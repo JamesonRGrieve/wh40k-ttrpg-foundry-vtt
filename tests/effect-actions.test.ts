@@ -12,11 +12,15 @@ import { describe, expect, it, vi } from 'vitest';
 import * as EffectActions from '../src/module/applications/api/effect-actions.ts';
 import type { ActiveEffectLike, EffectsOwner } from '../src/module/applications/api/effect-actions.ts';
 
-function makeEffect(over: Partial<ActiveEffectLike> = {}): ActiveEffectLike & {
+interface MockEffect {
+    name: string;
+    disabled: boolean;
+    sheet: { render: ReturnType<typeof vi.fn> };
     update: ReturnType<typeof vi.fn>;
     delete: ReturnType<typeof vi.fn>;
-    sheet: { render: ReturnType<typeof vi.fn> };
-} {
+}
+
+function makeEffect(over: Partial<Pick<MockEffect, 'name' | 'disabled'>> = {}): MockEffect {
     return {
         name: 'Test Effect',
         disabled: false,
@@ -27,10 +31,10 @@ function makeEffect(over: Partial<ActiveEffectLike> = {}): ActiveEffectLike & {
     };
 }
 
-function makeOwner(effect?: ActiveEffectLike): EffectsOwner & { createEmbeddedDocuments: ReturnType<typeof vi.fn> } {
+function makeOwner(effect?: MockEffect): EffectsOwner & { createEmbeddedDocuments: ReturnType<typeof vi.fn> } {
     return {
         uuid: 'Item.abc',
-        effects: { get: (id: string) => (id === 'eff1' ? effect : undefined) },
+        effects: { get: (id: string): ActiveEffectLike | undefined => (id === 'eff1' ? (effect as unknown as ActiveEffectLike) : undefined) },
         createEmbeddedDocuments: vi.fn().mockResolvedValue([]),
     };
 }
@@ -60,7 +64,7 @@ describe('effectIdFromTarget', () => {
 describe('resolveEffect', () => {
     it('returns the matching effect', () => {
         const eff = makeEffect();
-        expect(EffectActions.resolveEffect(makeOwner(eff), targetWith('eff1'))).toBe(eff);
+        expect(EffectActions.resolveEffect(makeOwner(eff), targetWith('eff1'))).toBe(eff as unknown as ActiveEffectLike);
     });
     it('returns undefined for unknown / missing id', () => {
         expect(EffectActions.resolveEffect(makeOwner(makeEffect()), targetWith('nope'))).toBeUndefined();

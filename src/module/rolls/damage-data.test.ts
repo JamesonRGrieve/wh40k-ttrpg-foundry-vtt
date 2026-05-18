@@ -17,11 +17,7 @@ describe('replaceDamageDieWithDoS (#129)', () => {
     });
 
     it('considers only active, non-discarded dice', () => {
-        const dice: DamageDieResult[] = [
-            { result: 1, discarded: true },
-            { result: 6, active: false },
-            { result: 5 },
-        ];
+        const dice: DamageDieResult[] = [{ result: 1, discarded: true }, { result: 6, active: false }, { result: 5 }];
         const outcome = replaceDamageDieWithDoS(dice, 3);
         expect(outcome?.replacedIndex).toBe(0);
         expect(dice[2]?.result).toBe(3);
@@ -39,7 +35,15 @@ describe('Hit.replaceDamageDieWithDoS (#129)', () => {
         const hit = new Hit();
         hit.damage = 7 + 2 + 5;
         hit.damageRoll = {
-            terms: [{ results: [{ result: 7, active: true }, { result: 2, active: true }, { result: 5, active: true }] }],
+            terms: [
+                {
+                    results: [
+                        { result: 7, active: true },
+                        { result: 2, active: true },
+                        { result: 5, active: true },
+                    ],
+                },
+            ],
         } as unknown as Hit['damageRoll'];
 
         const replaced = hit.replaceDamageDieWithDoS(6);

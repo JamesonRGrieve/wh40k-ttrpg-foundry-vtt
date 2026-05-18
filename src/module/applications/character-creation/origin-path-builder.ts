@@ -135,12 +135,7 @@ function hasToObject(item: WH40KItem | NormalizedOrigin): item is WH40KItem {
     // toObject(); calling it threw "item.toObject is not a function" on
     // origin selection. Guard the type and the operand so neither a
     // non-callable toObject nor a non-object item can reach .toObject().
-    return (
-        typeof item === 'object' &&
-        item !== null &&
-        'toObject' in item &&
-        typeof (item as { toObject?: unknown }).toObject === 'function'
-    );
+    return typeof item === 'object' && item !== null && 'toObject' in item && typeof (item as { toObject?: unknown }).toObject === 'function';
 }
 
 /**
@@ -3852,9 +3847,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             .map(([aptitude]) => aptitude)
             .sort((a, b) => a.localeCompare(b));
         if (duplicateAptitudes.length > 0) {
-            ui.notifications.warn(
-                game.i18n.format('WH40K.OriginPath.DuplicateAptitude', { aptitudes: duplicateAptitudes.join(', ') }),
-            );
+            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.DuplicateAptitude', { aptitudes: duplicateAptitudes.join(', ') }));
         }
 
         // Confirm — offer reset options. Base stats are always overridden.
