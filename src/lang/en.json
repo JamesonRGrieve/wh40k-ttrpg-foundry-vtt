@@ -891,6 +891,8 @@
             "CompleteAllSteps": "Complete all 6 steps before committing",
             "CompleteAllChoices": "Complete all required choices before committing",
             "CharacteristicsRequiredBeforeCommit": "Roll or assign your characteristics before completing character creation.",
+            "StepInProgressEquipment": "The Equip Acolyte step is still in progress — finish picking starting gear before applying the origin path.",
+            "StepInProgressCharacteristics": "The Characteristic Roll step is still in progress — roll or assign your characteristics before applying the origin path.",
             "DuplicateAptitude": "Your origin path grants these aptitudes more than once: {aptitudes}. Duplicate aptitudes have no effect — under Dark Heresy 2e you may swap a duplicate for a characteristic aptitude (GM adjudication).",
             "AptitudeDouble": {
                 "BannerTitle": "Duplicate aptitude detected",

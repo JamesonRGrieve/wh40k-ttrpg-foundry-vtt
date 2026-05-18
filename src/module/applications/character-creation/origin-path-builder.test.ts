@@ -398,13 +398,16 @@ describe('OriginPathBuilder commit (issue #206)', () => {
         f.applications.api['DialogV2'] = { prompt: dialogPrompt };
 
         const host = {
-            _calculateStatus: () => ({ canCommit: true, stepsComplete: true, choicesComplete: true }),
+            _calculateStatus: () => ({ canCommit: true, stepsComplete: true, choicesComplete: true, equipmentComplete: true }),
             _hasAssignedCharacteristics: vi.fn().mockReturnValue(false),
             _clearPreviewedOrigin: vi.fn(),
             render: vi.fn().mockResolvedValue(undefined),
             showLineage: true,
             showCharacteristics: false,
             showEquipment: true,
+            systemConfig: { equipmentStep: null },
+            equipmentSelections: new Map<string, unknown>(),
+            gameSystem: 'dh2e',
         };
 
         await OriginPathBuilder.DEFAULT_OPTIONS.actions.commit.call(
@@ -416,6 +419,42 @@ describe('OriginPathBuilder commit (issue #206)', () => {
         expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit');
         expect(host.showCharacteristics).toBe(true);
         expect(host.showEquipment).toBe(false);
+        expect(host.showLineage).toBe(false);
+        expect(dialogPrompt).not.toHaveBeenCalled();
+    });
+
+    it('blocks commit and routes to the Equipment step when equipment is empty under DH2e RAW', async () => {
+        const dialogPrompt = vi.fn();
+        const f = (globalThis as Record<string, unknown>)['foundry'] as {
+            applications: { api: Record<string, unknown> };
+        };
+        f.applications.api['DialogV2'] = { prompt: dialogPrompt };
+
+        const host = {
+            _calculateStatus: () => ({ canCommit: false, stepsComplete: true, choicesComplete: true, equipmentComplete: false }),
+            _hasAssignedCharacteristics: vi.fn().mockReturnValue(true),
+            _clearPreviewedOrigin: vi.fn(),
+            render: vi.fn().mockResolvedValue(undefined),
+            showLineage: false,
+            showCharacteristics: true,
+            showEquipment: false,
+            guidedMode: false,
+            systemConfig: {
+                equipmentStep: { key: 'equipment', step: 'equipment', icon: 'fa-box', descKey: 'EquipmentDesc', stepIndex: 6 },
+            },
+            equipmentSelections: new Map<string, unknown>(),
+            gameSystem: 'dh2e',
+        };
+
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.commit.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.StepInProgressEquipment');
+        expect(host.showEquipment).toBe(true);
+        expect(host.showCharacteristics).toBe(false);
         expect(host.showLineage).toBe(false);
         expect(dialogPrompt).not.toHaveBeenCalled();
     });

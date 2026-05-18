@@ -2788,12 +2788,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // floor(Influence/10) Scarce-or-better picks. The campaign also runs
         // a homebrew interpretation in which the Armory step is skipped
         // entirely (Influence is spent in play instead), so the cap is for
-        // display only and commit is never gated on it. The equipment step
-        // UI continues to enforce per-toggle caps via _toggleEquipmentByUuid.
-        const equipmentAvailable = this.systemConfig.equipmentStep !== undefined;
+        // display only and commit is never gated on it under homebrew. Under
+        // RAW DH2e the Armory step IS required for commit so players don't
+        // accidentally close the builder before picking starting gear (#206).
+        // The equipment step UI continues to enforce per-toggle caps via
+        // _toggleEquipmentByUuid.
+        const equipmentAvailable = this.systemConfig.equipmentStep != null;
         const equipmentMaxPicks = equipmentAvailable ? this._getInfluenceBonus() : 0;
-        const equipmentRequired = false;
-        const equipmentComplete = true;
+        const homebrewSkipsEquipment = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        const equipmentRequired = equipmentAvailable && !homebrewSkipsEquipment;
+        const equipmentComplete = !equipmentRequired || this.equipmentSelections.size > 0;
         let pendingChoices = 0;
         let pendingRolls = 0;
 
@@ -4018,15 +4022,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
             } else if (status['choicesComplete'] !== true) {
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
+            } else if (status['equipmentComplete'] !== true) {
+                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.StepInProgressEquipment'));
+                OriginPathBuilder.#goToEquipment.call(this, _event, _target);
             }
             return;
         }
 
         // Characteristics must be rolled/assigned before the path is applied —
         // commit otherwise produced a character with no characteristics
-        // because the Characteristic Roll step was skippable. The equipment
-        // (Armory) step is intentionally optional (homebrew runs Influence in
-        // play; see _calculateStatus) so it is deliberately not gated here.
+        // because the Characteristic Roll step was skippable (#206).
         if (!this._hasAssignedCharacteristics()) {
             ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit'));
             OriginPathBuilder.#goToCharacteristics.call(this, _event, _target);
