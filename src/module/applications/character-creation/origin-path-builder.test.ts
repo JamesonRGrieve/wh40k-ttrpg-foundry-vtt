@@ -243,6 +243,25 @@ describe('OriginPathBuilder._itemToSelectionData', () => {
         expect(normalized._sourceUuid).toBe('Compendium.wh40k-rpg.origin-paths.hive-world-source');
         expect(normalized._actorItemId).toBe('embedded-origin-1');
     });
+
+    it('does not throw on a compendium index entry without toObject (issue #198)', () => {
+        const builder = { actor: { id: 'actor-1' } };
+        const indexEntry = makeOrigin();
+
+        expect(() =>
+            OriginPathBuilder.prototype._itemToSelectionData.call(builder, indexEntry),
+        ).not.toThrow();
+    });
+
+    it('treats a non-callable toObject as plain data instead of invoking it (issue #198)', () => {
+        const builder = { actor: { id: 'actor-1' } };
+        const origin = makeOrigin();
+        (origin as unknown as Record<string, unknown>)['toObject'] = 'not-a-function';
+
+        const normalized = OriginPathBuilder.prototype._itemToSelectionData.call(builder, origin);
+
+        expect(normalized.name).toBe('Hive World');
+    });
 });
 
 describe('OriginPathBuilder preview action', () => {
