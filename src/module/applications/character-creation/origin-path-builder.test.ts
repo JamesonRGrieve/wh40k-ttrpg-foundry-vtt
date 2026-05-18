@@ -3,6 +3,7 @@ import { afterAll, describe, expect, it, vi } from 'vitest';
 const ORIGINAL_GAME = (globalThis as Record<string, unknown>)['game'];
 const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>)['foundry'];
 const ORIGINAL_UI = (globalThis as Record<string, unknown>)['ui'];
+const ORIGINAL_ROLL = (globalThis as Record<string, unknown>)['Roll'];
 
 class FakeApplicationV2 {}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: TS mixin class spec requires `any[]` rest, not `unknown[]`
@@ -105,10 +106,22 @@ vi.mock('./origin-roll-dialog.ts', () => ({
     },
 };
 
+class FakeRoll {
+    total: number;
+    constructor(public formula: string) {
+        this.total = 42;
+    }
+    async evaluate(): Promise<this> {
+        return this;
+    }
+}
+(globalThis as Record<string, unknown>)['Roll'] = FakeRoll;
+
 afterAll(() => {
     (globalThis as Record<string, unknown>)['game'] = ORIGINAL_GAME;
     (globalThis as Record<string, unknown>)['foundry'] = ORIGINAL_FOUNDRY;
     (globalThis as Record<string, unknown>)['ui'] = ORIGINAL_UI;
+    (globalThis as Record<string, unknown>)['Roll'] = ORIGINAL_ROLL;
 });
 
 const { default: OriginPathBuilder } = await import('./origin-path-builder.ts');
@@ -230,6 +243,25 @@ describe('OriginPathBuilder._itemToSelectionData', () => {
         expect(normalized._sourceUuid).toBe('Compendium.wh40k-rpg.origin-paths.hive-world-source');
         expect(normalized._actorItemId).toBe('embedded-origin-1');
     });
+
+    it('does not throw on a compendium index entry without toObject (issue #198)', () => {
+        const builder = { actor: { id: 'actor-1' } };
+        const indexEntry = makeOrigin();
+
+        expect(() =>
+            OriginPathBuilder.prototype._itemToSelectionData.call(builder, indexEntry),
+        ).not.toThrow();
+    });
+
+    it('treats a non-callable toObject as plain data instead of invoking it (issue #198)', () => {
+        const builder = { actor: { id: 'actor-1' } };
+        const origin = makeOrigin();
+        (origin as unknown as Record<string, unknown>)['toObject'] = 'not-a-function';
+
+        const normalized = OriginPathBuilder.prototype._itemToSelectionData.call(builder, origin);
+
+        expect(normalized.name).toBe('Hive World');
+    });
 });
 
 describe('OriginPathBuilder preview action', () => {
@@ -295,5 +327,161 @@ describe('OriginPathBuilder preview action', () => {
         expect(host.previewedOrigin).toBeNull();
         expect(host.render).not.toHaveBeenCalled();
         expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.OriginNotAvailable');
+    });
+});
+
+describe('OriginPathBuilder rollDivination (issue #199)', () => {
+    function makeDivinationHost() {
+        return {
+            _divination: '',
+            _saveScrollPosition: vi.fn(),
+            render: vi.fn().mockResolvedValue(undefined),
+        };
+    }
+
+    it('falls back to a 1d100 roll when the Divination table is absent', async () => {
+        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
+        g['tables'] = undefined;
+        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+
+        const host = makeDivinationHost();
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(host._divination).toBe('WH40K.OriginPath.DivinationTableUnavailable');
+        expect(host.render).toHaveBeenCalledTimes(1);
+        expect(host._saveScrollPosition).toHaveBeenCalledTimes(1);
+    });
+
+    it('treats an empty world RollTable as unavailable and never calls draw()', async () => {
+        const draw = vi.fn();
+        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
+        g['tables'] = { getName: () => ({ results: { size: 0 }, draw }) };
+        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+
+        const host = makeDivinationHost();
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(draw).not.toHaveBeenCalled();
+        expect(host._divination).toBe('WH40K.OriginPath.DivinationTableUnavailable');
+    });
+
+    it('uses the drawn result text when a populated table exists', async () => {
+        const draw = vi.fn().mockResolvedValue({ results: [{ text: 'Trust in your fear.' }] });
+        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
+        g['tables'] = { getName: () => ({ results: { size: 100 }, draw }) };
+        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+
+        const host = makeDivinationHost();
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(draw).toHaveBeenCalledTimes(1);
+        expect(host._divination).toBe('Trust in your fear.');
+    });
+});
+
+describe('OriginPathBuilder commit (issue #206)', () => {
+    it('blocks commit and routes to the Characteristics step when characteristics are unassigned', async () => {
+        const dialogPrompt = vi.fn();
+        const f = (globalThis as Record<string, unknown>)['foundry'] as {
+            applications: { api: Record<string, unknown> };
+        };
+        f.applications.api['DialogV2'] = { prompt: dialogPrompt };
+
+        const host = {
+            _calculateStatus: () => ({ canCommit: true, stepsComplete: true, choicesComplete: true }),
+            _hasAssignedCharacteristics: vi.fn().mockReturnValue(false),
+            _clearPreviewedOrigin: vi.fn(),
+            render: vi.fn().mockResolvedValue(undefined),
+            showLineage: true,
+            showCharacteristics: false,
+            showEquipment: true,
+        };
+
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.commit.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit');
+        expect(host.showCharacteristics).toBe(true);
+        expect(host.showEquipment).toBe(false);
+        expect(host.showLineage).toBe(false);
+        expect(dialogPrompt).not.toHaveBeenCalled();
+    });
+});
+
+describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
+    interface AptSelection {
+        system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> };
+    }
+
+    function makeCountHost(selections: Array<[string, AptSelection]>) {
+        return {
+            selections: new Map(selections),
+            _getSelectionSystem: (s: AptSelection) => s.system,
+            _collectAptitudeChoices: OriginPathBuilder.prototype._collectAptitudeChoices,
+        };
+    }
+
+    it('counts a fixed aptitude granted by two origins as a duplicate', () => {
+        const host = makeCountHost([
+            ['homeWorld', { system: { grants: { aptitudes: ['Willpower', 'Offence'] }, selectedChoices: {} } }],
+            ['background', { system: { grants: { aptitudes: ['Willpower'] }, selectedChoices: {} } }],
+        ]);
+
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+        );
+
+        expect(counts.get('Willpower')).toBe(2);
+        expect(counts.get('Offence')).toBe(1);
+    });
+
+    it('counts an aptitude-typed choice colliding with a fixed aptitude', () => {
+        const host = makeCountHost([
+            ['homeWorld', { system: { grants: { aptitudes: ['Tech'] }, selectedChoices: {} } }],
+            [
+                'background',
+                {
+                    system: {
+                        grants: {
+                            choices: [{ type: 'aptitude', label: 'Aptitude', options: [{ value: 'Tech' }] }],
+                        },
+                        selectedChoices: { Aptitude: ['Tech'] },
+                    },
+                },
+            ],
+        ]);
+
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+        );
+
+        expect(counts.get('Tech')).toBe(2);
+    });
+
+    it('does not double-count an aptitude granted twice by a single origin', () => {
+        const host = makeCountHost([
+            ['homeWorld', { system: { grants: { aptitudes: ['Willpower', 'Willpower'] }, selectedChoices: {} } }],
+        ]);
+
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+        );
+
+        expect(counts.get('Willpower')).toBe(1);
     });
 });
