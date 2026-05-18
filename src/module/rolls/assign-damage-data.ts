@@ -26,6 +26,12 @@ interface HitLike {
     totalFatigue: number;
     /** Cover AP added at the hit location (from active Cover situational modifiers). */
     coverAP?: number;
+    /**
+     * Number of Righteous Fury triggers on the damage roll. When > 0 and
+     * defences fully absorbed the hit (reducedDamage ≤ 0), RAW applies 1
+     * point of unarmoured damage anyway (core.md L10398-10414).
+     */
+    righteousFuryCount?: number;
 }
 
 export class AssignDamageData {
@@ -102,6 +108,18 @@ export class AssignDamageData {
                 this.damageTaken = this.actor.system.wounds.value;
                 this.hasCriticalDamage = true;
                 this.criticalDamageTaken = reducedDamage - this.damageTaken;
+            }
+        }
+
+        // Righteous Fury but defences fully absorbed the hit: RAW deals 1
+        // point of unarmoured damage anyway (core.md L10398-10414).
+        if (reducedDamage <= 0 && (this.hit.righteousFuryCount ?? 0) > 0) {
+            if (this.actor.system.wounds.value <= 0) {
+                // No wounds left → the 1 lands directly as critical.
+                this.hasCriticalDamage = true;
+                this.criticalDamageTaken = 1;
+            } else {
+                this.damageTaken = 1;
             }
         }
 
