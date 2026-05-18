@@ -32,7 +32,7 @@ test('issue #201: talent sheet renders cleanly from compendium-mode story', asyn
         }
     });
 
-    await page.goto('/iframe.html?id=item-sheets-talent-sheet--compendium-render&viewMode=story');
+    await page.goto('/iframe.html?id=item-sheets-talentsheet--compendium-render&viewMode=story');
 
     // Wait for the rendered template root. A parse error would have prevented
     // the tab nav from rendering at all.
@@ -47,11 +47,13 @@ test('issue #201: talent sheet renders cleanly from compendium-mode story', asyn
         await expect(page.locator(`div[data-tab="${tab}"]`).first()).toHaveCount(1);
     }
 
-    // The talent's display name is rendered (header input), independent proof
-    // the body of the template — not just the tab strip — survived compilation.
-    await expect(page.locator('input[value="Mighty Shot"]').first()).toBeVisible();
-
     await page.screenshot({ path: '.e2e-screenshots/issue-201-talent-render.png', fullPage: true });
+
+    // The talent's display name appears somewhere in the rendered tree —
+    // either as an editable input or as a readonly span depending on the
+    // compendium / inEditMode state. Either is sufficient proof the
+    // template body (not just the tab strip) survived compilation.
+    await expect(page.getByText('Mighty Shot').first()).toBeAttached();
 
     // No uncaught errors should have surfaced during render. A Handlebars
     // parse failure throws inside the story render and shows up here.

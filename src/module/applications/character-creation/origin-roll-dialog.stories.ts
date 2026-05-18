@@ -89,10 +89,14 @@ export const ActionFlow: Story = {
 export const RerollOverflow: Story = {
     decorators: [
         (storyFn): HTMLElement => {
-            // Constrain viewport so the dialog actually hits its tw-max-h-[80vh] cap
-            // and the history-overflow behaviour is exercised in the rendered DOM.
+            // Constrain viewport so the dialog actually hits its tw-max-h-[80vh]
+            // cap and the history-overflow behaviour is exercised. The dialog
+            // now uses tw-h-full to fill the parent, so size the frame at ~720
+            // (enough for header + result + 12rem history + footer) so the
+            // pinned-footer behaviour is what gets tested rather than the
+            // frame's own overflow:hidden clipping.
             const frame = document.createElement('div');
-            frame.style.cssText = 'height:520px;width:640px;display:flex;flex-direction:column;overflow:hidden;';
+            frame.style.cssText = 'height:720px;width:640px;display:flex;flex-direction:column;overflow:hidden;';
             frame.classList.add('wh40k-rpg', 'issue-202-viewport');
             const slot = storyFn() as HTMLElement;
             frame.appendChild(slot);

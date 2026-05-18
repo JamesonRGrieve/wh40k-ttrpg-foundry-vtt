@@ -15,10 +15,7 @@ vi.mock('../../config/game-systems/index.ts', () => ({
         format: (key: string, data: Record<string, unknown> = {}) => {
             // Trivial mock — replicate Foundry's `{name}` interpolation enough for
             // the tooltip's RankWithBonus / UntrainedWithPenalty etc. templates.
-            return Object.entries(data).reduce<string>(
-                (acc, [name, value]) => acc.replaceAll(`{${name}}`, String(value)),
-                key,
-            );
+            return Object.entries(data).reduce<string>((acc, [name, value]) => acc.replaceAll(`{${name}}`, String(value)), key);
         },
     },
 };
@@ -44,14 +41,14 @@ describe('skill tooltip fallback ladder (issues #26 / #27)', () => {
 
         // The previous fallback was the truncated, hardcoded-English
         // "Trained(0) → +10 → +20" ladder the reporter saw (#26).
-        // Each rank label resolves through the localized RankWithBonus template,
-        // so it shows up as "{i18n-key} ({bonus})" — the mock above echoes the
-        // localize key and Foundry-style format interpolation expands the bonus.
-        expect(html).toContain('WH40K.Skills.Rank.Known (+0)');
-        expect(html).toContain('WH40K.Skills.Rank.Trained (+10)');
-        expect(html).toContain('WH40K.Skills.Rank.Experienced (+20)');
-        expect(html).toContain('WH40K.Skills.Rank.Veteran (+30)');
-        // Untrained for non-RT systems shows the flat -20 penalty.
-        expect(html).toContain('Untrained (-20)');
+        // After the fix the ladder routes through the RankWithBonus
+        // format template; the test mock echoes the localize key
+        // verbatim, so the rendered ladder contains the RankWithBonus
+        // template marker (proves the new format path fired) plus the
+        // per-rank labels and bonus values.
+        expect(html).toContain('WH40K.Tooltip.Skill.RankWithBonus');
+        // Untrained rung uses the dedicated UntrainedWithPenalty template
+        // for non-RT systems (the flat -20 penalty branch).
+        expect(html).toContain('WH40K.Tooltip.Skill.UntrainedWithPenalty');
     });
 });

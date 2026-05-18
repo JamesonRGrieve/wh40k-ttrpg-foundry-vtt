@@ -518,7 +518,7 @@ export class TooltipsWH40K {
         // self-contained sentence ("Characteristic: Perception (35)").
         const characteristicRow = game.i18n.format('WH40K.Tooltip.Skill.CharacteristicLabel', {
             name: characteristic,
-            value: charValue,
+            value: String(charValue),
         });
         html += `
             <div class="wh40k-tooltip__divider"></div>
@@ -532,7 +532,7 @@ export class TooltipsWH40K {
         // DH2e and other aptitude/career systems apply a flat -20 penalty rather than halving.
         if (level === 0 && gameSystem === 'rt') {
             const untrainedTargetRow = game.i18n.format('WH40K.Tooltip.Skill.UntrainedTargetLabel', {
-                value: calculatedBase,
+                value: String(calculatedBase),
             });
             html += `
                 <div class="wh40k-tooltip__line">
@@ -587,7 +587,13 @@ export class TooltipsWH40K {
                 <div class="wh40k-tooltip__training-track">
                     <span class="${level === 0 ? 'active' : ''}">${untrainedLabel}</span>
                     ${skillRanks
-                        .map((rank, i) => `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${renderRank(rank.tooltip, rank.bonus)}</span>`)
+                        .map(
+                            (rank, i) =>
+                                `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${renderRank(
+                                    rank.tooltip,
+                                    rank.bonus,
+                                )}</span>`,
+                        )
                         .join('')}
                 </div>
             </div>
