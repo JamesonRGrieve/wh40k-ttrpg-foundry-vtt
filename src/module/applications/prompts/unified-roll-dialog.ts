@@ -377,7 +377,96 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             }
         }
 
-        const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : rollData.baseTarget || 0;
+        // Skill panel — alt-characteristic dropdown + untrained-halving indicator (#61).
+        // Reads `altCharacteristics` from the matching compendium/world skill item on the
+        // source actor, then runs `resolveUntrainedTarget` so the dialog can swap the
+        // characteristic and surface halving / blocked-advanced advisories. The override
+        // characteristic mutates `baseTarget` so every downstream modifier ramp re-computes.
+        let skillPanel: {
+            visible: boolean;
+            characteristic: string;
+            characteristicLabel: string;
+            altOptions: Array<{ value: string; label: string; isCurrent: boolean }>;
+            halved: boolean;
+            untrainedAdvanced: boolean;
+        } | null = null;
+        let skillBaseOverride: number | null = null;
+        if (this.rollType === 'simple' && rollData['type'] === 'Skill') {
+            const sourceActor = (rollData.sourceActor ?? rollData['actor']) as
+                | {
+                      // eslint-disable-next-line no-restricted-syntax -- boundary: per-actor skill / characteristic bags are typed loosely on WH40KBaseActor; structural read suffices
+                      skills?: Record<string, { advance?: number; characteristic?: string; current?: number; basic?: boolean }>;
+                      characteristics?: Record<string, { total?: number; label?: string; short?: string }>;
+                      items?: { find?: (cb: (i: { type?: string; name?: string; system?: { identifier?: string } }) => boolean) => unknown };
+                  }
+                | null
+                | undefined;
+            const rollKey = (rollData['rollKey'] as string | null | undefined) ?? null;
+            const actorSkill = rollKey !== null ? sourceActor?.skills?.[rollKey] : undefined;
+            const listedChar = actorSkill?.characteristic ?? '';
+            const advance = Number(actorSkill?.advance ?? 0);
+            const skillCurrent = Number(actorSkill?.current ?? rollData.baseTarget ?? 0);
+            const listedCharTotal = Number(sourceActor?.characteristics?.[listedChar]?.total ?? 0);
+            const trainingBonus = skillCurrent - listedCharTotal;
+
+            // Locate the matching skill item to read altCharacteristics off its DataModel.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: items.find is typed as returning unknown; per-system skill item schema is asserted via altCharacteristics presence
+            const skillItem = sourceActor?.items?.find?.((i) => i.type === 'skill' && (i.system?.identifier === rollKey || i.name === rollKey)) as
+                | { system?: { altCharacteristics?: string[]; isBasic?: boolean } }
+                | undefined;
+            const altCharacteristics = Array.isArray(skillItem?.system?.altCharacteristics) ? skillItem.system.altCharacteristics : [];
+            const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? false;
+
+            const effectiveChar = this._charOverride ?? listedChar;
+            const usingAlt = this._charOverride !== null && this._charOverride !== listedChar;
+            const altCharTotal = usingAlt ? Number(sourceActor?.characteristics?.[effectiveChar]?.total ?? 0) : 0;
+
+            const resolved = resolveUntrainedTarget({
+                advance,
+                isBasic,
+                characteristicTotal: listedCharTotal + trainingBonus,
+                altCharacteristicTotal: usingAlt ? altCharTotal + trainingBonus : undefined,
+                halveOnNonBasic: advance === 0 && !isBasic,
+            });
+            // Only override base target when we changed the characteristic or fired the halving rule.
+            // Otherwise leave rollData.baseTarget untouched so unrelated rolls behave identically.
+            if (usingAlt || resolved.halved || resolved.untrainedAdvanced) {
+                skillBaseOverride = resolved.target;
+            }
+
+            const charLabel = (c: string): string => {
+                if (c === '') return '';
+                const key = `WH40K.Characteristic.${c.charAt(0).toUpperCase()}${c.slice(1)}`;
+                const localized = game.i18n.localize(key);
+                return localized === key ? c : localized;
+            };
+            const altOptions: Array<{ value: string; label: string; isCurrent: boolean }> = [];
+            altOptions.push({
+                value: listedChar,
+                label: game.i18n.format('WH40K.UntrainedSkill.DefaultOption', { name: charLabel(listedChar) }),
+                isCurrent: !usingAlt,
+            });
+            for (const alt of altCharacteristics) {
+                if (alt === listedChar) continue;
+                altOptions.push({ value: alt, label: charLabel(alt), isCurrent: this._charOverride === alt });
+            }
+
+            const showPanel = altCharacteristics.length > 0 || resolved.halved || resolved.untrainedAdvanced;
+            skillPanel = {
+                visible: showPanel,
+                characteristic: effectiveChar,
+                characteristicLabel: charLabel(effectiveChar),
+                altOptions,
+                halved: resolved.halved,
+                untrainedAdvanced: resolved.untrainedAdvanced,
+            };
+        }
+
+        const baseTarget = isForceField
+            ? Number(rollData['protectionRating']) || 0
+            : skillBaseOverride !== null
+            ? skillBaseOverride
+            : rollData.baseTarget || 0;
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
         const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational', 'psy-mode', 'assistance']);
@@ -527,8 +616,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             isWeapon,
             isPsychic,
             isForceField,
+            // Skill alt-characteristic panel (#61)
+            skillPanel,
+            hasSkillPanel: skillPanel !== null && skillPanel.visible,
             isSimple,
-            hasContextPanel: isWeapon || isPsychic || isForceField,
+            hasContextPanel: isWeapon || isPsychic || isForceField || (skillPanel !== null && skillPanel.visible),
             // Weapon data
             ...(isWeapon ? this._getWeaponContext() : {}),
             // Psychic data
@@ -1086,6 +1178,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (this._assistantCount <= 0) return;
         this._assistantCount -= 1;
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    /* ---- Alternate characteristic override for skill rolls (#61) ---- */
+
+    static async #onSetCharacteristicOverride(this: UnifiedRollDialog, event: Event, _target: HTMLElement): Promise<void> {
+        const select = event.target as HTMLSelectElement | null;
+        const value = select?.value ?? '';
+        // Empty string sentinel means "no override" — fall back to the skill's listed characteristic.
+        this._charOverride = value === '' ? null : value;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     /* ---- Extended Test toggle (#59) ----                                                 */
