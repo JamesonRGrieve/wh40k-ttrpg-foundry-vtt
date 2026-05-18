@@ -211,4 +211,18 @@ export interface PreviewSummary {
     equipment: PreviewEquipmentEntry[];
     wounds: number | null;
     fate: number | null;
+    /**
+     * Aptitude grants that doubled up — either two origins granted the same
+     * aptitude, or a step's grant matches an aptitude the character already
+     * has. `replacement` is the swap the player picked, or null if the
+     * collision is unresolved (in which case the builder shows a sticky
+     * warning banner). Drives the issue #205 chooser flow.
+     */
+    aptitudeCollisions: Array<{ original: string; replacement: string | null }>;
+    /**
+     * True when at least one aptitude collision is currently unresolved
+     * (i.e. the player has not picked a replacement). The builder template
+     * keys its warning banner on this flag.
+     */
+    hasUnresolvedAptitudeCollision: boolean;
 }

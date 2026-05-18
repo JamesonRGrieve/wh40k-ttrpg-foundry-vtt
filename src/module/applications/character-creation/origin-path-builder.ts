@@ -314,6 +314,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare _influenceRolled: number;
     declare _savedScrollTop: number;
     declare _originsLoaded: boolean;
+    /**
+     * Replacement aptitudes the player has picked to resolve a duplicate grant.
+     * Key: the original (duplicated) aptitude name as it would have been granted.
+     * Value: the replacement aptitude name the player selected (or '' if explicitly skipped).
+     * Used by the preview pipeline to swap doubled aptitudes with the chosen replacement,
+     * so the warning banner clears once the player makes a choice. (#205)
+     */
+    declare aptitudeOverrides: Map<string, string>;
     /** @override */
     static DEFAULT_OPTIONS = {
         id: 'origin-path-builder',
@@ -364,6 +372,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             goToEquipment: OriginPathBuilder.#goToEquipment,
             toggleEquipmentItem: OriginPathBuilder.#toggleEquipmentItem,
             clearEquipment: OriginPathBuilder.#clearEquipment,
+            resolveAptitudeDouble: OriginPathBuilder.#resolveAptitudeDouble,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -421,6 +430,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._thronesRolled = isDH2Homebrew ? 0 : actorSys.throneGelt ?? 0;
         this._influenceRolled = isDH2Homebrew ? 0 : actorSys.influence ?? 0;
         this._savedScrollTop = 0;
+        this.aptitudeOverrides = new Map();
         this._initCharacteristicState();
 
         // Initialize from actor's existing origin paths
@@ -2288,6 +2298,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             equipment: [],
             wounds: null,
             fate: null,
+            aptitudeCollisions: [],
+            hasUnresolvedAptitudeCollision: false,
         };
 
         const charTotals: Record<string, number> = {};
@@ -2428,7 +2440,23 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         );
         preview.traits = Array.from(traitMap.values());
         preview.equipment = equipmentList.map((name) => ({ name }));
+
+        // (#205) Apply duplicate-aptitude overrides: for each collision the
+        // player resolved via the chooser dialog, add the replacement aptitude
+        // to the displayed set. The original aptitude name stays in the set
+        // because the character still gets it once (from either an existing
+        // grant or the first new-origin grant); the doubled instance is what
+        // gets swapped. Unresolved collisions are surfaced via
+        // `preview.aptitudeCollisions` so the template renders a warning.
+        const collisions = this._getAptitudeCollisions();
+        for (const { replacement } of collisions) {
+            if (replacement !== null && replacement !== '') {
+                aptitudeSet.add(replacement);
+            }
+        }
         preview.aptitudes = Array.from(aptitudeSet).sort((a, b) => a.localeCompare(b));
+        preview.aptitudeCollisions = collisions;
+        preview.hasUnresolvedAptitudeCollision = collisions.some((c) => c.replacement === null || c.replacement === '');
 
         return preview;
     }
@@ -2512,6 +2540,96 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             for (const apt of perOrigin) counts.set(apt, (counts.get(apt) ?? 0) + 1);
         }
         return counts;
+    }
+
+    /**
+     * Read the aptitudes already on the actor before this builder applies its
+     * pending selections. These are the aptitudes earned by prior origin items
+     * the character has accumulated (or hand-added by the GM). Used by the
+     * duplicate-aptitude detector so a step that would re-grant an existing
+     * aptitude is surfaced to the player as a collision. (#205)
+     * @private
+     */
+    _collectExistingAptitudes(): Set<string> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies per system DataModel; aptitudes lives on dh2/bc/ow character DataModels
+        const apts = (this.actor.system as unknown as { aptitudes?: unknown }).aptitudes;
+        const out = new Set<string>();
+        if (Array.isArray(apts)) {
+            for (const apt of apts) {
+                if (typeof apt === 'string' && apt !== '') out.add(apt);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Build the candidate pool of replacement aptitudes for the duplicate-
+     * resolution dialog. The pool is content-sourced: the union of every
+     * aptitude name referenced across loaded origin items (fixed grants +
+     * aptitude-choice options), minus aptitudes the character would already
+     * receive after their builder selections.
+     *
+     * Per Direction #7 the system has no hardcoded aptitude registry — the
+     * compendium origin path documents are the source of truth, so we mine
+     * the loaded origins for their referenced aptitude names. (#205)
+     * @private
+     */
+    _collectAvailableAptitudePool(taken: ReadonlySet<string>): string[] {
+        const pool = new Set<string>();
+        const visit = (origin: NormalizedOrigin): void => {
+            const system = this._getSelectionSystem(origin);
+            const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
+            const fixed = (grants as NonNullable<OriginPathSystemData['grants']> & { aptitudes?: string[] }).aptitudes;
+            if (Array.isArray(fixed)) {
+                for (const apt of fixed) if (typeof apt === 'string' && apt !== '') pool.add(apt);
+            }
+            if (Array.isArray(grants.choices)) {
+                for (const choice of grants.choices) {
+                    if (choice.type !== 'aptitude') continue;
+                    for (const opt of choice.options ?? []) {
+                        if (typeof opt === 'string') {
+                            if (opt !== '') pool.add(opt);
+                            continue;
+                        }
+                        const name = (opt.value !== undefined && opt.value !== '' ? opt.value : opt.name) ?? '';
+                        if (name !== '') pool.add(name);
+                    }
+                }
+            }
+        };
+        for (const origin of this.allOrigins) visit(origin);
+        for (const origin of this.lineageOrigins) visit(origin);
+        return Array.from(pool)
+            .filter((apt) => !taken.has(apt))
+            .sort((a, b) => a.localeCompare(b));
+    }
+
+    /**
+     * Compute the unresolved aptitude collisions for the current builder state.
+     * A collision is an aptitude name that would be granted by the player's
+     * selected origins but is either (a) duplicated across two origins, or
+     * (b) already present on the actor before commit. For each collision
+     * `replacement` is the chosen swap, or null if the player has not yet
+     * picked one. Used by `_calculatePreview` to feed the banner and by the
+     * `resolveAptitudeDouble` action to drive the chooser dialog. (#205)
+     */
+    _getAptitudeCollisions(): { original: string; replacement: string | null }[] {
+        const existing = this._collectExistingAptitudes();
+        const counts = this._collectAptitudeGrantCounts();
+        const collisions: { original: string; replacement: string | null }[] = [];
+        const seen = new Set<string>();
+        for (const [apt, count] of counts) {
+            const conflictsWithExisting = existing.has(apt);
+            // Duplicate within selections (count > 1) wastes the second grant;
+            // collision against actor's existing aptitudes wastes the only grant.
+            if (count > 1 || conflictsWithExisting) {
+                if (seen.has(apt)) continue;
+                seen.add(apt);
+                const override = this.aptitudeOverrides.get(apt);
+                collisions.push({ original: apt, replacement: override ?? null });
+            }
+        }
+        return collisions.sort((a, b) => a.original.localeCompare(b.original));
     }
 
     /**
@@ -3812,6 +3930,66 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Resolve a duplicate-aptitude collision (#205). Opens a picker prompting
+     * the player to swap the doubled aptitude for one their character does not
+     * already have. Per DH2 RAW, when an origin step would grant an aptitude
+     * the character already possesses, the player picks any aptitude they
+     * don't currently have. The picker pool is mined from the loaded origin
+     * compendium (Direction #7 — no hardcoded aptitude registry in `src/`).
+     * A non-selection leaves the collision unresolved so the warning banner
+     * stays visible until the player or GM acts.
+     */
+    static async #resolveAptitudeDouble(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
+        const original = target.dataset['aptitude'];
+        if (original === undefined || original === '') return;
+
+        // Build the candidate pool: every aptitude name referenced in loaded
+        // origin items, minus aptitudes the character already has (whether
+        // pre-existing or freshly granted) and minus already-chosen
+        // replacements so the player doesn't double-pick.
+        const taken = new Set<string>(this._collectExistingAptitudes());
+        for (const apt of this._collectAptitudeGrantCounts().keys()) taken.add(apt);
+        for (const replacement of this.aptitudeOverrides.values()) {
+            if (replacement !== '') taken.add(replacement);
+        }
+        const candidates = this._collectAvailableAptitudePool(taken);
+
+        if (candidates.length === 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.AptitudeDouble.NoCandidates'));
+            return;
+        }
+
+        const optionsHtml = candidates.map((apt) => `<option value="${apt}">${apt}</option>`).join('');
+        const promptLabel = game.i18n.format('WH40K.OriginPath.AptitudeDouble.PromptBody', { aptitude: original });
+        const pickerLabel = game.i18n.localize('WH40K.OriginPath.AptitudeDouble.PickerLabel');
+
+        const picked = (await foundry.applications.api.DialogV2.prompt({
+            window: { title: game.i18n.localize('WH40K.OriginPath.AptitudeDouble.DialogTitle') },
+            content: `
+                <p>${promptLabel}</p>
+                <div class="form-group">
+                    <label>${pickerLabel}</label>
+                    <select name="replacement" class="origin-path-aptitude-replacement">${optionsHtml}</select>
+                </div>
+            `,
+            ok: {
+                label: game.i18n.localize('WH40K.OriginPath.AptitudeDouble.ConfirmLabel'),
+                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
+                    const form = button.form;
+                    const select = form?.elements.namedItem('replacement') as HTMLSelectElement | null;
+                    return select?.value ?? '';
+                },
+            },
+            rejectClose: false,
+        })) as string | null;
+
+        if (picked === null || picked === '') return;
+        this.aptitudeOverrides.set(original, picked);
+        ui.notifications.info(game.i18n.format('WH40K.OriginPath.AptitudeDouble.Resolved', { from: original, to: picked }));
+        void this.render();
+    }
+
+    /**
      * Open an item sheet (for talents, skills, etc.)
      */
     static async #openItem(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
@@ -3855,14 +4033,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        // Soft-warn (do not block) when the path grants the same aptitude
-        // from more than one origin — the duplicate is wasted under DH2. (#205)
-        const duplicateAptitudes = Array.from(this._collectAptitudeGrantCounts().entries())
-            .filter(([, count]) => count > 1)
-            .map(([aptitude]) => aptitude)
-            .sort((a, b) => a.localeCompare(b));
-        if (duplicateAptitudes.length > 0) {
-            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.DuplicateAptitude', { aptitudes: duplicateAptitudes.join(', ') }));
+        // Soft-warn (do not block) on aptitude collisions that the player has
+        // not yet resolved via the chooser dialog. This covers both intra-
+        // selection duplicates AND collisions against aptitudes the character
+        // already had before opening the builder. (#205)
+        const unresolved = this._getAptitudeCollisions()
+            .filter((c) => c.replacement === null || c.replacement === '')
+            .map((c) => c.original);
+        if (unresolved.length > 0) {
+            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.DuplicateAptitude', { aptitudes: unresolved.join(', ') }));
         }
 
         // Confirm — offer reset options. Base stats are always overridden.
