@@ -32,9 +32,14 @@ type CareerModule = {
     RANK_1_ADVANCES?: RankAdvance[];
 };
 
-// CareerTable is a structural superset of the loose CareerModule shape this
-// module exposes, so the strongly-typed table assigns directly with no cast.
-const CAREER_REGISTRY: Record<string, CareerModule> = CAREER_TABLES;
+// CareerTable's CHARACTERISTIC_COSTS uses a named-tier interface
+// (CharacteristicCostTier) that's structurally similar but not directly
+// assignable to CareerModule's Record<string, number>. Cast through
+// unknown — the runtime shape is identical (named-tier keys ARE strings,
+// values ARE numbers) but TS's structural check rejects the named-vs-index
+// signature mismatch.
+// eslint-disable-next-line no-restricted-syntax -- boundary: cross-module structural-vs-named-key typing mismatch; runtime shape is identical.
+const CAREER_REGISTRY: Record<string, CareerModule> = CAREER_TABLES as unknown as Record<string, CareerModule>;
 
 /**
  * Tier labels for characteristic advances
