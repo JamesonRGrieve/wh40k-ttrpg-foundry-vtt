@@ -1,0 +1,78 @@
+{{!-- Daemon Weapon Attribute Roller (issue #142) --}}
+<form data-wh40k-system="dh2e">
+    <div class="tw-p-6 tw-flex tw-flex-col tw-gap-4">
+        <header class="tw-text-center">
+            <h2 class="tw-font-display tw-text-xl tw-font-bold tw-uppercase tw-tracking-[0.15em] tw-m-0 {{accentClass}}">
+                {{localize "WH40K.DaemonWeaponAttribute.DialogTitle"}}
+            </h2>
+        </header>
+
+        <div class="tw-flex tw-flex-col tw-gap-3">
+            <label class="tw-flex tw-flex-col tw-gap-1 tw-text-sm">
+                <span class="tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-text-medium)]">
+                    {{localize "WH40K.DaemonWeaponAttribute.Alignment"}}
+                </span>
+                <select name="alignment" class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded tw-px-2 tw-py-1">
+                    {{#each alignmentChoices}}
+                        {{#if (eq this ../alignment)}}
+                            <option value="{{this}}" selected>{{localize (concat "WH40K.DaemonWeaponAttribute.Alignment" (capitalize this))}}</option>
+                        {{else}}
+                            <option value="{{this}}">{{localize (concat "WH40K.DaemonWeaponAttribute.Alignment" (capitalize this))}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+            </label>
+
+            <label class="tw-flex tw-flex-col tw-gap-1 tw-text-sm">
+                <span class="tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-text-medium)]">
+                    {{localize "WH40K.DaemonWeaponAttribute.BindingStrength"}}
+                </span>
+                <select name="bindingStrength" class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded tw-px-2 tw-py-1">
+                    {{#each bindingChoices}}
+                        {{#if (eq this.value ../bindingStrength)}}
+                            <option value="{{this.value}}" selected>{{this.label}}</option>
+                        {{else}}
+                            <option value="{{this.value}}">{{this.label}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+            </label>
+        </div>
+
+        {{#if hasResult}}
+            <section class="tw-mt-2 tw-p-3 tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded tw-bg-[var(--wh40k-panel-bg)]">
+                <h3 class="tw-text-sm tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2 {{accentClass}}">
+                    {{localize "WH40K.DaemonWeaponAttribute.ChatTitle"}}
+                </h3>
+                <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-2">
+                    {{#each result.picks}}
+                        <li class="tw-text-sm">
+                            <div class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
+                                <span class="tw-opacity-70 tw-mr-1">[{{this.table}} d10={{this.roll}}]</span>
+                                {{this.attribute.label}}
+                            </div>
+                            <div class="tw-text-xs tw-text-[var(--wh40k-text-medium)]">{{this.attribute.effect}}</div>
+                        </li>
+                    {{/each}}
+                </ul>
+            </section>
+        {{/if}}
+
+        <div class="tw-flex tw-justify-end tw-gap-2 tw-mt-2">
+            <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-rounded tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg)] tw-cursor-pointer" data-action="close">
+                <i class="fas fa-xmark"></i>
+                {{localize "WH40K.Close"}}
+            </button>
+            {{#if hasResult}}
+                <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-rounded tw-border tw-border-solid tw-border-[rgba(59,130,246,0.5)] tw-bg-[var(--color-accent,#3b82f6)] tw-text-[var(--color-text-primary)] tw-cursor-pointer" data-action="post">
+                    <i class="fas fa-comment"></i>
+                    {{localize "WH40K.DaemonWeaponAttribute.PostButton"}}
+                </button>
+            {{/if}}
+            <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-rounded tw-border tw-border-solid tw-border-[rgba(59,130,246,0.5)] tw-bg-[var(--color-accent,#3b82f6)] tw-text-[var(--color-text-primary)] tw-cursor-pointer" data-action="roll">
+                <i class="fas fa-dice-d10"></i>
+                {{localize "WH40K.DaemonWeaponAttribute.RollButton"}}
+            </button>
+        </div>
+    </div>
+</form>
