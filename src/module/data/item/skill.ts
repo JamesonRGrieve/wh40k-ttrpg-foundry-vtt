@@ -11,6 +11,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare characteristic: string;
+    declare altCharacteristics: string[];
     declare skillType: string;
     declare isBasic: boolean;
     declare aptitudes: string[];
@@ -41,6 +42,12 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
                 initial: 'intelligence',
                 blank: true,
             }),
+
+            // Alternate characteristics permitted by the skill descriptor's
+            // "Special Uses" sub-section. The roll dialog surfaces these as a
+            // dropdown so the player can pick the most suitable characteristic
+            // for the test at hand (core.md §"Untrained Skill Use" and #61).
+            altCharacteristics: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
 
             // Skill type
             skillType: new fields.StringField({
