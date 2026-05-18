@@ -76,7 +76,12 @@ module.exports = {
             fontFamily: "var(--wh40k-font-display, 'Modesto Condensed', serif)",
             fontSize: 'var(--wh40k-text-h3, 1.1rem)',
             fontWeight: '600',
-            color: 'var(--wh40k-text-dark)',
+            // The panel header sits on a gold-tinted dark gradient; the legacy
+            // `var(--wh40k-text-dark)` value reads as dark-olive-on-dark-gold
+            // and is the root cause of the issue-19 / issue-191 / issue-199
+            // contrast regressions. Inherit the header's own `--wh40k-gold`
+            // so the title reads as bright gold and matches the chevron.
+            color: 'var(--wh40k-gold)',
             letterSpacing: '0.02em',
             whiteSpace: 'nowrap !important',
             overflow: 'hidden',

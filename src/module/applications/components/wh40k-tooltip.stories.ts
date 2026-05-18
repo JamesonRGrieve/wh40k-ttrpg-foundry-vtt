@@ -45,7 +45,12 @@ async function renderSkillTooltip(args: SkillTooltipStoryArgs): Promise<HTMLElem
         plus30: args.plus30,
     });
 
+    // The tooltip CSS in `tailwind/wh40k-tooltip.js` is scoped to
+    // `#tooltip.wh40k-tooltip { … }` (matching Foundry's runtime tooltip
+    // mount point). Without the literal id="tooltip", none of the styling
+    // applies — that's the regression captured in earlier #26/#27 PNGs.
     const host = document.createElement('div');
+    host.id = 'tooltip';
     host.className = 'wh40k-rpg wh40k-tooltip';
     host.setAttribute('data-testid', 'skill-tooltip-host');
     host.innerHTML = html;
@@ -65,6 +70,7 @@ const meta = {
         // active state) and tests/storybook/issue-27-*.spec.ts (the
         // characteristic + untrained labels).
         const host = document.createElement('div');
+        host.id = 'tooltip';
         host.className = 'wh40k-rpg wh40k-tooltip';
         host.setAttribute('data-testid', 'skill-tooltip-host');
         renderSkillTooltip(args)
@@ -72,20 +78,37 @@ const meta = {
                 host.innerHTML = node.innerHTML;
             })
             .catch(() => {
-                // Synchronous fallback so the assertions still hold.
+                // Synchronous fallback. Mirrors the structure the real builder
+                // emits — header / breakdown / training — so the consumer CSS
+                // (`#tooltip.wh40k-tooltip .wh40k-tooltip__header { … }` etc.)
+                // actually applies. An unstyled fallback was the source of the
+                // earlier #26/#27 PNG regression — keep the markup structurally
+                // identical to TooltipsWH40K._buildSkillTooltip output.
                 const activeRung = args.plus30 ? 'plus30' : args.plus20 ? 'plus20' : args.plus10 ? 'plus10' : args.trained ? 'trained' : 'untrained';
+                const rungs: Array<[string, string, string]> = [
+                    ['untrained', 'Untrained', '-20'],
+                    ['trained', 'Known', '+0'],
+                    ['plus10', 'Trained', '+10'],
+                    ['plus20', 'Experienced', '+20'],
+                    ['plus30', 'Veteran', '+30'],
+                ];
                 host.innerHTML = `
+                    <div class="wh40k-tooltip__header">
+                        <span class="wh40k-tooltip__title">${args.label}</span>
+                        <span class="wh40k-tooltip__total">${args.charValue}</span>
+                    </div>
+                    <div class="wh40k-tooltip__divider"></div>
                     <div class="wh40k-tooltip__breakdown">
                         <div class="wh40k-tooltip__line">
-                            <span class="wh40k-tooltip__label">Characteristic: ${args.characteristic} (${args.charValue})</span>
+                            <span class="wh40k-tooltip__label">${args.characteristic}</span>
+                            <span class="wh40k-tooltip__value">${args.charValue}</span>
                         </div>
                     </div>
-                    <div class="wh40k-tooltip__training-track">
-                        <span class="${activeRung === 'untrained' ? 'active' : ''}">Untrained -20</span>
-                        <span class="${activeRung === 'trained' ? 'active' : ''}">Known +0</span>
-                        <span class="${activeRung === 'plus10' ? 'active' : ''}">Trained +10</span>
-                        <span class="${activeRung === 'plus20' ? 'active' : ''}">Experienced +20</span>
-                        <span class="${activeRung === 'plus30' ? 'active' : ''}">Veteran +30</span>
+                    <div class="wh40k-tooltip__training">
+                        <div class="wh40k-tooltip__training-title">Training</div>
+                        <div class="wh40k-tooltip__training-track">
+                            ${rungs.map(([key, label, mod]) => `<span class="${activeRung === key ? 'active' : ''}">${label} ${mod}</span>`).join('')}
+                        </div>
                     </div>
                 `;
             });

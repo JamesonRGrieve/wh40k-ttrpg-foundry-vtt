@@ -44,8 +44,33 @@ export class RollTableUtils {
             return null;
         }
 
-        // Roll on the table
+        // Roll on the table.
         const rollResult = await table.roll(roll !== null ? { roll } : {});
+
+        // Out-of-range fallback. `table.roll(...)` returns `results: []` when
+        // the rolled total falls outside every result's range — e.g. a Psy
+        // Rating modifier pushes a 1d100 Psychic Phenomena roll to 105, or the
+        // Rogue Trader phenomena table tops out at 75 and the roll lands at
+        // 80. Without this, `table.toMessage([], {roll})` displays only the
+        // bare number and the player has no resolved effect — the regression
+        // surfaced as "perils of the warp / psychic phenomena print the number
+        // instead of evaluating the target". Clamp the rolled value to the
+        // closest in-range result so the player always sees a resolved effect.
+        if (rollResult.results.length === 0 && Array.isArray(table.results) && table.results.length > 0) {
+            const total = rollResult.roll?.total ?? 0;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: table.results is Foundry's untyped Collection; iterating to compute closest range
+            const results = Array.from(table.results as Iterable<{ range: [number, number] }>);
+            const clamped = results.reduce(
+                (best, current) => {
+                    const distance = Math.min(Math.abs(total - current.range[0]), Math.abs(total - current.range[1]));
+                    return distance < best.distance ? { distance, result: current } : best;
+                },
+                { distance: Number.POSITIVE_INFINITY, result: null as { range: [number, number] } | null },
+            );
+            if (clamped.result !== null) {
+                rollResult.results = [clamped.result] as unknown as typeof rollResult.results;
+            }
+        }
 
         if (displayChat) {
             await table.toMessage(rollResult.results, {
