@@ -222,6 +222,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/daemonhost-binding-dialog.hbs',
+            'systems/wh40k-rpg/templates/prompt/radical-services-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/radical-services-chat.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',

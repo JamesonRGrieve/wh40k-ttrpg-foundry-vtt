@@ -1,0 +1,52 @@
+{{!-- Radical Services Requisition Dialog (within.md p. 72, Table 2-10) --}}
+<div class="wh40k-rsv tw-p-4 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]">
+
+    {{!-- Header --}}
+    <div class="tw-mb-3 tw-flex tw-items-center tw-justify-between tw-gap-3 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.3)] tw-to-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-md">
+        <span class="tw-text-[0.85rem] tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.InfluenceLabel"}}</span>
+        <span class="tw-text-[1.15rem] tw-font-bold tw-text-gold tw-tabular-nums">{{influence}}</span>
+    </div>
+
+    {{!-- Services table --}}
+    <table class="wh40k-rsv-table tw-w-full tw-border-collapse tw-text-[0.85rem]">
+        <thead>
+            <tr class="tw-text-left tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em]">
+                <th class="tw-p-2 tw-font-semibold">{{localize "WH40K.RadicalServices.ServiceLabel"}}</th>
+                <th class="tw-p-2 tw-font-semibold">{{localize "WH40K.RadicalServices.AvailabilityLabel"}}</th>
+                <th class="tw-p-2 tw-font-semibold tw-text-center">{{localize "WH40K.RadicalServices.ThreatLabel"}}</th>
+                <th class="tw-p-2 tw-font-semibold tw-text-center">{{localize "WH40K.RadicalServices.SubtletyLabel"}}</th>
+                <th class="tw-p-2 tw-font-semibold tw-text-center">{{localize "WH40K.RadicalServices.TargetLabel"}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each services}}
+            <tr data-action="selectService"
+                data-service-id="{{this.id}}"
+                class="wh40k-rsv-row tw-cursor-pointer tw-border-t tw-border-[rgba(201,162,39,0.15)] hover:tw-bg-[rgba(201,162,39,0.08)] {{#if this.selected}}tw-bg-[rgba(201,162,39,0.18)]{{/if}}">
+                <td class="tw-p-2 tw-font-semibold tw-text-[#e8e4d9]">{{this.label}}</td>
+                <td class="tw-p-2 tw-text-[#cfcab8]">{{this.availabilityLabel}}</td>
+                <td class="tw-p-2 tw-text-center">
+                    <span class="wh40k-rsv-threat tw-inline-block tw-min-w-[2rem] tw-px-2 tw-py-0.5 tw-rounded tw-font-bold tw-text-[#0a0a0f] {{this.threatBadgeClass}}">{{this.threatLevel}}</span>
+                </td>
+                <td class="tw-p-2 tw-text-center tw-tabular-nums tw-text-[#f87171]">{{this.subtletyOnHire}}</td>
+                <td class="tw-p-2 tw-text-center tw-tabular-nums tw-text-gold">{{this.target}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2 tw-mt-4 tw-pt-3 tw-border-t tw-border-[rgba(201,162,39,0.2)]">
+        <button type="button"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]"
+                data-action="attemptRequisition"
+                {{#unless selectedServiceId}}disabled{{/unless}}>
+            <i class="fas fa-dice-d20"></i> {{localize "WH40K.RadicalServices.AttemptButton"}}
+        </button>
+        <button type="button"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]"
+                data-action="cancel">
+            <i class="fas fa-times"></i> {{localize "WH40K.RadicalServices.Cancel"}}
+        </button>
+    </div>
+</div>
