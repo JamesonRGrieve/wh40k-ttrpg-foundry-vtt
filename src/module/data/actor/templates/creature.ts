@@ -902,6 +902,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {number} fallback - Fallback value if conversion fails
      * @returns {number}
      */
+    // TODO(dry): this integer-coercion idiom is re-inlined ~7 sites (npc.ts, ship-weapon.ts, gear.ts, armour-modification.ts, ship-component.ts). Promote one coerceInt() to data/fields/.
     // eslint-disable-next-line no-restricted-syntax -- boundary: accepts raw migration source values
     static _toInt(value: unknown, fallback = 0): number {
         if (value === null || value === undefined || value === '') return fallback;

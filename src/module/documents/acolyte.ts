@@ -473,6 +473,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * Roll/use an item
      * @param {string} itemId - The item ID
      */
+    // TODO(dry): this weapon/psychic rollItem dispatch duplicates documents/npc.ts. Extract _dispatchItemRoll(item, { requireEquipped }) on WH40KBaseActor.
     override async rollItem(itemId: string): Promise<void> {
         game.wh40k.log('RollItem', itemId);
         const item = this.items.get(itemId);
