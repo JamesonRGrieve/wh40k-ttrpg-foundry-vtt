@@ -194,7 +194,27 @@
             "ResetSession": "Reset",
             "ResetSessionTitle": "Reset per-session Unleash Daemon counter (GM only)",
             "ResetGmOnly": "Only the GM can reset the possession session counter.",
-            "ResetDone": "Possession session counter reset."
+            "ResetDone": "Possession session counter reset.",
+            "FrenzyLoopHint": "Possession sustained — roll the Frenzy test each round.",
+            "FrenzyTest": "Frenzy Test",
+            "FrenzyTestTitle": "Roll the per-round Challenging (+0) Willpower test; failure inflicts Frenzy this round (the power must still be sustained).",
+            "Mismanifest": "Mismanifest",
+            "MismanifestTitle": "Resolve a Psychic Phenomena result: opposed Willpower test vs the Daemon; a loss escalates to full possession.",
+            "FrenzyChatTitle": "Possession — Frenzy Test",
+            "MismanifestChatTitle": "Possession — Mismanifest",
+            "RollLabel": "Roll / WP",
+            "DaemonRollLabel": "Daemon Roll / WP",
+            "DegreesLabel": "Degrees (Psyker / Daemon)",
+            "StateLabel": "State",
+            "FrenzyResisted": "The psyker holds — no Frenzy this round.",
+            "FrenzyEntered": "The psyker's will buckles — Frenzied this round (the power must still be sustained).",
+            "MismanifestHeld": "The psyker restrains the intruding Daemon and retains control.",
+            "MismanifestLost": "The Daemon overwhelms the psyker — full possession.",
+            "FrenzyLoopUnavailable": "The Possession power is not currently sustained.",
+            "FrenzyEnteredNotify": "Frenzy test failed — the psyker is Frenzied this round.",
+            "FrenzyResistedNotify": "Frenzy test passed — control held this round.",
+            "MismanifestEscalated": "Mismanifest lost — escalated to full possession.",
+            "MismanifestHeldNotify": "Mismanifest contest won — control retained."
         },
         "Mortification": {
             "ButtonLabel": "Mortification of the Flesh",
@@ -1054,6 +1074,142 @@
             "BreakFree": "Break Free",
             "StandUp": "Stand Up",
             "Move": "Move While Grappling"
+        },
+        "AerialManoeuvre": {
+            "ChatTitle": "Aerial Manoeuvre",
+            "Success": "Success",
+            "Failure": "Failure",
+            "AltitudeLabel": "Resulting Altitude",
+            "PilotBonusLabel": "Pilot & Crew BS",
+            "EnemyBonusLabel": "Enemy BS (vs. craft)",
+            "OutcomeLabel": "Outcome",
+            "FreeAttack": "Pilot-controlled weapons may fire at the target immediately as a Free Action.",
+            "Altitude": {
+                "Ground": "Ground",
+                "Low": "Low Altitude",
+                "High": "High Altitude",
+                "Orbital": "Orbital"
+            },
+            "LockOn": {
+                "Name": "Lock On",
+                "OutcomeSuccess": "The pilot manoeuvres behind the foe. The pilot and crew gain +20 BS against that craft.",
+                "OutcomeFail": "The pilot fails to gain position. Other enemies gain +10 BS against the pilot's craft until the start of the pilot's next turn."
+            },
+            "TightTurn": {
+                "Name": "Tight Turn",
+                "OutcomeSuccess": "The flyer wrenches around — 90° turns this move, and Altitude may shift one level.",
+                "OutcomeFail": "The turn is mishandled; the flyer drops one Altitude tier.",
+                "OutcomeDestabilise": "The turn is mishandled at ground level; the flyer destabilises (resolve on the Out-of-Control table)."
+            }
+        },
+        "CriticalDamage": {
+            "ChatTitle": "Critical Damage",
+            "DamageTypeLabel": "Damage Type",
+            "LocationLabel": "Location",
+            "SeverityLabel": "Severity",
+            "EffectLabel": "Critical Effect",
+            "ConditionsLabel": "Conditions Inflicted",
+            "NoEffectText": "Critical Effect text unavailable (content pack not installed).",
+            "DamageType": {
+                "Energy": "Energy",
+                "Explosive": "Explosive",
+                "Impact": "Impact",
+                "Rending": "Rending"
+            },
+            "BodyPart": {
+                "Arm": "Arm",
+                "Body": "Body",
+                "Head": "Head",
+                "Leg": "Leg"
+            },
+            "Rider": {
+                "Stunned": "Stunned",
+                "Burning": "Burning",
+                "BloodLoss": "Blood Loss",
+                "Prone": "Prone",
+                "Blinded": "Blinded",
+                "Deafened": "Deafened",
+                "Fatigue": "Fatigue",
+                "LostLimb": "Lost Limb",
+                "Fatal": "Fatal"
+            }
+        },
+        "TwoWeaponWielder": {
+            "ChatTitle": "Two-Weapon Wielder — Refocus",
+            "RefocusSummary": "Errata p. 132: after a Half-Action attack with one weapon, make a single additional same-mode Half-Action attack with the other weapon as a Free Action.",
+            "MainHandLabel": "Main hand (Half Action)",
+            "OffHandLabel": "Off hand (Free Action)",
+            "FreeActionLabel": "Free Action follow-up",
+            "FreeActionNote": "The off-hand attack follows the same restrictions as the opener and costs no further Action."
+        },
+        "MedicaeMechadendrite": {
+            "DialogTitle": "Medicae Mechadendrite",
+            "DialogIntro": "Engage the flesh staplers to staunch Blood Loss as a Half Action.",
+            "OperatorLabel": "Operator",
+            "HalfActionNote": "Staunching Blood Loss with the flesh staplers costs a Half Action (errata p. 183).",
+            "BonusNote": "Includes the Medicae Mechadendrite bonus",
+            "NotEligible": "This actor has no Medicae Mechadendrite cybernetic, or this game system does not use it.",
+            "StaunchButton": "Staunch Blood Loss (Half)",
+            "Cancel": "Cancel",
+            "ChatTitle": "Medicae Mechadendrite",
+            "HalfActionTag": "Staunch Blood Loss (Half Action)",
+            "RollLabel": "Roll",
+            "TargetLabel": "Medicae Target",
+            "BonusLabel": "Mechadendrite Bonus",
+            "SuccessLabel": "Success",
+            "FailureLabel": "Failure",
+            "BloodLossStaunched": "The flesh staplers seal the wound. Blood Loss is staunched.",
+            "StaunchFailed": "The staplers fail to close the wound. Blood Loss persists."
+        },
+        "SancticDaemonology": {
+            "ChatTitle": "Sanctic Daemonology",
+            "EffectivePR": "Effective Psy Rating",
+            "FocusModifier": "Focus Power Modifier",
+            "CorruptionCost": "Corruption Cost",
+            "NoCorruption": "None (Sanctified)",
+            "PhenomenaLabel": "Psychic Phenomena",
+            "PhenomenaFires": "Phenomena triggered",
+            "NoPhenomena": "No Psychic Phenomena.",
+            "SoulBindingAvailable": "Soul Binding may ignore this Phenomena (once per session).",
+            "AnathemaAvailable": "Emperor's Anathema may spend 1 Fate to negate this Phenomena.",
+            "Mode": {
+                "Fettered": "Fettered",
+                "Unfettered": "Unfettered",
+                "Push": "Push"
+            }
+        },
+        "Cybernetics": {
+            "InstallDialogTitle": "Install Cybernetic — Surgery",
+            "ChatTitle": "Cybernetic Installation",
+            "CraftsmanshipLabel": "Craftsmanship",
+            "SiteLabel": "Install Site",
+            "SiteExternal": "External",
+            "SiteLimb": "Limb",
+            "SiteOrgan": "Organ",
+            "SiteNeural": "Neural",
+            "BaseDifficultyLabel": "Base Difficulty",
+            "SurgeonSkillLabel": "Surgeon Medicae Total",
+            "SurgeonModifierLabel": "Surgeon Modifier",
+            "ToughnessBonusLabel": "Recipient Toughness Bonus",
+            "RollInstallButton": "Roll Install",
+            "TargetLabel": "Target",
+            "RollLabel": "Roll",
+            "DoS": "DoS",
+            "DoF": "DoF",
+            "InstallSuccess": "Surgery Successful",
+            "InstallFailure": "Surgery Botched",
+            "RecoveryPrefix": "Recovery:",
+            "RecoveryDays": "days bed rest",
+            "ConsequenceBloodLoss": "Blood Loss + 1d5 damage at the install site",
+            "ConsequenceFaulty": "Implant fitted faulty — functions one craftsmanship tier lower until re-installed",
+            "Breakdown": {
+                "SkillTotal": "Skill Total",
+                "BaseDifficulty": "Base Difficulty",
+                "Craftsmanship": "Craftsmanship",
+                "Site": "Install Site",
+                "Surgeon": "Surgeon Modifier",
+                "Other": "Other"
+            }
         },
         "IncorruptibleDevotion": {
             "DialogTitle": "Convert Corruption to Insanity (Adepta Sororitas)",
