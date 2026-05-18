@@ -2145,6 +2145,16 @@
         "Weight": "Weight",
         "Notes": "Notes",
         "NotesAndSource": "Notes & Source",
+        "NpcInteractions": {
+            "Header": "Interaction Counts",
+            "PCColumn": "PC",
+            "CountColumn": "Count",
+            "IncrementButton": "Record one more interaction",
+            "DecrementButton": "Undo one interaction",
+            "Empty": "No player characters in the world yet.",
+            "AtCapBadge": "At Cap",
+            "CapTooltip": "Per DH2 errata p.125, a PC can shift this NPC's disposition through social interaction only a number of times equal to their Fellowship bonus. Above the cap, further interactions stop yielding disposition gain."
+        },
         "Description": "Description",
         "Source": {
             "Book": "Book",
