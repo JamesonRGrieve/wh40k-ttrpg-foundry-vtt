@@ -23,7 +23,7 @@ describe('ELITE_ADVANCES registry (#86)', () => {
     });
 
     it('Astropath: 1000 XP cost, WP 40 + Psyniscience + Sanctioned prereqs', () => {
-        const a = ELITE_ADVANCES.astropath;
+        const a = ELITE_ADVANCES['astropath'];
         expect(a, 'Astropath entry missing').toBeDefined();
         expect(a?.xpCost).toBe(1000);
         const prereqs = a?.prerequisites ?? [];
@@ -33,10 +33,13 @@ describe('ELITE_ADVANCES registry (#86)', () => {
         expect(prereqs.some((p) => p.type === 'talent' && p.key === 'Sanctioned')).toBe(true);
     });
 
-    it('every elite advance carries a non-zero XP cost and at least one prerequisite', () => {
+    it('every elite advance carries a non-zero XP cost', () => {
+        // Note: prerequisite count is intentionally not pinned at >= 1.
+        // Some advances (e.g. Untouchable) are GM-gated per RAW with no
+        // characteristic/skill/talent prerequisite, so an empty
+        // prerequisites array is canonical, not a data gap.
         for (const entry of Object.values(ELITE_ADVANCES)) {
             expect(entry.xpCost, `${entry.id} XP cost should be > 0`).toBeGreaterThan(0);
-            expect(entry.prerequisites.length, `${entry.id} should have at least one prerequisite`).toBeGreaterThan(0);
         }
     });
 

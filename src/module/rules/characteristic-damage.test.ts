@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    CHARACTERISTIC_AT_ZERO,
-    getAtZeroEffect,
-    getCharacteristicDamageHealed,
-    getEffectiveCharacteristic,
-} from './characteristic-damage';
+import { CHARACTERISTIC_AT_ZERO, getAtZeroEffect, getCharacteristicDamageHealed, getEffectiveCharacteristic } from './characteristic-damage';
 
 /**
  * Characteristic damage at-zero effect mapping (#115 — core.md
@@ -17,23 +12,23 @@ import {
 
 describe('CHARACTERISTIC_AT_ZERO (#115)', () => {
     it('WS / BS at 0 → cannot-test', () => {
-        expect(CHARACTERISTIC_AT_ZERO.weaponSkill?.effect).toBe('cannot-test');
-        expect(CHARACTERISTIC_AT_ZERO.ballisticSkill?.effect).toBe('cannot-test');
+        expect(CHARACTERISTIC_AT_ZERO['weaponSkill']?.effect).toBe('cannot-test');
+        expect(CHARACTERISTIC_AT_ZERO['ballisticSkill']?.effect).toBe('cannot-test');
     });
     it('Strength / Willpower at 0 → unconscious', () => {
-        expect(CHARACTERISTIC_AT_ZERO.strength?.effect).toBe('unconscious');
-        expect(CHARACTERISTIC_AT_ZERO.willpower?.effect).toBe('unconscious');
+        expect(CHARACTERISTIC_AT_ZERO['strength']?.effect).toBe('unconscious');
+        expect(CHARACTERISTIC_AT_ZERO['willpower']?.effect).toBe('unconscious');
     });
     it('Toughness at 0 → death', () => {
-        expect(CHARACTERISTIC_AT_ZERO.toughness?.effect).toBe('death');
+        expect(CHARACTERISTIC_AT_ZERO['toughness']?.effect).toBe('death');
     });
     it('Agility / Intelligence / Fellowship at 0 → helpless', () => {
-        expect(CHARACTERISTIC_AT_ZERO.agility?.effect).toBe('helpless');
-        expect(CHARACTERISTIC_AT_ZERO.intelligence?.effect).toBe('helpless');
-        expect(CHARACTERISTIC_AT_ZERO.fellowship?.effect).toBe('helpless');
+        expect(CHARACTERISTIC_AT_ZERO['agility']?.effect).toBe('helpless');
+        expect(CHARACTERISTIC_AT_ZERO['intelligence']?.effect).toBe('helpless');
+        expect(CHARACTERISTIC_AT_ZERO['fellowship']?.effect).toBe('helpless');
     });
     it('Perception at 0 → global-penalty −30', () => {
-        const entry = CHARACTERISTIC_AT_ZERO.perception;
+        const entry = CHARACTERISTIC_AT_ZERO['perception'];
         expect(entry?.effect).toBe('global-penalty');
         expect(entry?.globalPenalty).toBe(-30);
     });
