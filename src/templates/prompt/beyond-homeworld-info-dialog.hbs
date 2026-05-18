@@ -1,0 +1,99 @@
+{{!-- Beyond — new home-world traits info dialog (GitHub #140) --}}
+{{!-- GM-only reference: Daemon World, Penal Colony, Quarantine World as cards. --}}
+<div class="beyond-homeworld-info-dialog__scroll tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9] tw-max-h-[70vh] tw-overflow-y-auto" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
+        {{localize "WH40K.BeyondHomeworld.DialogDescription"}}
+    </div>
+
+    <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-4">
+        {{#each homeworlds}}
+            {{#unless (eq accent "grey")}}
+                {{!-- Crimson + green branches handled below; this no-op preserves iteration order. --}}
+            {{/unless}}
+
+            <div class="beyond-homeworld-card beyond-homeworld-card--{{accent}}
+                        tw-flex tw-flex-col tw-gap-3 tw-p-4 tw-rounded-md tw-border-2 tw-bg-[rgba(0,0,0,0.35)]
+                        {{#if (eq accent "crimson")}}tw-border-[rgba(204,41,54,0.55)] dh2e:tw-border-crimson{{/if}}
+                        {{#if (eq accent "grey")}}tw-border-[rgba(180,180,180,0.35)] dh2e:tw-border-slate-400{{/if}}
+                        {{#if (eq accent "green")}}tw-border-[rgba(80,170,90,0.5)] dh2e:tw-border-emerald-500{{/if}}"
+                 data-homeworld-id="{{id}}">
+
+                <header class="tw-flex tw-items-baseline tw-justify-between tw-gap-2 tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-pb-2">
+                    <h3 class="tw-text-[1.05rem] tw-font-semibold tw-uppercase tw-tracking-[0.06em]
+                               {{#if (eq accent "crimson")}}tw-text-[#e6606e] dh2e:tw-text-crimson{{/if}}
+                               {{#if (eq accent "grey")}}tw-text-[#d6d6d6] dh2e:tw-text-slate-300{{/if}}
+                               {{#if (eq accent "green")}}tw-text-[#7fd590] dh2e:tw-text-emerald-400{{/if}}">
+                        {{localize label}}
+                    </h3>
+                </header>
+
+                <section class="tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+                    <div class="tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-text-[0.7rem]">
+                        {{localize "WH40K.BeyondHomeworld.Characteristics"}}
+                    </div>
+                    <div class="tw-flex tw-flex-wrap tw-gap-x-3 tw-text-[0.9rem]">
+                        <span class="tw-text-[#9be39b]">{{bonusesLabel}}</span>
+                        <span class="tw-text-[#e08585]">{{penaltiesLabel}}</span>
+                    </div>
+                </section>
+
+                <section class="tw-grid tw-grid-cols-2 tw-gap-2 tw-text-[0.85rem]">
+                    <div class="tw-flex tw-flex-col">
+                        <span class="tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-text-[0.7rem]">
+                            {{localize "WH40K.BeyondHomeworld.FateAdjust"}}
+                        </span>
+                        <span class="tw-tabular-nums">{{fateLabel}}</span>
+                    </div>
+                    <div class="tw-flex tw-flex-col">
+                        <span class="tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-text-[0.7rem]">
+                            {{localize "WH40K.BeyondHomeworld.WoundsAdjust"}}
+                        </span>
+                        <span class="tw-tabular-nums">{{woundsLabel}}</span>
+                    </div>
+                    <div class="tw-flex tw-flex-col">
+                        <span class="tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-text-[0.7rem]">
+                            {{localize "WH40K.BeyondHomeworld.Aptitude"}}
+                        </span>
+                        <span>{{aptitude}}</span>
+                    </div>
+                </section>
+
+                <section class="tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+                    <div class="tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-text-[0.7rem]">
+                        {{localize "WH40K.BeyondHomeworld.KeyTalents"}}
+                    </div>
+                    <ul class="tw-list-disc tw-list-inside tw-pl-1 tw-text-[0.85rem] tw-text-[#e8e4d9]">
+                        {{#each keyTalents}}
+                            <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </section>
+
+                <section class="tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+                    <div class="tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-text-[0.7rem]">
+                        {{localize "WH40K.BeyondHomeworld.RecommendedBackgrounds"}}
+                    </div>
+                    <div class="tw-text-[0.85rem] tw-text-[#cfc7b3]">
+                        {{#each recommendedBackgrounds}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+                    </div>
+                </section>
+
+                <section class="tw-flex tw-flex-col tw-gap-1 tw-pt-2 tw-border-t tw-border-[rgba(255,255,255,0.08)]">
+                    <div class="tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-text-[0.7rem]">
+                        {{localize "WH40K.BeyondHomeworld.MechanicalHook"}}
+                    </div>
+                    <p class="tw-text-[0.85rem] tw-leading-snug tw-text-[#e8e4d9]">{{mechanicalHook}}</p>
+                    {{#if corruptionRiderLabel}}
+                        <p class="tw-text-[0.8rem] tw-italic tw-text-[#e08585]" data-rider="corruption">{{corruptionRiderLabel}}</p>
+                    {{/if}}
+                    {{#if subtletyClampLabel}}
+                        <p class="tw-text-[0.8rem] tw-italic tw-text-[#7fd590]" data-rider="subtlety-clamp">{{subtletyClampLabel}}</p>
+                    {{/if}}
+                </section>
+
+            </div>
+        {{/each}}
+    </div>
+
+</div>
