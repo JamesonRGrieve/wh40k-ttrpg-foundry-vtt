@@ -122,6 +122,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/orders-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/rituals-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-role-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/journal-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/characteristic-panel.hbs',

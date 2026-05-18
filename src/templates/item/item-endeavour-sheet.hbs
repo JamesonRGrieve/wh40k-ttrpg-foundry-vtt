@@ -1,0 +1,120 @@
+{{! Endeavour Item Sheet — Rogue Trader Dynasty goal tracker }}
+<form class="tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]" autocomplete="off" data-wh40k-system="rt">
+    {{! Header }}
+    <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+        <div class="tw-flex tw-items-center tw-justify-center tw-w-12 tw-h-12 tw-shrink-0 tw-rounded-md">
+            <span class="material-icons tw-text-gold rt:tw-text-gold tw-text-2xl">flag</span>
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+            <input class="tw-font-display tw-text-xl tw-text-gold rt:tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" type="text" value="{{item.name}}" placeholder="{{localize 'WH40K.Endeavours.NamePlaceholder'}}" />
+            <div class="tw-inline-flex tw-items-center tw-gap-2 tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">
+                <span class="material-icons tw-text-sm">military_tech</span>
+                <span>{{localize "WH40K.Endeavours.Header"}}</span>
+                <span class="tw-ml-2">{{system.apEarned}} / {{system.apRequired}} {{localize "WH40K.Endeavours.APShort"}}</span>
+            </div>
+        </div>
+    </header>
+
+    {{! Progress Bar }}
+    <div class="tw-px-3 tw-pb-2">
+        <div class="tw-h-2 tw-rounded-sm tw-bg-[var(--wh40k-border-faint,#3a2a1a)] tw-overflow-hidden" role="progressbar" aria-valuenow="{{system.pctComplete}}" aria-valuemin="0" aria-valuemax="100" data-testid="endeavour-progress-bar">
+            <div class="tw-h-full tw-bg-gold rt:tw-bg-gold tw-transition-[width] tw-duration-300" style="width: {{system.pctComplete}}%;"></div>
+        </div>
+    </div>
+
+    {{! Tabs }}
+    <nav class="tw-flex tw-shrink-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-faint,#3a2a1a)]" data-group="primary">
+        {{#each tabs as |tab|}}
+            <a class="tw-px-3 tw-py-2 tw-text-xs tw-uppercase tw-tracking-wide tw-cursor-pointer {{#if tab.active}}tw-text-gold tw-border-b-2 tw-border-solid tw-border-gold{{else}}tw-opacity-70 hover:tw-opacity-100{{/if}}" data-action="tab" data-group="{{tab.group}}" data-tab="{{tab.tab}}">{{localize tab.label}}</a>
+        {{/each}}
+    </nav>
+
+    {{! Tab content }}
+    <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-p-3">
+        {{! ===== DETAILS TAB ===== }}
+        <section class="tw-flex tw-flex-col tw-gap-3 {{#unless tabs.details.active}}tw-hidden{{/unless}}" data-tab="details">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Endeavours.APEarned"}}</label>
+                    <input class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.apEarned" type="number" data-dtype="Number" value="{{system.apEarned}}" min="0" />
+                </div>
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Endeavours.APRequired"}}</label>
+                    <input class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.apRequired" type="number" data-dtype="Number" value="{{system.apRequired}}" min="0" />
+                </div>
+            </div>
+
+            <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold rt:tw-text-gold tw-text-base tw-mt-2 tw-mb-1 tw-pb-1 tw-border-b tw-border-solid">
+                <span class="material-icons tw-text-base">card_giftcard</span>
+                {{localize "WH40K.Endeavours.Reward"}}
+            </h2>
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Endeavours.RewardProfitFactor"}}</label>
+                    <input class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.reward.profitFactor" type="number" data-dtype="Number" value="{{system.reward.profitFactor}}" min="0" />
+                </div>
+            </div>
+            <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Endeavours.RewardNarrative"}}</label>
+                <textarea class="tw-min-h-[80px] tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.reward.narrative" placeholder="{{localize 'WH40K.Endeavours.RewardNarrativePlaceholder'}}">{{system.reward.narrative}}</textarea>
+            </div>
+        </section>
+
+        {{! ===== OBJECTIVES TAB ===== }}
+        <section class="tw-flex tw-flex-col tw-gap-2 {{#unless tabs.objectives.active}}tw-hidden{{/unless}}" data-tab="objectives">
+            <div class="tw-flex tw-items-center tw-justify-between">
+                <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold rt:tw-text-gold tw-text-base tw-m-0">
+                    <span class="material-icons tw-text-base">checklist</span>
+                    {{localize "WH40K.Endeavours.Objectives"}}
+                </h2>
+                <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-text-xs tw-uppercase tw-cursor-pointer tw-bg-transparent tw-border tw-border-solid tw-border-gold tw-px-2 tw-py-1 tw-rounded-sm tw-text-gold hover:tw-bg-gold hover:tw-text-black" data-action="addObjective">
+                    <span class="material-icons tw-text-sm">add</span>
+                    {{localize "WH40K.Endeavours.AddObjective"}}
+                </button>
+            </div>
+            <div class="tw-rounded-[6px] tw-overflow-hidden tw-border tw-border-solid tw-border-gold rt:tw-border-gold">
+                <div class="tw-grid tw-grid-cols-[auto_2fr_3fr_5em_auto] tw-items-center tw-gap-1 tw-text-[0.85em] tw-uppercase tw-tracking-[0.05em] tw-px-2 tw-py-1 tw-bg-[var(--wh40k-border-faint,#3a2a1a)]">
+                    <div class="tw-px-1">{{localize "WH40K.Endeavours.Complete"}}</div>
+                    <div class="tw-px-1">{{localize "WH40K.Endeavours.ObjectiveName"}}</div>
+                    <div class="tw-px-1">{{localize "WH40K.Endeavours.ObjectiveDescription"}}</div>
+                    <div class="tw-px-1">{{localize "WH40K.Endeavours.APShort"}}</div>
+                    <div class="tw-px-1"></div>
+                </div>
+                {{#each system.objectives as |obj index|}}
+                    <div class="tw-grid tw-grid-cols-[auto_2fr_3fr_5em_auto] tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-border-t tw-border-solid tw-border-[var(--wh40k-border-faint,#3a2a1a)]" data-testid="endeavour-objective-row" data-index="{{index}}">
+                        <div class="tw-px-1 tw-text-center">
+                            <input type="checkbox" data-dtype="Boolean" name="system.objectives.{{index}}.complete" {{checked obj.complete}} />
+                        </div>
+                        <div class="tw-px-1">
+                            <input class="tw-w-full tw-px-1 tw-py-1 tw-rounded-sm tw-text-sm" type="text" name="system.objectives.{{index}}.name" value="{{obj.name}}" />
+                        </div>
+                        <div class="tw-px-1">
+                            <input class="tw-w-full tw-px-1 tw-py-1 tw-rounded-sm tw-text-sm" type="text" name="system.objectives.{{index}}.description" value="{{obj.description}}" />
+                        </div>
+                        <div class="tw-px-1">
+                            <input class="tw-w-full tw-px-1 tw-py-1 tw-rounded-sm tw-text-sm" type="number" data-dtype="Number" name="system.objectives.{{index}}.ap" value="{{obj.ap}}" min="0" />
+                        </div>
+                        <div class="tw-px-1">
+                            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 hover:tw-opacity-100" data-action="removeObjective" data-index="{{index}}" aria-label="{{localize 'WH40K.Endeavours.RemoveObjective'}}">
+                                <span class="material-icons tw-text-base">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </section>
+
+        {{! ===== DESCRIPTION TAB ===== }}
+        <section class="tw-flex tw-flex-col tw-gap-2 {{#unless tabs.description.active}}tw-hidden{{/unless}}" data-tab="description">
+            <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold rt:tw-text-gold tw-text-base tw-mt-0 tw-mb-2 tw-pb-1 tw-border-b tw-border-solid">
+                <span class="material-icons tw-text-base">description</span>
+                {{localize "WH40K.Endeavours.DescriptionHeader"}}
+            </h2>
+            <textarea
+                class="tw-flex-1 tw-min-h-[200px] tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
+                name="system.description.value"
+                placeholder="{{localize 'WH40K.Endeavours.DescriptionPlaceholder'}}"
+            >{{system.description.value}}</textarea>
+        </section>
+    </div>
+</form>

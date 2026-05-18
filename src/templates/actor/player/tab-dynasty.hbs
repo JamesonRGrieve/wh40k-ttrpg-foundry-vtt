@@ -147,6 +147,12 @@
                     </div>
                 </div>
             </div>
+
+            {{!-- Multi-Endeavour Tracker (Issue #191) — embedded `endeavour` items
+                  with per-objective AP and reward grant action. The legacy
+                  inline tracker above remains for the single-Endeavour
+                  use case bound to system.rogueTrader.endeavour. --}}
+            {{> systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs}}
         </div>
     </div>
 </section>

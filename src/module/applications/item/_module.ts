@@ -13,6 +13,7 @@ export { default as AttackSpecialSheet } from './attack-special-sheet.ts';
 export { default as ConditionSheet } from './condition-sheet.ts';
 export { default as CriticalInjurySheet } from './critical-injury-sheet.ts';
 export { default as CyberneticSheet } from './cybernetic-sheet.ts';
+export { default as EndeavourSheet } from './endeavour-sheet.ts';
 export { default as ForceFieldSheet } from './force-field-sheet.ts';
 export { default as GearSheet } from './gear-sheet.ts';
 export { default as JournalEntryItemSheet } from './journal-entry-item-sheet.ts';

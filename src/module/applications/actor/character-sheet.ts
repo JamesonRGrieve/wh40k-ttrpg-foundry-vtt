@@ -310,6 +310,10 @@ export default class CharacterSheet extends BaseActorSheet {
             'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
             'openTransactionDialog': CharacterSheet.#openTransactionDialog,
 
+            // Endeavour actions (Rogue Trader)
+            'completeObjective': CharacterSheet.#completeObjective,
+            'completeEndeavour': CharacterSheet.#completeEndeavour,
+
             // Experience actions
             'customXP': CharacterSheet.#customXP,
             'openAdvancement': CharacterSheet.#openAdvancement,
@@ -612,6 +616,11 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Prepare dynasty tab data
         context.dynastyData = this._prepareDynastyData();
+
+        // Prepare Endeavours (Rogue Trader) — embedded `endeavour` items the
+        // Dynasty is currently pursuing. The panel partial reads this hash.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: context is the Foundry render payload, a free-form record under fvtt-types
+        (context as Record<string, unknown>)['endeavours'] = this.actor.items.filter((item) => (item.type as string) === 'endeavour');
 
         // Prepare active modifiers panel (Phase 5 Integration)
         context.activeModifiers = this.prepareActiveModifiers();
@@ -2972,6 +2981,97 @@ export default class CharacterSheet extends BaseActorSheet {
         const updatedAcquisitions = structuredClone(acquisitions);
         updatedAcquisitions.splice(index, 1);
         await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle the `complete` flag on an Endeavour's Objective. Updates the
+     * parent Endeavour item's `apEarned` total in lockstep — when an
+     * objective is checked, its AP contribution is added; when unchecked, it
+     * is reversed. Once `apEarned >= apRequired`, the actor sheet renders a
+     * "grant reward" button which calls `completeEndeavour`.
+     *
+     * The action's button carries:
+     *   - data-endeavour-id  → the parent Endeavour item id on the actor
+     *   - data-objective-index → numeric index into `system.objectives`
+     */
+    static async #completeObjective(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const endeavourId = target.dataset['endeavourId'];
+        const idxStr = target.dataset['objectiveIndex'];
+        if (endeavourId === undefined || idxStr === undefined) return;
+        const idx = Number.parseInt(idxStr, 10);
+        if (!Number.isFinite(idx)) return;
+        const item = this.actor.items.get(endeavourId);
+        if (!item || item.type !== 'endeavour') return;
+        const sys = item.system as unknown as {
+            apEarned: number;
+            apRequired: number;
+            objectives: Array<{ name: string; description: string; complete: boolean; ap: number }>;
+        };
+        if (idx < 0 || idx >= sys.objectives.length) return;
+        const objective = sys.objectives[idx];
+        if (objective === undefined) return;
+        const nextObjectives = sys.objectives.map((o, i) => (i === idx ? { ...o, complete: !o.complete } : o));
+        const delta = objective.complete ? -objective.ap : objective.ap;
+        const nextApEarned = Math.max(0, sys.apEarned + delta);
+        await item.update({
+            'system.objectives': nextObjectives,
+            'system.apEarned': nextApEarned,
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Grant the reward for a completed Endeavour: add the Endeavour's
+     * `reward.profitFactor` to `actor.system.rogueTrader.profitFactor.current`
+     * and post a chat card summarising the reward. The Endeavour item is
+     * left in place (with `apEarned >= apRequired`) so the GM still sees
+     * the historical record on the sheet.
+     *
+     * Guarded against double-spending: refuses to act unless
+     * `system.isComplete` evaluates to true on the embedded Endeavour.
+     */
+    static async #completeEndeavour(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const endeavourId = target.dataset['endeavourId'];
+        if (endeavourId === undefined) return;
+        const item = this.actor.items.get(endeavourId);
+        if (!item || item.type !== 'endeavour') return;
+        const sys = item.system as unknown as {
+            apEarned: number;
+            apRequired: number;
+            isComplete: boolean;
+            reward: { profitFactor: number; narrative: string };
+        };
+        if (!sys.isComplete) return;
+        const award = Math.max(0, sys.reward.profitFactor);
+        const currentPF = this.actor.system.rogueTrader?.profitFactor?.current ?? 0;
+        if (award > 0) {
+            await this.actor.update({ 'system.rogueTrader.profitFactor.current': currentPF + award });
+        }
+        const headerLabel = game.i18n.localize('WH40K.Endeavours.RewardGrantedHeader');
+        const apLabel = game.i18n.localize('WH40K.Endeavours.APShort');
+        const pfLabel = game.i18n.localize('WH40K.Endeavours.RewardProfitFactor');
+        const narrative = sys.reward.narrative === '' ? '' : `<p>${foundry.utils.escapeHTML(sys.reward.narrative)}</p>`;
+        const content = `
+            <div class="endeavour-chat-card">
+                <h3>${headerLabel}: ${foundry.utils.escapeHTML(item.name)}</h3>
+                <p><strong>${apLabel}:</strong> ${sys.apEarned}/${sys.apRequired}</p>
+                ${award > 0 ? `<p><strong>${pfLabel}:</strong> +${award}</p>` : ''}
+                ${narrative}
+            </div>
+        `;
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content,
+            flags: {
+                'wh40k-rpg': {
+                    type: 'endeavour-reward',
+                    endeavourId,
+                },
+            },
+        });
     }
 
     /* -------------------------------------------- */

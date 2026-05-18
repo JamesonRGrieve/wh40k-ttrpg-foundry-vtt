@@ -147,6 +147,9 @@
             "drug": {
                 "htmlFields": ["description.value"]
             },
+            "endeavour": {
+                "htmlFields": ["description.value", "reward.narrative"]
+            },
             "enemy": {
                 "htmlFields": ["description.value"]
             },
