@@ -1,4 +1,5 @@
 import type { WH40KItem } from '../../documents/item.ts';
+import { originStepLabel } from '../shared/origin-steps.ts';
 import CreatureTemplate from './templates/creature.ts';
 
 /** Minimal shape of an actor parent that character data methods depend on. */
@@ -666,31 +667,7 @@ export default class CharacterData extends CreatureTemplate {
      * @private
      */
     _getStepLabel(step: string): string {
-        const labels: Record<string, string> = {
-            // RT
-            homeWorld: 'Home World',
-            birthright: 'Birthright',
-            lureOfTheVoid: 'Lure of the Void',
-            trialsAndTravails: 'Trials and Travails',
-            motivation: 'Motivation',
-            career: 'Career',
-            lineage: 'Lineage',
-            // DH2e
-            background: 'Background',
-            role: 'Role',
-            elite: 'Elite Advance',
-            divination: 'Divination',
-            // Black Crusade
-            race: 'Race',
-            archetype: 'Archetype',
-            pride: 'Pride',
-            disgrace: 'Disgrace',
-            // Only War / Deathwatch
-            regiment: 'Regiment',
-            speciality: 'Speciality',
-            chapter: 'Chapter',
-        };
-        return labels[step] || step;
+        return originStepLabel(step);
     }
 
     /**
