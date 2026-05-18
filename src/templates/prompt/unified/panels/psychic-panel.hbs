@@ -19,6 +19,58 @@
     </div>
 {{/if}}
 
+{{!-- Fettered / Unfettered / Push selector (DH2 audit #69) --}}
+{{#if power}}
+    <div class="tw-mb-3" data-testid="psy-mode-selector">
+        <h4 class="tw-font-display tw-text-xs tw-font-semibold tw-text-gold-raw tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">{{localize "WH40K.Roll.PsychicPower"}}</h4>
+        <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-mb-2">
+            <button type="button"
+                    data-action="setPsyMode"
+                    data-psy-mode="fettered"
+                    data-testid="psy-mode-fettered"
+                    title="{{localize "WH40K.PsyMode.FetteredDesc"}}"
+                    class="tw-px-2 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wider tw-transition-all {{#if isFettered}}tw-bg-blue-900/40 tw-border-blue-400 tw-text-blue-100 tw-shadow-[0_0_12px_rgba(96,165,250,0.35)]{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.06)] tw-text-[#b8b8a8] hover:tw-border-blue-400/40{{/if}}">
+                {{localize "WH40K.PsyMode.Fettered"}}
+            </button>
+            <button type="button"
+                    data-action="setPsyMode"
+                    data-psy-mode="unfettered"
+                    data-testid="psy-mode-unfettered"
+                    title="{{localize "WH40K.PsyMode.UnfetteredDesc"}}"
+                    class="tw-px-2 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wider tw-transition-all {{#if isUnfettered}}tw-bg-[rgba(201,162,39,0.15)] tw-border-gold-raw tw-text-gold-raw tw-shadow-[0_0_12px_rgba(201,162,39,0.35)]{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.06)] tw-text-[#b8b8a8] hover:tw-border-gold-raw/40{{/if}}">
+                {{localize "WH40K.PsyMode.Unfettered"}}
+            </button>
+            <button type="button"
+                    data-action="setPsyMode"
+                    data-psy-mode="push"
+                    data-testid="psy-mode-push"
+                    title="{{localize "WH40K.PsyMode.PushDesc"}}"
+                    class="tw-px-2 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wider tw-transition-all {{#if isPush}}tw-bg-red-900/40 tw-border-red-400 tw-text-red-100 tw-shadow-[0_0_12px_rgba(248,113,113,0.45)]{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.06)] tw-text-[#b8b8a8] hover:tw-border-red-400/40{{/if}}">
+                {{localize "WH40K.PsyMode.Push"}}
+            </button>
+        </div>
+        {{#if isPush}}
+            <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-px-2 tw-rounded-md tw-bg-red-900/10 tw-border tw-border-red-400/30" data-testid="psy-push-stepper">
+                <span class="tw-text-xs tw-font-medium tw-uppercase tw-tracking-wider tw-text-red-200">{{localize "WH40K.PsyMode.PushLevel"}}</span>
+                <div class="tw-flex tw-items-center tw-gap-2">
+                    <button type="button" data-action="decrementPushLevel" data-testid="psy-push-decrement"
+                            class="tw-w-7 tw-h-7 tw-rounded tw-border tw-border-red-400/40 tw-bg-[rgba(0,0,0,0.3)] tw-text-red-200 tw-cursor-pointer tw-text-base tw-leading-none hover:tw-bg-red-900/30">−</button>
+                    <span class="tw-min-w-6 tw-text-center tw-text-base tw-font-bold tw-text-red-100" data-testid="psy-push-level-value">{{pushLevel}}</span>
+                    <button type="button" data-action="incrementPushLevel" data-testid="psy-push-increment"
+                            class="tw-w-7 tw-h-7 tw-rounded tw-border tw-border-red-400/40 tw-bg-[rgba(0,0,0,0.3)] tw-text-red-200 tw-cursor-pointer tw-text-base tw-leading-none hover:tw-bg-red-900/30">+</button>
+                </div>
+            </div>
+        {{/if}}
+        {{#if psyModeBreakdown}}
+            <div class="tw-mt-2 tw-px-2 tw-py-1.5 tw-text-[0.7rem] tw-text-[#a8a890] tw-bg-[rgba(0,0,0,0.2)] tw-rounded tw-flex tw-justify-between tw-gap-2" data-testid="psy-mode-breakdown">
+                <span>Effective PR: <strong class="tw-text-[#e8e4d9]" data-testid="psy-effective-pr">{{psyModeBreakdown.effectivePR}}</strong></span>
+                <span>Focus: <strong class="tw-text-[#e8e4d9]" data-testid="psy-focus-mod">{{#if (gte psyModeBreakdown.focusModifier 0)}}+{{/if}}{{psyModeBreakdown.focusModifier}}</strong></span>
+                {{#if psyModeBreakdown.forcePhenomena}}<span class="tw-text-red-300" data-testid="psy-force-phenomena">Phenomena</span>{{/if}}
+            </div>
+        {{/if}}
+    </div>
+{{/if}}
+
 {{!-- Power Config --}}
 {{#if power}}
     <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
