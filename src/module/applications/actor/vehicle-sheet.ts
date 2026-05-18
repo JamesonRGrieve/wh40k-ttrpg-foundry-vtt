@@ -585,10 +585,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {HTMLElement} target - The target element.
      */
     static async #toggleComponentActive(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset['itemId'];
-        if (itemId === undefined || itemId === '') return;
-
-        const item = this.actor.items.get(itemId);
+        const item = this._resolveItemFromTarget(target);
         if (!item) return;
 
         const componentSystem = item.system as { active?: boolean };
@@ -604,10 +601,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {HTMLElement} target - The target element.
      */
     static async #damageComponent(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset['itemId'];
-        if (itemId === undefined || itemId === '') return;
-
-        const item = this.actor.items.get(itemId);
+        const item = this._resolveItemFromTarget(target);
         if (!item) return;
 
         // Toggle damaged state or apply specific damage

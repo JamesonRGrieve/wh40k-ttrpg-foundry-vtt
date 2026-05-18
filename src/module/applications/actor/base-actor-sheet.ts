@@ -16,6 +16,7 @@ import ContextMenuMixin from '../api/context-menu-mixin.ts';
 import EnhancedDragDropMixin from '../api/drag-drop-visual-mixin.ts';
 import * as EffectActions from '../api/effect-actions.ts';
 import type { EffectsOwner } from '../api/effect-actions.ts';
+import { itemIdFromTarget } from '../api/item-target.ts';
 import EnhancedAnimationsMixin from '../api/enhanced-animations-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import type { BaseActorSheetMixins } from '../api/sheet-mixin-types.ts';
@@ -1702,6 +1703,25 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const next = favorites.includes(value) ? favorites.filter((v) => v !== value) : [...favorites, value];
         await this.actor.setFlag('wh40k-rpg', flagKey, next);
         await this.render({ parts: renderParts });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Resolve the owned item a clicked control refers to (via data-item-id).
+     * When `notFoundMsg` is given and the id resolves to no item, surface a
+     * warning notification (matches the prior per-handler behaviour). Shared
+     * by the actor-sheet item action handlers.
+     * @protected
+     */
+    _resolveItemFromTarget(target: HTMLElement, notFoundMsg?: string): WH40KItem | undefined {
+        const itemId = itemIdFromTarget(target);
+        if (itemId === undefined) return undefined;
+        const item = this.actor.items.get(itemId);
+        if (item === undefined && notFoundMsg !== undefined && notFoundMsg !== '') {
+            this._notify('warning', notFoundMsg, { duration: 3000 });
+        }
+        return item;
     }
 
     /* -------------------------------------------- */
