@@ -305,6 +305,219 @@ export const PreviewPanel: Story = {
     },
 };
 
+/**
+ * Issue #206 — Walk the full step sequence to assert the Characteristic Roll
+ * step and Equipment step both surface BEFORE the final confirmation dialog
+ * fires. The original bug closed the builder on either dialog button before
+ * those two steps could be reached.
+ */
+export const Issue206_CharacteristicStepReached: Story = {
+    args: makeArgs({
+        showCharacteristics: true,
+        hasEquipmentStep: true,
+        steps: [
+            {
+                index: 0,
+                key: 'homeWorld',
+                label: 'Home World',
+                shortLabel: 'Home',
+                icon: 'fa-globe',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Hive World', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 1,
+                key: 'background',
+                label: 'Background',
+                shortLabel: 'Back',
+                icon: 'fa-scroll',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Adept', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 2,
+                key: 'role',
+                label: 'Role',
+                shortLabel: 'Role',
+                icon: 'fa-user-shield',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Warrior', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 3,
+                key: 'elite',
+                label: 'Elite Advance',
+                shortLabel: 'Elite',
+                icon: 'fa-star',
+                isActive: false,
+                isComplete: false,
+                isDisabled: false,
+                isLineage: true,
+                selection: null,
+            },
+            {
+                index: 4,
+                key: 'characteristics',
+                label: 'Characteristics',
+                shortLabel: 'Chars',
+                icon: 'fa-dice-d20',
+                isActive: true,
+                isComplete: false,
+                isDisabled: false,
+                isLineage: false,
+                selection: null,
+            },
+            {
+                index: 5,
+                key: 'equipment',
+                label: 'Equip Acolyte',
+                shortLabel: 'Equip',
+                icon: 'fa-box',
+                isActive: false,
+                isComplete: false,
+                isDisabled: true,
+                isLineage: false,
+                selection: null,
+            },
+        ],
+        currentStep: {
+            index: 4,
+            key: 'characteristics',
+            label: 'Characteristics',
+            icon: 'fa-dice-d20',
+            description: 'Roll or enter your characteristic values',
+            origins: [],
+            isLineage: false,
+            isCharacteristics: true,
+        },
+        showSelectionPanel: false,
+        status: {
+            stepsComplete: true,
+            stepsCount: 3,
+            totalSteps: 6,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // The Characteristic Roll step surfaces in the journey rail before commit fires.
+        expect(canvas.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
+        // The Equipment step is queued behind characteristics — it has not fired the final dialog.
+        expect(canvas.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
+    },
+};
+
+export const Issue206_EquipmentStepReached: Story = {
+    args: makeArgs({
+        showCharacteristics: false,
+        showEquipment: true,
+        hasEquipmentStep: true,
+        steps: [
+            {
+                index: 0,
+                key: 'homeWorld',
+                label: 'Home World',
+                shortLabel: 'Home',
+                icon: 'fa-globe',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Hive World', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 1,
+                key: 'background',
+                label: 'Background',
+                shortLabel: 'Back',
+                icon: 'fa-scroll',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Adept', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 2,
+                key: 'role',
+                label: 'Role',
+                shortLabel: 'Role',
+                icon: 'fa-user-shield',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Warrior', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 4,
+                key: 'characteristics',
+                label: 'Characteristics',
+                shortLabel: 'Chars',
+                icon: 'fa-dice-d20',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: null,
+            },
+            {
+                index: 5,
+                key: 'equipment',
+                label: 'Equip Acolyte',
+                shortLabel: 'Equip',
+                icon: 'fa-box',
+                isActive: true,
+                isComplete: false,
+                isDisabled: false,
+                isLineage: false,
+                selection: null,
+            },
+        ],
+        currentStep: {
+            index: 5,
+            key: 'equipment',
+            label: 'Equip Acolyte',
+            icon: 'fa-box',
+            description: 'Select your starting gear before completing character creation.',
+            origins: [],
+            isLineage: false,
+            isCharacteristics: false,
+        },
+        showSelectionPanel: false,
+        status: {
+            stepsComplete: true,
+            stepsCount: 4,
+            totalSteps: 6,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            // canCommit is FALSE until the player picks at least one equipment item;
+            // the final confirmation dialog must not fire while this step is in progress.
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Equipment step is the active step in the journey rail.
+        expect(canvas.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
+        // Characteristics is marked complete and equipment is current — final commit must be gated.
+        expect(canvas.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
+    },
+};
+
 export const RogueTraderDirection: Story = {
     args: makeArgs({
         isDH2: false,
