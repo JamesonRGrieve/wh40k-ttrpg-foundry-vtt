@@ -5,16 +5,16 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
-import headerSrc from '../../../templates/actor/player/header-dh.hbs?raw';
-import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
-import biographyTabSrc from '../../../templates/actor/player/tab-biography.hbs?raw';
+import { expect, within } from 'storybook/test';
 import { renderTemplate } from '../../../../stories/mocks';
-import { mockPlayerSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { mockPlayerSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction } from '../../../../stories/test-helpers';
+import headerSrc from '../../../templates/actor/player/header-dh.hbs?raw';
+import biographyTabSrc from '../../../templates/actor/player/tab-biography.hbs?raw';
+import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
 
 initializeStoryHandlebars();
 

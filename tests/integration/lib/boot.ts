@@ -13,10 +13,9 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import * as vm from 'node:vm';
-
 import { FOUNDRY_RELEASE_DIR, hasFoundryTierA, skipBanner } from './has-foundry';
 
 interface BootResult {
@@ -48,9 +47,7 @@ export async function bootFoundryOnce(): Promise<BootResult> {
         cached = await doBoot();
     } catch (err) {
         // eslint-disable-next-line no-console
-        console.warn(
-            `[integration] Tier A boot threw — tests will skip. Reason: ${(err as Error).message}`,
-        );
+        console.warn(`[integration] Tier A boot threw — tests will skip. Reason: ${(err as Error).message}`);
         cached = { booted: false, skipped: true, error: err as Error };
     }
     return cached;
@@ -62,7 +59,7 @@ export function getRuntime(): FoundryRuntime | undefined {
 
 async function doBoot(): Promise<BootResult> {
     const { JSDOM } = await import('jsdom');
-    const { default: FDBFactory } = await import('fake-indexeddb/lib/FDBFactory');
+    const { IDBFactory: FDBFactory } = await import('fake-indexeddb');
 
     const foundryEntryPath = resolve(FOUNDRY_RELEASE_DIR, 'public', 'scripts', 'foundry.mjs');
 
@@ -89,14 +86,14 @@ async function doBoot(): Promise<BootResult> {
     for (const key of Object.getOwnPropertyNames(win)) {
         if (key in g) continue;
         try {
-            g[key] = (win as Record<string, unknown>)[key];
+            g[key] = win[key];
         } catch {
             // Read-only — leave whatever the environment already provided.
         }
     }
     for (const key of ['indexedDB', 'OffscreenCanvas', 'WebGL2RenderingContext', 'PIXI'] as const) {
         try {
-            g[key] = (win as Record<string, unknown>)[key];
+            g[key] = win[key];
         } catch {
             /* ignore */
         }

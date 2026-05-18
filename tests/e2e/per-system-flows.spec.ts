@@ -119,13 +119,13 @@ test.describe.serial('per-system flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set chaosAlignment=khorne: ${String((err as Error)?.message ?? err)}` };
             }
-            const afterKhorne = (game?.actors?.get?.(actorId) as { system?: { chaosAlignment?: string } } | undefined)?.system?.chaosAlignment ?? null;
+            const afterKhorne = game?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
             try {
                 await actor.update?.({ 'system.chaosAlignment': 'tzeentch' });
             } catch (err) {
                 return { error: `set chaosAlignment=tzeentch: ${String((err as Error)?.message ?? err)}` };
             }
-            const afterTzeentch = (game?.actors?.get?.(actorId) as { system?: { chaosAlignment?: string } } | undefined)?.system?.chaosAlignment ?? null;
+            const afterTzeentch = game?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
             return { initial, afterKhorne, afterTzeentch, error: null };
         }, created.id);
 
@@ -168,7 +168,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set corruption+insanity: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system as { corruption?: number; insanity?: number } | undefined;
+            const after = game?.actors?.get?.(actorId)?.system;
             return { afterCorruption: after?.corruption ?? null, afterInsanity: after?.insanity ?? null, error: null };
         }, created.id);
 
@@ -202,18 +202,23 @@ test.describe.serial('per-system flows (Tier B)', () => {
             const { game } = globalThis as unknown as {
                 game?: {
                     actors?: {
-                        get?: (id: string) => { system?: { originPath?: { chapter?: string; chapterUuid?: string } }; update?: (data: object) => Promise<unknown> } | undefined;
+                        get?: (
+                            id: string,
+                        ) => { system?: { originPath?: { chapter?: string; chapterUuid?: string } }; update?: (data: object) => Promise<unknown> } | undefined;
                     };
                 };
             };
             const actor = game?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
-                await actor.update?.({ 'system.originPath.chapter': 'Ultramarines', 'system.originPath.chapterUuid': 'Compendium.wh40k-rpg.dw-core-chapters.Item.placeholder' });
+                await actor.update?.({
+                    'system.originPath.chapter': 'Ultramarines',
+                    'system.originPath.chapterUuid': 'Compendium.wh40k-rpg.dw-core-chapters.Item.placeholder',
+                });
             } catch (err) {
                 return { error: `set chapter: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.originPath as { chapter?: string; chapterUuid?: string } | undefined;
+            const after = game?.actors?.get?.(actorId)?.system?.originPath;
             return { afterChapter: after?.chapter ?? null, afterChapterUuid: after?.chapterUuid ?? null, error: null };
         }, created.id);
 
@@ -249,7 +254,9 @@ test.describe.serial('per-system flows (Tier B)', () => {
             const { game } = globalThis as unknown as {
                 game?: {
                     actors?: {
-                        get?: (id: string) => { system?: { originPath?: { regiment?: string; speciality?: string } }; update?: (data: object) => Promise<unknown> } | undefined;
+                        get?: (
+                            id: string,
+                        ) => { system?: { originPath?: { regiment?: string; speciality?: string } }; update?: (data: object) => Promise<unknown> } | undefined;
                     };
                 };
             };
@@ -260,13 +267,14 @@ test.describe.serial('per-system flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set regiment+speciality: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.originPath as { regiment?: string; speciality?: string } | undefined;
+            const after = game?.actors?.get?.(actorId)?.system?.originPath;
             return { afterRegiment: after?.regiment ?? null, afterSpeciality: after?.speciality ?? null, error: null };
         }, created.id);
 
         if (result.error) failures.push(result.error);
         else {
-            if (result.afterRegiment !== 'Cadian Shock Troopers') failures.push(`regiment after set was ${result.afterRegiment}, expected 'Cadian Shock Troopers'`);
+            if (result.afterRegiment !== 'Cadian Shock Troopers')
+                failures.push(`regiment after set was ${result.afterRegiment}, expected 'Cadian Shock Troopers'`);
             if (result.afterSpeciality !== 'Heavy Gunner') failures.push(`speciality after set was ${result.afterSpeciality}, expected 'Heavy Gunner'`);
             if (failures.length === 0) recordCoverage('per-system.flow', 'ow-comrades-and-regiment');
         }
@@ -295,9 +303,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
             const { game } = globalThis as unknown as {
                 game?: {
                     actors?: {
-                        get?: (
-                            id: string,
-                        ) =>
+                        get?: (id: string) =>
                             | {
                                   system?: {
                                       rogueTrader?: {
@@ -344,8 +350,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
             if (result.pfCurrent !== 42) failures.push(`profitFactor.current was ${result.pfCurrent}, expected 42`);
             if (result.pfStarting !== 35) failures.push(`profitFactor.starting was ${result.pfStarting}, expected 35`);
             if (result.pfModifier !== 7) failures.push(`profitFactor.modifier was ${result.pfModifier}, expected 7`);
-            if (result.endName !== 'House Aurelius Reclamation')
-                failures.push(`endeavour.name was ${result.endName}, expected 'House Aurelius Reclamation'`);
+            if (result.endName !== 'House Aurelius Reclamation') failures.push(`endeavour.name was ${result.endName}, expected 'House Aurelius Reclamation'`);
             if (result.endCurrent !== 3) failures.push(`endeavour.achievementCurrent was ${result.endCurrent}, expected 3`);
             if (result.endRequired !== 10) failures.push(`endeavour.achievementRequired was ${result.endRequired}, expected 10`);
             if (result.endReward !== 5) failures.push(`endeavour.reward was ${result.endReward}, expected 5`);

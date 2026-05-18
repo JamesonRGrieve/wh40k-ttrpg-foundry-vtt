@@ -1,6 +1,5 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-
 import { test as base } from '@playwright/test';
 
 /**

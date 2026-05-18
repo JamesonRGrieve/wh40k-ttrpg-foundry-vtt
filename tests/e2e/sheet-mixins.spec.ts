@@ -110,7 +110,7 @@ async function probeSheetMixins(page: import('@playwright/test').Page): Promise<
                         if (rv2 && typeof rv2.then === 'function') await rv2;
                         await new Promise((r) => setTimeout(r, 60));
                         const afterSecond = sheet.inEditMode === true;
-                        if (before === false && afterFirst === true && afterSecond === false) {
+                        if (!before && afterFirst && !afterSecond) {
                             record('edit-mode-toggle-actor', true, null);
                         } else {
                             record('edit-mode-toggle-actor', false, `inEditMode trace: ${String(before)} → ${String(afterFirst)} → ${String(afterSecond)}`);
@@ -235,7 +235,7 @@ async function probeSheetMixins(page: import('@playwright/test').Page): Promise<
                             if (rv2 && typeof rv2.then === 'function') await rv2;
                             await new Promise((r) => setTimeout(r, 80));
                             const afterSecond = sheet.inEditMode === true;
-                            if (before === false && afterFirst === true && afterSecond === false) {
+                            if (!before && afterFirst && !afterSecond) {
                                 record('edit-mode-toggle-item', true, null);
                             } else {
                                 record('edit-mode-toggle-item', false, `inEditMode trace: ${String(before)} → ${String(afterFirst)} → ${String(afterSecond)}`);

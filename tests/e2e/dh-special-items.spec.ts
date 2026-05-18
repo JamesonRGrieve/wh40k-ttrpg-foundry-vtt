@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -88,9 +87,7 @@ async function createItems(page: Page, actorId: string, items: object[]): Promis
                 globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (id: string) =>
-                                | { createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>> }
-                                | undefined;
+                            get?: (id: string) => { createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>> } | undefined;
                         };
                     };
                 }
@@ -116,9 +113,7 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
                 globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (id: string) =>
-                                | { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> }
-                                | undefined;
+                            get?: (id: string) => { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> } | undefined;
                         };
                     };
                 }
@@ -200,7 +195,8 @@ async function probeMutation(page: Page, actorId: string): Promise<FlowResult> {
         const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
         if (category !== 'major') return { ok: false, error: `category round-trip: expected 'major', got ${JSON.stringify(category)}` };
         if (visible !== true) return { ok: false, error: `visible round-trip: expected true, got ${JSON.stringify(visible)}` };
-        if (!Array.isArray(chatProps) || chatProps.length < 1) return { ok: false, error: `chatProperties: expected array with ≥1 entry, got ${JSON.stringify(chatProps)}` };
+        if (!Array.isArray(chatProps) || chatProps.length < 1)
+            return { ok: false, error: `chatProperties: expected array with ≥1 entry, got ${JSON.stringify(chatProps)}` };
         return { ok: true, error: null };
     } finally {
         await deleteItems(page, actorId, ids);
@@ -231,7 +227,8 @@ async function probeMentalDisorder(page: Page, actorId: string): Promise<FlowRes
         const severity = await readItemPath(page, actorId, itemId, 'system.severity');
         const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
         if (severity !== 'acute') return { ok: false, error: `severity round-trip: expected 'acute', got ${JSON.stringify(severity)}` };
-        if (!Array.isArray(chatProps) || chatProps.length === 0) return { ok: false, error: `chatProperties: expected non-empty array, got ${JSON.stringify(chatProps)}` };
+        if (!Array.isArray(chatProps) || chatProps.length === 0)
+            return { ok: false, error: `chatProperties: expected non-empty array, got ${JSON.stringify(chatProps)}` };
         return { ok: true, error: null };
     } finally {
         await deleteItems(page, actorId, ids);
@@ -273,8 +270,10 @@ async function probeCriticalInjury(page: Page, actorId: string): Promise<FlowRes
             return { ok: false, error: `currentEffect: expected severity-8 text, got ${JSON.stringify(currentEffect)}` };
         }
         if (isPermanent !== true) return { ok: false, error: `isPermanent: expected true, got ${JSON.stringify(isPermanent)}` };
-        if (severityClass !== 'severity-severe') return { ok: false, error: `severityClass: expected 'severity-severe' (sev 8), got ${JSON.stringify(severityClass)}` };
-        if (typeof headerLabels !== 'object' || headerLabels === null) return { ok: false, error: `headerLabels: expected object, got ${JSON.stringify(headerLabels)}` };
+        if (severityClass !== 'severity-severe')
+            return { ok: false, error: `severityClass: expected 'severity-severe' (sev 8), got ${JSON.stringify(severityClass)}` };
+        if (typeof headerLabels !== 'object' || headerLabels === null)
+            return { ok: false, error: `headerLabels: expected object, got ${JSON.stringify(headerLabels)}` };
         // Confirm the actor was created with non-zero critical wounds so the
         // critical-injury sits in context where the system would track it.
         const critWounds = await readActorPath(page, actorId, 'system.wounds.critical');
@@ -315,7 +314,8 @@ async function probeMalignancy(page: Page, actorId: string): Promise<FlowResult>
         const corruption = await readActorPath(page, actorId, 'system.corruption');
         if (identifier !== 'probe-malig') return { ok: false, error: `identifier round-trip: expected 'probe-malig', got ${JSON.stringify(identifier)}` };
         if (!Array.isArray(chatProps)) return { ok: false, error: `chatProperties: expected array, got ${JSON.stringify(chatProps)}` };
-        if (typeof headerLabels !== 'object' || headerLabels === null) return { ok: false, error: `headerLabels: expected object, got ${JSON.stringify(headerLabels)}` };
+        if (typeof headerLabels !== 'object' || headerLabels === null)
+            return { ok: false, error: `headerLabels: expected object, got ${JSON.stringify(headerLabels)}` };
         if (corruption === null) return { ok: false, error: 'actor.corruption track missing — malignancy context not viable' };
         return { ok: true, error: null };
     } finally {
@@ -342,9 +342,7 @@ async function probeDrug(page: Page, actorId: string): Promise<FlowResult> {
                 duration: '1 hour',
                 effect: '<p>+10 Strength, -10 Intelligence.</p>',
                 grants: {
-                    activeEffects: [
-                        { key: 'system.characteristics.strength.modifier', mode: 2, value: 10, durationRounds: 60 },
-                    ],
+                    activeEffects: [{ key: 'system.characteristics.strength.modifier', mode: 2, value: 10, durationRounds: 60 }],
                 },
             },
         },
@@ -401,7 +399,8 @@ async function probePeer(page: Page, actorId: string): Promise<FlowResult> {
         if (!Array.isArray(chatProps) || !chatProps.includes('Mechanicus') || !chatProps.some((p) => typeof p === 'string' && p.startsWith('+'))) {
             return { ok: false, error: `chatProperties: expected ['Mechanicus', '+10'], got ${JSON.stringify(chatProps)}` };
         }
-        if (!Array.isArray(headerLabels) || headerLabels.length === 0) return { ok: false, error: `headerLabels: expected non-empty array, got ${JSON.stringify(headerLabels)}` };
+        if (!Array.isArray(headerLabels) || headerLabels.length === 0)
+            return { ok: false, error: `headerLabels: expected non-empty array, got ${JSON.stringify(headerLabels)}` };
         return { ok: true, error: null };
     } finally {
         await deleteItems(page, actorId, ids);
@@ -464,13 +463,13 @@ test.describe.serial('dh special items (Tier B)', () => {
         const failures: string[] = [];
         try {
             const probes: Array<{ flow: string; run: () => Promise<FlowResult> }> = [
-                { flow: FLOW_MUTATION, run: () => probeMutation(page, actorId) },
-                { flow: FLOW_MENTAL, run: () => probeMentalDisorder(page, actorId) },
-                { flow: FLOW_CRITICAL, run: () => probeCriticalInjury(page, actorId) },
-                { flow: FLOW_MALIGNANCY, run: () => probeMalignancy(page, actorId) },
-                { flow: FLOW_DRUG, run: () => probeDrug(page, actorId) },
-                { flow: FLOW_PEER, run: () => probePeer(page, actorId) },
-                { flow: FLOW_CYBERNETIC, run: () => probeCybernetic(page, actorId) },
+                { flow: FLOW_MUTATION, run: async () => probeMutation(page, actorId) },
+                { flow: FLOW_MENTAL, run: async () => probeMentalDisorder(page, actorId) },
+                { flow: FLOW_CRITICAL, run: async () => probeCriticalInjury(page, actorId) },
+                { flow: FLOW_MALIGNANCY, run: async () => probeMalignancy(page, actorId) },
+                { flow: FLOW_DRUG, run: async () => probeDrug(page, actorId) },
+                { flow: FLOW_PEER, run: async () => probePeer(page, actorId) },
+                { flow: FLOW_CYBERNETIC, run: async () => probeCybernetic(page, actorId) },
             ];
             for (const probe of probes) {
                 const result = await probe.run().catch((err: unknown) => ({ ok: false, error: String((err as Error)?.message ?? err) }));

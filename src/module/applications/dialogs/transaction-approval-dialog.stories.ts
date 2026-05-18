@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
-import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../../src/templates/dialogs/transaction-approval-dialog.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 interface Args {
     summary: string;

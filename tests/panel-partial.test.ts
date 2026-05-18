@@ -13,8 +13,8 @@
 
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
 import panelSrc from '../src/templates/actor/partial/panel.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 

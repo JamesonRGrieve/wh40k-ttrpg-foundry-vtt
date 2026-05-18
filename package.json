@@ -9,10 +9,8 @@
     "packs": "gulp packs",
     "css": "gulp css",
     "watch": "gulp",
-    "lint": "eslint src/module/ --ext .ts",
-    "lint:fix": "eslint src/module/ --ext .ts --fix",
-    "lint:stories": "eslint --no-eslintrc -c .eslintrc.stories.json --ext .ts stories/ tests/ src/module/**/*.stories.ts src/templates/**/*.stories.ts",
-    "lint:stories:fix": "eslint --no-eslintrc -c .eslintrc.stories.json --ext .ts --fix stories/ tests/ src/module/**/*.stories.ts src/templates/**/*.stories.ts",
+    "lint": "eslint src/module/ src/templates/ stories/ tests/ --ext .ts",
+    "lint:fix": "eslint src/module/ src/templates/ stories/ tests/ --ext .ts --fix",
     "lint:biome": "biome lint src/module/",
     "lint:ratchet": "node scripts/lint-ratchet.mjs",
     "lint:ratchet:update": "node scripts/lint-ratchet.mjs --update",
@@ -91,7 +89,7 @@
     "e2e:ratchet": "node scripts/e2e-ratchet.mjs",
     "e2e:ratchet:update": "node scripts/e2e-ratchet.mjs --update",
     "foundry:setup-test-world": "bash scripts/setup-foundry-test-world.sh",
-    "check": "pnpm validate:json && pnpm lint && pnpm lint:biome && pnpm format && pnpm stylelint && pnpm typecheck && pnpm test",
+    "check": "pnpm validate:json && pnpm lint && pnpm lint:biome && pnpm format && pnpm stylelint && pnpm typecheck && pnpm typecheck:tests && pnpm test",
     "prepare": "husky"
   },
   "browserslist": [
@@ -102,19 +100,13 @@
   "private": true,
   "packageManager": "pnpm@11.1.1+sha512.d1fdf5f73c617b64fa1a56a81c3c8dfe0e966e33a6010aa256b517ae77be21d93e05affc0de1a83b0e4f29d569f68b446ae8f068cd7247c0bb3df0fb4d7bdf9a",
   "lint-staged": {
-    "src/module/**/*.ts": [
+    "{src/module,src/templates,stories,tests}/**/*.ts": [
       "eslint --fix --quiet",
       "biome lint --fix",
       "prettier --write"
     ],
     "src/css/**/*.css": [
       "stylelint --fix",
-      "prettier --write"
-    ],
-    "stories/**/*.ts": [
-      "prettier --write"
-    ],
-    "tests/**/*.ts": [
       "prettier --write"
     ],
     "src/**/*.{json,hbs}": [
@@ -143,6 +135,7 @@
     "@storybook/addon-a11y": "^10.3.6",
     "@storybook/html-vite": "^10.3.6",
     "@total-typescript/ts-reset": "^0.6.1",
+    "@types/jsdom": "^28.0.3",
     "@typescript-eslint/eslint-plugin": "^8.59.2",
     "@typescript-eslint/parser": "^8.59.2",
     "@typhonjs-fvtt/eslint-config-foundry.js": "0.8.0",

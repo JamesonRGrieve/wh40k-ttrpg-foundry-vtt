@@ -5,10 +5,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect } from 'storybook/test';
-import templateSrc from '../../../templates/dialogs/talent-editor-dialog.hbs?raw';
 import { renderTemplate } from '../../../../stories/mocks';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import templateSrc from '../../../templates/dialogs/talent-editor-dialog.hbs?raw';
 
 initializeStoryHandlebars();
 const compiled = Handlebars.compile(templateSrc);

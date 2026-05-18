@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -75,7 +74,10 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                 chatCalls: number[];
                 rollCalls: Array<{ name: string | null; options: unknown }>;
             }
-            const buildHost = (system: Record<string, unknown>, opts: { withActor?: boolean; itemName?: string | null } = {}): { host: any; cap: HostCapture } => {
+            const buildHost = (
+                system: Record<string, unknown>,
+                opts: { withActor?: boolean; itemName?: string | null } = {},
+            ): { host: any; cap: HostCapture } => {
                 const cap: HostCapture = { updates: [], chatCalls: [], rollCalls: [] };
                 const actor = opts.withActor
                     ? {
@@ -171,7 +173,12 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                     'skill-specialUseRoll-noIndex',
                 ];
 
-                if (typeof specialUseAdd !== 'function' || typeof specialUseDelete !== 'function' || typeof specialUseChat !== 'function' || typeof specialUseRoll !== 'function') {
+                if (
+                    typeof specialUseAdd !== 'function' ||
+                    typeof specialUseDelete !== 'function' ||
+                    typeof specialUseChat !== 'function' ||
+                    typeof specialUseRoll !== 'function'
+                ) {
                     for (const k of skillKeys) record(k, false, 'skill-sheet action missing');
                 } else {
                     // specialUseAdd — appends to non-empty list.

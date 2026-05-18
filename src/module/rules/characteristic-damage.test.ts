@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    CHARACTERISTIC_AT_ZERO,
-    getAtZeroEffect,
-    getCharacteristicDamageHealed,
-    getEffectiveCharacteristic,
-} from './characteristic-damage';
+import { CHARACTERISTIC_AT_ZERO, getAtZeroEffect, getCharacteristicDamageHealed, getEffectiveCharacteristic } from './characteristic-damage';
 
 /**
  * Characteristic damage at-zero effect mapping (#115 — core.md

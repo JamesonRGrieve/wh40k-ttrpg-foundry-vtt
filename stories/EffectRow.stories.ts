@@ -5,11 +5,10 @@
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-
-import effectRowSrc from '../src/templates/actor/partial/effect-row.hbs?raw';
+import actorActiveEffectsCompactSrc from '../src/templates/actor/panel/active-effects-compact.hbs?raw';
 import actorActiveEffectsPanelSrc from '../src/templates/actor/panel/active-effects-panel.hbs?raw';
 import actorEffectsPanelSrc from '../src/templates/actor/panel/effects-panel.hbs?raw';
-import actorActiveEffectsCompactSrc from '../src/templates/actor/panel/active-effects-compact.hbs?raw';
+import effectRowSrc from '../src/templates/actor/partial/effect-row.hbs?raw';
 import itemActiveEffectsPanelSrc from '../src/templates/item/panel/active-effects-panel.hbs?raw';
 import { mockActiveEffect, mockItem } from './mocks';
 import { clickAction, renderSheet, renderSheetParts } from './test-helpers';

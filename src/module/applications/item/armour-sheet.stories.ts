@@ -4,9 +4,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../../templates/item/item-armour-sheet.hbs?raw';
 import { mockArmourSheetContext, renderTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import templateSrc from '../../../templates/item/item-armour-sheet.hbs?raw';
 
 initializeStoryHandlebars();
 const compiled = Handlebars.compile(templateSrc);

@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -135,9 +134,7 @@ async function setArmourItems(
             const actor = game?.actors?.get?.(actorId);
             if (!actor) return { ok: false, error: 'actor missing' };
             try {
-                const existing: string[] = (actor.items?.filter?.((i) => i.type === 'armour') ?? [])
-                    .map((i) => i.id ?? '')
-                    .filter((id) => id !== '');
+                const existing: string[] = (actor.items?.filter?.((i) => i.type === 'armour') ?? []).map((i) => i.id ?? '').filter((id) => id !== '');
                 if (existing.length > 0 && actor.deleteEmbeddedDocuments) {
                     await actor.deleteEmbeddedDocuments('Item', existing);
                 }
@@ -256,11 +253,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                         const head = armour?.head;
                         const body = armour?.body;
                         const ok = head?.value === 4 && body?.value === 0;
-                        record(
-                            'armour-calculator-equipped-only',
-                            ok,
-                            ok ? null : `head.value=${head?.value} body.value=${body?.value} (expected 4 / 0)`,
-                        );
+                        record('armour-calculator-equipped-only', ok, ok ? null : `head.value=${head?.value} body.value=${body?.value} (expected 4 / 0)`);
                     } catch (err) {
                         record('armour-calculator-equipped-only', false, `computeArmour threw: ${String((err as Error)?.message ?? err)}`);
                     }
@@ -299,7 +292,9 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                             ok,
                             ok
                                 ? null
-                                : `short=${JSON.stringify(shortInfo)} std=${JSON.stringify(standardInfo)} long=${JSON.stringify(longInfo)} pb=${JSON.stringify(pointBlankInfo)} melta.isMelta=${meltaResult?.isMeltaRange}`,
+                                : `short=${JSON.stringify(shortInfo)} std=${JSON.stringify(standardInfo)} long=${JSON.stringify(longInfo)} pb=${JSON.stringify(
+                                      pointBlankInfo,
+                                  )} melta.isMelta=${meltaResult?.isMeltaRange}`,
                         );
                     } catch (err) {
                         record('range-calculator-band', false, `range band threw: ${String((err as Error)?.message ?? err)}`);
@@ -340,7 +335,11 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                             ok,
                             ok
                                 ? null
-                                : `extreme=${JSON.stringify(extreme)} gyro=${JSON.stringify(gyro)} oor=${oor} meltaExt=${meltaOnExtreme} meltaShort=${meltaOnShort} melee=${JSON.stringify(melee)} display=${JSON.stringify(display)}`,
+                                : `extreme=${JSON.stringify(extreme)} gyro=${JSON.stringify(
+                                      gyro,
+                                  )} oor=${oor} meltaExt=${meltaOnExtreme} meltaShort=${meltaOnShort} melee=${JSON.stringify(melee)} display=${JSON.stringify(
+                                      display,
+                                  )}`,
                         );
                     } catch (err) {
                         record('range-calculator-extreme', false, `range extreme threw: ${String((err as Error)?.message ?? err)}`);
@@ -411,11 +410,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                         // assert only on the single-letter-abbr path (TB / WB / SB)
                         // which works correctly.
                         const ok = wounds === 13;
-                        record(
-                            'formula-evaluator-with-actor-data',
-                            ok,
-                            ok ? null : `evaluateWoundsFormula('2xTB+5') = ${wounds} (expected 13)`,
-                        );
+                        record('formula-evaluator-with-actor-data', ok, ok ? null : `evaluateWoundsFormula('2xTB+5') = ${wounds} (expected 13)`);
                     } catch (err) {
                         record('formula-evaluator-with-actor-data', false, `evaluateWoundsFormula threw: ${String((err as Error)?.message ?? err)}`);
                     }

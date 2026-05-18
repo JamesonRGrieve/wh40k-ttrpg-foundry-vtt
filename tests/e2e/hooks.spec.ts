@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -267,7 +266,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 // directly so the system's handler still runs and source
                 // coverage is recorded.
                 try {
-                    const renderResult = ui?.controls?.render?.(true) as Promise<unknown> | unknown;
+                    const renderResult = ui?.controls?.render?.(true);
                     if (renderResult && typeof (renderResult as { then?: unknown }).then === 'function') {
                         await renderResult;
                     }
@@ -302,7 +301,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
 
         return {
             fired: result.fired as Record<HookName, boolean>,
-            notes: result.notes as Partial<Record<HookName, string>>,
+            notes: result.notes,
             pageErrors,
         };
     } finally {

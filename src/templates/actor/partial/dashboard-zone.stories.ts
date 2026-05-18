@@ -1,21 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { expect, within } from 'storybook/test';
 import { renderTemplate } from '../../../../stories/mocks';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from './dashboard-zone.hbs?raw';
 
 initializeStoryHandlebars();
 
 // Wrap as a block partial caller — dashboard-zone uses `{{> @partial-block }}`.
 // We compile a small parent template that invokes it.
-function renderZone(args: {
-    title: string;
-    icon: string;
-    body: string;
-    zoneClass?: string;
-    contentClass?: string;
-}): HTMLElement {
+function renderZone(args: { title: string; icon: string; body: string; zoneClass?: string; contentClass?: string }): HTMLElement {
     // Register the body as an inline partial under a stable name, then call
     // the dashboard-zone block partial with that body.
     const wrapper = `{{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title=title icon=icon zoneClass=zoneClass contentClass=contentClass}}{{{body}}}{{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}`;

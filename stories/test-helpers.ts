@@ -18,8 +18,8 @@
  *     };
  */
 import Handlebars from 'handlebars';
-import { initializeStoryHandlebars } from './template-support';
 import { renderTemplate } from './mocks';
+import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();
 
@@ -44,10 +44,7 @@ export function renderSheet(templateSource: string, context: Context = {}): HTML
  * Use this for full-sheet stories — header + tabs + body in one tree — so that
  * Tailwind cascade breaks and theme regressions surface visually.
  */
-export function renderSheetParts(
-    parts: Array<{ template: string; context?: Context; partClass?: string }>,
-    baseContext: Context = {},
-): HTMLElement {
+export function renderSheetParts(parts: Array<{ template: string; context?: Context; partClass?: string }>, baseContext: Context = {}): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg', 'sheet');
     for (const part of parts) {
@@ -82,16 +79,11 @@ export function clickAction(canvas: ParentNode | HTMLElement, action: string): v
  * map to `name="..."` attributes (e.g. `system.wounds.value`). Throws if a
  * named field is not present in the canvas.
  */
-export function submitForm(
-    canvas: ParentNode | HTMLElement,
-    values: Record<string, string | number | boolean>,
-): void {
+export function submitForm(canvas: ParentNode | HTMLElement, values: Record<string, string | number | boolean>): void {
     const parent = asParent(canvas);
     let form: HTMLFormElement | null = null;
     for (const [name, value] of Object.entries(values)) {
-        const el = parent.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
-            `[name="${name}"]`,
-        );
+        const el = parent.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`[name="${name}"]`);
         if (!el) throw new Error(`submitForm: no element with [name="${name}"] in canvas`);
         if (el instanceof HTMLInputElement && el.type === 'checkbox') {
             el.checked = Boolean(value);
@@ -120,14 +112,8 @@ export function assertActiveTab(canvas: ParentNode | HTMLElement, name: string):
 /**
  * Assert the value of a named form field.
  */
-export function assertField(
-    canvas: ParentNode | HTMLElement,
-    name: string,
-    expected: string | number | boolean,
-): void {
-    const el = asParent(canvas).querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
-        `[name="${name}"]`,
-    );
+export function assertField(canvas: ParentNode | HTMLElement, name: string, expected: string | number | boolean): void {
+    const el = asParent(canvas).querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`[name="${name}"]`);
     if (!el) throw new Error(`assertField: no [name="${name}"] in canvas`);
     const actual = el instanceof HTMLInputElement && el.type === 'checkbox' ? el.checked : el.value;
     const expectedNorm = el instanceof HTMLInputElement && el.type === 'checkbox' ? Boolean(expected) : String(expected);

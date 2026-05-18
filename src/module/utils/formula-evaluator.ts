@@ -71,9 +71,7 @@ export function evaluateWoundsFormula(formula: string, actor: WH40KBaseActorDocu
         // so multi-letter abbrs (`WSB`, `BSB`, `InfB`) substitute before
         // shorter overlapping ones (`SB`, `IB`, `FB`) — otherwise `WSB` gets
         // clobbered to `W<SB-value>`.
-        const sortedEntries = Object.entries(charMap).sort(
-            ([a], [b]) => b.length - a.length,
-        );
+        const sortedEntries = Object.entries(charMap).sort(([a], [b]) => b.length - a.length);
         for (const [abbr, charName] of sortedEntries) {
             // Match patterns like "2xTB" or "TB" (with or without multiplier)
             const regex = new RegExp(`(\\d+)x${abbr}|${abbr}`, 'gi');

@@ -6,19 +6,18 @@
  * recipe.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
-
-import itemTableSrc from '../src/templates/actor/partial/item-table.hbs?raw';
-import itemTableRowSrc from '../src/templates/actor/partial/item-table-row.hbs?raw';
-import weaponPanelSrc from '../src/templates/actor/panel/weapon-panel.hbs?raw';
+import { expect, within } from 'storybook/test';
 import armourPanelSrc from '../src/templates/actor/panel/armour-panel.hbs?raw';
-import shipWeaponsPanelSrc from '../src/templates/actor/panel/ship-weapons-panel.hbs?raw';
 import shipComponentsPanelSrc from '../src/templates/actor/panel/ship-components-panel.hbs?raw';
-import shipUpgradesPanelSrc from '../src/templates/actor/panel/ship-upgrades-panel.hbs?raw';
 import shipCrewPanelSrc from '../src/templates/actor/panel/ship-crew-panel.hbs?raw';
-import vehicleWeaponsPanelSrc from '../src/templates/actor/panel/vehicle-weapons-panel.hbs?raw';
+import shipUpgradesPanelSrc from '../src/templates/actor/panel/ship-upgrades-panel.hbs?raw';
+import shipWeaponsPanelSrc from '../src/templates/actor/panel/ship-weapons-panel.hbs?raw';
 import vehicleUpgradesPanelSrc from '../src/templates/actor/panel/vehicle-upgrades-panel.hbs?raw';
+import vehicleWeaponsPanelSrc from '../src/templates/actor/panel/vehicle-weapons-panel.hbs?raw';
+import weaponPanelSrc from '../src/templates/actor/panel/weapon-panel.hbs?raw';
+import itemTableRowSrc from '../src/templates/actor/partial/item-table-row.hbs?raw';
+import itemTableSrc from '../src/templates/actor/partial/item-table.hbs?raw';
 import { mockItem } from './mocks';
 import { renderSheet, renderSheetParts } from './test-helpers';
 

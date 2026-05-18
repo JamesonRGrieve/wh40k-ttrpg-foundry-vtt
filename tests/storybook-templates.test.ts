@@ -3,12 +3,12 @@ import { describe, expect, it } from 'vitest';
 import actionRollChatSrc from '../src/templates/chat/action-roll-chat.hbs?raw';
 import damageRollChatSrc from '../src/templates/chat/damage-roll-chat.hbs?raw';
 import simpleRollChatSrc from '../src/templates/chat/simple-roll-chat.hbs?raw';
-import gearSheetSrc from '../src/templates/item/item-gear-sheet.hbs?raw';
-import armourSheetSrc from '../src/templates/item/item-armour-sheet.hbs?raw';
-import weaponSheetSrc from '../src/templates/item/item-weapon-sheet.hbs?raw';
-import activeEffectsPanelSrc from '../src/templates/item/panel/active-effects-panel.hbs?raw';
 import activeModifiersPanelSrc from '../src/templates/components/active-modifiers-panel.hbs?raw';
 import quickActionsBarSrc from '../src/templates/components/quick-actions-bar.hbs?raw';
+import armourSheetSrc from '../src/templates/item/item-armour-sheet.hbs?raw';
+import gearSheetSrc from '../src/templates/item/item-gear-sheet.hbs?raw';
+import weaponSheetSrc from '../src/templates/item/item-weapon-sheet.hbs?raw';
+import activeEffectsPanelSrc from '../src/templates/item/panel/active-effects-panel.hbs?raw';
 import {
     mockActionRollData,
     mockActiveEffectsContext,

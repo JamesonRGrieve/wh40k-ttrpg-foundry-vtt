@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -54,6 +53,11 @@ interface FlowResult {
     name: FlowName;
     ok: boolean;
     detail: string | null;
+}
+
+interface CareerEntry {
+    key?: string;
+    name?: string;
 }
 
 async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
@@ -126,10 +130,11 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                 const mod = await import(`${base}/config/advancements/index.js`);
 
                 try {
-                    const careers = mod.getAvailableCareers?.();
+                    const careers = mod.getAvailableCareers?.() as CareerEntry[] | undefined;
+                    const firstKey = careers?.[0]?.key;
                     record(
                         'advancements-getAvailableCareers',
-                        Array.isArray(careers) && careers.length > 0 && typeof careers[0]?.key === 'string',
+                        Array.isArray(careers) && careers.length > 0 && typeof firstKey === 'string',
                         `count=${careers?.length}`,
                     );
                 } catch (err) {
@@ -138,7 +143,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
 
                 let firstCareerKey: string | null = null;
                 try {
-                    const careers = mod.getAvailableCareers?.() ?? [];
+                    const careers = (mod.getAvailableCareers?.() ?? []) as CareerEntry[];
                     firstCareerKey = careers[0]?.key ?? null;
                     // getCareerKeyFromName uses fuzzy lookup; accept a string
                     // return (the canonical key) OR null (when the registry's

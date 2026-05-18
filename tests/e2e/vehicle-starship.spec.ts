@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -74,7 +73,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
             if (!Actor?.create) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'vehicle-hull-damage': 'Actor.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'vehicle-hull-damage': 'Actor.create unavailable' },
                     vehicleId: null as string | null,
                     starshipId: null as string | null,
                     setupError: 'Actor.create unavailable',
@@ -159,7 +158,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
             if (!vehicleActor?.id && !starshipActor?.id) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { ...notes, 'vehicle-hull-damage': 'no actors could be created' } as Record<string, string>,
+                    flowNotes: { ...notes, 'vehicle-hull-damage': 'no actors could be created' },
                     vehicleId: null,
                     starshipId: null,
                     setupError: 'no actors could be created',
@@ -176,11 +175,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     notes['vehicle-hull-damage'] = 'no vehicle available';
                 } else {
                     const before = v.system?.integrity?.value ?? -1;
-                    await withTimeout(
-                        v.update({ 'system.integrity.value': Math.max(0, before - 4) }),
-                        5_000,
-                        'vehicle integrity update',
-                    );
+                    await withTimeout(v.update({ 'system.integrity.value': Math.max(0, before - 4) }), 5_000, 'vehicle integrity update');
                     const after = getVehicle()?.system?.integrity?.value ?? -1;
                     const isDamaged = getVehicle()?.system?.isDamaged ?? false;
                     if (after === before - 4 && isDamaged === true) {
@@ -217,7 +212,9 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     if (afterReq === beforeReq + 1 && afterPax === beforePax + 2) {
                         fired['vehicle-crew-management'] = true;
                     } else {
-                        notes['vehicle-crew-management'] = `expected required=${beforeReq + 1} passengers=${beforePax + 2}, got req=${afterReq} pax=${afterPax}`;
+                        notes['vehicle-crew-management'] = `expected required=${beforeReq + 1} passengers=${
+                            beforePax + 2
+                        }, got req=${afterReq} pax=${afterPax}`;
                     }
                 }
             } catch (err) {
@@ -277,7 +274,9 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     if (after === before + 1 && componentExists) {
                         fired['starship-component-install'] = true;
                     } else {
-                        notes['starship-component-install'] = `expected items size ${before + 1} + shipComponent type, got size=${after} created=${JSON.stringify(createdArr.map((c) => c?.type))}`;
+                        notes['starship-component-install'] = `expected items size ${
+                            before + 1
+                        } + shipComponent type, got size=${after} created=${JSON.stringify(createdArr.map((c) => c?.type))}`;
                     }
                 }
             } catch (err) {
@@ -291,11 +290,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     notes['starship-crew-morale'] = 'no starship available';
                 } else {
                     const beforeMax = s.system?.crew?.morale?.max ?? 0;
-                    await withTimeout(
-                        s.update({ 'system.crew.morale.value': Math.floor(beforeMax / 2) }),
-                        5_000,
-                        'starship morale update',
-                    );
+                    await withTimeout(s.update({ 'system.crew.morale.value': Math.floor(beforeMax / 2) }), 5_000, 'starship morale update');
                     const afterVal = getStarship()?.system?.crew?.morale?.value ?? -1;
                     const moralePct = getStarship()?.system?.moralePercentage ?? -1;
                     if (afterVal === Math.floor(beforeMax / 2) && moralePct === 50) {
@@ -333,7 +328,9 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     if (hullVal === damaged && shields === 0 && hullPct === 40 && isCrippled === true) {
                         fired['starship-hull-and-shields'] = true;
                     } else {
-                        notes['starship-hull-and-shields'] = `expected hull=${damaged}/shields=0/pct=40/crippled=true, got hull=${hullVal} shields=${shields} pct=${hullPct} crippled=${isCrippled}`;
+                        notes[
+                            'starship-hull-and-shields'
+                        ] = `expected hull=${damaged}/shields=0/pct=40/crippled=true, got hull=${hullVal} shields=${shields} pct=${hullPct} crippled=${isCrippled}`;
                     }
                 }
             } catch (err) {
@@ -378,7 +375,9 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                         }
                         fired['vehicle-weapon-fire'] = true;
                     } else {
-                        notes['vehicle-weapon-fire'] = `expected items size ${beforeSize + 1}, got ${afterSize} (types=${JSON.stringify(createdArr.map((c) => c?.type))})`;
+                        notes['vehicle-weapon-fire'] = `expected items size ${beforeSize + 1}, got ${afterSize} (types=${JSON.stringify(
+                            createdArr.map((c) => c?.type),
+                        )})`;
                     }
                 }
             } catch (err) {
@@ -408,8 +407,8 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
         }, VEHICLE_STARSHIP_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             vehicleId: result.vehicleId,
             starshipId: result.starshipId,
             setupError: result.setupError,
@@ -441,6 +440,9 @@ test.describe.serial('vehicle + starship gameplay pipeline (Tier B)', () => {
 
         const pageErrorTail = probe.pageErrors.length > 0 ? `\n  pageerrors: ${probe.pageErrors.slice(0, 5).join(' | ')}` : '';
 
-        expect(failures, `${failures.length}/${VEHICLE_STARSHIP_FLOWS.length} vehicle/starship probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`).toEqual([]);
+        expect(
+            failures,
+            `${failures.length}/${VEHICLE_STARSHIP_FLOWS.length} vehicle/starship probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`,
+        ).toEqual([]);
     });
 });

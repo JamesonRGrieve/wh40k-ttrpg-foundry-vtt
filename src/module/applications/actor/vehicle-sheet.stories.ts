@@ -6,17 +6,16 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
-import headerSrc from '../../../templates/actor/vehicle/header.hbs?raw';
-import tabsSrc from '../../../templates/actor/vehicle/tabs.hbs?raw';
-import overviewTabSrc from '../../../templates/actor/vehicle/tab-overview.hbs?raw';
-import { renderTemplate } from '../../../../stories/mocks';
-import { mockVehicleSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
+import { expect, within } from 'storybook/test';
+import { renderTemplate, mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/extended';
-import { mockActor } from '../../../../stories/mocks';
+import { mockVehicleSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { assertField, submitForm } from '../../../../stories/test-helpers';
+import headerSrc from '../../../templates/actor/vehicle/header.hbs?raw';
+import overviewTabSrc from '../../../templates/actor/vehicle/tab-overview.hbs?raw';
+import tabsSrc from '../../../templates/actor/vehicle/tabs.hbs?raw';
 
 initializeStoryHandlebars();
 
@@ -143,7 +142,7 @@ export const OnlyWarVariant: Story = {
         return {
             ...defaultVehicleCtx,
             actor: owActor as SheetContextLike['actor'],
-            system: owActor.system as SheetContextLike['system'],
+            system: owActor.system,
         };
     })(),
     render: (args) => renderVehicleSheet(args),
