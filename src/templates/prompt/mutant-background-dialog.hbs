@@ -1,0 +1,52 @@
+{{!-- Mutant Background Dialog (GitHub #91) --}}
+{{!-- GM confirms the Within Mutant background; +10 starting Corruption + Twisted Flesh grant. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
+        {{localize "WH40K.MutantBackground.Description"}}
+    </div>
+
+    {{!-- Starting corruption callout --}}
+    <div class="tw-mb-3 tw-p-3 tw-rounded-md tw-border-2 dh2e:tw-border-green-700 dh2e:tw-bg-green-900/30 tw-border-[rgba(80,140,80,0.35)] tw-bg-[rgba(0,0,0,0.35)]">
+        <div class="tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] dh2e:tw-text-green-400 tw-text-[#a8e0a8] tw-mb-1">
+            {{localize "WH40K.MutantBackground.StartingCorruption"}}
+        </div>
+        <div class="tw-flex tw-items-baseline tw-gap-2">
+            <span class="tw-font-bold tw-tabular-nums tw-text-[1.6rem] dh2e:tw-text-green-400 tw-text-[#a8e0a8]">+{{startingCorruption}}</span>
+            <span class="tw-text-[0.8rem] tw-text-[#9a9a8a]">{{localize "WH40K.MutantBackground.CorruptionUnit"}}</span>
+        </div>
+        {{#if actorName}}
+            <div class="tw-mt-2 tw-text-[0.8rem] tw-text-[#9a9a8a]">
+                {{localize "WH40K.MutantBackground.AppliedTo"}}
+                <strong class="tw-text-[#e8e4d9]">{{actorName}}</strong>
+            </div>
+        {{/if}}
+    </div>
+
+    {{!-- Twisted Flesh grant callout --}}
+    <div class="tw-mb-5 tw-p-3 tw-rounded-md tw-border-2 dh2e:tw-border-green-700 dh2e:tw-bg-green-900/30 tw-border-[rgba(80,140,80,0.35)] tw-bg-[rgba(0,0,0,0.35)]"
+         data-talent="twisted-flesh">
+        <div class="tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] dh2e:tw-text-green-400 tw-text-[#a8e0a8] tw-mb-1">
+            {{localize "WH40K.MutantBackground.TwistedFleshLabel"}}
+        </div>
+        <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]">
+            {{localize "WH40K.MutantBackground.TwistedFleshNote"}}
+        </div>
+    </div>
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(80,140,80,0.25)]">
+        <button type="button"
+                data-action="apply"
+                {{#unless canApply}}disabled{{/unless}}
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br dh2e:tw-from-green-700 dh2e:tw-to-green-900 tw-from-[#3e6b3e] tw-to-[#1f3a1f] tw-text-[#e8e4d9] tw-shadow-[0_4px_12px_rgba(60,120,60,0.35)]">
+            <i class="fas fa-dna"></i> {{localize "WH40K.MutantBackground.ApplyButton"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.MutantBackground.Cancel"}}
+        </button>
+    </div>
+
+</div>
