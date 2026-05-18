@@ -17,6 +17,7 @@ export { default as EndeavourSheet } from './endeavour-sheet.ts';
 export { default as ForceFieldSheet } from './force-field-sheet.ts';
 export { default as GearSheet } from './gear-sheet.ts';
 export { default as JournalEntryItemSheet } from './journal-entry-item-sheet.ts';
+export { default as LeadSheet } from './lead-sheet.ts';
 export { default as OriginPathSheet } from './origin-path-sheet.ts';
 export { default as PeerEnemySheet } from './peer-enemy-sheet.ts';
 export { default as PsychicPowerSheet } from './psychic-power-sheet.ts';

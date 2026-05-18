@@ -98,6 +98,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/fate-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/corruption-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/insanity-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/experience-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/movement-panel-full.hbs',
             'systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs',
@@ -122,6 +123,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/orders-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/rituals-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-role-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/journal-panel.hbs',
@@ -216,9 +218,12 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs',
             'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
+            'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',
+            'systems/wh40k-rpg/templates/item/item-lead-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-weapon-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-armour-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-gear-sheet.hbs',
