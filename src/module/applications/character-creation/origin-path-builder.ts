@@ -676,11 +676,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _itemToSelectionData(item: WH40KItem | NormalizedOrigin): NormalizedOriginWithMeta {
-        const data = hasToObject(item)
-            ? (item.toObject() as ItemDataLike & { uuid?: string })
-            : (foundry.utils.deepClone(item) as ItemDataLike & { uuid?: string });
-
+        // Two call shapes reach this method:
+        //   1. A real Foundry Item document (compendium pack entry or owned actor item) — has `toObject()`.
+        //   2. An already-normalized plain-object origin entry (e.g. from `this.allOrigins` / `this.lineageOrigins`)
+        //      — no `toObject()`, the object IS the data we want to clone.
+        // `hasToObject` narrows the type; the document branch extracts data via `toObject()` plus
+        // document-only metadata (flags.core.sourceId, parent, id). The plain-object branch just
+        // deep-clones the already-normalized shape and falls back to its own `uuid` for `_sourceUuid`.
+        // Computing `data` and the metadata fields under a single narrowed branch keeps both shapes
+        // in lockstep — no `?.toObject?.()` sprinkles, no double-narrowing.
+        let data: ItemDataLike & { uuid?: string };
         if (hasToObject(item)) {
+            data = item.toObject() as ItemDataLike & { uuid?: string };
             // Store original uuid for reference to compendium item
             const flagsCore = (item.flags as { core?: CoreFlags }).core;
             const flagSourceId = typeof flagsCore?.sourceId === 'string' ? flagsCore.sourceId : undefined;
@@ -688,6 +695,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Store actor item id if this is an existing actor item
             data._actorItemId = item.parent === this.actor ? item.id : null;
         } else {
+            data = foundry.utils.deepClone(item) as ItemDataLike & { uuid?: string };
             data._sourceUuid = data._sourceUuid ?? data.uuid ?? null;
             data._actorItemId = data._actorItemId ?? null;
         }

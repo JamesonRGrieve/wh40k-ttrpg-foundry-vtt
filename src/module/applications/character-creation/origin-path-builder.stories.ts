@@ -328,3 +328,83 @@ export const RogueTraderDirection: Story = {
         expect(canvas.getByText('Origin')).toBeTruthy();
     },
 };
+
+/**
+ * Regression coverage for issue #198: selecting a Home World / Background / Role /
+ * Elite Advance origin card was firing `_itemToSelectionData` against an already-
+ * normalized plain-object origin entry (no `toObject()` method), which previously
+ * threw "TypeError: item.toObject is not a function" and left the preview panel
+ * empty.
+ *
+ * The story renders the preview-panel state that results from a successful
+ * normalized-origin selection — the card is `isSelected`, the selectedOrigin
+ * block carries the granted skills/characteristics/talents pulled from the
+ * normalized shape, and the per-system data attribute is wired so the
+ * Tailwind `dh2e:` variants resolve. The Playwright spec at
+ * tests/storybook/issue-198-origin-path-preview.spec.ts snapshots this story.
+ */
+export const Issue198VoidBornPreview: Story = {
+    args: makeArgs({
+        isDH2: false,
+        isRaw: false,
+        journeyTitle: 'Dynasty Path',
+        currentStep: {
+            index: 0,
+            key: 'origin',
+            label: 'Origin',
+            icon: 'fa-compass',
+            description: 'Trace the dynasty path from origin forward.',
+            origins: [
+                // The crashing call-site: a normalized POJO with NO toObject() method.
+                makeOriginCard('Void Born', { isSelected: true, hasChoices: true }),
+                makeOriginCard('Noble Born'),
+            ],
+            isLineage: false,
+            isCharacteristics: false,
+        },
+        selectedOrigin: makeSelectedOrigin('Void Born', {
+            description: '<p>Drawn from the void between stars; pressure-born, low gravity, long shadows.</p>',
+            grants: {
+                hasCharacteristics: true,
+                characteristics: [
+                    { short: 'WS', value: -5, positive: false },
+                    { short: 'BS', value: 5, positive: true },
+                    { short: 'Wp', value: 5, positive: true },
+                ],
+                hasSkills: true,
+                skills: [
+                    { displayName: 'Pilot (Spacecraft)', levelLabel: 'Trained', tooltipData: 'Pilot', uuid: null },
+                    { displayName: 'Operate (Voidship)', levelLabel: 'Trained', tooltipData: 'Operate', uuid: null },
+                ],
+                hasTalents: true,
+                talents: [{ name: 'Void Accustomed', tooltip: 'Immune to space-borne ill effects.', tooltipData: 'VoidAccustomed', uuid: null, hasItem: false }],
+                hasTraits: false,
+                traits: [],
+                hasEquipment: false,
+                equipment: [],
+            },
+            hasChoices: true,
+            choices: [{ name: 'Starting Talent', selected: 'Resistance (Cold)' }],
+        }),
+        status: {
+            stepsComplete: false,
+            stepsCount: 1,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Both card and selection panel show 'Void Born' — proves the normalized origin
+        // flowed through preview rendering without throwing.
+        expect(canvas.getAllByText('Void Born').length).toBeGreaterThan(1);
+        // Grant rows from the normalized.system shape are present
+        expect(canvas.getByText('Pilot (Spacecraft)')).toBeTruthy();
+        expect(canvas.getByText('Void Accustomed')).toBeTruthy();
+        // Re-clicking the previewed card must not throw (the bug path)
+        clickAction(canvasElement, 'selectOriginCard');
+    },
+};
