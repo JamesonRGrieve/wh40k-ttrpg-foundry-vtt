@@ -1,25 +1,39 @@
 /**
- * Storybook stories for the Warband Subtlety panel (#87).
+ * Storybook stories for the Warband Subtlety panel (DH2-only — issues
+ * #64 / #87).
  *
- * Renders the panel against a hand-crafted `system.subtlety` +
- * `subtletyAdjusters[]` context. Stories cover the visible states the
+ * Renders `src/templates/actor/panel/subtlety-panel.hbs` against a
+ * `system.subtlety` + `subtletyAdjusters[]` context (the exact shape the
+ * DH2 character sheet derives in `_prepareContext` from
+ * `actor.collectSubtletyAdjusters()`). Stories cover the visible states the
  * panel must render correctly:
- *   1. PlayerView           — non-GM, mixed adjusters (clamp + passive).
+ *   1. PlayerView           — non-GM, mixed adjusters (clamp + passive);
+ *                             interactive `play` asserts the readout +
+ *                             absence of the GM stepper.
  *   2. GmViewWithAdjusters  — GM stepper visible, three adjusters (clamp,
- *                             passive penalty, event bonus).
+ *                             passive penalty, event bonus); `play` asserts
+ *                             the stepper buttons + signed-delta rendering.
  *   3. EmptyAdjusters       — GM view with no adjusters surfaced.
  *
- * The companion e2e spec (`tests/e2e/subtlety-panel.spec.ts`) creates a
- * dh2-character with `system.subtlety.value=45` and snaps the panel
- * against a live Foundry instance.
+ * The panel is normally rendered inside the DH2 character sheet root, which
+ * carries `data-wh40k-system="dh2e"`; the stories wrap the panel in that
+ * ancestor so the `dh2e:tw-*` per-system variants fire under visual review
+ * (CLAUDE.md "Check the ancestor implication for variants"). The companion
+ * e2e spec (`tests/e2e/subtlety-panel.spec.ts`) snaps the live-Foundry render.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
 import { renderTemplate } from '../mocks';
+import { seedRandom } from '../mocks/extended';
 import { initializeStoryHandlebars } from '../template-support';
 import panelSrc from '../../src/templates/actor/panel/subtlety-panel.hbs?raw';
 
 initializeStoryHandlebars();
+
+// Seeded RNG so any future randomized fixture stays deterministic across
+// screenshot diffs / play-function runs (CLAUDE.md "Seeded RNG in stories").
+seedRandom(0x5b7);
 
 interface SubtletyAdjusterRow {
     sourceUuid: string | null;
@@ -38,8 +52,17 @@ interface SubtletyContext {
 
 const panelTpl = Handlebars.compile(panelSrc);
 
+/**
+ * Render the panel wrapped in the `.wh40k-rpg` + `data-wh40k-system="dh2e"`
+ * ancestor the live DH2 sheet provides, so `important: '.wh40k-rpg'`-scoped
+ * utilities and `dh2e:tw-*` per-system variants resolve under visual review.
+ */
 function renderPanel(ctx: SubtletyContext): HTMLElement {
-    return renderTemplate(panelTpl, ctx);
+    const root = document.createElement('div');
+    root.className = 'wh40k-rpg sheet actor character';
+    root.dataset['wh40kSystem'] = 'dh2e';
+    root.append(renderTemplate(panelTpl, ctx));
+    return root;
 }
 
 const meta: Meta<SubtletyContext> = {
@@ -73,6 +96,21 @@ export const PlayerView: Story = {
         ],
     },
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Pool readout shows current / max.
+        expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('60');
+        expect(canvasElement.querySelector('.wh40k-subtlety-max')?.textContent?.trim()).toBe('100');
+        // Player view: the GM-only manual stepper must NOT render.
+        expect(canvasElement.querySelector('.wh40k-subtlety-manual')).toBeNull();
+        expect(canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]').length).toBe(0);
+        // Both adjuster rows render; the clamp row shows its shield affordance.
+        expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(2);
+        expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
+        expect(canvas.getByText('Dark Pact — Hunger for Knowledge (discovered)')).toBeTruthy();
+        // Breakdown affordance is always available.
+        expect(canvasElement.querySelector('[data-action="viewSubtletyBreakdown"]')).not.toBeNull();
+    },
 };
 
 export const GmViewWithAdjusters: Story = {
@@ -108,6 +146,22 @@ export const GmViewWithAdjusters: Story = {
         ],
     },
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('45');
+        // GM view: the manual stepper renders both +1 / -1 buttons.
+        const steppers = canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]');
+        expect(steppers.length).toBe(2);
+        const deltas = Array.from(steppers).map((b) => b.getAttribute('data-delta'));
+        expect(deltas).toContain('1');
+        expect(deltas).toContain('-1');
+        // Three adjuster rows; the gains row (+5) and losses row (-3) render
+        // signed deltas, the clamp row renders the shield affordance.
+        expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(3);
+        const deltaCells = Array.from(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-delta')).map((n) => n.textContent?.trim());
+        expect(deltaCells).toContain('+5');
+        expect(deltaCells).toContain('-3');
+        expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
+    },
 };
 
 export const EmptyAdjusters: Story = {
@@ -118,4 +172,9 @@ export const EmptyAdjusters: Story = {
         subtletyAdjusters: [],
     },
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('80');
+        expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(0);
+        expect(canvasElement.querySelector('.wh40k-subtlety-adjusters-empty')).not.toBeNull();
+    },
 };
