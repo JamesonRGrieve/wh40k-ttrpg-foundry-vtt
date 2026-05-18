@@ -13,6 +13,7 @@
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData } from '../../rolls/roll-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import {
     AIM_OPTIONS,
     aggregateSituationalDamageEffects,
@@ -89,6 +90,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _initialized: boolean;
     declare _cachedSituationalModifiers: Array<{ key: string; source: string; value: number; label: string }> | null;
     declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
+    declare _psyMode: PsyMode;
+    declare _pushLevel: number;
 
     /**
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
@@ -123,6 +126,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._initialized = false;
         this._cachedSituationalModifiers = null;
         this._pickerOutsideHandler = null;
+        this._psyMode = 'unfettered';
+        this._pushLevel = 1;
     }
 
     /* -------------------------------------------- */
@@ -156,6 +161,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             toggleSizeSection: UnifiedRollDialog.#onToggleSizeSection,
             toggleRangeSection: UnifiedRollDialog.#onToggleRangeSection,
             toggleSituationalSection: UnifiedRollDialog.#onToggleSituationalSection,
+            setPsyMode: UnifiedRollDialog.#onSetPsyMode,
+            incrementPushLevel: UnifiedRollDialog.#onIncrementPushLevel,
+            decrementPushLevel: UnifiedRollDialog.#onDecrementPushLevel,
             cancel: UnifiedRollDialog.#onCancel,
         },
         form: {
@@ -314,11 +322,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const situationalMod = isForceField ? 0 : this._calculateSituationalModifiers();
         const customMod = isForceField ? 0 : this._customModifier;
         const combatSitMod = !isForceField && this.rollType === 'weapon' ? this._calculateCombatSituationalModifiers() : 0;
+        const psyMod = this.rollType === 'psychic'
+            ? resolvePsyMode({ mode: this._psyMode, basePR: Number(rollData['pr']) || 0, pushLevel: this._pushLevel }).focusModifier
+            : 0;
 
         const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : rollData.baseTarget || 0;
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
-        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational']);
+        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational', 'psy-mode']);
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rollData.modifiers always present per type; runtime data may be uninitialised; ?? {} is defensive
         const safeModifiers = rollData.modifiers ?? {};
         const weaponModSum = !isForceField
@@ -327,7 +338,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   .reduce((sum, [, v]) => sum + (Number(v) || 0), 0) + (Number(rollData.rangeBonus) || 0)
             : 0;
 
-        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod);
+        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod);
 
         // Build target breakdown tooltip
         const tooltipParts = [`Base: ${baseTarget}`];
@@ -336,6 +347,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (situationalMod !== 0) tooltipParts.push(`Situational: ${situationalMod >= 0 ? '+' : ''}${situationalMod}`);
         if (customMod !== 0) tooltipParts.push(`Custom: ${customMod >= 0 ? '+' : ''}${customMod}`);
         if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${combatSitMod >= 0 ? '+' : ''}${combatSitMod}`);
+        if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${psyMod >= 0 ? '+' : ''}${psyMod}`);
         tooltipParts.push(`= ${finalTarget}`);
         const targetBreakdownTooltip = tooltipParts.join('\n');
 
@@ -390,7 +402,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
         // Modifier aggregate
-        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod;
+        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod;
 
         // Roll type specific data
         const isWeapon = this.rollType === 'weapon';
@@ -744,6 +756,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     // eslint-disable-next-line no-restricted-syntax -- boundary: context bag returned to Handlebars template; keys are heterogeneous by design
     _getPsychicContext(): Record<string, unknown> {
         const rd = this.rollData;
+        const basePR = Number(rd['pr']) || 0;
+        const psyModeBreakdown = resolvePsyMode({ mode: this._psyMode, basePR, pushLevel: this._pushLevel });
         return {
             psychicPowers: Array.isArray(rd['psychicPowers']) ? rd['psychicPowers'] : [],
             power: rd.power,
@@ -756,6 +770,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             rangeName: rd.rangeName,
             maxRange: rd.maxRange,
             difficulties: rd.difficulties,
+            psyMode: this._psyMode,
+            pushLevel: this._pushLevel,
+            isFettered: this._psyMode === 'fettered',
+            isUnfettered: this._psyMode === 'unfettered',
+            isPush: this._psyMode === 'push',
+            psyModeBreakdown,
         };
     }
 
@@ -965,6 +985,28 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.close();
     }
 
+    /* ---- Psychic Push / Fettered / Unfettered selector handlers (#69) ---- */
+
+    static async #onSetPsyMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const mode = target.dataset['psyMode'];
+        if (mode !== 'fettered' && mode !== 'unfettered' && mode !== 'push') return;
+        this._psyMode = mode;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    static async #onIncrementPushLevel(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._pushLevel >= 3) return;
+        this._pushLevel += 1;
+        if (this._psyMode !== 'push') this._psyMode = 'push';
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    static async #onDecrementPushLevel(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._pushLevel <= 1) return;
+        this._pushLevel -= 1;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
     /* ---- Card-based Weapon Panel Handlers ---- */
 
     static async #onSelectAttackMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
@@ -1167,6 +1209,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.modifiers['difficulty'] = this._currentDifficulty.modifier;
         rd.modifiers['situational'] = this._calculateSituationalModifiers();
         rd.modifiers['modifier'] = this._customModifier;
+
+        // Apply psychic Push / Fettered / Unfettered selector (#69)
+        if (this.rollType === 'psychic') {
+            const basePR = Number(rd['pr']) || 0;
+            const breakdown = resolvePsyMode({ mode: this._psyMode, basePR, pushLevel: this._pushLevel });
+            rd.modifiers['psy-mode'] = breakdown.focusModifier;
+            rd['psyMode'] = this._psyMode;
+            rd['psyEffectivePR'] = breakdown.effectivePR;
+            rd['psyForcePhenomena'] = breakdown.forcePhenomena;
+            rd['psyPhenomenaModifier'] = breakdown.phenomenaModifier;
+            if (this._psyMode === 'push') rd['psyPushLevel'] = this._pushLevel;
+        }
 
         // Apply combat situational card modifiers (weapon panel)
         if (this.rollType === 'weapon') {
