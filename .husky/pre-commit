@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Husky's hook runner invokes this via `sh`; on systems where `sh` is dash
+# the bash-specific syntax below (arrays) fails to parse. Re-exec under bash
+# when we weren't started by it. No-op where `sh` is already bash.
+[ -z "${BASH_VERSION:-}" ] && exec bash "$0" "$@"
 #
 # pre-commit — maximally parallelized ratchet pipeline.
 #

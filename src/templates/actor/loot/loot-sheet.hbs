@@ -1,0 +1,73 @@
+{{!--
+    loot-sheet.hbs — content-agnostic loot pile. Single flat inventory with a
+    "take everything" action plus per-row edit/delete (inherited base actions).
+    Pickup target resolution + transfer lives in ItemDropManager.
+--}}
+<div class="wh40k-loot tw-flex tw-flex-col tw-h-full tw-gap-3 tw-p-3 tw-text-[color:var(--wh40k-text-primary)]">
+    <header class="wh40k-loot__header tw-flex tw-items-center tw-gap-3 tw-pb-2 tw-border-b tw-border-[var(--wh40k-border-light)]">
+        <img src="{{actor.img}}" alt="{{actor.name}}" class="tw-w-10 tw-h-10 tw-object-cover tw-rounded-sm tw-border tw-border-[var(--wh40k-border-light)]" />
+        <div class="tw-flex tw-flex-col tw-min-w-0">
+            <span class="wh40k-loot__title tw-font-semibold tw-text-gold dh2e:tw-text-gold-raw rt:tw-text-amber-400 im:tw-text-failure tw-truncate">{{actor.name}}</span>
+            {{#if lootSource}}
+                <span class="wh40k-loot__source tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-truncate">{{lootSource}}</span>
+            {{/if}}
+        </div>
+        <span class="tw-ml-auto tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-secondary)] tw-whitespace-nowrap">{{lootTotalWeight}} kg</span>
+    </header>
+
+    <button
+        type="button"
+        class="wh40k-loot__take-all tw-inline-flex tw-items-center tw-justify-center tw-gap-2 tw-rounded-md tw-border tw-border-amber-500/60 tw-bg-amber-500/10 tw-px-3 tw-py-2 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-amber-100 hover:tw-bg-amber-500/20 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+        data-action="pickupAll"
+        {{#if isEmpty}}disabled{{/if}}
+        title="{{localize 'WH40K.Loot.PickUpAll'}}"
+    >
+        <i class="fas fa-hand-holding"></i>
+        <span>{{localize "WH40K.Loot.PickUpAll"}}</span>
+    </button>
+
+    <div class="wh40k-loot__panel tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-mb-1 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-secondary)]">
+            <i class="fas fa-box-open"></i>
+            <span>{{localize "WH40K.Loot.Contents"}}</span>
+            <span class="tw-ml-auto tw-rounded-full tw-bg-[var(--wh40k-bg-input)] tw-px-1.5 tw-py-0.5 tw-text-[0.65rem] tw-font-bold">{{lootItems.length}}</span>
+        </div>
+        <div class="wh40k-loot-list tw-flex-1 tw-overflow-y-auto">
+            {{#if isEmpty}}
+                <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
+                    <i class="fas fa-feather tw-text-[2rem] tw-mb-2 tw-opacity-50"></i>
+                    <p class="tw-italic tw-text-sm tw-m-0">{{localize "WH40K.Loot.Empty"}}</p>
+                </div>
+            {{else}}
+                <table class="tw-w-full tw-text-[0.78rem] tw-border-collapse">
+                    <tbody>
+                        {{#each lootItems as |item|}}
+                        <tr class="tw-border-b tw-border-[rgba(255,255,255,0.05)] hover:tw-bg-[rgba(255,255,255,0.03)] tw-transition-colors" data-item-id="{{item.id}}" data-item-type="{{item.type}}">
+                            <td class="tw-p-1 tw-align-middle tw-w-7">
+                                <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-[22px] tw-h-[22px] tw-object-cover tw-rounded" />
+                            </td>
+                            <td class="tw-p-1 tw-align-middle">
+                                <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-text-left tw-p-0 tw-truncate tw-block tw-text-[color:var(--wh40k-text-primary)] hover:tw-text-gold" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
+                                    {{item.name}}
+                                </button>
+                            </td>
+                            <td class="tw-p-1 tw-align-middle tw-text-right tw-text-[color:var(--wh40k-text-muted)] tw-whitespace-nowrap">
+                                {{#if item.quantity}}<span>&times;{{item.quantity}}</span>{{/if}}
+                            </td>
+                            <td class="tw-p-1 tw-align-middle tw-text-right tw-text-[color:var(--wh40k-text-muted)] tw-whitespace-nowrap">
+                                {{#if item.weight}}<span>{{item.weight}} kg</span>{{else}}<span class="tw-italic">&mdash;</span>{{/if}}
+                            </td>
+                            <td class="tw-p-1 tw-align-middle tw-w-6 tw-text-right">
+                                <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat" data-action="itemDelete" data-item-id="{{item.id}}" title="{{localize 'WH40K.Common.Delete'}}" aria-label="{{localize 'WH40K.Common.Delete'}}">
+                                    <i class="fas fa-trash tw-text-[0.72rem]"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            {{/if}}
+        </div>
+        <p class="wh40k-loot__hint tw-mt-2 tw-text-[0.68rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Loot.PickUpHint"}}</p>
+    </div>
+</div>

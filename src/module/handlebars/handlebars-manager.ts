@@ -135,6 +135,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/vehicle/tab-crew.hbs',
             'systems/wh40k-rpg/templates/actor/vehicle/tab-components.hbs',
             'systems/wh40k-rpg/templates/actor/vehicle/tab-notes.hbs',
+            'systems/wh40k-rpg/templates/actor/loot/loot-sheet.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-armour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-integrity-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-movement-panel.hbs',
