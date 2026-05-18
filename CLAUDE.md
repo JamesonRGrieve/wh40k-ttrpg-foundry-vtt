@@ -291,7 +291,20 @@ Tasks that suit cheap-model grinders (each map to a ratchet that gates regressio
 | Add a `*.test.ts` for one DataModel using `pnpm scaffold:test` | `pnpm symmetry` (data missing-pair count ↓) |
 | Migrate one `game.i18n.localize(...)` call site to `t(...)` | (no metric — but the typed key surface catches stale references on next run) |
 
-Cheap workers can be wrong. The pre-commit ratchets and the typecheck/lint/vitest/storybook gates are what make this safe — a worker that breaks a sheet still has to pass `pnpm check`, and the orchestrator never `--no-verify` past failures.
+Cheap workers can be wrong. The pre-commit ratchets and the typecheck/lint/vitest/storybook gates are what make this safe — a worker that breaks a sheet still has to pass `pnpm check`, and the orchestrator (in cheap-LLM grind mode) never `--no-verify` past failures.
+
+### Parallel Claude-subagent refactor batches (deferred-verification mode)
+
+A distinct mode from the cheap-LLM `ai` grinder above: the Claude Code orchestrator fans out several concurrent **`Agent` subagents** to execute a partitioned DRY/refactor workload (typically the actionable findings of a codebase audit). Use this when a large refactor cleanly partitions into disjoint file-scope chunks, or when several independent abstraction-adoption tasks can run at once. The recipe:
+
+1. **Sync first.** Merge `origin/main` into the working branch before spawning anything, so every worktree branches from current HEAD.
+2. **Partition into disjoint file sets.** Scope each subagent so no two touch the same file — partition by file type or directory (e.g. item-sheet `.hbs` vs item-sheet `.ts` vs `config/` vs an actor panel). This is what makes the worktree branches merge cleanly without conflicts.
+3. **Single-owner shared files.** Any file multiple tasks might edit — the Handlebars preload list (`handlebars-manager.ts`), `tailwind.config.js`, a barrel `index.ts` — is assigned to **exactly one** subagent, and every other brief explicitly forbids touching it.
+4. **Worktree isolation, background.** Launch each subagent with `isolation: "worktree"` and `run_in_background: true`. One worktree branch per task; the orchestrator owns the merge-back.
+5. **The brief is a contract.** Each subagent prompt MUST: enumerate precise in-scope files and explicit out-of-scope files; require behavior-preserving edits that stay homologation-safe across all 7 systems; **forbid running any verification** (`pnpm check`/`test`/`typecheck`/`lint`/`build`/`storybook`, any `*:coverage`/`*:ratchet`, `preload:drift`, `i18n`) and the pre-commit hooks; require `git commit --no-verify`, **no push, no PR**; and require a closing report of files changed, net LOC delta (`git diff --stat`), commit hash, and worktree branch.
+6. **Deferred batched verification — the point of this mode.** Per-agent verification burns context and wall-clock re-validating overlapping surfaces that one batched pass would cover anyway. So subagents skip it and the **orchestrator** merges all worktree branches into the working branch, resolves any conflict, then runs **one** full `pnpm check` + ratchet pass and fixes the fallout — once — before the final pre-PR commit (that last commit IS verified normally). The safety invariant from the cheap-LLM section still holds where it matters: **nothing reaches a PR or the remote default branch unverified**. Verification is deferred and batched in this mode, never skipped.
+
+Keep granular brief templates, model flags, and partition-shape recipes in `PROMPTING_AGENTS.md`; this section is the doctrine, not the notebook.
 
 ### `.auto-fix/` — TSC and ESLint grinder
 
