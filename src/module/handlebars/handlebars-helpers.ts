@@ -642,55 +642,84 @@ export function registerHandlebarsHelpers(): void {
         return Number.isFinite(n) ? n : 0;
     };
 
-    Handlebars.registerHelper('corruptionDegree', (corruption: TplValue): string => {
-        const points = numberOr0(corruption);
-        if (points === 0) return 'PURE';
-        if (points <= 30) return 'TAINTED';
-        if (points <= 60) return 'SOILED';
-        if (points <= 90) return 'DEBASED';
-        if (points <= 99) return 'PROFANE';
-        return 'DAMNED';
-    });
+    /**
+     * First-match threshold ladder: returns the result of the first tier whose
+     * inclusive max is >= points, else the fallback. Backs the corruption /
+     * insanity degree / modifier / css-class helpers (formerly six near-
+     * identical if-chains).
+     */
+    const thresholdLadder = (points: number, tiers: ReadonlyArray<readonly [max: number, result: string]>, fallback: string): string => {
+        for (const [max, result] of tiers) {
+            if (points <= max) return result;
+        }
+        return fallback;
+    };
+
+    Handlebars.registerHelper('corruptionDegree', (corruption: TplValue): string =>
+        thresholdLadder(
+            numberOr0(corruption),
+            [
+                [0, 'PURE'],
+                [30, 'TAINTED'],
+                [60, 'SOILED'],
+                [90, 'DEBASED'],
+                [99, 'PROFANE'],
+            ],
+            'DAMNED',
+        ),
+    );
 
     /**
      * Get corruption modifier for checks
      */
-    Handlebars.registerHelper('corruptionModifier', (corruption: TplValue): string => {
-        const points = numberOr0(corruption);
-        if (points === 0) return '+0';
-        if (points <= 30) return '+0';
-        if (points <= 60) return '-10';
-        if (points <= 90) return '-20';
-        if (points <= 99) return '-30';
-        return 'DEAD';
-    });
+    Handlebars.registerHelper('corruptionModifier', (corruption: TplValue): string =>
+        thresholdLadder(
+            numberOr0(corruption),
+            [
+                [0, '+0'],
+                [30, '+0'],
+                [60, '-10'],
+                [90, '-20'],
+                [99, '-30'],
+            ],
+            'DEAD',
+        ),
+    );
 
     /**
      * Get insanity degree from insanity points (0-100)
      * STABLE (0-9), UNSETTLED (10-39) +10, DISTURBED (40-59) +0, UNHINGED (60-79) -10, DERANGED (80-99) -20, TERMINALLY INSANE (100)
      */
-    Handlebars.registerHelper('insanityDegree', (insanity: TplValue): string => {
-        const points = numberOr0(insanity);
-        if (points <= 9) return 'STABLE';
-        if (points <= 39) return 'UNSETTLED';
-        if (points <= 59) return 'DISTURBED';
-        if (points <= 79) return 'UNHINGED';
-        if (points <= 99) return 'DERANGED';
-        return 'TERMINALLY INSANE';
-    });
+    Handlebars.registerHelper('insanityDegree', (insanity: TplValue): string =>
+        thresholdLadder(
+            numberOr0(insanity),
+            [
+                [9, 'STABLE'],
+                [39, 'UNSETTLED'],
+                [59, 'DISTURBED'],
+                [79, 'UNHINGED'],
+                [99, 'DERANGED'],
+            ],
+            'TERMINALLY INSANE',
+        ),
+    );
 
     /**
      * Get insanity modifier for checks
      */
-    Handlebars.registerHelper('insanityModifier', (insanity: TplValue): string => {
-        const points = numberOr0(insanity);
-        if (points <= 9) return '+0';
-        if (points <= 39) return '+10';
-        if (points <= 59) return '+0';
-        if (points <= 79) return '-10';
-        if (points <= 99) return '-20';
-        return 'DEAD';
-    });
+    Handlebars.registerHelper('insanityModifier', (insanity: TplValue): string =>
+        thresholdLadder(
+            numberOr0(insanity),
+            [
+                [9, '+0'],
+                [39, '+10'],
+                [59, '+0'],
+                [79, '-10'],
+                [99, '-20'],
+            ],
+            'DEAD',
+        ),
+    );
 
     /**
      * Clamp critical damage to max 10
@@ -712,28 +741,36 @@ export function registerHandlebarsHelpers(): void {
     /**
      * Get CSS class for corruption degree
      */
-    Handlebars.registerHelper('corruptionDegreeClass', (corruption: TplValue): string => {
-        const points = numberOr0(corruption);
-        if (points === 0) return 'wh40k-degree-pure';
-        if (points <= 30) return 'wh40k-degree-tainted';
-        if (points <= 60) return 'wh40k-degree-soiled';
-        if (points <= 90) return 'wh40k-degree-debased';
-        if (points <= 99) return 'wh40k-degree-profane';
-        return 'wh40k-degree-damned';
-    });
+    Handlebars.registerHelper('corruptionDegreeClass', (corruption: TplValue): string =>
+        thresholdLadder(
+            numberOr0(corruption),
+            [
+                [0, 'wh40k-degree-pure'],
+                [30, 'wh40k-degree-tainted'],
+                [60, 'wh40k-degree-soiled'],
+                [90, 'wh40k-degree-debased'],
+                [99, 'wh40k-degree-profane'],
+            ],
+            'wh40k-degree-damned',
+        ),
+    );
 
     /**
      * Get CSS class for insanity degree
      */
-    Handlebars.registerHelper('insanityDegreeClass', (insanity: TplValue): string => {
-        const points = numberOr0(insanity);
-        if (points <= 9) return 'wh40k-degree-stable';
-        if (points <= 39) return 'wh40k-degree-unsettled';
-        if (points <= 59) return 'wh40k-degree-disturbed';
-        if (points <= 79) return 'wh40k-degree-unhinged';
-        if (points <= 99) return 'wh40k-degree-deranged';
-        return 'wh40k-degree-terminally';
-    });
+    Handlebars.registerHelper('insanityDegreeClass', (insanity: TplValue): string =>
+        thresholdLadder(
+            numberOr0(insanity),
+            [
+                [9, 'wh40k-degree-stable'],
+                [39, 'wh40k-degree-unsettled'],
+                [59, 'wh40k-degree-disturbed'],
+                [79, 'wh40k-degree-unhinged'],
+                [99, 'wh40k-degree-deranged'],
+            ],
+            'wh40k-degree-terminally',
+        ),
+    );
 
     /**
      * Join an array with a separator
