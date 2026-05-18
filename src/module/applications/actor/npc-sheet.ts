@@ -1804,9 +1804,7 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #removeItem(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        if (itemId === undefined || itemId === '') return;
-        const item = this.actor.items.get(itemId);
+        const item = this._resolveItemFromTarget(target);
         if (item) await item.delete();
     }
     /*  Overrides                                   */
