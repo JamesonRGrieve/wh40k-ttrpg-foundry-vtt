@@ -1,6 +1,28 @@
 {{!-- Unified Roll Dialog: Modifiers Section --}}
 <div class="tw-border-t tw-border-[rgba(255,255,255,0.06)] tw-py-2.5 tw-px-5" {{#if isForceField}}hidden{{/if}}>
 {{#unless isForceField}}
+    {{!-- Try-Again warning banner (#62) — soft advisory, never hard-blocks. --}}
+    {{#if tryAgainAdvice}}
+    <div class="wh40k-try-again-warning tw-flex tw-items-start tw-gap-2 tw-mb-2.5 tw-py-2 tw-px-3 tw-bg-yellow-900/30 tw-border tw-border-yellow-700/50 tw-rounded-md tw-text-[#fde68a]">
+        <i class="fas fa-triangle-exclamation tw-text-yellow-400 tw-mt-0.5"></i>
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-min-w-0 tw-flex-1">
+            <span class="tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-yellow-300">{{localize "WH40K.TryingAgain.WarningTitle"}}</span>
+            <span class="wh40k-try-again-warning__hint tw-text-[0.78rem] tw-leading-snug">
+                {{#if tryAgainAdvice.blocksByConvention}}
+                    {{localize "WH40K.TryingAgain.BlockedMessage"}}
+                {{else}}
+                    {{localize "WH40K.TryingAgain.CumulativeMessage"}}
+                {{/if}}
+            </span>
+            {{#unless (eq tryAgainPenalty 0)}}
+            <span class="wh40k-try-again-warning__penalty tw-text-[0.78rem] tw-font-bold tw-text-[#f87171]">
+                {{localize "WH40K.TryingAgain.PenaltyLabel"}}: {{tryAgainPenaltyLabel}}
+            </span>
+            {{/unless}}
+        </div>
+    </div>
+    {{/if}}
+
     {{!-- Situational modifier pills from character talents/traits/conditions --}}
     {{#if hasSituationalModifiers}}
     <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mb-2.5">
