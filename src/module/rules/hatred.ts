@@ -68,10 +68,19 @@ export function actorHasHatredFor(attacker: HatredActorLike, target: HatredTarge
         if (item.type !== 'talent') continue;
         const spec = extractHatredSpecialization(item);
         if (spec === null) continue;
-        const lower = spec.toLowerCase();
-        if (targetTokens.some((t) => t.includes(lower))) return spec;
+        // Match on the singular stem so the canonical plural specialization
+        // (e.g. "Daemons" / "Mutants") resolves against the singular/adjectival
+        // trait or species form ("Daemonic" / "Mutant"), per the module intent.
+        const stem = hatredStem(spec);
+        if (targetTokens.some((t) => t.includes(stem))) return spec;
     }
     return null;
+}
+
+/** Lower-cased, trailing-plural-stripped form used for substring matching. */
+function hatredStem(spec: string): string {
+    const lower = spec.toLowerCase();
+    return lower.endsWith('s') ? lower.slice(0, -1) : lower;
 }
 
 function extractHatredSpecialization(item: { name: string; system?: { specialization?: string } }): string | null {
@@ -80,8 +89,8 @@ function extractHatredSpecialization(item: { name: string; system?: { specializa
         return explicit;
     }
     // Legacy: "Hatred (Daemons)" on the talent name itself.
-    const match = /^hatred\s*\(([^)]+)\)\s*$/i.exec(item.name);
-    if (match?.[1] !== undefined) return match[1].trim();
+    const legacy = /^hatred\s*\(([^)]+)\)\s*$/i.exec(item.name)?.[1];
+    if (legacy !== undefined) return legacy.trim();
     return null;
 }
 

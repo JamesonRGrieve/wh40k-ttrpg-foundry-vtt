@@ -14,6 +14,9 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
 import ContextMenuMixin from '../api/context-menu-mixin.ts';
 import EnhancedDragDropMixin from '../api/drag-drop-visual-mixin.ts';
+import * as EffectActions from '../api/effect-actions.ts';
+import type { EffectsOwner } from '../api/effect-actions.ts';
+import { itemIdFromTarget } from '../api/item-target.ts';
 import EnhancedAnimationsMixin from '../api/enhanced-animations-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import type { BaseActorSheetMixins } from '../api/sheet-mixin-types.ts';
@@ -288,10 +291,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             itemVocalize: BaseActorSheet.#itemVocalize,
             itemCreate: BaseActorSheet.#itemCreate,
             dropItem: BaseActorSheet.#dropItem,
-            // effectCreate: BaseActorSheet.#effectCreate,
-            effectEdit: BaseActorSheet.#effectEdit,
-            effectDelete: BaseActorSheet.#effectDelete,
-            effectToggle: BaseActorSheet.#effectToggle,
+            effectEdit: EffectActions.effectEdit,
+            effectDelete: EffectActions.effectDelete,
+            effectToggle: EffectActions.effectToggle,
             toggleSection: BaseActorSheet.#toggleSection,
             toggleTraining: BaseActorSheet.#toggleTraining,
             addSpecialistSkill: BaseActorSheet.#addSpecialistSkill,
@@ -1691,6 +1693,36 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /**
+     * Toggle membership of `value` in a `wh40k-rpg` array flag and re-render
+     * the given sheet parts. Shared by every favourite-toggle action handler
+     * (favourite skills / specialist skills / talents) across PC + NPC sheets.
+     * @protected
+     */
+    async _toggleFavorite(flagKey: string, value: string, renderParts: string[]): Promise<void> {
+        const favorites = getFlag<string[]>(this.actor, flagKey) ?? [];
+        const next = favorites.includes(value) ? favorites.filter((v) => v !== value) : [...favorites, value];
+        await this.actor.setFlag('wh40k-rpg', flagKey, next);
+        await this.render({ parts: renderParts });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Resolve the owned item a clicked control refers to (via data-item-id,
+     * closest ancestor then self). Shared by the actor-sheet item action
+     * handlers. Callers that need a not-found notification handle it
+     * themselves (notification helpers are sheet-specific, not on the base).
+     * @protected
+     */
+    _resolveItemFromTarget(target: HTMLElement): WH40KItem | undefined {
+        const itemId = itemIdFromTarget(target);
+        if (itemId === undefined) return undefined;
+        return this.actor.items.get(itemId);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Handle panel toggle clicks.
      * Uses the data-toggle attribute to identify which section to expand/collapse.
      * @param {Event} event  The click event.
@@ -2073,66 +2105,14 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
     /* -------------------------------------------- */
 
-    // /**
-    //  * Handle creating an effect.
-    //  * Opens a streamlined, thematic effect creation dialog.
-    //  * @this {BaseActorSheet}
-    //  * @param {Event} event         Triggering click event.
-    //  * @param {HTMLElement} target  Button that was clicked.
-    //  */
-    // static async #effectCreate(event, target) {
-    //     const effect = await EffectCreationDialog.show(this.actor);
-    //     if (effect) {
-    //         ui.notifications.info(`Created effect: ${effect.name}`);
-    //     }
-    // }
-
-    /* -------------------------------------------- */
-
     /**
-     * Handle editing an effect.
-     * @this {BaseActorSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
+     * The ActiveEffect-owning document for this sheet. Consumed by the shared
+     * `api/effect-actions.ts` handlers (effectEdit / effectDelete /
+     * effectToggle) wired into DEFAULT_OPTIONS.actions.
      */
-    static #effectEdit(this: BaseActorSheet, _event: Event, target: HTMLElement): void {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
-        if (effectId === undefined || effectId === '') return;
-        const effect = this.actor.effects.get(effectId) as { sheet?: { render: (force?: boolean) => void } } | undefined;
-        effect?.sheet?.render(true);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle deleting an effect.
-     * @this {BaseActorSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #effectDelete(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
-        if (effectId === undefined || effectId === '') return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect delete() returns Promise<unknown> per Foundry's Document API.
-        const effect = this.actor.effects.get(effectId) as { delete: () => Promise<unknown> } | undefined;
-        await effect?.delete();
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle toggling an effect.
-     * @this {BaseActorSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #effectToggle(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
-        if (effectId === undefined || effectId === '') return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect update() takes opaque Record payload per Foundry's Document API.
-        const effect = this.actor.effects.get(effectId) as { disabled: boolean; update: (data: Record<string, unknown>) => Promise<unknown> } | undefined;
-        if (effect === undefined) return;
-        await effect.update({ disabled: !effect.disabled });
+    get effectsOwner(): EffectsOwner {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor structurally satisfies EffectsOwner; fvtt-types' ActiveEffect surface is narrower than the adapter
+        return this.actor as unknown as EffectsOwner;
     }
 
     /* -------------------------------------------- */

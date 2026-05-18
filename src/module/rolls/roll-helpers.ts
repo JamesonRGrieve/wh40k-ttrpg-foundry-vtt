@@ -63,21 +63,36 @@ export function applyRollModeWhispers(chatData: Record<string, unknown>): void {
     }
 }
 
+/**
+ * Build the standard chat payload (user + rollMode + content [+ rolls
+ * + speaker]), apply roll-mode whispers, and create the message. Collapses
+ * the `{ user: game.user.id, rollMode: …, content }` + applyRollModeWhispers
+ * + ChatMessage.create boilerplate repeated across the action managers.
+ */
+export async function postChatCard(
+    content: string,
+    // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
+    opts: { rolls?: Roll[] | undefined; speaker?: unknown; rollMode?: string | undefined } = {},
+): Promise<void> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped payload; Record<string, unknown> is the correct boundary type
+    const chatData: Record<string, unknown> = {
+        user: game.user.id,
+        rollMode: opts.rollMode ?? game.settings.get('core', 'rollMode'),
+        content,
+    };
+    if (opts.rolls !== undefined) chatData['rolls'] = opts.rolls;
+    if (opts.speaker !== undefined) chatData['speaker'] = opts.speaker;
+    applyRollModeWhispers(chatData);
+    await ChatMessage.create(chatData);
+}
+
 export async function sendActionDataToChat(actionData: ActionData): Promise<void> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate expects a plain record; ActionData is duck-typed to satisfy the shape
     const html = await foundry.applications.handlebars.renderTemplate(actionData.template, actionData as unknown as Record<string, unknown>);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped record-shaped payload
-    const chatData: Record<string, unknown> = {
-        user: game.user.id,
-        rollMode: game.settings.get('core', 'rollMode'),
-        content: html,
-    };
     const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
-    if (rollData.roll != null && rollData.isManualRoll !== true) {
-        chatData['rolls'] = [actionData.rollData.roll];
-    }
-    applyRollModeWhispers(chatData);
-    await ChatMessage.create(chatData);
+    const roll = rollData.roll;
+    const rolls = roll != null && rollData.isManualRoll !== true ? [roll] : undefined;
+    await postChatCard(html, { rolls });
 }
 
 export function recursiveUpdate(targetObject: DotNotationTarget, updateObject: DotNotationTarget): void {

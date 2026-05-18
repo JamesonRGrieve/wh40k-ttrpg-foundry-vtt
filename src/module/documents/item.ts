@@ -22,6 +22,15 @@ type OriginActorLike = WH40KBaseActor & {
     };
 };
 
+/* eslint-disable no-restricted-syntax -- boundary: `extra` is a template-shaped card bag forwarded to renderTemplate */
+type SimpleD100Opts = {
+    targetValue: number;
+    itemTypeLabel: string;
+    template: string;
+    extra?: Record<string, unknown>;
+};
+/* eslint-enable no-restricted-syntax */
+
 export class WH40KItem extends WH40KItemContainer {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 nested-container ref is opaque
     declare system: WH40KItemSystemData & { container: unknown };
@@ -612,6 +621,44 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     /**
+     * Shared d100 roll-under resolution + chat-card emission for simple item
+     * rolls (talent / navigator power / ship order / ritual). Callers resolve
+     * the target value and supply the card template; this method owns the
+     * roll, success/degrees math, card assembly, and ChatMessage creation so
+     * the four public roll methods stay copy-free.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque ChatMessage / roll result
+    async #rollSimpleD100(opts: SimpleD100Opts): Promise<unknown> {
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        if (roll.total === undefined) return this.sendToChat();
+        const rollTotal: number = roll.total;
+
+        const success = rollTotal <= opts.targetValue;
+        const degrees = Math.floor(Math.abs(opts.targetValue - rollTotal) / 10);
+
+        const cardData = {
+            item: this,
+            itemTypeLabel: opts.itemTypeLabel,
+            roll: roll,
+            targetValue: opts.targetValue,
+            success: success,
+            degrees: degrees,
+            actor: this.actor?.name,
+            ...opts.extra,
+        };
+
+        const html = await foundry.applications.handlebars.renderTemplate(opts.template, cardData);
+
+        return ChatMessage.create({
+            user: game.user.id,
+            content: html,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            rolls: [roll],
+        });
+    }
+
+    /**
      * Roll a talent that has a rollable action
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque ChatMessage / roll result
@@ -641,35 +688,15 @@ export class WH40KItem extends WH40KItemContainer {
 
         const targetValue = characteristic.total + (rollConfig.modifier ?? 0);
 
-        // Create the roll
-        const roll = new Roll('1d100');
-        await roll.evaluate();
-        if (roll.total === undefined) return this.sendToChat();
-        const rollTotal: number = roll.total;
-
-        const success = rollTotal <= targetValue;
-        const degrees = Math.floor(Math.abs(targetValue - rollTotal) / 10);
-
-        const cardData = {
-            item: this,
+        return this.#rollSimpleD100({
+            targetValue,
             itemTypeLabel: this.itemTypeLabel,
-            roll: roll,
-            targetValue: targetValue,
-            success: success,
-            degrees: degrees,
-            characteristic: characteristic,
-            charKey: charKey,
-            actor: this.actor.name,
-            rollDescription: rollConfig.description ?? '',
-        };
-
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
-
-        return ChatMessage.create({
-            user: game.user.id,
-            content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll],
+            template: 'systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs',
+            extra: {
+                characteristic: characteristic,
+                charKey: charKey,
+                rollDescription: rollConfig.description ?? '',
+            },
         });
     }
 
@@ -698,31 +725,10 @@ export class WH40KItem extends WH40KItemContainer {
         const baseChar = perceptionTotal > willpowerTotal ? perception : willpower;
         const targetValue = baseChar.total + navigatorRank * 5;
 
-        const roll = new Roll('1d100');
-        await roll.evaluate();
-        if (roll.total === undefined) return this.sendToChat();
-        const rollTotal: number = roll.total;
-
-        const success = rollTotal <= targetValue;
-        const degrees = Math.floor(Math.abs(targetValue - rollTotal) / 10);
-
-        const cardData = {
-            item: this,
+        return this.#rollSimpleD100({
+            targetValue,
             itemTypeLabel: 'Navigator Power',
-            roll: roll,
-            targetValue: targetValue,
-            success: success,
-            degrees: degrees,
-            actor: this.actor.name,
-        };
-
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs', cardData);
-
-        return ChatMessage.create({
-            user: game.user.id,
-            content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll],
+            template: 'systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs',
         });
     }
 
@@ -740,31 +746,10 @@ export class WH40KItem extends WH40KItemContainer {
         const command = (orderActor?.system as { skills?: Record<string, { current?: number }> } | undefined)?.skills?.['command'];
         const targetValue = command?.current ?? 50;
 
-        const roll = new Roll('1d100');
-        await roll.evaluate();
-        if (roll.total === undefined) return this.sendToChat();
-        const rollTotal: number = roll.total;
-
-        const success = rollTotal <= targetValue;
-        const degrees = Math.floor(Math.abs(targetValue - rollTotal) / 10);
-
-        const cardData = {
-            item: this,
+        return this.#rollSimpleD100({
+            targetValue,
             itemTypeLabel: 'Ship Order',
-            roll: roll,
-            targetValue: targetValue,
-            success: success,
-            degrees: degrees,
-            actor: this.actor.name,
-        };
-
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/order-roll-chat.hbs', cardData);
-
-        return ChatMessage.create({
-            user: game.user.id,
-            content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll],
+            template: 'systems/wh40k-rpg/templates/chat/order-roll-chat.hbs',
         });
     }
 
@@ -782,31 +767,10 @@ export class WH40KItem extends WH40KItemContainer {
         const willpower = ritualActor?.characteristics['willpower'];
         const targetValue = willpower?.total ?? 30;
 
-        const roll = new Roll('1d100');
-        await roll.evaluate();
-        if (roll.total === undefined) return this.sendToChat();
-        const rollTotal: number = roll.total;
-
-        const success = rollTotal <= targetValue;
-        const degrees = Math.floor(Math.abs(targetValue - rollTotal) / 10);
-
-        const cardData = {
-            item: this,
+        return this.#rollSimpleD100({
+            targetValue,
             itemTypeLabel: 'Ritual',
-            roll: roll,
-            targetValue: targetValue,
-            success: success,
-            degrees: degrees,
-            actor: this.actor.name,
-        };
-
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs', cardData);
-
-        return ChatMessage.create({
-            user: game.user.id,
-            content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll],
+            template: 'systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs',
         });
     }
 

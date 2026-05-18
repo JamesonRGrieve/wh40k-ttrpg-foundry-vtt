@@ -1685,21 +1685,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const skillKey = target.dataset['skill'];
         if (skillKey === undefined || skillKey === '') return;
-
-        const currentFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
-        const isFavorite = currentFavorites.includes(skillKey);
-
-        if (isFavorite) {
-            await this.actor.setFlag(
-                'wh40k-rpg',
-                'favoriteSkills',
-                currentFavorites.filter((k) => k !== skillKey),
-            );
-        } else {
-            await this.actor.setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
-        }
-
-        await this.render({ parts: ['overview', 'skills'] });
+        await this._toggleFavorite('favoriteSkills', skillKey, ['overview', 'skills']);
     }
 
     /* -------------------------------------------- */
@@ -1713,21 +1699,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
-
-        const currentFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
-        const isFavorite = currentFavorites.includes(itemId);
-
-        if (isFavorite) {
-            await this.actor.setFlag(
-                'wh40k-rpg',
-                'favoriteTalents',
-                currentFavorites.filter((id) => id !== itemId),
-            );
-        } else {
-            await this.actor.setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
-        }
-
-        await this.render({ parts: ['overview', 'abilities'] });
+        await this._toggleFavorite('favoriteTalents', itemId, ['overview', 'abilities']);
     }
 
     /* -------------------------------------------- */
@@ -1832,9 +1804,7 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #removeItem(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        if (itemId === undefined || itemId === '') return;
-        const item = this.actor.items.get(itemId);
+        const item = this._resolveItemFromTarget(target);
         if (item) await item.delete();
     }
     /*  Overrides                                   */
