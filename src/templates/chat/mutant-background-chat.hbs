@@ -1,0 +1,39 @@
+{{!-- Mutant background chat card (GitHub #91). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
+{{!-- A GM-facing "Convert Failed Malignancy" action surfaces here for downstream test pipeline (#67). --}}
+<div class="wh40k-rpg wh40k-mutant-card tw-p-4 tw-rounded-md tw-border dh2e:tw-border-green-700 dh2e:tw-bg-green-900/30 tw-border-[rgba(80,140,80,0.35)] tw-bg-[rgba(10,16,10,0.85)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-dna dh2e:tw-text-green-400 tw-text-[#a8e0a8] tw-text-[1.1rem]"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] dh2e:tw-text-green-400 tw-text-[#a8e0a8]">
+            {{localize "WH40K.MutantBackground.ChatTitle"}}
+        </div>
+    </div>
+    {{#if actorName}}
+        <div class="tw-text-[0.9rem] tw-mb-2 tw-text-[#e8e4d9]">
+            {{localize "WH40K.MutantBackground.AppliedMessage"}}
+            <strong class="dh2e:tw-text-green-400 tw-text-[#a8e0a8]">{{actorName}}</strong>
+        </div>
+    {{else}}
+        <div class="tw-text-[0.9rem] tw-mb-2 tw-text-[#e8e4d9]">
+            {{localize "WH40K.MutantBackground.AppliedMessage"}}
+        </div>
+    {{/if}}
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.MutantBackground.StartingCorruption"}}</span>
+            <span class="tw-font-bold tw-tabular-nums">+{{startingCorruption}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.MutantBackground.TwistedFleshLabel"}}</span>
+            <span class="tw-font-bold dh2e:tw-text-green-400 tw-text-[#a8e0a8]">{{localize "WH40K.MutantBackground.Granted"}}</span>
+        </li>
+    </ul>
+    <div class="tw-mt-3 tw-pt-3 tw-border-t tw-border-[rgba(80,140,80,0.25)]">
+        <button type="button"
+                data-action="convertMalignancy"
+                class="tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2 tw-rounded-md tw-border-2 dh2e:tw-border-green-700 tw-border-[rgba(80,140,80,0.45)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] dh2e:tw-text-green-400 tw-text-[#a8e0a8] tw-cursor-pointer">
+            <i class="fas fa-bug"></i> {{localize "WH40K.MutantBackground.ConvertMalignancy"}}
+        </button>
+    </div>
+</div>
