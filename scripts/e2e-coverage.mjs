@@ -973,6 +973,33 @@ const SHEET_ACTION_FLOWS = [
 ];
 recordDimension('sheet-action.flow', covered['sheet-action.flow'], SHEET_ACTION_FLOWS);
 
+// utils/prerequisite-validator + utils/roll-table-utils flows exercised
+// by tests/e2e/utils-validators.spec.ts. Drives source-code coverage on
+// `src/module/utils/prerequisite-validator.ts` (0% / 39.2% pre-spec) and
+// `src/module/utils/roll-table-utils.ts` (0% / 45.2% pre-spec). The
+// roll-table-* domain wrappers tolerate a null return when the named
+// roll table isn't packed in the test world — coverage attribution
+// happens via the call, not the outcome. Keys MUST match the
+// recordCoverage('utils-validators.flow', ...) calls in the spec.
+const UTILS_VALIDATORS_FLOWS = [
+    'prereq-parse-characteristic',
+    'prereq-parse-skill',
+    'prereq-parse-empty',
+    'prereq-check-empty',
+    'prereq-check-unmet-characteristic',
+    'prereq-check-unmet-skill',
+    'roll-table-findInCompendiums',
+    'roll-table-rollPsychicPhenomena',
+    'roll-table-rollPerilsOfTheWarp',
+    'roll-table-rollMutation',
+    'roll-table-rollMalignancy',
+    'roll-table-rollNavigatorMutation',
+    'roll-table-rollGiftOfTheGods',
+    'roll-table-rollFearEffects',
+    'roll-table-rollCriticalInjury',
+];
+recordDimension('utils-validators.flow', covered['utils-validators.flow'], UTILS_VALIDATORS_FLOWS);
+
 // Loot drop/pickup feature dimension exercised by tests/e2e/loot.spec.ts.
 // Keys MUST match the recordCoverage('loot.flow', ...) calls in that spec.
 // Canvas/HUD placement is a runtime-render concern; the document-layer
