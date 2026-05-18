@@ -57,6 +57,11 @@ export class BasicActionManager {
                     void this._applyDamage(ev);
                 });
             });
+            html.querySelectorAll('.roll-control__replace-damage-die').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._replaceDamageDieWithDoS(ev);
+                });
+            });
         });
 
         // Initialize Scene Control Buttons
@@ -114,12 +119,32 @@ export class BasicActionManager {
         // Calculate hits (deferred from attack roll)
         await actionData.calculateHits();
 
-        // Build template data
+        // Propagate attack DoS to each hit so the chat card can offer the
+        // "replace damage die with DoS" action (#129 — DH2 core L10398-10414).
+        const attackDoS = actionData.rollData.dos;
+        for (const hit of actionData.damageData?.hits ?? []) {
+            hit.dos = attackDoS;
+        }
+
+        await this._postDamageCard(actionData);
+    }
+
+    /**
+     * Render `damage-roll-chat.hbs` for an existing ActionData and post it
+     * to the chat log. Extracted so the "replace damage die with DoS"
+     * action (#129) can re-emit the card after mutating a Hit's dice.
+     */
+    async _postDamageCard(actionData: ActionData): Promise<void> {
         const damageRolls = actionData.damageData?.hits.map((h: Hit) => h.damageRoll).filter((r: Roll | undefined): r is Roll => r != null);
         const templateData = {
             weaponName: actionData.rollData.name,
             hits: actionData.damageData?.hits,
             targetActor: actionData.rollData.targetActor,
+            rollId: actionData.id,
+            // The replacement option is offered while the original ActionData is still
+            // resident in `storedRolls` — once it expires (page reload, etc.) the
+            // button is omitted from re-rendered cards.
+            canReplaceDie: true,
             // eslint-disable-next-line no-restricted-syntax -- boundary: psychicEffect is a system extension not declared in ActionData type
             psychicEffect: (actionData as unknown as { psychicEffect?: unknown }).psychicEffect ?? null,
         };
@@ -127,6 +152,64 @@ export class BasicActionManager {
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
         await postChatCard(html, { rolls: damageRolls });
+    }
+
+    /**
+     * Handle the chat-card "Replace die with DoS" button (#129 — DH2 core
+     * L10398-10414). Looks up the original ActionData by `data-roll-id`,
+     * mutates the targeted Hit's lowest active damage die to the attack's
+     * DoS, then re-emits the damage chat card with the updated total. A
+     * short announcement card narrates the swap.
+     */
+    async _replaceDamageDieWithDoS(event: Event): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLButtonElement;
+        const rollId = btn.dataset['rollId'];
+        const hitIndexRaw = btn.dataset['hitIndex'];
+        const dosRaw = btn.dataset['dos'];
+
+        const actionData = this.getActionData(rollId);
+        if (actionData == null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
+            return;
+        }
+
+        const hitIndex = hitIndexRaw !== undefined && hitIndexRaw !== '' ? Number.parseInt(hitIndexRaw, 10) : 0;
+        const dos = dosRaw !== undefined && dosRaw !== '' ? Number.parseInt(dosRaw, 10) : actionData.rollData.dos;
+        const hit = actionData.damageData?.hits[hitIndex];
+        if (hit === undefined || dos <= 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateAddDoSNotSuccess'));
+            return;
+        }
+
+        // Capture pre-replacement totals for the announcement.
+        const before = hit.totalDamage;
+        const replaced = hit.replaceDamageDieWithDoS(dos);
+        if (!replaced) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback; replacement only fails when the Roll has no dice terms
+            ui.notifications.warn('No damage die available to replace.');
+            return;
+        }
+
+        // Disable the button so the player cannot double-spend on the same Hit.
+        btn.disabled = true;
+
+        // Re-emit the damage card with the updated hit totals.
+        await this._postDamageCard(actionData);
+
+        // Short announcement of what was swapped — keeps the audit trail in chat.
+        // `delta = total_after - total_before = dos - previous_die`, so
+        // `previous_die = dos - delta`.
+        const delta = hit.totalDamage - before;
+        const announcement = game.i18n.format('WH40K.DamageDieReplacement.ReplacedDieMessage', {
+            weapon: actionData.rollData.name,
+            previous: String(dos - delta),
+            dos: String(dos),
+            total: String(hit.totalDamage),
+        });
+        await postChatCard(
+            `<div class="wh40k-rpg tw-font-ui tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[var(--wh40k-card-gold)] tw-bg-amber-500/20 tw-text-[var(--wh40k-card-text)] tw-text-[0.85rem]">${announcement}</div>`,
+        );
     }
 
     async _refundResources(event: Event): Promise<void> {
