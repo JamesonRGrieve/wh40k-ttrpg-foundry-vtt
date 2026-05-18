@@ -41,4 +41,51 @@ test.describe('Storybook integration', () => {
         await expect(page.getByText('GM Tools')).toBeVisible();
         await expect(page.getByText('Scale to Threat')).toBeVisible();
     });
+
+    test('renders the composed IM character biography story', async ({ page }) => {
+        await page.goto('/iframe.html?id=actor-character-sheets--imperium-maledictum-biography');
+
+        await expect(page.locator('input[value="House Varonius"]').first()).toBeVisible();
+        await expect(page.locator('input[value="Recover a lost ledger"]').first()).toBeVisible();
+    });
+
+    test('renders the skill chat card with specializations', async ({ page }) => {
+        await page.goto('/iframe.html?id=chat-skill-card--with-specializations');
+
+        await expect(page.getByText('Common Lore')).toBeVisible();
+        await expect(page.getByText('Advanced Skill')).toBeVisible();
+        await expect(page.getByText(/Imperial Creed/)).toBeVisible();
+    });
+
+    test('renders the composed DH2 weapon inventory panel', async ({ page }) => {
+        await page.goto('/iframe.html?id=inventory-item-table--weapon-panel-dh-2');
+
+        await expect(page.getByText(/Lasgun/).first()).toBeVisible();
+        await expect(page.locator('[data-action="itemRoll"]')).toHaveCount(2);
+    });
+
+    test('renders the active modifiers shared panel', async ({ page }) => {
+        await page.goto('/iframe.html?id=shared-components--active-modifiers-panel');
+
+        await expect(page.locator('.wh40k-rpg, [class*="modifier"]').first()).toBeAttached();
+    });
+
+    test('renders the weapon quick-actions shared component', async ({ page }) => {
+        await page.goto('/iframe.html?id=shared-components--weapon-quick-actions');
+
+        await expect(page.locator('[data-action]').first()).toBeAttached();
+    });
+
+    test('renders the simple-success roll chat card', async ({ page }) => {
+        await page.goto('/iframe.html?id=chat-roll-cards--simple-success');
+
+        await expect(page.locator('body')).not.toBeEmpty();
+        await expect(page.locator('.wh40k-rpg, [class*="roll"]').first()).toBeAttached();
+    });
+
+    test('renders the assignable damage roll chat card', async ({ page }) => {
+        await page.goto('/iframe.html?id=chat-roll-cards--damage-with-assignable-hit');
+
+        await expect(page.locator('.roll-control__assign-damage, [data-action*="ssign"]').first()).toBeAttached();
+    });
 });
