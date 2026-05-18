@@ -10,6 +10,12 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     declare availability: string;
     declare craftsmanship: string;
     declare quantity: number;
+    declare homebrew: {
+        inventory: {
+            profiles: Set<string>;
+            weight: number | null;
+        };
+    };
     declare cost: {
         dh1: {
             throneGelt: number | null;
@@ -82,6 +88,21 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 min: 0,
                 integer: true,
             }),
+            // Inventory-generator tagging. Content-agnostic primitive: a free
+            // set of profile tags + an optional relative draw weight. The tag
+            // *values* (vendor types / armoury tiers) live in compendium
+            // `_source/*.json`, never in `src/` (Direction #7). The generator
+            // discovers the available profiles by scanning the packs at
+            // runtime — nothing here enumerates them.
+            homebrew: new fields.SchemaField({
+                inventory: new fields.SchemaField({
+                    profiles: new fields.SetField(new fields.StringField({ required: true, blank: false }), {
+                        required: true,
+                        initial: [],
+                    }),
+                    weight: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                }),
+            }),
             cost: new fields.SchemaField({
                 dh1: new fields.SchemaField({
                     throneGelt: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
@@ -122,6 +143,38 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         PhysicalItemTemplate.#migrateCost(source);
+        PhysicalItemTemplate.#migrateHomebrew(source);
+    }
+
+    /**
+     * Normalize the homebrew inventory-tag field shape so legacy documents
+     * authored before the field existed validate under V14 strict mode.
+     * @param {object} source  The source data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData before schema validation
+    static #migrateHomebrew(source: Record<string, unknown>): void {
+        interface HomebrewShape {
+            inventory?: {
+                profiles?: unknown; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration field value may be any type before schema validation
+                weight?: unknown; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration field value may be any type before schema validation
+            };
+        }
+        const raw = (source['homebrew'] ?? {}) as HomebrewShape;
+        const inv = raw.inventory ?? {};
+
+        const profilesRaw = inv.profiles;
+        const profiles = Array.isArray(profilesRaw)
+            ? profilesRaw.filter((p): p is string => typeof p === 'string' && p.trim().length > 0).map((p) => p.trim())
+            : [];
+
+        const weightRaw = inv.weight;
+        let weight: number | null = null;
+        if (weightRaw !== null && weightRaw !== undefined && weightRaw !== '') {
+            const numeric = Number(weightRaw);
+            if (Number.isFinite(numeric) && numeric >= 0) weight = numeric;
+        }
+
+        source['homebrew'] = { inventory: { profiles, weight } };
     }
 
     /**

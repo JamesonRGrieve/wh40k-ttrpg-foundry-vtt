@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from './constants.ts';
+import { gameSystemPackPrefix } from './utils/game-system-pack-prefix.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
 /**
@@ -33,18 +34,6 @@ const SKIP_TYPES = new Set(['journalEntry']);
 
 /** Names that mark unconfigured stub items the GM hasn't filled out yet. */
 const STUB_NAMES = new Set(['New Talent', 'New JournalEntry', 'New Item']);
-
-/**
- * Map an actor's `system.gameSystem` value to the pack-name prefix used by the
- * compendium packs. Actor docs use the edition-suffixed variant (e.g. `dh2e`)
- * but the packs were authored without it (`dh2-core-stats-skills`). Strip a
- * trailing `e` to bridge the two; everything else passes through.
- */
-function gameSystemPackPrefix(gameSystem: string): string {
-    if (gameSystem === 'dh1e') return 'dh1';
-    if (gameSystem === 'dh2e') return 'dh2';
-    return gameSystem;
-}
 
 /** Strip ` (specialization)` suffix from an item name for fallback matching. */
 function stripSpecialization(name: string): string {
