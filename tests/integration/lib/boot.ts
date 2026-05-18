@@ -43,13 +43,17 @@ export async function bootFoundryOnce(): Promise<BootResult> {
         cached = { booted: false, skipped: true };
         return cached;
     }
+    let result: BootResult;
     try {
-        cached = await doBoot();
+        result = await doBoot();
     } catch (err) {
         // eslint-disable-next-line no-console
         console.warn(`[integration] Tier A boot threw — tests will skip. Reason: ${(err as Error).message}`);
-        cached = { booted: false, skipped: true, error: err as Error };
+        result = { booted: false, skipped: true, error: err as Error };
     }
+    // Atomic check-and-set: a concurrent caller may have populated `cached`
+    // while we were awaiting `doBoot()`; the first result wins.
+    if (!cached) cached = result;
     return cached;
 }
 

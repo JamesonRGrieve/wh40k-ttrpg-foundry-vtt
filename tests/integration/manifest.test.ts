@@ -7,13 +7,12 @@ const ok = requireOrSkip('A');
 describe.skipIf(!ok)('system manifest (Tier A)', () => {
     it('boots Foundry into jsdom (or skips with a clear reason)', async () => {
         const result = await bootFoundryOnce();
-        if (result.skipped) {
-            // Boot failure (not a missing license — that path already skipped via `ok`).
-            expect(result.error?.message ?? 'boot skipped').toBeTruthy();
-            return;
-        }
-        expect(result.booted).toBe(true);
-        expect(result.runtime?.foundry).toBeDefined();
+        // A boot failure (not a missing license — that path already skipped via
+        // `ok`) is an acceptable outcome as long as it carries a reason; a
+        // successful boot must expose the Foundry runtime.
+        const skippedWithReason = result.skipped && Boolean(result.error?.message ?? 'boot skipped');
+        const bootedWithRuntime = result.booted && result.runtime?.foundry !== undefined;
+        expect(skippedWithReason || bootedWithRuntime).toBe(true);
     });
 
     it('exposes CONFIG.Actor and CONFIG.Item once booted', async () => {
