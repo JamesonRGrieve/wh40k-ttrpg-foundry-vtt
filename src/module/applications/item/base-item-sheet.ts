@@ -8,6 +8,8 @@ import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import * as EffectActions from '../api/effect-actions.ts';
+import type { EffectsOwner } from '../api/effect-actions.ts';
 import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
@@ -49,9 +51,9 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             editImage: BaseItemSheet.#onEditImage,
             toggleEditMode: BaseItemSheet.#toggleEditMode,
             effectCreate: BaseItemSheet.#effectCreate,
-            effectEdit: BaseItemSheet.#effectEdit,
-            effectDelete: BaseItemSheet.#effectDelete,
-            effectToggle: BaseItemSheet.#effectToggle,
+            effectEdit: EffectActions.effectEdit,
+            effectDelete: EffectActions.effectDelete,
+            effectToggle: EffectActions.effectToggle,
             toggleSection: BaseItemSheet.#toggleSection,
         },
         tabs: [
@@ -385,55 +387,23 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /**
-     * Handle creating an effect.
+     * The ActiveEffect-owning document for this sheet. Consumed by the shared
+     * `api/effect-actions.ts` handlers (effectEdit / effectDelete /
+     * effectToggle) wired into DEFAULT_OPTIONS.actions.
+     */
+    get effectsOwner(): EffectsOwner {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem structurally satisfies EffectsOwner; fvtt-types' ActiveEffect surface is narrower than the adapter
+        return this.item as unknown as EffectsOwner;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle creating an effect. Item effects carry an `origin` back-ref and
+     * default disabled; the shared primitive owns the create call.
      */
     static async #effectCreate(this: BaseItemSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        await this.item.createEmbeddedDocuments(
-            'ActiveEffect',
-            [
-                {
-                    name: 'New Effect',
-                    img: 'icons/svg/aura.svg',
-                    origin: this.item.uuid,
-                    disabled: true,
-                },
-            ],
-            { renderSheet: true },
-        );
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle editing an effect.
-     */
-    static #effectEdit(this: BaseItemSheet, _event: Event, target: HTMLElement): void {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
-        const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- V14 backward compat: sheet.render(boolean) still works; V2 render(options) is preferred but not typed on the sheet union
-        void effect?.sheet?.render(true);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle deleting an effect.
-     */
-    static async #effectDelete(this: BaseItemSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
-        const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
-        await effect?.delete();
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle toggling an effect.
-     */
-    static async #effectToggle(this: BaseItemSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
-        const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
-        await effect?.update({ disabled: !effect.disabled });
+        await EffectActions.createEffect(this.effectsOwner, { origin: this.item.uuid, disabled: true }, { renderSheet: true });
     }
 
     /* -------------------------------------------- */
