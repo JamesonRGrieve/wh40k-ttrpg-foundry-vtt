@@ -145,6 +145,12 @@
             "MinusButton": "Remove an assistant",
             "BreakdownLine": "Assistance"
         },
+        "TryingAgain": {
+            "WarningTitle": "Trying Again",
+            "BlockedMessage": "RAW: this skill cannot be retried within the same scene without a meaningful change in circumstances.",
+            "CumulativeMessage": "RAW: each retry within the same scene takes a cumulative -10 to the test.",
+            "PenaltyLabel": "Cumulative penalty"
+        },
         "PsyMode": {
             "Fettered": "Fettered",
             "Unfettered": "Unfettered",
@@ -909,6 +915,21 @@
             "ApplyButton": "Apply",
             "Cancel": "Cancel",
             "ChatTitle": "Sister of Battle Elite Advance"
+        },
+        "MutantBackground": {
+            "DialogTitle": "Apply Mutant Background",
+            "Description": "Confirm the Mutant origin path background. The applicant begins play with starting Corruption and the Twisted Flesh talent, allowing failed Malignancy tests to be converted into Mutations.",
+            "StartingCorruption": "Starting Corruption",
+            "CorruptionUnit": "Corruption Points at character generation",
+            "AppliedTo": "Applying to:",
+            "TwistedFleshLabel": "Twisted Flesh",
+            "TwistedFleshNote": "When you fail a Malignancy test, you may convert the malignancy into a Mutation instead. The GM resolves the conversion from the Mutation table.",
+            "Granted": "Granted",
+            "ApplyButton": "Apply",
+            "Cancel": "Cancel",
+            "ChatTitle": "Mutant Background Applied",
+            "AppliedMessage": "The Mutant background has been applied to",
+            "ConvertMalignancy": "Convert Failed Malignancy"
         },
         "IncorruptibleDevotion": {
             "DialogTitle": "Convert Corruption to Insanity (Adepta Sororitas)",
