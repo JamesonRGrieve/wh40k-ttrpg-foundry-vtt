@@ -1,0 +1,41 @@
+{{!-- Two-Weapon Wielder errata p. 132 refocus chat card (#147). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-twr-card tw-p-4 tw-rounded-md tw-border tw-border-amber-600 tw-bg-[rgba(28,20,8,0.88)] dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-rose-700"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-hand-fist tw-text-[1.1rem] tw-text-amber-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-amber-200">
+            {{localize "WH40K.TwoWeaponWielder.ChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        {{localize "WH40K.TwoWeaponWielder.RefocusSummary"}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        {{#each attacks}}
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">
+                {{#if (eq this.hand "main")}}
+                    {{localize "WH40K.TwoWeaponWielder.MainHandLabel"}}
+                {{else}}
+                    {{localize "WH40K.TwoWeaponWielder.OffHandLabel"}}
+                {{/if}}
+            </span>
+            <span class="tw-font-bold tw-text-amber-100">
+                {{this.actionName}}
+                ({{this.actionCost}}{{#if (lt this.modifier 0)}}, {{this.modifier}}{{/if}})
+            </span>
+        </li>
+        {{/each}}
+    </ul>
+
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(217,160,60,0.45)] tw-bg-[rgba(120,82,20,0.18)] tw-text-[0.85rem] tw-text-[#fdebd0]">
+        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
+            {{localize "WH40K.TwoWeaponWielder.FreeActionLabel"}}
+        </div>
+        <div>{{localize "WH40K.TwoWeaponWielder.FreeActionNote"}}</div>
+    </div>
+</div>
