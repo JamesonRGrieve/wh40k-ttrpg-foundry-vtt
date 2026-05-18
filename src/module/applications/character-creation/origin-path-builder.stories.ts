@@ -107,6 +107,8 @@ interface BuilderStoryArgs {
         aptitudes: string[];
         wounds: string | null;
         fate: string | null;
+        aptitudeCollisions?: Array<{ original: string; replacement: string | null }>;
+        hasUnresolvedAptitudeCollision?: boolean;
     };
     status: {
         stepsComplete: boolean;
@@ -524,5 +526,52 @@ export const Issue198VoidBornPreview: Story = {
         expect(canvas.getByText('Void Accustomed')).toBeTruthy();
         // Re-clicking the previewed card must not throw (the bug path)
         clickAction(canvasElement, 'selectOriginCard');
+    },
+};
+
+/**
+ * Regression coverage for issue #205: the origin-path builder used to apply a
+ * step's aptitude grant on top of an aptitude the character already had, with
+ * no warning, no chooser, and no swap — the second grant was silently wasted.
+ *
+ * This story renders the preview state with the duplicate-aptitude warning
+ * banner visible (Awareness is already on the character, and the just-confirmed
+ * step would grant Awareness again). The banner exposes a "Pick replacement"
+ * button wired to the `resolveAptitudeDouble` action. The Playwright spec at
+ * `tests/storybook/issue-205-aptitude-doubling.spec.ts` opens this story and
+ * snapshots it; the unit play function asserts the banner is in the DOM.
+ */
+export const Issue205AptitudeDoubling: Story = {
+    args: makeArgs({
+        selectedOrigin: makeSelectedOrigin('Hive World', { isConfirmed: true }),
+        preview: {
+            characteristics: [],
+            skills: [],
+            talents: [],
+            aptitudes: ['Awareness', 'Fellowship'],
+            wounds: null,
+            fate: null,
+            aptitudeCollisions: [{ original: 'Awareness', replacement: null }],
+            hasUnresolvedAptitudeCollision: true,
+        },
+        status: {
+            stepsComplete: false,
+            stepsCount: 1,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Banner renders with the duplicate-aptitude warning title
+        expect(canvas.getByText('Duplicate aptitude detected')).toBeTruthy();
+        // The conflicting aptitude is named in the banner list
+        expect(canvas.getByText('Awareness')).toBeTruthy();
+        // The chooser button is present and clickable
+        const pickBtn = canvasElement.querySelector('[data-action="resolveAptitudeDouble"][data-aptitude="Awareness"]');
+        expect(pickBtn).toBeTruthy();
     },
 };
