@@ -10,6 +10,7 @@
  * (template throws, story id rename) rather than lock down DOM shape.
  */
 import { expect, test } from '@playwright/test';
+import { assertStoryRendered } from './lib/assert-story-rendered';
 
 test.describe('Issue #184 — RT macrobattery firing flow', () => {
     test('renders the macrobattery firing chat card', async ({ page }) => {
@@ -25,7 +26,7 @@ test.describe('Issue #184 — RT macrobattery firing flow', () => {
         // Snapshot first so visual review always has the artefact.
         await page.screenshot({ path: '.e2e-screenshots/issue-184-macrobattery.png', fullPage: true });
 
-        await expect(page.locator('body')).toBeAttached();
+        await assertStoryRendered(page);
         // The deterministic story payload puts the weapon name in the card title.
         // Lenient: pass if either the canvas content rendered or the story slot
         // mounted — both prove the chat-card template did not throw.

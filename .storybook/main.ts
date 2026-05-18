@@ -66,6 +66,12 @@ const config: StorybookConfig = {
         '../stories/**/*.mdx',
         '../stories/**/*.stories.@(js|ts)',
         '../src/module/**/*.stories.@(js|ts)',
+        // Co-located stories under `src/templates/` (e.g. panel-only stories
+        // that target an .hbs partial directly). Without this glob Storybook
+        // silently misses them and Playwright specs that hit those story slugs
+        // get a "Couldn't find story matching ..." error page instead of the
+        // intended render — see the issue-190 regression history.
+        '../src/templates/**/*.stories.@(js|ts)',
     ],
     // Foundry's compiled `foundry2.css`, `mce.css`, and the rest of
     // `.foundry-release/public/` are NOT bundled. The Storybook deployment

@@ -6,6 +6,7 @@
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
+import { MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
@@ -126,6 +127,7 @@ type CharacterSheetContextDeclaredFields = {
     encumbrancePercent?: number;
     backpackPercent?: number;
     transactionSourceCount?: number;
+    hasPenitent?: boolean;
 };
 
 type OriginSummary = {
@@ -267,6 +269,9 @@ export default class CharacterSheet extends BaseActorSheet {
             // Possession track (#82 — beyond.md p.69)
             'unleashDaemon': CharacterSheet.#unleashDaemon,
             'resetPossessionSession': CharacterSheet.#resetPossessionSession,
+
+            // Penitent role: Mortification of the Flesh (#94 — within.md p.36)
+            'applyMortification': CharacterSheet.#applyMortification,
 
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
@@ -635,6 +640,17 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Prepare active modifiers panel (Phase 5 Integration)
         context.activeModifiers = this.prepareActiveModifiers();
+
+        // Penitent role detection (#94 — within.md p.36).
+        // A Penitent is identified by the presence of a talent/trait/role
+        // item whose name matches "Penitent" or "Mortification of the Flesh"
+        // (case-insensitive). This is intentionally name-based rather than
+        // UUID-based so it works for hand-authored / dropped-in talents in
+        // addition to compendium items.
+        context.hasPenitent = this.actor.items.some((item) => {
+            const itemName = item.name?.toLowerCase() ?? '';
+            return itemName.includes('penitent') || itemName.includes('mortification of the flesh');
+        });
 
         return context;
     }
@@ -3327,6 +3343,59 @@ export default class CharacterSheet extends BaseActorSheet {
         } catch (error) {
             this._notify('error', `Failed to reset possession session: ${(error as Error).message}`, { duration: 5000 });
             console.error('Reset possession session error:', error);
+        }
+    }
+
+    /**
+     * Penitent role — Mortification of the Flesh (#94, within.md p.36).
+     *
+     * Applies the {@link MORTIFICATION_OF_THE_FLESH} effect:
+     *   - +N Fatigue via `actor.applyFatigue(fatigueCost)`
+     *   - temporary ActiveEffect granting +WP modifier for durationRounds rounds
+     *   - chat card narrating the action
+     *
+     * Errors surface as in-sheet notifications; the sheet re-renders on the
+     * subsequent fatigue mutation.
+     * @this {CharacterSheet}
+     */
+    static async #applyMortification(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            await this.actor.applyFatigue(MORTIFICATION_OF_THE_FLESH.fatigueCost);
+
+            const effectData = {
+                name: game.i18n.localize('WH40K.Mortification.ChatTitle'),
+                icon: 'icons/svg/aura.svg',
+                changes: [
+                    {
+                        key: 'system.characteristics.willpower.modifier',
+                        mode: 2,
+                        value: String(MORTIFICATION_OF_THE_FLESH.wpBonus),
+                        priority: 20,
+                    },
+                ],
+                duration: { rounds: MORTIFICATION_OF_THE_FLESH.durationRounds },
+                flags: { wh40k: { source: 'mortification' } },
+            };
+            await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+
+            const gameSystem = this._resolveGameSystemId() ?? '';
+            const content = await foundry.applications.handlebars.renderTemplate(
+                'systems/wh40k-rpg/templates/chat/mortification-chat.hbs',
+                {
+                    actorName: this.actor.name,
+                    wpBonus: MORTIFICATION_OF_THE_FLESH.wpBonus,
+                    durationRounds: MORTIFICATION_OF_THE_FLESH.durationRounds,
+                    gameSystem,
+                },
+            );
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+            });
+        } catch (error) {
+            this._notify('error', `Failed to apply Mortification of the Flesh: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Mortification of the Flesh error:', error);
         }
     }
 
