@@ -17,6 +17,7 @@ import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/glob
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
+import * as EffectActions from '../api/effect-actions.ts';
 import * as StatActions from '../api/stat-adjustment-actions.ts';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
@@ -3503,15 +3504,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #createEffect(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
-            await this.actor.createEmbeddedDocuments('ActiveEffect', [
-                {
-                    name: 'New Effect',
-                    img: 'icons/svg/aura.svg',
-                    disabled: false,
-                    duration: {},
-                    changes: [],
-                },
-            ]);
+            await EffectActions.createEffect(this.effectsOwner, { disabled: false, duration: {}, changes: [] });
 
             this._notify('info', 'New effect created', {
                 duration: 2000,
@@ -3534,9 +3527,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #toggleEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const effectId = target.dataset['effectId'];
-            if (effectId === undefined || effectId === '') return;
-            const effect = this.actor.effects.get(effectId);
+            const effect = EffectActions.resolveEffect(this.effectsOwner, target);
 
             if (effect === undefined) {
                 this._notify('warning', 'Effect not found', {
@@ -3568,9 +3559,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #deleteEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const effectId = target.dataset['effectId'];
-            if (effectId === undefined || effectId === '') return;
-            const effect = this.actor.effects.get(effectId);
+            const effect = EffectActions.resolveEffect(this.effectsOwner, target);
 
             if (effect === undefined) {
                 this._notify('warning', 'Effect not found', {
