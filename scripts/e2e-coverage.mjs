@@ -918,6 +918,21 @@ recordDimension('npc-create.flow', covered['npc-create.flow'], NPC_CREATE_FLOWS)
 const CANVAS_FLOWS = ['ruler-module-imports', 'ruler-class-extends-token-ruler'];
 recordDimension('canvas.flow', covered['canvas.flow'], CANVAS_FLOWS);
 
+// Loot drop/pickup feature dimension exercised by tests/e2e/loot.spec.ts.
+// Keys MUST match the recordCoverage('loot.flow', ...) calls in that spec.
+// Canvas/HUD placement is a runtime-render concern; the document-layer
+// transfer + DataModel + sheet render are fully driveable headlessly.
+const LOOT_FLOWS = [
+    'loot-actor-type-registered',
+    'loot-datamodel-prepares',
+    'loot-pile-reports-contents',
+    'manager-pure-helpers',
+    'loot-sheet-renders',
+    'pickup-transfers-items',
+    'drop-non-droppable-rejected',
+];
+recordDimension('loot.flow', covered['loot.flow'], LOOT_FLOWS);
+
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
 const aggregatePercent = dimensionWeights.length ? Math.round((dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100) / 100 : 0;

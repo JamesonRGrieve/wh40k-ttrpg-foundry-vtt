@@ -16,3 +16,4 @@ export {
 export { default as NPCSheet } from './npc-sheet.ts';
 export { default as VehicleSheet } from './vehicle-sheet.ts';
 export { default as StarshipSheet } from './starship-sheet.ts';
+export { default as LootActorSheet } from './loot-sheet.ts';

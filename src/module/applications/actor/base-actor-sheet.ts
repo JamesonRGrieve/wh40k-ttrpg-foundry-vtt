@@ -7,6 +7,7 @@ import WH40K from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
+import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -286,6 +287,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             itemDelete: BaseActorSheet.#itemDelete,
             itemVocalize: BaseActorSheet.#itemVocalize,
             itemCreate: BaseActorSheet.#itemCreate,
+            dropItem: BaseActorSheet.#dropItem,
             // effectCreate: BaseActorSheet.#effectCreate,
             effectEdit: BaseActorSheet.#effectEdit,
             effectDelete: BaseActorSheet.#effectDelete,
@@ -1671,8 +1673,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Check characteristics — absent on actor types that don't define them
         // (vehicles, starships). Guard the iterate so render doesn't blow up.
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: characteristics absent on vehicle/starship system schemas
         const characteristics = current.characteristics;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: characteristics absent on vehicle/starship system schemas
         if (characteristics !== undefined) {
             for (const [key, char] of Object.entries(characteristics)) {
                 const prevChar = previous.characteristics?.[key];
@@ -1965,6 +1967,44 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 console.error('WH40K | itemDelete: Error deleting item', err);
                 ui.notifications.error(`Failed to delete ${item.name}`);
             }
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle dropping an item onto the scene as a loot pile under the
+     * actor's token. The whole stack moves; transfer + placement is shared
+     * with the token-HUD pickup path via {@link ItemDropManager}.
+     * @this {BaseActorSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #dropItem(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
+        if (itemId === undefined || itemId === '') {
+            console.warn('WH40K | dropItem: No itemId found', target);
+            return;
+        }
+        const item = this.actor.items.get(itemId);
+        if (item === undefined) {
+            console.warn('WH40K | dropItem: Item not found with ID', itemId);
+            return;
+        }
+
+        const confirmed = await ConfirmationDialog.confirm({
+            title: game.i18n.format('WH40K.Loot.DropTitle', { item: item.name }),
+            content: game.i18n.format('WH40K.Loot.DropConfirm', { item: item.name }),
+            confirmLabel: game.i18n.localize('WH40K.Loot.DropConfirmLabel'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
+        });
+        if (!confirmed) return;
+
+        try {
+            await ItemDropManager.dropItemFromActor(this.actor, item);
+        } catch (err) {
+            console.error('WH40K | dropItem: Error dropping item', err);
+            ui.notifications.error(game.i18n.format('WH40K.Warning.LootNotDroppable', { item: item.name }));
         }
     }
 
