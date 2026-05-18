@@ -29,9 +29,13 @@
  * predicate matches case-insensitively against the literal trait name.
  */
 export interface DaemonicActorLike {
+    // The index signature keeps this from being a "weak type": a real
+    // DataModel-backed actor `system` (which carries `[key: string]: unknown`)
+    // satisfies it structurally, while plain `{ traits: [...] }` test
+    // fixtures remain assignable too.
     system?: {
         traits?: ReadonlyArray<{ name?: string }>;
-    };
+    } & { [key: string]: unknown };
     items?: Iterable<{ type?: string; name?: string }>;
 }
 

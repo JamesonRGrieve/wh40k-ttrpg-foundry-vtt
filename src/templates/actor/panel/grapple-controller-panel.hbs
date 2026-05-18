@@ -1,0 +1,89 @@
+{{!--
+    Grapple Controller Panel (#120 — core.md L10155-10180).
+
+    Rendered on the Status tab when the actor is mid-grapple (the flag
+    `flags.wh40k.grapple.state` is `'grappling'` or `'controlled'`). Shows
+    the current grapple state badge and exposes the five opposed-Strength
+    actions: Damage / Throw Down (controller actions) and Break Free /
+    Stand Up / Move (controlled-side actions). The panel does NOT filter
+    by state — both sides see all five buttons and the resolver layer
+    decides what makes sense; this matches the way other action panels
+    (combat-actions-panel.hbs) surface every option and let the GM
+    arbitrate.
+
+    Iron-grey accent dressing: bordered slate panel with a muted heading.
+    Per-system theming follows the established `<system>:tw-*` variant
+    convention so the panel reads correctly under all seven systems.
+--}}
+<section class="wh40k-grapple-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-slate-500
+                tw-bg-slate-700/20
+                dh2e:tw-border-slate-400 rt:tw-border-slate-400 im:tw-border-slate-400"
+         data-grapple-state="{{grappleState}}">
+
+    {{!-- Header: title + state badge --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-slate-200">
+            <i class="fas fa-hands-bound tw-text-slate-300" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Grapple.PanelTitle"}}</span>
+        </h3>
+        <span class="wh40k-grapple-state-badge tw-px-2 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]
+                     tw-bg-slate-600/40 tw-text-slate-100 tw-border tw-border-solid tw-border-slate-500">
+            {{#if (eq grappleState 'grappling')}}{{localize "WH40K.Grapple.StateGrappling"}}{{else}}{{#if (eq grappleState 'controlled')}}{{localize "WH40K.Grapple.StateControlled"}}{{else}}{{localize "WH40K.Grapple.StateNone"}}{{/if}}{{/if}}
+        </span>
+    </header>
+
+    {{!-- Action buttons --}}
+    <div class="tw-grid tw-grid-cols-2 tw-gap-2">
+        <button type="button"
+                class="wh40k-grapple-damage-btn tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                       tw-px-2 tw-py-1.5 tw-rounded tw-bg-slate-700/40 tw-border tw-border-solid tw-border-slate-500
+                       tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-slate-100
+                       tw-cursor-pointer tw-transition-colors hover:tw-bg-slate-600/60"
+                data-action="grappleDamageOpponent"
+                title="{{localize 'WH40K.Grapple.DamageOpponent'}}">
+            <i class="fas fa-fist-raised" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Grapple.DamageOpponent"}}</span>
+        </button>
+        <button type="button"
+                class="wh40k-grapple-throw-btn tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                       tw-px-2 tw-py-1.5 tw-rounded tw-bg-slate-700/40 tw-border tw-border-solid tw-border-slate-500
+                       tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-slate-100
+                       tw-cursor-pointer tw-transition-colors hover:tw-bg-slate-600/60"
+                data-action="grappleThrowDownOpponent"
+                title="{{localize 'WH40K.Grapple.ThrowDownOpponent'}}">
+            <i class="fas fa-person-falling" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Grapple.ThrowDownOpponent"}}</span>
+        </button>
+        <button type="button"
+                class="wh40k-grapple-break-btn tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                       tw-px-2 tw-py-1.5 tw-rounded tw-bg-slate-700/40 tw-border tw-border-solid tw-border-slate-500
+                       tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-slate-100
+                       tw-cursor-pointer tw-transition-colors hover:tw-bg-slate-600/60"
+                data-action="grappleBreakFree"
+                title="{{localize 'WH40K.Grapple.BreakFree'}}">
+            <i class="fas fa-handcuffs" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Grapple.BreakFree"}}</span>
+        </button>
+        <button type="button"
+                class="wh40k-grapple-stand-btn tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                       tw-px-2 tw-py-1.5 tw-rounded tw-bg-slate-700/40 tw-border tw-border-solid tw-border-slate-500
+                       tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-slate-100
+                       tw-cursor-pointer tw-transition-colors hover:tw-bg-slate-600/60"
+                data-action="grappleStandUp"
+                title="{{localize 'WH40K.Grapple.StandUp'}}">
+            <i class="fas fa-person-arrow-up-from-line" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Grapple.StandUp"}}</span>
+        </button>
+        <button type="button"
+                class="wh40k-grapple-move-btn tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-col-span-2
+                       tw-px-2 tw-py-1.5 tw-rounded tw-bg-slate-700/40 tw-border tw-border-solid tw-border-slate-500
+                       tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-slate-100
+                       tw-cursor-pointer tw-transition-colors hover:tw-bg-slate-600/60"
+                data-action="grappleMove"
+                title="{{localize 'WH40K.Grapple.Move'}}">
+            <i class="fas fa-arrows-up-down-left-right" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Grapple.Move"}}</span>
+        </button>
+    </div>
+</section>

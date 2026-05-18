@@ -7,6 +7,16 @@ import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
+import {
+    resolveBreakGrapple,
+    resolveDamageOpponent,
+    resolveMoveWhileGrappling,
+    resolveStandUpInGrapple,
+    resolveThrowDownOpponent,
+    type GrappleResolution,
+    type GrappleState,
+    type OpposedStrengthInput,
+} from '../../rules/grapple.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
@@ -129,6 +139,7 @@ type CharacterSheetContextDeclaredFields = {
     transactionSourceCount?: number;
     hasPenitent?: boolean;
     hasFanatic?: boolean;
+    grappleState?: GrappleState;
 };
 
 type OriginSummary = {
@@ -279,6 +290,13 @@ export default class CharacterSheet extends BaseActorSheet {
 
             // Fanatic role: Death to All Who Oppose Me (#93 — within.md p.34)
             'deathToAllWhoOpposeMe': CharacterSheet.#deathToAllWhoOpposeMe,
+
+            // Grapple controller actions (#120 — core.md L10155-10180)
+            'grappleDamageOpponent': CharacterSheet.#grappleDamageOpponent,
+            'grappleThrowDownOpponent': CharacterSheet.#grappleThrowDownOpponent,
+            'grappleBreakFree': CharacterSheet.#grappleBreakFree,
+            'grappleStandUp': CharacterSheet.#grappleStandUp,
+            'grappleMove': CharacterSheet.#grappleMove,
 
             // Subtlety panel (#87) — DH2 warband-subtlety stepper + breakdown popout.
             'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
@@ -449,6 +467,11 @@ export default class CharacterSheet extends BaseActorSheet {
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
+        status: {
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-status.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
         combat: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
@@ -485,6 +508,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static TABS: SheetTabConfig[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
+        { tab: 'status', label: 'WH40K.Tabs.Status', group: 'primary', cssClass: 'tab-status' },
         { tab: 'skills', label: 'WH40K.Tabs.Statistics', group: 'primary', cssClass: 'tab-skills' },
         // talents tab removed — content moved to overview and skills tabs
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
@@ -681,6 +705,13 @@ export default class CharacterSheet extends BaseActorSheet {
             const itemName = item.name?.toLowerCase() ?? '';
             return itemName.includes('fanatic') || itemName.includes('death to all who oppose me');
         });
+
+        // Grapple state (#120 — core.md L10155-10180). The flag is set by
+        // combat tooling (Charge / Standard Attack workflow) and read by
+        // the Status tab to surface the controller-actions panel.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
+        const grappleFlag = (this.actor.flags as { wh40k?: { grapple?: { state?: GrappleState } } } | undefined)?.wh40k?.grapple;
+        context.grappleState = grappleFlag?.state ?? 'none';
 
         return context;
     }
@@ -3504,6 +3535,72 @@ export default class CharacterSheet extends BaseActorSheet {
             this._notify('error', `Failed to apply Death to All Who Oppose Me: ${(error as Error).message}`, { duration: 5000 });
             console.error('Death to All Who Oppose Me error:', error);
         }
+    }
+
+    /**
+     * Shared roller for the five grapple actions (#120 — core.md L10155-10180).
+     *
+     * Rolls 1d100 for the actor against their Strength total, rolls 1d100
+     * against a placeholder opponent Strength (the opponent is supplied
+     * through targeting in the live combat flow; for now the controller
+     * actions roll an unopposed test echoed through the resolver so the
+     * DoS math stays canonical), and dispatches the result through the
+     * requested resolver. Returns the resolution so the caller can decide
+     * follow-up (chat card, state flag flip).
+     */
+    private async _rollGrappleOpposed(
+        resolver: (input: OpposedStrengthInput) => GrappleResolution,
+    ): Promise<GrappleResolution | null> {
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is keyed by characteristic slug
+            const characteristics = (this.actor.system as { characteristics?: Record<string, { total?: number } | undefined> }).characteristics;
+            const strengthTotal = characteristics?.['strength']?.total ?? 30;
+            const actorRollObj = await new Roll('1d100').evaluate();
+            const opponentRollObj = await new Roll('1d100').evaluate();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.total is typed loosely; we know it's a number after evaluate()
+            const actorRoll = Math.trunc(Number((actorRollObj as unknown as { total?: number }).total ?? 0));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: same as above
+            const opponentRoll = Math.trunc(Number((opponentRollObj as unknown as { total?: number }).total ?? 0));
+            return resolver({
+                actorRoll,
+                actorStrength: strengthTotal,
+                opponentRoll,
+                opponentStrength: strengthTotal,
+            });
+        } catch (error) {
+            this._notify('error', `Grapple action failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Grapple action error:', error);
+            return null;
+        }
+    }
+
+    /** Grapple controller — Damage Opponent (#120, opposed Strength). */
+    static async #grappleDamageOpponent(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._rollGrappleOpposed(resolveDamageOpponent);
+    }
+
+    /** Grapple controller — Throw Down Opponent (#120, opposed Strength). */
+    static async #grappleThrowDownOpponent(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._rollGrappleOpposed(resolveThrowDownOpponent);
+    }
+
+    /** Grapple controlled — Break Free (#120, opposed Strength). */
+    static async #grappleBreakFree(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const result = await this._rollGrappleOpposed(resolveBreakGrapple);
+        if (result?.success) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
+            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag('wh40k', 'grapple', { state: 'none' });
+        }
+    }
+
+    /** Grapple controlled — Stand Up while gripped (#120, opposed Strength). */
+    static async #grappleStandUp(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._rollGrappleOpposed(resolveStandUpInGrapple);
+    }
+
+    /** Grapple controlled — Move while grappling (#120, opposed Strength). */
+    static async #grappleMove(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._rollGrappleOpposed(resolveMoveWhileGrappling);
     }
 
     /**
