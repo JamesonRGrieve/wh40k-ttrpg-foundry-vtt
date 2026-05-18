@@ -71,6 +71,31 @@
         {{/if}}
     </div>
 
+    {{!-- Extended Test toggle (#59) — cumulative DoS toward a threshold. --}}
+    <div class="wh40k-extended-test-controls tw-flex tw-items-center tw-justify-between tw-gap-2 tw-mb-2 tw-py-1.5 tw-px-2 tw-border tw-border-[rgba(99,102,241,0.25)] tw-rounded-md tw-bg-[rgba(99,102,241,0.06)]"
+         data-tooltip="{{localize "WH40K.ExtendedTest.ToggleLabel"}}">
+        <label class="wh40k-extended-test-controls__toggle tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.78rem] tw-text-[#c8c8b8] tw-uppercase tw-tracking-[0.05em] tw-font-medium">
+            <input type="checkbox"
+                   class="wh40k-extended-test-controls__checkbox tw-w-4 tw-h-4 tw-cursor-pointer tw-accent-indigo-500"
+                   data-action="toggleExtended"
+                   name="extended"
+                   {{#if extended}}checked{{/if}} />
+            <span>{{localize "WH40K.ExtendedTest.ToggleLabel"}}</span>
+        </label>
+        {{#if extended}}
+        <div class="wh40k-extended-test-controls__threshold tw-flex tw-items-center tw-gap-1.5">
+            <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.ExtendedTest.ThresholdLabel"}}</span>
+            <input type="number"
+                   min="1"
+                   step="1"
+                   class="wh40k-extended-test-controls__threshold-input tw-w-14 tw-py-1 tw-px-1.5 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-border-[rgba(99,102,241,0.4)] tw-rounded tw-text-[#e0e7ff] tw-text-sm tw-text-center tw-font-bold tw-tabular-nums focus:tw-outline-none focus:tw-border-indigo-400 focus:tw-bg-[rgba(99,102,241,0.12)]"
+                   value="{{extendedThreshold}}"
+                   data-action="setExtendedThreshold"
+                   name="extendedThreshold" />
+        </div>
+        {{/if}}
+    </div>
+
     {{!-- Inline custom modifier: hidden until toggled --}}
     {{#if showCustomModifier}}
     <div class="tw-flex tw-items-center tw-justify-center tw-gap-2">

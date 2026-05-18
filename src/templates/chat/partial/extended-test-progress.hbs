@@ -1,0 +1,50 @@
+{{!--
+    Extended Test progress partial (#59).
+
+    Reusable summary of an ExtendedTestData ladder. Renders a cumulative
+    DoS-to-threshold progress bar plus per-attempt success/failure counts
+    and a hint banner for the next attempt.
+
+    Context shape (`extendedTest`):
+      - threshold:       number
+      - accumulatedDoS:  number
+      - successes:       number
+      - failures:        number
+      - failureBudget?:  number   (0 = unlimited)
+      - isComplete:      boolean
+      - isFailed:        boolean
+      - remaining:       number
+      - timePerAttempt?: string
+--}}
+{{#with extendedTest}}
+<div class="wh40k-extended-test-progress tw-flex tw-flex-col tw-gap-1.5 tw-mt-2 tw-px-3 tw-py-2 tw-rounded-md tw-bg-[rgba(99,102,241,0.08)] tw-border tw-border-[rgba(99,102,241,0.3)]">
+    <div class="wh40k-extended-test-progress__header tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.72rem] tw-uppercase tw-tracking-[0.08em]">
+        <span class="tw-font-semibold tw-text-indigo-300">{{localize "WH40K.ExtendedTest.ProgressLabel"}}</span>
+        <span class="tw-font-bold tw-tabular-nums tw-text-[#e0e7ff]">{{accumulatedDoS}} / {{threshold}}</span>
+    </div>
+    <div class="wh40k-extended-test-progress__bar tw-relative tw-h-2 tw-rounded-full tw-bg-[rgba(0,0,0,0.35)] tw-overflow-hidden">
+        <div class="wh40k-extended-test-progress__bar-fill tw-h-full tw-rounded-full {{#if isComplete}}tw-bg-emerald-500{{else}}tw-bg-indigo-500{{/if}} tw-transition-all"
+             style="width: {{#if (gt threshold 0)}}{{percent accumulatedDoS threshold}}{{else}}0{{/if}}%;"></div>
+    </div>
+    <div class="wh40k-extended-test-progress__counts tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.72rem] tw-text-[#c8c8b8]">
+        <span class="tw-inline-flex tw-items-center tw-gap-1">
+            <i class="fas fa-check tw-text-emerald-400"></i>
+            <span class="tw-font-bold tw-tabular-nums">{{successes}}</span>
+            <span class="tw-opacity-70">{{localize "WH40K.ExtendedTest.SuccessCount"}}</span>
+        </span>
+        <span class="tw-inline-flex tw-items-center tw-gap-1">
+            <i class="fas fa-xmark tw-text-rose-400"></i>
+            <span class="tw-font-bold tw-tabular-nums">{{failures}}</span>
+            <span class="tw-opacity-70">{{localize "WH40K.ExtendedTest.FailureCount"}}</span>
+            {{#if (gt failureBudget 0)}}<span class="tw-opacity-60">/ {{failureBudget}}</span>{{/if}}
+        </span>
+    </div>
+    <div class="wh40k-extended-test-progress__hint tw-text-[0.72rem] tw-italic {{#if isComplete}}tw-text-emerald-300{{else}}{{#if isFailed}}tw-text-rose-300{{else}}tw-text-indigo-200{{/if}}{{/if}}">
+        {{#if isComplete}}
+            {{localize "WH40K.ExtendedTest.Complete"}}
+        {{else}}
+            {{localize "WH40K.ExtendedTest.InProgress"}}{{#if timePerAttempt}} ({{timePerAttempt}}){{/if}}
+        {{/if}}
+    </div>
+</div>
+{{/with}}

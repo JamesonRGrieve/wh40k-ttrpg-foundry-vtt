@@ -151,6 +151,15 @@
             "CumulativeMessage": "RAW: each retry within the same scene takes a cumulative -10 to the test.",
             "PenaltyLabel": "Cumulative penalty"
         },
+        "ExtendedTest": {
+            "ToggleLabel": "Extended Test",
+            "ThresholdLabel": "Threshold",
+            "ProgressLabel": "Extended Progress",
+            "SuccessCount": "successes",
+            "FailureCount": "failures",
+            "Complete": "Threshold reached — test complete.",
+            "InProgress": "Roll again to accumulate more DoS."
+        },
         "PsyMode": {
             "Fettered": "Fettered",
             "Unfettered": "Unfettered",
@@ -159,6 +168,12 @@
             "FetteredDesc": "Half PR. No phenomena chance.",
             "UnfetteredDesc": "Full PR. Phenomena on doubles.",
             "PushDesc": "PR + Push. Always triggers phenomena."
+        },
+        "UntrainedSkill": {
+            "CharacteristicLabel": "Characteristic",
+            "DefaultOption": "{name} (default)",
+            "HalvedIndicator": "Halved (untrained)",
+            "UntrainedAdvancedBlocked": "Advanced skill — cannot attempt untrained."
         },
         "Possession": {
             "Title": "Possession",
