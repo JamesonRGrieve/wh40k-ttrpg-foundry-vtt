@@ -242,7 +242,10 @@
                 "UntrainedBase": "Untrained Test Base (Characteristic \u00f7 2)",
                 "Modifiers": "Modifiers",
                 "TrainingProgression": "Training Progression",
-                "ClickNameToRoll": "Use the die button to roll"
+                "ClickNameToRoll": "Use the die button to roll",
+                "RankWithBonus": "{rank} ({bonus})",
+                "UntrainedWithPenalty": "Untrained ({penalty})",
+                "UntrainedHalfBase": "Untrained (\u00f72)"
             }
         },
         "Favourites": {

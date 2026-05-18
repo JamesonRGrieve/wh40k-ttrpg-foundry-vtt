@@ -10,7 +10,17 @@ vi.mock('../../config/game-systems/index.ts', () => ({
 }));
 
 (globalThis as Record<string, unknown>)['game'] = {
-    i18n: { localize: (key: string) => key },
+    i18n: {
+        localize: (key: string) => key,
+        format: (key: string, data: Record<string, unknown> = {}) => {
+            // Trivial mock — replicate Foundry's `{name}` interpolation enough for
+            // the tooltip's RankWithBonus / UntrainedWithPenalty etc. templates.
+            return Object.entries(data).reduce<string>(
+                (acc, [name, value]) => acc.replaceAll(`{${name}}`, String(value)),
+                key,
+            );
+        },
+    },
 };
 
 afterAll(() => {
@@ -34,10 +44,14 @@ describe('skill tooltip fallback ladder (issues #26 / #27)', () => {
 
         // The previous fallback was the truncated, hardcoded-English
         // "Trained(0) → +10 → +20" ladder the reporter saw (#26).
-        expect(html).toContain('WH40K.Skills.Rank.Known');
-        expect(html).toContain('WH40K.Skills.Rank.Trained');
-        expect(html).toContain('WH40K.Skills.Rank.Experienced');
-        expect(html).toContain('WH40K.Skills.Rank.Veteran');
-        expect(html).toContain('WH40K.Skills.Untrained');
+        // Each rank label resolves through the localized RankWithBonus template,
+        // so it shows up as "{i18n-key} ({bonus})" — the mock above echoes the
+        // localize key and Foundry-style format interpolation expands the bonus.
+        expect(html).toContain('WH40K.Skills.Rank.Known (+0)');
+        expect(html).toContain('WH40K.Skills.Rank.Trained (+10)');
+        expect(html).toContain('WH40K.Skills.Rank.Experienced (+20)');
+        expect(html).toContain('WH40K.Skills.Rank.Veteran (+30)');
+        // Untrained for non-RT systems shows the flat -20 penalty.
+        expect(html).toContain('Untrained (-20)');
     });
 });

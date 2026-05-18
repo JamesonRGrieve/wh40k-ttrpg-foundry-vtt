@@ -546,15 +546,37 @@ export class TooltipsWH40K {
             `;
         }
 
+        // Issue #26: render rank labels alongside their modifier so the progression
+        // makes the rule-correct values explicit (Known (0) → Trained (+10) → …).
+        // Untrained for aptitude systems shows the flat -20 penalty; career systems
+        // (RT) halve the characteristic instead and surface that as "(÷2)".
+        const formatBonus = (bonus: number): string => `${bonus >= 0 ? '+' : ''}${bonus}`;
+        const RANK_TOOLTIP_I18N: Record<string, string> = {
+            Known: 'WH40K.Skills.Rank.Known',
+            Trained: 'WH40K.Skills.Rank.Trained',
+            Experienced: 'WH40K.Skills.Rank.Experienced',
+            Veteran: 'WH40K.Skills.Rank.Veteran',
+        };
+        const localizeRankLabel = (raw: string): string => {
+            const key = RANK_TOOLTIP_I18N[raw];
+            return key === undefined ? raw : localize(key);
+        };
+        const renderRank = (rankLabel: string, bonus: number): string =>
+            game.i18n.format('WH40K.Tooltip.Skill.RankWithBonus', { rank: localizeRankLabel(rankLabel), bonus: formatBonus(bonus) });
+        const untrainedLabel =
+            gameSystem === 'rt'
+                ? localize('WH40K.Tooltip.Skill.UntrainedHalfBase')
+                : game.i18n.format('WH40K.Tooltip.Skill.UntrainedWithPenalty', { penalty: '-20' });
+
         html += `
             </div>
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__training">
                 <div class="wh40k-tooltip__training-title">${localize('WH40K.Tooltip.Skill.TrainingProgression')}:</div>
                 <div class="wh40k-tooltip__training-track">
-                    <span class="${level === 0 ? 'active' : ''}">${localize('WH40K.Skills.Untrained')}</span>
+                    <span class="${level === 0 ? 'active' : ''}">${untrainedLabel}</span>
                     ${skillRanks
-                        .map((rank, i) => `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${rank.tooltip}</span>`)
+                        .map((rank, i) => `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${renderRank(rank.tooltip, rank.bonus)}</span>`)
                         .join('')}
                 </div>
             </div>
