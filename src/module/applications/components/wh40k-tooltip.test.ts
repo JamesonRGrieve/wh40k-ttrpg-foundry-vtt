@@ -21,19 +21,16 @@ const { TooltipsWH40K } = await import('./wh40k-tooltip.ts');
 
 describe('skill tooltip fallback ladder (issues #26 / #27)', () => {
     it('renders a localized 4-tier ladder when the game system cannot be resolved', async () => {
-        const html = await TooltipsWH40K.prototype._buildSkillTooltip.call(
-            {} as unknown as InstanceType<typeof TooltipsWH40K>,
-            {
-                name: 'Awareness',
-                characteristic: 'Per',
-                charValue: 35,
-                current: 35,
-                trained: false,
-                plus10: false,
-                plus20: false,
-                plus30: false,
-            },
-        );
+        const html = await TooltipsWH40K.prototype._buildSkillTooltip.call({} as unknown as InstanceType<typeof TooltipsWH40K>, {
+            name: 'Awareness',
+            characteristic: 'Per',
+            charValue: 35,
+            current: 35,
+            trained: false,
+            plus10: false,
+            plus20: false,
+            plus30: false,
+        });
 
         // The previous fallback was the truncated, hardcoded-English
         // "Trained(0) → +10 → +20" ladder the reporter saw (#26).
