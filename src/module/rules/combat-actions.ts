@@ -292,10 +292,15 @@ export function allCombatActions(): CombatAction[] {
         },
         {
             name: 'Two-Weapon Fighting',
-            type: ['Full'],
+            // Errata p. 132: the opener is a single Half-Action attack
+            // (Standard/Swift/Lightning melee or single-shot/semi-auto/
+            // full-auto ranged); the Two-Weapon Wielder talent then grants
+            // one additional same-mode Half-Action attack with the other
+            // weapon as a Free Action. It is no longer a Full-Action lump.
+            type: ['Half'],
             subtype: ['Attack', 'Melee', 'Ranged'],
             description:
-                'Attack with both wielded weapons. Baseline −20 to each attack. Two-Weapon Wielder (Melee/Ranged) drops the main-hand penalty to 0. Two-Weapon Master (Melee/Ranged) drops both penalties to 0. Ambidextrous reduces the off-hand penalty by an additional 10. See `rules/two-weapon-fighting.ts:resolveTwoWeaponPenalties()`.',
+                'Errata p. 132: make a Half-Action attack with one weapon (Standard/Swift/Lightning melee, or single shot/semi-auto burst/full-auto burst ranged). Two-Weapon Wielder (Melee/Ranged) then grants a single additional same-mode Half-Action attack with the other weapon as a Free Action. Baseline −20 to each; Wielder drops the main-hand penalty to 0, Two-Weapon Master drops both to 0, Ambidextrous reduces the off-hand penalty by an additional 10. See `rules/two-weapon-fighting.ts:resolveTwoWeaponRefocus()`.',
         },
         {
             name: 'Unjam',
