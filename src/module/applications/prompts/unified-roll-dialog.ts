@@ -13,6 +13,7 @@
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData } from '../../rolls/roll-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import {
     AIM_OPTIONS,
@@ -92,6 +93,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
     declare _psyMode: PsyMode;
     declare _pushLevel: number;
+    /** Number of assistants helping the active character (#60 — +10 per, capped by `DEFAULT_ASSISTANT_CAP`). */
+    declare _assistantCount: number;
 
     /**
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
@@ -128,6 +131,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._pickerOutsideHandler = null;
         this._psyMode = 'unfettered';
         this._pushLevel = 1;
+        this._assistantCount = 0;
     }
 
     /* -------------------------------------------- */
@@ -164,6 +168,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             setPsyMode: UnifiedRollDialog.#onSetPsyMode,
             incrementPushLevel: UnifiedRollDialog.#onIncrementPushLevel,
             decrementPushLevel: UnifiedRollDialog.#onDecrementPushLevel,
+            incrementAssistant: UnifiedRollDialog.#onIncrementAssistant,
+            decrementAssistant: UnifiedRollDialog.#onDecrementAssistant,
             cancel: UnifiedRollDialog.#onCancel,
         },
         form: {
@@ -325,11 +331,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const psyMod = this.rollType === 'psychic'
             ? resolvePsyMode({ mode: this._psyMode, basePR: Number(rollData['pr']) || 0, pushLevel: this._pushLevel }).focusModifier
             : 0;
+        const assistanceMod = isForceField ? 0 : getAssistanceBonus(this._assistantCount);
 
         const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : rollData.baseTarget || 0;
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
-        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational', 'psy-mode']);
+        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational', 'psy-mode', 'assistance']);
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rollData.modifiers always present per type; runtime data may be uninitialised; ?? {} is defensive
         const safeModifiers = rollData.modifiers ?? {};
         const weaponModSum = !isForceField
@@ -338,7 +345,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   .reduce((sum, [, v]) => sum + (Number(v) || 0), 0) + (Number(rollData.rangeBonus) || 0)
             : 0;
 
-        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod);
+        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod);
 
         // Build target breakdown tooltip
         const tooltipParts = [`Base: ${baseTarget}`];
@@ -348,6 +355,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (customMod !== 0) tooltipParts.push(`Custom: ${customMod >= 0 ? '+' : ''}${customMod}`);
         if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${combatSitMod >= 0 ? '+' : ''}${combatSitMod}`);
         if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${psyMod >= 0 ? '+' : ''}${psyMod}`);
+        if (assistanceMod !== 0) tooltipParts.push(`Assistance: +${assistanceMod}`);
         tooltipParts.push(`= ${finalTarget}`);
         const targetBreakdownTooltip = tooltipParts.join('\n');
 
@@ -402,7 +410,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
         // Modifier aggregate
-        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod;
+        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod;
 
         // Roll type specific data
         const isWeapon = this.rollType === 'weapon';
@@ -448,6 +456,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             situationalModifiers,
             hasSituationalModifiers,
             showCustomModifier: this._showCustomModifier || this._customModifier !== 0,
+            assistantCount: this._assistantCount,
+            assistanceBonus: assistanceMod,
+            assistantMax: DEFAULT_ASSISTANT_CAP,
+            canIncrementAssistant: this._assistantCount < DEFAULT_ASSISTANT_CAP,
+            canDecrementAssistant: this._assistantCount > 0,
             rollResult,
             manualRollTens: this._manualRollTens,
             manualRollUnits: this._manualRollUnits,
@@ -1007,6 +1020,21 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
     }
 
+    /* ---- Assistance stepper (#60) ----                                                  */
+    /* +10 per assistant up to DEFAULT_ASSISTANT_CAP (core.md §"Assistance", p. 25).        */
+
+    static async #onIncrementAssistant(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._assistantCount >= DEFAULT_ASSISTANT_CAP) return;
+        this._assistantCount += 1;
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    static async #onDecrementAssistant(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._assistantCount <= 0) return;
+        this._assistantCount -= 1;
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
     /* ---- Card-based Weapon Panel Handlers ---- */
 
     static async #onSelectAttackMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
@@ -1209,6 +1237,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.modifiers['difficulty'] = this._currentDifficulty.modifier;
         rd.modifiers['situational'] = this._calculateSituationalModifiers();
         rd.modifiers['modifier'] = this._customModifier;
+        // Assistance modifier (#60). +10 per assistant up to DEFAULT_ASSISTANT_CAP.
+        // Surfaces on chat cards via RollData.activeModifiers; key is uppercased
+        // for the modifier-breakdown partial, so "ASSISTANCE +N" appears in the
+        // chat-card row list when assistantCount > 0.
+        rd.modifiers['assistance'] = getAssistanceBonus(this._assistantCount);
 
         // Apply psychic Push / Fettered / Unfettered selector (#69)
         if (this.rollType === 'psychic') {

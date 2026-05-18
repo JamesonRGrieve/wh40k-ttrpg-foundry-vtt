@@ -19,6 +19,36 @@
     </div>
     {{/if}}
 
+    {{!-- Assistants stepper (#60) — +10 per assistant up to cap (core.md §"Assistance"). --}}
+    <div class="wh40k-assistance-stepper tw-flex tw-items-center tw-justify-center tw-gap-2 tw-mb-2"
+         data-tooltip="{{localize "WH40K.Assistance.Tooltip"}}">
+        <span class="tw-text-[0.78rem] tw-text-[#9a9a8a] tw-font-medium tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Assistance.Label"}}</span>
+        <div class="tw-flex tw-items-center tw-gap-0 tw-border tw-border-[rgba(255,255,255,0.1)] tw-rounded-md tw-overflow-hidden tw-bg-[rgba(0,0,0,0.2)]">
+            <button type="button"
+                    class="wh40k-assistance-stepper__minus tw-flex tw-items-center tw-justify-center tw-w-[28px] tw-h-[28px] tw-bg-[rgba(0,0,0,0.15)] tw-border-0 tw-text-[#c8c8b8] tw-cursor-pointer tw-text-[0.7rem] tw-transition-all hover:tw-bg-[rgba(255,255,255,0.08)] hover:tw-text-[#e8e4d9] active:tw-bg-[rgba(255,255,255,0.15)] disabled:tw-opacity-30 disabled:tw-cursor-not-allowed"
+                    data-action="decrementAssistant"
+                    data-tooltip="{{localize "WH40K.Assistance.MinusButton"}}"
+                    aria-label="{{localize "WH40K.Assistance.MinusButton"}}"
+                    {{#unless canDecrementAssistant}}disabled{{/unless}}>
+                <i class="fas fa-minus"></i>
+            </button>
+            <span class="wh40k-assistance-stepper__count tw-min-w-[28px] tw-h-[28px] tw-flex tw-items-center tw-justify-center tw-px-2 tw-border-l tw-border-r tw-border-[rgba(255,255,255,0.06)] tw-text-[#e8e4d9] tw-text-sm tw-font-bold tw-tabular-nums">{{assistantCount}}</span>
+            <button type="button"
+                    class="wh40k-assistance-stepper__plus tw-flex tw-items-center tw-justify-center tw-w-[28px] tw-h-[28px] tw-bg-[rgba(0,0,0,0.15)] tw-border-0 tw-text-[#c8c8b8] tw-cursor-pointer tw-text-[0.7rem] tw-transition-all hover:tw-bg-[rgba(255,255,255,0.08)] hover:tw-text-[#e8e4d9] active:tw-bg-[rgba(255,255,255,0.15)] disabled:tw-opacity-30 disabled:tw-cursor-not-allowed"
+                    data-action="incrementAssistant"
+                    data-tooltip="{{localize "WH40K.Assistance.PlusButton"}}"
+                    aria-label="{{localize "WH40K.Assistance.PlusButton"}}"
+                    {{#unless canIncrementAssistant}}disabled{{/unless}}>
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        {{#if (gt assistanceBonus 0)}}
+            <span class="wh40k-assistance-stepper__badge tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-bold tw-bg-[rgba(74,222,128,0.15)] tw-border tw-border-[rgba(74,222,128,0.4)] tw-text-[#4ade80] tw-shadow-[0_0_8px_rgba(74,222,128,0.2)]">+{{assistanceBonus}}</span>
+        {{else}}
+            <span class="wh40k-assistance-stepper__badge tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-medium tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-text-[#6a6a6a]">+0</span>
+        {{/if}}
+    </div>
+
     {{!-- Inline custom modifier: hidden until toggled --}}
     {{#if showCustomModifier}}
     <div class="tw-flex tw-items-center tw-justify-center tw-gap-2">
