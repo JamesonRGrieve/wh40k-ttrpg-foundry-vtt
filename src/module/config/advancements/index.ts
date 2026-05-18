@@ -3,16 +3,13 @@
  *
  * Central registry for all career advancement configurations.
  * Provides helper functions to access career-specific data.
+ *
+ * The per-career tables live in a single consolidated module
+ * (`./career-tables.ts`) — see that file for the DRY-consolidation /
+ * Direction #7 follow-up note. This module's exported API is unchanged.
  */
 
-import * as ArchMilitant from './arch-militant.ts';
-import * as Astropath from './astropath.ts';
-import * as Explorator from './explorator.ts';
-import * as Missionary from './missionary.ts';
-import * as Navigator from './navigator.ts';
-import * as Seneschal from './seneschal.ts';
-import * as VoidMaster from './void-master.ts';
-import * as WH40K from './wh40k-rpg.ts';
+import { CAREER_TABLES } from './career-tables.ts';
 
 /**
  * Registry of all career advancement configurations
@@ -23,9 +20,9 @@ type RankAdvance = {
     cost: number;
     type: string;
     specialization?: string;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: career data from untyped external modules
+    // eslint-disable-next-line no-restricted-syntax -- boundary: career data consumed via a loose registry shape
     prerequisites?: unknown[];
-    // eslint-disable-next-line no-restricted-syntax -- boundary: career data from untyped external modules
+    // eslint-disable-next-line no-restricted-syntax -- boundary: career data consumed via a loose registry shape
     [extra: string]: unknown;
 };
 
@@ -35,16 +32,9 @@ type CareerModule = {
     RANK_1_ADVANCES?: RankAdvance[];
 };
 
-const CAREER_REGISTRY: Record<string, CareerModule> = {
-    rogueTrader: WH40K,
-    archMilitant: ArchMilitant,
-    astropath: Astropath,
-    explorator: Explorator,
-    missionary: Missionary,
-    navigator: Navigator,
-    seneschal: Seneschal,
-    voidMaster: VoidMaster,
-};
+// CareerTable is a structural superset of the loose CareerModule shape this
+// module exposes, so the strongly-typed table assigns directly with no cast.
+const CAREER_REGISTRY: Record<string, CareerModule> = CAREER_TABLES;
 
 /**
  * Tier labels for characteristic advances
