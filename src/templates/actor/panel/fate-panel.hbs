@@ -37,6 +37,18 @@
             {{/if}}
         </div>
 
+        {{!-- Burn Threshold (issue #63) — surfaces system.fate.threshold
+             alongside the value/max so players can see the floor below which
+             the burn-fate action is gated. Hidden when threshold is 0
+             (the common case for campaigns that haven't granted any). --}}
+        {{#if (gt system.fate.threshold 0)}}
+            <div class="wh40k-fate-threshold tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-mt-1 tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.05em]"
+                 title="{{localize 'WH40K.VitalEditBody.FateThresholdLabel'}}">
+                <i class="fas fa-fire tw-text-[color:var(--wh40k-wounds-secondary)] tw-text-[0.65rem]"></i>
+                <span>{{localize "WH40K.VitalEditBody.FateThresholdLabel"}}: <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{system.fate.threshold}}</strong></span>
+            </div>
+        {{/if}}
+
         {{!-- Stat Breakdown Button --}}
         {{> systems/wh40k-rpg/templates/actor/partial/stat-breakdown-button.hbs
             statKey="fate"
@@ -57,8 +69,9 @@
           key="fate" actor=actor
           editIcon="fa-cog" editTitle=(localize "WH40K.VitalEditBody.EditFateTitle")
           fields=(array
-              (object name="system.fate.max"   label=(localize "WH40K.VitalEditBody.FateMaxLabel")     value=system.fate.max   min="0" max="10" placeholder=(localize "WH40K.VitalEditBody.MaxPlaceholder"))
-              (object name="system.fate.value" label=(localize "WH40K.VitalEditBody.FateCurrentLabel") value=system.fate.value min="0" max=system.fate.max placeholder=(localize "WH40K.VitalEditBody.CurrentPlaceholder")))}}
+              (object name="system.fate.max"       label=(localize "WH40K.VitalEditBody.FateMaxLabel")       value=system.fate.max       min="0" max="10" placeholder=(localize "WH40K.VitalEditBody.MaxPlaceholder"))
+              (object name="system.fate.value"     label=(localize "WH40K.VitalEditBody.FateCurrentLabel")   value=system.fate.value     min="0" max=system.fate.max placeholder=(localize "WH40K.VitalEditBody.CurrentPlaceholder"))
+              (object name="system.fate.threshold" label=(localize "WH40K.VitalEditBody.FateThresholdLabel") value=system.fate.threshold min="0" max=system.fate.max placeholder=(localize "WH40K.VitalEditBody.FateThresholdPlaceholder")))}}
         {{!-- About Fate Info Section --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs
               icon="fa-book-open"
