@@ -216,6 +216,12 @@
             "Trained": "Trained",
             "Plus10": "+10",
             "Plus20": "+20",
+            "Rank": {
+                "Known": "Known",
+                "Trained": "Trained",
+                "Experienced": "Experienced",
+                "Veteran": "Veteran"
+            },
             "Bonus": "Bonus",
             "Total": "Total",
             "AddSpecialization": "Add",
