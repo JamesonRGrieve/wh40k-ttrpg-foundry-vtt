@@ -422,3 +422,66 @@ describe('OriginPathBuilder commit (issue #206)', () => {
         expect(dialogPrompt).not.toHaveBeenCalled();
     });
 });
+
+describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
+    interface AptSelection {
+        system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> };
+    }
+
+    function makeCountHost(selections: Array<[string, AptSelection]>) {
+        return {
+            selections: new Map(selections),
+            _getSelectionSystem: (s: AptSelection) => s.system,
+            _collectAptitudeChoices: OriginPathBuilder.prototype._collectAptitudeChoices,
+        };
+    }
+
+    it('counts a fixed aptitude granted by two origins as a duplicate', () => {
+        const host = makeCountHost([
+            ['homeWorld', { system: { grants: { aptitudes: ['Willpower', 'Offence'] }, selectedChoices: {} } }],
+            ['background', { system: { grants: { aptitudes: ['Willpower'] }, selectedChoices: {} } }],
+        ]);
+
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+        );
+
+        expect(counts.get('Willpower')).toBe(2);
+        expect(counts.get('Offence')).toBe(1);
+    });
+
+    it('counts an aptitude-typed choice colliding with a fixed aptitude', () => {
+        const host = makeCountHost([
+            ['homeWorld', { system: { grants: { aptitudes: ['Tech'] }, selectedChoices: {} } }],
+            [
+                'background',
+                {
+                    system: {
+                        grants: {
+                            choices: [{ type: 'aptitude', label: 'Aptitude', options: [{ value: 'Tech' }] }],
+                        },
+                        selectedChoices: { Aptitude: ['Tech'] },
+                    },
+                },
+            ],
+        ]);
+
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+        );
+
+        expect(counts.get('Tech')).toBe(2);
+    });
+
+    it('does not double-count an aptitude granted twice by a single origin', () => {
+        const host = makeCountHost([
+            ['homeWorld', { system: { grants: { aptitudes: ['Willpower', 'Willpower'] }, selectedChoices: {} } }],
+        ]);
+
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+        );
+
+        expect(counts.get('Willpower')).toBe(1);
+    });
+});

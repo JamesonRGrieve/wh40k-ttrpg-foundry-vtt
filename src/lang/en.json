@@ -878,6 +878,7 @@
             "CompleteAllSteps": "Complete all 6 steps before committing",
             "CompleteAllChoices": "Complete all required choices before committing",
             "CharacteristicsRequiredBeforeCommit": "Roll or assign your characteristics before completing character creation.",
+            "DuplicateAptitude": "Your origin path grants these aptitudes more than once: {aptitudes}. Duplicate aptitudes have no effect — under Dark Heresy 2e you may swap a duplicate for a characteristic aptitude (GM adjudication).",
             "AllChoicesComplete": "All choices complete",
             "ChoicesPending": "choices pending",
             "RollsPending": "rolls pending",

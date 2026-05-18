@@ -2467,6 +2467,44 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Count how many selected origins grant each aptitude (deduplicated
+     * within a single origin). An aptitude granted by more than one origin
+     * is "doubled" — under DH2 the second instance is wasted unless swapped
+     * for a characteristic aptitude, so the builder surfaces a soft warning
+     * at commit time rather than silently discarding it. (#205)
+     * @private
+     */
+    _collectAptitudeGrantCounts(): Map<string, number> {
+        const counts = new Map<string, number>();
+        for (const [, selection] of this.selections) {
+            const system = this._getSelectionSystem(selection);
+            const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
+            const selectedChoices: Record<string, string[]> = system.selectedChoices ?? {};
+            const perOrigin = new Set<string>();
+
+            const fixed = (grants as NonNullable<OriginPathSystemData['grants']> & { aptitudes?: string[] }).aptitudes;
+            if (Array.isArray(fixed)) {
+                for (const apt of fixed) if (apt !== '') perOrigin.add(apt);
+            }
+
+            if (grants.choices && grants.choices.length > 0) {
+                const labelCounts: Record<string, number> = {};
+                for (const choice of grants.choices) {
+                    const base = choice.label ?? choice.name ?? '';
+                    labelCounts[base] = (labelCounts[base] ?? 0) + 1;
+                    const suffix = labelCounts[base] > 1 ? ` (${labelCounts[base]})` : '';
+                    if (choice.type === 'aptitude') {
+                        this._collectAptitudeChoices(choice, selectedChoices[`${base}${suffix}`] ?? [], perOrigin);
+                    }
+                }
+            }
+
+            for (const apt of perOrigin) counts.set(apt, (counts.get(apt) ?? 0) + 1);
+        }
+        return counts;
+    }
+
+    /**
      * Fold one option.grants block into the preview accumulators. Extracted
      * from _calculatePreview so the nested choice loop stays under the
      * max-depth cap.
@@ -3805,6 +3843,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit'));
             OriginPathBuilder.#goToCharacteristics.call(this, _event, _target);
             return;
+        }
+
+        // Soft-warn (do not block) when the path grants the same aptitude
+        // from more than one origin — the duplicate is wasted under DH2. (#205)
+        const duplicateAptitudes = Array.from(this._collectAptitudeGrantCounts().entries())
+            .filter(([, count]) => count > 1)
+            .map(([aptitude]) => aptitude)
+            .sort((a, b) => a.localeCompare(b));
+        if (duplicateAptitudes.length > 0) {
+            ui.notifications.warn(
+                game.i18n.format('WH40K.OriginPath.DuplicateAptitude', { aptitudes: duplicateAptitudes.join(', ') }),
+            );
         }
 
         // Confirm — offer reset options. Base stats are always overridden.
