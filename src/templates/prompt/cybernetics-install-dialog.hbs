@@ -1,0 +1,99 @@
+{{!-- Cybernetics install surgery dialog (#125) — core.md §"Attaching Bionics and Implants". --}}
+{{!-- Picks base difficulty + craftsmanship + install site + surgeon skill, rolls the Medicae test. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-cyan-300 tw-italic">
+        {{localize "WH40K.Cybernetics.InstallDialogTitle"}}
+    </div>
+
+    {{#if deviceName}}
+        <div class="tw-mb-4 tw-text-center tw-font-display tw-uppercase tw-tracking-[0.1em] tw-text-base tw-text-cyan-200">
+            {{deviceName}}
+        </div>
+    {{/if}}
+
+    {{!-- Craftsmanship selector --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-cyan-300">
+            {{localize "WH40K.Cybernetics.CraftsmanshipLabel"}}
+        </label>
+        <div class="tw-grid tw-grid-cols-4 tw-gap-2">
+            {{#each craftsmanships}}
+                <button type="button"
+                        data-action="selectCraftsmanship"
+                        data-craftsmanship="{{this.id}}"
+                        class="tw-flex tw-items-center tw-justify-center tw-px-2 tw-py-2.5 tw-rounded-md tw-border tw-cursor-pointer tw-transition-colors tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.06em] {{#if (eq this.id ../craftsmanship)}}tw-border-cyan-400 tw-bg-[rgba(34,211,238,0.18)] tw-text-cyan-200 tw-shadow-[0_0_0_1px_rgba(103,232,249,0.45)]{{else}}tw-border-[rgba(103,232,249,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-[#cbeefb] hover:tw-border-cyan-300 hover:tw-bg-[rgba(34,211,238,0.12)]{{/if}}">
+                    {{localize this.labelKey}}
+                </button>
+            {{/each}}
+        </div>
+    </div>
+
+    {{!-- Install site selector --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-cyan-300">
+            {{localize "WH40K.Cybernetics.SiteLabel"}}
+        </label>
+        <div class="tw-grid tw-grid-cols-4 tw-gap-2">
+            {{#each sites}}
+                <button type="button"
+                        data-action="selectSite"
+                        data-site="{{this.id}}"
+                        class="tw-flex tw-items-center tw-justify-center tw-px-2 tw-py-2.5 tw-rounded-md tw-border tw-cursor-pointer tw-transition-colors tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.06em] {{#if (eq this.id ../site)}}tw-border-cyan-400 tw-bg-[rgba(34,211,238,0.18)] tw-text-cyan-200 tw-shadow-[0_0_0_1px_rgba(103,232,249,0.45)]{{else}}tw-border-[rgba(103,232,249,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-[#cbeefb] hover:tw-border-cyan-300 hover:tw-bg-[rgba(34,211,238,0.12)]{{/if}}">
+                    {{localize this.labelKey}}
+                </button>
+            {{/each}}
+        </div>
+    </div>
+
+    {{!-- Numeric inputs --}}
+    <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-4">
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-cyan-300">
+                {{localize "WH40K.Cybernetics.BaseDifficultyLabel"}}
+            </label>
+            <select name="baseDifficulty"
+                    class="tw-px-2 tw-py-1.5 tw-rounded-sm tw-border tw-border-[rgba(103,232,249,0.3)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[#e8e4d9] tw-text-sm">
+                {{#each difficulties}}
+                    <option value="{{this.value}}" {{#if (eq this.value ../baseDifficulty)}}selected{{/if}}>{{this.label}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-cyan-300">
+                {{localize "WH40K.Cybernetics.SurgeonSkillLabel"}}
+            </label>
+            <input type="number" name="surgeonSkillTotal" value="{{surgeonSkillTotal}}" min="0" max="100"
+                   class="tw-px-2 tw-py-1.5 tw-rounded-sm tw-border tw-border-[rgba(103,232,249,0.3)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[#e8e4d9] tw-text-sm tw-tabular-nums" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-cyan-300">
+                {{localize "WH40K.Cybernetics.SurgeonModifierLabel"}}
+            </label>
+            <input type="number" name="surgeonModifier" value="{{surgeonModifier}}" step="5"
+                   class="tw-px-2 tw-py-1.5 tw-rounded-sm tw-border tw-border-[rgba(103,232,249,0.3)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[#e8e4d9] tw-text-sm tw-tabular-nums" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-cyan-300">
+                {{localize "WH40K.Cybernetics.ToughnessBonusLabel"}}
+            </label>
+            <input type="number" name="toughnessBonus" value="3" min="0" max="20"
+                   class="tw-px-2 tw-py-1.5 tw-rounded-sm tw-border tw-border-[rgba(103,232,249,0.3)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[#e8e4d9] tw-text-sm tw-tabular-nums" />
+        </div>
+    </div>
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(103,232,249,0.25)]">
+        <button type="button"
+                data-action="rollInstall"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-cyan-500 tw-to-blue-700 tw-text-[#ecfeff] tw-shadow-[0_4px_12px_rgba(34,211,238,0.35)]">
+            <i class="fas fa-microchip"></i> {{localize "WH40K.Cybernetics.RollInstallButton"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.Daemonhost.Cancel"}}
+        </button>
+    </div>
+
+</div>
