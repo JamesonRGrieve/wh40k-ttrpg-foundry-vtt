@@ -3,6 +3,9 @@
  * Produces a SchemaField covering the six hit locations used by armour and cybernetics.
  */
 
+/** The six standard hit locations, in canonical iteration order. */
+export const BODY_LOCATIONS: readonly string[] = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+
 /**
  * Build a SchemaField for the six standard body locations.
  * @returns {SchemaField}
