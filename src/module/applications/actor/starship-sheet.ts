@@ -34,6 +34,7 @@ export default class StarshipSheet extends BaseActorSheet {
             rollInitiative: StarshipSheet.#rollInitiative,
             validateBuild: StarshipSheet.#validateBuild,
             commitBuild: StarshipSheet.#commitBuild,
+            dispatchExtendedAction: StarshipSheet.#dispatchExtendedAction,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['starship'],
@@ -75,6 +76,10 @@ export default class StarshipSheet extends BaseActorSheet {
             template: 'systems/wh40k-rpg/templates/actor/starship/tab-history.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
         },
+        extendedActions: {
+            template: 'systems/wh40k-rpg/templates/actor/starship/tab-extended-actions.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+        },
     };
 
     /* -------------------------------------------- */
@@ -86,6 +91,7 @@ export default class StarshipSheet extends BaseActorSheet {
         { tab: 'weapons', label: 'WH40K.Starship.Tabs.Weapons', group: 'primary', cssClass: 'tab-weapons' },
         { tab: 'crew', label: 'WH40K.Starship.Tabs.Crew', group: 'primary', cssClass: 'tab-crew' },
         { tab: 'history', label: 'WH40K.Starship.Tabs.History', group: 'primary', cssClass: 'tab-history' },
+        { tab: 'extendedActions', label: 'WH40K.Starship.Tabs.ExtendedActions', group: 'primary', cssClass: 'tab-extended-actions' },
     ];
 
     /* -------------------------------------------- */
@@ -234,7 +240,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const partContext = await super._preparePartContext(partId, context, options as unknown as Record<string, unknown>);
 
         // Add tab metadata for tab parts
-        const tabParts = ['stats', 'components', 'weapons', 'crew', 'history'];
+        const tabParts = ['stats', 'components', 'weapons', 'crew', 'history', 'extendedActions'];
         if (tabParts.includes(partId)) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: subclass TABS not on shipped ApplicationV2 ctor type
             const ctor = this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] };
@@ -248,7 +254,120 @@ export default class StarshipSheet extends BaseActorSheet {
             };
         }
 
+        if (partId === 'extendedActions') {
+            partContext['extendedActions'] = await this._prepareExtendedActions();
+        }
+
         return partContext;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Resolve the list of starship Extended Actions to surface in the sheet.
+     *
+     * Pulls owned items of type `order` with `shipAction: true` AND any
+     * `order` items from the active game system's compendium pack(s) that
+     * carry the same flags. This keeps the list correct whether the GM has
+     * already imported the compendium entries onto the actor or not — per
+     * Direction #7 the source of truth is the compendium pack.
+     *
+     * @issue #186
+     */
+    async _prepareExtendedActions(): Promise<
+        Array<{
+            uuid: string;
+            id: string;
+            name: string;
+            img: string;
+            skill: string;
+            modifier: number;
+            duration: string;
+            description: string;
+            requirements: string;
+            typeAndAction: string;
+        }>
+    > {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
+        const actor = this.actor as unknown as WH40KStarship;
+        const gameSystemId = (actor.system as { gameSystem?: string }).gameSystem ?? 'rt';
+
+        const out: Array<{
+            uuid: string;
+            id: string;
+            name: string;
+            img: string;
+            skill: string;
+            modifier: number;
+            duration: string;
+            description: string;
+            requirements: string;
+            typeAndAction: string;
+        }> = [];
+
+        const seenUuids = new Set<string>();
+
+        const pushItem = (item: WH40KItem, uuid: string): void => {
+            if (seenUuids.has(uuid)) return;
+            seenUuids.add(uuid);
+            const sys = item.system as {
+                shipAction?: boolean;
+                gameSystems?: string[];
+                skill?: string;
+                modifier?: number;
+                duration?: string;
+                requirements?: string;
+                typeAndAction?: string;
+                description?: { value?: string };
+            };
+            if (sys.shipAction !== true) return;
+            const systems = sys.gameSystems ?? [];
+            if (systems.length > 0 && !systems.includes(gameSystemId)) return;
+            out.push({
+                uuid,
+                id: item.id ?? '',
+                name: item.name ?? '',
+                img: item.img ?? '',
+                skill: sys.skill ?? '',
+                modifier: sys.modifier ?? 0,
+                duration: sys.duration ?? '',
+                description: sys.description?.value ?? '',
+                requirements: sys.requirements ?? '',
+                typeAndAction: sys.typeAndAction ?? '',
+            });
+        };
+
+        // 1. Owned items already on the actor.
+        for (const item of actor.items) {
+            if (item.type !== 'order') continue;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem.uuid not in shipped types for our narrow view
+            const uuid = (item as unknown as { uuid?: string }).uuid ?? '';
+            if (uuid === '') continue;
+            pushItem(item, uuid);
+        }
+
+        // 2. Compendium pack: rt-items-ship-extended-actions (and any future per-system equivalent).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs typing in fvtt-types is loose
+        const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
+        const packId = `wh40k-rpg.${gameSystemId}-items-ship-extended-actions`;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
+        const pack = packs?.get?.(packId) as
+            | undefined
+            | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
+        if (pack?.getDocuments !== undefined) {
+            try {
+                const docs = await pack.getDocuments();
+                for (const doc of docs) {
+                    if (doc.type !== 'order') continue;
+                    pushItem(doc, doc.uuid);
+                }
+            } catch {
+                // Pack unavailable (e.g. during early sheet renders before world ready) — silently skip.
+            }
+        }
+
+        out.sort((a, b) => a.name.localeCompare(b.name));
+        return out;
     }
 
     /* -------------------------------------------- */
@@ -372,5 +491,76 @@ export default class StarshipSheet extends BaseActorSheet {
         const a = this.actor as unknown as { items: Iterable<{ type: string; system: unknown }> };
         const itemViews = [...a.items].map((it) => ({ type: it.type, system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean } }));
         return StarshipData.validateBuild(budget, itemViews);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Dispatch a starship Extended Action to chat (issue #186).
+     *
+     * Locates the action either by `data-action-uuid` (compendium or world)
+     * or `data-action-id` (owned), renders the chat card template, and posts
+     * it to the chat log. Mechanical resolution (rolls, modifiers, success
+     * effects) is intentionally out of scope at this stage and is a follow-up.
+     */
+    static async #dispatchExtendedAction(this: StarshipSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
+        const actor = this.actor as unknown as WH40KStarship;
+        const uuid = target.dataset['actionUuid'] ?? '';
+        const itemId = target.dataset['actionId'] ?? '';
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.fromUuid is loosely typed in fvtt-types
+        const fromUuidFn = (globalThis as unknown as { fromUuid?: (uuid: string) => Promise<unknown> }).fromUuid;
+        let item: WH40KItem | undefined;
+        if (uuid !== '' && fromUuidFn !== undefined) {
+            try {
+                item = (await fromUuidFn(uuid)) as WH40KItem | undefined;
+            } catch {
+                item = undefined;
+            }
+        }
+        if (item === undefined && itemId !== '') {
+            item = actor.items.get(itemId);
+        }
+        if (item === undefined) {
+            ui.notifications?.warn(game.i18n.localize('WH40K.Starship.ExtendedAction.Empty'));
+            return;
+        }
+
+        const sys = item.system as {
+            skill?: string;
+            modifier?: number;
+            duration?: string;
+            requirements?: string;
+            typeAndAction?: string;
+            description?: { value?: string };
+        };
+        const cardData = {
+            action: {
+                name: item.name ?? '',
+                img: item.img ?? '',
+                skill: sys.skill ?? '',
+                modifier: sys.modifier ?? 0,
+                duration: sys.duration ?? '',
+                requirements: sys.requirements ?? '',
+                typeAndAction: sys.typeAndAction ?? '',
+                description: sys.description?.value ?? '',
+            },
+            actorName: actor.name ?? '',
+            gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
+        };
+
+        const html = await foundry.applications.handlebars.renderTemplate(
+            'systems/wh40k-rpg/templates/chat/extended-action-chat.hbs',
+            cardData,
+        );
+
+        const speaker = ChatMessage.getSpeaker({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
+            actor: actor as unknown as Actor.Implementation,
+        });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
+        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        void ChatMessage.create(payload);
     }
 }
