@@ -1,0 +1,35 @@
+{{!-- Insanity Disorder roll chat card (#116). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-disorder-card tw-p-4 tw-rounded-md tw-border tw-border-indigo-500 tw-bg-[rgba(15,12,28,0.88)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-brain tw-text-[1.1rem] tw-text-indigo-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-indigo-200">
+            {{localize "WH40K.DisorderRoll.ChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        <strong class="tw-text-purple-200">{{disorderName}}</strong>
+        — {{localize severityKey}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-indigo-300">{{localize "WH40K.DisorderRoll.DisorderLabel"}}</span>
+            <span class="tw-font-bold tw-text-purple-200">{{disorderName}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-indigo-300">{{localize "WH40K.DisorderRoll.SeverityLabel"}}</span>
+            <span class="tw-font-bold tw-text-indigo-200">{{localize severityKey}}</span>
+        </li>
+    </ul>
+
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(129,140,248,0.45)] tw-bg-[rgba(67,56,202,0.18)] tw-text-[0.85rem] tw-text-[#e0e7ff]">
+        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300 tw-mb-1">
+            {{localize "WH40K.DisorderRoll.EffectLabel"}}
+        </div>
+        <div>{{effect}}</div>
+    </div>
+</div>
