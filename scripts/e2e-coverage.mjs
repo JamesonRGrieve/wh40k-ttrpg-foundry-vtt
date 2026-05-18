@@ -943,6 +943,36 @@ const ACTIVE_EFFECTS_RULES_FLOWS = [
 ];
 recordDimension('active-effects-rule.flow', covered['active-effects-rule.flow'], ACTIVE_EFFECTS_RULES_FLOWS);
 
+// Sheet action-handler flows exercised by tests/e2e/sheet-action-handlers.spec.ts.
+// Drives source-code coverage on two UI-adjacent modules that no other
+// spec exercises directly:
+//   - applications/components/quick-actions-bar.ts (was 0% / 21.7%) —
+//     `QuickActionsBar.getActionsForItem` per-item-type factory.
+//   - applications/api/stat-adjustment-actions.ts (was 0% / 32.4%) —
+//     the (this: Host, event, target) sheet-action handlers wired into
+//     character/NPC sheets for incrementing/decrementing characteristics,
+//     setting critical pips / fate stars / fatigue bolts / corruption /
+//     insanity, restoring + spending fate.
+// Keys MUST match the recordCoverage('sheet-action.flow', ...) calls
+// in the spec.
+const SHEET_ACTION_FLOWS = [
+    'quick-actions-weapon',
+    'quick-actions-armour',
+    'quick-actions-talent',
+    'quick-actions-gear',
+    'stat-adjustStat',
+    'stat-increment',
+    'stat-decrement',
+    'stat-setCriticalPip',
+    'stat-setFateStar',
+    'stat-setFatigueBolt',
+    'stat-setCorruption',
+    'stat-setInsanity',
+    'stat-restoreFate',
+    'stat-spendFate',
+];
+recordDimension('sheet-action.flow', covered['sheet-action.flow'], SHEET_ACTION_FLOWS);
+
 // Loot drop/pickup feature dimension exercised by tests/e2e/loot.spec.ts.
 // Keys MUST match the recordCoverage('loot.flow', ...) calls in that spec.
 // Canvas/HUD placement is a runtime-render concern; the document-layer
