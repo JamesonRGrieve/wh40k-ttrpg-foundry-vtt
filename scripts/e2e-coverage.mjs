@@ -899,6 +899,52 @@ const RULE_FLOWS = [
 ];
 recordDimension('rule.flow', covered['rule.flow'], RULE_FLOWS);
 
+// Second batch of pure-logic rules flows exercised by
+// tests/e2e/rules-pure-logic.spec.ts. Each key maps to a canonical RAW
+// resolver on a rules/ module that no other Tier B spec drives directly
+// (the difficulty ladder, scatter, surprise, retry, two-weapon,
+// untrained, cover, pinning, fatigue, fear, hit-locations, hazards,
+// healing, attack-options helpers). Pushes source-code coverage on
+// `src/module/rules/{difficulties,scatter,surprise,trying-again,
+// two-weapon-fighting,untrained-skill,cover,pinning,fatigue,fear,
+// hit-locations,hazards,healing,attack-options}.ts` — each at 0% Tier B
+// function coverage before this spec landed. Keys MUST match the
+// recordCoverage('rule-pure.flow', ...) calls in the spec.
+const RULE_PURE_FLOWS = [
+    'difficulties-rollDifficulties',
+    'scatter-buildVector',
+    'scatter-scaleForArea',
+    'scatter-labelForDirection',
+    'surprise-toHitBonus',
+    'surprise-canActThisRound',
+    'surprise-canUseReactions',
+    'trying-again-advice',
+    'two-weapon-penalties',
+    'untrained-skill-target',
+    'cover-resolveHit',
+    'cover-startingAP',
+    'pinning-resolveTest',
+    'pinning-escapeTest',
+    'fatigue-threshold',
+    'fatigue-unconscious',
+    'fatigue-characteristic-halved',
+    'fear-testPenalty',
+    'fear-resolveTest',
+    'fear-shockTableModifier',
+    'hit-locations-reverseDigits',
+    'hit-locations-forRoll',
+    'hit-locations-dropdown',
+    'hazards-fallingDice',
+    'hazards-fallingFormula',
+    'hazards-drowningTest',
+    'healing-damageTier',
+    'healing-naturalDays',
+    'attack-options-availableModes',
+    'attack-options-situationalModifiers',
+    'attack-options-aimModifier',
+];
+recordDimension('rule-pure.flow', covered['rule-pure.flow'], RULE_PURE_FLOWS);
+
 // Roll-data plumbing flows exercised by tests/e2e/rolls-data.spec.ts. Drives
 // source-code coverage on `src/module/rolls/assign-damage-data.ts` (the
 // damage allocator's reduce-then-distribute branch matrix between wounds,
