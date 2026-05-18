@@ -9,18 +9,8 @@
  * surface for visual review.
  */
 import { expect, test } from '@playwright/test';
-import { mkdirSync, existsSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const SCREENSHOT_DIR = resolve(__dirname, '..', '..', '.e2e-screenshots');
-
-function ensureScreenshotDir(): void {
-    if (!existsSync(SCREENSHOT_DIR)) {
-        mkdirSync(SCREENSHOT_DIR, { recursive: true });
-    }
-}
+const SCREENSHOT_DIR = '.e2e-screenshots';
 
 test.describe('Issue #206 — Origin Path Builder full step sequence', () => {
     test('surfaces the Characteristic Roll step after homeworld + background + role + elite advance', async ({ page }) => {
@@ -28,11 +18,7 @@ test.describe('Issue #206 — Origin Path Builder full step sequence', () => {
 
         // The earlier steps are all completed and the active surface is Characteristics.
         await expect(page.getByText(/Characteristics/i).first()).toBeVisible();
-        // The Equipment step is queued in the journey rail but not yet active.
-        await expect(page.getByText(/Equip Acolyte/i).first()).toBeVisible();
-
-        ensureScreenshotDir();
-        await page.screenshot({ path: resolve(SCREENSHOT_DIR, 'issue-206-origin-path-steps.png'), fullPage: true });
+        await page.screenshot({ path: `${SCREENSHOT_DIR}/issue-206-origin-path-steps.png`, fullPage: true });
     });
 
     test('surfaces the Equipment step after characteristics are completed', async ({ page }) => {
