@@ -77,6 +77,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unk
      * Wait for the dialog to be submitted or closed.
      * @returns {Promise<unknown>}
      */
+    // TODO(dry): ~13 dialogs (npc/*-dialog.ts, dialogs/*-dialog.ts) reimplement this wait()/_resolve/open() promise plumbing. Extract a generic PromiseDialogMixin<T> and route them through it.
     // eslint-disable-next-line no-restricted-syntax -- boundary: dialog wait() resolves with caller-typed value; unknown is correct for the generic API
     async wait(): Promise<unknown> {
         return new Promise((resolve, reject) => {

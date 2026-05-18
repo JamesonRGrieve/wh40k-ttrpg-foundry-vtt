@@ -3,31 +3,15 @@
  * Career-based advancement with 3 skill ranks.
  */
 
-// Import existing RT career registry
+// Import the consolidated RT career registry
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import * as ArchMilitant from '../advancements/arch-militant.ts';
-import * as Astropath from '../advancements/astropath.ts';
-import * as Explorator from '../advancements/explorator.ts';
+import { CAREER_TABLES } from '../advancements/career-tables.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
-import * as Missionary from '../advancements/missionary.ts';
-import * as Navigator from '../advancements/navigator.ts';
-import * as Seneschal from '../advancements/seneschal.ts';
-import * as VoidMaster from '../advancements/void-master.ts';
-import * as WH40K from '../advancements/wh40k-rpg.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: career module namespace imports are structurally CareerEntry but typed as unknown at the registry boundary
-const RT_CAREER_REGISTRY: Record<string, unknown> = {
-    rogueTrader: WH40K,
-    archMilitant: ArchMilitant,
-    astropath: Astropath,
-    explorator: Explorator,
-    missionary: Missionary,
-    navigator: Navigator,
-    seneschal: Seneschal,
-    voidMaster: VoidMaster,
-};
+// eslint-disable-next-line no-restricted-syntax -- boundary: career tables are structurally CareerEntry but typed as unknown at the registry boundary
+const RT_CAREER_REGISTRY: Record<string, unknown> = CAREER_TABLES;
 
 export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'rt' as const;

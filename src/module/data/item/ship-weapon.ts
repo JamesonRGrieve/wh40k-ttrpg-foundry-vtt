@@ -96,6 +96,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         ShipWeaponData.#migrateHullType(source);
     }
 
+    // TODO(dry): these 4 #migrate* helpers are the same field-rename idiom. Replace with a table-driven renameKeys(source, { powerUsage: 'power', ... }).
     // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migratePowerUsage(source: Record<string, unknown>): void {
         if ('powerUsage' in source && source['power'] === undefined) {
@@ -187,6 +188,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
+    // TODO(dry): the Set/string→array _cleanData normalization here is copy-pasted across armour-modification.ts, weapon-modification.ts, ship-component.ts, armour.ts, damage-template.ts. Extract normalizeToArray(source, key).
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._cleanData receives raw source before schema validation; options is a Foundry framework type
     static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData(source, options);

@@ -344,6 +344,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create characteristic modifier data
      */
+    // TODO(dry): _createCharacteristicData/_createSkillData/_create* all build the same {name,icon,changes[],flags,duration} payload. Collapse to one _buildEffectData({label,changeKey,value,data}).
     // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
     static _createCharacteristicData(data: EffectCreationData): Record<string, unknown> | null {
         const characteristic = data.characteristic;

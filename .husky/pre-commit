@@ -113,6 +113,7 @@ run_bg "theme"          pnpm -s theme:ratchet
 run_bg "ts-coverage"    pnpm -s ts:ratchet
 run_bg "symmetry"       pnpm -s symmetry:ratchet
 run_bg "preload-drift"  pnpm -s preload:drift
+run_bg "dry-todo"       pnpm -s dry-todo:ratchet
 run_bg "lockfile"       pnpm -s lockfile:validate
 
 # Conditional pack validation.
