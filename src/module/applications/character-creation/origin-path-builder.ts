@@ -2052,10 +2052,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             };
         }
 
-        // Per-origin throne gelt roll (homebrew only, homeworld and background steps each roll their own formula).
+        // Per-origin throne gelt roll. Throne Gelt is NOT a strict DH2 RAW rule;
+        // it ships only on the homebrew track (`WH40KSettings.dh2Ruleset === 'homebrew'`)
+        // and traditionally rolls exactly ONCE at character creation, against the
+        // home world's formula. Issue #204: the previous implementation also exposed
+        // a separate roll button on the Background step, doubling the player's starting
+        // throne gelt. Restrict the rollable widget to the Home World step only; any
+        // formula authored on a Background entry is ignored at the UI layer (its data
+        // remains in the compendium for narrative reference but no separate roll fires).
         const thronesFormulaForItem = this._getSelectionThronesFormula(item);
         const itemSys = item.system as OriginPathSystemData;
-        const thronesEligibleStep = itemSys.step === 'homeWorld' || itemSys.step === 'background';
+        const thronesEligibleStep = itemSys.step === 'homeWorld';
         const thronesAllowedByRuleset = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
         if (thronesFormulaForItem !== '' && thronesEligibleStep && thronesAllowedByRuleset) {
             const thronesResult = rollResults['thrones'];
