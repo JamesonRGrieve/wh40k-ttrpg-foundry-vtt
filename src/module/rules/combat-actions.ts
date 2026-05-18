@@ -87,7 +87,7 @@ export function updateAvailableCombatActions(rollData: WeaponRollData): void {
     }
 }
 
-function allCombatActions(): CombatAction[] {
+export function allCombatActions(): CombatAction[] {
     return [
         {
             name: 'Standard Attack',
