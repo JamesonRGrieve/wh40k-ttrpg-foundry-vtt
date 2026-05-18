@@ -1,9 +1,133 @@
+import {
+    type CanonicalBodyPart,
+    type CanonicalDamageType,
+    normalizeBodyPart,
+    normalizeDamageType,
+} from './damage-type.ts';
+
 export interface CriticalDamageTable {
     [key: string]: {
         [key: string]: {
             [key: number]: string;
         };
     };
+}
+
+/**
+ * Content-agnostic classification of the conditions / special damage a
+ * Critical Effects row inflicts (core.md §"Conditions And Special
+ * Damage"). These flags are derived by scanning the row text for the
+ * system's own condition vocabulary — they are NOT a hand-maintained
+ * content table (the prose text itself stays in the GW-copyrighted
+ * compendium pack per Direction #7). The damage-application path reads
+ * these flags to know which ActiveEffects / conditions to apply.
+ */
+export interface CriticalDamageRiders {
+    /** Row applies the Stunned condition. */
+    readonly stunned: boolean;
+    /** Row sets the target on fire (Burning) or risks catching fire. */
+    readonly burning: boolean;
+    /** Row inflicts Blood Loss. */
+    readonly bloodLoss: boolean;
+    /** Row knocks the target Prone. */
+    readonly prone: boolean;
+    /** Row Blinds the target. */
+    readonly blinded: boolean;
+    /** Row Deafens the target. */
+    readonly deafened: boolean;
+    /** Row inflicts at least one level of Fatigue. */
+    readonly fatigue: boolean;
+    /** Row severs or renders Useless a limb (Lost Hand/Arm/Foot/Leg/Eye). */
+    readonly lostLimb: boolean;
+    /** Row is outright lethal (the target dies / does not survive). */
+    readonly fatal: boolean;
+}
+
+/** Structured Critical Damage lookup result. */
+export interface CriticalDamageRecord {
+    /** Canonical damage type the effect was resolved on. */
+    readonly damageType: CanonicalDamageType;
+    /** Canonical body-part the effect was resolved on. */
+    readonly bodyPart: CanonicalBodyPart;
+    /** The Critical-damage severity row (1–10; 10 = the 10+ row). */
+    readonly severity: number;
+    /** Narrative effect text (from the compendium; '' if pack absent). */
+    readonly effect: string;
+    /** Which conditions / special damage this row inflicts. */
+    readonly riders: CriticalDamageRiders;
+}
+
+/** Empty rider set — used when no effect text is available to classify. */
+const NO_RIDERS: CriticalDamageRiders = Object.freeze({
+    stunned: false,
+    burning: false,
+    bloodLoss: false,
+    prone: false,
+    blinded: false,
+    deafened: false,
+    fatigue: false,
+    lostLimb: false,
+    fatal: false,
+});
+
+/**
+ * Classify a Critical Effects row's prose into structured rider flags.
+ * Pure keyword scan over the system's condition vocabulary — content-
+ * agnostic primitive logic, identical in spirit to `stripOuterParagraph`.
+ */
+export function classifyCriticalEffect(effectText: string | null | undefined): CriticalDamageRiders {
+    if (typeof effectText !== 'string' || effectText.trim() === '') return NO_RIDERS;
+    const t = effectText.toLowerCase();
+    return Object.freeze({
+        stunned: t.includes('stunned'),
+        burning: t.includes('catch fire') || t.includes('catches fire') || t.includes('on fire') || t.includes('immolate') || t.includes('burning'),
+        bloodLoss: t.includes('blood loss'),
+        prone: t.includes('prone'),
+        blinded: t.includes('blinded') || t.includes('lost eye') || t.includes('loses an eye') || t.includes('scooping out the eye'),
+        deafened: t.includes('deafened'),
+        fatigue: t.includes('fatigue'),
+        lostLimb:
+            t.includes('lost hand') ||
+            t.includes('lost arm') ||
+            t.includes('lost foot') ||
+            t.includes('lost leg') ||
+            t.includes('lost eye') ||
+            t.includes('useless') ||
+            t.includes('severed') ||
+            t.includes('amputat'),
+        fatal:
+            t.includes('immediately dies') ||
+            t.includes('he immediately dies') ||
+            t.includes('dies instantly') ||
+            t.includes('killed instantly') ||
+            t.includes('killed the target') ||
+            t.includes('killing the target') ||
+            t.includes('killing him instantly') ||
+            t.includes('instantly fatal') ||
+            t.includes('instantly slain') ||
+            t.includes('instantly killing') ||
+            t.includes('messily fatal') ||
+            t.includes('is killed instantly') ||
+            t.includes('does not survive') ||
+            t.includes('does not get up') ||
+            t.includes('quite dead') ||
+            t.includes('very, very dead') ||
+            t.includes('deader than this') ||
+            t.includes('is dead before') ||
+            t.includes('dies in a') ||
+            t.includes('dies from shock') ||
+            t.includes('dies a horrible') ||
+            t.includes('death is instantaneous') ||
+            t.includes('death is instantane') ||
+            t.includes('a lifeless corpse') ||
+            t.includes('lifeless form') ||
+            t.includes('crumpling to\nthe ground dead') ||
+            t.includes('to the ground dead') ||
+            t.includes('the ground dead') ||
+            t.includes('before dying') ||
+            t.includes('he does not survive') ||
+            t.includes('ceases to exist'),
+    });
 }
 
 const CRITICAL_INJURY_PACK = 'wh40k-rpg.dh2-core-stats-critical-injuries';
@@ -112,4 +236,53 @@ export async function getCriticalDamage(type: string, location: string, amount: 
     const clamped = amount > 10 ? 10 : amount;
     if (!Object.hasOwn(locationMap, clamped)) return null;
     return locationMap[clamped] ?? null;
+}
+
+/**
+ * Clamp a raw Critical-damage total to a table row (1 … 10, where 10 is
+ * the "10+" row). Values below 1 clamp up to 1 — any Critical damage at
+ * all triggers at least the row-1 effect (core.md L10650).
+ */
+export function clampCriticalSeverity(amount: number): number {
+    const n = Number.isFinite(amount) ? Math.trunc(amount) : 1;
+    if (n < 1) return 1;
+    if (n > 10) return 10;
+    return n;
+}
+
+/**
+ * Pure structured Critical Damage lookup:
+ *   (damageType, hitLocation, criticalValue) → CriticalDamageRecord
+ *
+ * Resolves the GW-copyrighted effect prose from the compendium pack
+ * (via `getCriticalDamage`) and layers the content-agnostic rider
+ * classification on top so the damage-application path knows which
+ * ActiveEffects / conditions (Stunned, Burning, Blood Loss, Helpless,
+ * lost limb, …) to apply. The hit location is collapsed onto its
+ * Critical Effects body-part; an unknown damage type falls back to
+ * Impact per core.md L10646.
+ *
+ * Returns null only when the damage type / body-part cannot be
+ * resolved at all. When the compendium pack is absent the record is
+ * still returned with `effect: ''` and empty riders, so the chat card
+ * and conditions plumbing degrade gracefully.
+ */
+export async function getCriticalDamageRecord(
+    damageType: string | null | undefined,
+    hitLocation: string | null | undefined,
+    criticalValue: number,
+): Promise<CriticalDamageRecord | null> {
+    // core.md L10646: an unspecified / unknown damage type is Impact.
+    const dt = normalizeDamageType(damageType) ?? 'Impact';
+    const bp = normalizeBodyPart(hitLocation);
+    if (bp === null) return null;
+    const severity = clampCriticalSeverity(criticalValue);
+    const effect = (await getCriticalDamage(dt, bp, severity)) ?? '';
+    return {
+        damageType: dt,
+        bodyPart: bp,
+        severity,
+        effect,
+        riders: classifyCriticalEffect(effect),
+    };
 }

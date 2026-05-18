@@ -251,6 +251,15 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/mutation-roll-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/disorder-roll-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/disorder-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/possession-frenzy-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/aerial-manoeuvre-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/critical-damage-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/two-weapon-refocus-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/sanctic-daemonology-chat.hbs',
+            'systems/wh40k-rpg/templates/prompt/medicae-mechadendrite-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/medicae-mechadendrite-chat.hbs',
+            'systems/wh40k-rpg/templates/prompt/cybernetics-install-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/cybernetics-install-chat.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',
