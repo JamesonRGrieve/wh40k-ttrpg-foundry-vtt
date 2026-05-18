@@ -3563,14 +3563,26 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     result !== undefined && typeof (result as unknown as Record<string, unknown>)['text'] === 'string'
                         ? ((result as unknown as Record<string, unknown>)['text'] as string)
                         : null;
-                this._divination = resultText ?? 'This character likes to flip tables, especially rollable ones.';
+                if (resultText !== null) {
+                    this._divination = resultText;
+                    this._saveScrollPosition();
+                    void this.render();
+                    return;
+                }
             } catch (error) {
                 console.error('[wh40k-rpg] Failed to draw Divination RollTable.', error);
-                this._divination = 'This character likes to flip tables, especially rollable ones.';
             }
-        } else {
-            this._divination = 'This character likes to flip tables, especially rollable ones.';
         }
+        // The Divination table text lives in the private packs submodule
+        // (GW-copyrighted). When it is not installed #getDivinationTable
+        // returns null, so no draw() is attempted and Foundry never raises
+        // its "no available results" notification. Fall back to a bare 1d100
+        // so the player records a roll and fills the maxim in by hand.
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        this._divination = game.i18n.format('WH40K.OriginPath.DivinationTableUnavailable', {
+            roll: String(roll.total ?? 0),
+        });
         this._saveScrollPosition();
         void this.render();
     }
@@ -3581,9 +3593,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable is an untyped Foundry document; caller casts to structural type before use
     static async #getDivinationTable(): Promise<unknown> {
+        // A RollTable with zero results makes Foundry's draw() raise a
+        // user-facing "no available results" notification. Treat an
+        // empty/absent table as unavailable so the caller can fall back
+        // to a bare 1d100 instead.
+        const hasResults = (candidate: unknown): boolean => {
+            const size = (candidate as { results?: { size?: number } }).results?.size;
+            return typeof size === 'number' && size > 0;
+        };
+
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.tables.getName returns an untyped Foundry document; narrowed by caller
         const worldTable = (game.tables as { getName?: (name: string) => unknown } | undefined)?.getName?.('Divination');
-        if (worldTable !== undefined && worldTable !== null) return worldTable;
+        if (worldTable !== undefined && worldTable !== null && hasResults(worldTable)) return worldTable;
 
         const expectedPackId = 'wh40k-rpg.dh2-core-rolltables';
         const pack =
@@ -3619,6 +3640,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const document = await pack.getDocument(entry._id);
         if (document == null) {
             console.warn('[wh40k-rpg] Divination RollTable document failed to load from pack.', {
+                packId: pack.metadata.id,
+                tableId: entry._id,
+            });
+            return null;
+        }
+
+        if (!hasResults(document)) {
+            console.warn('[wh40k-rpg] Divination RollTable has no results; using 1d100 fallback.', {
                 packId: pack.metadata.id,
                 tableId: entry._id,
             });
