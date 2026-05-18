@@ -328,6 +328,125 @@ describe('OriginPathBuilder preview action', () => {
     });
 });
 
+/**
+ * Issue #198 regression: selecting any Home World / Background / Role / Elite
+ * Advance card threw "item.toObject is not a function" because the cards loaded
+ * from `allOrigins` / `lineageOrigins` are normalized POJOs (no `toObject()`),
+ * but `_itemToSelectionData` invoked `.toObject()` unconditionally.
+ *
+ * All four selection types share one dispatch:
+ *   selectOriginCard action → #previewOriginCard → _itemToSelectionData(origin)
+ * The only difference between them is the `step`/`stepIndex` value, and whether
+ * the card is sourced from `allOrigins` (core steps) or `lineageOrigins` (the
+ * optional Elite Advance step). The total `hasToObject` guard must keep ALL
+ * four paths from throwing.
+ */
+describe('OriginPathBuilder selection dispatch is total across all four steps (issue #198)', () => {
+    interface StepCase {
+        label: string;
+        step: string;
+        stepIndex: number;
+        identifier: string;
+        lineage: boolean;
+    }
+
+    const STEP_CASES: StepCase[] = [
+        { label: 'Home World', step: 'homeWorld', stepIndex: 1, identifier: 'void-born', lineage: false },
+        { label: 'Background', step: 'background', stepIndex: 2, identifier: 'imperial-guard', lineage: false },
+        { label: 'Role', step: 'role', stepIndex: 3, identifier: 'warrior', lineage: false },
+        // Elite Advance is the optional step → cards live in `lineageOrigins`.
+        { label: 'Elite Advance', step: 'elite', stepIndex: 4, identifier: 'psyker', lineage: true },
+    ];
+
+    for (const sc of STEP_CASES) {
+        it(`previews a ${sc.label} card (normalized POJO, no toObject) without throwing`, () => {
+            const origin = makeOrigin({
+                id: `origin-${sc.identifier}`,
+                uuid: `Compendium.wh40k-rpg.origin-paths.origin-${sc.identifier}`,
+                name: sc.label,
+                step: sc.step,
+                stepIndex: sc.stepIndex,
+                identifier: sc.identifier,
+                system: {
+                    step: sc.step,
+                    stepIndex: sc.stepIndex,
+                    identifier: sc.identifier,
+                    selectedChoices: {},
+                    rollResults: {},
+                },
+            });
+            const host = makeBuilderHost();
+            if (sc.lineage) {
+                host.lineageOrigins = [origin];
+            } else {
+                host.allOrigins = [origin];
+            }
+
+            expect(() =>
+                OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(
+                    host as unknown as InstanceType<typeof OriginPathBuilder>,
+                    new Event('click'),
+                    makeTarget(origin),
+                ),
+            ).not.toThrow();
+
+            expect(host.previewedOrigin?.name).toBe(sc.label);
+            expect(host.previewedOrigin?.system['step']).toBe(sc.step);
+            expect(host.render).toHaveBeenCalledTimes(1);
+        });
+
+        it(`_itemToSelectionData converts a ${sc.label} POJO without invoking toObject`, () => {
+            const builder = { actor: { id: 'actor-1' } };
+            const origin = makeOrigin({
+                id: `origin-${sc.identifier}`,
+                uuid: `Compendium.wh40k-rpg.origin-paths.origin-${sc.identifier}`,
+                name: sc.label,
+                step: sc.step,
+                stepIndex: sc.stepIndex,
+                identifier: sc.identifier,
+                system: { step: sc.step, stepIndex: sc.stepIndex, identifier: sc.identifier },
+            });
+
+            let normalized: ReturnType<typeof OriginPathBuilder.prototype._itemToSelectionData> | undefined;
+            expect(() => {
+                normalized = OriginPathBuilder.prototype._itemToSelectionData.call(builder, origin);
+            }).not.toThrow();
+
+            expect(normalized?.name).toBe(sc.label);
+            // Plain-object branch: _sourceUuid falls back to the POJO's own uuid.
+            expect(normalized?._sourceUuid).toBe(`Compendium.wh40k-rpg.origin-paths.origin-${sc.identifier}`);
+            expect(normalized?._actorItemId).toBeNull();
+        });
+    }
+
+    it('still routes a real Item document through the toObject() branch', () => {
+        const builder = { actor: { id: 'actor-doc' } };
+        const toObject = vi.fn(() => ({
+            name: 'Forge World',
+            img: 'icons/svg/d20.svg',
+            system: { step: 'homeWorld', stepIndex: 1, identifier: 'forge-world' },
+        }));
+        const fakeItemDocument = {
+            toObject,
+            flags: { core: { sourceId: 'Compendium.wh40k-rpg.origin-paths.forge-world' } },
+            parent: { id: 'other-actor' },
+            id: 'embedded-1',
+            uuid: 'Actor.x.Item.embedded-1',
+        };
+
+        const normalized = OriginPathBuilder.prototype._itemToSelectionData.call(
+            builder as unknown as InstanceType<typeof OriginPathBuilder>,
+            fakeItemDocument as never,
+        );
+
+        expect(toObject).toHaveBeenCalledTimes(1);
+        expect(normalized.name).toBe('Forge World');
+        // Not parented to this.actor → _sourceUuid resolves from item.uuid.
+        expect(normalized._sourceUuid).toBe('Actor.x.Item.embedded-1');
+        expect(normalized._actorItemId).toBeNull();
+    });
+});
+
 describe('OriginPathBuilder rollDivination (issue #199)', () => {
     function makeDivinationHost() {
         return {
@@ -470,6 +589,7 @@ describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
             selections: new Map(selections),
             _getSelectionSystem: (s: AptSelection) => s.system,
             _collectAptitudeChoices: OriginPathBuilder.prototype._collectAptitudeChoices,
+            _selectionGrantedAptitudes: OriginPathBuilder.prototype._selectionGrantedAptitudes,
         };
     }
 
@@ -512,5 +632,439 @@ describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
         const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
 
         expect(counts.get('Willpower')).toBe(1);
+    });
+});
+
+/**
+ * Root-predicate coverage for the two coupled aptitude-duplicate bugs:
+ *  - #205: a step that re-grants an aptitude the character already has (or
+ *          another selection grants) MUST warn — including when the two
+ *          spellings differ only by case/whitespace.
+ *  - #215: a freshly-opened builder on a character that already has committed
+ *          origin steps must NOT report a phantom collision — the actor's
+ *          derived `system.aptitudes` is the same single grant the builder's
+ *          own loaded selection re-emits, not a real duplicate.
+ *
+ * `_getAptitudeCollisions` is the single comparison/normalisation function used
+ * by both the warning banner (`_calculatePreview`) and the commit-time
+ * doubling guard, so it is exercised directly with a minimal host.
+ */
+describe('OriginPathBuilder._getAptitudeCollisions (issues #205 & #215)', () => {
+    // A selection carries `_actorItemId` when `_itemToSelectionData` loaded it
+    // from an origin item already committed on the actor. The actor's derived
+    // `system.aptitudes` comes from those committed items, so a committed-step
+    // selection's grants must be subtracted from "existing" (#215) while a
+    // freshly-picked step (no `_actorItemId`) must NOT be (#205).
+    type AptSel = {
+        system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> };
+        _actorItemId?: string | null;
+    };
+
+    function makeCollisionHost(opts: {
+        selections: Array<[string, AptSel]>;
+        actorAptitudes?: string[];
+        overrides?: Map<string, string>;
+    }) {
+        const proto = OriginPathBuilder.prototype;
+        return {
+            selections: new Map(opts.selections),
+            actor: { system: { aptitudes: opts.actorAptitudes ?? [] } },
+            aptitudeOverrides: opts.overrides ?? new Map<string, string>(),
+            _getSelectionSystem: (s: AptSel) => s.system,
+            _collectAptitudeChoices: proto._collectAptitudeChoices,
+            _selectionGrantedAptitudes: proto._selectionGrantedAptitudes,
+            _collectAptitudeGrantCounts: proto._collectAptitudeGrantCounts,
+            _collectExistingAptitudes: proto._collectExistingAptitudes,
+            _lookupAptitudeOverride: proto._lookupAptitudeOverride,
+            _aptitudeKey: proto._aptitudeKey,
+        };
+    }
+
+    /** A selection seeded from a committed actor origin item. */
+    function committed(grants: Record<string, unknown>, selectedChoices: Record<string, string[]> = {}, id = 'actor-item'): AptSel {
+        return { system: { grants, selectedChoices }, _actorItemId: id };
+    }
+    /** A selection the player just picked this session (not yet committed). */
+    function picked(grants: Record<string, unknown>, selectedChoices: Record<string, string[]> = {}): AptSel {
+        return { system: { grants, selectedChoices }, _actorItemId: null };
+    }
+
+    function collisions(host: ReturnType<typeof makeCollisionHost>) {
+        return OriginPathBuilder.prototype._getAptitudeCollisions.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
+    }
+
+    // ---- #215 — no phantom collision on a pre-existing character ----
+
+    it('#215: does NOT warn when the only "existing" aptitudes come from the builder\'s own committed selections', () => {
+        // Builder opened on a character with a committed Home World step.
+        // _initializeFromActor seeded this selection from that committed item;
+        // the character DataModel derived system.aptitudes from the same item.
+        const host = makeCollisionHost({
+            selections: [['homeWorld', committed({ aptitudes: ['Willpower', 'Offence'] })]],
+            actorAptitudes: ['Willpower', 'Offence'],
+        });
+        expect(collisions(host)).toEqual([]);
+    });
+
+    it('#215: does NOT warn on a committed aptitude-typed choice already reflected in the actor', () => {
+        const host = makeCollisionHost({
+            selections: [
+                [
+                    'background',
+                    committed({ choices: [{ type: 'aptitude', label: 'Aptitude', options: [{ value: 'Tech' }] }] }, { Aptitude: ['Tech'] }),
+                ],
+            ],
+            actorAptitudes: ['Tech'],
+        });
+        expect(collisions(host)).toEqual([]);
+    });
+
+    it('#215: multi-step committed character (the screenshot case) → no phantom banner on open', () => {
+        // Several committed steps; actor.system.aptitudes mirrors all of them.
+        // Before the fix every one of these reported "duplicate aptitude
+        // detected" and Reset All was the only escape.
+        const host = makeCollisionHost({
+            selections: [
+                ['homeWorld', committed({ aptitudes: ['Willpower'] }, {}, 'i1')],
+                ['background', committed({ aptitudes: ['Tech'] }, {}, 'i2')],
+                ['role', committed({ aptitudes: ['Finesse', 'Offence'] }, {}, 'i3')],
+            ],
+            actorAptitudes: ['Willpower', 'Tech', 'Finesse', 'Offence'],
+        });
+        expect(collisions(host)).toEqual([]);
+    });
+
+    it('#215: empty actor + single non-duplicated picked selection → no collision', () => {
+        const host = makeCollisionHost({
+            selections: [['homeWorld', picked({ aptitudes: ['Awareness', 'Fellowship'] })]],
+            actorAptitudes: [],
+        });
+        expect(collisions(host)).toEqual([]);
+    });
+
+    // ---- #205 — real duplicates DO warn ----
+
+    it('#205: warns when two distinct selections grant the same aptitude', () => {
+        const host = makeCollisionHost({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Willpower'] })],
+                ['background', picked({ aptitudes: ['Willpower'] })],
+            ],
+            actorAptitudes: [],
+        });
+        const out = collisions(host);
+        expect(out).toHaveLength(1);
+        expect(out[0]).toMatchObject({ original: 'Willpower', replacement: null });
+    });
+
+    it('#205: warns across case/whitespace variants from different origins (was silently allowed)', () => {
+        const host = makeCollisionHost({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Willpower'] })],
+                ['background', picked({ aptitudes: ['  willpower '] })],
+            ],
+            actorAptitudes: [],
+        });
+        const out = collisions(host);
+        expect(out).toHaveLength(1);
+        // First literal spelling seen is preserved for the banner.
+        expect(out[0]?.original).toBe('Willpower');
+    });
+
+    it('#205: warns when a freshly-picked step re-grants a genuine pre-existing aptitude — case-insensitively', () => {
+        // 'Tech' is genuinely pre-existing (GM hand-add: on actor, NOT backed
+        // by any committed selection here). A just-picked Background step
+        // grants 'tech' — that doubles it; warn. 'Offence' is committed +
+        // self-sourced so it nets out (no warn).
+        const host = makeCollisionHost({
+            selections: [
+                ['homeWorld', committed({ aptitudes: ['Offence'] }, {}, 'i1')],
+                ['background', picked({ aptitudes: ['tech'] })],
+            ],
+            actorAptitudes: ['Tech', 'Offence'],
+        });
+        const out = collisions(host);
+        expect(out.map((c) => c.original)).toEqual(['tech']);
+    });
+
+    it('#205: distinct aptitudes including tricky near-matches do NOT warn', () => {
+        const host = makeCollisionHost({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Weapon Skill'] })],
+                ['background', picked({ aptitudes: ['Ballistic Skill'] })],
+                ['role', picked({ aptitudes: ['Tech', 'Toughness'] })],
+            ],
+            actorAptitudes: [],
+        });
+        expect(collisions(host)).toEqual([]);
+    });
+
+    it('#205: a free-choice aptitude slot resolving to a duplicate warns', () => {
+        const host = makeCollisionHost({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Fellowship'] })],
+                [
+                    'background',
+                    picked(
+                        { choices: [{ type: 'aptitude', label: 'Aptitude', options: [{ value: 'Fellowship' }, { value: 'Toughness' }] }] },
+                        { Aptitude: ['Fellowship'] },
+                    ),
+                ],
+            ],
+            actorAptitudes: [],
+        });
+        const out = collisions(host);
+        expect(out).toHaveLength(1);
+        expect(out[0]?.original).toBe('Fellowship');
+    });
+
+    it('#205: a free-choice aptitude slot resolving to a distinct aptitude does NOT warn', () => {
+        const host = makeCollisionHost({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Fellowship'] })],
+                [
+                    'background',
+                    picked(
+                        { choices: [{ type: 'aptitude', label: 'Aptitude', options: [{ value: 'Fellowship' }, { value: 'Toughness' }] }] },
+                        { Aptitude: ['Toughness'] },
+                    ),
+                ],
+            ],
+            actorAptitudes: [],
+        });
+        expect(collisions(host)).toEqual([]);
+    });
+
+    it('#205: an override recorded under a different casing still resolves the collision', () => {
+        const host = makeCollisionHost({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Willpower'] })],
+                ['background', picked({ aptitudes: ['willpower'] })],
+            ],
+            actorAptitudes: [],
+            overrides: new Map([['WILLPOWER', 'Tech']]),
+        });
+        const out = collisions(host);
+        expect(out).toHaveLength(1);
+        // Collision still listed, but resolved (replacement set) → banner clears.
+        expect(out[0]).toMatchObject({ original: 'Willpower', replacement: 'Tech' });
+    });
+});
+
+describe('OriginPathBuilder._normalizeAptitudeIdentity (#205)', () => {
+    it('canonicalises case and collapses whitespace', () => {
+        const n = OriginPathBuilder._normalizeAptitudeIdentity;
+        expect(n('Willpower')).toBe(n('  willpower '));
+        expect(n('Weapon  Skill')).toBe(n('weapon skill'));
+        expect(n('Weapon Skill')).not.toBe(n('Ballistic Skill'));
+    });
+});
+
+describe('OriginPathBuilder._collectAvailableAptitudePool (#205)', () => {
+    it('excludes taken aptitudes by canonical identity and de-dupes case variants', () => {
+        const proto = OriginPathBuilder.prototype;
+        const mkOrigin = (apts: string[]) => ({ system: { grants: { aptitudes: apts } } });
+        const host = {
+            allOrigins: [mkOrigin(['Willpower', 'willpower ', 'Tech', 'Offence'])],
+            lineageOrigins: [],
+            _getSelectionSystem: (o: { system: unknown }) => o.system,
+            _aptitudeKey: proto._aptitudeKey,
+        };
+        const pool = proto._collectAvailableAptitudePool.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Set<string>(['  WILLPOWER']),
+        );
+        // 'Willpower'/'willpower ' both excluded by the taken 'WILLPOWER';
+        // remaining pool has Tech + Offence with no case-variant dupes.
+        expect(pool).toEqual(['Offence', 'Tech']);
+    });
+});
+
+/**
+ * Issue #214 — "First time origin path on already generated character creates
+ * negative xp".
+ *
+ * An already-generated character carries XP-purchased advances recorded in two
+ * places per advance: the `.advance` rank AND a paired `.cost`, plus a running
+ * `system.experience.used` total (see AdvancementDialog#purchaseCharacteristic).
+ *
+ * Two accounting failures combined to drive `available = total - used`
+ * negative on the first origin-path commit:
+ *
+ *  A. The reset zeroed `.advance` but left every paired `.cost` orphaned, so
+ *     `_computeExperienceSpent`'s `calculatedTotal` and the auto-opened
+ *     Advancement Dialog kept pricing from a corrupt baseline.
+ *  B. The experience reset rode in the SAME atomic `actor.update()` payload as
+ *     the bulk `system.skills.<k>.entries` array replacements. On an
+ *     already-generated character those entries fail V14 strict array
+ *     validation, so Foundry rejected the WHOLE update — `experience.used`
+ *     stayed at the pre-origin spend while `total` was meant to drop to
+ *     `startingXP`, yielding negative available XP.
+ *
+ * These tests build a host that drives `_resetExperienceAndAdvancements`
+ * directly with a fake actor whose `update()` mutates a backing system object.
+ */
+describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () => {
+    interface FakeExperience {
+        total: number;
+        used: number;
+    }
+    interface FakeSystem {
+        experience: FakeExperience;
+        characteristics: Record<string, { advance: number; cost: number }>;
+        skills: Record<string, { advance: number; cost: number; entries?: Array<Record<string, unknown>> }>;
+    }
+
+    /**
+     * @param opts.rejectEntryWrites - simulate Foundry V14 strict validation
+     *        rejecting any update payload that contains a `system.skills.*.entries`
+     *        array (the pre-fix non-atomic-write failure mode).
+     */
+    function makeResetHost(
+        system: FakeSystem,
+        opts: { rejectEntryWrites?: boolean; dropFirstUsedWrite?: boolean } = {},
+    ): InstanceType<typeof OriginPathBuilder> {
+        let call = 0;
+        const actor = {
+            system,
+            update: vi.fn(async (payload: Record<string, unknown>) => {
+                call += 1;
+                const hasEntryWrite = Object.keys(payload).some((k) => /^system\.skills\..+\.entries$/.test(k));
+                if (opts.rejectEntryWrites === true && hasEntryWrite) {
+                    // Foundry rejects the ENTIRE atomic update — nothing applies.
+                    throw new Error('V14 strict validation: invalid skill entries array');
+                }
+                // Simulate the experience-reset write only partially landing
+                // (the `used` path silently dropped) so a stale `used` survives
+                // above the post-reset `total` — exercises the clamp guard.
+                if (opts.dropFirstUsedWrite === true && call === 1) {
+                    delete payload['system.experience.used'];
+                }
+                for (const [path, value] of Object.entries(payload)) {
+                    const parts = path.split('.').slice(1); // drop leading "system"
+                    let cursor: Record<string, unknown> = system as unknown as Record<string, unknown>;
+                    for (let i = 0; i < parts.length - 1; i++) {
+                        const seg = parts[i] as string;
+                        cursor = cursor[seg] as Record<string, unknown>;
+                    }
+                    cursor[parts[parts.length - 1] as string] = value;
+                }
+                return actor;
+            }),
+        };
+        return {
+            actor,
+            registryConfig: { startingXP: 1000 },
+            _actorSys: () => system,
+            _resetExperienceAndAdvancements: OriginPathBuilder.prototype._resetExperienceAndAdvancements,
+        } as unknown as InstanceType<typeof OriginPathBuilder>;
+    }
+
+    function generatedCharacter(): FakeSystem {
+        // Built via the Advancement Dialog: 1500 XP spent across WS + skills,
+        // total topped up to 2000 by play awards.
+        return {
+            experience: { total: 2000, used: 1500 },
+            characteristics: {
+                weaponSkill: { advance: 3, cost: 750 },
+                ballisticSkill: { advance: 1, cost: 250 },
+                strength: { advance: 0, cost: 0 },
+                toughness: { advance: 0, cost: 0 },
+                agility: { advance: 0, cost: 0 },
+                intelligence: { advance: 0, cost: 0 },
+                perception: { advance: 0, cost: 0 },
+                willpower: { advance: 0, cost: 0 },
+                fellowship: { advance: 0, cost: 0 },
+            },
+            skills: {
+                dodge: { advance: 2, cost: 400 },
+                awareness: { advance: 1, cost: 100 },
+                commonLore: {
+                    advance: 0,
+                    cost: 0,
+                    entries: [{ name: 'Imperium', advance: 1, cost: 100, trained: true, current: 35 }],
+                },
+            },
+        };
+    }
+
+    it('reproduces the pre-fix scenario: reset clears advances AND their paired costs', async () => {
+        const system = generatedCharacter();
+        const host = makeResetHost(system);
+
+        await host._resetExperienceAndAdvancements();
+
+        // Experience is fully reset to a clean slate.
+        expect(system.experience.total).toBe(1000);
+        expect(system.experience.used).toBe(0);
+
+        // Every advance AND its paired cost is zeroed — no orphaned `.cost`
+        // left to corrupt calculatedTotal / the Advancement Dialog re-pricing.
+        for (const c of Object.values(system.characteristics)) {
+            expect(c.advance).toBe(0);
+            expect(c.cost).toBe(0);
+        }
+        for (const s of Object.values(system.skills)) {
+            expect(s.advance).toBe(0);
+            expect(s.cost).toBe(0);
+            for (const e of s.entries ?? []) {
+                expect(e['advance']).toBe(0);
+                expect(e['cost']).toBe(0);
+            }
+        }
+    });
+
+    it('available XP (total - used) is non-negative and equals startingXP after reset', async () => {
+        const system = generatedCharacter();
+        const host = makeResetHost(system);
+
+        await host._resetExperienceAndAdvancements();
+
+        const available = system.experience.total - system.experience.used;
+        expect(available).toBe(1000);
+        expect(available).toBeGreaterThanOrEqual(0);
+    });
+
+    it('zeroes experience even when the bulk skill-entries write is rejected by V14 validation', async () => {
+        const system = generatedCharacter();
+        // Pre-fix: the experience reset shared one atomic update with the
+        // entries array write, so this rejection stranded `used` at 1500
+        // against a `total` meant to drop to startingXP → negative XP.
+        const host = makeResetHost(system, { rejectEntryWrites: true });
+
+        await expect(host._resetExperienceAndAdvancements()).rejects.toThrow();
+
+        // The experience reset is now its own update committed FIRST, so it
+        // landed before the entries write threw: available is never negative.
+        expect(system.experience.total).toBe(1000);
+        expect(system.experience.used).toBe(0);
+        expect(system.experience.total - system.experience.used).toBeGreaterThanOrEqual(0);
+    });
+
+    it('is idempotent — re-applying the reset on an already-reset character changes nothing', async () => {
+        const system = generatedCharacter();
+        const host = makeResetHost(system);
+
+        await host._resetExperienceAndAdvancements();
+        const firstPass = structuredClone(system);
+        await host._resetExperienceAndAdvancements();
+
+        expect(system).toEqual(firstPass);
+        expect(system.experience).toEqual({ total: 1000, used: 0 });
+    });
+
+    it('defensively clamps used <= total if some external state slipped through', async () => {
+        const system = generatedCharacter();
+        // The experience-reset write only partially lands (`used` dropped),
+        // leaving the stale 1500 against the reset total of 1000.
+        const host = makeResetHost(system, { dropFirstUsedWrite: true });
+
+        await host._resetExperienceAndAdvancements();
+
+        expect(system.experience.total).toBe(1000);
+        // Clamp step pulled used back down to total — available is exactly 0,
+        // never negative ("nothing can be bought" no longer occurs).
+        expect(system.experience.used).toBeLessThanOrEqual(system.experience.total);
+        expect(system.experience.total - system.experience.used).toBeGreaterThanOrEqual(0);
     });
 });
