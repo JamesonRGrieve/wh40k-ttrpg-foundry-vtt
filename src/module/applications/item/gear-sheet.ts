@@ -3,6 +3,7 @@
  */
 
 import type GearData from '../../data/item/gear.ts';
+import { getProfaneObjectDefinition } from '../../rules/profane-objects.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
@@ -82,6 +83,10 @@ export default class GearSheet extends BaseItemSheet {
         context['hasLimitedUses'] = this.item.system.hasLimitedUses;
         context['usesExhausted'] = this.item.system.usesExhausted;
         context['usesDisplay'] = this.item.system.usesDisplay;
+
+        // Profane Object metadata (within.md p. 52-57). Undefined for
+        // ordinary gear; template short-circuits the block with {{#if}}.
+        context['profaneObject'] = getProfaneObjectDefinition(this.item.system.profaneObjectId);
 
         return context;
     }
