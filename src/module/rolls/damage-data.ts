@@ -102,6 +102,11 @@ export class Hit {
     specials: unknown[] = [];
     effects: { name: string; effect: string }[] = [];
     righteousFury: { roll: Roll; effect: string }[] = [];
+
+    /** Number of Righteous Fury triggers from this hit's damage roll. */
+    get righteousFuryCount(): number {
+        return this.righteousFury.length;
+    }
     // eslint-disable-next-line no-restricted-syntax -- boundary: scatter data is an unstructured legacy object; no schema available
     scatter: Record<string, unknown> = {};
 

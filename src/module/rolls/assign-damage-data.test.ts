@@ -88,3 +88,82 @@ describe('AssignDamageData cover AP wiring', () => {
         expect(data.hasDamage).toBe(true);
     });
 });
+
+describe('Righteous Fury no-break branch (#109)', () => {
+    it('damage breaks through normally — RF count does not add extra', async () => {
+        const actor = buildActor();
+        // 12 dmg, 0 pen → reduction 4+3=7 → reducedDamage=5; RF count is informational only here.
+        const hit = {
+            location: 'Body',
+            damageType: 'Impact',
+            totalDamage: 12,
+            totalPenetration: 0,
+            totalFatigue: 0,
+            righteousFuryCount: 2,
+        };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.damageTaken).toBe(5);
+        expect(data.hasDamage).toBe(true);
+    });
+
+    it('defences absorb the hit AND RF triggered → 1 unarmoured wound lands', async () => {
+        const actor = buildActor();
+        // 5 dmg, 0 pen → reduction 4+3=7 → reducedDamage=-2; RF saves the 1.
+        const hit = {
+            location: 'Body',
+            damageType: 'Impact',
+            totalDamage: 5,
+            totalPenetration: 0,
+            totalFatigue: 0,
+            righteousFuryCount: 1,
+        };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.damageTaken).toBe(1);
+        expect(data.hasDamage).toBe(true);
+    });
+
+    it('defences absorb the hit and NO RF triggered → no damage', async () => {
+        const actor = buildActor();
+        const hit = {
+            location: 'Body',
+            damageType: 'Impact',
+            totalDamage: 5,
+            totalPenetration: 0,
+            totalFatigue: 0,
+            righteousFuryCount: 0,
+        };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.damageTaken).toBe(0);
+        expect(data.hasDamage).toBe(false);
+    });
+
+    it('absent righteousFuryCount field is treated as zero', async () => {
+        const actor = buildActor();
+        const hit = {
+            location: 'Body',
+            damageType: 'Impact',
+            totalDamage: 5,
+            totalPenetration: 0,
+            totalFatigue: 0,
+        };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.damageTaken).toBe(0);
+    });
+
+    // wounds = 0 path: in that case the no-break branch routes the 1 damage
+    // through criticalDamageTaken, which downstream calls
+    // getCriticalDamage → loadCriticalDamageTable → game.packs.get(...). The
+    // Foundry `game` global is not present in pure-rules vitest runs, so
+    // exercising that path here would crash the same way the existing
+    // wounds<=0 branch above (line 92 in source) would. The branch itself is
+    // covered by code review against the source; the wounds>0 case above
+    // proves the RF-no-break trigger fires.
+});
