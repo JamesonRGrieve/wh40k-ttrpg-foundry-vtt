@@ -1,0 +1,84 @@
+{{!-- Within Homeworld Info Dialog (GitHub #139) --}}
+{{!-- GM-only reference: Agri / Feudal / Frontier homeworld traits from within.md L632-808 --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
+        {{localize "WH40K.WithinHomeworld.Description"}}
+    </div>
+
+    {{!-- Three-card grid; collapses to one column on narrow popouts. --}}
+    <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-3 tw-mb-5">
+        {{#each cards as |card|}}
+            <article class="tw-rounded-md tw-border-2 tw-bg-[rgba(0,0,0,0.35)] {{card.accent.border}} tw-p-3 tw-flex tw-flex-col tw-gap-3"
+                     data-homeworld="{{card.id}}">
+
+                {{!-- Title --}}
+                <header class="tw-flex tw-items-baseline tw-justify-between tw-gap-2 tw-border-b tw-border-[rgba(255,255,255,0.08)] tw-pb-2">
+                    <h3 class="tw-text-[1.05rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-m-0 {{card.accent.accentText}}">
+                        {{card.label}}
+                    </h3>
+                    <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.1em] tw-text-[#9a9a8a]">{{localize "WH40K.WithinHomeworld.HomeworldTag"}}</span>
+                </header>
+
+                {{!-- Characteristics row --}}
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <div class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{card.accent.accentText}}">
+                        {{localize "WH40K.WithinHomeworld.Characteristics"}}
+                    </div>
+                    <div class="tw-text-[0.85rem] tw-text-[#e8e4d9] tw-tabular-nums" data-testid="hw-chars">
+                        {{card.characteristicModsLabel}}
+                    </div>
+                </div>
+
+                {{!-- Fate threshold --}}
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <div class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{card.accent.accentText}}">
+                        {{localize "WH40K.WithinHomeworld.FateAdjust"}}
+                    </div>
+                    <div class="tw-text-[0.85rem] tw-text-[#e8e4d9] tw-tabular-nums" data-testid="hw-fate">
+                        {{card.fateThresholdLabel}}
+                    </div>
+                </div>
+
+                {{!-- Wounds --}}
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <div class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{card.accent.accentText}}">
+                        {{localize "WH40K.WithinHomeworld.WoundsAdjust"}}
+                    </div>
+                    <div class="tw-text-[0.85rem] tw-text-[#e8e4d9] tw-tabular-nums" data-testid="hw-wounds">
+                        {{card.woundsLabel}}
+                    </div>
+                </div>
+
+                {{!-- Home-world bonus --}}
+                <div class="tw-flex tw-flex-col tw-gap-1 tw-p-2 tw-rounded {{card.accent.accentBg}}">
+                    <div class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{card.accent.accentText}}">
+                        {{localize "WH40K.WithinHomeworld.Bonuses"}}
+                    </div>
+                    <div class="tw-text-[0.85rem] tw-font-semibold tw-text-[#e8e4d9]" data-testid="hw-bonus-name">{{card.bonusName}}</div>
+                    <div class="tw-text-[0.8rem] tw-text-[#cfcab8] tw-leading-snug">{{card.bonusDescription}}</div>
+                </div>
+
+                {{!-- Key aptitudes --}}
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <div class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{card.accent.accentText}}">
+                        {{localize "WH40K.WithinHomeworld.KeyAptitudes"}}
+                    </div>
+                    <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]" data-testid="hw-aptitudes">
+                        {{#each card.keyAptitudes as |apt|}}<span class="tw-inline-block tw-mr-2">{{apt}}</span>{{/each}}
+                    </div>
+                </div>
+            </article>
+        {{/each}}
+    </div>
+
+    {{!-- Footer: single close button --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(255,255,255,0.08)]">
+        <button type="button"
+                data-action="close"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-check"></i> {{localize "WH40K.WithinHomeworld.CloseButton"}}
+        </button>
+    </div>
+
+</div>
