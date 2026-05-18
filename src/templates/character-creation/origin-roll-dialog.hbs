@@ -1,5 +1,7 @@
 {{!-- Origin Roll Dialog Template --}}
-<div class="tw-flex tw-flex-col tw-gap-5 tw-p-4">
+<div class="origin-roll-dialog__root tw-flex tw-flex-col tw-gap-5 tw-p-4 tw-max-h-[80vh] tw-overflow-hidden">
+
+    <div class="origin-roll-dialog__scroll tw-flex tw-flex-col tw-gap-5 tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-pr-1">
 
     {{!-- Header Info --}}
     <div class="tw-flex tw-justify-between tw-items-center tw-p-4 tw-bg-[linear-gradient(135deg,var(--wh40k-bronze-dark),var(--wh40k-bronze))] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)]">
@@ -53,7 +55,7 @@
             {{#if showHistory}}
                 <div class="tw-p-3 tw-bg-[var(--wh40k-input-bg)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)]">
                     <label class="tw-block tw-mb-2 tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.5px] tw-text-[color:var(--wh40k-text-muted)]">Previous Attempts:</label>
-                    <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
+                    <ul data-testid="previous-attempts-list" class="origin-roll-dialog__history tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1 tw-max-h-[12rem] tw-overflow-y-auto tw-pr-1">
                         {{#each rollHistory}}
                             <li class="{{#if @last}}tw-bg-[linear-gradient(90deg,rgba(201,162,39,0.2),rgba(201,162,39,0.1))] tw-border tw-border-[var(--wh40k-gold)] tw-font-semibold tw-text-[color:var(--wh40k-gold)]{{/if}} tw-flex tw-items-center tw-gap-2 tw-p-2 tw-bg-[var(--wh40k-panel-bg-solid)] tw-rounded-[var(--wh40k-radius-xs)] tw-text-[0.85rem]">
                                 <span class="tw-font-bold tw-min-w-[2.5rem] tw-text-[color:var(--wh40k-gold)]">{{this.result}}</span>
@@ -71,8 +73,10 @@
         </div>
     {{/if}}
 
-    {{!-- Actions --}}
-    <div class="tw-flex tw-justify-between tw-items-center tw-pt-4 tw-mt-2 tw-border-t-2 tw-border-[var(--wh40k-bronze)]">
+    </div>
+
+    {{!-- Actions (pinned footer — stays visible even when history scrolls) --}}
+    <div data-testid="origin-roll-actions" class="origin-roll-dialog__actions tw-flex tw-justify-between tw-items-center tw-pt-4 tw-mt-2 tw-border-t-2 tw-border-[var(--wh40k-bronze)] tw-flex-shrink-0 tw-bg-[var(--wh40k-panel-bg-solid)]">
         <div class="tw-flex tw-gap-3">
             {{#unless hasRolled}}
                 <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)] tw-animate-emphasize" data-action="roll">
