@@ -92,6 +92,7 @@ import {
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { WH40K } from './rules/config.ts';
 import { DHTourMain } from './tours/main-tour.ts';
+import { registerTradeProximityHud } from './transactions/trade-proximity.ts';
 import { TransactionManager } from './transactions/transaction-manager.ts';
 import type { WH40KGameSystem } from './types/global.d.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
@@ -828,6 +829,7 @@ export class HooksManager {
         // Register movement actions and Token HUD hooks (after settings are available)
         documents.TokenDocumentWH40K.registerMovementActions();
         documents.TokenDocumentWH40K.registerHUDListeners();
+        registerTradeProximityHud();
         // eslint-disable-next-line no-restricted-syntax -- boundary: costAggregator callback signature is untyped in fvtt-types; unknown[] is the correct boundary type
         CONFIG.Token.movement.costAggregator = (results: unknown[], _distance: unknown, _segment: unknown) => {
             return Math.max(...results.map((i) => (i as { cost: number }).cost));

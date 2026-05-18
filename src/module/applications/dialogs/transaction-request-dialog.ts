@@ -4,8 +4,17 @@ import { TransactionManager } from '../../transactions/transaction-manager.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+export interface TransactionRequestOptions {
+    /** Pre-select this source actor id (proximity launch). */
+    sourceId?: string;
+    /** Restrict the offered sources to these actor ids (proximity launch). */
+    restrictToSourceIds?: string[];
+}
+
 interface TransactionQuote {
     mode?: string;
+    allowInfluenceBurn?: boolean;
+    dispositionAttitude?: string | null;
 }
 
 interface TransactionItemSystemView {
@@ -68,23 +77,35 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     declare itemId: string | null;
     declare quantity: number;
     declare influenceBurn: number;
+    /** When set (proximity launch), only these source actor ids are offered. */
+    readonly #restrictToSourceIds: string[] | null = null;
     #resolve: ((value: boolean | null) => void) | null = null;
 
-    constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
+    constructor(actor: WH40KBaseActor, options: TransactionRequestOptions = {}) {
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts a partial options record; shipped typings narrower than runtime
         super(options as unknown as Record<string, unknown>);
         this.actor = actor;
+        this.#restrictToSourceIds = options.restrictToSourceIds ?? null;
 
-        const sources = TransactionManager.listSourcesForBuyer(actor);
-        const firstSource = sources[0];
+        const sources = this.#availableSources();
+        const preferred = options.sourceId !== undefined ? sources.find((source) => source.id === options.sourceId) : undefined;
+        const initial = preferred ?? sources[0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: sources[0] may be undefined at runtime
-        if (firstSource !== undefined) {
-            this.sourceId = firstSource.id;
-            const items = TransactionManager.listItemsForSource(firstSource);
+        if (initial !== undefined) {
+            this.sourceId = initial.id;
+            const items = TransactionManager.listItemsForSource(initial);
             const firstItem = items[0];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: items[0] may be undefined at runtime
             if (firstItem !== undefined) this.itemId = firstItem.id;
         }
+    }
+
+    /** Sources for this buyer, narrowed to the proximity set when launched from a token. */
+    #availableSources(): Actor.Implementation[] {
+        const sources = TransactionManager.listSourcesForBuyer(this.actor);
+        if (this.#restrictToSourceIds === null) return sources;
+        const allowed = new Set(this.#restrictToSourceIds);
+        return sources.filter((source) => source.id !== null && allowed.has(source.id));
     }
 
     get title(): string {
@@ -93,7 +114,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
 
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<TransactionRequestContext> {
         const context = (await super._prepareContext(options)) as TransactionRequestContext;
-        const sources = TransactionManager.listSourcesForBuyer(this.actor);
+        const sources = this.#availableSources();
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive null fallback against array .find()/indexed access
         const selectedSource = sources.find((source) => source.id === this.sourceId) ?? sources[0] ?? null;
 
@@ -252,8 +273,8 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         return super.close(options);
     }
 
-    static async show(actor: WH40KBaseActor): Promise<boolean | null> {
-        const dialog = new TransactionRequestDialog(actor);
+    static async show(actor: WH40KBaseActor, options: TransactionRequestOptions = {}): Promise<boolean | null> {
+        const dialog = new TransactionRequestDialog(actor, options);
         return dialog.wait();
     }
 }
