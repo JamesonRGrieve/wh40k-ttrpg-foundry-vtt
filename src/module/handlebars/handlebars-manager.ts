@@ -99,6 +99,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/corruption-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/insanity-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/shock-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/experience-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/movement-panel-full.hbs',
@@ -126,6 +127,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/mortification-button.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/fanatic-button.hbs',
             'systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-role-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/journal-panel.hbs',
@@ -206,6 +208,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs',
             'systems/wh40k-rpg/templates/chat/daemonhost-binding-chat.hbs',
             'systems/wh40k-rpg/templates/chat/mortification-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/fanatic-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs',
 
             // Unified roll dialog panels
             'systems/wh40k-rpg/templates/prompt/unified/panels/weapon-panel.hbs',
