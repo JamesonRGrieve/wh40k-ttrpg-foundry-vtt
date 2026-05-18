@@ -15,14 +15,14 @@
 
     <div class="wh40k-panel-body">
 
-        {{! COMBAT TALENTS }}
+        {{! COMBAT TALENTS — plain click shows description locally; Shift+Click posts to chat (issue #19) }}
         {{#if combatTalents.length}}
             {{> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
                 heading="Combat Talents"
                 icon="fa-star"
                 items=combatTalents
                 mode="item"
-                dataAction="itemVocalize"
+                dataAction="combatTalentDescribe"
                 actionColor="--wh40k-accent-combat"}}
         {{/if}}
 

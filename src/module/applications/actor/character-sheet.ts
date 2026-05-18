@@ -246,6 +246,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'toggleFavoriteAction': CharacterSheet.#toggleFavoriteAction,
             'combatAction': CharacterSheet.#combatAction,
             'vocalizeCombatAction': CharacterSheet.#vocalizeCombatAction,
+            'combatTalentDescribe': CharacterSheet.#combatTalentDescribe,
             'vocalizeMovement': CharacterSheet.#vocalizeMovement,
             'setMovementMode': CharacterSheet.#setMovementMode,
 
@@ -2452,6 +2453,70 @@ export default class CharacterSheet extends BaseActorSheet {
         } else {
             // Fallback for environments without the tooltip manager (e.g., tests).
             target.setAttribute('data-tooltip', `${actionName}${actionSubtypes}: ${actionDescription}`);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle clicks on combat-talent buttons in the Actions tab.
+     *
+     * Default behavior (plain click): show the talent's name + description
+     * as a local in-sheet tooltip on the clicked button. This matches the
+     * default for {@link #vocalizeCombatAction} and the Reactions block —
+     * a plain click never auto-posts to chat (issue #19).
+     *
+     * Modifier behavior (Shift+Click): explicit opt-in to post the talent
+     * card to chat via the item's normal {@link sendToChat} path.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #combatTalentDescribe(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
+        if (itemId === undefined || itemId === '') {
+            console.warn('WH40K | combatTalentDescribe: No item ID found', target);
+            return;
+        }
+
+        const item = this.actor.items.get(itemId);
+        if (item === undefined) {
+            console.warn(`WH40K | combatTalentDescribe: Item ${itemId} not found on actor`);
+            return;
+        }
+
+        // Shift+Click is the explicit opt-in to post to chat.
+        const isShiftClick = event instanceof MouseEvent && event.shiftKey;
+        if (isShiftClick) {
+            try {
+                await item.sendToChat();
+            } catch (err) {
+                console.error('WH40K | combatTalentDescribe: Error sending item to chat', err);
+                ui.notifications.error(game.i18n.format('WH40K.Combat.Actions.TalentChatFailed', { name: item.name ?? '' }));
+            }
+            return;
+        }
+
+        // Default: show the talent description as a local in-sheet tooltip.
+        const itemSystem = item.system as { description?: { value?: string } } | undefined;
+        const rawDescription = itemSystem?.description?.value ?? '';
+        const descriptionText =
+            rawDescription !== ''
+                ? rawDescription
+                : game.i18n.localize('WH40K.Combat.Actions.TalentNoDescription');
+        const tooltipText = `<strong>${item.name ?? ''}</strong><br/>${descriptionText}`;
+        const tooltipManager = (
+            game as foundry.Game & {
+                tooltip?: { activate?: (element: HTMLElement, options?: { text?: string; direction?: string; cssClass?: string }) => void };
+            }
+        ).tooltip;
+        if (tooltipManager?.activate !== undefined) {
+            tooltipManager.activate(target, { text: tooltipText, direction: 'UP', cssClass: 'wh40k-action-description' });
+        } else {
+            // Fallback for environments without the tooltip manager (e.g., tests).
+            // Strip HTML tags so the title/data-tooltip attribute reads cleanly.
+            const plain = descriptionText.replace(/<[^>]*>/g, '').trim();
+            target.setAttribute('data-tooltip', `${item.name ?? ''}: ${plain}`);
         }
     }
 
