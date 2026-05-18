@@ -8,8 +8,8 @@
 
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
 import fieldRowSrc from '../src/templates/shared/field-row.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
@@ -65,7 +65,7 @@ describe('field-row partial', () => {
         expect(select).not.toBeNull();
         expect(select?.getAttribute('name')).toBe('system.bio.build');
         const options = root.querySelectorAll('option');
-        expect(options.length).toBe(3);
+        expect(options).toHaveLength(3);
         const selected = Array.from(options).find((o) => o.hasAttribute('selected'));
         expect(selected?.getAttribute('value')).toBe('lean');
     });

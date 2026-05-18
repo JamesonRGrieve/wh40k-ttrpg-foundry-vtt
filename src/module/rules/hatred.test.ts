@@ -32,7 +32,7 @@ describe('actorHasHatredFor (#148)', () => {
     const nonTalentItem = { type: 'weapon', name: 'Hatred Daemons Spear', system: {} };
 
     it('matches when the target trait name contains the specialization (Daemons → Daemonic)', () => {
-        const target = { name: "Bloodletter", system: { traits: [{ name: 'Daemonic' }] } };
+        const target = { name: 'Bloodletter', system: { traits: [{ name: 'Daemonic' }] } };
         expect(actorHasHatredFor({ items: [hatredDaemons] }, target)).toBe('Daemons');
     });
 

@@ -8,8 +8,8 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { mockNpcSheetContext, mockPlayerSheetContext, mockStarshipSheetContext, mockVehicleSheetContext } from '../stories/mocks/sheet-contexts';
 import type { GameSystemId } from '../src/module/config/game-systems/types';
+import { mockNpcSheetContext, mockPlayerSheetContext, mockStarshipSheetContext, mockVehicleSheetContext } from '../stories/mocks/sheet-contexts';
 
 const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
 
@@ -38,10 +38,10 @@ describe('mockPlayerSheetContext', () => {
         expect(ctx.tabs.length).toBeGreaterThan(0);
         expect(ctx.tab.id).toBe('biography');
         expect(ctx.headerFields.length).toBeGreaterThan(0);
-        expect(ctx.originPathSteps.length).toBe(3);
+        expect(ctx.originPathSteps).toHaveLength(3);
         expect(ctx.originPathComplete).toBe(true);
         expect(ctx.biography.source.notes).toContain('Background notes');
-        expect(ctx.journalEntries.length).toBe(1);
+        expect(ctx.journalEntries).toHaveLength(1);
     });
 
     it('uses SystemConfigRegistry.getHeaderFields for header rows — DH2e shape', () => {

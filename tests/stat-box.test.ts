@@ -7,8 +7,8 @@
 
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
 import statBoxSrc from '../src/templates/actor/partial/stat-box.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
@@ -37,7 +37,7 @@ describe('stat-box partial', () => {
         expect(box).not.toBeNull();
         expect(box?.className).toContain('wh40k-vehicle-armour');
         const inputs = root.querySelectorAll('input[type="number"]');
-        expect(inputs.length).toBe(1);
+        expect(inputs).toHaveLength(1);
         expect(inputs[0].getAttribute('name')).toBe('system.armour.total');
         expect(inputs[0].getAttribute('value')).toBe('7');
         expect(inputs[0].getAttribute('min')).toBe('0');
@@ -56,13 +56,13 @@ describe('stat-box partial', () => {
         });
         const root = dom(html);
         const inputs = root.querySelectorAll('input[type="number"]');
-        expect(inputs.length).toBe(2);
+        expect(inputs).toHaveLength(2);
         expect(inputs[0].getAttribute('name')).toBe('system.hullIntegrity.value');
         expect(inputs[1].getAttribute('name')).toBe('system.hullIntegrity.max');
         expect(inputs[0].getAttribute('value')).toBe('24');
         expect(inputs[1].getAttribute('value')).toBe('30');
         const sep = Array.from(root.querySelectorAll('span')).find((s) => s.textContent?.trim() === '/');
-        expect(sep).not.toBeUndefined();
+        expect(sep).toBeDefined();
     });
 
     it('honours minMax override (vehicle Structure: value-min=0, max-min=1)', () => {

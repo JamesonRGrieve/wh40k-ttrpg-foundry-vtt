@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { computeArmour } from './armour-calculator';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
+import { computeArmour } from './armour-calculator';
 
 /**
  * Regression tests for the DH2 errata stacking rules (errata.md L69-73):

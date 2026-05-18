@@ -1,6 +1,5 @@
 import { writeFileSync, existsSync, unlinkSync, rmSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-
 import { trackerPath } from './lib/coverage-tracker';
 import { joinAsGM, GAME_SYSTEM_IDS } from './lib/join';
 import { expect, test } from './lib/test';

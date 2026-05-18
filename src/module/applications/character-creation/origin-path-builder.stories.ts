@@ -4,8 +4,8 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/character-creation/origin-path-builder.hbs?raw';
 import { renderTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
-import { clickAction } from '../../../../stories/test-helpers';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { clickAction } from '../../../../stories/test-helpers';
 
 initializeStoryHandlebars();
 

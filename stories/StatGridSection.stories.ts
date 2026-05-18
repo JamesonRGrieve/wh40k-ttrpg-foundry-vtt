@@ -7,11 +7,11 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import statGridSrc from '../src/templates/actor/partial/stat-grid-section.hbs?raw';
 import movementFullSrc from '../src/templates/actor/panel/movement-panel-full.hbs?raw';
+import statGridSrc from '../src/templates/actor/partial/stat-grid-section.hbs?raw';
 import vitalShellSrc from '../src/templates/actor/partial/vital-panel-shell.hbs?raw';
-import { renderSheet, renderSheetParts } from './test-helpers';
 import { initializeStoryHandlebars } from './template-support';
+import { renderSheet, renderSheetParts } from './test-helpers';
 
 initializeStoryHandlebars();
 

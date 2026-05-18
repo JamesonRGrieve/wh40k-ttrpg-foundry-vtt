@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from './pip-tracker-row.hbs?raw';
 
 initializeStoryHandlebars();
@@ -90,7 +90,7 @@ export const ClickDispatch: Story = {
         const pips = canvasElement.querySelectorAll('[data-action="setFateStar"]');
         expect(pips.length).toBe(3);
         // The second pip carries data-fate-index="2".
-        const second = canvasElement.querySelector('[data-fate-index="2"]') as HTMLElement | null;
+        const second = canvasElement.querySelector('[data-fate-index="2"]');
         expect(second).toBeTruthy();
         // Drive the action handle for parity with the live sheet.
         clickAction(canvasElement, 'setFateStar');

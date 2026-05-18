@@ -8,7 +8,7 @@ function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
     if (!override) return base;
     if (!isPlainObject(base)) return (override as T) ?? base;
     const result: Record<string, unknown> = { ...(base as Record<string, unknown>) };
-    for (const [key, ovVal] of Object.entries(override as Record<string, unknown>)) {
+    for (const [key, ovVal] of Object.entries(override)) {
         const baseVal = (base as Record<string, unknown>)[key];
         if (isPlainObject(ovVal) && isPlainObject(baseVal)) {
             result[key] = deepMerge(baseVal, ovVal as DeepPartial<typeof baseVal>);
@@ -77,7 +77,7 @@ export interface MockItem {
 }
 
 export function mockItem(overrides?: DeepPartial<MockItem>): MockItem {
-    const id = 'mock-item-' + Math.random().toString(36).slice(2, 8);
+    const id = `mock-item-${Math.random().toString(36).slice(2, 8)}`;
     const base: MockItem = {
         _id: id,
         id,
@@ -133,7 +133,7 @@ export function mockCharacteristics(
 ): Record<string, MockCharacteristic> {
     const result: Record<string, MockCharacteristic> = {};
     for (const key of Object.keys(CHARACTERISTIC_DEFAULTS)) {
-        result[key] = deepMerge(mockCharacteristic(key), overrides?.[key as keyof typeof CHARACTERISTIC_DEFAULTS]);
+        result[key] = deepMerge(mockCharacteristic(key), overrides?.[key]);
     }
     return result;
 }
@@ -181,7 +181,7 @@ export interface MockActor {
 
 export function mockActor(overrides?: DeepPartial<MockActor>): MockActor {
     const base: MockActor = {
-        _id: 'mock-actor-' + Math.random().toString(36).slice(2, 8),
+        _id: `mock-actor-${Math.random().toString(36).slice(2, 8)}`,
         name: 'Acolyte Vex',
         img: 'icons/portraits/acolyte-default.webp',
         type: 'player',
@@ -263,7 +263,7 @@ export function mockModifierBadge(overrides?: DeepPartial<MockModifierBadge>): M
 }
 
 export function mockModifierEntry(overrides?: DeepPartial<MockModifierGroupEntry>): MockModifierGroupEntry {
-    const id = 'modifier-' + Math.random().toString(36).slice(2, 8);
+    const id = `modifier-${Math.random().toString(36).slice(2, 8)}`;
     const base: MockModifierGroupEntry = {
         id,
         name: 'Targeting Auspex',
@@ -279,7 +279,7 @@ export function mockModifierEntry(overrides?: DeepPartial<MockModifierGroupEntry
 }
 
 export function mockActiveEffect(overrides?: DeepPartial<MockActiveEffect>): MockActiveEffect {
-    const id = 'effect-' + Math.random().toString(36).slice(2, 8);
+    const id = `effect-${Math.random().toString(36).slice(2, 8)}`;
     const base: MockActiveEffect = {
         id,
         label: 'Blessed Ammunition',

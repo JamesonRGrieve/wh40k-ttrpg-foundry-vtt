@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
-import activeEffectsPanelSrc from '../src/templates/item/panel/active-effects-panel.hbs?raw';
 import activeModifiersPanelSrc from '../src/templates/components/active-modifiers-panel.hbs?raw';
 import quickActionsBarSrc from '../src/templates/components/quick-actions-bar.hbs?raw';
+import activeEffectsPanelSrc from '../src/templates/item/panel/active-effects-panel.hbs?raw';
 import { mockActiveEffectsContext, mockModifiersPanel, mockQuickActionItem, renderTemplate, type MockItem } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 

@@ -121,7 +121,7 @@ async function probeScalarField(
                 return { before, after: null, error: `update ${path}=${val}: ${String((err as Error)?.message ?? err)}` };
             }
             const refreshed = game?.actors?.get?.(id);
-            const after = readPath(refreshed?.system as Record<string, unknown> | undefined, path);
+            const after = readPath(refreshed?.system, path);
             return { before, after, error: null };
         },
         { id: actorId, path: fieldPath, val: value },

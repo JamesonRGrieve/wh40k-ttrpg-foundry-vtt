@@ -381,7 +381,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         let createdId: string | null = null;
                         let createError: string | null = null;
                         try {
-                            const msg = await g.ChatMessage!.create!({
+                            const msg = await g.ChatMessage.create({
                                 content: html,
                                 speaker: { actor: setup.actorId },
                             });

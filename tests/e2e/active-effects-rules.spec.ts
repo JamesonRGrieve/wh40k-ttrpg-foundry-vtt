@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -105,7 +104,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
                 return out;
             }
 
-            const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
+            const sleep = async (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
             const liveActor = (): any => g.game?.actors?.get?.(actor.id);
             const effectCountBefore = (): number => liveActor()?.effects?.size ?? 0;
 
@@ -192,7 +191,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
                     const wasDisabled = target.disabled === true;
                     await ae.toggleEffect(liveActor(), target.id);
                     await sleep(20);
-                    const after = (liveActor()?.effects?.get?.(target.id) ?? target) as any;
+                    const after = liveActor()?.effects?.get?.(target.id) ?? target;
                     record('toggleEffect', after?.disabled !== wasDisabled, `before=${String(wasDisabled)} after=${String(after?.disabled)}`);
                 }
             } catch (err) {
@@ -228,9 +227,9 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             for (const fn of ['handleBleeding', 'handleBloodLoss', 'handleOnFire'] as const) {
                 try {
                     await ae[fn](liveActor());
-                    record(fn as FlowName, true, null);
+                    record(fn, true, null);
                 } catch (err) {
-                    record(fn as FlowName, false, String((err as Error)?.message ?? err));
+                    record(fn, false, String((err as Error)?.message ?? err));
                 }
             }
 

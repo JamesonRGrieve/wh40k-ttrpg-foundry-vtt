@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -210,7 +209,7 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
                 if (!transferred) {
                     const item = live?.items?.get?.(itemId);
                     const found = item?.effects?.find?.((e: any) => e?.name === 'probe-transfer-effect') ?? null;
-                    if (found && found.transfer === true) transferred = found;
+                    if (found?.transfer === true) transferred = found;
                 }
                 if (!transferred) {
                     return { ok: false, error: 'transferred effect not found on actor.effects / allApplicableEffects / item.effects' };
@@ -302,7 +301,9 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
             if (!looksTemporary) {
                 return {
                     ok: false,
-                    error: `effect not classified as temporary (isTemporary=${String(effect.isTemporary)}, duration=${JSON.stringify(effect.duration ?? null)})`,
+                    error: `effect not classified as temporary (isTemporary=${String(effect.isTemporary)}, duration=${JSON.stringify(
+                        effect.duration ?? null,
+                    )})`,
                 };
             }
             const beforeRoundEffect = root.game?.actors?.get?.(actorId)?.effects?.get?.(effectId);

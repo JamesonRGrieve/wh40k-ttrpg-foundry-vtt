@@ -13,14 +13,14 @@
 
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
-import shellSrc from '../src/templates/actor/partial/vital-panel-shell.hbs?raw';
-import quickControlsSrc from '../src/templates/actor/partial/vital-quick-controls.hbs?raw';
-import progressBarSrc from '../src/templates/actor/partial/vital-progress-bar.hbs?raw';
-import editInputSrc from '../src/templates/actor/partial/vital-edit-input.hbs?raw';
-import quickAdjustSrc from '../src/templates/actor/partial/vital-quick-adjust.hbs?raw';
-import infoCardSrc from '../src/templates/actor/partial/vital-info-card.hbs?raw';
 import editBodySrc from '../src/templates/actor/partial/vital-edit-body.hbs?raw';
+import editInputSrc from '../src/templates/actor/partial/vital-edit-input.hbs?raw';
+import infoCardSrc from '../src/templates/actor/partial/vital-info-card.hbs?raw';
+import shellSrc from '../src/templates/actor/partial/vital-panel-shell.hbs?raw';
+import progressBarSrc from '../src/templates/actor/partial/vital-progress-bar.hbs?raw';
+import quickAdjustSrc from '../src/templates/actor/partial/vital-quick-adjust.hbs?raw';
+import quickControlsSrc from '../src/templates/actor/partial/vital-quick-controls.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 let isExpandedReturn = false;
@@ -121,7 +121,7 @@ describe('vital-progress-bar partial', () => {
             ],
         });
         const markers = dom(html).querySelectorAll('.wh40k-threshold-marker');
-        expect(markers.length).toBe(3);
+        expect(markers).toHaveLength(3);
         expect(markers[0].getAttribute('style')).toContain('left: 30%');
         expect(markers[2].getAttribute('title')).toBe('DEBASED → PROFANE (90)');
     });
@@ -188,7 +188,7 @@ describe('vital-quick-adjust partial', () => {
             maxValue: '100',
         });
         const buttons = dom(html).querySelectorAll('button[data-action="adjustStat"]');
-        expect(buttons.length).toBe(4);
+        expect(buttons).toHaveLength(4);
         const deltas = Array.from(buttons).map((b) => b.getAttribute('data-delta'));
         expect(deltas).toEqual(['-5', '-1', '1', '5']);
         expect(buttons[0].getAttribute('data-min')).toBe('0');
@@ -346,7 +346,7 @@ describe('vital-edit-body partial', () => {
             ],
         });
         const inputs = root.querySelectorAll('input[type="number"]');
-        expect(inputs.length).toBe(2);
+        expect(inputs).toHaveLength(2);
         expect(inputs[0].getAttribute('name')).toBe('system.fate.max');
         expect(inputs[0].getAttribute('value')).toBe('3');
         expect(inputs[1].getAttribute('name')).toBe('system.fate.value');

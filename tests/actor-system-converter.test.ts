@@ -174,18 +174,18 @@ describe('actor-system-converter', () => {
         expect(converted.type).toBe('dh2-character');
         expect(converted.system).toEqual(
             expect.objectContaining({
-            gameSystem: 'dh2e',
-            wounds: { value: 11, max: 11 },
-            experience: { current: 250 },
-            originPath: expect.objectContaining({
-                homeWorld: 'Void Born',
-                career: '',
-                background: 'Adeptus Administratum',
-                role: 'Chirurgeon',
-                divination: 'Knowledge is Power',
-                motivation: '',
+                gameSystem: 'dh2e',
+                wounds: { value: 11, max: 11 },
+                experience: { current: 250 },
+                originPath: expect.objectContaining({
+                    homeWorld: 'Void Born',
+                    career: '',
+                    background: 'Adeptus Administratum',
+                    role: 'Chirurgeon',
+                    divination: 'Knowledge is Power',
+                    motivation: '',
+                }),
             }),
-        }),
         );
     });
 });

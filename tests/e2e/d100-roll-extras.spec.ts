@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -102,7 +101,7 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
                     flavor: 'spec-mods',
                     modifiers: { aiming: 10, range: -10, cover: 0 },
                 });
-                const am = (data as any)?.rollData?.activeModifiers ?? {};
+                const am = data?.rollData?.activeModifiers ?? {};
                 // cover should be filtered out (value === 0).
                 const ok = 'AIMING' in am && 'RANGE' in am && !('COVER' in am);
                 record('prepareTemplateData-with-modifiers', ok, `activeModifiers=${JSON.stringify(am)}`);

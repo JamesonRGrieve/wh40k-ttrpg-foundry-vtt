@@ -74,8 +74,11 @@ describe('compendium resync UUID safety layers', () => {
 describe('isValidFoundryId behavior (regex semantics)', () => {
     // Re-derive the regex from source so the test fails loudly if the source regex changes.
     const m = src.match(/FOUNDRY_ID_RE\s*=\s*(\/\^\[a-zA-Z0-9\]\{16\}\$\/)/);
-    expect(m).not.toBeNull();
     const re = new RegExp((m?.[1] ?? '').replaceAll('/', '').replace(/^\^/, '^').replace(/\$$/, '$'));
+
+    it('still derives FOUNDRY_ID_RE from source (guards against a silent regex change)', () => {
+        expect(m).not.toBeNull();
+    });
 
     it('accepts a canonical 16-char alphanumeric id', () => {
         expect(re.test('abcdefABCDEF0123')).toBe(true);

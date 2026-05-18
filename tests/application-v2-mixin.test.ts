@@ -4,7 +4,7 @@ import type { ApplicationV2Ctor } from '../src/module/applications/api/applicati
 type Constructor<T = object> = new (...args: any[]) => T;
 
 interface FakeApplicationApi {
-    HandlebarsApplicationMixin<T extends Constructor>(base: T): T;
+    HandlebarsApplicationMixin: <T extends Constructor>(base: T) => T;
 }
 
 function installFoundryStubs() {

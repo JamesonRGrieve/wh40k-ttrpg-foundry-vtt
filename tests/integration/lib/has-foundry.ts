@@ -20,9 +20,7 @@ export function requireOrSkip(tier: 'A' | 'B'): boolean {
     const required = process.env.FOUNDRY_INTEGRATION === 'required';
     if (!present && required) {
         const probe = tier === 'A' ? TIER_A_PROBE : TIER_B_PROBE;
-        throw new Error(
-            `FOUNDRY_INTEGRATION=required but ${probe} is missing — run ./pull-foundry.sh`,
-        );
+        throw new Error(`FOUNDRY_INTEGRATION=required but ${probe} is missing — run ./pull-foundry.sh`);
     }
     return present;
 }

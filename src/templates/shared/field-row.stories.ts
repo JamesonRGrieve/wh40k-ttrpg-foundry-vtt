@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderSheet } from '../../../stories/test-helpers';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
+import { renderSheet } from '../../../stories/test-helpers';
 import templateSrc from './field-row.hbs?raw';
 
 initializeStoryHandlebars();

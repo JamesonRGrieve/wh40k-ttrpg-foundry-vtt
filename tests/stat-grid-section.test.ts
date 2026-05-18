@@ -11,8 +11,8 @@
 
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
 import statGridSrc from '../src/templates/actor/partial/stat-grid-section.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
@@ -49,7 +49,7 @@ describe('stat-grid-section partial', () => {
         );
         // Without a heading, the outer div should contain only the grid div (no header sibling)
         const children = Array.from(root.querySelector('div')?.children ?? []);
-        expect(children.length).toBe(1);
+        expect(children).toHaveLength(1);
     });
 
     it('renders one cell per stat with label / value / unit', () => {
@@ -68,7 +68,7 @@ describe('stat-grid-section partial', () => {
         // Each stat renders as a tw-flex div inside the grid
         const grid = root.querySelector('.tw-grid');
         const cells = grid?.querySelectorAll(':scope > div') ?? [];
-        expect(cells.length).toBe(4);
+        expect(cells).toHaveLength(4);
         // First span in cell is the label, second is the value
         const labelSpans = cells[0].querySelectorAll('span');
         expect(labelSpans[0]?.textContent?.trim()).toBe('Half');
