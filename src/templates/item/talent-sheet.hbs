@@ -215,7 +215,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            OVERVIEW TAB: Benefit and effects summary
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel [&:not(.active)]:tw-hidden{{#if (eq activeTab "overview")}} active{{/if}}" data-tab="overview" data-group="primary">
+      <div class="wh40k-talent-panel{{#if (eq activeTab "overview")}} active{{/if}}" data-tab="overview" data-group="primary">
 
         {{!-- Benefit Section (Editable with hover button) --}}
         <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
@@ -295,7 +295,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            PROPERTIES TAB: Configuration and details
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel [&:not(.active)]:tw-hidden{{#if (eq activeTab "properties")}} active{{/if}}" data-tab="properties" data-group="primary">
+      <div class="wh40k-talent-panel{{#if (eq activeTab "properties")}} active{{/if}}" data-tab="properties" data-group="primary">
 
         {{!-- Basic Properties --}}
         <div >
@@ -596,7 +596,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            EFFECTS TAB: Modifiers and mechanical effects
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel [&:not(.active)]:tw-hidden{{#if (eq activeTab "effects")}} active{{/if}}" data-tab="effects" data-group="primary">
+      <div class="wh40k-talent-panel{{#if (eq activeTab "effects")}} active{{/if}}" data-tab="effects" data-group="primary">
 
         {{!-- Permanent Modifiers --}}
         <div  data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
@@ -908,7 +908,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            DESCRIPTION TAB: Benefit, notes, technical
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel [&:not(.active)]:tw-hidden{{#if (eq activeTab "description")}} active{{/if}}" data-tab="description" data-group="primary">
+      <div class="wh40k-talent-panel{{#if (eq activeTab "description")}} active{{/if}}" data-tab="description" data-group="primary">
 
         {{!-- Benefit (Editable with hover button) --}}
         <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
