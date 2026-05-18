@@ -917,17 +917,14 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
-     * Collect characteristic modifiers from items
-     * @param {string} charKey - Characteristic key
-     * @param {Array} modifiersArray - Array to push modifiers to
+     * Walk owned items, pick a single modifier value per item via `pick`, and
+     * push a breakdown entry for every non-zero result. The four per-stat
+     * collectors below differ only in the pick function.
      * @private
      */
-    #collectCharacteristicModifiers(charKey: string, modifiersArray: WH40KModifierEntry[]): void {
+    #collectItemModifiers(modifiersArray: WH40KModifierEntry[], pick: (modifiers: ItemModifierCarrier['system']['modifiers']) => number | undefined): void {
         for (const item of [...this.items] as ItemModifierCarrier[]) {
-            const modifiers = item.system.modifiers;
-            if (!modifiers?.characteristics) continue;
-
-            const value = modifiers.characteristics[charKey];
+            const value = pick(item.system.modifiers);
             if (value && value !== 0) {
                 modifiersArray.push({
                     source: item.name,
@@ -937,6 +934,16 @@ export class WH40KBaseActor extends Actor {
                 });
             }
         }
+    }
+
+    /**
+     * Collect characteristic modifiers from items
+     * @param {string} charKey - Characteristic key
+     * @param {Array} modifiersArray - Array to push modifiers to
+     * @private
+     */
+    #collectCharacteristicModifiers(charKey: string, modifiersArray: WH40KModifierEntry[]): void {
+        this.#collectItemModifiers(modifiersArray, (m) => m?.characteristics?.[charKey]);
     }
 
     /**
@@ -946,20 +953,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectSkillModifiers(skillKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as ItemModifierCarrier[]) {
-            const modifiers = item.system.modifiers;
-            if (!modifiers?.skills) continue;
-
-            const value = modifiers.skills[skillKey];
-            if (value && value !== 0) {
-                modifiersArray.push({
-                    source: item.name,
-                    value: value,
-                    uuid: item.uuid,
-                    icon: this.#getItemIcon(item),
-                });
-            }
-        }
+        this.#collectItemModifiers(modifiersArray, (m) => m?.skills?.[skillKey]);
     }
 
     /**
@@ -968,20 +962,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectWoundsModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as ItemModifierCarrier[]) {
-            const modifiers = item.system.modifiers;
-            if (!modifiers?.other) continue;
-
-            const woundsMod = modifiers.other.find((m: { key: string; value: number }) => m.key === 'wounds' || m.key === 'wounds.max');
-            if (woundsMod && woundsMod.value !== 0) {
-                modifiersArray.push({
-                    source: item.name,
-                    value: woundsMod.value,
-                    uuid: item.uuid,
-                    icon: this.#getItemIcon(item),
-                });
-            }
-        }
+        this.#collectItemModifiers(modifiersArray, (m) => m?.other?.find((x) => x.key === 'wounds' || x.key === 'wounds.max')?.value);
     }
 
     /**
@@ -990,20 +971,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectInitiativeModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as ItemModifierCarrier[]) {
-            const modifiers = item.system.modifiers;
-            if (!modifiers?.other) continue;
-
-            const initiativeMod = modifiers.other.find((m: { key: string; value: number }) => m.key === 'initiative');
-            if (initiativeMod && initiativeMod.value !== 0) {
-                modifiersArray.push({
-                    source: item.name,
-                    value: initiativeMod.value,
-                    uuid: item.uuid,
-                    icon: this.#getItemIcon(item),
-                });
-            }
-        }
+        this.#collectItemModifiers(modifiersArray, (m) => m?.other?.find((x) => x.key === 'initiative')?.value);
     }
 
     /**
