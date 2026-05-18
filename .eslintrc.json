@@ -62,6 +62,10 @@
     "no-restricted-syntax": [
       "warn",
       {
+        "selector": "SwitchStatement",
+        "message": "`switch` is prohibited. Use an object/Map lookup, early-return if/else, or polymorphism. Existing switches ride the lint:ratchet baseline and must ratchet to zero — do not add new ones."
+      },
+      {
         "selector": "LogicalExpression[operator='??'][left.type='MemberExpression'][left.object.type='ThisExpression']",
         "message": "Don't use `??` on `this.*` — initialize the field in the DataModel schema (defineSchema/migrateData) so the value is always defined. If this is truly external data, parse via Zod and propagate the inferred type."
       },

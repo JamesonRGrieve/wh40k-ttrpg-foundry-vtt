@@ -42,6 +42,7 @@ interface NPCActorData {
  * Dialog for creating multiple NPCs at once.
  * @extends {ApplicationV2}
  */
+// TODO(dry): the 6 npc/*-dialog.ts classes each redeclare a near-identical DEFAULT_OPTIONS and bypass DialogWH40K. Route through the shared base + a per-dialog config object.
 export default class BatchCreateDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
