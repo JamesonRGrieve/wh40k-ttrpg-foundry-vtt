@@ -4,6 +4,7 @@ import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
+import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
 import CommonTemplate from './common.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField } = foundry.data.fields;
@@ -377,25 +378,7 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     static CharacteristicField = (label: string, short: string): foundry.data.fields.DataField.Any =>
-        new SchemaField({
-            label: new StringField({ required: true, initial: label }),
-            short: new StringField({ required: true, initial: short }),
-            base: new NumberField({ required: true, initial: 0, integer: true }),
-            advance: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            modifier: new NumberField({ required: true, initial: 0, integer: true }),
-            unnatural: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            cost: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            /**
-             * Recoverable characteristic damage (core.md §"Characteristic Damage").
-             * Subtracted from the effective value and bonus during data prep so a
-             * 30-WS character with `damage: 10` rolls against 20-WS. Restored by
-             * rest and certain Medicae actions. Always ≥ 0.
-             */
-            damage: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            // Derived values
-            total: new NumberField({ required: true, initial: 0, integer: true }),
-            bonus: new NumberField({ required: true, initial: 0, integer: true }),
-        });
+        characteristicField(label, short, { base: 0, total: 0, bonus: 0, advancement: true });
 
     /** @inheritDoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -414,13 +397,9 @@ export default class CreatureTemplate extends CommonTemplate {
                 fellowship: this.CharacteristicField('Fellowship', 'Fel'),
             }),
 
-            size: new NumberField({ required: true, initial: 4, min: 1, max: 10, integer: true, nullable: false }),
+            size: sizeField({ nullable: false }),
 
-            wounds: new SchemaField({
-                max: new NumberField({ required: true, initial: 0, min: 0, integer: true, nullable: false }),
-                value: new NumberField({ required: true, initial: 0, min: 0, integer: true, nullable: false }),
-                critical: new NumberField({ required: true, initial: 0, min: 0, integer: true, nullable: false }),
-            }),
+            wounds: woundsField({ max: 0, value: 0, critical: 0, nullable: false }),
 
             fatigue: new SchemaField({
                 max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
@@ -444,22 +423,9 @@ export default class CreatureTemplate extends CommonTemplate {
                 unleashMax: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
-            initiative: new SchemaField({
-                characteristic: new StringField({ required: true, initial: 'agility' }),
-                base: new StringField({ required: true, initial: '1d10' }),
-                bonus: new NumberField({ required: true, initial: 0, integer: true, nullable: false }),
-            }),
+            initiative: initiativeField({ nullable: false }),
 
-            movement: new SchemaField({
-                half: new NumberField({ required: true, initial: 0, min: 0 }),
-                full: new NumberField({ required: true, initial: 0, min: 0 }),
-                charge: new NumberField({ required: true, initial: 0, min: 0 }),
-                run: new NumberField({ required: true, initial: 0, min: 0 }),
-                // Leap/Jump based on Strength Bonus
-                leapVertical: new NumberField({ required: true, initial: 0, min: 0 }),
-                leapHorizontal: new NumberField({ required: true, initial: 0, min: 0 }),
-                jump: new NumberField({ required: true, initial: 0, min: 0 }),
-            }),
+            movement: movementField({ half: 0, full: 0, charge: 0, run: 0, withLeap: true }),
 
             // Lifting/Carrying capacity based on Strength Bonus
             lifting: new SchemaField({

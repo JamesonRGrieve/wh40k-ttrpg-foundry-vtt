@@ -1,5 +1,6 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
+import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
@@ -217,16 +218,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @private
      */
     static _CharacteristicField(label: string, short: string): foundry.data.fields.DataField.Any {
-        return new SchemaField({
-            label: new StringField({ required: true, initial: label }),
-            short: new StringField({ required: true, initial: short }),
-            base: new NumberField({ required: true, initial: 30, integer: true }),
-            modifier: new NumberField({ required: true, initial: 0, integer: true }),
-            unnatural: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            // Derived values
-            total: new NumberField({ required: true, initial: 30, integer: true }),
-            bonus: new NumberField({ required: true, initial: 3, integer: true }),
-        });
+        return characteristicField(label, short, { base: 30, total: 30, bonus: 3, advancement: false });
     }
 
     /** @inheritDoc */
@@ -282,28 +274,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             }),
 
             // === WOUNDS ===
-            wounds: new SchemaField({
-                max: new NumberField({ required: true, initial: 10, min: 0, integer: true }),
-                value: new NumberField({ required: true, initial: 10, min: 0, integer: true }),
-                critical: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            }),
+            wounds: woundsField({ max: 10, value: 10, critical: 0, nullable: true }),
 
             // === MOVEMENT ===
-            movement: new SchemaField({
-                half: new NumberField({ required: true, initial: 3, min: 0 }),
-                full: new NumberField({ required: true, initial: 6, min: 0 }),
-                charge: new NumberField({ required: true, initial: 9, min: 0 }),
-                run: new NumberField({ required: true, initial: 18, min: 0 }),
-            }),
+            movement: movementField({ half: 3, full: 6, charge: 9, run: 18, withLeap: false }),
 
-            size: new NumberField({ required: true, initial: 4, min: 1, max: 10, integer: true }),
+            size: sizeField({ nullable: true }),
 
             // === INITIATIVE ===
-            initiative: new SchemaField({
-                characteristic: new StringField({ required: true, initial: 'agility' }),
-                base: new StringField({ required: true, initial: '1d10' }),
-                bonus: new NumberField({ required: true, initial: 0, integer: true }),
-            }),
+            initiative: initiativeField({ nullable: true }),
 
             // === TRAINED SKILLS (SPARSE) ===
             // Only store skills the NPC actually has, not all 48
