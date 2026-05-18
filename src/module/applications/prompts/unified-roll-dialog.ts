@@ -15,6 +15,7 @@ import type { RollData } from '../../rolls/roll-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
+import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import {
     AIM_OPTIONS,
     aggregateSituationalDamageEffects,
@@ -333,6 +334,36 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             : 0;
         const assistanceMod = isForceField ? 0 : getAssistanceBonus(this._assistantCount);
 
+        // Try-Again advisory (#62) — only for Skill rolls with a known rollKey.
+        // Reads actor.flags.wh40k['try-again'][rollKey] (a Record<string, number>)
+        // populated by chat-card emission. Surfaces a soft warning and pre-applies
+        // the cumulative penalty for CUMULATIVE_PENALTY_SKILLS.
+        let tryAgainAdvice: RetryAdvice | null = null;
+        let tryAgainPenalty = 0;
+        if (!isForceField && rollData['type'] === 'Skill') {
+            const skillKey = (rollData['rollKey'] as string | null | undefined) ?? null;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); getFlag is Foundry Document API
+            const actorRef = (rollData.sourceActor ?? rollData['actor']) as
+                | { getFlag?: (scope: string, key: string) => unknown }
+                | null
+                | undefined;
+            if (skillKey !== null && typeof actorRef?.getFlag === 'function') {
+                const flagBag = actorRef.getFlag('wh40k', 'try-again');
+                // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns unknown; the per-skill counter bag is Record<string, number> by construction
+                const attempts =
+                    flagBag != null && typeof flagBag === 'object'
+                        ? Number((flagBag as Record<string, unknown>)[skillKey] ?? 0)
+                        : 0;
+                if (attempts > 0) {
+                    const advice = getTryAgainAdvice(skillKey, attempts);
+                    if (advice.blocksByConvention || advice.cumulativePenalty !== 0) {
+                        tryAgainAdvice = advice;
+                        tryAgainPenalty = advice.cumulativePenalty;
+                    }
+                }
+            }
+        }
+
         const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : rollData.baseTarget || 0;
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
@@ -345,7 +376,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   .reduce((sum, [, v]) => sum + (Number(v) || 0), 0) + (Number(rollData.rangeBonus) || 0)
             : 0;
 
-        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod);
+        const finalTarget = Math.max(
+            0,
+            baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty,
+        );
 
         // Build target breakdown tooltip
         const tooltipParts = [`Base: ${baseTarget}`];
@@ -356,6 +390,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${combatSitMod >= 0 ? '+' : ''}${combatSitMod}`);
         if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${psyMod >= 0 ? '+' : ''}${psyMod}`);
         if (assistanceMod !== 0) tooltipParts.push(`Assistance: +${assistanceMod}`);
+        if (tryAgainPenalty !== 0) tooltipParts.push(`Try-Again: ${tryAgainPenalty}`);
         tooltipParts.push(`= ${finalTarget}`);
         const targetBreakdownTooltip = tooltipParts.join('\n');
 
@@ -410,7 +445,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
         // Modifier aggregate
-        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod;
+        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty;
 
         // Roll type specific data
         const isWeapon = this.rollType === 'weapon';
@@ -461,6 +496,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             assistantMax: DEFAULT_ASSISTANT_CAP,
             canIncrementAssistant: this._assistantCount < DEFAULT_ASSISTANT_CAP,
             canDecrementAssistant: this._assistantCount > 0,
+            tryAgainAdvice,
+            tryAgainPenalty,
+            tryAgainPenaltyLabel: tryAgainPenalty < 0 ? `${tryAgainPenalty}` : tryAgainPenalty > 0 ? `+${tryAgainPenalty}` : '0',
             rollResult,
             manualRollTens: this._manualRollTens,
             manualRollUnits: this._manualRollUnits,
