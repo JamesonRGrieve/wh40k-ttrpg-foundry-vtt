@@ -343,6 +343,124 @@ export const RogueTraderDirection: Story = {
  * Tailwind `dh2e:` variants resolve. The Playwright spec at
  * tests/storybook/issue-198-origin-path-preview.spec.ts snapshots this story.
  */
+/**
+ * Regression coverage for issue #204: the per-origin Throne Gelt roll widget
+ * was appearing in BOTH the Home World step AND the Background step of the
+ * homebrew DH2 origin-path builder, which let players roll twice and pocket
+ * a doubled starting purse. The fix restricts the rollable widget to the
+ * Home World step; Background-step thrones formulas no longer surface a roll
+ * button (the data remains in the compendium for narrative reference).
+ *
+ * Two stories cover the post-fix DOM:
+ *
+ * - `Issue204HomeWorldThroneGelt`: homebrew home-world step renders exactly
+ *   one Throne Gelt `[data-stat-type="thrones"][data-action="rollStat"]`
+ *   button — the legitimate single roll.
+ * - `Issue204BackgroundNoThroneGelt`: homebrew background step renders
+ *   zero such buttons, even when the selected background's compendium entry
+ *   still carries a `homebrew.throneGelt` formula in its system data.
+ *
+ * The Playwright spec at tests/storybook/issue-204-throne-gelt-single-step.spec.ts
+ * snapshots both stories so a regression that re-introduces the duplicate
+ * button on the background step would be visible in the rendered DOM.
+ */
+export const Issue204HomeWorldThroneGelt: Story = {
+    args: makeArgs({
+        isDH2: true,
+        isHomebrew: true,
+        isRaw: false,
+        hideThroneGelt: false,
+        currentStep: {
+            index: 0,
+            key: 'homeWorld',
+            label: 'Home World',
+            icon: 'fa-globe',
+            description: 'Choose the world that forged your character.',
+            origins: [makeOriginCard('Hive World', { isSelected: true }), makeOriginCard('Feral World', { isValidNext: false })],
+            isLineage: false,
+            isCharacteristics: false,
+        },
+        selectedOrigin: makeSelectedOrigin('Hive World', {
+            hasRolls: true,
+            rolls: {
+                thrones: {
+                    formula: '1d10+5',
+                    hasValue: false,
+                    value: undefined,
+                    breakdown: '',
+                },
+            },
+        }),
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // The Throne Gelt label and exactly one roll button must render on the home-world step.
+        expect(canvas.getByText('Throne Gelt')).toBeTruthy();
+        const thronesRollButtons = canvasElement.querySelectorAll('button[data-action="rollStat"][data-stat-type="thrones"]');
+        expect(thronesRollButtons.length).toBe(1);
+    },
+};
+
+export const Issue204BackgroundNoThroneGelt: Story = {
+    args: makeArgs({
+        isDH2: true,
+        isHomebrew: true,
+        isRaw: false,
+        hideThroneGelt: false,
+        steps: [
+            {
+                index: 0,
+                key: 'homeWorld',
+                label: 'Home World',
+                shortLabel: 'Home',
+                icon: 'fa-globe',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Hive World', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 1,
+                key: 'background',
+                label: 'Background',
+                shortLabel: 'Back',
+                icon: 'fa-scroll',
+                isActive: true,
+                isComplete: false,
+                isDisabled: false,
+                isLineage: false,
+                selection: null,
+            },
+        ],
+        currentStep: {
+            index: 1,
+            key: 'background',
+            label: 'Background',
+            icon: 'fa-scroll',
+            description: 'Choose what shaped your character after their home world.',
+            origins: [makeOriginCard('Adeptus Mechanicus', { isSelected: true }), makeOriginCard('Outcast')],
+            isLineage: false,
+            isCharacteristics: false,
+        },
+        // Even though the selected background's compendium entry HAS a `homebrew.throneGelt`
+        // formula, the post-fix `_prepareSelectedOrigin` must NOT promote it to a roll widget.
+        // We model that by leaving `rolls.thrones` undefined on the prepared selectedOrigin —
+        // the template only renders the Throne Gelt block under `{{#if selectedOrigin.rolls.thrones}}`.
+        selectedOrigin: makeSelectedOrigin('Adeptus Mechanicus', {
+            hasRolls: false,
+            rolls: {},
+        }),
+    }),
+    play: async ({ canvasElement }) => {
+        // Zero Throne Gelt roll buttons must appear on the background step.
+        const thronesRollButtons = canvasElement.querySelectorAll('button[data-action="rollStat"][data-stat-type="thrones"]');
+        expect(thronesRollButtons.length).toBe(0);
+        const thronesManualButtons = canvasElement.querySelectorAll('button[data-action="manualStat"][data-stat-type="thrones"]');
+        expect(thronesManualButtons.length).toBe(0);
+    },
+};
+
 export const Issue198VoidBornPreview: Story = {
     args: makeArgs({
         isDH2: false,
