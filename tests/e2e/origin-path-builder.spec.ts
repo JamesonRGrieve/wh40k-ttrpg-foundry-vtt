@@ -215,8 +215,9 @@ async function probeOriginPathBuilder(page: import('@playwright/test').Page): Pr
                 }
 
                 // ── 3. builder-back-to-previous-step ────────────────────
+                // Free mode persists from step 2 — #goToStep only reads
+                // guidedMode, never re-enables it — so no re-set is needed here.
                 try {
-                    builder.guidedMode = false;
                     const err = await callAction('goToStep', {
                         stepKey: String(builder.systemConfig?.coreSteps?.[0]?.key ?? 'homeWorld'),
                         stepIndex: '0',

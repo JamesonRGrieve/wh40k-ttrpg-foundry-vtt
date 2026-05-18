@@ -154,7 +154,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     },
                     last: {},
                     _throttle: async function (_k, _w, fn, ctx, args) {
-                        return (fn as Function).apply(ctx, args);
+                        return (fn as (...a: unknown[]) => unknown).apply(ctx, args);
                     },
                     _notify: () => undefined,
                     _updateSystemField: async function (this: HostStub, field, value) {
