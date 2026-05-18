@@ -161,6 +161,14 @@
             "ResetGmOnly": "Only the GM can reset the possession session counter.",
             "ResetDone": "Possession session counter reset."
         },
+        "Mortification": {
+            "ButtonLabel": "Mortification of the Flesh",
+            "ButtonTooltip": "Self-inflict 1 Fatigue to gain +10 to all Willpower tests for 60 rounds.",
+            "ChatTitle": "Mortification of the Flesh",
+            "ChatBody": "{name} mortifies the flesh, accepting fatigue in exchange for unshakable resolve.",
+            "DurationLabel": "Duration",
+            "WpBonusLabel": "Willpower bonus"
+        },
         "CharacteristicSetup": {
             "Title": "Characteristic Setup",
             "Instructions": "Enter your dice rolls in the bank, then drag them to assign to characteristics.",
@@ -817,6 +825,18 @@
             "RollModifierTitle": "Roll Modifier",
             "AssignDamageTitle": "Assign Damage"
         },
+        "Fear": {
+            "Rating": "Fear",
+            "RatingLabel": "Fear Rating",
+            "DialogTitle": "Trigger Fear Test",
+            "ObserverLabel": "Observer",
+            "FearRating": "Fear (X)",
+            "Target": "WP Target",
+            "ChatTitle": "Fear Test",
+            "SuccessText": "Resisted",
+            "FailureText": "Failed",
+            "ShockModifier": "Shock Table Roll"
+        },
         "Daemonhost": {
             "DialogTitle": "Bind Daemonhost",
             "DialogIntro": "Select a Binding Strength tier for the host being summoned.",
@@ -1144,6 +1164,17 @@
         "Subtlety": {
             "ManualAdjustment": "GM adjustment",
             "Inquest": "Inquest pursued openly"
+        },
+        "SubtletyPanel": {
+            "Header": "Warband Subtlety",
+            "Value": "Current",
+            "Max": "Maximum",
+            "ManualPlus": "Increase by 1 (GM)",
+            "ManualMinus": "Decrease by 1 (GM)",
+            "AdjusterList": "Active adjusters",
+            "EmptyAdjusters": "No adjusters active.",
+            "Clamped": "min loss {value}",
+            "BreakdownTitle": "Subtlety adjuster breakdown"
         },
         "DarkPact": {
             "Header": "Dark Pacts",

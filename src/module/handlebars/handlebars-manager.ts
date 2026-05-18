@@ -96,6 +96,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/wounds-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/fatigue-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/fate-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/corruption-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/insanity-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs',
@@ -124,6 +125,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/rituals-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/mortification-button.hbs',
             'systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-role-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/journal-panel.hbs',
@@ -203,6 +205,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs',
             'systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs',
             'systems/wh40k-rpg/templates/chat/daemonhost-binding-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/mortification-chat.hbs',
 
             // Unified roll dialog panels
             'systems/wh40k-rpg/templates/prompt/unified/panels/weapon-panel.hbs',
@@ -222,6 +225,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/daemonhost-binding-dialog.hbs',
+            'systems/wh40k-rpg/templates/prompt/fear-test-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/fear-test-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/radical-services-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/radical-services-chat.hbs',
 

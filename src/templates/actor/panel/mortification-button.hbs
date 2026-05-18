@@ -1,0 +1,28 @@
+{{!--
+    Penitent role: Mortification of the Flesh action button (#94, within.md p.36).
+
+    Self-harm-themed action that costs the actor 1 Fatigue in exchange for a
+    +10 WP modifier active effect lasting MORTIFICATION_OF_THE_FLESH.durationRounds
+    rounds. The panel renders only when `hasPenitent` is truthy (computed in
+    CharacterSheet._prepareContext from the actor's items / role flags).
+
+    The button itself dispatches `data-action="applyMortification"`, which
+    resolves to CharacterSheet.#applyMortification — see the action handler
+    for the wired Fatigue + ActiveEffect + ChatMessage pipeline.
+--}}
+{{#if hasPenitent}}
+<div class="wh40k-mortification-panel tw-flex tw-flex-col tw-items-stretch tw-gap-2 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-red-900/70 tw-bg-red-900/[8%]">
+    <button
+        type="button"
+        class="wh40k-mortification-btn tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-solid tw-border-red-900 tw-bg-red-900/60 tw-text-white tw-font-display tw-uppercase tw-tracking-[0.08em] tw-text-[0.85rem] hover:tw-bg-red-900/80 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-red-700"
+        data-action="applyMortification"
+        data-tooltip="{{localize 'WH40K.Mortification.ButtonTooltip'}}"
+        aria-label="{{localize 'WH40K.Mortification.ButtonLabel'}}">
+        <i class="fa-solid fa-droplet" aria-hidden="true"></i>
+        <span>{{localize "WH40K.Mortification.ButtonLabel"}}</span>
+    </button>
+    <p class="tw-text-[0.75rem] tw-italic tw-text-[var(--wh40k-text-muted,#a0a0a0)] tw-m-0">
+        {{localize "WH40K.Mortification.ButtonTooltip"}}
+    </p>
+</div>
+{{/if}}

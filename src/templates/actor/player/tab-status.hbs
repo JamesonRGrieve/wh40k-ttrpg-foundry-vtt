@@ -42,4 +42,8 @@
 
     {{!-- Dark Pacts (Enemies Beyond p. 72, #84). Renders only when at least one pact is active. --}}
     {{> systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs}}
+
+    {{!-- Penitent role: Mortification of the Flesh action (#94, within.md p.36). --}}
+    {{!-- Hidden unless the actor has a Penitent role / Mortification talent (computed in CharacterSheet._prepareContext). --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/mortification-button.hbs hasPenitent=hasPenitent}}
 </section>
