@@ -572,6 +572,39 @@ recordDimension('dh-special-item.flow', covered['dh-special-item.flow'], DH_SPEC
 // item-bucketing branches in `src/module/applications/actor/{vehicle,starship}-sheet.ts`.
 recordDimension('vehicle-starship.flow', covered['vehicle-starship.flow'], VEHICLE_STARSHIP_FLOWS);
 
+// WH40KVehicle Document-class coverage exercised by
+// tests/e2e/vehicle-methods.spec.ts. Pushes source-code coverage on
+// `src/module/documents/vehicle.ts` — every public getter (faction /
+// subfaction / subtype / threatLevel / armour / front / side / rear /
+// availability / manoeuverability / carryingCapacity / integrity /
+// speed / crew / vehicleClass / size) and the four rollItem branches
+// (missing item, no user character, non-weapon warn, weapon-attack
+// delegation through DHTargetedActionManager). Complements
+// vehicle-starship.flow, which covers the DataModel + sheet surfaces.
+const VEHICLE_METHODS_FLOWS = [
+    'getter-faction',
+    'getter-subfaction',
+    'getter-subtype',
+    'getter-threat-level',
+    'getter-armour',
+    'getter-front',
+    'getter-side',
+    'getter-rear',
+    'getter-availability',
+    'getter-manoeuverability',
+    'getter-carrying-capacity',
+    'getter-integrity',
+    'getter-speed',
+    'getter-crew',
+    'getter-vehicle-class',
+    'getter-size',
+    'rollItem-missing-item',
+    'rollItem-no-character',
+    'rollItem-non-weapon',
+    'rollItem-weapon-delegation',
+];
+recordDimension('vehicle-methods.flow', covered['vehicle-methods.flow'], VEHICLE_METHODS_FLOWS);
+
 // XP gain + advancement flows exercised by tests/e2e/xp-advancement.spec.ts.
 // Each key is a recordCoverage('xp.flow', ...) call in the spec. Pushes
 // source-code coverage on character.ts experience schema / _prepareExperience
@@ -1042,6 +1075,44 @@ const LOOT_FLOWS = [
     'drop-non-droppable-rejected',
 ];
 recordDimension('loot.flow', covered['loot.flow'], LOOT_FLOWS);
+
+// WH40KStarship document-layer methods exercised by
+// tests/e2e/starship-methods.spec.ts. vehicle-starship.spec.ts drives the
+// underlying DataModel (component embedding, morale, hull-and-shields);
+// this dimension covers the Document class itself — every getter on
+// `src/module/documents/starship.ts` plus `prepareData`, `fireWeapon`
+// (valid + invalid weapon-id branches), and the `rollInitiative`
+// override. Was 8.3% fn / 55.8% line pre-spec. Keys MUST match the
+// recordCoverage('starship-methods.flow', ...) calls in the spec.
+const STARSHIP_METHODS_FLOWS = [
+    'get-hullType',
+    'get-hullClass',
+    'get-hullIntegrity',
+    'get-speed',
+    'get-manoeuvrability',
+    'get-detection',
+    'get-detectionBonus',
+    'get-armour',
+    'get-voidShields',
+    'get-turretRating',
+    'get-crew',
+    'get-power',
+    'get-space',
+    'get-weaponCapacity',
+    'get-isCrippled-false',
+    'get-isCrippled-true',
+    'get-isDestroyed-false',
+    'get-isDestroyed-true',
+    'get-shipComponents',
+    'get-shipWeapons',
+    'get-shipUpgrades',
+    'get-weaponsByLocation',
+    'method-prepareData',
+    'method-fireWeapon-valid',
+    'method-fireWeapon-invalid',
+    'method-rollInitiative',
+];
+recordDimension('starship-methods.flow', covered['starship-methods.flow'], STARSHIP_METHODS_FLOWS);
 
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
