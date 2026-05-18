@@ -940,6 +940,15 @@
             "ChatTitle": "Daemonhost Bound",
             "BoundAtTier": "Host bound at tier:"
         },
+        "SancticPurity": {
+            "PromptTitle": "Sanctic Purity",
+            "PromptBody": "Spend 1 Fate to negate this Phenomena roll?",
+            "SpendButton": "Spend Fate",
+            "DeclineButton": "Let It Stand",
+            "NegatedChatTitle": "Phenomena Negated",
+            "NegatedChatBody": "The Emperor's Anathema rejects the warp's intrusion; the Phenomena roll is suppressed.",
+            "EmperorsAnathema": "Emperor's Anathema"
+        },
         "DaemonicImmunities": {
             "BadgeLabel": "Daemonic",
             "DiseaseImmune": "Immune to Disease",
@@ -967,6 +976,21 @@
             "ApplyButton": "Apply",
             "Cancel": "Cancel",
             "ChatTitle": "Sister of Battle Elite Advance"
+        },
+        "WithinHomeworld": {
+            "DialogTitle": "Within Homeworld Traits",
+            "Description": "Reference card for the three homeworlds introduced by the Within supplement. GM use during character creation.",
+            "AgriWorld": "Agri World",
+            "FeudalWorld": "Feudal World",
+            "FrontierWorld": "Frontier World",
+            "HomeworldTag": "Within",
+            "Characteristics": "Characteristics",
+            "FateAdjust": "Fate Threshold",
+            "WoundsAdjust": "Starting Wounds",
+            "KeyTalents": "Key Talents",
+            "KeyAptitudes": "Key Aptitudes",
+            "Bonuses": "Home World Bonus",
+            "CloseButton": "Close"
         },
         "MutantBackground": {
             "DialogTitle": "Apply Mutant Background",
