@@ -2,9 +2,22 @@
  * @file StarshipSheet - Starship actor sheet using ApplicationV2 with PARTS system
  */
 
+import StarshipData, { ESSENTIAL_SHIP_SLOTS, type StarshipBuildValidation } from '../../data/actor/starship.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KStarship } from '../../documents/starship.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
+
+/** Localization key per essential slot for the build panel. */
+const ESSENTIAL_SLOT_LABEL_KEY: Record<string, string> = {
+    plasmaDrive: 'WH40K.ShipComponent.Type.PlasmaDrive',
+    warpDrive: 'WH40K.ShipComponent.Type.WarpDrive',
+    gellarField: 'WH40K.ShipComponent.Type.GellarField',
+    voidShields: 'WH40K.ShipComponent.Type.VoidShields',
+    bridge: 'WH40K.ShipComponent.Type.Bridge',
+    lifeSupport: 'WH40K.ShipComponent.Type.LifeSupport',
+    quarters: 'WH40K.ShipComponent.Type.Quarters',
+    auger: 'WH40K.ShipComponent.Type.Auger',
+};
 
 /**
  * Actor sheet for Starship type actors.
@@ -19,6 +32,8 @@ export default class StarshipSheet extends BaseActorSheet {
             ...BaseActorSheet.DEFAULT_OPTIONS.actions,
             fireShipWeapon: StarshipSheet.#fireShipWeapon,
             rollInitiative: StarshipSheet.#rollInitiative,
+            validateBuild: StarshipSheet.#validateBuild,
+            commitBuild: StarshipSheet.#commitBuild,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['starship'],
@@ -174,6 +189,32 @@ export default class StarshipSheet extends BaseActorSheet {
         context['spaceUsed'] = spaceUsed;
         context['powerAvailable'] = powerGenerated - powerUsed;
         context['spaceAvailable'] = ((this.actor.system as { space?: { total?: number } }).space?.total ?? 0) - spaceUsed;
+
+        // SP-budget panel context (issue #190). The DataModel computes
+        // `buildValidation` during prepareDerivedData; fall back to a freshly
+        // calculated value when the actor was constructed before the schema
+        // was extended (legacy worlds prior to migration running).
+        const sys = this.actor.system as {
+            buildValidation?: StarshipBuildValidation;
+            shipPoints?: { budget?: number; spent?: number };
+        };
+        let buildValidation: StarshipBuildValidation;
+        if (sys.buildValidation) {
+            buildValidation = sys.buildValidation;
+        } else {
+            const budget = sys.shipPoints?.budget ?? 0;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: items collection iterates as untyped objects in the legacy fallback path
+            const itemViews = [...actor.items].map((it) => ({ type: it.type, system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean } }));
+            buildValidation = StarshipData.validateBuild(budget, itemViews);
+        }
+        context['buildValidation'] = buildValidation;
+
+        const missing = new Set(buildValidation.missingEssentialSlots);
+        context['essentialSlots'] = ESSENTIAL_SHIP_SLOTS.map((slot) => ({
+            id: slot,
+            labelKey: ESSENTIAL_SLOT_LABEL_KEY[slot] ?? slot,
+            filled: !missing.has(slot),
+        }));
     }
 
     /* -------------------------------------------- */
@@ -257,5 +298,79 @@ export default class StarshipSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollInitiative is defined on Starship document; not on Actor.Implementation
         const a = this.actor as unknown as { rollInitiative?: () => Promise<void> };
         await a.rollInitiative?.();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Returns the current `StarshipBuildValidation` for this starship and
+     * surfaces it to the player via `ui.notifications`. Used by the
+     * "Validate Build" button in the SP-budget panel (issue #190).
+     *
+     * Pure helper: does not mutate the actor. The commit-button enabled state
+     * is already wired against the same `buildValidation` in the template.
+     */
+    static async #validateBuild(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        const validation = this.computeBuildValidation();
+        const i18n = game.i18n;
+        if (validation.isValid) {
+            ui.notifications?.info(i18n.localize('WH40K.Starship.Build.NotifyValid'));
+        } else {
+            const parts: string[] = [];
+            if (validation.isOverBudget) {
+                parts.push(
+                    i18n.format('WH40K.Starship.Build.NotifyOverBudgetBy', {
+                        amount: validation.spent - validation.budget,
+                    }),
+                );
+            }
+            if (validation.missingEssentialSlots.length > 0) {
+                parts.push(
+                    i18n.format('WH40K.Starship.Build.NotifyMissingSlots', {
+                        count: validation.missingEssentialSlots.length,
+                    }),
+                );
+            }
+            ui.notifications?.warn(parts.join(' — '));
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Block-the-commit handler. Refuses to "save" the build when the validation
+     * fails and otherwise notifies success. The actual persistence of the build
+     * happens through the existing item add/remove flow — this handler exists
+     * so the template can wire `data-action="commitBuild"` to a single point
+     * that enforces the invariant. (Issue #190 explicitly requires that the
+     * build cannot be saved with missing essentials or an over-budget total.)
+     */
+    static async #commitBuild(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        const validation = this.computeBuildValidation();
+        if (!validation.isValid) {
+            ui.notifications?.error(game.i18n.localize('WH40K.Starship.Build.NotifyCannotCommit'));
+            return;
+        }
+        ui.notifications?.info(game.i18n.localize('WH40K.Starship.Build.NotifyCommitted'));
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Compute and return the build validation result for this actor. Prefers
+     * the live `system.buildValidation` populated by `prepareDerivedData`; if
+     * absent (legacy world pre-migration), reconstructs it from owned items.
+     */
+    computeBuildValidation(): StarshipBuildValidation {
+        const sys = this.actor.system as {
+            buildValidation?: StarshipBuildValidation;
+            shipPoints?: { budget?: number };
+        };
+        if (sys.buildValidation) return sys.buildValidation;
+        const budget = sys.shipPoints?.budget ?? 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: items collection iterates as untyped Foundry CollectionEntries
+        const a = this.actor as unknown as { items: Iterable<{ type: string; system: unknown }> };
+        const itemViews = [...a.items].map((it) => ({ type: it.type, system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean } }));
+        return StarshipData.validateBuild(budget, itemViews);
     }
 }
