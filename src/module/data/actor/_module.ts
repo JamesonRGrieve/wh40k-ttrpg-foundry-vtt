@@ -25,6 +25,9 @@ export { CharacterBaseData, NPCBaseData, VehicleBaseData, StarshipBaseData } fro
 // Concrete per-(system, kind) data models
 export * from './concrete/_module.ts';
 
+// Content-agnostic loot pile (homologated across all seven lines)
+export { default as LootData } from './loot.ts';
+
 // Shared templates
 export { CommonTemplate, CreatureTemplate } from './templates/_module.ts';
 

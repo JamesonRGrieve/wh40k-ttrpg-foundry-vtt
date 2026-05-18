@@ -37,6 +37,7 @@ import {
     // Starship sheet (default for rt-starship)
     RogueTraderStarshipSheet,
 } from './applications/actor/game-system-sheets.ts';
+import LootActorSheet from './applications/actor/loot-sheet.ts';
 import * as characterCreation from './applications/character-creation/_module.ts';
 import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
 import { TooltipsWH40K } from './applications/components/_module.ts';
@@ -88,6 +89,7 @@ import {
     rollItemMacro,
     rollSkillMacro,
 } from './macros/macro-manager.ts';
+import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { WH40K } from './rules/config.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import { TransactionManager } from './transactions/transaction-manager.ts';
@@ -106,6 +108,13 @@ interface DirectoryContextOption {
     icon: string;
     condition: (element: HTMLElement) => boolean;
     callback: (element: HTMLElement) => void | Promise<void>;
+}
+
+/** Minimal Token HUD shape needed by the loot pickup-button injection. */
+interface LootTokenHUDLike {
+    object?: {
+        document?: { actor?: WH40KBaseActor | null };
+    };
 }
 
 // biome-ignore lint/complexity/noStaticOnlyClass: stable system-bootstrap API surface with many callers
@@ -137,6 +146,7 @@ export class HooksManager {
         );
         /* eslint-enable no-restricted-syntax, @typescript-eslint/no-deprecated */
         hooksOn('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) => HooksManager.getActorDirectoryEntryContext(options));
+        hooksOn('renderTokenHUD', (app: LootTokenHUDLike, html: HTMLElement | JQuery) => HooksManager.onLootTokenHUD(app, html));
         hooksOn('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
             HooksManager.getActorSheetClass(actor, sheetData),
         );
@@ -245,6 +255,52 @@ export class HooksManager {
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-entry-id');
         if (actorId == null) return null;
         return (game.actors.get(actorId) as WH40KBaseActor | undefined) ?? null;
+    }
+
+    /**
+     * Inject a "Pick Up" control into the Token HUD when the token is a loot
+     * pile. Right-clicking any token opens its HUD; the loot Actor is created
+     * with default OWNER ownership so every player can reach this control.
+     * Pickup target resolution + transfer is shared with the loot sheet via
+     * {@link ItemDropManager}.
+     */
+    static onLootTokenHUD(app: LootTokenHUDLike, html: HTMLElement | JQuery): void {
+        const lootActor = app.object?.document?.actor ?? null;
+        if (lootActor == null || (lootActor.type as string) !== 'loot') return;
+
+        let root: HTMLElement | undefined;
+        if (html instanceof HTMLElement) {
+            root = html;
+        } else {
+            const first = html[0];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: jQuery[0] may be undefined under strict TS
+            if (first === undefined) return;
+            root = first;
+        }
+        if (root.querySelector('.wh40k-loot-pickup') !== null) return;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'wh40k-loot-pickup control-icon tw-flex tw-items-center tw-justify-center tw-gap-1 tw-cursor-pointer';
+        btn.title = game.i18n.localize('WH40K.Loot.PickUp');
+        btn.setAttribute('aria-label', game.i18n.localize('WH40K.Loot.PickUp'));
+        btn.innerHTML = '<i class="fas fa-hand-holding"></i>';
+        btn.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: canvas.tokens is the Foundry token layer; only controlled actors are read
+            const controlled = (canvas.tokens?.controlled ?? []) as Array<{ actor?: WH40KBaseActor | null }>;
+            const userCharacter = (game.user.character as WH40KBaseActor | null | undefined) ?? null;
+            const receiver = ItemDropManager.resolveReceivingActor<WH40KBaseActor>(controlled, userCharacter);
+            if (receiver == null) {
+                ui.notifications.warn(game.i18n.localize('WH40K.Warning.LootNoReceiver'));
+                return;
+            }
+            void ItemDropManager.pickupLoot(receiver, lootActor);
+        });
+
+        const leftCol = root.querySelector('.col.left') ?? root.querySelector('.col.middle') ?? root;
+        leftCol.appendChild(btn);
     }
 
     static init(): void {
@@ -391,6 +447,10 @@ export class HooksManager {
             'npc': dataModels.DH2NPCData,
             'vehicle': dataModels.DH2VehicleData,
             'starship': dataModels.RTStarshipData,
+            // Content-agnostic loot pile — one homologated type for all lines.
+            // No concrete document class: the actor proxy falls back to
+            // WH40KBaseActor, which is all a pile of embedded items needs.
+            'loot': dataModels.LootData,
         };
 
         // Register Item data models
@@ -576,6 +636,13 @@ export class HooksManager {
             types: ['rt-starship'],
             makeDefault: true,
             label: 'WH40K.Sheet.RogueTraderStarship',
+        });
+
+        // --- Loot pile (content-agnostic, all systems) ---
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, LootActorSheet, {
+            types: ['loot'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.Loot',
         });
 
         // Unregister core V1 item sheet and register V2 item sheets

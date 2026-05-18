@@ -4,7 +4,8 @@
             "character": "Player Character",
             "npc": "NPC",
             "vehicle": "Vehicle",
-            "starship": "Starship"
+            "starship": "Starship",
+            "loot": "Loot Pile"
         },
         "Item": {
             "ammunition": "Ammunition",
@@ -647,6 +648,7 @@
             "NPC": "NPC Sheet",
             "Vehicle": "Vehicle Sheet",
             "Starship": "Starship Sheet",
+            "Loot": "Loot Pile Sheet",
             "Item": "Item Sheet",
             "Weapon": "Weapon Sheet",
             "Armour": "Armour Sheet",
@@ -2352,6 +2354,25 @@
             "Title": "Select Ammunition",
             "LoadTitle": "Load Ammunition \u2014 {weaponName}"
         },
+        "Loot": {
+            "DefaultName": "Dropped: {item}",
+            "PileName": "Loot Pile",
+            "Drop": "Drop on the ground",
+            "DropTitle": "Drop {item}",
+            "DropConfirm": "Drop {item} on the ground here?",
+            "DropConfirmLabel": "Drop",
+            "Dropped": "{actor} dropped {item}.",
+            "PickUp": "Pick Up",
+            "PickUpAll": "Take Everything",
+            "PickUpHint": "Right-click this pile and use Pick Up, or open it to take individual items.",
+            "PickedUp": "{actor} picked up {item}.",
+            "PickedUpAll": "{actor} picked up everything from {pile}.",
+            "Empty": "This loot pile is empty.",
+            "Contents": "Contents",
+            "Source": "Dropped by {actor}",
+            "Tab": "Loot",
+            "Title": "Loot Pile"
+        },
         "Warning": {
             "InvalidCharacteristic": "Invalid characteristic.",
             "SkillNotSpecified": "Skill not specified.",
@@ -2361,7 +2382,12 @@
             "RangeFormulaFailed": "Range formula failed — setting to 0",
             "InvalidAmmunition": "Invalid ammunition item",
             "NoAmmunitionLoaded": "No ammunition loaded",
-            "UnknownCondition": "Unknown condition: {condition}"
+            "UnknownCondition": "Unknown condition: {condition}",
+            "LootNoToken": "Place {actor}'s token on the scene before dropping items.",
+            "LootNotDroppable": "{item} cannot be dropped.",
+            "LootNoReceiver": "Select the token that should pick this up first.",
+            "LootPickupDenied": "You do not have permission to pick this up.",
+            "LootDropDenied": "You do not have permission to drop this item."
         }
     }
 }
