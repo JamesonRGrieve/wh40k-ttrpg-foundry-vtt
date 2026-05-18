@@ -1,9 +1,16 @@
 {{!--
-    Possession Panel — Daemonic possession track (#82, beyond.md p.69).
+    Possession Panel — Daemonic possession track (#82, beyond.md p.69)
+    + Possession-power Frenzy-test loop (#132, beyond.md L2095-2116).
 
     Displays the actor's current possession state (latent / possessed),
     the per-session Unleash Daemon counter, and exposes the Unleash
     Daemon action plus a GM-only "Reset Session" control.
+
+    While the actor is in the `latent` (contested) state — the
+    Possession power is sustained — the panel also surfaces the
+    per-round Frenzy test and the mismanifest opposed-Willpower contest
+    that can escalate to full possession. Those controls are hidden in
+    the terminal `possessed` state (the daemon is already in control).
 
     Rendered only when `system.possession.state !== 'none'`; the call
     site in tab-status.hbs gates the include with `{{#if (neq ...)}}`.
@@ -69,4 +76,41 @@
             </button>
         {{/if}}
     </div>
+
+    {{!-- Frenzy-test loop (#132) — only while the power is sustained
+          (contested / latent state). The terminal possessed state hides
+          these because the daemon already won the contest. --}}
+    {{#if (eq system.possession.state 'latent')}}
+        <div class="wh40k-possession-frenzy-loop tw-flex tw-flex-col tw-gap-2 tw-pt-2 tw-mt-1
+                    tw-border-t tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]">
+            <p class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.72rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">
+                <i class="fas fa-arrows-rotate" aria-hidden="true"></i>
+                <span>{{localize "WH40K.Possession.FrenzyLoopHint"}}</span>
+            </p>
+            <div class="tw-flex tw-items-center tw-gap-2">
+                <button type="button"
+                        class="wh40k-possession-frenzy-btn tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                               tw-px-2 tw-py-1.5 tw-rounded tw-bg-gold-dark/20 tw-border tw-border-solid tw-border-gold-raw/60
+                               tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-bright)]
+                               tw-cursor-pointer tw-transition-colors hover:tw-bg-gold-dark/40
+                               dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure"
+                        data-action="possessionFrenzyTest"
+                        title="{{localize 'WH40K.Possession.FrenzyTestTitle'}}">
+                    <i class="fas fa-dice-d20" aria-hidden="true"></i>
+                    <span>{{localize "WH40K.Possession.FrenzyTest"}}</span>
+                </button>
+                <button type="button"
+                        class="wh40k-possession-mismanifest-btn tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                               tw-px-2 tw-py-1.5 tw-rounded tw-bg-crimson/20 tw-border tw-border-solid tw-border-crimson/60
+                               tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-bright)]
+                               tw-cursor-pointer tw-transition-colors hover:tw-bg-crimson/40
+                               dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure"
+                        data-action="possessionMismanifest"
+                        title="{{localize 'WH40K.Possession.MismanifestTitle'}}">
+                    <i class="fas fa-skull" aria-hidden="true"></i>
+                    <span>{{localize "WH40K.Possession.Mismanifest"}}</span>
+                </button>
+            </div>
+        </div>
+    {{/if}}
 </section>
