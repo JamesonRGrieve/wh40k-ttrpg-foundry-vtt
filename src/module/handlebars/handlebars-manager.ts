@@ -152,7 +152,9 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/starship/tab-crew.hbs',
             'systems/wh40k-rpg/templates/actor/starship/tab-history.hbs',
             'systems/wh40k-rpg/templates/actor/starship/tab-extended-actions.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/tab-manoeuvre-actions.hbs',
             'systems/wh40k-rpg/templates/chat/extended-action-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/manoeuvre-action-chat.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-components-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-crew-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-points-budget-panel.hbs',
@@ -188,6 +190,7 @@ export class HandlebarManager {
             // Chat templates
             'systems/wh40k-rpg/templates/chat/item-card-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ship-critical-hit-chat.hbs',
             'systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs',
             'systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs',
             'systems/wh40k-rpg/templates/chat/order-roll-chat.hbs',

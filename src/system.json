@@ -2801,6 +2801,18 @@
             "flags": {}
         },
         {
+            "name": "rt-core-rolltables-ship-combat",
+            "label": "Rogue Trader Ship Combat Tables",
+            "path": "packs/rogue-trader/rt-core-rolltables-ship-combat",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-faith-items-ammo",
             "label": "Faith and Coin Ammunition",
             "path": "packs/rogue-trader/rt-faith-items-ammo",
@@ -4386,7 +4398,8 @@
                         "rt-core-items-vehicle-traits",
                         "rt-core-items-weapon-qualities",
                         "rt-core-items-weapons",
-                        "rt-core-rolltables-psychic"
+                        "rt-core-rolltables-psychic",
+                        "rt-core-rolltables-ship-combat"
                     ]
                 },
                 {
