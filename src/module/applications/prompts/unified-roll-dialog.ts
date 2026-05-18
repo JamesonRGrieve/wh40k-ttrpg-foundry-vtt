@@ -17,6 +17,7 @@ import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistanc
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
+import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import {
     AIM_OPTIONS,
     aggregateSituationalDamageEffects,
@@ -103,6 +104,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _extendedThreshold: number;
     /** Alt-characteristic override for skill rolls (#61). `null` = use the skill's listed characteristic. */
     declare _charOverride: string | null;
+    /** Climbing-surface modifier for Athletics rolls (#146). Defaults to 'standard' (no modifier). */
+    declare _climbSurface: ClimbingSurface;
 
     /**
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
@@ -143,6 +146,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._extended = false;
         this._extendedThreshold = 5;
         this._charOverride = null;
+        this._climbSurface = 'standard';
     }
 
     /* -------------------------------------------- */
@@ -182,6 +186,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             incrementAssistant: UnifiedRollDialog.#onIncrementAssistant,
             decrementAssistant: UnifiedRollDialog.#onDecrementAssistant,
             setCharacteristicOverride: UnifiedRollDialog.#onSetCharacteristicOverride,
+            setClimbSurface: UnifiedRollDialog.#onSetClimbSurface,
             toggleExtended: UnifiedRollDialog.#onToggleExtended,
             setExtendedThreshold: UnifiedRollDialog.#onSetExtendedThreshold,
             cancel: UnifiedRollDialog.#onCancel,
@@ -478,9 +483,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   .reduce((sum, [, v]) => sum + (Number(v) || 0), 0) + (Number(rollData.rangeBonus) || 0)
             : 0;
 
+        // Climbing surface modifier (#146 — errata L113). Only applied on Athletics rolls.
+        const rollKeyValue = (rollData['rollKey'] as string | null | undefined) ?? null;
+        const isAthletics = this.rollType === 'simple' && rollData['type'] === 'Skill' && rollKeyValue === 'athletics';
+        const climbMod = isAthletics ? getClimbingModifier({ surfaceType: this._climbSurface }) : 0;
+
         const finalTarget = Math.max(
             0,
-            baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty,
+            baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty + climbMod,
         );
 
         // Build target breakdown tooltip
@@ -493,6 +503,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${psyMod >= 0 ? '+' : ''}${psyMod}`);
         if (assistanceMod !== 0) tooltipParts.push(`Assistance: +${assistanceMod}`);
         if (tryAgainPenalty !== 0) tooltipParts.push(`Try-Again: ${tryAgainPenalty}`);
+        if (climbMod !== 0) tooltipParts.push(`Climb Surface: ${climbMod >= 0 ? '+' : ''}${climbMod}`);
         tooltipParts.push(`= ${finalTarget}`);
         const targetBreakdownTooltip = tooltipParts.join('\n');
 
@@ -547,7 +558,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
         // Modifier aggregate
-        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty;
+        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty + climbMod;
 
         // Roll type specific data
         const isWeapon = this.rollType === 'weapon';
@@ -620,7 +631,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             skillPanel,
             hasSkillPanel: skillPanel !== null && skillPanel.visible,
             isSimple,
-            hasContextPanel: isWeapon || isPsychic || isForceField || (skillPanel !== null && skillPanel.visible),
+            // Climbing-surface picker (#146 — errata L113). Visible only on Athletics rolls.
+            isAthletics,
+            climbSurface: this._climbSurface,
+            climbSurfaceOptions: [
+                { value: 'standard', label: game.i18n.localize('WH40K.Climbing.Standard'), isCurrent: this._climbSurface === 'standard' },
+                { value: 'sheer', label: game.i18n.localize('WH40K.Climbing.Sheer'), isCurrent: this._climbSurface === 'sheer' },
+                { value: 'easy', label: game.i18n.localize('WH40K.Climbing.Easy'), isCurrent: this._climbSurface === 'easy' },
+            ],
+            climbMod,
+            hasContextPanel: isWeapon || isPsychic || isForceField || isAthletics || (skillPanel !== null && skillPanel.visible),
             // Weapon data
             ...(isWeapon ? this._getWeaponContext() : {}),
             // Psychic data
@@ -1187,6 +1207,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const value = select?.value ?? '';
         // Empty string sentinel means "no override" — fall back to the skill's listed characteristic.
         this._charOverride = value === '' ? null : value;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    /* ---- Climbing surface picker for Athletics rolls (#146) ----              */
+    /* Errata p. 113 — sheer surfaces add Hard (-20) to the Athletics test.      */
+
+    static async #onSetClimbSurface(this: UnifiedRollDialog, event: Event, _target: HTMLElement): Promise<void> {
+        const select = event.target as HTMLSelectElement | null;
+        const value = select?.value ?? 'standard';
+        const next: ClimbingSurface = value === 'sheer' || value === 'easy' ? value : 'standard';
+        if (next === this._climbSurface) return;
+        this._climbSurface = next;
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
     }
 

@@ -7,6 +7,7 @@
             {{#if isPsychic}}<i class="fas fa-brain tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-[0.9rem]"></i> Psychic Power{{/if}}
             {{#if isForceField}}<i class="fas fa-shield-alt tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-[0.9rem]"></i> Force Field{{/if}}
             {{#if hasSkillPanel}}<i class="fas fa-dumbbell tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-[0.9rem]"></i> {{localize "WH40K.UntrainedSkill.CharacteristicLabel"}}{{/if}}
+            {{#if isAthletics}}{{#unless hasSkillPanel}}<i class="fas fa-mountain tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-[0.9rem]"></i> {{localize "WH40K.Climbing.SurfaceLabel"}}{{/unless}}{{/if}}
         </span>
         <i class="fas {{#if contextExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} tw-text-[#6a6a6a] tw-text-xs"></i>
     </button>
@@ -21,6 +22,26 @@
             {{/if}}
             {{#if isForceField}}
                 {{> "systems/wh40k-rpg/templates/prompt/unified/panels/force-field-panel.hbs"}}
+            {{/if}}
+            {{#if isAthletics}}
+                <div class="wh40k-climb-surface-picker tw-mb-3">
+                    <h4 class="tw-font-display tw-text-xs tw-font-semibold tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">
+                        {{localize "WH40K.Climbing.SurfaceLabel"}}
+                    </h4>
+                    <select class="wh40k-climb-surface-picker__select tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
+                            name="climbSurface"
+                            data-action="setClimbSurface">
+                        {{#each climbSurfaceOptions as |opt|}}
+                            <option value="{{opt.value}}" {{#if opt.isCurrent}}selected{{/if}}>{{opt.label}}</option>
+                        {{/each}}
+                    </select>
+                    {{#if (eq climbSurface "sheer")}}
+                        <div class="wh40k-climb-surface-picker__sheer-indicator tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-mt-2 tw-rounded-md tw-bg-blue-900/40 tw-text-blue-200 tw-border tw-border-blue-400/40 tw-text-[0.8rem]" title="{{localize "WH40K.Climbing.SheerTooltip"}}">
+                            <i class="fas fa-icicles tw-text-blue-300"></i>
+                            <span>{{localize "WH40K.Climbing.SheerTooltip"}}</span>
+                        </div>
+                    {{/if}}
+                </div>
             {{/if}}
             {{#if hasSkillPanel}}
                 {{#with skillPanel as |panel|}}

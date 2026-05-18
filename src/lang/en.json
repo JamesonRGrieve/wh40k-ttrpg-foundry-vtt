@@ -175,6 +175,13 @@
             "HalvedIndicator": "Halved (untrained)",
             "UntrainedAdvancedBlocked": "Advanced skill — cannot attempt untrained."
         },
+        "Climbing": {
+            "SurfaceLabel": "Climbing Surface",
+            "Standard": "Standard (no modifier)",
+            "Sheer": "Sheer (Hard, -20)",
+            "Easy": "Easy / assisted (+10)",
+            "SheerTooltip": "Sheer cliffs, icy crevasses, smooth building walls, hive buttresses. Errata p. 113."
+        },
         "Possession": {
             "Title": "Possession",
             "StateNone": "Uncompromised",
@@ -925,6 +932,13 @@
             "Cancel": "Cancel",
             "ChatTitle": "Daemonhost Bound",
             "BoundAtTier": "Host bound at tier:"
+        },
+        "DaemonicImmunities": {
+            "BadgeLabel": "Daemonic",
+            "DiseaseImmune": "Immune to Disease",
+            "PoisonImmune": "Immune to Poison",
+            "Undying": "Undying",
+            "Tooltip": "Daemonic creatures are immune to disease and poison, and possess the Undying trait — once per session, the first time they would die they instead recover to 1 wound."
         },
         "SisterOfBattle": {
             "DialogTitle": "Apply Sister of Battle Elite Advance",
