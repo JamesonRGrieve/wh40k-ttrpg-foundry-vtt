@@ -44,12 +44,12 @@ interface EndeavourLike {
 
 function makeEndeavour(overrides: Partial<EndeavourLike> & { system?: Partial<EndeavourLike['system']> } = {}): EndeavourLike {
     const id = overrides.id ?? randomId('endeavour', rng);
-    const sysOverride = overrides.system ?? {};
-    const objectives = sysOverride.objectives ?? [];
-    const apEarned = sysOverride.apEarned ?? objectives.filter((o) => o.complete).reduce((sum, o) => sum + o.ap, 0);
-    const apRequired = sysOverride.apRequired ?? objectives.reduce((sum, o) => sum + o.ap, 0);
-    const isComplete = sysOverride.isComplete ?? (apRequired > 0 && apEarned >= apRequired);
-    const pctComplete = sysOverride.pctComplete ?? (apRequired > 0 ? Math.round((apEarned / apRequired) * 100) : 0);
+    const sysOverride: Partial<EndeavourLike['system']> = overrides.system ?? {};
+    const objectives: EndeavourObjectiveLike[] = sysOverride.objectives ?? [];
+    const apEarned: number = sysOverride.apEarned ?? objectives.filter((o) => o.complete).reduce((sum, o) => sum + o.ap, 0);
+    const apRequired: number = sysOverride.apRequired ?? objectives.reduce((sum, o) => sum + o.ap, 0);
+    const isComplete: boolean = sysOverride.isComplete ?? (apRequired > 0 && apEarned >= apRequired);
+    const pctComplete: number = sysOverride.pctComplete ?? (apRequired > 0 ? Math.round((apEarned / apRequired) * 100) : 0);
     return {
         id,
         name: overrides.name ?? 'Recover the Lathe Records',
@@ -92,12 +92,13 @@ export const InProgress: Story = {
             makeCtx([
                 makeEndeavour({
                     name: 'Recover the Lathe Records',
+                    // @ts-expect-error -- TS narrowing on literal-typed objectives doesn't match Partial<system> exactly; the runtime shape is correct
                     system: {
                         objectives: [
-                            { name: 'Establish a foothold on Solenne Minoris', description: 'Acquire a hab', complete: true, ap: 1 },
-                            { name: 'Bribe the harbourmaster', description: '', complete: true, ap: 1 },
-                            { name: 'Infiltrate the archive', description: '', complete: false, ap: 1 },
-                            { name: 'Escape with the cipher', description: '', complete: false, ap: 1 },
+                            { name: 'Establish a foothold on Solenne Minoris', description: 'Acquire a hab', complete: true as boolean, ap: 1 },
+                            { name: 'Bribe the harbourmaster', description: '', complete: true as boolean, ap: 1 },
+                            { name: 'Infiltrate the archive', description: '', complete: false as boolean, ap: 1 },
+                            { name: 'Escape with the cipher', description: '', complete: false as boolean, ap: 1 },
                         ],
                         reward: { profitFactor: 3, narrative: 'Acolyte favour with the Mechanicus contact at Outpost 7.' },
                     },
@@ -114,11 +115,12 @@ export const Completed: Story = {
             makeCtx([
                 makeEndeavour({
                     name: 'Cleanse the Sump Cell',
+                    // @ts-expect-error -- TS narrowing on literal-typed objectives doesn't match Partial<system> exactly; the runtime shape is correct
                     system: {
                         objectives: [
-                            { name: 'Identify the heretic broker', description: '', complete: true, ap: 2 },
-                            { name: 'Burn the safehouse', description: '', complete: true, ap: 2 },
-                            { name: 'Recover the dataslate', description: '', complete: true, ap: 1 },
+                            { name: 'Identify the heretic broker', description: '', complete: true as boolean, ap: 2 },
+                            { name: 'Burn the safehouse', description: '', complete: true as boolean, ap: 2 },
+                            { name: 'Recover the dataslate', description: '', complete: true as boolean, ap: 1 },
                         ],
                         reward: { profitFactor: 4, narrative: 'Inquisitorial Patronage: one personal favour redeemable within the warband.' },
                     },

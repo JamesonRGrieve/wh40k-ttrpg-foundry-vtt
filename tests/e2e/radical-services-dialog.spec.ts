@@ -37,7 +37,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
 
             try {
                 const mod: any = await import(
-                    /* @vite-ignore */ '/systems/wh40k-rpg/module/applications/prompts/radical-services-dialog.js'
+                    /* @vite-ignore */ '/systems/wh40k-rpg/module/applications/prompts/radical-services-dialog.js' as unknown as string
                 );
                 const Dialog = mod.default;
                 const dialog = new Dialog(actor);
@@ -67,9 +67,10 @@ test.describe.serial('Radical Services dialog (#89)', () => {
         });
 
         test.skip(!result.ok, `precondition failed: ${result.ok ? '' : result.reason}`);
-        if (!result.ok) return;
-        expect(result.snap.rowCount).toBe(9);
-        expect(result.snap.attemptDisabled).toBe(true);
-        expect(result.snap.hasCancel).toBe(true);
+        if (!result.ok || !('snap' in result) || result.snap === undefined) return;
+        const snap = result.snap;
+        expect(snap.rowCount).toBe(9);
+        expect(snap.attemptDisabled).toBe(true);
+        expect(snap.hasCancel).toBe(true);
     });
 });

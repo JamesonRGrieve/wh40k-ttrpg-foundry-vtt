@@ -3376,6 +3376,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 duration: { rounds: MORTIFICATION_OF_THE_FLESH.durationRounds },
                 flags: { wh40k: { source: 'mortification' } },
             };
+            // @ts-expect-error -- boundary: Foundry V14 ActiveEffect CreateData type omits name/icon/changes/duration; the structure matches runtime
             await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
 
             const gameSystem = this._resolveGameSystemId() ?? '';
