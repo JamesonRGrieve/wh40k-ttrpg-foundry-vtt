@@ -8,6 +8,7 @@
 
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { getInteractionCap } from '../../rules/disposition.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
@@ -270,6 +271,8 @@ export default class NPCSheet extends CharacterSheet {
             toggleAbilityDesc: NPCSheet.#toggleAbilityDesc,
             setTransactionMode: NPCSheet.#setTransactionMode,
             generateInventory: NPCSheet.#generateInventory,
+            // Interaction tally (DH2 errata p.125, #145)
+            adjustInteractionCount: NPCSheet.#adjustInteractionCount,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -377,8 +380,54 @@ export default class NPCSheet extends CharacterSheet {
         this._prepareWeaponsContext(context);
         this._prepareHordeContext(context);
         this._prepareItems(context);
+        this._prepareInteractionsContext(context);
 
         return context;
+    }
+
+    /**
+     * Prepare the per-PC interaction-tally context for the "Interaction Counts"
+     * panel (DH2 errata p.125, #145). Each PC actor in the world contributes
+     * one row showing how many qualifying interactions they've had with this
+     * NPC, capped by their Fellowship bonus.
+     *
+     * Storage lives on the NPC: `flags.wh40k-rpg.interactions[pcId] = number`.
+     * The cap is read from each PC's `system.characteristics.fellowship.bonus`.
+     *
+     * @param context The render context to mutate.
+     */
+    protected _prepareInteractionsContext(context: Record<string, unknown>): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry game globals are runtime-only.
+        const g = globalThis as unknown as { game?: { actors?: Iterable<{ id?: string; name?: string; type?: string; system?: unknown }> } };
+        const stored = (this.actor.getFlag('wh40k-rpg', 'interactions') as Record<string, number> | undefined) ?? {};
+        const rows: Array<{ pcId: string; pcName: string; count: number; cap: number; atCap: boolean }> = [];
+        const actors = g.game?.actors;
+        if (actors !== undefined) {
+            for (const a of actors) {
+                if (a.type === undefined) continue;
+                // PCs across all 7 systems use `<system>-character` actor types.
+                if (!a.type.endsWith('-character')) continue;
+                const pcId = a.id;
+                if (pcId === undefined || pcId === '') continue;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: cross-actor system shape varies per game system; narrowed below
+                const sys = a.system as { characteristics?: { fellowship?: { bonus?: number } } } | undefined;
+                const fb = sys?.characteristics?.fellowship?.bonus ?? 0;
+                const cap = getInteractionCap(fb);
+                const count = Math.max(0, Math.trunc(stored[pcId] ?? 0));
+                rows.push({
+                    pcId,
+                    pcName: a.name ?? pcId,
+                    count,
+                    cap,
+                    atCap: cap > 0 ? count >= cap : true,
+                });
+            }
+        }
+        rows.sort((x, y) => x.pcName.localeCompare(y.pcName));
+        context['npcInteractions'] = {
+            empty: rows.length === 0,
+            rows,
+        };
     }
 
     protected override _getSidebarHeaderFields(_gameSystem: GameSystemId | null): SidebarHeaderField[] {
@@ -1570,6 +1619,32 @@ export default class NPCSheet extends CharacterSheet {
         if (tag === undefined || tag === '') return;
         const tags = this.npcActor.system.tags.filter((t) => t !== tag);
         await this.actor.update({ 'system.tags': tags });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Adjust the per-PC interaction tally for this NPC by `data-delta`
+     * (typically ±1). Storage is `flags.wh40k-rpg.interactions[pcId]`. The
+     * count is clamped to zero on the low end; the cap is enforced visually
+     * only — the GM can intentionally push past it when narrative dictates.
+     *
+     * Errata reference: DH2 p.125 (#145).
+     *
+     * @param event Triggering pointer event.
+     * @param target Button element carrying `data-pc-id` and `data-delta`.
+     */
+    static async #adjustInteractionCount(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const pcId = target.dataset['pcId'];
+        const deltaRaw = target.dataset['delta'];
+        if (pcId === undefined || pcId === '') return;
+        const delta = Number.parseInt(deltaRaw ?? '0', 10);
+        if (!Number.isFinite(delta) || delta === 0) return;
+        const stored = (this.actor.getFlag('wh40k-rpg', 'interactions') as Record<string, number> | undefined) ?? {};
+        const prior = Math.max(0, Math.trunc(stored[pcId] ?? 0));
+        const next = Math.max(0, prior + delta);
+        await this.actor.setFlag('wh40k-rpg', 'interactions', { ...stored, [pcId]: next });
     }
 
     /* -------------------------------------------- */
