@@ -3,8 +3,9 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
-import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
+import { originStepLabel } from '../shared/origin-steps.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
+import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 
 /**
  * Data model for Origin Path items (homeworld, birthright, career, etc).
@@ -313,26 +314,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get stepLabel(): string {
-        const fallbackLabels: Record<string, string> = {
-            homeWorld: 'Home World',
-            birthright: 'Birthright',
-            lureOfTheVoid: 'Lure of the Void',
-            trialsAndTravails: 'Trials and Travails',
-            motivation: 'Motivation',
-            career: 'Career',
-            lineage: 'Lineage',
-            eliteAdvance: 'Elite Advance',
-        };
-
-        const step = this.step;
-        const key = step ? step.charAt(0).toUpperCase() + step.slice(1) : '';
-        const localizationKey = key !== '' ? `WH40K.OriginPath.${key}` : '';
-
-        if (localizationKey !== '' && game.i18n.has(localizationKey)) {
-            return game.i18n.localize(localizationKey);
-        }
-
-        return fallbackLabels[step] || step || '';
+        return originStepLabel(this.step);
     }
 
     /**

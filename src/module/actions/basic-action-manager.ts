@@ -3,7 +3,7 @@ import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-d
 import type { ActionData } from '../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
-import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import { uuid, postChatCard } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
@@ -126,15 +126,7 @@ export class BasicActionManager {
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped payload; Record<string, unknown> is the correct boundary type
-        const chatData: Record<string, unknown> = {
-            user: game.user.id,
-            rollMode: game.settings.get('core', 'rollMode'),
-            content: html,
-            rolls: damageRolls,
-        };
-        applyRollModeWhispers(chatData);
-        await ChatMessage.create(chatData);
+        await postChatCard(html, { rolls: damageRolls });
     }
 
     async _refundResources(event: Event): Promise<void> {
@@ -256,14 +248,9 @@ export class BasicActionManager {
             name: actorName,
             dos: String(actionData.rollData.dos),
         });
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped payload; Record<string, unknown> is the correct boundary type
-        const chatData: Record<string, unknown> = {
-            user: game.user.id,
-            rollMode: game.settings.get('core', 'rollMode'),
-            content: `<div class="wh40k-rpg tw-font-ui tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[var(--wh40k-powers-border)] tw-bg-[var(--wh40k-powers-bg)] tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.85rem]">${announcement}</div>`,
-        };
-        applyRollModeWhispers(chatData);
-        await ChatMessage.create(chatData);
+        await postChatCard(
+            `<div class="wh40k-rpg tw-font-ui tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[var(--wh40k-powers-border)] tw-bg-[var(--wh40k-powers-bg)] tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.85rem]">${announcement}</div>`,
+        );
     }
 
     async _assignDamage(event: Event): Promise<void> {
@@ -395,14 +382,7 @@ export class BasicActionManager {
     // eslint-disable-next-line no-restricted-syntax -- boundary: caller-supplied vocalize payload is untyped; Record<string, unknown> is the correct boundary type
     async sendItemVocalizeChat(data: Record<string, unknown>): Promise<void> {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped payload; Record<string, unknown> is the correct boundary type
-        const chatData: Record<string, unknown> = {
-            user: game.user.id,
-            content: html,
-            rollMode: game.settings.get('core', 'rollMode'),
-        };
-        applyRollModeWhispers(chatData);
-        await ChatMessage.create(chatData);
+        await postChatCard(html);
     }
 }
 

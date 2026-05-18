@@ -1,7 +1,7 @@
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
-import { bodyLocationsSchema } from '../shared/body-locations.ts';
+import { BODY_LOCATIONS, bodyLocationsSchema } from '../shared/body-locations.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
@@ -108,7 +108,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         const maxAgility = resolveLineVariant(data['maxAgility'], lineKey) as number | null | undefined;
 
         // Validate AP values (0-20 reasonable range)
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         for (const loc of locations) {
             const ap = armourPoints?.[loc];
             if (ap !== undefined && (ap < 0 || ap > 20)) {
@@ -291,7 +291,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         const coverage = this._getEffectiveCoverage();
         if (coverage.has('all')) return game.i18n.localize('WH40K.Coverage.All');
 
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         const covered = locations.filter((loc) => coverage.has(loc));
 
         if (covered.length === 0) return game.i18n.localize('WH40K.Coverage.None');
@@ -364,7 +364,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     _getEffectiveCoverage(): Set<string> {
         const inferred = new Set<string>();
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         for (const location of locations) {
             if (Number(this.armourPoints[location]) > 0) {
                 inferred.add(location);
@@ -392,7 +392,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get apSummary(): string {
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         const abbrs: Record<string, string> = { head: 'H', body: 'B', leftArm: 'LA', rightArm: 'RA', leftLeg: 'LL', rightLeg: 'RL' };
         const coverage = this._getEffectiveCoverage();
         const coveredLocations = coverage.has('all') || !coverage.size ? locations : locations.filter((loc) => coverage.has(loc));
@@ -459,7 +459,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get averageAP(): number {
         const coverage = this._getEffectiveCoverage();
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         const coveredLocs = coverage.has('all') ? locations : locations.filter((loc) => coverage.has(loc));
 
         if (coveredLocs.length === 0) return 0;
@@ -473,7 +473,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {number}
      */
     get maxAP(): number {
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         return Math.max(...locations.map((loc) => this.getEffectiveAPForLocation(loc)));
     }
 
@@ -482,7 +482,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {number}
      */
     get maxBaseAP(): number {
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         return Math.max(...locations.map((loc) => this.getAPForLocation(loc)));
     }
 
@@ -491,7 +491,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {number}
      */
     get locationCount(): number {
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         return locations.filter((loc) => this.getAPForLocation(loc) > 0).length;
     }
 
@@ -673,7 +673,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {boolean}
      */
     get imposesStealthPenalty(): boolean {
-        const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        const locations = BODY_LOCATIONS;
         return locations.some((loc) => this.getEffectiveAPForLocation(loc) > 7);
     }
 

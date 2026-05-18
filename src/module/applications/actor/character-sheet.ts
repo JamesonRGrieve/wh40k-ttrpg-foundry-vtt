@@ -17,6 +17,7 @@ import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/glob
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
+import * as EffectActions from '../api/effect-actions.ts';
 import * as StatActions from '../api/stat-adjustment-actions.ts';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
@@ -3329,24 +3330,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #toggleFavoriteSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset['skill'];
         if (skillKey === undefined || skillKey === '') return;
-
-        // Get current favorite skills
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
-        const index = favorites.indexOf(skillKey);
-
-        // Toggle. Storage order is irrelevant — _prepareFavoriteSkills sorts by display
-        // label at render time (#6), so add / remove / re-add is stable alphabetically.
-        if (index > -1) {
-            favorites.splice(index, 1);
-        } else {
-            favorites.push(skillKey);
-        }
-
-        // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteSkills', favorites);
-
-        // Re-render skills tab and overview tab
-        await this.render({ parts: ['skills', 'overview'] });
+        await this._toggleFavorite('favoriteSkills', skillKey, ['skills', 'overview']);
     }
 
     /* -------------------------------------------- */
@@ -3364,23 +3348,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Create a unique key for this specialist skill entry
         const favoriteKey = `${skillKey}:${entryIndex}`;
-
-        // Get current favorite specialist skills
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[] | undefined) ?? [];
-        const index = favorites.indexOf(favoriteKey);
-
-        // Storage order is irrelevant — render-time sort is authoritative (#6).
-        if (index > -1) {
-            favorites.splice(index, 1);
-        } else {
-            favorites.push(favoriteKey);
-        }
-
-        // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteSpecialistSkills', favorites);
-
-        // Re-render skills tab (specialist skills live here now)
-        await this.render({ parts: ['skills'] });
+        await this._toggleFavorite('favoriteSpecialistSkills', favoriteKey, ['skills']);
     }
 
     /* -------------------------------------------- */
@@ -3412,23 +3380,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #toggleFavoriteTalent(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
-
-        // Get current favorite talents
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
-        const index = favorites.indexOf(itemId);
-
-        // Storage order is irrelevant — render-time sort is authoritative (#6).
-        if (index > -1) {
-            favorites.splice(index, 1);
-        } else {
-            favorites.push(itemId);
-        }
-
-        // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteTalents', favorites);
-
-        // Re-render overview (favourite talents) and skills (full talent panel)
-        await this.render({ parts: ['overview', 'skills'] });
+        await this._toggleFavorite('favoriteTalents', itemId, ['overview', 'skills']);
     }
 
     /* -------------------------------------------- */
@@ -3503,15 +3455,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #createEffect(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
-            await this.actor.createEmbeddedDocuments('ActiveEffect', [
-                {
-                    name: 'New Effect',
-                    img: 'icons/svg/aura.svg',
-                    disabled: false,
-                    duration: {},
-                    changes: [],
-                },
-            ]);
+            await EffectActions.createEffect(this.effectsOwner, { disabled: false, duration: {}, changes: [] });
 
             this._notify('info', 'New effect created', {
                 duration: 2000,
@@ -3534,9 +3478,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #toggleEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const effectId = target.dataset['effectId'];
-            if (effectId === undefined || effectId === '') return;
-            const effect = this.actor.effects.get(effectId);
+            const effect = EffectActions.resolveEffect(this.effectsOwner, target);
 
             if (effect === undefined) {
                 this._notify('warning', 'Effect not found', {
@@ -3568,9 +3510,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #deleteEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const effectId = target.dataset['effectId'];
-            if (effectId === undefined || effectId === '') return;
-            const effect = this.actor.effects.get(effectId);
+            const effect = EffectActions.resolveEffect(this.effectsOwner, target);
 
             if (effect === undefined) {
                 this._notify('warning', 'Effect not found', {
@@ -3605,27 +3545,64 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * Shared roll handler for power / ritual / order list controls. They
+     * differed only by the notify label and console tag; homologated to all
+     * surface a "<label> not found" warning.
+     */
+    static async #rollItemAction(sheet: CharacterSheet, target: HTMLElement, label: string): Promise<void> {
+        try {
+            const itemId = target.dataset['itemId'];
+            if (itemId === undefined || itemId === '') return;
+            const item = sheet.actor.items.get(itemId);
+            if (item === undefined) {
+                sheet._notify('warning', `${label} not found`, { duration: 3000 });
+                return;
+            }
+            await sheet.actor.rollItem(itemId);
+        } catch (error) {
+            sheet._notify('error', `${label} roll failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error(`${label} roll error:`, error);
+        }
+    }
+
+    /**
+     * Shared vocalize-to-chat handler for power / ritual / order controls.
+     * Differed only by the chat-card CSS class and notify label.
+     */
+    static async #vocalizeItemAction(sheet: CharacterSheet, target: HTMLElement, label: string, cssClass: string): Promise<void> {
+        try {
+            const itemId = target.dataset['itemId'];
+            if (itemId === undefined || itemId === '') return;
+            const item = sheet.actor.items.get(itemId);
+            if (item === undefined) {
+                sheet._notify('warning', `${label} not found`, { duration: 3000 });
+                return;
+            }
+
+            if (typeof item.toChat === 'function') {
+                await item.toChat();
+            } else {
+                await ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({ actor: sheet.actor }),
+                    content: `<div class="${cssClass}"><h3>${item.name}</h3><p>${item.system.description.value}</p></div>`,
+                });
+            }
+        } catch (error) {
+            sheet._notify('error', `Failed to post ${label.toLowerCase()}: ${(error as Error).message}`, { duration: 5000 });
+            console.error(`Vocalize ${label.toLowerCase()} error:`, error);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Handle rolling a psychic or navigator power.
      * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollPower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            const item = this.actor.items.get(itemId);
-            if (item === undefined) {
-                this._notify('warning', 'Power not found', { duration: 3000 });
-                return;
-            }
-
-            // Use the actor's rollItem method for consistent handling
-            await this.actor.rollItem(itemId);
-        } catch (error) {
-            this._notify('error', `Power roll failed: ${(error as Error).message}`, { duration: 5000 });
-            console.error('Power roll error:', error);
-        }
+        await CharacterSheet.#rollItemAction(this, target, 'Power');
     }
 
     /* -------------------------------------------- */
@@ -3663,29 +3640,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #vocalizePower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            const item = this.actor.items.get(itemId);
-            if (item === undefined) {
-                this._notify('warning', 'Power not found', { duration: 3000 });
-                return;
-            }
-
-            // Post to chat using the item's vocalize or toChat method
-            if (typeof item.toChat === 'function') {
-                await item.toChat();
-            } else {
-                // Fallback: create a simple chat message
-                await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="wh40k-power-chat"><h3>${item.name}</h3><p>${item.system.description.value}</p></div>`,
-                });
-            }
-        } catch (error) {
-            this._notify('error', `Failed to post power: ${(error as Error).message}`, { duration: 5000 });
-            console.error('Vocalize power error:', error);
-        }
+        await CharacterSheet.#vocalizeItemAction(this, target, 'Power', 'wh40k-power-chat');
     }
 
     /* -------------------------------------------- */
@@ -3721,14 +3676,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            await this.actor.rollItem(itemId);
-        } catch (error) {
-            this._notify('error', `Ritual roll failed: ${(error as Error).message}`, { duration: 5000 });
-            console.error('Ritual roll error:', error);
-        }
+        await CharacterSheet.#rollItemAction(this, target, 'Ritual');
     }
 
     /* -------------------------------------------- */
@@ -3740,24 +3688,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #vocalizeRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            const item = this.actor.items.get(itemId);
-            if (item === undefined) return;
-
-            if (typeof item.toChat === 'function') {
-                await item.toChat();
-            } else {
-                await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="wh40k-ritual-chat"><h3>${item.name}</h3><p>${item.system.description.value}</p></div>`,
-                });
-            }
-        } catch (error) {
-            this._notify('error', `Failed to post ritual: ${(error as Error).message}`, { duration: 5000 });
-            console.error('Vocalize ritual error:', error);
-        }
+        await CharacterSheet.#vocalizeItemAction(this, target, 'Ritual', 'wh40k-ritual-chat');
     }
 
     /* -------------------------------------------- */
@@ -3769,14 +3700,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            await this.actor.rollItem(itemId);
-        } catch (error) {
-            this._notify('error', `Order roll failed: ${(error as Error).message}`, { duration: 5000 });
-            console.error('Order roll error:', error);
-        }
+        await CharacterSheet.#rollItemAction(this, target, 'Order');
     }
 
     /* -------------------------------------------- */
@@ -3788,24 +3712,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #vocalizeOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            const item = this.actor.items.get(itemId);
-            if (item === undefined) return;
-
-            if (typeof item.toChat === 'function') {
-                await item.toChat();
-            } else {
-                await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="wh40k-order-chat"><h3>${item.name}</h3><p>${item.system.description.value}</p></div>`,
-                });
-            }
-        } catch (error) {
-            this._notify('error', `Failed to post order: ${(error as Error).message}`, { duration: 5000 });
-            console.error('Vocalize order error:', error);
-        }
+        await CharacterSheet.#vocalizeItemAction(this, target, 'Order', 'wh40k-order-chat');
     }
 
     /* -------------------------------------------- */
