@@ -1,17 +1,7 @@
 {{! Rogue Trader Attack Special Sheet - Modern Design }}
 <form class="tw-flex tw-flex-col tw-h-full tw-overflow-hidden" autocomplete="off">
     {{! Header }}
-    <div class="tw-flex tw-items-center tw-gap-4 tw-p-4 tw-border-b-2 tw-border-[rgba(212,175,55,0.3)] tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.15)_0%,rgba(44,36,23,0.95)_100%)]">
-        <div class="tw-relative tw-shrink-0">
-            {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs imgOnly=true src=item.img alt=item.name title=item.name sizeClass="tw-h-16 tw-w-16" roundedClass="tw-rounded-lg" action=false imgClass="tw-border-2 tw-border-[rgba(212,175,55,0.3)] tw-transition-transform hover:tw-scale-105"}}
-        </div>
-        <div class="tw-flex-1 tw-min-w-0">
-            <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">Name</label>
-                <input class="tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-text-base tw-font-semibold" name="name" type="text" value="{{item.name}}" />
-            </div>
-        </div>
-    </div>
+    {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs hideTypeBadge=true}}
 
     {{! Main Fields }}
     <div class="tw-p-4 tw-border-b tw-border-[rgba(0,0,0,0.1)]">

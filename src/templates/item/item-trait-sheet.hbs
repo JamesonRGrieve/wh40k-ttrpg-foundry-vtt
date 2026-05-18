@@ -8,13 +8,9 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact trait identity with inline badges
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-traits-primary,#6a2090)_r_g_b_/_0.15)] tw-to-transparent tw-border-b-2 tw-border-b-[rgb(from_var(--wh40k-traits-primary,#6a2090)_r_g_b_/_0.3)] tw-shrink-0">
-      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-16 tw-h-16" roundedClass="tw-rounded-[6px]" frameClass="tw-border-2 tw-border-[var(--wh40k-bronze)] tw-transition-[transform,box-shadow] tw-duration-200" overlayBgClass="tw-bg-black/60" overlayTextClass="tw-text-white" overlayIconClass="tw-text-xl" extraClass="tw-shrink-0"}}
-
-      <div class="tw-flex-1 tw-min-w-0">
-        <input type="text" class="tw-w-full tw-px-2 tw-py-1 tw-m-0 tw-bg-transparent tw-border-none tw-border-b tw-border-b-transparent tw-font-display tw-text-xl tw-font-semibold tw-text-[color:var(--wh40k-text-dark)] tw-transition-colors focus:tw-outline-none focus:tw-border-b-[color:var(--wh40k-gold)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" name="name" value="{{item.name}}" placeholder="Trait Name" />
-
-        <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mt-1.5 tw-pl-2">
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Trait Name" hideTypeBadge=true }}
+      <div class="tw-flex tw-flex-col tw-gap-2">
+        <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-items-center">
           {{!-- Category Badge --}}
           <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-bg-[rgb(from_var(--wh40k-accent-combat,#8b0000)_r_g_b_/_0.15)] tw-border tw-border-[rgb(from_var(--wh40k-accent-combat,#8b0000)_r_g_b_/_0.3)] tw-text-[color:color-mix(in_srgb,var(--wh40k-accent-combat,#8b0000),white_15%)]" title="{{item.system.categoryLabel}}">
             <i class="fas fa-shield-alt"></i>
@@ -37,50 +33,48 @@
           </span>
           {{/if}}
         </div>
-      </div>
-    </header>
 
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         STATS BAR: Key trait info at a glance
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="tw-flex tw-flex-wrap tw-gap-0.5 tw-p-2 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-shrink-0">
-      {{!-- Category --}}
-      <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-        <div class="tw-text-base tw-text-[var(--wh40k-bronze)] tw-mb-1">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-          <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Category</span>
-          <span class="tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">{{item.system.categoryLabel}}</span>
-        </div>
-      </div>
+        {{!-- STATS BAR: Key trait info at a glance --}}
+        <div class="tw-flex tw-flex-wrap tw-gap-0.5">
+          {{!-- Category --}}
+          <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+            <div class="tw-text-base tw-text-[var(--wh40k-bronze)] tw-mb-1">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Category</span>
+              <span class="tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">{{item.system.categoryLabel}}</span>
+            </div>
+          </div>
 
-      {{!-- Level/Rating --}}
-      {{#if (gt item.system.level 0)}}
-      <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-        <div class="tw-text-base tw-text-[color:var(--wh40k-traits-primary,#6a2090)] tw-mb-1">
-          <i class="fas fa-layer-group"></i>
-        </div>
-        <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-          <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Level</span>
-          <span class="tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-traits-primary,#6a2090)]">{{item.system.level}}</span>
-        </div>
-      </div>
-      {{/if}}
+          {{!-- Level/Rating --}}
+          {{#if (gt item.system.level 0)}}
+          <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+            <div class="tw-text-base tw-text-[color:var(--wh40k-traits-primary,#6a2090)] tw-mb-1">
+              <i class="fas fa-layer-group"></i>
+            </div>
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Level</span>
+              <span class="tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-traits-primary,#6a2090)]">{{item.system.level}}</span>
+            </div>
+          </div>
+          {{/if}}
 
-      {{!-- Variable indicator --}}
-      {{#if item.system.isVariable}}
-      <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-        <div class="tw-text-base tw-text-[var(--wh40k-bronze)] tw-mb-1">
-          <i class="fas fa-question"></i>
-        </div>
-        <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-          <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Type</span>
-          <span class="tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">Variable (X)</span>
+          {{!-- Variable indicator --}}
+          {{#if item.system.isVariable}}
+          <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+            <div class="tw-text-base tw-text-[var(--wh40k-bronze)] tw-mb-1">
+              <i class="fas fa-question"></i>
+            </div>
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Type</span>
+              <span class="tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">Variable (X)</span>
+            </div>
+          </div>
+          {{/if}}
         </div>
       </div>
-      {{/if}}
-    </div>
+    {{/systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
