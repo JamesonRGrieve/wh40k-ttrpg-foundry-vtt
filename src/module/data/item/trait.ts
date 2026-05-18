@@ -58,8 +58,8 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
             // Level/rating (matching template.json)
             level: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
-            // Fear (X) — 0 disables, 1+ triggers Fear test on encounter.
-            fearRating: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            // Fear (X) — 0 disables, 1..4 triggers Fear test on encounter (RAW Fear 4 is the highest tier).
+            fearRating: new fields.NumberField({ required: true, initial: 0, min: 0, max: 4, integer: true }),
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
