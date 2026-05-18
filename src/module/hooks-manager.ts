@@ -61,6 +61,7 @@ import {
     PeerEnemySheet,
     JournalEntryItemSheet,
     EndeavourSheet,
+    LeadSheet,
     OriginPathSheet,
     WeaponModSheet,
     WeaponQualitySheet,
@@ -505,6 +506,7 @@ export class HooksManager {
             mentalDisorder: dataModels.MentalDisorderData,
             journalEntry: dataModels.JournalEntryItemData,
             endeavour: dataModels.EndeavourData,
+            lead: dataModels.LeadData,
             // NPC Templates
             npcTemplate: dataModels.NPCTemplateData,
         };
@@ -767,6 +769,13 @@ export class HooksManager {
             types: ['endeavour'],
             makeDefault: true,
             label: 'WH40K.Sheet.Endeavour',
+        });
+
+        // Investigation Lead sheet
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, LeadSheet, {
+            types: ['lead'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.Lead',
         });
 
         // Origin Path sheet

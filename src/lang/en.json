@@ -138,6 +138,29 @@
             "DegreesOfSuccess": "Degrees of Success",
             "DegreesOfFailure": "Degrees of Failure"
         },
+        "PsyMode": {
+            "Fettered": "Fettered",
+            "Unfettered": "Unfettered",
+            "Push": "Push",
+            "PushLevel": "Push Level",
+            "FetteredDesc": "Half PR. No phenomena chance.",
+            "UnfetteredDesc": "Full PR. Phenomena on doubles.",
+            "PushDesc": "PR + Push. Always triggers phenomena."
+        },
+        "Possession": {
+            "Title": "Possession",
+            "StateNone": "Uncompromised",
+            "StateLatent": "Latent",
+            "StatePossessed": "Possessed",
+            "UnleashTitle": "Unleash Daemon",
+            "UnleashCount": "Unleash Uses",
+            "UnleashUnavailable": "No Unleash Daemon uses remaining this session.",
+            "UnleashSpent": "Daemon unleashed.",
+            "ResetSession": "Reset",
+            "ResetSessionTitle": "Reset per-session Unleash Daemon counter (GM only)",
+            "ResetGmOnly": "Only the GM can reset the possession session counter.",
+            "ResetDone": "Possession session counter reset."
+        },
         "CharacteristicSetup": {
             "Title": "Characteristic Setup",
             "Instructions": "Enter your dice rolls in the bank, then drag them to assign to characteristics.",
@@ -315,6 +338,11 @@
         "FateAddDoSConfirmTitle": "Spend Fate: Add Degree of Success",
         "FateAddDoSConfirmContent": "Spend a Fate Point to add one Degree of Success to this test?",
         "FateAddDoSChat": "<strong>{name}</strong> spent a Fate Point to add a Degree of Success (now {dos} DoS).",
+        "DamageDieReplacement": {
+            "ButtonLabel": "Replace die with DoS",
+            "ButtonTooltip": "DH2 core rules (p. 247): replace one damage die with the attack's Degrees of Success ({dos}).",
+            "ReplacedDieMessage": "<strong>{weapon}</strong> replaced a damage die ({previous}) with {dos} DoS — new total: {total}."
+        },
         "Name": "Name",
         "Stat": "Stat",
         "Current": "Current",
@@ -649,6 +677,37 @@
                 "Stacked": "{name} stacked on {target} (\u00d7{stacks})"
             }
         },
+        "Lead": {
+            "Label": "Investigation Lead",
+            "Type": {
+                "Label": "Lead Type",
+                "Witness": "Witness",
+                "Document": "Document",
+                "Location": "Location",
+                "Other": "Other"
+            },
+            "State": {
+                "Label": "State",
+                "Active": "Active",
+                "Pursued": "Pursued",
+                "DeadEnd": "Dead End"
+            },
+            "SourceClue": {
+                "Label": "Source Clue",
+                "Placeholder": "Which clue produced this lead?"
+            },
+            "Description": {
+                "Label": "Description"
+            },
+            "Notes": {
+                "Label": "GM Notes",
+                "Placeholder": "Follow-up tracking, planned scenes..."
+            },
+            "Section": {
+                "Properties": "Lead Properties"
+            },
+            "NamePlaceholder": "Lead Name"
+        },
         "Sheet": {
             "Biography": {
                 "Contacts": "Contacts",
@@ -679,6 +738,7 @@
             "PeerEnemy": "Peer/Enemy Sheet",
             "JournalEntry": "Journal Entry Sheet",
             "Endeavour": "Endeavour Sheet",
+            "Lead": "Investigation Lead Sheet",
             "OriginPath": "Origin Path Sheet",
             "WeaponModification": "Weapon Modification Sheet",
             "ArmourModification": "Armour Modification Sheet",
@@ -1068,6 +1128,15 @@
         "Subtlety": {
             "ManualAdjustment": "GM adjustment",
             "Inquest": "Inquest pursued openly"
+        },
+        "DarkPact": {
+            "Header": "Dark Pacts",
+            "Boon": "Boon",
+            "Bane": "Bane",
+            "Disposition": "Disposition",
+            "Discovered": "Discovered",
+            "PaymentCurrent": "Payment Current",
+            "EmptyState": "No active Dark Pacts."
         },
         "Orders": {
             "Header": "Orders",
@@ -2599,6 +2668,22 @@
                 "Received": "{buyer} received {quantity}x {item} for {cost} {resource}.",
                 "Rejected": "Transaction request rejected by the GM."
             }
+        },
+        "DaemonWeaponAttribute": {
+            "DialogTitle": "Daemon Weapon Attribute Roller",
+            "Alignment": "Alignment",
+            "BindingStrength": "Binding Strength",
+            "RollButton": "Roll Attributes",
+            "PostButton": "Post to Chat",
+            "ChatTitle": "Daemon Weapon Attributes",
+            "AttributeLabel": "Attribute",
+            "EffectLabel": "Effect",
+            "AlignmentKhorne": "Khorne",
+            "AlignmentNurgle": "Nurgle",
+            "AlignmentSlaanesh": "Slaanesh",
+            "AlignmentTzeentch": "Tzeentch",
+            "AlignmentGeneral": "Unaligned",
+            "AlignmentUnaligned": "Unaligned"
         }
     }
 }
