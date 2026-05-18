@@ -150,6 +150,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/starship/tab-weapons.hbs',
             'systems/wh40k-rpg/templates/actor/starship/tab-crew.hbs',
             'systems/wh40k-rpg/templates/actor/starship/tab-history.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/tab-extended-actions.hbs',
+            'systems/wh40k-rpg/templates/chat/extended-action-chat.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-components-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-crew-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-points-budget-panel.hbs',

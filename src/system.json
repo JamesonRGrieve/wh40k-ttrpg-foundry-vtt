@@ -2990,6 +2990,18 @@
             "flags": {}
         },
         {
+            "name": "rt-items-ship-extended-actions",
+            "label": "Ship Extended Actions",
+            "path": "packs/rogue-trader/rt-items-ship-extended-actions",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-items-ship-roles",
             "label": "Ship Roles",
             "path": "packs/rogue-trader/rt-items-ship-roles",
@@ -4404,6 +4416,7 @@
                     "packs": [
                         "rt-items-navigator-powers",
                         "rt-items-origin-path",
+                        "rt-items-ship-extended-actions",
                         "rt-items-ship-roles",
                         "rt-items-ship-weapons",
                         "rt-journals-character-actions",
