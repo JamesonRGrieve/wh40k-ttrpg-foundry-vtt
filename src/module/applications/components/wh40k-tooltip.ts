@@ -510,22 +510,33 @@ export class TooltipsWH40K {
             `;
         }
 
+        // Issue #27: the previous labels — "[Chrstc] Value" and "Base (/2 untrained):"
+        // — were jargon-y and unexplained. The replacements spell out exactly what
+        // each number is: the characteristic's name + total, and the untrained roll
+        // target after the ÷2 halving (RT rule). The `CharacteristicLabel` template
+        // takes both the characteristic name and its total so the row reads as a
+        // self-contained sentence ("Characteristic: Perception (35)").
+        const characteristicRow = game.i18n.format('WH40K.Tooltip.Skill.CharacteristicLabel', {
+            name: characteristic,
+            value: charValue,
+        });
         html += `
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__breakdown">
                 <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">${characteristic} ${localize('WH40K.Tooltip.Skill.CharacteristicValue')}:</span>
-                    <span class="wh40k-tooltip__value">${charValue}</span>
+                    <span class="wh40k-tooltip__label">${characteristicRow}</span>
                 </div>
         `;
 
         // The half-characteristic untrained base is RT-specific (FFG Rogue Trader rule);
         // DH2e and other aptitude/career systems apply a flat -20 penalty rather than halving.
         if (level === 0 && gameSystem === 'rt') {
+            const untrainedTargetRow = game.i18n.format('WH40K.Tooltip.Skill.UntrainedTargetLabel', {
+                value: calculatedBase,
+            });
             html += `
                 <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Skill.UntrainedBase')}:</span>
-                    <span class="wh40k-tooltip__value">${calculatedBase}</span>
+                    <span class="wh40k-tooltip__label">${untrainedTargetRow}</span>
                 </div>
             `;
         }
