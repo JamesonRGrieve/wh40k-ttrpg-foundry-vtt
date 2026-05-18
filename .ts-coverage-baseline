@@ -87,6 +87,12 @@
       "tsExpectError": 0,
       "tsIgnore": 0
     },
+    "inventory": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
     "macros": {
       "any": 0,
       "asAny": 0,

@@ -1,3 +1,4 @@
+import { gameSystemPackPrefix } from './game-system-pack-prefix.ts';
 import { uuidNameCache } from './uuid-name-cache.ts';
 
 /**
@@ -48,12 +49,6 @@ interface ActorLike {
     update?: (data: Record<string, unknown>) => Promise<unknown>;
 }
 
-function packPrefixForActor(gameSystem: string | undefined): string {
-    if (gameSystem === 'dh1e') return 'dh1';
-    if (gameSystem === 'dh2e') return 'dh2';
-    return gameSystem ?? '';
-}
-
 export async function backfillOriginPathUuids(): Promise<void> {
     if (!uuidNameCache.isReady()) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors is a Foundry WorldCollection typed loosely by fvtt-types; narrowing to ActorLike shapes the surface we read on the next pass
@@ -64,7 +59,7 @@ export async function backfillOriginPathUuids(): Promise<void> {
         const sys = actor.system;
         const origin = sys?.originPath;
         if (origin == null) continue;
-        const prefix = packPrefixForActor(sys?.gameSystem);
+        const prefix = gameSystemPackPrefix(sys?.gameSystem);
         if (prefix.length === 0) continue;
 
         const updates: Record<string, string> = {};
