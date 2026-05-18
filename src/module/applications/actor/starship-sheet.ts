@@ -35,6 +35,10 @@ export default class StarshipSheet extends BaseActorSheet {
             validateBuild: StarshipSheet.#validateBuild,
             commitBuild: StarshipSheet.#commitBuild,
             dispatchExtendedAction: StarshipSheet.#dispatchExtendedAction,
+            dispatchManoeuvreAction: StarshipSheet.#dispatchManoeuvreAction,
+            raiseVoidShield: StarshipSheet.#raiseVoidShield,
+            lowerVoidShield: StarshipSheet.#lowerVoidShield,
+            restoreVoidShields: StarshipSheet.#restoreVoidShields,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['starship'],
@@ -80,6 +84,10 @@ export default class StarshipSheet extends BaseActorSheet {
             template: 'systems/wh40k-rpg/templates/actor/starship/tab-extended-actions.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
         },
+        manoeuvreActions: {
+            template: 'systems/wh40k-rpg/templates/actor/starship/tab-manoeuvre-actions.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+        },
     };
 
     /* -------------------------------------------- */
@@ -92,6 +100,7 @@ export default class StarshipSheet extends BaseActorSheet {
         { tab: 'crew', label: 'WH40K.Starship.Tabs.Crew', group: 'primary', cssClass: 'tab-crew' },
         { tab: 'history', label: 'WH40K.Starship.Tabs.History', group: 'primary', cssClass: 'tab-history' },
         { tab: 'extendedActions', label: 'WH40K.Starship.Tabs.ExtendedActions', group: 'primary', cssClass: 'tab-extended-actions' },
+        { tab: 'manoeuvreActions', label: 'WH40K.Starship.Tabs.ManoeuvreActions', group: 'primary', cssClass: 'tab-manoeuvre-actions' },
     ];
 
     /* -------------------------------------------- */
@@ -240,7 +249,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const partContext = await super._preparePartContext(partId, context, options as unknown as Record<string, unknown>);
 
         // Add tab metadata for tab parts
-        const tabParts = ['stats', 'components', 'weapons', 'crew', 'history', 'extendedActions'];
+        const tabParts = ['stats', 'components', 'weapons', 'crew', 'history', 'extendedActions', 'manoeuvreActions'];
         if (tabParts.includes(partId)) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: subclass TABS not on shipped ApplicationV2 ctor type
             const ctor = this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] };
@@ -256,6 +265,10 @@ export default class StarshipSheet extends BaseActorSheet {
 
         if (partId === 'extendedActions') {
             partContext['extendedActions'] = await this._prepareExtendedActions();
+        }
+
+        if (partId === 'manoeuvreActions') {
+            partContext['manoeuvreActions'] = await this._prepareManoeuvreActions();
         }
 
         return partContext;
@@ -371,38 +384,374 @@ export default class StarshipSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+
+    /**
+     * Resolve the list of starship Manoeuvre Actions to surface in the sheet.
+     *
+     * Mirrors `_prepareExtendedActions` but filters on the
+     * `manoeuvreAction: true` flag so the fixed RAW Rogue Trader /
+     * Battlefleet Koronus manoeuvre catalogue (Standard Move, Come to New
+     * Heading, Hard Brake, Adjust Speed, All Stop, Disengage, Ramming Speed,
+     * Evasive Manoeuvres, Burn Retros, Plot Course Change) surfaces as a
+     * separate tab from the broader Extended Actions list. Per Direction #7
+     * the source of truth is the compendium pack
+     * `rt-items-ship-manoeuvre-actions` — content is never hardcoded in
+     * `src/`.
+     *
+     * @issue #185
+     */
+    async _prepareManoeuvreActions(): Promise<
+        Array<{
+            uuid: string;
+            id: string;
+            name: string;
+            img: string;
+            skill: string;
+            modifier: number;
+            duration: string;
+            description: string;
+            requirements: string;
+            typeAndAction: string;
+        }>
+    > {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
+        const actor = this.actor as unknown as WH40KStarship;
+        const gameSystemId = (actor.system as { gameSystem?: string }).gameSystem ?? 'rt';
+
+        const out: Array<{
+            uuid: string;
+            id: string;
+            name: string;
+            img: string;
+            skill: string;
+            modifier: number;
+            duration: string;
+            description: string;
+            requirements: string;
+            typeAndAction: string;
+        }> = [];
+
+        const seenUuids = new Set<string>();
+
+        const pushItem = (item: WH40KItem, uuid: string): void => {
+            if (seenUuids.has(uuid)) return;
+            seenUuids.add(uuid);
+            const sys = item.system as {
+                shipAction?: boolean;
+                manoeuvreAction?: boolean;
+                gameSystems?: string[];
+                skill?: string;
+                modifier?: number;
+                duration?: string;
+                requirements?: string;
+                typeAndAction?: string;
+                description?: { value?: string };
+            };
+            if (sys.manoeuvreAction !== true) return;
+            const systems = sys.gameSystems ?? [];
+            if (systems.length > 0 && !systems.includes(gameSystemId)) return;
+            out.push({
+                uuid,
+                id: item.id ?? '',
+                name: item.name ?? '',
+                img: item.img ?? '',
+                skill: sys.skill ?? '',
+                modifier: sys.modifier ?? 0,
+                duration: sys.duration ?? '',
+                description: sys.description?.value ?? '',
+                requirements: sys.requirements ?? '',
+                typeAndAction: sys.typeAndAction ?? '',
+            });
+        };
+
+        // 1. Owned items already on the actor.
+        for (const item of actor.items) {
+            if (item.type !== 'order') continue;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem.uuid not in shipped types for our narrow view
+            const uuid = (item as unknown as { uuid?: string }).uuid ?? '';
+            if (uuid === '') continue;
+            pushItem(item, uuid);
+        }
+
+        // 2. Compendium pack: rt-items-ship-manoeuvre-actions (and any future per-system equivalent).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs typing in fvtt-types is loose
+        const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
+        const packId = `wh40k-rpg.${gameSystemId}-items-ship-manoeuvre-actions`;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
+        const pack = packs?.get?.(packId) as
+            | undefined
+            | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
+        if (pack?.getDocuments !== undefined) {
+            try {
+                const docs = await pack.getDocuments();
+                for (const doc of docs) {
+                    if (doc.type !== 'order') continue;
+                    pushItem(doc, doc.uuid);
+                }
+            } catch {
+                // Pack unavailable (e.g. during early sheet renders before world ready) — silently skip.
+            }
+        }
+
+        out.sort((a, b) => a.name.localeCompare(b.name));
+        return out;
+    }
+
+    /* -------------------------------------------- */
     /*  Event Handlers                              */
     /* -------------------------------------------- */
 
     /**
-     * Handle firing a ship weapon.
-     * @this {StarshipSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
+     * Handle firing a ship weapon (issue #184).
+     *
+     * Implements the RAW Rogue Trader Battlefleet Koronus resolution:
+     *   1. Roll a d100 BS test against the firing officer's BS (crewRating).
+     *   2. On success, by weapon class:
+     *      • Macrobattery — roll `strength` d6, every die ≥ 6 is one hit; the
+     *        weapon's base damage is dealt per hit.
+     *      • Lance — automatic single hit; void shields are ignored.
+     *      • Other (torpedo, nova-cannon, bombardment, etc.) — fall back to a
+     *        single hit pending dedicated resolution (out of scope for #184).
+     *   3. For each hit, void shields absorb damage when raised (one shield is
+     *      exhausted per macrobattery volley regardless of die count; lances
+     *      bypass shields entirely per BFK).
+     *   4. Damage that gets through reduces `hullIntegrity.value`.
+     *   5. Post a structured chat card with the full breakdown.
      */
     static async #fireShipWeapon(this: StarshipSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
         const actor = this.actor as unknown as WH40KStarship;
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const weapon = actor.items.get(itemId ?? '');
-        if (!weapon) return;
+        if (!weapon) {
+            ui.notifications?.warn(game.i18n.localize('WH40K.Starship.Combat.NoWeapon'));
+            return;
+        }
 
-        const cardData = {
-            actor,
-            weapon: weapon,
-            crewRating: (actor.system as { crew?: { crewRating?: number } }).crew?.crewRating ?? 30,
-            gameSystem: (actor.system as { gameSystem?: string }).gameSystem,
+        const sys = weapon.system as {
+            weaponType?: string;
+            strength?: number;
+            damage?: string;
+            crit?: number;
+            range?: number;
+            location?: string;
+            special?: Set<string> | string[];
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
+        const crewRating = (actor.system as { crew?: { crewRating?: number } }).crew?.crewRating ?? 30;
+        const weaponType = sys.weaponType ?? 'macrobattery';
+        const strength = sys.strength ?? 1;
+        const damageFormula = sys.damage ?? '1d10';
+
+        // ── BS Test (1d100 vs crewRating) ───────────────────────────────────
+        const bsRoll = await new Roll('1d100').evaluate();
+        const bsTotal = bsRoll.total ?? 100;
+        const bsSucceeded = bsTotal <= crewRating;
+        const dos = bsSucceeded ? Math.max(0, Math.floor((crewRating - bsTotal) / 10)) : 0;
+
+        // ── Hit resolution ──────────────────────────────────────────────────
+        let hits = 0;
+        let hitsRoll: Roll | undefined;
+        let damagePerHit = 0;
+        const ignoresShields = weaponType === 'lance';
+
+        if (bsSucceeded) {
+            if (weaponType === 'macrobattery') {
+                // Roll `strength` d6, count each ≥ 6 as a hit.
+                hitsRoll = await new Roll(`${strength}d6cs>=6`).evaluate();
+                hits = Number(hitsRoll.total ?? 0);
+            } else {
+                // Lance / fallback: single hit.
+                hits = 1;
+            }
+        }
+
+        // ── Damage roll (per hit) ───────────────────────────────────────────
+        const damageRolls: { total: number; formula: string }[] = [];
+        let totalDamage = 0;
+        for (let i = 0; i < hits; i += 1) {
+            const dmgRoll = await new Roll(damageFormula).evaluate();
+            const dmgTotal = Number(dmgRoll.total ?? 0);
+            damagePerHit = dmgTotal;
+            totalDamage += dmgTotal;
+            damageRolls.push({ total: dmgTotal, formula: damageFormula });
+        }
+
+        // ── Apply void shields (issue #184 RAW: shields absorb hits) ────────
+        const shieldStatusBefore = (actor.system as {
+            voidShieldsStatus?: { active?: number; exhausted?: number };
+        }).voidShieldsStatus ?? { active: 0, exhausted: 0 };
+        let shieldsActive = shieldStatusBefore.active ?? 0;
+        let shieldsExhausted = shieldStatusBefore.exhausted ?? 0;
+        let shieldedDamage = 0;
+        let appliedDamage = totalDamage;
+
+        if (!ignoresShields && hits > 0 && shieldsActive > 0) {
+            // One macrobattery volley exhausts at most one shield (regardless of
+            // how many dice came up ≥6); damage that pass through is the rest.
+            shieldedDamage = totalDamage; // entire volley absorbed by one shield
+            appliedDamage = 0;
+            shieldsActive -= 1;
+            shieldsExhausted += 1;
+        }
+
+        // ── Apply hull damage ───────────────────────────────────────────────
+        const hullBefore = (actor.system as { hullIntegrity?: { value?: number; max?: number } }).hullIntegrity ?? { value: 0, max: 0 };
+        const hullCurrentBefore = hullBefore.value ?? 0;
+        const hullCurrentAfter = Math.max(0, hullCurrentBefore - appliedDamage);
+
+        // ── Persist actor state (hull + shield exhaustion) ──────────────────
+        if (appliedDamage > 0 || (!ignoresShields && hits > 0 && shieldStatusBefore.active !== shieldsActive)) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
+            const updates: Record<string, unknown> = {};
+            if (appliedDamage > 0) {
+                updates['system.hullIntegrity.value'] = hullCurrentAfter;
+            }
+            if (!ignoresShields && hits > 0) {
+                updates['system.voidShieldsStatus.active'] = shieldsActive;
+                updates['system.voidShieldsStatus.exhausted'] = shieldsExhausted;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+            await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update(updates);
+        }
+
+        // ── Build chat card ─────────────────────────────────────────────────
+        const cardData = {
+            actor,
+            weapon,
+            crewRating,
+            gameSystem: (actor.system as { gameSystem?: string }).gameSystem,
+            resolution: {
+                weaponType,
+                weaponTypeLabel: game.i18n.localize(
+                    `WH40K.ShipWeapon.Type.${weaponType
+                        .split('-')
+                        .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+                        .join('')}`,
+                ),
+                location: sys.location ?? 'dorsal',
+                strength,
+                damageFormula,
+                bs: {
+                    target: crewRating,
+                    total: bsTotal,
+                    succeeded: bsSucceeded,
+                    dos,
+                },
+                hits,
+                hitsFormula: hitsRoll?.formula ?? '',
+                damageRolls,
+                totalDamage,
+                ignoresShields,
+                shieldedDamage,
+                appliedDamage,
+                shieldsBefore: shieldStatusBefore.active ?? 0,
+                shieldsAfter: ignoresShields ? shieldStatusBefore.active ?? 0 : shieldsActive,
+                hullBefore: hullCurrentBefore,
+                hullAfter: hullCurrentAfter,
+                hullMax: hullBefore.max ?? 0,
+            },
+        };
+        // Silence "unused-binding" lints; damagePerHit is computed for callers/tests.
+        void damagePerHit;
+
+        const html = await foundry.applications.handlebars.renderTemplate(
+            'systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs',
+            cardData,
+        );
 
         const speaker = ChatMessage.getSpeaker({
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
             actor: actor as unknown as Actor.Implementation,
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
-        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = {
+            user: game.user.id,
+            speaker,
+            content: html,
+            rolls: [bsRoll, ...(hitsRoll ? [hitsRoll] : [])],
+        } as unknown as Parameters<typeof ChatMessage.create>[0];
         void ChatMessage.create(payload);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Raise one void shield (issue #184). Increments `voidShieldsStatus.active`
+     * up to the hull's `voidShields` cap, drawing from the exhausted pool if
+     * any are available, otherwise refusing the request (the hull only has so
+     * many emitters). Players use this to bring a previously dropped shield
+     * back online when the round resets.
+     */
+    static async #raiseVoidShield(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
+        const actor = this.actor as unknown as WH40KStarship;
+        const sys = actor.system as {
+            voidShields?: number;
+            voidShieldsStatus?: { active?: number; exhausted?: number };
+        };
+        const max = sys.voidShields ?? 0;
+        const active = sys.voidShieldsStatus?.active ?? 0;
+        const exhausted = sys.voidShieldsStatus?.exhausted ?? 0;
+        if (active >= max) {
+            ui.notifications?.info(game.i18n.localize('WH40K.Starship.Combat.AllShieldsUp'));
+            return;
+        }
+        if (exhausted <= 0) {
+            ui.notifications?.warn(game.i18n.localize('WH40K.Starship.Combat.NoShieldsExhausted'));
+            return;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
+        await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+            'system.voidShieldsStatus.active': active + 1,
+            'system.voidShieldsStatus.exhausted': exhausted - 1,
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Lower one void shield (issue #184). Manually drops an active shield
+     * without spending it — used when the captain orders shields lowered (e.g.
+     * to vent heat, allow teleportation, or other RAW edge cases). The
+     * dropped shield moves to the exhausted pool.
+     */
+    static async #lowerVoidShield(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
+        const actor = this.actor as unknown as WH40KStarship;
+        const sys = actor.system as {
+            voidShieldsStatus?: { active?: number; exhausted?: number };
+        };
+        const active = sys.voidShieldsStatus?.active ?? 0;
+        const exhausted = sys.voidShieldsStatus?.exhausted ?? 0;
+        if (active <= 0) {
+            ui.notifications?.info(game.i18n.localize('WH40K.Starship.Combat.AllShieldsDown'));
+            return;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
+        await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+            'system.voidShieldsStatus.active': active - 1,
+            'system.voidShieldsStatus.exhausted': exhausted + 1,
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Restore all exhausted shields at end of round (issue #184). Resets
+     * `voidShieldsStatus` so `active` equals the configured `voidShields` max
+     * and `exhausted` returns to zero. Called by the GM at round refresh.
+     */
+    static async #restoreVoidShields(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
+        const actor = this.actor as unknown as WH40KStarship;
+        const max = (actor.system as { voidShields?: number }).voidShields ?? 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
+        await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+            'system.voidShieldsStatus.active': max,
+            'system.voidShieldsStatus.exhausted': 0,
+        });
+        ui.notifications?.info(game.i18n.localize('WH40K.Starship.Combat.ShieldsRestored'));
     }
 
     /* -------------------------------------------- */
@@ -552,6 +901,79 @@ export default class StarshipSheet extends BaseActorSheet {
 
         const html = await foundry.applications.handlebars.renderTemplate(
             'systems/wh40k-rpg/templates/chat/extended-action-chat.hbs',
+            cardData,
+        );
+
+        const speaker = ChatMessage.getSpeaker({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
+            actor: actor as unknown as Actor.Implementation,
+        });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
+        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        void ChatMessage.create(payload);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Dispatch a starship Manoeuvre Action to chat (issue #185).
+     *
+     * Locates the manoeuvre action either by `data-action-uuid` (compendium
+     * or world) or `data-action-id` (owned), renders the manoeuvre-action
+     * chat card template, and posts it to the chat log. Mechanical
+     * resolution (Pilot (Spacecraft) Tests, Manoeuvrability modifiers,
+     * heading updates) is intentionally out of scope at this stage and
+     * remains a follow-up.
+     */
+    static async #dispatchManoeuvreAction(this: StarshipSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
+        const actor = this.actor as unknown as WH40KStarship;
+        const uuid = target.dataset['actionUuid'] ?? '';
+        const itemId = target.dataset['actionId'] ?? '';
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.fromUuid is loosely typed in fvtt-types
+        const fromUuidFn = (globalThis as unknown as { fromUuid?: (uuid: string) => Promise<unknown> }).fromUuid;
+        let item: WH40KItem | undefined;
+        if (uuid !== '' && fromUuidFn !== undefined) {
+            try {
+                item = (await fromUuidFn(uuid)) as WH40KItem | undefined;
+            } catch {
+                item = undefined;
+            }
+        }
+        if (item === undefined && itemId !== '') {
+            item = actor.items.get(itemId);
+        }
+        if (item === undefined) {
+            ui.notifications?.warn(game.i18n.localize('WH40K.Starship.ManoeuvreAction.Empty'));
+            return;
+        }
+
+        const sys = item.system as {
+            skill?: string;
+            modifier?: number;
+            duration?: string;
+            requirements?: string;
+            typeAndAction?: string;
+            description?: { value?: string };
+        };
+        const cardData = {
+            action: {
+                name: item.name ?? '',
+                img: item.img ?? '',
+                skill: sys.skill ?? '',
+                modifier: sys.modifier ?? 0,
+                duration: sys.duration ?? '',
+                requirements: sys.requirements ?? '',
+                typeAndAction: sys.typeAndAction ?? '',
+                description: sys.description?.value ?? '',
+            },
+            actorName: actor.name ?? '',
+            gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
+        };
+
+        const html = await foundry.applications.handlebars.renderTemplate(
+            'systems/wh40k-rpg/templates/chat/manoeuvre-action-chat.hbs',
             cardData,
         );
 

@@ -13,6 +13,7 @@ import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/exte
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, assertField } from '../../../../stories/test-helpers';
+import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
 import extendedActionsTabSrc from '../../../templates/actor/starship/tab-extended-actions.hbs?raw';
 import headerSrc from '../../../templates/actor/starship/header.hbs?raw';
 import statsTabSrc from '../../../templates/actor/starship/tab-stats.hbs?raw';
@@ -26,6 +27,7 @@ const headerTpl = Handlebars.compile(headerSrc);
 const tabsTpl = Handlebars.compile(tabsSrc);
 const statsTabTpl = Handlebars.compile(statsTabSrc);
 const extendedActionsTabTpl = Handlebars.compile(extendedActionsTabSrc);
+const shipWeaponChatTpl = Handlebars.compile(shipWeaponChatSrc);
 
 function renderStarshipSheet(ctx: SheetContextLike): HTMLElement {
     const tpl = Handlebars.compile(`
@@ -174,6 +176,218 @@ function renderExtendedActionsPanel(ctx: SheetContextLike): HTMLElement {
     `);
     return renderTemplate(tpl, ctx);
 }
+
+// ── Issue #184 — Macrobattery Firing chat card ──────────────────────────────
+//
+// Renders the resolved BFK macrobattery firing pass to chat: BS test passed,
+// 4 hits from a strength-6 pool, base damage applied to hull after one void
+// shield absorbed the volley. The story is data-driven so the visual snapshot
+// is deterministic across runs.
+
+interface ShipWeaponChatCtx extends Record<string, unknown> {
+    actor: { name: string };
+    weapon: {
+        _id: string;
+        name: string;
+        img: string;
+        system: {
+            weaponType: string;
+            location: string;
+            strength: number;
+            damage: string;
+            crit: number;
+            range: number;
+            special: string;
+        };
+    };
+    crewRating: number;
+    gameSystem: string;
+    resolution: {
+        weaponType: string;
+        weaponTypeLabel: string;
+        location: string;
+        strength: number;
+        damageFormula: string;
+        bs: { target: number; total: number; succeeded: boolean; dos: number };
+        hits: number;
+        hitsFormula: string;
+        damageRolls: Array<{ total: number; formula: string }>;
+        totalDamage: number;
+        ignoresShields: boolean;
+        shieldedDamage: number;
+        appliedDamage: number;
+        shieldsBefore: number;
+        shieldsAfter: number;
+        hullBefore: number;
+        hullAfter: number;
+        hullMax: number;
+    };
+}
+
+function mockShipWeaponChatCtx(overrides?: Partial<ShipWeaponChatCtx>): ShipWeaponChatCtx {
+    return {
+        actor: { name: 'Sword of Terra' },
+        weapon: {
+            _id: 'macrobattery-1',
+            name: 'Sunsear Laser Battery',
+            img: 'icons/weapons/artillery/cannon-engraved-bronze.webp',
+            system: {
+                weaponType: 'macrobattery',
+                location: 'prow',
+                strength: 6,
+                damage: '1d10+2',
+                crit: 5,
+                range: 9,
+                special: '',
+            },
+        },
+        crewRating: 45,
+        gameSystem: 'rt',
+        resolution: {
+            weaponType: 'macrobattery',
+            weaponTypeLabel: 'Macrobattery',
+            location: 'prow',
+            strength: 6,
+            damageFormula: '1d10+2',
+            bs: { target: 45, total: 28, succeeded: true, dos: 1 },
+            hits: 4,
+            hitsFormula: '6d6cs>=6',
+            damageRolls: [
+                { total: 8, formula: '1d10+2' },
+                { total: 11, formula: '1d10+2' },
+                { total: 6, formula: '1d10+2' },
+                { total: 9, formula: '1d10+2' },
+            ],
+            totalDamage: 34,
+            ignoresShields: false,
+            shieldedDamage: 34,
+            appliedDamage: 0,
+            shieldsBefore: 2,
+            shieldsAfter: 1,
+            hullBefore: 35,
+            hullAfter: 35,
+            hullMax: 35,
+        },
+        ...overrides,
+    };
+}
+
+export const MacrobatteryFiring: StoryObj<ShipWeaponChatCtx> = {
+    name: 'Issue #184 — Macrobattery Firing chat card',
+    args: mockShipWeaponChatCtx(),
+    render: (args) => {
+        const wrapper = document.createElement('div');
+        // Outer `.wh40k-rpg` ancestor is required so Tailwind utilities scoped
+        // by `important: '.wh40k-rpg'` actually take effect. Per-system
+        // variants then cascade from `data-wh40k-system="rt"`.
+        wrapper.className = 'wh40k-rpg tw-p-4';
+        wrapper.setAttribute('data-wh40k-system', String(args.gameSystem ?? 'rt'));
+        wrapper.innerHTML = shipWeaponChatTpl(args);
+        return wrapper;
+    },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Weapon name and per-class label both render.
+        await expect(canvas.getByText('Sunsear Laser Battery')).toBeVisible();
+        await expect(canvas.getAllByText(/Macrobattery/).length).toBeGreaterThanOrEqual(1);
+        // BS Test row renders with the success badge.
+        await expect(canvas.getByText(/BS Test/i)).toBeVisible();
+        // Hits pool with total = 4.
+        await expect(canvas.getByText(/Hits/i)).toBeVisible();
+        // Aftermath panels.
+        await expect(canvas.getByText(/Shield absorbed/i)).toBeVisible();
+        await expect(canvas.getByText(/Hull/i)).toBeVisible();
+    },
+};
+
+export const LanceFiring: StoryObj<ShipWeaponChatCtx> = {
+    name: 'Issue #184 — Lance Firing (bypasses shields)',
+    args: mockShipWeaponChatCtx({
+        weapon: {
+            _id: 'lance-1',
+            name: 'Titanforge Lance',
+            img: 'icons/weapons/artillery/cannon-engraved-bronze.webp',
+            system: {
+                weaponType: 'lance',
+                location: 'dorsal',
+                strength: 1,
+                damage: '1d10+4',
+                crit: 3,
+                range: 6,
+                special: '',
+            },
+        },
+        resolution: {
+            weaponType: 'lance',
+            weaponTypeLabel: 'Lance Weapon',
+            location: 'dorsal',
+            strength: 1,
+            damageFormula: '1d10+4',
+            bs: { target: 45, total: 31, succeeded: true, dos: 1 },
+            hits: 1,
+            hitsFormula: '',
+            damageRolls: [{ total: 13, formula: '1d10+4' }],
+            totalDamage: 13,
+            ignoresShields: true,
+            shieldedDamage: 0,
+            appliedDamage: 13,
+            shieldsBefore: 2,
+            shieldsAfter: 2,
+            hullBefore: 35,
+            hullAfter: 22,
+            hullMax: 35,
+        },
+    }),
+    render: (args) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'wh40k-rpg tw-p-4';
+        wrapper.setAttribute('data-wh40k-system', String(args.gameSystem ?? 'rt'));
+        wrapper.innerHTML = shipWeaponChatTpl(args);
+        return wrapper;
+    },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByText('Titanforge Lance')).toBeVisible();
+        await expect(canvas.getByText(/Lance bypasses shields/i)).toBeVisible();
+    },
+};
+
+export const MacrobatteryMiss: StoryObj<ShipWeaponChatCtx> = {
+    name: 'Issue #184 — Macrobattery Miss',
+    args: mockShipWeaponChatCtx({
+        resolution: {
+            weaponType: 'macrobattery',
+            weaponTypeLabel: 'Macrobattery',
+            location: 'prow',
+            strength: 6,
+            damageFormula: '1d10+2',
+            bs: { target: 45, total: 87, succeeded: false, dos: 0 },
+            hits: 0,
+            hitsFormula: '',
+            damageRolls: [],
+            totalDamage: 0,
+            ignoresShields: false,
+            shieldedDamage: 0,
+            appliedDamage: 0,
+            shieldsBefore: 2,
+            shieldsAfter: 2,
+            hullBefore: 35,
+            hullAfter: 35,
+            hullMax: 35,
+        },
+    }),
+    render: (args) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'wh40k-rpg tw-p-4';
+        wrapper.setAttribute('data-wh40k-system', String(args.gameSystem ?? 'rt'));
+        wrapper.innerHTML = shipWeaponChatTpl(args);
+        return wrapper;
+    },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByText(/Miss/i)).toBeVisible();
+    },
+};
 
 export const ExtendedActions: Story = {
     name: 'Issue #186 — Extended Actions panel',
