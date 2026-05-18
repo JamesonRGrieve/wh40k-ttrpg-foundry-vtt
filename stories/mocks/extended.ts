@@ -115,6 +115,8 @@ function systemSpecificDefaults(systemId: SystemId): Record<string, unknown> {
             return { advanceScheme: 'core', insanityPoints: 0 };
         case 'dh2':
             return { background: 'imperial-guard', motivation: 'duty', divination: '' };
+        default:
+            return systemId satisfies never;
     }
 }
 

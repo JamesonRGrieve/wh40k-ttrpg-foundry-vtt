@@ -268,7 +268,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 try {
                     const renderResult = ui?.controls?.render?.(true);
                     if (renderResult && typeof (renderResult as { then?: unknown }).then === 'function') {
-                        await renderResult;
+                        await Promise.resolve(renderResult);
                     }
                     // Render is async; allow the hook callback to flush.
                     await new Promise((r) => setTimeout(r, 100));
