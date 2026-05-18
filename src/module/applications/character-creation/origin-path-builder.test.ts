@@ -3,6 +3,7 @@ import { afterAll, describe, expect, it, vi } from 'vitest';
 const ORIGINAL_GAME = (globalThis as Record<string, unknown>)['game'];
 const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>)['foundry'];
 const ORIGINAL_UI = (globalThis as Record<string, unknown>)['ui'];
+const ORIGINAL_ROLL = (globalThis as Record<string, unknown>)['Roll'];
 
 class FakeApplicationV2 {}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: TS mixin class spec requires `any[]` rest, not `unknown[]`
@@ -105,10 +106,22 @@ vi.mock('./origin-roll-dialog.ts', () => ({
     },
 };
 
+class FakeRoll {
+    total: number;
+    constructor(public formula: string) {
+        this.total = 42;
+    }
+    async evaluate(): Promise<this> {
+        return this;
+    }
+}
+(globalThis as Record<string, unknown>)['Roll'] = FakeRoll;
+
 afterAll(() => {
     (globalThis as Record<string, unknown>)['game'] = ORIGINAL_GAME;
     (globalThis as Record<string, unknown>)['foundry'] = ORIGINAL_FOUNDRY;
     (globalThis as Record<string, unknown>)['ui'] = ORIGINAL_UI;
+    (globalThis as Record<string, unknown>)['Roll'] = ORIGINAL_ROLL;
 });
 
 const { default: OriginPathBuilder } = await import('./origin-path-builder.ts');
@@ -295,5 +308,66 @@ describe('OriginPathBuilder preview action', () => {
         expect(host.previewedOrigin).toBeNull();
         expect(host.render).not.toHaveBeenCalled();
         expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.OriginNotAvailable');
+    });
+});
+
+describe('OriginPathBuilder rollDivination (issue #199)', () => {
+    function makeDivinationHost() {
+        return {
+            _divination: '',
+            _saveScrollPosition: vi.fn(),
+            render: vi.fn().mockResolvedValue(undefined),
+        };
+    }
+
+    it('falls back to a 1d100 roll when the Divination table is absent', async () => {
+        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
+        g['tables'] = undefined;
+        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+
+        const host = makeDivinationHost();
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(host._divination).toBe('WH40K.OriginPath.DivinationTableUnavailable');
+        expect(host.render).toHaveBeenCalledTimes(1);
+        expect(host._saveScrollPosition).toHaveBeenCalledTimes(1);
+    });
+
+    it('treats an empty world RollTable as unavailable and never calls draw()', async () => {
+        const draw = vi.fn();
+        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
+        g['tables'] = { getName: () => ({ results: { size: 0 }, draw }) };
+        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+
+        const host = makeDivinationHost();
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(draw).not.toHaveBeenCalled();
+        expect(host._divination).toBe('WH40K.OriginPath.DivinationTableUnavailable');
+    });
+
+    it('uses the drawn result text when a populated table exists', async () => {
+        const draw = vi.fn().mockResolvedValue({ results: [{ text: 'Trust in your fear.' }] });
+        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
+        g['tables'] = { getName: () => ({ results: { size: 100 }, draw }) };
+        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+
+        const host = makeDivinationHost();
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(draw).toHaveBeenCalledTimes(1);
+        expect(host._divination).toBe('Trust in your fear.');
     });
 });
