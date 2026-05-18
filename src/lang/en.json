@@ -138,6 +138,13 @@
             "DegreesOfSuccess": "Degrees of Success",
             "DegreesOfFailure": "Degrees of Failure"
         },
+        "Assistance": {
+            "Label": "Assistants",
+            "Tooltip": "Each assistant grants +10 to the test, up to the table cap (core.md §\"Assistance\", p. 25).",
+            "PlusButton": "Add an assistant (+10)",
+            "MinusButton": "Remove an assistant",
+            "BreakdownLine": "Assistance"
+        },
         "PsyMode": {
             "Fettered": "Fettered",
             "Unfettered": "Unfettered",
@@ -168,6 +175,25 @@
             "ChatBody": "{name} mortifies the flesh, accepting fatigue in exchange for unshakable resolve.",
             "DurationLabel": "Duration",
             "WpBonusLabel": "Willpower bonus"
+        },
+        "Shock": {
+            "Header": "Shock",
+            "Value": "Current",
+            "SnapOutLabel": "Snap Out of It",
+            "SnapOutTooltip": "Willpower test (Challenging +0). Success: reduce Shock by 1.",
+            "ChatTitle": "Snap Out of It",
+            "SuccessText": "Resolve holds — shock recedes (−1).",
+            "FailureText": "The mind reels. Shock holds."
+        },
+        "Fanatic": {
+            "ButtonLabel": "Death to All Who Oppose Me",
+            "ButtonTooltip": "Spend 1 Fate point to gain +10 Weapon Skill and +10 Ballistic Skill for 5 rounds.",
+            "ChatTitle": "Death to All Who Oppose Me",
+            "ChatBody": "{name} screams defiance and hurls themselves at the foe — death to all who oppose them.",
+            "DurationLabel": "Duration (rounds)",
+            "WsBonusLabel": "Weapon Skill bonus",
+            "BsBonusLabel": "Ballistic Skill bonus",
+            "NoFatePoints": "No Fate points remaining to spend."
         },
         "CharacteristicSetup": {
             "Title": "Characteristic Setup",
