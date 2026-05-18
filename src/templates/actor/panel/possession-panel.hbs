@@ -1,0 +1,72 @@
+{{!--
+    Possession Panel — Daemonic possession track (#82, beyond.md p.69).
+
+    Displays the actor's current possession state (latent / possessed),
+    the per-session Unleash Daemon counter, and exposes the Unleash
+    Daemon action plus a GM-only "Reset Session" control.
+
+    Rendered only when `system.possession.state !== 'none'`; the call
+    site in tab-status.hbs gates the include with `{{#if (neq ...)}}`.
+--}}
+<section class="wh40k-possession-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure"
+         data-possession-state="{{system.possession.state}}">
+
+    {{!-- Header: title + state badge --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-ghost tw-text-crimson dh2e:tw-text-crimson rt:tw-text-amber-700 im:tw-text-failure"></i>
+            <span>{{localize "WH40K.Possession.Title"}}</span>
+        </h3>
+        <span class="wh40k-possession-state-badge tw-px-2 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]
+                     {{#if (eq system.possession.state 'possessed')}}tw-bg-crimson/30 tw-text-crimson-light tw-border tw-border-solid tw-border-crimson{{else}}{{#if (eq system.possession.state 'latent')}}tw-bg-gold-dark/20 tw-text-gold tw-border tw-border-solid tw-border-gold-raw{{else}}tw-bg-black/20 tw-text-[color:var(--wh40k-text-muted)]{{/if}}{{/if}}">
+            {{#if (eq system.possession.state 'possessed')}}{{localize "WH40K.Possession.StatePossessed"}}{{else}}{{#if (eq system.possession.state 'latent')}}{{localize "WH40K.Possession.StateLatent"}}{{else}}{{localize "WH40K.Possession.StateNone"}}{{/if}}{{/if}}
+        </span>
+    </header>
+
+    {{!-- Unleash counter --}}
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-py-1">
+        <span class="tw-flex tw-items-center tw-gap-1.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.03em]">
+            <i class="fas fa-bolt"></i>
+            <span>{{localize "WH40K.Possession.UnleashCount"}}</span>
+        </span>
+        <span class="wh40k-possession-counter tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]">
+            <span class="wh40k-possession-used">{{system.possession.unleashUsed}}</span>
+            <span class="tw-text-[color:var(--wh40k-text-muted)]"> / </span>
+            <span class="wh40k-possession-max">{{system.possession.unleashMax}}</span>
+        </span>
+    </div>
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-items-center tw-gap-2">
+        <button type="button"
+                class="wh40k-possession-unleash-btn tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                       tw-px-2 tw-py-1.5 tw-rounded tw-bg-crimson/20 tw-border tw-border-solid tw-border-crimson/60
+                       tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-bright)]
+                       tw-cursor-pointer tw-transition-colors hover:tw-bg-crimson/40
+                       disabled:tw-opacity-40 disabled:tw-cursor-not-allowed disabled:hover:tw-bg-crimson/20
+                       dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure"
+                data-action="unleashDaemon"
+                title="{{localize 'WH40K.Possession.UnleashTitle'}}"
+                {{#unless (lt system.possession.unleashUsed system.possession.unleashMax)}}disabled{{/unless}}>
+            <i class="fas fa-bolt"></i>
+            <span>{{localize "WH40K.Possession.UnleashTitle"}}</span>
+        </button>
+
+        {{#if isGM}}
+            <button type="button"
+                    class="wh40k-possession-reset-btn tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                           tw-px-2 tw-py-1.5 tw-rounded tw-bg-transparent tw-border tw-border-solid
+                           tw-border-[color:var(--wh40k-border-color-light)]
+                           tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-medium)]
+                           tw-cursor-pointer tw-transition-colors hover:tw-text-[color:var(--wh40k-text-bright)]"
+                    data-action="resetPossessionSession"
+                    title="{{localize 'WH40K.Possession.ResetSessionTitle'}}">
+                <i class="fas fa-rotate-left"></i>
+                <span>{{localize "WH40K.Possession.ResetSession"}}</span>
+            </button>
+        {{/if}}
+    </div>
+</section>

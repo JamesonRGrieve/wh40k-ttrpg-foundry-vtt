@@ -17,6 +17,11 @@
 
             {{!-- Insanity Panel --}}
             {{> systems/wh40k-rpg/templates/actor/panel/insanity-panel.hbs}}
+
+            {{!-- Possession Panel (#82) — only when the possession track is engaged --}}
+            {{#if (neq system.possession.state 'none')}}
+                {{> systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs}}
+            {{/if}}
         </div>
 
         {{!-- Right Column --}}
@@ -34,4 +39,7 @@
             {{> systems/wh40k-rpg/templates/actor/panel/active-effects-panel.hbs}}
         </div>
     </div>
+
+    {{!-- Dark Pacts (Enemies Beyond p. 72, #84). Renders only when at least one pact is active. --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs}}
 </section>
