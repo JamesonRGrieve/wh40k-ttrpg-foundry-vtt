@@ -162,6 +162,9 @@
             "journalEntry": {
                 "htmlFields": ["description.value"]
             },
+            "lead": {
+                "htmlFields": ["description.value"]
+            },
             "malignancy": {
                 "htmlFields": ["description.value"]
             },

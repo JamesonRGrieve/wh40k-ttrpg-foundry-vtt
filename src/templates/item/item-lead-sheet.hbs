@@ -1,0 +1,111 @@
+{{!--
+  Investigation Lead Item Sheet
+  Single-pane summary: state pill, type, source clue, GM notes.
+--}}
+<div class="tw-flex tw-flex-col tw-h-full">
+  <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+
+    {{!-- HEADER --}}
+    <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-16 tw-h-16" frameClass="" overlayIcon=item.system.leadTypeIcon overlayBgClass="tw-bg-black/60" overlayTextClass="" overlayIconClass="" extraClass="tw-shrink-0"}}
+
+      <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text"
+               class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1"
+               name="name"
+               value="{{item.name}}"
+               placeholder="{{localize 'WH40K.Lead.NamePlaceholder'}}" />
+
+        <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-black/30 dh2e:tw-text-gold-raw" title="{{localize 'WH40K.Lead.State.Label'}}">
+            <i class="fas {{item.system.stateIcon}}"></i>
+            {{item.system.stateLabel}}
+          </span>
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-black/30" title="{{localize 'WH40K.Lead.Type.Label'}}">
+            <i class="fas {{item.system.leadTypeIcon}}"></i>
+            {{item.system.leadTypeLabel}}
+          </span>
+        </div>
+      </div>
+    </header>
+
+    {{!-- CONTENT --}}
+    <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+
+      {{!-- State + Type --}}
+      <div class="tw-mb-3">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-magnifying-glass tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Lead.Section.Properties"}}</h3>
+        </div>
+        <div class="tw-p-3">
+          <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+            <div class="tw-flex tw-flex-col tw-gap-1">
+              <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Lead.State.Label"}}</label>
+              <select name="system.state" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+                <option value="active" {{#if (eq item.system.state "active")}}selected{{/if}}>{{localize "WH40K.Lead.State.Active"}}</option>
+                <option value="pursued" {{#if (eq item.system.state "pursued")}}selected{{/if}}>{{localize "WH40K.Lead.State.Pursued"}}</option>
+                <option value="dead-end" {{#if (eq item.system.state "dead-end")}}selected{{/if}}>{{localize "WH40K.Lead.State.DeadEnd"}}</option>
+              </select>
+            </div>
+            <div class="tw-flex tw-flex-col tw-gap-1">
+              <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Lead.Type.Label"}}</label>
+              <select name="system.leadType" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+                <option value="witness" {{#if (eq item.system.leadType "witness")}}selected{{/if}}>{{localize "WH40K.Lead.Type.Witness"}}</option>
+                <option value="document" {{#if (eq item.system.leadType "document")}}selected{{/if}}>{{localize "WH40K.Lead.Type.Document"}}</option>
+                <option value="location" {{#if (eq item.system.leadType "location")}}selected{{/if}}>{{localize "WH40K.Lead.Type.Location"}}</option>
+                <option value="other" {{#if (eq item.system.leadType "other")}}selected{{/if}}>{{localize "WH40K.Lead.Type.Other"}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Source clue --}}
+      <div class="tw-mb-3">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-fingerprint tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Lead.SourceClue.Label"}}</h3>
+        </div>
+        <div class="tw-p-3">
+          <input type="text"
+                 name="system.sourceClue"
+                 value="{{item.system.sourceClue}}"
+                 placeholder="{{localize 'WH40K.Lead.SourceClue.Placeholder'}}"
+                 class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+        </div>
+      </div>
+
+      {{!-- Description / narrative --}}
+      <div class="tw-mb-3">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-book tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Lead.Description.Label"}}</h3>
+        </div>
+        <div class="tw-p-2">
+          {{#if inEditMode}}
+          {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+          {{else}}
+          <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
+          {{/if}}
+        </div>
+      </div>
+
+      {{!-- GM notes --}}
+      <div class="tw-mb-3">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-sticky-note tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Lead.Notes.Label"}}</h3>
+        </div>
+        <div class="tw-p-3">
+          <textarea name="system.notes"
+                    rows="3"
+                    placeholder="{{localize 'WH40K.Lead.Notes.Placeholder'}}"
+                    class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+</div>
