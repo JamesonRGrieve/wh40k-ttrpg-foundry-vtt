@@ -14,6 +14,7 @@ import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data
 import { Hit } from '../../rolls/damage-data.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
+import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
 import * as StatActions from '../api/stat-adjustment-actions.ts';
@@ -794,7 +795,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const stepNames: Record<string, Set<string>> = {};
 
-        const prefix = gameSystem === 'dh2e' ? 'dh2' : gameSystem === 'dh1e' ? 'dh1' : gameSystem;
+        const prefix = gameSystemPackPrefix(gameSystem);
         const relevantPacks = [...game.packs].filter((pack) => {
             if (pack.documentName !== 'Item') return false;
             const packName = pack.metadata.name;
@@ -1317,7 +1318,7 @@ export default class CharacterSheet extends BaseActorSheet {
     protected _prepareEncumbrancePercents(loadoutContext: { encumbrancePercent?: number; backpackPercent?: number }): void {
         if (!('encumbrance' in this.actor)) return;
         const enc = (this.actor as { encumbrance: { max?: number; value?: number; backpack_max?: number; backpack_value?: number } }).encumbrance;
-        const encMax = enc.max || 1;
+        const encMax = enc.max !== undefined && enc.max > 0 ? enc.max : 1;
         loadoutContext.encumbrancePercent = Math.min(100, Math.round(((enc.value ?? 0) / encMax) * 100));
         const backpackMax = enc.backpack_max ?? 1;
         loadoutContext.backpackPercent = Math.min(100, Math.round(((enc.backpack_value ?? 0) / backpackMax) * 100));

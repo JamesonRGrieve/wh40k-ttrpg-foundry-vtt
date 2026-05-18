@@ -9,6 +9,7 @@
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
+import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
@@ -268,6 +269,7 @@ export default class NPCSheet extends CharacterSheet {
             toggleGMTools: NPCSheet.#toggleGMTools,
             toggleAbilityDesc: NPCSheet.#toggleAbilityDesc,
             setTransactionMode: NPCSheet.#setTransactionMode,
+            generateInventory: NPCSheet.#generateInventory,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -1658,6 +1660,18 @@ export default class NPCSheet extends CharacterSheet {
         await TransactionManager.setMode(this.npcActor, mode);
         ui.notifications.info(`${this.npcActor.name} source mode set to ${mode}.`);
         await this.render(false);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Open the compendium-driven inventory generator for this NPC / vendor.
+     * @param {Event} event - The triggering event.
+     */
+    static async #generateInventory(this: NPCSheet, event: Event): Promise<void> {
+        event.preventDefault();
+        const applied = await InventoryGeneratorDialog.show(this.npcActor);
+        if (applied !== null && applied > 0) await this.render(false);
     }
 
     /* -------------------------------------------- */
