@@ -51,8 +51,11 @@ interface AnyGame {
 
 function localize(key: string): string {
     const g = globalThis as unknown as { game?: AnyGame };
-    const fn = g.game?.i18n?.localize;
-    return fn?.(key) ?? key;
+    // Inline-chained call preserves `this` binding; extracting via
+    // `const fn = g.game?.i18n?.localize` and calling `fn(key)` loses it,
+    // causing Foundry's localize to throw "Cannot read properties of
+    // undefined (reading 'translations')" when it accesses `this.translations`.
+    return g.game?.i18n?.localize?.(key) ?? key;
 }
 
 const CHARACTERISTIC_LABEL: Record<GrenadeSaveCharacteristic, string> = {
