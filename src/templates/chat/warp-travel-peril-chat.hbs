@@ -1,0 +1,28 @@
+{{!-- Perils of the Warp chat card (#193) — d100 lookup outcome. --}}
+<div class="wh40k-rpg wh40k-warp-peril-card tw-p-4 tw-rounded-md tw-border tw-border-red-700 tw-bg-[rgba(28,12,12,0.88)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-fire tw-text-[1.1rem] tw-text-red-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-red-200">
+            {{localize "WH40K.WarpTravel.PerilChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#fbe9e9]">
+        <span class="tw-text-red-300">d100</span> = <span class="tw-tabular-nums tw-font-bold">{{rolled}}</span>
+        {{#if peril}}
+            — <strong class="tw-text-red-200">{{peril.name}}</strong>
+        {{else}}
+            — <em class="tw-text-amber-300">{{localize "WH40K.WarpTravel.PerilTableGap"}}</em>
+        {{/if}}
+    </div>
+
+    {{#if peril}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(220,38,38,0.45)] tw-bg-[rgba(127,29,29,0.18)] tw-text-[0.85rem] tw-text-[#fde2e2]">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-red-300 tw-mb-1">
+                {{localize "WH40K.WarpTravel.EffectLabel"}}
+            </div>
+            <div>{{peril.effect}}</div>
+        </div>
+    {{/if}}
+</div>

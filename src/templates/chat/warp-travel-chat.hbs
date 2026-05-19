@@ -1,0 +1,49 @@
+{{!-- Warp Travel journey chat card (#193). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
+<div class="wh40k-rpg wh40k-warp-travel-card tw-p-4 tw-rounded-md tw-border tw-border-indigo-500 tw-bg-[rgba(15,12,28,0.88)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-route tw-text-[1.1rem] tw-text-indigo-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-indigo-200">
+            {{localize "WH40K.WarpTravel.ChatTitle"}}
+        </div>
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-indigo-300">{{localize "WH40K.WarpTravel.Stage.Duration"}}</span>
+            <span class="tw-tabular-nums tw-text-[#e8e4d9]">{{inputs.baseDays}} → {{result.elapsedDays}} {{localize "WH40K.WarpTravel.Days"}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-indigo-300">{{localize "WH40K.WarpTravel.Stage.LocateAstronomican"}}</span>
+            <span class="tw-tabular-nums {{#if (eq result.locate.status "success")}}tw-text-emerald-300{{else}}tw-text-rose-300{{/if}}">
+                {{result.locate.rolled}} / {{result.locate.target}}
+                {{#if result.locate.beaconLost}}<span class="tw-text-red-300">⚠</span>{{/if}}
+            </span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-indigo-300">{{localize "WH40K.WarpTravel.Stage.ChartCourse"}}</span>
+            <span class="tw-tabular-nums">{{result.chart.rolled}} / {{result.chart.target}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-indigo-300">{{localize "WH40K.WarpTravel.Stage.SteerVessel"}}</span>
+            <span class="tw-tabular-nums">{{result.steer.rolled}} / {{result.steer.target}} ×{{result.steer.durationMultiplier}}{{#if result.offCourse}} <span class="tw-text-red-300">⚠ {{localize "WH40K.WarpTravel.OffCourse"}}</span>{{/if}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-indigo-300">{{localize "WH40K.WarpTravel.Stage.LeaveWarp"}}</span>
+            <span class="tw-tabular-nums">{{result.leave.rolled}} / {{result.leave.target}}{{#if result.translationDeviation}} <span class="tw-text-amber-300">±{{result.leave.deviationSeverity}}</span>{{/if}}</span>
+        </li>
+    </ul>
+
+    {{#if result.beaconLost}}
+        <div class="tw-p-2 tw-mb-2 tw-rounded-sm tw-border tw-border-red-700 tw-bg-[rgba(127,29,29,0.25)] tw-text-[0.85rem] tw-text-red-200">
+            <i class="fas fa-exclamation-triangle"></i> {{localize "WH40K.WarpTravel.BeaconLostNote"}}
+        </div>
+    {{/if}}
+
+    {{#if result.offCourse}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-amber-700 tw-bg-[rgba(120,53,15,0.25)] tw-text-[0.85rem] tw-text-amber-200">
+            <i class="fas fa-compass"></i> {{localize "WH40K.WarpTravel.OffCourseNote"}}
+        </div>
+    {{/if}}
+</div>
