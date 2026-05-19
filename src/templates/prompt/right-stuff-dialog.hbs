@@ -1,0 +1,73 @@
+{{!-- Right Stuff Fate-spend dialog — Ace role (without.md L948-L980, #100). --}}
+{{!-- Button is gated on `eligible` (Ace role + ≥1 Fate + non-IM system). --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="{{gameSystem}}">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-amber-300 tw-italic">
+        {{localize "WH40K.RightStuff.DialogIntro"}}
+    </div>
+
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-300">
+            {{localize "WH40K.RightStuff.OperatorLabel"}}
+        </label>
+        <div class="tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[rgba(196,135,29,0.35)] tw-bg-[rgba(78,49,6,0.25)] tw-text-amber-100 tw-text-sm tw-font-semibold">
+            {{actorName}}
+        </div>
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-grid tw-grid-cols-2 tw-gap-2 tw-text-[0.85rem] tw-mb-4">
+        <li class="tw-flex tw-flex-col tw-gap-0.5 tw-px-3 tw-py-2 tw-rounded-sm tw-border tw-border-[rgba(196,135,29,0.25)] tw-bg-[rgba(78,49,6,0.12)]">
+            <span class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-300">{{localize "WH40K.RightStuff.AgilityBonusLabel"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-amber-100 tw-text-base">{{agilityBonus}}</span>
+        </li>
+        <li class="tw-flex tw-flex-col tw-gap-0.5 tw-px-3 tw-py-2 tw-rounded-sm tw-border tw-border-[rgba(196,135,29,0.25)] tw-bg-[rgba(78,49,6,0.12)]">
+            <span class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-300">{{localize "WH40K.RightStuff.FateRemainingLabel"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-amber-100 tw-text-base">{{fateValue}}</span>
+        </li>
+    </ul>
+
+    {{#if eligible}}
+        <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-300">
+                {{localize "WH40K.RightStuff.SkillLabel"}}
+            </label>
+            <div class="tw-grid tw-grid-cols-2 tw-gap-2">
+                {{#each skills}}
+                    <button type="button"
+                            data-action="selectSkill"
+                            data-skill="{{this.key}}"
+                            class="tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[rgba(196,135,29,0.4)] tw-text-amber-100 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.06em] tw-cursor-pointer {{#if (eq this.key ../selectedSkill)}}tw-bg-gradient-to-br tw-from-amber-500 tw-to-amber-800 tw-text-[#fffbeb] tw-shadow-[0_2px_8px_rgba(196,135,29,0.4)]{{else}}tw-bg-[rgba(78,49,6,0.2)]{{/if}}">
+                        {{localize this.labelKey}}
+                    </button>
+                {{/each}}
+            </div>
+        </div>
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(196,135,29,0.4)] tw-bg-[rgba(78,49,6,0.18)] tw-text-[0.85rem] tw-text-amber-100 tw-mb-2">
+            {{localize "WH40K.RightStuff.AutoSuccessNote"}}
+        </div>
+    {{else}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(248,113,113,0.4)] tw-bg-[rgba(127,29,29,0.2)] tw-text-[0.85rem] tw-text-red-200 tw-mb-2">
+            {{#unless isAce}}
+                {{localize "WH40K.RightStuff.NotAce"}}
+            {{else}}
+                {{localize "WH40K.RightStuff.NoFate"}}
+            {{/unless}}
+        </div>
+    {{/if}}
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(196,135,29,0.25)]">
+        <button type="button"
+                data-action="spendRightStuff"
+                {{#unless eligible}}disabled{{/unless}}
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-amber-500 tw-to-amber-800 tw-text-[#fffbeb] tw-shadow-[0_4px_12px_rgba(196,135,29,0.35)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed">
+            <i class="fas fa-star"></i> {{localize "WH40K.RightStuff.SpendButton"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.RightStuff.Cancel"}}
+        </button>
+    </div>
+
+</div>
