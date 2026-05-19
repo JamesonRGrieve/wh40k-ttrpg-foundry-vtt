@@ -42,7 +42,8 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
                         await inst.render(true);
                         await new Promise((r) => setTimeout(r, 60));
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        const e = err as Error;
+                        error = String(e?.stack ?? e?.message ?? err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -52,11 +53,10 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
                         }
                         hasThrowButton = inst.element.querySelector('[data-action="throw"]') !== null;
                     }
-                    try {
-                        await inst.close();
-                    } catch {
-                        /* ignore */
-                    }
+                    // Keep the dialog open and on a handle so snap() (called
+                    // outside this evaluate) captures the live DOM. Closing
+                    // here would leave the screenshot empty.
+                    (globalThis as any).__c9dialog = inst;
                 } catch (err) {
                     error = String((err as Error)?.message ?? err);
                 }
@@ -66,6 +66,19 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
             });
 
             await snap(page, 'grenade-throw-dialog');
+
+            // Dialog captured; tear it down so it doesn't leak into the next test's DOM.
+            await page.evaluate(async () => {
+                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
+                const d = (globalThis as any).__c9dialog;
+                try {
+                    await d?.close?.();
+                } catch {
+                    /* ignore */
+                }
+                (globalThis as any).__c9dialog = undefined;
+                /* eslint-enable @typescript-eslint/no-explicit-any */
+            });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'dialog did not render').toBe(true);
