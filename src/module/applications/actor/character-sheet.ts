@@ -1479,14 +1479,15 @@ export default class CharacterSheet extends BaseActorSheet {
 
         type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
 
-        // Untrained-skill rules diverge by system. Rogue Trader (FFG legacy) halves
-        // the characteristic when untrained; DH2 / BC / DW / OW / IM apply a flat
-        // -20 penalty (DH2 core.md p.95 "Untrained Skill Use"). See wh40k-tooltip.ts
-        // for the same gate around the untrained-target display.
+        // Untrained-skill rules diverge by system. The aptitude/career family
+        // (DH2 + BC/DW/OW/IM, and DH1 Errata which extended aptitudes) applies
+        // a flat -20 penalty (DH2 core.md p.95 "Untrained Skill Use"). FFG
+        // Rogue Trader is the halving outlier and lives on its own sheet class.
+        // See wh40k-tooltip.ts for the same gate around the untrained-target
+        // display.
         const systemId = this._resolveGameSystemId();
-        const untrainedHalves = systemId === 'rt' || systemId === 'dh1';
-        const untrainedPenalty = untrainedHalves ? 0 : -20;
-        const adjustUntrained = (base: number): number => (untrainedHalves ? Math.floor(base / 2) : base + untrainedPenalty);
+        const isAptitudeSystem = systemId === 'dh2e' || systemId === 'dh1e' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
+        const adjustUntrained = (base: number): number => (isAptitudeSystem ? base - 20 : Math.floor(base / 2));
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
         const dodgeSkill = skills['dodge'] as unknown as SkillBits | undefined;
