@@ -477,7 +477,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         for (const key of CHARS) {
             this._charAssignments[key] = assignments[key] ?? null;
-            this._charCustomBases[key] = customBases[key] ?? defaultBase;
+            // `||` (not `??`) so any legacy persisted-as-0 custom base from
+            // the pre-fix input handler is rescued on next open — a stored 0
+            // is invalid for character generation, fall back to defaultBase.
+            this._charCustomBases[key] = customBases[key] || defaultBase;
         }
         this._charAdvancedMode = customBases.enabled === true;
 
@@ -1003,7 +1006,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const charData = (this._actorSys().characteristics?.[key] ?? {}) as Partial<WH40KCharacteristic>;
             const assignedIndex = this._charAssignments[key] ?? null;
             const rollValue = assignedIndex !== null ? this._charRolls[assignedIndex] ?? null : null;
-            const base = this._charAdvancedMode ? this._charCustomBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
+            // `||` (not `??`) so a stored custom base of 0 (legacy bad data,
+            // see fix in input handler) falls back to DEFAULT_BASE rather
+            // than zero-out the rendered preview.
+            const base = this._charAdvancedMode ? this._charCustomBases[key] || DEFAULT_BASE : DEFAULT_BASE;
             const originBonus = originBonuses.totals[key] ?? 0;
             const total = rollValue !== null ? base + rollValue + originBonus : null;
 
@@ -1498,7 +1504,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const key = el.dataset['characteristic'];
                 if (key === undefined || key === '') return;
                 let value = parseInt(el.value, 10);
-                if (Number.isNaN(value) || value < 0) value = 0;
+                // Empty / invalid / negative input → fall back to the setting
+                // default base (20 + offset), NOT 0. A custom base of 0 is
+                // never meaningful for character generation, and previously
+                // got persisted into customBases and re-loaded as 0, which
+                // made every committed characteristic equal just its rolled
+                // value (8/13/15…) — the "stats all <20" regression.
+                if (Number.isNaN(value) || value <= 0) value = WH40KSettings.getCharacteristicBase();
                 this._charCustomBases[key] = value;
                 void this.render();
             });
@@ -4392,7 +4404,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const settingDefaultBase = WH40KSettings.getCharacteristicBase();
                 for (const key of CHARS) {
                     charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
-                    const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] ?? settingDefaultBase : settingDefaultBase;
+                    // `||` (not `??`) so a stored custom base of 0 (legacy
+                    // bad data, see fix in input handler) falls back to
+                    // settingDefaultBase rather than zero-out .base on commit.
+                    const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] || settingDefaultBase : settingDefaultBase;
                     const rollIndex = charAssignments[key] ?? null;
                     const rolled = rollIndex !== null && (charRolls[rollIndex] ?? 0) > 0 ? charRolls[rollIndex] ?? 0 : 0;
                     const originBonus = originModSums[key] ?? 0;
