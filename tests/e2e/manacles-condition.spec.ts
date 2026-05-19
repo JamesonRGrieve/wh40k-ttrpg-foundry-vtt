@@ -1,0 +1,111 @@
+import { joinAsGM } from './lib/join';
+import { snap } from './lib/screenshot';
+import { expect, test } from './lib/test';
+
+/**
+ * Manacles tracked condition visual regression (#105 — errata p. 176).
+ *
+ * Creates a `dh2-character`, applies the Manacled ActiveEffect (the
+ * condition that imposes −40 BS / −40 WS), opens the actor sheet,
+ * snaps with the sheet OPEN, and asserts the condition is visible on
+ * the rendered Active Effects panel.
+ *
+ * The condition itself is registered in
+ * `src/module/rules/active-effects.ts:conditions.manacled` and applied
+ * via `src/module/rules/manacles.ts:applyManaclesCondition`. This test
+ * exercises the full render path: AE creation → sheet render → DOM
+ * presence of the AE row.
+ */
+test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page }) => {
+    const joined = await joinAsGM(page);
+    test.skip(!joined, 'no Gamemaster user available in this test world');
+
+    const result = await page.evaluate(async () => {
+        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+        const g = globalThis as any;
+        const Actor = g.Actor;
+        if (!Actor?.create) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create unavailable' };
+
+        let actor;
+        try {
+            actor = await Actor.create({
+                name: 'manacles-probe',
+                type: 'dh2-character',
+                system: { gameSystem: 'dh2e' },
+            });
+        } catch (err) {
+            return { setupOk: false, aeFound: false, effectCount: 0, error: String((err as Error)?.message ?? err) };
+        }
+        if (!actor) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create returned null' };
+
+        // Apply the Manacled ActiveEffect directly. This mirrors what
+        // `applyManaclesCondition` does at runtime; using the raw API
+        // avoids depending on the system bundle's export surface in
+        // the page evaluation context.
+        try {
+            await actor.createEmbeddedDocuments('ActiveEffect', [
+                {
+                    name: 'Manacled',
+                    icon: 'icons/svg/chains.svg',
+                    changes: [
+                        { key: 'system.characteristics.ballisticSkill.modifier', mode: 2, value: -40 },
+                        { key: 'system.characteristics.weaponSkill.modifier', mode: 2, value: -40 },
+                    ],
+                    flags: { 'wh40k-rpg': { manacles: true, nature: 'harmful' } },
+                },
+            ]);
+        } catch (err) {
+            return { setupOk: false, aeFound: false, effectCount: 0, error: `AE create failed: ${String((err as Error)?.message ?? err)}` };
+        }
+
+        await actor.sheet.render(true);
+        await new Promise((r) => setTimeout(r, 250));
+
+        try {
+            actor.sheet?.changeTab?.('status', 'primary');
+            await new Promise((r) => setTimeout(r, 150));
+        } catch {
+            /* fall back to whatever tab is open */
+        }
+
+        const root = actor.sheet?.element;
+        const effectRows = root?.querySelectorAll?.('[data-effect-id]') ?? [];
+        let aeFound = false;
+        for (const row of Array.from(effectRows) as Element[]) {
+            const text = row.textContent ?? '';
+            if (text.includes('Manacled')) {
+                aeFound = true;
+                break;
+            }
+        }
+        return { setupOk: true, aeFound, effectCount: effectRows.length, error: null };
+    });
+
+    expect(result.setupOk, `setup error: ${result.error ?? ''}`).toBe(true);
+
+    await snap(page, 'manacles-condition');
+
+    try {
+        const appLoc = page.locator('.application[data-application-part]').last();
+        if ((await appLoc.count()) > 0) {
+            await appLoc.screenshot({ path: '.e2e-screenshots/manacles-condition__sheet-element.png' });
+        }
+    } catch {
+        /* non-fatal — primary snap already wrote a PNG */
+    }
+
+    expect(result.effectCount, 'expected at least one effect row on the sheet').toBeGreaterThan(0);
+    expect(result.aeFound, 'expected a Manacled effect row in the sheet DOM').toBe(true);
+
+    // Cleanup
+    await page.evaluate(async () => {
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+        const g = globalThis as any;
+        const a = g.game?.actors?.getName?.('manacles-probe');
+        try {
+            await a?.delete?.();
+        } catch {
+            /* ignore */
+        }
+    });
+});
