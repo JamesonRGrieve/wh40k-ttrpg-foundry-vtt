@@ -1,5 +1,17 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import {
+    type AvailabilityKey,
+    type CraftsmanshipKey,
+    type ScaleKey,
+    AVAILABILITY_KEYS_ORDERED,
+    CRAFTSMANSHIP_KEYS_ORDERED,
+    SCALE_KEYS_ORDERED,
+    normaliseAvailability,
+    normaliseCraftsmanship,
+    normaliseScale,
+    resolveAcquisitionTest,
+} from '../../rules/acquisition-scale.ts';
 
 /**
  * @file AcquisitionDialog - Profit Factor test dialog for acquiring items
@@ -18,6 +30,27 @@ import type { WH40KItem } from '../../documents/item.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface ScaleChoice {
+    key: ScaleKey;
+    labelKey: string;
+    value: number;
+    selected: boolean;
+}
+
+interface CraftsmanshipChoice {
+    key: CraftsmanshipKey;
+    labelKey: string;
+    value: number;
+    selected: boolean;
+}
+
+interface AvailabilityChoice {
+    key: AvailabilityKey;
+    labelKey: string;
+    value: number;
+    selected: boolean;
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record; we extend with strict fields
 interface AcquisitionContext extends Record<string, unknown> {
     profitFactor: { current: number; starting: number };
@@ -29,17 +62,91 @@ interface AcquisitionContext extends Record<string, unknown> {
         craftsmanship: string;
         cost: number;
     } | null;
+    availability: AvailabilityKey;
+    craftsmanship: CraftsmanshipKey;
+    scale: ScaleKey;
+    availabilityChoices: ReadonlyArray<AvailabilityChoice>;
+    craftsmanshipChoices: ReadonlyArray<CraftsmanshipChoice>;
+    scaleChoices: ReadonlyArray<ScaleChoice>;
     availabilityModifier: number;
     craftsmanshipModifier: number;
+    scaleModifier: number;
     commonModifiers: Array<{ key: string; label: string; value: number; selected: boolean }>;
     baseModifier: number;
     commonTotal: number;
     customModifier: number;
     totalModifier: number;
     finalTarget: number;
+    autoSuccess: boolean;
+    autoFail: boolean;
     // eslint-disable-next-line no-restricted-syntax -- boundary: recentAcquisitions read from flag store; opaque shape
     recentAcquisitions: unknown[];
 }
+
+const AVAILABILITY_LABEL_KEYS: Record<AvailabilityKey, string> = {
+    ubiquitous: 'WH40K.AcquisitionScale.Availability.Ubiquitous',
+    abundant: 'WH40K.AcquisitionScale.Availability.Abundant',
+    plentiful: 'WH40K.AcquisitionScale.Availability.Plentiful',
+    common: 'WH40K.AcquisitionScale.Availability.Common',
+    average: 'WH40K.AcquisitionScale.Availability.Average',
+    scarce: 'WH40K.AcquisitionScale.Availability.Scarce',
+    rare: 'WH40K.AcquisitionScale.Availability.Rare',
+    veryRare: 'WH40K.AcquisitionScale.Availability.VeryRare',
+    extremelyRare: 'WH40K.AcquisitionScale.Availability.ExtremelyRare',
+    nearUnique: 'WH40K.AcquisitionScale.Availability.NearUnique',
+    unique: 'WH40K.AcquisitionScale.Availability.Unique',
+};
+
+const CRAFTSMANSHIP_LABEL_KEYS: Record<CraftsmanshipKey, string> = {
+    poor: 'WH40K.AcquisitionScale.Craftsmanship.Poor',
+    common: 'WH40K.AcquisitionScale.Craftsmanship.Common',
+    good: 'WH40K.AcquisitionScale.Craftsmanship.Good',
+    best: 'WH40K.AcquisitionScale.Craftsmanship.Best',
+};
+
+const SCALE_LABEL_KEYS: Record<ScaleKey, string> = {
+    negligible: 'WH40K.AcquisitionScale.Scale.Negligible',
+    trivial: 'WH40K.AcquisitionScale.Scale.Trivial',
+    minor: 'WH40K.AcquisitionScale.Scale.Minor',
+    standard: 'WH40K.AcquisitionScale.Scale.Standard',
+    major: 'WH40K.AcquisitionScale.Scale.Major',
+    significant: 'WH40K.AcquisitionScale.Scale.Significant',
+    vast: 'WH40K.AcquisitionScale.Scale.Vast',
+};
+
+// Modifier integer lookup used for sidebar display. Mirrors
+// `ACQUISITION_*_MODIFIERS` from the rules module; kept inline here to
+// avoid runtime cost of resolving the table for every render.
+const AVAILABILITY_MOD_VALUES: Record<AvailabilityKey, number> = {
+    ubiquitous: 70,
+    abundant: 50,
+    plentiful: 30,
+    common: 20,
+    average: 10,
+    scarce: 0,
+    rare: -10,
+    veryRare: -20,
+    extremelyRare: -30,
+    nearUnique: -50,
+    unique: -70,
+};
+
+const CRAFTSMANSHIP_MOD_VALUES: Record<CraftsmanshipKey, number> = {
+    poor: 10,
+    common: 0,
+    good: -10,
+    best: -30,
+};
+
+const SCALE_MOD_VALUES: Record<ScaleKey, number> = {
+    negligible: 30,
+    trivial: 20,
+    minor: 10,
+    standard: 0,
+    major: -10,
+    significant: -20,
+    vast: -30,
+};
 
 interface RogueTraderSystem {
     rogueTrader?: {
@@ -73,7 +180,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'acquisition-dialog'],
         tag: 'form',
         window: {
-            title: 'WH40K.Acquisition.Title',
+            title: 'WH40K.AcquisitionScale.Title',
             icon: 'fa-solid fa-coins',
             resizable: false,
         },
@@ -91,6 +198,9 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             toggleModifier: AcquisitionDialog.#toggleModifier,
+            selectAvailability: AcquisitionDialog.#selectAvailability,
+            selectCraftsmanship: AcquisitionDialog.#selectCraftsmanship,
+            selectScale: AcquisitionDialog.#selectScale,
             roll: AcquisitionDialog.#roll,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
@@ -113,6 +223,9 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     declare item: WH40KItem | null;
     declare selectedModifiers: Set<string>;
     declare customModifier: number;
+    declare selectedAvailability: AvailabilityKey;
+    declare selectedCraftsmanship: CraftsmanshipKey;
+    declare selectedScale: ScaleKey;
     // eslint-disable-next-line no-restricted-syntax -- boundary: resolve receives an opaque result object whose shape depends on outcome
     #resolve: ((value: unknown) => void) | null = null;
 
@@ -130,15 +243,24 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         super(options);
         this.actor = actor;
         this.item = options.item ?? null;
-        this.selectedModifiers = new Set();
+        this.selectedModifiers = new Set<string>();
         this.customModifier = 0;
+        // Seed selectors from the item's stored fields if present;
+        // normalisation handles every shape Title-Case / hyphen / camel.
+        const itemSys = (options.item?.system ?? null) as AcquireableItemSystem | null;
+        this.selectedAvailability = normaliseAvailability(itemSys?.availability ?? null) ?? 'scarce';
+        this.selectedCraftsmanship = normaliseCraftsmanship(itemSys?.craftsmanship ?? null) ?? 'common';
+        this.selectedScale = 'negligible';
     }
 
     /* -------------------------------------------- */
 
     /** @override */
     get title(): string {
-        return this.item ? `Acquire: ${this.item.name}` : 'Profit Factor Acquisition Test';
+        if (this.item) {
+            return game.i18n.format('WH40K.AcquisitionScale.TitleForItem', { name: this.item.name });
+        }
+        return game.i18n.localize('WH40K.AcquisitionScale.Title');
     }
 
     /* -------------------------------------------- */
@@ -156,7 +278,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             starting: pf.starting,
         };
 
-        // Item data
+        // Item data — display only. The resolver consumes the
+        // normalised dialog selectors, not the raw string.
         if (this.item) {
             const itemSys = this.item.system as AcquireableItemSystem;
             context.item = {
@@ -167,37 +290,69 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
                 craftsmanship: itemSys.craftsmanship !== undefined && itemSys.craftsmanship !== '' ? itemSys.craftsmanship : 'Common',
                 cost: itemSys.cost ?? 0,
             };
-
-            // Calculate availability modifier
-            context.availabilityModifier = this._getAvailabilityModifier(context.item.availability);
-            context.craftsmanshipModifier = this._getCraftsmanshipModifier(context.item.craftsmanship);
         } else {
             context.item = null;
-            context.availabilityModifier = 0;
-            context.craftsmanshipModifier = 0;
         }
 
-        // Common modifiers
-        context.commonModifiers = [
-            { key: 'haggling', label: 'Haggling Successful', value: 10, selected: this.selectedModifiers.has('haggling') },
-            { key: 'rushed', label: 'Rushed Purchase', value: -10, selected: this.selectedModifiers.has('rushed') },
-            { key: 'supplier', label: 'Known Supplier', value: 5, selected: this.selectedModifiers.has('supplier') },
-            { key: 'bulk', label: 'Bulk Purchase', value: -5, selected: this.selectedModifiers.has('bulk') },
-            { key: 'rare', label: 'Rare Market', value: -10, selected: this.selectedModifiers.has('rare') },
-        ];
+        context.availability = this.selectedAvailability;
+        context.craftsmanship = this.selectedCraftsmanship;
+        context.scale = this.selectedScale;
+        context.availabilityModifier = AVAILABILITY_MOD_VALUES[this.selectedAvailability];
+        context.craftsmanshipModifier = CRAFTSMANSHIP_MOD_VALUES[this.selectedCraftsmanship];
+        context.scaleModifier = SCALE_MOD_VALUES[this.selectedScale];
 
-        // Calculate totals
-        context.baseModifier = context.availabilityModifier + context.craftsmanshipModifier;
+        // Selector option lists for the template.
+        context.availabilityChoices = AVAILABILITY_KEYS_ORDERED.map((k) => ({
+            key: k,
+            labelKey: AVAILABILITY_LABEL_KEYS[k],
+            value: AVAILABILITY_MOD_VALUES[k],
+            selected: k === this.selectedAvailability,
+        }));
+        context.craftsmanshipChoices = CRAFTSMANSHIP_KEYS_ORDERED.map((k) => ({
+            key: k,
+            labelKey: CRAFTSMANSHIP_LABEL_KEYS[k],
+            value: CRAFTSMANSHIP_MOD_VALUES[k],
+            selected: k === this.selectedCraftsmanship,
+        }));
+        context.scaleChoices = SCALE_KEYS_ORDERED.map((k) => ({
+            key: k,
+            labelKey: SCALE_LABEL_KEYS[k],
+            value: SCALE_MOD_VALUES[k],
+            selected: k === this.selectedScale,
+        }));
+
+        // Common modifiers (haggle / rush / etc) — display labels read
+        // from the langpack at render time via {{localize}}.
+        context.commonModifiers = [
+            { key: 'haggling', label: 'WH40K.AcquisitionScale.Common.Haggling', value: 10, selected: this.selectedModifiers.has('haggling') },
+            { key: 'rushed', label: 'WH40K.AcquisitionScale.Common.Rushed', value: -10, selected: this.selectedModifiers.has('rushed') },
+            { key: 'supplier', label: 'WH40K.AcquisitionScale.Common.Supplier', value: 5, selected: this.selectedModifiers.has('supplier') },
+            { key: 'bulk', label: 'WH40K.AcquisitionScale.Common.Bulk', value: -5, selected: this.selectedModifiers.has('bulk') },
+            { key: 'rare', label: 'WH40K.AcquisitionScale.Common.RareMarket', value: -10, selected: this.selectedModifiers.has('rare') },
+        ];
 
         let commonTotal = 0;
         for (const mod of context.commonModifiers) {
             if (mod.selected) commonTotal += mod.value;
         }
         context.commonTotal = commonTotal;
-
         context.customModifier = this.customModifier;
-        context.totalModifier = context.baseModifier + context.commonTotal + this.customModifier;
-        context.finalTarget = pf.current + context.totalModifier;
+
+        // Delegate the actual maths to the pure resolver so the auto
+        // success/fail short-circuit and combine-penalty bookkeeping stay
+        // in one place.
+        const resolved = resolveAcquisitionTest({
+            profitFactor: pf.current,
+            availability: this.selectedAvailability,
+            craftsmanship: this.selectedCraftsmanship,
+            scale: this.selectedScale,
+            extra: commonTotal + this.customModifier,
+        });
+        context.baseModifier = context.availabilityModifier + context.craftsmanshipModifier + context.scaleModifier;
+        context.totalModifier = resolved.totalModifier;
+        context.finalTarget = resolved.target;
+        context.autoSuccess = resolved.autoSuccess;
+        context.autoFail = resolved.autoFail;
 
         // Recent acquisitions
         context.recentAcquisitions = this._getRecentAcquisitions();
@@ -208,46 +363,29 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /**
-     * Get availability modifier
-     * @param {string} availability  Availability rating
-     * @returns {number}  Modifier value
-     * @private
+     * Get availability modifier — RT Table 9-35.
+     * Delegates to the shared rules module so all 7 systems and any
+     * other consumer see the same numbers.
+     * @param {string} availability  Availability rating (any case / separator).
+     * @returns {number}  Modifier value (0 when unrecognised).
      */
     _getAvailabilityModifier(availability: string): number {
-        // PhysicalItemTemplate stores availability lowercased per its `choices`
-        // set. Normalize the key before lookup so the modifier matches.
-        const modifiers: Record<string, number> = {
-            'abundant': 30,
-            'plentiful': 20,
-            'common': 10,
-            'average': 0,
-            'scarce': -10,
-            'rare': -20,
-            'very rare': -30,
-            'extremely rare': -40,
-            'near unique': -50,
-            'unique': -60,
-        };
-        return modifiers[(availability ?? '').toLowerCase()] ?? 0;
+        const key = normaliseAvailability(availability);
+        if (key === null) return 0;
+        return AVAILABILITY_MOD_VALUES[key];
     }
 
     /* -------------------------------------------- */
 
     /**
-     * Get craftsmanship modifier
-     * @param {string} craftsmanship  Craftsmanship quality
-     * @returns {number}  Modifier value
-     * @private
+     * Get craftsmanship modifier — RT Table 9-35.
+     * @param {string} craftsmanship  Craftsmanship quality (any case).
+     * @returns {number}  Modifier value (0 when unrecognised).
      */
     _getCraftsmanshipModifier(craftsmanship: string): number {
-        // Schema stores craftsmanship lowercased; normalize the lookup key.
-        const modifiers: Record<string, number> = {
-            poor: 10,
-            common: 0,
-            good: -10,
-            best: -20,
-        };
-        return modifiers[(craftsmanship ?? '').toLowerCase()] ?? 0;
+        const key = normaliseCraftsmanship(craftsmanship);
+        if (key === null) return 0;
+        return CRAFTSMANSHIP_MOD_VALUES[key];
     }
 
     /* -------------------------------------------- */
@@ -285,6 +423,40 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /**
+     * Pick an Availability tier. The raw `data-availability` attribute
+     * is normalised so Title-Case / hyphenated / camelCase all resolve.
+     */
+    static async #selectAvailability(this: AcquisitionDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const raw = target.dataset['availability'];
+        const key = normaliseAvailability(raw ?? null);
+        if (key === null) return;
+        this.selectedAvailability = key;
+        await this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    static async #selectCraftsmanship(this: AcquisitionDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const raw = target.dataset['craftsmanship'];
+        const key = normaliseCraftsmanship(raw ?? null);
+        if (key === null) return;
+        this.selectedCraftsmanship = key;
+        await this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    static async #selectScale(this: AcquisitionDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const raw = target.dataset['scale'];
+        const key = normaliseScale(raw ?? null);
+        if (key === null) return;
+        this.selectedScale = key;
+        await this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Handle form submission
      */
     static #onSubmit(this: AcquisitionDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): void {
@@ -306,15 +478,31 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         const context = await this._prepareContext({ force: true });
         const finalTarget = context.finalTarget;
 
-        // Roll d100
-        const roll = await new Roll('1d100').evaluate();
-        const success = roll.total <= finalTarget;
-        const dos = Math.floor((finalTarget - roll.total) / 10);
+        // Auto-success / auto-fail short-circuit (core.md §12238–12239):
+        // if the adjusted PF ≥ 100 or ≤ 0 before rolling, no die is rolled.
+        let roll: Roll | null = null;
+        let success: boolean;
+        let dos: number;
+        if (context.autoSuccess) {
+            success = true;
+            // DoS by SoP: count tens by which the target exceeded 100, so
+            // the chat card still reflects how comfortable the success was.
+            dos = Math.max(1, Math.floor((finalTarget - 1) / 10) + 1);
+        } else if (context.autoFail) {
+            success = false;
+            // DoF: count tens below zero (a flat −1 DoF when target = 0).
+            dos = Math.min(-1, Math.floor(finalTarget / 10) - 1);
+        } else {
+            roll = await new Roll('1d100').evaluate();
+            const rollTotal = Number(roll.total ?? 0);
+            success = rollTotal <= finalTarget;
+            dos = Math.floor((finalTarget - rollTotal) / 10);
+        }
 
         // Log acquisition
         await this._logAcquisition({
             item: this.item,
-            roll: roll.total,
+            roll: roll?.total ?? finalTarget,
             target: finalTarget,
             success,
             dos,
@@ -333,21 +521,24 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
                 common: context.commonTotal,
                 custom: this.customModifier,
             },
+            autoSuccess: context.autoSuccess,
+            autoFail: context.autoFail,
         });
 
         // On success, add item to inventory
         if (success && this.item) {
             await this.actor.createEmbeddedDocuments('Item', [this.item]);
-            ui.notifications.info(`Acquired ${this.item.name}`);
+            ui.notifications.info(game.i18n.format('WH40K.AcquisitionScale.Notification.Acquired', { name: this.item.name }));
         }
 
-        // Critical failure: reduce PF
-        if (dos <= -3) {
+        // Critical failure: reduce PF (rolled DoF only — auto-fail at PF≤0
+        // already implies a PF crisis and shouldn't compound).
+        if (roll !== null && dos <= -3) {
             const rogueTrader = (this.actor.system as RogueTraderSystem).rogueTrader;
             const currentPF = rogueTrader?.profitFactor?.current ?? 0;
             const newPF = Math.max(0, currentPF - 1);
             await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
-            ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
+            ui.notifications.warn(game.i18n.format('WH40K.AcquisitionScale.Notification.CriticalFailure', { pf: String(newPF) }));
         }
 
         // Resolve and close
@@ -355,8 +546,10 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             this.#resolve({
                 success,
                 dos,
-                roll: roll.total,
+                roll: roll?.total ?? null,
                 target: finalTarget,
+                autoSuccess: context.autoSuccess,
+                autoFail: context.autoFail,
             });
         }
 
@@ -390,20 +583,24 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _createAcquisitionMessage(data: {
-        roll: Roll;
+        roll: Roll | null;
         target: number;
         success: boolean;
         dos: number;
         item: WH40KItem | null;
         modifiers: { base: number; common: number; custom: number };
+        autoSuccess: boolean;
+        autoFail: boolean;
     }): Promise<ChatMessage | undefined> {
         const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/acquisition-test.hbs', {
             actor: this.actor,
             item: data.item,
-            roll: data.roll.total,
+            roll: data.roll?.total ?? null,
             target: data.target,
             success: data.success,
             dos: data.dos,
+            autoSuccess: data.autoSuccess,
+            autoFail: data.autoFail,
             modifiers: data.modifiers,
             gameSystem: (this.actor.system as { gameSystem?: string } | undefined)?.gameSystem,
         });
@@ -411,8 +608,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         return ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content,
-            flavor: 'Profit Factor Acquisition Test',
-            rolls: [data.roll],
+            flavor: game.i18n.localize('WH40K.AcquisitionScale.ChatFlavor'),
+            rolls: data.roll !== null ? [data.roll] : [],
         });
     }
 

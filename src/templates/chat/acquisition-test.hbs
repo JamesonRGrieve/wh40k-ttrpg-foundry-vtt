@@ -3,18 +3,26 @@
     cardClass="wh40k-acquisition-card"
     outerExtraClass="tw-overflow-hidden tw-rounded-md"
     title=actor.name
-    subtitle="Profit Factor Acquisition"
+    subtitle=(localize "WH40K.AcquisitionScale.ChatSubtitle")
     iconClass="fa-coins"
     gameSystem=gameSystem
 }}
     {{#if item}}
-        <p class="tw-m-0 tw-mb-1 tw-text-sm"><strong>Item:</strong> {{item.name}}</p>
+        <p class="tw-m-0 tw-mb-1 tw-text-sm"><strong>{{localize "WH40K.AcquisitionScale.ChatItem"}}</strong> {{item.name}}</p>
     {{/if}}
-    <p class="tw-m-0 tw-mb-1 tw-text-sm"><strong>Roll:</strong> {{roll}} vs {{target}}</p>
-    {{#if success}}
-        <p class="tw-m-0 tw-text-success-l20 tw-font-bold"><i class="fas fa-check-circle"></i> <strong>SUCCESS</strong> ({{dos}} DoS)</p>
+    {{#if autoSuccess}}
+        <p class="tw-m-0 tw-mb-1 tw-text-sm">{{localize "WH40K.AcquisitionScale.ChatAutoSuccessLine"}} <strong>{{target}}</strong></p>
+        <p class="tw-m-0 tw-text-success-l20 tw-font-bold"><i class="fas fa-check-circle"></i> <strong>{{localize "WH40K.AcquisitionScale.AutoSuccessBanner"}}</strong></p>
+    {{else if autoFail}}
+        <p class="tw-m-0 tw-mb-1 tw-text-sm">{{localize "WH40K.AcquisitionScale.ChatAutoFailLine"}} <strong>{{target}}</strong></p>
+        <p class="tw-m-0 tw-text-failure-l10 tw-font-bold"><i class="fas fa-times-circle"></i> <strong>{{localize "WH40K.AcquisitionScale.AutoFailBanner"}}</strong></p>
     {{else}}
-        <p class="tw-m-0 tw-text-failure-l10 tw-font-bold"><i class="fas fa-times-circle"></i> <strong>FAILURE</strong> ({{dos}} DoF)</p>
+        <p class="tw-m-0 tw-mb-1 tw-text-sm"><strong>{{localize "WH40K.AcquisitionScale.ChatRoll"}}</strong> {{roll}} {{localize "WH40K.AcquisitionScale.ChatVs"}} {{target}}</p>
+        {{#if success}}
+            <p class="tw-m-0 tw-text-success-l20 tw-font-bold"><i class="fas fa-check-circle"></i> <strong>{{localize "WH40K.AcquisitionScale.Success"}}</strong> ({{dos}} {{localize "WH40K.AcquisitionScale.DoS"}})</p>
+        {{else}}
+            <p class="tw-m-0 tw-text-failure-l10 tw-font-bold"><i class="fas fa-times-circle"></i> <strong>{{localize "WH40K.AcquisitionScale.Failure"}}</strong> ({{dos}} {{localize "WH40K.AcquisitionScale.DoF"}})</p>
+        {{/if}}
     {{/if}}
-    <p class="tw-m-0 tw-mt-1 tw-text-xs tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-70 tw-font-semibold tw-uppercase tw-tracking-wide">Acquisition Test</p>
+    <p class="tw-m-0 tw-mt-1 tw-text-xs tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-70 tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.AcquisitionScale.ChatFooter"}}</p>
 {{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}

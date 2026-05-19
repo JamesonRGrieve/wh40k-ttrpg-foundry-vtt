@@ -428,12 +428,13 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
 
         if (result.error) failures.push(result.error);
         else {
-            // Scarce → -10, Good → -10 per AcquisitionDialog._getAvailabilityModifier /
-            // _getCraftsmanshipModifier tables.
+            // RT Table 9-35: Scarce → +0, Good craftsmanship → -10.
+            // (DH2's Scarce=-10 value lives in requisition-test.ts; RT
+            // diverges and the dialog uses the rt rules module.)
             if (!result.elementOk) failures.push('dialog.element was not an HTMLElement after render');
             if (result.itemContext !== 'probe-acquisition-gear')
                 failures.push(`context.item.name was ${result.itemContext}, expected 'probe-acquisition-gear'`);
-            if (result.availabilityModifier !== -10) failures.push(`availabilityModifier was ${result.availabilityModifier}, expected -10`);
+            if (result.availabilityModifier !== 0) failures.push(`availabilityModifier was ${result.availabilityModifier}, expected 0`);
             if (result.craftsmanshipModifier !== -10) failures.push(`craftsmanshipModifier was ${result.craftsmanshipModifier}, expected -10`);
             // haggling (+10) + rare (-10) = 0
             if (result.commonTotal !== 0) failures.push(`commonTotal was ${result.commonTotal}, expected 0`);
