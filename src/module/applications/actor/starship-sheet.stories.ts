@@ -14,6 +14,7 @@ import { mockStarshipSheetContext, type SheetContextLike } from '../../../../sto
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, assertField } from '../../../../stories/test-helpers';
 import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
+import crewTabSrc from '../../../templates/actor/starship/tab-crew.hbs?raw';
 import extendedActionsTabSrc from '../../../templates/actor/starship/tab-extended-actions.hbs?raw';
 import headerSrc from '../../../templates/actor/starship/header.hbs?raw';
 import statsTabSrc from '../../../templates/actor/starship/tab-stats.hbs?raw';
@@ -27,6 +28,7 @@ const headerTpl = Handlebars.compile(headerSrc);
 const tabsTpl = Handlebars.compile(tabsSrc);
 const statsTabTpl = Handlebars.compile(statsTabSrc);
 const extendedActionsTabTpl = Handlebars.compile(extendedActionsTabSrc);
+const crewTabTpl = Handlebars.compile(crewTabSrc);
 const shipWeaponChatTpl = Handlebars.compile(shipWeaponChatSrc);
 
 function renderStarshipSheet(ctx: SheetContextLike): HTMLElement {
@@ -386,6 +388,73 @@ export const MacrobatteryMiss: StoryObj<ShipWeaponChatCtx> = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         await expect(canvas.getByText(/Miss/i)).toBeVisible();
+    },
+};
+
+// ── Issue #189 — Crew Population & Morale combat economy ────────────────────
+//
+// Renders the Crew tab twice: once at full strength, once after a 5-Hull hit
+// has propagated through the RT Crew/Morale economy (population, morale, and
+// hull all decremented by 5). The pair lets visual review confirm the panel
+// reflects the document's state change.
+
+function renderCrewPanel(ctx: SheetContextLike): HTMLElement {
+    const tpl = Handlebars.compile(`
+        <div class="wh40k-rpg starship sheet tw-flex tw-flex-col" data-wh40k-system="rt">
+            ${headerTpl(ctx)}
+            ${tabsTpl(ctx)}
+            <main class="wh40k-body tw-p-2">
+                ${crewTabTpl(ctx)}
+            </main>
+        </div>
+    `);
+    return renderTemplate(tpl, ctx);
+}
+
+const crewTabCtxBase: SheetContextLike = {
+    ...defaultCtxWithSource,
+    tab: { id: 'crew', group: 'primary', active: true, cssClass: 'tab-crew' },
+    // The crew partial pulls inputs from `source.crew.*`.
+    source: {
+        ...defaultCtxWithSource.source,
+        crew: { morale: { value: 100, max: 100 }, population: 100, crewRating: 40 },
+    },
+    // eslint-disable-next-line no-restricted-syntax -- boundary: SheetContextLike is an open record for story context
+    shipRoles: [] as unknown,
+};
+
+export const CrewPanelFullStrength: Story = {
+    name: 'Issue #189 — Crew Panel (full strength, RT)',
+    args: crewTabCtxBase,
+    render: (args) => renderCrewPanel(args),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByText(/Population/i)).toBeVisible();
+        // Population, Morale current, Morale max all = 100
+        const populationInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.population"]');
+        await expect(populationInputs.length).toBeGreaterThanOrEqual(1);
+        await expect(populationInputs[0]?.value).toBe('100');
+        const moraleInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.morale.value"]');
+        await expect(moraleInputs[0]?.value).toBe('100');
+    },
+};
+
+export const CrewPanelAfter5HullHit: Story = {
+    name: 'Issue #189 — Crew Panel after a 5-Hull hit (population/morale -5)',
+    args: {
+        ...crewTabCtxBase,
+        source: {
+            ...crewTabCtxBase.source,
+            hullIntegrity: { value: 30, max: 35 },
+            crew: { morale: { value: 95, max: 100 }, population: 95, crewRating: 40 },
+        },
+    } as SheetContextLike,
+    render: (args) => renderCrewPanel(args),
+    play: async ({ canvasElement }) => {
+        const populationInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.population"]');
+        await expect(populationInputs[0]?.value).toBe('95');
+        const moraleInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.morale.value"]');
+        await expect(moraleInputs[0]?.value).toBe('95');
     },
 };
 

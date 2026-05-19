@@ -1,3 +1,13 @@
+import {
+    cancelPriorTurnDamage as cancelPriorTurnDamageRule,
+    canCancelPriorTurnDamage as canCancelPriorTurnDamageRule,
+    emptySnapshot,
+    isCrippled as isCrippledRule,
+    recordHullHit,
+    replenishBetweenCombat as replenishBetweenCombatRule,
+    type PriorTurnDamageSnapshot,
+    type ShipCombatState,
+} from '../rules/ship-crew-morale.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 import type { WH40KItem } from './item.ts';
 
@@ -27,7 +37,16 @@ type StarshipSystemData = WH40KBaseActor['system'] & {
         starboard: number;
         keel: number;
     };
+    priorTurnDamage?: PriorTurnDamageSnapshot;
 };
+
+/**
+ * Game-system id the RT Crew Population & Morale combat economy is
+ * gated on (issue #189). Other systems (BC / DH1 / DH2 / DW / OW / IM)
+ * ship without ship-scale crew bookkeeping at this layer; their hulls
+ * still take damage but do NOT decrement crew / morale on hit.
+ */
+const RT_CREW_ECONOMY_GAME_SYSTEM = 'rt';
 
 export class WH40KStarship extends WH40KBaseActor {
     declare system: StarshipSystemData;
@@ -114,14 +133,6 @@ export class WH40KStarship extends WH40KBaseActor {
     }
 
     /**
-     * Is the ship crippled (below half hull)?
-     * @type {boolean}
-     */
-    get isCrippled(): boolean {
-        return this.hullIntegrity.value <= Math.floor(this.hullIntegrity.max / 2);
-    }
-
-    /**
      * Is the ship destroyed?
      * @type {boolean}
      */
@@ -201,6 +212,163 @@ export class WH40KStarship extends WH40KBaseActor {
             speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
             content: html,
         });
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  RT Crew Population & Morale combat economy (issue #189)           */
+    /* ------------------------------------------------------------------ */
+
+    /**
+     * Is this hull governed by the RT Crew Population / Morale combat
+     * economy? Per-system gating so the other six game systems never
+     * see crew/morale tick when their ship hulls take damage.
+     */
+    get usesRTCrewEconomy(): boolean {
+        return (this.system.gameSystem ?? 'rt') === RT_CREW_ECONOMY_GAME_SYSTEM;
+    }
+
+    /** Current combat-state snapshot consumed by the rules helpers. */
+    private _readShipCombatState(): ShipCombatState {
+        return {
+            hullIntegrity: { ...this.hullIntegrity },
+            crew: {
+                population: this.crew.population,
+                morale: { ...this.crew.morale },
+            },
+        };
+    }
+
+    /** Current prior-turn damage snapshot, with a sane default. */
+    private _readPriorTurnSnapshot(): PriorTurnDamageSnapshot {
+        return this.system.priorTurnDamage ?? emptySnapshot(0);
+    }
+
+    /**
+     * Look up the current strategic-turn number on the active Combat.
+     * Falls back to `1` when no Combat is in progress — the helpers
+     * treat turn `0` as "no snapshot", so we must return ≥ 1 here.
+     */
+    private _currentStrategicTurn(): number {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.combats typing in fvtt-types is loose
+        const combats = (globalThis as unknown as { game?: { combats?: { active?: { round?: number } | null } } }).game?.combats;
+        const round = combats?.active?.round;
+        return typeof round === 'number' && round > 0 ? round : 1;
+    }
+
+    /**
+     * Apply a hull-damage event from a void-combat hit. RT only:
+     *   • decrements `hullIntegrity.value` (floor 0);
+     *   • decrements `crew.population` and `crew.morale.value` by the
+     *     same amount of hull lost (floor 0);
+     *   • appends the loss to `priorTurnDamage` so a Hold Fast! /
+     *     Triage extended action on the *next* strategic turn can
+     *     revert it.
+     *
+     * Returns the deltas actually applied so callers (chat cards,
+     * tests) can render the breakdown.
+     */
+    async applyHullDamage(amount: number): Promise<{
+        hullLoss: number;
+        crewLoss: number;
+        moraleLoss: number;
+    }> {
+        const turn = this._currentStrategicTurn();
+        const before = this._readShipCombatState();
+        const snap = this._readPriorTurnSnapshot();
+        const { next, snapshot } = recordHullHit(before, snap, amount, turn);
+        const delta = {
+            hullLoss: before.hullIntegrity.value - next.hullIntegrity.value,
+            crewLoss: before.crew.population - next.crew.population,
+            moraleLoss: before.crew.morale.value - next.crew.morale.value,
+        };
+        if (delta.hullLoss === 0 && delta.crewLoss === 0 && delta.moraleLoss === 0) {
+            return delta;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
+        const updates: Record<string, unknown> = {
+            'system.hullIntegrity.value': next.hullIntegrity.value,
+        };
+        if (this.usesRTCrewEconomy) {
+            updates['system.crew.population'] = next.crew.population;
+            updates['system.crew.morale.value'] = next.crew.morale.value;
+            updates['system.priorTurnDamage'] = snapshot;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update(updates);
+        return delta;
+    }
+
+    /**
+     * Hold Fast! / Triage hook. Revert the prior-turn hull + crew +
+     * morale losses recorded on the actor. No-op when the snapshot is
+     * empty, belongs to the current turn, or this hull is not under
+     * the RT crew economy.
+     *
+     * Returns the deltas actually restored so callers can display a
+     * chat card or post a notification.
+     */
+    async cancelPriorTurnDamage(): Promise<{
+        hullRestored: number;
+        crewRestored: number;
+        moraleRestored: number;
+    }> {
+        if (!this.usesRTCrewEconomy) {
+            return { hullRestored: 0, crewRestored: 0, moraleRestored: 0 };
+        }
+        const turn = this._currentStrategicTurn();
+        const snap = this._readPriorTurnSnapshot();
+        if (!canCancelPriorTurnDamageRule(snap, turn)) {
+            return { hullRestored: 0, crewRestored: 0, moraleRestored: 0 };
+        }
+        const before = this._readShipCombatState();
+        const { next, snapshot } = cancelPriorTurnDamageRule(before, snap);
+        const restored = {
+            hullRestored: next.hullIntegrity.value - before.hullIntegrity.value,
+            crewRestored: next.crew.population - before.crew.population,
+            moraleRestored: next.crew.morale.value - before.crew.morale.value,
+        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
+        const updates: Record<string, unknown> = {
+            'system.hullIntegrity.value': next.hullIntegrity.value,
+            'system.crew.population': next.crew.population,
+            'system.crew.morale.value': next.crew.morale.value,
+            'system.priorTurnDamage': snapshot,
+        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update(updates);
+        return restored;
+    }
+
+    /**
+     * Replenish between combats — restores Morale to its max. Crew
+     * Population is intentionally NOT restored (RAW — recruitment is
+     * an Endeavour, off-screen). Clears the prior-turn damage snapshot
+     * since we've left combat entirely.
+     */
+    async replenishBetweenCombat(): Promise<void> {
+        if (!this.usesRTCrewEconomy) return;
+        const before = this._readShipCombatState();
+        const next = replenishBetweenCombatRule(before);
+        if (
+            next.crew.morale.value === before.crew.morale.value &&
+            (this.system.priorTurnDamage?.turn ?? 0) === 0
+        ) {
+            return;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+            'system.crew.morale.value': next.crew.morale.value,
+            'system.priorTurnDamage': emptySnapshot(0),
+        });
+    }
+
+    /**
+     * Override the base `isCrippled` getter to delegate to the rules
+     * helper — keeps the threshold composition test-reachable without
+     * a Foundry runtime.
+     */
+    get isCrippled(): boolean {
+        return isCrippledRule(this.hullIntegrity);
     }
 
     /**

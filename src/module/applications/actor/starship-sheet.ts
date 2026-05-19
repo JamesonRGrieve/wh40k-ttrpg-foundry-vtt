@@ -602,18 +602,19 @@ export default class StarshipSheet extends BaseActorSheet {
         const hullCurrentAfter = Math.max(0, hullCurrentBefore - appliedDamage);
 
         // ── Persist actor state (hull + shield exhaustion) ──────────────────
-        if (appliedDamage > 0 || (!ignoresShields && hits > 0 && shieldStatusBefore.active !== shieldsActive)) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
-            const updates: Record<string, unknown> = {};
-            if (appliedDamage > 0) {
-                updates['system.hullIntegrity.value'] = hullCurrentAfter;
-            }
-            if (!ignoresShields && hits > 0) {
-                updates['system.voidShieldsStatus.active'] = shieldsActive;
-                updates['system.voidShieldsStatus.exhausted'] = shieldsExhausted;
-            }
+        // Issue #189 — route hull damage through `applyHullDamage` so the
+        // RT Crew Population / Morale economy decrements (and the
+        // Hold Fast! / Triage prior-turn snapshot records) automatically.
+        // Non-RT hulls still take hull damage but skip the crew/morale tick.
+        if (appliedDamage > 0) {
+            await actor.applyHullDamage(appliedDamage);
+        }
+        if (!ignoresShields && hits > 0 && shieldStatusBefore.active !== shieldsActive) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
-            await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update(updates);
+            await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+                'system.voidShieldsStatus.active': shieldsActive,
+                'system.voidShieldsStatus.exhausted': shieldsExhausted,
+            });
         }
 
         // ── Build chat card ─────────────────────────────────────────────────
@@ -887,6 +888,7 @@ export default class StarshipSheet extends BaseActorSheet {
             requirements?: string;
             typeAndAction?: string;
             description?: { value?: string };
+            shipActionEffect?: string;
         };
         const cardData = {
             action: {
@@ -902,6 +904,30 @@ export default class StarshipSheet extends BaseActorSheet {
             actorName: actor.name ?? '',
             gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
         };
+
+        // Issue #189 — route content-agnostic shipActionEffect tags into the
+        // RT Crew/Morale economy. Compendium-side, Hold Fast! / Triage opt-in
+        // via `system.shipActionEffect = 'cancelPriorTurnDamage'`; replenish
+        // helpers opt in via `'replenishMorale'`. No name string-matching.
+        const effect = sys.shipActionEffect ?? '';
+        if (effect === 'cancelPriorTurnDamage') {
+            const restored = await actor.cancelPriorTurnDamage();
+            const i18n = game.i18n;
+            if (restored.hullRestored > 0 || restored.crewRestored > 0 || restored.moraleRestored > 0) {
+                ui.notifications?.info(
+                    i18n.format('WH40K.Starship.Crew.NotifyCancelled', {
+                        hull: String(restored.hullRestored),
+                        crew: String(restored.crewRestored),
+                        morale: String(restored.moraleRestored),
+                    }),
+                );
+            } else {
+                ui.notifications?.info(i18n.localize('WH40K.Starship.Crew.NotifyNothingToCancel'));
+            }
+        } else if (effect === 'replenishMorale') {
+            await actor.replenishBetweenCombat();
+            ui.notifications?.info(game.i18n.localize('WH40K.Starship.Crew.NotifyReplenished'));
+        }
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/extended-action-chat.hbs', cardData);
 

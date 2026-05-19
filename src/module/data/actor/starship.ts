@@ -140,6 +140,25 @@ export default class StarshipData extends ActorDataModel {
         appliedAt: number;
     }>;
 
+    /**
+     * Prior-turn damage snapshot for the Hold Fast! / Triage cancel
+     * mechanic (issue #189). Tracks the total Hull / Crew Population /
+     * Morale lost during the most-recent fully-recorded strategic turn,
+     * plus the turn number that snapshot belongs to. A Hold Fast! or
+     * Triage extended action resolved on the *following* turn reverts
+     * these losses; turn rollover (or actor reset) clears the record.
+     *
+     * Content-agnostic primitive (numbers only) per Direction #7 — the
+     * compendium-side `order` items opt into the cancel by tagging
+     * `system.shipActionEffect: 'cancelPriorTurnDamage'`.
+     */
+    declare priorTurnDamage: {
+        hullLoss: number;
+        crewLoss: number;
+        moraleLoss: number;
+        turn: number;
+    };
+
     /** Computed during _prepareCombatStats */
     declare detectionBonus: number;
     declare hullPercentage: number;
@@ -251,6 +270,17 @@ export default class StarshipData extends ActorDataModel {
                 }),
                 { required: true, initial: [] },
             ),
+
+            // Prior-turn damage snapshot for Hold Fast! / Triage (issue #189).
+            // All four numeric fields default to 0 — `turn: 0` is the sentinel
+            // for "no snapshot recorded yet". See document `applyHullDamage` /
+            // `cancelPriorTurnDamage` for the write path.
+            priorTurnDamage: new fields.SchemaField({
+                hullLoss: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                crewLoss: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                moraleLoss: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                turn: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            }),
         };
     }
 
