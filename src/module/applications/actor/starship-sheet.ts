@@ -2,7 +2,14 @@
  * @file StarshipSheet - Starship actor sheet using ApplicationV2 with PARTS system
  */
 
-import StarshipData, { ESSENTIAL_SHIP_SLOTS, type StarshipBuildValidation } from '../../data/actor/starship.ts';
+import StarshipData, {
+    ESSENTIAL_SHIP_SLOTS,
+    SHIP_MODIFIER_STAT_KEYS,
+    type ShipAppliedModifier,
+    type ShipModifierStatKey,
+    type ShipStatModifierSource,
+    type StarshipBuildValidation,
+} from '../../data/actor/starship.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KStarship } from '../../documents/starship.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
@@ -17,6 +24,25 @@ const ESSENTIAL_SLOT_LABEL_KEY: Record<string, string> = {
     lifeSupport: 'WH40K.ShipComponent.Type.LifeSupport',
     quarters: 'WH40K.ShipComponent.Type.Quarters',
     auger: 'WH40K.ShipComponent.Type.Auger',
+};
+
+/** Localization key per applied-modifier stat for the Build Summary panel (issue #196). */
+const BUILD_STAT_LABEL_KEY: Record<ShipModifierStatKey, string> = {
+    speed: 'WH40K.Starship.Build.Stat.Speed',
+    manoeuvrability: 'WH40K.Starship.Build.Stat.Manoeuvrability',
+    detection: 'WH40K.Starship.Build.Stat.Detection',
+    armour: 'WH40K.Starship.Build.Stat.Armour',
+    hullIntegrity: 'WH40K.Starship.Build.Stat.HullIntegrity',
+    turretRating: 'WH40K.Starship.Build.Stat.TurretRating',
+    voidShields: 'WH40K.Starship.Build.Stat.VoidShields',
+    morale: 'WH40K.Starship.Build.Stat.Morale',
+    crewRating: 'WH40K.Starship.Build.Stat.CrewRating',
+    ballisticSkill: 'WH40K.Starship.Build.Stat.BallisticSkill',
+    weaponCapacityDorsal: 'WH40K.Starship.Build.Stat.WeaponCapacityDorsal',
+    weaponCapacityProw: 'WH40K.Starship.Build.Stat.WeaponCapacityProw',
+    weaponCapacityPort: 'WH40K.Starship.Build.Stat.WeaponCapacityPort',
+    weaponCapacityStarboard: 'WH40K.Starship.Build.Stat.WeaponCapacityStarboard',
+    weaponCapacityKeel: 'WH40K.Starship.Build.Stat.WeaponCapacityKeel',
 };
 
 /**
@@ -231,6 +257,89 @@ export default class StarshipSheet extends BaseActorSheet {
             labelKey: ESSENTIAL_SLOT_LABEL_KEY[slot] ?? slot,
             filled: !missing.has(slot),
         }));
+
+        // Build Summary rows (issue #196). Walks the live applied-modifier
+        // rollup from prepareEmbeddedData; falls back to a freshly-computed
+        // rollup when the actor predates the schema extension.
+        this._prepareBuildSummary(context, actor);
+    }
+
+    /**
+     * Populate `buildSummaryRows` + `hasAppliedModifiers` on the render
+     * context. Each row pairs a stat's pre-modifier base with the signed total
+     * contributed by owned components, upgrades, and roles. Stats with no
+     * applied modifiers are filtered out so the panel only shows meaningful
+     * contributions.
+     *
+     * @issue #196
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: render context is an untyped Record per ApplicationV2 contract
+    _prepareBuildSummary(context: Record<string, unknown>, actor: WH40KStarship): void {
+        const sys = actor.system as {
+            appliedModifiers?: Record<ShipModifierStatKey, ShipAppliedModifier>;
+            baseStatSnapshot?: Record<ShipModifierStatKey, number>;
+        };
+        const applied: Record<ShipModifierStatKey, ShipAppliedModifier> =
+            sys.appliedModifiers ?? StarshipData._emptyAppliedModifiers();
+
+        // Reconstruct a base snapshot from current stat values when the actor
+        // is legacy. The displayed base will then equal the displayed total —
+        // technically correct (no modifiers means base == total) without
+        // requiring a re-prep pass at render time.
+        const sysShape = actor.system as {
+            speed?: number;
+            manoeuvrability?: number;
+            detection?: number;
+            armour?: number;
+            hullIntegrity?: { max?: number };
+            turretRating?: number;
+            voidShields?: number;
+            crew?: { morale?: { max?: number }; crewRating?: number };
+            weaponCapacity?: { dorsal?: number; prow?: number; port?: number; starboard?: number; keel?: number };
+        };
+        const base: Record<ShipModifierStatKey, number> = sys.baseStatSnapshot ?? {
+            speed: sysShape.speed ?? 0,
+            manoeuvrability: sysShape.manoeuvrability ?? 0,
+            detection: sysShape.detection ?? 0,
+            armour: sysShape.armour ?? 0,
+            hullIntegrity: sysShape.hullIntegrity?.max ?? 0,
+            turretRating: sysShape.turretRating ?? 0,
+            voidShields: sysShape.voidShields ?? 0,
+            morale: sysShape.crew?.morale?.max ?? 0,
+            crewRating: sysShape.crew?.crewRating ?? 0,
+            ballisticSkill: sysShape.crew?.crewRating ?? 0,
+            weaponCapacityDorsal: sysShape.weaponCapacity?.dorsal ?? 0,
+            weaponCapacityProw: sysShape.weaponCapacity?.prow ?? 0,
+            weaponCapacityPort: sysShape.weaponCapacity?.port ?? 0,
+            weaponCapacityStarboard: sysShape.weaponCapacity?.starboard ?? 0,
+            weaponCapacityKeel: sysShape.weaponCapacity?.keel ?? 0,
+        };
+
+        type Row = {
+            statKey: ShipModifierStatKey;
+            labelKey: string;
+            base: number;
+            modifier: number;
+            total: number;
+            sources: ShipStatModifierSource[];
+        };
+        const rows: Row[] = [];
+        for (const statKey of SHIP_MODIFIER_STAT_KEYS) {
+            const entry = applied[statKey];
+            if (entry.sources.length === 0 && entry.total === 0) continue;
+            const baseValue = base[statKey];
+            rows.push({
+                statKey,
+                labelKey: BUILD_STAT_LABEL_KEY[statKey],
+                base: baseValue,
+                modifier: entry.total,
+                total: baseValue + entry.total,
+                sources: entry.sources,
+            });
+        }
+
+        context['buildSummaryRows'] = rows;
+        context['hasAppliedModifiers'] = rows.length > 0;
     }
 
     /* -------------------------------------------- */
