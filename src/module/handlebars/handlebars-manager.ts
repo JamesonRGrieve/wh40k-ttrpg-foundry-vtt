@@ -271,6 +271,10 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/ship-ramming-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ship-boarding-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ship-hit-and-run-chat.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ship-build-summary-panel.hbs',
+            'systems/wh40k-rpg/templates/prompt/warp-travel-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/warp-travel-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/warp-travel-peril-chat.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',

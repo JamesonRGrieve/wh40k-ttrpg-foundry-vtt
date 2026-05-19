@@ -2132,7 +2132,31 @@
                 "NotifyOverBudgetBy": "Over budget by {amount} SP",
                 "NotifyMissingSlots": "{count} essential slot(s) unfilled",
                 "NotifyCannotCommit": "Cannot save: starship build is invalid.",
-                "NotifyCommitted": "Starship build saved."
+                "NotifyCommitted": "Starship build saved.",
+                "SummaryHeader": "Build Summary",
+                "SummaryEmpty": "No components, upgrades, or roles are contributing modifiers.",
+                "Stat": {
+                    "Speed": "Speed",
+                    "Manoeuvrability": "Manoeuvrability",
+                    "Detection": "Detection",
+                    "Armour": "Armour",
+                    "HullIntegrity": "Hull Integrity",
+                    "TurretRating": "Turret Rating",
+                    "VoidShields": "Void Shields",
+                    "Morale": "Morale",
+                    "CrewRating": "Crew Rating",
+                    "BallisticSkill": "Ballistic Skill",
+                    "WeaponCapacityDorsal": "Weapon Capacity (Dorsal)",
+                    "WeaponCapacityProw": "Weapon Capacity (Prow)",
+                    "WeaponCapacityPort": "Weapon Capacity (Port)",
+                    "WeaponCapacityStarboard": "Weapon Capacity (Starboard)",
+                    "WeaponCapacityKeel": "Weapon Capacity (Keel)"
+                },
+                "SourceType": {
+                    "shipComponent": "Component",
+                    "shipUpgrade": "Upgrade",
+                    "shipRole": "Role"
+                }
             },
             "Critical": {
                 "Header": "Critical Hit",
@@ -2150,6 +2174,124 @@
                     "Drive": "Drive Damage",
                     "Crew": "Crew Casualties"
                 }
+            }
+        },
+        "WarpTravel": {
+            "DialogTitle": "Warp Travel — Navigator's Test",
+            "DialogIntro": "Resolve the 5-stage Navigation workflow. GM enters base voyage duration plus per-stage d100 rolls.",
+            "ChatTitle": "Warp Journey",
+            "PerilChatTitle": "Perils of the Warp",
+            "PerilTableGap": "(No table entry — re-roll or GM adjudication.)",
+            "EffectLabel": "Effect",
+            "BeaconLostNote": "The Astronomican signal was lost (3+ DoF on Stage 2). Stage 4 used the Hellish (-60) substitute Navigation test.",
+            "OffCourse": "Off-Course",
+            "OffCourseNote": "Vessel translated into the wrong system / region of space (failed Stage 4 with a 9 on either d10).",
+            "Days": "days",
+            "Yes": "Yes",
+            "No": "No",
+            "SummaryTitle": "Journey Summary",
+            "Stage": {
+                "Duration": "Stage 1 — Duration",
+                "LocateAstronomican": "Stage 2 — Locate Astronomican",
+                "ChartCourse": "Stage 3 — Chart Course",
+                "SteerVessel": "Stage 4 — Steer Vessel",
+                "LeaveWarp": "Stage 5 — Leave Warp"
+            },
+            "Field": {
+                "BaseDays": "Base Duration (days)",
+                "Awareness": "Awareness",
+                "NavigationWarp": "Navigation (Warp)",
+                "LocateRoll": "Locate Astronomican d100",
+                "ChartRoll": "Chart Course d100",
+                "SteerRoll": "Steer Vessel d100",
+                "LeaveRoll": "Leave Warp d100"
+            },
+            "Summary": {
+                "ElapsedDays": "Elapsed Days",
+                "OffCourse": "Off-Course",
+                "BeaconLost": "Beacon Lost",
+                "Deviation": "Translation Deviation (DoF)"
+            },
+            "Button": {
+                "Resolve": "Resolve Journey",
+                "PostChat": "Post Chat",
+                "RollPeril": "Roll Peril",
+                "Cancel": "Cancel"
+            }
+        },
+        "AcquisitionScale": {
+            "Title": "Profit Factor Acquisition Test",
+            "TitleForItem": "Acquire: {name}",
+            "Header": "Profit Factor Acquisition",
+            "CurrentPF": "Current PF:",
+            "AvailabilityHeader": "Availability",
+            "CraftsmanshipHeader": "Craftsmanship",
+            "ScaleHeader": "Scale",
+            "AdditionalHeader": "Additional Modifiers",
+            "CustomModifier": "Custom Modifier:",
+            "BasePF": "Base PF:",
+            "TotalModifiers": "Total Modifiers:",
+            "FinalTarget": "Final Target:",
+            "AutoSuccessBanner": "Automatic Success",
+            "AutoFailBanner": "Automatic Failure",
+            "RollButton": "Roll Acquisition Test",
+            "CancelButton": "Cancel",
+            "RecentHeader": "Recent Acquisitions",
+            "Availability": {
+                "Header": "Availability",
+                "Ubiquitous": "Ubiquitous",
+                "Abundant": "Abundant",
+                "Plentiful": "Plentiful",
+                "Common": "Common",
+                "Average": "Average",
+                "Scarce": "Scarce",
+                "Rare": "Rare",
+                "VeryRare": "Very Rare",
+                "ExtremelyRare": "Extremely Rare",
+                "NearUnique": "Near Unique",
+                "Unique": "Unique"
+            },
+            "Craftsmanship": {
+                "Header": "Craftsmanship",
+                "Poor": "Poor",
+                "Common": "Common",
+                "Good": "Good",
+                "Best": "Best"
+            },
+            "Scale": {
+                "Header": "Scale",
+                "Negligible": "Negligible",
+                "Trivial": "Trivial",
+                "Minor": "Minor",
+                "Standard": "Standard",
+                "Major": "Major",
+                "Significant": "Significant",
+                "Vast": "Vast"
+            },
+            "Extra": "Other",
+            "CombinePenalty": "Combining ({count} extra)",
+            "ChatSubtitle": "Profit Factor Acquisition",
+            "ChatFlavor": "Profit Factor Acquisition Test",
+            "ChatItem": "Item:",
+            "ChatRoll": "Roll:",
+            "ChatVs": "vs",
+            "ChatAutoSuccessLine": "Adjusted PF ≥ 100, no roll required —",
+            "ChatAutoFailLine": "Adjusted PF ≤ 0, no roll attempted —",
+            "ChatFooter": "Acquisition Test",
+            "Success": "SUCCESS",
+            "Failure": "FAILURE",
+            "DoS": "DoS",
+            "DoF": "DoF",
+            "Notification": {
+                "Acquired": "Acquired {name}",
+                "CriticalFailure": "Critical failure! Profit Factor reduced to {pf}"
+            },
+            "Common": {
+                "Haggling": "Haggling Successful",
+                "Rushed": "Rushed Purchase",
+                "Supplier": "Known Supplier",
+                "Bulk": "Bulk Purchase",
+                "RareMarket": "Rare Market"
             }
         },
         "ShipComponent": {
