@@ -4365,7 +4365,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
             const charRolls = this._charRolls;
             const charAssignments = this._charAssignments;
-            const hasCharRolls = charRolls.some((r) => r > 0) && CHARS.some((k) => charAssignments[k] !== null);
+            // `charAssignments[k]` is `number | null | undefined`; loose `!= null`
+            // correctly rejects BOTH undefined (no entry) and explicit null
+            // (entry cleared). The earlier `!== null` accepted undefined, so the
+            // gate fired even when no characteristic had been assigned — the
+            // loop below then wrote `.base = baseDefault + 0 + originBonus` for
+            // every char, leaving stats <20 wherever the homeworld penalty bit.
+            const hasCharRolls = charRolls.some((r) => r > 0) && CHARS.some((k) => charAssignments[k] != null);
             if (hasCharRolls) {
                 // Sum origin-path characteristic bonuses across every committed selection, so
                 // baked-in bonuses like Imperial World's +5 Fellowship land directly in the
@@ -4390,6 +4396,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     const rollIndex = charAssignments[key] ?? null;
                     const rolled = rollIndex !== null && (charRolls[rollIndex] ?? 0) > 0 ? charRolls[rollIndex] ?? 0 : 0;
                     const originBonus = originModSums[key] ?? 0;
+                    // Only overwrite `.base` when this specific characteristic
+                    // actually has a roll assigned OR an origin bonus to bake
+                    // in. Otherwise the writeback would wipe a player's
+                    // existing base value down to `baseDefault` (20) for any
+                    // characteristic that wasn't assigned this commit — the
+                    // exact "<20 everywhere" regression players hit.
+                    if (rolled <= 0 && originBonus === 0) continue;
                     charUpdate[`system.characteristics.${key}.base`] = baseDefault + rolled + originBonus;
                 }
                 await this.actor.update(charUpdate);
