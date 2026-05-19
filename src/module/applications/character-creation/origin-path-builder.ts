@@ -18,7 +18,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
-import { getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
+import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
@@ -2300,6 +2300,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             fate: null,
             aptitudeCollisions: [],
             hasUnresolvedAptitudeCollision: false,
+            unresolvedAptitudeCollisions: [],
+            resolvedAptitudeCollisions: [],
         };
 
         const charTotals: Record<string, number> = {};
@@ -2456,7 +2458,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         preview.aptitudes = Array.from(aptitudeSet).sort((a, b) => a.localeCompare(b));
         preview.aptitudeCollisions = collisions;
-        preview.hasUnresolvedAptitudeCollision = collisions.some((c) => c.replacement === null || c.replacement === '');
+        // (#216) Split the collision list into "still needs action" (drives the
+        // warning banner) and "applied swap" (drives a neutral Change affordance
+        // sub-section). Before this split the template rendered every entry in
+        // `aptitudeCollisions` under the warning banner unconditionally, so a
+        // collision the player had already resolved kept appearing as an
+        // outstanding requirement until the builder closed.
+        preview.unresolvedAptitudeCollisions = collisions.filter((c) => c.replacement === null || c.replacement === '');
+        preview.resolvedAptitudeCollisions = collisions
+            .filter((c): c is { original: string; replacement: string } => typeof c.replacement === 'string' && c.replacement !== '');
+        preview.hasUnresolvedAptitudeCollision = preview.unresolvedAptitudeCollisions.length > 0;
 
         return preview;
     }
@@ -2678,6 +2689,21 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         };
         for (const origin of this.allOrigins) visit(origin);
         for (const origin of this.lineageOrigins) visit(origin);
+        // (#216) Per DH2 RAW the replacement for a duplicate aptitude must be
+        // a CHARACTERISTIC aptitude (Weapon Skill, Ballistic Skill, Strength,
+        // Toughness, Agility, Intelligence, Perception, Willpower, Fellowship).
+        // Non-characteristic aptitudes (Defence, Offence, Knowledge, Tech,
+        // Social, Fieldcraft, Finesse, etc.) are not eligible swap targets.
+        // The set of characteristic display names is the system-level
+        // GENERATION_CHARACTERISTICS map (engine primitive, not content),
+        // surfaced via getAllCharacteristicDisplayInfo() — Influence is excluded
+        // because it is a resource characteristic, not a generation char.
+        const characteristicKeys = new Set<string>();
+        const charInfo = getAllCharacteristicDisplayInfo();
+        for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
+            const label = charInfo[key]?.label;
+            if (label !== undefined && label !== '') characteristicKeys.add(this._aptitudeKey(label));
+        }
         // Exclude taken aptitudes by canonical identity so a "willpower"
         // candidate is not offered when "Willpower" is already taken (#205).
         const takenKeys = new Set<string>();
@@ -2687,8 +2713,22 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         for (const apt of pool) {
             const key = this._aptitudeKey(apt);
             if (takenKeys.has(key) || seenKeys.has(key)) continue;
+            // (#216) Drop non-characteristic candidates from the swap pool.
+            if (!characteristicKeys.has(key)) continue;
             seenKeys.add(key);
             result.push(apt);
+        }
+        // (#216) If the mined pool omitted some characteristic aptitudes (the
+        // loaded origins didn't happen to reference all nine), top up from the
+        // canonical characteristic list so the player can always pick any
+        // characteristic aptitude they don't already have, per RAW.
+        for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
+            const label = charInfo[key]?.label;
+            if (label === undefined || label === '') continue;
+            const canon = this._aptitudeKey(label);
+            if (takenKeys.has(canon) || seenKeys.has(canon)) continue;
+            seenKeys.add(canon);
+            result.push(label);
         }
         return result.sort((a, b) => a.localeCompare(b));
     }

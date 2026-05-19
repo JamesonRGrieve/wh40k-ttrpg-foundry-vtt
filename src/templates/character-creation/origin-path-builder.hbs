@@ -738,7 +738,7 @@
  </div>
  </div>
  {{/if}}
- {{#if preview.aptitudeCollisions.length}}
+ {{#if preview.unresolvedAptitudeCollisions.length}}
  <div class="wh40k-opb-aptitude-warning tw-col-span-full tw-mb-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[color:var(--wh40k-accent-warn,#f39c12)] tw-bg-[rgba(243,156,18,0.08)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]" data-testid="aptitude-collision-banner">
  <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-xs)]">
  <i class="fa-solid fa-triangle-exclamation tw-text-[color:var(--wh40k-accent-warn,#f39c12)] tw-mt-[2px]"></i>
@@ -746,16 +746,31 @@
  <div class="tw-font-semibold tw-mb-[2px]">{{localize "WH40K.OriginPath.AptitudeDouble.BannerTitle"}}</div>
  <div class="tw-text-[0.75rem] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.OriginPath.AptitudeDouble.BannerBody"}}</div>
  <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)]">
- {{#each preview.aptitudeCollisions as |coll|}}
- <li class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)]">
+ {{#each preview.unresolvedAptitudeCollisions as |coll|}}
+ <li class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)]" data-testid="aptitude-collision-unresolved" data-aptitude="{{coll.original}}">
  <span class="tw-font-semibold">{{coll.original}}</span>
- {{#if coll.replacement}}
+ <button type="button" class="tw-ml-[var(--wh40k-space-xs)] tw-py-[2px] tw-px-[6px] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[color:var(--wh40k-gold)] tw-text-[0.7rem] tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)]" data-action="resolveAptitudeDouble" data-aptitude="{{coll.original}}">{{localize "WH40K.OriginPath.AptitudeDouble.PickButton"}}</button>
+ </li>
+ {{/each}}
+ </ul>
+ </div>
+ </div>
+ </div>
+ {{/if}}
+ {{#if preview.resolvedAptitudeCollisions.length}}
+ <div class="wh40k-opb-aptitude-resolved tw-col-span-full tw-mb-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[color:var(--wh40k-gold)] tw-bg-[rgba(var(--wh40k-gold-rgb),0.06)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]" data-testid="aptitude-collision-resolved-banner">
+ <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-xs)]">
+ <i class="fa-solid fa-circle-check tw-text-[color:var(--wh40k-gold)] tw-mt-[2px]"></i>
+ <div class="tw-flex-1">
+ <div class="tw-font-semibold tw-mb-[2px]">{{localize "WH40K.OriginPath.AptitudeDouble.ResolvedTitle"}}</div>
+ <div class="tw-text-[0.75rem] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.OriginPath.AptitudeDouble.ResolvedBody"}}</div>
+ <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)]">
+ {{#each preview.resolvedAptitudeCollisions as |coll|}}
+ <li class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)]" data-testid="aptitude-collision-resolved" data-aptitude="{{coll.original}}">
+ <span class="tw-font-semibold">{{coll.original}}</span>
  <i class="fa-solid fa-arrow-right tw-text-[0.7rem] tw-opacity-70"></i>
  <span class="tw-text-[color:var(--wh40k-gold)]">{{coll.replacement}}</span>
  <button type="button" class="tw-ml-[var(--wh40k-space-xs)] tw-text-[0.7rem] tw-underline" data-action="resolveAptitudeDouble" data-aptitude="{{coll.original}}">{{localize "WH40K.OriginPath.AptitudeDouble.ChangeButton"}}</button>
- {{else}}
- <button type="button" class="tw-ml-[var(--wh40k-space-xs)] tw-py-[2px] tw-px-[6px] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[color:var(--wh40k-gold)] tw-text-[0.7rem] tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)]" data-action="resolveAptitudeDouble" data-aptitude="{{coll.original}}">{{localize "WH40K.OriginPath.AptitudeDouble.PickButton"}}</button>
- {{/if}}
  </li>
  {{/each}}
  </ul>
