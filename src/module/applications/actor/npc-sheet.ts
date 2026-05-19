@@ -889,7 +889,10 @@ export default class NPCSheet extends CharacterSheet {
                 else if (trainedData.plus10 === true) target += 10;
                 target += trainedData.bonus ?? 0;
             } else {
-                target = Math.floor(target / 2); // Untrained: half characteristic
+                // RT/DH1 halve characteristic when untrained; DH2/BC/DW/OW/IM
+                // apply a flat -20 penalty instead (DH2 core.md p.95).
+                const systemId = this._resolveGameSystemId();
+                target = systemId === 'rt' || systemId === 'dh1' ? Math.floor(target / 2) : target - 20;
             }
 
             // Proficiency cycle display data
@@ -1967,7 +1970,10 @@ export default class NPCSheet extends CharacterSheet {
             const charTotal = characteristics[charKey]?.total ?? 0;
             const level = skill.plus20 === true ? 3 : skill.plus10 === true ? 2 : skill.trained === true ? 1 : 0;
             const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
-            skill.current = level > 0 ? charTotal + trainingBonus + (skill.bonus ?? 0) : Math.floor(charTotal / 2) + (skill.bonus ?? 0);
+            // RT/DH1 halve; DH2/BC/DW/OW/IM apply flat -20 for untrained.
+            const systemId = this._resolveGameSystemId();
+            const untrainedAdjust = systemId === 'rt' || systemId === 'dh1' ? Math.floor(charTotal / 2) : charTotal - 20;
+            skill.current = level > 0 ? charTotal + trainingBonus + (skill.bonus ?? 0) : untrainedAdjust + (skill.bonus ?? 0);
             // Defer to the parent helper for trainingIndicators, breakdown, tooltipData, isGranted, etc.
             this._augmentSkillData(key, skill, characteristics);
             return [key, skill];

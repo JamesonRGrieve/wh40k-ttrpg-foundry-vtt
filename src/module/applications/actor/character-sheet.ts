@@ -1479,13 +1479,22 @@ export default class CharacterSheet extends BaseActorSheet {
 
         type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
 
+        // Untrained-skill rules diverge by system. Rogue Trader (FFG legacy) halves
+        // the characteristic when untrained; DH2 / BC / DW / OW / IM apply a flat
+        // -20 penalty (DH2 core.md p.95 "Untrained Skill Use"). See wh40k-tooltip.ts
+        // for the same gate around the untrained-target display.
+        const systemId = this._resolveGameSystemId();
+        const untrainedHalves = systemId === 'rt' || systemId === 'dh1';
+        const untrainedPenalty = untrainedHalves ? 0 : -20;
+        const adjustUntrained = (base: number): number => (untrainedHalves ? Math.floor(base / 2) : base + untrainedPenalty);
+
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
         const dodgeSkill = skills['dodge'] as unknown as SkillBits | undefined;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         let dodgeBase = chars['agility']?.total ?? 0;
         if (dodgeSkill?.plus20 === true) dodgeBase += 20;
         else if (dodgeSkill?.plus10 === true) dodgeBase += 10;
-        else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = Math.floor(dodgeBase / 2);
+        else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = adjustUntrained(dodgeBase);
         sheetContext.dodgeTarget = dodgeBase;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
@@ -1494,7 +1503,7 @@ export default class CharacterSheet extends BaseActorSheet {
         let parryBase = chars['weaponSkill']?.total ?? 0;
         if (parrySkill?.plus20 === true) parryBase += 20;
         else if (parrySkill?.plus10 === true) parryBase += 10;
-        else if (parrySkill?.trained !== true && parrySkill?.basic !== true) parryBase = Math.floor(parryBase / 2);
+        else if (parrySkill?.trained !== true && parrySkill?.basic !== true) parryBase = adjustUntrained(parryBase);
         sheetContext.parryTarget = parryBase;
     }
 
