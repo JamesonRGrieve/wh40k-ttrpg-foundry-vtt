@@ -426,12 +426,21 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             const usingAlt = this._charOverride !== null && this._charOverride !== listedChar;
             const altCharTotal = usingAlt ? Number(sourceActor?.characteristics?.[effectiveChar]?.total ?? 0) : 0;
 
+            // The aptitude/career family (DH2 + DH1e/BC/DW/OW/IM) lets any
+            // skill be attempted untrained — the -20 penalty is already
+            // baked into skillCurrent at actor prepare time (creature.ts
+            // line 999, `usesAptitudes === true ? charTotal - 20 : …`).
+            // Only RT/legacy systems block untrained Advanced skills.
+            const actorGameSystem = (sourceActor as { system?: { gameSystem?: string } } | null | undefined)?.system?.gameSystem ?? '';
+            const isAptitudeSystem = actorGameSystem === 'dh2e' || actorGameSystem === 'dh1e' || actorGameSystem === 'bc' || actorGameSystem === 'dw' || actorGameSystem === 'ow' || actorGameSystem === 'im';
+
             const resolved = resolveUntrainedTarget({
                 advance,
                 isBasic,
                 characteristicTotal: listedCharTotal + trainingBonus,
                 altCharacteristicTotal: usingAlt ? altCharTotal + trainingBonus : undefined,
                 halveOnNonBasic: advance === 0 && !isBasic,
+                allowUntrainedAdvanced: isAptitudeSystem,
             });
             // Only override base target when we changed the characteristic or fired the halving rule.
             // Otherwise leave rollData.baseTarget untouched so unrelated rolls behave identically.

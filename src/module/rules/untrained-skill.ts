@@ -30,6 +30,15 @@ export interface UntrainedTestInput {
     altCharacteristicTotal?: number;
     /** Apply the optional non-Basic halving penalty (DH1/RT carryover). */
     halveOnNonBasic?: boolean;
+    /**
+     * If true, untrained Advanced/non-Basic skills are NOT blocked — they
+     * fall through to the same roll resolution as untrained Basic skills.
+     * DH2 RAW (and the aptitude/career family generally) lets any skill be
+     * attempted untrained with the -20 penalty already baked into the
+     * caller's `characteristicTotal`. The RAW "cannot attempt untrained
+     * advanced" rule belongs to RT/DH1.
+     */
+    allowUntrainedAdvanced?: boolean;
 }
 
 export interface UntrainedTestOutput {
@@ -50,8 +59,10 @@ export function resolveUntrainedTarget(input: UntrainedTestInput): UntrainedTest
         return { target: base, untrainedAdvanced: false, halved: false, usedAltCharacteristic: usedAlt };
     }
     // Advance is 0 — untrained.
-    if (!input.isBasic) {
-        // RAW: cannot attempt. Caller decides whether to render the row.
+    if (!input.isBasic && input.allowUntrainedAdvanced !== true) {
+        // RT/DH1 RAW: cannot attempt. Caller decides whether to render the row.
+        // DH2 and the aptitude family pass `allowUntrainedAdvanced: true` so
+        // any skill stays rollable untrained (penalty already in the target).
         return { target: 0, untrainedAdvanced: true, halved: false, usedAltCharacteristic: usedAlt };
     }
     // Basic untrained: roll at full characteristic in DH2, halved if the
