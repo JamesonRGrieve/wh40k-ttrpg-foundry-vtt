@@ -267,6 +267,10 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/weapon-quality-effect-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/right-stuff-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/right-stuff-chat.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/action-bar-manoeuvres.hbs',
+            'systems/wh40k-rpg/templates/chat/ship-ramming-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ship-boarding-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ship-hit-and-run-chat.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',
