@@ -84,9 +84,27 @@ interface ModifierSource {
     name: string;
     type: string;
     id: string | null;
+    /** Live embedded UUID (Actor.<id>.Item.<id>) — points at the owned copy. */
+    uuid?: string | null;
+    /**
+     * Compendium origin UUID (Compendium.<system>.<pack>.Item.<id>) when the
+     * item was dragged from a pack. Standard practice per CLAUDE.md Direction
+     * #11 — every actor-applied modifier must be source-traceable back to its
+     * canonical compendium document so tooltips, audits, and migrations can
+     * resolve the originating entry.
+     */
+    sourceUuid?: string | null;
     value: number;
     label?: string | undefined;
     specialization?: string | undefined;
+}
+
+/** Extract the compendium-source UUID from a Foundry document, or null. */
+function compendiumSourceUuidOf(item: WH40KItem): string | null {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _stats is Foundry-managed document metadata not in our schema
+    const stats = (item as { _stats?: { compendiumSource?: string | null } })._stats;
+    const src = stats?.compendiumSource;
+    return typeof src === 'string' && src.length > 0 ? src : null;
 }
 
 /** Shape of an item's modifiers block (accessed via item.system.modifiers). */
@@ -1075,6 +1093,8 @@ export default class CreatureTemplate extends CommonTemplate {
             name: item.name,
             type: item.type,
             id: item.id,
+            uuid: item.uuid,
+            sourceUuid: compendiumSourceUuidOf(item),
         };
 
         // Characteristic modifiers
@@ -1323,7 +1343,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
         for (const item of originItems) {
-            const source = { name: item.name, type: 'originPath', id: item.id };
+            const source = { name: item.name, type: 'originPath', id: item.id, uuid: item.uuid, sourceUuid: compendiumSourceUuidOf(item) };
 
             // Base modifiers from ModifiersTemplate
             const modBlock = item.system.modifiers as ItemModifiersBlock | null | undefined;
