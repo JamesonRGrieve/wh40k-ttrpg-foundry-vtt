@@ -9,6 +9,8 @@ interface ShipComponentSystem {
     space?: number;
     shipPoints?: number;
     modifiers?: Record<string, number>;
+    /** ship-role only — bonuses applied while the role is staffed. */
+    shipBonuses?: { manoeuvrability?: number; detection?: number; ballisticSkill?: number; crewRating?: number };
 }
 
 interface ShipItemView {
@@ -17,6 +19,60 @@ interface ShipItemView {
     name?: string;
     type: string;
     system: ShipComponentSystem;
+    /** Foundry stamps a `_stats.compendiumSource` UUID on imported entries. */
+    _stats?: { compendiumSource?: string };
+}
+
+/**
+ * Stat keys that owned items can modify on a starship. Authored as a
+ * literal-typed tuple so the iterator in `_recomputeAppliedModifiers` narrows
+ * each key against the typed `appliedModifiers` record without needing a
+ * runtime guard against Record-of-string widening.
+ */
+export const SHIP_MODIFIER_STAT_KEYS = [
+    'speed',
+    'manoeuvrability',
+    'detection',
+    'armour',
+    'hullIntegrity',
+    'turretRating',
+    'voidShields',
+    'morale',
+    'crewRating',
+    'ballisticSkill',
+    'weaponCapacityDorsal',
+    'weaponCapacityProw',
+    'weaponCapacityPort',
+    'weaponCapacityStarboard',
+    'weaponCapacityKeel',
+] as const;
+
+/** Union of every stat key the modifier engine recognizes. */
+export type ShipModifierStatKey = (typeof SHIP_MODIFIER_STAT_KEYS)[number];
+
+/**
+ * A single contribution to a modified ship stat. Identifies the source item
+ * by both `uuid` (the world-relative UUID, suitable for `fromUuid()`) and
+ * `sourceUuid` (the compendium UUID it was instantiated from, when known —
+ * the canonical reference for Direction #11 UUID-primary content links).
+ */
+export interface ShipStatModifierSource {
+    /** Display name from the owning item. */
+    name: string;
+    /** Item type (`shipComponent` | `shipUpgrade` | `shipRole`). */
+    type: string;
+    /** The world-instance UUID for hover-link / inspection. */
+    uuid: string;
+    /** The compendium UUID the item was instantiated from. Empty when world-only. */
+    sourceUuid: string;
+    /** Signed integer contribution to the stat. */
+    value: number;
+}
+
+/** Per-stat applied-modifier rollup: total + ordered list of contributing sources. */
+export interface ShipAppliedModifier {
+    total: number;
+    sources: ShipStatModifierSource[];
 }
 
 /**
@@ -166,6 +222,23 @@ export default class StarshipData extends ActorDataModel {
 
     /** Computed during prepareEmbeddedData */
     declare componentModifiers: Record<string, number>;
+
+    /**
+     * Computed during prepareEmbeddedData (issue #196). Maps every stat key in
+     * `SHIP_MODIFIER_STAT_KEYS` to its applied rollup — a total delta and the
+     * list of contributing items. Base stats from `defineSchema()` are mutated
+     * in place to include each rollup's `total` so downstream code (rolls,
+     * chat cards, derived getters) sees the post-modifier value without
+     * threading the rollup through.
+     */
+    declare appliedModifiers: Record<ShipModifierStatKey, ShipAppliedModifier>;
+
+    /**
+     * Snapshot of the base stat values *before* applied modifiers are added.
+     * Re-read on each prep so the Build Summary panel can show "base (+mod)".
+     * Indexed by the same `ShipModifierStatKey` union used for `appliedModifiers`.
+     */
+    declare baseStatSnapshot: Record<ShipModifierStatKey, number>;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -463,6 +536,84 @@ export default class StarshipData extends ActorDataModel {
     }
 
     /**
+     * Returns the zero-state for `appliedModifiers`. Every stat key in
+     * `SHIP_MODIFIER_STAT_KEYS` is present with `total: 0` and an empty
+     * `sources` array — the Build Summary panel can iterate the full set
+     * without guarding on `undefined`.
+     */
+    static _emptyAppliedModifiers(): Record<ShipModifierStatKey, ShipAppliedModifier> {
+        // eslint-disable-next-line no-restricted-syntax -- bootstrap: empty record is built up below before being returned
+        const out = {} as Record<ShipModifierStatKey, ShipAppliedModifier>;
+        for (const key of SHIP_MODIFIER_STAT_KEYS) {
+            out[key] = { total: 0, sources: [] };
+        }
+        return out;
+    }
+
+    /**
+     * Walk an iterable of ship items and produce a per-stat applied-modifier
+     * rollup. Pure helper — no `this` state is read; usable from tests via
+     * `StarshipData.computeAppliedModifiers(items)`.
+     *
+     *   • `shipComponent`s contribute their `system.modifiers` map (only when
+     *     `condition === 'functional'` — a destroyed component grants no
+     *     bonus).
+     *   • `shipUpgrade`s contribute their `system.modifiers` map
+     *     unconditionally; upgrades have no per-component condition tracking.
+     *   • `shipRole`s contribute their `system.shipBonuses` block — the four
+     *     RAW Rogue Trader role bonuses (manoeuvrability / detection /
+     *     ballisticSkill / crewRating).
+     *
+     * Unknown modifier keys are dropped silently. The rollup only records
+     * stats listed in `SHIP_MODIFIER_STAT_KEYS`.
+     */
+    static computeAppliedModifiers(items: Iterable<ShipItemView>): Record<ShipModifierStatKey, ShipAppliedModifier> {
+        const out = StarshipData._emptyAppliedModifiers();
+        const validKey = (k: string): k is ShipModifierStatKey =>
+            (SHIP_MODIFIER_STAT_KEYS as readonly string[]).includes(k);
+
+        const apply = (item: ShipItemView, key: string, raw: number): void => {
+            if (!validKey(key)) return;
+            const value = Number(raw);
+            if (!Number.isFinite(value) || value === 0) return;
+            const slot = out[key];
+            slot.total += value;
+            slot.sources.push({
+                name: item.name ?? '',
+                type: item.type,
+                uuid: item.uuid ?? '',
+                sourceUuid: item._stats?.compendiumSource ?? '',
+                value,
+            });
+        };
+
+        for (const item of items) {
+            const sys = item.system;
+            if (item.type === 'shipComponent') {
+                if (sys.condition !== undefined && sys.condition !== 'functional') continue;
+                if (sys.modifiers !== undefined) {
+                    for (const [key, value] of Object.entries(sys.modifiers)) {
+                        apply(item, key, Number(value));
+                    }
+                }
+            } else if (item.type === 'shipUpgrade') {
+                if (sys.modifiers !== undefined) {
+                    for (const [key, value] of Object.entries(sys.modifiers)) {
+                        apply(item, key, Number(value));
+                    }
+                }
+            } else if (item.type === 'shipRole' && sys.shipBonuses !== undefined) {
+                const bonuses = sys.shipBonuses;
+                apply(item, 'manoeuvrability', bonuses.manoeuvrability ?? 0);
+                apply(item, 'detection', bonuses.detection ?? 0);
+                apply(item, 'ballisticSkill', bonuses.ballisticSkill ?? 0);
+                apply(item, 'crewRating', bonuses.crewRating ?? 0);
+            }
+        }
+        return out;
+    }
+
+    /**
      * Calculate stats from equipped components.
      * Called by the Document after items are ready.
      */
@@ -473,12 +624,42 @@ export default class StarshipData extends ActorDataModel {
         const items = actor.items;
         if (items === undefined) return;
 
+        // Snapshot base stats BEFORE applying modifiers so the Build Summary
+        // panel can show the breakdown (and so we can recompute idempotently
+        // if prepareEmbeddedData runs more than once per render pass).
+        this.baseStatSnapshot = {
+            speed: this.speed,
+            manoeuvrability: this.manoeuvrability,
+            detection: this.detection,
+            armour: this.armour,
+            hullIntegrity: this.hullIntegrity.max,
+            turretRating: this.turretRating,
+            voidShields: this.voidShields,
+            morale: this.crew.morale.max,
+            crewRating: this.crew.crewRating,
+            ballisticSkill: this.crew.crewRating, // RAW: ship BS == crew rating
+            weaponCapacityDorsal: this.weaponCapacity.dorsal,
+            weaponCapacityProw: this.weaponCapacity.prow,
+            weaponCapacityPort: this.weaponCapacity.port,
+            weaponCapacityStarboard: this.weaponCapacity.starboard,
+            weaponCapacityKeel: this.weaponCapacity.keel,
+        };
+
         // Calculate power and space from components
         let powerGenerated = 0;
         let powerUsed = 0;
         let spaceUsed = 0;
 
-        // Track stat modifiers from components
+        // Collect items into an array once so we can pass the same view to
+        // both the legacy power/space accumulator AND the new applied-modifier
+        // engine without iterating the Foundry collection twice.
+        const itemViews: ShipItemView[] = [];
+        for (const rawItem of items) {
+            itemViews.push(rawItem as ShipItemView);
+        }
+
+        // Track stat modifiers from components (legacy flat shape — preserved
+        // for the older sheet bindings that read it directly).
         const componentModifiers: Record<string, number> = {
             speed: 0,
             manoeuvrability: 0,
@@ -491,9 +672,7 @@ export default class StarshipData extends ActorDataModel {
             crewRating: 0,
         };
 
-        // Process ship components
-        for (const rawItem of items) {
-            const item = rawItem as ShipItemView;
+        for (const item of itemViews) {
             const sys = item.system;
             if (item.type === 'shipComponent' && sys.condition === 'functional') {
                 // Power
@@ -506,7 +685,7 @@ export default class StarshipData extends ActorDataModel {
                 // Space
                 spaceUsed += sys.space ?? 0;
 
-                // Modifiers
+                // Modifiers (legacy flat rollup)
                 if (sys.modifiers !== undefined) {
                     for (const [key, value] of Object.entries(sys.modifiers)) {
                         const existing = componentModifiers[key];
@@ -546,17 +725,50 @@ export default class StarshipData extends ActorDataModel {
         // Store component modifiers for display
         this.componentModifiers = componentModifiers;
 
+        // ── Apply per-stat modifiers from owned components / upgrades / roles ──
+        // (Issue #196.) Rich rollup with per-source attribution; mutates the
+        // base stats so derived getters and rolls see the post-modifier value.
+        const applied = StarshipData.computeAppliedModifiers(itemViews);
+        this.appliedModifiers = applied;
+
+        this.speed = this.baseStatSnapshot.speed + applied.speed.total;
+        this.manoeuvrability = this.baseStatSnapshot.manoeuvrability + applied.manoeuvrability.total;
+        this.detection = this.baseStatSnapshot.detection + applied.detection.total;
+        this.armour = this.baseStatSnapshot.armour + applied.armour.total;
+        this.hullIntegrity.max = this.baseStatSnapshot.hullIntegrity + applied.hullIntegrity.total;
+        this.turretRating = this.baseStatSnapshot.turretRating + applied.turretRating.total;
+        this.voidShields = Math.max(0, this.baseStatSnapshot.voidShields + applied.voidShields.total);
+        this.crew.morale.max = this.baseStatSnapshot.morale + applied.morale.total;
+        this.crew.crewRating = this.baseStatSnapshot.crewRating + applied.crewRating.total;
+        this.weaponCapacity.dorsal = Math.max(0, this.baseStatSnapshot.weaponCapacityDorsal + applied.weaponCapacityDorsal.total);
+        this.weaponCapacity.prow = Math.max(0, this.baseStatSnapshot.weaponCapacityProw + applied.weaponCapacityProw.total);
+        this.weaponCapacity.port = Math.max(0, this.baseStatSnapshot.weaponCapacityPort + applied.weaponCapacityPort.total);
+        this.weaponCapacity.starboard = Math.max(0, this.baseStatSnapshot.weaponCapacityStarboard + applied.weaponCapacityStarboard.total);
+        this.weaponCapacity.keel = Math.max(0, this.baseStatSnapshot.weaponCapacityKeel + applied.weaponCapacityKeel.total);
+
+        // Detection bonus is derived from (modified) detection — recompute so
+        // initiative rolls and the chat card pull the right value after a role
+        // bonus or auger array adjusts detection upward.
+        this.detectionBonus = Math.floor(this.detection / 10);
+
+        // Clamp hull / morale current values to the (possibly new) max so a
+        // higher cap from a freshly-fitted hull component doesn't leave the
+        // current values below 100% but a lower cap (decommissioned upgrade)
+        // doesn't push them above max.
+        if (this.hullIntegrity.value > this.hullIntegrity.max) {
+            this.hullIntegrity.value = this.hullIntegrity.max;
+        }
+        if (this.crew.morale.value > this.crew.morale.max) {
+            this.crew.morale.value = this.crew.morale.max;
+        }
+
         // Refresh SP-budget + essential-slot validation now that items are
         // visible. The earlier `_prepareBuildValidation()` call seeded the
         // shape with stale `spent` and the full essential-slot list; this pass
         // computes the accurate state for the rendered sheet.
-        const itemsForValidation: ShipItemView[] = [];
-        for (const rawItem of items) {
-            const item = rawItem as ShipItemView;
-            if (item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade') {
-                itemsForValidation.push(item);
-            }
-        }
+        const itemsForValidation = itemViews.filter(
+            (item) => item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade',
+        );
         this._refreshBuildValidation(itemsForValidation);
     }
 

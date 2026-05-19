@@ -70,6 +70,91 @@ describe('StarshipData', () => {
         expect(fakeInstance.moralePercentage).toBe(80);
     });
 
+    it('_emptyAppliedModifiers seeds every known stat key with total=0 and empty sources', async () => {
+        const mod = await import('./starship').catch(() => undefined);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        if (mod === undefined) return;
+        const { default: StarshipData, SHIP_MODIFIER_STAT_KEYS } = mod;
+        const empty = StarshipData._emptyAppliedModifiers();
+        for (const key of SHIP_MODIFIER_STAT_KEYS) {
+            expect(empty[key]).toBeDefined();
+            expect(empty[key].total).toBe(0);
+            expect(empty[key].sources).toEqual([]);
+        }
+    });
+
+    it('computeAppliedModifiers sums shipComponent.modifiers + shipUpgrade.modifiers + shipRole.shipBonuses', async () => {
+        const mod = await import('./starship').catch(() => undefined);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        if (mod === undefined) return;
+        const { default: StarshipData } = mod;
+        const items = [
+            {
+                type: 'shipComponent',
+                name: 'Best Auger Array',
+                uuid: 'Actor.A.Item.1',
+                _stats: { compendiumSource: 'Compendium.wh40k-rpg.rt-items.augur1' },
+                system: { condition: 'functional', modifiers: { detection: 8, manoeuvrability: 2 } },
+            },
+            {
+                type: 'shipComponent',
+                name: 'Wrecked Plasma Drive',
+                uuid: 'Actor.A.Item.2',
+                system: { condition: 'damaged', modifiers: { speed: 5 } }, // ignored — damaged
+            },
+            {
+                type: 'shipUpgrade',
+                name: 'Reinforced Bulkheads',
+                uuid: 'Actor.A.Item.3',
+                _stats: { compendiumSource: 'Compendium.wh40k-rpg.rt-items.upgrade1' },
+                system: { modifiers: { armour: 1, hullIntegrity: 4 } },
+            },
+            {
+                type: 'shipRole',
+                name: 'Helmsman',
+                uuid: 'Actor.A.Item.4',
+                system: { shipBonuses: { manoeuvrability: 5, detection: 0, ballisticSkill: 0, crewRating: 0 } },
+            },
+        ];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: test-fixture heterogeneous item shape vs the private ShipItemView interface; cast narrows to the public parameter signature
+        const applied = StarshipData.computeAppliedModifiers(items as unknown as Parameters<typeof StarshipData.computeAppliedModifiers>[0]);
+        expect(applied.detection.total).toBe(8);
+        expect(applied.detection.sources).toHaveLength(1);
+        const detSrc = applied.detection.sources[0];
+        expect(detSrc?.name).toBe('Best Auger Array');
+        expect(detSrc?.sourceUuid).toBe('Compendium.wh40k-rpg.rt-items.augur1');
+        // manoeuvrability: 2 from component + 5 from role
+        expect(applied.manoeuvrability.total).toBe(7);
+        expect(applied.manoeuvrability.sources).toHaveLength(2);
+        expect(applied.armour.total).toBe(1);
+        expect(applied.hullIntegrity.total).toBe(4);
+        // damaged component contributes nothing
+        expect(applied.speed.total).toBe(0);
+        // unused stat keys default to 0
+        expect(applied.voidShields.total).toBe(0);
+        expect(applied.crewRating.total).toBe(0);
+    });
+
+    it('computeAppliedModifiers ignores unknown modifier keys', async () => {
+        const mod = await import('./starship').catch(() => undefined);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        if (mod === undefined) return;
+        const { default: StarshipData } = mod;
+        const items = [
+            {
+                type: 'shipComponent',
+                name: 'Strange Component',
+                uuid: 'Actor.A.Item.X',
+                system: { condition: 'functional', modifiers: { mysteryStat: 99, detection: 3 } },
+            },
+        ];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: test-fixture heterogeneous item shape vs the private ShipItemView interface; cast narrows to the public parameter signature
+        const applied = StarshipData.computeAppliedModifiers(items as unknown as Parameters<typeof StarshipData.computeAppliedModifiers>[0]);
+        expect(applied.detection.total).toBe(3);
+        // mysteryStat is dropped — not present in SHIP_MODIFIER_STAT_KEYS.
+        expect(Object.keys(applied)).not.toContain('mysteryStat');
+    });
+
     it('_prepareCombatStats handles zero maxima gracefully (percentage = 100)', async () => {
         const mod = await import('./starship').catch(() => undefined);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
