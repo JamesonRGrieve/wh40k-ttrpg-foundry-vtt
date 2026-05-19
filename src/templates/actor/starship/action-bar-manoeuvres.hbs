@@ -1,0 +1,47 @@
+{{!-- Starship Manoeuvre Action bar (issue #185)
+      Renders the RAW Rogue Trader Table 8-10 catalogue as clickable
+      tiles. Each tile resolves a stable ship-manoeuvre id (Adjust
+      Bearing, Adjust Speed, Adjust Speed & Bearing, Come to New
+      Heading, Disengage, Evasive Manoeuvres) — sheet wiring binds
+      the data-action="rollShipManoeuvre" + data-manoeuvre-id="<id>"
+      pair to a combined Pilot+Manoeuvrability roll. Difficulty,
+      label, and benefit are read from src/module/rules/ship-manoeuvres.ts. --}}
+<section class="wh40k-starship-manoeuvre-bar tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-border-t tw-border-gold rt:tw-border-gold dh2e:tw-border-bronze">
+    <header class="tw-flex tw-items-baseline tw-justify-between tw-gap-3">
+        <h2 class="wh40k-starship-manoeuvre-bar__title tw-text-base tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gold rt:tw-text-gold dh2e:tw-text-bronze">{{localize "WH40K.Starship.Manoeuvre.BarTitle"}}</h2>
+        {{#if helmsmanName}}
+            <span class="wh40k-starship-manoeuvre-bar__helmsman tw-text-xs tw-text-[#6a5239] tw-italic">{{localize "WH40K.Starship.Manoeuvre.Helmsman"}}: {{helmsmanName}}</span>
+        {{/if}}
+    </header>
+
+    {{#if manoeuvres.length}}
+        <ul class="wh40k-starship-manoeuvre-bar__list tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-2 tw-list-none tw-p-0 tw-m-0">
+            {{#each manoeuvres as |m|}}
+                <li class="wh40k-starship-manoeuvre-tile tw-flex tw-flex-col tw-gap-1 tw-px-2.5 tw-py-2 tw-rounded-md tw-border tw-border-[rgba(74,55,40,0.25)] tw-bg-white/70" data-manoeuvre-id="{{m.id}}">
+                    <div class="tw-flex tw-items-baseline tw-justify-between tw-gap-2">
+                        <span class="wh40k-starship-manoeuvre-tile__name tw-font-semibold tw-text-[0.95em] tw-text-[#4a3728] tw-uppercase tw-tracking-wide">{{localize m.labelKey}}</span>
+                        <span class="wh40k-starship-manoeuvre-tile__difficulty tw-text-[0.75em] tw-text-[#6a5239] tw-uppercase">{{m.difficultyLabel}}</span>
+                    </div>
+                    <span class="wh40k-starship-manoeuvre-tile__benefit tw-text-[0.78em] tw-text-[#4a3728] tw-opacity-80">{{localize m.benefitKey}}</span>
+                    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-mt-1">
+                        <span class="wh40k-starship-manoeuvre-tile__target tw-text-[0.78em] tw-text-[#4a3728]">
+                            {{localize "WH40K.Starship.Manoeuvre.Target"}}: <strong>{{m.target}}</strong>
+                            {{#if m.opposed}}
+                                <span class="wh40k-starship-manoeuvre-tile__opposed tw-text-[0.7em] tw-uppercase tw-px-1 tw-py-0.5 tw-rounded-sm tw-border tw-border-[#5a3a2a] tw-bg-[#f4e9d8] tw-text-[#5a3a2a] tw-ml-1">{{localize "WH40K.Starship.Manoeuvre.Opposed"}}</span>
+                            {{/if}}
+                        </span>
+                        <button type="button"
+                                class="wh40k-starship-manoeuvre-tile__roll tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[#2a4a6a] tw-bg-[#4a6b8a] tw-text-white tw-cursor-pointer"
+                                data-action="rollShipManoeuvre"
+                                data-manoeuvre-id="{{m.id}}"
+                                title="{{localize 'WH40K.Starship.Manoeuvre.RollTitle'}}">
+                            {{localize "WH40K.Starship.Manoeuvre.Roll"}}
+                        </button>
+                    </div>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p class="wh40k-starship-manoeuvre-bar__empty tw-text-[0.85em] tw-italic tw-text-[#6a5239] tw-px-1 tw-py-2">{{localize "WH40K.Starship.Manoeuvre.Empty"}}</p>
+    {{/if}}
+</section>
