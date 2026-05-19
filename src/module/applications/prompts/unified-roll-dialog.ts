@@ -366,7 +366,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 | null
                 | undefined;
             if (skillKey !== null && typeof actorRef?.getFlag === 'function') {
-                const flagBag = actorRef.getFlag('wh40k', 'try-again');
+                const flagBag = actorRef.getFlag('wh40k-rpg', 'try-again');
                 // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns unknown; the per-skill counter bag is Record<string, number> by construction
                 const attempts =
                     flagBag != null && typeof flagBag === 'object'
