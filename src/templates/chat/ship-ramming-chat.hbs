@@ -1,0 +1,61 @@
+{{!-- Rogue Trader Ramming chat card (#188 — core.md L9997). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- wh40k-rpg keeps utility cascade alive outside the sheet root.       --}}
+<div class="wh40k-rpg wh40k-ship-ramming-card tw-p-4 tw-rounded-md tw-border-2 tw-border-bronze rt:tw-border-gold dh2e:tw-border-bronze dh1e:tw-border-gold-raw bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light tw-bg-[rgba(8,16,28,0.9)]"
+     data-wh40k-system="{{gameSystem}}">
+    <header class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-bullseye tw-text-[1.1rem] tw-text-amber-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-amber-200">
+            {{localize "WH40K.Starship.Ramming.ChatTitle"}}
+        </div>
+    </header>
+
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        <strong class="tw-text-amber-200">{{attackerName}}</strong>
+        <span class="tw-mx-1 tw-text-amber-400">→</span>
+        <strong class="tw-text-amber-200">{{defenderName}}</strong>
+        — {{#if toHit.success}}<span class="tw-text-emerald-300">{{localize "WH40K.Starship.Ramming.OutcomeHit"}}</span>{{else}}<span class="tw-text-rose-300">{{localize "WH40K.Starship.Ramming.OutcomeMiss"}}</span>{{/if}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.Starship.Ramming.AttackerDoS"}}</span>
+            <span class="tw-font-bold tw-text-emerald-300">{{toHit.attackerDoS}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.Starship.Ramming.DefenderDoS"}}</span>
+            <span class="tw-font-bold tw-text-rose-300">{{toHit.defenderDoS}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.Starship.Ramming.NetDoS"}}</span>
+            <span class="tw-font-bold tw-text-amber-200">{{toHit.netDoS}}</span>
+        </li>
+    </ul>
+
+    {{#if damage}}
+    <div class="tw-p-2 tw-mb-2 tw-rounded-sm tw-border tw-border-amber-500/50 tw-bg-[rgba(96,64,16,0.25)] tw-text-[0.85rem] tw-text-amber-100">
+        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
+            {{localize "WH40K.Starship.Ramming.DamageHeader"}}
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3">
+            <span>{{localize "WH40K.Starship.Ramming.DefenderHull"}}</span>
+            <span class="tw-font-bold tw-text-rose-300">{{damage.defender.hullDamage}}
+                <span class="tw-text-amber-400/80 tw-font-normal">({{damage.defender.raw}} − {{damage.defender.armour}} {{localize "WH40K.Starship.Ramming.ArmourSuffix"}})</span></span>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3">
+            <span>{{localize "WH40K.Starship.Ramming.AttackerHull"}}</span>
+            <span class="tw-font-bold tw-text-rose-300">{{damage.attacker.hullDamage}}
+                <span class="tw-text-amber-400/80 tw-font-normal">({{damage.attacker.raw}} − {{damage.attacker.armour}} {{localize "WH40K.Starship.Ramming.ArmourSuffix"}})</span></span>
+        </div>
+        {{#if damage.bonusDamage}}
+        <div class="tw-mt-1 tw-text-[0.8rem] tw-text-amber-200">
+            <i class="fas fa-plus-circle tw-mr-1"></i>{{localize "WH40K.Starship.Ramming.BonusDamage"}} +{{damage.bonusDamage}}
+        </div>
+        {{/if}}
+    </div>
+    {{else}}
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(56,189,248,0.4)] tw-bg-[rgba(14,116,144,0.18)] tw-text-[0.85rem] tw-text-[#e0f2fe]">
+        {{localize "WH40K.Starship.Ramming.MissExplain"}}
+    </div>
+    {{/if}}
+</div>

@@ -1,0 +1,66 @@
+{{!-- Rogue Trader Boarding Action chat card (#188 — core.md L9997). --}}
+<div class="wh40k-rpg wh40k-ship-boarding-card tw-p-4 tw-rounded-md tw-border-2 tw-border-bronze rt:tw-border-gold dh2e:tw-border-bronze dh1e:tw-border-gold-raw bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light tw-bg-[rgba(8,16,28,0.9)]"
+     data-wh40k-system="{{gameSystem}}">
+    <header class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-skull-crossbones tw-text-[1.1rem] tw-text-rose-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-rose-200">
+            {{localize "WH40K.Starship.Boarding.ChatTitle"}}
+        </div>
+    </header>
+
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        <strong class="tw-text-rose-200">{{attackerName}}</strong>
+        <span class="tw-mx-1 tw-text-rose-400">⚔</span>
+        <strong class="tw-text-rose-200">{{defenderName}}</strong>
+        — {{#if opposed.success}}
+            <span class="tw-text-emerald-300">{{localize "WH40K.Starship.Boarding.OutcomeBreach"}}</span>
+        {{else if opposed.boardersLost}}
+            <span class="tw-text-rose-500">{{localize "WH40K.Starship.Boarding.OutcomeBoardersLost"}}</span>
+        {{else}}
+            <span class="tw-text-rose-300">{{localize "WH40K.Starship.Boarding.OutcomeRepelled"}}</span>
+        {{/if}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-rose-300">{{localize "WH40K.Starship.Boarding.AttackerCommandDoS"}}</span>
+            <span class="tw-font-bold tw-text-emerald-300">{{opposed.attackerDoS}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-rose-300">{{localize "WH40K.Starship.Boarding.DefenderCommandDoS"}}</span>
+            <span class="tw-font-bold tw-text-rose-300">{{opposed.defenderDoS}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-rose-300">{{localize "WH40K.Starship.Boarding.NetDoS"}}</span>
+            <span class="tw-font-bold tw-text-rose-200">{{opposed.netDoS}}</span>
+        </li>
+    </ul>
+
+    {{#if damage}}
+    <div class="tw-p-2 tw-mb-2 tw-rounded-sm tw-border tw-border-rose-500/50 tw-bg-[rgba(96,16,32,0.25)] tw-text-[0.85rem] tw-text-rose-100">
+        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-rose-300 tw-mb-1">
+            {{localize "WH40K.Starship.Boarding.DamageHeader"}}
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3">
+            <span>{{localize "WH40K.Starship.Boarding.HullDamage"}}</span>
+            <span class="tw-font-bold tw-text-rose-300">{{damage.hullDamage}}</span>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3">
+            <span>{{localize "WH40K.Starship.Boarding.CrewDamage"}}</span>
+            <span class="tw-font-bold tw-text-rose-300">{{damage.crewDamage}}</span>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3">
+            <span>{{localize "WH40K.Starship.Boarding.MoraleDamage"}}</span>
+            <span class="tw-font-bold tw-text-rose-300">{{damage.moraleDamage}}</span>
+        </div>
+    </div>
+    {{else if opposed.boardersLost}}
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-rose-700/60 tw-bg-[rgba(64,8,16,0.32)] tw-text-[0.85rem] tw-text-rose-200">
+        {{localize "WH40K.Starship.Boarding.BoardersLostExplain"}}
+    </div>
+    {{else}}
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(56,189,248,0.4)] tw-bg-[rgba(14,116,144,0.18)] tw-text-[0.85rem] tw-text-[#e0f2fe]">
+        {{localize "WH40K.Starship.Boarding.RepelledExplain"}}
+    </div>
+    {{/if}}
+</div>
