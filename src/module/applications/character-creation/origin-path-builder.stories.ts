@@ -109,6 +109,8 @@ interface BuilderStoryArgs {
         fate: string | null;
         aptitudeCollisions?: Array<{ original: string; replacement: string | null }>;
         hasUnresolvedAptitudeCollision?: boolean;
+        unresolvedAptitudeCollisions?: Array<{ original: string; replacement: string | null }>;
+        resolvedAptitudeCollisions?: Array<{ original: string; replacement: string }>;
     };
     status: {
         stepsComplete: boolean;
@@ -765,6 +767,10 @@ export const Issue205AptitudeDoubling: Story = {
             wounds: null,
             fate: null,
             aptitudeCollisions: [{ original: 'Awareness', replacement: null }],
+            // (#216) The template now reads the unresolved list, not the full
+            // collision list, so the banner only fires on outstanding entries.
+            unresolvedAptitudeCollisions: [{ original: 'Awareness', replacement: null }],
+            resolvedAptitudeCollisions: [],
             hasUnresolvedAptitudeCollision: true,
         },
         status: {
@@ -814,6 +820,8 @@ export const Issue215NoPhantomDuplicate: Story = {
             wounds: null,
             fate: null,
             aptitudeCollisions: [],
+            unresolvedAptitudeCollisions: [],
+            resolvedAptitudeCollisions: [],
             hasUnresolvedAptitudeCollision: false,
         },
         status: {
@@ -833,5 +841,100 @@ export const Issue215NoPhantomDuplicate: Story = {
         // The preview still lists the character's aptitudes normally.
         const canvas = within(canvasElement);
         expect(canvas.getByText('Willpower')).toBeTruthy();
+    },
+};
+
+/**
+ * Regression coverage for issue #216 — "Duplicate aptitude option still
+ * displays as a requirement even if it is selected".
+ *
+ * Pre-fix the warning banner showed every entry in `preview.aptitudeCollisions`
+ * regardless of whether the player had picked a replacement, so a resolved
+ * collision kept appearing as an outstanding requirement.
+ *
+ * This story stages the POST-SELECT state: the player resolved a Willpower
+ * collision by swapping to Strength. After the fix the warning banner is gone
+ * (no entries in `unresolvedAptitudeCollisions`) and the resolved swap shows
+ * up in the neutral "applied swap" sub-section with a Change affordance.
+ *
+ * The Playwright spec at `tests/storybook/issue-216-resolved-aptitude.spec.ts`
+ * opens this story, snapshots it, and asserts the warning banner is absent
+ * while the resolved-banner is present.
+ */
+export const Issue216ResolvedAptitudeNotARequirement: Story = {
+    args: makeArgs({
+        selectedOrigin: makeSelectedOrigin('Hive World', { isConfirmed: true }),
+        preview: {
+            characteristics: [],
+            skills: [],
+            talents: [],
+            aptitudes: ['Strength', 'Fellowship', 'Willpower'],
+            wounds: null,
+            fate: null,
+            aptitudeCollisions: [{ original: 'Willpower', replacement: 'Strength' }],
+            unresolvedAptitudeCollisions: [],
+            resolvedAptitudeCollisions: [{ original: 'Willpower', replacement: 'Strength' }],
+            hasUnresolvedAptitudeCollision: false,
+        },
+        status: {
+            stepsComplete: true,
+            stepsCount: 2,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        // Bug #216: the warning banner used to render even after the swap.
+        const warningBanner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
+        expect(warningBanner).toBeNull();
+        // The resolved-applied list should still be visible so the player can Change it.
+        const resolvedBanner = canvasElement.querySelector('[data-testid="aptitude-collision-resolved-banner"]');
+        expect(resolvedBanner).toBeTruthy();
+        const resolvedRow = canvasElement.querySelector('[data-testid="aptitude-collision-resolved"][data-aptitude="Willpower"]');
+        expect(resolvedRow).toBeTruthy();
+    },
+};
+
+/**
+ * Pair to {@link Issue216ResolvedAptitudeNotARequirement}: PRE-select state
+ * with a still-unresolved Willpower collision. The warning banner must
+ * appear here. Stories are paired so visual review can compare pre/post
+ * side-by-side and the resolved-state regression doesn't slip past unnoticed.
+ */
+export const Issue216UnresolvedAptitudeIsARequirement: Story = {
+    args: makeArgs({
+        selectedOrigin: makeSelectedOrigin('Hive World', { isConfirmed: true }),
+        preview: {
+            characteristics: [],
+            skills: [],
+            talents: [],
+            aptitudes: ['Fellowship'],
+            wounds: null,
+            fate: null,
+            aptitudeCollisions: [{ original: 'Willpower', replacement: null }],
+            unresolvedAptitudeCollisions: [{ original: 'Willpower', replacement: null }],
+            resolvedAptitudeCollisions: [],
+            hasUnresolvedAptitudeCollision: true,
+        },
+        status: {
+            stepsComplete: false,
+            stepsCount: 2,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const warningBanner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
+        expect(warningBanner).toBeTruthy();
+        const resolvedBanner = canvasElement.querySelector('[data-testid="aptitude-collision-resolved-banner"]');
+        expect(resolvedBanner).toBeNull();
+        const unresolvedRow = canvasElement.querySelector('[data-testid="aptitude-collision-unresolved"][data-aptitude="Willpower"]');
+        expect(unresolvedRow).toBeTruthy();
     },
 };

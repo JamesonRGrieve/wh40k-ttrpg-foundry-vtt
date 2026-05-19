@@ -225,4 +225,18 @@ export interface PreviewSummary {
      * keys its warning banner on this flag.
      */
     hasUnresolvedAptitudeCollision: boolean;
+    /**
+     * Subset of {@link aptitudeCollisions} with no replacement chosen yet.
+     * The warning banner ("Duplicate aptitude detected — pick a replacement")
+     * renders ONLY these so a resolved collision no longer shows up as an
+     * outstanding requirement after the player picks a swap (#216).
+     */
+    unresolvedAptitudeCollisions: Array<{ original: string; replacement: string | null }>;
+    /**
+     * Subset of {@link aptitudeCollisions} with a replacement chosen. Rendered
+     * in a separate, neutral "applied swaps" sub-section that still lets the
+     * player Change their choice but does NOT frame the row as an outstanding
+     * requirement (#216).
+     */
+    resolvedAptitudeCollisions: Array<{ original: string; replacement: string }>;
 }

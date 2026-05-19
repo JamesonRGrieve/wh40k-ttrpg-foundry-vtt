@@ -43,6 +43,21 @@ vi.mock('../../utils/origin-chart-layout.ts', () => ({
 
 vi.mock('../../utils/origin-ui-labels.ts', () => ({
     getCharacteristicDisplayInfo: () => ({ label: 'Agility', short: 'Ag' }),
+    // Test fixture mirrors the real DH2 GENERATION_CHARACTERISTICS map so
+    // _collectAvailableAptitudePool's characteristic-only filter (#216) has a
+    // realistic registry to compare against.
+    getAllCharacteristicDisplayInfo: () => ({
+        weaponSkill: { label: 'Weapon Skill', short: 'WS' },
+        ballisticSkill: { label: 'Ballistic Skill', short: 'BS' },
+        strength: { label: 'Strength', short: 'S' },
+        toughness: { label: 'Toughness', short: 'T' },
+        agility: { label: 'Agility', short: 'Ag' },
+        intelligence: { label: 'Intelligence', short: 'Int' },
+        perception: { label: 'Perception', short: 'Per' },
+        willpower: { label: 'Willpower', short: 'WP' },
+        fellowship: { label: 'Fellowship', short: 'Fel' },
+        influence: { label: 'Influence', short: 'Inf' },
+    }),
     getChoiceTypeLabel: () => 'Choice',
     getTrainingLabel: () => 'Trained',
 }));
@@ -860,12 +875,12 @@ describe('OriginPathBuilder._normalizeAptitudeIdentity (#205)', () => {
     });
 });
 
-describe('OriginPathBuilder._collectAvailableAptitudePool (#205)', () => {
-    it('excludes taken aptitudes by canonical identity and de-dupes case variants', () => {
+describe('OriginPathBuilder._collectAvailableAptitudePool (#205, #216)', () => {
+    it('excludes taken aptitudes by canonical identity and restricts to characteristic aptitudes (#216)', () => {
         const proto = OriginPathBuilder.prototype;
         const mkOrigin = (apts: string[]) => ({ system: { grants: { aptitudes: apts } } });
         const host = {
-            allOrigins: [mkOrigin(['Willpower', 'willpower ', 'Tech', 'Offence'])],
+            allOrigins: [mkOrigin(['Willpower', 'willpower ', 'Tech', 'Offence', 'Strength', 'Fellowship'])],
             lineageOrigins: [],
             _getSelectionSystem: (o: { system: unknown }) => o.system,
             _aptitudeKey: proto._aptitudeKey,
@@ -874,9 +889,174 @@ describe('OriginPathBuilder._collectAvailableAptitudePool (#205)', () => {
             host as unknown as InstanceType<typeof OriginPathBuilder>,
             new Set<string>(['  WILLPOWER']),
         );
-        // 'Willpower'/'willpower ' both excluded by the taken 'WILLPOWER';
-        // remaining pool has Tech + Offence with no case-variant dupes.
-        expect(pool).toEqual(['Offence', 'Tech']);
+        // 'Willpower' excluded by the taken set; 'Tech' / 'Offence' filtered
+        // out because they are NOT characteristic aptitudes; 'Strength' and
+        // 'Fellowship' kept. The fallback top-up adds the other six
+        // characteristic aptitudes that weren't mined from origins.
+        expect(pool).toContain('Strength');
+        expect(pool).toContain('Fellowship');
+        expect(pool).not.toContain('Tech');
+        expect(pool).not.toContain('Offence');
+        expect(pool).not.toContain('Willpower');
+        // Every entry must be one of the nine generation characteristics.
+        const allowed = new Set(['Weapon Skill', 'Ballistic Skill', 'Strength', 'Toughness', 'Agility', 'Intelligence', 'Perception', 'Willpower', 'Fellowship']);
+        for (const apt of pool) expect(allowed.has(apt)).toBe(true);
+    });
+
+    it('(#216) falls back to the full characteristic registry when origins reference no characteristic aptitudes', () => {
+        const proto = OriginPathBuilder.prototype;
+        const host = {
+            // Only non-characteristic aptitudes referenced by origins.
+            allOrigins: [{ system: { grants: { aptitudes: ['Tech', 'Offence', 'Knowledge'] } } }],
+            lineageOrigins: [],
+            _getSelectionSystem: (o: { system: unknown }) => o.system,
+            _aptitudeKey: proto._aptitudeKey,
+        };
+        const pool = proto._collectAvailableAptitudePool.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Set<string>());
+        // Pool should still contain every characteristic aptitude, sorted.
+        expect(pool).toEqual(['Agility', 'Ballistic Skill', 'Fellowship', 'Intelligence', 'Perception', 'Strength', 'Toughness', 'Weapon Skill', 'Willpower']);
+    });
+
+    it('(#216) excludes Influence (resource char, not a generation char)', () => {
+        const proto = OriginPathBuilder.prototype;
+        const host = {
+            allOrigins: [{ system: { grants: { aptitudes: ['Influence', 'Strength'] } } }],
+            lineageOrigins: [],
+            _getSelectionSystem: (o: { system: unknown }) => o.system,
+            _aptitudeKey: proto._aptitudeKey,
+        };
+        const pool = proto._collectAvailableAptitudePool.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Set<string>());
+        expect(pool).not.toContain('Influence');
+        expect(pool).toContain('Strength');
+    });
+});
+
+/**
+ * Issue #216 — "Duplicate aptitude option still displays as a requirement
+ * even if it is selected".
+ *
+ * Root cause: `_calculatePreview` emitted every collision into
+ * `preview.aptitudeCollisions`; the template's banner keyed on
+ * `aptitudeCollisions.length` (any collision, resolved or not), so a
+ * collision the player had already swapped via the chooser still rendered
+ * under the warning banner as an outstanding requirement until the builder
+ * closed.
+ *
+ * Fix: derive two filtered lists on the preview —
+ * `unresolvedAptitudeCollisions` (drives the warning banner) and
+ * `resolvedAptitudeCollisions` (drives a neutral "applied swap" sub-section
+ * with a Change affordance). Banner now only displays for genuinely
+ * outstanding requirements.
+ */
+describe('OriginPathBuilder._calculatePreview aptitude collision split (issue #216)', () => {
+    /**
+     * Drive _calculatePreview through the same minimal host pattern the rest
+     * of the file uses, returning just the four collision-related fields.
+     */
+    async function previewCollisions(opts: {
+        selections: Array<[string, { system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> }; _actorItemId?: string | null }]>;
+        actorAptitudes?: string[];
+        overrides?: Map<string, string>;
+    }) {
+        const proto = OriginPathBuilder.prototype;
+        const host = {
+            selections: new Map(opts.selections),
+            actor: { system: { aptitudes: opts.actorAptitudes ?? [] } },
+            aptitudeOverrides: opts.overrides ?? new Map<string, string>(),
+            // Preview pipeline dependencies; stubbed so the bare minimum runs.
+            systemConfig: { getOriginStepConfig: () => ({ coreSteps: [], optionalStep: null, equipmentStep: null }) },
+            allOrigins: [],
+            lineageOrigins: [],
+            // The methods _calculatePreview reaches transitively.
+            _getSelectionSystem: (s: { system: unknown }) => s.system,
+            _collectAptitudeChoices: proto._collectAptitudeChoices,
+            _selectionGrantedAptitudes: proto._selectionGrantedAptitudes,
+            _collectAptitudeGrantCounts: proto._collectAptitudeGrantCounts,
+            _collectExistingAptitudes: proto._collectExistingAptitudes,
+            _lookupAptitudeOverride: proto._lookupAptitudeOverride,
+            _aptitudeKey: proto._aptitudeKey,
+            _getAptitudeCollisions: proto._getAptitudeCollisions,
+            _applyChoiceGrantsToPreview: async () => {
+                /* no choice grants in this test fixture */
+            },
+            _addTalentModifiers: async () => {
+                /* no talent modifier resolution needed */
+            },
+            _findSkillUuid: () => null,
+            _prepareGrantTooltipData: async () => null,
+        };
+        const preview = await proto._calculatePreview.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
+        return {
+            aptitudeCollisions: preview.aptitudeCollisions,
+            unresolvedAptitudeCollisions: preview.unresolvedAptitudeCollisions,
+            resolvedAptitudeCollisions: preview.resolvedAptitudeCollisions,
+            hasUnresolvedAptitudeCollision: preview.hasUnresolvedAptitudeCollision,
+        };
+    }
+
+    const picked = (grants: Record<string, unknown>, selectedChoices: Record<string, string[]> = {}) => ({
+        system: { grants, selectedChoices },
+        _actorItemId: null,
+    });
+
+    it('reproduces the bug: an unresolved collision lands in unresolvedAptitudeCollisions only', async () => {
+        const out = await previewCollisions({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Willpower'] })],
+                ['background', picked({ aptitudes: ['Willpower'] })],
+            ],
+        });
+        expect(out.unresolvedAptitudeCollisions).toHaveLength(1);
+        expect(out.unresolvedAptitudeCollisions[0]).toMatchObject({ original: 'Willpower', replacement: null });
+        expect(out.resolvedAptitudeCollisions).toEqual([]);
+        expect(out.hasUnresolvedAptitudeCollision).toBe(true);
+    });
+
+    it('post-select: a resolved collision moves OUT of unresolved and INTO resolved (this is the #216 fix)', async () => {
+        const out = await previewCollisions({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Willpower'] })],
+                ['background', picked({ aptitudes: ['Willpower'] })],
+            ],
+            overrides: new Map([['Willpower', 'Strength']]),
+        });
+        // Banner data-source must be empty so the warning banner no longer
+        // renders — this is the exact assertion the bug report demanded.
+        expect(out.unresolvedAptitudeCollisions).toEqual([]);
+        expect(out.hasUnresolvedAptitudeCollision).toBe(false);
+        // The resolved entry is still tracked so the player can Change it.
+        expect(out.resolvedAptitudeCollisions).toHaveLength(1);
+        expect(out.resolvedAptitudeCollisions[0]).toEqual({ original: 'Willpower', replacement: 'Strength' });
+        // Legacy `aptitudeCollisions` still carries everything for any caller
+        // that wants the combined list.
+        expect(out.aptitudeCollisions).toHaveLength(1);
+    });
+
+    it('mixed: two collisions, one resolved one not — banner shows only the unresolved', async () => {
+        const out = await previewCollisions({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Willpower', 'Fellowship'] })],
+                ['background', picked({ aptitudes: ['Willpower'] })],
+                ['role', picked({ aptitudes: ['Fellowship'] })],
+            ],
+            overrides: new Map([['Willpower', 'Strength']]),
+        });
+        expect(out.unresolvedAptitudeCollisions.map((c) => c.original)).toEqual(['Fellowship']);
+        expect(out.resolvedAptitudeCollisions.map((c) => c.original)).toEqual(['Willpower']);
+        expect(out.hasUnresolvedAptitudeCollision).toBe(true);
+    });
+
+    it('treats an empty-string replacement as still-unresolved (player closed the picker without choosing)', async () => {
+        const out = await previewCollisions({
+            selections: [
+                ['homeWorld', picked({ aptitudes: ['Willpower'] })],
+                ['background', picked({ aptitudes: ['Willpower'] })],
+            ],
+            overrides: new Map([['Willpower', '']]),
+        });
+        // '' is the "explicitly skipped" sentinel — still requires action.
+        expect(out.unresolvedAptitudeCollisions).toHaveLength(1);
+        expect(out.resolvedAptitudeCollisions).toEqual([]);
     });
 });
 
