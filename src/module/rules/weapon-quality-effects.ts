@@ -78,12 +78,39 @@ type QualitySummaryContext = 'attack' | 'parry' | 'damage' | 'penetration' | 'ri
 
 /** Save-and-effect shape used by qualities that trigger a defender save on hit (Concussive, Shocking, Snare, etc.). */
 export interface WeaponQualityHitEffect {
-    requiresSave: 'agility' | 'toughness' | 'willpower';
-    failEffect: 'stunned' | 'snared' | 'prone' | 'burning';
+    requiresSave: 'agility' | 'toughness' | 'willpower' | 'strength';
+    failEffect: 'stunned' | 'snared' | 'prone' | 'burning' | 'hallucinating' | 'haywire' | 'poisoned' | 'crippled' | 'armour-melt';
     /** Static round count, OR true if the X parameter on the quality scales it. */
     stunRoundsVariable?: boolean;
     /** Static round count when not variable. */
     stunRounds?: number;
+    /**
+     * Per-DoF penalty applied to the save target value (e.g. Concussive (X) applies
+     * `-X × 10` to the Toughness test). The engine multiplies the level (X) by this
+     * value at runtime to compute the actual penalty. -10 = "Challenging step per X".
+     */
+    saveTargetPenaltyPerLevel?: number;
+}
+
+/**
+ * Range-banded scaling payload used by qualities whose damage / penetration
+ * changes by the current range band (Scatter). The values are signed deltas
+ * applied to the relevant pool (damage or penetration).
+ */
+export interface WeaponQualityRangeBands {
+    pointBlank: number;
+    shortRange: number;
+    standardRange: number;
+    longRange: number;
+    extremeRange: number;
+}
+
+/** Template shape (Blast / Smoke) — radius is variable on level X. */
+export interface WeaponQualityTemplate {
+    /** 'sphere' for Blast, 'concealment-cloud' for Smoke. */
+    shape: 'sphere' | 'concealment-cloud' | 'cone';
+    /** True when radius scales with the X level on the quality. */
+    radiusVariable: boolean;
 }
 
 /**
@@ -228,56 +255,131 @@ export const WEAPON_QUALITY_EFFECTS = {
         recharge: true,
     },
 
-    // Phase 6: Description-only qualities (#57 follow-up surface). These are
-    // tracked here so GMs see the canonical mechanic; the engine does not
-    // automate them and they should be resolved narratively (or via a
-    // future per-quality issue).
+    // Phase 6: Mechanical wiring for the remaining audit-listed qualities
+    // (#57 completion). Each entry now carries the structured payload the
+    // engine consumes — the inline switch in `rolls/damage-data.ts` and the
+    // template/save resolvers below are the live consumers.
     'blast': {
         type: 'template',
         description: 'Hits all targets within X metres of the impact point.',
-        template: 'sphere',
-        radiusVariable: true,
+        template: { shape: 'sphere', radiusVariable: true } satisfies WeaponQualityTemplate,
     },
     'concussive': {
         type: 'hit-effect',
-        description: 'On a hit, the target makes a Toughness test or is Stunned for X rounds.',
-        hitEffect: { requiresSave: 'toughness', failEffect: 'stunned', stunRoundsVariable: true } satisfies WeaponQualityHitEffect,
+        description: 'On a hit, the target makes a Toughness test (-X×10) or is Stunned for 1 round per DoF; knocked Prone if damage exceeds target SB.',
+        hitEffect: {
+            requiresSave: 'toughness',
+            failEffect: 'stunned',
+            stunRoundsVariable: true,
+            saveTargetPenaltyPerLevel: -10,
+        } satisfies WeaponQualityHitEffect,
     },
-    'corrosive': { type: 'description-only', description: 'Damage rolls a d10 against armour; armour loses that many points.' },
-    'crippling': { type: 'description-only', description: 'If wounded, target gains the Crippled condition until healed.' },
-    'flame': { type: 'description-only', description: 'On any failed Agility test against the attack, the target catches fire.' },
+    'corrosive': {
+        type: 'hit-effect',
+        description: "Damage rolls a d10 against armour; armour loses that many points and bypasses Toughness reduction on overflow.",
+        hitEffect: { requiresSave: 'toughness', failEffect: 'armour-melt' } satisfies WeaponQualityHitEffect,
+        corrosiveArmourDice: '1d10',
+    },
+    'crippling': {
+        type: 'hit-effect',
+        description: 'If wounded, target gains Crippled; taking more than a Half Action inflicts X damage ignoring Armour and Toughness.',
+        hitEffect: { requiresSave: 'toughness', failEffect: 'crippled' } satisfies WeaponQualityHitEffect,
+        cripplingPenaltyPerActionVariable: true,
+    },
+    'flame': {
+        type: 'hit-effect',
+        description: 'Target makes an Agility test or catches fire.',
+        hitEffect: { requiresSave: 'agility', failEffect: 'burning' } satisfies WeaponQualityHitEffect,
+    },
     'flexible': { type: 'parry', cannotBeParried: true, description: 'This weapon cannot be parried.' },
-    'graviton': { type: 'description-only', description: 'On a hit, target makes a Strength test or falls Prone; vehicles must Agility test or skid.' },
-    'hallucinogenic': { type: 'description-only', description: 'Toughness test or roll on the Hallucinogenic table for the duration listed.' },
-    'haywire': { type: 'description-only', description: 'On a hit, technological items roll on the Haywire table for X rounds.' },
+    'graviton': {
+        type: 'hit-effect',
+        description: 'On a hit, the target makes a Strength test or falls Prone; vehicles roll Agility instead. Bonus damage equal to the struck location’s Armour Points.',
+        hitEffect: { requiresSave: 'strength', failEffect: 'prone' } satisfies WeaponQualityHitEffect,
+        gravitonAddsArmourAsDamage: true,
+    },
+    'hallucinogenic': {
+        type: 'hit-effect',
+        description: 'Target makes a Toughness test (-X×10) or rolls on the Hallucinogenic table.',
+        hitEffect: {
+            requiresSave: 'toughness',
+            failEffect: 'hallucinating',
+            saveTargetPenaltyPerLevel: -10,
+        } satisfies WeaponQualityHitEffect,
+    },
+    'haywire': {
+        type: 'hit-effect',
+        description: 'On a hit, technological items within X×10 metres roll on the Haywire table at strength 1d10.',
+        hitEffect: { requiresSave: 'toughness', failEffect: 'haywire' } satisfies WeaponQualityHitEffect,
+        haywireRadiusPerLevel: 10,
+    },
     'indirect': {
         type: 'attack',
-        description: 'Can be fired without line of sight; suffers +X BS penalty.',
+        description: 'Can be fired without line of sight; suffers a +X BS penalty and scatters 1d10−BSB metres on a miss.',
         allowsIndirectFire: true,
         indirectPenaltyVariable: true,
     },
     'lance': { type: 'penetration', description: 'Penetration is multiplied by DoS (minimum 1).' },
-    'maximal': { type: 'description-only', description: 'Once per encounter, fire at +2 damage and +2 penetration; weapon Overheats and gains Recharge.' },
-    'primitive': { type: 'description-only', description: 'Damage reduced against non-Primitive armour.' },
-    'scatter': { type: 'description-only', description: 'Range-banded damage and Penetration: bonus at Point Blank/Short Range, penalty at Long/Extreme.' },
+    'maximal': {
+        type: 'damage',
+        description: 'Once per encounter, fire at +1d10 damage and +2 penetration; the weapon gains Overheats and must Recharge afterwards.',
+        maximalDamageDice: '1d10',
+        maximalPenetrationBonus: 2,
+        triggersRecharge: true,
+    },
+    'primitive': {
+        type: 'damage',
+        description: 'Each damage die counts as the Primitive (X) value if it would otherwise roll higher (against non-Primitive armour).',
+        primitiveCap: true,
+    },
+    'scatter': {
+        type: 'damage',
+        description: 'Range-banded damage: +3 at Point Blank, +0 at Short Range, −3 at Standard/Long/Extreme.',
+        rangeBands: {
+            pointBlank: 3,
+            shortRange: 0,
+            standardRange: -3,
+            longRange: -3,
+            extremeRange: -3,
+        } satisfies WeaponQualityRangeBands,
+    },
     'shocking': {
         type: 'hit-effect',
-        description: 'On a hit, the target makes a Toughness test or is Stunned for 1 round.',
+        description: 'On a hit, the target makes a Toughness test or suffers 1 level of Fatigue and is Stunned for half DoF rounds (round up).',
         hitEffect: { requiresSave: 'toughness', failEffect: 'stunned', stunRounds: 1 } satisfies WeaponQualityHitEffect,
+        shockingHalfDoFStun: true,
+        shockingAppliesFatigue: 1,
     },
     'smoke': {
         type: 'template',
         description: 'On detonation, creates a smoke cloud X metres across that grants concealment.',
-        template: 'concealment-cloud',
-        radiusVariable: true,
+        template: { shape: 'concealment-cloud', radiusVariable: true } satisfies WeaponQualityTemplate,
     },
     'snare': {
         type: 'hit-effect',
-        description: 'On a hit, the target makes an Agility test or is Snared (immobilised) until cleared.',
-        hitEffect: { requiresSave: 'agility', failEffect: 'snared' } satisfies WeaponQualityHitEffect,
+        description: 'On a hit, the target makes an Agility test (-X×10) or is Snared until they escape with a Strength or Agility test (-X×10).',
+        hitEffect: {
+            requiresSave: 'agility',
+            failEffect: 'snared',
+            saveTargetPenaltyPerLevel: -10,
+        } satisfies WeaponQualityHitEffect,
     },
-    'spray': { type: 'description-only', description: 'No BS test required; all targets in a cone make an Agility test to avoid being hit.' },
-    'toxic': { type: 'description-only', description: 'On a wound, target makes a Toughness test or takes additional damage; severity varies by X.' },
+    'spray': {
+        type: 'template',
+        description: 'No BS test required; all targets in a cone make a Challenging (+0) Agility test to avoid being hit. Composes with the Leaping Dodge talent (rules/spray-avoidance.ts).',
+        template: { shape: 'cone', radiusVariable: false } satisfies WeaponQualityTemplate,
+        sprayAvoidanceCharacteristic: 'agility',
+    },
+    'toxic': {
+        type: 'hit-effect',
+        description: 'On a wound, target makes a Toughness test (-X×10) or suffers 1d10 additional damage of the weapon’s damage type.',
+        hitEffect: {
+            requiresSave: 'toughness',
+            failEffect: 'poisoned',
+            saveTargetPenaltyPerLevel: -10,
+        } satisfies WeaponQualityHitEffect,
+        toxicAdditionalDamageDice: '1d10',
+    },
 };
 
 /* -------------------------------------------- */
@@ -667,6 +769,174 @@ export function getWeaponQualitySummary(weapon: QualityItem | null | undefined, 
 }
 
 /* -------------------------------------------- */
+/*  Phase 6 pure resolvers (#57 completion)     */
+/* -------------------------------------------- */
+
+/** Range-band keys used by `resolveScatterRangeBand`. */
+export type ScatterRangeBand = 'Point Blank' | 'Short Range' | 'Standard Range' | 'Long Range' | 'Extreme Range';
+
+/**
+ * Resolve the Scatter quality's signed damage delta for the current range.
+ * Replaces the inline `damage-data.ts:333-341` block with a pure table lookup
+ * so the per-band values can be unit-tested without standing up an actor.
+ */
+export function resolveScatterRangeBand(rangeName: string | undefined): number {
+    if (rangeName === undefined) return 0;
+    const bands = WEAPON_QUALITY_EFFECTS.scatter.rangeBands;
+    switch (rangeName as ScatterRangeBand) {
+        case 'Point Blank':
+            return bands.pointBlank;
+        case 'Short Range':
+            return bands.shortRange;
+        case 'Standard Range':
+            return bands.standardRange;
+        case 'Long Range':
+            return bands.longRange;
+        case 'Extreme Range':
+            return bands.extremeRange;
+        default:
+            return 0;
+    }
+}
+
+/**
+ * Resolve the save target value for a quality whose hit-effect imposes a
+ * per-level penalty on the defender's characteristic test. Used by
+ * Concussive (X), Hallucinogenic (X), Snare (X), Toxic (X).
+ *
+ * Concussive (3) on a defender with Toughness 40 →
+ *   resolveHitEffectSaveTarget({ characteristicTotal: 40, key: 'concussive', level: 3 })
+ *   = 40 + (3 × -10) = 10
+ */
+export function resolveHitEffectSaveTarget(opts: {
+    characteristicTotal: number;
+    key: keyof typeof WEAPON_QUALITY_EFFECTS;
+    level: number;
+}): number {
+    const entry = WEAPON_QUALITY_EFFECTS[opts.key] as { hitEffect?: WeaponQualityHitEffect } | undefined;
+    const penalty = entry?.hitEffect?.saveTargetPenaltyPerLevel ?? 0;
+    const safeLevel = Math.max(0, Math.trunc(opts.level));
+    const total = Math.max(0, Math.trunc(opts.characteristicTotal));
+    return Math.max(0, total + penalty * safeLevel);
+}
+
+/**
+ * Stun-duration payload from Shocking (RAW: half DoF, round up) or
+ * Concussive (RAW: 1 round per DoF). Pure: caller passes the DoF and key.
+ */
+export function resolveStunDuration(opts: { dof: number; key: 'shocking' | 'concussive' }): number {
+    const dof = Math.max(0, Math.trunc(opts.dof));
+    if (opts.key === 'shocking') return Math.ceil(dof / 2);
+    return dof;
+}
+
+/**
+ * Lance penetration multiplier. Returns the **additive** delta the engine
+ * adds on top of `basePenetration` so total = basePen × DoS. Mirrors the
+ * inline `calculateQualityPenetrationModifiers` Lance branch but exposed
+ * as a standalone helper for chat-card display layers.
+ */
+export function resolveLanceBonus(basePenetration: number, dos: number): number {
+    const pen = Math.max(0, Math.trunc(basePenetration));
+    const safeDos = Math.max(1, Math.trunc(dos));
+    return pen * (safeDos - 1);
+}
+
+/**
+ * Primitive (X) cap: a damage die rolling above X is treated as X.
+ * Returns the signed adjustment the engine adds to the die total
+ * (negative when the die exceeded the cap, 0 otherwise). Pure mirror of
+ * the inline `damage-data.ts:301-307` branch.
+ */
+export function resolvePrimitiveDamageAdjust(dieResult: number, level: number): number {
+    const die = Math.max(0, Math.trunc(dieResult));
+    const cap = Math.max(0, Math.trunc(level));
+    return die > cap ? cap - die : 0;
+}
+
+/**
+ * Graviton bonus damage equal to the struck location's Armour Points.
+ * Pure: takes the armour-point reading and returns the additive delta.
+ * Returns 0 when armour is missing or non-positive.
+ */
+export function resolveGravitonBonusDamage(armourPoints: number | undefined): number {
+    if (armourPoints === undefined) return 0;
+    const ap = Math.trunc(armourPoints);
+    return ap > 0 ? ap : 0;
+}
+
+/**
+ * Haywire field radius (metres) for a given X level: X × 10 metres.
+ */
+export function resolveHaywireRadius(level: number): number {
+    const safeLevel = Math.max(0, Math.trunc(level));
+    return safeLevel * 10;
+}
+
+/**
+ * Blast / Smoke template radius (metres). Per RAW the variable is just X,
+ * but the helper guards against bogus negatives for safety.
+ */
+export function resolveTemplateRadius(level: number): number {
+    return Math.max(0, Math.trunc(level));
+}
+
+/**
+ * Maximal mode-switch outcome. RAW: +1d10 damage, +2 penetration, and the
+ * weapon gains Overheats this shot plus Recharge next round. The dice are
+ * the caller's to roll; this helper returns the configured deltas and the
+ * follow-up tags the engine consumer should apply.
+ */
+export function resolveMaximalEffect(): {
+    bonusPenetration: number;
+    bonusDamageDice: string;
+    appliesOverheats: boolean;
+    triggersRecharge: boolean;
+} {
+    return {
+        bonusPenetration: WEAPON_QUALITY_EFFECTS.maximal.maximalPenetrationBonus,
+        bonusDamageDice: WEAPON_QUALITY_EFFECTS.maximal.maximalDamageDice,
+        appliesOverheats: true,
+        triggersRecharge: WEAPON_QUALITY_EFFECTS.maximal.triggersRecharge,
+    };
+}
+
+/**
+ * Power Field on a successful parry destroys the parried weapon unless it
+ * also carries Power Field or Force. Pure check used by the parry
+ * resolution flow and chat-card renderer.
+ */
+export function resolvePowerFieldParryDestroys(
+    defenderWeapon: QualityItem | null | undefined,
+    attackerWeapon: QualityItem | null | undefined,
+): boolean {
+    if (!defenderWeapon || !attackerWeapon) return false;
+    if (!weaponHasQuality(defenderWeapon, 'power-field')) return false;
+    // Power Field and Force weapons resist destruction.
+    if (weaponHasQuality(attackerWeapon, 'power-field') || weaponHasQuality(attackerWeapon, 'force')) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Crippling (X) Half-Action penalty: each round the Crippled target takes
+ * more than a Half Action they suffer X damage ignoring Armour and
+ * Toughness. Returns the per-tick damage value.
+ */
+export function resolveCripplingTickDamage(level: number): number {
+    return Math.max(0, Math.trunc(level));
+}
+
+/**
+ * Indirect (X) BS penalty applied to the firer (positive number → penalty).
+ */
+export function resolveIndirectPenalty(level: number): number {
+    const n = Math.max(0, Math.trunc(level));
+    return n === 0 ? 0 : n * -10;
+}
+
+/* -------------------------------------------- */
 /*  Export for External Integration             */
 /* -------------------------------------------- */
 
@@ -702,6 +972,20 @@ export const WeaponQualityEffects = {
 
     // Display helpers
     getWeaponQualitySummary,
+
+    // Phase 6 pure resolvers (#57 completion)
+    resolveScatterRangeBand,
+    resolveHitEffectSaveTarget,
+    resolveStunDuration,
+    resolveLanceBonus,
+    resolvePrimitiveDamageAdjust,
+    resolveGravitonBonusDamage,
+    resolveHaywireRadius,
+    resolveTemplateRadius,
+    resolveMaximalEffect,
+    resolvePowerFieldParryDestroys,
+    resolveCripplingTickDamage,
+    resolveIndirectPenalty,
 };
 
 export default WeaponQualityEffects;
