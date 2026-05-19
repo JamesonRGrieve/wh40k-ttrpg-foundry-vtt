@@ -63,6 +63,10 @@
     {{!-- Hidden unless the actor has a Fanatic role/talent (computed in CharacterSheet._prepareContext). --}}
     {{> systems/wh40k-rpg/templates/actor/panel/fanatic-button.hbs hasFanatic=hasFanatic}}
 
+    {{!-- Crusader role: Smite the Unholy action (#141, beyond.md p.34). --}}
+    {{!-- Hidden unless the actor has a Crusader role/talent (computed in CharacterSheet._prepareContext). --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/crusader-button.hbs hasCrusader=hasCrusader}}
+
     {{!-- Grapple Controller Actions (#120, core.md L10155-10180). --}}
     {{!-- Rendered only when the actor is mid-grapple (flag set by combat tooling). --}}
     {{#if (and grappleState (neq grappleState 'none'))}}

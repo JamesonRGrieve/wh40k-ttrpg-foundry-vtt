@@ -1,0 +1,155 @@
+{{!-- Weapon-quality chat card (#57 completion). Renders the bespoke
+     visible effect for a single quality's resolution payload: template
+     radius (Blast/Smoke), range-band bonus (Scatter), forced save
+     (Concussive/Shocking/Snare/Toxic/Flame/Graviton/Hallucinogenic),
+     Lance/Razor-Sharp pen multiplier, Maximal recharge package, or
+     Power Field parry-destroy event.
+
+     Surface contract:
+       gameSystem         active system id (data-wh40k-system anchor)
+       qualityKey         registry key (e.g. "blast", "shocking")
+       qualityLabelKey    "WH40K.Quality.<Name>.Name" i18n key
+       qualityDescKey     "WH40K.Quality.<Name>.Description" i18n key
+       accentClass        tailwind colour class for the icon / pill
+       iconClass          Font-Awesome icon class
+       payload            quality-specific data block; populated by
+                          the engine consumer or stories. Optional
+                          fields rendered conditionally:
+         - radius           Blast / Smoke template metres
+         - templateShape    'sphere' | 'concealment-cloud' | 'cone'
+         - rangeBand        Scatter band name
+         - rangeBandDelta   signed integer
+         - saveCharacteristic 'agility' | 'toughness' | 'willpower' | 'strength'
+         - saveTarget       resolved test target value
+         - savePenalty      signed integer penalty applied by X
+         - failEffectKey    "WH40K.Quality.FailEffect.<tag>" i18n key
+         - stunRounds       integer
+         - fatigue          integer
+         - bonusDamageDice  e.g. "1d10"
+         - bonusPenetration integer
+         - bonusDamage      integer (Graviton / Lance flat value)
+         - triggersRecharge boolean
+         - appliesOverheats boolean
+         - powerFieldDestroyed boolean
+         - radiusUnit       label override (default "m")
+--}}
+<div class="wh40k-rpg wh40k-quality-card tw-p-4 tw-rounded-md tw-border tw-bg-[rgba(15,12,8,0.85)] tw-border-[rgba(201,162,39,0.35)] dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure"
+     data-wh40k-system="{{gameSystem}}"
+     data-quality-key="{{qualityKey}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas {{#if iconClass}}{{iconClass}}{{else}}fa-bullseye{{/if}} tw-text-[1.1rem] {{accentClass}}"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] {{accentClass}}">
+            {{localize "WH40K.Quality.ChatTitle"}}
+        </div>
+        <div class="tw-ml-auto tw-text-[0.75rem] tw-text-[#9a9a8a] tw-uppercase">
+            {{localize qualityLabelKey}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.85rem] tw-mb-3 tw-text-[#d6d3c5]">
+        {{localize qualityDescKey}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+
+        {{#if payload.radius}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="radius">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.Radius"}}</span>
+                <span class="tw-font-bold tw-tabular-nums {{accentClass}}">{{payload.radius}}{{#if payload.radiusUnit}}{{payload.radiusUnit}}{{else}}m{{/if}}</span>
+            </li>
+        {{/if}}
+
+        {{#if payload.templateShape}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="template-shape">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.Template"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{payload.templateShape}}</span>
+            </li>
+        {{/if}}
+
+        {{#if payload.rangeBand}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="range-band">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.RangeBand"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{payload.rangeBand}}
+                    {{#if payload.rangeBandDelta}}
+                        <span class="{{#if (lt payload.rangeBandDelta 0)}}tw-text-red-400{{else}}tw-text-emerald-400{{/if}}">({{#if (gt payload.rangeBandDelta 0)}}+{{/if}}{{payload.rangeBandDelta}})</span>
+                    {{/if}}
+                </span>
+            </li>
+        {{/if}}
+
+        {{#if payload.saveCharacteristic}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="save">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.Save"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">
+                    {{localize (concat "WH40K.Quality.Save." payload.saveCharacteristic)}}
+                    {{#if payload.saveTarget}}
+                        <span class="tw-text-gold dh2e:tw-text-bronze">{{payload.saveTarget}}</span>
+                    {{/if}}
+                    {{#if payload.savePenalty}}
+                        <span class="tw-text-red-400">({{payload.savePenalty}})</span>
+                    {{/if}}
+                </span>
+            </li>
+        {{/if}}
+
+        {{#if payload.stunRounds}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="stun-rounds">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.StunRounds"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-red-300">{{payload.stunRounds}}</span>
+            </li>
+        {{/if}}
+
+        {{#if payload.fatigue}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="fatigue">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.Fatigue"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-amber-300">+{{payload.fatigue}}</span>
+            </li>
+        {{/if}}
+
+        {{#if payload.bonusDamageDice}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="bonus-damage-dice">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.BonusDamageDice"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{payload.bonusDamageDice}}</span>
+            </li>
+        {{/if}}
+
+        {{#if payload.bonusDamage}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="bonus-damage">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.BonusDamage"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-red-300">+{{payload.bonusDamage}}</span>
+            </li>
+        {{/if}}
+
+        {{#if payload.bonusPenetration}}
+            <li class="tw-flex tw-justify-between tw-gap-3" data-row="bonus-pen">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Quality.Field.BonusPenetration"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-amber-300">+{{payload.bonusPenetration}}</span>
+            </li>
+        {{/if}}
+    </ul>
+
+    {{#if payload.failEffectKey}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(201,162,39,0.3)] tw-bg-[rgba(0,0,0,0.25)] tw-mb-2" data-row="fail-effect">
+            <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-mb-1">
+                {{localize "WH40K.Quality.Field.FailEffect"}}
+            </div>
+            <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]">{{localize payload.failEffectKey}}</div>
+        </div>
+    {{/if}}
+
+    {{#if payload.powerFieldDestroyed}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-amber-700 tw-bg-[rgba(80,30,10,0.45)] tw-text-amber-200" data-row="parry-destroyed">
+            <i class="fas fa-bolt tw-mr-1"></i>{{localize "WH40K.Quality.PowerField.Destroyed"}}
+        </div>
+    {{/if}}
+
+    {{#if payload.triggersRecharge}}
+        <div class="tw-flex tw-gap-2 tw-mt-2 tw-text-[0.75rem] tw-uppercase tw-tracking-[0.08em]">
+            {{#if payload.appliesOverheats}}
+                <span class="tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-red-500/60 tw-text-red-300">{{localize "WH40K.Quality.Maximal.Overheats"}}</span>
+            {{/if}}
+            <span class="tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-amber-600/60 tw-text-amber-300">{{localize "WH40K.Quality.Maximal.Recharge"}}</span>
+        </div>
+    {{/if}}
+</div>
