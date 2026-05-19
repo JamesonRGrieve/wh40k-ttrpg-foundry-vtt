@@ -1211,6 +1211,198 @@
                 "Other": "Other"
             }
         },
+        "Crusader": {
+            "ButtonLabel": "Smite the Unholy",
+            "ButtonTooltip": "Spend 1 Fate point to automatically pass a Fear test with Degrees of Success equal to your Willpower Bonus.",
+            "ChatTitle": "Smite the Unholy",
+            "ChatBody": "{name} steels their soul and calls upon the Emperor's grace — the Fear test passes by sheer faith.",
+            "DegreesOfSuccessLabel": "Degrees of Success",
+            "AutoPassLabel": "Result",
+            "FearTestAutoPass": "Fear test auto-passed",
+            "NoFatePoints": "No Fate points remaining to spend."
+        },
+        "WithoutHomeworld": {
+            "DialogTitle": "Without — New Home Worlds (GM Reference)",
+            "DialogDescription": "Reference for the three new home worlds introduced in Enemies Without: Death World, Garden World, and Research Station.",
+            "DeathWorld": "Death World",
+            "GardenWorld": "Garden World",
+            "ResearchStation": "Research Station",
+            "Characteristics": "Characteristics",
+            "FateAdjust": "Fate Threshold",
+            "WoundsAdjust": "Starting Wounds",
+            "Aptitude": "Aptitude",
+            "KeyTalents": "Key Talents & Skills",
+            "RecommendedBackgrounds": "Recommended Backgrounds",
+            "MechanicalHook": "Mechanical Hook"
+        },
+        "WithoutTalents": {
+            "PushTheLimit": {
+                "ChatTitle": "Push the Limit",
+                "InvokedTag": "Talent invoked (+20 Operate)",
+                "NotInvokedTag": "Talent not invoked",
+                "BonusLabel": "Operate bonus",
+                "DegreesLabel": "Degrees",
+                "OutcomeLabel": "Outcome",
+                "Success": "Success",
+                "Failure": "Failure",
+                "CriticalLabel": "Catastrophic failure — roll on:",
+                "MotiveSystemsTable": "Table 7-32: Motive Systems Critical Hit Effects (DH Core p. 257)",
+                "ImpactLegTable": "Table 7-18: Impact Critical Effects — Leg (DH Core p. 239)"
+            }
+        },
+        "Condition": {
+            "Manacles": {
+                "Name": "Manacled",
+                "Description": "Bound in manacles — a -40 penalty applies to all Ballistic and Weapon Skill tests until the restraints are removed.",
+                "Source": "Manacles (errata p. 176)",
+                "AppliedNotification": "Manacled condition applied — -40 BS/WS until removed.",
+                "LiftedNotification": "Manacled condition lifted.",
+                "AppliedFromEquip": "Manacles equipped — -40 BS/WS applied.",
+                "LiftedFromUnequip": "Manacles removed — -40 BS/WS lifted.",
+                "ActionApply": "Apply Manacled",
+                "ActionLift": "Lift Manacled",
+                "BadgeLabel": "Manacled"
+            }
+        },
+        "Quality": {
+            "ChatTitle": "Weapon Quality Effect",
+            "Field": {
+                "Radius": "Radius",
+                "Template": "Template",
+                "RangeBand": "Range Band",
+                "Save": "Save",
+                "StunRounds": "Stunned (rounds)",
+                "Fatigue": "Fatigue",
+                "BonusDamageDice": "Bonus Damage",
+                "BonusDamage": "Bonus Damage",
+                "BonusPenetration": "Bonus Penetration",
+                "FailEffect": "On Failed Save"
+            },
+            "Save": {
+                "agility": "Agility",
+                "toughness": "Toughness",
+                "willpower": "Willpower",
+                "strength": "Strength"
+            },
+            "FailEffect": {
+                "hit": "Target is hit by the attack.",
+                "burning": "Target catches fire and gains the Burning condition.",
+                "stunned": "Target is Stunned.",
+                "snared": "Target is Snared (immobilised) until they break free.",
+                "prone": "Target is knocked Prone.",
+                "hallucinating": "Roll on the Hallucinogenic table.",
+                "haywire": "Technological items roll on the Haywire table.",
+                "poisoned": "Target suffers 1d10 additional damage from the toxin.",
+                "crippled": "Target gains the Crippled condition.",
+                "armour-melt": "Armour points are reduced by 1d10; overflow bypasses Toughness."
+            },
+            "PowerField": {
+                "Destroyed": "The parried weapon is destroyed by the power field!",
+                "Name": "Power Field",
+                "Description": "A successful parry against a non-Power, non-Force weapon destroys the parried weapon."
+            },
+            "Maximal": {
+                "Overheats": "Overheats",
+                "Recharge": "Recharge",
+                "Name": "Maximal",
+                "Description": "Once per encounter, fire at +1d10 damage and +2 penetration; the weapon gains Overheats this shot and must Recharge afterwards."
+            },
+            "Blast": {
+                "Name": "Blast (X)",
+                "Description": "Hits all targets within X metres of the impact point."
+            },
+            "Concussive": {
+                "Name": "Concussive (X)",
+                "Description": "On a hit, the target makes a Toughness test (-X×10) or is Stunned for 1 round per degree of failure; if damage exceeds the target's Strength Bonus, they are knocked Prone."
+            },
+            "Corrosive": {
+                "Name": "Corrosive",
+                "Description": "Rolls 1d10 against the struck location's armour; armour loses that many points and any overflow damage bypasses Toughness."
+            },
+            "Crippling": {
+                "Name": "Crippling (X)",
+                "Description": "If wounded, target gains the Crippled condition; taking more than a Half Action inflicts X damage ignoring Armour and Toughness."
+            },
+            "Flame": {
+                "Name": "Flame",
+                "Description": "Target makes an Agility test or catches fire."
+            },
+            "Flexible": {
+                "Name": "Flexible",
+                "Description": "This weapon cannot be parried."
+            },
+            "Graviton": {
+                "Name": "Graviton",
+                "Description": "On a hit, the target makes a Strength test or falls Prone (vehicles roll Agility instead). The attack deals additional damage equal to the struck location's Armour Points."
+            },
+            "Hallucinogenic": {
+                "Name": "Hallucinogenic (X)",
+                "Description": "Target makes a Toughness test (-X×10) or rolls on the Hallucinogenic table."
+            },
+            "Haywire": {
+                "Name": "Haywire (X)",
+                "Description": "On a hit, technological items within X×10 metres roll on the Haywire table at strength 1d10."
+            },
+            "Indirect": {
+                "Name": "Indirect (X)",
+                "Description": "Can be fired without line of sight; the firer suffers a -10×X BS penalty and the shot scatters 1d10-BSB metres on a miss."
+            },
+            "Lance": {
+                "Name": "Lance",
+                "Description": "Penetration is multiplied by degrees of success (minimum 1)."
+            },
+            "Primitive": {
+                "Name": "Primitive (X)",
+                "Description": "Each damage die counts as X if it would otherwise roll higher (against non-Primitive armour)."
+            },
+            "Scatter": {
+                "Name": "Scatter",
+                "Description": "Range-banded damage: +3 at Point Blank, +0 at Short Range, -3 at Standard / Long / Extreme Range."
+            },
+            "Shocking": {
+                "Name": "Shocking",
+                "Description": "On a hit, the target makes a Toughness test or suffers 1 level of Fatigue and is Stunned for a number of rounds equal to half the degrees of failure (round up)."
+            },
+            "Smoke": {
+                "Name": "Smoke (X)",
+                "Description": "On detonation, creates a smoke cloud X metres across that grants concealment."
+            },
+            "Snare": {
+                "Name": "Snare (X)",
+                "Description": "On a hit, the target makes an Agility test (-X×10) or is Snared until they escape with a Strength or Agility test (-X×10) as a Full Action."
+            },
+            "Spray": {
+                "Name": "Spray",
+                "Description": "No BS test required; all targets in a cone make a Challenging (+0) Agility test to avoid being hit. Leaping Dodge upgrades the test to Dodge."
+            },
+            "Toxic": {
+                "Name": "Toxic (X)",
+                "Description": "On a wound, target makes a Toughness test (-X×10) or suffers 1d10 additional damage of the weapon's damage type."
+            }
+        },
+        "RightStuff": {
+            "DialogTitle": "Right Stuff",
+            "DialogIntro": "Spend a Fate Point to automatically succeed at this Operate or Survival test with degrees of success equal to your Agility bonus.",
+            "OperatorLabel": "Ace",
+            "AgilityBonusLabel": "Agility Bonus",
+            "FateRemainingLabel": "Fate Points",
+            "SkillLabel": "Skill",
+            "AutoSuccessNote": "The test auto-succeeds — no dice are rolled. DoS equals your Agility bonus.",
+            "AutoSuccessLabel": "Automatic Success",
+            "AutoSuccessWithDoS": "The test succeeds with degrees of success equal to the Ace's Agility bonus.",
+            "AutoSuccessZeroDoS": "The test succeeds with 0 degrees of success (Agility bonus is 0).",
+            "FateSpentTag": "Spends a Fate Point — Right Stuff",
+            "DoSLabel": "Degrees of Success",
+            "ChatTitle": "Right Stuff",
+            "SpendButton": "Spend Fate (Right Stuff)",
+            "Cancel": "Cancel",
+            "NotAce": "Only an Ace may invoke Right Stuff (without.md p. 39).",
+            "NoFate": "No Fate points remaining to spend.",
+            "Skill": {
+                "operate": "Operate",
+                "survival": "Survival"
+            }
+        },
         "IncorruptibleDevotion": {
             "DialogTitle": "Convert Corruption to Insanity (Adepta Sororitas)",
             "Description": "Your unwavering faith arms you against the Ruinous Powers. You may refuse this taint, taking the spiritual toll on your mind instead.",
@@ -1373,7 +1565,9 @@
                 "PickerLabel": "Replacement aptitude",
                 "ConfirmLabel": "Pick",
                 "NoCandidates": "No replacement aptitudes are available. Ask the GM to adjudicate.",
-                "Resolved": "Replaced {from} with {to}."
+                "Resolved": "Replaced {from} with {to}.",
+                "ResolvedTitle": "Aptitude swap applied",
+                "ResolvedBody": "You resolved a duplicate aptitude by swapping it for the listed replacement. You can change your choice if you wish."
             },
             "AllChoicesComplete": "All choices complete",
             "ChoicesPending": "choices pending",

@@ -7,6 +7,9 @@ import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
+import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
+import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
+import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
 import {
     resolveBreakGrapple,
     resolveDamageOpponent,
@@ -147,6 +150,7 @@ type CharacterSheetContextDeclaredFields = {
     transactionSourceCount?: number;
     hasPenitent?: boolean;
     hasFanatic?: boolean;
+    hasCrusader?: boolean;
     grappleState?: GrappleState;
 };
 
@@ -300,6 +304,16 @@ export default class CharacterSheet extends BaseActorSheet {
 
             // Fanatic role: Death to All Who Oppose Me (#93 — within.md p.34)
             'deathToAllWhoOpposeMe': CharacterSheet.#deathToAllWhoOpposeMe,
+
+            // Crusader role: Smite the Unholy (#141 — beyond.md p.34)
+            'smiteTheUnholy': CharacterSheet.#smiteTheUnholy,
+
+            // Manacles condition (#105 — errata p.176)
+            'applyManacles': CharacterSheet.#applyManacles,
+            'liftManacles': CharacterSheet.#liftManacles,
+
+            // Ace role: Right Stuff Fate-spend (#100 — without.md p.39)
+            'openRightStuff': CharacterSheet.#openRightStuff,
 
             // Grapple controller actions (#120 — core.md L10155-10180)
             'grappleDamageOpponent': CharacterSheet.#grappleDamageOpponent,
@@ -715,6 +729,11 @@ export default class CharacterSheet extends BaseActorSheet {
             const itemName = item.name?.toLowerCase() ?? '';
             return itemName.includes('fanatic') || itemName.includes('death to all who oppose me');
         });
+
+        // Crusader role detection (#141 — beyond.md p.34). Same name-based
+        // pattern as Penitent/Fanatic above; matches "Crusader" or "Smite
+        // the Unholy".
+        context.hasCrusader = hasCrusaderRole(Array.from(this.actor.items));
 
         // Grapple state (#120 — core.md L10155-10180). The flag is set by
         // combat tooling (Charge / Standard Attack workflow) and read by
@@ -3640,6 +3659,71 @@ export default class CharacterSheet extends BaseActorSheet {
         } catch (error) {
             this._notify('error', `Failed to apply Death to All Who Oppose Me: ${(error as Error).message}`, { duration: 5000 });
             console.error('Death to All Who Oppose Me error:', error);
+        }
+    }
+
+    /**
+     * Crusader role — Smite the Unholy (#141, beyond.md p.34).
+     * Spend 1 Fate to auto-pass a Fear test with DoS = WPB.
+     */
+    static async #smiteTheUnholy(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const fateValue = this.actor.system?.fate?.value ?? 0;
+            if (fateValue < SMITE_THE_UNHOLY_FATE_COST) {
+                this._notify('warning', game.i18n.localize('WH40K.Crusader.NoFatePoints'), { duration: 3000 });
+                return;
+            }
+            await this._updateSystemField('system.fate.value', fateValue - SMITE_THE_UNHOLY_FATE_COST);
+            const wp = this.actor.system?.characteristics?.willpower?.total ?? 0;
+            const dos = resolveSmiteTheUnholyDoS(wp);
+            const gameSystem = this._resolveGameSystemId() ?? '';
+            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/crusader-chat.hbs', {
+                actorName: this.actor.name,
+                willpowerBonus: dos,
+                gameSystem,
+            });
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+            });
+        } catch (error) {
+            this._notify('error', `Smite the Unholy failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Smite the Unholy error:', error);
+        }
+    }
+
+    /** Manacles condition — apply (#105, errata p.176). */
+    static async #applyManacles(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            await applyManaclesCondition(this.actor);
+            this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.AppliedNotification'), { duration: 2500 });
+        } catch (error) {
+            this._notify('error', `Failed to apply Manacled: ${(error as Error).message}`, { duration: 5000 });
+            console.error('applyManacles error:', error);
+        }
+    }
+
+    /** Manacles condition — lift (#105). */
+    static async #liftManacles(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const removed = await liftManaclesCondition(this.actor);
+            if (removed > 0) {
+                this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.LiftedNotification'), { duration: 2500 });
+            }
+        } catch (error) {
+            this._notify('error', `Failed to lift Manacled: ${(error as Error).message}`, { duration: 5000 });
+            console.error('liftManacles error:', error);
+        }
+    }
+
+    /** Ace role — Right Stuff Fate-spend (#100, without.md p.39). */
+    static async #openRightStuff(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            await openRightStuffDialog({ actor: this.actor });
+        } catch (error) {
+            this._notify('error', `Right Stuff dialog failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('openRightStuff error:', error);
         }
     }
 

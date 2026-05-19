@@ -260,6 +260,13 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/medicae-mechadendrite-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/cybernetics-install-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/cybernetics-install-chat.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/crusader-button.hbs',
+            'systems/wh40k-rpg/templates/chat/crusader-chat.hbs',
+            'systems/wh40k-rpg/templates/prompt/without-homeworld-info-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/push-the-limit-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/weapon-quality-effect-chat.hbs',
+            'systems/wh40k-rpg/templates/prompt/right-stuff-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/right-stuff-chat.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',
