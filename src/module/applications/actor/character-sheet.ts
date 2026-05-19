@@ -3695,7 +3695,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const result = await this._rollGrappleOpposed(resolveBreakGrapple);
         if (result?.success) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
-            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag('wh40k', 'grapple', { state: 'none' });
+            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag('wh40k-rpg', 'grapple', { state: 'none' });
         }
     }
 
