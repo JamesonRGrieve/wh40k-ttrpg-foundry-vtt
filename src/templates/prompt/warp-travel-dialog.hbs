@@ -1,0 +1,93 @@
+{{!-- Warp Travel resolver dialog (#193) — GM-only. --}}
+{{!-- Enter base voyage duration + Navigator characteristics + per-stage rolls; --}}
+{{!-- the dialog drives resolveWarpJourney() and surfaces the per-stage outcomes. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="rt">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-indigo-300 tw-italic">
+        {{localize "WH40K.WarpTravel.DialogIntro"}}
+    </div>
+
+    {{!-- Base duration + Navigator characteristics --}}
+    <div class="tw-grid tw-grid-cols-3 tw-gap-3 tw-mb-4">
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300">
+            <span>{{localize "WH40K.WarpTravel.Field.BaseDays"}}</span>
+            <input type="number" name="baseDays" min="1" value="{{inputs.baseDays}}"
+                   class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(129,140,248,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9]" />
+        </label>
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300">
+            <span>{{localize "WH40K.WarpTravel.Field.Awareness"}}</span>
+            <input type="number" name="awareness" min="1" max="100" value="{{inputs.awareness}}"
+                   class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(129,140,248,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9]" />
+        </label>
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300">
+            <span>{{localize "WH40K.WarpTravel.Field.NavigationWarp"}}</span>
+            <input type="number" name="navigationWarp" min="1" max="100" value="{{inputs.navigationWarp}}"
+                   class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(129,140,248,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9]" />
+        </label>
+    </div>
+
+    {{!-- Per-stage d100 rolls --}}
+    <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-4">
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300">
+            <span>{{localize "WH40K.WarpTravel.Field.LocateRoll"}}</span>
+            <input type="number" name="locateRoll" min="1" max="100" value="{{inputs.locateRoll}}"
+                   class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(129,140,248,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9]" />
+        </label>
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300">
+            <span>{{localize "WH40K.WarpTravel.Field.ChartRoll"}}</span>
+            <input type="number" name="chartRoll" min="1" max="100" value="{{inputs.chartRoll}}"
+                   class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(129,140,248,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9]" />
+        </label>
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300">
+            <span>{{localize "WH40K.WarpTravel.Field.SteerRoll"}}</span>
+            <input type="number" name="steerRoll" min="1" max="100" value="{{inputs.steerRoll}}"
+                   class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(129,140,248,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9]" />
+        </label>
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300">
+            <span>{{localize "WH40K.WarpTravel.Field.LeaveRoll"}}</span>
+            <input type="number" name="leaveRoll" min="1" max="100" value="{{inputs.leaveRoll}}"
+                   class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(129,140,248,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9]" />
+        </label>
+    </div>
+
+    {{!-- Live summary panel — only after Resolve is pressed. --}}
+    {{#if result}}
+        <div class="tw-mb-4 tw-p-3 tw-rounded-md tw-border tw-border-[rgba(129,140,248,0.45)] tw-bg-[rgba(67,56,202,0.18)]">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300 tw-mb-2">
+                {{localize "WH40K.WarpTravel.SummaryTitle"}}
+            </div>
+            <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+                <li class="tw-flex tw-justify-between"><span>{{localize "WH40K.WarpTravel.Summary.ElapsedDays"}}</span><span class="tw-tabular-nums tw-text-indigo-200">{{result.elapsedDays}}</span></li>
+                <li class="tw-flex tw-justify-between"><span>{{localize "WH40K.WarpTravel.Summary.OffCourse"}}</span><span class="{{#if result.offCourse}}tw-text-red-300{{else}}tw-text-indigo-200{{/if}}">{{#if result.offCourse}}{{localize "WH40K.WarpTravel.Yes"}}{{else}}{{localize "WH40K.WarpTravel.No"}}{{/if}}</span></li>
+                <li class="tw-flex tw-justify-between"><span>{{localize "WH40K.WarpTravel.Summary.BeaconLost"}}</span><span class="{{#if result.beaconLost}}tw-text-red-300{{else}}tw-text-indigo-200{{/if}}">{{#if result.beaconLost}}{{localize "WH40K.WarpTravel.Yes"}}{{else}}{{localize "WH40K.WarpTravel.No"}}{{/if}}</span></li>
+                <li class="tw-flex tw-justify-between"><span>{{localize "WH40K.WarpTravel.Summary.Deviation"}}</span><span class="tw-tabular-nums">{{result.leave.deviationSeverity}}</span></li>
+            </ul>
+        </div>
+    {{/if}}
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(129,140,248,0.25)]">
+        <button type="button"
+                data-action="resolveJourney"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-indigo-500 tw-to-purple-700 tw-text-[#f5f3ff]">
+            <i class="fas fa-route"></i> {{localize "WH40K.WarpTravel.Button.Resolve"}}
+        </button>
+        <button type="button"
+                data-action="postChat"
+                {{#unless result}}disabled{{/unless}}
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(129,140,248,0.35)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(99,102,241,0.18)] tw-text-indigo-200 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
+            <i class="fas fa-scroll"></i> {{localize "WH40K.WarpTravel.Button.PostChat"}}
+        </button>
+        <button type="button"
+                data-action="rollPeril"
+                class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-3 tw-border tw-border-red-700 tw-rounded-md tw-font-ui tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(127,29,29,0.35)] tw-text-red-200">
+            <i class="fas fa-fire"></i> {{localize "WH40K.WarpTravel.Button.RollPeril"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.WarpTravel.Button.Cancel"}}
+        </button>
+    </div>
+
+</div>
