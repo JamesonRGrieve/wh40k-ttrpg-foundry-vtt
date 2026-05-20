@@ -1462,6 +1462,33 @@
                     "RollCount": "Phenomena Rolls",
                     "Triggered": "Psychic Phenomena triggered"
                 }
+            },
+            "Ritual": {
+                "Label": "Chaos Ritual",
+                "Template": {
+                    "Description": "Description",
+                    "Requirements": "Requirements",
+                    "Effects": "Effects",
+                    "Duration": "Duration",
+                    "Cost": "Cost",
+                    "PriceOfFailure": "Price of Failure"
+                },
+                "Modifier": {
+                    "CultAffiliation": "Cult Affiliation",
+                    "Sacrifice": "Sacrifice",
+                    "SanctifiedGround": "Sanctified Ground",
+                    "ComponentReagent": "Component Reagent",
+                    "DaemonicMastery": "Daemonic Mastery",
+                    "GmOther": "Other Adjustment"
+                },
+                "Contempt": {
+                    "Success": "The Warp yields — the ritual takes hold.",
+                    "Failure": "The Warp roils against the ritualist — the working fails."
+                },
+                "BreakingMastery": {
+                    "Broken": "The binding shatters.",
+                    "Held": "The binding holds against the assault."
+                }
             }
         },
         "DW": {
@@ -1643,6 +1670,30 @@
                 "GrantedAbilities": {
                     "Title": "Granted Squad-Mode Abilities",
                     "None": "No additional Squad-Mode abilities granted."
+                }
+            },
+            "Mission": {
+                "Label": "Mission",
+                "Rating": {
+                    "Standard": "Standard",
+                    "Extended": "Extended",
+                    "Priority": "Priority",
+                    "Critical": "Critical"
+                },
+                "Objective": {
+                    "Status": {
+                        "Pending": "Pending",
+                        "Complete": "Complete",
+                        "Failed": "Failed"
+                    }
+                },
+                "Reward": {
+                    "Renown": "Renown Awarded",
+                    "Xp": "Experience Awarded",
+                    "CohesionRecovered": "Cohesion Recovered"
+                },
+                "Complication": {
+                    "Triggered": "Complication Triggered"
                 }
             }
         },
@@ -4027,6 +4078,28 @@
                     "ApFirstHit": "AP vs First Hit",
                     "HalfWeight": "Half Weight",
                     "FlatApBonus": "Armour Point Bonus"
+                }
+            },
+            "VehicleMovement": {
+                "Label": "Vehicle Movement",
+                "Action": {
+                    "EvasiveManoeuvring": "Evasive Manoeuvring",
+                    "FloorIt": "Floor It!",
+                    "HitAndRun": "Hit & Run",
+                    "Jink": "Jink",
+                    "TacticalManoeuvring": "Tactical Manoeuvring"
+                },
+                "Timing": {
+                    "Full": "Full Action",
+                    "Half": "Half Action",
+                    "Reaction": "Reaction"
+                },
+                "Chase": {
+                    "Title": "High-Speed Chase",
+                    "PursuerDistance": "Pursuer Distance",
+                    "DangerZone": "Danger Zone",
+                    "TurnCount": "Turn",
+                    "CloseRate": "Close Rate"
                 }
             }
         }
