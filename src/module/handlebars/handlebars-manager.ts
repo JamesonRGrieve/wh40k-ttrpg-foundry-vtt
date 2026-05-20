@@ -315,6 +315,10 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/ow-vehicle-movement-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ow-comrade-healing-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ow-craftsmanship-panel.hbs',
+            // Batch-4 engine panels (OW #159, #160, #161)
+            'systems/wh40k-rpg/templates/actor/panel/ow-mount-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ow-drawback-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ow-battlefield-panel.hbs',
             'systems/wh40k-rpg/templates/chat/bc-ascension-chat.hbs',
             'systems/wh40k-rpg/templates/chat/bc-ritual-chat.hbs',
             'systems/wh40k-rpg/templates/chat/dw-mission-reward-chat.hbs',
@@ -323,6 +327,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/ow-mission-gear-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ow-vehicle-action-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ow-comrade-healing-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ow-mount-action-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ow-battlefield-chat.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',

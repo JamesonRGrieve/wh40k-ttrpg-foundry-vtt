@@ -4551,11 +4551,31 @@
             },
             "Mount": {
                 "Label": "Mount",
+                "Dismounted": "No active mount",
                 "Action": {
                     "Charge": "Charge",
                     "Trample": "Trample",
                     "RunDown": "Run Down",
                     "MountedAttack": "Mounted Attack"
+                },
+                "Description": {
+                    "Charge": "Mount and rider close to melee on a charge; the rider strikes with +10 WS, and Brutal Charge mounts add a further +20.",
+                    "Trample": "Mount drives over an enemy in its path; resolve impact damage from the mount's profile against the target's armour and TB.",
+                    "RunDown": "Mount pursues a fleeing target at full pace; the target must outpace the mount's Agility-based movement or be overrun.",
+                    "MountedAttack": "Rider attacks from the saddle as a Half Action, combining situational mount-trait modifiers with the weapon-skill test."
+                },
+                "Timing": {
+                    "Full": "Full Action",
+                    "Half": "Half Action",
+                    "Reaction": "Reaction"
+                },
+                "Issue": {
+                    "Button": "Issue",
+                    "Title": "Dispatch this mounted special action"
+                },
+                "Chat": {
+                    "Title": "Mounted Action: {action}",
+                    "Header": "Mounted Combat"
                 },
                 "Trait": {
                     "Quadruped": "Quadruped",

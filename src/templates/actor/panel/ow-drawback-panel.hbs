@@ -1,0 +1,218 @@
+{{!--
+    Only War "Regimental Drawbacks + Multiple Comrades" panel
+    (#160 — hammer.md §"REGIMENTAL DRAWBACKS" line 1150,
+            §"Comrade Advances / Multiple Comrades" lines 1677, 1713).
+
+    Surfaces three pieces of readout the operator needs after a Drawback
+    selection has been committed:
+
+      • A list of every currently-selected Regimental Drawback, with the
+        compendium-resolved description and per-entry refund.
+      • The aggregate merged penalty (negative characteristic deltas plus
+        the extra skill / talent / wound / logistics / kit-modifier
+        grants), as computed by {@link mergeDrawbackPenalties}.
+      • The total points refunded back into the 12-point Regiment
+        Creation budget, plus the final adjusted budget total.
+
+    Below that the panel renders the optional Multiple Comrades roster:
+    the primary Comrade name with a per-additional row for every extra
+    Comrade plus an `Add` affordance. When no roster is configured the
+    primary slot is empty and the table reads as "RAW single Comrade".
+
+    Sheet context (built by character-sheet `_prepareContext`):
+
+      drawbackPanel: {
+        drawbacks: Array<{
+            id:          string  // compendium UUID, for action dataset
+            description: string  // resolved label / fluff text
+            refund:      number  // positive points returned
+        }>
+        appliedRefund:   number   // sum of every entry's refund
+        baseBudget:      number   // RAW 12 by default
+        adjustedBudget:  number   // baseBudget + appliedRefund
+        penalty: {
+            characteristics: Array<{ key: string, value: number }>
+            skills:          string[]
+            talents:         string[]
+            wounds:          number
+            logistics:       number
+            kitModifier:     number
+        }
+        hasDrawbacks:    boolean
+        hasPenaltyRow:   boolean  // any penalty sub-field non-zero
+        roster: {
+            present:       boolean   // multiComradeRoster !== null
+            primaryId:     string
+            additionalIds: string[]
+            totalCount:    number    // 1 + additionals
+        }
+      }
+
+    Rendered only for OW actors; the include in tab-overview.hbs gates on
+    `isOW`.
+--}}
+<section class="wh40k-ow-drawback-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-brass"
+         data-ow-drawback-count="{{drawbackPanel.drawbacks.length}}"
+         data-ow-roster-present="{{#if drawbackPanel.roster.present}}true{{else}}false{{/if}}">
+
+    {{!-- Header: title + applied-refund badge --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-triangle-exclamation ow:tw-text-brass"></i>
+            <span class="wh40k-ow-drawback-panel__label">{{localize "WH40K.OW.RegimentDrawback.Label"}}</span>
+        </h3>
+        <span class="wh40k-ow-drawback-panel__refund-badge tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
+                     {{#if drawbackPanel.hasDrawbacks}}tw-border-gold tw-text-gold tw-bg-gold/10{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+              data-refund-total="{{drawbackPanel.appliedRefund}}">
+            {{localize "WH40K.OW.RegimentDrawback.Refund"}}: +{{drawbackPanel.appliedRefund}}
+        </span>
+    </header>
+
+    {{!-- Drawback list --}}
+    <ul class="wh40k-ow-drawback-panel__list tw-flex tw-flex-col tw-gap-1 tw-list-none tw-m-0 tw-p-0">
+        {{#each drawbackPanel.drawbacks as |drawback|}}
+            <li class="wh40k-ow-drawback-panel__entry tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
+                       tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                       tw-text-[0.78rem]"
+                data-drawback-id="{{drawback.id}}">
+                <span class="wh40k-ow-drawback-panel__entry-desc tw-text-[color:var(--wh40k-text-bright)]">
+                    {{drawback.description}}
+                </span>
+                <span class="wh40k-ow-drawback-panel__entry-refund tw-inline-flex tw-items-center tw-gap-1 tw-font-semibold tw-tabular-nums tw-text-gold">
+                    +{{drawback.refund}}
+                </span>
+                <button type="button"
+                        class="wh40k-ow-drawback-panel__entry-toggle tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
+                        data-action="owToggleDrawback"
+                        data-drawback-id="{{drawback.id}}"
+                        title="{{localize 'WH40K.Common.Delete'}}">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </li>
+        {{else}}
+            <li class="wh40k-ow-drawback-panel__entry--empty tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-px-2 tw-py-1">
+                {{localize "WH40K.OW.RegimentDrawback.Label"}} — 0
+            </li>
+        {{/each}}
+    </ul>
+
+    {{!-- Merged penalty readout --}}
+    {{#if drawbackPanel.hasPenaltyRow}}
+        <div class="wh40k-ow-drawback-panel__penalty tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded
+                    tw-border tw-border-solid tw-border-crimson/40 tw-bg-crimson/5
+                    tw-text-[0.78rem]"
+             data-field="merged-penalty">
+            <span class="tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.05em] tw-text-[0.7rem]">
+                {{localize "WH40K.OW.RegimentDrawback.Penalty"}}
+            </span>
+            {{#if drawbackPanel.penalty.characteristics.length}}
+                <ul class="wh40k-ow-drawback-panel__penalty-chars tw-flex tw-flex-wrap tw-gap-1 tw-list-none tw-m-0 tw-p-0">
+                    {{#each drawbackPanel.penalty.characteristics as |char|}}
+                        <li class="wh40k-ow-drawback-panel__penalty-char tw-inline-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson/50 tw-text-crimson tw-tabular-nums tw-text-[0.72rem]"
+                            data-char-key="{{char.key}}"
+                            data-char-value="{{char.value}}">
+                            <span>{{char.key}}</span>
+                            <span class="tw-font-semibold">{{char.value}}</span>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+            {{#if drawbackPanel.penalty.skills.length}}
+                <span class="wh40k-ow-drawback-panel__penalty-skills tw-text-crimson tw-text-[0.72rem]">
+                    {{#each drawbackPanel.penalty.skills as |skill|}}{{skill}}{{#unless @last}}, {{/unless}}{{/each}}
+                </span>
+            {{/if}}
+            {{#if drawbackPanel.penalty.talents.length}}
+                <span class="wh40k-ow-drawback-panel__penalty-talents tw-text-crimson tw-text-[0.72rem]">
+                    {{#each drawbackPanel.penalty.talents as |talent|}}{{talent}}{{#unless @last}}, {{/unless}}{{/each}}
+                </span>
+            {{/if}}
+            {{#if drawbackPanel.penalty.wounds}}
+                <span class="wh40k-ow-drawback-panel__penalty-wounds tw-text-crimson tw-tabular-nums tw-text-[0.72rem]" data-field="wounds">
+                    wounds: {{drawbackPanel.penalty.wounds}}
+                </span>
+            {{/if}}
+            {{#if drawbackPanel.penalty.logistics}}
+                <span class="wh40k-ow-drawback-panel__penalty-logistics tw-text-crimson tw-tabular-nums tw-text-[0.72rem]" data-field="logistics">
+                    logistics: {{drawbackPanel.penalty.logistics}}
+                </span>
+            {{/if}}
+            {{#if drawbackPanel.penalty.kitModifier}}
+                <span class="wh40k-ow-drawback-panel__penalty-kit tw-text-crimson tw-tabular-nums tw-text-[0.72rem]" data-field="kit">
+                    kit: {{drawbackPanel.penalty.kitModifier}}
+                </span>
+            {{/if}}
+        </div>
+    {{/if}}
+
+    {{!-- Budget readout --}}
+    <div class="wh40k-ow-drawback-panel__budget tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-text-[0.78rem]"
+         data-field="adjusted-budget">
+        <span class="tw-text-[color:var(--wh40k-text-muted)]">
+            {{drawbackPanel.baseBudget}} + {{drawbackPanel.appliedRefund}}
+        </span>
+        <span class="tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold tw-tabular-nums"
+              data-adjusted-budget="{{drawbackPanel.adjustedBudget}}">
+            = {{drawbackPanel.adjustedBudget}}
+        </span>
+    </div>
+
+    {{!-- Multiple Comrades roster --}}
+    <section class="wh40k-ow-drawback-panel__roster tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded
+                    tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                    tw-text-[0.78rem]"
+             data-field="multi-comrade-roster"
+             data-roster-count="{{drawbackPanel.roster.totalCount}}">
+        <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+            <span class="tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.05em] tw-text-[0.7rem]">
+                {{localize "WH40K.OW.RegimentDrawback.MultiComrade.Title"}}
+            </span>
+            <span class="tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums">
+                {{localize "WH40K.OW.RegimentDrawback.MultiComrade.Count"}}: {{drawbackPanel.roster.totalCount}}
+            </span>
+        </header>
+        {{#if drawbackPanel.roster.present}}
+            <div class="wh40k-ow-drawback-panel__roster-primary tw-flex tw-items-center tw-justify-between tw-gap-2"
+                 data-primary-id="{{drawbackPanel.roster.primaryId}}">
+                <span class="tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.OW.RegimentDrawback.MultiComrade.Primary"}}
+                </span>
+                <span class="tw-text-[color:var(--wh40k-text-bright)]">{{drawbackPanel.roster.primaryId}}</span>
+            </div>
+            <div class="wh40k-ow-drawback-panel__roster-additional tw-flex tw-flex-col tw-gap-1">
+                <span class="tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.72rem]">
+                    {{localize "WH40K.OW.RegimentDrawback.MultiComrade.Additional"}}
+                </span>
+                <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
+                    {{#each drawbackPanel.roster.additionalIds as |comradeId|}}
+                        <li class="wh40k-ow-drawback-panel__roster-entry tw-flex tw-items-center tw-justify-between tw-gap-2"
+                            data-comrade-id="{{comradeId}}">
+                            <span class="tw-text-[color:var(--wh40k-text-bright)]">{{comradeId}}</span>
+                            <button type="button"
+                                    class="wh40k-ow-drawback-panel__roster-remove tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
+                                    data-action="owRemoveComrade"
+                                    data-comrade-id="{{comradeId}}"
+                                    title="{{localize 'WH40K.Common.Delete'}}">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{else}}
+            <span class="tw-text-[color:var(--wh40k-text-muted)] tw-italic">—</span>
+        {{/if}}
+        <button type="button"
+                class="wh40k-ow-drawback-panel__roster-add tw-self-start tw-inline-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
+                data-action="owAddComrade"
+                title="{{localize 'WH40K.Common.Add'}}">
+            <i class="fas fa-user-plus"></i>
+            {{localize "WH40K.Common.Add"}}
+        </button>
+    </section>
+</section>

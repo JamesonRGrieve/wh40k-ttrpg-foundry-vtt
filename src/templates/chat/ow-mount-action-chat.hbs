@@ -1,0 +1,48 @@
+{{!-- Only War Mounted Combat action dispatch chat card (#159 — Hammer of the Emperor §"MOUNT SPECIAL ACTIONS"). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-ow-mount-action-card tw-p-4 tw-rounded-md tw-border tw-border-brass tw-bg-[rgba(28,22,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-action-id="{{actionId}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-horse tw-text-[1.1rem] tw-text-brass"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-brass">
+            {{localize "WH40K.OW.Mount.Chat.Title" action=(localize actionNameKey)}}
+        </div>
+    </div>
+
+    {{!-- Timing badge --}}
+    <div class="tw-flex tw-gap-2 tw-text-[0.78rem] tw-mb-3 tw-text-amber-200">
+        <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.4)]">
+            {{localize timingKey}}
+        </span>
+    </div>
+
+    {{!-- Rules-text description --}}
+    {{#if descriptionKey}}
+        <div class="tw-text-[0.85rem] tw-mb-3 tw-text-amber-50 tw-italic">
+            {{localize descriptionKey}}
+        </div>
+    {{/if}}
+
+    {{!-- Mount readout (when the rider is mounted) --}}
+    {{#if mount}}
+        <div class="wh40k-ow-mount-action-mount tw-p-2 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.22)] tw-flex tw-flex-col tw-gap-1"
+             data-mount-id="{{mount.mountId}}">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-brass tw-mb-1">
+                {{localize "WH40K.OW.Mount.Label"}}
+            </div>
+            {{#if mount.traits.length}}
+                <ul class="wh40k-ow-mount-action-traits tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-wrap tw-gap-1">
+                    {{#each mount.traits}}
+                        <li class="wh40k-ow-mount-action-trait-badge tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid tw-border-brass/60 tw-bg-[rgba(60,40,8,0.35)] tw-text-[0.68rem] tw-uppercase tw-tracking-[0.04em] tw-text-brass"
+                            data-trait-id="{{this}}">
+                            {{this}}
+                        </li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+        </div>
+    {{/if}}
+</div>
