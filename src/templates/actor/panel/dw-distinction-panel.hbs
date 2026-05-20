@@ -1,0 +1,175 @@
+{{!--
+    Deathwatch Distinctions panel (#171).
+
+    Surfaces the Battle-Brother's earned Distinctions and the subset
+    crystallised into permanent Marks of Distinction, along with the
+    merged characteristic / trait grant payload computed by the engine's
+    `mergeMarkGrants(marks)` helper. Clicking a Distinction badge
+    dispatches `dwToggleDistinction`; clicking a Mark badge dispatches
+    `dwToggleMark`. Both handlers live in
+    `src/module/actions/dw-distinction-actions.ts`.
+
+    Context (built by the orchestrator-owned `_prepareContext` on the
+    Character sheet, gated on `isDW`):
+
+      distinctionPanel: {
+        distinctions: Array<{
+          id:               string    // canonical Distinction slug
+          name:             string    // resolved display name (compendium)
+          renownReward:     number    // engine: DistinctionDef.renownReward
+          renownRequired:   string    // RenownRank label key (already localised)
+          earned:           boolean   // id present in system.distinctions
+          rankTooLow:       boolean   // canEarnDistinction → rank-too-low
+        }>
+        marks: Array<{
+          id:           string        // canonical Mark slug
+          name:         string        // resolved display name (compendium)
+          description:  string        // grant.description (compendium)
+          borne:        boolean       // id present in system.marksOfDistinction
+        }>
+        merged: {
+          characteristicDelta: Array<{ key: string, value: number, displayValue: string }>  // engine output, sorted for stable diffs; displayValue is pre-signed ("+5" / "-3")
+          traits:              string[]                                // engine output (display names)
+        }
+      }
+
+    Rendered only for DW actors; the include in tab-overview.hbs gates
+    on `isDW`.
+--}}
+<section class="wh40k-dw-distinction-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-accent-combat">
+
+    {{!-- Header --}}
+    <header class="tw-flex tw-items-center tw-gap-1.5">
+        <i class="fas fa-medal dw:tw-text-accent-combat"></i>
+        <h3 class="tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            {{localize "WH40K.DW.Distinction.List.Plural"}}
+        </h3>
+    </header>
+
+    {{!-- Distinctions list --}}
+    <div class="wh40k-dw-distinction-list tw-flex tw-flex-col tw-gap-1">
+        {{#if distinctionPanel.distinctions.length}}
+            {{#each distinctionPanel.distinctions}}
+                <button type="button"
+                        class="wh40k-dw-distinction-entry tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors
+                               {{#if this.earned}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}
+                               {{#if this.rankTooLow}}tw-opacity-60{{/if}}"
+                        data-action="dwToggleDistinction"
+                        data-distinction-id="{{this.id}}"
+                        data-earned="{{#if this.earned}}true{{else}}false{{/if}}"
+                        data-rank-too-low="{{#if this.rankTooLow}}true{{else}}false{{/if}}"
+                        aria-pressed="{{#if this.earned}}true{{else}}false{{/if}}"
+                        title="{{localize 'WH40K.DW.Distinction.Toggle.Distinction'}}">
+                    <span class="wh40k-dw-distinction-name tw-flex tw-items-center tw-gap-1.5 tw-text-[0.78rem] tw-font-semibold">
+                        <i class="fas {{#if this.earned}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+                        <span>{{this.name}}</span>
+                    </span>
+                    <span class="wh40k-dw-distinction-meta tw-flex tw-items-center tw-gap-2 tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)]">
+                        <span class="wh40k-dw-distinction-rank" title="{{localize 'WH40K.DW.Renown.Required'}}">
+                            {{this.renownRequired}}
+                        </span>
+                        <span class="wh40k-dw-distinction-renown" title="{{localize 'WH40K.DW.Distinction.RenownReward'}}">
+                            +{{this.renownReward}}
+                        </span>
+                        {{#if this.rankTooLow}}
+                            <span class="wh40k-dw-distinction-locked tw-italic" title="{{localize 'WH40K.DW.Distinction.Earn.RankTooLow'}}">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                        {{/if}}
+                    </span>
+                </button>
+            {{/each}}
+        {{else}}
+            <p class="wh40k-dw-distinction-empty tw-m-0 tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.Distinction.List.Empty"}}
+            </p>
+        {{/if}}
+    </div>
+
+    {{!-- Marks of Distinction sub-header --}}
+    <header class="tw-flex tw-items-center tw-gap-1.5 tw-mt-1">
+        <i class="fas fa-star dw:tw-text-accent-combat"></i>
+        <h4 class="tw-m-0 tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            {{localize "WH40K.DW.Distinction.Mark.Plural"}}
+        </h4>
+    </header>
+
+    {{!-- Marks list --}}
+    <div class="wh40k-dw-distinction-marks tw-flex tw-flex-col tw-gap-1">
+        {{#if distinctionPanel.marks.length}}
+            {{#each distinctionPanel.marks}}
+                <button type="button"
+                        class="wh40k-dw-distinction-mark tw-flex tw-flex-col tw-items-start tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors
+                               {{#if this.borne}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                        data-action="dwToggleMark"
+                        data-mark-id="{{this.id}}"
+                        data-borne="{{#if this.borne}}true{{else}}false{{/if}}"
+                        aria-pressed="{{#if this.borne}}true{{else}}false{{/if}}"
+                        title="{{localize 'WH40K.DW.Distinction.Toggle.Mark'}}">
+                    <span class="wh40k-dw-distinction-mark-name tw-flex tw-items-center tw-gap-1.5 tw-text-[0.78rem] tw-font-semibold">
+                        <i class="fas {{#if this.borne}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+                        <span>{{this.name}}</span>
+                    </span>
+                    {{#if this.description}}
+                        <span class="wh40k-dw-distinction-mark-desc tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                            {{this.description}}
+                        </span>
+                    {{/if}}
+                </button>
+            {{/each}}
+        {{else}}
+            <p class="wh40k-dw-distinction-marks-empty tw-m-0 tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.Distinction.Mark.Empty"}}
+            </p>
+        {{/if}}
+    </div>
+
+    {{!-- Merged characteristic deltas + traits readout --}}
+    <section class="wh40k-dw-distinction-merged tw-flex tw-flex-col tw-gap-1 tw-mt-1 tw-px-2 tw-py-1.5 tw-rounded
+                    tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                    tw-bg-[rgba(0,0,0,0.18)] dw:tw-border-accent-combat">
+        <header class="tw-flex tw-items-center tw-gap-1.5">
+            <i class="fas fa-balance-scale dw:tw-text-accent-combat"></i>
+            <h5 class="tw-m-0 tw-text-[0.72rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+                {{localize "WH40K.DW.Distinction.Merged.Title"}}
+            </h5>
+        </header>
+
+        <div class="wh40k-dw-distinction-merged-chars tw-flex tw-flex-wrap tw-gap-1.5 tw-items-baseline">
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.Distinction.Delta.Characteristics"}}:
+            </span>
+            {{#if distinctionPanel.merged.characteristicDelta.length}}
+                {{#each distinctionPanel.merged.characteristicDelta}}
+                    <span class="wh40k-dw-distinction-merged-char tw-px-1.5 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat">
+                        {{this.key}} {{this.displayValue}}
+                    </span>
+                {{/each}}
+            {{else}}
+                <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.DW.Distinction.Delta.None"}}
+                </span>
+            {{/if}}
+        </div>
+
+        <div class="wh40k-dw-distinction-merged-traits tw-flex tw-flex-wrap tw-gap-1.5 tw-items-baseline">
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.Distinction.Delta.Traits"}}:
+            </span>
+            {{#if distinctionPanel.merged.traits.length}}
+                {{#each distinctionPanel.merged.traits}}
+                    <span class="wh40k-dw-distinction-merged-trait tw-px-1.5 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat">
+                        {{this}}
+                    </span>
+                {{/each}}
+            {{else}}
+                <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.DW.Distinction.Delta.None"}}
+                </span>
+            {{/if}}
+        </div>
+    </section>
+</section>

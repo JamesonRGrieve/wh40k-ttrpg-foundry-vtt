@@ -1,0 +1,27 @@
+{
+    "issue": 172,
+    "engine": "dw-special-ammo",
+    "gameSystem": "dw",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/dw-ammo-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "dwAmmoSchemaFields",
+        "declarationsTypeExport": "DwAmmoDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/dw-ammo-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/dw-ammo-panel.hbs",
+        "includeIn": "tab-overview.hbs",
+        "gateOn": "isDW"
+    },
+    "actions": [
+        {
+            "actionName": "dwSelectAmmo",
+            "module": "src/module/actions/dw-ammo-actions.ts",
+            "exportName": "dwSelectAmmo"
+        }
+    ],
+    "i18nKeys": "WH40K.DW.SpecialAmmo.*",
+    "e2eSpec": "tests/e2e/dw-special-ammo.spec.ts",
+    "storybookStories": ["src/templates/actor/panel/dw-ammo-panel.stories.ts"]
+}

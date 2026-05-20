@@ -300,6 +300,24 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/logistics-test-dialog.hbs',
             'systems/wh40k-rpg/templates/prompt/regiment-builder-dialog.hbs',
 
+            // Batch-2 engine panels / chats (BC #179-#182, DW #168-#172, OW #155).
+            'systems/wh40k-rpg/templates/actor/panel/bc-daemon-prince-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/bc-ritual-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/bc-supplements-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-ammo-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-distinction-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-vehicle-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ow-mission-gear-panel.hbs',
+            'systems/wh40k-rpg/templates/chat/bc-ascension-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/bc-ritual-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/dw-mission-reward-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/dw-oath-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/dw-vehicle-crit-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ow-mission-gear-chat.hbs',
+
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-lead-sheet.hbs',

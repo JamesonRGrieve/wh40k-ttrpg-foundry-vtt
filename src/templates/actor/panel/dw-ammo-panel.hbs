@@ -1,0 +1,149 @@
+{{!--
+    Deathwatch Special-Issue Ammunition panel (#172).
+
+    Renders a radio-select picker for the actor-level loaded Special-Issue
+    ammunition (DW core.md §"WEAPONS" / Special Issue Ammunition). Eight
+    options total: a `'standard'` sentinel + the seven RAW kinds
+    (Hellfire / Kraken / Metal Storm / Tempest / Stalker / Vengeance /
+    Dragonfire). The selected row shows a summary of the engine effect
+    pulled from `DW_SPECIAL_AMMO_EFFECTS`; the `'standard'` row shows the
+    `WH40K.DW.SpecialAmmo.NoSelection` placeholder.
+
+    Context (built by the character sheet's _prepareContext; gated on
+    `actor._gameSystemId === 'dw'`):
+
+      ammoPanel: {
+        selected:        DwSelectedAmmoId          // sys.selectedAmmo
+        selectedLabel:   string                    // localized label of selected
+        options:         Array<{
+          id:            DwSelectedAmmoId
+          label:         string                    // localized name
+          selected:      boolean                   // matches `selected`
+          summary:       string                    // one-line effect summary
+        }>
+        effect:          {                         // null when selected === 'standard'
+          bonusDamageDice:     number
+          bonusFlatDamage:     number
+          bonusPenetration:    number
+          bonusHitsPerDoS:     number
+          ignoresCover:        boolean
+          ignoresEnergyFields: boolean
+          reliabilityShift:    number
+          stealthBonus:        number
+          fireDamage:          boolean
+          conditionalUnarmored: boolean
+        } | null
+      }
+--}}
+<section class="wh40k-dw-ammo-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-bronze"
+         data-dw-ammo="{{ammoPanel.selected}}">
+
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-burst dw:tw-text-bronze"></i>
+            <span>{{localize "WH40K.DW.SpecialAmmo.Label"}}</span>
+        </h3>
+        <span class="wh40k-dw-ammo-loaded tw-font-bold tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-bright)]"
+              data-loaded="{{ammoPanel.selected}}"
+              title="{{localize 'WH40K.DW.SpecialAmmo.Loaded'}}">
+            {{ammoPanel.selectedLabel}}
+        </span>
+    </header>
+
+    {{!-- Radio-select picker --}}
+    <fieldset class="wh40k-dw-ammo-picker tw-flex tw-flex-col tw-gap-1 tw-m-0 tw-p-0 tw-border-0"
+              data-action-target="dwSelectAmmo">
+        <legend class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">
+            {{localize "WH40K.DW.SpecialAmmo.Select"}}
+        </legend>
+        {{#each ammoPanel.options}}
+            <label class="wh40k-dw-ammo-option tw-flex tw-items-start tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer hover:tw-bg-[rgba(255,255,255,0.05)]
+                          {{#if this.selected}}tw-bg-[rgba(255,255,255,0.08)] dw:tw-border dw:tw-border-solid dw:tw-border-bronze{{/if}}"
+                   data-ammo-id="{{this.id}}">
+                <input type="radio"
+                       name="system.selectedAmmo"
+                       value="{{this.id}}"
+                       class="wh40k-dw-ammo-radio tw-mt-1"
+                       data-action="dwSelectAmmo"
+                       data-ammo-id="{{this.id}}"
+                       {{#if this.selected}}checked{{/if}} />
+                <span class="tw-flex tw-flex-col tw-gap-0.5">
+                    <span class="wh40k-dw-ammo-name tw-font-semibold tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
+                        {{this.label}}
+                    </span>
+                    <span class="wh40k-dw-ammo-summary tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                        {{this.summary}}
+                    </span>
+                </span>
+            </label>
+        {{/each}}
+    </fieldset>
+
+    {{!-- Effect summary for the selected ammo --}}
+    {{#if ammoPanel.effect}}
+        <div class="wh40k-dw-ammo-effect tw-flex tw-flex-col tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.SpecialAmmo.Effects"}}
+            </span>
+            <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-0.5">
+                {{#if ammoPanel.effect.bonusDamageDice}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="bonusDamageDice">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.BonusDamage"}}: +{{ammoPanel.effect.bonusDamageDice}}d10
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.bonusFlatDamage}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="bonusFlatDamage">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.BonusDamage"}}: +{{ammoPanel.effect.bonusFlatDamage}}
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.bonusPenetration}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="bonusPenetration">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.BonusPenetration"}}: +{{ammoPanel.effect.bonusPenetration}}
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.bonusHitsPerDoS}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="bonusHitsPerDoS">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.BonusHits"}}: +{{ammoPanel.effect.bonusHitsPerDoS}}
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.ignoresCover}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="ignoresCover">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.IgnoresCover"}}
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.ignoresEnergyFields}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="ignoresEnergyFields">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.IgnoresEnergyFields"}}
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.reliabilityShift}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="reliabilityShift">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.ReliabilityShift"}}: {{ammoPanel.effect.reliabilityShift}}
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.stealthBonus}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="stealthBonus">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.StealthBonus"}}: +{{ammoPanel.effect.stealthBonus}}
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.fireDamage}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="fireDamage">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.FireDamage"}}
+                    </li>
+                {{/if}}
+                {{#if ammoPanel.effect.conditionalUnarmored}}
+                    <li class="wh40k-dw-ammo-effect-line tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]" data-effect="conditionalUnarmored">
+                        {{localize "WH40K.DW.SpecialAmmo.Effect.UnarmoredOnly"}}
+                    </li>
+                {{/if}}
+            </ul>
+        </div>
+    {{else}}
+        <p class="wh40k-dw-ammo-no-selection tw-m-0 tw-px-2 tw-py-1 tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.DW.SpecialAmmo.NoSelection"}}
+        </p>
+    {{/if}}
+</section>

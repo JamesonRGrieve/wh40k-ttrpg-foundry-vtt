@@ -1,0 +1,120 @@
+{{!--
+    Black Crusade Supplement Mechanics panel (#181).
+
+    Surfaces the persisted state the pure resolver in
+    `src/module/rules/bc-supplement-mechanics.ts` consumes for the two
+    actor-scoped supplement mechanics:
+
+      1. Daemon Engine(X) rating  — drives daemonEngineRageBonus(...)
+      2. Quick and the Dead       — drives quickAndTheDeadInitiativeBonus(...)
+
+    Legacy Weapon kills/tier live on weapon items (out of scope here);
+    Irradiated(X) ticks live on the target's effect state.
+
+    Context (built by the BC character sheet — wiring lives outside the
+    file list this issue is allowed to edit; the panel reads exactly the
+    fields documented below):
+
+      supplementsPanel: {
+        daemonEngineRating:  number               // sys.daemonEngineRating
+        daemonEngineActive:  boolean              // rating > 0
+        turnsSinceLastDamage: number              // ephemeral / dialog-scoped
+        daemonEngineRageBonus: number             // daemonEngineRageBonus({rating, turnsSinceLastDamage})
+
+        quickAndTheDeadActive: boolean            // sys.quickAndTheDeadActive
+        chaosAlignment:        QuickAndTheDeadAlignment   // sys.chaosAlignment
+        baseInitiative:        number             // raw initiative score
+        quickAndTheDeadBonus:  number             // QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT[alignment]
+        quickAndTheDeadInitiative: number         // quickAndTheDeadInitiativeBonus(base, alignment)
+      }
+
+    Rendered only for BC actors; the include in tab-overview.hbs gates on
+    `isBC`.
+--}}
+<section class="wh40k-bc-supplements-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                bc:tw-border-crimson"
+         data-bc-daemon-engine-rating="{{supplementsPanel.daemonEngineRating}}"
+         data-bc-quick-and-the-dead-active="{{supplementsPanel.quickAndTheDeadActive}}">
+
+    {{!-- Header --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-skull-crossbones bc:tw-text-crimson"></i>
+            <span>{{localize "WH40K.BC.Supplements.PanelHeader"}}</span>
+        </h3>
+    </header>
+
+    {{!-- Daemon Engine(X) rating --}}
+    <div class="wh40k-bc-daemon-engine tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+            <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
+                   for="bc-daemon-engine-rating">
+                {{localize "WH40K.BC.Supplements.DaemonEngine.RatingLabel"}}
+            </label>
+            <input id="bc-daemon-engine-rating"
+                   name="system.daemonEngineRating"
+                   type="number"
+                   min="0"
+                   step="1"
+                   value="{{supplementsPanel.daemonEngineRating}}"
+                   class="wh40k-bc-daemon-engine-rating-input tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
+        </div>
+        {{#if supplementsPanel.daemonEngineActive}}
+            <div class="wh40k-bc-daemon-engine-rage tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]"
+                 data-rage-bonus="{{supplementsPanel.daemonEngineRageBonus}}">
+                <span class="tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.BC.Supplements.DaemonEngine.RageBonusLabel"}}
+                </span>
+                <span class="tw-font-semibold tw-tabular-nums">
+                    +{{supplementsPanel.daemonEngineRageBonus}}
+                </span>
+            </div>
+        {{/if}}
+    </div>
+
+    {{!-- Quick and the Dead toggle --}}
+    <div class="wh40k-bc-quick-and-the-dead tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+            <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
+                   for="bc-quick-and-the-dead">
+                {{localize "WH40K.BC.Supplements.QuickAndTheDead.ToggleLabel"}}
+            </label>
+            <button type="button"
+                    id="bc-quick-and-the-dead"
+                    class="wh40k-bc-quick-and-the-dead-toggle tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] {{#if supplementsPanel.quickAndTheDeadActive}}tw-border-crimson tw-text-crimson{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                    data-action="bcToggleQuickAndTheDead"
+                    aria-pressed="{{supplementsPanel.quickAndTheDeadActive}}"
+                    title="{{localize 'WH40K.BC.Supplements.QuickAndTheDead.ToggleTitle'}}">
+                {{#if supplementsPanel.quickAndTheDeadActive}}
+                    {{localize "WH40K.BC.Supplements.QuickAndTheDead.StateActive"}}
+                {{else}}
+                    {{localize "WH40K.BC.Supplements.QuickAndTheDead.StateInactive"}}
+                {{/if}}
+            </button>
+        </div>
+        {{#if supplementsPanel.quickAndTheDeadActive}}
+            <div class="wh40k-bc-quick-and-the-dead-readout tw-grid tw-grid-cols-2 tw-gap-1 tw-mt-1">
+                <div class="wh40k-bc-quick-and-the-dead-bonus tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                     data-alignment-bonus="{{supplementsPanel.quickAndTheDeadBonus}}">
+                    <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                        {{localize "WH40K.BC.Supplements.QuickAndTheDead.AlignmentBonusLabel"}}
+                    </span>
+                    <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+                        +{{supplementsPanel.quickAndTheDeadBonus}}
+                    </span>
+                </div>
+                <div class="wh40k-bc-quick-and-the-dead-initiative tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                     data-initiative="{{supplementsPanel.quickAndTheDeadInitiative}}">
+                    <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                        {{localize "WH40K.BC.Supplements.QuickAndTheDead.InitiativeLabel"}}
+                    </span>
+                    <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+                        {{supplementsPanel.quickAndTheDeadInitiative}}
+                    </span>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</section>

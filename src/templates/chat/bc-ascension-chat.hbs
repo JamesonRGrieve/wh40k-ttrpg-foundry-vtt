@@ -1,0 +1,53 @@
+{{!-- Black Crusade Daemon Prince ascension chat card (#182 — core.md §"Apotheosis"). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-bc-ascension-card tw-p-4 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(20,8,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-bc-alignment="{{alignmentAtAscension}}">
+
+    {{!-- Header --}}
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-crown tw-text-[1.1rem] bc:tw-text-crimson"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">
+            {{localize "WH40K.BC.DaemonPrince.Chat.Title"}}
+        </div>
+    </div>
+
+    {{!-- Patron summary --}}
+    <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.DaemonPrince.Status.AlignmentAt" alignment=alignmentAtAscension}}</span>
+        <span class="tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
+            {{localize "WH40K.BC.DaemonPrince.Status.AscendedAt" when=ascendedAt}}
+        </span>
+    </div>
+
+    {{!-- Applied boost --}}
+    <div class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">
+        {{localize "WH40K.BC.DaemonPrince.Chat.BoostHeader"}}
+    </div>
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.DaemonPrince.Boost.UnnaturalStrength" multiplier=boost.strengthBonusMultiplier}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.DaemonPrince.Boost.UnnaturalToughness" multiplier=boost.toughnessBonusMultiplier}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.DaemonPrince.Boost.BonusWounds" wounds=boost.bonusWounds}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.DaemonPrince.Boost.FearRating" rating=boost.fearRating}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)] bc:tw-text-crimson tw-font-bold">{{localize "WH40K.BC.DaemonPrince.Boost.DaemonicTrait"}}</span>
+        </li>
+        <li class="tw-flex tw-flex-col tw-gap-0.5">
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.BC.DaemonPrince.Boost.ImmuneToConditions"}}
+            </span>
+            <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
+                {{#each boost.immuneToConditions}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+            </span>
+        </li>
+    </ul>
+</div>

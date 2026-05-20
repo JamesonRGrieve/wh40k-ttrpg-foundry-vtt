@@ -449,15 +449,24 @@
             {{/unless}}
         </div>
 
-        {{!-- Per-game-system overview panels (batch-1 integration).
+        {{!-- Per-game-system overview panels (batch-1 + batch-2 integration).
              BC psychic strength (#178), DW Astartes implants (#167),
              OW Regiment Creation (#151). Each gates on its system flag
-             so the include is no-op on the other six systems. --}}
+             so the include is no-op on the other six systems.
+             Batch-2 additions: BC Ritual (#179), Gifts (#180), Supplements
+             (#181), Daemon Prince (#182); DW Distinctions (#171), Special
+             Ammo (#172). --}}
         {{#if isBC}}
             {{> systems/wh40k-rpg/templates/actor/panel/bc-psychic-panel.hbs psychicPanel=psychicPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/bc-ritual-panel.hbs ritualPanel=ritualPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs giftsPanel=giftsPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/bc-supplements-panel.hbs supplementsPanel=supplementsPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/bc-daemon-prince-panel.hbs daemonPrincePanel=daemonPrincePanel}}
         {{/if}}
         {{#if isDW}}
             {{> systems/wh40k-rpg/templates/actor/panel/dw-astartes-panel.hbs astartesPanel=astartesPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-distinction-panel.hbs distinctionPanel=distinctionPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-ammo-panel.hbs ammoPanel=ammoPanel}}
         {{/if}}
         {{#if isOW}}
             {{> systems/wh40k-rpg/templates/actor/panel/ow-regiment-panel.hbs regimentPanel=regimentPanel}}

@@ -1,0 +1,62 @@
+{{!--
+    Only War · Mission Assignment Gear panel (#155 — OW core.md §"MISSION
+    ASSIGNMENT GEAR", line 7156).
+
+    Surfaces the entry point to the Mission Assignment Gear roll. Per the
+    engine's design, all Table 6-3 modifiers are per-test inputs collected
+    by the action handler at click time — the panel itself is stateless
+    apart from the "last outcome" readout sourced from
+    `sys.lastGearOutcome` and pre-resolved by the sheet to a localized
+    label.
+
+    Context (set up by the OW character sheet via `_prepareContext`,
+    gated on `isOW`):
+
+      missionGearPanel: {
+        hasOutcome:        boolean    // sys.lastGearOutcome !== null
+        outcomeKey:        string|null  // i18n key for the localized tier
+                                        // label, or null when no roll yet
+      }
+
+    Rendered only for OW actors; the include in tab-status.hbs gates on
+    `isOW`.
+--}}
+<section class="wh40k-ow-mission-gear-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-amber-700"
+         data-wh40k-system="ow"
+         data-ow-last-outcome="{{#if missionGearPanel.hasOutcome}}{{missionGearPanel.outcomeKey}}{{else}}none{{/if}}">
+
+    {{!-- Header: panel title --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-box-open ow:tw-text-amber-300"></i>
+            <span>{{localize "WH40K.OW.MissionGear.Label"}}</span>
+        </h3>
+    </header>
+
+    {{!-- Last outcome readout --}}
+    {{#if missionGearPanel.hasOutcome}}
+        <div class="wh40k-ow-mission-gear-last tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+             data-ow-mission-gear-last-readout="{{missionGearPanel.outcomeKey}}">
+            <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.OW.MissionGear.Roll.Result"}}
+            </span>
+            <span class="tw-font-bold tw-text-[0.85rem] tw-text-amber-100 tw-tabular-nums">
+                {{localize missionGearPanel.outcomeKey}}
+            </span>
+        </div>
+    {{/if}}
+
+    {{!-- Request Mission Gear button --}}
+    <div class="tw-flex tw-justify-end tw-pt-1">
+        <button type="button"
+                data-action="owRequestGear"
+                class="wh40k-ow-mission-gear-request-btn tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-1.5 tw-border tw-border-solid tw-border-amber-700 tw-rounded tw-cursor-pointer tw-text-[0.78rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-amber-200 tw-bg-[rgba(217,119,6,0.12)] hover:tw-bg-amber-900"
+                title="{{localize 'WH40K.OW.MissionGear.RequestButton'}}">
+            <i class="fas fa-dice-d10"></i>
+            {{localize "WH40K.OW.MissionGear.RequestButton"}}
+        </button>
+    </div>
+</section>
