@@ -1475,6 +1475,46 @@
                     "Frenzy": "Frenzy",
                     "Overwhelming": "Overwhelming"
                 }
+            },
+            "Renown": {
+                "Label": "Renown",
+                "Current": "Current Renown",
+                "Required": "Required Renown",
+                "Rank": {
+                    "Initiated": "Initiated",
+                    "Respected": "Respected",
+                    "Distinguished": "Distinguished",
+                    "Famed": "Famed",
+                    "Hero": "Hero"
+                },
+                "Award": "Renown Awarded",
+                "Loss": "Renown Lost",
+                "GateFailure": "Renown rank insufficient to requisition this item."
+            },
+            "Cohesion": {
+                "Label": "Cohesion",
+                "Max": "Maximum Cohesion",
+                "Current": "Current Cohesion",
+                "Pool": "Cohesion Pool",
+                "Damaged": "Cohesion Damaged",
+                "Recovered": "Cohesion Recovered",
+                "Lost": "Cohesion Lost",
+                "Rally": {
+                    "Title": "Rally — Free Action",
+                    "Description": "Challenging (+0) Command (or Fellowship) test to negate this turn's Cohesion loss.",
+                    "Success": "Rally succeeds — the kill-team holds.",
+                    "Failure": "Rally fails — the kill-team falters."
+                },
+                "Challenge": {
+                    "Title": "Cohesion Challenge",
+                    "Success": "Cohesion holds.",
+                    "Failure": "Cohesion breaks — the kill-team fragments."
+                },
+                "Source": {
+                    "Objective": "Objective Completed",
+                    "Fate": "Fate Point Spent",
+                    "GM": "GM Ruling"
+                }
             }
         },
         "RT": {
@@ -3696,6 +3736,35 @@
             "AlignmentTzeentch": "Tzeentch",
             "AlignmentGeneral": "Unaligned",
             "AlignmentUnaligned": "Unaligned"
+        },
+        "OW": {
+            "Regiment": {
+                "Label": "Regiment",
+                "Budget": {
+                    "Total": "Regiment Points",
+                    "Spent": "Spent",
+                    "Remaining": "Remaining",
+                    "OverBudget": "Over budget by {amount}"
+                },
+                "Category": {
+                    "HomeWorld": "Home World / Origin",
+                    "CommandingOfficer": "Commanding Officer",
+                    "RegimentType": "Regiment Type",
+                    "TrainingDoctrine": "Training Doctrines",
+                    "SpecialEquipmentDoctrine": "Special Equipment Doctrines",
+                    "FavouredWeapons": "Favoured Weapons"
+                },
+                "Kit": {
+                    "Total": "Standard Kit Points",
+                    "Spent": "Spent",
+                    "Remaining": "Remaining",
+                    "OverBudget": "Over kit budget by {amount}"
+                },
+                "Validation": {
+                    "OverBudget": "Selection exceeds the {budget}-point budget by {amount}.",
+                    "MissingCategory": "{category} has not been selected."
+                }
+            }
         }
     }
 }
