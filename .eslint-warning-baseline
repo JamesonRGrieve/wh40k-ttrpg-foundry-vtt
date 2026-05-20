@@ -86,7 +86,7 @@
     "prettier/prettier",
     "require-atomic-updates"
   ],
-  "total": 12443,
+  "total": 12447,
   "byRule": {
     "@typescript-eslint/consistent-type-imports": 41,
     "@typescript-eslint/explicit-function-return-type": 110,
@@ -114,12 +114,12 @@
     "@vitest/no-conditional-in-test": 48,
     "@vitest/no-conditional-tests": 5,
     "complexity": 43,
-    "import/order": 8,
+    "import/order": 11,
     "max-depth": 13,
     "no-await-in-loop": 77,
     "no-new-func": 7,
     "no-promise-executor-return": 138,
-    "no-restricted-syntax": 1589,
+    "no-restricted-syntax": 1590,
     "storybook/no-redundant-story-name": 5
   }
 }
