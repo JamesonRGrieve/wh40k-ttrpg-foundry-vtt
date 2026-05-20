@@ -23,7 +23,7 @@
  *     cost, and no contributor may pledge more RP than they have.
  */
 
-import { canRequisition, type RenownRank } from './dw-renown';
+import { canRequisition, type RenownRank } from './dw-renown.ts';
 
 /** Craftsmanship tier identifiers. */
 export type Craftsmanship = 'poor' | 'common' | 'good' | 'best';

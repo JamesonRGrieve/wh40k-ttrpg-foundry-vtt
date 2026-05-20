@@ -600,20 +600,6 @@ export default class CharacterSheet extends BaseActorSheet {
     readonly #originOptionsCache = new Map<GameSystemId, Record<string, string[]>>();
 
     /**
-     * Whether the sheet is in edit mode (showing inline stat fields).
-     * @type {boolean}
-     */
-    #editMode = false;
-
-    /**
-     * Whether the sheet is currently in edit mode.
-     * @type {boolean}
-     */
-    get inEditMode(): boolean {
-        return this.#editMode && this.isEditable;
-    }
-
-    /**
      * Resolve the active rules line for this sheet instance.
      * Shared parent logic must derive this from the concrete child/system state
      * rather than hardcoding a game-specific fallback.
@@ -634,7 +620,6 @@ export default class CharacterSheet extends BaseActorSheet {
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...(BaseActorSheet.DEFAULT_OPTIONS.actions ?? {}),
-            'toggleEditMode': CharacterSheet.#toggleEditMode,
             'viewFateUses': CharacterSheet.#viewFateUses,
             // Combat actions
             'attack': CharacterSheet.#attack,
@@ -4977,18 +4962,6 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
-
-    /**
-     * Toggle edit mode for inline characteristic editing.
-     * @this {CharacterSheet}
-     * @param {PointerEvent} event  The triggering event.
-     * @param {HTMLElement} target  The action target.
-     */
-    static #toggleEditMode(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        if (!this.isEditable) return;
-        this.#editMode = !this.#editMode;
-        void this.render();
-    }
 
     /**
      * Open the Fate Point uses reference dialog. Triggered by clicking the

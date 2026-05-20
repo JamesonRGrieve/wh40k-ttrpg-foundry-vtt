@@ -305,6 +305,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             applyPreset: (BaseActorSheet as unknown as { _onApplyPreset: (event: Event, target: HTMLElement) => Promise<void> })._onApplyPreset,
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
             editCharacteristic: BaseActorSheet.#editCharacteristic,
+            toggleEditMode: BaseActorSheet.#toggleEditMode,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['wh40k-rpg', 'sheet', 'actor'],
@@ -332,6 +333,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
     /*  Instance Properties                         */
     /* -------------------------------------------- */
+
+    /**
+     * Whether the sheet is in edit mode (inline characteristic / stat fields
+     * exposed for editing). Toggled via the `toggleEditMode` action.
+     */
+    #editMode = false;
+
+    /** Edit-mode getter — gated by `isEditable` so non-owners can never edit. */
+    get inEditMode(): boolean {
+        return this.#editMode && this.isEditable;
+    }
 
     /**
      * Filter state for equipment panel.
@@ -1798,6 +1810,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {PointerEvent} event  The triggering event.
      * @param {HTMLElement} target  The action target.
      */
+    /**
+     * Toggle the sheet's edit mode flag and re-render. Shared by every actor
+     * sheet subclass; access to mutable inline fields is gated by
+     * `inEditMode` (which also requires `isEditable`).
+     */
+    static #toggleEditMode(this: BaseActorSheet, _event: Event, _target: HTMLElement): void {
+        if (!this.isEditable) return;
+        this.#editMode = !this.#editMode;
+        void this.render();
+    }
+
     static async #onEditImage(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset['edit'] ?? 'img';
         const docSource = this.document.toObject(true);

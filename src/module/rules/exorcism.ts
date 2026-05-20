@@ -11,7 +11,7 @@
  * workflow that drives the ritual is a follow-up.
  */
 
-import { DAEMONIC_MASTERY_FACTORS, buildDaemonicMasteryTest, type DaemonicMasteryFactor } from './daemonic-mastery';
+import { DAEMONIC_MASTERY_FACTORS, buildDaemonicMasteryTest, type DaemonicMasteryFactor } from './daemonic-mastery.ts';
 
 /** Canonical Exorcism Modifiers table entries (beyond.md p. 70). */
 export const EXORCISM_MODIFIERS = {
