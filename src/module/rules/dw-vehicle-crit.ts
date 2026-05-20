@@ -33,7 +33,7 @@
  * difficulty-tier table, and the acquisition gate primitives.
  */
 
-import { renownRankIndex, type RenownRank } from './dw-renown';
+import { renownRankIndex, type RenownRank } from './dw-renown.ts';
 
 /**
  * Twelve discrete Vehicle Critical Hit Chart cells (Table 4-2,

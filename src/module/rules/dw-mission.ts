@@ -21,7 +21,7 @@
  * at authoring time, not in this resolver.
  */
 
-import { RENOWN_MIN } from './dw-renown';
+import { RENOWN_MIN } from './dw-renown.ts';
 
 /**
  * Mission rating — content-agnostic classification of mission scope.

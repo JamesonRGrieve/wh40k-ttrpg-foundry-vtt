@@ -12,7 +12,7 @@
  * follow-up.
  */
 
-import { DAEMONIC_MASTERY_FACTORS, buildDaemonicMasteryTest, type DaemonicMasteryFactor } from './daemonic-mastery';
+import { DAEMONIC_MASTERY_FACTORS, buildDaemonicMasteryTest, type DaemonicMasteryFactor } from './daemonic-mastery.ts';
 
 export interface SummoningRitualState {
     /** Forbidden Lore (Daemonology) skill total. */

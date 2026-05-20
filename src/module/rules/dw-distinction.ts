@@ -16,7 +16,7 @@
  * Cohesion spend.
  */
 
-import { type RenownRank, awardRenown, renownRankIndex, getRenownRank } from './dw-renown';
+import { type RenownRank, awardRenown, renownRankIndex, getRenownRank } from './dw-renown.ts';
 
 /**
  * A Distinction definition — the honor itself. The Mark of Distinction
