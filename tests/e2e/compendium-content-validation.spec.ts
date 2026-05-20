@@ -227,7 +227,14 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                             // sub-object-truthy), accept it. This keeps the
                             // gate honest without churning on cosmetic
                             // re-ordering.
-                            if (srcVal !== null && typeof srcVal === 'object' && !Array.isArray(srcVal) && serVal !== null && typeof serVal === 'object' && !Array.isArray(serVal)) {
+                            if (
+                                srcVal !== null &&
+                                typeof srcVal === 'object' &&
+                                !Array.isArray(srcVal) &&
+                                serVal !== null &&
+                                typeof serVal === 'object' &&
+                                !Array.isArray(serVal)
+                            ) {
                                 const srcKeys = Object.keys(srcVal as Record<string, unknown>);
                                 const serKeys = new Set(Object.keys(serVal as Record<string, unknown>));
                                 const lost = srcKeys.filter((sk) => !serKeys.has(sk));
@@ -301,7 +308,8 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
 
                     // Assertion 1: doc.system is a non-null object.
                     if (doc.system === null || typeof doc.system !== 'object') {
-                        if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: system is not an object (got ${doc.system === null ? 'null' : typeof doc.system})`);
+                        if (outcome.failures.length < 5)
+                            outcome.failures.push(`${docLabel}: system is not an object (got ${doc.system === null ? 'null' : typeof doc.system})`);
                         perDocFailures += 1;
                         continue;
                     }
@@ -318,7 +326,11 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     // either a non-empty `schema.fields` or — for those two
                     // document kinds — just a non-null system object.
                     const fieldsObj = system.schema?.fields;
-                    const hasFields = fieldsObj !== null && fieldsObj !== undefined && typeof fieldsObj === 'object' && Object.keys(fieldsObj as Record<string, unknown>).length > 0;
+                    const hasFields =
+                        fieldsObj !== null &&
+                        fieldsObj !== undefined &&
+                        typeof fieldsObj === 'object' &&
+                        Object.keys(fieldsObj as Record<string, unknown>).length > 0;
                     if (!hasFields) {
                         // Best-effort: tolerate framework-doc kinds whose
                         // DataModel is implicit. Only flag when the doc
@@ -435,7 +447,9 @@ test.describe.serial('compendium content validation (Tier B)', () => {
 
         expect(
             failures,
-            `${failures.length}/${COMPENDIUM_CONTENT_FLOWS.length} compendium-content probes failed (${totalDocsValidated} docs validated cleanly):\n  - ${failures.join('\n  - ')}${refTail}${pageErrorTail}`,
+            `${failures.length}/${
+                COMPENDIUM_CONTENT_FLOWS.length
+            } compendium-content probes failed (${totalDocsValidated} docs validated cleanly):\n  - ${failures.join('\n  - ')}${refTail}${pageErrorTail}`,
         ).toEqual([]);
     });
 });

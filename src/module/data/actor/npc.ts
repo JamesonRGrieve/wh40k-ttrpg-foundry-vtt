@@ -2,6 +2,7 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
+import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
@@ -234,6 +235,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             // Integrity pair. The DwVehicleDeclarations interface is merged
             // onto NPCData below the class.
             ...dwVehicleSchemaFields(),
+
+            // OW Vehicle Movement (#156) — chase tracker slot, NPC drivers too.
+            ...owVehicleMovementSchemaFields(),
 
             // === CORE IDENTITY ===
             faction: new StringField({ required: false, initial: '', blank: true }),
@@ -1171,4 +1175,4 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
  * vehicles persist Integrity + over-Integrity for crit-table lookups.
  */
 /* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging -- declaration-merging target: all members come from the extends list; intentional merge with the class above */
-export default interface NPCData extends DwVehicleDeclarations {}
+export default interface NPCData extends DwVehicleDeclarations, OwVehicleMovementDeclarations {}

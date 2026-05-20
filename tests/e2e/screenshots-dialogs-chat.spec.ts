@@ -72,10 +72,7 @@ const CHAT_TEMPLATES = [
     'weapon-card-chat',
 ] as const;
 
-const SCREENSHOT_DIALOG_CHAT_FLOWS = [
-    ...DIALOG_CLASSES.map((c) => `dialog::${c}`),
-    ...CHAT_TEMPLATES.map((t) => `chat::${t}`),
-] as const;
+const SCREENSHOT_DIALOG_CHAT_FLOWS = [...DIALOG_CLASSES.map((c) => `dialog::${c}`), ...CHAT_TEMPLATES.map((t) => `chat::${t}`)] as const;
 void SCREENSHOT_DIALOG_CHAT_FLOWS;
 
 /**

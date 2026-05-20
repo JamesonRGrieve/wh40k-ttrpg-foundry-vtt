@@ -1,0 +1,34 @@
+{
+    "issue": 156,
+    "engine": "ow-vehicle-movement",
+    "gameSystem": "ow",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/ow-vehicle-movement-template.ts",
+        "applyTo": "both",
+        "schemaFieldsExport": "owVehicleMovementSchemaFields",
+        "declarationsTypeExport": "OwVehicleMovementDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/ow-vehicle-movement-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/ow-vehicle-movement-panel.hbs",
+        "includeIn": "tab-status.hbs",
+        "gateOn": "isOW"
+    },
+    "actions": [
+        {
+            "actionName": "owVehicleAction",
+            "module": "src/module/actions/ow-vehicle-actions.ts",
+            "exportName": "owVehicleAction"
+        }
+    ],
+    "chatPartial": {
+        "partialPath": "systems/wh40k-rpg/templates/chat/ow-vehicle-action-chat.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/chat/ow-vehicle-action-chat.hbs"
+    },
+    "i18nKeys": "WH40K.OW.VehicleMovement.*",
+    "e2eSpec": "tests/e2e/ow-vehicle-movement.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/ow-vehicle-movement-panel.stories.ts",
+        "src/templates/chat/ow-vehicle-action-chat.stories.ts"
+    ]
+}

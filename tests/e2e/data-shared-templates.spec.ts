@@ -67,6 +67,17 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 out.push({ name, ok, detail });
             };
 
+            // Synthetic subclasses below extend dynamic-imported DataModel templates
+            // whose static side is `any`. Casting through this alias lets each
+            // class declare its own constructor signature and static overrides.
+            // The `defineSchema` / `_migrateData` static slots reflect the shared
+            // template API every dynamically-imported module exposes; this is a
+            // boundary cast against untyped Foundry DataModel statics.
+            type Ctor = (new (...args: any[]) => any) & {
+                defineSchema: () => Record<string, any>;
+                _migrateData?: (source: Record<string, any>) => void;
+            };
+
             const base = `${'/systems/wh40k-rpg'}/module/data/shared`;
             const loadModule = async (name: string): Promise<any | null> => {
                 try {
@@ -198,8 +209,10 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     const pcSubFields = pcChar.fields ?? {};
                     const npcSubFields = npcChar.fields ?? {};
                     // Advancement triplet is PC-only.
-                    if (!('advance' in pcSubFields) || !('cost' in pcSubFields) || !('damage' in pcSubFields)) return 'PC characteristic missing advancement triplet';
-                    if ('advance' in npcSubFields || 'cost' in npcSubFields || 'damage' in npcSubFields) return 'NPC characteristic should omit advancement triplet';
+                    if (!('advance' in pcSubFields) || !('cost' in pcSubFields) || !('damage' in pcSubFields))
+                        return 'PC characteristic missing advancement triplet';
+                    if ('advance' in npcSubFields || 'cost' in npcSubFields || 'damage' in npcSubFields)
+                        return 'NPC characteristic should omit advancement triplet';
 
                     const w = statFields.woundsField({ max: 10, value: 10, critical: 0, nullable: false });
                     if (w === null || typeof w !== 'object') return 'woundsField returned non-object';
@@ -245,9 +258,9 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             if (activationMod?.__importError) {
                 fail(['activation-schema-roundtrip', 'activation-derived-labels', 'activation-uses-helpers'], activationMod.__importError);
             } else {
-                const ActivationTemplate = activationMod.default;
+                const ActivationTemplate = activationMod.default as Ctor;
                 class T extends ActivationTemplate {
-                    static override defineSchema(): Record<string, any> {
+                    static defineSchema(): Record<string, any> {
                         return {
                             ...ActivationTemplate.defineSchema(),
                             extra: new ff.NumberField({ required: false, initial: 0 }),
@@ -368,7 +381,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                             parent: {
                                 _source: { system: {} },
                                 actor: null,
-                                update: (data: any) => {
+                                update: async (data: any) => {
                                     calls.push(data);
                                     return Promise.resolve({});
                                 },
@@ -390,9 +403,9 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             if (attackMod?.__importError) {
                 fail(['attack-schema-roundtrip', 'attack-derived-getters'], attackMod.__importError);
             } else {
-                const AttackTemplate = attackMod.default;
+                const AttackTemplate = attackMod.default as Ctor;
                 class T extends AttackTemplate {
-                    static override defineSchema(): Record<string, any> {
+                    static defineSchema(): Record<string, any> {
                         return {
                             ...AttackTemplate.defineSchema(),
                             extra: new ff.NumberField({ required: false, initial: 0 }),
@@ -497,9 +510,9 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             if (damageMod?.__importError) {
                 fail(['damage-schema-roundtrip', 'damage-derived-labels'], damageMod.__importError);
             } else {
-                const DamageTemplate = damageMod.default;
+                const DamageTemplate = damageMod.default as Ctor;
                 class T extends DamageTemplate {
-                    static override defineSchema(): Record<string, any> {
+                    static defineSchema(): Record<string, any> {
                         return {
                             ...DamageTemplate.defineSchema(),
                             extra: new ff.NumberField({ required: false, initial: 0 }),
@@ -585,9 +598,9 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             if (descMod?.__importError) {
                 fail(['description-schema-roundtrip', 'description-source-reference'], descMod.__importError);
             } else {
-                const DescriptionTemplate = descMod.default;
+                const DescriptionTemplate = descMod.default as Ctor;
                 class T extends DescriptionTemplate {
-                    static override defineSchema(): Record<string, any> {
+                    static defineSchema(): Record<string, any> {
                         return {
                             ...DescriptionTemplate.defineSchema(),
                             extra: new ff.NumberField({ required: false, initial: 0 }),
@@ -670,9 +683,9 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             if (equipMod?.__importError) {
                 record('equippable-schema-roundtrip', false, equipMod.__importError);
             } else {
-                const EquippableTemplate = equipMod.default;
+                const EquippableTemplate = equipMod.default as Ctor;
                 class T extends EquippableTemplate {
-                    static override defineSchema(): Record<string, any> {
+                    static defineSchema(): Record<string, any> {
                         return {
                             ...EquippableTemplate.defineSchema(),
                             extra: new ff.NumberField({ required: false, initial: 0 }),
@@ -723,9 +736,9 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             if (physMod?.__importError) {
                 fail(['physical-schema-roundtrip', 'physical-derived-labels'], physMod.__importError);
             } else {
-                const PhysicalItemTemplate = physMod.default;
+                const PhysicalItemTemplate = physMod.default as Ctor;
                 class T extends PhysicalItemTemplate {
-                    static override defineSchema(): Record<string, any> {
+                    static defineSchema(): Record<string, any> {
                         return {
                             ...PhysicalItemTemplate.defineSchema(),
                             extra: new ff.NumberField({ required: false, initial: 0 }),

@@ -5,7 +5,29 @@
             "npc": "NPC",
             "vehicle": "Vehicle",
             "starship": "Starship",
-            "loot": "Loot Pile"
+            "loot": "Loot Pile",
+            "dh2-character": "Dark Heresy 2e Character",
+            "dh2-npc": "Dark Heresy 2e NPC",
+            "dh2-vehicle": "Dark Heresy 2e Vehicle",
+            "dh1-character": "Dark Heresy 1e Character",
+            "dh1-npc": "Dark Heresy 1e NPC",
+            "dh1-vehicle": "Dark Heresy 1e Vehicle",
+            "rt-character": "Rogue Trader Character",
+            "rt-npc": "Rogue Trader NPC",
+            "rt-vehicle": "Rogue Trader Vehicle",
+            "rt-starship": "Rogue Trader Starship",
+            "bc-character": "Black Crusade Character",
+            "bc-npc": "Black Crusade NPC",
+            "bc-vehicle": "Black Crusade Vehicle",
+            "ow-character": "Only War Character",
+            "ow-npc": "Only War NPC",
+            "ow-vehicle": "Only War Vehicle",
+            "dw-character": "Deathwatch Character",
+            "dw-npc": "Deathwatch NPC",
+            "dw-vehicle": "Deathwatch Vehicle",
+            "im-character": "Imperium Maledictum Character",
+            "im-npc": "Imperium Maledictum NPC",
+            "im-vehicle": "Imperium Maledictum Vehicle"
         },
         "Item": {
             "ammunition": "Ammunition",
@@ -19,10 +41,12 @@
             "criticalInjury": "Critical Injury",
             "cybernetic": "Cybernetic",
             "drug": "Drug",
+            "endeavour": "Endeavour",
             "enemy": "Enemy",
             "forceField": "Force Field",
             "gear": "Gear",
             "journalEntry": "Journal Entry",
+            "lead": "Lead",
             "malignancy": "Malignancy",
             "mentalDisorder": "Mental Disorder",
             "miscellaneous": "Miscellaneous",
@@ -4343,6 +4367,23 @@
                     "Available": "Replacement Comrade joins the squad",
                     "NotDead": "Comrade is still alive — no replacement needed",
                     "NoRefit": "No refit available — replacement denied"
+                },
+                "Action": {
+                    "TickDay": "Tick Day",
+                    "MedicaeAttempt": "Medicae Attempt",
+                    "Replace": "Replace at Camp",
+                    "ToggleRefit": "Toggle refit availability"
+                },
+                "Status": {
+                    "Ready": "Comrade ready for duty",
+                    "Recovering": "Recovering",
+                    "RefitAvailable": "Refit available",
+                    "RefitUnavailable": "Refit unavailable"
+                },
+                "Chat": {
+                    "TickTitle": "Recovery day ticked",
+                    "MedicaeTitle": "Medicae attempt resolved",
+                    "ReplaceTitle": "Replacement resolution"
                 }
             },
             "Logistics": {
@@ -4437,6 +4478,12 @@
             },
             "Craftsmanship": {
                 "Label": "Craftsmanship",
+                "Empty": "No equipped weapons or armour with Craftsmanship effects.",
+                "WeaponsHeader": "Equipped Weapons",
+                "ArmoursHeader": "Equipped Armour",
+                "DamageShort": "Dmg",
+                "ApShort": "AP",
+                "NoEffect": "No effect",
                 "Tier": {
                     "Poor": "Poor",
                     "Common": "Common",
@@ -4445,6 +4492,7 @@
                 },
                 "Ranged": {
                     "Reliability": {
+                        "Standard": "Standard reliability",
                         "Unreliable": "Unreliable",
                         "Reliable": "Reliable",
                         "NeverJams": "Never Jams"
@@ -4470,17 +4518,35 @@
                     "Jink": "Jink",
                     "TacticalManoeuvring": "Tactical Manoeuvring"
                 },
+                "Description": {
+                    "EvasiveManoeuvring": "Driver makes an Operate test; on success, attackers suffer a -10 penalty to hit the vehicle until the start of the driver's next turn.",
+                    "FloorIt": "Vehicle moves at maximum tactical speed in a straight line; all ranged attacks against the vehicle suffer a -10 penalty, but the driver may take no other actions this turn.",
+                    "HitAndRun": "Vehicle moves up to its tactical speed, gunners may fire as a free action during the move, then the vehicle continues to its end position.",
+                    "Jink": "Reaction: driver attempts an Operate test against an incoming attack; on success the attack suffers a -20 penalty to hit.",
+                    "TacticalManoeuvring": "Vehicle moves at tactical speed and may make a single course change of up to 90 degrees during the move."
+                },
                 "Timing": {
                     "Full": "Full Action",
                     "Half": "Half Action",
                     "Reaction": "Reaction"
+                },
+                "Issue": {
+                    "Button": "Issue",
+                    "Title": "Dispatch this vehicle movement action"
+                },
+                "Chat": {
+                    "Title": "Vehicle Action: {action}",
+                    "Header": "Vehicle Movement"
                 },
                 "Chase": {
                     "Title": "High-Speed Chase",
                     "PursuerDistance": "Pursuer Distance",
                     "DangerZone": "Danger Zone",
                     "TurnCount": "Turn",
-                    "CloseRate": "Close Rate"
+                    "CloseRate": "Close Rate",
+                    "Inactive": "No active chase",
+                    "DangerZoneActive": "Danger Zone — handling hazard!",
+                    "DangerZoneClear": "No handling hazard"
                 }
             },
             "Mount": {

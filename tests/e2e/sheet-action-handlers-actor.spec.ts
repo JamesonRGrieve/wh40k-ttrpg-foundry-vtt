@@ -242,7 +242,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
                         // ---- character-sheet::toggleEquip ----
                         try {
-                            const handler = actions['toggleEquip'];
+                            const handler = actions.toggleEquip;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::toggleEquip'] = 'handler missing';
                             } else if (!gear) {
@@ -265,7 +265,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
                         // ---- character-sheet::stowItem ----
                         try {
-                            const handler = actions['stowItem'];
+                            const handler = actions.stowItem;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::stowItem'] = 'handler missing';
                             } else if (!gear) {
@@ -288,7 +288,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
                         // ---- character-sheet::unstowItem ----
                         try {
-                            const handler = actions['unstowItem'];
+                            const handler = actions.unstowItem;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::unstowItem'] = 'handler missing';
                             } else if (!gear) {
@@ -311,7 +311,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- character-sheet::filterEquipment ----
                         // Pure DOM helper; success = dispatch returns without throwing.
                         try {
-                            const handler = actions['filterEquipment'];
+                            const handler = actions.filterEquipment;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::filterEquipment'] = 'handler missing';
                             } else {
@@ -326,20 +326,14 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- character-sheet::toggleFavoriteSkill ----
                         // Flips the actor's `favoriteSkills` flag list.
                         try {
-                            const handler = actions['toggleFavoriteSkill'];
+                            const handler = actions.toggleFavoriteSkill;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::toggleFavoriteSkill'] = 'handler missing';
                             } else {
-                                const flagBefore =
-                                    (livePc().getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
+                                const flagBefore = (livePc().getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
                                 const includesBefore = flagBefore.includes('athletics');
-                                await withTimeout(
-                                    handler.call(sheet, synthEvent(), synthTarget({ skill: 'athletics' })),
-                                    5_000,
-                                    'toggleFavoriteSkill',
-                                );
-                                const flagAfter =
-                                    (livePc().getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
+                                await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'athletics' })), 5_000, 'toggleFavoriteSkill');
+                                const flagAfter = (livePc().getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
                                 const includesAfter = flagAfter.includes('athletics');
                                 if (includesAfter !== includesBefore) {
                                     fired['character-sheet::toggleFavoriteSkill'] = true;
@@ -358,14 +352,12 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- character-sheet::toggleFavoriteTalent ----
                         // Create a talent to favorite.
                         try {
-                            const handler = actions['toggleFavoriteTalent'];
+                            const handler = actions.toggleFavoriteTalent;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::toggleFavoriteTalent'] = 'handler missing';
                             } else {
                                 const talentCreated = (await withTimeout(
-                                    livePc().createEmbeddedDocuments?.('Item', [
-                                        { name: 'probe-talent', type: 'talent', system: {} },
-                                    ]),
+                                    livePc().createEmbeddedDocuments?.('Item', [{ name: 'probe-talent', type: 'talent', system: {} }]),
                                     5_000,
                                     'create talent',
                                 )) as any[];
@@ -380,13 +372,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                             /* ignore */
                                         }
                                     });
-                                    await withTimeout(
-                                        handler.call(sheet, synthEvent(), synthRowTarget(talent.id)),
-                                        5_000,
-                                        'toggleFavoriteTalent',
-                                    );
-                                    const flagAfter =
-                                        (livePc().getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
+                                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(talent.id)), 5_000, 'toggleFavoriteTalent');
+                                    const flagAfter = (livePc().getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
                                     if (flagAfter.includes(talent.id)) {
                                         fired['character-sheet::toggleFavoriteTalent'] = true;
                                         notes['character-sheet::toggleFavoriteTalent'] = `flag added`;
@@ -404,7 +391,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- character-sheet::adjustSubtletyManually ----
                         // GM-only; passing data-delta drives applySubtlety('manual').
                         try {
-                            const handler = actions['adjustSubtletyManually'];
+                            const handler = actions.adjustSubtletyManually;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::adjustSubtletyManually'] = 'handler missing';
                             } else if (game?.user?.isGM !== true) {
@@ -412,11 +399,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             } else {
                                 let threw: string | null = null;
                                 try {
-                                    await withTimeout(
-                                        handler.call(sheet, synthEvent(), synthTarget({ delta: '-2' })),
-                                        5_000,
-                                        'adjustSubtletyManually',
-                                    );
+                                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-2' })), 5_000, 'adjustSubtletyManually');
                                 } catch (err) {
                                     threw = String((err as Error)?.message ?? err);
                                 }
@@ -468,7 +451,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
                         // ---- npc-sheet::toggleHordeMode ----
                         try {
-                            const handler = actions['toggleHordeMode'];
+                            const handler = actions.toggleHordeMode;
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::toggleHordeMode'] = 'handler missing';
                             } else {
@@ -491,17 +474,13 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- npc-sheet::applyMagnitudeDamage ----
                         // Reads `data-amount`; success = dispatch returns without throwing.
                         try {
-                            const handler = actions['applyMagnitudeDamage'];
+                            const handler = actions.applyMagnitudeDamage;
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::applyMagnitudeDamage'] = 'handler missing';
                             } else {
                                 let threw: string | null = null;
                                 try {
-                                    await withTimeout(
-                                        handler.call(sheet, synthEvent(), synthTarget({ amount: '1' })),
-                                        5_000,
-                                        'applyMagnitudeDamage',
-                                    );
+                                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '1' })), 5_000, 'applyMagnitudeDamage');
                                 } catch (err) {
                                     threw = String((err as Error)?.message ?? err);
                                 }
@@ -519,7 +498,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- npc-sheet::setSkillLevel ----
                         // Writes `system.trainedSkills.<skill>` to a chosen training level.
                         try {
-                            const handler = actions['setSkillLevel'];
+                            const handler = actions.setSkillLevel;
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::setSkillLevel'] = 'handler missing';
                             } else {
@@ -528,8 +507,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     5_000,
                                     'setSkillLevel',
                                 );
-                                const fresh = liveNpc().system?.trainedSkills?.['awareness'];
-                                if (fresh && fresh.trained === true) {
+                                const fresh = liveNpc().system?.trainedSkills?.awareness;
+                                if (fresh?.trained === true) {
                                     fired['npc-sheet::setSkillLevel'] = true;
                                     notes['npc-sheet::setSkillLevel'] = 'awareness set to trained';
                                 } else {
@@ -545,7 +524,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- npc-sheet::addTag ----
                         // Opens a DialogV2; we accept render-or-no-throw as the coverage signal.
                         try {
-                            const handler = actions['addTag'];
+                            const handler = actions.addTag;
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::addTag'] = 'handler missing';
                             } else {
@@ -571,16 +550,12 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- npc-sheet::removeTag ----
                         // Pre-seed a tag, dispatch the action, expect it gone.
                         try {
-                            const handler = actions['removeTag'];
+                            const handler = actions.removeTag;
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::removeTag'] = 'handler missing';
                             } else {
                                 await withTimeout(liveNpc().update?.({ 'system.tags': ['boss'] }), 5_000, 'seed npc tag');
-                                await withTimeout(
-                                    handler.call(sheet, synthEvent(), synthTarget({ tag: 'boss' })),
-                                    5_000,
-                                    'removeTag',
-                                );
+                                await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ tag: 'boss' })), 5_000, 'removeTag');
                                 const tags = (liveNpc().system?.tags ?? []) as string[];
                                 if (!tags.includes('boss')) {
                                     fired['npc-sheet::removeTag'] = true;
@@ -596,7 +571,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- npc-sheet::adjustInteractionCount ----
                         // Writes per-PC interaction tally to a flag.
                         try {
-                            const handler = actions['adjustInteractionCount'];
+                            const handler = actions.adjustInteractionCount;
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::adjustInteractionCount'] = 'handler missing';
                             } else {
@@ -605,8 +580,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     5_000,
                                     'adjustInteractionCount',
                                 );
-                                const interactions =
-                                    (liveNpc().getFlag('wh40k-rpg', 'interactions') as Record<string, number> | undefined) ?? {};
+                                const interactions = (liveNpc().getFlag('wh40k-rpg', 'interactions') as Record<string, number> | undefined) ?? {};
                                 if (interactions['probe-pc'] === 1) {
                                     fired['npc-sheet::adjustInteractionCount'] = true;
                                     notes['npc-sheet::adjustInteractionCount'] = 'tally incremented to 1';
@@ -650,7 +624,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     /* ignore */
                                 }
                             });
-                            const handler = sheet.options?.actions?.['scaleToThreat'];
+                            const handler = sheet.options?.actions?.scaleToThreat;
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::scaleToThreat-im'] = 'handler missing';
                             } else {
@@ -708,16 +682,12 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
                         // ---- vehicle-sheet::adjustStructure ----
                         try {
-                            const handler = actions['adjustStructure'];
+                            const handler = actions.adjustStructure;
                             if (typeof handler !== 'function') {
                                 notes['vehicle-sheet::adjustStructure'] = 'handler missing';
                             } else {
                                 const before = liveV().system?.wounds?.value ?? -1;
-                                await withTimeout(
-                                    handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })),
-                                    5_000,
-                                    'adjustStructure',
-                                );
+                                await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })), 5_000, 'adjustStructure');
                                 const after = liveV().system?.wounds?.value ?? -1;
                                 if (after === Math.max(0, before - 3)) {
                                     fired['vehicle-sheet::adjustStructure'] = true;
@@ -732,17 +702,13 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
                         // ---- vehicle-sheet::repairDamage ----
                         try {
-                            const handler = actions['repairDamage'];
+                            const handler = actions.repairDamage;
                             if (typeof handler !== 'function') {
                                 notes['vehicle-sheet::repairDamage'] = 'handler missing';
                             } else {
                                 const before = liveV().system?.wounds?.value ?? -1;
                                 const max = liveV().system?.wounds?.max ?? before;
-                                await withTimeout(
-                                    handler.call(sheet, synthEvent(), synthTarget({ amount: '2' })),
-                                    5_000,
-                                    'repairDamage',
-                                );
+                                await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '2' })), 5_000, 'repairDamage');
                                 const after = liveV().system?.wounds?.value ?? -1;
                                 if (after === Math.min(max, before + 2)) {
                                     fired['vehicle-sheet::repairDamage'] = true;
@@ -757,16 +723,12 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
                         // ---- vehicle-sheet::modifyCrew ----
                         try {
-                            const handler = actions['modifyCrew'];
+                            const handler = actions.modifyCrew;
                             if (typeof handler !== 'function') {
                                 notes['vehicle-sheet::modifyCrew'] = 'handler missing';
                             } else {
                                 const before = liveV().system?.crew?.rating ?? 30;
-                                await withTimeout(
-                                    handler.call(sheet, synthEvent(), synthTarget({ delta: '5' })),
-                                    5_000,
-                                    'modifyCrew',
-                                );
+                                await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '5' })), 5_000, 'modifyCrew');
                                 const after = liveV().system?.crew?.rating ?? 30;
                                 if (after === Math.max(1, Math.min(100, before + 5))) {
                                     fired['vehicle-sheet::modifyCrew'] = true;
@@ -781,25 +743,18 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
                         // ---- vehicle-sheet::adjustCrewMorale ----
                         try {
-                            const handler = actions['adjustCrewMorale'];
+                            const handler = actions.adjustCrewMorale;
                             if (typeof handler !== 'function') {
                                 notes['vehicle-sheet::adjustCrewMorale'] = 'handler missing';
                             } else {
                                 const before = liveV().system?.crew?.morale ?? 50;
-                                await withTimeout(
-                                    handler.call(sheet, synthEvent(), synthTarget({ delta: '-10' })),
-                                    5_000,
-                                    'adjustCrewMorale',
-                                );
+                                await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-10' })), 5_000, 'adjustCrewMorale');
                                 const after = liveV().system?.crew?.morale ?? 50;
                                 if (after === Math.max(0, Math.min(100, before - 10))) {
                                     fired['vehicle-sheet::adjustCrewMorale'] = true;
                                     notes['vehicle-sheet::adjustCrewMorale'] = `crew.morale ${before} → ${after}`;
                                 } else {
-                                    notes['vehicle-sheet::adjustCrewMorale'] = `expected ${Math.max(
-                                        0,
-                                        Math.min(100, before - 10),
-                                    )}, got ${after}`;
+                                    notes['vehicle-sheet::adjustCrewMorale'] = `expected ${Math.max(0, Math.min(100, before - 10))}, got ${after}`;
                                 }
                             }
                         } catch (err) {
@@ -844,7 +799,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- starship-sheet::raiseVoidShield ----
                         // From active=1/exhausted=1 → active=2/exhausted=0.
                         try {
-                            const handler = actions['raiseVoidShield'];
+                            const handler = actions.raiseVoidShield;
                             if (typeof handler !== 'function') {
                                 notes['starship-sheet::raiseVoidShield'] = 'handler missing';
                             } else {
@@ -865,7 +820,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- starship-sheet::lowerVoidShield ----
                         // From active=2/exhausted=0 → active=1/exhausted=1.
                         try {
-                            const handler = actions['lowerVoidShield'];
+                            const handler = actions.lowerVoidShield;
                             if (typeof handler !== 'function') {
                                 notes['starship-sheet::lowerVoidShield'] = 'handler missing';
                             } else {
@@ -886,7 +841,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // ---- starship-sheet::restoreVoidShields ----
                         // Snaps active=max, exhausted=0.
                         try {
-                            const handler = actions['restoreVoidShields'];
+                            const handler = actions.restoreVoidShields;
                             if (typeof handler !== 'function') {
                                 notes['starship-sheet::restoreVoidShields'] = 'handler missing';
                             } else {
@@ -898,7 +853,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     fired['starship-sheet::restoreVoidShields'] = true;
                                     notes['starship-sheet::restoreVoidShields'] = `active=${active}=${max} exhausted=${exhausted}`;
                                 } else {
-                                    notes['starship-sheet::restoreVoidShields'] = `expected active=${max} exhausted=0, got active=${active} exhausted=${exhausted}`;
+                                    notes[
+                                        'starship-sheet::restoreVoidShields'
+                                    ] = `expected active=${max} exhausted=0, got active=${active} exhausted=${exhausted}`;
                                 }
                             }
                         } catch (err) {
@@ -910,7 +867,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // to StarshipData.validateBuild) and pings ui.notifications.
                         // Success = no throw.
                         try {
-                            const handler = actions['validateBuild'];
+                            const handler = actions.validateBuild;
                             if (typeof handler !== 'function') {
                                 notes['starship-sheet::validateBuild'] = 'handler missing';
                             } else {
@@ -960,7 +917,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 /* ignore */
                             }
                         });
-                        const handler = sheet.options?.actions?.['pickupAll'];
+                        const handler = sheet.options?.actions?.pickupAll;
                         if (typeof handler !== 'function') {
                             notes['loot-sheet::pickupAll'] = 'handler missing';
                         } else {
@@ -1031,8 +988,7 @@ test.describe.serial('per-sheet actor action handlers (Tier B)', () => {
             }
         }
 
-        const pageErrorTail =
-            probe.pageErrors.length > 0 ? `\n  pageerrors: ${probe.pageErrors.slice(0, 5).join(' | ')}` : '';
+        const pageErrorTail = probe.pageErrors.length > 0 ? `\n  pageerrors: ${probe.pageErrors.slice(0, 5).join(' | ')}` : '';
 
         expect(
             failures,

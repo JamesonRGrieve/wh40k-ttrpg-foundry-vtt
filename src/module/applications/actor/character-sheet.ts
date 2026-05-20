@@ -23,6 +23,9 @@ import { owComradeHeal, owComradeReplace, owComradeWound } from '../../actions/o
 import { owRequestGear } from '../../actions/ow-mission-gear-actions.ts';
 import { owIssueOrder } from '../../actions/ow-orders-actions.ts';
 import { owRegimentEdit } from '../../actions/ow-regiment-actions.ts';
+import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
+import { owComradeMedicae, owComradeReplace2, owComradeTickDay } from '../../actions/ow-comrade-healing-actions.ts';
+import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
@@ -172,6 +175,9 @@ type CharacterSheetContextDeclaredFields = {
     missionPanel?: DwMissionPanelContext;
     vehiclePanel?: DwVehiclePanelContext;
     missionGearPanel?: OwMissionGearPanelContext;
+    vehicleMovementPanel?: OwVehicleMovementPanelContext;
+    comradeHealingPanel?: OwComradeHealingPanelContext;
+    craftsmanshipPanel?: OwCraftsmanshipPanelContext;
     hideThroneGelt?: boolean;
     originPathSteps?: unknown;
     originPathSummary?: unknown;
@@ -490,6 +496,22 @@ type OwMissionGearPanelContext = {
     outcomeKey: string | null;
 };
 
+type OwVehicleMovementPanelContext = {
+    actions: Array<{ id: string; nameKey: string; timingKey: string; descriptionKey: string }>;
+    chase: { active: boolean; pursuerDistance: number; dangerZone: boolean; turnCount: number };
+};
+
+type OwComradeHealingPanelContext = {
+    recoveryDays: number;
+    refitAvailable: boolean;
+    canTick: boolean;
+    canMedicae: boolean;
+    canReplace: boolean;
+    statusKey: string;
+};
+
+type OwCraftsmanshipPanelContext = ReturnType<typeof buildOwCraftsmanshipPanel>;
+
 type OriginSummary = {
     steps: Record<string, unknown>[];
     completedSteps: number;
@@ -720,6 +742,11 @@ export default class CharacterSheet extends BaseActorSheet {
             'dwVehicleRollCrit': dwVehicleRollCrit,
             'dwVehicleRepair': dwVehicleRepair,
             'owRequestGear': owRequestGear,
+            // Batch-3 actions
+            'owVehicleAction': owVehicleAction,
+            'owComradeTickDay': owComradeTickDay,
+            'owComradeMedicae': owComradeMedicae,
+            'owComradeReplace2': owComradeReplace2,
 
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
@@ -1090,6 +1117,10 @@ export default class CharacterSheet extends BaseActorSheet {
             context.logisticsPanel = this._prepareOwLogisticsPanel();
             // Batch-2 OW Mission Assignment Gear panel (#155).
             context.missionGearPanel = this._prepareOwMissionGearPanel();
+            // Batch-3 OW panels (#156, #157, #158).
+            context.vehicleMovementPanel = this._prepareOwVehicleMovementPanel();
+            context.comradeHealingPanel = this._prepareOwComradeHealingPanel();
+            context.craftsmanshipPanel = buildOwCraftsmanshipPanel(Array.from(this.actor.items.values()));
         }
 
         // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
@@ -2029,6 +2060,55 @@ export default class CharacterSheet extends BaseActorSheet {
         return {
             hasOutcome: true,
             outcomeKey: `WH40K.OW.MissionGear.Outcome.${titleCase(last)}`,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /** OW Vehicle Movement panel (#156). */
+    _prepareOwVehicleMovementPanel(): OwVehicleMovementPanelContext {
+        const sys = this.actor.system;
+        const chase = sys.chaseState;
+        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
+        const actions = [
+            { id: 'evasive-manoeuvring', timing: 'half' },
+            { id: 'floor-it', timing: 'full' },
+            { id: 'hit-and-run', timing: 'full' },
+            { id: 'jink', timing: 'reaction' },
+            { id: 'tactical-manoeuvring', timing: 'half' },
+        ].map((a) => ({
+            id: a.id,
+            nameKey: `WH40K.OW.VehicleMovement.Action.${titleCase(a.id)}`,
+            timingKey: `WH40K.OW.VehicleMovement.Timing.${a.timing.charAt(0).toUpperCase()}${a.timing.slice(1)}`,
+            descriptionKey: `WH40K.OW.VehicleMovement.Description.${titleCase(a.id)}`,
+        }));
+        return {
+            actions,
+            chase:
+                chase === null
+                    ? { active: false, pursuerDistance: 0, dangerZone: false, turnCount: 0 }
+                    : { active: true, pursuerDistance: chase.pursuerDistance, dangerZone: chase.dangerZone, turnCount: chase.turnCount },
+        };
+    }
+
+    /** OW Comrade Healing panel (#157). */
+    _prepareOwComradeHealingPanel(): OwComradeHealingPanelContext {
+        const sys = this.actor.system;
+        const recoveryDays = sys.comradeRecoveryDays;
+        const refitAvailable = sys.refitAvailable;
+        const statusKey =
+            recoveryDays > 0
+                ? 'WH40K.OW.ComradeHealing.Status.Recovering'
+                : refitAvailable
+                ? 'WH40K.OW.ComradeHealing.Status.RefitAvailable'
+                : 'WH40K.OW.ComradeHealing.Status.Ready';
+        return {
+            recoveryDays,
+            refitAvailable,
+            canTick: recoveryDays > 0,
+            canMedicae: recoveryDays > 0,
+            canReplace: refitAvailable,
+            statusKey,
         };
     }
 
