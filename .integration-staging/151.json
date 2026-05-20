@@ -1,0 +1,33 @@
+{
+    "issue": 151,
+    "engine": "ow-regiment",
+    "gameSystem": "ow",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/ow-regiment-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "owRegimentSchemaFields",
+        "declarationsTypeExport": "OwRegimentDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/ow-regiment-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/ow-regiment-panel.hbs",
+        "includeIn": "tab-overview.hbs",
+        "gateOn": "isOW"
+    },
+    "preloadExtras": [
+        "systems/wh40k-rpg/templates/prompt/regiment-builder-dialog.hbs"
+    ],
+    "actions": [
+        {
+            "actionName": "owRegimentEdit",
+            "module": "src/module/actions/ow-regiment-actions.ts",
+            "exportName": "owRegimentEdit"
+        }
+    ],
+    "i18nKeys": "WH40K.OW.Regiment.*",
+    "e2eSpec": "tests/e2e/ow-regiment.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/ow-regiment-panel.stories.ts",
+        "src/module/applications/prompts/regiment-builder-dialog.stories.ts"
+    ]
+}

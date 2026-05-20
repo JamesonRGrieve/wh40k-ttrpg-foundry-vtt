@@ -1,0 +1,159 @@
+{{!--
+    Black Crusade Psychic Strength panel (#178).
+
+    Surfaces the live state the pure resolver in
+    `src/module/rules/bc-psychic-strength.ts` consumes, plus the per-test
+    Mode and Push Level controls that drive the on-demand Psychic Test.
+
+    Context (built by the BC character sheet — wiring lives outside the
+    file list this issue is allowed to edit; the panel reads exactly the
+    fields documented below):
+
+      psychicPanel: {
+        psykerClass:        'bound' | 'unbound' | 'daemonic'   // sys.psykerClass
+        psyRating:          number                              // sys.psyRating
+        sustainedPowerCount: number                             // sys.sustainedPowerCount
+        mode:               'fettered' | 'unfettered' | 'push'  // ephemeral UI choice
+        pushLevel:          number                              // ephemeral UI choice
+        maxPushLevel:       number                              // maxPushLevel(psykerClass)
+        effectivePR:        number                              // resolvePsychicTest().effectivePR
+        sustainPenalty:     number                              // resolvePsychicTest().sustainPenalty (≤ 0)
+        phenomenaRolls:     number                              // resolvePsychicTest().phenomenaRolls
+      }
+
+    Rendered only for BC actors; the include in tab-overview.hbs gates on
+    `isBC`.
+--}}
+<section class="wh40k-bc-psychic-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                bc:tw-border-crimson"
+         data-bc-psyker-class="{{psychicPanel.psykerClass}}"
+         data-bc-psy-mode="{{psychicPanel.mode}}">
+
+    {{!-- Header --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-brain bc:tw-text-crimson"></i>
+            <span>{{localize "WH40K.BC.Psychic.PanelHeader"}}</span>
+        </h3>
+        <button type="button"
+                class="wh40k-bc-psychic-test-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                data-action="bcPsychicTest"
+                title="{{localize 'WH40K.BC.Psychic.TestButton'}}">
+            {{localize "WH40K.BC.Psychic.TestButton"}}
+        </button>
+    </header>
+
+    {{!-- Psyker Class selector --}}
+    <div class="wh40k-bc-psychic-class tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
+               for="bc-psyker-class">
+            {{localize "WH40K.BC.Psychic.ClassLabel"}}
+        </label>
+        <select id="bc-psyker-class"
+                name="system.psykerClass"
+                class="wh40k-bc-psyker-class-select tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
+            <option value="bound" {{#if (eq psychicPanel.psykerClass "bound")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Class.Bound"}}</option>
+            <option value="unbound" {{#if (eq psychicPanel.psykerClass "unbound")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Class.Unbound"}}</option>
+            <option value="daemonic" {{#if (eq psychicPanel.psykerClass "daemonic")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Class.Daemonic"}}</option>
+        </select>
+    </div>
+
+    {{!-- Base Psy Rating --}}
+    <div class="wh40k-bc-psychic-pr tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
+               for="bc-psy-rating">
+            {{localize "WH40K.BC.Psychic.BasePR"}}
+        </label>
+        <input id="bc-psy-rating"
+               name="system.psyRating"
+               type="number"
+               min="0"
+               step="1"
+               value="{{psychicPanel.psyRating}}"
+               class="wh40k-bc-psy-rating-input tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
+    </div>
+
+    {{!-- Mode selector --}}
+    <div class="wh40k-bc-psychic-mode tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
+               for="bc-psy-mode">
+            {{localize "WH40K.BC.Psychic.ModeLabel"}}
+        </label>
+        <select id="bc-psy-mode"
+                name="psychicPanel.mode"
+                class="wh40k-bc-psy-mode-select tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]"
+                data-action="bcPsychicSetMode">
+            <option value="fettered" {{#if (eq psychicPanel.mode "fettered")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Mode.Fettered"}}</option>
+            <option value="unfettered" {{#if (eq psychicPanel.mode "unfettered")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Mode.Unfettered"}}</option>
+            <option value="push" {{#if (eq psychicPanel.mode "push")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Mode.Push"}}</option>
+        </select>
+    </div>
+
+    {{!-- Push Level slider (active only when mode === 'push') --}}
+    <div class="wh40k-bc-psychic-push tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
+               for="bc-push-level">
+            {{localize "WH40K.BC.Psychic.Push.Level"}}
+        </label>
+        <div class="tw-flex tw-items-center tw-gap-2">
+            <input id="bc-push-level"
+                   name="psychicPanel.pushLevel"
+                   type="range"
+                   min="0"
+                   max="{{psychicPanel.maxPushLevel}}"
+                   step="1"
+                   value="{{psychicPanel.pushLevel}}"
+                   {{#unless (eq psychicPanel.mode "push")}}disabled{{/unless}}
+                   class="wh40k-bc-push-level-input tw-w-24"
+                   data-action="bcPsychicSetPushLevel" />
+            <span class="wh40k-bc-push-level-readout tw-text-[0.78rem] tw-font-semibold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+                {{psychicPanel.pushLevel}} / {{psychicPanel.maxPushLevel}}
+            </span>
+        </div>
+    </div>
+
+    {{!-- Sustained powers count --}}
+    <div class="wh40k-bc-psychic-sustain tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
+               for="bc-sustain-count">
+            {{localize "WH40K.BC.Psychic.Sustain.Count"}}
+        </label>
+        <input id="bc-sustain-count"
+               name="system.sustainedPowerCount"
+               type="number"
+               min="0"
+               step="1"
+               value="{{psychicPanel.sustainedPowerCount}}"
+               class="wh40k-bc-sustain-count-input tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
+    </div>
+
+    {{!-- Computed readouts --}}
+    <div class="wh40k-bc-psychic-readout tw-grid tw-grid-cols-3 tw-gap-1 tw-mt-1">
+        <div class="wh40k-bc-psychic-effective tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-effective-pr="{{psychicPanel.effectivePR}}">
+            <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.BC.Psychic.EffectivePR"}}
+            </span>
+            <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+                {{psychicPanel.effectivePR}}
+            </span>
+        </div>
+        <div class="wh40k-bc-psychic-phenomena tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-phenomena-rolls="{{psychicPanel.phenomenaRolls}}">
+            <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.BC.Psychic.Phenomena.RollCount"}}
+            </span>
+            <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+                {{psychicPanel.phenomenaRolls}}
+            </span>
+        </div>
+        <div class="wh40k-bc-psychic-sustain-penalty tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-sustain-penalty="{{psychicPanel.sustainPenalty}}">
+            <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.BC.Psychic.Sustain.Penalty"}}
+            </span>
+            <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+                {{psychicPanel.sustainPenalty}}
+            </span>
+        </div>
+    </div>
+</section>

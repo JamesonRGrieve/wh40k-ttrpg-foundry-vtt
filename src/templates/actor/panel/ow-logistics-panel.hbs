@@ -1,0 +1,89 @@
+{{!--
+    Only War · Squad Logistics panel (#154).
+
+    Displays the persisted Logistics scalars and exposes the entry point
+    to the per-test dialog (`LogisticsTestDialog`). The four Table 6-2
+    axis selectors, the standard-kit toggle, and the craftsmanship picker
+    all live IN the dialog — they are per-test inputs, not standing
+    actor state.
+
+    Context (set up by the OW character sheet via `_prepareContext`,
+    gated on `isOW`):
+
+      logisticsPanel: {
+        rating:       number   // sys.logisticsRating
+        munitorum:    boolean  // sys.munitorum
+        situational:  number   // sys.situational
+      }
+
+    Rendered only for OW actors; the include in tab-status.hbs gates on
+    `isOW` — the orchestrator wires that flag in `_prepareContext`.
+--}}
+<section class="wh40k-ow-logistics-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-amber-700"
+         data-wh40k-system="ow"
+         data-ow-rating="{{logisticsPanel.rating}}"
+         data-ow-munitorum="{{#if logisticsPanel.munitorum}}on{{else}}off{{/if}}"
+         data-ow-situational="{{logisticsPanel.situational}}">
+
+    {{!-- Header: panel title + rating readout --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-truck-loading ow:tw-text-amber-300"></i>
+            <span>{{localize "WH40K.OW.Logistics.PanelHeader"}}</span>
+        </h3>
+        <span class="wh40k-ow-rating tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums"
+              data-ow-rating-readout="{{logisticsPanel.rating}}"
+              title="{{localize 'WH40K.OW.Logistics.Rating'}}">
+            {{logisticsPanel.rating}}
+        </span>
+    </header>
+
+    {{!-- Munitorum Influence Talent toggle --}}
+    <div class="wh40k-ow-munitorum tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.OW.Logistics.MunitorumToggle"}}
+        </span>
+        <button type="button"
+                class="wh40k-ow-munitorum-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-amber-700 tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] {{#if logisticsPanel.munitorum}}tw-text-amber-200 tw-bg-[rgba(217,119,6,0.18)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                data-action="owToggleMunitorum"
+                data-state="{{#if logisticsPanel.munitorum}}on{{else}}off{{/if}}"
+                title="{{localize 'WH40K.OW.Logistics.MunitorumToggle'}}">
+            <i class="fas {{#if logisticsPanel.munitorum}}fa-check-square{{else}}fa-square{{/if}}"></i>
+        </button>
+    </div>
+
+    {{!-- Situational +/- adjuster --}}
+    <div class="wh40k-ow-situational tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.OW.Logistics.SituationalLabel"}}
+        </span>
+        <div class="tw-flex tw-items-center tw-gap-2">
+            <button type="button"
+                    data-action="owAdjustSituational"
+                    data-delta="-5"
+                    class="tw-w-7 tw-h-7 tw-rounded-sm tw-border tw-border-amber-700 tw-bg-[rgba(0,0,0,0.4)] tw-text-amber-100 tw-cursor-pointer hover:tw-bg-amber-900"
+                    title="{{localize 'WH40K.OW.Logistics.AdjustSituationalDown'}}">−</button>
+            <span class="tw-min-w-[2.25rem] tw-text-center tw-font-bold tw-tabular-nums tw-text-amber-100"
+                  data-ow-situational-readout="{{logisticsPanel.situational}}">{{logisticsPanel.situational}}</span>
+            <button type="button"
+                    data-action="owAdjustSituational"
+                    data-delta="5"
+                    class="tw-w-7 tw-h-7 tw-rounded-sm tw-border tw-border-amber-700 tw-bg-[rgba(0,0,0,0.4)] tw-text-amber-100 tw-cursor-pointer hover:tw-bg-amber-900"
+                    title="{{localize 'WH40K.OW.Logistics.AdjustSituationalUp'}}">+</button>
+        </div>
+    </div>
+
+    {{!-- Open the per-test dialog --}}
+    <div class="tw-flex tw-justify-end tw-pt-1">
+        <button type="button"
+                data-action="owLogisticsTest"
+                class="wh40k-ow-logistics-test-btn tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-1.5 tw-border tw-border-solid tw-border-amber-700 tw-rounded tw-cursor-pointer tw-text-[0.78rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-amber-200 tw-bg-[rgba(217,119,6,0.12)] hover:tw-bg-amber-900"
+                title="{{localize 'WH40K.OW.Logistics.RollButton'}}">
+            <i class="fas fa-dice-d10"></i>
+            {{localize "WH40K.OW.Logistics.RollButton"}}
+        </button>
+    </div>
+</section>
