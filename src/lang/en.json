@@ -1489,6 +1489,27 @@
                     "Broken": "The binding shatters.",
                     "Held": "The binding holds against the assault."
                 }
+            },
+            "Gifts": {
+                "Label": "Gifts of the Gods",
+                "Table": {
+                    "Title": "Gifts of the Gods"
+                },
+                "SubTable": {
+                    "Limb": "Additional Limb",
+                    "Animal": "Animal"
+                },
+                "Rider": {
+                    "Khorne": "Khorne Rider",
+                    "Slaanesh": "Slaanesh Rider",
+                    "Nurgle": "Nurgle Rider",
+                    "Tzeentch": "Tzeentch Rider",
+                    "None": "No Alignment Rider"
+                },
+                "Resolved": {
+                    "BaseDescription": "Base Effect",
+                    "AppliedAlignment": "Applied Alignment"
+                }
             }
         },
         "DW": {
@@ -4003,6 +4024,24 @@
                     "Corruption": "Comrade dies from PC's Corruption ({amount} this round)"
                 }
             },
+            "ComradeHealing": {
+                "Label": "Comrade Healing",
+                "RemainingDays": "{days} days until recovery",
+                "AutoRecoveryDays": "Auto-recovery: {days} days",
+                "Medicae": {
+                    "Title": "Medicae Attempt",
+                    "Difficulty": "Difficult (-10) Medicae Test",
+                    "ReducedBy": "Recovery reduced by {days} days"
+                },
+                "Recovery": {
+                    "Complete": "Comrade has fully recovered"
+                },
+                "Replacement": {
+                    "Available": "Replacement Comrade joins the squad",
+                    "NotDead": "Comrade is still alive — no replacement needed",
+                    "NoRefit": "No refit available — replacement denied"
+                }
+            },
             "Logistics": {
                 "Label": "Logistics",
                 "Rating": "Squad Logistics Rating",
@@ -4052,6 +4091,23 @@
                     "Common": "Common",
                     "Good": "Good",
                     "Best": "Best"
+                }
+            },
+            "MissionGear": {
+                "Label": "Mission Assignment Gear",
+                "Outcome": {
+                    "SurrenderKit": "Surrender Kit",
+                    "MinimumKit": "Minimum Kit",
+                    "StandardKit": "Standard Kit",
+                    "BonusItems": "Bonus Items"
+                },
+                "Roll": {
+                    "RandomIssue": "Random Issue Gear",
+                    "Result": "Result"
+                },
+                "Modifier": {
+                    "Title": "Mission Gear Modifiers",
+                    "OrdinaryBonus": "Ordinary (+10)"
                 }
             },
             "Craftsmanship": {
