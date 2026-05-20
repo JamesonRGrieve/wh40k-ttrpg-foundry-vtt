@@ -65,6 +65,8 @@ playwright-report/
 .e2e-raw-coverage/
 .e2e-source-coverage/
 .e2e-screenshots/
+tests/e2e/screenshots/
+tests/storybook/screenshots/
 
 ## Stray TypeScript transpile output (source-of-truth is the .ts files)
 stories/**/*.js
