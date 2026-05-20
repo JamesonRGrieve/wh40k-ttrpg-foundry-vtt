@@ -3,7 +3,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": ".",
-    "types": ["fvtt-types", "vitest/globals"]
+    "types": ["fvtt-types", "vitest/globals"],
+    "noImplicitReturns": false,
+    "noImplicitOverride": false,
+    "noFallthroughCasesInSwitch": false,
+    "noUncheckedIndexedAccess": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "exactOptionalPropertyTypes": false
   },
   "include": [
     "src/module/**/*.ts",

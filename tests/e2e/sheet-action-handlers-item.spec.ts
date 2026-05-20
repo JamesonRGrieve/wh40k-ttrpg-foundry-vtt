@@ -206,19 +206,11 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
              * a handle (`{ item, sheet }`) and register cleanup for both.
              * Returns `null` if the embedded create / sheet render fails.
              */
-            async function makeItemSheet(
-                type: string,
-                systemData: Record<string, unknown>,
-                name = `probe-${type}`,
-            ): Promise<{ item: any; sheet: any } | null> {
+            async function makeItemSheet(type: string, systemData: Record<string, unknown>, name = `probe-${type}`): Promise<{ item: any; sheet: any } | null> {
                 const live = getPc();
                 let createdRaw: unknown;
                 try {
-                    createdRaw = await withTimeout(
-                        live.createEmbeddedDocuments?.('Item', [{ name, type, system: systemData }]),
-                        5_000,
-                        `create ${type}`,
-                    );
+                    createdRaw = await withTimeout(live.createEmbeddedDocuments?.('Item', [{ name, type, system: systemData }]), 5_000, `create ${type}`);
                 } catch {
                     return null;
                 }
@@ -256,11 +248,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
              * `{ ok, detail }` so the call site can convert it into a flow
              * fired/note record.
              */
-            async function runHandler(
-                sheet: any,
-                actionName: string,
-                target: HTMLElement,
-            ): Promise<{ called: boolean; error: string | null }> {
+            async function runHandler(sheet: any, actionName: string, target: HTMLElement): Promise<{ called: boolean; error: string | null }> {
                 const SheetCls = sheet?.constructor;
                 const actions = SheetCls?.DEFAULT_OPTIONS?.actions ?? {};
                 const handler = actions[actionName] as ((event: Event, target: HTMLElement) => unknown) | undefined;
@@ -280,18 +268,29 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * Group A: weapon-sheet
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('weapon', {
-                        equipped: true,
-                        class: 'basic',
-                        melee: false,
-                        usesAmmo: true,
-                        clip: { value: 5, max: 30, type: '' },
-                        damage: { formula: '1d10+3', type: 'impact', bonus: 0, penetration: 2 },
-                        penetration: 2,
-                    }, 'probe-weapon-actions');
+                    const made = await makeItemSheet(
+                        'weapon',
+                        {
+                            equipped: true,
+                            class: 'basic',
+                            melee: false,
+                            usesAmmo: true,
+                            clip: { value: 5, max: 30, type: '' },
+                            damage: { formula: '1d10+3', type: 'impact', bonus: 0, penetration: 2 },
+                            penetration: 2,
+                        },
+                        'probe-weapon-actions',
+                    );
 
                     if (!made?.sheet) {
-                        for (const k of ['weapon-sheet::rollAttack', 'weapon-sheet::rollDamage', 'weapon-sheet::expendAmmo', 'weapon-sheet::loadAmmo', 'weapon-sheet::toggleFab', 'weapon-sheet::onAddModification']) {
+                        for (const k of [
+                            'weapon-sheet::rollAttack',
+                            'weapon-sheet::rollDamage',
+                            'weapon-sheet::expendAmmo',
+                            'weapon-sheet::loadAmmo',
+                            'weapon-sheet::toggleFab',
+                            'weapon-sheet::onAddModification',
+                        ]) {
                             notes[k] = 'weapon-sheet render failed';
                         }
                     } else {
@@ -331,7 +330,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             const live = sheet.item ?? item;
                             const before = live.system?.clip?.value ?? -1;
                             const res = await runHandler(sheet, 'expendAmmo', makeTarget({}));
-                            const after = (getPc()?.items?.get?.(item.id))?.system?.clip?.value ?? -1;
+                            const after = getPc()?.items?.get?.(item.id)?.system?.clip?.value ?? -1;
                             if (res.called && after === before - 1) {
                                 fired['weapon-sheet::expendAmmo'] = true;
                                 notes['weapon-sheet::expendAmmo'] = `clip ${before} → ${after}`;
@@ -387,16 +386,34 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * Group B: armour-sheet
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('armour', {
-                        equipped: false,
-                        armourType: 'light',
-                        coverage: ['body'],
-                        properties: ['sealed'],
-                        modifications: [{ uuid: 'Compendium.wh40k-rpg.bogus.Item.mod-x', name: 'Probe Mod', active: true, category: 'accessory', cachedModifiers: { damage: 0, penetration: 0, toHit: 0, range: 0, weight: 0 } }],
-                    }, 'probe-armour-actions');
+                    const made = await makeItemSheet(
+                        'armour',
+                        {
+                            equipped: false,
+                            armourType: 'light',
+                            coverage: ['body'],
+                            properties: ['sealed'],
+                            modifications: [
+                                {
+                                    uuid: 'Compendium.wh40k-rpg.bogus.Item.mod-x',
+                                    name: 'Probe Mod',
+                                    active: true,
+                                    category: 'accessory',
+                                    cachedModifiers: { damage: 0, penetration: 0, toHit: 0, range: 0, weight: 0 },
+                                },
+                            ],
+                        },
+                        'probe-armour-actions',
+                    );
 
                     if (!made?.sheet) {
-                        for (const k of ['armour-sheet::toggleCoverage', 'armour-sheet::addProperty', 'armour-sheet::removeProperty', 'armour-sheet::addModification', 'armour-sheet::removeMod']) {
+                        for (const k of [
+                            'armour-sheet::toggleCoverage',
+                            'armour-sheet::addProperty',
+                            'armour-sheet::removeProperty',
+                            'armour-sheet::addModification',
+                            'armour-sheet::removeMod',
+                        ]) {
                             notes[k] = 'armour-sheet render failed';
                         }
                     } else {
@@ -491,15 +508,24 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * Group C: armour-mod-sheet
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('armourModification', {
-                        restrictions: { armourTypes: ['any'] },
-                        addedProperties: [],
-                        removedProperties: [],
-                        modifiers: { armour: 1 },
-                    }, 'probe-armour-mod-actions');
+                    const made = await makeItemSheet(
+                        'armourModification',
+                        {
+                            restrictions: { armourTypes: ['any'] },
+                            addedProperties: [],
+                            removedProperties: [],
+                            modifiers: { armour: 1 },
+                        },
+                        'probe-armour-mod-actions',
+                    );
 
                     if (!made?.sheet) {
-                        for (const k of ['armour-mod-sheet::toggleArmourType', 'armour-mod-sheet::adjustModifier', 'armour-mod-sheet::addProperty', 'armour-mod-sheet::removeProperty']) {
+                        for (const k of [
+                            'armour-mod-sheet::toggleArmourType',
+                            'armour-mod-sheet::adjustModifier',
+                            'armour-mod-sheet::addProperty',
+                            'armour-mod-sheet::removeProperty',
+                        ]) {
                             notes[k] = 'armour-mod-sheet render failed';
                         }
                     } else {
@@ -569,10 +595,14 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * Group D: ammo-sheet
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('ammunition', {
-                        addedQualities: ['accurate'],
-                        removedQualities: ['unreliable'],
-                    }, 'probe-ammo-actions');
+                    const made = await makeItemSheet(
+                        'ammunition',
+                        {
+                            addedQualities: ['accurate'],
+                            removedQualities: ['unreliable'],
+                        },
+                        'probe-ammo-actions',
+                    );
 
                     if (!made?.sheet) {
                         for (const k of ['ammo-sheet::addQuality', 'ammo-sheet::removeAddedQuality', 'ammo-sheet::removeRemovedQuality']) {
@@ -639,15 +669,19 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * Group E: talent-sheet
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('talent', {
-                        identifier: 'probe-talent',
-                        tier: 1,
-                        cost: 200,
-                        stackable: true,
-                        rank: 1,
-                        category: 'general',
-                        rollConfig: { characteristic: '', skill: '', modifier: 0, description: '' },
-                    }, 'probe-talent-actions');
+                    const made = await makeItemSheet(
+                        'talent',
+                        {
+                            identifier: 'probe-talent',
+                            tier: 1,
+                            cost: 200,
+                            stackable: true,
+                            rank: 1,
+                            category: 'general',
+                            rollConfig: { characteristic: '', skill: '', modifier: 0, description: '' },
+                        },
+                        'probe-talent-actions',
+                    );
 
                     if (!made?.sheet) {
                         for (const k of ['talent-sheet::rollTalent', 'talent-sheet::postToChat', 'talent-sheet::adjustRank', 'talent-sheet::switchTab']) {
@@ -717,9 +751,13 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * Group F: gear-sheet
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('gear', {
-                        uses: { value: 0, max: 3 },
-                    }, 'probe-gear-actions');
+                    const made = await makeItemSheet(
+                        'gear',
+                        {
+                            uses: { value: 0, max: 3 },
+                        },
+                        'probe-gear-actions',
+                    );
 
                     if (!made?.sheet) {
                         for (const k of ['gear-sheet::resetUses', 'gear-sheet::consumeUse']) {
@@ -762,11 +800,15 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * inherits nestedItemCreate / nestedItemRoll.
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('weapon', {
-                        equipped: false,
-                        class: 'basic',
-                        damage: { formula: '1d10', type: 'impact', bonus: 0, penetration: 0 },
-                    }, 'probe-container-actions');
+                    const made = await makeItemSheet(
+                        'weapon',
+                        {
+                            equipped: false,
+                            class: 'basic',
+                            damage: { formula: '1d10', type: 'impact', bonus: 0, penetration: 0 },
+                        },
+                        'probe-container-actions',
+                    );
 
                     if (!made?.sheet) {
                         for (const k of ['container-item-sheet::nestedItemCreate', 'container-item-sheet::nestedItemRoll']) {
@@ -810,12 +852,16 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * Group H: endeavour-sheet
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('endeavour', {
-                        apEarned: 0,
-                        apRequired: 5,
-                        objectives: [{ name: 'Existing', description: '', complete: false, ap: 1 }],
-                        reward: { profitFactor: 0, narrative: '' },
-                    }, 'probe-endeavour-actions');
+                    const made = await makeItemSheet(
+                        'endeavour',
+                        {
+                            apEarned: 0,
+                            apRequired: 5,
+                            objectives: [{ name: 'Existing', description: '', complete: false, ap: 1 }],
+                            reward: { profitFactor: 0, narrative: '' },
+                        },
+                        'probe-endeavour-actions',
+                    );
 
                     if (!made?.sheet) {
                         for (const k of ['endeavour-sheet::addObjective', 'endeavour-sheet::removeObjective']) {
@@ -860,25 +906,41 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                  * Group I: npc-template-sheet
                  * ============================================================ */
                 {
-                    const made = await makeItemSheet('npcTemplate', {
-                        category: 'humanoid',
-                        role: 'bruiser',
-                        type: 'troop',
-                        equipmentPreset: 'melee',
-                        trainedSkills: [],
-                        customWeapons: [],
-                        traits: [],
-                        talents: [],
-                        variants: [],
-                        baseCharacteristics: {
-                            weaponSkill: 30, ballisticSkill: 30, strength: 30, toughness: 30,
-                            agility: 30, intelligence: 30, perception: 30, willpower: 30, fellowship: 30,
+                    const made = await makeItemSheet(
+                        'npcTemplate',
+                        {
+                            category: 'humanoid',
+                            role: 'bruiser',
+                            type: 'troop',
+                            equipmentPreset: 'melee',
+                            trainedSkills: [],
+                            customWeapons: [],
+                            traits: [],
+                            talents: [],
+                            variants: [],
+                            baseCharacteristics: {
+                                weaponSkill: 30,
+                                ballisticSkill: 30,
+                                strength: 30,
+                                toughness: 30,
+                                agility: 30,
+                                intelligence: 30,
+                                perception: 30,
+                                willpower: 30,
+                                fellowship: 30,
+                            },
+                            unnaturals: {},
                         },
-                        unnaturals: {},
-                    }, 'probe-npc-template-actions');
+                        'probe-npc-template-actions',
+                    );
 
                     if (!made?.sheet) {
-                        for (const k of ['npc-template-sheet::addSkill', 'npc-template-sheet::removeSkill', 'npc-template-sheet::addTrait', 'npc-template-sheet::updatePreview']) {
+                        for (const k of [
+                            'npc-template-sheet::addSkill',
+                            'npc-template-sheet::removeSkill',
+                            'npc-template-sheet::addTrait',
+                            'npc-template-sheet::updatePreview',
+                        ]) {
                             notes[k] = 'npc-template-sheet render failed';
                         }
                     } else {

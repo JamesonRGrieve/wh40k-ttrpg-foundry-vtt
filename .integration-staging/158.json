@@ -1,0 +1,23 @@
+{
+    "issue": 158,
+    "engine": "ow-craftsmanship",
+    "gameSystem": "ow",
+    "datamodel": null,
+    "contextBuilder": {
+        "module": "src/module/data/actor/mixins/ow-craftsmanship-template.ts",
+        "exportName": "buildOwCraftsmanshipPanel",
+        "contextKey": "craftsmanshipPanel",
+        "notes": "Pure passive readout — no actor-level state. The builder takes the actor's owned items (`actor.items`) and returns the panel hash. Orchestrator should invoke it inside the `if (isOW)` branch in `_prepareContext` alongside the other OW panel builders."
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/ow-craftsmanship-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/ow-craftsmanship-panel.hbs",
+        "includeIn": "tab-overview.hbs",
+        "gateOn": "isOW",
+        "includeSnippet": "{{> systems/wh40k-rpg/templates/actor/panel/ow-craftsmanship-panel.hbs craftsmanshipPanel=craftsmanshipPanel}}"
+    },
+    "actions": [],
+    "i18nKeys": "WH40K.OW.Craftsmanship.*",
+    "e2eSpec": "tests/e2e/ow-craftsmanship.spec.ts",
+    "storybookStories": ["src/templates/actor/panel/ow-craftsmanship-panel.stories.ts"]
+}

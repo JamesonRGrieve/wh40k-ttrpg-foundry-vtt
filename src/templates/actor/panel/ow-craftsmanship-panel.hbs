@@ -1,0 +1,159 @@
+{{!--
+    Only War Craftsmanship readout panel (#158).
+
+    Passive surface — no actions, no persisted actor state. Each equipped
+    weapon / armour row resolves its Craftsmanship tier through the
+    engine in `src/module/rules/ow-craftsmanship.ts` and is rendered with
+    the corresponding mechanical effect summary:
+
+      * Ranged weapons      — reliability shift (Unreliable / Standard /
+                              Reliable / Never Jams)
+      * Melee weapons       — Weapon Skill modifier (+/-) and damage
+                              bonus (Best only)
+      * Armour              — Agility modifier, AP vs first hit, half
+                              weight flag, flat AP bonus
+
+    Context (built by `buildOwCraftsmanshipPanel` in
+    `src/module/data/actor/mixins/ow-craftsmanship-template.ts`):
+
+      craftsmanshipPanel: {
+        weapons: Array<
+          | { kind: 'ranged'; itemId; name; tier;
+              effect: { reliabilityShift } }
+          | { kind: 'melee'; itemId; name; tier;
+              effect: { weaponSkillModifier; damageBonus } }
+        >
+        armours: Array<{
+          itemId; name; tier;
+          effect: { agilityModifier; apFirstHit; halfWeight; flatApBonus }
+        }>
+        hasEntries: boolean
+      }
+
+    Rendered only for OW actors; the include in `tab-overview.hbs` gates
+    on `isOW`.
+--}}
+<section class="wh40k-ow-craftsmanship-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-amber-700">
+
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-hammer ow:tw-text-amber-500"></i>
+            <span>{{localize "WH40K.OW.Craftsmanship.Label"}}</span>
+        </h3>
+    </header>
+
+    {{#unless craftsmanshipPanel.hasEntries}}
+        <div class="wh40k-ow-craftsmanship-empty tw-px-2 tw-py-2 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.OW.Craftsmanship.Empty"}}
+        </div>
+    {{/unless}}
+
+    {{#if craftsmanshipPanel.weapons.length}}
+        <div class="wh40k-ow-craftsmanship-weapons tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.OW.Craftsmanship.WeaponsHeader"}}
+            </span>
+            {{#each craftsmanshipPanel.weapons as |entry|}}
+                <div class="wh40k-ow-craftsmanship-row tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                     data-item-id="{{entry.itemId}}"
+                     data-weapon-kind="{{entry.kind}}"
+                     data-tier="{{entry.tier}}">
+                    <div class="tw-flex tw-flex-col tw-min-w-[8rem]">
+                        <span class="wh40k-ow-craftsmanship-name tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">{{entry.name}}</span>
+                        <span class="wh40k-ow-craftsmanship-tier tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                            {{localize (concat "WH40K.OW.Craftsmanship.Tier." (capitalize entry.tier))}}
+                        </span>
+                    </div>
+                    {{#if (eq entry.kind "ranged")}}
+                        <span class="wh40k-ow-craftsmanship-effect tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
+                              data-reliability-shift="{{entry.effect.reliabilityShift}}">
+                            {{#if (eq entry.effect.reliabilityShift "unreliable")}}
+                                <i class="fas fa-exclamation-triangle ow:tw-text-amber-500"></i>
+                                {{localize "WH40K.OW.Craftsmanship.Ranged.Reliability.Unreliable"}}
+                            {{else if (eq entry.effect.reliabilityShift "reliable")}}
+                                <i class="fas fa-shield-alt ow:tw-text-amber-500"></i>
+                                {{localize "WH40K.OW.Craftsmanship.Ranged.Reliability.Reliable"}}
+                            {{else if (eq entry.effect.reliabilityShift "never-jams")}}
+                                <i class="fas fa-star ow:tw-text-amber-500"></i>
+                                {{localize "WH40K.OW.Craftsmanship.Ranged.Reliability.NeverJams"}}
+                            {{else}}
+                                <span class="tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                                    {{localize "WH40K.OW.Craftsmanship.Ranged.Reliability.Standard"}}
+                                </span>
+                            {{/if}}
+                        </span>
+                    {{else}}
+                        <span class="wh40k-ow-craftsmanship-effect tw-flex tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
+                              data-ws-modifier="{{entry.effect.weaponSkillModifier}}"
+                              data-damage-bonus="{{entry.effect.damageBonus}}">
+                            <span title="{{localize 'WH40K.OW.Craftsmanship.Melee.WeaponSkillModifier'}}">
+                                {{#if (gt entry.effect.weaponSkillModifier 0)}}+{{/if}}{{entry.effect.weaponSkillModifier}} WS
+                            </span>
+                            {{#if entry.effect.damageBonus}}
+                                <span title="{{localize 'WH40K.OW.Craftsmanship.Melee.DamageBonus'}}">
+                                    +{{entry.effect.damageBonus}} {{localize "WH40K.OW.Craftsmanship.DamageShort"}}
+                                </span>
+                            {{/if}}
+                        </span>
+                    {{/if}}
+                </div>
+            {{/each}}
+        </div>
+    {{/if}}
+
+    {{#if craftsmanshipPanel.armours.length}}
+        <div class="wh40k-ow-craftsmanship-armours tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.OW.Craftsmanship.ArmoursHeader"}}
+            </span>
+            {{#each craftsmanshipPanel.armours as |entry|}}
+                <div class="wh40k-ow-craftsmanship-row tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                     data-item-id="{{entry.itemId}}"
+                     data-armour-row="true"
+                     data-tier="{{entry.tier}}">
+                    <div class="tw-flex tw-flex-col tw-min-w-[8rem]">
+                        <span class="wh40k-ow-craftsmanship-name tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">{{entry.name}}</span>
+                        <span class="wh40k-ow-craftsmanship-tier tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                            {{localize (concat "WH40K.OW.Craftsmanship.Tier." (capitalize entry.tier))}}
+                        </span>
+                    </div>
+                    <span class="wh40k-ow-craftsmanship-effect tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
+                          data-agility-modifier="{{entry.effect.agilityModifier}}"
+                          data-ap-first-hit="{{entry.effect.apFirstHit}}"
+                          data-half-weight="{{entry.effect.halfWeight}}"
+                          data-flat-ap-bonus="{{entry.effect.flatApBonus}}">
+                        {{#if entry.effect.agilityModifier}}
+                            <span title="{{localize 'WH40K.OW.Craftsmanship.Armour.AgilityModifier'}}">
+                                {{#if (gt entry.effect.agilityModifier 0)}}+{{/if}}{{entry.effect.agilityModifier}} Ag
+                            </span>
+                        {{/if}}
+                        {{#if entry.effect.apFirstHit}}
+                            <span title="{{localize 'WH40K.OW.Craftsmanship.Armour.ApFirstHit'}}">
+                                +{{entry.effect.apFirstHit}} {{localize "WH40K.OW.Craftsmanship.ApShort"}}<sup>1st</sup>
+                            </span>
+                        {{/if}}
+                        {{#if entry.effect.flatApBonus}}
+                            <span title="{{localize 'WH40K.OW.Craftsmanship.Armour.FlatApBonus'}}">
+                                +{{entry.effect.flatApBonus}} {{localize "WH40K.OW.Craftsmanship.ApShort"}}
+                            </span>
+                        {{/if}}
+                        {{#if entry.effect.halfWeight}}
+                            <span title="{{localize 'WH40K.OW.Craftsmanship.Armour.HalfWeight'}}">
+                                <i class="fas fa-feather ow:tw-text-amber-500"></i>
+                                {{localize "WH40K.OW.Craftsmanship.Armour.HalfWeight"}}
+                            </span>
+                        {{/if}}
+                        {{#unless (or entry.effect.agilityModifier entry.effect.apFirstHit entry.effect.flatApBonus entry.effect.halfWeight)}}
+                            <span class="tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                                {{localize "WH40K.OW.Craftsmanship.NoEffect"}}
+                            </span>
+                        {{/unless}}
+                    </span>
+                </div>
+            {{/each}}
+        </div>
+    {{/if}}
+</section>

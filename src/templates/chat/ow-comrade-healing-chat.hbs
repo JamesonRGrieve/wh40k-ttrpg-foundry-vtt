@@ -1,0 +1,111 @@
+{{!--
+    Only War Comrade Healing chat card (#157 — core.md §"Healing Comrades"
+    p.12269; replacement p.12261).
+
+    One card type per RAW shortcut emitted by the action layer:
+
+      • kind = 'tick'      — a day of in-fiction rest ticked the recovery
+                              clock down. Surfaces `daysElapsed` and
+                              `remainingDays`. When `recovered` is true
+                              the card highlights the unharmed return.
+      • kind = 'medicae'   — a Difficult(-10) Medicae attempt was applied.
+                              Surfaces `degreesOfSuccess` and the
+                              `reducedBy` shave (clamped at the days
+                              actually saved).
+      • kind = 'replace'   — return-to-camp replacement attempt.
+                              Surfaces `replaced` (success) and, on
+                              failure, the `reason` ('not-dead' or
+                              'no-refit') so the table gets the
+                              correct "no replacement because…" message.
+
+    Context expected (built by the action handler before passing to
+    ChatMessage.create):
+
+      gameSystem     — 'ow' (per-system theme variants fire on the
+                       modern-card-shell frame).
+      actor          — { name, uuid } of the PC who owns the Comrade.
+      comradeName    — display name of the Comrade (or '—' fallback).
+      event:
+        kind             — 'tick' | 'medicae' | 'replace'
+        daysElapsed      — number (tick only)
+        remainingDays    — number (tick / medicae)
+        degreesOfSuccess — number (medicae only)
+        reducedBy        — number (medicae only)
+        recovered        — boolean (tick / medicae; true on remainingDays === 0)
+        replaced         — boolean (replace only)
+        reason           — 'not-dead' | 'no-refit' | undefined (replace only)
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs
+        actorName=actor.name
+        titleKey="WH40K.OW.ComradeHealing.Label"
+        subtitle=comradeName
+        imageIcon="fa-staff-snake"
+        gameSystem=gameSystem}}
+    <div class="wh40k-ow-comrade-healing-chat tw-flex tw-flex-col tw-gap-2 tw-p-3"
+         data-healing-event="{{event.kind}}">
+
+        {{#if (eq event.kind "tick")}}
+            <div class="wh40k-ow-comrade-healing-chat__tick tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+                        tw-border-l-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-translucent)]"
+                 data-remaining-days="{{event.remainingDays}}">
+                <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
+                    <i class="fas fa-clock tw-mr-1 tw-text-gold"></i>
+                    {{localize "WH40K.OW.ComradeHealing.Chat.TickTitle"}}
+                </span>
+                <span class="tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums">
+                    {{#if event.recovered}}
+                        <i class="fas fa-check tw-text-success tw-mr-1"></i>
+                        {{localize "WH40K.OW.ComradeHealing.Recovery.Complete"}}
+                    {{else}}
+                        {{localize "WH40K.OW.ComradeHealing.RemainingDays" days=event.remainingDays}}
+                    {{/if}}
+                </span>
+            </div>
+        {{/if}}
+
+        {{#if (eq event.kind "medicae")}}
+            <div class="wh40k-ow-comrade-healing-chat__medicae tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+                        tw-border-l-2 tw-border-brass tw-bg-[var(--wh40k-panel-bg-translucent)]"
+                 data-degrees-of-success="{{event.degreesOfSuccess}}"
+                 data-reduced-by="{{event.reducedBy}}">
+                <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
+                    <i class="fas fa-staff-snake tw-mr-1 tw-text-brass"></i>
+                    {{localize "WH40K.OW.ComradeHealing.Chat.MedicaeTitle"}}
+                </span>
+                <span class="tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums">
+                    {{localize "WH40K.OW.ComradeHealing.Medicae.ReducedBy" days=event.reducedBy}}
+                </span>
+            </div>
+            <div class="wh40k-ow-comrade-healing-chat__medicae-remaining tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-px-3">
+                {{#if event.recovered}}
+                    <i class="fas fa-check tw-text-success tw-mr-1"></i>
+                    {{localize "WH40K.OW.ComradeHealing.Recovery.Complete"}}
+                {{else}}
+                    {{localize "WH40K.OW.ComradeHealing.RemainingDays" days=event.remainingDays}}
+                {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if (eq event.kind "replace")}}
+            <div class="wh40k-ow-comrade-healing-chat__replace tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+                        tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]"
+                 data-replaced="{{#if event.replaced}}true{{else}}false{{/if}}"
+                 data-reason="{{event.reason}}">
+                <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
+                    <i class="fas fa-user-plus tw-mr-1 {{#if event.replaced}}tw-text-success{{else}}tw-text-crimson{{/if}}"></i>
+                    {{localize "WH40K.OW.ComradeHealing.Chat.ReplaceTitle"}}
+                </span>
+                <span class="tw-text-[0.85rem] tw-font-semibold
+                             {{#if event.replaced}}tw-text-success{{else}}tw-text-crimson{{/if}}">
+                    {{#if event.replaced}}
+                        {{localize "WH40K.OW.ComradeHealing.Replacement.Available"}}
+                    {{else if (eq event.reason "not-dead")}}
+                        {{localize "WH40K.OW.ComradeHealing.Replacement.NotDead"}}
+                    {{else if (eq event.reason "no-refit")}}
+                        {{localize "WH40K.OW.ComradeHealing.Replacement.NoRefit"}}
+                    {{/if}}
+                </span>
+            </div>
+        {{/if}}
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}

@@ -144,12 +144,23 @@ const ACTOR_TYPES_BY_PREFIX: Record<string, readonly string[]> = {
 
 /** Item-type categories that match the grouping in `init()`'s CONFIG.Item.dataModels block. */
 const ITEM_TYPE_CATEGORIES: Record<string, readonly string[]> = {
-    equipment: ['weapon', 'armour', 'ammunition', 'gear', 'consumable', 'tool', 'drug', 'cybernetic', 'forceField', 'backpack', 'storageLocation'],
-    features: ['talent', 'trait', 'skill', 'originPath', 'aptitude', 'peer', 'enemy', 'condition'],
-    powers: ['psychicPower', 'navigatorPower', 'ritual'],
+    'equipment': ['weapon', 'armour', 'ammunition', 'gear', 'consumable', 'tool', 'drug', 'cybernetic', 'forceField', 'backpack', 'storageLocation'],
+    'features': ['talent', 'trait', 'skill', 'originPath', 'aptitude', 'peer', 'enemy', 'condition'],
+    'powers': ['psychicPower', 'navigatorPower', 'ritual'],
     'ship-vehicle': ['shipComponent', 'shipWeapon', 'shipUpgrade', 'shipRole', 'order', 'vehicleTrait', 'vehicleUpgrade'],
-    modifications: ['weaponModification', 'armourModification', 'weaponQuality', 'attackSpecial'],
-    misc: ['miscellaneous', 'specialAbility', 'criticalInjury', 'mutation', 'malignancy', 'mentalDisorder', 'journalEntry', 'endeavour', 'lead', 'npcTemplate'],
+    'modifications': ['weaponModification', 'armourModification', 'weaponQuality', 'attackSpecial'],
+    'misc': [
+        'miscellaneous',
+        'specialAbility',
+        'criticalInjury',
+        'mutation',
+        'malignancy',
+        'mentalDisorder',
+        'journalEntry',
+        'endeavour',
+        'lead',
+        'npcTemplate',
+    ],
 };
 
 async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
@@ -161,17 +172,17 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
     try {
         const results = await page.evaluate(
             async ({
-                FOUNDRY_CONFIG_FLOWS_INNER,
-                ACTOR_TYPES_BY_PREFIX_INNER,
-                ITEM_TYPE_CATEGORIES_INNER,
+                foundryConfigFlowsInner,
+                actorTypesByPrefixInner,
+                itemTypeCategoriesInner,
             }: {
-                FOUNDRY_CONFIG_FLOWS_INNER: readonly string[];
-                ACTOR_TYPES_BY_PREFIX_INNER: Record<string, readonly string[]>;
-                ITEM_TYPE_CATEGORIES_INNER: Record<string, readonly string[]>;
+                foundryConfigFlowsInner: readonly string[];
+                actorTypesByPrefixInner: Record<string, readonly string[]>;
+                itemTypeCategoriesInner: Record<string, readonly string[]>;
             }): Promise<FlowResult[]> => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: CONFIG / game.wh40k are dynamically-typed Foundry boundaries */
                 const out: FlowResult[] = [];
-                const allowedKeys = new Set(FOUNDRY_CONFIG_FLOWS_INNER);
+                const allowedKeys = new Set(foundryConfigFlowsInner);
                 const record = (name: string, ok: boolean, detail: string | null = null): void => {
                     if (!allowedKeys.has(name)) {
                         out.push({ name: name as FlowName, ok: false, detail: `unknown flow key emitted: ${name}` });
@@ -260,7 +271,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
 
                 // ---------- Actor dataModels (per game-system prefix) ----------
                 const actorDataModels = (cfg?.Actor?.dataModels ?? {}) as Record<string, unknown>;
-                for (const [prefix, types] of Object.entries(ACTOR_TYPES_BY_PREFIX_INNER)) {
+                for (const [prefix, types] of Object.entries(actorTypesByPrefixInner)) {
                     const key = `config::Actor.dataModels.${prefix}-all`;
                     guarded(key, () => {
                         const missing = types.filter((t) => typeof actorDataModels[t] !== 'function');
@@ -271,7 +282,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
 
                 // ---------- Item dataModels (by category) ----------
                 const itemDataModels = (cfg?.Item?.dataModels ?? {}) as Record<string, unknown>;
-                for (const [category, types] of Object.entries(ITEM_TYPE_CATEGORIES_INNER)) {
+                for (const [category, types] of Object.entries(itemTypeCategoriesInner)) {
                     const key = `config::Item.dataModels.${category}`;
                     guarded(key, () => {
                         const missing = types.filter((t) => typeof itemDataModels[t] !== 'function');
@@ -281,7 +292,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
 
                 // ---------- Actor sheetClasses (per game-system prefix) ----------
                 const actorSheetClasses = (cfg?.Actor?.sheetClasses ?? {}) as Record<string, Record<string, { cls?: unknown; id?: string; label?: string }>>;
-                for (const [prefix, types] of Object.entries(ACTOR_TYPES_BY_PREFIX_INNER)) {
+                for (const [prefix, types] of Object.entries(actorTypesByPrefixInner)) {
                     const key = `config::Actor.sheetClasses.${prefix}-all`;
                     guarded(key, () => {
                         const missing = types.filter((t) => {
@@ -399,9 +410,9 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             {
-                FOUNDRY_CONFIG_FLOWS_INNER: FOUNDRY_CONFIG_FLOWS as readonly string[],
-                ACTOR_TYPES_BY_PREFIX_INNER: ACTOR_TYPES_BY_PREFIX,
-                ITEM_TYPE_CATEGORIES_INNER: ITEM_TYPE_CATEGORIES,
+                foundryConfigFlowsInner: FOUNDRY_CONFIG_FLOWS as readonly string[],
+                actorTypesByPrefixInner: ACTOR_TYPES_BY_PREFIX,
+                itemTypeCategoriesInner: ITEM_TYPE_CATEGORIES,
             },
         );
         return { results, pageErrors };

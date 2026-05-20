@@ -55,9 +55,7 @@ function startCase(input: string): string {
     const abbrevSplit = camelSplit.replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
     // 4. Insert a space between letters and digits in both directions
     //    (`DH2` → `DH 2`, `2Default` → `2 Default`).
-    const digitSplit = abbrevSplit
-        .replace(/([A-Za-z])([0-9])/g, '$1 $2')
-        .replace(/([0-9])([A-Za-z])/g, '$1 $2');
+    const digitSplit = abbrevSplit.replace(/([A-Za-z])([0-9])/g, '$1 $2').replace(/([0-9])([A-Za-z])/g, '$1 $2');
     return digitSplit.trim().replace(/\s+/g, ' ');
 }
 
@@ -121,16 +119,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Actor/StarshipSheet',
-        exports: [
-            'Default',
-            'EditMode',
-            'RollInitiative',
-            'BlackCruisadeVariant',
-            'MacrobatteryFiring',
-            'LanceFiring',
-            'MacrobatteryMiss',
-            'ExtendedActions',
-        ],
+        exports: ['Default', 'EditMode', 'RollInitiative', 'BlackCruisadeVariant', 'MacrobatteryFiring', 'LanceFiring', 'MacrobatteryMiss', 'ExtendedActions'],
     },
     {
         title: 'Actor/VehicleSheet',
@@ -193,13 +182,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Dialogs/InventoryGeneratorDialog',
-        exports: [
-            'Generate',
-            'Browse',
-            'EmptyStaging',
-            'PoolEmpty',
-            'ImperiumMaledictumVariant',
-        ],
+        exports: ['Generate', 'Browse', 'EmptyStaging', 'PoolEmpty', 'ImperiumMaledictumVariant'],
     },
     {
         title: 'Dialogs/TransactionApprovalDialog',
@@ -225,24 +208,11 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Item Sheets/ArmourModSheet',
-        exports: [
-            'Header',
-            'Restrictions',
-            'Modifiers',
-            'FullSheet',
-            'RendersItemName',
-            'RendersEditImageAction',
-        ],
+        exports: ['Header', 'Restrictions', 'Modifiers', 'FullSheet', 'RendersItemName', 'RendersEditImageAction'],
     },
     {
         title: 'Item Sheets/ArmourSheet',
-        exports: [
-            'Default',
-            'Unequipped',
-            'EditMode',
-            'RendersArmourName',
-            'RendersEditModeToggle',
-        ],
+        exports: ['Default', 'Unequipped', 'EditMode', 'RendersArmourName', 'RendersEditModeToggle'],
     },
     {
         title: 'Item Sheets/AttackSpecialSheet',
@@ -294,14 +264,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Item Sheets/NPCTemplateSheet',
-        exports: [
-            'Header',
-            'TabNav',
-            'BasicsTab',
-            'FullSheet',
-            'RendersNPCName',
-            'RendersTabButtons',
-        ],
+        exports: ['Header', 'TabNav', 'BasicsTab', 'FullSheet', 'RendersNPCName', 'RendersTabButtons'],
     },
     {
         title: 'Item Sheets/OriginPathSheet',
@@ -337,23 +300,11 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Item Sheets/TalentEditorDialog',
-        exports: [
-            'PrerequisitesTab',
-            'ModifiersTab',
-            'GrantsTab',
-            'RendersSectionTabs',
-            'ClicksModifiersSection',
-        ],
+        exports: ['PrerequisitesTab', 'ModifiersTab', 'GrantsTab', 'RendersSectionTabs', 'ClicksModifiersSection'],
     },
     {
         title: 'Item Sheets/TalentSheet',
-        exports: [
-            'Default',
-            'EditMode',
-            'RendersTalentName',
-            'RendersEditImageAction',
-            'CompendiumRender',
-        ],
+        exports: ['Default', 'EditMode', 'RendersTalentName', 'RendersEditImageAction', 'CompendiumRender'],
     },
     {
         title: 'Item Sheets/TraitSheet',
@@ -369,14 +320,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Item Sheets/WeaponSheet',
-        exports: [
-            'Default',
-            'BodyExpanded',
-            'EditMode',
-            'NoAmmoLoaded',
-            'RendersWeaponName',
-            'RendersToggleBodyAction',
-        ],
+        exports: ['Default', 'BodyExpanded', 'EditMode', 'NoAmmoLoaded', 'RendersWeaponName', 'RendersToggleBodyAction'],
     },
 
     // ── src/module/applications/prompts/ ─────────────────────────────────
@@ -386,13 +330,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Dialogs/EffectCreationDialog',
-        exports: [
-            'ConditionTab',
-            'CharacteristicTab',
-            'SkillTab',
-            'CustomTab',
-            'CategoryTabsDispatch',
-        ],
+        exports: ['ConditionTab', 'CharacteristicTab', 'SkillTab', 'CustomTab', 'CategoryTabsDispatch'],
     },
     {
         title: 'Prompts/RighteousFuryDialog',
@@ -400,11 +338,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Prompts/SpecialistSkillDialog',
-        exports: [
-            'NoSkillSelected',
-            'WithPreselectedSkillAndSpecializations',
-            'ActionButtonsDispatch',
-        ],
+        exports: ['NoSkillSelected', 'WithPreselectedSkillAndSpecializations', 'ActionButtonsDispatch'],
     },
 
     // ── src/module/rules/ ────────────────────────────────────────────────
@@ -438,48 +372,19 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Actor/Partials/DegreeMeterPanel',
-        exports: [
-            'CorruptionDH2Pure',
-            'CorruptionDH2Soiled',
-            'CorruptionDH2Debased',
-            'InsanityDH2',
-            'CorruptionIM',
-            'CorruptionRT',
-        ],
+        exports: ['CorruptionDH2Pure', 'CorruptionDH2Soiled', 'CorruptionDH2Debased', 'InsanityDH2', 'CorruptionIM', 'CorruptionRT'],
     },
     {
         title: 'Actor/Partials/HeaderBase',
-        exports: [
-            'SidebarDH2',
-            'SidebarIM',
-            'HorizontalVehicle',
-            'HorizontalStarship',
-            'HorizontalNPC',
-        ],
+        exports: ['SidebarDH2', 'SidebarIM', 'HorizontalVehicle', 'HorizontalStarship', 'HorizontalNPC'],
     },
     {
         title: 'Actor/Partials/Panel',
-        exports: [
-            'Default',
-            'NoIcon',
-            'WithCount',
-            'WithHeaderActionInfo',
-            'WithHeaderActionGold',
-            'WithDropZone',
-            'FullList',
-            'HeaderActionDispatch',
-        ],
+        exports: ['Default', 'NoIcon', 'WithCount', 'WithHeaderActionInfo', 'WithHeaderActionGold', 'WithDropZone', 'FullList', 'HeaderActionDispatch'],
     },
     {
         title: 'Actor/Partials/PipTrackerRow',
-        exports: [
-            'Empty',
-            'Partial',
-            'Full',
-            'FatigueBolts',
-            'CriticalDamage',
-            'ClickDispatch',
-        ],
+        exports: ['Empty', 'Partial', 'Full', 'FatigueBolts', 'CriticalDamage', 'ClickDispatch'],
     },
     {
         title: 'Actor/Partials/SectionCard',
@@ -487,40 +392,17 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Actor/Partials/StatBox',
-        exports: [
-            'ValueOverMax',
-            'SingleValue',
-            'VehicleStructure',
-            'StarshipMorale',
-            'StarshipCrewRating',
-            'ValueMaxNamesBind',
-        ],
+        exports: ['ValueOverMax', 'SingleValue', 'VehicleStructure', 'StarshipMorale', 'StarshipCrewRating', 'ValueMaxNamesBind'],
     },
     {
         title: 'Actor/Partials/VitalInlineRow',
-        exports: [
-            'Wounds',
-            'WoundsCritical',
-            'WoundsWarning',
-            'SimpleValueOnly',
-            'MentalCorruption',
-            'FatigueWithPenalty',
-            'ClickDispatch',
-        ],
+        exports: ['Wounds', 'WoundsCritical', 'WoundsWarning', 'SimpleValueOnly', 'MentalCorruption', 'FatigueWithPenalty', 'ClickDispatch'],
     },
 
     // ── src/templates/shared/ ────────────────────────────────────────────
     {
         title: 'Shared/FieldRow',
-        exports: [
-            'Text',
-            'TextWithValue',
-            'Number_',
-            'Select',
-            'Textarea',
-            'Readonly',
-            'NumberDispatch',
-        ],
+        exports: ['Text', 'TextWithValue', 'Number_', 'Select', 'Textarea', 'Readonly', 'NumberDispatch'],
     },
 
     // ── stories/ (top-level) ─────────────────────────────────────────────
@@ -530,11 +412,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Actor/Character Sheets',
-        exports: [
-            'DarkHeresy2Biography',
-            'ImperiumMaledictumBiography',
-            'ImperiumMaledictumNpc',
-        ],
+        exports: ['DarkHeresy2Biography', 'ImperiumMaledictumBiography', 'ImperiumMaledictumNpc'],
     },
     {
         title: 'Effects/Row + Panels',
@@ -583,13 +461,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Chat/Roll Cards',
-        exports: [
-            'SimpleSuccess',
-            'SimpleTargetOnly',
-            'DamageWithAssignableHit',
-            'ActionSuccessWithControls',
-            'ActionFailureWithoutDamage',
-        ],
+        exports: ['SimpleSuccess', 'SimpleTargetOnly', 'DamageWithAssignableHit', 'ActionSuccessWithControls', 'ActionFailureWithoutDamage'],
     },
     {
         title: 'Shared/Components',
@@ -605,14 +477,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Chat/Ship Critical Hit',
-        exports: [
-            'Vacuum',
-            'Fire',
-            'Bridge',
-            'Drive',
-            'CrewCasualties',
-            'TableUnavailableFallback',
-        ],
+        exports: ['Vacuum', 'Fire', 'Bridge', 'Drive', 'CrewCasualties', 'TableUnavailableFallback'],
     },
     {
         title: 'Chat/Skill Card',
@@ -620,14 +485,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Partials/Stat Grid Section',
-        exports: [
-            'Mobility',
-            'Athletics',
-            'CarryingCapacity',
-            'PerSystemIM',
-            'PerSystemRT',
-            'ComposedFullPanel',
-        ],
+        exports: ['Mobility', 'Athletics', 'CarryingCapacity', 'PerSystemIM', 'PerSystemRT', 'ComposedFullPanel'],
     },
     {
         title: 'Item Sheets/Weapon Sheet',
@@ -683,22 +541,11 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Chat/Critical Damage (#108)',
-        exports: [
-            'EnergyArmMid',
-            'ExplosiveLegLow',
-            'ImpactHeadHighFatal',
-            'RendingBodyFatalRT',
-            'PackAbsentDegrades',
-            'RenderSmoke',
-        ],
+        exports: ['EnergyArmMid', 'ExplosiveLegLow', 'ImpactHeadHighFatal', 'RendingBodyFatalRT', 'PackAbsentDegrades', 'RenderSmoke'],
     },
     {
         title: 'Chat/Damage Die Replacement (#129)',
-        exports: [
-            'ReplaceDieAvailable',
-            'ReplaceDieHiddenWhenZeroDoS',
-            'ReplaceDieHiddenWhenFlagFalse',
-        ],
+        exports: ['ReplaceDieAvailable', 'ReplaceDieHiddenWhenZeroDoS', 'ReplaceDieHiddenWhenFlagFalse'],
     },
     {
         title: 'Chat/Medicae Mechadendrite (#104)',
@@ -710,22 +557,11 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Chat/Sanctic Daemonology (#130)',
-        exports: [
-            'UnfetteredNoPhenomena',
-            'FetteredHolocaust',
-            'PushPhenomena',
-            'PushWithSoulBinding',
-            'PushWithEmperorsAnathema',
-        ],
+        exports: ['UnfetteredNoPhenomena', 'FetteredHolocaust', 'PushPhenomena', 'PushWithSoulBinding', 'PushWithEmperorsAnathema'],
     },
     {
         title: 'Chat/Two-Weapon Refocus (#147)',
-        exports: [
-            'RangedSingleShotWielder',
-            'RangedSemiAutoSameRestrictions',
-            'RangedMasterAmbidextrous',
-            'MeleeSwiftAttackVariant',
-        ],
+        exports: ['RangedSingleShotWielder', 'RangedSemiAutoSameRestrictions', 'RangedMasterAmbidextrous', 'MeleeSwiftAttackVariant'],
     },
     {
         title: 'Chat/Weapon Quality (#57 completion)',
@@ -759,15 +595,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Dialogs/Daemon Weapon Attribute Roller',
-        exports: [
-            'PreRoll',
-            'KhorneNormal',
-            'NurgleMajor',
-            'SlaaneshGreater',
-            'TzeentchLesser',
-            'UnalignedMinor',
-            'ChatCard',
-        ],
+        exports: ['PreRoll', 'KhorneNormal', 'NurgleMajor', 'SlaaneshGreater', 'TzeentchLesser', 'UnalignedMinor', 'ChatCard'],
     },
     {
         title: 'Dialogs/DaemonhostBindingDialog',
@@ -815,14 +643,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Dialogs/RightStuffDialog',
-        exports: [
-            'Eligible',
-            'NoFate',
-            'NotAce',
-            'RenderSmoke',
-            'NoFateDisablesButton',
-            'NotAceDisablesButton',
-        ],
+        exports: ['Eligible', 'NoFate', 'NotAce', 'RenderSmoke', 'NoFateDisablesButton', 'NotAceDisablesButton'],
     },
     {
         title: 'Dialogs/SancticPurityPrompt',
@@ -834,21 +655,11 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Dialogs/Skill Alt-Characteristic Dropdown',
-        exports: [
-            'TrainedDefault',
-            'TrainedAltToughness',
-            'UntrainedBasicHalved',
-            'UntrainedAdvancedBlocked',
-        ],
+        exports: ['TrainedDefault', 'TrainedAltToughness', 'UntrainedBasicHalved', 'UntrainedAdvancedBlocked'],
     },
     {
         title: 'Dialogs/Unified Roll — Trying Again Warning (#62)',
-        exports: [
-            'NoRetryYet',
-            'InquiryBlocked',
-            'CharmCumulativeMinus10',
-            'IntimidateCumulativeMinus20',
-        ],
+        exports: ['NoRetryYet', 'InquiryBlocked', 'CharmCumulativeMinus10', 'IntimidateCumulativeMinus20'],
     },
     {
         title: 'Dialogs/Unified Roll — Assistance Stepper (#60)',
@@ -856,12 +667,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Dialogs/WithinHomeworldInfoDialog',
-        exports: [
-            'Default',
-            'RendersThreeHomeworldCards',
-            'AgriWorldShowsBrutalCharge',
-            'FrontierWorldShowsTechUseBonus',
-        ],
+        exports: ['Default', 'RendersThreeHomeworldCards', 'AgriWorldShowsBrutalCharge', 'FrontierWorldShowsTechUseBonus'],
     },
     {
         title: 'Dialogs/WithoutHomeworldInfoDialog',
@@ -875,14 +681,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Item Sheets/ProfaneObjectGearSheet',
-        exports: [
-            'EyeOfTzeentch',
-            'FoundationStone',
-            'HammerOfSaintLucillius',
-            'LibrisMaleficarum',
-            'OrdinaryGearHidesPanel',
-            'RendersPanel',
-        ],
+        exports: ['EyeOfTzeentch', 'FoundationStone', 'HammerOfSaintLucillius', 'LibrisMaleficarum', 'OrdinaryGearHidesPanel', 'RendersPanel'],
     },
 ];
 

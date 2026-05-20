@@ -16,10 +16,12 @@ import { dwRenownSchemaFields, type DwRenownDeclarations } from './mixins/dw-ren
 import { dwRequisitionSchemaFields, type DwRequisitionDeclarations } from './mixins/dw-requisition-template.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import { owComradeSchemaFields, type OwComradeDeclarations } from './mixins/ow-comrade-template.ts';
+import { owComradeHealingSchemaFields, type OwComradeHealingDeclarations } from './mixins/ow-comrade-healing-template.ts';
 import { owLogisticsSchemaFields, type OwLogisticsDeclarations } from './mixins/ow-logistics-template.ts';
 import { owMissionGearSchemaFields, type OwMissionGearDeclarations } from './mixins/ow-mission-gear-template.ts';
 import { owOrdersSchemaFields, type OwOrdersDeclarations } from './mixins/ow-orders-template.ts';
 import { owRegimentSchemaFields, type OwRegimentDeclarations } from './mixins/ow-regiment-template.ts';
+import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
 import CreatureTemplate from './templates/creature.ts';
 
 /** Minimal shape of an actor parent that character data methods depend on. */
@@ -317,6 +319,10 @@ export default class CharacterData extends CreatureTemplate {
             ...dwOathSchemaFields(),
             ...dwVehicleSchemaFields(),
             ...owMissionGearSchemaFields(),
+
+            // Batch-3 engine slots (OW #156, #157).
+            ...owVehicleMovementSchemaFields(),
+            ...owComradeHealingSchemaFields(),
 
             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
             mutations: new fields.StringField({ required: false, blank: true }),
@@ -1087,4 +1093,6 @@ export default interface CharacterData
         DwMissionDeclarations,
         DwOathDeclarations,
         DwVehicleDeclarations,
-        OwMissionGearDeclarations {}
+        OwMissionGearDeclarations,
+        OwVehicleMovementDeclarations,
+        OwComradeHealingDeclarations {}

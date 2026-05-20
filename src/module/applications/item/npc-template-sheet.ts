@@ -166,7 +166,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
         // Add icons from TABS definition
         for (const tabDef of NPCTemplateSheet.TABS) {
             const tabEntry = tabs[tabDef.tab];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes this undefined-possible under tsconfig.strict.json
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes this undefined-possible
             if (tabEntry !== undefined) {
                 tabEntry['icon'] = tabDef.icon;
             }

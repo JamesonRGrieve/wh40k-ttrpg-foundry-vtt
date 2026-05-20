@@ -1,0 +1,116 @@
+{{!--
+    Only War Vehicle Movement panel (#156 — core.md §"VEHICLE MOVEMENT", p.12305).
+
+    Lists the five RAW vehicle movement actions every OW driver may
+    issue (Evasive Manoeuvring / Floor It! / Hit & Run / Jink /
+    Tactical Manoeuvring), an "Issue" button on each, and a readout
+    of the currently active High-Speed Chase tracker (pursuer
+    distance, turn count, danger-zone flag) when one is in progress.
+
+    Context (built by the OW character-sheet branch of `_prepareContext`
+    — the orchestrator wires this once the panel is included):
+
+      vehicleMovementPanel: {
+        actions: Array<{                                  // 5 vehicle actions
+          actionId:    'evasive-manoeuvring' | 'floor-it' | 'hit-and-run' | 'jink' | 'tactical-manoeuvring'
+          nameKey:     string                             // 'WH40K.OW.VehicleMovement.Action.EvasiveManoeuvring' …
+          descriptionKey: string                          // 'WH40K.OW.VehicleMovement.Description.EvasiveManoeuvring' …
+          timingKey:   string                             // 'WH40K.OW.VehicleMovement.Timing.Half' …
+          timing:      'full' | 'half' | 'reaction'
+        }>
+        chaseState: null | {                              // active chase tracker (else null)
+          pursuerDistance: number
+          dangerZone:      boolean
+          turnCount:       number
+        }
+      }
+
+    Gate matches `_gameSystemId === 'ow'` from CharacterSheet
+    (`isOW` flag + `vehicleMovementPanel` context set in `_prepareContext`).
+--}}
+<section class="wh40k-ow-vehicle-movement-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-brass">
+
+    {{!-- Header --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-truck-fast ow:tw-text-brass"></i>
+            <span>{{localize "WH40K.OW.VehicleMovement.Label"}}</span>
+        </h3>
+    </header>
+
+    {{!-- Available vehicle actions --}}
+    <div class="wh40k-ow-vehicle-movement-actions tw-flex tw-flex-col tw-gap-1">
+        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1.5">
+            {{#each vehicleMovementPanel.actions}}
+                <li class="wh40k-ow-vehicle-movement-row tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                    data-action-id="{{this.actionId}}"
+                    data-action-timing="{{this.timing}}">
+                    <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0 tw-gap-0.5">
+                        <span class="wh40k-ow-vehicle-movement-name tw-text-[0.85rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
+                            {{localize this.nameKey}}
+                        </span>
+                        <span class="wh40k-ow-vehicle-movement-effect tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                            {{localize this.descriptionKey}}
+                        </span>
+                        <span class="wh40k-ow-vehicle-movement-cost tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] ow:tw-text-brass">
+                            {{localize this.timingKey}}
+                        </span>
+                    </div>
+                    <button type="button"
+                            class="wh40k-ow-vehicle-movement-issue-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-brass hover:tw-bg-brass hover:tw-text-black"
+                            data-action="owVehicleAction"
+                            data-action-id="{{this.actionId}}"
+                            title="{{localize 'WH40K.OW.VehicleMovement.Issue.Title'}}">
+                        {{localize "WH40K.OW.VehicleMovement.Issue.Button"}}
+                    </button>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+
+    {{!-- High-Speed Chase readout (only when a chase is active) --}}
+    <div class="wh40k-ow-vehicle-movement-chase tw-flex tw-flex-col tw-gap-1">
+        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.OW.VehicleMovement.Chase.Title"}}
+        </span>
+        {{#if vehicleMovementPanel.chaseState}}
+            <div class="wh40k-ow-vehicle-movement-chase-readout tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-brass/40"
+                 data-chase-distance="{{vehicleMovementPanel.chaseState.pursuerDistance}}"
+                 data-chase-turn="{{vehicleMovementPanel.chaseState.turnCount}}"
+                 data-chase-danger="{{vehicleMovementPanel.chaseState.dangerZone}}">
+                <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]">
+                    <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.VehicleMovement.Chase.PursuerDistance"}}</span>
+                    <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+                        {{vehicleMovementPanel.chaseState.pursuerDistance}}
+                    </span>
+                </div>
+                <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]">
+                    <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.VehicleMovement.Chase.TurnCount"}}</span>
+                    <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+                        {{vehicleMovementPanel.chaseState.turnCount}}
+                    </span>
+                </div>
+                <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]">
+                    <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.VehicleMovement.Chase.DangerZone"}}</span>
+                    {{#if vehicleMovementPanel.chaseState.dangerZone}}
+                        <span class="wh40k-ow-vehicle-movement-danger-active tw-font-semibold tw-text-[color:var(--wh40k-warning-color,#ff7849)] ow:tw-text-brass">
+                            <i class="fas fa-triangle-exclamation tw-mr-1"></i>
+                            {{localize "WH40K.OW.VehicleMovement.Chase.DangerZoneActive"}}
+                        </span>
+                    {{else}}
+                        <span class="wh40k-ow-vehicle-movement-danger-clear tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                            {{localize "WH40K.OW.VehicleMovement.Chase.DangerZoneClear"}}
+                        </span>
+                    {{/if}}
+                </div>
+            </div>
+        {{else}}
+            <div class="wh40k-ow-vehicle-movement-chase-empty tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.OW.VehicleMovement.Chase.Inactive"}}
+            </div>
+        {{/if}}
+    </div>
+</section>
