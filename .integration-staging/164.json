@@ -1,0 +1,54 @@
+{
+    "issue": 164,
+    "engine": "dw-renown",
+    "gameSystem": "dw",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/dw-renown-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "dwRenownSchemaFields",
+        "declarationsTypeExport": "DwRenownDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/dw-renown-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/dw-renown-panel.hbs",
+        "includeIn": "tab-status.hbs",
+        "gateOn": "isDW"
+    },
+    "actions": [
+        {
+            "actionName": "dwRenownAward",
+            "module": "src/module/actions/dw-renown-actions.ts",
+            "exportName": "dwRenownAward"
+        },
+        {
+            "actionName": "dwRenownLoss",
+            "module": "src/module/actions/dw-renown-actions.ts",
+            "exportName": "dwRenownLoss"
+        }
+    ],
+    "i18nKeys": "WH40K.DW.Renown.*",
+    "e2eSpec": "tests/e2e/dw-renown.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/dw-renown-panel.stories.ts"
+    ],
+    "contextBuilder": {
+        "description": "Character sheet _prepareContext should build ctx.renownPanel for DW actors. Pseudocode:",
+        "pseudocode": [
+            "import { getRenownRank, RENOWN_THRESHOLDS, RENOWN_RANK_ORDER } from '../rules/dw-renown.ts';",
+            "if (this.actor._gameSystemId === 'dw') {",
+            "  const value = this.actor.system.renown ?? 0;",
+            "  const rank = getRenownRank(value);",
+            "  const rankRange = RENOWN_THRESHOLDS[rank];",
+            "  const rankIdx = RENOWN_RANK_ORDER.indexOf(rank);",
+            "  const nextRank = RENOWN_RANK_ORDER[rankIdx + 1] ?? null;",
+            "  const nextRankMin = nextRank ? RENOWN_THRESHOLDS[nextRank].min : null;",
+            "  const rankLabel = game.i18n.localize(`WH40K.DW.Renown.Rank.${rank[0].toUpperCase()}${rank.slice(1)}`);",
+            "  const nextRankLabel = nextRank ? game.i18n.localize(`WH40K.DW.Renown.Rank.${nextRank[0].toUpperCase()}${nextRank.slice(1)}`) : null;",
+            "  const progressPercent = nextRankMin === null",
+            "    ? 100",
+            "    : Math.max(0, Math.min(100, Math.round(((value - rankRange.min) / (nextRankMin - rankRange.min)) * 100)));",
+            "  ctx.renownPanel = { value, rank, rankLabel, nextRank, nextRankLabel, rankMin: rankRange.min, nextRankMin, progressPercent };",
+            "}"
+        ]
+    }
+}

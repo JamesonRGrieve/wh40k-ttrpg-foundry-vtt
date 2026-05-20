@@ -1,5 +1,15 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
+import { bcPsychicSchemaFields, type BcPsychicDeclarations } from './mixins/bc-psychic-template.ts';
+import { dwAstartesSchemaFields, type DwAstartesDeclarations } from './mixins/dw-astartes-template.ts';
+import { dwCohesionSchemaFields, type DwCohesionDeclarations } from './mixins/dw-cohesion-template.ts';
+import { dwModeSchemaFields, type DwModeDeclarations } from './mixins/dw-mode-template.ts';
+import { dwRenownSchemaFields, type DwRenownDeclarations } from './mixins/dw-renown-template.ts';
+import { dwRequisitionSchemaFields, type DwRequisitionDeclarations } from './mixins/dw-requisition-template.ts';
+import { owComradeSchemaFields, type OwComradeDeclarations } from './mixins/ow-comrade-template.ts';
+import { owLogisticsSchemaFields, type OwLogisticsDeclarations } from './mixins/ow-logistics-template.ts';
+import { owOrdersSchemaFields, type OwOrdersDeclarations } from './mixins/ow-orders-template.ts';
+import { owRegimentSchemaFields, type OwRegimentDeclarations } from './mixins/ow-regiment-template.ts';
 import CreatureTemplate from './templates/creature.ts';
 
 /** Minimal shape of an actor parent that character data methods depend on. */
@@ -81,6 +91,7 @@ type CharacterGenerationAssignments = Record<string, number | null>;
 /** Shape of custom base values for non-human races. */
 type CharacterGenerationCustomBases = Record<string, number | boolean>;
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging -- intentional: declaration-merge with the trailing interface to apply all mixin Declarations to the class type without per-field `declare` repetition
 export default class CharacterData extends CreatureTemplate {
     // Typed property declarations matching defineSchema()
     declare rank: number;
@@ -268,6 +279,22 @@ export default class CharacterData extends CreatureTemplate {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
+
+            // ===== ENGINE MIXIN SCHEMA SLOTS =====
+            // Each `*SchemaFields()` returns the persisted slot(s) for one
+            // engine. The matching `*Declarations` interface is merged
+            // into CharacterData below the class so the compiler narrows
+            // `system.<slot>` without per-field repetition.
+            ...bcPsychicSchemaFields(),
+            ...dwAstartesSchemaFields(),
+            ...dwCohesionSchemaFields(),
+            ...dwModeSchemaFields(),
+            ...dwRenownSchemaFields(),
+            ...dwRequisitionSchemaFields(),
+            ...owComradeSchemaFields(),
+            ...owLogisticsSchemaFields(),
+            ...owOrdersSchemaFields(),
+            ...owRegimentSchemaFields(),
 
             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
             mutations: new fields.StringField({ required: false, blank: true }),
@@ -1008,3 +1035,24 @@ export default class CharacterData extends CreatureTemplate {
         return super.getRollData();
     }
 }
+
+/**
+ * Engine-mixin schema declarations spliced onto {@link CharacterData}
+ * via TypeScript interface merging. Each `*Declarations` interface
+ * mirrors the schema-field bundle of the matching mixin in
+ * `./mixins/*-template.ts` — keeping the runtime schema (spread into
+ * `defineSchema()`) and the compile-time type (declared on the class)
+ * in lock-step without per-field repetition.
+ */
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging -- declaration-merging target: all members come from the extends list; intentional merge with the class above */
+export default interface CharacterData
+    extends BcPsychicDeclarations,
+        DwAstartesDeclarations,
+        DwCohesionDeclarations,
+        DwModeDeclarations,
+        DwRenownDeclarations,
+        DwRequisitionDeclarations,
+        OwComradeDeclarations,
+        OwLogisticsDeclarations,
+        OwOrdersDeclarations,
+        OwRegimentDeclarations {}

@@ -1,0 +1,73 @@
+{{!--
+    Deathwatch Requisition chat card (#165) — emitted after a successful
+    requisition spend (single-actor or pooled). Summarises the item
+    acquired, the craftsmanship tier, the RP cost paid, and (for pooled
+    requisitions) the per-contributor pledges.
+
+    The wh40k-rpg class anchors Tailwind utilities outside the sheet
+    root (chat log has no .wh40k-rpg ancestor by default); the
+    data-wh40k-system attribute drives `dw:tw-*` variants.
+
+    Context shape:
+      gameSystem        'dw'
+      mode              'item' | 'pool'
+      actorName         string                      — requisitioning Brother
+      itemName          string                      — display name
+      craftsmanshipKey  i18n key for the craftsmanship tier
+      baseCost          number                      — raw RP cost
+      itemCost          number                      — cost after multiplier
+      rpAfter           number                      — actor's RP post-spend
+      contributions?    [{ brotherName, rp }]       — pool mode only
+      totalContributed? number                      — pool mode only
+--}}
+<div class="wh40k-rpg wh40k-dw-requisition-card tw-p-4 tw-rounded-md tw-border tw-border-amber-600 tw-bg-[rgba(28,18,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-medal tw-text-[1.1rem] tw-text-amber-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-amber-200">
+            {{localize "WH40K.DW.Requisition.ChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.9rem] tw-mb-2 tw-text-amber-50">
+        <strong class="tw-text-amber-200">{{actorName}}</strong>
+        — <span>{{localize "WH40K.DW.Requisition.AcquiredLabel"}}: <strong>{{itemName}}</strong></span>
+    </div>
+
+    {{!-- Craftsmanship + cost line --}}
+    <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-mb-2 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-[rgba(217,119,6,0.45)] tw-bg-[rgba(120,53,15,0.18)]">
+        <span class="tw-text-amber-300">{{localize craftsmanshipKey}}</span>
+        <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">
+            {{baseCost}} → {{itemCost}} {{localize "WH40K.DW.Requisition.RP.Label"}}
+        </span>
+    </div>
+
+    {{!-- RP spent + remaining --}}
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-2">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.DW.Requisition.RP.Spent"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{itemCost}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.DW.Requisition.RP.Remaining"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{rpAfter}}</span>
+        </li>
+    </ul>
+
+    {{#if (eq mode "pool")}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(217,119,6,0.45)] tw-bg-[rgba(120,53,15,0.18)] tw-text-[0.85rem]">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
+                {{localize "WH40K.DW.Requisition.Pool.Title"}} — {{totalContributed}}
+            </div>
+            <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1">
+                {{#each contributions}}
+                    <li class="tw-flex tw-justify-between tw-gap-3">
+                        <span class="tw-text-amber-300">{{this.brotherName}}</span>
+                        <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{this.rp}}</span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+</div>

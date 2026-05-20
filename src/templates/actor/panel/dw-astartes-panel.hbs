@@ -1,0 +1,85 @@
+{{!--
+    Deathwatch Astartes baseline panel (#167).
+
+    Surfaces the Adeptus Astartes always-on traits and the 19-implant
+    grid. Each implant card is a toggleable badge that reflects whether
+    the character currently has the implant; clicking it dispatches the
+    `dwAstartesToggleImplant` action (handled by
+    `src/module/actions/dw-astartes-actions.ts`) which adds or removes
+    the implant id from `system.implants`.
+
+    Context (built by the orchestrator-owned `_prepareContext` on the
+    Character sheet, gated on `isDW`):
+
+      astartesPanel: {
+        implants: Array<{
+          id:          AstartesImplantId   // kebab-case canonical id
+          nameKey:     I18nKey             // 'WH40K.DW.Astartes.Implant.<Name>.Name'
+          categoryKey: I18nKey             // 'WH40K.DW.Astartes.Category.<Cat>'
+          has:         boolean             // implant present on this actor
+        }>
+        strengthBonus:     number   // astartesStrengthBonus(rawSB)
+        toughnessBonus:    number   // astartesToughnessBonus(rawTB)
+        hasBlackCarapace:  boolean  // hasBlackCarapace(system.implants)
+      }
+
+    Rendered only for DW actors; the include in tab-overview.hbs gates
+    on `isDW`.
+--}}
+<section class="wh40k-dw-astartes-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-accent-combat"
+         data-dw-has-black-carapace="{{#if astartesPanel.hasBlackCarapace}}true{{else}}false{{/if}}">
+
+    {{!-- Header: Adeptus Astartes label + Unnatural Str/Tgh readouts --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-shield-alt dw:tw-text-accent-combat"></i>
+            <span>{{localize "WH40K.DW.Astartes.Label"}}</span>
+        </h3>
+        <div class="wh40k-dw-astartes-unnatural tw-flex tw-items-center tw-gap-2">
+            <span class="wh40k-dw-astartes-sb tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
+                  data-strength-bonus="{{astartesPanel.strengthBonus}}"
+                  title="{{localize 'WH40K.DW.Astartes.Unnatural.Strength'}}">
+                SB ×2 = {{astartesPanel.strengthBonus}}
+            </span>
+            <span class="wh40k-dw-astartes-tb tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
+                  data-toughness-bonus="{{astartesPanel.toughnessBonus}}"
+                  title="{{localize 'WH40K.DW.Astartes.Unnatural.Toughness'}}">
+                TB ×2 = {{astartesPanel.toughnessBonus}}
+            </span>
+        </div>
+    </header>
+
+    {{!-- Black Carapace power-armour interface banner (only when active) --}}
+    {{#if astartesPanel.hasBlackCarapace}}
+        <div class="wh40k-dw-astartes-bc-banner tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded dw:tw-border-accent-combat">
+            <i class="fas fa-link dw:tw-text-accent-combat"></i>
+            {{localize "WH40K.DW.Astartes.BlackCarapace.PowerArmorInterface"}}
+        </div>
+    {{/if}}
+
+    {{!-- Implant grid: 19 toggleable badges --}}
+    <div class="wh40k-dw-astartes-implants tw-grid tw-grid-cols-2 tw-gap-1.5 tw-mt-1
+                md:tw-grid-cols-3 lg:tw-grid-cols-4">
+        {{#each astartesPanel.implants}}
+            <button type="button"
+                    class="wh40k-dw-astartes-implant tw-flex tw-flex-col tw-items-start tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors
+                           {{#if this.has}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                    data-action="dwAstartesToggleImplant"
+                    data-implant-id="{{this.id}}"
+                    data-implanted="{{#if this.has}}true{{else}}false{{/if}}"
+                    aria-pressed="{{#if this.has}}true{{else}}false{{/if}}"
+                    title="{{localize this.nameKey}}">
+                <span class="wh40k-dw-astartes-implant-name tw-text-[0.78rem] tw-font-semibold">
+                    <i class="fas {{#if this.has}}fa-check-circle{{else}}fa-circle{{/if}} tw-mr-1"></i>
+                    {{localize this.nameKey}}
+                </span>
+                <span class="wh40k-dw-astartes-implant-category tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize this.categoryKey}}
+                </span>
+            </button>
+        {{/each}}
+    </div>
+</section>

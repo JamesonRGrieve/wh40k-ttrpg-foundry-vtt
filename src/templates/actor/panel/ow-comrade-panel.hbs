@@ -1,0 +1,116 @@
+{{!--
+    Only War "Comrade in Combat" panel (#152 — core.md p.12137).
+
+    Renders the PC's Comrade abstraction:
+      • Comrade name (or "Unnamed" fallback).
+      • State badge — color-coded green (Unharmed) / yellow (Wounded) /
+        red (Dead) — driven by the unharmed → wounded → dead track in
+        `src/module/rules/ow-comrade.ts`.
+      • Distance readout vs. the 5 m Cohesion radius, with an
+        in-Cohesion / out-of-Cohesion indicator computed once on the
+        context-build side (no Handlebars math here).
+      • Action affordances:
+          - "Wound" — manual mark the Comrade wounded (advances the
+            track by one step). Disabled when already dead.
+          - "Heal" — restore wounded → unharmed. Disabled when not
+            wounded.
+          - "Replace" — replace a dead Comrade with a fresh one;
+            requires both `isDead === true` AND `inCamp === true`.
+
+    Sheet context (built by character-sheet `_prepareContext`):
+
+      comradePanel: {
+        name:            string  // sys.comrade.name (or '' → render fallback)
+        state:           'unharmed' | 'wounded' | 'dead'
+        stateLabelKey:   string   // WH40K.OW.Comrade.State.<Unharmed|Wounded|Dead>
+        distanceM:       number   // sys.comrade.distanceM
+        hasVisualLine:   boolean  // sys.comrade.hasVisualLine
+        cohesionRangeM:  number   // COMRADE_COHESION_RANGE_M (5)
+        inCohesion:      boolean  // pre-resolved via inCohesion(...)
+        isUnharmed:      boolean
+        isWounded:       boolean
+        isDead:          boolean
+        canWound:        boolean  // !isDead
+        canHeal:         boolean  // isWounded
+        canReplace:      boolean  // isDead && inCamp
+        inCamp:          boolean  // GM-toggle / scene-flag passed through
+      }
+
+    Rendered only for OW actors; the include in the appropriate
+    tab-*.hbs gates on `isOW` from context.
+--}}
+<section class="wh40k-ow-comrade-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-brass"
+         data-ow-comrade-state="{{comradePanel.state}}"
+         data-ow-comrade-cohesion="{{#if comradePanel.inCohesion}}in{{else}}out{{/if}}">
+
+    {{!-- Header: Comrade name + state badge --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-user-shield ow:tw-text-brass"></i>
+            <span class="wh40k-ow-comrade-panel__label">{{localize "WH40K.OW.Comrade.Label"}}</span>
+            <span class="wh40k-ow-comrade-panel__name tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold tw-normal-case"
+                  data-field="name">
+                {{#if comradePanel.name}}{{comradePanel.name}}{{else}}&mdash;{{/if}}
+            </span>
+        </h3>
+        <span class="wh40k-ow-comrade-panel__state-badge tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
+                     {{#if comradePanel.isUnharmed}}tw-border-success tw-text-success tw-bg-success/10{{/if}}
+                     {{#if comradePanel.isWounded}}tw-border-gold tw-text-gold tw-bg-gold/10{{/if}}
+                     {{#if comradePanel.isDead}}tw-border-crimson tw-text-crimson tw-bg-crimson/10{{/if}}"
+              data-state-badge="{{comradePanel.state}}">
+            {{localize comradePanel.stateLabelKey}}
+        </span>
+    </header>
+
+    {{!-- Distance + cohesion indicator --}}
+    <div class="wh40k-ow-comrade-panel__cohesion tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-text-[0.78rem]">
+        <span class="wh40k-ow-comrade-panel__distance tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums"
+              data-field="distance-m">
+            {{localize "WH40K.OW.Comrade.Cohesion.Range" meters=comradePanel.cohesionRangeM}}
+            <span class="tw-ml-1 tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold">({{comradePanel.distanceM}} m)</span>
+        </span>
+        <span class="wh40k-ow-comrade-panel__cohesion-indicator tw-inline-flex tw-items-center tw-gap-1 tw-font-semibold
+                     {{#if comradePanel.inCohesion}}tw-text-success{{else}}tw-text-crimson{{/if}}"
+              data-cohesion="{{#if comradePanel.inCohesion}}in{{else}}out{{/if}}">
+            <i class="fas {{#if comradePanel.inCohesion}}fa-link{{else}}fa-link-slash{{/if}}"></i>
+            {{#if comradePanel.inCohesion}}
+                {{localize "WH40K.OW.Comrade.Cohesion.Maintained"}}
+            {{else}}
+                {{localize "WH40K.OW.Comrade.Cohesion.Broken"}}
+            {{/if}}
+        </span>
+    </div>
+
+    {{!-- Action affordances --}}
+    <div class="wh40k-ow-comrade-panel__actions tw-flex tw-flex-wrap tw-gap-1.5">
+        <button type="button"
+                class="wh40k-ow-comrade-panel__wound-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="owComradeWound"
+                title="{{localize 'WH40K.OW.Comrade.Action.Wound'}}"
+                {{#unless comradePanel.canWound}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-heart-crack tw-mr-1"></i>
+            {{localize "WH40K.OW.Comrade.Action.Wound"}}
+        </button>
+        <button type="button"
+                class="wh40k-ow-comrade-panel__heal-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="owComradeHeal"
+                title="{{localize 'WH40K.OW.Comrade.Action.Heal'}}"
+                {{#unless comradePanel.canHeal}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-staff-snake tw-mr-1"></i>
+            {{localize "WH40K.OW.Comrade.Action.Heal"}}
+        </button>
+        <button type="button"
+                class="wh40k-ow-comrade-panel__replace-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="owComradeReplace"
+                title="{{localize 'WH40K.OW.Comrade.Action.Replace'}}"
+                {{#unless comradePanel.canReplace}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-user-plus tw-mr-1"></i>
+            {{localize "WH40K.OW.Comrade.Action.Replace"}}
+        </button>
+    </div>
+</section>

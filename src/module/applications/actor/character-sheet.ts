@@ -4,6 +4,16 @@
  */
 
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
+import { bcPsychicTest } from '../../actions/bc-psychic-actions.ts';
+import { dwAstartesToggleImplant } from '../../actions/dw-astartes-actions.ts';
+import { dwCohesionChallenge, dwCohesionRally, dwCohesionRecoverObjective } from '../../actions/dw-cohesion-actions.ts';
+import { dwEnterSquadMode, dwLeaveSquadMode } from '../../actions/dw-mode-actions.ts';
+import { dwRenownAward, dwRenownLoss } from '../../actions/dw-renown-actions.ts';
+import { dwRequisitionItem, dwRequisitionPool } from '../../actions/dw-requisition-actions.ts';
+import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../actions/ow-logistics-actions.ts';
+import { owComradeHeal, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
+import { owIssueOrder } from '../../actions/ow-orders-actions.ts';
+import { owRegimentEdit } from '../../actions/ow-regiment-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
@@ -21,9 +31,15 @@ import {
     tallyAdvancesByAlignment,
     type ChaosAdvanceEntry,
 } from '../../rules/bc-alignment-derivation.ts';
+import { maxPushLevel, resolvePsychicTest, type PsyMode } from '../../rules/bc-psychic-strength.ts';
 import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
+import { ASTARTES_IMPLANTS, astartesStrengthBonus, astartesToughnessBonus, hasBlackCarapace, type AstartesImplantId } from '../../rules/dw-astartes.ts';
+import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS } from '../../rules/dw-renown.ts';
+import { getSupportRange } from '../../rules/dw-squad-mode.ts';
+import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
+import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
 import {
     resolveBreakGrapple,
     resolveDamageOpponent,
@@ -104,9 +120,21 @@ type CharacterSheetContextDeclaredFields = {
     ruleset?: unknown;
     isDH2?: boolean;
     isBC?: boolean;
+    isOW?: boolean;
+    isDW?: boolean;
     isHomebrew?: boolean;
     isRaw?: boolean;
     alignmentPanel?: BcAlignmentPanelContext;
+    psychicPanel?: BcPsychicPanelContext;
+    astartesPanel?: DwAstartesPanelContext;
+    cohesionPanel?: DwCohesionPanelContext;
+    modePanel?: DwModePanelContext;
+    renownPanel?: DwRenownPanelContext;
+    requisitionPanel?: DwRequisitionPanelContext;
+    regimentPanel?: OwRegimentPanelContext;
+    comradePanel?: OwComradePanelContext;
+    logisticsPanel?: OwLogisticsPanelContext;
+    ordersPanel?: OwOrdersPanelContext;
     hideThroneGelt?: boolean;
     originPathSteps?: unknown;
     originPathSummary?: unknown;
@@ -188,6 +216,101 @@ type BcAlignmentPanelContext = {
     infamyIncrement: number;
 };
 
+/* -------------------------------------------------------------------- */
+/*  Per-engine panel context shapes (batch-1 integration)               */
+/* -------------------------------------------------------------------- */
+
+/** BC Psychic Strength panel (#178). */
+type BcPsychicPanelContext = {
+    psykerClass: string;
+    psyRating: number;
+    sustainedPowerCount: number;
+    mode: PsyMode;
+    pushLevel: number;
+    maxPushLevel: number;
+    effectivePR: number;
+    sustainPenalty: number;
+    phenomenaRolls: number;
+};
+
+/** DW Astartes implants panel (#167). */
+type DwAstartesPanelContext = {
+    implants: Array<{ id: AstartesImplantId; nameKey: string; categoryKey: string; has: boolean }>;
+    strengthBonus: number;
+    toughnessBonus: number;
+    hasBlackCarapace: boolean;
+};
+
+/** DW Kill-team Cohesion panel (#162). */
+type DwCohesionPanelContext = {
+    current: number;
+    max: number;
+    lostThisTurn: number;
+    rallied: boolean;
+    canRally: boolean;
+    canRecover: boolean;
+};
+
+/** DW Squad Mode panel (#163). */
+type DwModePanelContext = {
+    mode: string;
+    renownRank: string;
+    renownRankKey: string;
+    supportRange: { visual: number; vocal: number };
+    sustainedAbilities: Array<{ id: string; label: string }>;
+};
+
+/** DW Renown panel (#164). */
+type DwRenownPanelContext = {
+    value: number;
+    rank: string;
+    rankLabel: string;
+    nextRank: string | null;
+    nextRankLabel: string | null;
+    rankMin: number;
+    nextRankMin: number | null;
+    progressPercent: number;
+};
+
+/** DW Requisition panel (#165). */
+type DwRequisitionPanelContext = {
+    rp: number;
+    missionRating: string;
+    renownRank: string;
+};
+
+/** OW Regiment panel (#151). */
+type OwRegimentPanelContext = {
+    selection: unknown;
+    kit: ReadonlyArray<{ id: string; cost: number }>;
+};
+
+/** OW Comrade panel (#152). */
+type OwComradePanelContext = {
+    comrade: unknown;
+};
+
+/** OW Logistics panel (#154). */
+type OwLogisticsPanelContext = {
+    rating: number;
+    munitorum: boolean;
+    situational: number;
+};
+
+/** OW Orders panel (#153). */
+type OwOrdersPanelContext = {
+    available: Array<{
+        orderId: string;
+        nameKey: string;
+        effectKey: string;
+        actionCostKey: string;
+        actionCost: string;
+        canIssue: boolean;
+        blockReasonKey: string | null;
+    }>;
+    sweepingActive: Array<{ orderId: string; appliedCount: number }>;
+};
+
 type OriginSummary = {
     steps: Record<string, unknown>[];
     completedSteps: number;
@@ -252,6 +375,13 @@ export default class CharacterSheet extends BaseActorSheet {
     declare document: WH40KAcolyte & BaseActorSheet['document'];
     declare isEditable: boolean;
     _powersFilter: { discipline: string; orderCategory: string } = { discipline: '', orderCategory: '' };
+    /**
+     * Ephemeral BC Psychic Strength selections (#178). Mode and push
+     * level are render-only UI state — they are not persisted on the
+     * actor. The panel reads these via `psychicPanel` each render.
+     */
+    _bcPsyMode: PsyMode = 'unfettered';
+    _bcPsyPushLevel = 0;
     declare _equipmentFilter: { search: string; type: string; status: string };
     declare _skillsFilter: { search: string; characteristic: string; training: string; [key: string]: string };
     /* eslint-enable no-restricted-syntax */
@@ -363,6 +493,33 @@ export default class CharacterSheet extends BaseActorSheet {
             // BC Alignment / Infamy advancement panel (#173).
             'recheckBcAlignment': CharacterSheet.#recheckBcAlignment,
             'buyBcInfamyAdvance': CharacterSheet.#buyBcInfamyAdvance,
+
+            // BC Psychic Strength panel (#178).
+            'bcPsychicTest': bcPsychicTest,
+
+            // DW engines: Cohesion (#162), Squad Mode (#163), Renown (#164),
+            // Requisition (#165), Astartes implants (#167).
+            'dwCohesionRally': dwCohesionRally,
+            'dwCohesionRecoverObjective': dwCohesionRecoverObjective,
+            'dwCohesionChallenge': dwCohesionChallenge,
+            'dwEnterSquadMode': dwEnterSquadMode,
+            'dwLeaveSquadMode': dwLeaveSquadMode,
+            'dwRenownAward': dwRenownAward,
+            'dwRenownLoss': dwRenownLoss,
+            'dwRequisitionItem': dwRequisitionItem,
+            'dwRequisitionPool': dwRequisitionPool,
+            'dwAstartesToggleImplant': dwAstartesToggleImplant,
+
+            // OW engines: Regiment (#151), Comrade (#152), Orders (#153),
+            // Logistics (#154).
+            'owRegimentEdit': owRegimentEdit,
+            'owComradeWound': owComradeWound,
+            'owComradeHeal': owComradeHeal,
+            'owComradeReplace': owComradeReplace,
+            'owIssueOrder': owIssueOrder,
+            'owLogisticsTest': owLogisticsTest,
+            'owToggleMunitorum': owToggleMunitorum,
+            'owAdjustSituational': owAdjustSituational,
 
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
@@ -688,16 +845,38 @@ export default class CharacterSheet extends BaseActorSheet {
         const activeGameSystem = this._resolveGameSystemId();
         const isDH2 = activeGameSystem === 'dh2e';
         const isBC = activeGameSystem === 'bc';
+        const isOW = activeGameSystem === 'ow';
+        const isDW = activeGameSystem === 'dw';
         const ruleset = WH40KSettings.getRuleset();
         context.ruleset = ruleset;
         context.isDH2 = isDH2;
         context.isBC = isBC;
+        context.isOW = isOW;
+        context.isDW = isDW;
 
         // BC Alignment / Infamy panel (#173) — only built for BC actors;
         // other systems leave `alignmentPanel` undefined so the tab-status
         // gate (`{{#if isBC}}`) keeps the include site no-op.
         if (isBC) {
             context.alignmentPanel = this._prepareBcAlignmentPanel();
+            context.psychicPanel = this._prepareBcPsychicPanel();
+        }
+
+        // DW engine panels (#162, #163, #164, #165, #167).
+        if (isDW) {
+            context.cohesionPanel = this._prepareDwCohesionPanel();
+            context.modePanel = this._prepareDwModePanel();
+            context.renownPanel = this._prepareDwRenownPanel();
+            context.requisitionPanel = this._prepareDwRequisitionPanel();
+            context.astartesPanel = this._prepareDwAstartesPanel();
+        }
+
+        // OW engine panels (#151, #152, #153, #154).
+        if (isOW) {
+            context.regimentPanel = this._prepareOwRegimentPanel();
+            context.comradePanel = this._prepareOwComradePanel();
+            context.ordersPanel = this._prepareOwOrdersPanel();
+            context.logisticsPanel = this._prepareOwLogisticsPanel();
         }
 
         // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
@@ -1140,6 +1319,230 @@ export default class CharacterSheet extends BaseActorSheet {
             infamyCost: infamyAdvanceCost(infamy),
             infamyCap: BC_INFAMY_ADVANCE_CAP,
             infamyIncrement: BC_INFAMY_INCREMENT,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * BC Psychic Strength panel (#178). Resolver inputs come from the
+     * persisted DataModel fields (psykerClass / psyRating / sustainedPowerCount);
+     * the panel's mode + push level are ephemeral UI state owned by the
+     * sheet instance (_bcPsyMode / _bcPsyPushLevel).
+     */
+    _prepareBcPsychicPanel(): BcPsychicPanelContext {
+        const sys = this.actor.system;
+        const psykerClass = sys.psykerClass;
+        const psyRating = sys.psyRating;
+        const sustainedPowerCount = sys.sustainedPowerCount;
+        const mode = this._bcPsyMode;
+        const pushLevel = this._bcPsyPushLevel;
+        const resolved = resolvePsychicTest({ psykerClass, basePR: psyRating, mode, pushLevel, sustainedPowerCount });
+        return {
+            psykerClass,
+            psyRating,
+            sustainedPowerCount,
+            mode,
+            pushLevel,
+            maxPushLevel: maxPushLevel(psykerClass),
+            effectivePR: resolved.effectivePR,
+            sustainPenalty: resolved.sustainPenalty,
+            phenomenaRolls: resolved.phenomenaRolls,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Astartes implants panel (#167). Iterates the canonical implant
+     * inventory and reports per-id presence + the derived Unnatural
+     * Strength/Toughness bonuses and Black-Carapace flag.
+     */
+    _prepareDwAstartesPanel(): DwAstartesPanelContext {
+        const sys = this.actor.system;
+        const implants = sys.implants;
+        const sb = sys.characteristics.strength.bonus;
+        const tb = sys.characteristics.toughness.bonus;
+        const implantSet = new Set<AstartesImplantId>(implants);
+        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
+        return {
+            implants: ASTARTES_IMPLANTS.map((id) => ({
+                id,
+                nameKey: `WH40K.DW.Astartes.Implant.${titleCase(id)}`,
+                categoryKey: `WH40K.DW.Astartes.Category.Baseline`,
+                has: implantSet.has(id),
+            })),
+            strengthBonus: astartesStrengthBonus(sb),
+            toughnessBonus: astartesToughnessBonus(tb),
+            hasBlackCarapace: hasBlackCarapace(implants),
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Kill-team Cohesion panel (#162). Reads the four schema slots
+     * (`cohesionCurrent`, `cohesionMax`, `cohesionLostThisTurn`,
+     * `rallied`) and computes the action-availability gates.
+     */
+    _prepareDwCohesionPanel(): DwCohesionPanelContext {
+        const sys = this.actor.system;
+        const current = sys.cohesionCurrent;
+        const max = sys.cohesionMax;
+        const rallied = sys.rallied;
+        return {
+            current,
+            max,
+            lostThisTurn: sys.cohesionLostThisTurn,
+            rallied,
+            canRally: !rallied,
+            canRecover: current < max && max > 0,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Squad Mode panel (#163). Surfaces the current combat mode,
+     * Renown-derived support range, and the labels of any
+     * currently-sustained Squad-mode abilities.
+     */
+    _prepareDwModePanel(): DwModePanelContext {
+        const sys = this.actor.system;
+        const mode = sys.combatMode;
+        const renownRank = getRenownRank(sys.renown);
+        const renownRankKey = renownRank.charAt(0).toUpperCase() + renownRank.slice(1);
+        const supportRange = getSupportRange(renownRank);
+        const sustainedAbilities = sys.sustainedAbilities.map((id) => ({ id, label: id }));
+        return {
+            mode,
+            renownRank,
+            renownRankKey,
+            supportRange,
+            sustainedAbilities,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Renown panel (#164). Computes the current rank, the next rank's
+     * threshold (if any), and a 0-100% progress percentage.
+     */
+    _prepareDwRenownPanel(): DwRenownPanelContext {
+        const sys = this.actor.system;
+        const value = sys.renown;
+        const rank = getRenownRank(value);
+        const rankRange = RENOWN_THRESHOLDS[rank];
+        const rankIdx = RENOWN_RANK_ORDER.indexOf(rank);
+        const nextRank = RENOWN_RANK_ORDER[rankIdx + 1] ?? null;
+        const nextRankMin = nextRank ? RENOWN_THRESHOLDS[nextRank].min : null;
+        const rankLabel = game.i18n.localize(`WH40K.DW.Renown.Rank.${rank.charAt(0).toUpperCase()}${rank.slice(1)}`);
+        const nextRankLabel = nextRank ? game.i18n.localize(`WH40K.DW.Renown.Rank.${nextRank.charAt(0).toUpperCase()}${nextRank.slice(1)}`) : null;
+        const progressPercent =
+            nextRankMin === null ? 100 : Math.max(0, Math.min(100, Math.round(((value - rankRange.min) / (nextRankMin - rankRange.min)) * 100)));
+        return {
+            value,
+            rank,
+            rankLabel,
+            nextRank,
+            nextRankLabel,
+            rankMin: rankRange.min,
+            nextRankMin,
+            progressPercent,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Requisition panel (#165). Surfaces the RP balance, the current
+     * mission rating, and the Renown-derived rank gate the requisition
+     * dialog will enforce.
+     */
+    _prepareDwRequisitionPanel(): DwRequisitionPanelContext {
+        const sys = this.actor.system;
+        return {
+            rp: sys.requisitionPoints,
+            missionRating: sys.missionRating,
+            renownRank: getRenownRank(sys.renown),
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * OW Regiment Creation panel (#151). Surfaces the persisted regiment
+     * selection + kit budget for the panel partial.
+     */
+    _prepareOwRegimentPanel(): OwRegimentPanelContext {
+        const sys = this.actor.system;
+        return {
+            selection: sys.regimentSelection,
+            kit: sys.regimentKit,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * OW Comrade panel (#152). Surfaces the comrade's persisted state
+     * (name / state / distance / line-of-sight) for the panel partial.
+     */
+    _prepareOwComradePanel(): OwComradePanelContext {
+        const sys = this.actor.system;
+        return {
+            comrade: sys.comrade,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * OW Orders panel (#153). Two arrays: the three GENERIC_ORDERS with
+     * resolved issue-availability + i18n keys, and any currently-active
+     * sweeping Orders with their applied-member counts.
+     */
+    _prepareOwOrdersPanel(): OwOrdersPanelContext {
+        const sys = this.actor.system;
+        // Conservative defaults — the actor sheet has no live action-economy
+        // state yet, so assume full action + half action remain and let
+        // the issue dialog refine. Cohesion gate uses the live pool.
+        const cohesionAvailable = (sys.cohesionCurrent ?? 0) > 0;
+        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
+        const available = GENERIC_ORDERS.map((order) => {
+            const check = canIssueOrder({ order, hasFullAction: true, hasHalfAction: true, cohesionAvailable });
+            return {
+                orderId: order.id,
+                nameKey: `WH40K.OW.Orders.Generic.${titleCase(order.id)}.Name`,
+                effectKey: `WH40K.OW.Orders.Generic.${titleCase(order.id)}.Effect`,
+                actionCostKey: `WH40K.OW.Orders.ActionCost.${titleCase(order.actionCost)}`,
+                actionCost: order.actionCost,
+                canIssue: check.allowed,
+                blockReasonKey: check.reason === undefined ? null : `WH40K.OW.Orders.BlockReason.${titleCase(check.reason)}`,
+            };
+        });
+        const sweepingActive = (sys.activeOrders ?? [])
+            .filter((o) => o.sweeping)
+            .map((o) => ({
+                orderId: o.orderId,
+                appliedCount: o.appliedToMemberIds.length,
+            }));
+        return { available, sweepingActive };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * OW Logistics panel (#154). Surfaces the Squad Logistics Rating
+     * baseline + Munitorum flag + GM situational modifier.
+     */
+    _prepareOwLogisticsPanel(): OwLogisticsPanelContext {
+        const sys = this.actor.system;
+        return {
+            rating: sys.logisticsRating === 0 ? OW_DEFAULT_LOGISTICS_RATING : sys.logisticsRating,
+            munitorum: sys.munitorum,
+            situational: sys.situational,
         };
     }
 

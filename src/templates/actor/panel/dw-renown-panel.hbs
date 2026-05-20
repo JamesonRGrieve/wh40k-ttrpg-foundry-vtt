@@ -1,0 +1,91 @@
+{{!--
+    Deathwatch Renown panel (#164).
+
+    Surfaces the actor's current Renown value + computed Rank from
+    `getRenownRank()` and a progress bar from the current rank's `min`
+    threshold to the next rank's `min` (Hero collapses to a saturated
+    bar — no documented ceiling in RAW).
+
+    Context (built by the character sheet's _prepareContext; gated on
+    `actor._gameSystemId === 'dw'`):
+
+      renownPanel: {
+        value:            number       // sys.renown
+        rank:             RenownRank   // getRenownRank(value)
+        rankLabel:        string       // localized rank name
+        nextRank:         RenownRank | null
+        nextRankLabel:    string | null
+        rankMin:          number       // RENOWN_THRESHOLDS[rank].min
+        nextRankMin:      number | null // null for Hero
+        progressPercent:  number       // 0..100; 100 at Hero
+      }
+--}}
+<section class="wh40k-dw-renown-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-bronze"
+         data-dw-renown="{{renownPanel.value}}"
+         data-dw-rank="{{renownPanel.rank}}">
+
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-medal dw:tw-text-bronze"></i>
+            <span>{{localize "WH40K.DW.Renown.Label"}}</span>
+        </h3>
+        <span class="wh40k-dw-renown-rank tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
+              data-rank="{{renownPanel.rank}}"
+              title="{{localize 'WH40K.DW.Renown.Current'}}">
+            {{renownPanel.rankLabel}}
+        </span>
+    </header>
+
+    {{!-- Current value + thresholds --}}
+    <div class="wh40k-dw-renown-readout tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.DW.Renown.Current"}}
+        </span>
+        <span class="wh40k-dw-renown-value tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
+            {{#if renownPanel.nextRankMin}}
+                {{renownPanel.value}} / {{renownPanel.nextRankMin}}
+            {{else}}
+                {{renownPanel.value}}
+            {{/if}}
+        </span>
+    </div>
+
+    {{!-- Progress bar to next threshold --}}
+    <div class="wh40k-dw-renown-progress tw-relative tw-h-2 tw-w-full tw-rounded tw-overflow-hidden tw-bg-[rgba(0,0,0,0.35)]"
+         role="progressbar"
+         aria-valuemin="0"
+         aria-valuemax="100"
+         aria-valuenow="{{renownPanel.progressPercent}}">
+        <div class="wh40k-dw-renown-progress-fill tw-absolute tw-top-0 tw-left-0 tw-h-full tw-bg-bronze dw:tw-bg-bronze"
+             style="width: {{renownPanel.progressPercent}}%;"
+             data-progress="{{renownPanel.progressPercent}}"></div>
+    </div>
+
+    {{#if renownPanel.nextRankLabel}}
+        <p class="wh40k-dw-renown-next tw-m-0 tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]"
+           data-next-rank="{{renownPanel.nextRank}}">
+            &rarr; {{renownPanel.nextRankLabel}}
+        </p>
+    {{/if}}
+
+    {{!-- Award / Loss mini-buttons --}}
+    <div class="wh40k-dw-renown-actions tw-flex tw-items-center tw-justify-end tw-gap-1">
+        <button type="button"
+                class="wh40k-dw-renown-award-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-bronze hover:tw-bg-bronze hover:tw-text-white dw:tw-border-bronze dw:tw-text-bronze"
+                data-action="dwRenownAward"
+                title="{{localize 'WH40K.DW.Renown.Award'}}">
+            <i class="fas fa-plus tw-mr-1"></i>
+            {{localize "WH40K.DW.Renown.Award"}}
+        </button>
+        <button type="button"
+                class="wh40k-dw-renown-loss-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                data-action="dwRenownLoss"
+                title="{{localize 'WH40K.DW.Renown.Loss'}}">
+            <i class="fas fa-minus tw-mr-1"></i>
+            {{localize "WH40K.DW.Renown.Loss"}}
+        </button>
+    </div>
+</section>

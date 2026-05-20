@@ -1439,6 +1439,23 @@
             },
             "Psychic": {
                 "Label": "Psychic Strength",
+                "PanelHeader": "Psychic Strength",
+                "ClassLabel": "Psyker Class",
+                "ModeLabel": "Manifestation Mode",
+                "BasePR": "Base Psy Rating",
+                "TestButton": "Psychic Test",
+                "DialogTitle": "Resolve Psychic Test",
+                "DialogSubmit": "Resolve",
+                "DialogCancel": "Cancel",
+                "ChatTitle": "Psychic Test",
+                "ResultMode": "Mode",
+                "ResultClass": "Class",
+                "ResultEffectivePR": "Effective PR",
+                "ResultBasePR": "Base PR",
+                "ResultPushLevel": "Push Level",
+                "ResultSustainPenalty": "Sustain Penalty",
+                "ResultPhenomenaRolls": "Phenomena Rolls",
+                "NoPhenomena": "No Psychic Phenomena triggered",
                 "Class": {
                     "Bound": "Bound Psyker",
                     "Unbound": "Unbound Psyker",
@@ -1656,7 +1673,11 @@
             },
             "Requisition": {
                 "Label": "Requisition",
+                "RequestItemButton": "Request Item",
+                "ChatTitle": "Deathwatch Requisition",
+                "AcquiredLabel": "Acquired",
                 "RP": {
+                    "Label": "RP",
                     "Pool": "Requisition Pool",
                     "Spent": "RP Spent",
                     "Remaining": "RP Remaining",
@@ -1680,11 +1701,21 @@
                     "RankTooLow": "Renown rank too low to requisition this item.",
                     "InsufficientRp": "Insufficient Requisition Points.",
                     "OverAllocated": "A contributing brother allocated more RP than available.",
-                    "InsufficientPool": "Pooled contributions do not cover the item cost."
+                    "InsufficientPool": "Pooled contributions do not cover the item cost.",
+                    "InvalidInput": "Invalid requisition input — item name and a non-negative base cost are required."
                 },
                 "Pool": {
                     "Title": "Pool Requisition",
-                    "Contributor": "Contributor"
+                    "Contributor": "Contributor",
+                    "Holder": "Requisitioning Brother"
+                },
+                "Form": {
+                    "ItemName": "Item Name",
+                    "BaseCost": "Base RP Cost",
+                    "Craftsmanship": "Craftsmanship",
+                    "RequiredRank": "Required Renown Rank",
+                    "HolderRp": "Your RP Contribution",
+                    "PoolRp": "Pooled RP from Other Brothers"
                 }
             },
             "Mode": {
@@ -1716,6 +1747,23 @@
                 "BlackCarapace": {
                     "Label": "Black Carapace",
                     "PowerArmorInterface": "Power-armour interface — encumbrance penalties ignored"
+                },
+                "Category": {
+                    "Baseline": "Baseline gene-seed",
+                    "AutoHeal": "Auto-heal",
+                    "ImmunePoison": "Poison immunity",
+                    "ImmuneSuspendedAnimation": "Suspended animation",
+                    "EnhancedVision": "Enhanced vision",
+                    "EnhancedHearing": "Enhanced hearing",
+                    "EnhancedSmell": "Enhanced smell",
+                    "EnhancedTaste": "Enhanced taste",
+                    "Environmental": "Environmental adaptation",
+                    "SpitAcid": "Acid spit",
+                    "GeneSeedOrgan": "Gene-seed organ",
+                    "PowerArmorInterface": "Power-armour interface"
+                },
+                "Panel": {
+                    "ToggleImplantTitle": "Toggle implant"
                 },
                 "Implant": {
                     "SecondaryHeart": { "Name": "Secondary Heart" },
@@ -4081,7 +4129,13 @@
                 "Validation": {
                     "OverBudget": "Selection exceeds the {budget}-point budget by {amount}.",
                     "MissingCategory": "{category} has not been selected."
-                }
+                },
+                "DialogTitle": "Regiment Creation",
+                "EditButton": "Edit Regiment",
+                "EditButtonTitle": "Open the Regiment Creation builder",
+                "CommitButton": "Commit Regiment",
+                "CancelButton": "Cancel",
+                "NoOptions": "No options available — load the OW compendium."
             },
             "RegimentDrawback": {
                 "Label": "Regimental Drawback",
@@ -4101,7 +4155,8 @@
             "Orders": {
                 "Label": "Orders",
                 "Issue": {
-                    "Title": "Issue Order"
+                    "Title": "Issue Order",
+                    "Button": "Issue"
                 },
                 "Kind": {
                     "Generic": "Generic Order",
@@ -4123,7 +4178,23 @@
                     "InsufficientCohesion": "Not enough Cohesion to issue this Order."
                 },
                 "Sweeping": {
-                    "AppliedTo": "Applied to {target}"
+                    "AppliedTo": "Applied to {target}",
+                    "Header": "Active Sweeping Orders",
+                    "Empty": "No Sweeping Orders currently active."
+                },
+                "Effect": {
+                    "RangedVolley": "+5 BS to squad ranged attacks this round.",
+                    "CloseQuarters": "Squad gains Ganging Up bonuses against the designated foe.",
+                    "TakeCover": "Squad-wide cover bonus until end of round."
+                },
+                "Panel": {
+                    "Header": "Orders",
+                    "AvailableHeader": "Generic Orders"
+                },
+                "Chat": {
+                    "Title": "Order Issued: {order}",
+                    "AffectedHeader": "Affected Squad Members",
+                    "NoMembers": "No squad members affected."
                 }
             },
             "Comrade": {
@@ -4139,7 +4210,13 @@
                     "Range": "Cohesion range: {meters} m"
                 },
                 "Action": {
-                    "MaintainBreak": "Maintain / Break Cohesion"
+                    "MaintainBreak": "Maintain / Break Cohesion",
+                    "Wound": "Wound",
+                    "Heal": "Heal",
+                    "Replace": "Replace"
+                },
+                "Chat": {
+                    "NoOp": "No change to the Comrade's state."
                 },
                 "Hit": {
                     "Transferred": {
@@ -4177,6 +4254,23 @@
             "Logistics": {
                 "Label": "Logistics",
                 "Rating": "Squad Logistics Rating",
+                "PanelHeader": "Squad Logistics",
+                "RollButton": "Logistics Test",
+                "CancelButton": "Cancel",
+                "AdjustSituationalUp": "Increase situational modifier",
+                "AdjustSituationalDown": "Decrease situational modifier",
+                "MunitorumToggle": "Munitorum Influence",
+                "StandardKitToggle": "Standard Kit (regimental)",
+                "TroopCountLabel": "Troop Count",
+                "TimeInFrontLabel": "Time in Front",
+                "FrontActiveLabel": "Front Activity",
+                "WarConditionLabel": "War Conditions",
+                "CraftsmanshipLabel": "Craftsmanship",
+                "SituationalLabel": "Situational",
+                "BaseRatingLabel": "Base Rating",
+                "TargetPreview": "Computed Target",
+                "BreakdownLabel": "Breakdown",
+                "ChatTitle": "Logistics Test",
                 "Test": {
                     "Title": "Logistics Test",
                     "Target": "Target",

@@ -1,0 +1,55 @@
+{{!-- Deathwatch Squad Mode / Solo Mode transition chat card (#163). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-dw-mode-card tw-p-4 tw-rounded-md tw-border tw-border-accent-combat tw-bg-[rgba(14,22,28,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-dw-combat-mode="{{newMode}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        {{#if (eq newMode "squad")}}
+            <i class="fas fa-users tw-text-[1.1rem] tw-text-accent-combat"></i>
+        {{else}}
+            <i class="fas fa-user tw-text-[1.1rem] tw-text-accent-combat"></i>
+        {{/if}}
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-accent-combat">
+            {{localize "WH40K.DW.Mode.Label"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.9rem] tw-mb-3 tw-text-slate-100">
+        <strong class="tw-text-accent-combat">{{actorName}}</strong>
+        — {{localize transitionMessageKey}}
+    </div>
+
+    {{!-- Mode transition: previous → new --}}
+    <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-[rgba(140,200,255,0.35)] tw-bg-[rgba(20,40,60,0.4)]">
+        <span class="tw-text-slate-300">{{localize "WH40K.DW.Mode.Label"}}</span>
+        <span class="tw-font-bold tw-text-slate-50">
+            {{localize previousModeKey}}
+            <i class="fas fa-arrow-right tw-mx-2 tw-text-accent-combat"></i>
+            {{localize newModeKey}}
+        </span>
+    </div>
+
+    {{#if viaKey}}
+        <div class="tw-text-xs tw-text-slate-300 tw-italic tw-mb-2">
+            {{localize viaKey}}
+        </div>
+    {{/if}}
+
+    {{#if supportRange}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(140,200,255,0.35)] tw-bg-[rgba(20,40,60,0.4)] tw-text-[0.85rem]">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-slate-300 tw-mb-1">
+                {{localize "WH40K.DW.Renown.Label"}}: {{localize (concat "WH40K.DW.Renown.Rank." renownRankKey)}}
+            </div>
+            <div class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-slate-300">{{localize "WH40K.DW.Mode.SupportRange.Visual"}}</span>
+                <span class="tw-font-bold tw-text-slate-50 tw-tabular-nums">{{supportRange.visual}} m</span>
+            </div>
+            <div class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-slate-300">{{localize "WH40K.DW.Mode.SupportRange.Vocal"}}</span>
+                <span class="tw-font-bold tw-text-slate-50 tw-tabular-nums">{{supportRange.vocal}} m</span>
+            </div>
+        </div>
+    {{/if}}
+</div>

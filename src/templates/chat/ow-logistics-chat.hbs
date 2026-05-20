@@ -1,0 +1,84 @@
+{{!-- Only War Logistics Test chat card (#154). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-ow-logistics-card tw-p-4 tw-rounded-md tw-border tw-border-amber-600 tw-bg-[rgba(28,18,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-truck-loading tw-text-[1.1rem] tw-text-amber-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-amber-200">
+            {{localize "WH40K.OW.Logistics.ChatTitle"}}
+        </div>
+    </div>
+
+    {{!-- Roll vs target headline --}}
+    <div class="tw-text-[0.9rem] tw-mb-3 tw-text-amber-50">
+        <strong class="tw-text-amber-200">
+            {{#if success}}{{localize "WH40K.OW.Logistics.Test.Success"}}{{else}}{{localize "WH40K.OW.Logistics.Test.Failure"}}{{/if}}
+        </strong>
+        — <span class="tw-tabular-nums">
+            {{localize "WH40K.OW.Logistics.Test.Roll"}}: {{roll}}
+            vs {{localize "WH40K.OW.Logistics.Test.Target"}}: {{target}}
+        </span>
+    </div>
+
+    {{!-- DoS / DoF readout --}}
+    <div class="tw-flex tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-[rgba(217,119,6,0.45)] tw-bg-[rgba(120,53,15,0.18)]">
+        {{#if success}}
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Test.DoS"}}:</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{degreesOfSuccess}}</span>
+        {{else}}
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Test.DoF"}}:</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{degreesOfFailure}}</span>
+        {{/if}}
+    </div>
+
+    {{!-- Breakdown --}}
+    <div class="tw-text-[0.78rem] tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
+        {{localize "WH40K.OW.Logistics.BreakdownLabel"}}
+    </div>
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.BaseRatingLabel"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{breakdown.rating}}</span>
+        </li>
+        {{#if breakdown.munitorum}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Modifier.Munitorum"}}</span>
+                <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">+{{breakdown.munitorum}}</span>
+            </li>
+        {{/if}}
+        {{#if breakdown.situational}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Modifier.Situational"}}</span>
+                <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (gt breakdown.situational 0)}}+{{/if}}{{breakdown.situational}}</span>
+            </li>
+        {{/if}}
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Modifier.TroopCount"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (gt breakdown.troopCount 0)}}+{{/if}}{{breakdown.troopCount}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Modifier.TimeInFront"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (gt breakdown.timeInFront 0)}}+{{/if}}{{breakdown.timeInFront}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Modifier.FrontActive"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (gt breakdown.frontActive 0)}}+{{/if}}{{breakdown.frontActive}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Modifier.WarCondition"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (gt breakdown.warCondition 0)}}+{{/if}}{{breakdown.warCondition}}</span>
+        </li>
+        {{#if breakdown.standardKit}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Modifier.StandardKit"}}</span>
+                <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">+{{breakdown.standardKit}}</span>
+            </li>
+        {{/if}}
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Modifier.Craftsmanship"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (gt breakdown.craftsmanship 0)}}+{{/if}}{{breakdown.craftsmanship}}</span>
+        </li>
+    </ul>
+</div>

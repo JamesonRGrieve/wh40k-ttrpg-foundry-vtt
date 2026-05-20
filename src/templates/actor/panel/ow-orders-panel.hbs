@@ -1,0 +1,112 @@
+{{!--
+    Only War Orders panel (#153).
+
+    Lists the three generic Orders every PC may issue (Ranged Volley /
+    Close Quarters / Take Cover!), an "Issue" button on each, the
+    structured action cost, and a section for any currently-active
+    Sweeping Orders the actor (typically a Sergeant) is broadcasting.
+
+    Context (set up by the OW character-sheet branch of
+    `_prepareContext` — the orchestrator wires this once the panel is
+    included):
+
+      ordersPanel: {
+        available: Array<{                          // 3 generic Orders
+          orderId:          'ranged-volley' | 'close-quarters' | 'take-cover'
+          nameKey:          string                  // 'WH40K.OW.Orders.Generic.RangedVolley' …
+          effectKey:        string                  // 'WH40K.OW.Orders.Effect.RangedVolley' …
+          actionCostKey:    string                  // 'WH40K.OW.Orders.ActionCost.Half' …
+          actionCost:       'free' | 'half' | 'full'
+          canIssue:         boolean                 // canIssueOrder result
+          blockReasonKey:   string | null           // 'WH40K.OW.Orders.Validation.…' when canIssue=false
+        }>
+        sweepingActive: Array<{                     // current active sweeping orders
+          orderId:          string
+          nameKey:          string
+          effectKey:        string | null
+          appliedCount:     number                  // appliedToMemberIds.length
+        }>
+      }
+
+    Gate matches `_gameSystemId === 'ow'` from CharacterSheet
+    (`isOW` flag + `ordersPanel` context set in `_prepareContext`).
+--}}
+<section class="wh40k-ow-orders-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-brass">
+
+    {{!-- Header --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-bullhorn ow:tw-text-brass"></i>
+            <span>{{localize "WH40K.OW.Orders.Panel.Header"}}</span>
+        </h3>
+    </header>
+
+    {{!-- Available generic Orders --}}
+    <div class="wh40k-ow-orders-available tw-flex tw-flex-col tw-gap-1">
+        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.OW.Orders.Panel.AvailableHeader"}}
+        </span>
+        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1.5">
+            {{#each ordersPanel.available}}
+                <li class="wh40k-ow-orders-row tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                    data-order-id="{{this.orderId}}"
+                    data-action-cost="{{this.actionCost}}">
+                    <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0 tw-gap-0.5">
+                        <span class="wh40k-ow-orders-name tw-text-[0.85rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
+                            {{localize this.nameKey}}
+                        </span>
+                        <span class="wh40k-ow-orders-effect tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                            {{localize this.effectKey}}
+                        </span>
+                        <span class="wh40k-ow-orders-cost tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] ow:tw-text-brass">
+                            {{localize this.actionCostKey}}
+                        </span>
+                    </div>
+                    {{#if this.canIssue}}
+                        <button type="button"
+                                class="wh40k-ow-orders-issue-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-brass hover:tw-bg-brass hover:tw-text-black"
+                                data-action="owIssueOrder"
+                                data-order-id="{{this.orderId}}"
+                                title="{{localize 'WH40K.OW.Orders.Issue.Title'}}">
+                            {{localize "WH40K.OW.Orders.Issue.Button"}}
+                        </button>
+                    {{else}}
+                        <span class="wh40k-ow-orders-blocked tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]"
+                              title="{{#if this.blockReasonKey}}{{localize this.blockReasonKey}}{{/if}}">
+                            <i class="fas fa-ban"></i>
+                        </span>
+                    {{/if}}
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+
+    {{!-- Sweeping Orders currently active --}}
+    <div class="wh40k-ow-orders-sweeping tw-flex tw-flex-col tw-gap-1">
+        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.OW.Orders.Sweeping.Header"}}
+        </span>
+        {{#if ordersPanel.sweepingActive.length}}
+            <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1">
+                {{#each ordersPanel.sweepingActive}}
+                    <li class="wh40k-ow-orders-sweeping-row tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-brass/40"
+                        data-order-id="{{this.orderId}}">
+                        <span class="tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
+                            {{localize this.nameKey}}
+                        </span>
+                        <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                            {{localize "WH40K.OW.Orders.Sweeping.AppliedTo" target=this.appliedCount}}
+                        </span>
+                    </li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <div class="wh40k-ow-orders-sweeping-empty tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.OW.Orders.Sweeping.Empty"}}
+            </div>
+        {{/if}}
+    </div>
+</section>

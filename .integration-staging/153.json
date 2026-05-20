@@ -1,0 +1,38 @@
+{
+    "issue": 153,
+    "engine": "ow-orders",
+    "gameSystem": "ow",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/ow-orders-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "owOrdersSchemaFields",
+        "declarationsTypeExport": "OwOrdersDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/ow-orders-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/ow-orders-panel.hbs",
+        "includeIn": "tab-status.hbs",
+        "gateOn": "isOW"
+    },
+    "actions": [
+        {
+            "actionName": "owIssueOrder",
+            "module": "src/module/actions/ow-orders-actions.ts",
+            "exportName": "owIssueOrder"
+        }
+    ],
+    "chatPartial": {
+        "partialPath": "systems/wh40k-rpg/templates/chat/ow-orders-chat.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/chat/ow-orders-chat.hbs"
+    },
+    "i18nKeys": "WH40K.OW.Orders.*",
+    "e2eSpec": "tests/e2e/ow-orders.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/ow-orders-panel.stories.ts",
+        "src/templates/chat/ow-orders-chat.stories.ts"
+    ],
+    "context": {
+        "description": "CharacterSheet._prepareContext (gated on _gameSystemId === 'ow') must build an `ordersPanel` context object with two arrays. `available` is the three GENERIC_ORDERS resolved through canIssueOrder() — each entry: { orderId, nameKey, effectKey, actionCostKey, actionCost, canIssue, blockReasonKey }. `sweepingActive` is system.activeOrders.filter(o => o.sweeping) mapped to { orderId, nameKey, effectKey, appliedCount }. The orchestrator should reuse GENERIC_ORDER_I18N / ACTION_COST_KEY / KIND_KEY / BLOCK_REASON_KEY maps already exported (constants are duplicated as private in ow-orders-actions.ts; promote to shared module when wiring if desired).",
+        "actorTypes": ["ow-character"]
+    }
+}

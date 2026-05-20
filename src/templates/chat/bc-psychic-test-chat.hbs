@@ -1,0 +1,61 @@
+{{!-- Black Crusade Psychic Test chat card (#178 — core.md §"Manifesting a Power"). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-bc-psychic-card tw-p-4 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(20,8,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-bc-psyker-class="{{psykerClass}}"
+     data-bc-psy-mode="{{mode}}">
+
+    {{!-- Header --}}
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-brain tw-text-[1.1rem] bc:tw-text-crimson"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">
+            {{localize "WH40K.BC.Psychic.ChatTitle"}}
+        </div>
+    </div>
+
+    {{!-- Mode / Class summary --}}
+    <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultMode"}}</span>
+        <span class="tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
+            {{localize modeLabelKey}} <i class="fas fa-circle tw-mx-2 tw-text-[0.45rem] bc:tw-text-crimson"></i> {{localize classLabelKey}}
+        </span>
+    </div>
+
+    {{!-- Result rows --}}
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultBasePR"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{basePR}}</span>
+        </li>
+        {{#if showPushLevel}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultPushLevel"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{pushLevel}} / {{maxPushLevel}}</span>
+            </li>
+        {{/if}}
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultEffectivePR"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">{{effectivePR}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultSustainPenalty"}}</span>
+            <span class="tw-font-bold tw-tabular-nums {{#if sustainPenalty}}tw-text-rose-300{{else}}tw-text-[color:var(--wh40k-text-bright)]{{/if}}">{{sustainPenalty}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultPhenomenaRolls"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{phenomenaRolls}}</span>
+        </li>
+    </ul>
+
+    {{#if phenomenaRolls}}
+        <div class="tw-text-xs tw-italic bc:tw-text-crimson tw-text-[color:var(--wh40k-text-muted)]">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{localize "WH40K.BC.Psychic.Phenomena.Triggered"}}
+        </div>
+    {{else}}
+        <div class="tw-text-xs tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.BC.Psychic.NoPhenomena"}}
+        </div>
+    {{/if}}
+</div>

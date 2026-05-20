@@ -279,6 +279,27 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/colony-growth-chat.hbs',
             'systems/wh40k-rpg/templates/actor/panel/bc-alignment-panel.hbs',
 
+            // Batch-1 engine panels / chats / dialogs (BC #178, DW #162-#167, OW #151-#154).
+            'systems/wh40k-rpg/templates/actor/panel/bc-psychic-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-astartes-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-cohesion-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-mode-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-renown-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/dw-requisition-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ow-comrade-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ow-logistics-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ow-orders-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ow-regiment-panel.hbs',
+            'systems/wh40k-rpg/templates/chat/bc-psychic-test-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/dw-cohesion-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/dw-mode-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/dw-requisition-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ow-comrade-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ow-logistics-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ow-orders-chat.hbs',
+            'systems/wh40k-rpg/templates/prompt/logistics-test-dialog.hbs',
+            'systems/wh40k-rpg/templates/prompt/regiment-builder-dialog.hbs',
+
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-lead-sheet.hbs',

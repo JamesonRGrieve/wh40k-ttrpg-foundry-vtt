@@ -1,0 +1,36 @@
+{
+    "issue": 167,
+    "engine": "dw-astartes",
+    "gameSystem": "dw",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/dw-astartes-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "dwAstartesSchemaFields",
+        "declarationsTypeExport": "DwAstartesDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/dw-astartes-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/dw-astartes-panel.hbs",
+        "includeIn": "tab-overview.hbs",
+        "gateOn": "isDW"
+    },
+    "actions": [
+        {
+            "actionName": "dwAstartesToggleImplant",
+            "module": "src/module/actions/dw-astartes-actions.ts",
+            "exportName": "dwAstartesToggleImplant"
+        }
+    ],
+    "i18nKeys": "WH40K.DW.Astartes.*",
+    "e2eSpec": "tests/e2e/dw-astartes.spec.ts",
+    "storybookStories": ["src/templates/actor/panel/dw-astartes-panel.stories.ts"],
+    "context": {
+        "shape": "astartesPanel: { implants: Array<{ id, nameKey, categoryKey, has }>, strengthBonus, toughnessBonus, hasBlackCarapace }",
+        "buildNotes": [
+            "Compute strengthBonus via astartesStrengthBonus(actor.system.characteristics.strength.bonus) from src/module/rules/dw-astartes.ts",
+            "Compute toughnessBonus via astartesToughnessBonus(actor.system.characteristics.toughness.bonus)",
+            "hasBlackCarapace = hasBlackCarapace(actor.system.implants ?? [])",
+            "implants[] iterates ASTARTES_IMPLANTS; per-id PascalCase name suffix + Category.<Cat>|Baseline key derivation matches the panel stories file"
+        ]
+    }
+}

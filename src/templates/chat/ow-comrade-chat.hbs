@@ -1,0 +1,86 @@
+{{!--
+    Only War Comrade chat card (#152 — core.md p.12137).
+
+    Surfaces a Comrade event to the chat log. Two intertwined surfaces:
+
+      1. Hit transfer — when a hit on the PC also lands on the Comrade
+         (doubles roll while in Cohesion, OR Blast/Spray template
+         coverage). The `reason` field carries which RAW path fired so
+         the card can show the correct human-readable explanation
+         drawn from `WH40K.OW.Comrade.Hit.Transferred.*`.
+
+      2. State change — when the Comrade's track moves
+         (unharmed → wounded, wounded → dead, dead → unharmed on
+         replacement, wounded → unharmed on heal). `previousState`
+         and `newState` localise via `WH40K.OW.Comrade.State.*`.
+
+    Context expected (built by the action handler before passing the
+    payload to ChatMessage.create):
+
+      gameSystem     — 'ow' (so the per-system theme variants fire on
+                       the modern-card-shell frame).
+      actor          — { name, uuid } of the PC who owns the Comrade.
+      comradeName    — display name of the Comrade (or '—' fallback).
+      event:
+        kind         — 'hit-transfer' | 'state-change'
+        reason       — 'doubles' | 'blast-spray' | 'none'  (only meaningful for hit-transfer)
+        previousState — 'unharmed' | 'wounded' | 'dead'
+        newState      — 'unharmed' | 'wounded' | 'dead'
+        previousStateKey — WH40K.OW.Comrade.State.<X> for previousState
+        newStateKey      — WH40K.OW.Comrade.State.<X> for newState
+        transitioned     — boolean (false on no-op heals / blocked replaces)
+        replaced         — boolean (true only on dead → unharmed via replace)
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs
+        actorName=actor.name
+        titleKey="WH40K.OW.Comrade.Label"
+        subtitle=comradeName
+        imageIcon="fa-user-shield"
+        gameSystem=gameSystem}}
+    <div class="wh40k-ow-comrade-chat tw-flex tw-flex-col tw-gap-2 tw-p-3" data-comrade-event="{{event.kind}}">
+        {{#if (eq event.kind "hit-transfer")}}
+            <div class="wh40k-ow-comrade-chat__hit tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+                        tw-border-l-2 tw-border-crimson tw-bg-[var(--wh40k-panel-bg-translucent)]"
+                 data-reason="{{event.reason}}">
+                <i class="fas fa-crosshairs tw-text-crimson"></i>
+                <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
+                    {{#if (eq event.reason "doubles")}}
+                        {{localize "WH40K.OW.Comrade.Hit.Transferred.Doubles"}}
+                    {{else if (eq event.reason "blast-spray")}}
+                        {{localize "WH40K.OW.Comrade.Hit.Transferred.BlastSpray"}}
+                    {{/if}}
+                </span>
+            </div>
+        {{/if}}
+
+        {{#if (eq event.kind "state-change")}}
+            {{#if event.transitioned}}
+                <div class="wh40k-ow-comrade-chat__state tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+                            tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]"
+                     data-previous-state="{{event.previousState}}" data-new-state="{{event.newState}}">
+                    <span class="tw-text-[0.78rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                        {{localize event.previousStateKey}}
+                    </span>
+                    <i class="fas fa-arrow-right tw-text-[color:var(--wh40k-text-muted)]"></i>
+                    <span class="tw-text-[0.85rem] tw-font-semibold
+                                 {{#if (eq event.newState 'unharmed')}}tw-text-success{{/if}}
+                                 {{#if (eq event.newState 'wounded')}}tw-text-gold{{/if}}
+                                 {{#if (eq event.newState 'dead')}}tw-text-crimson{{/if}}">
+                        {{localize event.newStateKey}}
+                    </span>
+                </div>
+                {{#if event.replaced}}
+                    <div class="wh40k-ow-comrade-chat__replaced tw-text-[0.78rem] tw-italic tw-text-success tw-px-3">
+                        <i class="fas fa-user-plus tw-mr-1"></i>
+                        {{localize "WH40K.OW.ComradeHealing.Replacement.Available"}}
+                    </div>
+                {{/if}}
+            {{else}}
+                <div class="wh40k-ow-comrade-chat__no-op tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-px-3 tw-py-2">
+                    <i class="fas fa-circle-info tw-mr-1"></i>
+                    {{localize "WH40K.OW.Comrade.Chat.NoOp"}}
+                </div>
+            {{/if}}
+        {{/if}}
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}
