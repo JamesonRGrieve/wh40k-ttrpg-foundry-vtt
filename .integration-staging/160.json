@@ -1,0 +1,28 @@
+{
+    "issue": 160,
+    "engine": "ow-regiment-drawback",
+    "gameSystem": "ow",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/ow-drawback-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "owDrawbackSchemaFields",
+        "declarationsTypeExport": "OwDrawbackDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/ow-drawback-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/ow-drawback-panel.hbs",
+        "includeIn": "tab-overview.hbs",
+        "gateOn": "isOW",
+        "contextKey": "drawbackPanel",
+        "includeSnippet": "{{> systems/wh40k-rpg/templates/actor/panel/ow-drawback-panel.hbs drawbackPanel=drawbackPanel}}",
+        "contextBuilderNotes": "Build `drawbackPanel` in character-sheet `_prepareContext` for OW actors only. Walk `system.regimentDrawbacks` and resolve each id to a `RegimentDrawback` descriptor (compendium lookup via the boot-time resync / uuidNameCache — Direction #7: do NOT hardcode drawback names or refund tables in `src/`). Pass the resolved descriptors to `applyDrawbacksToBudget(baseBudget=12, drawbacks)` for `appliedRefund` / `adjustedBudget`, and to `mergeDrawbackPenalties(drawbacks)` for the merged penalty surface. Convert `merged.characteristics` (Record) to `[{key,value}]` for handlebars. `hasPenaltyRow = any of characteristics.length / skills.length / talents.length / wounds / logistics / kitModifier is truthy`. For the roster: `roster = system.multiComradeRoster ? { present:true, primaryId, additionalIds, totalCount: 1 + additionalIds.length } : { present:false, primaryId:'', additionalIds:[], totalCount: 1 }`."
+    },
+    "actions": [
+        { "actionName": "owToggleDrawback", "module": "src/module/actions/ow-drawback-actions.ts", "exportName": "owToggleDrawback" },
+        { "actionName": "owAddComrade", "module": "src/module/actions/ow-drawback-actions.ts", "exportName": "owAddComrade" },
+        { "actionName": "owRemoveComrade", "module": "src/module/actions/ow-drawback-actions.ts", "exportName": "owRemoveComrade" }
+    ],
+    "i18nKeys": "WH40K.OW.RegimentDrawback.*",
+    "e2eSpec": "tests/e2e/ow-drawbacks.spec.ts",
+    "storybookStories": ["src/templates/actor/panel/ow-drawback-panel.stories.ts"]
+}

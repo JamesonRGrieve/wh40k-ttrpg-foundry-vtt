@@ -1,0 +1,47 @@
+{
+    "issue": 161,
+    "engine": "ow-battlefield",
+    "gameSystem": "ow",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/ow-battlefield-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "owBattlefieldSchemaFields",
+        "declarationsTypeExport": "OwBattlefieldDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/ow-battlefield-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/ow-battlefield-panel.hbs",
+        "includeIn": "tab-status.hbs",
+        "gateOn": "isOW",
+        "contextKey": "battlefieldPanel",
+        "contextShape": {
+            "supportCooldown": "system.supportCooldown",
+            "canRequestSupport": "system.supportCooldown === 0",
+            "cooldownActive": "system.supportCooldown > 0",
+            "availableAwards": "Resolve system.regimentalAwards via uuidNameCache to {id, name, description, conferred: true}; the GM-curated catalogue contributes extras with conferred: false",
+            "merged": "mergeRegimentalAwards(resolvedAwards) — { characteristicDelta, traits, bonusFatePoints, entryCount, hasAny }"
+        }
+    },
+    "actions": [
+        {
+            "actionName": "owRequestSupport",
+            "module": "src/module/actions/ow-battlefield-actions.ts",
+            "exportName": "owRequestSupport"
+        },
+        {
+            "actionName": "owToggleAward",
+            "module": "src/module/actions/ow-battlefield-actions.ts",
+            "exportName": "owToggleAward"
+        }
+    ],
+    "chatPartial": {
+        "partialPath": "systems/wh40k-rpg/templates/chat/ow-battlefield-chat.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/chat/ow-battlefield-chat.hbs"
+    },
+    "i18nKeys": "WH40K.OW.Battlefield.*, WH40K.OW.RegimentalAward.*",
+    "e2eSpec": "tests/e2e/ow-battlefield.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/ow-battlefield-panel.stories.ts",
+        "src/templates/chat/ow-battlefield-chat.stories.ts"
+    ]
+}

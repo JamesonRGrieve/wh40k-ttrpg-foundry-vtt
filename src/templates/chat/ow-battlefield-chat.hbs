@@ -1,0 +1,101 @@
+{{!--
+    Only War Battlefield Awareness chat card
+    (#161 — core.md §"BATTLEFIELD AWARENESS AND MANOEUVRES" line 13361,
+    §"Support" line 13411; §"CREATING REGIMENTAL AWARDS" line 13103).
+
+    Two card kinds emitted by the action layer:
+
+      • kind = 'request' — a support-asset request was resolved.
+                            Surfaces `assetKind`, `assetNameKey`,
+                            `successful`, `effectiveTarget`, `roll`,
+                            `turnsUntilArrival` (success) and
+                            `cooldownAfter`.
+      • kind = 'award'   — a Regimental Award was toggled on / off the
+                            actor's roster. Surfaces `awardId`,
+                            `toggledOn`, `rosterSize`.
+
+    Context expected (built by the action handler before passing to
+    ChatMessage.create):
+
+      gameSystem  — 'ow' (per-system theme variants fire on the
+                    modern-card-shell frame).
+      actor       — { name } of the PC making the request / receiving
+                    the award.
+      event:
+        kind             — 'request' | 'award'
+        assetKind        — 'artillery'|'air-strike'|'reinforcements'|'orbital' (request only)
+        assetNameKey     — typed i18n key for the asset display name
+        successful       — boolean (request only)
+        effectiveTarget  — number (request only — Logistics target after asset modifier)
+        roll             — number (request only — d100 roll)
+        turnsUntilArrival- number | null (request only)
+        cooldownAfter    — number (request only — actor.supportCooldown post-resolution)
+        awardId          — string (award only)
+        toggledOn        — boolean (award only)
+        rosterSize       — number (award only)
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs
+        actorName=actor.name
+        titleKey="WH40K.OW.Battlefield.Label"
+        imageIcon="fa-satellite-dish"
+        gameSystem=gameSystem}}
+    <div class="wh40k-ow-battlefield-chat tw-flex tw-flex-col tw-gap-2 tw-p-3"
+         data-battlefield-event="{{event.kind}}">
+
+        {{#if (eq event.kind "request")}}
+            <div class="wh40k-ow-battlefield-chat__request tw-flex tw-flex-col tw-gap-1 tw-px-3 tw-py-2 tw-rounded
+                        tw-border-l-2 tw-bg-[var(--wh40k-panel-bg-translucent)]
+                        {{#if event.successful}}tw-border-success{{else}}tw-border-crimson{{/if}}"
+                 data-asset-kind="{{event.assetKind}}"
+                 data-successful="{{#if event.successful}}true{{else}}false{{/if}}">
+                <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+                    <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-font-semibold">
+                        <i class="fas fa-satellite-dish tw-mr-1 {{#if event.successful}}tw-text-success{{else}}tw-text-crimson{{/if}}"></i>
+                        {{localize event.assetNameKey}}
+                    </span>
+                    <span class="tw-text-[0.78rem] tw-font-semibold
+                                 {{#if event.successful}}tw-text-success{{else}}tw-text-crimson{{/if}}">
+                        {{#if event.successful}}
+                            {{localize "WH40K.OW.Battlefield.Support.Request.Success"}}
+                        {{else}}
+                            {{localize "WH40K.OW.Battlefield.Support.Request.Failure"}}
+                        {{/if}}
+                    </span>
+                </div>
+                <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums">
+                    <span data-field="effective-target">
+                        Target: <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{event.effectiveTarget}}</strong>
+                    </span>
+                    <span data-field="roll">
+                        Roll: <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{event.roll}}</strong>
+                    </span>
+                </div>
+                {{#if event.successful}}
+                    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums">
+                        <span data-field="turns-until-arrival">
+                            {{localize "WH40K.OW.Battlefield.Support.TurnsUntilArrival"}}: <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{event.turnsUntilArrival}}</strong>
+                        </span>
+                        <span data-field="cooldown-after">
+                            {{localize "WH40K.OW.Battlefield.Support.Cooldown"}}: <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{event.cooldownAfter}}</strong>
+                        </span>
+                    </div>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if (eq event.kind "award")}}
+            <div class="wh40k-ow-battlefield-chat__award tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+                        tw-border-l-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-translucent)]"
+                 data-award-id="{{event.awardId}}"
+                 data-toggled-on="{{#if event.toggledOn}}true{{else}}false{{/if}}">
+                <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
+                    <i class="fas {{#if event.toggledOn}}fa-medal tw-text-gold{{else}}fa-times tw-text-crimson{{/if}} tw-mr-1"></i>
+                    {{localize "WH40K.OW.RegimentalAward.Label"}}
+                </span>
+                <span class="tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums" data-field="roster-size">
+                    {{event.rosterSize}}
+                </span>
+            </div>
+        {{/if}}
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}

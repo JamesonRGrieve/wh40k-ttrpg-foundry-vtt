@@ -21,6 +21,9 @@ import { owLogisticsSchemaFields, type OwLogisticsDeclarations } from './mixins/
 import { owMissionGearSchemaFields, type OwMissionGearDeclarations } from './mixins/ow-mission-gear-template.ts';
 import { owOrdersSchemaFields, type OwOrdersDeclarations } from './mixins/ow-orders-template.ts';
 import { owRegimentSchemaFields, type OwRegimentDeclarations } from './mixins/ow-regiment-template.ts';
+import { owBattlefieldSchemaFields, type OwBattlefieldDeclarations } from './mixins/ow-battlefield-template.ts';
+import { owDrawbackSchemaFields, type OwDrawbackDeclarations } from './mixins/ow-drawback-template.ts';
+import { owMountSchemaFields, type OwMountDeclarations } from './mixins/ow-mount-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
 import CreatureTemplate from './templates/creature.ts';
 
@@ -323,6 +326,10 @@ export default class CharacterData extends CreatureTemplate {
             // Batch-3 engine slots (OW #156, #157).
             ...owVehicleMovementSchemaFields(),
             ...owComradeHealingSchemaFields(),
+            // Batch-4 engine slots (OW #159, #160, #161).
+            ...owMountSchemaFields(),
+            ...owDrawbackSchemaFields(),
+            ...owBattlefieldSchemaFields(),
 
             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
             mutations: new fields.StringField({ required: false, blank: true }),
@@ -1095,4 +1102,7 @@ export default interface CharacterData
         DwVehicleDeclarations,
         OwMissionGearDeclarations,
         OwVehicleMovementDeclarations,
-        OwComradeHealingDeclarations {}
+        OwComradeHealingDeclarations,
+        OwMountDeclarations,
+        OwDrawbackDeclarations,
+        OwBattlefieldDeclarations {}

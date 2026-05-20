@@ -1,0 +1,151 @@
+{{!--
+    Only War Battlefield Awareness panel
+    (#161 — core.md §"BATTLEFIELD AWARENESS AND MANOEUVRES" line 13361,
+    §"Support" line 13411; §"CREATING REGIMENTAL AWARDS" line 13103).
+
+    Two engine surfaces share this panel because they share the
+    Battlefield section in core.md:
+
+      • Support Asset Request — single "Request Support" button opens
+        a dialog for asset kind + per-asset modifiers, resolves the
+        call, and sets the per-actor cooldown.
+      • Regimental Award roster — togglable list of currently conferred
+        awards, with a merged-bonus readout below.
+
+    Sheet context (built by character-sheet `_prepareContext`):
+
+      battlefieldPanel: {
+        supportCooldown:   number  // sys.supportCooldown
+        canRequestSupport: boolean // supportCooldown === 0
+        cooldownActive:    boolean // supportCooldown > 0
+        availableAwards: Array<{
+            id: string
+            name: string
+            description: string
+            conferred: boolean
+        }>
+        merged: {
+            characteristicDelta: Record<string, number>
+            traits: string[]
+            bonusFatePoints: number
+            entryCount: number
+            hasAny: boolean
+        }
+      }
+
+    Rendered only for OW actors; the include in tab-status.hbs gates
+    on `isOW`.
+--}}
+<section class="wh40k-ow-battlefield-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-brass"
+         data-ow-battlefield-cooldown="{{battlefieldPanel.supportCooldown}}"
+         data-ow-battlefield-cooldown-active="{{#if battlefieldPanel.cooldownActive}}true{{else}}false{{/if}}">
+
+    {{!-- Header: label + cooldown badge --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-satellite-dish ow:tw-text-brass"></i>
+            <span class="wh40k-ow-battlefield-panel__label">{{localize "WH40K.OW.Battlefield.Label"}}</span>
+        </h3>
+        <span class="wh40k-ow-battlefield-panel__cooldown-badge tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
+                     {{#if battlefieldPanel.cooldownActive}}tw-border-crimson tw-text-crimson tw-bg-crimson/10{{else}}tw-border-success tw-text-success tw-bg-success/10{{/if}}"
+              data-cooldown-status="{{#if battlefieldPanel.cooldownActive}}active{{else}}ready{{/if}}">
+            <i class="fas {{#if battlefieldPanel.cooldownActive}}fa-hourglass-half{{else}}fa-check{{/if}}"></i>
+            {{#if battlefieldPanel.cooldownActive}}
+                {{localize "WH40K.OW.Battlefield.Support.Cooldown"}}: {{battlefieldPanel.supportCooldown}}
+            {{else}}
+                {{localize "WH40K.OW.Battlefield.Support.Request.Success"}}
+            {{/if}}
+        </span>
+    </header>
+
+    {{!-- Support Asset Request affordance --}}
+    <div class="wh40k-ow-battlefield-panel__support tw-flex tw-flex-col tw-gap-1.5 tw-px-2 tw-py-2 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]">
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.OW.Battlefield.Support.Request.Title"}}
+            </span>
+            <span class="tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums" data-field="support-cooldown">
+                {{localize "WH40K.OW.Battlefield.Support.Cooldown"}}: <strong>{{battlefieldPanel.supportCooldown}}</strong>
+            </span>
+        </div>
+        <button type="button"
+                class="wh40k-ow-battlefield-panel__request-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-1 tw-cursor-pointer tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="owRequestSupport"
+                title="{{localize 'WH40K.OW.Battlefield.Support.Request.Title'}}"
+                {{#unless battlefieldPanel.canRequestSupport}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-satellite-dish"></i>
+            {{localize "WH40K.OW.Battlefield.Support.Request.Title"}}
+        </button>
+    </div>
+
+    {{!-- Regimental Awards roster --}}
+    <div class="wh40k-ow-battlefield-panel__awards tw-flex tw-flex-col tw-gap-1.5 tw-px-2 tw-py-2 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]">
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]">
+            <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
+                {{localize "WH40K.OW.RegimentalAward.Label"}}
+            </span>
+            <span class="tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums" data-field="award-count">
+                {{battlefieldPanel.merged.entryCount}}
+            </span>
+        </div>
+
+        {{#if battlefieldPanel.availableAwards.length}}
+            <ul class="wh40k-ow-battlefield-panel__award-list tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
+                {{#each battlefieldPanel.availableAwards}}
+                    <li class="wh40k-ow-battlefield-panel__award-row tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]"
+                        data-award-id="{{this.id}}"
+                        data-conferred="{{#if this.conferred}}true{{else}}false{{/if}}">
+                        <span class="tw-flex tw-items-center tw-gap-1.5 tw-truncate">
+                            <i class="fas {{#if this.conferred}}fa-medal tw-text-gold{{else}}fa-ribbon tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
+                            <span class="tw-truncate {{#if this.conferred}}tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                                  title="{{this.description}}">{{this.name}}</span>
+                        </span>
+                        <button type="button"
+                                class="wh40k-ow-battlefield-panel__award-toggle tw-inline-flex tw-items-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1.5 tw-py-0.5 tw-cursor-pointer tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
+                                data-action="owToggleAward"
+                                data-award-id="{{this.id}}"
+                                title="{{localize 'WH40K.OW.RegimentalAward.Label'}}">
+                            <i class="fas {{#if this.conferred}}fa-times{{else}}fa-plus{{/if}}"></i>
+                        </button>
+                    </li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <p class="tw-m-0 tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.OW.RegimentalAward.Awardable.Title"}}
+            </p>
+        {{/if}}
+
+        {{#if battlefieldPanel.merged.hasAny}}
+            <div class="wh40k-ow-battlefield-panel__award-merged tw-flex tw-flex-col tw-gap-0.5 tw-mt-1 tw-px-2 tw-py-1 tw-rounded
+                        tw-border-l-2 tw-border-gold tw-bg-[color:var(--wh40k-panel-bg-translucent,rgba(0,0,0,0.12))]
+                        tw-text-[0.75rem]"
+                 data-field="award-merged">
+                <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
+                    {{localize "WH40K.OW.RegimentalAward.Bonus.Title"}}
+                </span>
+                {{#each battlefieldPanel.merged.characteristicDelta}}
+                    <span class="tw-text-[color:var(--wh40k-text-muted)]" data-bonus-characteristic="{{@key}}">
+                        {{localize "WH40K.OW.RegimentalAward.Bonus.Characteristic"}}: <strong class="tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums">{{@key}} {{#if (gte this 0)}}+{{/if}}{{this}}</strong>
+                    </span>
+                {{/each}}
+                {{#if battlefieldPanel.merged.traits.length}}
+                    <span class="tw-text-[color:var(--wh40k-text-muted)]" data-bonus-traits>
+                        {{localize "WH40K.OW.RegimentalAward.Bonus.Trait"}}:
+                        <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{#each battlefieldPanel.merged.traits}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</strong>
+                    </span>
+                {{/if}}
+                {{#if battlefieldPanel.merged.bonusFatePoints}}
+                    <span class="tw-text-[color:var(--wh40k-text-muted)]" data-bonus-fate>
+                        {{localize "WH40K.OW.RegimentalAward.Bonus.FatePoints"}}: <strong class="tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums">+{{battlefieldPanel.merged.bonusFatePoints}}</strong>
+                    </span>
+                {{/if}}
+            </div>
+        {{/if}}
+    </div>
+</section>

@@ -1,0 +1,34 @@
+{
+    "issue": 159,
+    "engine": "ow-mount",
+    "gameSystem": "ow",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/ow-mount-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "owMountSchemaFields",
+        "declarationsTypeExport": "OwMountDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/ow-mount-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/ow-mount-panel.hbs",
+        "includeIn": "tab-status.hbs",
+        "gateOn": "isOW"
+    },
+    "actions": [
+        {
+            "actionName": "owMountedAction",
+            "module": "src/module/actions/ow-mount-actions.ts",
+            "exportName": "owMountedAction"
+        }
+    ],
+    "chatPartial": {
+        "partialPath": "systems/wh40k-rpg/templates/chat/ow-mount-action-chat.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/chat/ow-mount-action-chat.hbs"
+    },
+    "i18nKeys": "WH40K.OW.Mount.*",
+    "e2eSpec": "tests/e2e/ow-mount.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/ow-mount-panel.stories.ts",
+        "src/templates/chat/ow-mount-action-chat.stories.ts"
+    ]
+}

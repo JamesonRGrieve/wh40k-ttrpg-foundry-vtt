@@ -1,0 +1,107 @@
+{{!--
+    Only War Mounted Combat panel (#159 — Hammer of the Emperor
+    §"MOUNTED COMBAT" / "MOUNT SPECIAL ACTIONS" / "MOUNT TRAITS",
+    hammer.md lines 4046-4260).
+
+    Shows the actor's current mount (if any) plus the four RAW
+    mounted special actions (Charge / Trample / Run Down /
+    Mounted Attack), each with an Issue button. When the rider is
+    dismounted (`mount === null`) the action rows still render so
+    the table can see the catalogue, but their Issue buttons are
+    disabled — RAW disallows mounted actions without a mount.
+
+    Context (built by the OW character-sheet branch of `_prepareContext`
+    — the orchestrator wires this once the panel is included):
+
+      mountPanel: {
+        mount: null | {                                     // current mount link
+          mountId:    string                                // compendium UUID
+          mountName:  string                                // resolved display name
+          traits:     Array<{                               // mechanical trait badges
+            id:       'quadruped' | 'sure-footed' | 'steadfast' |
+                       'unnatural-speed' | 'fearless' | 'brutal-charge'
+            labelKey: string                                // 'WH40K.OW.Mount.Trait.…'
+          }>
+        }
+        actions: Array<{                                    // 4 mounted actions
+          actionId:       'charge' | 'trample' | 'run-down' | 'mounted-attack'
+          nameKey:        string                            // 'WH40K.OW.Mount.Action.Charge' …
+          descriptionKey: string                            // 'WH40K.OW.Mount.Description.Charge' …
+          timingKey:      string                            // 'WH40K.OW.Mount.Timing.Full' …
+          timing:         'full' | 'half' | 'reaction'
+        }>
+      }
+
+    Gate matches `_gameSystemId === 'ow'` from CharacterSheet
+    (`isOW` flag + `mountPanel` context set in `_prepareContext`).
+--}}
+<section class="wh40k-ow-mount-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-brass"
+         data-mounted="{{#if mountPanel.mount}}true{{else}}false{{/if}}">
+
+    {{!-- Header --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-horse ow:tw-text-brass"></i>
+            <span>{{localize "WH40K.OW.Mount.Label"}}</span>
+        </h3>
+    </header>
+
+    {{!-- Current mount + trait badges --}}
+    <div class="wh40k-ow-mount-current tw-flex tw-flex-col tw-gap-1">
+        {{#if mountPanel.mount}}
+            <div class="wh40k-ow-mount-current-readout tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-brass/40"
+                 data-mount-id="{{mountPanel.mount.mountId}}">
+                <span class="wh40k-ow-mount-name tw-font-bold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
+                    <i class="fas fa-horse-head ow:tw-text-brass tw-mr-1"></i>
+                    {{mountPanel.mount.mountName}}
+                </span>
+                <ul class="wh40k-ow-mount-traits tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-wrap tw-gap-1 tw-justify-end">
+                    {{#each mountPanel.mount.traits}}
+                        <li class="wh40k-ow-mount-trait-badge tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid tw-border-brass/60 tw-bg-[rgba(60,40,8,0.25)] tw-text-[0.68rem] tw-uppercase tw-tracking-[0.04em] tw-text-brass"
+                            data-trait-id="{{this.id}}">
+                            {{localize this.labelKey}}
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{else}}
+            <div class="wh40k-ow-mount-current-empty tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.OW.Mount.Dismounted"}}
+            </div>
+        {{/if}}
+    </div>
+
+    {{!-- Available mounted actions --}}
+    <div class="wh40k-ow-mount-actions tw-flex tw-flex-col tw-gap-1">
+        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1.5">
+            {{#each mountPanel.actions}}
+                <li class="wh40k-ow-mount-row tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                    data-action-id="{{this.actionId}}"
+                    data-action-timing="{{this.timing}}">
+                    <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0 tw-gap-0.5">
+                        <span class="wh40k-ow-mount-action-name tw-text-[0.85rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
+                            {{localize this.nameKey}}
+                        </span>
+                        <span class="wh40k-ow-mount-action-effect tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                            {{localize this.descriptionKey}}
+                        </span>
+                        <span class="wh40k-ow-mount-action-cost tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] ow:tw-text-brass">
+                            {{localize this.timingKey}}
+                        </span>
+                    </div>
+                    <button type="button"
+                            class="wh40k-ow-mount-issue-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-brass hover:tw-bg-brass hover:tw-text-black disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                            data-action="owMountedAction"
+                            data-action-id="{{this.actionId}}"
+                            title="{{localize 'WH40K.OW.Mount.Issue.Title'}}"
+                            {{#unless ../mountPanel.mount}}disabled aria-disabled="true"{{/unless}}>
+                        {{localize "WH40K.OW.Mount.Issue.Button"}}
+                    </button>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</section>
