@@ -1,0 +1,79 @@
+{{!--
+    Deathwatch Kill-team Cohesion panel (#162 — core.md §"COHESION").
+
+    Renders the squad-level Cohesion pool attached to the kill-team
+    leader character. Surfaces:
+
+      - current / max Cohesion readout
+      - Rally button (Free Action Command/Fellowship test) — gated on
+        `rallied === false`
+      - Recover (Objective) button — gates on current < max
+      - Cohesion Challenge button — always present while pool exists
+
+    Sheet context (built by character-sheet `_prepareContext`):
+
+      cohesionPanel: {
+        current:      number   // sys.cohesionCurrent
+        max:          number   // sys.cohesionMax
+        lostThisTurn: number   // sys.cohesionLostThisTurn
+        rallied:      boolean  // sys.rallied
+        canRally:     boolean  // !rallied
+        canRecover:   boolean  // current < max && max > 0
+      }
+
+    Rendered only for DW actors; the include in the appropriate
+    tab-*.hbs gates on `isDW` from context.
+--}}
+<section class="wh40k-dw-cohesion-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-bronze"
+         data-dw-cohesion-current="{{cohesionPanel.current}}"
+         data-dw-cohesion-max="{{cohesionPanel.max}}">
+
+    {{!-- Header: pool readout --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-shield-halved dw:tw-text-bronze"></i>
+            <span>{{localize "WH40K.DW.Cohesion.Label"}}</span>
+        </h3>
+        <span class="wh40k-dw-cohesion-readout tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums"
+              title="{{localize 'WH40K.DW.Cohesion.Pool'}}">
+            {{cohesionPanel.current}} / {{cohesionPanel.max}}
+        </span>
+    </header>
+
+    {{#if cohesionPanel.rallied}}
+        <div class="wh40k-dw-cohesion-rallied tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded">
+            <i class="fas fa-check"></i>
+            {{localize "WH40K.DW.Cohesion.Rally.Success"}}
+        </div>
+    {{/if}}
+
+    {{!-- Action affordances --}}
+    <div class="wh40k-dw-cohesion-actions tw-flex tw-flex-wrap tw-gap-1.5">
+        <button type="button"
+                class="wh40k-dw-cohesion-rally-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="dwCohesionRally"
+                title="{{localize 'WH40K.DW.Cohesion.Rally.Description'}}"
+                {{#unless cohesionPanel.canRally}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-flag tw-mr-1"></i>
+            {{localize "WH40K.DW.Cohesion.Rally.Title"}}
+        </button>
+        <button type="button"
+                class="wh40k-dw-cohesion-recover-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="dwCohesionRecoverObjective"
+                title="{{localize 'WH40K.DW.Cohesion.Source.Objective'}}"
+                {{#unless cohesionPanel.canRecover}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-plus tw-mr-1"></i>
+            {{localize "WH40K.DW.Cohesion.Recovered"}}
+        </button>
+        <button type="button"
+                class="wh40k-dw-cohesion-challenge-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
+                data-action="dwCohesionChallenge"
+                title="{{localize 'WH40K.DW.Cohesion.Challenge.Title'}}">
+            <i class="fas fa-dice-d10 tw-mr-1"></i>
+            {{localize "WH40K.DW.Cohesion.Challenge.Title"}}
+        </button>
+    </div>
+</section>

@@ -449,5 +449,19 @@
             {{/unless}}
         </div>
 
+        {{!-- Per-game-system overview panels (batch-1 integration).
+             BC psychic strength (#178), DW Astartes implants (#167),
+             OW Regiment Creation (#151). Each gates on its system flag
+             so the include is no-op on the other six systems. --}}
+        {{#if isBC}}
+            {{> systems/wh40k-rpg/templates/actor/panel/bc-psychic-panel.hbs psychicPanel=psychicPanel}}
+        {{/if}}
+        {{#if isDW}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-astartes-panel.hbs astartesPanel=astartesPanel}}
+        {{/if}}
+        {{#if isOW}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-regiment-panel.hbs regimentPanel=regimentPanel}}
+        {{/if}}
+
     </div>
 </section>

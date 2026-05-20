@@ -1,0 +1,125 @@
+{{!--
+    Deathwatch Squad Mode / Solo Mode panel (#163).
+
+    Surfaces the Battle-Brother's current combat mode, the Support
+    Range tier for their Renown rank (visual + vocal, Table 7-9), the
+    list of abilities they are currently sustaining, and the two
+    transition buttons (Enter Squad Mode / Return to Solo Mode).
+
+    Context (set up by the DW character-sheet context-prep — wiring
+    lives outside the file list this issue is allowed to edit; the
+    panel is render-only and reads exactly the fields documented
+    below):
+
+      modePanel: {
+        mode:             'solo' | 'squad'      // sys.combatMode
+        renownRank:       RenownRank            // from rules/dw-renown
+        renownRankKey:    string                // langpack key for the rank label
+        supportRange:     { visual: number; vocal: number }
+        sustainedAbilities: Array<{
+            id: string                          // compendium UUID / slug
+            label: string                       // pre-resolved display name
+        }>
+      }
+
+    Rendered only for DW actors; the include in tab-status.hbs gates on
+    `isDW` from the CharacterSheet `_prepareContext`.
+--}}
+<section class="wh40k-dw-mode-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-accent-combat"
+         data-dw-combat-mode="{{modePanel.mode}}"
+         data-dw-renown-rank="{{modePanel.renownRank}}">
+
+    {{!-- Header: mode label + current mode badge --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-shield-halved dw:tw-text-accent-combat"></i>
+            <span>{{localize "WH40K.DW.Mode.Label"}}</span>
+        </h3>
+        <span class="wh40k-dw-mode-current tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
+              data-mode="{{modePanel.mode}}">
+            {{#if (eq modePanel.mode "squad")}}
+                {{localize "WH40K.DW.Mode.Squad"}}
+            {{else}}
+                {{localize "WH40K.DW.Mode.Solo"}}
+            {{/if}}
+        </span>
+    </header>
+
+    {{!-- Support Range table (Table 7-9) for the actor's Renown rank --}}
+    <div class="wh40k-dw-mode-support-range tw-flex tw-flex-col tw-gap-1"
+         data-renown-rank="{{modePanel.renownRank}}">
+        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.DW.Renown.Label"}}: {{localize (concat "WH40K.DW.Renown.Rank." modePanel.renownRankKey)}}
+        </span>
+        <div class="wh40k-dw-mode-support-grid tw-grid tw-grid-cols-2 tw-gap-1">
+            <div class="wh40k-dw-mode-support-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                 data-channel="visual">
+                <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.DW.Mode.SupportRange.Visual"}}
+                </span>
+                <span class="wh40k-dw-mode-support-value tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums"
+                      data-distance="{{modePanel.supportRange.visual}}">
+                    {{modePanel.supportRange.visual}} m
+                </span>
+            </div>
+            <div class="wh40k-dw-mode-support-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                 data-channel="vocal">
+                <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.DW.Mode.SupportRange.Vocal"}}
+                </span>
+                <span class="wh40k-dw-mode-support-value tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums"
+                      data-distance="{{modePanel.supportRange.vocal}}">
+                    {{modePanel.supportRange.vocal}} m
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Sustained abilities (RAW: only meaningful in Squad Mode). --}}
+    {{#if (eq modePanel.mode "squad")}}
+        <div class="wh40k-dw-mode-sustained tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.Mode.Ability.Sustained"}}
+            </span>
+            {{#if modePanel.sustainedAbilities.length}}
+                <ul class="wh40k-dw-mode-sustained-list tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1">
+                    {{#each modePanel.sustainedAbilities}}
+                        <li class="wh40k-dw-mode-sustained-item tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                            data-ability-id="{{this.id}}">
+                            <i class="fas fa-circle-dot dw:tw-text-accent-combat"></i>
+                            <span class="tw-flex-1 tw-text-[0.82rem] tw-text-[color:var(--wh40k-text-bright)]">{{this.label}}</span>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <span class="wh40k-dw-mode-sustained-empty tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                    —
+                </span>
+            {{/if}}
+        </div>
+    {{/if}}
+
+    {{!-- Mode-transition controls --}}
+    <div class="wh40k-dw-mode-controls tw-flex tw-items-center tw-justify-end tw-gap-2">
+        {{#if (eq modePanel.mode "solo")}}
+            <button type="button"
+                    class="wh40k-dw-mode-enter-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-border-accent-combat tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.75rem] tw-text-accent-combat hover:tw-bg-accent-combat hover:tw-text-white"
+                    data-action="dwEnterSquadMode"
+                    title="{{localize 'WH40K.DW.Mode.Enter.FullAction'}}">
+                <i class="fas fa-users"></i>
+                {{localize "WH40K.DW.Mode.Enter.FullAction"}}
+            </button>
+        {{else}}
+            <button type="button"
+                    class="wh40k-dw-mode-leave-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-text-muted)] tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-text-muted)] hover:tw-text-black"
+                    data-action="dwLeaveSquadMode"
+                    title="{{localize 'WH40K.DW.Mode.Leave'}}">
+                <i class="fas fa-user"></i>
+                {{localize "WH40K.DW.Mode.Leave"}}
+            </button>
+        {{/if}}
+    </div>
+</section>

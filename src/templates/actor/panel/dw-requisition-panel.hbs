@@ -1,0 +1,98 @@
+{{!--
+    Deathwatch Requisition panel (#165) — surfaces the Battle-Brother's
+    current RP pool, the kill-team's mission rating, and the two action
+    affordances:
+
+      - "Request Item" (data-action="dwRequisitionItem") opens a prompt
+        that gates a single-actor requisition through the Renown rank
+        check + RP cost (Tables 5-1 / 5-3).
+      - "Pool Requisition" (data-action="dwRequisitionPool") opens the
+        multi-brother pooling prompt; the holder still pays the Renown
+        gate, but contributors of any rank can chip RP in.
+
+    Context (set up by the DW character sheet's _prepareContext when
+    `_gameSystemId === 'dw'`; the include in tab-status.hbs gates on
+    `isDW`):
+
+      requisitionPanel: {
+        rp:            number             // sys.requisitionPoints
+        missionRating: MissionRating      // sys.missionRating
+        renownRank:    RenownRank         // resolved from sys.renown
+      }
+--}}
+<section class="wh40k-dw-requisition-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-accent-combat"
+         data-dw-rp="{{requisitionPanel.rp}}"
+         data-dw-mission-rating="{{requisitionPanel.missionRating}}">
+
+    {{!-- Header: Requisition label + current rank --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-medal dw:tw-text-accent-combat"></i>
+            <span>{{localize "WH40K.DW.Requisition.Label"}}</span>
+        </h3>
+        {{#if requisitionPanel.renownRank}}
+            <span class="wh40k-dw-renown-rank tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]"
+                  data-rank="{{requisitionPanel.renownRank}}"
+                  title="{{localize 'WH40K.DW.Renown.Label'}}">
+                {{requisitionPanel.renownRank}}
+            </span>
+        {{/if}}
+    </header>
+
+    {{!-- RP pool readout --}}
+    <div class="wh40k-dw-rp tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.DW.Requisition.RP.Available"}}
+        </span>
+        <input class="wh40k-dw-rp-input tw-w-20 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-tabular-nums tw-bg-transparent tw-border-0"
+               type="number"
+               data-dtype="Number"
+               name="system.requisitionPoints"
+               value="{{requisitionPanel.rp}}"
+               min="0"
+               step="1" />
+    </div>
+
+    {{!-- Mission rating selector --}}
+    <div class="wh40k-dw-mission tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.DW.Requisition.Mission.Rating"}}
+        </span>
+        <select class="wh40k-dw-mission-select tw-w-32 tw-text-[0.78rem] tw-bg-transparent"
+                name="system.missionRating">
+            <option value="standard" {{#if (eq requisitionPanel.missionRating "standard")}}selected{{/if}}>
+                {{localize "WH40K.DW.Requisition.Mission.Standard"}}
+            </option>
+            <option value="extended" {{#if (eq requisitionPanel.missionRating "extended")}}selected{{/if}}>
+                {{localize "WH40K.DW.Requisition.Mission.Extended"}}
+            </option>
+            <option value="priority" {{#if (eq requisitionPanel.missionRating "priority")}}selected{{/if}}>
+                {{localize "WH40K.DW.Requisition.Mission.Priority"}}
+            </option>
+            <option value="critical" {{#if (eq requisitionPanel.missionRating "critical")}}selected{{/if}}>
+                {{localize "WH40K.DW.Requisition.Mission.Critical"}}
+            </option>
+        </select>
+    </div>
+
+    {{!-- Action row --}}
+    <div class="wh40k-dw-requisition-actions tw-flex tw-items-center tw-justify-end tw-gap-2">
+        <button type="button"
+                class="wh40k-dw-requisition-pool-btn tw-inline-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)] dw:hover:tw-bg-accent-combat dw:hover:tw-text-white"
+                data-action="dwRequisitionPool"
+                title="{{localize 'WH40K.DW.Requisition.Pool.Title'}}">
+            <i class="fas fa-users"></i>
+            <span>{{localize "WH40K.DW.Requisition.Pool.Title"}}</span>
+        </button>
+        <button type="button"
+                class="wh40k-dw-requisition-item-btn tw-inline-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-accent-combat hover:tw-bg-[color:var(--wh40k-border-color-light)] dw:hover:tw-bg-accent-combat dw:hover:tw-text-white"
+                data-action="dwRequisitionItem"
+                title="{{localize 'WH40K.DW.Requisition.Label'}}">
+            <i class="fas fa-hand-holding"></i>
+            <span>{{localize "WH40K.DW.Requisition.RequestItemButton"}}</span>
+        </button>
+    </div>
+</section>
