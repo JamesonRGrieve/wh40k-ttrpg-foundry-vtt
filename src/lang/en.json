@@ -4083,6 +4083,21 @@
                     "MissingCategory": "{category} has not been selected."
                 }
             },
+            "RegimentDrawback": {
+                "Label": "Regimental Drawback",
+                "Refund": "Refund",
+                "Penalty": "Penalty",
+                "Mixed": {
+                    "Title": "Mixed Regiment",
+                    "Override": "Per-Member Override"
+                },
+                "MultiComrade": {
+                    "Title": "Multiple Comrades",
+                    "Primary": "Primary Comrade",
+                    "Additional": "Additional Comrades",
+                    "Count": "Comrade Count"
+                }
+            },
             "Orders": {
                 "Label": "Orders",
                 "Issue": {
@@ -4295,6 +4310,36 @@
                     "BrutalCharge": "Brutal Charge (+20)",
                     "Steadfast": "Steadfast (+10)",
                     "SureFooted": "Sure-Footed on rough terrain (+10)"
+                }
+            },
+            "Battlefield": {
+                "Label": "Battlefield Awareness",
+                "Support": {
+                    "Asset": {
+                        "Artillery": "Artillery Strike",
+                        "AirStrike": "Air Strike",
+                        "Reinforcements": "Reinforcements",
+                        "Orbital": "Orbital Bombardment"
+                    },
+                    "Request": {
+                        "Title": "Support Asset Request",
+                        "Success": "Support en route",
+                        "Failure": "Support unavailable"
+                    },
+                    "TurnsUntilArrival": "Turns Until Arrival",
+                    "Cooldown": "Cooldown"
+                }
+            },
+            "RegimentalAward": {
+                "Label": "Regimental Award",
+                "Bonus": {
+                    "Title": "Award Bonus",
+                    "Characteristic": "Characteristic Bonus",
+                    "Trait": "Granted Trait",
+                    "FatePoints": "Bonus Fate Points"
+                },
+                "Awardable": {
+                    "Title": "Eligible Awards"
                 }
             }
         }
