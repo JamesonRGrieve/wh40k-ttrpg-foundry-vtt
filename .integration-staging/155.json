@@ -1,0 +1,39 @@
+{
+    "issue": 155,
+    "engine": "ow-mission-gear",
+    "gameSystem": "ow",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/ow-mission-gear-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "owMissionGearSchemaFields",
+        "declarationsTypeExport": "OwMissionGearDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/ow-mission-gear-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/ow-mission-gear-panel.hbs",
+        "includeIn": "tab-status.hbs",
+        "gateOn": "isOW",
+        "contextKey": "missionGearPanel",
+        "contextShape": {
+            "hasOutcome": "system.lastGearOutcome !== null",
+            "outcomeKey": "WH40K.OW.MissionGear.Outcome.<TitleCase(system.lastGearOutcome)> when set, else null"
+        }
+    },
+    "actions": [
+        {
+            "actionName": "owRequestGear",
+            "module": "src/module/actions/ow-mission-gear-actions.ts",
+            "exportName": "owRequestGear"
+        }
+    ],
+    "chatPartial": {
+        "partialPath": "systems/wh40k-rpg/templates/chat/ow-mission-gear-chat.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/chat/ow-mission-gear-chat.hbs"
+    },
+    "i18nKeys": "WH40K.OW.MissionGear.*",
+    "e2eSpec": "tests/e2e/ow-mission-gear.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/ow-mission-gear-panel.stories.ts",
+        "src/templates/chat/ow-mission-gear-chat.stories.ts"
+    ]
+}

@@ -1,0 +1,131 @@
+{{!--
+    Black Crusade Gifts of the Gods panel (#180).
+
+    Passive readout: shows each gift the actor holds with its resolved
+    rider for the actor's current Chaos Alignment, plus the merged
+    characteristic-delta summary across all gifts. No interactive
+    controls — gift acquisition / removal is handled elsewhere (compendium
+    drop, GM tooling). The panel exists so the player can see what every
+    gift currently contributes given their alignment.
+
+    Context (built by the BC character sheet — wiring lives outside the
+    file list this issue is allowed to edit; the panel reads exactly the
+    fields documented below):
+
+      giftsPanel: {
+        currentAlignment: ChaosAlignment                // sys.chaosAlignment
+        gifts: Array<{
+          id:                 string                    // GiftDef.id
+          name:               string                    // resolved via uuidNameCache
+          baseDescription:    string                    // GiftDef.baseDescription
+          riderDescription:   string                    // matching rider, or '' if none
+          appliedAlignment:   ChaosAlignment            // ResolvedGift.appliedAlignment
+          subTableLabel:      string                    // localized sub-table name, or ''
+          characteristicDelta:Array<{ key: string, value: number }>
+          traits:             string[]
+          activeEffects:      string[]
+        }>
+        mergedDelta:    Array<{ key: string, value: number }>   // mergeGiftDeltas across all gifts
+      }
+
+    Rendered only for BC actors; the include in tab-overview.hbs gates on
+    `isBC`.
+--}}
+<section class="wh40k-bc-gifts-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                bc:tw-border-crimson"
+         data-bc-current-alignment="{{giftsPanel.currentAlignment}}">
+
+    {{!-- Header --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-gift bc:tw-text-crimson"></i>
+            <span>{{localize "WH40K.BC.Gifts.Label"}}</span>
+        </h3>
+        <span class="wh40k-bc-gifts-count tw-text-[0.72rem] tw-tabular-nums tw-text-[color:var(--wh40k-text-muted)]"
+              data-gift-count="{{giftsPanel.gifts.length}}">
+            {{giftsPanel.gifts.length}}
+        </span>
+    </header>
+
+    {{!-- Gifts list --}}
+    {{#if giftsPanel.gifts.length}}
+        <ul class="wh40k-bc-gifts-list tw-flex tw-flex-col tw-gap-2 tw-list-none tw-m-0 tw-p-0">
+            {{#each giftsPanel.gifts as |gift|}}
+                <li class="wh40k-bc-gift-entry tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                    data-gift-id="{{gift.id}}"
+                    data-applied-alignment="{{gift.appliedAlignment}}">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+                        <span class="wh40k-bc-gift-name tw-font-semibold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
+                            {{gift.name}}
+                        </span>
+                        <span class="wh40k-bc-gift-rider-tag tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-crimson bc:tw-text-crimson-light">
+                            {{#if (eq gift.appliedAlignment "khorne")}}{{localize "WH40K.BC.Gifts.Rider.Khorne"}}{{/if}}
+                            {{#if (eq gift.appliedAlignment "slaanesh")}}{{localize "WH40K.BC.Gifts.Rider.Slaanesh"}}{{/if}}
+                            {{#if (eq gift.appliedAlignment "nurgle")}}{{localize "WH40K.BC.Gifts.Rider.Nurgle"}}{{/if}}
+                            {{#if (eq gift.appliedAlignment "tzeentch")}}{{localize "WH40K.BC.Gifts.Rider.Tzeentch"}}{{/if}}
+                            {{#if (eq gift.appliedAlignment "unaligned")}}{{localize "WH40K.BC.Gifts.Rider.None"}}{{/if}}
+                        </span>
+                    </div>
+
+                    {{#if gift.baseDescription}}
+                        <div class="wh40k-bc-gift-base tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-muted)]">
+                            <span class="tw-uppercase tw-tracking-[0.05em] tw-text-[0.65rem]">{{localize "WH40K.BC.Gifts.Resolved.BaseDescription"}}:</span>
+                            <span class="wh40k-bc-gift-base-text tw-italic">{{gift.baseDescription}}</span>
+                        </div>
+                    {{/if}}
+
+                    {{#if gift.riderDescription}}
+                        <div class="wh40k-bc-gift-rider tw-text-[0.72rem] tw-text-crimson bc:tw-text-crimson-light"
+                             data-rider-alignment="{{gift.appliedAlignment}}">
+                            <span class="wh40k-bc-gift-rider-text tw-italic">{{gift.riderDescription}}</span>
+                        </div>
+                    {{/if}}
+
+                    {{#if gift.subTableLabel}}
+                        <div class="wh40k-bc-gift-subtable tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                            {{gift.subTableLabel}}
+                        </div>
+                    {{/if}}
+
+                    {{#if gift.characteristicDelta.length}}
+                        <div class="wh40k-bc-gift-deltas tw-flex tw-flex-wrap tw-gap-1">
+                            {{#each gift.characteristicDelta as |delta|}}
+                                <span class="wh40k-bc-gift-delta tw-tabular-nums tw-text-[0.7rem] tw-px-1 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.25)] tw-text-[color:var(--wh40k-text-bright)]"
+                                      data-delta-key="{{delta.key}}"
+                                      data-delta-value="{{delta.value}}">
+                                    {{delta.key}} {{#if (gt delta.value 0)}}+{{/if}}{{delta.value}}
+                                </span>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <div class="wh40k-bc-gifts-empty tw-px-2 tw-py-2 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+            <i class="fas fa-skull"></i>
+            {{localize "WH40K.BC.Gifts.Label"}} &mdash; 0
+        </div>
+    {{/if}}
+
+    {{!-- Merged characteristic-delta summary (across all gifts, current alignment) --}}
+    {{#if giftsPanel.mergedDelta.length}}
+        <footer class="wh40k-bc-gifts-merged tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.25)]"
+                data-merged-delta-count="{{giftsPanel.mergedDelta.length}}">
+            <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.BC.Gifts.Resolved.AppliedAlignment"}}: <span class="tw-text-[color:var(--wh40k-text-bright)]">{{giftsPanel.currentAlignment}}</span>
+            </span>
+            <div class="wh40k-bc-gifts-merged-row tw-flex tw-flex-wrap tw-gap-1">
+                {{#each giftsPanel.mergedDelta as |delta|}}
+                    <span class="wh40k-bc-gifts-merged-delta tw-tabular-nums tw-text-[0.75rem] tw-font-semibold tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-[color:var(--wh40k-text-bright)]"
+                          data-delta-key="{{delta.key}}"
+                          data-delta-value="{{delta.value}}">
+                        {{delta.key}} {{#if (gt delta.value 0)}}+{{/if}}{{delta.value}}
+                    </span>
+                {{/each}}
+            </div>
+        </footer>
+    {{/if}}
+</section>

@@ -1,0 +1,80 @@
+{{!--
+    Deathwatch Mission Oath panel (#168 — core.md Table 7-16 §"OATHS").
+
+    Surfaces the squad-level Mission Oath state on the kill-team
+    leader's character sheet:
+
+      - current Oath label (or "no Oath sworn") readout
+      - "Swear Oath" button — gated on `canSwear` (leader + no active oath)
+      - "Release Oath" button — gated on `canRelease` (active oath present)
+
+    Sheet context (built by character-sheet `_prepareContext`):
+
+      oathPanel: {
+        isLeader:     boolean
+        active:       boolean         // isOathActive(activeOathId)
+        activeOathId: string | null
+        activeLabel:  string | null   // uuidNameCache.getName(activeOathId) when active
+        canSwear:     boolean         // isLeader && !active
+        canRelease:   boolean         // active (regardless of leader — covers death/GM fiat)
+      }
+
+    Rendered only for DW actors; the include in tab-status.hbs gates on
+    `isDW` from context.
+--}}
+<section class="wh40k-dw-oath-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-bronze"
+         data-dw-oath-active="{{#if oathPanel.active}}true{{else}}false{{/if}}"
+         data-dw-oath-id="{{#if oathPanel.activeOathId}}{{oathPanel.activeOathId}}{{/if}}">
+
+    {{!-- Header: oath readout --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-scroll dw:tw-text-bronze"></i>
+            <span>{{localize "WH40K.DW.Oath.Label"}}</span>
+        </h3>
+        <span class="wh40k-dw-oath-current tw-font-bold tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze">
+            {{#if oathPanel.active}}
+                {{oathPanel.activeLabel}}
+            {{else}}
+                <em class="tw-text-[color:var(--wh40k-text-muted)] tw-not-italic">&mdash;</em>
+            {{/if}}
+        </span>
+    </header>
+
+    {{#if oathPanel.active}}
+        <div class="wh40k-dw-oath-sworn tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded">
+            <i class="fas fa-check"></i>
+            {{localize "WH40K.DW.Oath.Sworn"}}
+        </div>
+    {{else}}
+        {{#unless oathPanel.isLeader}}
+            <div class="wh40k-dw-oath-not-leader tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded">
+                <i class="fas fa-circle-info"></i>
+                {{localize "WH40K.DW.Oath.Validation.NotLeader"}}
+            </div>
+        {{/unless}}
+    {{/if}}
+
+    {{!-- Action affordances --}}
+    <div class="wh40k-dw-oath-actions tw-flex tw-flex-wrap tw-gap-1.5">
+        <button type="button"
+                class="wh40k-dw-oath-swear-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="dwSwearOath"
+                title="{{localize 'WH40K.DW.Oath.Label'}}"
+                {{#unless oathPanel.canSwear}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-hand-fist tw-mr-1"></i>
+            {{localize "WH40K.DW.Oath.Sworn"}}
+        </button>
+        <button type="button"
+                class="wh40k-dw-oath-release-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="dwReleaseOath"
+                title="{{localize 'WH40K.DW.Oath.Released'}}"
+                {{#unless oathPanel.canRelease}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-xmark tw-mr-1"></i>
+            {{localize "WH40K.DW.Oath.Released"}}
+        </button>
+    </div>
+</section>

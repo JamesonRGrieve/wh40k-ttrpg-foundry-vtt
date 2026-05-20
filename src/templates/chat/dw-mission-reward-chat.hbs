@@ -1,0 +1,100 @@
+{{!-- Deathwatch Mission reward chat card (#169 — core.md §"REWARDS"). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-dw-mission-reward-card tw-p-4 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-bg-[rgba(20,18,12,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-mission-id="{{mission.id}}"
+     data-mission-rating="{{mission.rating}}">
+
+    {{!-- Header --}}
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-flag-checkered tw-text-[1.1rem] dw:tw-text-bronze"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze">
+            {{localize "WH40K.DW.Mission.Complete.Title"}}
+        </div>
+    </div>
+
+    {{!-- Mission line --}}
+    <div class="tw-text-[0.9rem] tw-mb-3 tw-text-[color:var(--wh40k-text-bright)]">
+        <strong>{{mission.name}}</strong>
+        <span class="tw-ml-2 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]"
+              data-rating="{{mission.rating}}">
+            {{mission.ratingLabel}}
+        </span>
+    </div>
+
+    {{!-- Reward totals --}}
+    <div class="wh40k-dw-mission-reward-totals tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-bg-[rgba(0,0,0,0.18)]">
+        <div class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">
+                <i class="fas fa-medal dw:tw-text-bronze tw-mr-1"></i>
+                {{localize "WH40K.DW.Mission.Reward.Renown"}}
+            </span>
+            <span class="wh40k-dw-mission-reward-renown tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]"
+                  data-value="{{reward.totalRenown}}">
+                +{{reward.totalRenown}}
+            </span>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">
+                <i class="fas fa-star tw-mr-1"></i>
+                {{localize "WH40K.DW.Mission.Reward.Xp"}}
+            </span>
+            <span class="wh40k-dw-mission-reward-xp tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]"
+                  data-value="{{reward.totalXp}}">
+                +{{reward.totalXp}}
+            </span>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">
+                <i class="fas fa-shield-halved tw-mr-1"></i>
+                {{localize "WH40K.DW.Mission.Reward.CohesionRecovered"}}
+            </span>
+            <span class="wh40k-dw-mission-reward-cohesion tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]"
+                  data-value="{{reward.cohesionRecovered}}">
+                +{{reward.cohesionRecovered}}
+            </span>
+        </div>
+    </div>
+
+    {{!-- Per-objective breakdown --}}
+    {{#if reward.perObjective.length}}
+        <div class="wh40k-dw-mission-reward-objectives tw-mb-3">
+            <div class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">
+                {{localize "WH40K.DW.Mission.Objectives"}}
+            </div>
+            <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-0.5">
+                {{#each reward.perObjective as |entry|}}
+                    <li class="wh40k-dw-mission-reward-objective tw-flex tw-justify-between tw-gap-3 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]"
+                        data-objective-id="{{entry.id}}">
+                        <span>{{entry.description}}</span>
+                        <span class="tw-tabular-nums tw-text-[color:var(--wh40k-text-muted)]">
+                            <i class="fas fa-medal dw:tw-text-bronze"></i> +{{entry.renown}}
+                            <i class="fas fa-star tw-ml-1"></i> +{{entry.xp}}
+                        </span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+
+    {{!-- Triggered complications --}}
+    {{#if reward.complicationsTriggered.length}}
+        <div class="wh40k-dw-mission-reward-complications">
+            <div class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">
+                {{localize "WH40K.DW.Mission.Complication.Triggered"}}
+            </div>
+            <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-0.5">
+                {{#each reward.complicationsTriggered as |complication|}}
+                    <li class="wh40k-dw-mission-reward-complication tw-flex tw-justify-between tw-gap-3 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]"
+                        data-complication-id="{{complication.id}}">
+                        <span>{{complication.description}}</span>
+                        <span class="tw-tabular-nums tw-text-crimson">
+                            <i class="fas fa-medal"></i> -{{complication.renownPenalty}}
+                        </span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+</div>

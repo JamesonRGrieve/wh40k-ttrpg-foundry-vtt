@@ -1,0 +1,27 @@
+{
+    "issue": 180,
+    "engine": "bc-gifts",
+    "gameSystem": "bc",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/bc-gifts-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "bcGiftsSchemaFields",
+        "declarationsTypeExport": "BcGiftsDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs",
+        "includeIn": "tab-overview.hbs",
+        "gateOn": "isBC"
+    },
+    "actions": [],
+    "i18nKeys": "WH40K.BC.Gifts.*",
+    "e2eSpec": "tests/e2e/bc-gifts.spec.ts",
+    "storybookStories": ["src/templates/actor/panel/bc-gifts-panel.stories.ts"],
+    "notes": [
+        "Passive readout only — no action handlers, no chat partial. Gift acquisition/removal lives elsewhere (compendium drop, GM tooling).",
+        "Panel context (giftsPanel) is built in character-sheet._prepareContext by mapping actor.system.gifts ids through the catalogue (compendium/uuidNameCache) and resolveGiftForAlignment(gift, actor.system.chaosAlignment), then mergeGiftDeltas across the resolved set.",
+        "Uses existing WH40K.BC.Gifts.* i18n keys only — no new keys added.",
+        "Gated on tab-overview.hbs via isBC; non-BC sheets never see the panel."
+    ]
+}

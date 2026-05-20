@@ -1,0 +1,40 @@
+{
+    "issue": 169,
+    "engine": "dw-mission",
+    "gameSystem": "dw",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/dw-mission-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "dwMissionSchemaFields",
+        "declarationsTypeExport": "DwMissionDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs",
+        "includeIn": "tab-status.hbs",
+        "gateOn": "isDW",
+        "contextKey": "missionPanel",
+        "contextNotes": [
+            "Build missionPanel from actor.system.activeMission:",
+            "  hasMission = activeMission !== null",
+            "  mission.ratingLabel = t(`WH40K.DW.Mission.Rating.${capitalize(rating)}`)",
+            "  mission.objectives[i].statusLabel = t(`WH40K.DW.Mission.Objective.Status.${capitalize(status)}`)",
+            "When hasMission === false, mission is null and the panel renders the empty-state placeholder."
+        ]
+    },
+    "actions": [
+        { "actionName": "dwCompleteMission", "module": "src/module/actions/dw-mission-actions.ts", "exportName": "dwCompleteMission" },
+        { "actionName": "dwToggleObjective", "module": "src/module/actions/dw-mission-actions.ts", "exportName": "dwToggleObjective" },
+        { "actionName": "dwToggleComplication", "module": "src/module/actions/dw-mission-actions.ts", "exportName": "dwToggleComplication" }
+    ],
+    "chatPartial": {
+        "partialPath": "systems/wh40k-rpg/templates/chat/dw-mission-reward-chat.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/chat/dw-mission-reward-chat.hbs"
+    },
+    "i18nKeys": "WH40K.DW.Mission.*",
+    "e2eSpec": "tests/e2e/dw-mission.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/dw-mission-panel.stories.ts",
+        "src/templates/chat/dw-mission-reward-chat.stories.ts"
+    ]
+}

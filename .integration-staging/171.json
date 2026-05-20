@@ -1,0 +1,34 @@
+{
+    "issue": 171,
+    "engine": "dw-distinction",
+    "gameSystem": "dw",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/dw-distinction-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "dwDistinctionSchemaFields",
+        "declarationsTypeExport": "DwDistinctionDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/dw-distinction-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/dw-distinction-panel.hbs",
+        "includeIn": "tab-overview.hbs",
+        "gateOn": "isDW"
+    },
+    "actions": [
+        {
+            "actionName": "dwToggleDistinction",
+            "module": "src/module/actions/dw-distinction-actions.ts",
+            "exportName": "dwToggleDistinction"
+        },
+        {
+            "actionName": "dwToggleMark",
+            "module": "src/module/actions/dw-distinction-actions.ts",
+            "exportName": "dwToggleMark"
+        }
+    ],
+    "i18nKeys": "WH40K.DW.Distinction.*",
+    "e2eSpec": "tests/e2e/dw-distinctions.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/dw-distinction-panel.stories.ts"
+    ]
+}

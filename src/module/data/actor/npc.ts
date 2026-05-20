@@ -1,6 +1,7 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
+import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
@@ -52,6 +53,7 @@ interface NPCV2TrainedSkill {
     bonus: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging -- intentional: declaration-merge with the trailing interface to apply engine mixin Declarations to the class type without per-field `declare` repetition
 export default class NPCData extends HordeTemplate(ActorDataModel) {
     // Typed property declarations matching defineSchema()
     declare faction: string;
@@ -225,6 +227,13 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
+
+            // ===== ENGINE MIXIN SCHEMA SLOTS (batch-2) =====
+            // DW Vehicle Crit (#170) applies to BOTH CharacterData and NPCData
+            // so hostile gun-wagons / transports persist the Integrity + over-
+            // Integrity pair. The DwVehicleDeclarations interface is merged
+            // onto NPCData below the class.
+            ...dwVehicleSchemaFields(),
 
             // === CORE IDENTITY ===
             faction: new StringField({ required: false, initial: '', blank: true }),
@@ -1149,3 +1158,17 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         }
     }
 }
+
+/**
+ * Engine-mixin schema declarations spliced onto {@link NPCData} via
+ * TypeScript interface merging. Each `*Declarations` interface mirrors
+ * the schema-field bundle of the matching mixin in
+ * `./mixins/*-template.ts` — keeping the runtime schema (spread into
+ * `defineSchema()`) and the compile-time type (declared on the class)
+ * in lock-step without per-field repetition.
+ *
+ * DW Vehicle Crit (#170) is the first engine to ship on NPCs; hostile
+ * vehicles persist Integrity + over-Integrity for crit-table lookups.
+ */
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging -- declaration-merging target: all members come from the extends list; intentional merge with the class above */
+export default interface NPCData extends DwVehicleDeclarations {}

@@ -1,0 +1,60 @@
+{{!-- Only War Mission Assignment Gear chat card (#155). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-ow-mission-gear-card tw-p-4 tw-rounded-md tw-border tw-border-amber-600 tw-bg-[rgba(28,18,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-ow-mission-gear-outcome="{{outcomeKey}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-box-open tw-text-[1.1rem] tw-text-amber-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-amber-200">
+            {{localize "WH40K.OW.MissionGear.Label"}}
+        </div>
+    </div>
+
+    {{!-- Roll vs target headline --}}
+    <div class="tw-text-[0.9rem] tw-mb-3 tw-text-amber-50">
+        <strong class="tw-text-amber-200">
+            {{localize outcomeKey}}
+        </strong>
+        — <span class="tw-tabular-nums">
+            {{localize "WH40K.OW.Logistics.Test.Roll"}}: {{roll}}
+            vs {{localize "WH40K.OW.Logistics.Test.Target"}}: {{target}}
+        </span>
+    </div>
+
+    {{!-- DoS / DoF readout --}}
+    <div class="tw-flex tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-[rgba(217,119,6,0.45)] tw-bg-[rgba(120,53,15,0.18)]">
+        {{#if success}}
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Test.DoS"}}:</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{degreesOfSuccess}}</span>
+        {{else}}
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Test.DoF"}}:</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{degreesOfFailure}}</span>
+        {{/if}}
+    </div>
+
+    {{!-- Table 6-3 modifier breakdown --}}
+    <div class="tw-text-[0.78rem] tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
+        {{localize "WH40K.OW.MissionGear.Modifier.Title"}}
+    </div>
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        {{#each breakdown}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-amber-300">{{localize this.labelKey}}</span>
+                <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (gt this.value 0)}}+{{/if}}{{this.value}}</span>
+            </li>
+        {{/each}}
+    </ul>
+
+    {{!-- Bonus item readout (Table 6-5 random issue) --}}
+    {{#if hasBonusItem}}
+        <div class="tw-text-[0.78rem] tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
+            {{localize "WH40K.OW.MissionGear.Roll.RandomIssue"}}
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(217,119,6,0.45)] tw-bg-[rgba(120,53,15,0.18)]">
+            <span class="tw-text-amber-300">{{localize "WH40K.OW.MissionGear.Roll.RandomIssue"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{bonusItemRoll}}</span>
+        </div>
+    {{/if}}
+</div>

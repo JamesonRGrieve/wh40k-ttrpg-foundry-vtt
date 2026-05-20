@@ -1,13 +1,23 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
+import { bcDaemonPrinceSchemaFields, type BcDaemonPrinceDeclarations } from './mixins/bc-daemon-prince-template.ts';
+import { bcGiftsSchemaFields, type BcGiftsDeclarations } from './mixins/bc-gifts-template.ts';
 import { bcPsychicSchemaFields, type BcPsychicDeclarations } from './mixins/bc-psychic-template.ts';
+import { bcRitualSchemaFields, type BcRitualDeclarations } from './mixins/bc-ritual-template.ts';
+import { bcSupplementsSchemaFields, type BcSupplementsDeclarations } from './mixins/bc-supplements-template.ts';
+import { dwAmmoSchemaFields, type DwAmmoDeclarations } from './mixins/dw-ammo-template.ts';
 import { dwAstartesSchemaFields, type DwAstartesDeclarations } from './mixins/dw-astartes-template.ts';
 import { dwCohesionSchemaFields, type DwCohesionDeclarations } from './mixins/dw-cohesion-template.ts';
+import { dwDistinctionSchemaFields, type DwDistinctionDeclarations } from './mixins/dw-distinction-template.ts';
+import { dwMissionSchemaFields, type DwMissionDeclarations } from './mixins/dw-mission-template.ts';
 import { dwModeSchemaFields, type DwModeDeclarations } from './mixins/dw-mode-template.ts';
+import { dwOathSchemaFields, type DwOathDeclarations } from './mixins/dw-oath-template.ts';
 import { dwRenownSchemaFields, type DwRenownDeclarations } from './mixins/dw-renown-template.ts';
 import { dwRequisitionSchemaFields, type DwRequisitionDeclarations } from './mixins/dw-requisition-template.ts';
+import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import { owComradeSchemaFields, type OwComradeDeclarations } from './mixins/ow-comrade-template.ts';
 import { owLogisticsSchemaFields, type OwLogisticsDeclarations } from './mixins/ow-logistics-template.ts';
+import { owMissionGearSchemaFields, type OwMissionGearDeclarations } from './mixins/ow-mission-gear-template.ts';
 import { owOrdersSchemaFields, type OwOrdersDeclarations } from './mixins/ow-orders-template.ts';
 import { owRegimentSchemaFields, type OwRegimentDeclarations } from './mixins/ow-regiment-template.ts';
 import CreatureTemplate from './templates/creature.ts';
@@ -295,6 +305,18 @@ export default class CharacterData extends CreatureTemplate {
             ...owLogisticsSchemaFields(),
             ...owOrdersSchemaFields(),
             ...owRegimentSchemaFields(),
+
+            // Batch-2 engine slots (BC #179-#182, DW #168-#172, OW #155).
+            ...bcDaemonPrinceSchemaFields(),
+            ...bcGiftsSchemaFields(),
+            ...bcRitualSchemaFields(),
+            ...bcSupplementsSchemaFields(),
+            ...dwAmmoSchemaFields(),
+            ...dwDistinctionSchemaFields(),
+            ...dwMissionSchemaFields(),
+            ...dwOathSchemaFields(),
+            ...dwVehicleSchemaFields(),
+            ...owMissionGearSchemaFields(),
 
             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
             mutations: new fields.StringField({ required: false, blank: true }),
@@ -1055,4 +1077,14 @@ export default interface CharacterData
         OwComradeDeclarations,
         OwLogisticsDeclarations,
         OwOrdersDeclarations,
-        OwRegimentDeclarations {}
+        OwRegimentDeclarations,
+        BcDaemonPrinceDeclarations,
+        BcGiftsDeclarations,
+        BcRitualDeclarations,
+        BcSupplementsDeclarations,
+        DwAmmoDeclarations,
+        DwDistinctionDeclarations,
+        DwMissionDeclarations,
+        DwOathDeclarations,
+        DwVehicleDeclarations,
+        OwMissionGearDeclarations {}

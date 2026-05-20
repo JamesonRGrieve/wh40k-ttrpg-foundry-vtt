@@ -1482,6 +1482,28 @@
             },
             "Ritual": {
                 "Label": "Chaos Ritual",
+                "PanelHeader": "Chaos Ritual",
+                "MasteryLabel": "Daemonic Mastery",
+                "PerformButton": "Perform Ritual",
+                "DialogTitle": "Perform Chaos Ritual",
+                "DialogSubmit": "Roll Contempt of the Warp",
+                "DialogCancel": "Cancel",
+                "DialogTemplateId": "Ritual Template ID",
+                "DialogBaseTarget": "Base Target (d100)",
+                "DialogAddModifier": "Add Modifier",
+                "DialogModifiersHeader": "Modifiers (Table 6-7)",
+                "DialogModifierKind": "Kind",
+                "DialogModifierValue": "Value",
+                "DialogModifierDescription": "Description (optional)",
+                "ChatTitle": "Chaos Ritual",
+                "ChatTemplateId": "Ritual",
+                "ChatBaseTarget": "Base Target",
+                "ChatModifierSum": "Modifier Sum",
+                "ChatFinalTarget": "Final Target",
+                "ChatRoll": "d100 Roll",
+                "ChatDegreesOfSuccess": "Degrees of Success",
+                "ChatDegreesOfFailure": "Degrees of Failure",
+                "ChatNoModifiers": "No Table 6-7 modifiers applied.",
                 "Template": {
                     "Description": "Description",
                     "Requirements": "Requirements",
@@ -1530,6 +1552,28 @@
             },
             "DaemonPrince": {
                 "Label": "Daemon Prince",
+                "PanelHeader": "Apotheosis",
+                "Status": {
+                    "Ascended": "Ascended Daemon Prince",
+                    "NotAscended": "Mortal Champion",
+                    "AscendedAt": "Ascended at: {when}",
+                    "AlignmentAt": "Patron: {alignment}",
+                    "Thresholds": "Requires Infamy ≥ {infamy} & Corruption ≥ {corruption}"
+                },
+                "AscendButton": {
+                    "Label": "Ascend",
+                    "Disabled": "Thresholds Not Met"
+                },
+                "Confirm": {
+                    "Title": "Confirm Apotheosis",
+                    "Body": "Commit to apotheosis? This change is permanent.",
+                    "Ok": "Ascend",
+                    "Cancel": "Stay Mortal"
+                },
+                "Chat": {
+                    "Title": "Apotheosis — A New Daemon Prince",
+                    "BoostHeader": "Daemonic Endowments"
+                },
                 "Ascension": {
                     "Title": "Apotheosis — Ascension to Daemon Prince",
                     "Insufficient": {
@@ -1540,7 +1584,7 @@
                 "Boost": {
                     "UnnaturalStrength": "Unnatural Strength (x{multiplier})",
                     "UnnaturalToughness": "Unnatural Toughness (x{multiplier})",
-                    "BonusWounds": "Bonus Wounds",
+                    "BonusWounds": "Bonus Wounds: +{wounds}",
                     "FearRating": "Fear ({rating})",
                     "DaemonicTrait": "Daemonic",
                     "ImmuneToConditions": "Immune to Conditions"
@@ -1548,6 +1592,7 @@
             },
             "Supplements": {
                 "Label": "Supplement Mechanics",
+                "PanelHeader": "Supplement Mechanics",
                 "Irradiated": {
                     "Label": "Irradiated ({rating})",
                     "TicksRemaining": "Ticks Remaining: {count}",
@@ -1564,11 +1609,19 @@
                 },
                 "DaemonEngine": {
                     "Rating": "Daemon Engine ({rating})",
-                    "RageBonus": "Rage Bonus: +{bonus}"
+                    "RageBonus": "Rage Bonus: +{bonus}",
+                    "RatingLabel": "Daemon Engine Rating",
+                    "RageBonusLabel": "Rage Bonus"
                 },
                 "QuickAndTheDead": {
                     "Initiative": "Quick and the Dead Initiative: {value}",
-                    "AlignmentBonus": "Alignment Bonus: +{bonus}"
+                    "AlignmentBonus": "Alignment Bonus: +{bonus}",
+                    "ToggleLabel": "Quick and the Dead",
+                    "ToggleTitle": "Toggle the Quick and the Dead trait",
+                    "StateActive": "Active",
+                    "StateInactive": "Inactive",
+                    "AlignmentBonusLabel": "Alignment Bonus",
+                    "InitiativeLabel": "Initiative"
                 }
             }
         },
@@ -1634,7 +1687,22 @@
                     "Granted": "Distinction granted."
                 },
                 "Mark": {
-                    "Label": "Mark of Distinction"
+                    "Label": "Mark of Distinction",
+                    "Plural": "Marks of Distinction",
+                    "Empty": "No Marks of Distinction borne."
+                },
+                "List": {
+                    "Plural": "Distinctions",
+                    "Empty": "No Distinctions earned yet."
+                },
+                "Toggle": {
+                    "Distinction": "Toggle Distinction",
+                    "Mark": "Toggle Mark of Distinction"
+                },
+                "Delta": {
+                    "Characteristics": "Characteristic Bonuses",
+                    "Traits": "Granted Traits",
+                    "None": "None"
                 },
                 "Advanced": {
                     "Label": "Advanced Special Ability",
@@ -1807,6 +1875,11 @@
             },
             "Mission": {
                 "Label": "Mission",
+                "None": "No active mission.",
+                "Objectives": "Objectives",
+                "NoObjectives": "No objectives recorded.",
+                "Complications": "Complications",
+                "NoComplications": "No complications recorded.",
                 "Rating": {
                     "Standard": "Standard",
                     "Extended": "Extended",
@@ -1814,6 +1887,7 @@
                     "Critical": "Critical"
                 },
                 "Objective": {
+                    "Toggle": "Cycle objective status",
                     "Status": {
                         "Pending": "Pending",
                         "Complete": "Complete",
@@ -1826,12 +1900,22 @@
                     "CohesionRecovered": "Cohesion Recovered"
                 },
                 "Complication": {
+                    "Toggle": "Toggle complication triggered",
+                    "Penalty": "Renown Penalty",
                     "Triggered": "Complication Triggered"
+                },
+                "Complete": {
+                    "Title": "Complete Mission"
                 }
             },
             "SpecialAmmo": {
                 "Label": "Special-Issue Ammunition",
+                "Loaded": "Loaded",
+                "Select": "Select Ammunition",
+                "Effects": "Effects",
+                "NoSelection": "No special ammunition loaded.",
                 "Ammo": {
+                    "Standard": "Standard",
                     "Hellfire": "Hellfire",
                     "Kraken": "Kraken",
                     "MetalStorm": "Metal Storm",
@@ -1854,8 +1938,17 @@
             },
             "Vehicle": {
                 "Label": "Vehicle",
+                "Integrity": "Structural Integrity",
+                "OverIntegrity": "Over-Integrity Damage",
+                "RollCrit": "Roll Critical Hit",
+                "RollCritTooltip": "Roll 1d10 + over-Integrity on the Vehicle Critical Hit Chart (Table 4-2).",
+                "RepairTest": "Repair Test",
+                "RepairTestTooltip": "Tech-Use Test; difficulty scales with the last suffered critical result.",
+                "RolledLabel": "Rolled {rolled} + {over} = {final}",
+                "RepairLabel": "Repair difficulty",
                 "Crit": {
                     "Roll": "Critical Hit Roll",
+                    "Header": "Vehicle Critical Hit",
                     "Result": {
                         "Minor": "Jarring Blow",
                         "Mobility": "Staggered",
@@ -1870,6 +1963,7 @@
                     }
                 },
                 "Repair": {
+                    "Header": "Vehicle Repair",
                     "Difficulty": {
                         "Routine": "Routine (+20)",
                         "Challenging": "Challenging (+0)",
@@ -4321,6 +4415,7 @@
             },
             "MissionGear": {
                 "Label": "Mission Assignment Gear",
+                "RequestButton": "Request Mission Gear",
                 "Outcome": {
                     "SurrenderKit": "Surrender Kit",
                     "MinimumKit": "Minimum Kit",
@@ -4329,11 +4424,15 @@
                 },
                 "Roll": {
                     "RandomIssue": "Random Issue Gear",
-                    "Result": "Result"
+                    "Result": "Result",
+                    "BonusToggle": "Also roll Random Issue Gear (Table 6-5)"
                 },
                 "Modifier": {
                     "Title": "Mission Gear Modifiers",
-                    "OrdinaryBonus": "Ordinary (+10)"
+                    "OrdinaryBonus": "Ordinary (+10)",
+                    "RemoteWarzone": "Remote Warzone",
+                    "UnusualRequest": "Unusual Request",
+                    "Other": "Other"
                 }
             },
             "Craftsmanship": {

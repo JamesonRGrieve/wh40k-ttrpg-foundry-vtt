@@ -4,20 +4,30 @@
  */
 
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
+import { bcAscend } from '../../actions/bc-daemon-prince-actions.ts';
 import { bcPsychicTest } from '../../actions/bc-psychic-actions.ts';
+import { bcPerformRitual } from '../../actions/bc-ritual-actions.ts';
+import { bcToggleQuickAndTheDead } from '../../actions/bc-supplements-actions.ts';
+import { dwSelectAmmo } from '../../actions/dw-ammo-actions.ts';
 import { dwAstartesToggleImplant } from '../../actions/dw-astartes-actions.ts';
 import { dwCohesionChallenge, dwCohesionRally, dwCohesionRecoverObjective } from '../../actions/dw-cohesion-actions.ts';
+import { dwToggleDistinction, dwToggleMark } from '../../actions/dw-distinction-actions.ts';
+import { dwCompleteMission, dwToggleComplication, dwToggleObjective } from '../../actions/dw-mission-actions.ts';
 import { dwEnterSquadMode, dwLeaveSquadMode } from '../../actions/dw-mode-actions.ts';
+import { dwReleaseOath, dwSwearOath } from '../../actions/dw-oath-actions.ts';
 import { dwRenownAward, dwRenownLoss } from '../../actions/dw-renown-actions.ts';
 import { dwRequisitionItem, dwRequisitionPool } from '../../actions/dw-requisition-actions.ts';
+import { dwVehicleRepair, dwVehicleRollCrit } from '../../actions/dw-vehicle-actions.ts';
 import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../actions/ow-logistics-actions.ts';
 import { owComradeHeal, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
+import { owRequestGear } from '../../actions/ow-mission-gear-actions.ts';
 import { owIssueOrder } from '../../actions/ow-orders-actions.ts';
 import { owRegimentEdit } from '../../actions/ow-regiment-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
+import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/actor/mixins/dw-ammo-template.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
@@ -31,12 +41,28 @@ import {
     tallyAdvancesByAlignment,
     type ChaosAdvanceEntry,
 } from '../../rules/bc-alignment-derivation.ts';
+import {
+    DAEMON_PRINCE_CORRUPTION_THRESHOLD,
+    DAEMON_PRINCE_INFAMY_THRESHOLD,
+    getDaemonPrinceBoost,
+    isAscended,
+    type DaemonPrinceAlignment,
+    type DaemonPrinceStatBoost,
+} from '../../rules/bc-daemon-prince.ts';
 import { maxPushLevel, resolvePsychicTest, type PsyMode } from '../../rules/bc-psychic-strength.ts';
+import {
+    daemonEngineRageBonus,
+    QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT,
+    quickAndTheDeadInitiativeBonus,
+    type QuickAndTheDeadAlignment,
+} from '../../rules/bc-supplement-mechanics.ts';
 import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import { ASTARTES_IMPLANTS, astartesStrengthBonus, astartesToughnessBonus, hasBlackCarapace, type AstartesImplantId } from '../../rules/dw-astartes.ts';
+import { isOathActive } from '../../rules/dw-oath.ts';
 import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS } from '../../rules/dw-renown.ts';
+import { DW_SPECIAL_AMMO_EFFECTS, type AmmoEffect } from '../../rules/dw-special-ammo.ts';
 import { getSupportRange } from '../../rules/dw-squad-mode.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
@@ -135,6 +161,17 @@ type CharacterSheetContextDeclaredFields = {
     comradePanel?: OwComradePanelContext;
     logisticsPanel?: OwLogisticsPanelContext;
     ordersPanel?: OwOrdersPanelContext;
+    // Batch-2 panel contexts.
+    ritualPanel?: BcRitualPanelContext;
+    giftsPanel?: BcGiftsPanelContext;
+    supplementsPanel?: BcSupplementsPanelContext;
+    daemonPrincePanel?: BcDaemonPrincePanelContext;
+    distinctionPanel?: DwDistinctionPanelContext;
+    ammoPanel?: DwAmmoPanelContext;
+    oathPanel?: DwOathPanelContext;
+    missionPanel?: DwMissionPanelContext;
+    vehiclePanel?: DwVehiclePanelContext;
+    missionGearPanel?: OwMissionGearPanelContext;
     hideThroneGelt?: boolean;
     originPathSteps?: unknown;
     originPathSummary?: unknown;
@@ -309,6 +346,148 @@ type OwOrdersPanelContext = {
         blockReasonKey: string | null;
     }>;
     sweepingActive: Array<{ orderId: string; appliedCount: number }>;
+};
+
+/* -------------------------------------------------------------------- */
+/*  Per-engine panel context shapes (batch-2 integration)               */
+/* -------------------------------------------------------------------- */
+
+/** BC Chaos Ritual panel (#179). */
+type BcRitualPanelContext = {
+    ritualMastery: number;
+};
+
+/** BC Gifts of the Gods panel (#180). The full gift catalogue lives in
+ *  compendium (Direction #7); without a live catalogue lookup at sheet
+ *  render time we surface the persisted ids plus the current alignment
+ *  and let the panel's empty-state path handle missing display data. */
+type BcGiftsPanelContext = {
+    currentAlignment: 'unaligned' | 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch';
+    gifts: Array<{
+        id: string;
+        name: string;
+        baseDescription: string;
+        riderDescription: string;
+        appliedAlignment: string;
+        subTableLabel: string;
+        characteristicDelta: Array<{ key: string; value: number }>;
+        traits: string[];
+        activeEffects: string[];
+    }>;
+    mergedDelta: Array<{ key: string; value: number }>;
+};
+
+/** BC Supplement Mechanics panel (#181). */
+type BcSupplementsPanelContext = {
+    daemonEngineRating: number;
+    daemonEngineActive: boolean;
+    turnsSinceLastDamage: number;
+    daemonEngineRageBonus: number;
+    quickAndTheDeadActive: boolean;
+    chaosAlignment: QuickAndTheDeadAlignment;
+    baseInitiative: number;
+    quickAndTheDeadBonus: number;
+    quickAndTheDeadInitiative: number;
+};
+
+/** BC Daemon Prince ascension panel (#182). */
+type BcDaemonPrincePanelContext = {
+    ascended: boolean;
+    ascendedAt: number | null;
+    alignmentAtAscension: DaemonPrinceAlignment;
+    infamy: number;
+    corruption: number;
+    infamyThreshold: number;
+    corruptionThreshold: number;
+    canAscend: boolean;
+    boost: DaemonPrinceStatBoost | null;
+};
+
+/** DW Distinctions panel (#171). Catalogue resolution is compendium-driven;
+ *  without a live catalogue lookup the orchestrator-built context surfaces
+ *  the persisted id lists and a stub merged-grant readout the engine
+ *  produces from an empty MarkOfDistinction set. */
+type DwDistinctionPanelContext = {
+    distinctions: Array<{
+        id: string;
+        name: string;
+        renownReward: number;
+        renownRequired: string;
+        earned: boolean;
+        rankTooLow: boolean;
+    }>;
+    marks: Array<{
+        id: string;
+        name: string;
+        description: string;
+        borne: boolean;
+    }>;
+    merged: {
+        characteristicDelta: Array<{ key: string; value: number; displayValue: string }>;
+        traits: string[];
+    };
+};
+
+/** DW Special-Issue Ammo panel (#172). */
+type DwAmmoPanelContext = {
+    selected: DwSelectedAmmoId;
+    selectedLabel: string;
+    options: Array<{
+        id: DwSelectedAmmoId;
+        label: string;
+        selected: boolean;
+        summary: string;
+    }>;
+    effect: AmmoEffect | null;
+};
+
+/** DW Mission Oath panel (#168). */
+type DwOathPanelContext = {
+    isLeader: boolean;
+    active: boolean;
+    activeOathId: string | null;
+    activeLabel: string | null;
+    canSwear: boolean;
+    canRelease: boolean;
+};
+
+/** DW Mission framework panel (#169). */
+type DwMissionPanelContext = {
+    hasMission: boolean;
+    mission: {
+        id: string;
+        name: string;
+        rating: 'standard' | 'extended' | 'priority' | 'critical';
+        ratingLabel: string;
+        objectives: Array<{
+            id: string;
+            description: string;
+            renownReward: number;
+            xpReward: number;
+            status: 'pending' | 'complete' | 'failed';
+            statusLabel: string;
+        }>;
+        complications: Array<{
+            id: string;
+            description: string;
+            renownPenalty: number;
+            triggered: boolean;
+        }>;
+    } | null;
+};
+
+/** DW Vehicle Critical Hit / Repair panel (#170). */
+type DwVehiclePanelContext = {
+    integrity: number;
+    overIntegrity: number;
+    canRollCrit: boolean;
+    canRepair: boolean;
+};
+
+/** OW Mission Assignment Gear panel (#155). */
+type OwMissionGearPanelContext = {
+    hasOutcome: boolean;
+    outcomeKey: string | null;
 };
 
 type OriginSummary = {
@@ -520,6 +699,27 @@ export default class CharacterSheet extends BaseActorSheet {
             'owLogisticsTest': owLogisticsTest,
             'owToggleMunitorum': owToggleMunitorum,
             'owAdjustSituational': owAdjustSituational,
+
+            // Batch-2 engines:
+            //   BC Ritual (#179), Supplements (#181), Daemon Prince (#182).
+            //   (BC Gifts #180 is a passive readout — no action.)
+            //   DW Special Ammo (#172), Distinctions (#171), Oath (#168),
+            //   Mission (#169), Vehicle Crit (#170).
+            //   OW Mission Gear (#155).
+            'bcPerformRitual': bcPerformRitual,
+            'bcToggleQuickAndTheDead': bcToggleQuickAndTheDead,
+            'bcAscend': bcAscend,
+            'dwSelectAmmo': dwSelectAmmo,
+            'dwToggleDistinction': dwToggleDistinction,
+            'dwToggleMark': dwToggleMark,
+            'dwSwearOath': dwSwearOath,
+            'dwReleaseOath': dwReleaseOath,
+            'dwToggleObjective': dwToggleObjective,
+            'dwToggleComplication': dwToggleComplication,
+            'dwCompleteMission': dwCompleteMission,
+            'dwVehicleRollCrit': dwVehicleRollCrit,
+            'dwVehicleRepair': dwVehicleRepair,
+            'owRequestGear': owRequestGear,
 
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
@@ -860,6 +1060,11 @@ export default class CharacterSheet extends BaseActorSheet {
         if (isBC) {
             context.alignmentPanel = this._prepareBcAlignmentPanel();
             context.psychicPanel = this._prepareBcPsychicPanel();
+            // Batch-2 BC overview panels (#179 Ritual, #180 Gifts, #181 Supplements, #182 Daemon Prince).
+            context.ritualPanel = this._prepareBcRitualPanel();
+            context.giftsPanel = this._prepareBcGiftsPanel();
+            context.supplementsPanel = this._prepareBcSupplementsPanel();
+            context.daemonPrincePanel = this._prepareBcDaemonPrincePanel();
         }
 
         // DW engine panels (#162, #163, #164, #165, #167).
@@ -869,6 +1074,12 @@ export default class CharacterSheet extends BaseActorSheet {
             context.renownPanel = this._prepareDwRenownPanel();
             context.requisitionPanel = this._prepareDwRequisitionPanel();
             context.astartesPanel = this._prepareDwAstartesPanel();
+            // Batch-2 DW panels (#168 Oath, #169 Mission, #170 Vehicle, #171 Distinctions, #172 Ammo).
+            context.oathPanel = this._prepareDwOathPanel();
+            context.missionPanel = this._prepareDwMissionPanel();
+            context.vehiclePanel = this._prepareDwVehiclePanel();
+            context.distinctionPanel = this._prepareDwDistinctionPanel();
+            context.ammoPanel = this._prepareDwAmmoPanel();
         }
 
         // OW engine panels (#151, #152, #153, #154).
@@ -877,6 +1088,8 @@ export default class CharacterSheet extends BaseActorSheet {
             context.comradePanel = this._prepareOwComradePanel();
             context.ordersPanel = this._prepareOwOrdersPanel();
             context.logisticsPanel = this._prepareOwLogisticsPanel();
+            // Batch-2 OW Mission Assignment Gear panel (#155).
+            context.missionGearPanel = this._prepareOwMissionGearPanel();
         }
 
         // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
@@ -1543,6 +1756,279 @@ export default class CharacterSheet extends BaseActorSheet {
             rating: sys.logisticsRating === 0 ? OW_DEFAULT_LOGISTICS_RATING : sys.logisticsRating,
             munitorum: sys.munitorum,
             situational: sys.situational,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * BC Chaos Ritual panel (#179). The only persisted slot is the
+     * ritualist's Daemonic Mastery rating; per-ritual selections are
+     * dialog-scoped state and never leak to the panel.
+     */
+    _prepareBcRitualPanel(): BcRitualPanelContext {
+        return { ritualMastery: this.actor.system.ritualMastery };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * BC Gifts of the Gods panel (#180). The catalogue + per-alignment
+     * riders live in compendium content (Direction #7); without a live
+     * lookup at sheet render time we surface the persisted ids and the
+     * actor's current alignment so the panel's empty-state path renders
+     * cleanly. A future enhancement will resolve gift catalogue entries
+     * via `uuidNameCache` and apply `resolveGiftForAlignment` +
+     * `mergeGiftDeltas` here.
+     */
+    _prepareBcGiftsPanel(): BcGiftsPanelContext {
+        const sys = this.actor.system;
+        return {
+            currentAlignment: sys.chaosAlignment,
+            gifts: sys.gifts.map((id) => ({
+                id,
+                name: id,
+                baseDescription: '',
+                riderDescription: '',
+                appliedAlignment: sys.chaosAlignment,
+                subTableLabel: '',
+                characteristicDelta: [],
+                traits: [],
+                activeEffects: [],
+            })),
+            mergedDelta: [],
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * BC Supplement Mechanics panel (#181). Surfaces the Daemon Engine
+     * rage bonus (computed against a conservative `turnsSinceLastDamage`
+     * baseline of 0 — the actual delta is dialog-scoped per encounter)
+     * and the Quick-and-the-Dead initiative shift folded against the
+     * actor's chaos alignment.
+     */
+    _prepareBcSupplementsPanel(): BcSupplementsPanelContext {
+        const sys = this.actor.system;
+        const rating = sys.daemonEngineRating;
+        const daemonEngineActive = rating > 0;
+        const turnsSinceLastDamage = 0;
+        const rageBonus = daemonEngineActive ? daemonEngineRageBonus({ rating, turnsSinceLastDamage }) : 0;
+        const alignment: QuickAndTheDeadAlignment = sys.chaosAlignment;
+        const baseInitiative = sys.characteristics.agility.bonus;
+        const qatdActive = sys.quickAndTheDeadActive;
+        const qatdBonus = QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT[alignment];
+        return {
+            daemonEngineRating: rating,
+            daemonEngineActive,
+            turnsSinceLastDamage,
+            daemonEngineRageBonus: rageBonus,
+            quickAndTheDeadActive: qatdActive,
+            chaosAlignment: alignment,
+            baseInitiative,
+            quickAndTheDeadBonus: qatdBonus,
+            quickAndTheDeadInitiative: qatdActive ? quickAndTheDeadInitiativeBonus(baseInitiative, alignment) : baseInitiative,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * BC Daemon Prince ascension panel (#182). Reads the persisted
+     * ascension record off `system.daemonPrinceAscension` and reports
+     * threshold progress + the unlocked boost when apotheosis has fired.
+     */
+    _prepareBcDaemonPrincePanel(): BcDaemonPrincePanelContext {
+        const sys = this.actor.system;
+        const record = sys.daemonPrinceAscension;
+        const ascendedAt = record.ascendedAt;
+        // Build a non-null ascension record for the engine when one exists; isAscended treats a
+        // non-null record as ascended and the boost is derived from the same record.
+        const ascension = ascendedAt === null ? null : { ascendedAt, alignmentAtAscension: record.alignmentAtAscension };
+        const ascended = isAscended(ascension);
+        const infamy = sys.infamy;
+        const corruption = sys.corruption;
+        const canAscend = !ascended && infamy >= DAEMON_PRINCE_INFAMY_THRESHOLD && corruption >= DAEMON_PRINCE_CORRUPTION_THRESHOLD;
+        const boost = ascension === null ? null : getDaemonPrinceBoost(ascension);
+        return {
+            ascended,
+            ascendedAt,
+            alignmentAtAscension: record.alignmentAtAscension,
+            infamy,
+            corruption,
+            infamyThreshold: DAEMON_PRINCE_INFAMY_THRESHOLD,
+            corruptionThreshold: DAEMON_PRINCE_CORRUPTION_THRESHOLD,
+            canAscend,
+            boost,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Distinctions panel (#171). The catalogue itself is compendium
+     * content; without a runtime catalogue lookup we surface the
+     * persisted id arrays and let `mergeMarkGrants(empty)` produce the
+     * stub merged-grant readout. The panel's empty-state paths handle
+     * missing catalogue entries cleanly.
+     */
+    _prepareDwDistinctionPanel(): DwDistinctionPanelContext {
+        const sys = this.actor.system;
+        const earned = new Set(sys.distinctions);
+        const borne = new Set(sys.marksOfDistinction);
+        return {
+            distinctions: sys.distinctions.map((id) => ({
+                id,
+                name: id,
+                renownReward: 0,
+                renownRequired: '',
+                earned: earned.has(id),
+                rankTooLow: false,
+            })),
+            marks: sys.marksOfDistinction.map((id) => ({
+                id,
+                name: id,
+                description: '',
+                borne: borne.has(id),
+            })),
+            merged: {
+                characteristicDelta: [],
+                traits: [],
+            },
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Special-Issue Ammunition panel (#172). Reads the actor-level
+     * selected ammo id and builds the option list against the canonical
+     * `DW_SELECTED_AMMO_CHOICES`. The detail readout consumes
+     * `DW_SPECIAL_AMMO_EFFECTS` directly; `'standard'` yields `null`.
+     */
+    _prepareDwAmmoPanel(): DwAmmoPanelContext {
+        const sys = this.actor.system;
+        const selected: DwSelectedAmmoId = sys.selectedAmmo;
+        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
+        const labelFor = (id: DwSelectedAmmoId): string => game.i18n.localize(`WH40K.DW.SpecialAmmo.Kind.${titleCase(id)}`);
+        const effect = selected === 'standard' ? null : DW_SPECIAL_AMMO_EFFECTS[selected];
+        return {
+            selected,
+            selectedLabel: labelFor(selected),
+            options: DW_SELECTED_AMMO_CHOICES.map((id) => ({
+                id,
+                label: labelFor(id),
+                selected: id === selected,
+                summary:
+                    id === 'standard'
+                        ? game.i18n.localize('WH40K.DW.SpecialAmmo.NoSelection')
+                        : game.i18n.localize(`WH40K.DW.SpecialAmmo.Summary.${titleCase(id)}`),
+            })),
+            effect,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Mission Oath panel (#168). Surfaces the leader marker, the
+     * active oath id (or null), and the swear/release gates. The active
+     * oath display label resolves from the compendium UUID cache at
+     * panel render time; without a sync lookup we fall back to the id
+     * string so the panel still renders a meaningful readout.
+     */
+    _prepareDwOathPanel(): DwOathPanelContext {
+        const sys = this.actor.system;
+        const activeOathId = sys.activeOathId;
+        const active = isOathActive(activeOathId);
+        return {
+            isLeader: sys.isLeader,
+            active,
+            activeOathId,
+            activeLabel: active && activeOathId !== null ? activeOathId : null,
+            canSwear: sys.isLeader && !active,
+            canRelease: active,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Mission framework panel (#169). When `activeMission === null`
+     * the panel renders the empty-state placeholder; otherwise we map
+     * the persisted record into the localized labels the template
+     * consumes.
+     */
+    _prepareDwMissionPanel(): DwMissionPanelContext {
+        const sys = this.actor.system;
+        const active = sys.activeMission;
+        if (active === null) {
+            return { hasMission: false, mission: null };
+        }
+        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
+        return {
+            hasMission: true,
+            mission: {
+                id: active.id,
+                name: active.name,
+                rating: active.rating,
+                ratingLabel: game.i18n.localize(`WH40K.DW.Mission.Rating.${titleCase(active.rating)}`),
+                objectives: active.objectives.map((o) => ({
+                    id: o.id,
+                    description: o.description,
+                    renownReward: o.renownReward,
+                    xpReward: o.xpReward,
+                    status: o.status,
+                    statusLabel: game.i18n.localize(`WH40K.DW.Mission.Objective.Status.${titleCase(o.status)}`),
+                })),
+                complications: active.complications.map((c) => ({
+                    id: c.id,
+                    description: c.description,
+                    renownPenalty: c.renownPenalty,
+                    triggered: c.triggered,
+                })),
+            },
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * DW Vehicle Critical Hit / Repair panel (#170). The crit-roll
+     * button unlocks when over-Integrity has accumulated OR the vehicle
+     * has just been pushed to zero Integrity (its first crit roll); the
+     * repair button requires accumulated over-Integrity to act on.
+     */
+    _prepareDwVehiclePanel(): DwVehiclePanelContext {
+        const sys = this.actor.system;
+        const integrity = sys.vehicleIntegrity;
+        const overIntegrity = sys.overIntegrity;
+        return {
+            integrity,
+            overIntegrity,
+            canRollCrit: overIntegrity > 0 || integrity <= 0,
+            canRepair: overIntegrity > 0,
+        };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * OW Mission Assignment Gear panel (#155). Stateless apart from the
+     * "last outcome" readout; the request-gear action gathers Table 6-3
+     * modifiers at click time via a DialogV2 prompt.
+     */
+    _prepareOwMissionGearPanel(): OwMissionGearPanelContext {
+        const sys = this.actor.system;
+        const last = sys.lastGearOutcome;
+        if (last === null) {
+            return { hasOutcome: false, outcomeKey: null };
+        }
+        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
+        return {
+            hasOutcome: true,
+            outcomeKey: `WH40K.OW.MissionGear.Outcome.${titleCase(last)}`,
         };
     }
 

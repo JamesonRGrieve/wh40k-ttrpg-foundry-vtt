@@ -1,0 +1,48 @@
+{
+    "issue": 168,
+    "engine": "dw-oath",
+    "gameSystem": "dw",
+    "datamodel": {
+        "mixinFile": "src/module/data/actor/mixins/dw-oath-template.ts",
+        "applyTo": "CharacterData",
+        "schemaFieldsExport": "dwOathSchemaFields",
+        "declarationsTypeExport": "DwOathDeclarations"
+    },
+    "sheetPanel": {
+        "partialPath": "systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs",
+        "includeIn": "tab-status.hbs",
+        "gateOn": "isDW",
+        "contextKey": "oathPanel",
+        "contextShape": {
+            "isLeader": "system.isLeader",
+            "active": "isOathActive(system.activeOathId)",
+            "activeOathId": "system.activeOathId",
+            "activeLabel": "uuidNameCache.getName(system.activeOathId) when active, else null",
+            "canSwear": "system.isLeader && !isOathActive(system.activeOathId)",
+            "canRelease": "isOathActive(system.activeOathId)"
+        }
+    },
+    "actions": [
+        {
+            "actionName": "dwSwearOath",
+            "module": "src/module/actions/dw-oath-actions.ts",
+            "exportName": "dwSwearOath"
+        },
+        {
+            "actionName": "dwReleaseOath",
+            "module": "src/module/actions/dw-oath-actions.ts",
+            "exportName": "dwReleaseOath"
+        }
+    ],
+    "chatPartial": {
+        "partialPath": "systems/wh40k-rpg/templates/chat/dw-oath-chat.hbs",
+        "preloadEntry": "systems/wh40k-rpg/templates/chat/dw-oath-chat.hbs"
+    },
+    "i18nKeys": "WH40K.DW.Oath.*",
+    "e2eSpec": "tests/e2e/dw-oath.spec.ts",
+    "storybookStories": [
+        "src/templates/actor/panel/dw-oath-panel.stories.ts",
+        "src/templates/chat/dw-oath-chat.stories.ts"
+    ]
+}

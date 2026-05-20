@@ -1,0 +1,91 @@
+{{!-- Black Crusade Chaos Ritual chat card (#179 — Contempt of the Warp + Table 6-7 breakdown). --}}
+{{!-- The wh40k-rpg class is injected onto the message root by the renderChatMessageHTML hook --}}
+{{!-- in basic-action-manager.ts so the tw-* utilities cascade outside the sheet root. --}}
+<div class="wh40k-bc-ritual-card tw-p-4 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(20,8,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-bc-ritual-success="{{success}}"
+     data-bc-ritual-target="{{finalTarget}}"
+     data-bc-ritual-roll="{{roll}}">
+
+    {{!-- Header --}}
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-hat-wizard tw-text-[1.1rem] bc:tw-text-crimson"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">
+            {{localize "WH40K.BC.Ritual.ChatTitle"}}
+        </div>
+    </div>
+
+    {{!-- Template id summary --}}
+    <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Ritual.ChatTemplateId"}}</span>
+        <span class="tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{templateId}}</span>
+    </div>
+
+    {{!-- Target composition --}}
+    <ul class="wh40k-bc-ritual-target tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Ritual.ChatBaseTarget"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{baseTarget}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Ritual.ChatModifierSum"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{modifierSum}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Ritual.ChatFinalTarget"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">{{finalTarget}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Ritual.ChatRoll"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{roll}}</span>
+        </li>
+        {{#if success}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Ritual.ChatDegreesOfSuccess"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-emerald-300">{{degreesOfSuccess}}</span>
+            </li>
+        {{else}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Ritual.ChatDegreesOfFailure"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-rose-300">{{degreesOfFailure}}</span>
+            </li>
+        {{/if}}
+    </ul>
+
+    {{!-- Modifier breakdown (Table 6-7) --}}
+    {{#if breakdown.length}}
+        <div class="wh40k-bc-ritual-breakdown tw-mb-2">
+            <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">
+                {{localize "WH40K.BC.Ritual.DialogModifiersHeader"}}
+            </div>
+            <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.78rem]">
+                {{#each breakdown}}
+                    <li class="wh40k-bc-ritual-mod-row tw-flex tw-justify-between tw-gap-3 tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                        data-bc-ritual-mod-kind="{{this.kind}}">
+                        <span class="tw-text-[color:var(--wh40k-text-muted)]">
+                            {{localize this.labelKey}}{{#if this.description}} — <em class="tw-not-italic tw-text-[color:var(--wh40k-text-muted)]">{{this.description}}</em>{{/if}}
+                        </span>
+                        <span class="tw-font-bold tw-tabular-nums {{#if this.positive}}tw-text-emerald-300{{else}}{{#if this.negative}}tw-text-rose-300{{else}}tw-text-[color:var(--wh40k-text-bright)]{{/if}}{{/if}}">{{this.signed}}</span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{else}}
+        <div class="tw-text-xs tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-mb-2">
+            {{localize "WH40K.BC.Ritual.ChatNoModifiers"}}
+        </div>
+    {{/if}}
+
+    {{!-- Contempt of the Warp outcome --}}
+    {{#if success}}
+        <div class="tw-text-xs tw-italic tw-text-emerald-300 bc:tw-text-crimson">
+            <i class="fas fa-check-circle"></i>
+            {{localize "WH40K.BC.Ritual.Contempt.Success"}}
+        </div>
+    {{else}}
+        <div class="tw-text-xs tw-italic tw-text-rose-300">
+            <i class="fas fa-skull"></i>
+            {{localize "WH40K.BC.Ritual.Contempt.Failure"}}
+        </div>
+    {{/if}}
+</div>

@@ -52,20 +52,25 @@
             {{/if}}
 
             {{!-- DW engine panels (#162 Cohesion, #163 Squad Mode, #164 Renown,
-                 #165 Requisition). Gate matches `_gameSystemId === 'dw'`. --}}
+                 #165 Requisition, batch-2: #168 Oath, #169 Mission, #170 Vehicle).
+                 Gate matches `_gameSystemId === 'dw'`. --}}
             {{#if isDW}}
                 {{> systems/wh40k-rpg/templates/actor/panel/dw-cohesion-panel.hbs cohesionPanel=cohesionPanel}}
                 {{> systems/wh40k-rpg/templates/actor/panel/dw-mode-panel.hbs modePanel=modePanel}}
                 {{> systems/wh40k-rpg/templates/actor/panel/dw-renown-panel.hbs renownPanel=renownPanel}}
                 {{> systems/wh40k-rpg/templates/actor/panel/dw-requisition-panel.hbs requisitionPanel=requisitionPanel}}
+                {{> systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs oathPanel=oathPanel}}
+                {{> systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs missionPanel=missionPanel}}
+                {{> systems/wh40k-rpg/templates/actor/panel/dw-vehicle-panel.hbs vehiclePanel=vehiclePanel}}
             {{/if}}
 
-            {{!-- OW engine panels (#152 Comrade, #154 Logistics, #153 Orders).
-                 Gate matches `_gameSystemId === 'ow'`. --}}
+            {{!-- OW engine panels (#152 Comrade, #154 Logistics, #153 Orders,
+                 batch-2: #155 Mission Gear). Gate matches `_gameSystemId === 'ow'`. --}}
             {{#if isOW}}
                 {{> systems/wh40k-rpg/templates/actor/panel/ow-comrade-panel.hbs comradePanel=comradePanel}}
                 {{> systems/wh40k-rpg/templates/actor/panel/ow-logistics-panel.hbs logisticsPanel=logisticsPanel}}
                 {{> systems/wh40k-rpg/templates/actor/panel/ow-orders-panel.hbs ordersPanel=ordersPanel}}
+                {{> systems/wh40k-rpg/templates/actor/panel/ow-mission-gear-panel.hbs missionGearPanel=missionGearPanel}}
             {{/if}}
 
             {{!-- Movement & Physical Capacity (Full Version) --}}
