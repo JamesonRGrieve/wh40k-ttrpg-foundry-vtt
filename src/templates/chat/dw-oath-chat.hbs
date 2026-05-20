@@ -1,0 +1,67 @@
+{{!-- Deathwatch Mission Oath chat card (#168 — core.md Table 7-16 §"OATHS"). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-dw-oath-card tw-p-4 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-bg-[rgba(20,18,12,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-dw-oath-event="{{eventKind}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-scroll tw-text-[1.1rem] dw:tw-text-bronze"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze">
+            {{localize headerKey}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.9rem] tw-mb-3 tw-text-[color:var(--wh40k-text-bright)]">
+        <strong>{{localize outcomeKey}}</strong>
+        {{#if oathLabel}}
+            &mdash; <span class="tw-italic dw:tw-text-bronze">{{oathLabel}}</span>
+        {{/if}}
+    </div>
+
+    {{#if buff}}
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-bg-[rgba(0,0,0,0.18)]">
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+                <span class="tw-text-[0.78rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.DW.Oath.Buff.Title"}}
+                </span>
+                {{#if buff.characteristic}}
+                    <span class="tw-tabular-nums tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
+                        {{buff.characteristic}}
+                        {{#if buff.modifier}}
+                            {{#if (gte buff.modifier 0)}}+{{/if}}{{buff.modifier}}
+                        {{/if}}
+                    </span>
+                {{/if}}
+            </div>
+            {{#if buff.trait}}
+                <div class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-bright)]">
+                    <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.DW.Oath.Buff.Description"}}:</span>
+                    <em class="dw:tw-text-bronze">{{buff.trait}}</em>
+                </div>
+            {{/if}}
+            {{#if buff.description}}
+                <p class="tw-m-0 tw-text-[0.8rem] tw-italic tw-text-[color:var(--wh40k-text-bright)]">{{buff.description}}</p>
+            {{/if}}
+        </div>
+    {{/if}}
+
+    {{#if grantedSquadAbilities}}
+        <div class="tw-text-[0.82rem] tw-text-[color:var(--wh40k-text-bright)]">
+            <div class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">
+                {{localize "WH40K.DW.Oath.GrantedAbilities.Title"}}
+            </div>
+            <ul class="tw-m-0 tw-pl-4 tw-list-disc">
+                {{#each grantedSquadAbilities}}
+                    <li>{{this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    {{else}}
+        {{#if showGrantedEmpty}}
+            <div class="tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.Oath.GrantedAbilities.None"}}
+            </div>
+        {{/if}}
+    {{/if}}
+</div>

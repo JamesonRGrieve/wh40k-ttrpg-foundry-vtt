@@ -1,0 +1,164 @@
+{{!--
+    Deathwatch Mission framework panel (#169 — core.md §"MISSIONS" /
+    §"REWARDS").
+
+    Surfaces the actor's active mission: rating label, objective
+    checklist (each toggleable through `dwToggleObjective`), complication
+    list (each toggleable through `dwToggleComplication`), and the
+    "Complete Mission" payout button (`dwCompleteMission`).
+
+    Sheet context (built by character-sheet `_prepareContext`; gated on
+    `actor._gameSystemId === 'dw'`):
+
+      missionPanel: {
+        hasMission:    boolean
+        mission: {
+          id:          string
+          name:        string
+          rating:      'standard' | 'extended' | 'priority' | 'critical'
+          ratingLabel: string              // localized
+          objectives: Array<{
+              id:          string
+              description: string
+              renownReward: number
+              xpReward:     number
+              status:      'pending' | 'complete' | 'failed'
+              statusLabel: string          // localized
+          }>
+          complications: Array<{
+              id:           string
+              description:  string
+              renownPenalty: number
+              triggered:    boolean
+          }>
+        } | null
+      }
+
+    Rendered only for DW actors; the include in `tab-status.hbs` gates
+    on `isDW` from context.
+--}}
+<section class="wh40k-dw-mission-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dw:tw-border-bronze"
+         data-dw-mission-active="{{#if missionPanel.hasMission}}true{{else}}false{{/if}}">
+
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-scroll dw:tw-text-bronze"></i>
+            <span>{{localize "WH40K.DW.Mission.Label"}}</span>
+        </h3>
+        {{#if missionPanel.hasMission}}
+            <span class="wh40k-dw-mission-rating tw-font-bold tw-text-[0.8rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze"
+                  data-rating="{{missionPanel.mission.rating}}">
+                {{missionPanel.mission.ratingLabel}}
+            </span>
+        {{/if}}
+    </header>
+
+    {{#if missionPanel.hasMission}}
+        {{!-- Mission name --}}
+        <div class="wh40k-dw-mission-name tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)] tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+             data-mission-id="{{missionPanel.mission.id}}">
+            {{missionPanel.mission.name}}
+        </div>
+
+        {{!-- Objectives checklist --}}
+        <div class="wh40k-dw-mission-objectives tw-flex tw-flex-col tw-gap-1">
+            <h4 class="tw-m-0 tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.Mission.Objectives"}}
+            </h4>
+            {{#if missionPanel.mission.objectives.length}}
+                <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
+                    {{#each missionPanel.mission.objectives as |objective|}}
+                        <li class="wh40k-dw-mission-objective tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[rgba(0,0,0,0.18)]"
+                            data-objective-id="{{objective.id}}"
+                            data-objective-status="{{objective.status}}">
+                            <button type="button"
+                                    class="wh40k-dw-mission-objective-toggle tw-flex tw-items-center tw-gap-1.5 tw-bg-transparent tw-border-0 tw-p-0 tw-cursor-pointer tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)] tw-text-left"
+                                    data-action="dwToggleObjective"
+                                    data-objective-id="{{objective.id}}"
+                                    title="{{localize 'WH40K.DW.Mission.Objective.Toggle'}}">
+                                {{#if (eq objective.status "complete")}}
+                                    <i class="fas fa-check-square dw:tw-text-bronze"></i>
+                                {{else if (eq objective.status "failed")}}
+                                    <i class="fas fa-times-square tw-text-crimson"></i>
+                                {{else}}
+                                    <i class="far fa-square"></i>
+                                {{/if}}
+                                <span class="wh40k-dw-mission-objective-desc">{{objective.description}}</span>
+                            </button>
+                            <span class="wh40k-dw-mission-objective-rewards tw-flex tw-items-center tw-gap-2 tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums">
+                                <span title="{{localize 'WH40K.DW.Mission.Reward.Renown'}}">
+                                    <i class="fas fa-medal dw:tw-text-bronze"></i> {{objective.renownReward}}
+                                </span>
+                                <span title="{{localize 'WH40K.DW.Mission.Reward.Xp'}}">
+                                    <i class="fas fa-star"></i> {{objective.xpReward}}
+                                </span>
+                                <span class="wh40k-dw-mission-objective-status" data-status="{{objective.status}}">
+                                    {{objective.statusLabel}}
+                                </span>
+                            </span>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <p class="tw-m-0 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.DW.Mission.NoObjectives"}}
+                </p>
+            {{/if}}
+        </div>
+
+        {{!-- Complications --}}
+        <div class="wh40k-dw-mission-complications tw-flex tw-flex-col tw-gap-1">
+            <h4 class="tw-m-0 tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.DW.Mission.Complications"}}
+            </h4>
+            {{#if missionPanel.mission.complications.length}}
+                <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
+                    {{#each missionPanel.mission.complications as |complication|}}
+                        <li class="wh40k-dw-mission-complication tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[rgba(0,0,0,0.18)]"
+                            data-complication-id="{{complication.id}}"
+                            data-complication-triggered="{{#if complication.triggered}}true{{else}}false{{/if}}">
+                            <button type="button"
+                                    class="wh40k-dw-mission-complication-toggle tw-flex tw-items-center tw-gap-1.5 tw-bg-transparent tw-border-0 tw-p-0 tw-cursor-pointer tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)] tw-text-left"
+                                    data-action="dwToggleComplication"
+                                    data-complication-id="{{complication.id}}"
+                                    title="{{localize 'WH40K.DW.Mission.Complication.Toggle'}}">
+                                {{#if complication.triggered}}
+                                    <i class="fas fa-exclamation-triangle tw-text-crimson"></i>
+                                {{else}}
+                                    <i class="far fa-circle"></i>
+                                {{/if}}
+                                <span class="wh40k-dw-mission-complication-desc">{{complication.description}}</span>
+                            </button>
+                            <span class="tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums"
+                                  title="{{localize 'WH40K.DW.Mission.Complication.Penalty'}}">
+                                <i class="fas fa-medal tw-text-crimson"></i> -{{complication.renownPenalty}}
+                            </span>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <p class="tw-m-0 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.DW.Mission.NoComplications"}}
+                </p>
+            {{/if}}
+        </div>
+
+        {{!-- Complete-mission payout --}}
+        <div class="wh40k-dw-mission-actions tw-flex tw-items-center tw-justify-end tw-gap-1">
+            <button type="button"
+                    class="wh40k-dw-mission-complete-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-bronze hover:tw-bg-bronze hover:tw-text-white dw:tw-border-bronze dw:tw-text-bronze"
+                    data-action="dwCompleteMission"
+                    title="{{localize 'WH40K.DW.Mission.Complete.Title'}}">
+                <i class="fas fa-flag-checkered tw-mr-1"></i>
+                {{localize "WH40K.DW.Mission.Complete.Title"}}
+            </button>
+        </div>
+    {{else}}
+        <p class="wh40k-dw-mission-empty tw-m-0 tw-px-2 tw-py-1 tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.DW.Mission.None"}}
+        </p>
+    {{/if}}
+</section>
