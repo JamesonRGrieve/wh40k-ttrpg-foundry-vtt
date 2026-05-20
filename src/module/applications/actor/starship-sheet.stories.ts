@@ -13,12 +13,12 @@ import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/exte
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, assertField } from '../../../../stories/test-helpers';
-import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
+import headerSrc from '../../../templates/actor/starship/header.hbs?raw';
 import crewTabSrc from '../../../templates/actor/starship/tab-crew.hbs?raw';
 import extendedActionsTabSrc from '../../../templates/actor/starship/tab-extended-actions.hbs?raw';
-import headerSrc from '../../../templates/actor/starship/header.hbs?raw';
 import statsTabSrc from '../../../templates/actor/starship/tab-stats.hbs?raw';
 import tabsSrc from '../../../templates/actor/starship/tabs.hbs?raw';
+import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
 
 initializeStoryHandlebars();
 
@@ -153,16 +153,40 @@ export const BlackCruisadeVariant: Story = {
 const issue186ExtendedActions = [
     { uuid: 'rt-ea-active-augury', id: 'active-augury', name: 'Active Augury', img: '', skill: 'Scrutiny', modifier: 0, duration: '1 Round' },
     { uuid: 'rt-ea-brace-for-impact', id: 'brace-for-impact', name: 'Brace for Impact', img: '', skill: 'Command', modifier: 0, duration: '1 Round' },
-    { uuid: 'rt-ea-defensive-stance', id: 'defensive-stance', name: 'Defensive Stance', img: '', skill: 'Pilot (Space Craft)', modifier: 0, duration: '1 Round' },
+    {
+        uuid: 'rt-ea-defensive-stance',
+        id: 'defensive-stance',
+        name: 'Defensive Stance',
+        img: '',
+        skill: 'Pilot (Space Craft)',
+        modifier: 0,
+        duration: '1 Round',
+    },
     { uuid: 'rt-ea-disengage', id: 'disengage', name: 'Disengage', img: '', skill: 'Pilot (Space Craft)', modifier: 0, duration: '1 Round' },
     { uuid: 'rt-ea-emergency-repair', id: 'emergency-repair', name: 'Emergency Repair', img: '', skill: 'Tech-Use', modifier: -10, duration: '1d5 Rounds' },
-    { uuid: 'rt-ea-evasive-manoeuvres', id: 'evasive-manoeuvres', name: 'Evasive Manoeuvres', img: '', skill: 'Pilot (Space Craft)', modifier: 0, duration: '1 Round' },
+    {
+        uuid: 'rt-ea-evasive-manoeuvres',
+        id: 'evasive-manoeuvres',
+        name: 'Evasive Manoeuvres',
+        img: '',
+        skill: 'Pilot (Space Craft)',
+        modifier: 0,
+        duration: '1 Round',
+    },
     { uuid: 'rt-ea-focused-augury', id: 'focused-augury', name: 'Focused Augury', img: '', skill: 'Scrutiny', modifier: -10, duration: '1 Round' },
     { uuid: 'rt-ea-lock-on', id: 'lock-on', name: 'Lock On', img: '', skill: 'Ballistic Skill', modifier: 0, duration: '1 Round' },
     { uuid: 'rt-ea-plot-course', id: 'plot-course', name: 'Plot Course', img: '', skill: 'Navigation (Warp)', modifier: 0, duration: '1d5 Rounds' },
     { uuid: 'rt-ea-quick-repair', id: 'quick-repair', name: 'Quick Repair', img: '', skill: 'Tech-Use', modifier: -20, duration: '1 Round' },
     { uuid: 'rt-ea-rapid-reload', id: 'rapid-reload', name: 'Rapid Reload', img: '', skill: 'Command', modifier: 0, duration: '1 Round' },
-    { uuid: 'rt-ea-set-up-boarding-action', id: 'set-up-boarding-action', name: 'Set Up Boarding Action', img: '', skill: 'Command', modifier: 0, duration: '1 Round' },
+    {
+        uuid: 'rt-ea-set-up-boarding-action',
+        id: 'set-up-boarding-action',
+        name: 'Set Up Boarding Action',
+        img: '',
+        skill: 'Command',
+        modifier: 0,
+        duration: '1 Round',
+    },
     { uuid: 'rt-ea-suppressive-fire', id: 'suppressive-fire', name: 'Suppressive Fire', img: '', skill: 'Ballistic Skill', modifier: 0, duration: '1 Round' },
 ];
 
@@ -448,7 +472,7 @@ export const CrewPanelAfter5HullHit: Story = {
             hullIntegrity: { value: 30, max: 35 },
             crew: { morale: { value: 95, max: 100 }, population: 95, crewRating: 40 },
         },
-    } as SheetContextLike,
+    },
     render: (args) => renderCrewPanel(args),
     play: async ({ canvasElement }) => {
         const populationInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.population"]');
@@ -464,8 +488,8 @@ export const ExtendedActions: Story = {
         ...defaultCtxWithSource,
         tab: { id: 'extendedActions', group: 'primary', active: true, cssClass: 'tab-extended-actions' },
         // eslint-disable-next-line no-restricted-syntax -- boundary: SheetContextLike is an open record for story context
-        extendedActions: issue186ExtendedActions as unknown,
-    } as SheetContextLike,
+        extendedActions: issue186ExtendedActions,
+    },
     render: (args) => renderExtendedActionsPanel(args),
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);

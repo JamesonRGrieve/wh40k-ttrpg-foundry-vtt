@@ -101,7 +101,7 @@ export const Rolled: Story = {
         const input = canvasElement.querySelector<HTMLInputElement>('input.csd-divination-input');
         expect(input).toBeTruthy();
         expect(input?.value).toBe('Trust in your fear.');
-        expect((input?.value.length ?? 0)).toBeGreaterThan(0);
+        expect(input?.value.length ?? 0).toBeGreaterThan(0);
     },
 };
 
@@ -113,8 +113,7 @@ export const Rolled: Story = {
  */
 export const TableUnavailableFallback: Story = {
     args: {
-        divination:
-            'The Divination table is unavailable — rolled 42 on 1d100. Record the corresponding maxim from the rulebook by hand.',
+        divination: 'The Divination table is unavailable — rolled 42 on 1d100. Record the corresponding maxim from the rulebook by hand.',
     },
     play: async ({ canvasElement }) => {
         const input = canvasElement.querySelector<HTMLInputElement>('input.csd-divination-input');

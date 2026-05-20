@@ -5,6 +5,7 @@ import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, postChatCard } from '../rolls/roll-helpers.ts';
 import { ASSASSINS_STRIKE_TEST } from '../rules/assassins-strike.ts';
+import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
@@ -66,6 +67,11 @@ export class BasicActionManager {
             html.querySelectorAll('.roll-control__assassins-strike').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._assassinsStrike(ev);
+                });
+            });
+            html.querySelectorAll('.roll-control__horde-break-test').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._hordeBreakTest(ev);
                 });
             });
         });
@@ -142,6 +148,21 @@ export class BasicActionManager {
      */
     async _postDamageCard(actionData: ActionData): Promise<void> {
         const damageRolls = actionData.damageData?.hits.map((h: Hit) => h.damageRoll).filter((r: Roll | undefined): r is Roll => r != null);
+
+        // Tag each hit with whether the source weapon carries the Explosive
+        // quality so the chat-card assign-damage button can propagate it
+        // through to AssignDamageData (DW horde branch: +1 Magnitude per
+        // Explosive hit per RAW). `weaponHasQuality` walks effectiveSpecial
+        // / special / embedded attackSpecial items — the existing helper
+        // is the single point of truth for quality detection (no string
+        // literal name match anywhere else in src/).
+        const weapon = actionData.rollData.weapon ?? actionData.rollData.power;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actionData.rollData.weapon is a typed WH40KItemDocument; weaponHasQuality accepts a duck-typed QualityItem
+        const explosive = weaponHasQuality(weapon as Parameters<typeof weaponHasQuality>[0], 'explosive');
+        for (const hit of actionData.damageData?.hits ?? []) {
+            hit.isExplosive = explosive;
+        }
+
         const templateData = {
             weaponName: actionData.rollData.name,
             hits: actionData.damageData?.hits,
@@ -238,12 +259,13 @@ export class BasicActionManager {
             return;
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor.rollSkill comes from a system-specific Document subclass not visible on the base type; cast is the documented Foundry boundary
         const sourceActor = actionData.rollData.sourceActor as
             | (WH40KBaseActorDocument & { rollSkill?: (skill: string, spec?: string, opts?: Record<string, unknown>) => Promise<void> })
             | null;
         if (sourceActor == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn('No source actor found for Assassin\'s Strike dispatch.');
+            ui.notifications.warn("No source actor found for Assassin's Strike dispatch.");
             return;
         }
 
@@ -262,7 +284,7 @@ export class BasicActionManager {
             });
         } catch {
             // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback when the actor's rollSkill API throws (e.g., missing skill on legacy data)
-            ui.notifications.warn('Unable to dispatch Acrobatics test for Assassin\'s Strike.');
+            ui.notifications.warn("Unable to dispatch Acrobatics test for Assassin's Strike.");
             btn.disabled = false;
             return;
         }
@@ -273,6 +295,45 @@ export class BasicActionManager {
         await postChatCard(
             `<div class="wh40k-rpg tw-font-ui tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-gray-700 tw-bg-gray-800/60 tw-text-gray-100 tw-text-[0.85rem]">${announcement}</div>`,
         );
+    }
+
+    /**
+     * Chat-card "Willpower test to hold" button (#166 — DW Horde RAW).
+     * Resolves the target horde from the dataset UUID, then dispatches a
+     * Willpower characteristic test with the resolver-supplied modifier
+     * (0 for a normal hold test, -10 when Magnitude has dropped below
+     * 50%). Auto-break / Fearless / "no test required" cases do not emit
+     * a button — the resolver short-circuits to the label-only render.
+     */
+    async _hordeBreakTest(event: Event): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLButtonElement;
+        const targetUuid = btn.dataset['targetUuid'];
+        const modifierRaw = btn.dataset['willpowerModifier'];
+
+        if (targetUuid == null || targetUuid === '') {
+            ui.notifications.warn(game.i18n.localize('WH40K.DW.Horde.Break.NoTest'));
+            return;
+        }
+
+        const doc = await fromUuid(targetUuid);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid result may be a TokenDocument with .actor; cast through unknown is necessary
+        const resolved = doc instanceof Actor ? doc : (doc as unknown as { actor?: unknown } | null)?.actor;
+        const actor =
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor is instanceof-narrowed from unknown
+            resolved instanceof Actor
+                ? (resolved as unknown as WH40KBaseActorDocument & { rollCharacteristic?: (key: string, flavor?: string) => void | Promise<void> })
+                : undefined;
+        if (actor == null) return;
+
+        const modifier = modifierRaw !== undefined && modifierRaw !== '' ? Number.parseInt(modifierRaw, 10) : 0;
+        const flavorKey = modifier < 0 ? 'WH40K.DW.Horde.Break.TestPenalised' : 'WH40K.DW.Horde.Break.TestNormal';
+        btn.disabled = true;
+        try {
+            await Promise.resolve(actor.rollCharacteristic?.('willpower', game.i18n.localize(flavorKey)));
+        } catch {
+            btn.disabled = false;
+        }
     }
 
     async _refundResources(event: Event): Promise<void> {
@@ -408,6 +469,7 @@ export class BasicActionManager {
         const totalPenetration = div.dataset['totalPenetration'];
         const totalFatigue = div.dataset['totalFatigue'];
         const damageType = div.dataset['damageType'];
+        const isExplosive = div.dataset['isExplosive'];
 
         const hitData = new Hit();
         hitData.location = location ?? 'Body';
@@ -419,6 +481,10 @@ export class BasicActionManager {
         hitWritable.totalPenetration = totalPenetration;
         hitWritable.totalFatigue = totalFatigue;
         hitData.damageType = damageType ?? 'Impact';
+        // Handlebars renders booleans as "true"/"false" strings on dataset
+        // attributes; coerce explicitly so the DW horde branch reads a real
+        // boolean for `magnitudeLossForHit(damage, isExplosive)`.
+        hitData.isExplosive = isExplosive === 'true';
 
         const targetUuid = div.dataset['targetUuid'];
 
@@ -492,6 +558,8 @@ export class BasicActionManager {
         if (penetration != null && penetration !== '') hit.totalPenetration = Number.parseInt(penetration, 10);
         if (fatigue != null && fatigue !== '') hit.totalFatigue = Number.parseInt(fatigue, 10);
         if (damageType != null && damageType !== '') hit.damageType = damageType;
+        // Handlebars renders booleans as "true"/"false" strings on dataset.
+        hit.isExplosive = div.dataset['isExplosive'] === 'true';
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: AssignDamageData accepts untyped system ActorLike; cast through unknown is necessary
         const assignDamageData = new AssignDamageData(targetActor as unknown as ActorLike, hit);

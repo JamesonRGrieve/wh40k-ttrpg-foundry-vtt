@@ -29,15 +29,8 @@ import {
 describe('SHIP_MANOEUVRES registry shape', () => {
     it('contains the six RAW Table 8-10 entries', () => {
         const ids = getShipManoeuvreIds();
-        expect(ids).toEqual([
-            'adjust-bearing',
-            'adjust-speed',
-            'adjust-speed-and-bearing',
-            'come-to-new-heading',
-            'disengage',
-            'evasive-manoeuvres',
-        ]);
-        expect(SHIP_MANOEUVRES.length).toBe(6);
+        expect(ids).toEqual(['adjust-bearing', 'adjust-speed', 'adjust-speed-and-bearing', 'come-to-new-heading', 'disengage', 'evasive-manoeuvres']);
+        expect(SHIP_MANOEUVRES).toHaveLength(6);
     });
 
     it('every entry uses the Pilot (Space Craft) test', () => {
@@ -98,7 +91,7 @@ describe('Opposed flag (Disengage)', () => {
     it('non-opposed entries do not carry the opposed flag truthy', () => {
         for (const m of SHIP_MANOEUVRES) {
             if (m.id === 'disengage') continue;
-            expect(m.opposed === true).toBe(false);
+            expect(m.opposed).not.toBe(true);
         }
     });
 });
@@ -106,7 +99,7 @@ describe('Opposed flag (Disengage)', () => {
 describe('Per-system gating', () => {
     it('returns the full catalogue for rt', () => {
         const rt = getShipManoeuvresForSystem('rt');
-        expect(rt.length).toBe(SHIP_MANOEUVRES.length);
+        expect(rt).toHaveLength(SHIP_MANOEUVRES.length);
     });
 
     it.each(['dh1e', 'dh2e', 'bc', 'ow', 'dw', 'im'] as const)('returns no entries for %s', (sys) => {

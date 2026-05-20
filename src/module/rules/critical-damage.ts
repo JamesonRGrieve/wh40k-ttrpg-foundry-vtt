@@ -1,9 +1,4 @@
-import {
-    type CanonicalBodyPart,
-    type CanonicalDamageType,
-    normalizeBodyPart,
-    normalizeDamageType,
-} from './damage-type.ts';
+import { type CanonicalBodyPart, type CanonicalDamageType, normalizeBodyPart, normalizeDamageType } from './damage-type.ts';
 
 export interface CriticalDamageTable {
     [key: string]: {

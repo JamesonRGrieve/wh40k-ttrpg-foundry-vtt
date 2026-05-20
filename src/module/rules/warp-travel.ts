@@ -51,12 +51,7 @@ import type { GameSystemId } from '../config/game-systems/types.ts';
 // ---------------------------------------------------------------------------
 
 /** Stable ids for the five Navigation stages. */
-export type WarpStageId =
-    | 'duration'
-    | 'locate-astronomican'
-    | 'chart-course'
-    | 'steer-vessel'
-    | 'leave-warp';
+export type WarpStageId = 'duration' | 'locate-astronomican' | 'chart-course' | 'steer-vessel' | 'leave-warp';
 
 /** Outcome verdicts for a single stage. */
 export type WarpStageStatus = 'success' | 'failure' | 'peril' | 'pending';
@@ -91,7 +86,7 @@ export const STAGE_DIFFICULTY: Readonly<Record<Exclude<WarpStageId, 'duration'>,
 
 /** Localization keys for stage labels. */
 export const STAGE_LABEL_KEYS: Readonly<Record<WarpStageId, string>> = Object.freeze({
-    duration: 'WH40K.WarpTravel.Stage.Duration',
+    'duration': 'WH40K.WarpTravel.Stage.Duration',
     'locate-astronomican': 'WH40K.WarpTravel.Stage.LocateAstronomican',
     'chart-course': 'WH40K.WarpTravel.Stage.ChartCourse',
     'steer-vessel': 'WH40K.WarpTravel.Stage.SteerVessel',
@@ -394,23 +389,114 @@ export interface PerilDef {
 
 /** Table 6-3 — Perils of the Warp (full RT/DH d100 lookup). */
 export const PERILS_OF_THE_WARP: ReadonlyArray<PerilDef> = Object.freeze([
-    { id: 'the-gibbering', rangeMin: 1, rangeMax: 5, key: 'TheGibbering', name: 'The Gibbering', effect: 'Challenging Willpower test or 1d5+1 Insanity and Stunned 1d5 rounds.' },
+    {
+        id: 'the-gibbering',
+        rangeMin: 1,
+        rangeMax: 5,
+        key: 'TheGibbering',
+        name: 'The Gibbering',
+        effect: 'Challenging Willpower test or 1d5+1 Insanity and Stunned 1d5 rounds.',
+    },
     { id: 'warp-burn', rangeMin: 6, rangeMax: 9, key: 'WarpBurn', name: 'Warp Burn', effect: '1d5 Wounds and Stunned 1d5 rounds.' },
-    { id: 'psychic-concussion', rangeMin: 10, rangeMax: 13, key: 'PsychicConcussion', name: 'Psychic Concussion', effect: 'Psyker unconscious 1d5 rounds; bystanders within 3d10m Routine Willpower or Stunned 1 round.' },
+    {
+        id: 'psychic-concussion',
+        rangeMin: 10,
+        rangeMax: 13,
+        key: 'PsychicConcussion',
+        name: 'Psychic Concussion',
+        effect: 'Psyker unconscious 1d5 rounds; bystanders within 3d10m Routine Willpower or Stunned 1 round.',
+    },
     { id: 'psy-blast', rangeMin: 14, rangeMax: 18, key: 'PsyBlast', name: 'Psy-Blast', effect: 'Psyker thrown 1d10m into the air (falling damage).' },
     { id: 'soul-sear', rangeMin: 19, rangeMax: 24, key: 'SoulSear', name: 'Soul Sear', effect: 'No psychic powers for one hour; 5 Corruption.' },
     { id: 'locked-in', rangeMin: 25, rangeMax: 30, key: 'LockedIn', name: 'Locked In', effect: 'Catatonic; each round full-action Willpower test to recover.' },
-    { id: 'chronological-incontinence', rangeMin: 31, rangeMax: 38, key: 'ChronologicalIncontinence', name: 'Chronological Incontinence', effect: 'Vanishes 1d10 rounds; 1d5 Insanity and 1d5 permanent Toughness damage.' },
-    { id: 'psychic-mirror', rangeMin: 39, rangeMax: 46, key: 'PsychicMirror', name: 'Psychic Mirror', effect: "Power reflected on the psyker; beneficial powers deal 1d10+5 Energy ignoring non-warded armour." },
-    { id: 'warp-whispers', rangeMin: 47, rangeMax: 55, key: 'WarpWhispers', name: 'Warp Whispers', effect: 'Everyone within 4d10m Hard Willpower or 1d10 Corruption.' },
-    { id: 'dark-summoning', rangeMin: 59, rangeMax: 67, key: 'DarkSummoning', name: 'Dark Summoning', effect: 'A Warp Predator manifests within 3d10m for 1d10 rounds; attacks the psyker.' },
-    { id: 'rending-the-veil', rangeMin: 68, rangeMax: 72, key: 'RendingTheVeil', name: 'Rending the Veil', effect: 'All within 1d100m must test against Fear (3) Warp Shock for 1d5 rounds.' },
-    { id: 'blood-rain', rangeMin: 73, rangeMax: 78, key: 'BloodRain', name: 'Blood Rain', effect: 'Within 5d10m: Challenging Strength or knocked down; further Perils auto-invoked 1d5 rounds.' },
-    { id: 'cataclysmic-blast', rangeMin: 79, rangeMax: 82, key: 'CataclysmicBlast', name: 'Cataclysmic Blast', effect: 'Anyone within 1d10m takes 1d10+5 Energy; psyker stripped naked; no powers 1d5 hours.' },
-    { id: 'mass-possession', rangeMin: 83, rangeMax: 86, key: 'MassPossession', name: 'Mass Possession', effect: 'All within 1d100m resist Puppet Master at 60/60/60; possession lasts 2d10 rounds.' },
-    { id: 'reality-quake', rangeMin: 87, rangeMax: 90, key: 'RealityQuake', name: 'Reality Quake', effect: 'Within 3d10m all take 2d10 Rending; warded objects/Untouchables halve.' },
-    { id: 'lost-to-the-warp', rangeMin: 91, rangeMax: 99, key: 'LostToTheWarp', name: 'Lost to the Warp', effect: 'Very Hard Willpower or dragged into the warp; reappear 1d10 weeks later with 4d10 Corruption.' },
-    { id: 'destruction', rangeMin: 100, rangeMax: 100, key: 'Destruction', name: 'Destruction', effect: 'Irrevocably destroyed; 50% chance a daemonic entity takes his place.' },
+    {
+        id: 'chronological-incontinence',
+        rangeMin: 31,
+        rangeMax: 38,
+        key: 'ChronologicalIncontinence',
+        name: 'Chronological Incontinence',
+        effect: 'Vanishes 1d10 rounds; 1d5 Insanity and 1d5 permanent Toughness damage.',
+    },
+    {
+        id: 'psychic-mirror',
+        rangeMin: 39,
+        rangeMax: 46,
+        key: 'PsychicMirror',
+        name: 'Psychic Mirror',
+        effect: 'Power reflected on the psyker; beneficial powers deal 1d10+5 Energy ignoring non-warded armour.',
+    },
+    {
+        id: 'warp-whispers',
+        rangeMin: 47,
+        rangeMax: 55,
+        key: 'WarpWhispers',
+        name: 'Warp Whispers',
+        effect: 'Everyone within 4d10m Hard Willpower or 1d10 Corruption.',
+    },
+    {
+        id: 'dark-summoning',
+        rangeMin: 59,
+        rangeMax: 67,
+        key: 'DarkSummoning',
+        name: 'Dark Summoning',
+        effect: 'A Warp Predator manifests within 3d10m for 1d10 rounds; attacks the psyker.',
+    },
+    {
+        id: 'rending-the-veil',
+        rangeMin: 68,
+        rangeMax: 72,
+        key: 'RendingTheVeil',
+        name: 'Rending the Veil',
+        effect: 'All within 1d100m must test against Fear (3) Warp Shock for 1d5 rounds.',
+    },
+    {
+        id: 'blood-rain',
+        rangeMin: 73,
+        rangeMax: 78,
+        key: 'BloodRain',
+        name: 'Blood Rain',
+        effect: 'Within 5d10m: Challenging Strength or knocked down; further Perils auto-invoked 1d5 rounds.',
+    },
+    {
+        id: 'cataclysmic-blast',
+        rangeMin: 79,
+        rangeMax: 82,
+        key: 'CataclysmicBlast',
+        name: 'Cataclysmic Blast',
+        effect: 'Anyone within 1d10m takes 1d10+5 Energy; psyker stripped naked; no powers 1d5 hours.',
+    },
+    {
+        id: 'mass-possession',
+        rangeMin: 83,
+        rangeMax: 86,
+        key: 'MassPossession',
+        name: 'Mass Possession',
+        effect: 'All within 1d100m resist Puppet Master at 60/60/60; possession lasts 2d10 rounds.',
+    },
+    {
+        id: 'reality-quake',
+        rangeMin: 87,
+        rangeMax: 90,
+        key: 'RealityQuake',
+        name: 'Reality Quake',
+        effect: 'Within 3d10m all take 2d10 Rending; warded objects/Untouchables halve.',
+    },
+    {
+        id: 'lost-to-the-warp',
+        rangeMin: 91,
+        rangeMax: 99,
+        key: 'LostToTheWarp',
+        name: 'Lost to the Warp',
+        effect: 'Very Hard Willpower or dragged into the warp; reappear 1d10 weeks later with 4d10 Corruption.',
+    },
+    {
+        id: 'destruction',
+        rangeMin: 100,
+        rangeMax: 100,
+        key: 'Destruction',
+        name: 'Destruction',
+        effect: 'Irrevocably destroyed; 50% chance a daemonic entity takes his place.',
+    },
 ]);
 
 /** Find the Peril entry covering the given d100 roll (1-100; 00 → 100). */

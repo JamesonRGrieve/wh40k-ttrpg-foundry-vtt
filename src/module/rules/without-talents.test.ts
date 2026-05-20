@@ -18,9 +18,7 @@ import {
 
 describe('WITHOUT_TALENTS — namespace re-export (#101)', () => {
     it('groups all five novel-mechanic talents', () => {
-        expect(Object.keys(WITHOUT_TALENTS).sort()).toEqual(
-            ['fieldVivisection', 'hotshotPilot', 'hullDown', 'leapingDodge', 'pushTheLimit'].sort(),
-        );
+        expect(Object.keys(WITHOUT_TALENTS).sort()).toEqual(['fieldVivisection', 'hotshotPilot', 'hullDown', 'leapingDodge', 'pushTheLimit'].sort());
     });
 });
 

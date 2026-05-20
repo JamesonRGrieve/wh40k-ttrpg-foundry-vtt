@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
+import { resolvePsyMode, type PsyMode } from '../../src/module/rules/psychic-push.ts';
 import psychicPanelSrc from '../../src/templates/prompt/unified/panels/psychic-panel.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
-import { resolvePsyMode, type PsyMode } from '../../src/module/rules/psychic-push.ts';
 
 initializeStoryHandlebars();
 

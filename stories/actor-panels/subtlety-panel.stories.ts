@@ -22,12 +22,12 @@
  * e2e spec (`tests/e2e/subtlety-panel.spec.ts`) snaps the live-Foundry render.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
+import { expect, within } from 'storybook/test';
+import panelSrc from '../../src/templates/actor/panel/subtlety-panel.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { seedRandom } from '../mocks/extended';
 import { initializeStoryHandlebars } from '../template-support';
-import panelSrc from '../../src/templates/actor/panel/subtlety-panel.hbs?raw';
 
 initializeStoryHandlebars();
 

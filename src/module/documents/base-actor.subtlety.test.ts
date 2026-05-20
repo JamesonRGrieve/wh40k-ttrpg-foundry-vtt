@@ -68,7 +68,7 @@ function makeActor(
         configurable: true,
     });
     Object.defineProperty(actor, 'update', {
-        value: (data: Record<string, unknown>) => {
+        value: async (data: Record<string, unknown>) => {
             updates.push(data);
             const next = data['system.subtlety.value'];
             if (slot && typeof next === 'number') slot.value = next;
@@ -212,7 +212,8 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             });
             const collected = actor.collectSubtletyAdjusters();
             expect(collected).toHaveLength(1);
-            const row = collected[0] as CollectedAdjuster;
+            const row = collected[0];
+            if (row === undefined) throw new Error('expected at least one collected adjuster row');
             expect(row.kind).toBe('passive');
             expect(row.delta).toBe(-5);
             expect(row.label).toBe('Hunger for Knowledge');
@@ -224,13 +225,7 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             const mod = await loadModule();
             if (mod === undefined) return;
             const { actor } = makeActor(mod.WH40KBaseActor, {
-                items: [
-                    adjusterItem(
-                        'Daemon Blade',
-                        { kind: 'passive', delta: -3, minAbsoluteDelta: 0, requiresEquipped: true },
-                        { equipped: false },
-                    ),
-                ],
+                items: [adjusterItem('Daemon Blade', { kind: 'passive', delta: -3, minAbsoluteDelta: 0, requiresEquipped: true }, { equipped: false })],
             });
             expect(actor.collectSubtletyAdjusters()).toEqual([]);
         });
@@ -239,17 +234,13 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             const mod = await loadModule();
             if (mod === undefined) return;
             const { actor } = makeActor(mod.WH40KBaseActor, {
-                items: [
-                    adjusterItem(
-                        'Daemon Blade',
-                        { kind: 'passive', delta: -3, minAbsoluteDelta: 0, requiresEquipped: true },
-                        { equipped: true },
-                    ),
-                ],
+                items: [adjusterItem('Daemon Blade', { kind: 'passive', delta: -3, minAbsoluteDelta: 0, requiresEquipped: true }, { equipped: true })],
             });
             const collected = actor.collectSubtletyAdjusters();
             expect(collected).toHaveLength(1);
-            expect((collected[0] as CollectedAdjuster).delta).toBe(-3);
+            const row = collected[0];
+            if (row === undefined) throw new Error('expected at least one collected adjuster row');
+            expect(row.delta).toBe(-3);
         });
 
         it('reports a null source uuid for a non-compendium owned item', async () => {
@@ -258,7 +249,8 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             const { actor } = makeActor(mod.WH40KBaseActor, {
                 items: [adjusterItem('Homebrew Talent', { kind: 'event', delta: -2, minAbsoluteDelta: 0, requiresEquipped: false })],
             });
-            const row = actor.collectSubtletyAdjusters()[0] as CollectedAdjuster;
+            const row = actor.collectSubtletyAdjusters()[0];
+            if (row === undefined) throw new Error('expected at least one collected adjuster row');
             expect(row.sourceUuid).toBeNull();
         });
     });
@@ -307,11 +299,7 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             const { actor, updates } = makeActor(mod.WH40KBaseActor, {
                 subtlety: { value: 60, max: 100 },
                 items: [
-                    adjusterItem(
-                        'Daemon Weapon',
-                        { kind: 'passive', delta: -3, minAbsoluteDelta: 0, requiresEquipped: false },
-                        { compendiumSource: uuid },
-                    ),
+                    adjusterItem('Daemon Weapon', { kind: 'passive', delta: -3, minAbsoluteDelta: 0, requiresEquipped: false }, { compendiumSource: uuid }),
                 ],
             });
             await actor.applySubtletyFromSource(uuid);

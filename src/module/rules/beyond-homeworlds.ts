@@ -94,8 +94,7 @@ const DAEMON_WORLD: BeyondHomeworldDef = {
     aptitude: 'Willpower',
     keyTalents: ['Touched by the Warp (Psyniscience rank 1)'],
     recommendedBackgrounds: ['Adeptus Astra Telepathica', 'Adeptus Ministorum', 'Exorcised', 'Outcast'],
-    mechanicalHook:
-        'Begins with one rank in Psyniscience (cannot be increased without the Psyker aptitude) and 1d10+5 starting Corruption Points.',
+    mechanicalHook: 'Begins with one rank in Psyniscience (cannot be increased without the Psyker aptitude) and 1d10+5 starting Corruption Points.',
     corruptionRider: { base: 5, dieFaces: 10 },
 };
 
@@ -118,8 +117,7 @@ const PENAL_COLONY: BeyondHomeworldDef = {
     aptitude: 'Toughness',
     keyTalents: ['Common Lore (Underworld) rank 1', 'Scrutiny rank 1', 'Peer (Criminal Cartels)'],
     recommendedBackgrounds: ['Adeptus Administratum', 'Adeptus Ministorum', 'Imperial Guard', 'Outcast'],
-    mechanicalHook:
-        'Finger on the Pulse: begins with rank 1 in Common Lore (Underworld) and Scrutiny, and the Peer (Criminal Cartels) talent.',
+    mechanicalHook: 'Finger on the Pulse: begins with rank 1 in Common Lore (Underworld) and Scrutiny, and the Peer (Criminal Cartels) talent.',
 };
 
 /**

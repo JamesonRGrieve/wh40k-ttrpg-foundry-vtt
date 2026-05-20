@@ -31,13 +31,7 @@
 import type { GameSystemId } from '../config/game-systems/types.ts';
 
 /** Stable ids for the six RAW RT Manoeuvre Actions. */
-export type ShipManoeuvreId =
-    | 'adjust-bearing'
-    | 'adjust-speed'
-    | 'adjust-speed-and-bearing'
-    | 'come-to-new-heading'
-    | 'disengage'
-    | 'evasive-manoeuvres';
+export type ShipManoeuvreId = 'adjust-bearing' | 'adjust-speed' | 'adjust-speed-and-bearing' | 'come-to-new-heading' | 'disengage' | 'evasive-manoeuvres';
 
 /** Shape of a single Manoeuvre Action registry entry. */
 export interface ShipManoeuvre {
@@ -199,10 +193,7 @@ export interface ShipManoeuvreTarget {
  * Throws on an unknown id so callers cannot silently drop a bad action
  * onto the chain.
  */
-export function resolveShipManoeuvreCombinedTest(
-    id: ShipManoeuvreId,
-    input: ShipManoeuvreTestInput,
-): ShipManoeuvreTarget {
+export function resolveShipManoeuvreCombinedTest(id: ShipManoeuvreId, input: ShipManoeuvreTestInput): ShipManoeuvreTarget {
     const manoeuvre = getShipManoeuvre(id);
     if (manoeuvre === undefined) {
         throw new Error(`Unknown ship Manoeuvre id: ${id}`);

@@ -153,6 +153,55 @@
                   inline tracker above remains for the single-Endeavour
                   use case bound to system.rogueTrader.endeavour. --}}
             {{> systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs}}
+
+            {{!-- Colony (Stars of Inequity, #195). The Dynasty tab is RT-only,
+                  so this panel is implicitly RT-gated by its host tab. The
+                  Roll Growth button hands the actor to ColonyGrowthDialog,
+                  which reads / writes system.rogueTrader.colony.characteristics. --}}
+            <div class="wh40k-panel">
+                <div class="wh40k-panel-header">
+                    <span class="wh40k-panel-title"><i class="fas fa-city"></i> {{localize "WH40K.RT.Colony.ChatTitle"}}</span>
+                    <button type="button"
+                            class="tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-py-1 tw-px-2 tw-rounded-md tw-transition-all tw-text-xs hover:tw-border-gold hover:tw-text-gold"
+                            data-action="openColonyGrowthDialog"
+                            data-tooltip="{{localize "WH40K.RT.Colony.DialogTitle"}}">
+                        <i class="fas fa-dice-d10"></i> {{localize "WH40K.RT.Colony.RollGrowthButton"}}
+                    </button>
+                </div>
+                <div class="wh40k-panel-body">
+                    <div class="tw-flex tw-flex-col tw-gap-2">
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.Name"}}</label>
+                            <input type="text"
+                                   class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold"
+                                   name="system.rogueTrader.colony.name"
+                                   value="{{system.rogueTrader.colony.name}}" />
+                        </div>
+                        <div class="tw-grid tw-grid-cols-5 tw-gap-2">
+                            <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                                <label class="tw-font-semibold tw-uppercase tw-text-[0.65rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.RT.Colony.Characteristic.Size"}}</label>
+                                <input type="number" class="tw-py-1 tw-px-1 tw-w-full tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-8 tw-text-base tw-font-semibold" name="system.rogueTrader.colony.characteristics.size" value="{{system.rogueTrader.colony.characteristics.size}}" data-dtype="Number" min="0" max="10" />
+                            </div>
+                            <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                                <label class="tw-font-semibold tw-uppercase tw-text-[0.65rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.RT.Colony.Characteristic.Complacency"}}</label>
+                                <input type="number" class="tw-py-1 tw-px-1 tw-w-full tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-8 tw-text-base tw-font-semibold" name="system.rogueTrader.colony.characteristics.complacency" value="{{system.rogueTrader.colony.characteristics.complacency}}" data-dtype="Number" min="0" max="99" />
+                            </div>
+                            <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                                <label class="tw-font-semibold tw-uppercase tw-text-[0.65rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.RT.Colony.Characteristic.Order"}}</label>
+                                <input type="number" class="tw-py-1 tw-px-1 tw-w-full tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-8 tw-text-base tw-font-semibold" name="system.rogueTrader.colony.characteristics.order" value="{{system.rogueTrader.colony.characteristics.order}}" data-dtype="Number" min="0" max="99" />
+                            </div>
+                            <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                                <label class="tw-font-semibold tw-uppercase tw-text-[0.65rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.RT.Colony.Characteristic.Productivity"}}</label>
+                                <input type="number" class="tw-py-1 tw-px-1 tw-w-full tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-8 tw-text-base tw-font-semibold" name="system.rogueTrader.colony.characteristics.productivity" value="{{system.rogueTrader.colony.characteristics.productivity}}" data-dtype="Number" min="0" max="99" />
+                            </div>
+                            <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                                <label class="tw-font-semibold tw-uppercase tw-text-[0.65rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.RT.Colony.Characteristic.Piety"}}</label>
+                                <input type="number" class="tw-py-1 tw-px-1 tw-w-full tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-8 tw-text-base tw-font-semibold" name="system.rogueTrader.colony.characteristics.piety" value="{{system.rogueTrader.colony.characteristics.piety}}" data-dtype="Number" min="0" max="99" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -1,7 +1,22 @@
+import type { HordeTrait } from '../data/actor/mixins/horde-template.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
 import { damageTypeDropdown } from '../rules/damage-type.ts';
+import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import { applyRollModeWhispers } from './roll-helpers.ts';
+
+/**
+ * Optional horde state surfaced by NPC actors carrying the HordeTemplate
+ * mixin. When the target is a horde *and* its owning actor runs on the
+ * DW game system, AssignDamageData routes the resolved hit through the
+ * RAW "single hit removes 1 Magnitude" branch instead of wounds.
+ */
+export interface ActorHordeState {
+    enabled: boolean;
+    magnitude: { current: number; max: number };
+    /** Trait identifiers (Fearless / Disciplined / …) governing break-check behaviour. */
+    traits?: readonly string[];
+}
 
 /** Minimal actor shape needed for damage assignment. Exported for tests. */
 export interface ActorLike {
@@ -9,6 +24,10 @@ export interface ActorLike {
         armour: Record<string, { value: number; toughnessBonus: number }>;
         wounds: { value: number; critical: number };
         fatigue: { value: number };
+        /** Active game-system id from the DataModel (`'dw'`, `'dh2'`, …). */
+        gameSystem?: string;
+        /** Optional horde state (set on NPC DataModels via the mixin). */
+        horde?: ActorHordeState;
     };
     hasTalent: (name: string) => boolean;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update accepts arbitrary update data; return type is unknown
@@ -32,6 +51,13 @@ interface HitLike {
      * point of unarmoured damage anyway (core.md L10398-10414).
      */
     righteousFuryCount?: number;
+    /**
+     * Whether the source weapon has Explosive (X). When the target is a
+     * DW horde, RAW gives +1 Magnitude loss per hit ("Weapons that
+     * inflict Explosive Damage … count as having inflicted one
+     * additional Hit", core.md p. 359).
+     */
+    isExplosive?: boolean;
 }
 
 export class AssignDamageData {
@@ -55,6 +81,28 @@ export class AssignDamageData {
     criticalDamageTaken = 0;
     criticalEffect = '';
 
+    /** True when this hit resolved against a DW horde (#166). */
+    hasHordeDamage = false;
+    /** Magnitude removed by this hit when {@link hasHordeDamage} is true. */
+    magnitudeLost = 0;
+    /** Pre-hit magnitude (for chat-card display). */
+    magnitudeBefore = 0;
+    /** Post-hit magnitude (for chat-card display). */
+    magnitudeAfter = 0;
+    /**
+     * Break-check resolution from {@link resolveBreakCheck}, computed when
+     * a horde lost Magnitude this hit. Drives the follow-up Willpower
+     * test / auto-break narration in the chat card.
+     */
+    hordeBreakCheck: BreakCheck | undefined = undefined;
+    /** True when {@link hordeBreakCheck} is populated; convenience flag for Handlebars. */
+    hasHordeBreakCheck = false;
+    /**
+     * Localised break-check status label (e.g., "Willpower test at -10",
+     * "Auto-break"). Empty when no test required.
+     */
+    hordeBreakLabel = '';
+
     constructor(actor: ActorLike, hit: HitLike) {
         this.actor = actor;
         this.hit = hit;
@@ -76,6 +124,34 @@ export class AssignDamageData {
         this.armour += this.coverAP;
     }
 
+    /**
+     * DW horde branch (#166): when the target is a horde *and* runs on
+     * the DW ruleset, RAW collapses the wounds path entirely. The hit
+     * either does damage (after armour + TB) or it doesn't; a damaging
+     * hit removes 1 Magnitude (+1 if Explosive). Wounds, criticals,
+     * fatigue, Righteous Fury, True Grit all bypass — a horde is an
+     * abstract pool, not an actor with anatomy.
+     */
+    private _isDwHordeTarget(): boolean {
+        const horde = this.actor.system.horde;
+        if (!horde?.enabled) return false;
+        return this.actor.system.gameSystem === 'dw';
+    }
+
+    /**
+     * Read the active horde-trait set from the target actor. Returns a
+     * read-only `Set<HordeTrait>` (empty when the horde has no traits or
+     * the target isn't a horde). The mixin stores traits as `string[]`
+     * to allow forward-compat with unknown trait ids; the cast here
+     * preserves that — unknown strings simply never match a `traits.has(…)`
+     * check in the resolver.
+     */
+    private _getHordeTraits(): ReadonlySet<HordeTrait> {
+        const traits = this.actor.system.horde?.traits;
+        if (traits === undefined) return new Set<HordeTrait>();
+        return new Set(traits as readonly HordeTrait[]);
+    }
+
     async finalize(): Promise<void> {
         const totalDamage = Number(this.hit.totalDamage);
         const totalPenetration = Number(this.hit.totalPenetration);
@@ -92,6 +168,46 @@ export class AssignDamageData {
 
         const reduction = usableArmour + this.tb;
         const reducedDamage = totalDamage - reduction;
+
+        // DW horde branch (#166 — core.md p. 359 "Damaging a Horde").
+        if (this._isDwHordeTarget()) {
+            const horde = this.actor.system.horde;
+            if (horde !== undefined) {
+                this.hasHordeDamage = true;
+                this.magnitudeBefore = horde.magnitude.current;
+                // TODO (#166 Part C — defender-side trait damage modifiers):
+                //   `applyHordeTraits()` in rules/dw-horde-magnitude.ts is the
+                //   *attacker* horde's outgoing-damage hook (Overwhelming /
+                //   Brutal Charge). RAW defender traits that affect received
+                //   damage (e.g., Heavily Armoured-style cover bumps) aren't
+                //   modelled yet — when they are, route the trait-modified
+                //   hit-count / damage through here before magnitudeLossForHit.
+                //   Disciplined / Fearless DO flow through, but via the
+                //   break-check call below (RAW behaviour change).
+                const loss = magnitudeLossForHit(reducedDamage, this.hit.isExplosive === true);
+                this.magnitudeLost = loss;
+                this.magnitudeAfter = Math.max(0, horde.magnitude.current - loss);
+
+                // Resolve break check now so the chat card can render the
+                // outcome alongside the magnitude delta. The caller can
+                // dispatch the Willpower test from the rendered card.
+                if (loss > 0) {
+                    const traits = this._getHordeTraits();
+                    const breakCheck = resolveBreakCheck({
+                        startingMagnitude: horde.magnitude.max,
+                        currentMagnitude: this.magnitudeAfter,
+                        lostThisTurn: loss,
+                        isFearless: traits.has('fearless'),
+                        isDisciplined: traits.has('disciplined'),
+                    });
+                    this.hordeBreakCheck = breakCheck;
+                    this.hasHordeBreakCheck = true;
+                    this.hordeBreakLabel = this._localiseBreakOutcome(breakCheck);
+                }
+                return;
+            }
+        }
+
         // We have damage to process
         if (reducedDamage > 0) {
             // No Wounds Available
@@ -145,12 +261,19 @@ export class AssignDamageData {
     }
 
     async performActionAndSendToChat(): Promise<void> {
-        // Assign Damage - use dot notation to avoid overwriting sibling properties
-        await this.actor.update({
-            'system.wounds.value': this.actor.system.wounds.value - this.damageTaken,
-            'system.wounds.critical': this.actor.system.wounds.critical + this.criticalDamageTaken,
-            'system.fatigue.value': this.actor.system.fatigue.value + this.fatigueTaken,
-        });
+        if (this.hasHordeDamage) {
+            // DW horde branch (#166): write Magnitude, skip wound bookkeeping.
+            await this.actor.update({
+                'system.horde.magnitude.current': this.magnitudeAfter,
+            });
+        } else {
+            // Assign Damage - use dot notation to avoid overwriting sibling properties
+            await this.actor.update({
+                'system.wounds.value': this.actor.system.wounds.value - this.damageTaken,
+                'system.wounds.critical': this.actor.system.wounds.critical + this.criticalDamageTaken,
+                'system.fatigue.value': this.actor.system.fatigue.value + this.fatigueTaken,
+            });
+        }
         game.wh40k.log('performActionAndSendToChat', this);
 
         // Create critical injury item if critical damage was taken
@@ -169,6 +292,35 @@ export class AssignDamageData {
         };
         applyRollModeWhispers(chatData);
         await ChatMessage.create(chatData);
+    }
+
+    /**
+     * Translate a {@link BreakCheck} outcome to its localised label. The
+     * keys live under `WH40K.DW.Horde.Break.*` to stay co-located with
+     * the rest of the horde lang surface.
+     */
+    private _localiseBreakOutcome(breakCheck: BreakCheck): string {
+        // Unit tests construct AssignDamageData without a Foundry runtime,
+        // so `game.i18n` may not be defined. Falling back to the bare key
+        // keeps the label deterministic in tests; at runtime Foundry
+        // resolves the key to a translated string.
+        const localize = (key: string): string => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: `game` is the Foundry runtime global; tests run without it
+            const i18n = (globalThis as { game?: { i18n?: { localize?: (k: string) => string } } }).game?.i18n;
+            return i18n?.localize?.(key) ?? key;
+        };
+        switch (breakCheck.outcome) {
+            case 'auto-break':
+                return localize('WH40K.DW.Horde.Break.AutoBreak');
+            case 'test-penalised':
+                return localize('WH40K.DW.Horde.Break.TestPenalised');
+            case 'test-normal':
+                return localize('WH40K.DW.Horde.Break.TestNormal');
+            case 'no-test':
+                return localize('WH40K.DW.Horde.Break.NoTest');
+            default:
+                return localize('WH40K.DW.Horde.Break.NoTest');
+        }
     }
 
     /**

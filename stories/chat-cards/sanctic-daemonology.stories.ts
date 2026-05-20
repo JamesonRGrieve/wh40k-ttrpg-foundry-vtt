@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import sancticChatSrc from '../../src/templates/chat/sanctic-daemonology-chat.hbs?raw';
 import { resolveSancticManifestation, type SancticManifestInput } from '../../src/module/rules/sanctic-daemonology.ts';
+import sancticChatSrc from '../../src/templates/chat/sanctic-daemonology-chat.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
@@ -48,11 +48,7 @@ type Story = StoryObj;
 
 export const UnfetteredNoPhenomena: Story = {
     name: 'Unfettered Banishment — no corruption, no phenomena',
-    render: () =>
-        renderTemplate(
-            sancticTemplate,
-            cardContext({ powerId: 'banishment', mode: 'unfettered', basePR: 4, success: true }),
-        ),
+    render: () => renderTemplate(sancticTemplate, cardContext({ powerId: 'banishment', mode: 'unfettered', basePR: 4, success: true })),
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         expect(canvas.getByText(/Banishment/i)).toBeTruthy();
@@ -65,20 +61,12 @@ export const UnfetteredNoPhenomena: Story = {
 
 export const FetteredHolocaust: Story = {
     name: 'Fettered Holocaust — half PR, +10 focus',
-    render: () =>
-        renderTemplate(
-            sancticTemplate,
-            cardContext({ powerId: 'holocaust', mode: 'fettered', basePR: 5, success: true }),
-        ),
+    render: () => renderTemplate(sancticTemplate, cardContext({ powerId: 'holocaust', mode: 'fettered', basePR: 5, success: true })),
 };
 
 export const PushPhenomena: Story = {
     name: 'Pushed Cleansing Flame — Phenomena fires (no corruption)',
-    render: () =>
-        renderTemplate(
-            sancticTemplate,
-            cardContext({ powerId: 'cleansing-flame', mode: 'push', basePR: 4, pushLevel: 2, success: true }),
-        ),
+    render: () => renderTemplate(sancticTemplate, cardContext({ powerId: 'cleansing-flame', mode: 'push', basePR: 4, pushLevel: 2, success: true })),
     play: async ({ canvasElement }) => {
         // Phenomena block renders on a pushed success.
         expect(canvasElement.querySelector('.tw-text-red-300')).toBeTruthy();

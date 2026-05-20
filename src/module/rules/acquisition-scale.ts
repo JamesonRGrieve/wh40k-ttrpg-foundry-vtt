@@ -72,7 +72,10 @@ export const ACQUISITION_AVAILABILITY_MODIFIERS: Record<AvailabilityKey, number>
  */
 export function normaliseAvailability(raw: string | null | undefined): AvailabilityKey | null {
     if (raw === null || raw === undefined) return null;
-    const collapsed = raw.trim().toLowerCase().replace(/[\s_-]+/g, '');
+    const collapsed = raw
+        .trim()
+        .toLowerCase()
+        .replace(/[\s_-]+/g, '');
     switch (collapsed) {
         case 'ubiquitous':
             return 'ubiquitous';
@@ -120,7 +123,10 @@ export const ACQUISITION_CRAFTSMANSHIP_MODIFIERS: Record<CraftsmanshipKey, numbe
 
 export function normaliseCraftsmanship(raw: string | null | undefined): CraftsmanshipKey | null {
     if (raw === null || raw === undefined) return null;
-    const collapsed = raw.trim().toLowerCase().replace(/[\s_-]+/g, '');
+    const collapsed = raw
+        .trim()
+        .toLowerCase()
+        .replace(/[\s_-]+/g, '');
     switch (collapsed) {
         case 'poor':
             return 'poor';
@@ -158,7 +164,10 @@ export const ACQUISITION_SCALE_MODIFIERS: Record<ScaleKey, number> = {
 
 export function normaliseScale(raw: string | null | undefined): ScaleKey | null {
     if (raw === null || raw === undefined) return null;
-    const collapsed = raw.trim().toLowerCase().replace(/[\s_-]+/g, '');
+    const collapsed = raw
+        .trim()
+        .toLowerCase()
+        .replace(/[\s_-]+/g, '');
     switch (collapsed) {
         case 'negligible':
             return 'negligible';

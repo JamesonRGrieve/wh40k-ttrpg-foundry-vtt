@@ -16,17 +16,16 @@ test.describe('DaemonWeaponAttributeDialog (#142)', () => {
         const probe = await page.evaluate(async (): Promise<{ rendered: boolean; hasSelects: boolean; hasResult: boolean; error: string | null }> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side dynamic import probe */
             try {
-                const mod = (await import(
-                    /* @vite-ignore */ '/systems/wh40k-rpg/module/applications/prompts/daemon-weapon-attribute-dialog.js' as unknown as string
-                )) as any;
+                const modUrl = '/systems/wh40k-rpg/module/applications/prompts/daemon-weapon-attribute-dialog.js';
+                const mod = await import(/* @vite-ignore */ modUrl);
                 const DialogCtor = mod.default;
-                const dialog = new DialogCtor({ alignment: 'khorne', bindingStrength: 'normal' }) as any;
+                const dialog = new DialogCtor({ alignment: 'khorne', bindingStrength: 'normal' });
                 await dialog.render({ force: true });
                 const el = dialog.element as HTMLElement | undefined;
                 const rendered = el instanceof HTMLElement;
-                const hasSelects = !!(el && el.querySelector('select[name="alignment"]') && el.querySelector('select[name="bindingStrength"]'));
+                const hasSelects = !!(el?.querySelector('select[name="alignment"]') && el.querySelector('select[name="bindingStrength"]'));
                 // Force a deterministic roll path
-                const roller = mod.default as any;
+                const roller = mod.default;
                 const actions = roller.DEFAULT_OPTIONS.actions;
                 await actions.roll.call(dialog, new Event('click'), document.createElement('button'));
                 const afterEl = dialog.element as HTMLElement | undefined;

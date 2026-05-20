@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/beyond-homeworld-info-dialog.hbs?raw';
 import { listBeyondHomeworlds } from '../../src/module/rules/beyond-homeworlds';
+import templateSrc from '../../src/templates/prompt/beyond-homeworld-info-dialog.hbs?raw';
 import { renderSheet } from '../test-helpers';
 
 /**
@@ -33,7 +33,9 @@ function buildContext(): Record<string, unknown> {
             recommendedBackgrounds: def.recommendedBackgrounds,
             mechanicalHook: def.mechanicalHook,
             corruptionRiderLabel: def.corruptionRider ? `1d${def.corruptionRider.dieFaces} + ${def.corruptionRider.base} Corruption Points` : null,
-            subtletyClampLabel: def.subtletyClamp ? `Subtlety decreases reduced by ${def.subtletyClamp.reducedBy} (min reduction ${def.subtletyClamp.minimumReduction})` : null,
+            subtletyClampLabel: def.subtletyClamp
+                ? `Subtlety decreases reduced by ${def.subtletyClamp.reducedBy} (min reduction ${def.subtletyClamp.minimumReduction})`
+                : null,
         })),
     };
 }

@@ -168,6 +168,29 @@ export default class CharacterData extends CreatureTemplate {
             notes: string;
         };
         acquisitions: AcquisitionEntry[];
+        /**
+         * Stars-of-Inequity Colony state owned by the Rogue Trader Dynasty
+         * (#195). The engine in `src/module/rules/rt-colony.ts` operates
+         * on the five characteristics; type/name/lastTick are persisted
+         * for sheet display and chat-card re-emission. RT-gated — the
+         * Dynasty tab where this surfaces is only visible to RT actors.
+         */
+        colony: {
+            name: string;
+            type: 'research-mission' | 'mining-industry' | 'ecclesiastical' | 'agricultural' | '';
+            characteristics: {
+                size: number;
+                complacency: number;
+                order: number;
+                productivity: number;
+                piety: number;
+            };
+            lastTick: {
+                date: string;
+                modifier: number;
+                outcome: '' | 'decrease' | 'noChange' | 'increase';
+            };
+        };
     };
     declare influence: number;
     declare requisition: number;
@@ -183,6 +206,29 @@ export default class CharacterData extends CreatureTemplate {
     declare corruption: number;
     declare aptitudes: string[];
     declare chaosAlignment: 'unaligned' | 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch';
+    /**
+     * Per-advance log used by BC's Alignment derivation (see
+     * `src/module/rules/bc-alignment-derivation.ts`). Each entry records
+     * the advance's category, key (charKey/skillKey/talent UUID/etc.),
+     * paid xp cost, the alignment of the advance, and whether it came
+     * from the Archetype (excluded from the tally per `bc/core/core.md`
+     * :2561). Empty for non-BC actors.
+     */
+    declare chaosAdvancements: Array<{
+        category: 'characteristic' | 'skill' | 'talent' | 'psychic-power' | 'infamy';
+        key: string;
+        xpCost: number;
+        alignment: 'unaligned' | 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch';
+        fromArchetype: boolean;
+    }>;
+    /**
+     * Last Corruption-Point threshold at which BC Alignment was
+     * re-evaluated (`bc/core/core.md` :2569). Used to gate the 10-CP
+     * re-check so we only flip Alignment once per threshold crossed.
+     * Always a non-negative multiple of 10 (or 0 if never checked).
+     */
+    declare alignmentCheckpoint: number;
+    declare infamy: number;
     /**
      * Active Dark Pacts (beyond.md p. 72). Each entry tracks a single pact
      * the actor has struck with a daemon: the `pactUuid` resolves to the
@@ -330,6 +376,36 @@ export default class CharacterData extends CreatureTemplate {
                     }),
                     { required: true, initial: [] },
                 ),
+                // Colony (Stars of Inequity, #195). Founding defaults match
+                // COLONY_CHARACTERISTICS[*].default in `src/module/rules/rt-colony.ts`.
+                // The Type field is blank until the Dynasty founds a Colony —
+                // when set, it picks one of the four canonical Colony Type
+                // seeds (research-mission / mining-industry / ecclesiastical /
+                // agricultural).
+                colony: new fields.SchemaField({
+                    name: new fields.StringField({ required: false, blank: true }),
+                    type: new fields.StringField({
+                        required: true,
+                        initial: '',
+                        choices: ['', 'research-mission', 'mining-industry', 'ecclesiastical', 'agricultural'],
+                    }),
+                    characteristics: new fields.SchemaField({
+                        size: new fields.NumberField({ required: true, initial: 1, min: 0, max: 10, integer: true }),
+                        complacency: new fields.NumberField({ required: true, initial: 1, min: 0, max: 99, integer: true }),
+                        order: new fields.NumberField({ required: true, initial: 1, min: 0, max: 99, integer: true }),
+                        productivity: new fields.NumberField({ required: true, initial: 1, min: 0, max: 99, integer: true }),
+                        piety: new fields.NumberField({ required: true, initial: 1, min: 0, max: 99, integer: true }),
+                    }),
+                    lastTick: new fields.SchemaField({
+                        date: new fields.StringField({ required: false, blank: true }),
+                        modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        outcome: new fields.StringField({
+                            required: true,
+                            initial: '',
+                            choices: ['', 'decrease', 'noChange', 'increase'],
+                        }),
+                    }),
+                }),
             }),
 
             // ===== DH2e RESOURCES =====
@@ -366,6 +442,34 @@ export default class CharacterData extends CreatureTemplate {
                 initial: 'unaligned',
                 choices: ['unaligned', 'khorne', 'nurgle', 'slaanesh', 'tzeentch'],
             }),
+            // Per-advance log driving Alignment derivation. Empty for non-BC actors.
+            // Per `bc/core/core.md` :2559 alignment is computed from this tally,
+            // re-checked at 10-CP thresholds (:2569).
+            chaosAdvancements: new fields.ArrayField(
+                new fields.SchemaField({
+                    category: new fields.StringField({
+                        required: true,
+                        initial: 'characteristic',
+                        choices: ['characteristic', 'skill', 'talent', 'psychic-power', 'infamy'],
+                    }),
+                    key: new fields.StringField({ required: true, blank: false }),
+                    xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    alignment: new fields.StringField({
+                        required: true,
+                        initial: 'unaligned',
+                        choices: ['unaligned', 'khorne', 'nurgle', 'slaanesh', 'tzeentch'],
+                    }),
+                    fromArchetype: new fields.BooleanField({ required: true, initial: false }),
+                }),
+                { required: true, initial: [] },
+            ),
+            // BC Alignment re-check checkpoint (highest 10-CP threshold last evaluated).
+            // 0 = never checked; rounds up to 10/20/30/... as Corruption accrues.
+            alignmentCheckpoint: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            // BC Infamy stat (`core.md` :2667). Flat 500xp/+5 advance, blocked at >=40.
+            // Sibling issue tracks Infamy's RAW role outside advancement; this slot is
+            // the canonical persistence so `BCSystemConfig.getInfamyAdvanceCost` works.
+            infamy: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
 
             // ===== DARK PACTS (Enemies Beyond, p. 72) =====
             // Active pacts struck with daemons. Per-pact disposition is

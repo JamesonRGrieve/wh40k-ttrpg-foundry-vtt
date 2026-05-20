@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/without-homeworld-info-dialog.hbs?raw';
 import { listWithoutHomeworlds } from '../../src/module/rules/without-homeworlds';
+import templateSrc from '../../src/templates/prompt/without-homeworld-info-dialog.hbs?raw';
 import { renderSheet } from '../test-helpers';
 
 /**

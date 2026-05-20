@@ -74,9 +74,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                     actionNames = plan.attacks.map((a) => a.actionName);
                     actionCosts = plan.attacks.map((a) => a.actionCost);
 
-                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as
-                        | ((path: string, ctx: object) => Promise<string>)
-                        | undefined;
+                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
                     if (typeof renderTemplate !== 'function') {
                         return {
                             rendered,
@@ -150,10 +148,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
             expect(result.attackCount, 'refocus plan should hold exactly two attacks').toBe(2);
             // Both are Standard Attacks — NOT a Full-Action lump, NOT
             // Semi-Auto-Burst ×2.
-            expect(result.actionNames, 'both attacks must be Standard Attack (single shot ×2)').toEqual([
-                'Standard Attack',
-                'Standard Attack',
-            ]);
+            expect(result.actionNames, 'both attacks must be Standard Attack (single shot ×2)').toEqual(['Standard Attack', 'Standard Attack']);
             // Action economy: Half opener + Free follow-up, never Full.
             expect(result.actionCosts, 'opener is a Half Action; follow-up is a Free Action').toEqual(['Half', 'Free']);
             expect(result.actionCosts.includes('Full'), 'no Full-Action lump in the refocus plan').toBe(false);

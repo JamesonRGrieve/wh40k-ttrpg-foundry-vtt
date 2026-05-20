@@ -72,12 +72,9 @@ test.describe.serial('WithoutHomeworldInfoDialog (Tier B)', () => {
                         hasDeathWorld = el.querySelector('[data-homeworld-id="deathWorld"]') !== null;
                         hasGardenWorld = el.querySelector('[data-homeworld-id="gardenWorld"]') !== null;
                         hasResearchStation = el.querySelector('[data-homeworld-id="researchStation"]') !== null;
-                        hasSurpriseSuppressionRider =
-                            el.querySelector('[data-homeworld-id="deathWorld"] [data-rider="surprise-suppression"]') !== null;
-                        hasSerenityRider =
-                            el.querySelector('[data-homeworld-id="gardenWorld"] [data-rider="serenity"]') !== null;
-                        hasPursuitOfDataRider =
-                            el.querySelector('[data-homeworld-id="researchStation"] [data-rider="pursuit-of-data"]') !== null;
+                        hasSurpriseSuppressionRider = el.querySelector('[data-homeworld-id="deathWorld"] [data-rider="surprise-suppression"]') !== null;
+                        hasSerenityRider = el.querySelector('[data-homeworld-id="gardenWorld"] [data-rider="serenity"]') !== null;
+                        hasPursuitOfDataRider = el.querySelector('[data-homeworld-id="researchStation"] [data-rider="pursuit-of-data"]') !== null;
                     }
                     // Keep the dialog open and on a handle so snap() (called
                     // outside this evaluate) captures the live DOM. Closing

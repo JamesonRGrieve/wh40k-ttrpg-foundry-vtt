@@ -4,8 +4,8 @@ import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
-import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
+import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 
 /**
  * Data model for Origin Path items (homeworld, birthright, career, etc).

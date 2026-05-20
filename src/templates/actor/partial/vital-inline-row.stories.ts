@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from './vital-inline-row.hbs?raw';
 
 initializeStoryHandlebars();
@@ -106,7 +106,7 @@ export const ClickDispatch: Story = {
         clickAction(canvasElement, 'increment');
         clickAction(canvasElement, 'decrement');
         // Field path threaded onto both buttons.
-        const inc = canvasElement.querySelector('[data-action="increment"]') as HTMLButtonElement | null;
+        const inc = canvasElement.querySelector<HTMLElement>('[data-action="increment"]');
         expect(inc?.dataset.field).toBe('system.wounds.value');
         void canvas;
     },

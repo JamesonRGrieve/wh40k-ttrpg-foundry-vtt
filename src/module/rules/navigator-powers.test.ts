@@ -184,7 +184,7 @@ describe('emitNavigatorPowerEffects (#194)', () => {
 
     it('handles a completely missing levels payload gracefully', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test boundary: probing the missing-payload branch
-        const out = emitNavigatorPowerEffects({} as any, 'master');
+        const out = emitNavigatorPowerEffects({}, 'master');
         expect(out).toEqual([]);
     });
 });

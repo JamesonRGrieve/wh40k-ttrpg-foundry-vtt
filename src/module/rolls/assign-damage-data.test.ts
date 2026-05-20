@@ -167,3 +167,96 @@ describe('Righteous Fury no-break branch (#109)', () => {
     // covered by code review against the source; the wounds>0 case above
     // proves the RF-no-break trigger fires.
 });
+
+describe('DW horde branch (#166 — core.md p. 359 "Damaging a Horde")', () => {
+    function buildHordeActor(magnitude = 30, gameSystem: string | undefined = 'dw'): ActorLike {
+        const actor = buildActor();
+        actor.system.gameSystem = gameSystem;
+        actor.system.horde = { enabled: true, magnitude: { current: magnitude, max: magnitude } };
+        return actor;
+    }
+
+    it('damaging hit removes 1 Magnitude (DW)', async () => {
+        const actor = buildHordeActor(30);
+        // Body armour 4 + TB 3 = 7; damage 12 → 5 reduced damage (>0 → 1 hit lands).
+        const hit = { location: 'Body', damageType: 'Impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.hasHordeDamage).toBe(true);
+        expect(data.magnitudeLost).toBe(1);
+        expect(data.magnitudeBefore).toBe(30);
+        expect(data.magnitudeAfter).toBe(29);
+        // Wound bookkeeping must stay zero on the horde branch.
+        expect(data.damageTaken).toBe(0);
+        expect(data.hasCriticalDamage).toBe(false);
+    });
+
+    it('hit fully absorbed → 0 Magnitude loss (no damage = no hit removed)', async () => {
+        const actor = buildHordeActor(30);
+        // Damage 5 vs armour 4 + TB 3 = 7 reduction → 0 net.
+        const hit = { location: 'Body', damageType: 'Impact', totalDamage: 5, totalPenetration: 0, totalFatigue: 0 };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.hasHordeDamage).toBe(true);
+        expect(data.magnitudeLost).toBe(0);
+        expect(data.magnitudeAfter).toBe(30);
+    });
+
+    it('Explosive damage type removes 2 Magnitude per hit (RAW: counts as extra hit)', async () => {
+        const actor = buildHordeActor(30);
+        const hit = { location: 'Body', damageType: 'Explosive', totalDamage: 12, totalPenetration: 0, totalFatigue: 0, isExplosive: true };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.magnitudeLost).toBe(2);
+        expect(data.magnitudeAfter).toBe(28);
+    });
+
+    it('Magnitude floors at 0 (no negative magnitude)', async () => {
+        const actor = buildHordeActor(1);
+        const hit = { location: 'Body', damageType: 'Explosive', totalDamage: 30, totalPenetration: 0, totalFatigue: 0, isExplosive: true };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.magnitudeLost).toBe(2);
+        expect(data.magnitudeAfter).toBe(0);
+    });
+
+    it('non-DW horde target falls back to normal wounds path (other six systems unaffected)', async () => {
+        const actor = buildHordeActor(30, 'dh2');
+        const hit = { location: 'Body', damageType: 'Impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        // Horde branch must NOT fire outside DW.
+        expect(data.hasHordeDamage).toBe(false);
+        expect(data.magnitudeLost).toBe(0);
+        // Falls through to normal wound bookkeeping: 12 - (4+3) = 5 wounds.
+        expect(data.damageTaken).toBe(5);
+    });
+
+    it('DW non-horde target falls back to normal wounds path', async () => {
+        const actor = buildActor();
+        actor.system.gameSystem = 'dw';
+        // No horde field at all.
+        const hit = { location: 'Body', damageType: 'Impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.hasHordeDamage).toBe(false);
+        expect(data.damageTaken).toBe(5);
+    });
+
+    it('horde disabled → falls back to normal wounds path', async () => {
+        const actor = buildHordeActor(30);
+        actor.system.horde = { enabled: false, magnitude: { current: 30, max: 30 } };
+        const hit = { location: 'Body', damageType: 'Impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 };
+        const data = new AssignDamageData(actor, hit);
+        data.update();
+        await data.finalize();
+        expect(data.hasHordeDamage).toBe(false);
+        expect(data.damageTaken).toBe(5);
+    });
+});

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
+import { getClimbingModifier, type ClimbingSurface } from '../../src/module/rules/climbing.ts';
 import contextPanelSrc from '../../src/templates/prompt/unified/context-panel.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
-import { getClimbingModifier, type ClimbingSurface } from '../../src/module/rules/climbing.ts';
 
 initializeStoryHandlebars();
 

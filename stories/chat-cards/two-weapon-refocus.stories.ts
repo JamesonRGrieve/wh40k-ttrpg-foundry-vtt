@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import refocusChatSrc from '../../src/templates/chat/two-weapon-refocus-chat.hbs?raw';
 import { resolveTwoWeaponRefocus, type TwoWeaponRefocusContext } from '../../src/module/rules/two-weapon-fighting.ts';
+import refocusChatSrc from '../../src/templates/chat/two-weapon-refocus-chat.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
@@ -37,11 +37,7 @@ type Story = StoryObj;
 
 export const RangedSingleShotWielder: Story = {
     name: 'Ranged Wielder — single shot Half-Action ×2',
-    render: () =>
-        renderTemplate(
-            refocusTemplate,
-            cardContext({ isMelee: false, mode: 'Standard Attack', talents: new Set(['Two-Weapon Wielder (Ranged)']) }),
-        ),
+    render: () => renderTemplate(refocusTemplate, cardContext({ isMelee: false, mode: 'Standard Attack', talents: new Set(['Two-Weapon Wielder (Ranged)']) })),
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         // Two Standard Attack rows render (main Half + off Free).
@@ -58,11 +54,7 @@ export const RangedSingleShotWielder: Story = {
 
 export const RangedSemiAutoSameRestrictions: Story = {
     name: 'Ranged Wielder — semi-auto opener, same-mode follow-up',
-    render: () =>
-        renderTemplate(
-            refocusTemplate,
-            cardContext({ isMelee: false, mode: 'Semi-Auto Burst', talents: new Set(['Two-Weapon Wielder (Ranged)']) }),
-        ),
+    render: () => renderTemplate(refocusTemplate, cardContext({ isMelee: false, mode: 'Semi-Auto Burst', talents: new Set(['Two-Weapon Wielder (Ranged)']) })),
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         // The off-hand follows the same restrictions as the opener.
@@ -85,11 +77,7 @@ export const RangedMasterAmbidextrous: Story = {
 
 export const MeleeSwiftAttackVariant: Story = {
     name: 'Melee Wielder (RT) — Swift Attack ×2',
-    render: () =>
-        renderTemplate(
-            refocusTemplate,
-            cardContext({ isMelee: true, mode: 'Swift Attack', talents: new Set(['Two-Weapon Wielder (Melee)']) }, 'rt'),
-        ),
+    render: () => renderTemplate(refocusTemplate, cardContext({ isMelee: true, mode: 'Swift Attack', talents: new Set(['Two-Weapon Wielder (Melee)']) }, 'rt')),
     play: async ({ canvasElement }) => {
         // Per-system variant anchor differs across the seven systems.
         const root = canvasElement.querySelector('.wh40k-twr-card');

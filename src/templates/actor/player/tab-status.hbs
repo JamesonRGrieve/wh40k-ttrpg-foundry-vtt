@@ -44,6 +44,13 @@
                 {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
             {{/if}}
 
+            {{!-- BC Alignment / Infamy Panel (#173) — Black-Crusade-only.
+                 Gate matches `_gameSystemId === 'bc'` from CharacterSheet
+                 (`isBC` flag + `alignmentPanel` context set in _prepareContext). --}}
+            {{#if isBC}}
+                {{> systems/wh40k-rpg/templates/actor/panel/bc-alignment-panel.hbs alignmentPanel=alignmentPanel}}
+            {{/if}}
+
             {{!-- Movement & Physical Capacity (Full Version) --}}
             {{> systems/wh40k-rpg/templates/actor/panel/movement-panel-full.hbs}}
             

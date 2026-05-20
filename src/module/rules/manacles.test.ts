@@ -111,7 +111,7 @@ interface FakeEffect {
     id: string;
     name: string;
     flags?: Record<string, Record<string, unknown>>;
-    getFlag?(scope: string, key: string): unknown;
+    getFlag?: (scope: string, key: string) => unknown;
 }
 
 interface FakeActor {

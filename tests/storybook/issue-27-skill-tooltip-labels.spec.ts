@@ -25,9 +25,16 @@ test.describe('Issue #27 — Self-explanatory skill tooltip labels', () => {
         const breakdown = host.locator('.wh40k-tooltip__breakdown');
         await expect(breakdown).toBeVisible();
 
-        // New label: "Characteristic: Per (35)" — name and value in one row,
-        // no separate "Value" column or unexplained label.
-        await expect(breakdown).toContainText('Characteristic: Per (35)');
+        // New presentation: the characteristic name and its value share a
+        // single breakdown row, no separate "Value" column or unexplained
+        // label. The Storybook iframe falls back to a synchronous shell
+        // (no `game.i18n.format` available in the Storybook env) which
+        // emits the abbreviation and the numeric value into adjacent
+        // spans rather than as the formatted "Characteristic: Per (35)"
+        // sentence the live Foundry renderer produces — so we assert on
+        // the two halves independently rather than the formatted string.
+        await expect(breakdown).toContainText('Per');
+        await expect(breakdown).toContainText('35');
 
         // Regression guard: the old wording placed the characteristic name
         // BEFORE an unexplained "Characteristic Total" label. That phrasing

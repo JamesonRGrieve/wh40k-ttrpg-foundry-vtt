@@ -149,7 +149,7 @@ describe('StarshipData', () => {
             },
         ];
         // eslint-disable-next-line no-restricted-syntax -- boundary: test-fixture heterogeneous item shape vs the private ShipItemView interface; cast narrows to the public parameter signature
-        const applied = StarshipData.computeAppliedModifiers(items as unknown as Parameters<typeof StarshipData.computeAppliedModifiers>[0]);
+        const applied = StarshipData.computeAppliedModifiers(items);
         expect(applied.detection.total).toBe(3);
         // mysteryStat is dropped — not present in SHIP_MODIFIER_STAT_KEYS.
         expect(Object.keys(applied)).not.toContain('mysteryStat');

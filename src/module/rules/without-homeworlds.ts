@@ -152,12 +152,7 @@ const GARDEN_WORLD: WithoutHomeworldDef = {
     wounds: { base: 7, dieFaces: 5 },
     aptitude: 'Social',
     keyTalents: ['Serenity of the Green (Shock/Trauma halved, Insanity removal 50xp)'],
-    recommendedBackgrounds: [
-        'Adeptus Administratum',
-        'Adeptus Astra Telepathica',
-        'Adeptus Ministorum',
-        'Rogue Trader Fleet',
-    ],
+    recommendedBackgrounds: ['Adeptus Administratum', 'Adeptus Astra Telepathica', 'Adeptus Ministorum', 'Rogue Trader Fleet'],
     mechanicalHook:
         'Serenity of the Green: halves (rounded up) the duration of any Shock or Mental Trauma result, and Insanity points may be removed for 50 XP per point instead of the standard 100.',
     serenityRider: {
