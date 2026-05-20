@@ -1515,6 +1515,59 @@
                     "Fate": "Fate Point Spent",
                     "GM": "GM Ruling"
                 }
+            },
+            "Requisition": {
+                "Label": "Requisition",
+                "RP": {
+                    "Pool": "Requisition Pool",
+                    "Spent": "RP Spent",
+                    "Remaining": "RP Remaining",
+                    "Available": "RP Available",
+                    "Required": "RP Required"
+                },
+                "Craftsmanship": {
+                    "Poor": "Poor",
+                    "Common": "Common",
+                    "Good": "Good",
+                    "Best": "Best"
+                },
+                "Mission": {
+                    "Rating": "Mission Rating",
+                    "Standard": "Standard",
+                    "Extended": "Extended",
+                    "Priority": "Priority",
+                    "Critical": "Critical"
+                },
+                "Validation": {
+                    "RankTooLow": "Renown rank too low to requisition this item.",
+                    "InsufficientRp": "Insufficient Requisition Points.",
+                    "OverAllocated": "A contributing brother allocated more RP than available.",
+                    "InsufficientPool": "Pooled contributions do not cover the item cost."
+                },
+                "Pool": {
+                    "Title": "Pool Requisition",
+                    "Contributor": "Contributor"
+                }
+            },
+            "Mode": {
+                "Label": "Combat Mode",
+                "Solo": "Solo Mode",
+                "Squad": "Squad Mode",
+                "Enter": {
+                    "FullAction": "Enter Squad Mode (Full Action)",
+                    "CohesionChallenge": "Enter Squad Mode (Cohesion Challenge)"
+                },
+                "Leave": "Return to Solo Mode",
+                "SupportRange": {
+                    "Visual": "Visual Support Range",
+                    "Vocal": "Vocal Support Range"
+                },
+                "Ability": {
+                    "Sustained": "Sustained",
+                    "Activate": "Activate Squad Ability",
+                    "InsufficientCohesion": "Insufficient Cohesion to activate this ability.",
+                    "NotInSquadMode": "This ability requires Squad Mode."
+                }
             }
         },
         "RT": {
@@ -3763,6 +3816,34 @@
                 "Validation": {
                     "OverBudget": "Selection exceeds the {budget}-point budget by {amount}.",
                     "MissingCategory": "{category} has not been selected."
+                }
+            },
+            "Orders": {
+                "Label": "Orders",
+                "Issue": {
+                    "Title": "Issue Order"
+                },
+                "Kind": {
+                    "Generic": "Generic Order",
+                    "Speciality": "Speciality Order",
+                    "Sweeping": "Sweeping Order"
+                },
+                "Generic": {
+                    "RangedVolley": "Ranged Volley",
+                    "CloseQuarters": "Close Quarters",
+                    "TakeCover": "Take Cover!"
+                },
+                "ActionCost": {
+                    "Free": "Free Action",
+                    "Half": "Half Action",
+                    "Full": "Full Action"
+                },
+                "Validation": {
+                    "InsufficientAction": "Not enough action available to issue this Order.",
+                    "InsufficientCohesion": "Not enough Cohesion to issue this Order."
+                },
+                "Sweeping": {
+                    "AppliedTo": "Applied to {target}"
                 }
             }
         }
