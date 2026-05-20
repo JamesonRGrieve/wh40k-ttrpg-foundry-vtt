@@ -1568,6 +1568,38 @@
                     "InsufficientCohesion": "Insufficient Cohesion to activate this ability.",
                     "NotInSquadMode": "This ability requires Squad Mode."
                 }
+            },
+            "Astartes": {
+                "Label": "Adeptus Astartes",
+                "Unnatural": {
+                    "Strength": "Unnatural Strength (×2)",
+                    "Toughness": "Unnatural Toughness (×2)"
+                },
+                "BlackCarapace": {
+                    "Label": "Black Carapace",
+                    "PowerArmorInterface": "Power-armour interface — encumbrance penalties ignored"
+                },
+                "Implant": {
+                    "SecondaryHeart": { "Name": "Secondary Heart" },
+                    "Ossmodula": { "Name": "Ossmodula" },
+                    "Biscopea": { "Name": "Biscopea" },
+                    "Haemastamen": { "Name": "Haemastamen" },
+                    "LarramansOrgan": { "Name": "Larraman's Organ" },
+                    "CatalepseanNode": { "Name": "Catalepsean Node" },
+                    "Preomnor": { "Name": "Preomnor" },
+                    "Omophagea": { "Name": "Omophagea" },
+                    "MultiLung": { "Name": "Multi-lung" },
+                    "Occulobe": { "Name": "Occulobe" },
+                    "LymansEar": { "Name": "Lyman's Ear" },
+                    "SusAnMembrane": { "Name": "Sus-an Membrane" },
+                    "MelanchromicOrgan": { "Name": "Melanchromic Organ" },
+                    "OoliticKidney": { "Name": "Oolitic Kidney" },
+                    "Neuroglottis": { "Name": "Neuroglottis" },
+                    "Mucranoid": { "Name": "Mucranoid" },
+                    "BetchersGland": { "Name": "Betcher's Gland" },
+                    "Progenoids": { "Name": "Progenoids" },
+                    "BlackCarapace": { "Name": "Black Carapace" }
+                }
             }
         },
         "RT": {
@@ -3844,6 +3876,87 @@
                 },
                 "Sweeping": {
                     "AppliedTo": "Applied to {target}"
+                }
+            },
+            "Comrade": {
+                "Label": "Comrade",
+                "State": {
+                    "Unharmed": "Unharmed",
+                    "Wounded": "Wounded",
+                    "Dead": "Dead"
+                },
+                "Cohesion": {
+                    "Maintained": "In Cohesion",
+                    "Broken": "Out of Cohesion",
+                    "Range": "Cohesion range: {meters} m"
+                },
+                "Action": {
+                    "MaintainBreak": "Maintain / Break Cohesion"
+                },
+                "Hit": {
+                    "Transferred": {
+                        "Doubles": "Hit transferred to Comrade on doubles roll",
+                        "BlastSpray": "Blast/Spray catches the Comrade"
+                    }
+                },
+                "Replacement": {
+                    "Available": "Replacement available",
+                    "None": "No replacement available"
+                },
+                "Death": {
+                    "Insanity": "Comrade dies from PC's Insanity ({amount} this round)",
+                    "Corruption": "Comrade dies from PC's Corruption ({amount} this round)"
+                }
+            },
+            "Logistics": {
+                "Label": "Logistics",
+                "Rating": "Squad Logistics Rating",
+                "Test": {
+                    "Title": "Logistics Test",
+                    "Target": "Target",
+                    "Roll": "Roll",
+                    "Success": "Success",
+                    "Failure": "Failure",
+                    "DoS": "Degrees of Success",
+                    "DoF": "Degrees of Failure"
+                },
+                "Modifier": {
+                    "Munitorum": "Munitorum Influence",
+                    "Situational": "Situational",
+                    "StandardKit": "Standard Kit",
+                    "TroopCount": "Troop Count",
+                    "TimeInFront": "Time in Front",
+                    "FrontActive": "Front Active",
+                    "WarCondition": "War Conditions",
+                    "Craftsmanship": "Craftsmanship"
+                },
+                "TroopCount": {
+                    "Squad": "Squad",
+                    "Platoon": "Platoon",
+                    "Company": "Company or Less",
+                    "Regiment": "Single Regiment"
+                },
+                "TimeInFront": {
+                    "Days": "Days (less than 3 months)",
+                    "Weeks": "Weeks (3-6 months)",
+                    "Months": "Months (6-12 months)",
+                    "Years": "Years (5+ years)"
+                },
+                "FrontActive": {
+                    "Lull": "Lull",
+                    "Active": "Active",
+                    "Major": "Major Offensive"
+                },
+                "WarCondition": {
+                    "Standard": "Standard",
+                    "Hostile": "Hostile",
+                    "Desperate": "Desperate"
+                },
+                "Craftsmanship": {
+                    "Poor": "Poor",
+                    "Common": "Common",
+                    "Good": "Good",
+                    "Best": "Best"
                 }
             }
         }
