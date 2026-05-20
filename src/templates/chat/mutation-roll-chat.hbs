@@ -1,0 +1,48 @@
+{{!-- Mutation roll chat card (#117). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
+<div class="wh40k-rpg wh40k-mutation-card tw-p-4 tw-rounded-md tw-border tw-border-purple-700 tw-bg-[rgba(28,16,42,0.85)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-biohazard tw-text-[1.1rem] tw-text-purple-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-purple-200">
+            {{localize "WH40K.MutationRoll.ChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.85rem] tw-text-purple-300 tw-uppercase tw-tracking-[0.08em] tw-mb-3">
+        {{#if trackIsMajor}}
+            {{localize "WH40K.MutationRoll.MajorTrack"}}
+        {{else}}
+            {{localize "WH40K.MutationRoll.MinorTrack"}}
+        {{/if}}
+        — d100 = <span class="tw-font-bold tw-tabular-nums tw-text-purple-100">{{roll}}</span>
+    </div>
+
+    {{#if mutationKnown}}
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-2">
+            <span class="tw-text-purple-300 tw-text-xs tw-uppercase tw-tracking-[0.08em]">
+                {{localize "WH40K.MutationRoll.MutationLabel"}}
+            </span>
+            <span class="tw-font-display tw-font-bold tw-text-base tw-text-purple-100">{{mutationName}}</span>
+        </div>
+
+        <div class="tw-text-[0.85rem] tw-text-[#e8e4d9] tw-mb-3 tw-leading-snug">
+            <span class="tw-text-purple-400 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-mr-1">{{localize "WH40K.MutationRoll.EffectLabel"}}:</span>
+            {{mutationEffect}}
+        </div>
+
+        {{#if mutationVisible}}
+            <div class="tw-p-2 tw-rounded-sm tw-border tw-border-purple-500 tw-bg-[rgba(94,52,124,0.35)] tw-text-purple-100 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-center">
+                <i class="fas fa-eye"></i> {{visibleLabel}}
+            </div>
+        {{else}}
+            <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(160,120,200,0.4)] tw-bg-[rgba(0,0,0,0.35)] tw-text-purple-300 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-center">
+                <i class="fas fa-eye-slash"></i> {{visibleLabel}}
+            </div>
+        {{/if}}
+    {{else}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-purple-700 tw-bg-[rgba(40,20,60,0.4)] tw-text-purple-200 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-center">
+            {{localize "WH40K.MutationRoll.NoMutation"}}
+        </div>
+    {{/if}}
+</div>

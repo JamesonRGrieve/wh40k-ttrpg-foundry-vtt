@@ -4,6 +4,7 @@ import type { ActionData } from '../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, postChatCard } from '../rolls/roll-helpers.ts';
+import { ASSASSINS_STRIKE_TEST } from '../rules/assassins-strike.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
@@ -55,6 +56,16 @@ export class BasicActionManager {
             html.querySelectorAll('.roll-control__apply-damage').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._applyDamage(ev);
+                });
+            });
+            html.querySelectorAll('.roll-control__replace-damage-die').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._replaceDamageDieWithDoS(ev);
+                });
+            });
+            html.querySelectorAll('.roll-control__assassins-strike').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._assassinsStrike(ev);
                 });
             });
         });
@@ -114,12 +125,32 @@ export class BasicActionManager {
         // Calculate hits (deferred from attack roll)
         await actionData.calculateHits();
 
-        // Build template data
+        // Propagate attack DoS to each hit so the chat card can offer the
+        // "replace damage die with DoS" action (#129 — DH2 core L10398-10414).
+        const attackDoS = actionData.rollData.dos;
+        for (const hit of actionData.damageData?.hits ?? []) {
+            hit.dos = attackDoS;
+        }
+
+        await this._postDamageCard(actionData);
+    }
+
+    /**
+     * Render `damage-roll-chat.hbs` for an existing ActionData and post it
+     * to the chat log. Extracted so the "replace damage die with DoS"
+     * action (#129) can re-emit the card after mutating a Hit's dice.
+     */
+    async _postDamageCard(actionData: ActionData): Promise<void> {
         const damageRolls = actionData.damageData?.hits.map((h: Hit) => h.damageRoll).filter((r: Roll | undefined): r is Roll => r != null);
         const templateData = {
             weaponName: actionData.rollData.name,
             hits: actionData.damageData?.hits,
             targetActor: actionData.rollData.targetActor,
+            rollId: actionData.id,
+            // The replacement option is offered while the original ActionData is still
+            // resident in `storedRolls` — once it expires (page reload, etc.) the
+            // button is omitted from re-rendered cards.
+            canReplaceDie: true,
             // eslint-disable-next-line no-restricted-syntax -- boundary: psychicEffect is a system extension not declared in ActionData type
             psychicEffect: (actionData as unknown as { psychicEffect?: unknown }).psychicEffect ?? null,
         };
@@ -127,6 +158,121 @@ export class BasicActionManager {
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
         await postChatCard(html, { rolls: damageRolls });
+    }
+
+    /**
+     * Handle the chat-card "Replace die with DoS" button (#129 — DH2 core
+     * L10398-10414). Looks up the original ActionData by `data-roll-id`,
+     * mutates the targeted Hit's lowest active damage die to the attack's
+     * DoS, then re-emits the damage chat card with the updated total. A
+     * short announcement card narrates the swap.
+     */
+    async _replaceDamageDieWithDoS(event: Event): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLButtonElement;
+        const rollId = btn.dataset['rollId'];
+        const hitIndexRaw = btn.dataset['hitIndex'];
+        const dosRaw = btn.dataset['dos'];
+
+        const actionData = this.getActionData(rollId);
+        if (actionData == null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
+            return;
+        }
+
+        const hitIndex = hitIndexRaw !== undefined && hitIndexRaw !== '' ? Number.parseInt(hitIndexRaw, 10) : 0;
+        const dos = dosRaw !== undefined && dosRaw !== '' ? Number.parseInt(dosRaw, 10) : actionData.rollData.dos;
+        const hit = actionData.damageData?.hits[hitIndex];
+        if (hit === undefined || dos <= 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateAddDoSNotSuccess'));
+            return;
+        }
+
+        // Capture pre-replacement totals for the announcement.
+        const before = hit.totalDamage;
+        const replaced = hit.replaceDamageDieWithDoS(dos);
+        if (!replaced) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback; replacement only fails when the Roll has no dice terms
+            ui.notifications.warn('No damage die available to replace.');
+            return;
+        }
+
+        // Disable the button so the player cannot double-spend on the same Hit.
+        btn.disabled = true;
+
+        // Re-emit the damage card with the updated hit totals.
+        await this._postDamageCard(actionData);
+
+        // Short announcement of what was swapped — keeps the audit trail in chat.
+        // `delta = total_after - total_before = dos - previous_die`, so
+        // `previous_die = dos - delta`.
+        const delta = hit.totalDamage - before;
+        const announcement = game.i18n.format('WH40K.DamageDieReplacement.ReplacedDieMessage', {
+            weapon: actionData.rollData.name,
+            previous: String(dos - delta),
+            dos: String(dos),
+            total: String(hit.totalDamage),
+        });
+        await postChatCard(
+            `<div class="wh40k-rpg tw-font-ui tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[var(--wh40k-card-gold)] tw-bg-amber-500/20 tw-text-[var(--wh40k-card-text)] tw-text-[0.85rem]">${announcement}</div>`,
+        );
+    }
+
+    /**
+     * Handle the chat-card "Assassin's Strike" button (#149 — DH2 errata
+     * L75). Looks up the stored ActionData by `data-roll-id` so the
+     * Acrobatics test is dispatched against the same actor that just
+     * resolved the melee attack, then opens the unified roll dialog for
+     * a Challenging (+0) Acrobatics Test. On success, the GM narrates
+     * the Half Move (Agility-bonus metres) as a Free Action per the
+     * errata — the dispatch posts a short announcement so the audit
+     * trail stays in chat.
+     */
+    async _assassinsStrike(event: Event): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLButtonElement;
+        const rollId = btn.dataset['rollId'];
+        const actionData = this.getActionData(rollId);
+        if (actionData == null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
+            return;
+        }
+
+        const sourceActor = actionData.rollData.sourceActor as
+            | (WH40KBaseActorDocument & { rollSkill?: (skill: string, spec?: string, opts?: Record<string, unknown>) => Promise<void> })
+            | null;
+        if (sourceActor == null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
+            ui.notifications.warn('No source actor found for Assassin\'s Strike dispatch.');
+            return;
+        }
+
+        // Disable the button so the action cannot be double-dispatched.
+        btn.disabled = true;
+
+        // Open the Acrobatics test dialog at Challenging (+0). The unified
+        // roll dialog reads the modifier from the dispatch options when the
+        // caller surfaces a difficulty band; passing the locked constants
+        // here ensures the chat-card path matches the errata wording.
+        try {
+            await sourceActor.rollSkill?.(ASSASSINS_STRIKE_TEST.skill, undefined, {
+                difficulty: ASSASSINS_STRIKE_TEST.difficulty,
+                modifier: ASSASSINS_STRIKE_TEST.modifier,
+                flavor: game.i18n.localize('WH40K.AssassinsStrike.TestTitle'),
+            });
+        } catch {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback when the actor's rollSkill API throws (e.g., missing skill on legacy data)
+            ui.notifications.warn('Unable to dispatch Acrobatics test for Assassin\'s Strike.');
+            btn.disabled = false;
+            return;
+        }
+
+        // Short announcement keeps the audit trail in chat so the GM can
+        // narrate the Half Move (Agility-bonus metres) immediately after.
+        const announcement = game.i18n.localize('WH40K.AssassinsStrike.SuccessChatLine');
+        await postChatCard(
+            `<div class="wh40k-rpg tw-font-ui tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-gray-700 tw-bg-gray-800/60 tw-text-gray-100 tw-text-[0.85rem]">${announcement}</div>`,
+        );
     }
 
     async _refundResources(event: Event): Promise<void> {

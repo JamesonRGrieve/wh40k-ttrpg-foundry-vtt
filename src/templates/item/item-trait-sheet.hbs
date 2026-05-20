@@ -32,6 +32,24 @@
             Variable
           </span>
           {{/if}}
+
+          {{!-- Fear (X) rating badge — 1..4 ringed pips, crimson tier accent at 3-4. (#65) --}}
+          {{#if (gt item.system.fearRating 0)}}
+          <span class="wh40k-fear-badge tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-border {{#if (gt item.system.fearRating 2)}}tw-bg-[rgba(139,0,0,0.18)] tw-border-red-700 tw-text-red-600{{else}}tw-bg-[rgba(139,0,0,0.10)] tw-border-[rgba(139,0,0,0.4)] tw-text-[color:color-mix(in_srgb,var(--wh40k-accent-combat,#8b0000),white_20%)]{{/if}}"
+                title="{{localize 'WH40K.Fear.RatingLabel'}}">
+            <i class="fas fa-skull"></i>
+            <span class="tw-mr-0.5">{{localize "WH40K.Fear.Rating"}}</span>
+            <span class="tw-inline-flex tw-items-center tw-gap-0.5" aria-label="Fear {{item.system.fearRating}}">
+              {{#each (range 1 4)}}
+                {{#if (lte this ../item.system.fearRating)}}
+                  <span class="wh40k-fear-pip wh40k-fear-pip--on tw-inline-block tw-w-2 tw-h-2 tw-rounded-full tw-border tw-border-current tw-bg-current"></span>
+                {{else}}
+                  <span class="wh40k-fear-pip tw-inline-block tw-w-2 tw-h-2 tw-rounded-full tw-border tw-border-current tw-bg-transparent"></span>
+                {{/if}}
+              {{/each}}
+            </span>
+          </span>
+          {{/if}}
         </div>
 
         {{!-- STATS BAR: Key trait info at a glance --}}
@@ -129,6 +147,16 @@
             <div class="tw-flex tw-flex-col tw-gap-1.5">
               <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--color-text-secondary)]">Level / Rating <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)] tw-normal-case">(0 = none)</span></label>
               <input type="number" name="system.level" value="{{item.system.level}}" min="0" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="0" />
+            </div>
+
+            {{!-- Fear (X) Rating — #65 --}}
+            <div class="tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
+              <label class="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide {{#if (gt item.system.fearRating 2)}}tw-text-red-600{{else}}tw-text-[color:var(--color-text-secondary)]{{/if}}">
+                <i class="fas fa-skull"></i>
+                {{localize "WH40K.Fear.FearRating"}}
+                <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)] tw-normal-case">(0 = none, max 4)</span>
+              </label>
+              <input type="number" name="system.fearRating" value="{{item.system.fearRating}}" min="0" max="4" step="1" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-rounded-sm tw-text-sm focus:tw-outline-none {{#if (gt item.system.fearRating 2)}}tw-border-red-700 tw-text-red-600 focus:tw-border-red-600{{else}}tw-border-[var(--color-border-secondary)] tw-text-[color:var(--color-text-primary)] focus:tw-border-[var(--wh40k-color-gold)]{{/if}}" placeholder="0" />
             </div>
           </div>
         </div>

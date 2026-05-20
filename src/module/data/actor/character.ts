@@ -183,6 +183,21 @@ export default class CharacterData extends CreatureTemplate {
     declare corruption: number;
     declare aptitudes: string[];
     declare chaosAlignment: 'unaligned' | 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch';
+    /**
+     * Active Dark Pacts (beyond.md p. 72). Each entry tracks a single pact
+     * the actor has struck with a daemon: the `pactUuid` resolves to the
+     * compendium `PactDefinition` (Boons / Banes / initial disposition /
+     * discovery-Subtlety penalty), `discovered` flips when the pact is
+     * exposed in play, `disposition` floats in [-3..+3] (see
+     * `adjustPactDisposition` in `src/module/rules/dark-pact.ts`), and
+     * `paymentCurrent` tracks whether the most recent payment was made.
+     */
+    declare pacts: Array<{
+        pactUuid: string;
+        discovered: boolean;
+        disposition: number;
+        paymentCurrent: boolean;
+    }>;
     declare backgroundEffects: {
         abilities: BackgroundAbility[];
         // eslint-disable-next-line no-restricted-syntax -- boundary: originPath is a dynamic map keyed by step names (homeWorld, career, etc.) storing WH40KItem references; no fixed schema
@@ -351,6 +366,21 @@ export default class CharacterData extends CreatureTemplate {
                 initial: 'unaligned',
                 choices: ['unaligned', 'khorne', 'nurgle', 'slaanesh', 'tzeentch'],
             }),
+
+            // ===== DARK PACTS (Enemies Beyond, p. 72) =====
+            // Active pacts struck with daemons. Per-pact disposition is
+            // clamped to [-3..+3] by `adjustPactDisposition` in
+            // src/module/rules/dark-pact.ts; the on-discovery Subtlety hit
+            // goes through `WH40KBaseActor.applySubtletyFromSource`.
+            pacts: new fields.ArrayField(
+                new fields.SchemaField({
+                    pactUuid: new fields.StringField({ required: true, blank: false }),
+                    discovered: new fields.BooleanField({ required: true, initial: false }),
+                    disposition: new fields.NumberField({ required: true, initial: 0, min: -3, max: 3, integer: true }),
+                    paymentCurrent: new fields.BooleanField({ required: true, initial: true }),
+                }),
+                { required: true, initial: [] },
+            ),
 
             // Effects computed from origin path items - populated during prepareEmbeddedData
             backgroundEffects: new fields.SchemaField({

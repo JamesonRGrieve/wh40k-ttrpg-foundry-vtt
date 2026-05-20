@@ -1,0 +1,71 @@
+{{!-- Cybernetics install surgery chat card (#125). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-cyber-card tw-p-4 tw-rounded-md tw-border tw-border-cyan-600 tw-bg-[rgba(8,20,28,0.88)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-microchip tw-text-[1.1rem] tw-text-cyan-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-cyan-200">
+            {{localize "WH40K.Cybernetics.ChatTitle"}}
+        </div>
+    </div>
+
+    {{#if deviceName}}
+        <div class="tw-text-[0.95rem] tw-mb-2 tw-text-[#e8e4d9]">
+            <strong class="tw-text-cyan-100">{{deviceName}}</strong>
+        </div>
+    {{/if}}
+
+    <div class="tw-text-[0.8rem] tw-text-cyan-300 tw-uppercase tw-tracking-[0.08em] tw-mb-3">
+        {{craftsmanshipLabel}} · {{siteLabel}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.8rem] tw-mb-2">
+        {{#each breakdown}}
+            <li class="tw-flex tw-justify-between tw-gap-3 tw-text-[#9fd6e8]">
+                <span>{{localize (concat "WH40K.Cybernetics.Breakdown." this.label)}}</span>
+                <span class="tw-tabular-nums">{{signedNumber this.value}}</span>
+            </li>
+        {{/each}}
+    </ul>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-cyan-300">{{localize "WH40K.Cybernetics.TargetLabel"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-cyan-100">{{target}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-cyan-300">{{localize "WH40K.Cybernetics.RollLabel"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-cyan-100">{{roll}}</span>
+        </li>
+    </ul>
+
+    {{#if success}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-emerald-500 tw-bg-[rgba(16,72,56,0.4)] tw-text-emerald-200 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-center tw-mb-3">
+            <i class="fas fa-check-circle"></i>
+            {{localize "WH40K.Cybernetics.InstallSuccess"}} ({{dos}} {{localize "WH40K.Cybernetics.DoS"}})
+        </div>
+        <div class="tw-text-[0.85rem] tw-text-[#cbeefb] tw-text-center">
+            {{localize "WH40K.Cybernetics.RecoveryPrefix"}}
+            <strong class="tw-text-cyan-100">{{recoveryDays}}</strong>
+            {{localize "WH40K.Cybernetics.RecoveryDays"}}
+        </div>
+    {{else}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-red-600 tw-bg-[rgba(80,16,16,0.4)] tw-text-red-200 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-center tw-mb-2">
+            <i class="fas fa-skull-crossbones"></i>
+            {{localize "WH40K.Cybernetics.InstallFailure"}} ({{dof}} {{localize "WH40K.Cybernetics.DoF"}})
+        </div>
+        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+            {{#if bloodLoss}}
+                <li class="tw-flex tw-items-center tw-gap-2 tw-text-red-300">
+                    <i class="fas fa-tint"></i> {{localize "WH40K.Cybernetics.ConsequenceBloodLoss"}}
+                </li>
+            {{/if}}
+            {{#if faulty}}
+                <li class="tw-flex tw-items-center tw-gap-2 tw-text-amber-300">
+                    <i class="fas fa-exclamation-triangle"></i> {{localize "WH40K.Cybernetics.ConsequenceFaulty"}}
+                </li>
+            {{/if}}
+        </ul>
+    {{/if}}
+</div>

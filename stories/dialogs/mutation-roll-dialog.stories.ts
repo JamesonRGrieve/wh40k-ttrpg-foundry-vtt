@@ -1,0 +1,53 @@
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect, within } from 'storybook/test';
+import templateSrc from '../../src/templates/prompt/mutation-roll-dialog.hbs?raw';
+import { TRACK_RANGES, type MutationTrack } from '../../src/module/rules/mutation-table.ts';
+import { renderSheet } from '../test-helpers';
+
+interface Args {
+    track: MutationTrack;
+}
+
+function buildContext(args: Args): Record<string, unknown> {
+    const range = TRACK_RANGES[args.track];
+    return {
+        track: args.track,
+        trackIsMinor: args.track === 'minor',
+        trackIsMajor: args.track === 'major',
+        rangeMin: range.min,
+        rangeMax: range.max,
+    };
+}
+
+const meta = {
+    title: 'Dialogs/MutationRollDialog',
+    render: (args) => renderSheet(templateSrc, buildContext(args)),
+    args: {
+        track: 'minor',
+    },
+} satisfies Meta<Args>;
+export default meta;
+
+type Story = StoryObj<Args>;
+
+export const MinorTrack: Story = {
+    args: { track: 'minor' },
+};
+
+export const MajorTrack: Story = {
+    args: { track: 'major' },
+};
+
+export const RenderSmoke: Story = {
+    args: { track: 'major' },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Both track buttons render.
+        expect(canvasElement.querySelector('[data-action="selectTrack"][data-track="minor"]')).toBeTruthy();
+        expect(canvasElement.querySelector('[data-action="selectTrack"][data-track="major"]')).toBeTruthy();
+        // Roll button is present.
+        expect(canvasElement.querySelector('[data-action="rollMutation"]')).toBeTruthy();
+        // Title localizes.
+        expect(canvas.getByText(/Roll Mutation/i)).toBeTruthy();
+    },
+};

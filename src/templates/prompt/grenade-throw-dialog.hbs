@@ -1,0 +1,68 @@
+{{!-- Within-supplement grenade throw dialog (#135). --}}
+{{!-- GM picks a grenade; "Throw" emits the chat card with the mechanical rider. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
+        {{localize "WH40K.WithinGrenade.DialogTitle"}}
+    </div>
+
+    {{!-- Grenade picker list --}}
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-mb-4" role="radiogroup" aria-label="{{localize "WH40K.WithinGrenade.GrenadeLabel"}}">
+        {{#each grenades}}
+            <button type="button"
+                    data-action="selectGrenade"
+                    data-grenade-id="{{this.id}}"
+                    role="radio"
+                    aria-checked="{{#if this.isSelected}}true{{else}}false{{/if}}"
+                    class="tw-flex tw-flex-col tw-gap-1 tw-w-full tw-text-left tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if this.isSelected}}tw-border-gold tw-bg-[rgba(201,162,39,0.12)]{{else}}tw-border-[rgba(201,162,39,0.25)] tw-bg-[rgba(0,0,0,0.35)]{{/if}}">
+                <div class="tw-flex tw-items-center tw-gap-2">
+                    <i class="fas fa-bomb {{this.accentClass}}"></i>
+                    <span class="tw-font-display tw-text-sm tw-uppercase tw-tracking-[0.08em] {{this.accentClass}}">{{this.label}}</span>
+                </div>
+                <div class="tw-flex tw-flex-wrap tw-gap-x-3 tw-gap-y-1 tw-text-[0.75rem] tw-text-[#9a9a8a]">
+                    <span>{{localize "WH40K.WithinGrenade.BlastRadius"}}: <span class="tw-text-[#e8e4d9] tw-tabular-nums">{{this.blastRadius}}m</span></span>
+                    {{#if this.damage}}
+                        <span>{{localize "WH40K.WithinGrenade.Damage"}}: <span class="tw-text-[#e8e4d9]">{{this.damage}}</span></span>
+                    {{/if}}
+                    <span>{{localize "WH40K.WithinGrenade.SaveLabel"}}: <span class="tw-text-[#e8e4d9]">{{this.saveLabel}}</span></span>
+                </div>
+            </button>
+        {{/each}}
+    </div>
+
+    {{!-- Selected grenade detail --}}
+    {{#if selectedGrenade}}
+        <div class="tw-p-3 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-mb-4">
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-2">
+                <span class="tw-text-[#9a9a8a] tw-text-xs tw-uppercase tw-tracking-[0.08em]">{{localize "WH40K.WithinGrenade.FailEffectLabel"}}</span>
+                <span class="tw-text-xs tw-tabular-nums {{selectedGrenade.accentClass}}">{{selectedGrenade.saveLabel}}</span>
+            </div>
+            <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]">
+                {{selectedGrenade.failEffect}}
+            </div>
+            {{#if selectedGrenade.specialQualities.length}}
+                <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mt-2">
+                    {{#each selectedGrenade.specialQualities}}
+                        <span class="tw-text-[0.7rem] tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-[rgba(201,162,39,0.35)] tw-text-[#c4871d]">{{this}}</span>
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
+    {{/if}}
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(201,162,39,0.2)]">
+        <button type="button"
+                data-action="throw"
+                {{#unless selectedGrenade}}disabled{{/unless}}
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2e:tw-from-bronze tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]">
+            <i class="fas fa-bomb"></i> {{localize "WH40K.WithinGrenade.ThrowButton"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.Daemonhost.Cancel"}}
+        </button>
+    </div>
+
+</div>

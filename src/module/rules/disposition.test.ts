@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DISPOSITION_LABELS, getDispositionModifier, labelForDisposition } from './disposition';
+import { DISPOSITION_LABELS, getDispositionModifier, getInteractionCap, labelForDisposition, resolveInteractionDispositionGain } from './disposition';
 
 describe('labelForDisposition', () => {
     it('maps -3 to Hostile, 0 to Neutral, +3 to Helpful', () => {
@@ -28,5 +28,43 @@ describe('getDispositionModifier', () => {
     it('clamps the disposition input to −3..+3', () => {
         expect(getDispositionModifier(99, 'charm')).toBe(30);
         expect(getDispositionModifier(-99, 'charm')).toBe(-30);
+    });
+});
+
+describe('getInteractionCap', () => {
+    it('returns the Fellowship bonus as the cap', () => {
+        expect(getInteractionCap(4)).toBe(4);
+        expect(getInteractionCap(0)).toBe(0);
+    });
+    it('clamps negative bonuses to zero (malformed input)', () => {
+        expect(getInteractionCap(-3)).toBe(0);
+    });
+});
+
+describe('resolveInteractionDispositionGain', () => {
+    it('passes the raw gain through below the Fellowship-bonus cap', () => {
+        const r = resolveInteractionDispositionGain({ pcFellowshipBonus: 4, interactionsSoFar: 1, rawGain: 1 });
+        expect(r).toEqual({ gain: 1, atCap: false, remainingInteractions: 3 });
+    });
+
+    it('reports remainingInteractions = cap − used before incrementing the tally', () => {
+        const r = resolveInteractionDispositionGain({ pcFellowshipBonus: 5, interactionsSoFar: 0, rawGain: 2 });
+        expect(r.gain).toBe(2);
+        expect(r.remainingInteractions).toBe(5);
+    });
+
+    it('suppresses the gain and flags atCap once interactionsSoFar reaches the cap', () => {
+        const r = resolveInteractionDispositionGain({ pcFellowshipBonus: 3, interactionsSoFar: 3, rawGain: 1 });
+        expect(r).toEqual({ gain: 0, atCap: true, remainingInteractions: 0 });
+    });
+
+    it('treats over-cap tallies the same as exactly at-cap (no negative remaining)', () => {
+        const r = resolveInteractionDispositionGain({ pcFellowshipBonus: 2, interactionsSoFar: 7, rawGain: 3 });
+        expect(r).toEqual({ gain: 0, atCap: true, remainingInteractions: 0 });
+    });
+
+    it('zero Fellowship bonus means no interaction-based disposition gain is ever earned', () => {
+        const r = resolveInteractionDispositionGain({ pcFellowshipBonus: 0, interactionsSoFar: 0, rawGain: 1 });
+        expect(r).toEqual({ gain: 0, atCap: true, remainingInteractions: 0 });
     });
 });

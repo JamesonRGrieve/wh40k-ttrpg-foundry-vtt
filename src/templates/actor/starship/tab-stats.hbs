@@ -10,6 +10,13 @@
             </button>
             <span class="tw-text-[1.4em] tw-font-bold tw-text-[#2a4a6a] tw-ml-auto tw-px-2.5 tw-py-1 tw-bg-[rgba(255,255,255,0.8)] tw-rounded-md tw-border tw-border-[rgba(30,60,90,0.2)]" title="{{localize 'WH40K.Starship.Combat.DetectionBonus'}}">+{{system.detectionBonus}}</span>
         </div>
+        {{!-- Critical Hit roll (issue #187) — Battlefleet Koronus 1d5 chart --}}
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2 tw-mb-2.5 tw-rounded-md tw-border tw-border-[rgba(192,57,43,0.3)] tw-bg-[linear-gradient(135deg,rgba(192,57,43,0.15)_0%,rgba(192,57,43,0.2)_100%)]">
+            <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-md tw-border tw-border-[#8b1f15] tw-bg-[linear-gradient(180deg,#c0392b_0%,#992d22_100%)] tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer" data-action="rollShipCriticalHit" title="{{localize 'WH40K.Starship.Critical.RollTooltip'}}">
+                <i class="fas fa-dice-d6"></i>
+                <span>{{localize "WH40K.Starship.Critical.Roll"}}</span>
+            </button>
+        </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Combat.Speed"}}</span>
             <input type="number" data-dtype="Number" name="system.speed" value="{{source.speed}}" />

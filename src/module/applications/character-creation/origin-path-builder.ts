@@ -18,7 +18,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
-import { getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
+import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
@@ -314,6 +314,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare _influenceRolled: number;
     declare _savedScrollTop: number;
     declare _originsLoaded: boolean;
+    /**
+     * Replacement aptitudes the player has picked to resolve a duplicate grant.
+     * Key: the original (duplicated) aptitude name as it would have been granted.
+     * Value: the replacement aptitude name the player selected (or '' if explicitly skipped).
+     * Used by the preview pipeline to swap doubled aptitudes with the chosen replacement,
+     * so the warning banner clears once the player makes a choice. (#205)
+     */
+    declare aptitudeOverrides: Map<string, string>;
     /** @override */
     static DEFAULT_OPTIONS = {
         id: 'origin-path-builder',
@@ -364,6 +372,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             goToEquipment: OriginPathBuilder.#goToEquipment,
             toggleEquipmentItem: OriginPathBuilder.#toggleEquipmentItem,
             clearEquipment: OriginPathBuilder.#clearEquipment,
+            resolveAptitudeDouble: OriginPathBuilder.#resolveAptitudeDouble,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -421,6 +430,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._thronesRolled = isDH2Homebrew ? 0 : actorSys.throneGelt ?? 0;
         this._influenceRolled = isDH2Homebrew ? 0 : actorSys.influence ?? 0;
         this._savedScrollTop = 0;
+        this.aptitudeOverrides = new Map();
         this._initCharacteristicState();
 
         // Initialize from actor's existing origin paths
@@ -467,7 +477,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         for (const key of CHARS) {
             this._charAssignments[key] = assignments[key] ?? null;
-            this._charCustomBases[key] = customBases[key] ?? defaultBase;
+            // `||` (not `??`) so any legacy persisted-as-0 custom base from
+            // the pre-fix input handler is rescued on next open — a stored 0
+            // is invalid for character generation, fall back to defaultBase.
+            this._charCustomBases[key] = customBases[key] || defaultBase;
         }
         this._charAdvancedMode = customBases.enabled === true;
 
@@ -676,11 +689,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _itemToSelectionData(item: WH40KItem | NormalizedOrigin): NormalizedOriginWithMeta {
-        const data = hasToObject(item)
-            ? (item.toObject() as ItemDataLike & { uuid?: string })
-            : (foundry.utils.deepClone(item) as ItemDataLike & { uuid?: string });
-
+        // Two call shapes reach this method:
+        //   1. A real Foundry Item document (compendium pack entry or owned actor item) — has `toObject()`.
+        //   2. An already-normalized plain-object origin entry (e.g. from `this.allOrigins` / `this.lineageOrigins`)
+        //      — no `toObject()`, the object IS the data we want to clone.
+        // `hasToObject` narrows the type; the document branch extracts data via `toObject()` plus
+        // document-only metadata (flags.core.sourceId, parent, id). The plain-object branch just
+        // deep-clones the already-normalized shape and falls back to its own `uuid` for `_sourceUuid`.
+        // Computing `data` and the metadata fields under a single narrowed branch keeps both shapes
+        // in lockstep — no `?.toObject?.()` sprinkles, no double-narrowing.
+        let data: ItemDataLike & { uuid?: string };
         if (hasToObject(item)) {
+            data = item.toObject() as ItemDataLike & { uuid?: string };
             // Store original uuid for reference to compendium item
             const flagsCore = (item.flags as { core?: CoreFlags }).core;
             const flagSourceId = typeof flagsCore?.sourceId === 'string' ? flagsCore.sourceId : undefined;
@@ -688,6 +708,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Store actor item id if this is an existing actor item
             data._actorItemId = item.parent === this.actor ? item.id : null;
         } else {
+            data = foundry.utils.deepClone(item) as ItemDataLike & { uuid?: string };
             data._sourceUuid = data._sourceUuid ?? data.uuid ?? null;
             data._actorItemId = data._actorItemId ?? null;
         }
@@ -985,7 +1006,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const charData = (this._actorSys().characteristics?.[key] ?? {}) as Partial<WH40KCharacteristic>;
             const assignedIndex = this._charAssignments[key] ?? null;
             const rollValue = assignedIndex !== null ? this._charRolls[assignedIndex] ?? null : null;
-            const base = this._charAdvancedMode ? this._charCustomBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
+            // `||` (not `??`) so a stored custom base of 0 (legacy bad data,
+            // see fix in input handler) falls back to DEFAULT_BASE rather
+            // than zero-out the rendered preview.
+            const base = this._charAdvancedMode ? this._charCustomBases[key] || DEFAULT_BASE : DEFAULT_BASE;
             const originBonus = originBonuses.totals[key] ?? 0;
             const total = rollValue !== null ? base + rollValue + originBonus : null;
 
@@ -1480,7 +1504,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const key = el.dataset['characteristic'];
                 if (key === undefined || key === '') return;
                 let value = parseInt(el.value, 10);
-                if (Number.isNaN(value) || value < 0) value = 0;
+                // Empty / invalid / negative input → fall back to the setting
+                // default base (20 + offset), NOT 0. A custom base of 0 is
+                // never meaningful for character generation, and previously
+                // got persisted into customBases and re-loaded as 0, which
+                // made every committed characteristic equal just its rolled
+                // value (8/13/15…) — the "stats all <20" regression.
+                if (Number.isNaN(value) || value <= 0) value = WH40KSettings.getCharacteristicBase();
                 this._charCustomBases[key] = value;
                 void this.render();
             });
@@ -2044,10 +2074,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             };
         }
 
-        // Per-origin throne gelt roll (homebrew only, homeworld and background steps each roll their own formula).
+        // Per-origin throne gelt roll. Throne Gelt is NOT a strict DH2 RAW rule;
+        // it ships only on the homebrew track (`WH40KSettings.dh2Ruleset === 'homebrew'`)
+        // and traditionally rolls exactly ONCE at character creation, against the
+        // home world's formula. Issue #204: the previous implementation also exposed
+        // a separate roll button on the Background step, doubling the player's starting
+        // throne gelt. Restrict the rollable widget to the Home World step only; any
+        // formula authored on a Background entry is ignored at the UI layer (its data
+        // remains in the compendium for narrative reference but no separate roll fires).
         const thronesFormulaForItem = this._getSelectionThronesFormula(item);
         const itemSys = item.system as OriginPathSystemData;
-        const thronesEligibleStep = itemSys.step === 'homeWorld' || itemSys.step === 'background';
+        const thronesEligibleStep = itemSys.step === 'homeWorld';
         const thronesAllowedByRuleset = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
         if (thronesFormulaForItem !== '' && thronesEligibleStep && thronesAllowedByRuleset) {
             const thronesResult = rollResults['thrones'];
@@ -2273,6 +2310,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             equipment: [],
             wounds: null,
             fate: null,
+            aptitudeCollisions: [],
+            hasUnresolvedAptitudeCollision: false,
+            unresolvedAptitudeCollisions: [],
+            resolvedAptitudeCollisions: [],
         };
 
         const charTotals: Record<string, number> = {};
@@ -2413,7 +2454,32 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         );
         preview.traits = Array.from(traitMap.values());
         preview.equipment = equipmentList.map((name) => ({ name }));
+
+        // (#205) Apply duplicate-aptitude overrides: for each collision the
+        // player resolved via the chooser dialog, add the replacement aptitude
+        // to the displayed set. The original aptitude name stays in the set
+        // because the character still gets it once (from either an existing
+        // grant or the first new-origin grant); the doubled instance is what
+        // gets swapped. Unresolved collisions are surfaced via
+        // `preview.aptitudeCollisions` so the template renders a warning.
+        const collisions = this._getAptitudeCollisions();
+        for (const { replacement } of collisions) {
+            if (replacement !== null && replacement !== '') {
+                aptitudeSet.add(replacement);
+            }
+        }
         preview.aptitudes = Array.from(aptitudeSet).sort((a, b) => a.localeCompare(b));
+        preview.aptitudeCollisions = collisions;
+        // (#216) Split the collision list into "still needs action" (drives the
+        // warning banner) and "applied swap" (drives a neutral Change affordance
+        // sub-section). Before this split the template rendered every entry in
+        // `aptitudeCollisions` under the warning banner unconditionally, so a
+        // collision the player had already resolved kept appearing as an
+        // outstanding requirement until the builder closed.
+        preview.unresolvedAptitudeCollisions = collisions.filter((c) => c.replacement === null || c.replacement === '');
+        preview.resolvedAptitudeCollisions = collisions
+            .filter((c): c is { original: string; replacement: string } => typeof c.replacement === 'string' && c.replacement !== '');
+        preview.hasUnresolvedAptitudeCollision = preview.unresolvedAptitudeCollisions.length > 0;
 
         return preview;
     }
@@ -2449,6 +2515,31 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Canonical identity for an aptitude name. Aptitude grants are authored
+     * across many independent compendium origin-path documents, so the same
+     * aptitude can appear with incidental case / whitespace differences
+     * ("Willpower", "willpower", " Willpower "). Duplicate detection compares
+     * identity, not the literal display string: without canonicalisation two
+     * grants of the same aptitude that differ only by case/spacing slip past
+     * the doubling guard with no warning (#205). The display string is
+     * preserved separately for the banner; only membership/equality uses this.
+     * @private
+     */
+    static _normalizeAptitudeIdentity(name: string): string {
+        return name.trim().replace(/\s+/g, ' ').toLocaleLowerCase();
+    }
+
+    /**
+     * Set-membership / equality wrapper over {@link _normalizeAptitudeIdentity}
+     * so call sites read intent rather than the regex. Instance-side for ergonomic
+     * `this._aptitudeKey(...)` use; delegates to the static canonicaliser.
+     * @private
+     */
+    _aptitudeKey(name: string): string {
+        return OriginPathBuilder._normalizeAptitudeIdentity(name);
+    }
+
+    /**
      * Add aptitude names from a resolved aptitude-typed choice into the running
      * aptitude set. Extracted from _calculatePreview to flatten its loop depth.
      * @private
@@ -2469,34 +2560,259 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * at commit time rather than silently discarding it. (#205)
      * @private
      */
+    /**
+     * The set of aptitude names a single selection would grant, deduplicated
+     * within that origin (fixed `grants.aptitudes` + resolved aptitude-typed
+     * choices). Extracted so the count aggregator and the self-source detector
+     * in {@link _collectExistingAptitudes} share one definition of "what does
+     * this selection grant". Returns literal names; canonicalisation is the
+     * caller's job.
+     * @private
+     */
+    _selectionGrantedAptitudes(selection: NormalizedOrigin): Set<string> {
+        const system = this._getSelectionSystem(selection);
+        const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
+        const selectedChoices: Record<string, string[]> = system.selectedChoices ?? {};
+        const perOrigin = new Set<string>();
+
+        const fixed = (grants as NonNullable<OriginPathSystemData['grants']> & { aptitudes?: string[] }).aptitudes;
+        if (Array.isArray(fixed)) {
+            for (const apt of fixed) if (apt !== '') perOrigin.add(apt);
+        }
+
+        if (grants.choices && grants.choices.length > 0) {
+            const labelCounts: Record<string, number> = {};
+            for (const choice of grants.choices) {
+                const base = choice.label ?? choice.name ?? '';
+                labelCounts[base] = (labelCounts[base] ?? 0) + 1;
+                const suffix = labelCounts[base] > 1 ? ` (${labelCounts[base]})` : '';
+                if (choice.type === 'aptitude') {
+                    this._collectAptitudeChoices(choice, selectedChoices[`${base}${suffix}`] ?? [], perOrigin);
+                }
+            }
+        }
+        return perOrigin;
+    }
+
     _collectAptitudeGrantCounts(): Map<string, number> {
         const counts = new Map<string, number>();
         for (const [, selection] of this.selections) {
-            const system = this._getSelectionSystem(selection);
-            const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
-            const selectedChoices: Record<string, string[]> = system.selectedChoices ?? {};
-            const perOrigin = new Set<string>();
+            for (const apt of this._selectionGrantedAptitudes(selection)) {
+                counts.set(apt, (counts.get(apt) ?? 0) + 1);
+            }
+        }
+        return counts;
+    }
 
+    /**
+     * Read the aptitudes already on the actor that are *genuinely* pre-existing
+     * relative to this builder's pending selections.
+     *
+     * The DH2e/BC/OW character DataModel derives `actor.system.aptitudes`
+     * entirely from the actor's owned origin-path items. The builder seeds its
+     * selections from those same committed origin items in
+     * `_initializeFromActor()`, and on commit it deletes *every* origin-path
+     * item and re-creates them from its selections. So an aptitude that appears
+     * on `actor.system.aptitudes` *and* is granted by the builder's own loaded
+     * selections is not a real collision — it is the same single grant seen
+     * from two angles. Treating it as "existing" produced a phantom
+     * "duplicate aptitude detected" the moment the builder opened on any
+     * character that already had committed origin steps, with no way to clear
+     * it but Reset All (#215).
+     *
+     * The true pre-existing set is therefore the actor's aptitudes minus every
+     * aptitude the builder's current selections would themselves grant
+     * (compared by canonical identity, not literal string, so case/whitespace
+     * variants do not leak a phantom collision back in). What remains is only
+     * aptitudes with no backing origin selection (e.g. GM-added directly on the
+     * actor) — those are real collisions when a step would re-grant them.
+     *
+     * This set still drives the genuine doubling guard (#205): an aptitude a
+     * step grants that is in this trimmed set, or one granted by two distinct
+     * selections, is a real duplicate and warns.
+     * @private
+     */
+    _collectExistingAptitudes(): Set<string> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies per system DataModel; aptitudes lives on dh2/bc/ow character DataModels
+        const apts = (this.actor.system as unknown as { aptitudes?: unknown }).aptitudes;
+        if (!Array.isArray(apts)) return new Set<string>();
+
+        // Aptitudes attributable to origin items the builder LOADED FROM THE
+        // ACTOR (selections carrying `_actorItemId`, set by
+        // `_itemToSelectionData` for items already committed on the actor).
+        // `actor.system.aptitudes` is derived from those same committed items,
+        // so subtracting them removes the phantom self-collision (#215) — but
+        // ONLY for already-committed steps. A freshly-picked step (no
+        // `_actorItemId`) is NOT subtracted, so if it re-grants an aptitude the
+        // actor genuinely already has (from a different committed step or a GM
+        // hand-add) it still trips the real doubling guard (#205).
+        const selfGranted = new Set<string>();
+        for (const [, selection] of this.selections) {
+            const actorItemId = (selection as NormalizedOriginWithMeta)._actorItemId;
+            if (actorItemId === undefined || actorItemId === null || actorItemId === '') continue;
+            for (const apt of this._selectionGrantedAptitudes(selection)) {
+                selfGranted.add(this._aptitudeKey(apt));
+            }
+        }
+
+        const out = new Set<string>();
+        for (const apt of apts) {
+            if (typeof apt !== 'string' || apt === '') continue;
+            if (selfGranted.has(this._aptitudeKey(apt))) continue;
+            out.add(apt);
+        }
+        return out;
+    }
+
+    /**
+     * Build the candidate pool of replacement aptitudes for the duplicate-
+     * resolution dialog. The pool is content-sourced: the union of every
+     * aptitude name referenced across loaded origin items (fixed grants +
+     * aptitude-choice options), minus aptitudes the character would already
+     * receive after their builder selections.
+     *
+     * Per Direction #7 the system has no hardcoded aptitude registry — the
+     * compendium origin path documents are the source of truth, so we mine
+     * the loaded origins for their referenced aptitude names. (#205)
+     * @private
+     */
+    _collectAvailableAptitudePool(taken: ReadonlySet<string>): string[] {
+        const pool = new Set<string>();
+        const visit = (origin: NormalizedOrigin): void => {
+            const system = this._getSelectionSystem(origin);
+            const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
             const fixed = (grants as NonNullable<OriginPathSystemData['grants']> & { aptitudes?: string[] }).aptitudes;
             if (Array.isArray(fixed)) {
-                for (const apt of fixed) if (apt !== '') perOrigin.add(apt);
+                for (const apt of fixed) if (typeof apt === 'string' && apt !== '') pool.add(apt);
             }
-
-            if (grants.choices && grants.choices.length > 0) {
-                const labelCounts: Record<string, number> = {};
+            if (Array.isArray(grants.choices)) {
                 for (const choice of grants.choices) {
-                    const base = choice.label ?? choice.name ?? '';
-                    labelCounts[base] = (labelCounts[base] ?? 0) + 1;
-                    const suffix = labelCounts[base] > 1 ? ` (${labelCounts[base]})` : '';
-                    if (choice.type === 'aptitude') {
-                        this._collectAptitudeChoices(choice, selectedChoices[`${base}${suffix}`] ?? [], perOrigin);
+                    if (choice.type !== 'aptitude') continue;
+                    for (const opt of choice.options ?? []) {
+                        if (typeof opt === 'string') {
+                            if (opt !== '') pool.add(opt);
+                            continue;
+                        }
+                        const name = (opt.value !== undefined && opt.value !== '' ? opt.value : opt.name) ?? '';
+                        if (name !== '') pool.add(name);
                     }
                 }
             }
-
-            for (const apt of perOrigin) counts.set(apt, (counts.get(apt) ?? 0) + 1);
+        };
+        for (const origin of this.allOrigins) visit(origin);
+        for (const origin of this.lineageOrigins) visit(origin);
+        // (#216) Per DH2 RAW the replacement for a duplicate aptitude must be
+        // a CHARACTERISTIC aptitude (Weapon Skill, Ballistic Skill, Strength,
+        // Toughness, Agility, Intelligence, Perception, Willpower, Fellowship).
+        // Non-characteristic aptitudes (Defence, Offence, Knowledge, Tech,
+        // Social, Fieldcraft, Finesse, etc.) are not eligible swap targets.
+        // The set of characteristic display names is the system-level
+        // GENERATION_CHARACTERISTICS map (engine primitive, not content),
+        // surfaced via getAllCharacteristicDisplayInfo() — Influence is excluded
+        // because it is a resource characteristic, not a generation char.
+        const characteristicKeys = new Set<string>();
+        const charInfo = getAllCharacteristicDisplayInfo();
+        for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
+            const label = charInfo[key]?.label;
+            if (label !== undefined && label !== '') characteristicKeys.add(this._aptitudeKey(label));
         }
-        return counts;
+        // Exclude taken aptitudes by canonical identity so a "willpower"
+        // candidate is not offered when "Willpower" is already taken (#205).
+        const takenKeys = new Set<string>();
+        for (const t of taken) takenKeys.add(this._aptitudeKey(t));
+        const seenKeys = new Set<string>();
+        const result: string[] = [];
+        for (const apt of pool) {
+            const key = this._aptitudeKey(apt);
+            if (takenKeys.has(key) || seenKeys.has(key)) continue;
+            // (#216) Drop non-characteristic candidates from the swap pool.
+            if (!characteristicKeys.has(key)) continue;
+            seenKeys.add(key);
+            result.push(apt);
+        }
+        // (#216) If the mined pool omitted some characteristic aptitudes (the
+        // loaded origins didn't happen to reference all nine), top up from the
+        // canonical characteristic list so the player can always pick any
+        // characteristic aptitude they don't already have, per RAW.
+        for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
+            const label = charInfo[key]?.label;
+            if (label === undefined || label === '') continue;
+            const canon = this._aptitudeKey(label);
+            if (takenKeys.has(canon) || seenKeys.has(canon)) continue;
+            seenKeys.add(canon);
+            result.push(label);
+        }
+        return result.sort((a, b) => a.localeCompare(b));
+    }
+
+    /**
+     * Look up a player-chosen replacement for a colliding aptitude by canonical
+     * identity, so a swap recorded under one casing/spacing still resolves the
+     * collision when the same aptitude surfaces under another (#205). Returns
+     * the stored replacement (which may be '' meaning "explicitly skipped") or
+     * `undefined` if the player has not acted on this aptitude yet.
+     * @private
+     */
+    _lookupAptitudeOverride(original: string): string | undefined {
+        const key = this._aptitudeKey(original);
+        const direct = this.aptitudeOverrides.get(original);
+        if (direct !== undefined) return direct;
+        for (const [k, v] of this.aptitudeOverrides) {
+            if (this._aptitudeKey(k) === key) return v;
+        }
+        return undefined;
+    }
+
+    /**
+     * Compute the unresolved aptitude collisions for the current builder state.
+     * A collision is an aptitude that would be granted by the player's selected
+     * origins but is either (a) duplicated across two selections, or (b)
+     * genuinely already present on the actor independent of those selections
+     * (see `_collectExistingAptitudes`). For each collision `replacement` is the
+     * chosen swap, or null if the player has not yet picked one. Used by
+     * `_calculatePreview` to feed the banner and by the `resolveAptitudeDouble`
+     * action to drive the chooser dialog.
+     *
+     * Identity is canonical (case/whitespace-insensitive): two origins that
+     * grant the same aptitude with incidental string differences are a real
+     * duplicate and must warn (#205). The actor-existing check is fed by the
+     * self-source-aware set so a freshly-opened builder on an existing
+     * character does NOT report a phantom collision (#215). The first literal
+     * spelling seen is preserved as `original` for the banner/dialog/override
+     * key. (#205, #215)
+     */
+    _getAptitudeCollisions(): { original: string; replacement: string | null }[] {
+        const existing = this._collectExistingAptitudes();
+        const existingKeys = new Set<string>();
+        for (const apt of existing) existingKeys.add(this._aptitudeKey(apt));
+
+        const counts = this._collectAptitudeGrantCounts();
+        // Fold count-keys by canonical identity so "Willpower" granted by one
+        // origin and "willpower" by another sum to 2 (a real duplicate) rather
+        // than staying two distinct count-1 entries that never trip the guard.
+        const folded = new Map<string, { display: string; count: number }>();
+        for (const [apt, count] of counts) {
+            const key = this._aptitudeKey(apt);
+            const prior = folded.get(key);
+            if (prior === undefined) {
+                folded.set(key, { display: apt, count });
+            } else {
+                prior.count += count;
+            }
+        }
+
+        const collisions: { original: string; replacement: string | null }[] = [];
+        for (const [key, { display, count }] of folded) {
+            const conflictsWithExisting = existingKeys.has(key);
+            // Duplicate within selections (count > 1) wastes the second grant;
+            // collision against the actor's genuine pre-existing aptitudes
+            // wastes the only grant.
+            if (count > 1 || conflictsWithExisting) {
+                const override = this._lookupAptitudeOverride(display);
+                collisions.push({ original: display, replacement: override ?? null });
+            }
+        }
+        return collisions.sort((a, b) => a.original.localeCompare(b.original));
     }
 
     /**
@@ -2655,12 +2971,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // floor(Influence/10) Scarce-or-better picks. The campaign also runs
         // a homebrew interpretation in which the Armory step is skipped
         // entirely (Influence is spent in play instead), so the cap is for
-        // display only and commit is never gated on it. The equipment step
-        // UI continues to enforce per-toggle caps via _toggleEquipmentByUuid.
-        const equipmentAvailable = this.systemConfig.equipmentStep !== undefined;
+        // display only and commit is never gated on it under homebrew. Under
+        // RAW DH2e the Armory step IS required for commit so players don't
+        // accidentally close the builder before picking starting gear (#206).
+        // The equipment step UI continues to enforce per-toggle caps via
+        // _toggleEquipmentByUuid.
+        const equipmentAvailable = this.systemConfig.equipmentStep != null;
         const equipmentMaxPicks = equipmentAvailable ? this._getInfluenceBonus() : 0;
-        const equipmentRequired = false;
-        const equipmentComplete = true;
+        const homebrewSkipsEquipment = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        const equipmentRequired = equipmentAvailable && !homebrewSkipsEquipment;
+        const equipmentComplete = !equipmentRequired || this.equipmentSelections.size > 0;
         let pendingChoices = 0;
         let pendingRolls = 0;
 
@@ -3797,6 +4117,66 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Resolve a duplicate-aptitude collision (#205). Opens a picker prompting
+     * the player to swap the doubled aptitude for one their character does not
+     * already have. Per DH2 RAW, when an origin step would grant an aptitude
+     * the character already possesses, the player picks any aptitude they
+     * don't currently have. The picker pool is mined from the loaded origin
+     * compendium (Direction #7 — no hardcoded aptitude registry in `src/`).
+     * A non-selection leaves the collision unresolved so the warning banner
+     * stays visible until the player or GM acts.
+     */
+    static async #resolveAptitudeDouble(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
+        const original = target.dataset['aptitude'];
+        if (original === undefined || original === '') return;
+
+        // Build the candidate pool: every aptitude name referenced in loaded
+        // origin items, minus aptitudes the character already has (whether
+        // pre-existing or freshly granted) and minus already-chosen
+        // replacements so the player doesn't double-pick.
+        const taken = new Set<string>(this._collectExistingAptitudes());
+        for (const apt of this._collectAptitudeGrantCounts().keys()) taken.add(apt);
+        for (const replacement of this.aptitudeOverrides.values()) {
+            if (replacement !== '') taken.add(replacement);
+        }
+        const candidates = this._collectAvailableAptitudePool(taken);
+
+        if (candidates.length === 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.AptitudeDouble.NoCandidates'));
+            return;
+        }
+
+        const optionsHtml = candidates.map((apt) => `<option value="${apt}">${apt}</option>`).join('');
+        const promptLabel = game.i18n.format('WH40K.OriginPath.AptitudeDouble.PromptBody', { aptitude: original });
+        const pickerLabel = game.i18n.localize('WH40K.OriginPath.AptitudeDouble.PickerLabel');
+
+        const picked = (await foundry.applications.api.DialogV2.prompt({
+            window: { title: game.i18n.localize('WH40K.OriginPath.AptitudeDouble.DialogTitle') },
+            content: `
+                <p>${promptLabel}</p>
+                <div class="form-group">
+                    <label>${pickerLabel}</label>
+                    <select name="replacement" class="origin-path-aptitude-replacement">${optionsHtml}</select>
+                </div>
+            `,
+            ok: {
+                label: game.i18n.localize('WH40K.OriginPath.AptitudeDouble.ConfirmLabel'),
+                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
+                    const form = button.form;
+                    const select = form?.elements.namedItem('replacement') as HTMLSelectElement | null;
+                    return select?.value ?? '';
+                },
+            },
+            rejectClose: false,
+        })) as string | null;
+
+        if (picked === null || picked === '') return;
+        this.aptitudeOverrides.set(original, picked);
+        ui.notifications.info(game.i18n.format('WH40K.OriginPath.AptitudeDouble.Resolved', { from: original, to: picked }));
+        void this.render();
+    }
+
+    /**
      * Open an item sheet (for talents, skills, etc.)
      */
     static async #openItem(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
@@ -3825,29 +4205,31 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
             } else if (status['choicesComplete'] !== true) {
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
+            } else if (status['equipmentComplete'] !== true) {
+                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.StepInProgressEquipment'));
+                OriginPathBuilder.#goToEquipment.call(this, _event, _target);
             }
             return;
         }
 
         // Characteristics must be rolled/assigned before the path is applied —
         // commit otherwise produced a character with no characteristics
-        // because the Characteristic Roll step was skippable. The equipment
-        // (Armory) step is intentionally optional (homebrew runs Influence in
-        // play; see _calculateStatus) so it is deliberately not gated here.
+        // because the Characteristic Roll step was skippable (#206).
         if (!this._hasAssignedCharacteristics()) {
             ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit'));
             OriginPathBuilder.#goToCharacteristics.call(this, _event, _target);
             return;
         }
 
-        // Soft-warn (do not block) when the path grants the same aptitude
-        // from more than one origin — the duplicate is wasted under DH2. (#205)
-        const duplicateAptitudes = Array.from(this._collectAptitudeGrantCounts().entries())
-            .filter(([, count]) => count > 1)
-            .map(([aptitude]) => aptitude)
-            .sort((a, b) => a.localeCompare(b));
-        if (duplicateAptitudes.length > 0) {
-            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.DuplicateAptitude', { aptitudes: duplicateAptitudes.join(', ') }));
+        // Soft-warn (do not block) on aptitude collisions that the player has
+        // not yet resolved via the chooser dialog. This covers both intra-
+        // selection duplicates AND collisions against aptitudes the character
+        // already had before opening the builder. (#205)
+        const unresolved = this._getAptitudeCollisions()
+            .filter((c) => c.replacement === null || c.replacement === '')
+            .map((c) => c.original);
+        if (unresolved.length > 0) {
+            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.DuplicateAptitude', { aptitudes: unresolved.join(', ') }));
         }
 
         // Confirm — offer reset options. Base stats are always overridden.
@@ -3995,7 +4377,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
             const charRolls = this._charRolls;
             const charAssignments = this._charAssignments;
-            const hasCharRolls = charRolls.some((r) => r > 0) && CHARS.some((k) => charAssignments[k] !== null);
+            // `charAssignments[k]` is `number | null | undefined`; loose `!= null`
+            // correctly rejects BOTH undefined (no entry) and explicit null
+            // (entry cleared). The earlier `!== null` accepted undefined, so the
+            // gate fired even when no characteristic had been assigned — the
+            // loop below then wrote `.base = baseDefault + 0 + originBonus` for
+            // every char, leaving stats <20 wherever the homeworld penalty bit.
+            const hasCharRolls = charRolls.some((r) => r > 0) && CHARS.some((k) => charAssignments[k] != null);
             if (hasCharRolls) {
                 // Sum origin-path characteristic bonuses across every committed selection, so
                 // baked-in bonuses like Imperial World's +5 Fellowship land directly in the
@@ -4016,10 +4404,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const settingDefaultBase = WH40KSettings.getCharacteristicBase();
                 for (const key of CHARS) {
                     charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
-                    const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] ?? settingDefaultBase : settingDefaultBase;
+                    // `||` (not `??`) so a stored custom base of 0 (legacy
+                    // bad data, see fix in input handler) falls back to
+                    // settingDefaultBase rather than zero-out .base on commit.
+                    const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] || settingDefaultBase : settingDefaultBase;
                     const rollIndex = charAssignments[key] ?? null;
                     const rolled = rollIndex !== null && (charRolls[rollIndex] ?? 0) > 0 ? charRolls[rollIndex] ?? 0 : 0;
                     const originBonus = originModSums[key] ?? 0;
+                    // Only overwrite `.base` when this specific characteristic
+                    // actually has a roll assigned OR an origin bonus to bake
+                    // in. Otherwise the writeback would wipe a player's
+                    // existing base value down to `baseDefault` (20) for any
+                    // characteristic that wasn't assigned this commit — the
+                    // exact "<20 everywhere" regression players hit.
+                    if (rolled <= 0 && originBonus === 0) continue;
                     charUpdate[`system.characteristics.${key}.base`] = baseDefault + rolled + originBonus;
                 }
                 await this.actor.update(charUpdate);
@@ -4258,6 +4656,29 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
     /**
      * Reset XP to the system's starting value and zero out all characteristic/skill advances.
+     *
+     * Two distinct accounting failures are guarded here (issue #214 — first-time
+     * origin path on an already-generated character produced negative XP):
+     *
+     * 1. **Half-reset advancement state.** Every XP-purchased advance is recorded
+     *    in *two* places: the `.advance` rank AND a paired `.cost` (the XP that
+     *    was spent on it, see AdvancementDialog#purchaseCharacteristic / #_buySkill).
+     *    Zeroing only `.advance` left every `.cost` orphaned, so
+     *    `_computeExperienceSpent` kept summing stale costs into
+     *    `experience.calculatedTotal` and the auto-opened Advancement Dialog
+     *    re-priced advances from a corrupt baseline. Both halves must be zeroed
+     *    together so the post-reset character is a clean slate.
+     *
+     * 2. **Non-atomic experience write.** The experience reset previously rode in
+     *    the *same* `actor.update()` payload as the bulk
+     *    `system.skills.<k>.entries` array replacements. On an already-generated
+     *    character those entries can carry legacy / out-of-range fields that fail
+     *    Foundry V14 strict array validation, which rejects the *entire* atomic
+     *    update — so `experience.used` was never zeroed while the rest of the
+     *    commit proceeded, leaving `used` from the pre-origin build against a
+     *    `total` lowered to `startingXP` → negative `available`. The experience
+     *    reset is now committed first, on its own, so a later validation failure
+     *    on the advance/entry sweep can never strand it.
      * @private
      */
     async _resetExperienceAndAdvancements(): Promise<void> {
@@ -4266,26 +4687,51 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // systemConfig here always resolved to `undefined`, which silently
         // zeroed the reset.
         const startingXP = this.registryConfig.startingXP;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
-        const update: Record<string, unknown> = {
+
+        // Step 1 — experience totals, committed on their own so a validation
+        // failure on the advance/entry sweep below can never leave `used`
+        // pointing at the pre-origin spend (issue #214).
+        await this.actor.update({
             'system.experience.total': startingXP,
             'system.experience.used': 0,
-        };
+        });
+
+        // Step 2 — zero every advance AND its paired cost. Resetting `.advance`
+        // without `.cost` left the spend accounting internally inconsistent.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
+        const update: Record<string, unknown> = {};
         const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
         for (const key of CHARS) {
             update[`system.characteristics.${key}.advance`] = 0;
+            update[`system.characteristics.${key}.cost`] = 0;
         }
         const skills = this._actorSys().skills ?? {};
         for (const skillKey of Object.keys(skills)) {
             update[`system.skills.${skillKey}.advance`] = 0;
+            update[`system.skills.${skillKey}.cost`] = 0;
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skills is a Record; key may be absent at runtime
             const entries = skills[skillKey]?.entries;
             if (Array.isArray(entries)) {
-                const resetEntries = entries.map((entry) => ({ ...entry, advance: 0 }));
+                // Zero both halves of the per-entry advancement record. Step 1
+                // already committed the experience reset on its own, so even if
+                // this entries array write is rejected by V14 strict validation
+                // the character can no longer be left with negative XP (#214).
+                const resetEntries = entries.map((entry) => ({ ...entry, advance: 0, cost: 0 }));
                 update[`system.skills.${skillKey}.entries`] = resetEntries;
             }
         }
         await this.actor.update(update);
+
+        // Step 3 — defensive clamp. Even if some external state slipped a `used`
+        // above `total` past steps 1-2, available XP must never render negative
+        // ("nothing can be bought", issue #214). This is the symptom guard; the
+        // real correction is steps 1-2 keeping the accounting consistent.
+        const exp = (this.actor.system as { experience?: { total?: number; used?: number } } | undefined)?.experience;
+        const total = exp?.total ?? startingXP;
+        const used = exp?.used ?? 0;
+        if (used > total) {
+            await this.actor.update({ 'system.experience.used': total });
+        }
     }
 
     /**

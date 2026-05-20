@@ -1,0 +1,32 @@
+{{! Rogue Trader Ship Critical Hit Chart Result Card (issue #187) }}
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+    cardClass="wh40k-ship-crit-card"
+    outerExtraClass="tw-overflow-hidden tw-rounded-md tw-font-ui"
+    image=image
+    imageAlt=resultName
+    title=resultName
+    subtitle=(localize "WH40K.Starship.Critical.ChatSubtitle")
+    badges=(array
+        (object class="tw-bg-[rgba(192,57,43,0.2)] tw-text-[#c0392b] tw-border tw-border-[rgba(192,57,43,0.35)]" icon="fa-dice-d6" label=rollLabel)
+    )
+    footerLabel=actorName
+    footerIcon="fa-rocket"
+    gameSystem=gameSystem
+}}
+    <div class="tw-px-2 tw-py-2 tw-mb-2 tw-bg-[rgba(254,245,231,0.5)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-red)] tw-rounded-md tw-leading-relaxed">
+        {{resultText}}
+    </div>
+
+    <div class="tw-flex tw-flex-col tw-gap-1 tw-p-1.5 tw-bg-black/[0.03] tw-rounded-md tw-text-[13px]">
+        <div class="tw-flex tw-items-baseline tw-gap-2">
+            <span class="tw-font-semibold tw-text-bronze bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+                <i class="fas fa-skull-crossbones"></i>
+                {{localize "WH40K.Starship.Critical.StatusApplied"}}
+            </span>
+            <span>{{statusLabel}}</span>
+        </div>
+        <div class="tw-text-[12px] tw-text-[#5a5a5a]">
+            {{localize "WH40K.Starship.Critical.PersistsUntilRepaired"}}
+        </div>
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}

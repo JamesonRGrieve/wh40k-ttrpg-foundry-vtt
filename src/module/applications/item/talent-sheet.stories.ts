@@ -10,11 +10,23 @@ import { initializeStoryHandlebars } from '../../../../stories/template-support'
 import templateSrc from '../../../templates/item/talent-sheet.hbs?raw';
 
 initializeStoryHandlebars();
+// Issue #201: opening a talent in a compendium previously threw a Handlebars
+// parse error because `{{#if (eq activeTab"overview")}}` was missing the space
+// between the variable and the literal. Compiling at module load asserts the
+// template parses cleanly; if a future edit reintroduces the typo, Storybook
+// (and the regression spec in tests/storybook/issue-201-...) will fail loudly.
 const compiled = Handlebars.compile(templateSrc);
 const rng = seedRandom(0x7a1e47);
 
 function makeCtx(overrides: Record<string, unknown> = {}) {
     const id = randomId('talent', rng);
+    // The talent sheet template gates each tab panel on `(eq activeTab "<id>")`
+    // — `activeTab` is set at runtime from `this.tabGroups.primary` in
+    // `TalentSheet._prepareContext`. Without it the story renders every panel
+    // simultaneously (the issue-201 "duplicate Benefit" symptom). Stories that
+    // need a different active tab should pass `activeTab: '<tab-id>'` via the
+    // overrides argument.
+    const activeTab = (overrides as { activeTab?: string }).activeTab ?? 'overview';
     const item = mockItem({
         _id: id,
         id,
@@ -85,11 +97,12 @@ function makeCtx(overrides: Record<string, unknown> = {}) {
         isOwnedByActor: false,
         effects: [],
         tabs: {
-            overview: { id: 'overview', tab: 'overview', group: 'primary', active: true, cssClass: 'active' },
-            effects: { id: 'effects', tab: 'effects', group: 'primary', active: false, cssClass: '' },
-            properties: { id: 'properties', tab: 'properties', group: 'primary', active: false, cssClass: '' },
-            description: { id: 'description', tab: 'description', group: 'primary', active: false, cssClass: '' },
+            overview: { id: 'overview', tab: 'overview', group: 'primary', active: activeTab === 'overview', cssClass: activeTab === 'overview' ? 'active' : '' },
+            effects: { id: 'effects', tab: 'effects', group: 'primary', active: activeTab === 'effects', cssClass: activeTab === 'effects' ? 'active' : '' },
+            properties: { id: 'properties', tab: 'properties', group: 'primary', active: activeTab === 'properties', cssClass: activeTab === 'properties' ? 'active' : '' },
+            description: { id: 'description', tab: 'description', group: 'primary', active: activeTab === 'description', cssClass: activeTab === 'description' ? 'active' : '' },
         },
+        activeTab,
         ...overrides,
     };
 }
@@ -117,5 +130,35 @@ export const RendersEditImageAction: Story = {
         const btn = canvasElement.querySelector('[data-action="editImage"]');
         expect(btn).toBeTruthy();
         btn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    },
+};
+
+/**
+ * Regression coverage for issue #201.
+ *
+ * Asserts the compendium-render path of the talent sheet:
+ *   1. The template parses (compiling it at module load would have already
+ *      thrown if the `activeTab"overview"` typo were present — this story
+ *      simply re-renders it inside a story so Storybook's static build covers
+ *      the same surface, and the Playwright regression spec under
+ *      `tests/storybook/issue-201-talent-compendium-render.spec.ts` can drive
+ *      a real browser against the rendered DOM.
+ *   2. Each of the four tab buttons (`overview`, `effects`, `properties`,
+ *      `description`) is present in the DOM — proving every
+ *      `(eq activeTab "<tab>")` token reached compile time correctly spaced.
+ */
+export const CompendiumRender: Story = {
+    name: 'Issue 201 — Compendium Render',
+    render: () => renderTemplate(compiled, makeCtx({ inEditMode: false, editable: false, isCompendiumItem: true })),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // No parse error => rendered output contains the tab nav.
+        expect(canvas.getByDisplayValue('Mighty Shot')).toBeTruthy();
+        for (const tab of ['overview', 'effects', 'properties', 'description'] as const) {
+            const button = canvasElement.querySelector(`button[data-tab="${tab}"]`);
+            expect(button, `tab button [data-tab="${tab}"] should render`).toBeTruthy();
+            const panel = canvasElement.querySelector(`div[data-tab="${tab}"]`);
+            expect(panel, `tab panel [data-tab="${tab}"] should render`).toBeTruthy();
+        }
     },
 };

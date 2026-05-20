@@ -1,0 +1,46 @@
+{{!-- Medicae Mechadendrite — Half-Action Staunch Blood Loss dialog (#104, errata p. 183). --}}
+{{!-- Button is gated on `eligible` (actor owns the cybernetic + non-IM system). --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-emerald-300 tw-italic">
+        {{localize "WH40K.MedicaeMechadendrite.DialogIntro"}}
+    </div>
+
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-emerald-300">
+            {{localize "WH40K.MedicaeMechadendrite.OperatorLabel"}}
+        </label>
+        <div class="tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[rgba(16,185,129,0.35)] tw-bg-[rgba(6,78,59,0.25)] tw-text-emerald-100 tw-text-sm tw-font-semibold">
+            {{actorName}}
+        </div>
+    </div>
+
+    {{#if eligible}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(16,185,129,0.4)] tw-bg-[rgba(6,78,59,0.18)] tw-text-[0.85rem] tw-text-emerald-100 tw-mb-2">
+            {{localize "WH40K.MedicaeMechadendrite.HalfActionNote"}}
+        </div>
+        <div class="tw-text-xs tw-text-emerald-300 tw-text-center tw-mb-1">
+            {{localize "WH40K.MedicaeMechadendrite.BonusNote"}} (+{{medicaeBonus}})
+        </div>
+    {{else}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(248,113,113,0.4)] tw-bg-[rgba(127,29,29,0.2)] tw-text-[0.85rem] tw-text-red-200 tw-mb-2">
+            {{localize "WH40K.MedicaeMechadendrite.NotEligible"}}
+        </div>
+    {{/if}}
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(16,185,129,0.25)]">
+        <button type="button"
+                data-action="staunchBloodLoss"
+                {{#unless eligible}}disabled{{/unless}}
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-emerald-500 tw-to-teal-700 tw-text-[#f0fdfa] tw-shadow-[0_4px_12px_rgba(16,185,129,0.35)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed">
+            <i class="fas fa-syringe"></i> {{localize "WH40K.MedicaeMechadendrite.StaunchButton"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.MedicaeMechadendrite.Cancel"}}
+        </button>
+    </div>
+
+</div>

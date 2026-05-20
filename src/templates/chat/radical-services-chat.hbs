@@ -1,0 +1,32 @@
+{{!-- Radical Services Requisition chat-card (within.md p. 72) --}}
+<div class="wh40k-rsv-chat tw-p-3 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.45)] tw-to-[rgba(0,0,0,0.25)] dh2e:tw-border-bronze" data-wh40k-system="dh2e">
+
+    <header class="tw-mb-2 tw-pb-2 tw-border-b tw-border-[rgba(201,162,39,0.25)]">
+        <div class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.ChatTitle"}}</div>
+        <div class="tw-text-[1.05rem] tw-font-bold tw-text-gold dh2e:tw-text-gold-raw">{{service.label}}</div>
+    </header>
+
+    <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-text-[0.8rem] tw-text-[#cfcab8]">
+        <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.AvailabilityLabel"}}:</span> {{service.availabilityLabel}}</div>
+        <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.TargetLabel"}}:</span> <span class="tw-tabular-nums tw-text-gold">{{requisition.target}}</span></div>
+        <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.RollLabel"}}:</span> <span class="tw-tabular-nums">{{requisition.roll}}</span></div>
+        <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.ThreatLabel"}}:</span> <span class="tw-tabular-nums">{{service.threatLevel}}</span></div>
+    </div>
+
+    <div class="tw-mt-3 tw-px-3 tw-py-2 tw-rounded-md tw-text-center tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{#if requisition.success}}tw-bg-emerald-900/40 tw-text-emerald-300 tw-border tw-border-emerald-500/40{{else}}tw-bg-rose-900/40 tw-text-rose-300 tw-border tw-border-rose-500/40{{/if}}">
+        {{#if requisition.success}}
+            {{localize "WH40K.RadicalServices.Success"}}
+            <span class="tw-ml-2 tw-tabular-nums">(+{{requisition.dos}} DoS)</span>
+        {{else}}
+            {{localize "WH40K.RadicalServices.Failure"}}
+            <span class="tw-ml-2 tw-tabular-nums">(-{{requisition.dof}} DoF)</span>
+        {{/if}}
+    </div>
+
+    {{#if requisition.success}}
+    <div class="tw-mt-2 tw-text-[0.8rem] tw-text-[#f87171] tw-text-center">
+        <i class="fas fa-eye-slash"></i>
+        {{localize "WH40K.RadicalServices.SubtletyLabel"}}: {{subtletyDelta}}
+    </div>
+    {{/if}}
+</div>

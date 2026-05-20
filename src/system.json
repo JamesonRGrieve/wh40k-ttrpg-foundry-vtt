@@ -147,6 +147,9 @@
             "drug": {
                 "htmlFields": ["description.value"]
             },
+            "endeavour": {
+                "htmlFields": ["description.value", "reward.narrative"]
+            },
             "enemy": {
                 "htmlFields": ["description.value"]
             },
@@ -157,6 +160,9 @@
                 "htmlFields": ["description.value"]
             },
             "journalEntry": {
+                "htmlFields": ["description.value"]
+            },
+            "lead": {
                 "htmlFields": ["description.value"]
             },
             "malignancy": {
@@ -2798,6 +2804,18 @@
             "flags": {}
         },
         {
+            "name": "rt-core-rolltables-ship-combat",
+            "label": "Rogue Trader Ship Combat Tables",
+            "path": "packs/rogue-trader/rt-core-rolltables-ship-combat",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-faith-items-ammo",
             "label": "Faith and Coin Ammunition",
             "path": "packs/rogue-trader/rt-faith-items-ammo",
@@ -2981,6 +2999,18 @@
             "name": "rt-items-navigator-powers",
             "label": "Navigator Powers",
             "path": "packs/rogue-trader/rt-items-navigator-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-items-ship-extended-actions",
+            "label": "Ship Extended Actions",
+            "path": "packs/rogue-trader/rt-items-ship-extended-actions",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -4371,7 +4401,8 @@
                         "rt-core-items-vehicle-traits",
                         "rt-core-items-weapon-qualities",
                         "rt-core-items-weapons",
-                        "rt-core-rolltables-psychic"
+                        "rt-core-rolltables-psychic",
+                        "rt-core-rolltables-ship-combat"
                     ]
                 },
                 {
@@ -4404,6 +4435,7 @@
                     "packs": [
                         "rt-items-navigator-powers",
                         "rt-items-origin-path",
+                        "rt-items-ship-extended-actions",
                         "rt-items-ship-roles",
                         "rt-items-ship-weapons",
                         "rt-journals-character-actions",

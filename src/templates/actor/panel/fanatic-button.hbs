@@ -1,0 +1,29 @@
+{{!--
+    Fanatic role: Death to All Who Oppose Me action button (#93, within.md p.34/967).
+
+    Fate-spend action that costs 1 Fate point in exchange for a temporary
+    Active Effect granting +10 WS / +10 BS for DEATH_TO_OPPOSE_DURATION_ROUNDS
+    rounds. The panel renders only when `hasFanatic` is truthy (computed in
+    CharacterSheet._prepareContext from the actor's items / role flags).
+
+    The button itself dispatches `data-action="deathToAllWhoOpposeMe"`, which
+    resolves to CharacterSheet.#deathToAllWhoOpposeMe — see the action
+    handler for the wired Fate decrement + ActiveEffect + ChatMessage
+    pipeline.
+--}}
+{{#if hasFanatic}}
+<div class="wh40k-fanatic-button tw-flex tw-flex-col tw-items-stretch tw-gap-2 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-red-900/70 tw-bg-red-900/[8%]">
+    <button
+        type="button"
+        class="wh40k-fanatic-btn tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-solid tw-border-red-900 tw-bg-red-900/60 tw-text-white tw-font-display tw-uppercase tw-tracking-[0.08em] tw-text-[0.85rem] hover:tw-bg-red-900/80 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-red-700"
+        data-action="deathToAllWhoOpposeMe"
+        data-tooltip="{{localize 'WH40K.Fanatic.ButtonTooltip'}}"
+        aria-label="{{localize 'WH40K.Fanatic.ButtonLabel'}}">
+        <i class="fa-solid fa-skull" aria-hidden="true"></i>
+        <span>{{localize "WH40K.Fanatic.ButtonLabel"}}</span>
+    </button>
+    <p class="tw-text-[0.75rem] tw-italic tw-text-[var(--wh40k-text-muted,#a0a0a0)] tw-m-0">
+        {{localize "WH40K.Fanatic.ButtonTooltip"}}
+    </p>
+</div>
+{{/if}}
