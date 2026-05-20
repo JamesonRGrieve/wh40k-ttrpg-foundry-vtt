@@ -1436,6 +1436,32 @@
                     "Trained": "Trained",
                     "Expert": "Expert"
                 }
+            },
+            "Psychic": {
+                "Label": "Psychic Strength",
+                "Class": {
+                    "Bound": "Bound Psyker",
+                    "Unbound": "Unbound Psyker",
+                    "Daemonic": "Daemonic Psyker"
+                },
+                "Mode": {
+                    "Fettered": "Fettered",
+                    "Unfettered": "Unfettered",
+                    "Push": "Push"
+                },
+                "Push": {
+                    "Level": "Push Level",
+                    "MaxLevel": "Maximum Push Level"
+                },
+                "EffectivePR": "Effective Psy Rating",
+                "Sustain": {
+                    "Count": "Sustained Powers",
+                    "Penalty": "Sustain Penalty"
+                },
+                "Phenomena": {
+                    "RollCount": "Phenomena Rolls",
+                    "Triggered": "Psychic Phenomena triggered"
+                }
             }
         },
         "DW": {
@@ -1599,6 +1625,24 @@
                     "BetchersGland": { "Name": "Betcher's Gland" },
                     "Progenoids": { "Name": "Progenoids" },
                     "BlackCarapace": { "Name": "Black Carapace" }
+                }
+            },
+            "Oath": {
+                "Label": "Mission Oath",
+                "Sworn": "Oath sworn — bound for the mission.",
+                "Released": "Oath released.",
+                "Buff": {
+                    "Title": "Mission Buff",
+                    "Modifier": "Modifier",
+                    "Description": "Description"
+                },
+                "Validation": {
+                    "NotLeader": "Only the kill-team leader may swear a Mission Oath.",
+                    "AlreadySworn": "An Oath is already sworn for this mission."
+                },
+                "GrantedAbilities": {
+                    "Title": "Granted Squad-Mode Abilities",
+                    "None": "No additional Squad-Mode abilities granted."
                 }
             }
         },
@@ -3957,6 +4001,32 @@
                     "Common": "Common",
                     "Good": "Good",
                     "Best": "Best"
+                }
+            },
+            "Craftsmanship": {
+                "Label": "Craftsmanship",
+                "Tier": {
+                    "Poor": "Poor",
+                    "Common": "Common",
+                    "Good": "Good",
+                    "Best": "Best"
+                },
+                "Ranged": {
+                    "Reliability": {
+                        "Unreliable": "Unreliable",
+                        "Reliable": "Reliable",
+                        "NeverJams": "Never Jams"
+                    }
+                },
+                "Melee": {
+                    "WeaponSkillModifier": "Weapon Skill Modifier",
+                    "DamageBonus": "Damage Bonus"
+                },
+                "Armour": {
+                    "AgilityModifier": "Agility Test Modifier",
+                    "ApFirstHit": "AP vs First Hit",
+                    "HalfWeight": "Half Weight",
+                    "FlatApBonus": "Armour Point Bonus"
                 }
             }
         }
