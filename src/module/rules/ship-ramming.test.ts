@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    computeRammingDamage,
-    degreesOfSuccess,
-    RAMMING_RESOLUTION_FAVORS_DEFENDER,
-    resolveRamming,
-    resolveRammingToHit,
-} from './ship-ramming';
+import { computeRammingDamage, degreesOfSuccess, RAMMING_RESOLUTION_FAVORS_DEFENDER, resolveRamming, resolveRammingToHit } from './ship-ramming';
 
 /**
  * RT Ramming resolver pins (#188 — core.md L9997 §Ramming and Boarding

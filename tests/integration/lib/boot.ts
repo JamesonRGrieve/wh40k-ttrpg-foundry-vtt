@@ -73,7 +73,7 @@ async function doBoot(): Promise<BootResult> {
         pretendToBeVisual: true,
     });
 
-    const win = dom.window as unknown as Record<string, unknown>;
+    const win = dom.window as Record<string, unknown>;
     // Foundry expects these but jsdom does not provide them.
     win.indexedDB = new FDBFactory();
     win.OffscreenCanvas = class {};

@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -124,21 +123,19 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
 
             // Drain any dialog/prompt/tour windows a probe left open so the
             // next probe's window stack starts clean (mirrors dialogs.spec.ts).
+            type ProbeWindow = { id?: string; title?: string; close?: () => Promise<unknown> };
             async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
-                for (const w of windows) {
-                    const id = w?.id ?? '';
-                    if (
-                        id.includes('dialog') ||
-                        id.includes('prompt') ||
-                        id.includes('tour') ||
-                        id.includes('talent-editor') ||
-                        id.includes('breakdown')
-                    ) {
-                        try {
-                            await w?.close?.();
-                        } catch {
-                            /* ignore */
+                const winRecord = ui?.windows;
+                if (winRecord) {
+                    for (const wRaw of Object.values(winRecord)) {
+                        const w = wRaw as ProbeWindow;
+                        const id = w?.id ?? '';
+                        if (id.includes('dialog') || id.includes('prompt') || id.includes('tour') || id.includes('talent-editor') || id.includes('breakdown')) {
+                            try {
+                                await w?.close?.();
+                            } catch {
+                                /* ignore */
+                            }
                         }
                     }
                 }
@@ -192,8 +189,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             fired['tour-wh40k-base-class'] = true;
                             notes['tour-wh40k-base-class'] = 'WH40KTour extends foundry.nue.Tour; waitForElement fast-path resolved';
                         } else {
-                            notes['tour-wh40k-base-class'] =
-                                `extendsTour=${String(extendsTour)} waitResolved=${String(waitResolved)} hasReset=${String(hasReset)}`;
+                            notes['tour-wh40k-base-class'] = `extendsTour=${String(extendsTour)} waitResolved=${String(waitResolved)} hasReset=${String(
+                                hasReset,
+                            )}`;
                         }
                     }
                 } catch (err) {
@@ -223,8 +221,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             fired['tour-main-construct'] = true;
                             notes['tour-main-construct'] = `constructed DHTourMain — title="${String(cfg.title)}"`;
                         } else {
-                            notes['tour-main-construct'] =
-                                `titleOk=${String(titleOk)} descOk=${String(descOk)} resumeOk=${String(resumeOk)} displayOk=${String(displayOk)}`;
+                            notes['tour-main-construct'] = `titleOk=${String(titleOk)} descOk=${String(descOk)} resumeOk=${String(resumeOk)} displayOk=${String(
+                                displayOk,
+                            )}`;
                         }
                     }
                 } catch (err) {
@@ -257,8 +256,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             fired['tour-main-steps-shape'] = true;
                             notes['tour-main-steps-shape'] = `6 steps well-formed; ids=${JSON.stringify(ids)}`;
                         } else {
-                            notes['tour-main-steps-shape'] =
-                                `count=${steps.length} allHaveCore=${String(allHaveCore)} firstClicks=${String(firstClicks)} hasAttackStep=${String(hasAttackStep)}`;
+                            notes['tour-main-steps-shape'] = `count=${steps.length} allHaveCore=${String(allHaveCore)} firstClicks=${String(
+                                firstClicks,
+                            )} hasAttackStep=${String(hasAttackStep)}`;
                         }
                     }
                 } catch (err) {
@@ -330,7 +330,12 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         const charParsed = JSON.parse(charJson) as { label?: string; total?: number };
                         const weaponParsed = JSON.parse(weaponJson) as { name?: string };
                         const skillParsed = JSON.parse(skillJson) as { label?: string };
-                        if (charParsed.label === 'Weapon Skill' && charParsed.total === 35 && weaponParsed.name === 'probe-las' && skillParsed.label === 'Awareness') {
+                        if (
+                            charParsed.label === 'Weapon Skill' &&
+                            charParsed.total === 35 &&
+                            weaponParsed.name === 'probe-las' &&
+                            skillParsed.label === 'Awareness'
+                        ) {
                             fired['tooltip-mixin-prepare'] = true;
                             notes['tooltip-mixin-prepare'] = 'char/weapon/skill tooltip JSON payloads built and parsed';
                         } else {
@@ -398,13 +403,14 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         const contentOk = ctx.content === '<p>probe-content</p>';
                         const buttonOk = Array.isArray(ctx.buttons) && ctx.buttons[0]?.cssClass === 'primary';
                         const elementPresent = dialog.element != null;
-                        const tolerable = renderThrew !== null && renderThrew.includes('must render a single HTML element');
+                        const tolerable = renderThrew?.includes('must render a single HTML element') === true;
                         if (contentOk && buttonOk && (elementPresent || tolerable)) {
                             fired['dialog-wh40k-instance-render'] = true;
                             notes['dialog-wh40k-instance-render'] = '_prepareContext mapped content + button.cssClass';
                         } else {
-                            notes['dialog-wh40k-instance-render'] =
-                                `contentOk=${String(contentOk)} buttonOk=${String(buttonOk)} elementPresent=${String(elementPresent)} renderThrew=${renderThrew ?? 'no'}`;
+                            notes['dialog-wh40k-instance-render'] = `contentOk=${String(contentOk)} buttonOk=${String(buttonOk)} elementPresent=${String(
+                                elementPresent,
+                            )} renderThrew=${renderThrew ?? 'no'}`;
                         }
                         try {
                             await dialog.close?.();
@@ -470,13 +476,13 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 // Non-async stubs returning resolved promises keep
                                 // the Foundry render/prepare/_onRender shape without
                                 // needing a require-await suppression.
-                                render(): Promise<void> {
+                                async render(): Promise<void> {
                                     return Promise.resolve();
                                 }
-                                _prepareContext(): Promise<Record<string, unknown>> {
+                                async _prepareContext(): Promise<Record<string, unknown>> {
                                     return Promise.resolve({});
                                 }
-                                _onRender(): Promise<void> {
+                                async _onRender(): Promise<void> {
                                     return Promise.resolve();
                                 }
                             }
@@ -493,8 +499,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 fired['whatif-mixin-state'] = true;
                                 notes['whatif-mixin-state'] = 'enter → previewChange tracked 1 change; preview actor materialised';
                             } else {
-                                notes['whatif-mixin-state'] =
-                                    `inactiveBefore=${String(inactiveBefore)} activeAfterEnter=${String(activeAfterEnter)} changeCount=${after.changeCount} previewBuilt=${String(previewBuilt)}`;
+                                notes['whatif-mixin-state'] = `inactiveBefore=${String(inactiveBefore)} activeAfterEnter=${String(
+                                    activeAfterEnter,
+                                )} changeCount=${after.changeCount} previewBuilt=${String(previewBuilt)}`;
                             }
                             try {
                                 await inst.exitWhatIfMode();
@@ -574,8 +581,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['collapsible-panel-mixin-toggle'] = 'CollapsiblePanelMixin export missing';
                     } else {
                         const root = document.createElement('div');
-                        root.innerHTML =
-                            '<section data-panel-id="weapons"></section><section data-panel-id="skills" class="collapsed"></section>';
+                        root.innerHTML = '<section data-panel-id="weapons"></section><section data-panel-id="skills" class="collapsed"></section>';
                         class StubBase {
                             element = root;
                             expandedSections = new Map<string, boolean>();
@@ -592,8 +598,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             fired['collapsible-panel-mixin-toggle'] = true;
                             notes['collapsible-panel-mixin-toggle'] = 'static config OK; togglePanel/collapseAll wrote expandedSections';
                         } else {
-                            notes['collapsible-panel-mixin-toggle'] =
-                                `scopeOk=${String(scopeOk)} presetsOk=${String(presetsOk)} weaponsCollapsed=${String(weaponsCollapsed)} skillsTracked=${String(skillsTracked)}`;
+                            notes['collapsible-panel-mixin-toggle'] = `scopeOk=${String(scopeOk)} presetsOk=${String(presetsOk)} weaponsCollapsed=${String(
+                                weaponsCollapsed,
+                            )} skillsTracked=${String(skillsTracked)}`;
                         }
                     }
                 } catch (err) {
@@ -628,8 +635,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             fired['enhanced-animations-counter'] = true;
                             notes['enhanced-animations-counter'] = 'animateCounter settled to 12 and cleared running-animation map';
                         } else {
-                            notes['enhanced-animations-counter'] =
-                                `settled=${String(settled)} text="${String(el.textContent)}" cleared=${String(cleared)} counterClass=${String(counterClass)}`;
+                            notes['enhanced-animations-counter'] = `settled=${String(settled)} text="${String(el.textContent)}" cleared=${String(
+                                cleared,
+                            )} counterClass=${String(counterClass)}`;
                         }
                     }
                 } catch (err) {
@@ -725,8 +733,8 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         const mod = await import(`${base}/applications/api/effect-actions.js`);
                         const { effectIdFromTarget, resolveEffect, createEffect, effectToggle, effectDelete } = mod;
-                        const created = (await withTimeout(createEffect(live, { name: 'probe-effect' }), 5_000, 'createEffect')) as any[];
-                        const effect = Array.isArray(created) ? created[0] : null;
+                        const created = await withTimeout(createEffect(live, { name: 'probe-effect' }), 5_000, 'createEffect');
+                        const effect = (Array.isArray(created) ? created[0] : null) as { id?: string; name?: string } | null;
                         if (effect?.id == null) {
                             notes['effect-actions-crud'] = 'createEffect did not return an ActiveEffect';
                         } else {
@@ -734,7 +742,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             target.dataset['effectId'] = effect.id;
                             const idResolved = effectIdFromTarget(target) === effect.id;
                             const resolved = resolveEffect(live, target);
-                            const resolvedOk = resolved != null && resolved.name === 'probe-effect';
+                            const resolvedOk = resolved?.name === 'probe-effect';
                             const disabledBefore = live.effects.get(effect.id)?.disabled === false;
                             await withTimeout(effectToggle.call({ effectsOwner: live }, new Event('click'), target), 5_000, 'effectToggle');
                             const disabledAfter = live.effects.get(effect.id)?.disabled === true;
@@ -744,8 +752,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 fired['effect-actions-crud'] = true;
                                 notes['effect-actions-crud'] = 'create → resolve → toggle (disabled flip) → delete round-tripped';
                             } else {
-                                notes['effect-actions-crud'] =
-                                    `idResolved=${String(idResolved)} resolvedOk=${String(resolvedOk)} disabledBefore=${String(disabledBefore)} disabledAfter=${String(disabledAfter)} deleted=${String(deleted)}`;
+                                notes['effect-actions-crud'] = `idResolved=${String(idResolved)} resolvedOk=${String(resolvedOk)} disabledBefore=${String(
+                                    disabledBefore,
+                                )} disabledAfter=${String(disabledAfter)} deleted=${String(deleted)}`;
                             }
                         }
                     }
@@ -798,7 +807,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     if (live == null) {
                         notes['active-modifiers-panel-prepare'] = 'no PC actor';
                     } else {
-                        const embeds = (await withTimeout(
+                        const embeds = await withTimeout(
                             live.createEmbeddedDocuments?.('Item', [
                                 { name: 'probe-condition', type: 'condition', system: { gameSystem: 'dh2e', description: 'probe', duration: 'Permanent' } },
                                 {
@@ -809,8 +818,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             ]),
                             5_000,
                             'embed condition+talent',
-                        )) as any[];
-                        for (const e of embeds ?? []) {
+                        );
+                        const embedList = (embeds ?? []) as Array<{ id: string }>;
+                        for (const e of embedList) {
                             const created = live.items.get(e.id);
                             if (created != null) {
                                 cleanups.push(async () => {
@@ -841,15 +851,14 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             };
                             const conditionBucketed = data.conditions.length >= 1;
                             const talentBucketed = data.talents.length >= 1;
-                            const hasAllCategories =
-                                Array.isArray(data.traits) && Array.isArray(data.equipment) && Array.isArray(data.effects);
+                            const hasAllCategories = Array.isArray(data.traits) && Array.isArray(data.equipment) && Array.isArray(data.effects);
                             if (conditionBucketed && talentBucketed && hasAllCategories) {
                                 fired['active-modifiers-panel-prepare'] = true;
-                                notes['active-modifiers-panel-prepare'] =
-                                    `roll-up: conditions=${data.conditions.length} talents=${data.talents.length}`;
+                                notes['active-modifiers-panel-prepare'] = `roll-up: conditions=${data.conditions.length} talents=${data.talents.length}`;
                             } else {
-                                notes['active-modifiers-panel-prepare'] =
-                                    `conditionBucketed=${String(conditionBucketed)} talentBucketed=${String(talentBucketed)} hasAllCategories=${String(hasAllCategories)}`;
+                                notes['active-modifiers-panel-prepare'] = `conditionBucketed=${String(conditionBucketed)} talentBucketed=${String(
+                                    talentBucketed,
+                                )} hasAllCategories=${String(hasAllCategories)}`;
                             }
                         }
                     }
@@ -869,14 +878,15 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     if (live == null) {
                         notes['item-preview-card-toggle'] = 'no PC actor';
                     } else {
-                        const created = (await withTimeout(
+                        const created = await withTimeout(
                             live.createEmbeddedDocuments?.('Item', [
                                 { name: 'probe-preview-gear', type: 'gear', system: { gameSystem: 'dh2e', quantity: 2, description: 'probe gear' } },
                             ]),
                             5_000,
                             'embed preview gear',
-                        )) as any[];
-                        const gear = created?.[0] ? live.items.get(created[0].id) : null;
+                        );
+                        const createdArr = created as Array<{ id: string }> | undefined | null;
+                        const gear = createdArr?.[0] ? live.items.get(createdArr[0].id) : null;
                         if (gear == null) {
                             notes['item-preview-card-toggle'] = 'failed to embed gear';
                         } else {
@@ -938,12 +948,13 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     if (live == null) {
                         notes['talent-editor-dialog-render'] = 'no PC actor';
                     } else {
-                        const created = (await withTimeout(
+                        const created = await withTimeout(
                             live.createEmbeddedDocuments?.('Item', [{ name: 'probe-editor-talent', type: 'talent', system: { gameSystem: 'dh2e' } }]),
                             5_000,
                             'embed talent',
-                        )) as any[];
-                        const talent = created?.[0] ? live.items.get(created[0].id) : null;
+                        );
+                        const createdArr = created as Array<{ id: string }> | undefined | null;
+                        const talent = createdArr?.[0] ? live.items.get(createdArr[0].id) : null;
                         if (talent == null) {
                             notes['talent-editor-dialog-render'] = 'failed to embed talent';
                         } else {
@@ -974,13 +985,14 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 const titleOk = typeof dialog.title === 'string' && dialog.title.includes('probe-editor-talent');
                                 const sectionOk = ctx.activeSection === 'modifiers' && ctx.sections?.modifiers === true;
                                 const elementPresent = dialog.element != null;
-                                const tolerable = renderThrew !== null && renderThrew.includes('must render a single HTML element');
+                                const tolerable = renderThrew?.includes('must render a single HTML element') === true;
                                 if (titleOk && sectionOk && (elementPresent || tolerable)) {
                                     fired['talent-editor-dialog-render'] = true;
                                     notes['talent-editor-dialog-render'] = '_prepareContext returned modifiers section; title reflects item';
                                 } else {
-                                    notes['talent-editor-dialog-render'] =
-                                        `titleOk=${String(titleOk)} sectionOk=${String(sectionOk)} elementPresent=${String(elementPresent)} renderThrew=${renderThrew ?? 'no'}`;
+                                    notes['talent-editor-dialog-render'] = `titleOk=${String(titleOk)} sectionOk=${String(sectionOk)} elementPresent=${String(
+                                        elementPresent,
+                                    )} renderThrew=${renderThrew ?? 'no'}`;
                                 }
                                 try {
                                     await dialog.close?.();
@@ -1014,8 +1026,8 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
         }, APP_TOURS_EXTRA_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

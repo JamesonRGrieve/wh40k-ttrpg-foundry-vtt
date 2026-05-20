@@ -53,12 +53,22 @@ async function deleteActor(page: import('@playwright/test').Page, actorId: strin
     }, actorId);
 }
 
-async function addFearTrait(page: import('@playwright/test').Page, actorId: string, fearRating: number): Promise<{ traitId: string | null; fearRating: number; error: string | null }> {
+async function addFearTrait(
+    page: import('@playwright/test').Page,
+    actorId: string,
+    fearRating: number,
+): Promise<{ traitId: string | null; fearRating: number; error: string | null }> {
     return page.evaluate(
         async ({ actorId, fearRating }) => {
             const { game } = globalThis as unknown as {
                 game?: {
-                    actors?: { get?: (id: string) => { createEmbeddedDocuments?: (kind: string, data: unknown[]) => Promise<Array<{ id?: string; system?: { fearRating?: number } }>> } | undefined };
+                    actors?: {
+                        get?: (
+                            id: string,
+                        ) =>
+                            | { createEmbeddedDocuments?: (kind: string, data: unknown[]) => Promise<Array<{ id?: string; system?: { fearRating?: number } }>> }
+                            | undefined;
+                    };
                 };
             };
             const actor = game?.actors?.get?.(actorId);
@@ -113,7 +123,9 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
 
                 try {
                     const mod = await import(moduleUrl);
-                    const Cls = mod.default as { new (opts?: unknown): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> } };
+                    const Cls = mod.default as {
+                        new (opts?: unknown): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
+                    };
                     if (typeof Cls !== 'function') {
                         return { rendered, hasFearInput, fearInputValue, hasRollButton, error: 'default export not a constructor' };
                     }

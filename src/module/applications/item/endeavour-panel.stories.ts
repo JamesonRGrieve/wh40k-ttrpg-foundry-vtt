@@ -95,10 +95,10 @@ export const InProgress: Story = {
                     // @ts-expect-error -- TS narrowing on literal-typed objectives doesn't match Partial<system> exactly; the runtime shape is correct
                     system: {
                         objectives: [
-                            { name: 'Establish a foothold on Solenne Minoris', description: 'Acquire a hab', complete: true as boolean, ap: 1 },
-                            { name: 'Bribe the harbourmaster', description: '', complete: true as boolean, ap: 1 },
-                            { name: 'Infiltrate the archive', description: '', complete: false as boolean, ap: 1 },
-                            { name: 'Escape with the cipher', description: '', complete: false as boolean, ap: 1 },
+                            { name: 'Establish a foothold on Solenne Minoris', description: 'Acquire a hab', complete: true, ap: 1 },
+                            { name: 'Bribe the harbourmaster', description: '', complete: true, ap: 1 },
+                            { name: 'Infiltrate the archive', description: '', complete: false, ap: 1 },
+                            { name: 'Escape with the cipher', description: '', complete: false, ap: 1 },
                         ],
                         reward: { profitFactor: 3, narrative: 'Acolyte favour with the Mechanicus contact at Outpost 7.' },
                     },
@@ -118,9 +118,9 @@ export const Completed: Story = {
                     // @ts-expect-error -- TS narrowing on literal-typed objectives doesn't match Partial<system> exactly; the runtime shape is correct
                     system: {
                         objectives: [
-                            { name: 'Identify the heretic broker', description: '', complete: true as boolean, ap: 2 },
-                            { name: 'Burn the safehouse', description: '', complete: true as boolean, ap: 2 },
-                            { name: 'Recover the dataslate', description: '', complete: true as boolean, ap: 1 },
+                            { name: 'Identify the heretic broker', description: '', complete: true, ap: 2 },
+                            { name: 'Burn the safehouse', description: '', complete: true, ap: 2 },
+                            { name: 'Recover the dataslate', description: '', complete: true, ap: 1 },
                         ],
                         reward: { profitFactor: 4, narrative: 'Inquisitorial Patronage: one personal favour redeemable within the warband.' },
                     },

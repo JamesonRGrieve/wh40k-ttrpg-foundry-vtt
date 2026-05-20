@@ -68,9 +68,7 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
                     hasSystemAnchor = html.includes('data-wh40k-system="rt"');
                     hasDamageBlock = html.includes('WH40K.Starship.Ramming.DefenderHull');
 
-                    const ChatMessageCls = (globalThis as any).ChatMessage as
-                        | { create: (data: object) => Promise<{ id: string } | null> }
-                        | undefined;
+                    const ChatMessageCls = (globalThis as any).ChatMessage as { create: (data: object) => Promise<{ id: string } | null> } | undefined;
                     const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {

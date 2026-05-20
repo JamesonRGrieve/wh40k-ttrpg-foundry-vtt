@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import pushChatSrc from '../../src/templates/chat/push-the-limit-chat.hbs?raw';
 import { resolvePushTheLimit } from '../../src/module/rules/without-talents.ts';
+import pushChatSrc from '../../src/templates/chat/push-the-limit-chat.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
@@ -38,8 +38,8 @@ function cardContext(
             result.criticalTable === 'motive-systems'
                 ? 'WH40K.WithoutTalents.PushTheLimit.MotiveSystemsTable'
                 : result.criticalTable === 'impact-leg'
-                  ? 'WH40K.WithoutTalents.PushTheLimit.ImpactLegTable'
-                  : '',
+                ? 'WH40K.WithoutTalents.PushTheLimit.ImpactLegTable'
+                : '',
     };
 }
 

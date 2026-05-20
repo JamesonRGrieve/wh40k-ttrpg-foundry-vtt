@@ -238,10 +238,7 @@ export interface InstallResolution {
  * surgeon's 1d100 roll, and the breakdown. The UI rolls the dice and
  * the post-install damage/AE; the engine only classifies the outcome.
  */
-export function resolveInstall(
-    composition: InstallTestComposition,
-    roll: number,
-): InstallResolution {
+export function resolveInstall(composition: InstallTestComposition, roll: number): InstallResolution {
     const { target, breakdown } = composition;
     const success = roll <= target;
     const dos = degreesOfSuccess(roll, target);
@@ -327,10 +324,7 @@ export function composeMaintenanceTest(input: MaintenanceTestInput): InstallTest
         breakdown.push({ label: 'Other', value: input.extraModifier });
     }
 
-    const netModifier =
-        input.baseDifficulty +
-        CYBERNETIC_CRAFTSMANSHIP_INSTALL_MODIFIERS[input.craftsmanship] +
-        (input.extraModifier ?? 0);
+    const netModifier = input.baseDifficulty + CYBERNETIC_CRAFTSMANSHIP_INSTALL_MODIFIERS[input.craftsmanship] + (input.extraModifier ?? 0);
 
     const target = Math.max(0, input.maintainerSkillTotal + netModifier);
     return { target, netModifier, breakdown };
@@ -381,11 +375,7 @@ export interface MaintenanceResolution {
  * the issue requires). Pure: dice + composed target in, classification
  * out.
  */
-export function resolveMaintenance(
-    currentCraftsmanship: CyberneticCraftsmanship,
-    composition: InstallTestComposition,
-    roll: number,
-): MaintenanceResolution {
+export function resolveMaintenance(currentCraftsmanship: CyberneticCraftsmanship, composition: InstallTestComposition, roll: number): MaintenanceResolution {
     const { target, breakdown } = composition;
     const success = roll <= target;
     const dos = degreesOfSuccess(roll, target);

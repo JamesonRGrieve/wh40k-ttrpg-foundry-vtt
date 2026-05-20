@@ -45,7 +45,12 @@ const GENERAL_TABLE: readonly DaemonWeaponAttribute[] = [
 const KHORNE_TABLE: readonly DaemonWeaponAttribute[] = [
     { id: 'khorne.skull-taker', roll: [1, 2], label: 'Skull Taker', effect: 'Confirmed Righteous Fury triggers a free called shot to the head.' },
     { id: 'khorne.crimson-thirst', roll: [3, 4], label: 'Crimson Thirst', effect: '+2 damage on the first hit each combat.' },
-    { id: 'khorne.rage-of-the-eight', roll: [5, 6], label: 'Rage of the Eight', effect: 'Once per scene, the wielder may take an extra melee attack as a Free Action.' },
+    {
+        id: 'khorne.rage-of-the-eight',
+        roll: [5, 6],
+        label: 'Rage of the Eight',
+        effect: 'Once per scene, the wielder may take an extra melee attack as a Free Action.',
+    },
     { id: 'khorne.bloodletter-strike', roll: [7, 8], label: 'Bloodletter Strike', effect: 'Weapon counts as having Razor Sharp.' },
     { id: 'khorne.unstoppable', roll: [9, 9], label: 'Unstoppable', effect: 'Ignore Fatigue inflicted while in melee.' },
     { id: 'khorne.brass-collar', roll: [10, 10], label: 'Brass Collar', effect: 'Daemons within 5m suffer -10 WS.' },
@@ -57,14 +62,24 @@ const NURGLE_TABLE: readonly DaemonWeaponAttribute[] = [
     { id: 'nurgle.weeping-edge', roll: [5, 6], label: 'Weeping Edge', effect: 'Weapon counts as Toxic (1).' },
     { id: 'nurgle.fly-swarm', roll: [7, 8], label: 'Fly Swarm', effect: 'Within 5m, enemies suffer -10 to ranged attacks.' },
     { id: 'nurgle.gift-of-decay', roll: [9, 9], label: 'Gift of Decay', effect: 'Wounded foes lose 1 AP from struck location for the scene.' },
-    { id: 'nurgle.papa-nurgles-blessing', roll: [10, 10], label: 'Papa Nurgle’s Blessing', effect: 'Wielder gains immunity to one disease at the GM’s choice.' },
+    {
+        id: 'nurgle.papa-nurgles-blessing',
+        roll: [10, 10],
+        label: 'Papa Nurgle’s Blessing',
+        effect: 'Wielder gains immunity to one disease at the GM’s choice.',
+    },
 ];
 
 const SLAANESH_TABLE: readonly DaemonWeaponAttribute[] = [
     { id: 'slaanesh.exquisite-edge', roll: [1, 2], label: 'Exquisite Edge', effect: 'Critical Damage tables roll twice; choose either result.' },
     { id: 'slaanesh.serpents-grace', roll: [3, 4], label: 'Serpent’s Grace', effect: '+10 to Dodge while wielded.' },
     { id: 'slaanesh.lingering-touch', roll: [5, 6], label: 'Lingering Touch', effect: 'Damaged targets suffer -10 to all tests for one round.' },
-    { id: 'slaanesh.song-of-six', roll: [7, 8], label: 'Song of Six', effect: 'Once per session, charm a single non-daemon for one minute (Willpower negates).' },
+    {
+        id: 'slaanesh.song-of-six',
+        roll: [7, 8],
+        label: 'Song of Six',
+        effect: 'Once per session, charm a single non-daemon for one minute (Willpower negates).',
+    },
     { id: 'slaanesh.sense-stealer', roll: [9, 9], label: 'Sense Stealer', effect: 'Wielder may inflict Blinded (1) on a confirmed crit.' },
     { id: 'slaanesh.unending-yearning', roll: [10, 10], label: 'Unending Yearning', effect: 'Each scene without combat costs the wielder 1 Insanity Point.' },
 ];
@@ -74,7 +89,12 @@ const TZEENTCH_TABLE: readonly DaemonWeaponAttribute[] = [
     { id: 'tzeentch.warp-eye', roll: [3, 4], label: 'Warp Eye', effect: '+10 to Awareness against psykers and daemons.' },
     { id: 'tzeentch.flickering-form', roll: [5, 6], label: 'Flickering Form', effect: 'Once per scene, count as one Range Band further when shot at.' },
     { id: 'tzeentch.pink-fire', roll: [7, 8], label: 'Pink Fire', effect: 'Weapon counts as Warp Weapon and inflicts Flame on a confirmed crit.' },
-    { id: 'tzeentch.twist-of-fate', roll: [9, 9], label: 'Twist of Fate', effect: 'Once per session, force an enemy to re-roll a successful attack against the wielder.' },
+    {
+        id: 'tzeentch.twist-of-fate',
+        roll: [9, 9],
+        label: 'Twist of Fate',
+        effect: 'Once per session, force an enemy to re-roll a successful attack against the wielder.',
+    },
     { id: 'tzeentch.changers-gift', roll: [10, 10], label: 'Changer’s Gift', effect: 'Wielder may attempt a single non-mastered psychic power at -20.' },
 ];
 
@@ -98,8 +118,11 @@ export function attributeAtRoll(table: DaemonWeaponAttributeTable, roll: number)
     const entries = DAEMON_WEAPON_ATTRIBUTE_TABLES[table];
     const clamped = Math.max(1, Math.min(10, Math.floor(roll)));
     const found = entries.find((entry) => clamped >= entry.roll[0] && clamped <= entry.roll[1]);
+    if (found !== undefined) return found;
     // Tables cover 1..10 by construction; fall back defensively to the last entry to keep the signature non-undefined.
-    return found ?? entries[entries.length - 1]!;
+    const fallback = entries[entries.length - 1];
+    if (fallback === undefined) throw new Error(`Daemon weapon attribute table '${table}' is empty.`);
+    return fallback;
 }
 
 /** Result of a Daemon Weapon Attribute roll session. */

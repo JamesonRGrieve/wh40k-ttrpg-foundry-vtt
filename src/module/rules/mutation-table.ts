@@ -84,7 +84,7 @@ export const MUTATION_TABLE: ReadonlyArray<MutationDef> = [
         name: 'Deathsight',
         roll: { min: 26, max: 30 },
         visible: false,
-        effect: "Once per session, the character may add their Corruption bonus to the damage of a single attack. Doing so inflicts 1 Corruption.",
+        effect: 'Once per session, the character may add their Corruption bonus to the damage of a single attack. Doing so inflicts 1 Corruption.',
         tracks: ['minor', 'major'],
     },
     {

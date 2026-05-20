@@ -16,13 +16,9 @@
  * file is a thin UI shell.
  */
 
+import { type WarpJourneyResult, resolveWarpJourney, rollPeril } from '../../rules/warp-travel.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import {
-    type WarpJourneyResult,
-    resolveWarpJourney,
-    rollPeril,
-} from '../../rules/warp-travel.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -84,13 +80,13 @@ export default class WarpTravelDialog extends ApplicationV2Mixin(ApplicationV2 a
         classes: ['wh40k-rpg', 'dialog', 'warp-travel-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            resolveJourney: WarpTravelDialog.#onResolveJourney as ActionHandler,
+            resolveJourney: WarpTravelDialog.#onResolveJourney,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            postChat: WarpTravelDialog.#onPostChat as ActionHandler,
+            postChat: WarpTravelDialog.#onPostChat,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            rollPeril: WarpTravelDialog.#onRollPeril as ActionHandler,
+            rollPeril: WarpTravelDialog.#onRollPeril,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: WarpTravelDialog.#onCancel as ActionHandler,
+            cancel: WarpTravelDialog.#onCancel,
         },
         position: { width: 560 },
         window: {
@@ -142,14 +138,11 @@ export default class WarpTravelDialog extends ApplicationV2Mixin(ApplicationV2 a
         event.preventDefault();
         const result = this.journey.result;
         if (result === null) return;
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/warp-travel-chat.hbs',
-            {
-                inputs: this.journey.inputs,
-                result,
-                gameSystem: 'rt',
-            },
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/warp-travel-chat.hbs', {
+            inputs: this.journey.inputs,
+            result,
+            gameSystem: 'rt',
+        });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
@@ -159,14 +152,11 @@ export default class WarpTravelDialog extends ApplicationV2Mixin(ApplicationV2 a
     static async #onRollPeril(this: WarpTravelDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const { rolled, peril } = rollPeril();
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/warp-travel-peril-chat.hbs',
-            {
-                rolled,
-                peril,
-                gameSystem: 'rt',
-            },
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/warp-travel-peril-chat.hbs', {
+            rolled,
+            peril,
+            gameSystem: 'rt',
+        });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);

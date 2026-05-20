@@ -1,0 +1,88 @@
+{{!-- Rogue Trader Colony 90-day Growth roll dialog (#195). --}}
+{{!-- GM enters / adjusts the Colony state and modifiers, then rolls on Table 3-3. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="rt">
+
+    <div class="tw-mb-3 tw-text-center tw-text-[0.85rem] tw-text-amber-300 tw-italic">
+        {{localize "WH40K.RT.Colony.DialogTitle"}}
+    </div>
+
+    <div class="tw-mb-3 tw-text-center tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">
+        {{localize tierKey}}
+    </div>
+
+    {{!-- Characteristic editor — Size + four affective stats with ± buttons --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">
+            {{localize "WH40K.RT.Colony.CharacteristicsLabel"}}
+        </label>
+        {{#each characteristics}}
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)]">
+                <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em] tw-text-amber-100">{{localize this.labelKey}}</span>
+                <div class="tw-flex tw-items-center tw-gap-2">
+                    <button type="button"
+                            data-action="adjustStat"
+                            data-stat="{{this.id}}"
+                            data-delta="-1"
+                            class="tw-w-7 tw-h-7 tw-rounded-sm tw-border tw-border-amber-700 tw-bg-[rgba(0,0,0,0.4)] tw-text-amber-100 tw-cursor-pointer hover:tw-bg-amber-900">−</button>
+                    <span class="tw-min-w-[2.25rem] tw-text-center tw-font-bold tw-tabular-nums tw-text-amber-100" data-stat-value="{{this.id}}">{{this.value}}</span>
+                    <button type="button"
+                            data-action="adjustStat"
+                            data-stat="{{this.id}}"
+                            data-delta="1"
+                            class="tw-w-7 tw-h-7 tw-rounded-sm tw-border tw-border-amber-700 tw-bg-[rgba(0,0,0,0.4)] tw-text-amber-100 tw-cursor-pointer hover:tw-bg-amber-900">+</button>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+
+    {{!-- Growth modifier --}}
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-mb-3 tw-rounded-md tw-border tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)]">
+        <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em] tw-text-amber-100">
+            {{localize "WH40K.RT.Colony.GrowthModifierLabel"}}
+        </span>
+        <div class="tw-flex tw-items-center tw-gap-2">
+            <button type="button"
+                    data-action="adjustModifier"
+                    data-delta="-1"
+                    class="tw-w-7 tw-h-7 tw-rounded-sm tw-border tw-border-amber-700 tw-bg-[rgba(0,0,0,0.4)] tw-text-amber-100 tw-cursor-pointer">−</button>
+            <span class="tw-min-w-[2.25rem] tw-text-center tw-font-bold tw-tabular-nums tw-text-amber-100" data-modifier-value>{{growthModifier}}</span>
+            <button type="button"
+                    data-action="adjustModifier"
+                    data-delta="1"
+                    class="tw-w-7 tw-h-7 tw-rounded-sm tw-border tw-border-amber-700 tw-bg-[rgba(0,0,0,0.4)] tw-text-amber-100 tw-cursor-pointer">+</button>
+        </div>
+    </div>
+
+    {{!-- Toggles for Agricultural / Ecclesiastical type-specific protections --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+        <button type="button"
+                data-action="toggleAgricultural"
+                data-toggle-state="{{#if agriculturalSoftener}}on{{else}}off{{/if}}"
+                class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if agriculturalSoftener}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.18)] tw-text-amber-200{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-100{{/if}}">
+            <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em]">{{localize "WH40K.RT.Colony.AgriculturalSoftenerLabel"}}</span>
+            <i class="fas {{#if agriculturalSoftener}}fa-check-square{{else}}fa-square{{/if}}"></i>
+        </button>
+        <button type="button"
+                data-action="toggleEcclesiastical"
+                data-toggle-state="{{#if ecclesiasticalOrderSwap}}on{{else}}off{{/if}}"
+                class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if ecclesiasticalOrderSwap}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.18)] tw-text-amber-200{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-100{{/if}}">
+            <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em]">{{localize "WH40K.RT.Colony.EcclesiasticalOrderSwapLabel"}}</span>
+            <i class="fas {{#if ecclesiasticalOrderSwap}}fa-check-square{{else}}fa-square{{/if}}"></i>
+        </button>
+    </div>
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-4 tw-pt-4 tw-border-t tw-border-[rgba(217,119,6,0.25)]">
+        <button type="button"
+                data-action="rollGrowth"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-amber-600 tw-to-amber-900 tw-text-amber-50 tw-shadow-[0_4px_12px_rgba(217,119,6,0.35)]">
+            <i class="fas fa-dice-d10"></i> {{localize "WH40K.RT.Colony.RollGrowthButton"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.RT.Colony.CancelButton"}}
+        </button>
+    </div>
+
+</div>

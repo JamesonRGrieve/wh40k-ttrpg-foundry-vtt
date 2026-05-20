@@ -132,6 +132,134 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     });
     Handlebars.registerHelper('setToArray', (value: unknown) => asArray(value));
     Handlebars.registerHelper('specialQualities', (value: unknown) => asArray(value));
+    Handlebars.registerHelper('arrayToObject', (array: unknown): Record<string, string> => {
+        const obj: Record<string, string> = {};
+        if (array === null || array === undefined) return obj;
+        if (Array.isArray(array)) {
+            for (const a of array) {
+                const key = String(a);
+                obj[key] = key;
+            }
+            return obj;
+        }
+        if (typeof array === 'object') {
+            for (const key of Object.keys(array as Record<string, unknown>)) obj[key] = key;
+            return obj;
+        }
+        return obj;
+    });
+    Handlebars.registerHelper('capitalize', (text: unknown): string => {
+        const s = String(text ?? '');
+        return s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+    });
+    Handlebars.registerHelper('toLowerCase', (str: unknown): string => String(str ?? '').toLowerCase());
+    Handlebars.registerHelper('removeMarkup', (text: unknown): string => String(text ?? '').replace(/<[^>]*>/g, ''));
+    Handlebars.registerHelper('cleanFieldName', (text: unknown): string => String(text ?? '').replace(/[^a-zA-Z0-9]/g, ''));
+    Handlebars.registerHelper('hideIf', (check: unknown) => (check ? new Handlebars.SafeString('style="display:none;"') : ''));
+    Handlebars.registerHelper('arrayIncludes', (field: unknown, list: unknown): boolean => Array.isArray(list) && list.includes(field));
+    Handlebars.registerHelper('includes', (list: unknown, value: unknown): boolean => Array.isArray(list) && list.includes(value));
+    Handlebars.registerHelper('option', (option: unknown, current: unknown, name: unknown): string => {
+        const v = String(option ?? '');
+        const label = name !== undefined ? String(name) : v;
+        const selected = current === option ? ' selected' : '';
+        return `<option value="${Handlebars.escapeExpression(v)}"${selected}>${Handlebars.escapeExpression(label)}</option>`;
+    });
+    Handlebars.registerHelper('slice', (arr: unknown, start: unknown, end: unknown) => {
+        if (!Array.isArray(arr)) return [];
+        return arr.slice(Number(start ?? 0), end === undefined ? undefined : Number(end));
+    });
+    Handlebars.registerHelper('range', (start: unknown, end: unknown) => {
+        const s = Number(start ?? 0);
+        const e = Number(end ?? 0);
+        const result: number[] = [];
+        if (e < s) return result;
+        for (let i = s; i <= e; i++) result.push(i);
+        return result;
+    });
+    Handlebars.registerHelper('times', function timesHelper(this: unknown, count: unknown, options: { fn: (ctx: number) => string }): string {
+        const n = Number(count ?? 0);
+        let out = '';
+        for (let i = 0; i < n; i++) out += options.fn(i);
+        return out;
+    });
+    // NB: cannot register a helper named `percent` here — many templates use
+    // `{{percent}}` as a plain context variable (e.g. vital-progress-bar.hbs)
+    // and a same-named helper shadows the lookup, returning 0. Use a distinct
+    // identifier for the helper version if/when needed.
+    Handlebars.registerHelper('inversePercent', (value: unknown, max: unknown): number => {
+        const v = Number(value ?? 0);
+        const m = Number(max ?? 0);
+        return m > 0 ? Math.max(0, 100 - Math.round((v / m) * 100)) : 0;
+    });
+    Handlebars.registerHelper('colorCode', (positive: unknown, negative: unknown): string => {
+        return positive ? 'positive' : negative ? 'negative' : 'neutral';
+    });
+    Handlebars.registerHelper('isError', (value: unknown): boolean => value === 'error' || value === false);
+    Handlebars.registerHelper('isSuccess', (value: unknown): boolean => value === 'success' || value === true);
+    Handlebars.registerHelper('themeClassFor', (role: unknown): string => {
+        return typeof role === 'string' ? `wh40k-theme-${role}` : '';
+    });
+    Handlebars.registerHelper('select', function selectHelper(this: unknown, selected: unknown, options: { fn: (ctx: unknown) => string }): string {
+        const html = options.fn(this);
+        const target = typeof selected === 'string' || typeof selected === 'number' || typeof selected === 'boolean' ? String(selected) : '';
+        return html.replace(/<option([^>]*?)value=(["'])(.*?)\2([^>]*)>/g, (_match, before: string, q: string, value: string, after: string) => {
+            const alreadySelected = /\bselected\b/.test(before) || /\bselected\b/.test(after);
+            const isMatch = value === target;
+            const tail = alreadySelected || !isMatch ? '' : ' selected';
+            return `<option${before}value=${q}${value}${q}${after}${tail}>`;
+        });
+    });
+    Handlebars.registerHelper('any', (list: unknown, prop: unknown) => {
+        if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return false;
+        return list.some((item) => item !== null && typeof item === 'object' && Boolean((item as Record<string, unknown>)[prop]));
+    });
+    Handlebars.registerHelper('countType', (list: unknown, prop: unknown) => {
+        if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return 0;
+        return list.filter((item) => item !== null && typeof item === 'object' && Boolean((item as Record<string, unknown>)[prop])).length;
+    });
+    Handlebars.registerHelper('hash', function hashHelper(this: unknown, options?: { hash?: Record<string, unknown> }) {
+        return options?.hash ?? {};
+    });
+    Handlebars.registerHelper('specialDisplay', (special: unknown): string => {
+        if (special === null || special === undefined || special === '') return '';
+        if (Array.isArray(special)) {
+            return special
+                .map((q) => {
+                    if (typeof q === 'string') return q;
+                    if (q !== null && typeof q === 'object') {
+                        const obj = q as Record<string, unknown>;
+                        const name = String(obj.name ?? obj.label ?? '');
+                        const value = obj.value;
+                        return value !== undefined && value !== null && value !== '' ? `${name} (${String(value)})` : name;
+                    }
+                    return String(q);
+                })
+                .filter((s) => s !== '')
+                .join(', ');
+        }
+        return String(special);
+    });
+    Handlebars.registerHelper('armourDisplay', (armour: unknown): string => {
+        if (armour === null || armour === undefined || typeof armour !== 'object') return '0';
+        const a = armour as Record<string, unknown>;
+        const num = (v: unknown) => Number(v ?? 0);
+        const body = num(a['body']);
+        const locations = ['body', 'head', 'rightArm', 'leftArm', 'rightLeg', 'leftLeg'] as const;
+        const same = locations.every((loc) => num(a[loc]) === body);
+        return same ? String(body) : locations.map((loc) => num(a[loc])).join('/');
+    });
+    Handlebars.registerHelper('armourLocation', (armour: unknown, location: unknown): number => {
+        if (armour === null || armour === undefined || typeof armour !== 'object' || typeof location !== 'string') return 0;
+        return Number((armour as Record<string, unknown>)[location] ?? 0);
+    });
+    Handlebars.registerHelper('displayStrength', (strength: unknown): string => {
+        const n = Number(strength ?? 0);
+        return n > 0 ? String(n) : '-';
+    });
+    Handlebars.registerHelper('displayCrit', (crit: unknown): string => {
+        const n = Number(crit ?? 0);
+        return n > 0 ? `${n}+` : '-';
+    });
     Handlebars.registerHelper('selectOptions', (options: unknown, helperOptions?: { hash?: Record<string, unknown> }) => {
         const hash = helperOptions?.hash ?? {};
         const selected = hash.selected;
@@ -194,6 +322,13 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         if (idx === -1) continue;
         const relative = path.slice(idx + SOURCE_ROOT.length);
         Handlebars.registerPartial(`${TEMPLATE_PREFIX}${relative}`, source);
+        // Foundry's renderTemplate accepts paths without .hbs; many templates
+        // (e.g. corruption-panel, insanity-panel) `{{> ... }}` partials by
+        // bare path. Register that alias too.
+        if (relative.endsWith('.hbs')) {
+            const noExt = relative.slice(0, -4);
+            Handlebars.registerPartial(`${TEMPLATE_PREFIX}${noExt}`, source);
+        }
     }
 
     // Register the {{icon}} helper using the same registry the runtime uses.

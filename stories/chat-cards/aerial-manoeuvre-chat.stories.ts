@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import aerialChatSrc from '../../src/templates/chat/aerial-manoeuvre-chat.hbs?raw';
 import { resolveAerialManoeuvre } from '../../src/module/rules/vehicle-actions.ts';
+import aerialChatSrc from '../../src/templates/chat/aerial-manoeuvre-chat.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 

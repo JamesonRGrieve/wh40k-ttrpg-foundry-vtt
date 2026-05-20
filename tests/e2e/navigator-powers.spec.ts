@@ -42,9 +42,7 @@ test.describe.serial('NavigatorPowerChat (Tier B)', () => {
 
                 try {
                     const g = globalThis as any;
-                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as
-                        | ((path: string, ctx: object) => Promise<string>)
-                        | undefined;
+                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
                     if (typeof renderTemplate !== 'function') {
                         return {
                             rendered,
@@ -147,10 +145,9 @@ test.describe.serial('NavigatorPowerChat (Tier B)', () => {
                         if (lists.length >= 2) {
                             effectTierItems = lists[1]?.querySelectorAll('li').length ?? 0;
                         }
-                        hasManifestedText = (card?.textContent ?? '').includes('NavigatorPower.Manifested') ||
-                            (card?.textContent ?? '').toLowerCase().includes('manifested');
-                        hasNetDosText = (card?.textContent ?? '').includes('NetDoS') ||
-                            (card?.textContent ?? '').toLowerCase().includes('net');
+                        hasManifestedText =
+                            (card?.textContent ?? '').includes('NavigatorPower.Manifested') || (card?.textContent ?? '').toLowerCase().includes('manifested');
+                        hasNetDosText = (card?.textContent ?? '').includes('NetDoS') || (card?.textContent ?? '').toLowerCase().includes('net');
                     }
                 } catch (err) {
                     error = String((err as Error)?.message ?? err);

@@ -151,6 +151,15 @@ export class Hit {
     effects: { name: string; effect: string }[] = [];
     righteousFury: { roll: Roll; effect: string }[] = [];
 
+    /**
+     * Source weapon carries the Explosive (X) quality. Surfaced on Hit so
+     * the damage chat card can pass it through `data-is-explosive` to the
+     * assign-damage dialog; AssignDamageData consumes it on the DW horde
+     * branch ({@link magnitudeLossForHit}: +1 Magnitude per Explosive hit).
+     * Populated by the renderer that posts the damage chat card.
+     */
+    isExplosive = false;
+
     /** Number of Righteous Fury triggers from this hit's damage roll. */
     get righteousFuryCount(): number {
         return this.righteousFury.length;

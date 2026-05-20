@@ -29,7 +29,15 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
             const result = await page.evaluate(async () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor as { create?: (data: object) => Promise<{ id?: string; sheet?: { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> }; createEmbeddedDocuments?: (collection: string, data: unknown[]) => Promise<unknown[]> } | null> } | undefined;
+                const Actor = g.Actor as
+                    | {
+                          create?: (data: object) => Promise<{
+                              id?: string;
+                              sheet?: { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
+                              createEmbeddedDocuments?: (collection: string, data: unknown[]) => Promise<unknown[]>;
+                          } | null>;
+                      }
+                    | undefined;
                 if (!Actor?.create) return { error: 'Actor.create unavailable' };
 
                 let actorId: string | null = null;
@@ -48,9 +56,7 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                     actorId = actor.id ?? null;
 
                     if (typeof actor.createEmbeddedDocuments === 'function') {
-                        await actor.createEmbeddedDocuments('Item', [
-                            { name: 'Daemonic', type: 'trait' },
-                        ]);
+                        await actor.createEmbeddedDocuments('Item', [{ name: 'Daemonic', type: 'trait' }]);
                     }
 
                     const sheet = actor.sheet;

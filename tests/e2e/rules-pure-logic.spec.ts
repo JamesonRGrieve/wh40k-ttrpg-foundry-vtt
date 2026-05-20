@@ -144,7 +144,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const inRange = scatter.buildScatterVector(5, 3);
                     const clampedLow = scatter.buildScatterVector(0, -3);
                     const clampedHigh = scatter.buildScatterVector(99, 7);
-                    return inRange.direction === 5 && inRange.metres === 3 && clampedLow.direction === 1 && clampedLow.metres === 1 && clampedHigh.direction === 10 && clampedHigh.metres === 5;
+                    return (
+                        inRange.direction === 5 &&
+                        inRange.metres === 3 &&
+                        clampedLow.direction === 1 &&
+                        clampedLow.metres === 1 &&
+                        clampedHigh.direction === 10 &&
+                        clampedHigh.metres === 5
+                    );
                 });
                 guarded('scatter-scaleForArea', () => scatter.scaleScatterForArea(3) === 6 && scatter.scaleScatterForArea(50) === 10);
                 guarded('scatter-labelForDirection', () => {
@@ -156,7 +163,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             // ---------- surprise ----------
             const surprise = await loadModule('surprise');
             if (surprise?.__importError) {
-                for (const k of ['surprise-toHitBonus', 'surprise-canActThisRound', 'surprise-canUseReactions'] as const) record(k, false, surprise.__importError);
+                for (const k of ['surprise-toHitBonus', 'surprise-canActThisRound', 'surprise-canUseReactions'] as const)
+                    record(k, false, surprise.__importError);
             } else {
                 guarded('surprise-toHitBonus', () => {
                     const yes = surprise.getSurpriseToHitBonus({ targetIsSurprised: true, currentRound: 1 });
@@ -164,8 +172,17 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const expired = surprise.getSurpriseToHitBonus({ targetIsSurprised: true, currentRound: 2 });
                     return yes === 30 && no === 0 && expired === 0;
                 });
-                guarded('surprise-canActThisRound', () => surprise.canActThisRound(false, 1) === true && surprise.canActThisRound(true, 1) === false && surprise.canActThisRound(true, 2) === true);
-                guarded('surprise-canUseReactions', () => typeof surprise.canUseReactions(true, 1) === 'boolean' && typeof surprise.canUseReactions(false, 3) === 'boolean');
+                guarded(
+                    'surprise-canActThisRound',
+                    () =>
+                        surprise.canActThisRound(false, 1) === true &&
+                        surprise.canActThisRound(true, 1) === false &&
+                        surprise.canActThisRound(true, 2) === true,
+                );
+                guarded(
+                    'surprise-canUseReactions',
+                    () => typeof surprise.canUseReactions(true, 1) === 'boolean' && typeof surprise.canUseReactions(false, 3) === 'boolean',
+                );
             }
 
             // ---------- trying-again ----------
@@ -178,7 +195,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const blocked = tryingAgain.getTryAgainAdvice('inquiry', 1);
                     const cumulative = tryingAgain.getTryAgainAdvice('charm', 2);
                     const neutral = tryingAgain.getTryAgainAdvice('weaponSkill', 5);
-                    return first.blocksByConvention === false && blocked.blocksByConvention === true && cumulative.cumulativePenalty === -20 && neutral.cumulativePenalty === 0;
+                    return (
+                        first.blocksByConvention === false &&
+                        blocked.blocksByConvention === true &&
+                        cumulative.cumulativePenalty === -20 &&
+                        neutral.cumulativePenalty === 0
+                    );
                 });
             }
 
@@ -191,7 +213,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const baseline = twoWeapon.resolveTwoWeaponPenalties({ isMelee: true, talents: new Set<string>() });
                     const wielder = twoWeapon.resolveTwoWeaponPenalties({ isMelee: true, talents: new Set(['Two-Weapon Wielder (Melee)']) });
                     const master = twoWeapon.resolveTwoWeaponPenalties({ isMelee: false, talents: new Set(['Two-Weapon Master (Ranged)']) });
-                    return baseline.mainPenalty === -20 && baseline.offPenalty === -20 && wielder.mainPenalty === 0 && master.mainPenalty === 0 && master.offPenalty === 0;
+                    return (
+                        baseline.mainPenalty === -20 &&
+                        baseline.offPenalty === -20 &&
+                        wielder.mainPenalty === 0 &&
+                        master.mainPenalty === 0 &&
+                        master.offPenalty === 0
+                    );
                 });
             }
 
@@ -218,7 +246,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const absorbed = cover.resolveCoverHit({ incomingDamage: 5, coverAP: 8 });
                     const destroyed = cover.resolveCoverHit({ incomingDamage: 4, coverAP: 4 });
                     const overflow = cover.resolveCoverHit({ incomingDamage: 10, coverAP: 4 });
-                    return absorbed.overflowToActor === 0 && absorbed.coverDestroyed === false && destroyed.coverDestroyed === true && overflow.overflowToActor === 6;
+                    return (
+                        absorbed.overflowToActor === 0 &&
+                        absorbed.coverDestroyed === false &&
+                        destroyed.coverDestroyed === true &&
+                        overflow.overflowToActor === 6
+                    );
                 });
                 guarded('cover-startingAP', () => typeof cover.startingCoverAP('sandbags') === 'number' && cover.COVER_AP.barricade === 12);
             }
@@ -250,9 +283,18 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 guarded('fatigue-threshold', () => fatigue.getFatigueThreshold({ toughnessBonus: 4, willpowerBonus: 3 }) === 7);
                 guarded('fatigue-unconscious', () => {
                     const profile = { toughnessBonus: 4, willpowerBonus: 3 };
-                    return fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 7 }) === false && fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 8 }) === true;
+                    return (
+                        fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 7 }) === false &&
+                        fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 8 }) === true
+                    );
                 });
-                guarded('fatigue-characteristic-halved', () => fatigue.isCharacteristicHalvedByFatigue(2, 4) === true && fatigue.isCharacteristicHalvedByFatigue(5, 4) === false && fatigue.isCharacteristicHalvedByFatigue(3, 0) === false);
+                guarded(
+                    'fatigue-characteristic-halved',
+                    () =>
+                        fatigue.isCharacteristicHalvedByFatigue(2, 4) === true &&
+                        fatigue.isCharacteristicHalvedByFatigue(5, 4) === false &&
+                        fatigue.isCharacteristicHalvedByFatigue(3, 0) === false,
+                );
             }
 
             // ---------- fear ----------
@@ -273,16 +315,29 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             // ---------- hit-locations ----------
             const hitLocations = await loadModule('hit-locations');
             if (hitLocations?.__importError) {
-                for (const k of ['hit-locations-reverseDigits', 'hit-locations-forRoll', 'hit-locations-dropdown'] as const) record(k, false, hitLocations.__importError);
+                for (const k of ['hit-locations-reverseDigits', 'hit-locations-forRoll', 'hit-locations-dropdown'] as const)
+                    record(k, false, hitLocations.__importError);
             } else {
-                guarded('hit-locations-reverseDigits', () => hitLocations.reverseAttackRollDigits(23) === 32 && hitLocations.reverseAttackRollDigits(33) === 33 && hitLocations.reverseAttackRollDigits(100) === 1);
+                guarded(
+                    'hit-locations-reverseDigits',
+                    () =>
+                        hitLocations.reverseAttackRollDigits(23) === 32 &&
+                        hitLocations.reverseAttackRollDigits(33) === 33 &&
+                        hitLocations.reverseAttackRollDigits(100) === 1,
+                );
                 guarded('hit-locations-forRoll', () => {
                     const loc = hitLocations.getHitLocationForRoll(23);
                     return typeof loc === 'string' && loc.length > 0;
                 });
                 guarded('hit-locations-dropdown', () => {
                     const dd = hitLocations.hitDropdown();
-                    return dd !== null && typeof dd === 'object' && Object.keys(dd).length > 0 && Array.isArray(hitLocations.hitLocationNames()) && hitLocations.hitLocationNames().length > 0;
+                    return (
+                        dd !== null &&
+                        typeof dd === 'object' &&
+                        Object.keys(dd).length > 0 &&
+                        Array.isArray(hitLocations.hitLocationNames()) &&
+                        hitLocations.hitLocationNames().length > 0
+                    );
                 });
             }
 
@@ -291,8 +346,17 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (hazards?.__importError) {
                 for (const k of ['hazards-fallingDice', 'hazards-fallingFormula', 'hazards-drowningTest'] as const) record(k, false, hazards.__importError);
             } else {
-                guarded('hazards-fallingDice', () => hazards.getFallingDiceCount(1) === 0 && hazards.getFallingDiceCount(2) === 1 && hazards.getFallingDiceCount(7) === 3);
-                guarded('hazards-fallingFormula', () => hazards.getFallingDamageFormula(1) === '' && hazards.getFallingDamageFormula(4) === '2d10' && hazards.getFallingDamageFormula(10) === '5d10');
+                guarded(
+                    'hazards-fallingDice',
+                    () => hazards.getFallingDiceCount(1) === 0 && hazards.getFallingDiceCount(2) === 1 && hazards.getFallingDiceCount(7) === 3,
+                );
+                guarded(
+                    'hazards-fallingFormula',
+                    () =>
+                        hazards.getFallingDamageFormula(1) === '' &&
+                        hazards.getFallingDamageFormula(4) === '2d10' &&
+                        hazards.getFallingDamageFormula(10) === '5d10',
+                );
                 guarded('hazards-drowningTest', () => {
                     const r1 = hazards.resolveDrowningTest({ toughnessTotal: 40, roundsSubmerged: 1 });
                     const r3 = hazards.resolveDrowningTest({ toughnessTotal: 40, roundsSubmerged: 3 });
@@ -305,27 +369,44 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (healing?.__importError) {
                 for (const k of ['healing-damageTier', 'healing-naturalDays'] as const) record(k, false, healing.__importError);
             } else {
-                guarded('healing-damageTier', () => healing.getDamageTier(10, 10) === 'unharmed' && healing.getDamageTier(5, 10) === 'lightlyDamaged' && healing.getDamageTier(0, 10) === 'heavilyDamaged');
-                guarded('healing-naturalDays', () => healing.getNaturalHealingDays('unharmed') === 0 && healing.getNaturalHealingDays('lightlyDamaged') === 1 && healing.getNaturalHealingDays('heavilyDamaged') === 7);
+                guarded(
+                    'healing-damageTier',
+                    () =>
+                        healing.getDamageTier(10, 10) === 'unharmed' &&
+                        healing.getDamageTier(5, 10) === 'lightlyDamaged' &&
+                        healing.getDamageTier(0, 10) === 'heavilyDamaged',
+                );
+                guarded(
+                    'healing-naturalDays',
+                    () =>
+                        healing.getNaturalHealingDays('unharmed') === 0 &&
+                        healing.getNaturalHealingDays('lightlyDamaged') === 1 &&
+                        healing.getNaturalHealingDays('heavilyDamaged') === 7,
+                );
             }
 
             // ---------- attack-options ----------
             const attackOptions = await loadModule('attack-options');
             if (attackOptions?.__importError) {
-                for (const k of ['attack-options-availableModes', 'attack-options-situationalModifiers', 'attack-options-aimModifier'] as const) record(k, false, attackOptions.__importError);
+                for (const k of ['attack-options-availableModes', 'attack-options-situationalModifiers', 'attack-options-aimModifier'] as const)
+                    record(k, false, attackOptions.__importError);
             } else {
                 guarded('attack-options-availableModes', () => {
                     const weapon = { isRanged: true, system: { attack: { rateOfFire: { semi: 3, full: 10 } } } };
                     const ranged = attackOptions.getAvailableAttackModes(weapon);
                     const melee = attackOptions.getAvailableAttackModes({ isRanged: false, system: {} });
-                    return Array.isArray(ranged) && ranged.length > 0 && typeof ranged[0]?.available === 'boolean' && Array.isArray(melee) && melee.length > 0;
+                    const first = ranged[0] as { available?: unknown } | undefined;
+                    return Array.isArray(ranged) && ranged.length > 0 && typeof first?.available === 'boolean' && Array.isArray(melee) && melee.length > 0;
                 });
                 guarded('attack-options-situationalModifiers', () => {
                     const ranged = attackOptions.getSituationalModifiers(true);
                     const melee = attackOptions.getSituationalModifiers(false);
                     return Array.isArray(ranged) && ranged.length > 0 && Array.isArray(melee) && melee.length > 0;
                 });
-                guarded('attack-options-aimModifier', () => typeof attackOptions.getAimModifier('full') === 'number' && attackOptions.getAimModifier('does-not-exist') === 0);
+                guarded(
+                    'attack-options-aimModifier',
+                    () => typeof attackOptions.getAimModifier('full') === 'number' && attackOptions.getAimModifier('does-not-exist') === 0,
+                );
             }
 
             return out;

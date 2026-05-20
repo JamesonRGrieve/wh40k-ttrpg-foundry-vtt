@@ -98,7 +98,7 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
 
     // Capture JUST the panel element clearly.
     const panelLocator = page.locator('.wh40k-crusader-panel').first();
-    if (await panelLocator.count() > 0) {
+    if ((await panelLocator.count()) > 0) {
         await panelLocator.screenshot({ path: '.e2e-screenshots/crusader-button-element.png' });
     }
 

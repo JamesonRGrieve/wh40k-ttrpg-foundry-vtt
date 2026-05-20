@@ -8,21 +8,19 @@
 
 import type { FoundryRuntime } from './boot';
 
-interface RuntimeWithActor extends FoundryRuntime {
+interface RuntimeWithActor {
     game: {
         documentTypes?: { Actor?: string[]; Item?: string[] };
-    } & object;
+    };
     CONFIG: {
         Actor?: { documentClass?: { create?: (data: unknown) => Promise<unknown> } };
         Item?: { documentClass?: { create?: (data: unknown) => Promise<unknown> } };
-    } & object;
+    };
 }
 
-export async function createActor(
-    runtime: FoundryRuntime,
-    data: { type: string; name?: string; system?: object },
-): Promise<unknown> {
-    const r = runtime as RuntimeWithActor;
+export async function createActor(runtime: FoundryRuntime, data: { type: string; name?: string; system?: object }): Promise<unknown> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: FoundryRuntime.CONFIG is typed as `object` in boot.ts; the integration helper needs to read the well-known shape
+    const r = runtime as unknown as RuntimeWithActor;
     const klass = r.CONFIG.Actor?.documentClass;
     if (!klass?.create) {
         throw new Error('CONFIG.Actor.documentClass.create is unavailable — Foundry not fully booted');
@@ -30,11 +28,9 @@ export async function createActor(
     return klass.create({ name: data.name ?? 'Test Actor', ...data });
 }
 
-export async function createItem(
-    runtime: FoundryRuntime,
-    data: { type: string; name?: string; system?: object },
-): Promise<unknown> {
-    const r = runtime as RuntimeWithActor;
+export async function createItem(runtime: FoundryRuntime, data: { type: string; name?: string; system?: object }): Promise<unknown> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: FoundryRuntime.CONFIG is typed as `object` in boot.ts
+    const r = runtime as unknown as RuntimeWithActor;
     const klass = r.CONFIG.Item?.documentClass;
     if (!klass?.create) {
         throw new Error('CONFIG.Item.documentClass.create is unavailable — Foundry not fully booted');

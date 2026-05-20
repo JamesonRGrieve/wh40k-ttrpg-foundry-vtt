@@ -1,6 +1,16 @@
 import type { WH40KBaseActor } from '../../../documents/base-actor.ts';
+import { bonusDamageDiceForMagnitude, getHordeTier, toHitBonusForMagnitude } from '../../../rules/dw-horde-magnitude.ts';
 
 const { SchemaField, NumberField, BooleanField, ArrayField, StringField } = foundry.data.fields;
+
+/**
+ * Horde-trait vocabulary. RAW Horde-tagged traits from core.md p. 360-362
+ * plus the cross-supplement extensions referenced by the resolver.
+ * Extend this list when a new trait is implemented; an unknown trait
+ * string on a saved actor is preserved verbatim but produces no rule
+ * effect until added here.
+ */
+export type HordeTrait = 'blood-soaked-tide' | 'brutal-charge' | 'disciplined' | 'fearless' | 'fighting-withdrawal' | 'fire-drill' | 'frenzy' | 'overwhelming';
 
 /** Shape of the instance extensions provided by HordeTemplate mixin. */
 export interface HordeMixinExtensions {
@@ -27,6 +37,12 @@ export interface HordeLogEntry {
 
 /**
  * Interface representing the horde data structure within the actor's system data.
+ *
+ * `damageMultiplier` is RETAINED for non-DW systems (BC/DH1/DH2/OW/RT/IM)
+ * which kept the legacy "% of starting Magnitude scales damage" abstraction
+ * before #166. The DW path now reads {@link bonusDamageDice} (RAW: +d10
+ * per 10 Magnitude, capped at +2d10) and {@link toHitBonus} / {@link sizeKeyword}
+ * (RAW: TABLE 13-1).
  */
 export interface HordeData {
     enabled: boolean;
@@ -36,8 +52,17 @@ export interface HordeData {
     };
     magnitudeLog: HordeLogEntry[];
     traits: string[];
+    /** Legacy non-DW multiplier (unchanged for the other six systems). */
     damageMultiplier: number;
     sizeModifier: number;
+    /** RAW: bonus damage dice the horde adds to its own attacks, capped +2d10. */
+    bonusDamageDice: number;
+    /** RAW: to-hit bonus against the horde from TABLE 13-1. */
+    toHitBonus: number;
+    /** RAW: size keyword from TABLE 13-1 (Massive/Immense/Monumental/Titanic). */
+    sizeKeyword: string;
+    /** RAW: descriptive tier label from TABLE 13-1. */
+    tierDescriptor: string;
 }
 
 /** Raw source data passed to DataModel migration hooks — opaque Foundry framework boundary. */
@@ -115,6 +140,10 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
                     // Derived values (calculated in prepareDerivedData)
                     damageMultiplier: new NumberField({ required: true, initial: 1.0, min: 0 }),
                     sizeModifier: new NumberField({ required: true, initial: 0, integer: true }),
+                    bonusDamageDice: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+                    toHitBonus: new NumberField({ required: true, initial: 30, integer: true, min: 0 }),
+                    sizeKeyword: new StringField({ required: true, initial: 'Massive', blank: false }),
+                    tierDescriptor: new StringField({ required: true, initial: 'A mob', blank: false }),
                 }),
             };
         }
@@ -135,6 +164,10 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
                 traits: [],
                 damageMultiplier: 1.0,
                 sizeModifier: 0,
+                bonusDamageDice: 0,
+                toHitBonus: 30,
+                sizeKeyword: 'Massive',
+                tierDescriptor: 'A mob',
             };
             // Migrate magnitude values to integers
             // eslint-disable-next-line no-restricted-syntax -- boundary: raw migration source data from Foundry _migrateData hook; no schema available at this point
@@ -155,6 +188,12 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
 
         /**
          * Calculate horde-derived values based on current magnitude.
+         *
+         * DW (issue #166) uses RAW TABLE 13-1: size keyword + to-hit bonus +
+         * bonus damage dice are looked up from the canonical resolver in
+         * `rules/dw-horde-magnitude.ts`. The legacy `damageMultiplier` /
+         * percentage-based `sizeModifier` are retained unchanged for the
+         * other six systems whose horde rules have not yet been audited.
          * @protected
          */
         _prepareHordeData(): void {
@@ -163,12 +202,17 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
             const magnitude = this.horde.magnitude;
             const magnitudePercent = magnitude.max > 0 ? magnitude.current / magnitude.max : 0;
 
-            // Damage multiplier: 0.5x to 5x based on magnitude percentage
-            // At 100%: 5x damage, at 10%: 0.5x damage
-            this.horde.damageMultiplier = Math.max(0.5, Math.ceil(magnitudePercent * 10) / 2);
+            // RAW (DW) derived values — pure lookup, system-agnostic to compute.
+            const tier = getHordeTier(magnitude.current);
+            this.horde.bonusDamageDice = bonusDamageDiceForMagnitude(magnitude.current);
+            this.horde.toHitBonus = toHitBonusForMagnitude(magnitude.current);
+            this.horde.sizeKeyword = tier.sizeKeyword;
+            this.horde.tierDescriptor = tier.descriptor;
 
-            // Size modifier: 0-3 based on magnitude (for token scaling)
-            // 100%: +3 size, 66%: +2, 33%: +1, <33%: +0
+            // Legacy non-DW abstractions, preserved so the other six systems
+            // continue to render unchanged. The DW rendering path reads the
+            // RAW fields above.
+            this.horde.damageMultiplier = Math.max(0.5, Math.ceil(magnitudePercent * 10) / 2);
             this.horde.sizeModifier = Math.floor(magnitudePercent * 3);
         }
 

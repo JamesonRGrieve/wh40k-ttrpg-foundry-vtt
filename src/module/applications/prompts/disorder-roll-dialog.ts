@@ -11,13 +11,9 @@
  * this file is a thin UI shell over `rollDisorder()`.
  */
 
+import { type DisorderDef, type DisorderSeverity, rollDisorder } from '../../rules/disorders-table.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import {
-    type DisorderDef,
-    type DisorderSeverity,
-    rollDisorder,
-} from '../../rules/disorders-table.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -62,11 +58,11 @@ export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2
         classes: ['wh40k-rpg', 'dialog', 'disorder-roll-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectSeverity: DisorderRollDialog.#onSelectSeverity as ActionHandler,
+            selectSeverity: DisorderRollDialog.#onSelectSeverity,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            rollDisorder: DisorderRollDialog.#onRollDisorder as ActionHandler,
+            rollDisorder: DisorderRollDialog.#onRollDisorder,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: DisorderRollDialog.#onCancel as ActionHandler,
+            cancel: DisorderRollDialog.#onCancel,
         },
         position: { width: 480 },
         window: {
@@ -96,7 +92,7 @@ export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2
 
     static async #onSelectSeverity(this: DisorderRollDialog, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const next = (target as HTMLElement).dataset['severity'] ?? '';
+        const next = target.dataset['severity'] ?? '';
         if (isValidSeverity(next)) {
             this.severity = next;
             await this.render();
@@ -120,10 +116,7 @@ export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2
             gameSystem: 'dh2e',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/disorder-roll-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/disorder-roll-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];

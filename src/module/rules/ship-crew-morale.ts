@@ -114,18 +114,9 @@ export function applyHullDamageToCrew(
  * verifying the snapshot's `turn` matches the *previous* strategic
  * turn before invoking this — see `canCancelPriorTurnDamage`.
  */
-export function cancelPriorTurnDamage(
-    state: ShipCombatState,
-    snapshot: PriorTurnDamageSnapshot,
-): { next: ShipCombatState; snapshot: PriorTurnDamageSnapshot } {
-    const hullRestored = Math.min(
-        state.hullIntegrity.max,
-        state.hullIntegrity.value + Math.max(0, snapshot.hullLoss),
-    );
-    const moraleRestored = Math.min(
-        state.crew.morale.max,
-        state.crew.morale.value + Math.max(0, snapshot.moraleLoss),
-    );
+export function cancelPriorTurnDamage(state: ShipCombatState, snapshot: PriorTurnDamageSnapshot): { next: ShipCombatState; snapshot: PriorTurnDamageSnapshot } {
+    const hullRestored = Math.min(state.hullIntegrity.max, state.hullIntegrity.value + Math.max(0, snapshot.hullLoss));
+    const moraleRestored = Math.min(state.crew.morale.max, state.crew.morale.value + Math.max(0, snapshot.moraleLoss));
     // Crew Population has no schema-level max in the RT economy — population
     // can rise above its starting value via Endeavours — so we restore the
     // exact crew lost without clamping. Note this is asymmetric with morale
@@ -149,10 +140,7 @@ export function cancelPriorTurnDamage(
  * only the *prior* turn's damage — the current turn's hits are not
  * affected, and a snapshot with no recorded losses is a no-op.
  */
-export function canCancelPriorTurnDamage(
-    snapshot: PriorTurnDamageSnapshot,
-    currentTurn: number,
-): boolean {
+export function canCancelPriorTurnDamage(snapshot: PriorTurnDamageSnapshot, currentTurn: number): boolean {
     if (snapshot.turn === 0) return false;
     if (snapshot.hullLoss === 0 && snapshot.crewLoss === 0 && snapshot.moraleLoss === 0) {
         return false;
@@ -212,8 +200,7 @@ export function recordHullHit(
     const { next, delta } = applyHullDamageToCrew(state, hullDamage);
     // If the recorded snapshot belongs to a stale turn, start a fresh one
     // for the current hit; otherwise append to the running tally.
-    const baseSnapshot: PriorTurnDamageSnapshot =
-        snapshot.turn === turn || snapshot.turn === 0 ? snapshot : emptySnapshot(turn);
+    const baseSnapshot: PriorTurnDamageSnapshot = snapshot.turn === turn || snapshot.turn === 0 ? snapshot : emptySnapshot(turn);
     return {
         next,
         snapshot: {
@@ -235,8 +222,5 @@ export function recordHullHit(
  * `shipActionEffect: 'cancelPriorTurnDamage'`. No string-matching
  * against display names happens in `src/` (Direction #7).
  */
-export const SHIP_ACTION_EFFECTS = [
-    'cancelPriorTurnDamage',
-    'replenishMorale',
-] as const;
+export const SHIP_ACTION_EFFECTS = ['cancelPriorTurnDamage', 'replenishMorale'] as const;
 export type ShipActionEffect = (typeof SHIP_ACTION_EFFECTS)[number];

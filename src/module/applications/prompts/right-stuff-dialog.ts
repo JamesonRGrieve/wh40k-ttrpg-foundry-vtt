@@ -14,9 +14,6 @@
  * shape (ApplicationV2Mixin + static action handlers + thin template).
  */
 
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
 import {
     actorHasFatePoints,
     actorIsAce,
@@ -27,6 +24,9 @@ import {
     type RightStuffSkill,
 } from '../../rules/ace-role.ts';
 import { RIGHT_STUFF } from '../../rules/xenos-features.ts';
+import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -75,11 +75,11 @@ export default class RightStuffDialog extends ApplicationV2Mixin(ApplicationV2 a
         classes: ['wh40k-rpg', 'dialog', 'right-stuff-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectSkill: RightStuffDialog.#onSelectSkill as ActionHandler,
+            selectSkill: RightStuffDialog.#onSelectSkill,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            spendRightStuff: RightStuffDialog.#onSpend as ActionHandler,
+            spendRightStuff: RightStuffDialog.#onSpend,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: RightStuffDialog.#onCancel as ActionHandler,
+            cancel: RightStuffDialog.#onCancel,
         },
         position: { width: 480 },
         window: {

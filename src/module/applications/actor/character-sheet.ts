@@ -5,11 +5,25 @@
 
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
-import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
+import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
+import type { WH40KAcolyte } from '../../documents/acolyte.ts';
+import type { WH40KItem } from '../../documents/item.ts';
+import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
+import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
+import { Hit } from '../../rolls/damage-data.ts';
+import {
+    deriveAlignmentFromTally,
+    nextAlignmentCheckpoint,
+    psykerLockedByAlignment,
+    shouldRecheckAlignment,
+    tallyAdvancesByAlignment,
+    type ChaosAdvanceEntry,
+} from '../../rules/bc-alignment-derivation.ts';
 import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
-import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
-import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
+import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import {
     resolveBreakGrapple,
     resolveDamageOpponent,
@@ -20,13 +34,7 @@ import {
     type GrappleState,
     type OpposedStrengthInput,
 } from '../../rules/grapple.ts';
-import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
-import type { WH40KAcolyte } from '../../documents/acolyte.ts';
-import type { WH40KItem } from '../../documents/item.ts';
-import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
-import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
-import { Hit } from '../../rolls/damage-data.ts';
+import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
 import {
     applyMismanifest,
     canUnleashDaemon,
@@ -50,6 +58,8 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import FateUsesDialog from '../dialogs/fate-uses-dialog.ts';
 import TransactionRequestDialog from '../dialogs/transaction-request-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
+import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
+import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
 import BaseActorSheet, { type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract the TextEditor implementation
@@ -93,8 +103,10 @@ type CharacterSheetContextDeclaredFields = {
     inEditMode?: boolean;
     ruleset?: unknown;
     isDH2?: boolean;
+    isBC?: boolean;
     isHomebrew?: boolean;
     isRaw?: boolean;
+    alignmentPanel?: BcAlignmentPanelContext;
     hideThroneGelt?: boolean;
     originPathSteps?: unknown;
     originPathSummary?: unknown;
@@ -152,6 +164,28 @@ type CharacterSheetContextDeclaredFields = {
     hasFanatic?: boolean;
     hasCrusader?: boolean;
     grappleState?: GrappleState;
+};
+
+/**
+ * Render payload for the BC Alignment / Infamy panel (#173). The fields
+ * are read by `src/templates/actor/panel/bc-alignment-panel.hbs` and
+ * documented in its header comment. Built by `_prepareBcAlignmentPanel`
+ * only when the active game system is BC.
+ */
+type BcAlignmentPanelContext = {
+    current: ChaosAlignment;
+    derived: ChaosAlignment;
+    tally: { khorne: number; nurgle: number; slaanesh: number; tzeentch: number };
+    pendingFlip: boolean;
+    checkpoint: number;
+    corruption: number;
+    nextCheckpoint: number;
+    recheckDue: boolean;
+    psykerLocked: boolean;
+    infamy: number;
+    infamyCost: number | null;
+    infamyCap: number;
+    infamyIncrement: number;
 };
 
 type OriginSummary = {
@@ -326,6 +360,10 @@ export default class CharacterSheet extends BaseActorSheet {
             'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
             'viewSubtletyBreakdown': CharacterSheet.#viewSubtletyBreakdown,
 
+            // BC Alignment / Infamy advancement panel (#173).
+            'recheckBcAlignment': CharacterSheet.#recheckBcAlignment,
+            'buyBcInfamyAdvance': CharacterSheet.#buyBcInfamyAdvance,
+
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
             'stowItem': CharacterSheet.#stowItem,
@@ -382,6 +420,9 @@ export default class CharacterSheet extends BaseActorSheet {
             // Endeavour actions (Rogue Trader)
             'completeObjective': CharacterSheet.#completeObjective,
             'completeEndeavour': CharacterSheet.#completeEndeavour,
+
+            // Colony actions (Rogue Trader, Stars of Inequity #195)
+            'openColonyGrowthDialog': CharacterSheet.#openColonyGrowthDialog,
 
             // Experience actions
             'customXP': CharacterSheet.#customXP,
@@ -646,9 +687,18 @@ export default class CharacterSheet extends BaseActorSheet {
         // Ruleset state (DH2e only) — controls Throne Gelt visibility
         const activeGameSystem = this._resolveGameSystemId();
         const isDH2 = activeGameSystem === 'dh2e';
+        const isBC = activeGameSystem === 'bc';
         const ruleset = WH40KSettings.getRuleset();
         context.ruleset = ruleset;
         context.isDH2 = isDH2;
+        context.isBC = isBC;
+
+        // BC Alignment / Infamy panel (#173) — only built for BC actors;
+        // other systems leave `alignmentPanel` undefined so the tab-status
+        // gate (`{{#if isBC}}`) keeps the include site no-op.
+        if (isBC) {
+            context.alignmentPanel = this._prepareBcAlignmentPanel();
+        }
 
         // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
         // (`src/templates/actor/panel/subtlety-panel.hbs`). Collected on the
@@ -1055,6 +1105,42 @@ export default class CharacterSheet extends BaseActorSheet {
         const characteristics = actor.characteristics ?? {};
         characteristics['influence'] = entry;
         actor.characteristics = characteristics;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Build the BC Alignment / Infamy panel context (#173).
+     *
+     * Tally + derived-alignment + recheck-due + psyker-lock all come from
+     * `bc-alignment-derivation.ts`; the Infamy cost / cap / increment come
+     * from `bc-advancement-config.ts`. The partial reads the returned
+     * object as `alignmentPanel.*`.
+     */
+    _prepareBcAlignmentPanel(): BcAlignmentPanelContext {
+        const system = this.actor.system;
+        const advances: ReadonlyArray<ChaosAdvanceEntry> = system.chaosAdvancements ?? [];
+        const tally = tallyAdvancesByAlignment(advances);
+        const derived = deriveAlignmentFromTally(tally);
+        const current = system.chaosAlignment;
+        const checkpoint = system.alignmentCheckpoint;
+        const corruption = system.corruption;
+        const infamy = system.infamy;
+        return {
+            current,
+            derived,
+            tally,
+            pendingFlip: current !== derived,
+            checkpoint,
+            corruption,
+            nextCheckpoint: nextAlignmentCheckpoint(corruption),
+            recheckDue: shouldRecheckAlignment(corruption, checkpoint),
+            psykerLocked: psykerLockedByAlignment(current),
+            infamy,
+            infamyCost: infamyAdvanceCost(infamy),
+            infamyCap: BC_INFAMY_ADVANCE_CAP,
+            infamyIncrement: BC_INFAMY_INCREMENT,
+        };
     }
 
     /* -------------------------------------------- */
@@ -2636,10 +2722,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Default: show the talent description as a local in-sheet tooltip.
         const itemSystem = item.system as { description?: { value?: string } } | undefined;
         const rawDescription = itemSystem?.description?.value ?? '';
-        const descriptionText =
-            rawDescription !== ''
-                ? rawDescription
-                : game.i18n.localize('WH40K.Combat.Actions.TalentNoDescription');
+        const descriptionText = rawDescription !== '' ? rawDescription : game.i18n.localize('WH40K.Combat.Actions.TalentNoDescription');
         const tooltipText = `<strong>${item.name ?? ''}</strong><br/>${descriptionText}`;
         const tooltipManager = (
             game as foundry.Game & {
@@ -3156,7 +3239,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const updated = structuredClone(pacts);
         const entry = updated[index];
         if (!entry) return;
-        const wasDiscovered = entry.discovered === true;
+        const wasDiscovered = entry.discovered;
         entry.discovered = !wasDiscovered;
         await this.actor.update({ 'system.pacts': updated });
 
@@ -3183,7 +3266,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const updated = structuredClone(pacts);
         const entry = updated[index];
         if (!entry) return;
-        entry.paymentCurrent = !(entry.paymentCurrent === true);
+        entry.paymentCurrent = !entry.paymentCurrent;
         await this.actor.update({ 'system.pacts': updated });
     }
 
@@ -3207,7 +3290,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const idx = Number.parseInt(idxStr, 10);
         if (!Number.isFinite(idx)) return;
         const item = this.actor.items.get(endeavourId);
-        if (!item || item.type !== 'endeavour') return;
+        if (item?.type !== 'endeavour') return;
         const sys = item.system as unknown as {
             apEarned: number;
             apRequired: number;
@@ -3241,7 +3324,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const endeavourId = target.dataset['endeavourId'];
         if (endeavourId === undefined) return;
         const item = this.actor.items.get(endeavourId);
-        if (!item || item.type !== 'endeavour') return;
+        if (item?.type !== 'endeavour') return;
         const sys = item.system as unknown as {
             apEarned: number;
             apRequired: number;
@@ -3251,7 +3334,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!sys.isComplete) return;
         const award = Math.max(0, sys.reward.profitFactor);
         // eslint-disable-next-line no-restricted-syntax -- boundary: rogueTrader.profitFactor.current is a per-system actor schema field not exposed on the abstract WH40KBaseActor system surface
-        const currentPF = ((this.actor.system as { rogueTrader?: { profitFactor?: { current?: number } } }).rogueTrader?.profitFactor?.current) ?? 0;
+        const currentPF = (this.actor.system as { rogueTrader?: { profitFactor?: { current?: number } } }).rogueTrader?.profitFactor?.current ?? 0;
         if (award > 0) {
             await this.actor.update({ 'system.rogueTrader.profitFactor.current': currentPF + award });
         }
@@ -3290,6 +3373,22 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #openAcquisitionDialog(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         await AcquisitionDialog.show(this.actor);
+    }
+
+    /**
+     * Open the Colony Growth Dialog for resolving a 90-day Colony growth
+     * cycle (Stars of Inequity, #195). RT-gated — the Dynasty tab where
+     * this button lives is only rendered for RT characters, so the
+     * runtime guard is defensive against accidental invocation on other
+     * systems.
+     * @this {CharacterSheet}
+     * @param {Event} event Triggering click event.
+     * @param {HTMLElement} target Button that was clicked.
+     */
+    static async #openColonyGrowthDialog(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        if (this._resolveGameSystemId() !== 'rt') return;
+        ColonyGrowthDialog.show(this.actor);
     }
 
     /**
@@ -3576,15 +3675,12 @@ export default class CharacterSheet extends BaseActorSheet {
             await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
 
             const gameSystem = this._resolveGameSystemId() ?? '';
-            const content = await foundry.applications.handlebars.renderTemplate(
-                'systems/wh40k-rpg/templates/chat/mortification-chat.hbs',
-                {
-                    actorName: this.actor.name,
-                    wpBonus: MORTIFICATION_OF_THE_FLESH.wpBonus,
-                    durationRounds: MORTIFICATION_OF_THE_FLESH.durationRounds,
-                    gameSystem,
-                },
-            );
+            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mortification-chat.hbs', {
+                actorName: this.actor.name,
+                wpBonus: MORTIFICATION_OF_THE_FLESH.wpBonus,
+                durationRounds: MORTIFICATION_OF_THE_FLESH.durationRounds,
+                gameSystem,
+            });
             await ChatMessage.create({
                 user: game.user?.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -3651,16 +3747,13 @@ export default class CharacterSheet extends BaseActorSheet {
             await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
 
             const gameSystem = this._resolveGameSystemId() ?? '';
-            const content = await foundry.applications.handlebars.renderTemplate(
-                'systems/wh40k-rpg/templates/chat/fanatic-chat.hbs',
-                {
-                    actorName: this.actor.name,
-                    wsBonus,
-                    bsBonus,
-                    durationRounds: DEATH_TO_OPPOSE_DURATION_ROUNDS,
-                    gameSystem,
-                },
-            );
+            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/fanatic-chat.hbs', {
+                actorName: this.actor.name,
+                wsBonus,
+                bsBonus,
+                durationRounds: DEATH_TO_OPPOSE_DURATION_ROUNDS,
+                gameSystem,
+            });
             await ChatMessage.create({
                 user: game.user?.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -3728,9 +3821,9 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /** Ace role — Right Stuff Fate-spend (#100, without.md p.39). */
-    static async #openRightStuff(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+    static #openRightStuff(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         try {
-            await openRightStuffDialog({ actor: this.actor });
+            openRightStuffDialog({ actor: this.actor });
         } catch (error) {
             this._notify('error', `Right Stuff dialog failed: ${(error as Error).message}`, { duration: 5000 });
             console.error('openRightStuff error:', error);
@@ -3748,9 +3841,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * requested resolver. Returns the resolution so the caller can decide
      * follow-up (chat card, state flag flip).
      */
-    private async _rollGrappleOpposed(
-        resolver: (input: OpposedStrengthInput) => GrappleResolution,
-    ): Promise<GrappleResolution | null> {
+    private async _rollGrappleOpposed(resolver: (input: OpposedStrengthInput) => GrappleResolution): Promise<GrappleResolution | null> {
         try {
             // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is keyed by characteristic slug
             const characteristics = (this.actor.system as { characteristics?: Record<string, { total?: number } | undefined> }).characteristics;
@@ -3789,7 +3880,9 @@ export default class CharacterSheet extends BaseActorSheet {
         const result = await this._rollGrappleOpposed(resolveBreakGrapple);
         if (result?.success) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
-            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag('wh40k-rpg', 'grapple', { state: 'none' });
+            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag('wh40k-rpg', 'grapple', {
+                state: 'none',
+            });
         }
     }
 
@@ -3839,17 +3932,14 @@ export default class CharacterSheet extends BaseActorSheet {
             }
             const shockAfter = Math.max(0, shockBefore - (success ? 1 : 0));
 
-            const content = await foundry.applications.handlebars.renderTemplate(
-                'systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs',
-                {
-                    actorName: this.actor.name,
-                    willpower,
-                    roll: rollValue,
-                    success,
-                    shockBefore,
-                    shockAfter,
-                },
-            );
+            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs', {
+                actorName: this.actor.name,
+                willpower,
+                roll: rollValue,
+                success,
+                shockBefore,
+                shockAfter,
+            });
             await ChatMessage.create({
                 user: game.user?.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -3956,6 +4046,125 @@ export default class CharacterSheet extends BaseActorSheet {
             content,
             ok: { label: 'OK' },
         });
+    }
+
+    /**
+     * Re-evaluate the BC Alignment at the next 10-CP threshold (#173).
+     *
+     * Walks the actor's chaos-advance log via `tallyAdvancesByAlignment`
+     * and `deriveAlignmentFromTally`, persists the new `chaosAlignment`
+     * and `alignmentCheckpoint` in a single update, then posts a chat
+     * card reporting the outcome. The button is only rendered by the
+     * panel when `recheckDue` is true, but we still guard against a
+     * stale click here by no-op-ing if `shouldRecheckAlignment` returns
+     * false. Naming matches the partial's `data-action="recheckBcAlignment"`
+     * — the BC-prefixed name disambiguates it from a generic re-check
+     * that may exist for other systems in the future.
+     */
+    static async #recheckBcAlignment(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._resolveGameSystemId() !== 'bc') return;
+        const system = this.actor.system;
+        const corruption = system.corruption;
+        const previousCheckpoint = system.alignmentCheckpoint;
+        if (!shouldRecheckAlignment(corruption, previousCheckpoint)) return;
+        const previous = system.chaosAlignment;
+        const tally = tallyAdvancesByAlignment(system.chaosAdvancements ?? []);
+        const next = deriveAlignmentFromTally(tally);
+        const newCheckpoint = nextAlignmentCheckpoint(corruption);
+        try {
+            await this.actor.update({
+                'system.chaosAlignment': next,
+                'system.alignmentCheckpoint': newCheckpoint,
+            });
+            const flipped = previous !== next;
+            const messageKey = flipped ? 'WH40K.BC.Advancement.RecheckFlippedTo' : 'WH40K.BC.Advancement.RecheckUnchanged';
+            const formatted = flipped
+                ? game.i18n.format(messageKey, {
+                      previous: game.i18n.localize(`WH40K.BC.Advancement.Alignment.${this.#capitalizeAlignment(previous)}`),
+                      next: game.i18n.localize(`WH40K.BC.Advancement.Alignment.${this.#capitalizeAlignment(next)}`),
+                  })
+                : game.i18n.localize(messageKey);
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content: `<p><strong>${game.i18n.localize('WH40K.BC.Advancement.RecheckChatTitle')}</strong></p><p>${formatted}</p>`,
+            });
+        } catch (error) {
+            this._notify('error', `Failed to re-check BC alignment: ${(error as Error).message}`, { duration: 5000 });
+            console.error('BC alignment recheck error:', error);
+        }
+    }
+
+    /**
+     * Purchase an Infamy advance for a BC actor per Table 2-9 (#173).
+     *
+     * Pulls cost and increment from `bc-advancement-config.ts`, confirms
+     * the spend via DialogV2.prompt (matching the prompt-driven XP-spend
+     * style used elsewhere in the sheet), and writes the new
+     * `experience.used` + `infamy` value in a single update. The cap is
+     * enforced in two places defensively: `infamyAdvanceCost` returns
+     * null when at/over the cap, and the partial collapses the button to
+     * the "InfamyCapped" notice.
+     */
+    static async #buyBcInfamyAdvance(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._resolveGameSystemId() !== 'bc') return;
+        const system = this.actor.system;
+        const currentInfamy = system.infamy;
+        const cost = infamyAdvanceCost(currentInfamy);
+        if (cost === null) {
+            this._notify('warning', game.i18n.format('WH40K.BC.Advancement.BuyInfamyCapped', { cap: String(BC_INFAMY_ADVANCE_CAP) }), {
+                duration: 4000,
+            });
+            return;
+        }
+        const available = system.experience.available;
+        if (available < cost) {
+            this._notify(
+                'warning',
+                game.i18n.format('WH40K.BC.Advancement.BuyInfamyInsufficientXP', {
+                    cost: String(cost),
+                    available: String(available),
+                }),
+                { duration: 4000 },
+            );
+            return;
+        }
+        const nextInfamy = Math.min(currentInfamy + BC_INFAMY_INCREMENT, BC_INFAMY_ADVANCE_CAP);
+        const confirmContent = `<p>${game.i18n.format('WH40K.BC.Advancement.BuyInfamyConfirmBody', {
+            xp: String(cost),
+            step: String(BC_INFAMY_INCREMENT),
+            next: String(nextInfamy),
+        })}</p>`;
+        const confirmed = await dialogV2.confirm({
+            window: { title: game.i18n.localize('WH40K.BC.Advancement.BuyInfamyConfirmTitle') },
+            content: confirmContent,
+            rejectClose: false,
+        });
+        if (!confirmed) return;
+        try {
+            await this.actor.update({
+                'system.infamy': nextInfamy,
+                'system.experience.used': system.experience.used + cost,
+                'system.chaosAdvancements': [
+                    ...(system.chaosAdvancements ?? []),
+                    {
+                        category: 'infamy',
+                        key: `infamy:${nextInfamy}`,
+                        xpCost: cost,
+                        alignment: 'unaligned',
+                        fromArchetype: false,
+                    },
+                ],
+            });
+        } catch (error) {
+            this._notify('error', `Failed to purchase Infamy advance: ${(error as Error).message}`, { duration: 5000 });
+            console.error('BC infamy advance purchase error:', error);
+        }
+    }
+
+    /** Capitalize a ChaosAlignment string for use in the langpack key suffix. */
+    #capitalizeAlignment(alignment: ChaosAlignment): string {
+        return alignment.charAt(0).toUpperCase() + alignment.slice(1);
     }
 
     /**

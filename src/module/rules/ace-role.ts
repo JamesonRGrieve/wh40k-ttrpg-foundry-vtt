@@ -21,8 +21,8 @@
  * content-agnostic resolution primitive only.
  */
 
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RIGHT_STUFF } from './xenos-features.ts';
 
 /** Skill keys Right Stuff applies to (mirrors `RIGHT_STUFF.applicableSkills`). */
@@ -123,10 +123,7 @@ export function resolveRightStuff(skill: RightStuffSkill, agilityBonus: number):
  * @param actor The Ace whose Fate is being spent.
  * @param skill One of `RIGHT_STUFF.applicableSkills`.
  */
-export async function spendRightStuff(
-    actor: WH40KBaseActorDocument,
-    skill: RightStuffSkill,
-): Promise<RightStuffResolution | null> {
+export async function spendRightStuff(actor: WH40KBaseActorDocument, skill: RightStuffSkill): Promise<RightStuffResolution | null> {
     if (!canSpendRightStuff(actor)) return null;
     if (!isRightStuffSkill(skill)) return null;
 
@@ -162,7 +159,7 @@ export async function spendRightStuff(
     };
     applyRollModeWhispers(chatData);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts untyped Foundry data
-    await ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]);
+    await ChatMessage.create(chatData);
 
     return resolution;
 }

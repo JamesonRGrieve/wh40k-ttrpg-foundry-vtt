@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-
-import {
-    WITHIN_HOMEWORLDS,
-    WITHIN_HOMEWORLD_IDS,
-    getWithinHomeworld,
-    type WithinHomeworldId,
-} from './within-homeworlds';
+import { WITHIN_HOMEWORLDS, WITHIN_HOMEWORLD_IDS, getWithinHomeworld, type WithinHomeworldId } from './within-homeworlds';
 
 /**
  * Within-supplement homeworld registry (#139, within.md L632-808).
@@ -27,7 +21,7 @@ describe('WITHIN_HOMEWORLDS (#139)', () => {
     it('every entry carries exactly one negative characteristic and at least one positive', () => {
         for (const id of ids) {
             const mods = WITHIN_HOMEWORLDS[id].characteristicMods;
-            expect(mods.negative.length, `${id} negative count`).toBe(1);
+            expect(mods.negative, `${id} negative count`).toHaveLength(1);
             expect(mods.positive.length, `${id} positive count`).toBeGreaterThanOrEqual(1);
         }
     });

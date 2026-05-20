@@ -103,9 +103,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const tainted = chaosTalents.TAINTED_PSYKER;
                     record(
                         'chaos-talents-constants',
-                        typeof aegis?.radiusMetres === 'number' &&
-                            typeof flagellant?.wpBonus === 'number' &&
-                            typeof tainted?.testBonusPerCp === 'number',
+                        typeof aegis?.radiusMetres === 'number' && typeof flagellant?.wpBonus === 'number' && typeof tainted?.testBonusPerCp === 'number',
                         null,
                     );
                 } catch (err) {
@@ -154,7 +152,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 try {
                     const reg = radical.RADICAL_SERVICES as Record<string, { availability?: unknown }>;
                     const availabilities = Object.values(reg).map((s) => s.availability);
-                    const allStrings = availabilities.length > 0 && availabilities.every((a) => typeof a === 'string' && (a as string).length > 0);
+                    const allStrings = availabilities.length > 0 && availabilities.every((a) => typeof a === 'string' && a.length > 0);
                     record('radical-services-availability', allStrings, null);
                 } catch (err) {
                     record('radical-services-availability', false, String((err as Error)?.message ?? err));
@@ -286,7 +284,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             // ---------- range ----------
             const range = await loadModule('range');
             if (range.__importError !== undefined) {
-                for (const k of ['range-calculateWeaponRange-melee', 'range-calculateWeaponRange-noWeapon'] as const) record(k, false, String(range.__importError));
+                for (const k of ['range-calculateWeaponRange-melee', 'range-calculateWeaponRange-noWeapon'] as const)
+                    record(k, false, String(range.__importError));
             } else {
                 try {
                     // Melee branch: maxRange forced to 1, range bracket = melee,

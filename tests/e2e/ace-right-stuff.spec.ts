@@ -174,13 +174,9 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
                     hasCardRoot = html.includes('wh40k-right-stuff-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="dh2e"');
                     hasAutoSuccessBanner =
-                        html.includes('WH40K.RightStuff.AutoSuccessLabel') ||
-                        html.includes('WH40K.RightStuff.AutoSuccessWithDoS') ||
-                        html.includes('fa-star');
+                        html.includes('WH40K.RightStuff.AutoSuccessLabel') || html.includes('WH40K.RightStuff.AutoSuccessWithDoS') || html.includes('fa-star');
 
-                    const ChatMessageCls = (globalThis as any).ChatMessage as
-                        | { create: (data: object) => Promise<{ id: string } | null> }
-                        | undefined;
+                    const ChatMessageCls = (globalThis as any).ChatMessage as { create: (data: object) => Promise<{ id: string } | null> } | undefined;
                     const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {

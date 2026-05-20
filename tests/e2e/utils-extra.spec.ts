@@ -154,11 +154,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                 try {
                     const trained = mod.getTrainingLabel?.('trained');
                     const plus10 = mod.getTrainingLabel?.('plus10');
-                    record(
-                        'origin-ui-training-label',
-                        trained === 'Trained' && plus10 === '+10',
-                        `trained=${String(trained)} plus10=${String(plus10)}`,
-                    );
+                    record('origin-ui-training-label', trained === 'Trained' && plus10 === '+10', `trained=${String(trained)} plus10=${String(plus10)}`);
                 } catch (err) {
                     record('origin-ui-training-label', false, String((err as Error)?.message ?? err));
                 }
@@ -196,11 +192,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                     try {
                         const key = TPE.toKey('Ballistic Skill');
                         const capped = TPE.toKey('Ballistic Skill', true);
-                        record(
-                            'text-pattern-to-key',
-                            key === 'ballisticSkill' && capped === 'BallisticSkill',
-                            `key=${String(key)} capped=${String(capped)}`,
-                        );
+                        record('text-pattern-to-key', key === 'ballisticSkill' && capped === 'BallisticSkill', `key=${String(key)} capped=${String(capped)}`);
                     } catch (err) {
                         record('text-pattern-to-key', false, String((err as Error)?.message ?? err));
                     }

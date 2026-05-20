@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import {
     MEDICAE_MECHADENDRITE,
     actorHasMedicaeMechadendrite,
@@ -8,7 +9,6 @@ import {
     resolveBloodLossStaunch,
     staunchBloodLoss,
 } from './medicae-mechadendrite.ts';
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 /* -------------------------------------------- */
 /*  Constants (errata p. 183)                   */
@@ -164,8 +164,9 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         vi.stubGlobal('foundry', {
             applications: {
                 handlebars: {
-                    renderTemplate: vi.fn(async (_tpl: string, ctx: Record<string, unknown>) =>
-                        `<card success="${String(ctx['success'])}" bleed="${String(ctx['bleedStopped'])}" sys="${String(ctx['gameSystem'])}">`,
+                    renderTemplate: vi.fn(
+                        async (_tpl: string, ctx: Record<string, unknown>) =>
+                            `<card success="${String(ctx['success'])}" bleed="${String(ctx['bleedStopped'])}" sys="${String(ctx['gameSystem'])}">`,
                     ),
                 },
             },

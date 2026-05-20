@@ -35,9 +35,7 @@ import { expect, test } from './lib/test';
  * caught by the DOM-shape assertions below, which fail loudly if the
  * `tw-*` utilities are stripped or the `.wh40k-rpg` ancestor is lost.
  */
-test('origin-path-builder renders fully-styled dialog with workspace, journey rail, and preview panel (#198)', async ({
-    page,
-}) => {
+test('origin-path-builder renders fully-styled dialog with workspace, journey rail, and preview panel (#198)', async ({ page }) => {
     const joined = await joinAsGM(page);
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
@@ -116,7 +114,8 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
 
         let builder: any;
         try {
-            const mod: any = await import('/systems/wh40k-rpg/module/applications/character-creation/origin-path-builder.js');
+            const modUrl = '/systems/wh40k-rpg/module/applications/character-creation/origin-path-builder.js';
+            const mod: any = await import(/* @vite-ignore */ modUrl);
             const OriginPathBuilder = mod?.default;
             if (typeof OriginPathBuilder !== 'function') {
                 throw new Error('OriginPathBuilder default export not a constructor');
@@ -155,7 +154,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
         const hasJourneyRail = root?.querySelector?.('nav') !== null;
         const hasMainContent = root?.querySelector?.('main') !== null;
         const hasFooter = root?.querySelector?.('footer') !== null;
-        const hasPreviewSection = root?.querySelectorAll?.('section').length! >= 2;
+        const hasPreviewSection = (root?.querySelectorAll?.('section').length ?? 0) >= 2;
 
         // .csd-* hooks must remain in the DOM (JS selectors target them) AND
         // every element bearing a .csd-* class should also carry at least one
@@ -252,18 +251,12 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
 
     // Characteristic step renders the workspace (drag-bank + char grid).
     expect(result.charSetupReachable, 'expected the characteristics workspace to be reachable from the journey rail').toBe(true);
-    expect(
-        result.workspaceHasTwGrid,
-        'csd-workspace must carry `tw-grid` so the bank + grid render side-by-side rather than stacked',
-    ).toBe(true);
+    expect(result.workspaceHasTwGrid, 'csd-workspace must carry `tw-grid` so the bank + grid render side-by-side rather than stacked').toBe(true);
 
     // Surface any page errors that occurred during render — a thrown
     // exception inside _onRender would still let the dialog DOM exist but
     // would point at a regression in the data prep paths.
-    expect(
-        result.pageErrors,
-        `unexpected page errors during render: ${result.pageErrors.slice(0, 3).join(' | ')}`,
-    ).toEqual([]);
+    expect(result.pageErrors, `unexpected page errors during render: ${result.pageErrors.slice(0, 3).join(' | ')}`).toEqual([]);
 
     // Cleanup
     await page.evaluate(async () => {

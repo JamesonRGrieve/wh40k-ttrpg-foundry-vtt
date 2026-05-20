@@ -1,15 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
-import dialogSrc from '../../src/templates/prompt/daemon-weapon-attribute-dialog.hbs?raw';
-import chatSrc from '../../src/templates/chat/daemon-weapon-attribute-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
-import { initializeStoryHandlebars } from '../template-support';
-import {
-    ALIGNMENT_ACCENT_CLASS,
-} from '../../src/module/applications/prompts/daemon-weapon-attribute-dialog.ts';
+import { ALIGNMENT_ACCENT_CLASS } from '../../src/module/applications/prompts/daemon-weapon-attribute-dialog.ts';
+import type { ChaosAlignment } from '../../src/module/config/game-systems/types.ts';
 import { rollDaemonWeaponAttributes } from '../../src/module/rules/daemon-weapon-attributes.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../src/module/rules/daemon-weapon.ts';
-import type { ChaosAlignment } from '../../src/module/config/game-systems/types.ts';
+import chatSrc from '../../src/templates/chat/daemon-weapon-attribute-chat.hbs?raw';
+import dialogSrc from '../../src/templates/prompt/daemon-weapon-attribute-dialog.hbs?raw';
+import { renderTemplate } from '../mocks';
+import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
 

@@ -228,9 +228,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         ].join('|'),
                     );
                     const out = tpl({});
-                    const ok =
-                        out ===
-                        'PURE|SOILED|DAMNED|-20|STABLE|TERMINALLY INSANE|+10|wh40k-degree-profane|wh40k-degree-unhinged';
+                    const ok = out === 'PURE|SOILED|DAMNED|-20|STABLE|TERMINALLY INSANE|+10|wh40k-degree-profane|wh40k-degree-unhinged';
                     record('handlebars-sanity-ladders', ok, `out=${out}`);
                 } catch (err) {
                     record('handlebars-sanity-ladders', false, `threw: ${String((err as Error)?.message ?? err)}`);
@@ -242,12 +240,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                 // ---------------------------------------------------------
                 try {
                     const tpl = HB.compile(
-                        [
-                            '{{rateOfFireDisplay rof}}',
-                            '{{armourDisplay armour}}',
-                            "{{armourLocation armour 'head'}}",
-                            '{{specialDisplay special}}',
-                        ].join('|'),
+                        ['{{rateOfFireDisplay rof}}', '{{armourDisplay armour}}', "{{armourLocation armour 'head'}}", '{{specialDisplay special}}'].join('|'),
                     );
                     const out = tpl({
                         rof: { single: true, semi: 3, full: 0 },
@@ -281,9 +274,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const out = tpl({
                         prereq: { characteristics: { ws: 40 }, skills: ['Awareness'], talents: ['Quick Draw'] },
                     });
-                    const ok =
-                        out ===
-                        'fa-sword|fa-circle|tier-silver|fa-paw|trait-elite|Unnatural Strength (3)|WS 40+, Awareness, Quick Draw';
+                    const ok = out === 'fa-sword|fa-circle|tier-silver|fa-paw|trait-elite|Unnatural Strength (3)|WS 40+, Awareness, Quick Draw';
                     record('handlebars-talent-trait-helpers', ok, `out=${out}`);
                 } catch (err) {
                     record('handlebars-talent-trait-helpers', false, `threw: ${String((err as Error)?.message ?? err)}`);
@@ -293,9 +284,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                 // 9. `option` SafeString helper + `object` hash helper.
                 // ---------------------------------------------------------
                 try {
-                    const tpl = HB.compile(
-                        "{{option 'b' 'b' 'Beta'}}|{{option 5 3 ''}}|{{#with (object at=25 label='Q')}}{{at}}:{{label}}{{/with}}",
-                    );
+                    const tpl = HB.compile("{{option 'b' 'b' 'Beta'}}|{{option 5 3 ''}}|{{#with (object at=25 label='Q')}}{{at}}:{{label}}{{/with}}");
                     const out = tpl({});
                     const ok =
                         out.includes('value="b"') &&
@@ -314,9 +303,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                 //     parsing + unknown fallback).
                 // ---------------------------------------------------------
                 try {
-                    const tpl = HB.compile(
-                        "{{#each (specialQualities ids)}}{{this.baseIdentifier}}:{{this.level}};{{/each}}",
-                    );
+                    const tpl = HB.compile('{{#each (specialQualities ids)}}{{this.baseIdentifier}}:{{this.level}};{{/each}}');
                     const out = tpl({ ids: ['totallyMadeUpQuality-3'] });
                     // Unknown quality → baseIdentifier is the parsed base,
                     // level is the parsed number (3). The helper never throws
@@ -436,7 +423,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         parryChar === 'WS' &&
                         stealthChar === 'Ag' &&
                         Array.isArray(agSkills) &&
-                        agSkills.some((s: { key: string }) => s.key === 'operate') &&
+                        agSkills.some((s) => (s as { key?: string }).key === 'operate') &&
                         Array.isArray(names) &&
                         names.includes('Stealth');
                     record('helpers-skillkey-dh2-family', ok, `athl=${athl} ling=${ling} op=${op} parry=${parryChar}`);
@@ -480,11 +467,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         ffRange.length === 2 &&
                         overloads === true &&
                         Array.isArray(summary);
-                    record(
-                        'helpers-craftsmanship',
-                        ok,
-                        `mods=${JSON.stringify(mods)} ffRange=${JSON.stringify(ffRange)} summary=${JSON.stringify(summary)}`,
-                    );
+                    record('helpers-craftsmanship', ok, `mods=${JSON.stringify(mods)} ffRange=${JSON.stringify(ffRange)} summary=${JSON.stringify(summary)}`);
                 } catch (err) {
                     record('helpers-craftsmanship', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
                 }
@@ -514,11 +497,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         knownDefault.includes('crossed-swords') &&
                         typeof fallbackDefault === 'string' &&
                         fallbackDefault.includes('perspective-dice-six');
-                    record(
-                        'helpers-game-icons',
-                        ok,
-                        `short=${short} full=${full} coloured=${coloured} known=${knownDefault} fallback=${fallbackDefault}`,
-                    );
+                    record('helpers-game-icons', ok, `short=${short} full=${full} coloured=${coloured} known=${knownDefault} fallback=${fallbackDefault}`);
                 } catch (err) {
                     record('helpers-game-icons', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
                 }

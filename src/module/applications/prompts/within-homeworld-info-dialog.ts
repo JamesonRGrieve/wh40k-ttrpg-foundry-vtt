@@ -13,8 +13,6 @@
  * See GitHub issue #139.
  */
 
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import {
     WITHIN_HOMEWORLDS,
     WITHIN_HOMEWORLD_IDS,
@@ -22,6 +20,8 @@ import {
     type WithinHomeworldDef,
     type WithinHomeworldId,
 } from '../../rules/within-homeworlds.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -136,7 +136,7 @@ export default class WithinHomeworldInfoDialog extends ApplicationV2Mixin(Applic
         classes: ['wh40k-rpg', 'dialog', 'within-homeworld-info-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            close: WithinHomeworldInfoDialog.#onClose as ActionHandler,
+            close: WithinHomeworldInfoDialog.#onClose,
         },
         position: {
             width: 880,

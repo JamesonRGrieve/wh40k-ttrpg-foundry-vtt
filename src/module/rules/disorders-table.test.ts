@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    DISORDERS_TABLE,
-    type DisorderId,
-    getDisorder,
-    listDisordersBySeverity,
-    rollDisorder,
-} from './disorders-table';
+import { DISORDERS_TABLE, type DisorderId, getDisorder, listDisordersBySeverity, rollDisorder } from './disorders-table';
 
 describe('DISORDERS_TABLE (#116)', () => {
     it('has between 8 and 10 canonical entries', () => {

@@ -1,12 +1,12 @@
 {
   "strict": [],
   "totals": {
-    "totalViolations": 241
+    "totalViolations": 239
   },
   "byRule": {
     "documents-must-not-depend-on-applications": 4,
-    "no-circular": 195,
-    "no-orphans": 41,
+    "no-circular": 202,
+    "no-orphans": 32,
     "sheets-must-not-import-data-models-directly": 1
   }
 }

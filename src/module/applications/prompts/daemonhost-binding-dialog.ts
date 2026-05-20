@@ -11,10 +11,10 @@
  * See GitHub issue #85.
  */
 
+import type { BindingStrength } from '../../rules/daemon-weapon.ts';
+import { DAEMONHOST_TIERS, type DaemonhostTier } from '../../rules/daemonhost.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import { DAEMONHOST_TIERS, type DaemonhostTier } from '../../rules/daemonhost.ts';
-import type { BindingStrength } from '../../rules/daemon-weapon.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -74,11 +74,11 @@ export default class DaemonhostBindingDialog extends ApplicationV2Mixin(Applicat
         classes: ['wh40k-rpg', 'dialog', 'daemonhost-binding-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectTier: DaemonhostBindingDialog.#onSelectTier as ActionHandler,
+            selectTier: DaemonhostBindingDialog.#onSelectTier,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            bind: DaemonhostBindingDialog.#onBind as ActionHandler,
+            bind: DaemonhostBindingDialog.#onBind,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: DaemonhostBindingDialog.#onCancel as ActionHandler,
+            cancel: DaemonhostBindingDialog.#onCancel,
         },
         position: {
             width: 640,
@@ -163,10 +163,7 @@ export default class DaemonhostBindingDialog extends ApplicationV2Mixin(Applicat
             gameSystem: 'dh2e',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/daemonhost-binding-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/daemonhost-binding-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];

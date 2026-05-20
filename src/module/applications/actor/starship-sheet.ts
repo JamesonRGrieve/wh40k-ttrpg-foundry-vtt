@@ -246,7 +246,10 @@ export default class StarshipSheet extends BaseActorSheet {
         } else {
             const budget = sys.shipPoints?.budget ?? 0;
             // eslint-disable-next-line no-restricted-syntax -- boundary: items collection iterates as untyped objects in the legacy fallback path
-            const itemViews = [...actor.items].map((it) => ({ type: it.type, system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean } }));
+            const itemViews = [...actor.items].map((it) => ({
+                type: it.type,
+                system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean },
+            }));
             buildValidation = StarshipData.validateBuild(budget, itemViews);
         }
         context['buildValidation'] = buildValidation;
@@ -279,8 +282,7 @@ export default class StarshipSheet extends BaseActorSheet {
             appliedModifiers?: Record<ShipModifierStatKey, ShipAppliedModifier>;
             baseStatSnapshot?: Record<ShipModifierStatKey, number>;
         };
-        const applied: Record<ShipModifierStatKey, ShipAppliedModifier> =
-            sys.appliedModifiers ?? StarshipData._emptyAppliedModifiers();
+        const applied: Record<ShipModifierStatKey, ShipAppliedModifier> = sys.appliedModifiers ?? StarshipData._emptyAppliedModifiers();
 
         // Reconstruct a base snapshot from current stat values when the actor
         // is legacy. The displayed base will then equal the displayed total —
@@ -474,9 +476,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
         const packId = `wh40k-rpg.${gameSystemId}-items-ship-extended-actions`;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
-        const pack = packs?.get?.(packId) as
-            | undefined
-            | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
+        const pack = packs?.get?.(packId) as undefined | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
         if (pack?.getDocuments !== undefined) {
             try {
                 const docs = await pack.getDocuments();
@@ -588,9 +588,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
         const packId = `wh40k-rpg.${gameSystemId}-items-ship-manoeuvre-actions`;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
-        const pack = packs?.get?.(packId) as
-            | undefined
-            | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
+        const pack = packs?.get?.(packId) as undefined | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
         if (pack?.getDocuments !== undefined) {
             try {
                 const docs = await pack.getDocuments();
@@ -688,9 +686,11 @@ export default class StarshipSheet extends BaseActorSheet {
         }
 
         // ── Apply void shields (issue #184 RAW: shields absorb hits) ────────
-        const shieldStatusBefore = (actor.system as {
-            voidShieldsStatus?: { active?: number; exhausted?: number };
-        }).voidShieldsStatus ?? { active: 0, exhausted: 0 };
+        const shieldStatusBefore = (
+            actor.system as {
+                voidShieldsStatus?: { active?: number; exhausted?: number };
+            }
+        ).voidShieldsStatus ?? { active: 0, exhausted: 0 };
         let shieldsActive = shieldStatusBefore.active ?? 0;
         let shieldsExhausted = shieldStatusBefore.exhausted ?? 0;
         let shieldedDamage = 0;
@@ -766,10 +766,7 @@ export default class StarshipSheet extends BaseActorSheet {
         // Silence "unused-binding" lints; damagePerHit is computed for callers/tests.
         void damagePerHit;
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs',
-            cardData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
         const speaker = ChatMessage.getSpeaker({
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
@@ -1103,7 +1100,14 @@ export default class StarshipSheet extends BaseActorSheet {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
             const pack = packs?.get?.('wh40k-rpg.rt-core-rolltables-ship-combat') as
                 | undefined
-                | { getDocuments?: () => Promise<Array<{ name?: string; draw?: (opts?: { displayChat?: boolean }) => Promise<{ roll?: { total?: number }; results?: Array<{ text?: string }> }> }>> };
+                | {
+                      getDocuments?: () => Promise<
+                          Array<{
+                              name?: string;
+                              draw?: (opts?: { displayChat?: boolean }) => Promise<{ roll?: { total?: number }; results?: Array<{ text?: string }> }>;
+                          }>
+                      >;
+                  };
             if (pack?.getDocuments !== undefined) {
                 try {
                     const docs = await pack.getDocuments();

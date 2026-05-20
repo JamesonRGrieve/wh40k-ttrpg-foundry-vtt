@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -97,7 +96,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             if (!Actor?.create) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'armour-ap-aggregation': 'Actor.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'armour-ap-aggregation': 'Actor.create unavailable' },
                 };
             }
 
@@ -169,11 +168,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
              */
             const embed = async (flow: string, data: Record<string, unknown>): Promise<any | null> => {
                 const live = getPc();
-                const created = (await withTimeout(
-                    live.createEmbeddedDocuments?.('Item', [data]),
-                    5_000,
-                    `create ${String(data['type'])} for ${flow}`,
-                )) as any[];
+                const created = await withTimeout(live.createEmbeddedDocuments?.('Item', [data]), 5_000, `create ${String(data['type'])} for ${flow}`);
                 const itemId = created?.[0]?.id;
                 if (itemId === undefined || itemId === null) return null;
                 const item = live.items.get(itemId);
@@ -221,8 +216,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['armour-ap-aggregation'] = true;
                             notes['armour-ap-aggregation'] = `averageAP=5 maxAP=6 maxBaseAP=6 protectionLevel=medium locationCount=6`;
                         } else {
-                            notes['armour-ap-aggregation'] =
-                                `expected avg=5 max=6 maxBase=6 level=medium locCount=6, got avg=${avg} max=${max} maxBase=${maxBase} level=${level} locCount=${locCount}`;
+                            notes[
+                                'armour-ap-aggregation'
+                            ] = `expected avg=5 max=6 maxBase=6 level=medium locCount=6, got avg=${avg} max=${max} maxBase=${maxBase} level=${level} locCount=${locCount}`;
                         }
                     }
                 } catch (err) {
@@ -260,8 +256,11 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['armour-craftsmanship-ap'] = true;
                             notes['armour-craftsmanship-ap'] = `base body AP=5, best craft → effective body AP=6, weight 10→5, hasCraftsmanshipEffects=true`;
                         } else {
-                            notes['armour-craftsmanship-ap'] =
-                                `expected base=5 eff=6 effWeight=5 hasCraft=true, got base=${baseBody} eff=${effBody} effWeight=${effWeight} hasCraft=${String(hasCraft)}`;
+                            notes[
+                                'armour-craftsmanship-ap'
+                            ] = `expected base=5 eff=6 effWeight=5 hasCraft=true, got base=${baseBody} eff=${effBody} effWeight=${effWeight} hasCraft=${String(
+                                hasCraft,
+                            )}`;
                         }
                     }
                 } catch (err) {
@@ -305,8 +304,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['armour-coverage-derivation'] = true;
                             notes['armour-coverage-derivation'] = `coversAll=false locationCount=2 head AP=4 arm AP=0 coverageLabel="${coverageLabel}"`;
                         } else {
-                            notes['armour-coverage-derivation'] =
-                                `expected coversAll=false locCount=2 headAP=4 armAP=0 label!="", got coversAll=${String(coversAll)} locCount=${locCount} headAP=${headAP} armAP=${armAP} label=${JSON.stringify(coverageLabel)}`;
+                            notes['armour-coverage-derivation'] = `expected coversAll=false locCount=2 headAP=4 armAP=0 label!="", got coversAll=${String(
+                                coversAll,
+                            )} locCount=${locCount} headAP=${headAP} armAP=${armAP} label=${JSON.stringify(coverageLabel)}`;
                         }
                     }
                 } catch (err) {
@@ -340,8 +340,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['armour-stealth-penalty'] = true;
                             notes['armour-stealth-penalty'] = `AP 8 everywhere → imposesStealthPenalty=true stealthPenalty=-30 protectionLevel=power`;
                         } else {
-                            notes['armour-stealth-penalty'] =
-                                `expected imposes=true penalty=-30 level=power, got imposes=${String(imposes)} penalty=${penalty} level=${protLevel}`;
+                            notes['armour-stealth-penalty'] = `expected imposes=true penalty=-30 level=power, got imposes=${String(
+                                imposes,
+                            )} penalty=${penalty} level=${protLevel}`;
                         }
                     }
                 } catch (err) {
@@ -377,8 +378,11 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['gear-weight-math'] = true;
                             notes['gear-weight-math'] = `totalWeight=30 effectiveWeight=9 (good -10%) effectiveTotalWeight=27 hasCraftsmanshipEffects=true`;
                         } else {
-                            notes['gear-weight-math'] =
-                                `expected total=30 eff=9 effTotal=27 hasCraft=true, got total=${total} eff=${effWeight} effTotal=${effTotal} hasCraft=${String(hasCraft)}`;
+                            notes[
+                                'gear-weight-math'
+                            ] = `expected total=30 eff=9 effTotal=27 hasCraft=true, got total=${total} eff=${effWeight} effTotal=${effTotal} hasCraft=${String(
+                                hasCraft,
+                            )}`;
                         }
                     }
                 } catch (err) {
@@ -411,8 +415,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['gear-uses-exhausted'] = true;
                             notes['gear-uses-exhausted'] = `hasLimitedUses=true usesExhausted=true usesDisplay="0/5"`;
                         } else {
-                            notes['gear-uses-exhausted'] =
-                                `expected hasUses=true exhausted=true display="0/5", got hasUses=${String(hasUses)} exhausted=${String(exhausted)} display=${JSON.stringify(display)}`;
+                            notes['gear-uses-exhausted'] = `expected hasUses=true exhausted=true display="0/5", got hasUses=${String(
+                                hasUses,
+                            )} exhausted=${String(exhausted)} display=${JSON.stringify(display)}`;
                         }
                     }
                 } catch (err) {
@@ -447,16 +452,13 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         const has = talent.system?.hasPrerequisites;
                         const label = talent.system?.prerequisitesLabel;
-                        if (
-                            has === true &&
-                            typeof label === 'string' &&
-                            label.includes('Strength 40+') &&
-                            label.includes('Athletics')
-                        ) {
+                        if (has === true && typeof label === 'string' && label.includes('Strength 40+') && label.includes('Athletics')) {
                             fired['talent-prerequisites'] = true;
                             notes['talent-prerequisites'] = `hasPrerequisites=true prerequisitesLabel="${label}"`;
                         } else {
-                            notes['talent-prerequisites'] = `expected has=true label⊇"Strength 40+","Athletics", got has=${String(has)} label=${JSON.stringify(label)}`;
+                            notes['talent-prerequisites'] = `expected has=true label⊇"Strength 40+","Athletics", got has=${String(has)} label=${JSON.stringify(
+                                label,
+                            )}`;
                         }
                     }
                 } catch (err) {
@@ -497,8 +499,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['talent-grants-summary'] = true;
                             notes['talent-grants-summary'] = `hasGrants=true grantsSummary covers skills+talents+traits: ${JSON.stringify(arr)}`;
                         } else {
-                            notes['talent-grants-summary'] =
-                                `expected has=true and skills/talents/traits entries, got has=${String(has)} summary=${JSON.stringify(arr)}`;
+                            notes['talent-grants-summary'] = `expected has=true and skills/talents/traits entries, got has=${String(
+                                has,
+                            )} summary=${JSON.stringify(arr)}`;
                         }
                     }
                 } catch (err) {
@@ -534,10 +537,15 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         const rollable = talent.system?.isRollable;
                         if (hasSpec === true && fullName === 'probe-talent (X) (Las) x3' && rollable === true) {
                             fired['talent-specialization-fullname'] = true;
-                            notes['talent-specialization-fullname'] = `prepareDerivedData inferred hasSpecialization=true; fullName="${fullName}"; isRollable=true`;
+                            notes[
+                                'talent-specialization-fullname'
+                            ] = `prepareDerivedData inferred hasSpecialization=true; fullName="${fullName}"; isRollable=true`;
                         } else {
-                            notes['talent-specialization-fullname'] =
-                                `expected hasSpec=true fullName="probe-talent (X) (Las) x3" rollable=true, got hasSpec=${String(hasSpec)} fullName=${JSON.stringify(fullName)} rollable=${String(rollable)}`;
+                            notes[
+                                'talent-specialization-fullname'
+                            ] = `expected hasSpec=true fullName="probe-talent (X) (Las) x3" rollable=true, got hasSpec=${String(
+                                hasSpec,
+                            )} fullName=${JSON.stringify(fullName)} rollable=${String(rollable)}`;
                         }
                     }
                 } catch (err) {
@@ -574,8 +582,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['ammunition-modifiers'] = true;
                             notes['ammunition-modifiers'] = `hasModifiers=true weaponTypesLabel="${typesLabel}" chatProperties has "Damage: +2","Pen: +3"`;
                         } else {
-                            notes['ammunition-modifiers'] =
-                                `expected hasMods=true label!="" Damage:+2 Pen:+3, got hasMods=${String(hasMods)} label=${JSON.stringify(typesLabel)} props=${JSON.stringify(arr)}`;
+                            notes['ammunition-modifiers'] = `expected hasMods=true label!="" Damage:+2 Pen:+3, got hasMods=${String(
+                                hasMods,
+                            )} label=${JSON.stringify(typesLabel)} props=${JSON.stringify(arr)}`;
                         }
                     }
                 } catch (err) {
@@ -612,19 +621,17 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         const checks16 = ff.system?.checksOverload?.(16);
                         const label = ff.system?.overloadRangeLabel;
                         const protecting = ff.system?.isProtecting;
-                        if (
-                            range?.min === 1 &&
-                            range?.max === 15 &&
-                            checks10 === true &&
-                            checks16 === false &&
-                            label === '01-15' &&
-                            protecting === true
-                        ) {
+                        if (range?.min === 1 && range?.max === 15 && checks10 === true && checks16 === false && label === '01-15' && protecting === true) {
                             fired['force-field-overload'] = true;
-                            notes['force-field-overload'] = `effectiveOverloadRange={1,15} checksOverload(10)=true checksOverload(16)=false label="01-15" isProtecting=true`;
+                            notes[
+                                'force-field-overload'
+                            ] = `effectiveOverloadRange={1,15} checksOverload(10)=true checksOverload(16)=false label="01-15" isProtecting=true`;
                         } else {
-                            notes['force-field-overload'] =
-                                `expected range{1,15} checks10=true checks16=false label="01-15" protecting=true, got range=${JSON.stringify(range)} c10=${String(checks10)} c16=${String(checks16)} label=${JSON.stringify(label)} protecting=${String(protecting)}`;
+                            notes[
+                                'force-field-overload'
+                            ] = `expected range{1,15} checks10=true checks16=false label="01-15" protecting=true, got range=${JSON.stringify(
+                                range,
+                            )} c10=${String(checks10)} c16=${String(checks16)} label=${JSON.stringify(label)} protecting=${String(protecting)}`;
                         }
                     }
                 } catch (err) {
@@ -662,10 +669,13 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         const protecting = ff.system?.isProtecting;
                         if (range?.min === 1 && range?.max === 1 && label === '01' && checks1 === true && checks2 === false && protecting === false) {
                             fired['force-field-craftsmanship'] = true;
-                            notes['force-field-craftsmanship'] = `best craft → effectiveOverloadRange={1,1} label="01" checksOverload(1)=true (2)=false; isProtecting=false (inactive)`;
+                            notes[
+                                'force-field-craftsmanship'
+                            ] = `best craft → effectiveOverloadRange={1,1} label="01" checksOverload(1)=true (2)=false; isProtecting=false (inactive)`;
                         } else {
-                            notes['force-field-craftsmanship'] =
-                                `expected range{1,1} label="01" c1=true c2=false protecting=false, got range=${JSON.stringify(range)} label=${JSON.stringify(label)} c1=${String(checks1)} c2=${String(checks2)} protecting=${String(protecting)}`;
+                            notes['force-field-craftsmanship'] = `expected range{1,1} label="01" c1=true c2=false protecting=false, got range=${JSON.stringify(
+                                range,
+                            )} label=${JSON.stringify(label)} c1=${String(checks1)} c2=${String(checks2)} protecting=${String(protecting)}`;
                         }
                     }
                 } catch (err) {
@@ -706,8 +716,11 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['trait-level-variable'] = true;
                             notes['trait-level-variable'] = `hasLevel=true fullName="${fullName}" isVariable=true categoryLabel="${categoryLabel}"`;
                         } else {
-                            notes['trait-level-variable'] =
-                                `expected hasLevel=true fullName="probe-trait (X) (4)" isVariable=true label!="", got hasLevel=${String(hasLevel)} fullName=${JSON.stringify(fullName)} isVariable=${String(isVariable)} label=${JSON.stringify(categoryLabel)}`;
+                            notes[
+                                'trait-level-variable'
+                            ] = `expected hasLevel=true fullName="probe-trait (X) (4)" isVariable=true label!="", got hasLevel=${String(
+                                hasLevel,
+                            )} fullName=${JSON.stringify(fullName)} isVariable=${String(isVariable)} label=${JSON.stringify(categoryLabel)}`;
                         }
                     }
                 } catch (err) {
@@ -741,8 +754,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fired['skill-derived-labels'] = true;
                             notes['skill-derived-labels'] = `characteristicAbbr="BS" skillTypeLabel="${typeLabel}" hasSpecializations=true`;
                         } else {
-                            notes['skill-derived-labels'] =
-                                `expected abbr="BS" typeLabel!="" hasSpecs=true, got abbr=${JSON.stringify(abbr)} typeLabel=${JSON.stringify(typeLabel)} hasSpecs=${String(hasSpecs)}`;
+                            notes['skill-derived-labels'] = `expected abbr="BS" typeLabel!="" hasSpecs=true, got abbr=${JSON.stringify(
+                                abbr,
+                            )} typeLabel=${JSON.stringify(typeLabel)} hasSpecs=${String(hasSpecs)}`;
                         }
                     }
                 } catch (err) {
@@ -783,10 +797,15 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             natureClass === 'nature-harmful'
                         ) {
                             fired['condition-duration'] = true;
-                            notes['condition-duration'] = `isTemporary=true durationDisplay="${durDisplay}" fullName="${fullName}" natureClass="nature-harmful"`;
+                            notes[
+                                'condition-duration'
+                            ] = `isTemporary=true durationDisplay="${durDisplay}" fullName="${fullName}" natureClass="nature-harmful"`;
                         } else {
-                            notes['condition-duration'] =
-                                `expected isTemp=true dur="4 ..." fullName="probe-condition (×3)" natureClass="nature-harmful", got isTemp=${String(isTemp)} dur=${JSON.stringify(durDisplay)} fullName=${JSON.stringify(fullName)} natureClass=${JSON.stringify(natureClass)}`;
+                            notes[
+                                'condition-duration'
+                            ] = `expected isTemp=true dur="4 ..." fullName="probe-condition (×3)" natureClass="nature-harmful", got isTemp=${String(
+                                isTemp,
+                            )} dur=${JSON.stringify(durDisplay)} fullName=${JSON.stringify(fullName)} natureClass=${JSON.stringify(natureClass)}`;
                         }
                     }
                 } catch (err) {
@@ -835,10 +854,15 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             icon === 'fa-crosshairs'
                         ) {
                             fired['weapon-modification-restrictions'] = true;
-                            notes['weapon-modification-restrictions'] = `restrictionsLabel="${restrictionsLabel}" hasModifiers=true categoryIcon="fa-crosshairs" (Set→Array clean round-trip ok)`;
+                            notes[
+                                'weapon-modification-restrictions'
+                            ] = `restrictionsLabel="${restrictionsLabel}" hasModifiers=true categoryIcon="fa-crosshairs" (Set→Array clean round-trip ok)`;
                         } else {
-                            notes['weapon-modification-restrictions'] =
-                                `expected label⊇Classes:/Types: hasMods=true icon=fa-crosshairs, got label=${JSON.stringify(restrictionsLabel)} hasMods=${String(hasMods)} icon=${JSON.stringify(icon)}`;
+                            notes[
+                                'weapon-modification-restrictions'
+                            ] = `expected label⊇Classes:/Types: hasMods=true icon=fa-crosshairs, got label=${JSON.stringify(
+                                restrictionsLabel,
+                            )} hasMods=${String(hasMods)} icon=${JSON.stringify(icon)}`;
                         }
                     }
                 } catch (err) {
@@ -860,8 +884,8 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
         }, DATA_ITEM_MODEL_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

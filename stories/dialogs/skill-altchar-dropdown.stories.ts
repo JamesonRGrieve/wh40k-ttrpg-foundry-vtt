@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
+import { resolveUntrainedTarget } from '../../src/module/rules/untrained-skill.ts';
 import contextPanelSrc from '../../src/templates/prompt/unified/context-panel.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
-import { resolveUntrainedTarget } from '../../src/module/rules/untrained-skill.ts';
 
 initializeStoryHandlebars();
 

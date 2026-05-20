@@ -36,9 +36,8 @@ test.describe.serial('Radical Services dialog (#89)', () => {
             }
 
             try {
-                const mod: any = await import(
-                    /* @vite-ignore */ '/systems/wh40k-rpg/module/applications/prompts/radical-services-dialog.js' as unknown as string
-                );
+                const modUrl = '/systems/wh40k-rpg/module/applications/prompts/radical-services-dialog.js';
+                const mod: any = await import(/* @vite-ignore */ modUrl);
                 const Dialog = mod.default;
                 const dialog = new Dialog(actor);
                 await dialog.render({ force: true });
@@ -47,7 +46,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
                     return { ok: false, reason: 'dialog.element not an HTMLElement' };
                 }
                 const rows = root.querySelectorAll('[data-action="selectService"]');
-                const attempt = root.querySelector('[data-action="attemptRequisition"]') as HTMLButtonElement | null;
+                const attempt = root.querySelector<HTMLButtonElement>('[data-action="attemptRequisition"]');
                 const cancel = root.querySelector('[data-action="cancel"]');
                 const snap = {
                     rowCount: rows.length,

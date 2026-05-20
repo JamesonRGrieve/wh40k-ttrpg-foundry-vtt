@@ -63,7 +63,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
         }
 
         const fateAfter = actor.system?.fate?.value ?? 0;
-        const effects: Array<{ flags?: { wh40k?: { source?: string } } }> = Array.from(actor.effects ?? []) as Array<{ flags?: { wh40k?: { source?: string } } }>;
+        const effects: Array<{ flags?: { wh40k?: { source?: string } } }> = Array.from(actor.effects ?? []);
         const fanaticEffect = effects.find((e) => e?.flags?.wh40k?.source === 'fanatic-death-to-oppose');
 
         return {
@@ -84,7 +84,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
 
     // Capture JUST the button element clearly (see tests/storybook/issue-191-endeavour-tracker.spec.ts).
     const buttonLocator = page.locator('.wh40k-fanatic-button').first();
-    if (await buttonLocator.count() > 0) {
+    if ((await buttonLocator.count()) > 0) {
         await buttonLocator.screenshot({ path: '.e2e-screenshots/fanatic-button-element.png' });
     }
 

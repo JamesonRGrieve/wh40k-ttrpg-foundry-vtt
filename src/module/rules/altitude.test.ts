@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { ALTITUDE_PROFILES, canChangeAltitude, FLYER_AIRBORNE_FIRE_PENALTY, resolveFlyerFireModifier } from './altitude.ts';
 
 describe('flyer altitude rules (#99)', () => {

@@ -9,7 +9,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import navigatorPowerChatSrc from './navigator-power-chat.hbs?raw';
+import { renderSheet } from '../../../stories/test-helpers';
 import {
     NAVIGATOR_LEVEL_BONUS,
     type NavigatorPowerLevel,
@@ -17,7 +17,7 @@ import {
     resolveNavigatorPower,
     resolveOpposedNavigatorPower,
 } from '../../module/rules/navigator-powers';
-import { renderSheet } from '../../../stories/test-helpers';
+import navigatorPowerChatSrc from './navigator-power-chat.hbs?raw';
 
 const meta: Meta = {
     title: 'Rules / Navigator Powers (#194)',
@@ -120,8 +120,7 @@ function navigatorContext(opts: {
 
 const LIDLESS_STARE_LEVELS = {
     novice: {
-        effect:
-            'Full Action. Opposed Willpower vs. each viewer. On more DoS, victim suffers 1d10 + WPB Energy damage (ignores armour / TB) and is Stunned for 1 round. Inflicts 1 Fatigue on the Navigator; +1 more on a failure.',
+        effect: 'Full Action. Opposed Willpower vs. each viewer. On more DoS, victim suffers 1d10 + WPB Energy damage (ignores armour / TB) and is Stunned for 1 round. Inflicts 1 Fatigue on the Navigator; +1 more on a failure.',
     },
     adept: {
         effect: 'As above, but damage becomes 2d10 + WPB and Stun is 1d5 rounds; victims also suffer 1d5 Insanity.',
@@ -254,8 +253,7 @@ export const OpposedTie: Story = {
                 sustain: 'Yes — power persists while the Navigator does not use another Navigator Power and the target remains in range / line of sight.',
                 levels: {
                     novice: {
-                        effect:
-                            'Opposed Willpower vs. one target (≤5 m × PerB). On success, target is locked while the Navigator sustains; psyker powers / Daemonic Presence require beating the Navigator anew each time.',
+                        effect: 'Opposed Willpower vs. one target (≤5 m × PerB). On success, target is locked while the Navigator sustains; psyker powers / Daemonic Presence require beating the Navigator anew each time.',
                     },
                     adept: { effect: 'Range becomes 20 m × PerB; daemons take 2d10 damage from Warp Instability.' },
                     master: { effect: 'Line of sight no longer required; daemons taking Warp Instability damage are destroyed.' },

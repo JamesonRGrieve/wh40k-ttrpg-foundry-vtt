@@ -104,15 +104,9 @@ export interface SmiteMeleeHitResult {
  * rider itself only ever adds, never subtracts.
  */
 export function applySmiteTheUnholyBonus(input: SmiteMeleeHitInput): SmiteMeleeHitResult {
-    const rating = Math.max(
-        0,
-        Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(input.targetFearRating) ? input.targetFearRating : 0)),
-    );
+    const rating = Math.max(0, Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(input.targetFearRating) ? input.targetFearRating : 0)));
     const baseDamage = Math.max(0, Math.trunc(Number.isFinite(input.baseDamage) ? input.baseDamage : 0));
-    const basePenetration = Math.max(
-        0,
-        Math.trunc(Number.isFinite(input.basePenetration) ? input.basePenetration : 0),
-    );
+    const basePenetration = Math.max(0, Math.trunc(Number.isFinite(input.basePenetration) ? input.basePenetration : 0));
     if (rating === 0) {
         return { damage: baseDamage, penetration: basePenetration, bonusApplied: 0, isNoOp: true };
     }

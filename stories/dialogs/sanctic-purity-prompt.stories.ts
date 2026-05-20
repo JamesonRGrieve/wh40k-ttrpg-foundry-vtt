@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/sanctic-purity-prompt.hbs?raw';
 import { SANCTIC_PURITY_FATE_COST } from '../../src/module/rules/sanctic-purity.ts';
+import templateSrc from '../../src/templates/prompt/sanctic-purity-prompt.hbs?raw';
 import { clickAction, renderSheet } from '../test-helpers';
 
 /**

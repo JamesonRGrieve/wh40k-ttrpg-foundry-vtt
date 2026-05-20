@@ -105,9 +105,7 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                 let probeItemUuid: string | null = null;
                 let probeItemName: string | null = null;
                 try {
-                    const packs: any[] = Array.from(g.game?.packs ?? []).filter(
-                        (p: any) => p?.metadata?.system === 'wh40k-rpg' && p?.documentName === 'Item',
-                    );
+                    const packs: any[] = Array.from(g.game?.packs ?? []).filter((p: any) => p?.metadata?.system === 'wh40k-rpg' && p?.documentName === 'Item');
                     for (const pack of packs) {
                         try {
                             const index = await pack.getIndex({ fields: ['name'] });
@@ -177,7 +175,7 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                             if (pfx !== '') prefixes.add(pfx);
                         }
                         // Prefer dh2 if present (canonical default); otherwise pick any.
-                        const targetPrefix = prefixes.has('dh2') ? 'dh2' : (Array.from(prefixes)[0] ?? '');
+                        const targetPrefix = prefixes.has('dh2') ? 'dh2' : Array.from(prefixes)[0] ?? '';
                         if (targetPrefix === '') {
                             record('browser-filter-by-system', false, 'no pack prefixes discovered');
                         } else {
@@ -242,7 +240,7 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                         record('browser-select-result', ok, null);
                         // Best-effort: close any opened sheets so they don't
                         // pile up across the test.
-                        const wins = Object.values(g.ui?.windows ?? {}) as any[];
+                        const wins = Object.values(g.ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                         for (const w of wins) {
                             const id: string = w?.id ?? '';
                             if (id.includes('Item') || id.includes('item-sheet') || id.startsWith('app-')) {
@@ -283,7 +281,11 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                             resolved = uuidNameCache.getName(probeItemUuid);
                         }
                         const ok = typeof resolved === 'string' && resolved === probeItemName;
-                        record('uuid-cache-resolves-name', ok, ok ? null : `getName returned ${JSON.stringify(resolved)} (expected ${JSON.stringify(probeItemName)})`);
+                        record(
+                            'uuid-cache-resolves-name',
+                            ok,
+                            ok ? null : `getName returned ${JSON.stringify(resolved)} (expected ${JSON.stringify(probeItemName)})`,
+                        );
                     } catch (err) {
                         record('uuid-cache-resolves-name', false, `getName threw: ${String((err as Error)?.message ?? err)}`);
                     }
@@ -300,7 +302,11 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                         // Also drive the early-return branch (no token in text).
                         const passthrough: string = uuidNameCache.expandTemplates('plain text with no tokens');
                         const passthroughOk = passthrough === 'plain text with no tokens';
-                        record('uuid-cache-expand-templates', ok && passthroughOk, ok && passthroughOk ? null : `expand=${JSON.stringify(expanded)} passthroughOk=${passthroughOk}`);
+                        record(
+                            'uuid-cache-expand-templates',
+                            ok && passthroughOk,
+                            ok && passthroughOk ? null : `expand=${JSON.stringify(expanded)} passthroughOk=${passthroughOk}`,
+                        );
                     } catch (err) {
                         record('uuid-cache-expand-templates', false, `expandTemplates threw: ${String((err as Error)?.message ?? err)}`);
                     }
@@ -349,7 +355,13 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
 // Per-side flow keys, injected into the page via globalThis so the
 // import-failure branches in the evaluate body can iterate without
 // duplicating the canonical FLOWS list. Kept in sync with FLOWS above.
-const FLOWS_BROWSER: readonly string[] = ['browser-renders', 'browser-filter-by-pack', 'browser-filter-by-system', 'browser-search-by-name', 'browser-select-result'];
+const FLOWS_BROWSER: readonly string[] = [
+    'browser-renders',
+    'browser-filter-by-pack',
+    'browser-filter-by-system',
+    'browser-search-by-name',
+    'browser-select-result',
+];
 const FLOWS_CACHE: readonly string[] = ['uuid-cache-resolves-name', 'uuid-cache-expand-templates', 'uuid-cache-warm'];
 
 test.describe.serial('compendium browser + uuid name cache (Tier B)', () => {

@@ -11,14 +11,10 @@
  * module; this file owns no game logic.
  */
 
+import { MEDICAE_MECHADENDRITE, actorHasMedicaeMechadendrite, staunchBloodLoss } from '../../rules/medicae-mechadendrite.ts';
+import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
-import {
-    MEDICAE_MECHADENDRITE,
-    actorHasMedicaeMechadendrite,
-    staunchBloodLoss,
-} from '../../rules/medicae-mechadendrite.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -46,9 +42,9 @@ export default class MedicaeMechadendriteDialog extends ApplicationV2Mixin(Appli
         classes: ['wh40k-rpg', 'dialog', 'medicae-mechadendrite-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            staunchBloodLoss: MedicaeMechadendriteDialog.#onStaunch as ActionHandler,
+            staunchBloodLoss: MedicaeMechadendriteDialog.#onStaunch,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: MedicaeMechadendriteDialog.#onCancel as ActionHandler,
+            cancel: MedicaeMechadendriteDialog.#onCancel,
         },
         position: { width: 460 },
         window: {

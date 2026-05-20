@@ -37,7 +37,9 @@ test.describe.serial('DaemonhostBindingDialog (Tier B)', () => {
 
                 try {
                     const mod = await import(moduleUrl);
-                    const Cls = mod.default as { new (): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> } };
+                    const Cls = mod.default as {
+                        new (): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
+                    };
                     if (typeof Cls !== 'function') {
                         return { rendered, tierCardCount, hasBindButton, error: 'default export not a constructor' };
                     }

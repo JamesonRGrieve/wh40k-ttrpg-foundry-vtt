@@ -540,7 +540,7 @@ describe('OriginPathBuilder commit (issue #206)', () => {
             showCharacteristics: false,
             showEquipment: true,
             systemConfig: { equipmentStep: null },
-            equipmentSelections: new Map<string, unknown>(),
+            equipmentSelections: new Map<string>(),
             gameSystem: 'dh2e',
         };
 
@@ -576,7 +576,7 @@ describe('OriginPathBuilder commit (issue #206)', () => {
             systemConfig: {
                 equipmentStep: { key: 'equipment', step: 'equipment', icon: 'fa-box', descKey: 'EquipmentDesc', stepIndex: 6 },
             },
-            equipmentSelections: new Map<string, unknown>(),
+            equipmentSelections: new Map<string>(),
             gameSystem: 'dh2e',
         };
 
@@ -675,11 +675,7 @@ describe('OriginPathBuilder._getAptitudeCollisions (issues #205 & #215)', () => 
         _actorItemId?: string | null;
     };
 
-    function makeCollisionHost(opts: {
-        selections: Array<[string, AptSel]>;
-        actorAptitudes?: string[];
-        overrides?: Map<string, string>;
-    }) {
+    function makeCollisionHost(opts: { selections: Array<[string, AptSel]>; actorAptitudes?: string[]; overrides?: Map<string, string> }) {
         const proto = OriginPathBuilder.prototype;
         return {
             selections: new Map(opts.selections),
@@ -724,10 +720,7 @@ describe('OriginPathBuilder._getAptitudeCollisions (issues #205 & #215)', () => 
     it('#215: does NOT warn on a committed aptitude-typed choice already reflected in the actor', () => {
         const host = makeCollisionHost({
             selections: [
-                [
-                    'background',
-                    committed({ choices: [{ type: 'aptitude', label: 'Aptitude', options: [{ value: 'Tech' }] }] }, { Aptitude: ['Tech'] }),
-                ],
+                ['background', committed({ choices: [{ type: 'aptitude', label: 'Aptitude', options: [{ value: 'Tech' }] }] }, { Aptitude: ['Tech'] })],
             ],
             actorAptitudes: ['Tech'],
         });
@@ -885,10 +878,7 @@ describe('OriginPathBuilder._collectAvailableAptitudePool (#205, #216)', () => {
             _getSelectionSystem: (o: { system: unknown }) => o.system,
             _aptitudeKey: proto._aptitudeKey,
         };
-        const pool = proto._collectAvailableAptitudePool.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Set<string>(['  WILLPOWER']),
-        );
+        const pool = proto._collectAvailableAptitudePool.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Set<string>(['  WILLPOWER']));
         // 'Willpower' excluded by the taken set; 'Tech' / 'Offence' filtered
         // out because they are NOT characteristic aptitudes; 'Strength' and
         // 'Fellowship' kept. The fallback top-up adds the other six
@@ -899,7 +889,17 @@ describe('OriginPathBuilder._collectAvailableAptitudePool (#205, #216)', () => {
         expect(pool).not.toContain('Offence');
         expect(pool).not.toContain('Willpower');
         // Every entry must be one of the nine generation characteristics.
-        const allowed = new Set(['Weapon Skill', 'Ballistic Skill', 'Strength', 'Toughness', 'Agility', 'Intelligence', 'Perception', 'Willpower', 'Fellowship']);
+        const allowed = new Set([
+            'Weapon Skill',
+            'Ballistic Skill',
+            'Strength',
+            'Toughness',
+            'Agility',
+            'Intelligence',
+            'Perception',
+            'Willpower',
+            'Fellowship',
+        ]);
         for (const apt of pool) expect(allowed.has(apt)).toBe(true);
     });
 
@@ -1124,10 +1124,13 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
                     const parts = path.split('.').slice(1); // drop leading "system"
                     let cursor: Record<string, unknown> = system as unknown as Record<string, unknown>;
                     for (let i = 0; i < parts.length - 1; i++) {
-                        const seg = parts[i] as string;
+                        const seg = parts[i];
+                        if (seg === undefined) throw new Error(`Unexpected undefined path segment at index ${i} for path '${path}'.`);
                         cursor = cursor[seg] as Record<string, unknown>;
                     }
-                    cursor[parts[parts.length - 1] as string] = value;
+                    const tail = parts[parts.length - 1];
+                    if (tail === undefined) throw new Error(`Empty path: '${path}'.`);
+                    cursor[tail] = value;
                 }
                 return actor;
             }),

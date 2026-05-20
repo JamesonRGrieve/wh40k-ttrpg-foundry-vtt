@@ -15,9 +15,9 @@
  * See GitHub issue #91.
  */
 
+import { MUTANT_STARTING_CORRUPTION } from '../../rules/chaos-backgrounds.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import { MUTANT_STARTING_CORRUPTION } from '../../rules/chaos-backgrounds.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -69,9 +69,9 @@ export default class MutantBackgroundDialog extends ApplicationV2Mixin(Applicati
         classes: ['wh40k-rpg', 'dialog', 'mutant-background-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            apply: MutantBackgroundDialog.#onApply as ActionHandler,
+            apply: MutantBackgroundDialog.#onApply,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: MutantBackgroundDialog.#onCancel as ActionHandler,
+            cancel: MutantBackgroundDialog.#onCancel,
         },
         position: {
             width: 560,
@@ -140,10 +140,7 @@ export default class MutantBackgroundDialog extends ApplicationV2Mixin(Applicati
             gameSystem: 'dh2e',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/mutant-background-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mutant-background-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];

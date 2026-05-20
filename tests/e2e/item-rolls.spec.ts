@@ -81,21 +81,12 @@ async function probeItemRoll(page: import('@playwright/test').Page, actorId: str
                     return { chatDelta: 0, returned: 'falsy' as const, error: 'actor or createEmbeddedDocuments unavailable' };
                 }
                 const created = await actor.createEmbeddedDocuments('Item', [{ name: `probe-${itemType}`, type: itemType, system: itemSystem }]);
-                const item = created?.[0] as
-                    | {
-                          id?: string;
-                          rollTalent?: () => Promise<unknown>;
-                          rollNavigatorPower?: () => Promise<unknown>;
-                          rollOrder?: () => Promise<unknown>;
-                          rollRitual?: () => Promise<unknown>;
-                          delete?: () => Promise<unknown>;
-                      }
-                    | undefined;
+                const item = created?.[0];
                 if (!item) {
                     return { chatDelta: 0, returned: 'falsy' as const, error: 'createEmbeddedDocuments returned no item' };
                 }
                 const before = g.game?.messages?.size ?? 0;
-                const fn = item[method as 'rollTalent' | 'rollNavigatorPower' | 'rollOrder' | 'rollRitual'];
+                const fn = item[method];
                 if (typeof fn !== 'function') {
                     await item.delete?.();
                     return { chatDelta: 0, returned: 'falsy' as const, error: `item.${method} is not a function` };

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/daemonhost-binding-dialog.hbs?raw';
-import { DAEMONHOST_TIERS } from '../../src/module/rules/daemonhost.ts';
 import type { BindingStrength } from '../../src/module/rules/daemon-weapon.ts';
+import { DAEMONHOST_TIERS } from '../../src/module/rules/daemonhost.ts';
+import templateSrc from '../../src/templates/prompt/daemonhost-binding-dialog.hbs?raw';
 import { clickAction, renderSheet } from '../test-helpers';
 
 const TIER_ORDER: readonly BindingStrength[] = ['minor', 'lesser', 'normal', 'greater', 'major'] as const;

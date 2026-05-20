@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -108,7 +107,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
             if (!Actor?.create) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'characteristic-total-and-bonus::dh2e': 'Actor.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'characteristic-total-and-bonus::dh2e': 'Actor.create unavailable' },
                 };
             }
 
@@ -640,7 +639,9 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             note(
                                 'roll-data-exposes-characteristic-keys::dh2e',
-                                `expected WS=40 WSB=4 weaponSkill=40 pr=5, got WS=${String(ws)} WSB=${String(wsb)} weaponSkill=${String(full)} pr=${String(pr)}`,
+                                `expected WS=40 WSB=4 weaponSkill=40 pr=5, got WS=${String(ws)} WSB=${String(wsb)} weaponSkill=${String(full)} pr=${String(
+                                    pr,
+                                )}`,
                             );
                         }
                     }
@@ -662,8 +663,8 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
         }, DATA_ACTOR_MODEL_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

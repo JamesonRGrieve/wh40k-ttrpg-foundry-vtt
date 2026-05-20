@@ -11,9 +11,9 @@
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
+import panelSrc from '../../src/templates/actor/panel/grapple-controller-panel.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
-import panelSrc from '../../src/templates/actor/panel/grapple-controller-panel.hbs?raw';
 
 initializeStoryHandlebars();
 

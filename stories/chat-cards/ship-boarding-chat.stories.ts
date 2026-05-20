@@ -13,8 +13,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import shipBoardingChatSrc from '../../src/templates/chat/ship-boarding-chat.hbs?raw';
 import { resolveBoarding, type BoardingResolution } from '../../src/module/rules/ship-boarding.ts';
+import shipBoardingChatSrc from '../../src/templates/chat/ship-boarding-chat.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 

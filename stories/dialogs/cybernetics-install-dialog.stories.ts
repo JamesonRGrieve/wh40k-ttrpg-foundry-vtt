@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/cybernetics-install-dialog.hbs?raw';
-import { rollDifficulties } from '../../src/module/rules/difficulties.ts';
 import type { CyberneticCraftsmanship, CyberneticInstallSite } from '../../src/module/rules/cybernetics.ts';
+import { rollDifficulties } from '../../src/module/rules/difficulties.ts';
+import templateSrc from '../../src/templates/prompt/cybernetics-install-dialog.hbs?raw';
 import { renderSheet } from '../test-helpers';
 
 interface Args {

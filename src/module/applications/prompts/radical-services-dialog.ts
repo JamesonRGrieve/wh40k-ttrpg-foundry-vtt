@@ -7,11 +7,7 @@
  */
 
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
-import {
-    RADICAL_SERVICES,
-    type RadicalServiceDefinition,
-    type RadicalServiceId,
-} from '../../rules/radical-services.ts';
+import { RADICAL_SERVICES, type RadicalServiceDefinition, type RadicalServiceId } from '../../rules/radical-services.ts';
 import { getRequisitionTestTarget } from '../../rules/requisition-test.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -72,7 +68,7 @@ export default class RadicalServicesDialog extends ApplicationV2Mixin(Applicatio
         classes: ['wh40k-rpg', 'dialog', 'radical-services-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectService: RadicalServicesDialog.#onSelectService as ActionHandler,
+            selectService: RadicalServicesDialog.#onSelectService,
             // eslint-disable-next-line @typescript-eslint/unbound-method
             attemptRequisition: RadicalServicesDialog.#onAttemptRequisition as ActionHandler,
             // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -102,7 +98,7 @@ export default class RadicalServicesDialog extends ApplicationV2Mixin(Applicatio
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<RadicalServicesContext> {
         const context = (await super._prepareContext(options)) as RadicalServicesContext;
         const influence = this.#getInfluence();
-        const services: ServiceRow[] = (Object.values(RADICAL_SERVICES) as RadicalServiceDefinition[]).map((s) => {
+        const services: ServiceRow[] = Object.values(RADICAL_SERVICES).map((s) => {
             const { target } = getRequisitionTestTarget({ influence, availability: s.availability });
             return {
                 id: s.id,
@@ -185,10 +181,7 @@ export default class RadicalServicesDialog extends ApplicationV2Mixin(Applicatio
             subtletyDelta: success ? service.subtletyOnHire : 0,
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/radical-services-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/radical-services-chat.hbs', templateData);
 
         const chatData = {
             user: game.user.id,
@@ -199,7 +192,7 @@ export default class RadicalServicesDialog extends ApplicationV2Mixin(Applicatio
         };
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts loose document-data shape
-        await ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]);
+        await ChatMessage.create(chatData);
 
         await this.close();
     }

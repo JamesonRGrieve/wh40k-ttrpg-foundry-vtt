@@ -100,12 +100,7 @@ export const WITHIN_HOMEWORLDS: Record<WithinHomeworldId, WithinHomeworldDef> = 
         },
         keyAptitudes: ['weaponSkill'],
         wounds: { flat: 9, dice: 1, faces: 5 },
-        recommendedBackgrounds: [
-            'Adepta Sororitas',
-            'Adeptus Administratum',
-            'Adeptus Ministorum',
-            'Imperial Guard',
-        ],
+        recommendedBackgrounds: ['Adepta Sororitas', 'Adeptus Administratum', 'Adeptus Ministorum', 'Imperial Guard'],
     },
     frontierWorld: {
         id: 'frontierWorld',

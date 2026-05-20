@@ -15,8 +15,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import shipHarChatSrc from '../../src/templates/chat/ship-hit-and-run-chat.hbs?raw';
 import { resolveHitAndRun, type HitAndRunResolution } from '../../src/module/rules/ship-hit-and-run.ts';
+import shipHarChatSrc from '../../src/templates/chat/ship-hit-and-run-chat.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 

@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    WITHOUT_HOMEWORLDS,
-    getWithoutHomeworld,
-    listWithoutHomeworlds,
-} from './without-homeworlds';
+import { WITHOUT_HOMEWORLDS, getWithoutHomeworld, listWithoutHomeworlds } from './without-homeworlds';
 
 /**
  * Contract tests for the Without-supplement new home-world registry

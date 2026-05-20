@@ -11,13 +11,9 @@
  * See GitHub issue #65.
  */
 
+import { MAX_FEAR_RATING, getShockTableRollModifier, resolveFearTest } from '../../rules/fear.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import {
-    MAX_FEAR_RATING,
-    getShockTableRollModifier,
-    resolveFearTest,
-} from '../../rules/fear.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -101,13 +97,13 @@ export default class FearTestDialog extends ApplicationV2Mixin(ApplicationV2 as 
         classes: ['wh40k-rpg', 'dialog', 'fear-test-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectObserver: FearTestDialog.#onSelectObserver as ActionHandler,
+            selectObserver: FearTestDialog.#onSelectObserver,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            updateInputs: FearTestDialog.#onUpdateInputs as ActionHandler,
+            updateInputs: FearTestDialog.#onUpdateInputs,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            rollTest: FearTestDialog.#onRollTest as ActionHandler,
+            rollTest: FearTestDialog.#onRollTest,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: FearTestDialog.#onCancel as ActionHandler,
+            cancel: FearTestDialog.#onCancel,
         },
         position: { width: 520 },
         window: {
@@ -187,7 +183,7 @@ export default class FearTestDialog extends ApplicationV2Mixin(ApplicationV2 as 
         event.preventDefault();
 
         const observer = findObserver(this.selectedObserverId);
-        const observerName = observer?.name ?? (game.i18n?.localize?.('WH40K.Fear.ObserverLabel') ?? 'Observer');
+        const observerName = observer?.name ?? game.i18n?.localize?.('WH40K.Fear.ObserverLabel') ?? 'Observer';
 
         const { target, isNoOp } = resolveFearTest({
             willpowerTotal: this.willpower,
@@ -215,10 +211,7 @@ export default class FearTestDialog extends ApplicationV2Mixin(ApplicationV2 as 
             gameSystem: 'dh2e',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/fear-test-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/fear-test-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];

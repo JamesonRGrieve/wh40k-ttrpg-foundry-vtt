@@ -231,12 +231,8 @@ function buildCombatPanelContext(): CombatPanelContext {
         rangedAttacks: [],
         dh: {
             combatActions: {
-                movement: [
-                    { key: 'halfMove', label: 'Half Move', description: 'Move half your AB.', type: 'Half', icon: 'fa-walking' },
-                ],
-                utility: [
-                    { key: 'ready', label: 'Ready', description: 'Ready a stowed item.', type: 'Half', icon: 'fa-tools' },
-                ],
+                movement: [{ key: 'halfMove', label: 'Half Move', description: 'Move half your AB.', type: 'Half', icon: 'fa-walking' }],
+                utility: [{ key: 'ready', label: 'Ready', description: 'Ready a stowed item.', type: 'Half', icon: 'fa-tools' }],
             },
         },
     };
@@ -275,7 +271,7 @@ export const Issue19NonReactionLocalDescription: Story = {
     args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'combat' }),
     render: () => renderCombatPanel(),
     play: async ({ canvasElement }) => {
-        const root = canvasElement as HTMLElement;
+        const root = canvasElement;
         // The combat-talent button must route through the new local action,
         // not the legacy itemVocalize (which auto-posted to chat).
         const talentButton = root.querySelector<HTMLElement>('[data-action="combatTalentDescribe"][data-item-id="talent-iron-jaw"]');

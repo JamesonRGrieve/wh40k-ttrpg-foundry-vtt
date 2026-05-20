@@ -33,7 +33,9 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
 
                 try {
                     const mod = await import(moduleUrl);
-                    const Cls = mod.default as { new (opts?: unknown): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> } };
+                    const Cls = mod.default as {
+                        new (opts?: unknown): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
+                    };
                     if (typeof Cls !== 'function') {
                         return { rendered, grenadeIds, hasThrowButton, error: 'default export not a constructor' };
                     }

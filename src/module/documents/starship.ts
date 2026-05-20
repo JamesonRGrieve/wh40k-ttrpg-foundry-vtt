@@ -349,10 +349,7 @@ export class WH40KStarship extends WH40KBaseActor {
         if (!this.usesRTCrewEconomy) return;
         const before = this._readShipCombatState();
         const next = replenishBetweenCombatRule(before);
-        if (
-            next.crew.morale.value === before.crew.morale.value &&
-            (this.system.priorTurnDamage?.turn ?? 0) === 0
-        ) {
+        if (next.crew.morale.value === before.crew.morale.value && (this.system.priorTurnDamage?.turn ?? 0) === 0) {
             return;
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view

@@ -58,8 +58,8 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
      */
     get stateLabel(): string {
         const map: Record<string, string> = {
-            active: 'WH40K.Lead.State.Active',
-            pursued: 'WH40K.Lead.State.Pursued',
+            'active': 'WH40K.Lead.State.Active',
+            'pursued': 'WH40K.Lead.State.Pursued',
             'dead-end': 'WH40K.Lead.State.DeadEnd',
         };
         const key = map[this.state] ?? 'WH40K.Lead.State.Active';
@@ -71,8 +71,8 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
      */
     get stateIcon(): string {
         const icons: Record<string, string> = {
-            active: 'fa-magnifying-glass',
-            pursued: 'fa-route',
+            'active': 'fa-magnifying-glass',
+            'pursued': 'fa-route',
             'dead-end': 'fa-ban',
         };
         return icons[this.state] ?? 'fa-circle-question';

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
+import { getTryAgainAdvice } from '../../src/module/rules/trying-again.ts';
 import modifiersSrc from '../../src/templates/prompt/unified/modifiers.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
-import { getTryAgainAdvice } from '../../src/module/rules/trying-again.ts';
 
 initializeStoryHandlebars();
 

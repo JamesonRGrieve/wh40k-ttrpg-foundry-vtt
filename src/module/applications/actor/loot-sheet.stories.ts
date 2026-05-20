@@ -9,10 +9,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-
-import lootSrc from '../../../templates/actor/loot/loot-sheet.hbs?raw';
 import { renderTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import lootSrc from '../../../templates/actor/loot/loot-sheet.hbs?raw';
 
 initializeStoryHandlebars();
 
@@ -64,7 +63,7 @@ export const Populated: Story = {
         await expect(canvas.getByText('Dropped: Bolt Pistol')).toBeVisible();
         await expect(canvas.getByText('Bolt Pistol')).toBeVisible();
         await expect(canvas.getByText('Bolt Shells')).toBeVisible();
-        const takeAll = canvasElement.querySelector('[data-action="pickupAll"]');
+        const takeAll = canvasElement.querySelector<HTMLButtonElement>('[data-action="pickupAll"]');
         await expect(takeAll).not.toBeNull();
         await expect((takeAll as HTMLButtonElement).disabled).toBe(false);
         // Per-row take/delete control wired to the inherited base action.
@@ -77,7 +76,7 @@ export const Empty: Story = {
     args: emptyCtx,
     render: (args) => renderLootSheet(args),
     play: async ({ canvasElement }) => {
-        const takeAll = canvasElement.querySelector('[data-action="pickupAll"]') as HTMLButtonElement | null;
+        const takeAll = canvasElement.querySelector<HTMLButtonElement>('[data-action="pickupAll"]');
         await expect(takeAll).not.toBeNull();
         await expect(takeAll?.disabled).toBe(true);
         await expect(canvasElement.querySelectorAll('tr[data-item-id]').length).toBe(0);

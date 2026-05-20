@@ -357,7 +357,7 @@ Hooks.on('renderChatMessageHTML', (message: ChatMessageWH40K, html: HTMLElement,
     // Add click listeners for WH40K-specific actions
     // Note: Existing roll-control__* listeners are handled by BasicActionManager
     html.querySelectorAll(
-        '[data-action]:not(.roll-control__hide-control):not(.roll-control__refund):not(.roll-control__fate-reroll):not(.roll-control__assign-damage):not(.roll-control__apply-damage)',
+        '[data-action]:not(.roll-control__hide-control):not(.roll-control__refund):not(.roll-control__fate-reroll):not(.roll-control__assign-damage):not(.roll-control__apply-damage):not(.roll-control__horde-break-test)',
     ).forEach((btn: Element) => {
         btn.addEventListener('click', (event: Event) => {
             void ChatMessageWH40K.onChatCardAction(event, html);

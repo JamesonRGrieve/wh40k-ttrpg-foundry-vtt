@@ -16,8 +16,8 @@ const LeadSheet = defineSimpleItemSheet({
     tabs: [],
     extraContext: {
         states: {
-            active: 'WH40K.Lead.State.Active',
-            pursued: 'WH40K.Lead.State.Pursued',
+            'active': 'WH40K.Lead.State.Active',
+            'pursued': 'WH40K.Lead.State.Pursued',
             'dead-end': 'WH40K.Lead.State.DeadEnd',
         },
         leadTypes: {

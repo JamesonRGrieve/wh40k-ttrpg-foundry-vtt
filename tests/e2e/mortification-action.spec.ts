@@ -63,7 +63,7 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
         }
 
         const fatigueAfter = actor.system?.fatigue?.value ?? 0;
-        const effects: Array<{ flags?: { wh40k?: { source?: string } } }> = Array.from(actor.effects ?? []) as Array<{ flags?: { wh40k?: { source?: string } } }>;
+        const effects: Array<{ flags?: { wh40k?: { source?: string } } }> = Array.from(actor.effects ?? []);
         const mortificationEffect = effects.find((e) => e?.flags?.wh40k?.source === 'mortification');
 
         return {

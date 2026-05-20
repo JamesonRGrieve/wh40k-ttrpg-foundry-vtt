@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    BEYOND_HOMEWORLDS,
-    getBeyondHomeworld,
-    listBeyondHomeworlds,
-} from './beyond-homeworlds';
+import { BEYOND_HOMEWORLDS, getBeyondHomeworld, listBeyondHomeworlds } from './beyond-homeworlds';
 
 /**
  * Contract tests for the Beyond-supplement new home-world registry

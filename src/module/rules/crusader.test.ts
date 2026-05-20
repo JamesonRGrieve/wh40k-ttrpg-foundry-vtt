@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    SMITE_THE_UNHOLY_FATE_COST,
-    applySmiteTheUnholyBonus,
-    hasCrusaderRole,
-    resolveSmiteTheUnholyDoS,
-} from './crusader';
+import { SMITE_THE_UNHOLY_FATE_COST, applySmiteTheUnholyBonus, hasCrusaderRole, resolveSmiteTheUnholyDoS } from './crusader';
 
 /**
  * Contract tests for the Crusader role rider (#141, beyond.md p.34).
@@ -82,8 +77,8 @@ describe('Crusader role — Smite the Unholy (#141, beyond.md p.34)', () => {
             expect(hasCrusaderRole([{ name: 'Bodyguard' }, { name: 'Deny the Witch' }])).toBe(false);
         });
         it('tolerates items with null / undefined names without throwing', () => {
-            expect(hasCrusaderRole([{ name: null }, { name: undefined }, { name: 'Crusader' }])).toBe(true);
-            expect(hasCrusaderRole([{ name: null }, { name: undefined }])).toBe(false);
+            expect(hasCrusaderRole([{ name: null }, {}, { name: 'Crusader' }])).toBe(true);
+            expect(hasCrusaderRole([{ name: null }, {}])).toBe(false);
         });
     });
 });

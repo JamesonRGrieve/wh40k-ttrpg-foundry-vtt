@@ -47,9 +47,17 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     const Actor = (globalThis as any).Actor;
                     if (typeof Actor?.create !== 'function') {
                         return {
-                            actorCreated, sheetRendered, hullBefore, hullAfter,
-                            crewBefore, crewAfter, moraleBefore, moraleAfter,
-                            cancelRestored, replenishedMorale, nonRtCrewUnchanged,
+                            actorCreated,
+                            sheetRendered,
+                            hullBefore,
+                            hullAfter,
+                            crewBefore,
+                            crewAfter,
+                            moraleBefore,
+                            moraleAfter,
+                            cancelRestored,
+                            replenishedMorale,
+                            nonRtCrewUnchanged,
                             error: 'Actor.create not available',
                         };
                     }
@@ -92,8 +100,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                         if (typeof actor?.cancelPriorTurnDamage === 'function') {
                             await actor.cancelPriorTurnDamage();
                             cancelRestored =
-                                Number(actor?.system?.crew?.population ?? 0) === crewBefore &&
-                                Number(actor?.system?.crew?.morale?.value ?? 0) === moraleBefore;
+                                Number(actor?.system?.crew?.population ?? 0) === crewBefore && Number(actor?.system?.crew?.morale?.value ?? 0) === moraleBefore;
                         }
                     } finally {
                         if (game?.combats) game.combats.active = realActive;
@@ -137,7 +144,9 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                             if (crewNav && typeof actor.sheet.changeTab === 'function') {
                                 try {
                                     actor.sheet.changeTab('crew', 'primary');
-                                } catch { /* ignore */ }
+                                } catch {
+                                    /* ignore */
+                                }
                             }
                             sheetRendered = crewTab !== null;
                         }
@@ -154,9 +163,12 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 return {
                     actorCreated,
                     sheetRendered,
-                    hullBefore, hullAfter,
-                    crewBefore, crewAfter,
-                    moraleBefore, moraleAfter,
+                    hullBefore,
+                    hullAfter,
+                    crewBefore,
+                    crewAfter,
+                    moraleBefore,
+                    moraleAfter,
                     cancelRestored,
                     replenishedMorale,
                     nonRtCrewUnchanged,
@@ -174,9 +186,21 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
                 const a = (globalThis as any).__c9starship;
                 const dh = (globalThis as any).__c9starshipDh;
-                try { await a?.sheet?.close?.(); } catch { /* ignore */ }
-                try { await a?.delete?.(); } catch { /* ignore */ }
-                try { await dh?.delete?.(); } catch { /* ignore */ }
+                try {
+                    await a?.sheet?.close?.();
+                } catch {
+                    /* ignore */
+                }
+                try {
+                    await a?.delete?.();
+                } catch {
+                    /* ignore */
+                }
+                try {
+                    await dh?.delete?.();
+                } catch {
+                    /* ignore */
+                }
                 (globalThis as any).__c9starship = undefined;
                 (globalThis as any).__c9starshipDh = undefined;
                 /* eslint-enable @typescript-eslint/no-explicit-any */

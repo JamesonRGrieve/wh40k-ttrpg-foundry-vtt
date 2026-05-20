@@ -50,8 +50,4 @@ export const SISTERS_RESOLVE: SisterOfBattleTalent = {
 };
 
 /** Display order for the dialog + chat card grants list. */
-export const SISTER_OF_BATTLE_TALENTS: readonly SisterOfBattleTalent[] = [
-    FAITH_OF_THE_EMPEROR,
-    HOLY_AEGIS,
-    SISTERS_RESOLVE,
-] as const;
+export const SISTER_OF_BATTLE_TALENTS: readonly SisterOfBattleTalent[] = [FAITH_OF_THE_EMPEROR, HOLY_AEGIS, SISTERS_RESOLVE] as const;

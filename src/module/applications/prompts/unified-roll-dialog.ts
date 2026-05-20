@@ -14,10 +14,6 @@ import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData } from '../../rolls/roll-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
-import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
-import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
-import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
-import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import {
     AIM_OPTIONS,
     aggregateSituationalDamageEffects,
@@ -30,6 +26,10 @@ import {
     getSituationalModifiers,
     isMeleeSpecialOption,
 } from '../../rules/attack-options.ts';
+import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
+import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
+import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
+import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { calculateTokenDistance, RANGE_BRACKETS } from '../../utils/range-calculator.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -347,9 +347,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const situationalMod = isForceField ? 0 : this._calculateSituationalModifiers();
         const customMod = isForceField ? 0 : this._customModifier;
         const combatSitMod = !isForceField && this.rollType === 'weapon' ? this._calculateCombatSituationalModifiers() : 0;
-        const psyMod = this.rollType === 'psychic'
-            ? resolvePsyMode({ mode: this._psyMode, basePR: Number(rollData['pr']) || 0, pushLevel: this._pushLevel }).focusModifier
-            : 0;
+        const psyMod =
+            this.rollType === 'psychic'
+                ? resolvePsyMode({ mode: this._psyMode, basePR: Number(rollData['pr']) || 0, pushLevel: this._pushLevel }).focusModifier
+                : 0;
         const assistanceMod = isForceField ? 0 : getAssistanceBonus(this._assistantCount);
 
         // Try-Again advisory (#62) — only for Skill rolls with a known rollKey.
@@ -361,17 +362,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (!isForceField && rollData['type'] === 'Skill') {
             const skillKey = (rollData['rollKey'] as string | null | undefined) ?? null;
             // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); getFlag is Foundry Document API
-            const actorRef = (rollData.sourceActor ?? rollData['actor']) as
-                | { getFlag?: (scope: string, key: string) => unknown }
-                | null
-                | undefined;
+            const actorRef = (rollData.sourceActor ?? rollData['actor']) as { getFlag?: (scope: string, key: string) => unknown } | null | undefined;
             if (skillKey !== null && typeof actorRef?.getFlag === 'function') {
                 const flagBag = actorRef.getFlag('wh40k-rpg', 'try-again');
                 // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns unknown; the per-skill counter bag is Record<string, number> by construction
-                const attempts =
-                    flagBag != null && typeof flagBag === 'object'
-                        ? Number((flagBag as Record<string, unknown>)[skillKey] ?? 0)
-                        : 0;
+                const attempts = flagBag != null && typeof flagBag === 'object' ? Number((flagBag as Record<string, unknown>)[skillKey] ?? 0) : 0;
                 if (attempts > 0) {
                     const advice = getTryAgainAdvice(skillKey, attempts);
                     if (advice.blocksByConvention || advice.cumulativePenalty !== 0) {
@@ -432,13 +427,19 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // line 999, `usesAptitudes === true ? charTotal - 20 : …`).
             // Only RT/legacy systems block untrained Advanced skills.
             const actorGameSystem = (sourceActor as { system?: { gameSystem?: string } } | null | undefined)?.system?.gameSystem ?? '';
-            const isAptitudeSystem = actorGameSystem === 'dh2e' || actorGameSystem === 'dh1e' || actorGameSystem === 'bc' || actorGameSystem === 'dw' || actorGameSystem === 'ow' || actorGameSystem === 'im';
+            const isAptitudeSystem =
+                actorGameSystem === 'dh2e' ||
+                actorGameSystem === 'dh1e' ||
+                actorGameSystem === 'bc' ||
+                actorGameSystem === 'dw' ||
+                actorGameSystem === 'ow' ||
+                actorGameSystem === 'im';
 
             const resolved = resolveUntrainedTarget({
                 advance,
                 isBasic,
                 characteristicTotal: listedCharTotal + trainingBonus,
-                altCharacteristicTotal: usingAlt ? altCharTotal + trainingBonus : undefined,
+                ...(usingAlt ? { altCharacteristicTotal: altCharTotal + trainingBonus } : {}),
                 halveOnNonBasic: advance === 0 && !isBasic,
                 allowUntrainedAdvanced: isAptitudeSystem,
             });
@@ -476,11 +477,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             };
         }
 
-        const baseTarget = isForceField
-            ? Number(rollData['protectionRating']) || 0
-            : skillBaseOverride !== null
-            ? skillBaseOverride
-            : rollData.baseTarget || 0;
+        const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : skillBaseOverride !== null ? skillBaseOverride : rollData.baseTarget || 0;
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
         const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational', 'psy-mode', 'assistance']);
@@ -638,7 +635,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             isForceField,
             // Skill alt-characteristic panel (#61)
             skillPanel,
-            hasSkillPanel: skillPanel !== null && skillPanel.visible,
+            hasSkillPanel: skillPanel?.visible === true,
             isSimple,
             // Climbing-surface picker (#146 — errata L113). Visible only on Athletics rolls.
             isAthletics,
@@ -649,7 +646,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 { value: 'easy', label: game.i18n.localize('WH40K.Climbing.Easy'), isCurrent: this._climbSurface === 'easy' },
             ],
             climbMod,
-            hasContextPanel: isWeapon || isPsychic || isForceField || isAthletics || (skillPanel !== null && skillPanel.visible),
+            hasContextPanel: isWeapon || isPsychic || isForceField || isAthletics || skillPanel?.visible === true,
             // Weapon data
             ...(isWeapon ? this._getWeaponContext() : {}),
             // Psychic data

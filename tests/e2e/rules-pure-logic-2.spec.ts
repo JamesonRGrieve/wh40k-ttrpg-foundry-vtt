@@ -102,7 +102,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const severe = addiction.resolveAddictionCheck({ willpowerTotal: 40, substanceRating: 10, currentTier: 'severe' });
                     return r.target === 40 && r.nextTierOnFailure === 'mild' && floored.target === 0 && severe.nextTierOnFailure === 'severe';
                 });
-                guarded('addiction-treatmentDays', () => typeof addiction.getTreatmentClockDays('mild') === 'number' && addiction.ADDICTION_TREATMENT_DAYS !== undefined);
+                guarded(
+                    'addiction-treatmentDays',
+                    () => typeof addiction.getTreatmentClockDays('mild') === 'number' && addiction.ADDICTION_TREATMENT_DAYS !== undefined,
+                );
             }
 
             // ---------- assistance ----------
@@ -132,8 +135,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const missing = charDamage.getAtZeroEffect('not-a-characteristic');
                     return ws?.effect === 'cannot-test' && tough?.effect === 'death' && missing === undefined;
                 });
-                guarded('characteristic-damage-effective', () => charDamage.getEffectiveCharacteristic(40, 10) === 30 && charDamage.getEffectiveCharacteristic(10, 50) === 0);
-                guarded('characteristic-damage-healed', () => charDamage.getCharacteristicDamageHealed(5, 3) === 3 && charDamage.getCharacteristicDamageHealed(2, 10) === 2);
+                guarded(
+                    'characteristic-damage-effective',
+                    () => charDamage.getEffectiveCharacteristic(40, 10) === 30 && charDamage.getEffectiveCharacteristic(10, 50) === 0,
+                );
+                guarded(
+                    'characteristic-damage-healed',
+                    () => charDamage.getCharacteristicDamageHealed(5, 3) === 3 && charDamage.getCharacteristicDamageHealed(2, 10) === 2,
+                );
             }
 
             // ---------- combat-circumstance-modifiers ----------
@@ -144,10 +153,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 guarded('combat-modifiers-registry', () => {
                     const reg = ccm.COMBAT_CIRCUMSTANCE_MODIFIERS;
                     if (!Array.isArray(reg) || reg.length === 0) return false;
-                    const first = reg[0];
-                    const byId = ccm.getCombatModifier(first.id);
+                    const first = reg[0] as { id?: string } | undefined;
+                    const byId = ccm.getCombatModifier(first?.id ?? '');
                     const missing = ccm.getCombatModifier('does-not-exist');
-                    return byId?.id === first.id && missing === undefined && Array.isArray(ccm.getCombatModifiersForTarget('bs'));
+                    return byId?.id === first?.id && missing === undefined && Array.isArray(ccm.getCombatModifiersForTarget('bs'));
                 });
                 guarded('combat-modifiers-sumSelected', () => {
                     const reg = ccm.COMBAT_CIRCUMSTANCE_MODIFIERS;
@@ -172,7 +181,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                         disposition.DISPOSITION_LABELS.length === 7
                     );
                 });
-                guarded('disposition-modifier', () => disposition.getDispositionModifier(2, 'charm') === 20 && disposition.getDispositionModifier(2, 'intimidate') === -20 && disposition.getDispositionModifier(99, 'charm') === 30);
+                guarded(
+                    'disposition-modifier',
+                    () =>
+                        disposition.getDispositionModifier(2, 'charm') === 20 &&
+                        disposition.getDispositionModifier(2, 'intimidate') === -20 &&
+                        disposition.getDispositionModifier(99, 'charm') === 30,
+                );
             }
 
             // ---------- disease ----------
@@ -181,7 +196,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 fail(['disease-exposure', 'disease-dailyTick'], disease.__importError);
             } else {
                 const profile = { id: 'redfly-plague', label: 'Redfly Plague', rating: 20, damagePerDay: 2, treatmentThreshold: 6 };
-                guarded('disease-exposure', () => disease.resolveDiseaseExposure({ toughnessTotal: 50, diseaseRating: 20 }).target === 30 && disease.resolveDiseaseExposure({ toughnessTotal: 10, diseaseRating: 50 }).target === 0);
+                guarded(
+                    'disease-exposure',
+                    () =>
+                        disease.resolveDiseaseExposure({ toughnessTotal: 50, diseaseRating: 20 }).target === 30 &&
+                        disease.resolveDiseaseExposure({ toughnessTotal: 10, diseaseRating: 50 }).target === 0,
+                );
                 guarded('disease-dailyTick', () => {
                     const tick1 = disease.applyInfectionDailyTick({ profile, cumulativeSoFar: 0 });
                     const treated = disease.applyInfectionDailyTick({ profile, cumulativeSoFar: 6, treatmentSucceeded: true });
@@ -194,8 +214,21 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (poison?.__importError) {
                 fail(['poison-exposure', 'poison-failurePayload'], poison.__importError);
             } else {
-                const ulva = { id: 'ulva-serum', label: 'Ulva-Serum', rating: 30, failureDamage: 1, ongoingDamagePerRound: 1, ongoingDurationRounds: 5, ongoingTag: 'crippled' };
-                guarded('poison-exposure', () => poison.resolvePoisonExposure({ toughnessTotal: 50, poisonRating: 30 }).target === 20 && poison.resolvePoisonExposure({ toughnessTotal: 20, poisonRating: 30 }).target === 0);
+                const ulva = {
+                    id: 'ulva-serum',
+                    label: 'Ulva-Serum',
+                    rating: 30,
+                    failureDamage: 1,
+                    ongoingDamagePerRound: 1,
+                    ongoingDurationRounds: 5,
+                    ongoingTag: 'crippled',
+                };
+                guarded(
+                    'poison-exposure',
+                    () =>
+                        poison.resolvePoisonExposure({ toughnessTotal: 50, poisonRating: 30 }).target === 20 &&
+                        poison.resolvePoisonExposure({ toughnessTotal: 20, poisonRating: 30 }).target === 0,
+                );
                 guarded('poison-failurePayload', () => {
                     const p = poison.buildPoisonFailurePayload(ulva);
                     return p.immediateDamage === 1 && p.ongoingDamagePerRound === 1 && p.ongoingDurationRounds === 5 && p.ongoingTag === 'crippled';
@@ -226,7 +259,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const baseline = phenomena.composePhenomenaModifier({ warpWeakness: false, taintedPsykerPushCP: 0 });
                     const warp = phenomena.composePhenomenaModifier({ warpWeakness: true, taintedPsykerPushCP: 0 });
                     const tainted = phenomena.composePhenomenaModifier({ warpWeakness: false, taintedPsykerPushCP: 1 });
-                    return baseline.focusModifier === 0 && baseline.autoTriggerOnOddOr9 === false && warp.focusModifier === 10 && warp.autoTriggerOnOddOr9 === true && tainted.phenomenaModifier === 5;
+                    return (
+                        baseline.focusModifier === 0 &&
+                        baseline.autoTriggerOnOddOr9 === false &&
+                        warp.focusModifier === 10 &&
+                        warp.autoTriggerOnOddOr9 === true &&
+                        tainted.phenomenaModifier === 5
+                    );
                 });
             }
 
@@ -260,7 +299,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const residual = requisition.getRequisitionTestTarget({ influence: 80, availability: 'rare', craftsmanship: 'best' });
                     return common.target === 40 && clamped.target === 0 && residual.target === 30 && requisition.AVAILABILITY_MODIFIERS.ubiquitous === 30;
                 });
-                guarded('requisition-test-influenceLoss', () => typeof requisition.applyInfluenceLossOnBigFailure(40, 3) === 'number' && requisition.CRAFTSMANSHIP_MODIFIERS.best === -30);
+                guarded(
+                    'requisition-test-influenceLoss',
+                    () => typeof requisition.applyInfluenceLossOnBigFailure(40, 3) === 'number' && requisition.CRAFTSMANSHIP_MODIFIERS.best === -30,
+                );
             }
 
             // ---------- spray-avoidance ----------
@@ -285,7 +327,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const names = vehicleActions.getVehicleActionNames();
                     const ram = vehicleActions.getVehicleAction('Ram');
                     const missing = vehicleActions.getVehicleAction('Not An Action');
-                    return Array.isArray(names) && names.includes('Ram') && ram?.skill === 'operate' && missing === undefined && Array.isArray(vehicleActions.VEHICLE_ACTIONS);
+                    return (
+                        Array.isArray(names) &&
+                        names.includes('Ram') &&
+                        ram?.skill === 'operate' &&
+                        missing === undefined &&
+                        Array.isArray(vehicleActions.VEHICLE_ACTIONS)
+                    );
                 });
             }
 
@@ -300,7 +348,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const fire = vehicleHazards.resolveHazardRoll('onFire', 1);
                     return skid?.label === 'Wide Skid' && crash?.label === 'Catastrophic' && fire?.label === 'Smouldering';
                 });
-                guarded('vehicle-hazards-repairDifficulty', () => typeof vehicleHazards.getRepairDifficulty(5, 10) === 'number' && typeof vehicleHazards.getRepairDifficulty(1, 10) === 'number');
+                guarded(
+                    'vehicle-hazards-repairDifficulty',
+                    () => typeof vehicleHazards.getRepairDifficulty(5, 10) === 'number' && typeof vehicleHazards.getRepairDifficulty(1, 10) === 'number',
+                );
             }
 
             return out;

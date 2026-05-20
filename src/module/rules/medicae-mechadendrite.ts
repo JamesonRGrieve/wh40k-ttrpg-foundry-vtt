@@ -23,9 +23,9 @@
  * by First Aid.
  */
 
-import type { WH40KBaseActorDocument, WH40KSkill } from '../types/global.d.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { applyRollModeWhispers, roll1d100 } from '../rolls/roll-helpers.ts';
+import type { WH40KBaseActorDocument, WH40KSkill } from '../types/global.d.ts';
 import { removeEffects } from './active-effects.ts';
 
 export const MEDICAE_MECHADENDRITE = {
@@ -81,8 +81,8 @@ export function findMedicaeMechadendrite(actor: WH40KBaseActorDocument): WH40KIt
     const gameSystem = (actor.system as { gameSystem?: string } | undefined)?.gameSystem;
     if (!isMedicaeMechadendriteSystem(gameSystem)) return null;
     for (const item of actor.items) {
-        if (isMedicaeMechadendrite(item as unknown as { name?: string | null; isCybernetic?: boolean })) {
-            return item as WH40KItem;
+        if (isMedicaeMechadendrite(item)) {
+            return item;
         }
     }
     return null;
@@ -136,10 +136,7 @@ function getMedicaeTarget(actor: WH40KBaseActorDocument): number {
  * @param actor   The actor whose mechadendrite is being used.
  * @param rng     Optional injectable d100 roll (1-100) for determinism.
  */
-export async function staunchBloodLoss(
-    actor: WH40KBaseActorDocument,
-    rng?: () => number,
-): Promise<StaunchResolution> {
+export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: () => number): Promise<StaunchResolution> {
     const medicaeTarget = getMedicaeTarget(actor);
     let rollTotal: number;
     if (rng !== undefined) {
@@ -189,7 +186,7 @@ export async function staunchBloodLoss(
     };
     applyRollModeWhispers(chatData);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts untyped Foundry data
-    await ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]);
+    await ChatMessage.create(chatData);
 
     return resolution;
 }

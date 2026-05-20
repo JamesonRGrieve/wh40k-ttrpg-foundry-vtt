@@ -2477,8 +2477,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // collision the player had already resolved kept appearing as an
         // outstanding requirement until the builder closed.
         preview.unresolvedAptitudeCollisions = collisions.filter((c) => c.replacement === null || c.replacement === '');
-        preview.resolvedAptitudeCollisions = collisions
-            .filter((c): c is { original: string; replacement: string } => typeof c.replacement === 'string' && c.replacement !== '');
+        preview.resolvedAptitudeCollisions = collisions.filter(
+            (c): c is { original: string; replacement: string } => typeof c.replacement === 'string' && c.replacement !== '',
+        );
         preview.hasUnresolvedAptitudeCollision = preview.unresolvedAptitudeCollisions.length > 0;
 
         return preview;
@@ -4150,7 +4151,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const promptLabel = game.i18n.format('WH40K.OriginPath.AptitudeDouble.PromptBody', { aptitude: original });
         const pickerLabel = game.i18n.localize('WH40K.OriginPath.AptitudeDouble.PickerLabel');
 
-        const picked = (await foundry.applications.api.DialogV2.prompt({
+        const picked = await foundry.applications.api.DialogV2.prompt({
             window: { title: game.i18n.localize('WH40K.OriginPath.AptitudeDouble.DialogTitle') },
             content: `
                 <p>${promptLabel}</p>
@@ -4168,7 +4169,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 },
             },
             rejectClose: false,
-        })) as string | null;
+        });
 
         if (picked === null || picked === '') return;
         this.aptitudeOverrides.set(original, picked);

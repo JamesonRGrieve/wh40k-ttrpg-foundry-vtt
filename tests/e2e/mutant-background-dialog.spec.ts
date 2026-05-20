@@ -129,7 +129,7 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
             // Best-effort cleanup so the dialog doesn't leak into later specs.
             await page.evaluate(() => {
                 /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const root = document.querySelector('.mutant-background-dialog') as any;
+                const root = document.querySelector<HTMLDialogElement>('.mutant-background-dialog');
                 if (root?.close) {
                     try {
                         root.close();

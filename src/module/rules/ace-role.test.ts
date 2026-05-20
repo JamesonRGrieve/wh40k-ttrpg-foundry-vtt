@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import {
     actorHasFatePoints,
     actorIsAce,
@@ -9,7 +10,6 @@ import {
     resolveRightStuff,
     spendRightStuff,
 } from './ace-role.ts';
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 /**
  * Contract tests for the Ace role's Right Stuff Fate spend
@@ -64,12 +64,7 @@ interface FakeFate {
     max?: number;
 }
 
-function makeActor(opts: {
-    gameSystem?: string;
-    role?: string | undefined;
-    fateValue?: number;
-    agilityBonus?: number;
-}): WH40KBaseActorDocument {
+function makeActor(opts: { gameSystem?: string; role?: string | undefined; fateValue?: number; agilityBonus?: number }): WH40KBaseActorDocument {
     const update = vi.fn(async () => undefined);
     return {
         name: 'Vex Tannor',
@@ -184,8 +179,11 @@ describe('spendRightStuff', () => {
         vi.stubGlobal('foundry', {
             applications: {
                 handlebars: {
-                    renderTemplate: vi.fn(async (_tpl: string, ctx: Record<string, unknown>) =>
-                        `<card actor="${String(ctx['actorName'])}" skill="${String(ctx['skillRaw'])}" dos="${String(ctx['degrees'])}" sys="${String(ctx['gameSystem'])}">`,
+                    renderTemplate: vi.fn(
+                        async (_tpl: string, ctx: Record<string, unknown>) =>
+                            `<card actor="${String(ctx['actorName'])}" skill="${String(ctx['skillRaw'])}" dos="${String(ctx['degrees'])}" sys="${String(
+                                ctx['gameSystem'],
+                            )}">`,
                     ),
                 },
             },

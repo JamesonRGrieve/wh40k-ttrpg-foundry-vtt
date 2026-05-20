@@ -4,7 +4,6 @@
  */
 
 import { describe, expect, it } from 'vitest';
-
 import {
     applyHullDamageToCrew,
     canCancelPriorTurnDamage,
@@ -124,17 +123,11 @@ describe('recordHullHit + cancelPriorTurnDamage (Hold Fast! / Triage)', () => {
 
     it('canCancelPriorTurnDamage requires a non-empty snapshot from a strictly prior turn', () => {
         expect(canCancelPriorTurnDamage(emptySnapshot(0), 5)).toBe(false);
-        expect(
-            canCancelPriorTurnDamage({ hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn: 1 }, 2),
-        ).toBe(false);
+        expect(canCancelPriorTurnDamage({ hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn: 1 }, 2)).toBe(false);
         // Same turn — current turn's damage cannot be cancelled per RAW.
-        expect(
-            canCancelPriorTurnDamage({ hullLoss: 3, crewLoss: 3, moraleLoss: 3, turn: 2 }, 2),
-        ).toBe(false);
+        expect(canCancelPriorTurnDamage({ hullLoss: 3, crewLoss: 3, moraleLoss: 3, turn: 2 }, 2)).toBe(false);
         // Strictly-prior, non-empty snapshot → eligible.
-        expect(
-            canCancelPriorTurnDamage({ hullLoss: 3, crewLoss: 3, moraleLoss: 3, turn: 1 }, 2),
-        ).toBe(true);
+        expect(canCancelPriorTurnDamage({ hullLoss: 3, crewLoss: 3, moraleLoss: 3, turn: 1 }, 2)).toBe(true);
     });
 
     it('rolloverSnapshot returns a zero snapshot for the new turn', () => {

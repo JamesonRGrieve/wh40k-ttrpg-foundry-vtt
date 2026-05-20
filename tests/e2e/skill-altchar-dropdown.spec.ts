@@ -22,7 +22,8 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
 
         const result = await page.evaluate(async () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any -- e2e probe runs in browser realm against untyped Foundry globals.
-            const mod = await import('/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js' as any);
+            const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
+            const mod = await import(/* @vite-ignore */ modUrl);
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing', snaps: null };
@@ -43,7 +44,13 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                     toughness: { total: 45, label: 'Toughness', short: 'T' },
                 },
                 items: {
-                    find(cb: (i: { type?: string; name?: string; system?: { identifier?: string; altCharacteristics?: string[]; isBasic?: boolean } }) => boolean) {
+                    find(
+                        cb: (i: {
+                            type?: string;
+                            name?: string;
+                            system?: { identifier?: string; altCharacteristics?: string[]; isBasic?: boolean };
+                        }) => boolean,
+                    ) {
                         const skillItem = {
                             type: 'skill',
                             name: 'athletics',

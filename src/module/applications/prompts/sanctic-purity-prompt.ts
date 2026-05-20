@@ -19,10 +19,10 @@
  * module so unit tests can pin them independently.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { SANCTIC_PURITY_FATE_COST } from '../../rules/sanctic-purity.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import { SANCTIC_PURITY_FATE_COST } from '../../rules/sanctic-purity.ts';
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -73,7 +73,7 @@ export default class SancticPurityPrompt extends ApplicationV2Mixin(ApplicationV
 
     constructor(options: SancticPurityPromptOptions = {}) {
         super(options);
-        this.actor = (options.actor as ActorWithFate | undefined) ?? null;
+        this.actor = options.actor ?? null;
         this.onNegate = options.onNegate ?? null;
         this.onDecline = options.onDecline ?? null;
     }
@@ -86,9 +86,9 @@ export default class SancticPurityPrompt extends ApplicationV2Mixin(ApplicationV
         classes: ['wh40k-rpg', 'dialog', 'sanctic-purity-prompt', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            spend: SancticPurityPrompt.#onSpend as ActionHandler,
+            spend: SancticPurityPrompt.#onSpend,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            decline: SancticPurityPrompt.#onDecline as ActionHandler,
+            decline: SancticPurityPrompt.#onDecline,
         },
         position: {
             width: 480,
@@ -181,10 +181,7 @@ export default class SancticPurityPrompt extends ApplicationV2Mixin(ApplicationV
             fateAfter: Math.max(0, fateBefore - SANCTIC_PURITY_FATE_COST),
             gameSystem: 'dh2e',
         };
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/sanctic-purity-negated-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/sanctic-purity-negated-chat.hbs', templateData);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);

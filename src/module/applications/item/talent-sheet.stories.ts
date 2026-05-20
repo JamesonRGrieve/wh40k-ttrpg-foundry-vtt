@@ -97,10 +97,28 @@ function makeCtx(overrides: Record<string, unknown> = {}) {
         isOwnedByActor: false,
         effects: [],
         tabs: {
-            overview: { id: 'overview', tab: 'overview', group: 'primary', active: activeTab === 'overview', cssClass: activeTab === 'overview' ? 'active' : '' },
+            overview: {
+                id: 'overview',
+                tab: 'overview',
+                group: 'primary',
+                active: activeTab === 'overview',
+                cssClass: activeTab === 'overview' ? 'active' : '',
+            },
             effects: { id: 'effects', tab: 'effects', group: 'primary', active: activeTab === 'effects', cssClass: activeTab === 'effects' ? 'active' : '' },
-            properties: { id: 'properties', tab: 'properties', group: 'primary', active: activeTab === 'properties', cssClass: activeTab === 'properties' ? 'active' : '' },
-            description: { id: 'description', tab: 'description', group: 'primary', active: activeTab === 'description', cssClass: activeTab === 'description' ? 'active' : '' },
+            properties: {
+                id: 'properties',
+                tab: 'properties',
+                group: 'primary',
+                active: activeTab === 'properties',
+                cssClass: activeTab === 'properties' ? 'active' : '',
+            },
+            description: {
+                id: 'description',
+                tab: 'description',
+                group: 'primary',
+                active: activeTab === 'description',
+                cssClass: activeTab === 'description' ? 'active' : '',
+            },
         },
         activeTab,
         ...overrides,
@@ -120,7 +138,7 @@ export const RendersTalentName: Story = {
     render: () => renderTemplate(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Mighty Shot')).toBeTruthy();
+        expect(canvas.getByRole('heading', { name: 'Mighty Shot' })).toBeTruthy();
     },
 };
 
@@ -153,7 +171,7 @@ export const CompendiumRender: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         // No parse error => rendered output contains the tab nav.
-        expect(canvas.getByDisplayValue('Mighty Shot')).toBeTruthy();
+        expect(canvas.getByRole('heading', { name: 'Mighty Shot' })).toBeTruthy();
         for (const tab of ['overview', 'effects', 'properties', 'description'] as const) {
             const button = canvasElement.querySelector(`button[data-tab="${tab}"]`);
             expect(button, `tab button [data-tab="${tab}"] should render`).toBeTruthy();

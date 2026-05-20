@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -83,7 +82,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             if (!Actor?.create) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'weapon-attack-rolls-to-hit': 'Actor.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'weapon-attack-rolls-to-hit': 'Actor.create unavailable' },
                 };
             }
 
@@ -184,7 +183,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 try {
                     const live = getPc();
-                    const meleeCreated = (await withTimeout(
+                    const meleeCreated = await withTimeout(
                         live.createEmbeddedDocuments?.('Item', [
                             {
                                 name: 'probe-melee-weapon',
@@ -199,8 +198,9 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         ]),
                         5_000,
                         'create melee weapon',
-                    )) as any[];
-                    const weapon = meleeCreated?.[0] ? live.items.get(meleeCreated[0].id) : null;
+                    );
+                    const meleeArr = meleeCreated as Array<{ id: string }> | undefined | null;
+                    const weapon = meleeArr?.[0] ? live.items.get(meleeArr[0].id) : null;
                     if (!weapon) {
                         notes['weapon-attack-rolls-to-hit'] = 'failed to create melee weapon';
                     } else {
@@ -244,7 +244,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 try {
                     const live = getPc();
-                    const rangedCreated = (await withTimeout(
+                    const rangedCreated = await withTimeout(
                         live.createEmbeddedDocuments?.('Item', [
                             {
                                 name: 'probe-ranged-weapon-ammo',
@@ -262,8 +262,9 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         ]),
                         5_000,
                         'create ranged weapon (ammo)',
-                    )) as any[];
-                    const weapon = rangedCreated?.[0] ? live.items.get(rangedCreated[0].id) : null;
+                    );
+                    const rangedArr = rangedCreated as Array<{ id: string }> | undefined | null;
+                    const weapon = rangedArr?.[0] ? live.items.get(rangedArr[0].id) : null;
                     if (!weapon) {
                         notes['weapon-attack-consumes-ammo'] = 'failed to create ranged weapon';
                     } else {
@@ -301,7 +302,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 try {
                     const live = getPc();
-                    const emptyCreated = (await withTimeout(
+                    const emptyCreated = await withTimeout(
                         live.createEmbeddedDocuments?.('Item', [
                             {
                                 name: 'probe-empty-weapon',
@@ -319,8 +320,9 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         ]),
                         5_000,
                         'create empty-clip weapon',
-                    )) as any[];
-                    const weapon = emptyCreated?.[0] ? live.items.get(emptyCreated[0].id) : null;
+                    );
+                    const emptyArr = emptyCreated as Array<{ id: string }> | undefined | null;
+                    const weapon = emptyArr?.[0] ? live.items.get(emptyArr[0].id) : null;
                     if (!weapon) {
                         notes['weapon-attack-out-of-ammo'] = 'failed to create empty weapon';
                     } else {
@@ -464,7 +466,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 try {
                     const live = getPc();
-                    const powerCreated = (await withTimeout(
+                    const powerCreated = await withTimeout(
                         live.createEmbeddedDocuments?.('Item', [
                             {
                                 name: 'probe-psychic-power',
@@ -477,8 +479,9 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         ]),
                         5_000,
                         'create psychic power',
-                    )) as any[];
-                    const power = powerCreated?.[0] ? live.items.get(powerCreated[0].id) : null;
+                    );
+                    const powerArr = powerCreated as Array<{ id: string }> | undefined | null;
+                    const power = powerArr?.[0] ? live.items.get(powerArr[0].id) : null;
                     if (!power) {
                         notes['psychic-power-roll'] = 'failed to create psychic-power item';
                     } else {
@@ -518,7 +521,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 try {
                     const live = getPc();
-                    const modeCreated = (await withTimeout(
+                    const modeCreated = await withTimeout(
                         live.createEmbeddedDocuments?.('Item', [
                             {
                                 name: 'probe-fire-mode-weapon',
@@ -539,7 +542,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         ]),
                         5_000,
                         'create fire-mode weapon',
-                    )) as any[];
+                    );
                     const weapon = modeCreated?.[0] ? live.items.get(modeCreated[0].id) : null;
                     if (!weapon) {
                         notes['weapon-modes'] = 'failed to create fire-mode weapon';
@@ -593,8 +596,8 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
         }, WEAPON_ATTACK_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

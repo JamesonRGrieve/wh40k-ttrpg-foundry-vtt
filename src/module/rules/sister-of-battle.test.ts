@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    FAITH_OF_THE_EMPEROR,
-    HOLY_AEGIS,
-    SISTER_OF_BATTLE_TALENTS,
-    SISTERS_RESOLVE,
-} from './sister-of-battle';
+import { FAITH_OF_THE_EMPEROR, HOLY_AEGIS, SISTER_OF_BATTLE_TALENTS, SISTERS_RESOLVE } from './sister-of-battle';
 
 /**
  * Contract tests for the Sister of Battle elite-advance talents

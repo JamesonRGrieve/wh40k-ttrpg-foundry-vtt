@@ -82,7 +82,9 @@ describe('rollDaemonWeaponAttributes (#142)', () => {
 
     it('slot 1 always uses the General table even when alignment is set', () => {
         const result = rollDaemonWeaponAttributes('tzeentch', 'major', () => 0.5);
-        expect(result.picks[0]!.table).toBe('general');
+        const firstPick = result.picks[0];
+        if (firstPick === undefined) throw new Error('expected at least one pick');
+        expect(firstPick.table).toBe('general');
         for (const pick of result.picks.slice(1)) {
             expect(pick.table).toBe('tzeentch');
         }
@@ -99,11 +101,15 @@ describe('rollDaemonWeaponAttributes (#142)', () => {
         // Sequence forces rolls: floor(0.05*10)+1=1, floor(0.15*10)+1=2, floor(0.95*10)+1=10
         const seq = [0.05, 0.15, 0.95];
         let idx = 0;
-        const rng = (): number => seq[idx++ % seq.length]!;
+        const rng = (): number => seq[idx++ % seq.length] ?? 0;
         const result = rollDaemonWeaponAttributes('khorne', 'normal', rng);
         expect(result.picks.map((p) => p.roll)).toEqual([1, 2, 10]);
-        expect(result.picks[0]!.table).toBe('general');
-        expect(result.picks[1]!.table).toBe('khorne');
-        expect(result.picks[2]!.table).toBe('khorne');
+        const p0 = result.picks[0];
+        const p1 = result.picks[1];
+        const p2 = result.picks[2];
+        if (p0 === undefined || p1 === undefined || p2 === undefined) throw new Error('expected three picks');
+        expect(p0.table).toBe('general');
+        expect(p1.table).toBe('khorne');
+        expect(p2.table).toBe('khorne');
     });
 });

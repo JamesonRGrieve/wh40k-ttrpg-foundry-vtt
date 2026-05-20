@@ -31,7 +31,9 @@ import { expect, test } from './lib/test';
  *   - src/module/config/game-systems/{bc,dh1e,dh2e,dw,ow,rt,im}-config.ts
  *       (id / label / cssClass / theme blocks, getOriginStepConfig,
  *        getCharacteristicAptitudes / getSkillAptitudeTable for the
- *        aptitude systems, BC getAlignmentCostModifier opposition matrix)
+ *        aptitude systems, BC patron-status / True-Allied-Opposed matrix
+ *        via getCharacteristicAdvanceCost — replaces the pre-#173
+ *        getAlignmentCostModifier multiplier API)
  *
  * Every helper that takes a system id is iterated across ALL 7 ids so
  * per-system divergence (3- vs 4-rank, 4- vs 5-tier, theme palette refs,
@@ -124,7 +126,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         const regIds = Registry.getIds();
                         const everyIdResolves = ids.every((id) => {
                             const cfg = Registry.get(id);
-                            return cfg != null && cfg.id === id;
+                            return cfg?.id === id;
                         });
                         const countOk = all.length === ids.length && regIds.length === ids.length;
                         const idsMatch = ids.every((id) => regIds.includes(id));
@@ -142,9 +144,9 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     // while a known id resolves through both.
                     try {
                         const unknownNull = Registry.getOrNull('not-a-system') === null;
-                        const unknownHas = Registry.has('not-a-system') === false;
+                        const unknownHas = !Registry.has('not-a-system');
                         const knownNonNull = Registry.getOrNull('dh2e') != null;
-                        const knownHas = Registry.has('dh2e') === true;
+                        const knownHas = Registry.has('dh2e');
                         record(
                             'registry-getOrNull-and-has',
                             unknownNull && unknownHas && knownNonNull && knownHas,
@@ -197,8 +199,8 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const familyOk = isAptitude
                                 ? cfg?.usesAptitudes === true && cfg?.usesCareerTables === false
                                 : isCareer
-                                  ? cfg?.usesCareerTables === true && cfg?.usesAptitudes === false
-                                  : false;
+                                ? cfg?.usesCareerTables === true && cfg?.usesAptitudes === false
+                                : false;
                             record(
                                 `config-identity::${id}`,
                                 Boolean(labelOk && cssOk && flagsExclusive && familyOk),
@@ -273,13 +275,17 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             };
                             const coreOk =
                                 Array.isArray(osc?.coreSteps) &&
-                                osc.coreSteps.every((s) => typeof s.key === 'string' && s.step === s.key && typeof s.icon === 'string' && typeof s.stepIndex === 'number');
+                                osc.coreSteps.every(
+                                    (s) => typeof s.key === 'string' && s.step === s.key && typeof s.icon === 'string' && typeof s.stepIndex === 'number',
+                                );
                             const optOk = osc?.optionalStep === null || (typeof osc?.optionalStep === 'object' && osc.optionalStep !== null);
                             const packsOk = Array.isArray(osc?.packs);
                             record(
                                 `origin-step-config::${id}`,
                                 Boolean(coreOk && optOk && packsOk),
-                                `coreSteps=${osc?.coreSteps?.length} optionalStep=${osc?.optionalStep === null ? 'null' : 'obj'} packs=${(osc?.packs as unknown[])?.length}`,
+                                `coreSteps=${osc?.coreSteps?.length} optionalStep=${osc?.optionalStep === null ? 'null' : 'obj'} packs=${
+                                    (osc?.packs as unknown[])?.length
+                                }`,
                             );
                         } catch (err) {
                             record(`origin-step-config::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
@@ -308,11 +314,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                                 );
                             const survive = uses?.find((u) => u.key === 'survive');
                             const burnOk = survive?.burn === true;
-                            record(
-                                `fate-point-uses::${id}`,
-                                Boolean(shapeOk && burnOk),
-                                `count=${uses?.length} surviveBurn=${survive?.burn}`,
-                            );
+                            record(`fate-point-uses::${id}`, Boolean(shapeOk && burnOk), `count=${uses?.length} surviveBurn=${survive?.burn}`);
                         } catch (err) {
                             record(`fate-point-uses::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
                         }
@@ -328,10 +330,8 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const skills = cfg?.getVisibleSkills() as Set<string>;
                             const isSet = skills instanceof Set && skills.size > 0;
                             const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
-                            const dodgeShared = skills?.has('dodge') === true;
-                            const familyOk = isAptitude
-                                ? skills?.has('parry') === true && skills?.has('barter') === false
-                                : skills?.has('barter') === true && skills?.has('parry') === false;
+                            const dodgeShared = skills?.has('dodge');
+                            const familyOk = isAptitude ? skills?.has('parry') && !skills?.has('barter') : skills?.has('barter') && !skills?.has('parry');
                             record(
                                 `visible-skills::${id}`,
                                 Boolean(isSet && dodgeShared && familyOk),
@@ -352,9 +352,12 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         const charCost = cfg?.getCharacteristicCostTable() as Record<number, number[]>;
                         const talentCost = cfg?.getTalentCostTable() as Record<number, Record<number, number>>;
                         const eq = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
-                        const skillOk = eq(skillCost?.[2], [100, 200, 300, 400]) && eq(skillCost?.[1], [200, 400, 600, 800]) && eq(skillCost?.[0], [300, 600, 900, 1200]);
+                        const skillOk =
+                            eq(skillCost?.[2], [100, 200, 300, 400]) && eq(skillCost?.[1], [200, 400, 600, 800]) && eq(skillCost?.[0], [300, 600, 900, 1200]);
                         const charOk =
-                            eq(charCost?.[2], [100, 250, 500, 750, 1250]) && eq(charCost?.[1], [250, 500, 750, 1000, 1500]) && eq(charCost?.[0], [500, 750, 1000, 1500, 2500]);
+                            eq(charCost?.[2], [100, 250, 500, 750, 1250]) &&
+                            eq(charCost?.[1], [250, 500, 750, 1000, 1500]) &&
+                            eq(charCost?.[0], [500, 750, 1000, 1500, 2500]);
                         const talentOk = eq(talentCost?.[1], { 2: 200, 1: 300, 0: 600 }) && eq(talentCost?.[3], { 2: 400, 1: 600, 0: 1200 });
                         const matchCI = cfg?.countMatchingAptitudes(['weapon skill', 'OFFENCE'], ['Weapon Skill', 'Offence']) === 2;
                         const matchZero = cfg?.countMatchingAptitudes(['Fellowship'], ['Weapon Skill', 'Offence']) === 0;
@@ -411,11 +414,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         const matchedOk = JSON.stringify(info?.matched) === JSON.stringify(['Weapon Skill']);
                         const unmatchedOk = JSON.stringify(info?.unmatched) === JSON.stringify(['Knowledge']);
                         const allOk = JSON.stringify(info?.all) === JSON.stringify(['Weapon Skill', 'Knowledge']);
-                        record(
-                            'advance-match-info',
-                            Boolean(matchesOk && matchedOk && unmatchedOk && allOk),
-                            `info=${JSON.stringify(info)}`,
-                        );
+                        record('advance-match-info', Boolean(matchesOk && matchedOk && unmatchedOk && allOk), `info=${JSON.stringify(info)}`);
                     } catch (err) {
                         record('advance-match-info', false, `threw: ${String((err as Error)?.message ?? err)}`);
                     }
@@ -441,26 +440,33 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         record('career-cost-null-contract', false, `threw: ${String((err as Error)?.message ?? err)}`);
                     }
 
-                    // ── bc-alignment-cost-modifier ─────────────────────────
-                    // BC's getAlignmentCostModifier opposition matrix:
-                    // matching/unaligned-advance → 1.0, unaligned-char buying
-                    // aligned → 1.5, opposed (khorne↔slaanesh) → 2.0,
-                    // non-opposing different → 1.5.
+                    // ── bc-patron-status-matrix ────────────────────────────
+                    // BC's Allies/Opponents matrix (Table 2-4, core.md :2594)
+                    // routes through the new True/Allied/Opposed × tier cost
+                    // engine introduced in #173. Verify the four canonical
+                    // patron-status outcomes round-trip through the public
+                    // characteristic-cost dispatch: True (matching), Allied
+                    // (Khorne/Nurgle pair), Opposed (Khorne↔Slaanesh), and
+                    // unaligned-character treated as Allied for every god.
                     try {
-                        const cfg = Registry.get('bc');
-                        const match = cfg?.getAlignmentCostModifier('khorne', 'khorne') === 1.0;
-                        const advUnaligned = cfg?.getAlignmentCostModifier('khorne', 'unaligned') === 1.0;
-                        const charUnaligned = cfg?.getAlignmentCostModifier('unaligned', 'khorne') === 1.5;
-                        const opposed = cfg?.getAlignmentCostModifier('khorne', 'slaanesh') === 2.0;
-                        const opposedRev = cfg?.getAlignmentCostModifier('nurgle', 'tzeentch') === 2.0;
-                        const nonOpposing = cfg?.getAlignmentCostModifier('khorne', 'nurgle') === 1.5;
+                        const cfg = Registry.get('bc') as {
+                            getCharacteristicAdvanceCost: (a: { system: Record<string, unknown> }, k: string, t: number) => { cost: number } | null;
+                        } | null;
+                        const khorneActor = { system: { chaosAlignment: 'khorne', chaosAdvancements: [] } };
+                        const nurgleActor = { system: { chaosAlignment: 'nurgle', chaosAdvancements: [] } };
+                        const unalignedActor = { system: { chaosAlignment: 'unaligned', chaosAdvancements: [] } };
+                        const matchedCost = cfg?.getCharacteristicAdvanceCost(khorneActor, 'strength', 0)?.cost ?? null;
+                        const alliedCost = cfg?.getCharacteristicAdvanceCost(nurgleActor, 'strength', 0)?.cost ?? null;
+                        const opposedCost = cfg?.getCharacteristicAdvanceCost(khorneActor, 'fellowship', 0)?.cost ?? null;
+                        const unalignedCost = cfg?.getCharacteristicAdvanceCost(unalignedActor, 'strength', 0)?.cost ?? null;
+                        const ok = matchedCost === 100 && alliedCost === 250 && opposedCost === 500 && unalignedCost === 250;
                         record(
-                            'bc-alignment-cost-modifier',
-                            Boolean(match && advUnaligned && charUnaligned && opposed && opposedRev && nonOpposing),
-                            `match=${match} advUn=${advUnaligned} charUn=${charUnaligned} opp=${opposed} oppRev=${opposedRev} nonOpp=${nonOpposing}`,
+                            'bc-patron-status-matrix',
+                            ok,
+                            `true=${matchedCost} allied=${alliedCost} opposed=${opposedCost} unalignedActor=${unalignedCost}`,
                         );
                     } catch (err) {
-                        record('bc-alignment-cost-modifier', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('bc-patron-status-matrix', false, `threw: ${String((err as Error)?.message ?? err)}`);
                     }
 
                     // ── skill-level-to-rank ────────────────────────────────
@@ -513,8 +519,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const labels = cfg?.getStepShortLabels() as Record<string, string>;
                             const osc = cfg?.getOriginStepConfig() as { coreSteps?: Array<{ key: string }> };
                             const coreKeys = (osc?.coreSteps ?? []).map((s) => s.key);
-                            const everyKeyLabelled =
-                                labels != null && coreKeys.every((k) => typeof labels[k] === 'string' && (labels[k]?.length ?? 0) > 0);
+                            const everyKeyLabelled = labels != null && coreKeys.every((k) => typeof labels[k] === 'string' && (labels[k]?.length ?? 0) > 0);
                             checks.push(everyKeyLabelled);
                             detail.push(`${id}:${coreKeys.length}keys`);
                         }

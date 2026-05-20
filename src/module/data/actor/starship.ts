@@ -376,7 +376,7 @@ export default class StarshipData extends ActorDataModel {
      */
     static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: SystemDataModel.migrateData inherits an untyped Foundry signature
-        const out = (super.migrateData(source) as Record<string, unknown>) ?? source;
+        const out = super.migrateData(source) ?? source;
         const sp = out['shipPoints'];
         if (typeof sp === 'number') {
             out['shipPoints'] = { spent: 0, budget: sp };
@@ -414,11 +414,7 @@ export default class StarshipData extends ActorDataModel {
         // freshly imported / migrated actor would enter combat with no shields
         // raised, which contradicts the RAW assumption that shields are on by
         // default.
-        if (
-            this.voidShields > 0 &&
-            this.voidShieldsStatus.active === 0 &&
-            this.voidShieldsStatus.exhausted === 0
-        ) {
+        if (this.voidShields > 0 && this.voidShieldsStatus.active === 0 && this.voidShieldsStatus.exhausted === 0) {
             this.voidShieldsStatus.active = this.voidShields;
         }
         // Cap active + exhausted against the configured maximum.
@@ -569,8 +565,7 @@ export default class StarshipData extends ActorDataModel {
      */
     static computeAppliedModifiers(items: Iterable<ShipItemView>): Record<ShipModifierStatKey, ShipAppliedModifier> {
         const out = StarshipData._emptyAppliedModifiers();
-        const validKey = (k: string): k is ShipModifierStatKey =>
-            (SHIP_MODIFIER_STAT_KEYS as readonly string[]).includes(k);
+        const validKey = (k: string): k is ShipModifierStatKey => (SHIP_MODIFIER_STAT_KEYS as readonly string[]).includes(k);
 
         const apply = (item: ShipItemView, key: string, raw: number): void => {
             if (!validKey(key)) return;
@@ -766,9 +761,7 @@ export default class StarshipData extends ActorDataModel {
         // visible. The earlier `_prepareBuildValidation()` call seeded the
         // shape with stale `spent` and the full essential-slot list; this pass
         // computes the accurate state for the rendered sheet.
-        const itemsForValidation = itemViews.filter(
-            (item) => item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade',
-        );
+        const itemsForValidation = itemViews.filter((item) => item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade');
         this._refreshBuildValidation(itemsForValidation);
     }
 

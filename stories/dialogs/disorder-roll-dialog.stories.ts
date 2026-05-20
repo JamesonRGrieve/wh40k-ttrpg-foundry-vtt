@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/disorder-roll-dialog.hbs?raw';
 import type { DisorderSeverity } from '../../src/module/rules/disorders-table.ts';
+import templateSrc from '../../src/templates/prompt/disorder-roll-dialog.hbs?raw';
 import { renderSheet } from '../test-helpers';
 
 interface Args {

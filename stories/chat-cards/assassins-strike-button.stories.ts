@@ -73,7 +73,7 @@ export const TalentMissHidesButton: Story = {
 };
 
 export const NoTalentHidesButton: Story = {
-    name: 'Melee attack hit — no Assassin\'s Strike talent',
+    name: "Melee attack hit — no Assassin's Strike talent",
     render: () =>
         renderTemplate(
             actionRollTemplate,

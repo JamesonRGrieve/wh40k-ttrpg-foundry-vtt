@@ -15,11 +15,11 @@
  * a live Foundry instance.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect } from 'storybook/test';
 import Handlebars from 'handlebars';
+import { expect } from 'storybook/test';
+import panelSrc from '../../src/templates/actor/panel/possession-panel.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
-import panelSrc from '../../src/templates/actor/panel/possession-panel.hbs?raw';
 
 initializeStoryHandlebars();
 

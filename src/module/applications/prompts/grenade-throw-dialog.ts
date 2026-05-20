@@ -12,14 +12,9 @@
  * it up without changes.
  */
 
+import { type GrenadeDefinition, type GrenadeSaveCharacteristic, getWithinGrenade, listWithinGrenades } from '../../rules/within-grenades.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import {
-    type GrenadeDefinition,
-    type GrenadeSaveCharacteristic,
-    getWithinGrenade,
-    listWithinGrenades,
-} from '../../rules/within-grenades.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -95,9 +90,7 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
     constructor(options: ApplicationV2Config.DefaultOptions & { grenadeId?: string } = {}) {
         super(options);
         const requested = (options as { grenadeId?: string }).grenadeId;
-        const initial = typeof requested === 'string' && getWithinGrenade(requested) !== null
-            ? requested
-            : (listWithinGrenades()[0]?.id ?? '');
+        const initial = typeof requested === 'string' && getWithinGrenade(requested) !== null ? requested : listWithinGrenades()[0]?.id ?? '';
         this.selectedId = initial;
     }
 
@@ -107,11 +100,11 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
         classes: ['wh40k-rpg', 'dialog', 'grenade-throw-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectGrenade: GrenadeThrowDialog.#onSelectGrenade as ActionHandler,
+            selectGrenade: GrenadeThrowDialog.#onSelectGrenade,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            throw: GrenadeThrowDialog.#onThrow as ActionHandler,
+            throw: GrenadeThrowDialog.#onThrow,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: GrenadeThrowDialog.#onCancel as ActionHandler,
+            cancel: GrenadeThrowDialog.#onCancel,
         },
         position: { width: 560 },
         window: {
@@ -144,7 +137,7 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
 
     static async #onSelectGrenade(this: GrenadeThrowDialog, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const next = target.dataset.grenadeId ?? '';
+        const next = target.dataset['grenadeId'] ?? '';
         if (next !== '' && getWithinGrenade(next) !== null) {
             this.selectedId = next;
             await this.render();
@@ -162,10 +155,7 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
             gameSystem: 'dh2e',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
