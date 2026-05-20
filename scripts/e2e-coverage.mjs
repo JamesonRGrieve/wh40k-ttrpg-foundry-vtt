@@ -1292,6 +1292,504 @@ const GAME_SYSTEM_CONFIG_IDS = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'];
 const GAME_SYSTEM_CONFIG_FLOWS = [...GAME_SYSTEM_CONFIG_SINGLE_FLOWS, ...GAME_SYSTEM_CONFIG_FAMILIES.flatMap((fam) => GAME_SYSTEM_CONFIG_IDS.map((id) => `${fam}::${id}`))];
 recordDimension('game-system-config.flow', covered['game-system-config.flow'], GAME_SYSTEM_CONFIG_FLOWS);
 
+// ─────────────────────────────────────────────────────────────────────────
+// Full-depth + screenshot expansion (round: 12 parallel worktree agents).
+// Closes the 7 thin sub-areas (documents-extra, data/{abstract,fields,grant,
+// shared}, character-creation wizard, sheet-action handlers for item +
+// actor sheets, canvas/token-HUD) plus adds full UI screenshot rendering
+// for actor sheets, item sheets, dialogs + chat cards. Storybook all-stories
+// screenshots run under playwright.storybook (no Tier B dimension).
+// ─────────────────────────────────────────────────────────────────────────
+
+// tests/e2e/documents-extra.spec.ts
+const DOCUMENTS_EXTRA_FLOWS = [
+    'actor-proxy-dispatches-by-type',
+    'actor-proxy-falls-back-on-unknown-type',
+    'actor-proxy-registered-on-config',
+    'item-container-isNestedItem-false-on-owned',
+    'item-container-setNested-roundtrip',
+    'item-container-createNestedDocuments-appends',
+    'item-container-updateNestedDocuments-merges',
+    'item-container-deleteNestedDocuments-removes',
+    'item-container-convertNestedToItems-builds-collection',
+    'item-container-update-injects-id',
+    'chat-message-class-registered',
+    'chat-message-getters',
+    'chat-message-calculateDegrees-real-roll',
+    'chat-message-onChatCardAction-routes',
+    'chat-message-enrichActionButtons-stamps-messageId',
+    'module-exports-match-config-documentClass',
+];
+recordDimension('documents-extra.flow', covered['documents-extra.flow'], DOCUMENTS_EXTRA_FLOWS);
+
+// tests/e2e/data-abstract-fields.spec.ts
+const DATA_ABSTRACT_FIELDS_FLOWS = [
+    'system-data-model-metadata-default',
+    'system-data-model-mergeSchema',
+    'system-data-model-migrateData-empty',
+    'system-data-model-cleanData-empty',
+    'system-data-model-mixin-both-branches',
+    'system-data-model-initializationOrder-generator',
+    'item-data-model-metadata-merged',
+    'item-data-model-migrate-description-promotion',
+    'item-data-model-migrate-source-promotion',
+    'item-data-model-migrate-coverage-array-to-set',
+    'item-data-model-migrate-img-default-icon',
+    'actor-data-model-metadata-supportsAdvancement',
+    'actor-data-model-migrate-noop',
+    'formula-field-defaults-deterministic',
+    'formula-field-validateType-branches',
+    'identifier-field-defaults-blank',
+    'identifier-field-validateType-branches',
+    'identifier-field-fromName-kebab',
+];
+recordDimension('data-abstract-fields.flow', covered['data-abstract-fields.flow'], DATA_ABSTRACT_FIELDS_FLOWS);
+
+// tests/e2e/data-grants-extra.spec.ts
+const DATA_GRANTS_EXTRA_FLOWS = [
+    'base-grant-null-actor-rejects',
+    'item-grant-apply-creates-item',
+    'item-grant-reverse-removes-item',
+    'item-grant-duplicate-name-skipped',
+    'item-grant-validate-and-summary',
+    'skill-grant-apply-writes-advance',
+    'skill-grant-reverse-restores-previous',
+    'skill-grant-schema-key-normalisation',
+    'characteristic-grant-apply-advance-delta',
+    'characteristic-grant-reverse-restores-advance',
+    'characteristic-grant-rejects-invalid-key',
+    'resource-grant-apply-flat-wounds-bonus',
+    'resource-grant-reverse-rolls-back',
+    'resource-grant-auto-value-rejects-dice',
+    'choice-grant-apply-non-empty-selection',
+    'choice-grant-reverse-round-trip',
+    'choice-grant-auto-value-always-false',
+];
+recordDimension('data-grants-extra.flow', covered['data-grants-extra.flow'], DATA_GRANTS_EXTRA_FLOWS);
+
+// tests/e2e/data-shared-templates.spec.ts
+const DATA_SHARED_FLOWS = [
+    'module-barrel-exports',
+    'activation-schema-roundtrip',
+    'activation-derived-labels',
+    'activation-uses-helpers',
+    'attack-schema-roundtrip',
+    'attack-derived-getters',
+    'body-locations-helpers',
+    'damage-schema-roundtrip',
+    'damage-derived-labels',
+    'description-schema-roundtrip',
+    'description-source-reference',
+    'equippable-schema-roundtrip',
+    'origin-steps-labels',
+    'physical-schema-roundtrip',
+    'physical-derived-labels',
+    'stat-fields-builders',
+];
+recordDimension('data-shared.flow', covered['data-shared.flow'], DATA_SHARED_FLOWS);
+
+// tests/e2e/character-creation-wizard.spec.ts
+const CHARGEN_WIZARD_FLOWS = [
+    'system-builders-actor-type-dispatch',
+    'system-builders-dh2e-stamps-game-system',
+    'system-builders-rt-six-core-steps',
+    'system-builders-im-falls-back-to-dh2e',
+    'normalize-origin-from-raw-compendium-doc',
+    'normalize-choice-handles-string-options',
+    'builder-randomize-fills-selections',
+    'builder-set-mode-toggles-guided',
+    'builder-clear-origin-removes-selection',
+    'builder-go-to-characteristics-step',
+    'builder-roll-characteristics-bank-populates',
+    'builder-char-reset-clears-assignments',
+    'builder-char-toggle-advanced-flips',
+    'builder-set-char-gen-mode-changes-state',
+    'builder-go-to-equipment-step',
+    'builder-clear-equipment-empties-map',
+    'builder-toggle-equipment-by-uuid',
+    'builder-export-emits-json-blob',
+];
+recordDimension('chargen-wizard.flow', covered['chargen-wizard.flow'], CHARGEN_WIZARD_FLOWS);
+
+// tests/e2e/sheet-action-handlers-item.spec.ts
+const SHEET_ACTION_ITEM_FLOWS = [
+    'weapon-sheet::rollAttack',
+    'weapon-sheet::rollDamage',
+    'weapon-sheet::expendAmmo',
+    'weapon-sheet::loadAmmo',
+    'weapon-sheet::toggleFab',
+    'weapon-sheet::onAddModification',
+    'armour-sheet::toggleCoverage',
+    'armour-sheet::addProperty',
+    'armour-sheet::removeProperty',
+    'armour-sheet::addModification',
+    'armour-sheet::removeMod',
+    'armour-mod-sheet::toggleArmourType',
+    'armour-mod-sheet::adjustModifier',
+    'armour-mod-sheet::addProperty',
+    'armour-mod-sheet::removeProperty',
+    'ammo-sheet::addQuality',
+    'ammo-sheet::removeAddedQuality',
+    'ammo-sheet::removeRemovedQuality',
+    'talent-sheet::rollTalent',
+    'talent-sheet::postToChat',
+    'talent-sheet::adjustRank',
+    'talent-sheet::switchTab',
+    'gear-sheet::resetUses',
+    'gear-sheet::consumeUse',
+    'container-item-sheet::nestedItemCreate',
+    'container-item-sheet::nestedItemRoll',
+    'endeavour-sheet::addObjective',
+    'endeavour-sheet::removeObjective',
+    'npc-template-sheet::addSkill',
+    'npc-template-sheet::removeSkill',
+    'npc-template-sheet::addTrait',
+    'npc-template-sheet::updatePreview',
+];
+recordDimension('sheet-action-item.flow', covered['sheet-action-item.flow'], SHEET_ACTION_ITEM_FLOWS);
+
+// tests/e2e/sheet-action-handlers-actor.spec.ts
+const SHEET_ACTION_ACTOR_FLOWS = [
+    'character-sheet::toggleEquip',
+    'character-sheet::stowItem',
+    'character-sheet::unstowItem',
+    'character-sheet::filterEquipment',
+    'character-sheet::toggleFavoriteSkill',
+    'character-sheet::toggleFavoriteTalent',
+    'character-sheet::adjustSubtletyManually',
+    'npc-sheet::toggleHordeMode',
+    'npc-sheet::applyMagnitudeDamage',
+    'npc-sheet::setSkillLevel',
+    'npc-sheet::addTag',
+    'npc-sheet::removeTag',
+    'npc-sheet::adjustInteractionCount',
+    'npc-sheet::scaleToThreat-im',
+    'vehicle-sheet::adjustStructure',
+    'vehicle-sheet::repairDamage',
+    'vehicle-sheet::modifyCrew',
+    'vehicle-sheet::adjustCrewMorale',
+    'starship-sheet::raiseVoidShield',
+    'starship-sheet::lowerVoidShield',
+    'starship-sheet::restoreVoidShields',
+    'starship-sheet::validateBuild',
+    'loot-sheet::pickupAll',
+];
+recordDimension('sheet-action-actor.flow', covered['sheet-action-actor.flow'], SHEET_ACTION_ACTOR_FLOWS);
+
+// tests/e2e/canvas-token-hud-extra.spec.ts
+const CANVAS_EXTRA_FLOWS = [
+    'ruler-instantiates-with-token',
+    'ruler-waypoint-style-budget-green',
+    'ruler-waypoint-style-double-yellow',
+    'ruler-waypoint-style-triple-red',
+    'ruler-segment-style-respects-speed',
+    'ruler-grid-highlight-style',
+    'ruler-teleport-action-skips-color',
+    'ruler-no-movement-returns-default',
+    'token-hud-active-button-class',
+    'token-hud-no-movement-skips-injection',
+    'token-hud-button-localizes-label',
+    'token-hud-set-movement-action-flag-update',
+    'token-hud-button-mouseenter-mouseleave-styles',
+    'register-movement-actions-config-population',
+];
+recordDimension('canvas-extra.flow', covered['canvas-extra.flow'], CANVAS_EXTRA_FLOWS);
+
+// tests/e2e/applications-api-components-depth.spec.ts
+const APP_API_DEPTH_FLOWS = [
+    'drag-drop-api-allowed-behaviors',
+    'drag-drop-api-default-behavior',
+    'drag-drop-api-modifier-keys',
+    'drag-drop-visual-ghost-and-split',
+    'drag-drop-visual-validate-slot',
+    'drag-drop-visual-favorites-api',
+    'expandable-tooltip-toggle-action',
+    'expandable-tooltip-programmatic-api',
+    'visual-feedback-find-and-classify',
+    'visual-feedback-animate-counter',
+    'visual-feedback-visualize-changes',
+    'wh40k-tooltip-builders',
+    'wh40k-tooltip-static-data-helpers',
+    'icons-helper-resolution',
+    'icons-handlebars-registration',
+    'appv2-mixin-subtitle-and-disable',
+    'dialog-wait-and-resolve',
+    'whatif-mixin-exit-and-direct-apply',
+    'statbreakdown-mixin-variant-rows',
+    'collapsible-panel-roundtrip',
+    'collapsible-panel-apply-preset',
+    'enhanced-animations-skip-and-flash',
+];
+recordDimension('app-api-depth.flow', covered['app-api-depth.flow'], APP_API_DEPTH_FLOWS);
+
+// ── Screenshot dimensions ── outputs go to tests/e2e/screenshots/ (gitignored).
+
+// tests/e2e/screenshots-actor-sheets.spec.ts — every (actorType × systemId × {view,edit}).
+const SCREENSHOT_ACTOR_FLOWS = [
+    'bc-character::bc::view', 'bc-character::bc::edit', 'bc-npc::bc::view', 'bc-npc::bc::edit',
+    'bc-vehicle::bc::view', 'bc-vehicle::bc::edit', 'loot::bc::view', 'loot::bc::edit',
+    'dh1-character::dh1e::view', 'dh1-character::dh1e::edit', 'dh1-npc::dh1e::view', 'dh1-npc::dh1e::edit',
+    'dh1-vehicle::dh1e::view', 'dh1-vehicle::dh1e::edit', 'loot::dh1e::view', 'loot::dh1e::edit',
+    'dh2-character::dh2e::view', 'dh2-character::dh2e::edit', 'dh2-npc::dh2e::view', 'dh2-npc::dh2e::edit',
+    'dh2-vehicle::dh2e::view', 'dh2-vehicle::dh2e::edit', 'loot::dh2e::view', 'loot::dh2e::edit',
+    'dw-character::dw::view', 'dw-character::dw::edit', 'dw-npc::dw::view', 'dw-npc::dw::edit',
+    'dw-vehicle::dw::view', 'dw-vehicle::dw::edit', 'loot::dw::view', 'loot::dw::edit',
+    'ow-character::ow::view', 'ow-character::ow::edit', 'ow-npc::ow::view', 'ow-npc::ow::edit',
+    'ow-vehicle::ow::view', 'ow-vehicle::ow::edit', 'loot::ow::view', 'loot::ow::edit',
+    'rt-character::rt::view', 'rt-character::rt::edit', 'rt-npc::rt::view', 'rt-npc::rt::edit',
+    'rt-vehicle::rt::view', 'rt-vehicle::rt::edit', 'rt-starship::rt::view', 'rt-starship::rt::edit',
+    'loot::rt::view', 'loot::rt::edit',
+    'im-character::im::view', 'im-character::im::edit', 'im-npc::im::view', 'im-npc::im::edit',
+    'im-vehicle::im::view', 'im-vehicle::im::edit', 'loot::im::view', 'loot::im::edit',
+];
+recordDimension('screenshot.actor.flow', covered['screenshot.actor.flow'], SCREENSHOT_ACTOR_FLOWS);
+
+// tests/e2e/screenshots-item-sheets.spec.ts — every itemType × {view,edit}; weapon/armour add ::im::view.
+const SCREENSHOT_ITEM_FLOWS = [
+    'weapon::view', 'weapon::edit', 'weapon::im::view',
+    'armour::view', 'armour::edit', 'armour::im::view',
+    'ammunition::view', 'ammunition::edit',
+    'gear::view', 'gear::edit',
+    'cybernetic::view', 'cybernetic::edit',
+    'forceField::view', 'forceField::edit',
+    'backpack::view', 'backpack::edit',
+    'storageLocation::view', 'storageLocation::edit',
+    'talent::view', 'talent::edit',
+    'trait::view', 'trait::edit',
+    'skill::view', 'skill::edit',
+    'originPath::view', 'originPath::edit',
+    'aptitude::view', 'aptitude::edit',
+    'peer::view', 'peer::edit',
+    'enemy::view', 'enemy::edit',
+    'condition::view', 'condition::edit',
+    'psychicPower::view', 'psychicPower::edit',
+    'navigatorPower::view', 'navigatorPower::edit',
+    'ritual::view', 'ritual::edit',
+    'shipComponent::view', 'shipComponent::edit',
+    'shipWeapon::view', 'shipWeapon::edit',
+    'shipUpgrade::view', 'shipUpgrade::edit',
+    'shipRole::view', 'shipRole::edit',
+    'order::view', 'order::edit',
+    'vehicleTrait::view', 'vehicleTrait::edit',
+    'vehicleUpgrade::view', 'vehicleUpgrade::edit',
+    'weaponModification::view', 'weaponModification::edit',
+    'armourModification::view', 'armourModification::edit',
+    'weaponQuality::view', 'weaponQuality::edit',
+    'attackSpecial::view', 'attackSpecial::edit',
+    'specialAbility::view', 'specialAbility::edit',
+    'criticalInjury::view', 'criticalInjury::edit',
+    'mutation::view', 'mutation::edit',
+    'malignancy::view', 'malignancy::edit',
+    'mentalDisorder::view', 'mentalDisorder::edit',
+    'journalEntry::view', 'journalEntry::edit',
+    'endeavour::view', 'endeavour::edit',
+    'lead::view', 'lead::edit',
+    'npcTemplate::view', 'npcTemplate::edit',
+];
+recordDimension('screenshot.item.flow', covered['screenshot.item.flow'], SCREENSHOT_ITEM_FLOWS);
+
+// tests/e2e/screenshots-dialogs-chat.spec.ts — union of dialog classes + chat templates.
+const SCREENSHOT_DIALOG_CLASSES = [
+    'AcquisitionDialog', 'AdvancementDialog', 'AmmoPickerDialog', 'CharacteristicSetupDialog', 'ConfirmationDialog',
+    'ConvertActorSystemDialog', 'WH40KCreateActorDialog', 'FateUsesDialog', 'RollConfigurationDialog', 'TransactionRequestDialog',
+    'AddXPDialog', 'AssignDamageDialog', 'BaseRollDialog', 'DamageRollDialog', 'EffectCreationDialog',
+    'EnhancedSkillDialog', 'ForceFieldDialog', 'PsychicPowerDialog', 'RighteousFuryDialog', 'SimpleRollDialog',
+    'SpecialistSkillDialog', 'UnifiedRollDialog', 'WeaponAttackDialog',
+];
+const SCREENSHOT_CHAT_TEMPLATES = [
+    'acquisition-test', 'action-roll-chat', 'armour-card-chat', 'assign-damage-chat', 'bleeding-chat',
+    'burning-chat', 'combat-action-card', 'condition-card', 'critical-injury-card', 'damage-roll-chat',
+    'force-field-roll-chat', 'item-card-chat', 'item-vocalize-chat', 'movement-card', 'navigator-power-chat',
+    'order-roll-chat', 'origin-roll-card', 'psychic-action-chat', 'reload-action-chat', 'ritual-roll-chat',
+    'ship-weapon-chat', 'simple-roll-chat', 'skill-card', 'talent-card', 'talent-roll-chat',
+    'trait-card', 'weapon-card-chat',
+];
+const SCREENSHOT_DIALOG_CHAT_FLOWS = [
+    ...SCREENSHOT_DIALOG_CLASSES.map((c) => `dialog::${c}`),
+    ...SCREENSHOT_CHAT_TEMPLATES.map((t) => `chat::${t}`),
+];
+recordDimension('screenshot.dialog-chat.flow', covered['screenshot.dialog-chat.flow'], SCREENSHOT_DIALOG_CHAT_FLOWS);
+
+// ─────────────────────────────────────────────────────────────────────────
+// Gap-closure wave (round: 5 parallel worktree agents). Targets the
+// remaining structural gaps: compendium pack content validation, Foundry
+// CONFIG registration audit, form-submit round-trip across many sheets,
+// hook-handler observable side-effects. (The Storybook visual-regression
+// spec uses Playwright's toHaveScreenshot baselines — no Tier B dim.)
+// ─────────────────────────────────────────────────────────────────────────
+
+// tests/e2e/foundry-config-audit.spec.ts
+const FOUNDRY_CONFIG_FLOWS = [
+    'config::Actor.documentClass',
+    'config::Actor.documentClasses-map',
+    'config::Item.documentClass',
+    'config::ActiveEffect.documentClass',
+    'config::ChatMessage.documentClass',
+    'config::Token.documentClass',
+    'config::Token.rulerClass',
+    'config::Token.movement.costAggregator',
+    'config::Combat.initiative.formula',
+    'config::MeasuredTemplate.defaults.angle',
+    'config::Dice.rolls.BasicRollWH40K',
+    'config::Dice.rolls.D100Roll',
+    'config::wh40k.config-installed',
+    'config::Actor.dataModels.bc-all',
+    'config::Actor.dataModels.dh1-all',
+    'config::Actor.dataModels.dh2-all',
+    'config::Actor.dataModels.rt-all',
+    'config::Actor.dataModels.ow-all',
+    'config::Actor.dataModels.dw-all',
+    'config::Actor.dataModels.im-all',
+    'config::Actor.dataModels.loot',
+    'config::Item.dataModels.equipment',
+    'config::Item.dataModels.features',
+    'config::Item.dataModels.powers',
+    'config::Item.dataModels.ship-vehicle',
+    'config::Item.dataModels.modifications',
+    'config::Item.dataModels.misc',
+    'config::Actor.sheetClasses.bc-all',
+    'config::Actor.sheetClasses.dh1-all',
+    'config::Actor.sheetClasses.dh2-all',
+    'config::Actor.sheetClasses.rt-all',
+    'config::Actor.sheetClasses.ow-all',
+    'config::Actor.sheetClasses.dw-all',
+    'config::Actor.sheetClasses.im-all',
+    'config::Actor.sheetClasses.loot',
+    'config::Actor.sheetClasses.no-anonymous-collisions',
+    'config::Item.sheetClasses.populated',
+    'config::Item.sheetClasses.no-anonymous-collisions',
+    'config::TextEditor.enrichers.populated',
+    'config::statusEffects.populated',
+    'config::game.wh40k.namespace',
+    'config::game.wh40k.log',
+    'config::game.wh40k.warn',
+    'config::game.wh40k.error',
+    'config::game.wh40k.rollItemMacro',
+    'config::game.wh40k.rollSkillMacro',
+    'config::game.wh40k.rollCharacteristicMacro',
+    'config::game.wh40k.rollTable',
+    'config::game.wh40k.openCompendiumBrowser',
+    'config::game.wh40k.OriginPathBuilder',
+    'config::game.wh40k.openOriginPathBuilder',
+    'config::game.wh40k.npc',
+    'config::game.wh40k.transaction',
+    'config::game.wh40k.dice',
+    'config::game.wh40k.BasicRollWH40K',
+    'config::game.wh40k.D100Roll',
+];
+recordDimension('foundry-config.flow', covered['foundry-config.flow'], FOUNDRY_CONFIG_FLOWS);
+
+// tests/e2e/compendium-content-validation.spec.ts
+const COMPENDIUM_CONTENT_FLOWS = [
+    'bc-core-items-talents::validated',
+    'bc-core-items-weapons::validated',
+    'bc-core-archetypes::validated',
+    'dh1-core-items-talents::validated',
+    'dh1-core-items-weapons::validated',
+    'dh2-core-stats-talents::validated',
+    'dh2-core-items-weapons::validated',
+    'dh2-core-stats-skills::validated',
+    'dh2-core-stats-conditions::validated',
+    'dh2-core-stats-traits::validated',
+    'dh2-core-stats-homeworlds::validated',
+    'dh2-actors-bestiary::validated',
+    'dh2-core-rolltables::validated',
+    'dh2-core-journals::validated',
+    'dw-core-items-talents::validated',
+    'dw-core-items-weapons::validated',
+    'dw-core-chapters::validated',
+    'hb-items-weapons::validated',
+    'hb-items-actors::validated',
+    'ow-core-items-talents::validated',
+    'ow-core-items-weapons::validated',
+    'ow-core-homeworlds::validated',
+    'rt-core-items-talents::validated',
+    'rt-core-items-weapons::validated',
+    'rt-core-actors-ships::validated',
+    'rt-core-items-traits::validated',
+];
+recordDimension('compendium-content.flow', covered['compendium-content.flow'], COMPENDIUM_CONTENT_FLOWS);
+
+// tests/e2e/sheet-form-submit-extra.spec.ts
+const SHEET_FORM_SUBMIT_EXTRA_FLOWS = [
+    'character-dh2-sheet::system.wounds.max',
+    'character-dh2-sheet::system.insanity',
+    'character-dh2-sheet::system.corruption',
+    'character-dh2-sheet::system.requisition',
+    'character-dh2-sheet::system.throneGelt',
+    'character-dh2-sheet::system.experience.total',
+    'character-dh2-sheet::system.bio.age',
+    'character-dh2-sheet::system.bio.eyes',
+    'character-rt-sheet::system.wounds.value',
+    'character-rt-sheet::system.bio.age',
+    'character-rt-sheet::system.rogueTrader.profitFactor.current',
+    'character-rt-sheet::system.throneGelt',
+    'character-bc-sheet::system.wounds.value',
+    'character-bc-sheet::system.insanity',
+    'character-bc-sheet::system.corruption',
+    'character-bc-sheet::system.bio.gender',
+    'npc-dh2-sheet::system.wounds.value',
+    'npc-dh2-sheet::system.wounds.max',
+    'npc-dh2-sheet::system.armour.total',
+    'npc-dh2-sheet::system.armour.locations.body',
+    'npc-dh2-sheet::system.faction',
+    'npc-dh2-sheet::system.threatLevel',
+    'vehicle-dh2-sheet::system.integrity.value',
+    'vehicle-dh2-sheet::system.integrity.max',
+    'vehicle-dh2-sheet::system.armour.front.value',
+    'vehicle-dh2-sheet::system.speed.cruising',
+    'vehicle-dh2-sheet::system.crew.required',
+    'starship-rt-sheet::system.hullIntegrity.value',
+    'starship-rt-sheet::system.hullIntegrity.max',
+    'starship-rt-sheet::system.speed',
+    'starship-rt-sheet::system.armour',
+    'starship-rt-sheet::system.voidShields',
+    'starship-rt-sheet::system.crew.population',
+    'weapon-sheet::system.damage.bonus',
+    'weapon-sheet::system.damage.penetration',
+    'weapon-sheet::system.clip.value',
+    'weapon-sheet::system.clip.max',
+    'weapon-sheet::system.attack.modifier',
+    'weapon-sheet::system.attack.range.value',
+    'weapon-sheet::system.attack.rateOfFire.semi',
+    'armour-sheet::system.armourPoints.head',
+    'armour-sheet::system.armourPoints.body',
+    'armour-sheet::system.armourPoints.leftArm',
+    'armour-sheet::system.armourPoints.leftLeg',
+    'armour-sheet::system.primitive',
+    'talent-sheet::system.tier',
+    'talent-sheet::system.cost',
+    'talent-sheet::system.rank',
+    'talent-sheet::system.isPassive',
+    'gear-sheet::system.quantity',
+    'gear-sheet::system.uses.value',
+    'gear-sheet::system.uses.max',
+    'gear-sheet::system.consumable',
+];
+recordDimension('sheet-form-submit-extra.flow', covered['sheet-form-submit-extra.flow'], SHEET_FORM_SUBMIT_EXTRA_FLOWS);
+
+// tests/e2e/hook-handler-effects.spec.ts
+const HOOK_HANDLER_EFFECT_FLOWS = [
+    'hook-effect::init::config-actor-document',
+    'hook-effect::ready::game-wh40k-namespace',
+    'hook-effect::renderChatMessageHTML::wh40k-ancestor',
+    'hook-effect::updateActor::derived-data-recomputed',
+    'hook-effect::updateItem::derived-modifiers-applied',
+    'hook-effect::combatStart::condition-applied',
+    'hook-effect::combatTurn::on-turn-effects-resolved',
+    'hook-effect::combatRound::bleed-tick',
+    'hook-effect::deleteCombat::cleanup-flag-cleared',
+    'hook-effect::getSceneControlButtons::assignDamage-tool',
+    'hook-effect::getActorSheetClass::default-fallthrough',
+    'hook-effect::hotbarDrop::item-shortcircuit',
+    'hook-effect::getActorDirectoryEntryContext::convert-system-entry',
+    'hook-effect::createItem::uuid-cache-warm',
+    'hook-effect::deleteItem::uuid-cache-evicts',
+    'hook-effect::registration::all-hooks-installed',
+];
+recordDimension('hook-handler-effect.flow', covered['hook-handler-effect.flow'], HOOK_HANDLER_EFFECT_FLOWS);
+
+
 // Roll-data plumbing flows exercised by tests/e2e/rolls-data.spec.ts. Drives
 // source-code coverage on `src/module/rolls/assign-damage-data.ts` (the
 // damage allocator's reduce-then-distribute branch matrix between wounds,
