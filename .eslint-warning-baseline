@@ -86,7 +86,7 @@
     "prettier/prettier",
     "require-atomic-updates"
   ],
-  "total": 12442,
+  "total": 12443,
   "byRule": {
     "@typescript-eslint/consistent-type-imports": 41,
     "@typescript-eslint/explicit-function-return-type": 110,
@@ -97,7 +97,7 @@
     "@typescript-eslint/no-non-null-assertion": 65,
     "@typescript-eslint/no-redundant-type-constituents": 10,
     "@typescript-eslint/no-shadow": 620,
-    "@typescript-eslint/no-unnecessary-condition": 1892,
+    "@typescript-eslint/no-unnecessary-condition": 1893,
     "@typescript-eslint/no-unnecessary-type-assertion": 15,
     "@typescript-eslint/no-unsafe-argument": 243,
     "@typescript-eslint/no-unsafe-assignment": 1632,
