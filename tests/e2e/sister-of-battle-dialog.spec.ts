@@ -44,7 +44,9 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
 
                 try {
                     const mod = await import(moduleUrl);
-                    const Cls = mod.default as { new (): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> } };
+                    const Cls = mod.default as {
+                        new (): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
+                    };
                     if (typeof Cls !== 'function') {
                         return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error: 'default export not a constructor' };
                     }
@@ -83,7 +85,7 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
             // Best-effort cleanup so the dialog doesn't leak into later specs.
             await page.evaluate(() => {
                 /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const root = document.querySelector('.sister-of-battle-dialog') as any;
+                const root = document.querySelector<HTMLDialogElement>('.sister-of-battle-dialog');
                 if (root?.close) {
                     try {
                         root.close();

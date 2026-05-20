@@ -21,7 +21,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "prettier/prettier": "warn",
+    "prettier/prettier": "error",
     "no-shadow": ["error", { "builtinGlobals": true, "hoist": "all", "allow": ["event", "name", "location", "origin", "parent", "prompt", "toolbar", "status", "length", "top", "close", "open", "stop", "history", "confirm", "document", "innerWidth", "innerHeight", "TextEditor", "CharacterData", "source", "Navigator", "selection", "match"] }],
     "no-var": "error",
     "prefer-const": "error",

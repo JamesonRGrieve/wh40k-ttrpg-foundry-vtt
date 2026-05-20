@@ -127,12 +127,12 @@ export const RerollOverflow: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
         // History list must exist with 10 entries.
-        const list = canvasElement.querySelector('[data-testid="previous-attempts-list"]') as HTMLElement | null;
+        const list = canvasElement.querySelector('[data-testid="previous-attempts-list"]');
         expect(list).toBeTruthy();
         expect(list?.querySelectorAll('li').length).toBe(10);
 
         // Action footer must be in the DOM AND visible in the viewport.
-        const footer = canvasElement.querySelector('[data-testid="origin-roll-actions"]') as HTMLElement | null;
+        const footer = canvasElement.querySelector('[data-testid="origin-roll-actions"]');
         expect(footer).toBeTruthy();
 
         // The Reroll button is rendered inside the action footer (post-roll state).

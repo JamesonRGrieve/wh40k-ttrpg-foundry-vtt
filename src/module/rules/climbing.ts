@@ -37,5 +37,7 @@ export function getClimbingModifier({ surfaceType }: ClimbingModifierInput): num
             return EASY_SURFACE_CLIMB_MODIFIER;
         case 'standard':
             return STANDARD_SURFACE_CLIMB_MODIFIER;
+        default:
+            return STANDARD_SURFACE_CLIMB_MODIFIER;
     }
 }

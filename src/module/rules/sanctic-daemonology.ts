@@ -256,7 +256,11 @@ export function resolveSancticManifestation(input: SancticManifestInput): Sancti
         throw new Error(`Unknown Sanctic power: ${input.powerId}`);
     }
 
-    const mode = resolvePsyMode({ mode: input.mode, basePR: input.basePR, pushLevel: input.pushLevel });
+    const mode = resolvePsyMode({
+        mode: input.mode,
+        basePR: input.basePR,
+        ...(input.pushLevel !== undefined ? { pushLevel: input.pushLevel } : {}),
+    });
 
     // Sanctic never charges Corruption (beyond.md §"TO INVITE
     // CORRUPTION" — the per-use cost is explicitly Malefic-only). The

@@ -111,9 +111,7 @@ describe('composeInstallTest (#125)', () => {
     });
 
     it('craftsmanship and site modifier tables are monotonic in the expected direction', () => {
-        expect(CYBERNETIC_CRAFTSMANSHIP_INSTALL_MODIFIERS.poor).toBeLessThan(
-            CYBERNETIC_CRAFTSMANSHIP_INSTALL_MODIFIERS.best,
-        );
+        expect(CYBERNETIC_CRAFTSMANSHIP_INSTALL_MODIFIERS.poor).toBeLessThan(CYBERNETIC_CRAFTSMANSHIP_INSTALL_MODIFIERS.best);
         expect(CYBERNETIC_SITE_MODIFIERS.neural).toBeLessThan(CYBERNETIC_SITE_MODIFIERS.external);
     });
 });

@@ -40,7 +40,12 @@ test.describe('Issue #216 — resolved aptitude collision no longer renders as r
         // The resolved-applied list MUST be present so the player can still
         // Change their choice. The arrow + replacement label is visible.
         await expect(page.getByTestId('aptitude-collision-resolved-banner')).toHaveCount(1);
-        await expect(page.getByTestId('aptitude-collision-resolved').filter({ has: page.locator('[data-aptitude="Willpower"]') }).first()).toBeVisible();
+        await expect(
+            page
+                .getByTestId('aptitude-collision-resolved')
+                .filter({ has: page.locator('[data-aptitude="Willpower"]') })
+                .first(),
+        ).toBeVisible();
 
         void consoleErrors;
     });
@@ -51,6 +56,11 @@ test.describe('Issue #216 — resolved aptitude collision no longer renders as r
 
         await expect(page.getByTestId('aptitude-collision-banner')).toHaveCount(1);
         await expect(page.getByTestId('aptitude-collision-resolved-banner')).toHaveCount(0);
-        await expect(page.getByTestId('aptitude-collision-unresolved').filter({ has: page.locator('[data-aptitude="Willpower"]') }).first()).toBeVisible();
+        await expect(
+            page
+                .getByTestId('aptitude-collision-unresolved')
+                .filter({ has: page.locator('[data-aptitude="Willpower"]') })
+                .first(),
+        ).toBeVisible();
     });
 });

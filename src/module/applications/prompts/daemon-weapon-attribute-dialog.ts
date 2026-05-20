@@ -8,10 +8,7 @@
  */
 
 import type { ChaosAlignment } from '../../config/game-systems/types.ts';
-import {
-    type DaemonWeaponAttributeRollResult,
-    rollDaemonWeaponAttributes,
-} from '../../rules/daemon-weapon-attributes.ts';
+import { type DaemonWeaponAttributeRollResult, rollDaemonWeaponAttributes } from '../../rules/daemon-weapon-attributes.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../rules/daemon-weapon.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';

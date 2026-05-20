@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';

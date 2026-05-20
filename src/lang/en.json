@@ -1403,6 +1403,138 @@
                 "survival": "Survival"
             }
         },
+        "BC": {
+            "Advancement": {
+                "PanelHeader": "Chaos Alignment",
+                "CurrentAlignment": "Current Alignment",
+                "TallyHeader": "Advances Tally",
+                "Checkpoint": "Last Alignment Check",
+                "RecheckTitle": "Re-evaluate Alignment at this Corruption-Point threshold",
+                "RecheckButton": "Recheck",
+                "PendingFlip": "A re-check would flip this Heretic's Alignment to {target}.",
+                "PsykerLocked": "Aligned to Khorne — psychic powers and Psyker Trait are suppressed.",
+                "Infamy": "Infamy",
+                "InfamyCapped": "Cap reached — Infamy advances must be earned through play.",
+                "BuyInfamyTitle": "Purchase +{step} Infamy for {xp} xp",
+                "BuyInfamyConfirmTitle": "Purchase Infamy Advance",
+                "BuyInfamyConfirmBody": "Spend {xp} xp to raise Infamy by {step} (to {next})?",
+                "BuyInfamyInsufficientXP": "Not enough XP to purchase Infamy advance (cost: {cost}, available: {available}).",
+                "BuyInfamyCapped": "Infamy is already at the {cap} cap and cannot be advanced with xp.",
+                "RecheckChatTitle": "Alignment Re-check",
+                "RecheckFlippedTo": "Alignment shifted from {previous} to {next}.",
+                "RecheckUnchanged": "Alignment re-evaluated — no shift required.",
+                "Alignment": {
+                    "Unaligned": "Unaligned",
+                    "Khorne": "Khorne",
+                    "Nurgle": "Nurgle",
+                    "Slaanesh": "Slaanesh",
+                    "Tzeentch": "Tzeentch"
+                },
+                "Tier": {
+                    "Simple": "Simple",
+                    "Intermediate": "Intermediate",
+                    "Trained": "Trained",
+                    "Expert": "Expert"
+                }
+            }
+        },
+        "DW": {
+            "Horde": {
+                "MagnitudeLost": "Magnitude Lost",
+                "Magnitude": "Magnitude",
+                "RawTag": "RAW Horde",
+                "ToHitBonus": "To-Hit Bonus",
+                "BonusDamageDice": "Bonus Damage Dice",
+                "SizeKeyword": {
+                    "Massive": "Massive",
+                    "Immense": "Immense",
+                    "Monumental": "Monumental",
+                    "Titanic": "Titanic"
+                },
+                "Tier": {
+                    "Mob": "A mob",
+                    "Throng": "A thronged phalanx",
+                    "MassedAssault": "A massed assault",
+                    "SerriedTide": "A serried tide of foes"
+                },
+                "Break": {
+                    "NoTest": "No break test required",
+                    "TestNormal": "Willpower test to hold",
+                    "TestPenalised": "Willpower test at -10",
+                    "AutoBreak": "Auto-break: routs at Sprint",
+                    "Fearless": "Fearless — never breaks",
+                    "RollTestButton": "Roll Willpower Test"
+                },
+                "Trait": {
+                    "BloodSoakedTide": "Blood Soaked Tide",
+                    "BrutalCharge": "Brutal Charge",
+                    "Disciplined": "Disciplined",
+                    "Fearless": "Fearless",
+                    "FightingWithdrawal": "Fighting Withdrawal",
+                    "FireDrill": "Fire Drill",
+                    "Frenzy": "Frenzy",
+                    "Overwhelming": "Overwhelming"
+                }
+            }
+        },
+        "RT": {
+            "Colony": {
+                "DialogTitle": "Colony Growth (90-day cycle)",
+                "ChatTitle": "Colony Growth",
+                "CharacteristicsLabel": "Characteristics",
+                "GrowthModifierLabel": "Growth Modifier",
+                "AgriculturalSoftenerLabel": "Agricultural Softener (re-roll on decrease)",
+                "EcclesiasticalOrderSwapLabel": "Ecclesiastical: take Order loss as Piety",
+                "AgriculturalSoftenerRollLabel": "Agricultural Softener Roll",
+                "RollLabel": "Roll",
+                "TierLabel": "Tier",
+                "DecreaseFootnote": "Decreased",
+                "ActiveEffectsLabel": "Active Effects",
+                "RollGrowthButton": "Roll Growth",
+                "CancelButton": "Cancel",
+                "Characteristic": {
+                    "Size": "Size",
+                    "Complacency": "Complacency",
+                    "Order": "Order",
+                    "Productivity": "Productivity",
+                    "Piety": "Piety"
+                },
+                "Tier": {
+                    "Abandoned": "Abandoned",
+                    "Outpost": "Outpost",
+                    "Settlement": "Settlement",
+                    "Foothold": "Foothold",
+                    "Colony": "Colony",
+                    "Holding": "Holding",
+                    "Dominion": "Dominion",
+                    "Territory": "Territory",
+                    "City": "City",
+                    "Metropolis": "Metropolis",
+                    "Hive": "Hive"
+                },
+                "Outcome": {
+                    "Decrease": "Colony Shrank",
+                    "NoChange": "No Change",
+                    "Increase": "Colony Grew"
+                },
+                "Effect": {
+                    "Placated": "Placated",
+                    "Orderly": "Orderly",
+                    "Productive": "Productive",
+                    "Pious": "Pious",
+                    "Unhappy": "Unhappy",
+                    "Anarchy": "Anarchy",
+                    "Idle": "Idle",
+                    "Apostate": "Apostate"
+                },
+                "Type": {
+                    "ResearchMission": "Research Mission",
+                    "MiningIndustry": "Mining and Industry",
+                    "Ecclesiastical": "Ecclesiastical",
+                    "Agricultural": "Agricultural"
+                }
+            }
+        },
         "IncorruptibleDevotion": {
             "DialogTitle": "Convert Corruption to Insanity (Adepta Sororitas)",
             "Description": "Your unwavering faith arms you against the Ruinous Powers. You may refuse this taint, taking the spiritual toll on your mind instead.",
@@ -2050,10 +2182,16 @@
                 "Empty": "No Manoeuvre Actions available for this game system.",
                 "AdjustBearing": { "Label": "Adjust Bearing", "Benefit": "Turn earlier than normal." },
                 "AdjustSpeed": { "Label": "Adjust Speed", "Benefit": "Move faster or slower than normal." },
-                "AdjustSpeedAndBearing": { "Label": "Adjust Speed & Bearing", "Benefit": "Turn earlier than normal while moving faster or slower than normal." },
+                "AdjustSpeedAndBearing": {
+                    "Label": "Adjust Speed & Bearing",
+                    "Benefit": "Turn earlier than normal while moving faster or slower than normal."
+                },
                 "ComeToNewHeading": { "Label": "Come to New Heading", "Benefit": "Make two turns in one Round (-20 BS to fire this turn)." },
                 "Disengage": { "Label": "Disengage", "Benefit": "Escape combat (opposed by enemy Detection+Scrutiny within 20 VU)." },
-                "EvasiveManoeuvres": { "Label": "Evasive Manoeuvres", "Benefit": "Inflicts -10 (per DoS) penalty on incoming fire; same penalty applies to own shooting." }
+                "EvasiveManoeuvres": {
+                    "Label": "Evasive Manoeuvres",
+                    "Benefit": "Inflicts -10 (per DoS) penalty on incoming fire; same penalty applies to own shooting."
+                }
             },
             "Ramming": {
                 "ChatTitle": "Ramming Action",

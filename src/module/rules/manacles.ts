@@ -123,7 +123,7 @@ export function isManaclesItemEquipped(item: ManaclesCandidate | null | undefine
 export function findEquippedManacles(actor: WH40KBaseActorDocument): WH40KItemDocument | null {
     // eslint-disable-next-line no-restricted-syntax -- boundary: actor.items is a Foundry EmbeddedCollection iterating untyped Item docs
     for (const item of actor.items as unknown as Iterable<WH40KItemDocument>) {
-        if (isManaclesItemEquipped(item as unknown as ManaclesCandidate)) return item;
+        if (isManaclesItemEquipped(item)) return item;
     }
     return null;
 }
@@ -160,7 +160,7 @@ export function effectIsManacled(effect: ManaclesEffectCandidate | null | undefi
         const flagged = effect.getFlag(MANACLES_FLAG_SCOPE, MANACLES_FLAG_KEY);
         if (flagged === true) return true;
     }
-    const flagBag = effect.flags?.[MANACLES_FLAG_SCOPE] as Record<string, unknown> | undefined;
+    const flagBag = effect.flags?.[MANACLES_FLAG_SCOPE];
     if (flagBag?.[MANACLES_FLAG_KEY] === true) return true;
     return (effect.name ?? '') === MANACLES_EFFECT_NAME;
 }
@@ -198,7 +198,7 @@ export async function applyManaclesCondition(actor: WH40KBaseActorDocument, opti
     // eslint-disable-next-line no-restricted-syntax -- boundary: createConditionEffect returns Foundry's untyped ActiveEffect handle
     const created = (await createConditionEffect(actor, MANACLES_CONDITION_KEY, {
         flags,
-        origin: options.origin,
+        ...(options.origin !== undefined ? { origin: options.origin } : {}),
     })) as ManaclesEffectCandidate | Array<ManaclesEffectCandidate> | null;
 
     if (Array.isArray(created)) return created[0] ?? null;

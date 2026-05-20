@@ -1,10 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-    classifyCriticalEffect,
-    clampCriticalSeverity,
-    getCriticalDamageRecord,
-    invalidateCriticalDamageCache,
-} from './critical-damage';
+import { classifyCriticalEffect, clampCriticalSeverity, getCriticalDamageRecord, invalidateCriticalDamageCache } from './critical-damage';
 import { normalizeBodyPart, normalizeDamageType } from './damage-type';
 
 /**
@@ -103,7 +98,7 @@ const FIXTURE: FixtureItem[] = [
 function stubGameWithFixture(docs: FixtureItem[]): void {
     vi.stubGlobal('game', {
         packs: {
-            get: (id: string) => (id === 'wh40k-rpg.dh2-core-stats-critical-injuries' ? { getDocuments: () => Promise.resolve(docs) } : undefined),
+            get: (id: string) => (id === 'wh40k-rpg.dh2-core-stats-critical-injuries' ? { getDocuments: async () => Promise.resolve(docs) } : undefined),
         },
     });
 }

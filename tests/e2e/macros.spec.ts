@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -224,7 +223,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     }
                 }
                 // Close any chat-card or roll prompt the dispatch flows opened.
-                const wins = Object.values(g.ui?.windows ?? {}) as any[];
+                const wins = Object.values(g.ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of wins) {
                     const id: string = w?.id ?? '';
                     if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {

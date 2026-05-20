@@ -59,9 +59,7 @@ function formatPenalties(penalties: readonly string[]): string {
 }
 
 function buildCardContext(def: BeyondHomeworldDef): BeyondHomeworldCardContext {
-    const corruptionRiderLabel = def.corruptionRider
-        ? `1d${def.corruptionRider.dieFaces} + ${def.corruptionRider.base} Corruption Points`
-        : null;
+    const corruptionRiderLabel = def.corruptionRider ? `1d${def.corruptionRider.dieFaces} + ${def.corruptionRider.base} Corruption Points` : null;
     const subtletyClampLabel = def.subtletyClamp
         ? `Subtlety decreases reduced by ${def.subtletyClamp.reducedBy} (min reduction ${def.subtletyClamp.minimumReduction})`
         : null;

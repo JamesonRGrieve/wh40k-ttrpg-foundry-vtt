@@ -170,7 +170,17 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                             description: '',
                             shortDescription: '',
                             requirements: { text: '', previousSteps: [], excludedSteps: [] },
-                            grants: { skills: [], talents: [], traits: [], equipment: [], aptitudes: apts, specialAbilities: [], choices: [], woundsFormula: null, fateFormula: null },
+                            grants: {
+                                skills: [],
+                                talents: [],
+                                traits: [],
+                                equipment: [],
+                                aptitudes: apts,
+                                specialAbilities: [],
+                                choices: [],
+                                woundsFormula: null,
+                                fateFormula: null,
+                            },
                             modifiers: { characteristics: {} },
                             isAdvanced: false,
                             xpCost: 0,
@@ -218,8 +228,8 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                     // Hold the open application on a handle so snap() (called
                     // outside this evaluate) captures the live DOM rather than
                     // an empty viewport. The follow-up evaluate closes it.
-                    (g as any).__c216builder = builder;
-                    (g as any).__c216actor = actor;
+                    g.__c216builder = builder;
+                    g.__c216actor = actor;
 
                     return {
                         created,

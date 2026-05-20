@@ -89,7 +89,20 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         _lastUpdate?: Record<string, unknown>;
     }
 
-    async function makeFakeStarship(opts: { gameSystem?: string; priorTurnDamage?: { hullLoss: number; crewLoss: number; moraleLoss: number; turn: number } } = {}): Promise<{ fake: FakeStarship; methods: { applyHullDamage: (this: FakeStarship, n: number) => Promise<unknown>; cancelPriorTurnDamage: (this: FakeStarship) => Promise<unknown>; replenishBetweenCombat: (this: FakeStarship) => Promise<unknown>; usesRTCrewEconomy: PropertyDescriptor } } | undefined> {
+    async function makeFakeStarship(
+        opts: { gameSystem?: string; priorTurnDamage?: { hullLoss: number; crewLoss: number; moraleLoss: number; turn: number } } = {},
+    ): Promise<
+        | {
+              fake: FakeStarship;
+              methods: {
+                  applyHullDamage: (this: FakeStarship, n: number) => Promise<unknown>;
+                  cancelPriorTurnDamage: (this: FakeStarship) => Promise<unknown>;
+                  replenishBetweenCombat: (this: FakeStarship) => Promise<unknown>;
+                  usesRTCrewEconomy: PropertyDescriptor;
+              };
+          }
+        | undefined
+    > {
         const mod = await import('./starship').catch((err) => {
             console.warn(`WH40KStarship import failed: ${err instanceof Error ? err.message : String(err)}`);
             return undefined;
@@ -134,7 +147,12 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         return {
             fake,
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- defined on prototype by design
-            methods: { applyHullDamage: proto.applyHullDamage, cancelPriorTurnDamage: proto.cancelPriorTurnDamage, replenishBetweenCombat: proto.replenishBetweenCombat, usesRTCrewEconomy: desc! },
+            methods: {
+                applyHullDamage: proto.applyHullDamage,
+                cancelPriorTurnDamage: proto.cancelPriorTurnDamage,
+                replenishBetweenCombat: proto.replenishBetweenCombat,
+                usesRTCrewEconomy: desc!,
+            },
         };
     }
 
@@ -203,7 +221,9 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         (globalThis as { game?: unknown }).game = stubGame;
         try {
             const restored = (await methods.cancelPriorTurnDamage.call(fake)) as {
-                hullRestored: number; crewRestored: number; moraleRestored: number;
+                hullRestored: number;
+                crewRestored: number;
+                moraleRestored: number;
             };
             expect(restored).toEqual({ hullRestored: 5, crewRestored: 5, moraleRestored: 5 });
             expect(fake.system.hullIntegrity.value).toBe(35);
@@ -244,4 +264,3 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         expect(fake.system.crew.population).toBe(70);
     });
 });
-

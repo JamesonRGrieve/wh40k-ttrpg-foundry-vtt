@@ -1,7 +1,6 @@
 // Keys MUST match the DICE_ENGINE_FLOWS constant in scripts/e2e-coverage.mjs (registered by the orchestrator).
 
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -202,7 +201,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 if (typeof roll.evaluate === 'function') await roll.evaluate();
                 roll.configuration = { target: 42, flavor: 'roundtrip-probe' };
                 const json = roll.toJSON();
-                const serializedConfig = (json as any).configuration;
+                const serializedConfig = json.configuration;
                 const restored = BasicRollWH40K.fromData(json);
                 const restoredConfig = restored?.configuration ?? {};
                 const ok =
@@ -211,11 +210,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     restored instanceof BasicRollWH40K &&
                     restoredConfig.target === 42 &&
                     restoredConfig.flavor === 'roundtrip-probe';
-                record(
-                    'basic-roll-tojson-fromdata-roundtrip',
-                    ok,
-                    `serialized=${JSON.stringify(serializedConfig)} restored=${JSON.stringify(restoredConfig)}`,
-                );
+                record('basic-roll-tojson-fromdata-roundtrip', ok, `serialized=${JSON.stringify(serializedConfig)} restored=${JSON.stringify(restoredConfig)}`);
             } catch (err) {
                 record('basic-roll-tojson-fromdata-roundtrip', false, String((err as Error)?.message ?? err));
             }
@@ -267,11 +262,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
             try {
                 const success = await makeD100(28, { target: 60 }); // DoS 4
                 const failure = await makeD100(67, { target: 35 }); // DoF 4
-                const ok =
-                    success.degrees === 4 &&
-                    success.absoluteDegrees === 4 &&
-                    failure.degrees === -4 &&
-                    failure.absoluteDegrees === 4;
+                const ok = success.degrees === 4 && success.absoluteDegrees === 4 && failure.degrees === -4 && failure.absoluteDegrees === 4;
                 record(
                     'd100-degrees-signed-and-absolute',
                     ok,
@@ -357,12 +348,12 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
             try {
                 const roll = await makeD100(3, { target: 50 }); // crit success + below-target
                 const html = await roll.getTooltip();
-                const ok =
-                    typeof html === 'string' &&
-                    html.includes('wh40k-dice-summary') &&
-                    html.includes('Target: 50') &&
-                    html.includes('Success');
-                record('d100-get-tooltip-enhances', ok, `len=${typeof html === 'string' ? html.length : 'n/a'} hasSummary=${typeof html === 'string' && html.includes('wh40k-dice-summary')}`);
+                const ok = typeof html === 'string' && html.includes('wh40k-dice-summary') && html.includes('Target: 50') && html.includes('Success');
+                record(
+                    'd100-get-tooltip-enhances',
+                    ok,
+                    `len=${typeof html === 'string' ? html.length : 'n/a'} hasSummary=${typeof html === 'string' && html.includes('wh40k-dice-summary')}`,
+                );
             } catch (err) {
                 record('d100-get-tooltip-enhances', false, String((err as Error)?.message ?? err));
             }

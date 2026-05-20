@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    MUTATION_TABLE,
-    TRACK_RANGES,
-    findMutationByRoll,
-    getMutationById,
-    rollMutation,
-} from './mutation-table';
+import { MUTATION_TABLE, TRACK_RANGES, findMutationByRoll, getMutationById, rollMutation } from './mutation-table';
 
 describe('MUTATION_TABLE registry', () => {
     it('pins canonical RAW entries', () => {
@@ -40,8 +34,9 @@ describe('MUTATION_TABLE registry', () => {
         }
         for (let i = 0; i < MUTATION_TABLE.length; i += 1) {
             for (let j = i + 1; j < MUTATION_TABLE.length; j += 1) {
-                const a = MUTATION_TABLE[i]!;
-                const b = MUTATION_TABLE[j]!;
+                const a = MUTATION_TABLE[i];
+                const b = MUTATION_TABLE[j];
+                if (a === undefined || b === undefined) throw new Error('MUTATION_TABLE index out of range');
                 const overlap = a.roll.min <= b.roll.max && b.roll.min <= a.roll.max;
                 expect(overlap, `${a.id} vs ${b.id} ranges overlap`).toBe(false);
             }

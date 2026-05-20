@@ -66,10 +66,8 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                         hasDaemonWorld = el.querySelector('[data-homeworld-id="daemonWorld"]') !== null;
                         hasPenalColony = el.querySelector('[data-homeworld-id="penalColony"]') !== null;
                         hasQuarantineWorld = el.querySelector('[data-homeworld-id="quarantineWorld"]') !== null;
-                        hasCorruptionRider =
-                            el.querySelector('[data-homeworld-id="daemonWorld"] [data-rider="corruption"]') !== null;
-                        hasSubtletyClampRider =
-                            el.querySelector('[data-homeworld-id="quarantineWorld"] [data-rider="subtlety-clamp"]') !== null;
+                        hasCorruptionRider = el.querySelector('[data-homeworld-id="daemonWorld"] [data-rider="corruption"]') !== null;
+                        hasSubtletyClampRider = el.querySelector('[data-homeworld-id="quarantineWorld"] [data-rider="subtlety-clamp"]') !== null;
                     }
                     try {
                         await inst.close();

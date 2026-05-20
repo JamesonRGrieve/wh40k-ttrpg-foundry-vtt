@@ -53,9 +53,9 @@ export default class IncorruptibleDevotionDialog extends ApplicationV2Mixin(Appl
         classes: ['wh40k-rpg', 'dialog', 'incorruptible-devotion-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            trade: IncorruptibleDevotionDialog.#onTrade as ActionHandler,
+            trade: IncorruptibleDevotionDialog.#onTrade,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            decline: IncorruptibleDevotionDialog.#onDecline as ActionHandler,
+            decline: IncorruptibleDevotionDialog.#onDecline,
         },
         position: {
             width: 480,
@@ -118,10 +118,7 @@ export default class IncorruptibleDevotionDialog extends ApplicationV2Mixin(Appl
             traded,
             gameSystem: 'dh2e',
         };
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/incorruptible-devotion-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/incorruptible-devotion-chat.hbs', templateData);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);

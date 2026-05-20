@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import qualityChatSrc from '../../src/templates/chat/weapon-quality-effect-chat.hbs?raw';
 import {
     resolveGravitonBonusDamage,
     resolveHitEffectSaveTarget,
@@ -11,8 +10,9 @@ import {
     resolveScatterRangeBand,
     resolveStunDuration,
     resolveTemplateRadius,
-    WEAPON_QUALITY_EFFECTS,
+    type WEAPON_QUALITY_EFFECTS,
 } from '../../src/module/rules/weapon-quality-effects.ts';
+import qualityChatSrc from '../../src/templates/chat/weapon-quality-effect-chat.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 

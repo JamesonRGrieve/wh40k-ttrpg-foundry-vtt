@@ -15,7 +15,7 @@ import { expect, test } from './lib/test';
  */
 
 test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
-    test('renders against a dh2 actor with Emperor\'s Anathema + Fate', async ({ page }) => {
+    test("renders against a dh2 actor with Emperor's Anathema + Fate", async ({ page }) => {
         const joined = await joinAsGM(page);
         test.skip(!joined, 'GM join failed');
 
@@ -53,9 +53,7 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
 
                 try {
                     if (typeof actor.createEmbeddedDocuments === 'function') {
-                        await actor.createEmbeddedDocuments('Item', [
-                            { name: "Emperor's Anathema", type: 'talent' },
-                        ]);
+                        await actor.createEmbeddedDocuments('Item', [{ name: "Emperor's Anathema", type: 'talent' }]);
                     }
                 } catch {
                     /* If the talent can't be created (e.g. dh2-talent type variant), the predicate

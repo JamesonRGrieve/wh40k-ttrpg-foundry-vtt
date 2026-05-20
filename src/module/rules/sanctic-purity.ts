@@ -32,11 +32,7 @@ export const SANCTIC_PURITY_FATE_COST = 1 as const;
  * both are present in a duck-typed `hasTalent` implementation that
  * does substring matching.
  */
-const TALENT_NAMES: readonly string[] = [
-    "Emperor's Anathema",
-    'Emperors Anathema',
-    'Emperor Anathema',
-];
+const TALENT_NAMES: readonly string[] = ["Emperor's Anathema", 'Emperors Anathema', 'Emperor Anathema'];
 
 /**
  * Minimal duck-type for an actor that exposes the `hasTalent` lookup.

@@ -23,7 +23,7 @@ export interface EliteAdvanceDefinition {
 }
 
 export const ELITE_ADVANCES: Record<string, EliteAdvanceDefinition> = {
-    astropath: {
+    'astropath': {
         id: 'astropath',
         label: 'Astropath',
         description:
@@ -35,21 +35,21 @@ export const ELITE_ADVANCES: Record<string, EliteAdvanceDefinition> = {
             { type: 'talent', key: 'Sanctioned', minimum: 1 },
         ],
     },
-    inquisitor: {
+    'inquisitor': {
         id: 'inquisitor',
         label: 'Inquisitor',
         description: 'You take the Rosette and become an Inquisitor of the Holy Ordos. Grants the Inquisitor talent and unlocks Inquisitor special rules.',
         xpCost: 3000,
         prerequisites: [{ type: 'characteristic', key: 'willpower', minimum: 50 }],
     },
-    psyker: {
+    'psyker': {
         id: 'psyker',
         label: 'Psyker',
         description: 'You awaken the witch within. Gain Psy Rating 1, Sanctioned talent, and Psyniscience as a Known skill.',
         xpCost: 1000,
         prerequisites: [{ type: 'characteristic', key: 'willpower', minimum: 35 }],
     },
-    untouchable: {
+    'untouchable': {
         id: 'untouchable',
         label: 'Untouchable',
         description: 'The galaxy recoils from your absence. Permanent immunity to psychic powers; you do not register on the Warp.',

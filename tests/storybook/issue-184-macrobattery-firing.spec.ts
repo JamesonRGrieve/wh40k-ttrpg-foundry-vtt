@@ -30,8 +30,16 @@ test.describe('Issue #184 — RT macrobattery firing flow', () => {
         // The deterministic story payload puts the weapon name in the card title.
         // Lenient: pass if either the canvas content rendered or the story slot
         // mounted — both prove the chat-card template did not throw.
-        const titleVisible = await page.getByText('Sunsear Laser Battery').first().isVisible().catch(() => false);
-        const canvasVisible = await page.locator('#storybook-root').first().isVisible().catch(() => false);
+        const titleVisible = await page
+            .getByText('Sunsear Laser Battery')
+            .first()
+            .isVisible()
+            .catch(() => false);
+        const canvasVisible = await page
+            .locator('#storybook-root')
+            .first()
+            .isVisible()
+            .catch(() => false);
         expect(titleVisible || canvasVisible).toBeTruthy();
         void consoleErrors;
     });

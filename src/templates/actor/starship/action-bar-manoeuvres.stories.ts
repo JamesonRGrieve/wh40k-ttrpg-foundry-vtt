@@ -11,13 +11,10 @@
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { rollDifficulties } from '../../../module/rules/difficulties';
-import {
-    getShipManoeuvresForSystem,
-    resolveShipManoeuvreCombinedTest,
-} from '../../../module/rules/ship-manoeuvres';
 import { mockStarshipActor, resetDefaultRng } from '../../../../stories/mocks/extended';
 import { renderSheet, renderSheetParts } from '../../../../stories/test-helpers';
+import { rollDifficulties } from '../../../module/rules/difficulties';
+import { getShipManoeuvresForSystem, resolveShipManoeuvreCombinedTest } from '../../../module/rules/ship-manoeuvres';
 import actionBarSrc from './action-bar-manoeuvres.hbs?raw';
 
 const meta: Meta = {
@@ -75,14 +72,7 @@ export const Default: Story = {
         const canvas = within(canvasElement);
         // The six RAW Manoeuvres render — assert by stable id on the
         // tile element so localized name drift does not break the test.
-        for (const id of [
-            'adjust-bearing',
-            'adjust-speed',
-            'adjust-speed-and-bearing',
-            'come-to-new-heading',
-            'disengage',
-            'evasive-manoeuvres',
-        ]) {
+        for (const id of ['adjust-bearing', 'adjust-speed', 'adjust-speed-and-bearing', 'come-to-new-heading', 'disengage', 'evasive-manoeuvres']) {
             const tile = canvasElement.querySelector(`[data-manoeuvre-id="${id}"]`);
             expect(tile, `tile missing for ${id}`).not.toBeNull();
         }
@@ -109,10 +99,7 @@ export const Empty: Story = {
 export const ThemeRT: Story = {
     name: 'Theme / Rogue Trader',
     render: () => {
-        const wrapper = renderSheetParts(
-            [{ template: actionBarSrc, context: buildContext({ pilot: 50, helmsman: 'Pilot-Officer Korr' }) }],
-            {},
-        );
+        const wrapper = renderSheetParts([{ template: actionBarSrc, context: buildContext({ pilot: 50, helmsman: 'Pilot-Officer Korr' }) }], {});
         wrapper.dataset.wh40kSystem = 'rt';
         return wrapper;
     },
@@ -127,10 +114,7 @@ export const ThemeRT: Story = {
 export const ThemeDH2: Story = {
     name: 'Theme / Dark Heresy 2e',
     render: () => {
-        const wrapper = renderSheetParts(
-            [{ template: actionBarSrc, context: buildContext({ pilot: 40, helmsman: 'Scribe-Adjunct Calix' }) }],
-            {},
-        );
+        const wrapper = renderSheetParts([{ template: actionBarSrc, context: buildContext({ pilot: 40, helmsman: 'Scribe-Adjunct Calix' }) }], {});
         wrapper.dataset.wh40kSystem = 'dh2e';
         return wrapper;
     },
@@ -140,10 +124,7 @@ export const ThemeDH2: Story = {
 export const ThemeIM: Story = {
     name: 'Theme / Imperium Maledictum',
     render: () => {
-        const wrapper = renderSheetParts(
-            [{ template: actionBarSrc, context: buildContext({ pilot: 35, helmsman: 'Bondsman Hreth' }) }],
-            {},
-        );
+        const wrapper = renderSheetParts([{ template: actionBarSrc, context: buildContext({ pilot: 35, helmsman: 'Bondsman Hreth' }) }], {});
         wrapper.dataset.wh40kSystem = 'im';
         return wrapper;
     },

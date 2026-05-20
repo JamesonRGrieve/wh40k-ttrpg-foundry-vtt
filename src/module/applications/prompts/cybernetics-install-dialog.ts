@@ -20,16 +20,10 @@
  * regress the other six lines.
  */
 
+import { type CyberneticCraftsmanship, type CyberneticInstallSite, composeInstallTest, resolveInstall, rollRecoveryTime } from '../../rules/cybernetics.ts';
+import { rollDifficulties } from '../../rules/difficulties.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import { rollDifficulties } from '../../rules/difficulties.ts';
-import {
-    type CyberneticCraftsmanship,
-    type CyberneticInstallSite,
-    composeInstallTest,
-    resolveInstall,
-    rollRecoveryTime,
-} from '../../rules/cybernetics.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -114,13 +108,13 @@ export default class CyberneticsInstallDialog extends ApplicationV2Mixin(Applica
         classes: ['wh40k-rpg', 'dialog', 'cybernetics-install-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectCraftsmanship: CyberneticsInstallDialog.#onSelectCraftsmanship as ActionHandler,
+            selectCraftsmanship: CyberneticsInstallDialog.#onSelectCraftsmanship,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectSite: CyberneticsInstallDialog.#onSelectSite as ActionHandler,
+            selectSite: CyberneticsInstallDialog.#onSelectSite,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            rollInstall: CyberneticsInstallDialog.#onRollInstall as ActionHandler,
+            rollInstall: CyberneticsInstallDialog.#onRollInstall,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: CyberneticsInstallDialog.#onCancel as ActionHandler,
+            cancel: CyberneticsInstallDialog.#onCancel,
         },
         position: { width: 540 },
         window: {
@@ -238,10 +232,7 @@ export default class CyberneticsInstallDialog extends ApplicationV2Mixin(Applica
             gameSystem: 'dh2e',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/cybernetics-install-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/cybernetics-install-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: g.game?.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];

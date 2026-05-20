@@ -17,8 +17,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
-import shipRammingChatSrc from '../../src/templates/chat/ship-ramming-chat.hbs?raw';
 import { resolveRamming, type RammingResolution } from '../../src/module/rules/ship-ramming.ts';
+import shipRammingChatSrc from '../../src/templates/chat/ship-ramming-chat.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 

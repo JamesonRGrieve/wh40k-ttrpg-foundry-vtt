@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/fear-test-dialog.hbs?raw';
 import { MAX_FEAR_RATING, resolveFearTest } from '../../src/module/rules/fear.ts';
+import templateSrc from '../../src/templates/prompt/fear-test-dialog.hbs?raw';
 import { renderSheet } from '../test-helpers';
 
 interface ObserverOption {

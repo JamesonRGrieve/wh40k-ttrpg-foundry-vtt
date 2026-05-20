@@ -1,0 +1,75 @@
+{{!-- Rogue Trader Colony Growth roll chat card (#195). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-rt-colony-card tw-p-4 tw-rounded-md tw-border tw-border-amber-600 tw-bg-[rgba(28,18,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-city tw-text-[1.1rem] tw-text-amber-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-amber-200">
+            {{localize "WH40K.RT.Colony.ChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.9rem] tw-mb-3 tw-text-amber-50">
+        <strong class="tw-text-amber-200">{{localize outcomeKey}}</strong>
+        — <span class="tw-tabular-nums">{{localize "WH40K.RT.Colony.RollLabel"}}: {{growthRoll}}{{#if modifier}} {{#if (gt modifier 0)}}+{{/if}}{{modifier}}{{/if}} = {{growthTotal}}</span>
+    </div>
+
+    {{#if softenerRoll}}
+        <div class="tw-text-xs tw-mb-3 tw-text-amber-300 tw-italic">
+            {{localize "WH40K.RT.Colony.AgriculturalSoftenerRollLabel"}}: {{softenerRoll}}
+        </div>
+    {{/if}}
+
+    {{!-- Tier transition --}}
+    <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-[rgba(217,119,6,0.45)] tw-bg-[rgba(120,53,15,0.18)]">
+        <span class="tw-text-amber-300">{{localize "WH40K.RT.Colony.TierLabel"}}</span>
+        <span class="tw-font-bold tw-text-amber-100">
+            {{localize tierBeforeKey}} <i class="fas fa-arrow-right tw-mx-2 tw-text-amber-400"></i> {{localize tierAfterKey}}
+        </span>
+    </div>
+
+    {{!-- Stat deltas --}}
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.RT.Colony.Characteristic.Size"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{stateBefore.size}} → {{stateAfter.size}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.RT.Colony.Characteristic.Complacency"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{stateBefore.complacency}} → {{stateAfter.complacency}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.RT.Colony.Characteristic.Order"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{stateBefore.order}} → {{stateAfter.order}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.RT.Colony.Characteristic.Productivity"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{stateBefore.productivity}} → {{stateAfter.productivity}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-amber-300">{{localize "WH40K.RT.Colony.Characteristic.Piety"}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{stateBefore.piety}} → {{stateAfter.piety}}</span>
+        </li>
+    </ul>
+
+    {{#if decreasedStatKey}}
+        <div class="tw-text-xs tw-mb-2 tw-text-rose-300 tw-italic">
+            {{localize "WH40K.RT.Colony.DecreaseFootnote"}}: {{localize decreasedStatKey}}
+        </div>
+    {{/if}}
+
+    {{#if activeEffectKeys.length}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(217,119,6,0.45)] tw-bg-[rgba(120,53,15,0.18)] tw-text-[0.85rem]">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
+                {{localize "WH40K.RT.Colony.ActiveEffectsLabel"}}
+            </div>
+            <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-wrap tw-gap-1.5">
+                {{#each activeEffectKeys}}
+                    <li class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-bg-amber-900 tw-text-amber-100 tw-text-xs tw-uppercase tw-tracking-[0.06em]">{{localize this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+</div>

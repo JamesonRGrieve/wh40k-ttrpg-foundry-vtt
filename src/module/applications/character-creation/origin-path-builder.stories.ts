@@ -313,7 +313,7 @@ export const PreviewPanel: Story = {
  * fires. The original bug closed the builder on either dialog button before
  * those two steps could be reached.
  */
-export const Issue206_CharacteristicStepReached: Story = {
+export const Issue206CharacteristicStepReached: Story = {
     args: makeArgs({
         showCharacteristics: true,
         hasEquipmentStep: true,
@@ -421,7 +421,7 @@ export const Issue206_CharacteristicStepReached: Story = {
     },
 };
 
-export const Issue206_EquipmentStepReached: Story = {
+export const Issue206EquipmentStepReached: Story = {
     args: makeArgs({
         showCharacteristics: false,
         showEquipment: true,
@@ -712,7 +712,9 @@ export const Issue198VoidBornPreview: Story = {
                     { displayName: 'Operate (Voidship)', levelLabel: 'Trained', tooltipData: 'Operate', uuid: null },
                 ],
                 hasTalents: true,
-                talents: [{ name: 'Void Accustomed', tooltip: 'Immune to space-borne ill effects.', tooltipData: 'VoidAccustomed', uuid: null, hasItem: false }],
+                talents: [
+                    { name: 'Void Accustomed', tooltip: 'Immune to space-borne ill effects.', tooltipData: 'VoidAccustomed', uuid: null, hasItem: false },
+                ],
                 hasTraits: false,
                 traits: [],
                 hasEquipment: false,

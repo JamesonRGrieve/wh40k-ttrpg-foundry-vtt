@@ -18,17 +18,7 @@
 export type DisorderSeverity = 'minor' | 'severe' | 'acute';
 
 /** Stable identifiers for each canonical disorder. */
-export type DisorderId =
-    | 'phobia'
-    | 'paranoia'
-    | 'delusion'
-    | 'schizoid'
-    | 'dissociative'
-    | 'catatonia'
-    | 'obsession'
-    | 'compulsion'
-    | 'anxiety'
-    | 'echolalia';
+export type DisorderId = 'phobia' | 'paranoia' | 'delusion' | 'schizoid' | 'dissociative' | 'catatonia' | 'obsession' | 'compulsion' | 'anxiety' | 'echolalia';
 
 /** Single Disorders-table entry. */
 export interface DisorderDef {
@@ -50,80 +40,70 @@ export const DISORDERS_TABLE: ReadonlyArray<DisorderDef> = Object.freeze([
         id: 'phobia',
         key: 'phobia',
         name: 'Phobia',
-        effect:
-            'When confronted with the subject of the phobia, the character must pass a Willpower test or suffer a -10 penalty to all tests in its presence.',
+        effect: 'When confronted with the subject of the phobia, the character must pass a Willpower test or suffer a -10 penalty to all tests in its presence.',
         severities: ['minor', 'severe', 'acute'],
     },
     {
         id: 'paranoia',
         key: 'paranoia',
         name: 'Paranoia',
-        effect:
-            'The character treats unfamiliar NPCs as hostile and suffers -10 on Fellowship tests with anyone not already a trusted ally.',
+        effect: 'The character treats unfamiliar NPCs as hostile and suffers -10 on Fellowship tests with anyone not already a trusted ally.',
         severities: ['minor', 'severe', 'acute'],
     },
     {
         id: 'delusion',
         key: 'delusion',
         name: 'Delusion',
-        effect:
-            'The character holds an unshakable false belief. Any test that requires acknowledging the truth contradicting the delusion suffers -10.',
+        effect: 'The character holds an unshakable false belief. Any test that requires acknowledging the truth contradicting the delusion suffers -10.',
         severities: ['minor', 'severe'],
     },
     {
         id: 'schizoid',
         key: 'schizoid',
         name: 'Schizoid',
-        effect:
-            'The character is socially detached: -10 Fellowship for prolonged interactions; immune to first-encounter Fear ratings 1.',
+        effect: 'The character is socially detached: -10 Fellowship for prolonged interactions; immune to first-encounter Fear ratings 1.',
         severities: ['minor', 'severe'],
     },
     {
         id: 'dissociative',
         key: 'dissociative',
         name: 'Dissociative',
-        effect:
-            'Under stress, the character may lose minutes to hours. The GM may rule the character cannot recall recent events tied to the trauma.',
+        effect: 'Under stress, the character may lose minutes to hours. The GM may rule the character cannot recall recent events tied to the trauma.',
         severities: ['severe', 'acute'],
     },
     {
         id: 'catatonia',
         key: 'catatonia',
         name: 'Catatonia',
-        effect:
-            'When triggered, the character is immobile for 1d5 rounds and may take no actions; a Willpower test each round to break free.',
+        effect: 'When triggered, the character is immobile for 1d5 rounds and may take no actions; a Willpower test each round to break free.',
         severities: ['acute'],
     },
     {
         id: 'obsession',
         key: 'obsession',
         name: 'Obsession',
-        effect:
-            'The character is fixated on a person, object, or idea. Any test to act contrary to the obsession suffers -10.',
+        effect: 'The character is fixated on a person, object, or idea. Any test to act contrary to the obsession suffers -10.',
         severities: ['minor', 'severe'],
     },
     {
         id: 'compulsion',
         key: 'compulsion',
         name: 'Compulsion',
-        effect:
-            'The character must perform a specific ritualised behaviour when stressed; failing to do so imposes -10 on all tests until completed.',
+        effect: 'The character must perform a specific ritualised behaviour when stressed; failing to do so imposes -10 on all tests until completed.',
         severities: ['minor', 'severe'],
     },
     {
         id: 'anxiety',
         key: 'anxiety',
         name: 'Anxiety',
-        effect:
-            'Under pressure, the character suffers -10 on Willpower tests and is treated as Fatigued in encounter situations.',
+        effect: 'Under pressure, the character suffers -10 on Willpower tests and is treated as Fatigued in encounter situations.',
         severities: ['minor', 'severe'],
     },
     {
         id: 'echolalia',
         key: 'echolalia',
         name: 'Echolalia',
-        effect:
-            'Under stress the character repeats fragments of nearby speech, imposing -10 on Stealth and Deceive tests while affected.',
+        effect: 'Under stress the character repeats fragments of nearby speech, imposing -10 on Stealth and Deceive tests while affected.',
         severities: ['minor', 'severe'],
     },
 ]);

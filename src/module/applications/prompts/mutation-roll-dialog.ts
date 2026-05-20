@@ -10,14 +10,9 @@
  * See GitHub issue #117.
  */
 
+import { type MutationDef, type MutationTrack, TRACK_RANGES, rollMutation } from '../../rules/mutation-table.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import {
-    type MutationDef,
-    type MutationTrack,
-    TRACK_RANGES,
-    rollMutation,
-} from '../../rules/mutation-table.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -53,11 +48,11 @@ export default class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2
         classes: ['wh40k-rpg', 'dialog', 'mutation-roll-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            selectTrack: MutationRollDialog.#onSelectTrack as ActionHandler,
+            selectTrack: MutationRollDialog.#onSelectTrack,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            rollMutation: MutationRollDialog.#onRollMutation as ActionHandler,
+            rollMutation: MutationRollDialog.#onRollMutation,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: MutationRollDialog.#onCancel as ActionHandler,
+            cancel: MutationRollDialog.#onCancel,
         },
         position: { width: 520 },
         window: {
@@ -105,9 +100,8 @@ export default class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2
         const g = globalThis as unknown as { game?: AnyGame };
         const localize = g.game?.i18n?.localize?.bind(g.game.i18n);
 
-        const visibleLabel = mutation?.visible === true
-            ? (localize?.('WH40K.MutationRoll.VisibleFlag') ?? 'Visible')
-            : (localize?.('WH40K.MutationRoll.HiddenFlag') ?? 'Hidden');
+        const visibleLabel =
+            mutation?.visible === true ? localize?.('WH40K.MutationRoll.VisibleFlag') ?? 'Visible' : localize?.('WH40K.MutationRoll.HiddenFlag') ?? 'Hidden';
 
         const templateData = {
             track: result.track,
@@ -121,10 +115,7 @@ export default class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2
             gameSystem: 'dh2e',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/mutation-roll-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mutation-roll-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: g.game?.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];

@@ -276,7 +276,7 @@ export const WEAPON_QUALITY_EFFECTS = {
     },
     'corrosive': {
         type: 'hit-effect',
-        description: "Damage rolls a d10 against armour; armour loses that many points and bypasses Toughness reduction on overflow.",
+        description: 'Damage rolls a d10 against armour; armour loses that many points and bypasses Toughness reduction on overflow.',
         hitEffect: { requiresSave: 'toughness', failEffect: 'armour-melt' } satisfies WeaponQualityHitEffect,
         corrosiveArmourDice: '1d10',
     },
@@ -294,7 +294,8 @@ export const WEAPON_QUALITY_EFFECTS = {
     'flexible': { type: 'parry', cannotBeParried: true, description: 'This weapon cannot be parried.' },
     'graviton': {
         type: 'hit-effect',
-        description: 'On a hit, the target makes a Strength test or falls Prone; vehicles roll Agility instead. Bonus damage equal to the struck location’s Armour Points.',
+        description:
+            'On a hit, the target makes a Strength test or falls Prone; vehicles roll Agility instead. Bonus damage equal to the struck location’s Armour Points.',
         hitEffect: { requiresSave: 'strength', failEffect: 'prone' } satisfies WeaponQualityHitEffect,
         gravitonAddsArmourAsDamage: true,
     },
@@ -366,7 +367,8 @@ export const WEAPON_QUALITY_EFFECTS = {
     },
     'spray': {
         type: 'template',
-        description: 'No BS test required; all targets in a cone make a Challenging (+0) Agility test to avoid being hit. Composes with the Leaping Dodge talent (rules/spray-avoidance.ts).',
+        description:
+            'No BS test required; all targets in a cone make a Challenging (+0) Agility test to avoid being hit. Composes with the Leaping Dodge talent (rules/spray-avoidance.ts).',
         template: { shape: 'cone', radiusVariable: false } satisfies WeaponQualityTemplate,
         sprayAvoidanceCharacteristic: 'agility',
     },
@@ -808,11 +810,7 @@ export function resolveScatterRangeBand(rangeName: string | undefined): number {
  *   resolveHitEffectSaveTarget({ characteristicTotal: 40, key: 'concussive', level: 3 })
  *   = 40 + (3 × -10) = 10
  */
-export function resolveHitEffectSaveTarget(opts: {
-    characteristicTotal: number;
-    key: keyof typeof WEAPON_QUALITY_EFFECTS;
-    level: number;
-}): number {
+export function resolveHitEffectSaveTarget(opts: { characteristicTotal: number; key: keyof typeof WEAPON_QUALITY_EFFECTS; level: number }): number {
     const entry = WEAPON_QUALITY_EFFECTS[opts.key] as { hitEffect?: WeaponQualityHitEffect } | undefined;
     const penalty = entry?.hitEffect?.saveTargetPenaltyPerLevel ?? 0;
     const safeLevel = Math.max(0, Math.trunc(opts.level));
@@ -906,10 +904,7 @@ export function resolveMaximalEffect(): {
  * also carries Power Field or Force. Pure check used by the parry
  * resolution flow and chat-card renderer.
  */
-export function resolvePowerFieldParryDestroys(
-    defenderWeapon: QualityItem | null | undefined,
-    attackerWeapon: QualityItem | null | undefined,
-): boolean {
+export function resolvePowerFieldParryDestroys(defenderWeapon: QualityItem | null | undefined, attackerWeapon: QualityItem | null | undefined): boolean {
     if (!defenderWeapon || !attackerWeapon) return false;
     if (!weaponHasQuality(defenderWeapon, 'power-field')) return false;
     // Power Field and Force weapons resist destruction.

@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    hasDaemonic,
-    resolveUndyingRevival,
-    shouldSkipDiseaseExposure,
-    shouldSkipPoisonExposure,
-    type DaemonicActorLike,
-} from './daemonic-immunities';
+import { hasDaemonic, resolveUndyingRevival, shouldSkipDiseaseExposure, shouldSkipPoisonExposure, type DaemonicActorLike } from './daemonic-immunities';
 
 describe('hasDaemonic (#143)', () => {
     it('matches an inline trait named "Daemonic"', () => {

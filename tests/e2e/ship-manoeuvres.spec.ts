@@ -75,12 +75,54 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                     const context = {
                         helmsmanName: 'Helmsmistress Vey',
                         manoeuvres: [
-                            { id: 'adjust-bearing', labelKey: 'WH40K.Starship.Manoeuvre.AdjustBearing.Label', benefitKey: 'WH40K.Starship.Manoeuvre.AdjustBearing.Benefit', difficultyLabel: 'Challenging (+0)', target: pilot + man + 0, opposed: false },
-                            { id: 'adjust-speed', labelKey: 'WH40K.Starship.Manoeuvre.AdjustSpeed.Label', benefitKey: 'WH40K.Starship.Manoeuvre.AdjustSpeed.Benefit', difficultyLabel: 'Challenging (+0)', target: pilot + man + 0, opposed: false },
-                            { id: 'adjust-speed-and-bearing', labelKey: 'WH40K.Starship.Manoeuvre.AdjustSpeedAndBearing.Label', benefitKey: 'WH40K.Starship.Manoeuvre.AdjustSpeedAndBearing.Benefit', difficultyLabel: 'Hard (-20)', target: pilot + man - 20, opposed: false },
-                            { id: 'come-to-new-heading', labelKey: 'WH40K.Starship.Manoeuvre.ComeToNewHeading.Label', benefitKey: 'WH40K.Starship.Manoeuvre.ComeToNewHeading.Benefit', difficultyLabel: 'Difficult (-10)', target: pilot + man - 10, opposed: false },
-                            { id: 'disengage', labelKey: 'WH40K.Starship.Manoeuvre.Disengage.Label', benefitKey: 'WH40K.Starship.Manoeuvre.Disengage.Benefit', difficultyLabel: 'Challenging (+0)', target: pilot + man + 0, opposed: true },
-                            { id: 'evasive-manoeuvres', labelKey: 'WH40K.Starship.Manoeuvre.EvasiveManoeuvres.Label', benefitKey: 'WH40K.Starship.Manoeuvre.EvasiveManoeuvres.Benefit', difficultyLabel: 'Difficult (-10)', target: pilot + man - 10, opposed: false },
+                            {
+                                id: 'adjust-bearing',
+                                labelKey: 'WH40K.Starship.Manoeuvre.AdjustBearing.Label',
+                                benefitKey: 'WH40K.Starship.Manoeuvre.AdjustBearing.Benefit',
+                                difficultyLabel: 'Challenging (+0)',
+                                target: pilot + man + 0,
+                                opposed: false,
+                            },
+                            {
+                                id: 'adjust-speed',
+                                labelKey: 'WH40K.Starship.Manoeuvre.AdjustSpeed.Label',
+                                benefitKey: 'WH40K.Starship.Manoeuvre.AdjustSpeed.Benefit',
+                                difficultyLabel: 'Challenging (+0)',
+                                target: pilot + man + 0,
+                                opposed: false,
+                            },
+                            {
+                                id: 'adjust-speed-and-bearing',
+                                labelKey: 'WH40K.Starship.Manoeuvre.AdjustSpeedAndBearing.Label',
+                                benefitKey: 'WH40K.Starship.Manoeuvre.AdjustSpeedAndBearing.Benefit',
+                                difficultyLabel: 'Hard (-20)',
+                                target: pilot + man - 20,
+                                opposed: false,
+                            },
+                            {
+                                id: 'come-to-new-heading',
+                                labelKey: 'WH40K.Starship.Manoeuvre.ComeToNewHeading.Label',
+                                benefitKey: 'WH40K.Starship.Manoeuvre.ComeToNewHeading.Benefit',
+                                difficultyLabel: 'Difficult (-10)',
+                                target: pilot + man - 10,
+                                opposed: false,
+                            },
+                            {
+                                id: 'disengage',
+                                labelKey: 'WH40K.Starship.Manoeuvre.Disengage.Label',
+                                benefitKey: 'WH40K.Starship.Manoeuvre.Disengage.Benefit',
+                                difficultyLabel: 'Challenging (+0)',
+                                target: pilot + man + 0,
+                                opposed: true,
+                            },
+                            {
+                                id: 'evasive-manoeuvres',
+                                labelKey: 'WH40K.Starship.Manoeuvre.EvasiveManoeuvres.Label',
+                                benefitKey: 'WH40K.Starship.Manoeuvre.EvasiveManoeuvres.Benefit',
+                                difficultyLabel: 'Difficult (-10)',
+                                target: pilot + man - 10,
+                                opposed: false,
+                            },
                         ],
                     };
 
@@ -96,9 +138,7 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                     hasOpposedBadge = html.includes('wh40k-starship-manoeuvre-tile__opposed');
                     tileCount = (html.match(/wh40k-starship-manoeuvre-tile"/g) ?? []).length;
 
-                    const ChatMessageCls = (globalThis as any).ChatMessage as
-                        | { create: (data: object) => Promise<{ id: string } | null> }
-                        | undefined;
+                    const ChatMessageCls = (globalThis as any).ChatMessage as { create: (data: object) => Promise<{ id: string } | null> } | undefined;
                     const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {

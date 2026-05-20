@@ -12,9 +12,9 @@
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
+import badgeSrc from '../../src/templates/actor/partial/daemonic-immunities-badge.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
-import badgeSrc from '../../src/templates/actor/partial/daemonic-immunities-badge.hbs?raw';
 
 initializeStoryHandlebars();
 

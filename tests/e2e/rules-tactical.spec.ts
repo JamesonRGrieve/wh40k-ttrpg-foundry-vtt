@@ -75,7 +75,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             const fail = (keys: readonly FlowName[], detail: string): void => {
                 for (const k of keys) record(k, false, detail);
             };
-            const isPopulatedObject = (v: unknown): boolean => v !== null && typeof v === 'object' && Object.keys(v as object).length > 0;
+            const isPopulatedObject = (v: unknown): boolean => v !== null && typeof v === 'object' && Object.keys(v).length > 0;
 
             // ---------- aim ----------
             const aim = await loadModule('aim');
@@ -120,7 +120,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             } else {
                 guarded('attack-specials-list', () => {
                     const list = attackSpecials.attackSpecials();
-                    return Array.isArray(list) && list.length > 0 && typeof list[0]?.name === 'string' && typeof list[0]?.hasLevel === 'boolean';
+                    const first = list[0] as { name?: unknown; hasLevel?: unknown } | undefined;
+                    return Array.isArray(list) && list.length > 0 && typeof first?.name === 'string' && typeof first?.hasLevel === 'boolean';
                 });
                 guarded('attack-specials-names', () => {
                     const names = attackSpecials.attackSpecialsNames();
@@ -160,7 +161,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             } else {
                 guarded('combat-actions-all', () => {
                     const all = combatActions.allCombatActions();
-                    return Array.isArray(all) && all.length > 0 && typeof all[0]?.name === 'string' && all.some((a: any) => a.name === 'Standard Attack');
+                    const first = all[0] as { name?: unknown } | undefined;
+                    return (
+                        Array.isArray(all) &&
+                        all.length > 0 &&
+                        typeof first?.name === 'string' &&
+                        all.some((a) => (a as { name?: string }).name === 'Standard Attack')
+                    );
                 });
             }
 
@@ -169,7 +176,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (daemonWeapon?.__importError) {
                 fail(['daemon-weapon-profiles'], daemonWeapon.__importError);
             } else {
-                guarded('daemon-weapon-profiles', () => isPopulatedObject(daemonWeapon.BINDING_STRENGTH_PROFILES) && isPopulatedObject(daemonWeapon.DAEMON_PERSONALITY_TRIGGERS));
+                guarded(
+                    'daemon-weapon-profiles',
+                    () => isPopulatedObject(daemonWeapon.BINDING_STRENGTH_PROFILES) && isPopulatedObject(daemonWeapon.DAEMON_PERSONALITY_TRIGGERS),
+                );
             }
 
             // ---------- daemonhost ----------

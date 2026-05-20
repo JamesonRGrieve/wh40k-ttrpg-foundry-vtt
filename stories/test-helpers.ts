@@ -30,7 +30,20 @@ type Context = Record<string, unknown>;
  * provided context. Returns a detached HTMLElement so callers can mount it
  * wherever they need.
  */
+let renderSheetCounter = 0;
+
 export function renderSheet(templateSource: string, context: Context = {}): HTMLElement {
+    // If the source contains `{{> @partial-block}}`, we need the template
+    // to be invoked AS a block partial so `@partial-block` resolves to
+    // empty block content (rather than throwing). Register the source as a
+    // uniquely-named partial and compile a tiny wrapper that calls it via
+    // `{{#> name}}{{/name}}`.
+    if (templateSource.includes('@partial-block')) {
+        const name = `__renderSheet_${renderSheetCounter++}`;
+        Handlebars.registerPartial(name, templateSource);
+        const wrapper = Handlebars.compile(`{{#> ${name}}}{{/${name}}}`);
+        return renderTemplate(wrapper, context);
+    }
     const tpl = Handlebars.compile(templateSource);
     return renderTemplate(tpl, context);
 }

@@ -1,12 +1,5 @@
 import { describe, expect, it } from 'vitest';
-
-import {
-    BREAKTHROUGH_FRACTIONS,
-    EXPLICATION_THRESHOLDS,
-    breakthroughsCrossed,
-    isExplicationComplete,
-    type ExplicationState,
-} from './explication.ts';
+import { BREAKTHROUGH_FRACTIONS, EXPLICATION_THRESHOLDS, breakthroughsCrossed, isExplicationComplete, type ExplicationState } from './explication.ts';
 
 describe('explication research engine (#98)', () => {
     it('exposes the four complexity thresholds', () => {

@@ -1,7 +1,6 @@
 // Keys MUST match the ROLLS_BUILDER_FLOWS constant in scripts/e2e-coverage.mjs (registered by the orchestrator).
 
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -109,8 +108,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
             try {
                 helpersMod = await dynImport(`${base}/rolls/roll-helpers.js`);
             } catch (err) {
-                for (const f of flows.filter((k) => k.startsWith('helpers-')))
-                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of flows.filter((k) => k.startsWith('helpers-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 helpersMod = null;
             }
             if (helpersMod) {
@@ -119,7 +117,9 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                 try {
                     const id = uuid();
                     const v4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(String(id));
-                    const distinct = uuid() !== uuid();
+                    const idA = uuid();
+                    const idB = uuid();
+                    const distinct = idA !== idB;
                     record('helpers-uuid-shape', v4 && distinct, `id=${String(id)} v4=${v4} distinct=${distinct}`);
                 } catch (err) {
                     record('helpers-uuid-shape', false, String((err as Error)?.message ?? err));
@@ -176,8 +176,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
             try {
                 rollDataMod = await dynImport(`${base}/rolls/roll-data.js`);
             } catch (err) {
-                for (const f of flows.filter((k) => k.startsWith('roll-data-')))
-                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of flows.filter((k) => k.startsWith('roll-data-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 rollDataMod = null;
             }
             if (rollDataMod) {
@@ -200,7 +199,11 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         under.capFired === true &&
                         nan.clamped === 0 &&
                         nan.capFired === false;
-                    record('roll-data-clamp-modifier-cap', ok, `cap=${cap} within=${within.clamped} over=${over.clamped} under=${under.clamped} nan=${nan.clamped}`);
+                    record(
+                        'roll-data-clamp-modifier-cap',
+                        ok,
+                        `cap=${cap} within=${within.clamped} over=${over.clamped} under=${under.clamped} nan=${nan.clamped}`,
+                    );
                 } catch (err) {
                     record('roll-data-clamp-modifier-cap', false, String((err as Error)?.message ?? err));
                 }
@@ -233,7 +236,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     rd.modifiers = { difficulty: -10, modifier: 0, aim: 5 };
                     const active = rd.activeModifiers;
                     // 0-valued entries are dropped; keys are upper-cased.
-                    const ok = active['DIFFICULTY'] === -10 && active['AIM'] === 5 && active['MODIFIER'] === undefined;
+                    const ok = active.DIFFICULTY === -10 && active.AIM === 5 && active.MODIFIER === undefined;
                     record('roll-data-active-modifiers-getter', ok, `active=${JSON.stringify(active)}`);
                 } catch (err) {
                     record('roll-data-active-modifiers-getter', false, String((err as Error)?.message ?? err));
@@ -260,9 +263,9 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const ok =
                         formula.includes('- @difficulty') &&
                         formula.includes('+ @modifier') &&
-                        params['difficulty'] === 10 &&
-                        params['modifier'] === 20 &&
-                        params['aim'] === undefined;
+                        params.difficulty === 10 &&
+                        params.modifier === 20 &&
+                        params.aim === undefined;
                     record('roll-data-modifiers-to-rolldata', ok, `formula="${formula}" params=${JSON.stringify(params)}`);
                 } catch (err) {
                     record('roll-data-modifiers-to-rolldata', false, String((err as Error)?.message ?? err));
@@ -274,7 +277,11 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     await rd.calculateTotalModifiers();
                     // Net: -10 + 30 = 20, within the ±60 cap.
                     const ok = rd.modifierTotal === 20 && rd.modifierCapFired === false && rd.rawModifierTotal === 20;
-                    record('roll-data-calculate-total-modifiers', ok, `total=${rd.modifierTotal} raw=${rd.rawModifierTotal} capFired=${String(rd.modifierCapFired)}`);
+                    record(
+                        'roll-data-calculate-total-modifiers',
+                        ok,
+                        `total=${rd.modifierTotal} raw=${rd.rawModifierTotal} capFired=${String(rd.modifierCapFired)}`,
+                    );
                 } catch (err) {
                     record('roll-data-calculate-total-modifiers', false, String((err as Error)?.message ?? err));
                 }
@@ -311,8 +318,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
             try {
                 actionDataMod = await dynImport(`${base}/rolls/action-data.js`);
             } catch (err) {
-                for (const f of flows.filter((k) => k.startsWith('action-data-')))
-                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of flows.filter((k) => k.startsWith('action-data-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 actionDataMod = null;
             }
             if (actionDataMod) {
@@ -341,11 +347,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     ad.effects = ['jam', 'overheat', 'auto-failure'];
                     ad.createEffectData();
                     const names = ad.effectOutput.map((e: { name: string }) => e.name);
-                    const ok =
-                        names.includes('Manual') &&
-                        names.includes('Jam') &&
-                        names.includes('Overheats') &&
-                        names.includes('Auto Failure');
+                    const ok = names.includes('Manual') && names.includes('Jam') && names.includes('Overheats') && names.includes('Auto Failure');
                     record('action-data-effect-switch', ok, `names=${names.join(',')}`);
                 } catch (err) {
                     record('action-data-effect-switch', false, String((err as Error)?.message ?? err));
@@ -386,8 +388,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
             try {
                 extMod = await dynImport(`${base}/rolls/extended-test-data.js`);
             } catch (err) {
-                for (const f of flows.filter((k) => k.startsWith('extended-test-')))
-                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of flows.filter((k) => k.startsWith('extended-test-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 extMod = null;
             }
             if (extMod) {
@@ -411,7 +412,11 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         remainingBefore === 3 &&
                         t.isComplete === true &&
                         t.remaining === 0;
-                    record('extended-test-threshold-and-ladder', ok, `acc=${t.accumulatedDoS} succ=${t.successes} fail=${t.failures} complete=${String(t.isComplete)}`);
+                    record(
+                        'extended-test-threshold-and-ladder',
+                        ok,
+                        `acc=${t.accumulatedDoS} succ=${t.successes} fail=${t.failures} complete=${String(t.isComplete)}`,
+                    );
                 } catch (err) {
                     record('extended-test-threshold-and-ladder', false, String((err as Error)?.message ?? err));
                 }
@@ -437,8 +442,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
             try {
                 damageMod = await dynImport(`${base}/rolls/damage-data.js`);
             } catch (err) {
-                for (const f of flows.filter((k) => k.startsWith('damage-')))
-                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of flows.filter((k) => k.startsWith('damage-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 damageMod = null;
             }
             if (damageMod) {
@@ -526,10 +530,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         const dflt = BasicRollWH40K.constructFormula({});
                         const plus = BasicRollWH40K.constructFormula({ base: '1d10', modifier: '3' });
                         const minus = BasicRollWH40K.constructFormula({ modifier: '-5' });
-                        const ok =
-                            dflt === '1d100' &&
-                            plus === '1d10 + 3' &&
-                            minus === '1d100 - 5';
+                        const ok = dflt === '1d100' && plus === '1d10 + 3' && minus === '1d100 - 5';
                         record('basic-roll-construct-formula', ok, `default="${dflt}" plus="${plus}" minus="${minus}"`);
                     }
                 } catch (err) {
@@ -569,9 +570,6 @@ test.describe.serial('rolls / dice pure builders (Tier B)', () => {
             failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
         }
 
-        expect(
-            failures,
-            `${failures.length}/${ROLLS_BUILDER_FLOWS.length} rolls-builder flows failed:\n  - ${failures.join('\n  - ')}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${ROLLS_BUILDER_FLOWS.length} rolls-builder flows failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

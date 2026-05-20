@@ -13,9 +13,9 @@
  * See GitHub issue #134.
  */
 
+import { SISTER_OF_BATTLE_TALENTS, type SisterOfBattleTalent } from '../../rules/sister-of-battle.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import { SISTER_OF_BATTLE_TALENTS, type SisterOfBattleTalent } from '../../rules/sister-of-battle.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -40,11 +40,13 @@ function localize(key: string): string {
 }
 
 function buildTalentCards(): TalentCard[] {
-    return SISTER_OF_BATTLE_TALENTS.map((talent: SisterOfBattleTalent): TalentCard => ({
-        id: talent.id,
-        label: localize(talent.label),
-        summary: localize(talent.summary),
-    }));
+    return SISTER_OF_BATTLE_TALENTS.map(
+        (talent: SisterOfBattleTalent): TalentCard => ({
+            id: talent.id,
+            label: localize(talent.label),
+            summary: localize(talent.summary),
+        }),
+    );
 }
 
 /**
@@ -62,9 +64,9 @@ export default class SisterOfBattleDialog extends ApplicationV2Mixin(Application
         classes: ['wh40k-rpg', 'dialog', 'sister-of-battle-dialog', 'standard-form'],
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            apply: SisterOfBattleDialog.#onApply as ActionHandler,
+            apply: SisterOfBattleDialog.#onApply,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            cancel: SisterOfBattleDialog.#onCancel as ActionHandler,
+            cancel: SisterOfBattleDialog.#onCancel,
         },
         position: {
             width: 560,
@@ -111,10 +113,7 @@ export default class SisterOfBattleDialog extends ApplicationV2Mixin(Application
             gameSystem: 'dh2e',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/sister-of-battle-chat.hbs',
-            templateData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/sister-of-battle-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];

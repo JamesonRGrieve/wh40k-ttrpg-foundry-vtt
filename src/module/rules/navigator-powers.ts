@@ -171,9 +171,7 @@ export function resolveNavigatorPower(input: NavigatorTestInput): NavigatorTestR
  */
 export function resolveOpposedNavigatorPower(input: NavigatorOpposedInput): NavigatorOpposedResult {
     const navigator = resolveNavigatorPower(input.navigator);
-    const opponentTarget = clampTarget(
-        input.opponent.characteristic + (input.opponent.difficultyModifier ?? 0) + (input.opponent.situationalModifier ?? 0),
-    );
+    const opponentTarget = clampTarget(input.opponent.characteristic + (input.opponent.difficultyModifier ?? 0) + (input.opponent.situationalModifier ?? 0));
     const opponentRoll = clampRoll(input.opponent.roll);
     const opponentSuccess = opponentRoll <= opponentTarget;
     const opponentDos = opponentSuccess ? Math.floor((opponentTarget - opponentRoll) / 10) + 1 : 0;
@@ -187,7 +185,7 @@ export function resolveOpposedNavigatorPower(input: NavigatorOpposedInput): Navi
         dof: opponentDof,
         // The opponent has no Navigator level; we echo Novice purely so
         // the shape stays uniform for chat-card rendering.
-        level: 'novice' as NavigatorPowerLevel,
+        level: 'novice',
     });
 
     const netDos = navigator.dos - opponent.dos;
@@ -225,10 +223,7 @@ export interface NavigatorPowerEffectTier {
     readonly effect: string;
 }
 
-export function emitNavigatorPowerEffects(
-    levels: NavigatorPowerLevels,
-    activeLevel: NavigatorPowerLevel,
-): NavigatorPowerEffectTier[] {
+export function emitNavigatorPowerEffects(levels: NavigatorPowerLevels, activeLevel: NavigatorPowerLevel): NavigatorPowerEffectTier[] {
     const out: NavigatorPowerEffectTier[] = [];
     for (const tier of NAVIGATOR_LEVEL_ORDER) {
         if (tier === 'novice' || tier === 'adept' || tier === 'master') {

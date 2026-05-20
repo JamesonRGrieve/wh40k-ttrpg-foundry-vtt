@@ -78,8 +78,22 @@ export const RendersObjectiveRows: Story = {
             makeCtx({
                 tabs: {
                     details: { id: 'details', tab: 'details', group: 'primary', active: false, cssClass: '', label: 'WH40K.Endeavours.Header' },
-                    objectives: { id: 'objectives', tab: 'objectives', group: 'primary', active: true, cssClass: 'active', label: 'WH40K.Endeavours.Objectives' },
-                    description: { id: 'description', tab: 'description', group: 'primary', active: false, cssClass: '', label: 'WH40K.Endeavours.DescriptionHeader' },
+                    objectives: {
+                        id: 'objectives',
+                        tab: 'objectives',
+                        group: 'primary',
+                        active: true,
+                        cssClass: 'active',
+                        label: 'WH40K.Endeavours.Objectives',
+                    },
+                    description: {
+                        id: 'description',
+                        tab: 'description',
+                        group: 'primary',
+                        active: false,
+                        cssClass: '',
+                        label: 'WH40K.Endeavours.DescriptionHeader',
+                    },
                 },
             }),
         ),

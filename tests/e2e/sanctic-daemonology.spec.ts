@@ -77,9 +77,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                     phenomenaFires = r.phenomenaFires;
                     canFateNegate = r.canFateNegate;
 
-                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as
-                        | ((path: string, ctx: object) => Promise<string>)
-                        | undefined;
+                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
                     if (typeof renderTemplate !== 'function') {
                         return {
                             rendered,

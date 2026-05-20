@@ -25,12 +25,7 @@
 export type GrappleState = 'none' | 'grappling' | 'controlled';
 
 /** Enumerated controller / controlled actions, all opposed-Strength resolved. */
-export type GrappleAction =
-    | 'damage-opponent'
-    | 'throw-down-opponent'
-    | 'break-free'
-    | 'stand-up'
-    | 'move-while-grappling';
+export type GrappleAction = 'damage-opponent' | 'throw-down-opponent' | 'break-free' | 'stand-up' | 'move-while-grappling';
 
 /** Input shape for every opposed-Strength resolver below. */
 export interface OpposedStrengthInput {

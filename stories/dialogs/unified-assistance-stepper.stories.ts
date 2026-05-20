@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
+import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../src/module/rules/assistance.ts';
 import modifiersSrc from '../../src/templates/prompt/unified/modifiers.hbs?raw';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
-import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../src/module/rules/assistance.ts';
 
 initializeStoryHandlebars();
 

@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -114,6 +113,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
 
                 /** Drain any dialog the previous probe left open. */
                 async function closeOpenDialogs(): Promise<void> {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime ui.windows is untyped Record<string, Application>; narrowing to the trio of fields we read
                     const windows = Object.values(ui?.windows ?? {}) as Array<{ id?: string; title?: string; close?: () => Promise<unknown> }>;
                     for (const w of windows) {
                         const id = `${w?.id ?? ''} ${w?.title ?? ''}`.toLowerCase();
@@ -192,8 +192,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             await withTimeout(ET.setResolved(eventId, true), 5_000, 'setResolved(true)');
                             const afterSet = ET.getResolved();
                             const present = afterSet != null && typeof afterSet === 'object' && eventId in afterSet;
-                            const stamped =
-                                present && typeof (afterSet as Record<string, { resolvedAt?: unknown }>)[eventId]?.resolvedAt === 'string';
+                            const stamped = present && typeof (afterSet as Record<string, { resolvedAt?: unknown }>)[eventId]?.resolvedAt === 'string';
                             await withTimeout(ET.setResolved(eventId, false), 5_000, 'setResolved(false)');
                             const afterClear = ET.getResolved();
                             const removed = afterClear != null && typeof afterClear === 'object' && !(eventId in afterClear);
@@ -249,11 +248,11 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     gateAfter === true
                                 ) {
                                     fired['event-tracker-is-available'] = true;
-                                    notes['event-tracker-is-available'] =
-                                        'isAvailable resolves unknown/root/requires/requires_any branches correctly';
+                                    notes['event-tracker-is-available'] = 'isAvailable resolves unknown/root/requires/requires_any branches correctly';
                                 } else {
-                                    notes['event-tracker-is-available'] =
-                                        `unknown=${unknownEvent} root=${rootAvailable} gateBefore=${gateBefore} stillBlocked=${gateStillBlocked} after=${gateAfter}`;
+                                    notes[
+                                        'event-tracker-is-available'
+                                    ] = `unknown=${unknownEvent} root=${rootAvailable} gateBefore=${gateBefore} stillBlocked=${gateStillBlocked} after=${gateAfter}`;
                                 }
                             } finally {
                                 // Restore graph + clear our resolved markers.
@@ -302,11 +301,11 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 const hasOneOf = Array.isArray(reasons) && reasons.some((r) => r.includes('Requires one of:') && r.includes(' OR '));
                                 if (Array.isArray(unknownReasons) && unknownReasons.length === 0 && hasRequires && hasOneOf) {
                                     fired['event-tracker-blocking-reasons'] = true;
-                                    notes['event-tracker-blocking-reasons'] =
-                                        `reasons=${JSON.stringify(reasons)}; unknown-event returns []`;
+                                    notes['event-tracker-blocking-reasons'] = `reasons=${JSON.stringify(reasons)}; unknown-event returns []`;
                                 } else {
-                                    notes['event-tracker-blocking-reasons'] =
-                                        `unknownLen=${Array.isArray(unknownReasons) ? unknownReasons.length : 'n/a'} hasRequires=${hasRequires} hasOneOf=${hasOneOf}`;
+                                    notes['event-tracker-blocking-reasons'] = `unknownLen=${
+                                        Array.isArray(unknownReasons) ? unknownReasons.length : 'n/a'
+                                    } hasRequires=${hasRequires} hasOneOf=${hasOneOf}`;
                                 }
                             } finally {
                                 ET._graph = prevGraph;
@@ -364,8 +363,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 >;
                                 const vael = states['Inquisitor Vael'];
                                 const dispOk =
-                                    vael?.dispositions?.['party']?.attitude === 'hostile' &&
-                                    vael?.dispositions?.['party']?.trigger === 'evt-betrayal';
+                                    vael?.dispositions?.['party']?.attitude === 'hostile' && vael?.dispositions?.['party']?.trigger === 'evt-betrayal';
                                 const relOk =
                                     Array.isArray(vael?.relationships) &&
                                     vael.relationships.length === 1 &&
@@ -376,8 +374,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     notes['event-tracker-compute-character-states'] =
                                         'triggered disposition + walked relationship influences resolved correctly';
                                 } else {
-                                    notes['event-tracker-compute-character-states'] =
-                                        `dispOk=${dispOk} relOk=${relOk} states=${JSON.stringify(states)}`;
+                                    notes['event-tracker-compute-character-states'] = `dispOk=${dispOk} relOk=${relOk} states=${JSON.stringify(states)}`;
                                 }
                             } finally {
                                 try {
@@ -443,21 +440,13 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 const hasBadge = typeof npcPane === 'string' && npcPane.includes('evt-badge') && npcPane.includes(colorAlly);
                                 const hasLockedReason = typeof eventsPane === 'string' && eventsPane.includes('Requires: Arrival at the Spire');
                                 const npcActive = typeof npcHtml === 'string' && npcHtml.includes('data-pane="npcs"');
-                                if (
-                                    hasEvent &&
-                                    hasTabs &&
-                                    hasBadge &&
-                                    hasLockedReason &&
-                                    npcActive &&
-                                    colorAlly === '#2d6' &&
-                                    colorUnknown === '#888'
-                                ) {
+                                if (hasEvent && hasTabs && hasBadge && hasLockedReason && npcActive && colorAlly === '#2d6' && colorUnknown === '#888') {
                                     fired['event-tracker-build-content-html'] = true;
-                                    notes['event-tracker-build-content-html'] =
-                                        'events pane + NPC pane + tab scaffold + _stateColor mapping rendered';
+                                    notes['event-tracker-build-content-html'] = 'events pane + NPC pane + tab scaffold + _stateColor mapping rendered';
                                 } else {
-                                    notes['event-tracker-build-content-html'] =
-                                        `hasEvent=${hasEvent} hasTabs=${hasTabs} hasBadge=${hasBadge} hasLockedReason=${hasLockedReason} npcActive=${npcActive} colorAlly=${colorAlly} colorUnknown=${colorUnknown}`;
+                                    notes[
+                                        'event-tracker-build-content-html'
+                                    ] = `hasEvent=${hasEvent} hasTabs=${hasTabs} hasBadge=${hasBadge} hasLockedReason=${hasLockedReason} npcActive=${npcActive} colorAlly=${colorAlly} colorUnknown=${colorUnknown}`;
                                 }
                             } finally {
                                 ET._graph = prevGraph;
@@ -494,10 +483,15 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 // open() calls Dialog#render synchronously; let
                                 // the render microtask settle.
                                 await new Promise((r) => setTimeout(r, 250));
+                                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime ui.windows is untyped
                                 const windowList = Object.values(ui?.windows ?? {}) as Array<{ title?: string }>;
                                 const opened =
                                     Object.keys(ui?.windows ?? {}).length > before ||
-                                    windowList.some((w) => String(w?.title ?? '').toLowerCase().includes('event tracker'));
+                                    windowList.some((w) =>
+                                        String(w?.title ?? '')
+                                            .toLowerCase()
+                                            .includes('event tracker'),
+                                    );
                                 if (opened) {
                                     fired['event-tracker-open-dialog'] = true;
                                     notes['event-tracker-open-dialog'] = 'tracker Dialog rendered into ui.windows';
@@ -557,12 +551,13 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const mod = await import(itemDropUrl);
                             const IDM = mod.ItemDropManager ?? mod.default;
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments returns an untyped Foundry array
                             const created = (await withTimeout(
                                 live.createEmbeddedDocuments?.('Item', [{ name: 'probe-nondrop-talent', type: 'talent' }]),
                                 5_000,
                                 'create talent',
-                            )) as any[];
-                            const talent = created?.[0] ? live.items.get(created[0].id) : null;
+                            )) as Array<{ id?: string }> | undefined;
+                            const talent = created?.[0] ? live.items.get(created[0].id ?? '') : null;
                             if (!talent) {
                                 notes['item-drop-non-droppable-returns-null'] = 'talent create failed';
                             } else {
@@ -601,14 +596,13 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const mod = await import(itemDropUrl);
                             const IDM = mod.ItemDropManager ?? mod.default;
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments returns an untyped Foundry array
                             const created = (await withTimeout(
-                                live.createEmbeddedDocuments?.('Item', [
-                                    { name: 'probe-notoken-gear', type: 'gear', system: { quantity: 1 } },
-                                ]),
+                                live.createEmbeddedDocuments?.('Item', [{ name: 'probe-notoken-gear', type: 'gear', system: { quantity: 1 } }]),
                                 5_000,
                                 'create gear',
-                            )) as any[];
-                            const gear = created?.[0] ? live.items.get(created[0].id) : null;
+                            )) as Array<{ id?: string }> | undefined;
+                            const gear = created?.[0] ? live.items.get(created[0].id ?? '') : null;
                             if (!gear) {
                                 notes['item-drop-no-token-returns-null'] = 'gear create failed';
                             } else {
@@ -677,34 +671,28 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 protoData.delta.items = protoData.delta.items ?? [];
                                 protoData.delta.effects = protoData.delta.effects ?? [];
                                 protoData.delta.flags = protoData.delta.flags ?? {};
-                                await withTimeout(
-                                    dropScene.createEmbeddedDocuments('Token', [protoData]),
-                                    5_000,
-                                    'createEmbeddedDocuments(Token)',
-                                );
+                                await withTimeout(dropScene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
+                                // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments returns an untyped Foundry array
                                 const created = (await withTimeout(
-                                    live.createEmbeddedDocuments?.('Item', [
-                                        { name: 'probe-drop-gear', type: 'gear', system: { quantity: 2 } },
-                                    ]),
+                                    live.createEmbeddedDocuments?.('Item', [{ name: 'probe-drop-gear', type: 'gear', system: { quantity: 2 } }]),
                                     5_000,
                                     'create drop gear',
-                                )) as any[];
-                                const gear = created?.[0] ? live.items.get(created[0].id) : null;
+                                )) as Array<{ id?: string }> | undefined;
+                                const gear = created?.[0] ? live.items.get(created[0].id ?? '') : null;
                                 if (!gear) {
                                     notes['item-drop-creates-loot-pile'] = 'drop gear create failed';
                                 } else {
-                                    const result = await withTimeout(
-                                        IDM.dropItemFromActor(live, gear),
-                                        5_000,
-                                        'dropItemFromActor(with token)',
-                                    );
+                                    // eslint-disable-next-line no-restricted-syntax -- boundary: dropItemFromActor returns an untyped Foundry actor doc
+                                    const result = (await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(with token)')) as {
+                                        id?: string;
+                                        type?: string;
+                                        items?: { contents?: Array<{ name?: string }> };
+                                    } | null;
                                     lootActor = result;
                                     const refreshed = getPc();
                                     const gearGone = refreshed?.items?.get?.(gear.id) === undefined;
                                     const lootHasItem =
-                                        result != null &&
-                                        result.type === 'loot' &&
-                                        (result.items?.contents ?? []).some((i: any) => i.name === 'probe-drop-gear');
+                                        result?.type === 'loot' && (result.items?.contents ?? []).some((i: { name?: string }) => i.name === 'probe-drop-gear');
                                     if (result != null && gearGone && lootHasItem) {
                                         if (result?.id) {
                                             cleanups.push(async () => {
@@ -718,8 +706,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                         fired['item-drop-creates-loot-pile'] = true;
                                         notes['item-drop-creates-loot-pile'] = 'loot Actor created, item moved off the PC into the pile';
                                     } else {
-                                        notes['item-drop-creates-loot-pile'] =
-                                            `result=${result == null ? 'null' : result.type} gearGone=${gearGone} lootHasItem=${lootHasItem} (canvas may be headless)`;
+                                        notes['item-drop-creates-loot-pile'] = `result=${
+                                            result == null ? 'null' : result.type
+                                        } gearGone=${gearGone} lootHasItem=${lootHasItem} (canvas may be headless)`;
                                     }
                                 }
                             } else {
@@ -745,13 +734,12 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const mod = await import(itemDropUrl);
                             const IDM = mod.ItemDropManager ?? mod.default;
-                            let pile = lootActor;
-                            if (pile == null || pile.type !== 'loot') {
-                                pile = await withTimeout(
-                                    Actor.create({ name: 'managers-extra-loot-pile', type: 'loot' }),
-                                    5_000,
-                                    'loot Actor.create',
-                                );
+                            const initialPile = lootActor;
+                            const pile =
+                                initialPile?.type === 'loot'
+                                    ? initialPile
+                                    : await withTimeout(Actor.create({ name: 'managers-extra-loot-pile', type: 'loot' }), 5_000, 'loot Actor.create');
+                            if (initialPile?.type !== 'loot') {
                                 if (pile?.id) {
                                     cleanups.push(async () => {
                                         try {
@@ -761,9 +749,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                         }
                                     });
                                     await withTimeout(
-                                        pile.createEmbeddedDocuments('Item', [
-                                            { name: 'probe-pickup-gear', type: 'gear', system: { quantity: 3 } },
-                                        ]),
+                                        pile.createEmbeddedDocuments('Item', [{ name: 'probe-pickup-gear', type: 'gear', system: { quantity: 3 } }]),
                                         5_000,
                                         'stock loot pile',
                                     );
@@ -776,17 +762,15 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             } else {
                                 const ok = await withTimeout(IDM.pickupLoot(live, pile), 5_000, 'pickupLoot');
                                 const refreshedPc = getPc();
-                                const receivedSomething =
-                                    (refreshedPc?.items?.contents ?? []).some(
-                                        (i: any) => i.name === 'probe-drop-gear' || i.name === 'probe-pickup-gear',
-                                    );
+                                const receivedSomething = (refreshedPc?.items?.contents ?? []).some(
+                                    (i: any) => i.name === 'probe-drop-gear' || i.name === 'probe-pickup-gear',
+                                );
                                 const pileDeleted = game?.actors?.get?.(pileId) === undefined;
                                 if (ok === true && receivedSomething && pileDeleted) {
                                     fired['item-drop-pickup-loot'] = true;
                                     notes['item-drop-pickup-loot'] = 'pile items merged onto receiver and the empty pile was deleted';
                                 } else {
-                                    notes['item-drop-pickup-loot'] =
-                                        `ok=${String(ok)} received=${receivedSomething} pileDeleted=${pileDeleted}`;
+                                    notes['item-drop-pickup-loot'] = `ok=${String(ok)} received=${receivedSomething} pileDeleted=${pileDeleted}`;
                                 }
                             }
                         }
@@ -810,8 +794,20 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         if (typeof IGM?.collectCandidates !== 'function') {
                             notes['inventory-generator-collect-candidates'] = 'collectCandidates unavailable';
                         } else {
-                            const dh2 = (await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates(dh2e)')) as any[];
-                            const im = (await withTimeout(IGM.collectCandidates('im'), 15_000, 'collectCandidates(im)')) as any[];
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: probe-result shape varies per content registry; uuid/name/type/profiles asserted below
+                            const dh2 = (await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates(dh2e)')) as Array<{
+                                uuid?: string;
+                                name?: string;
+                                type?: string;
+                                profiles?: unknown;
+                            }>;
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: probe-result shape varies per content registry
+                            const im = (await withTimeout(IGM.collectCandidates('im'), 15_000, 'collectCandidates(im)')) as Array<{
+                                uuid?: string;
+                                name?: string;
+                                type?: string;
+                                profiles?: unknown;
+                            }>;
                             const shapeOk =
                                 Array.isArray(dh2) &&
                                 Array.isArray(im) &&
@@ -827,21 +823,22 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             // talent / etc.) — collectCandidates filters via
                             // ItemDropManager.isDroppable.
                             const noOwnershipFacts = dh2.every(
-                                (c) => !['skill', 'talent', 'trait', 'aptitude', 'condition', 'originPath'].includes(c?.type),
+                                (c) => !['skill', 'talent', 'trait', 'aptitude', 'condition', 'originPath'].includes(c?.type ?? ''),
                             );
                             const sorted =
                                 dh2.length < 2 ||
-                                dh2.every(
-                                    (c, idx) =>
-                                        idx === 0 || String(dh2[idx - 1]?.name ?? '').localeCompare(String(c?.name ?? '')) <= 0,
-                                );
+                                dh2.every((c, idx) => idx === 0 || String(dh2[idx - 1]?.name ?? '').localeCompare(String(c?.name ?? '')) <= 0);
                             if (shapeOk && noOwnershipFacts && sorted) {
                                 fired['inventory-generator-collect-candidates'] = true;
-                                notes['inventory-generator-collect-candidates'] =
-                                    `dh2e=${dh2.length} candidates, im=${im.length} candidates; shapes valid, droppable-only, name-sorted`;
+                                notes[
+                                    'inventory-generator-collect-candidates'
+                                ] = `dh2e=${dh2.length} candidates, im=${im.length} candidates; shapes valid, droppable-only, name-sorted`;
                             } else {
-                                notes['inventory-generator-collect-candidates'] =
-                                    `shapeOk=${shapeOk} noOwnershipFacts=${noOwnershipFacts} sorted=${sorted} dh2Len=${Array.isArray(dh2) ? dh2.length : 'n/a'}`;
+                                notes[
+                                    'inventory-generator-collect-candidates'
+                                ] = `shapeOk=${shapeOk} noOwnershipFacts=${noOwnershipFacts} sorted=${sorted} dh2Len=${
+                                    Array.isArray(dh2) ? dh2.length : 'n/a'
+                                }`;
                             }
                         }
                     } catch (err) {
@@ -868,23 +865,18 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         } else if (typeof IGM?.applyToActor !== 'function' || typeof IGM?.collectCandidates !== 'function') {
                             notes['inventory-generator-apply-to-actor'] = 'applyToActor/collectCandidates unavailable';
                         } else {
-                            const candidates = (await withTimeout(
-                                IGM.collectCandidates('dh2e'),
-                                15_000,
-                                'collectCandidates for apply',
-                            )) as any[];
-                            const candidate = Array.isArray(candidates)
-                                ? candidates.find((c) => typeof c?.uuid === 'string')
-                                : undefined;
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: probe-result shape varies per content registry
+                            const candidates = (await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates for apply')) as Array<{
+                                uuid?: string;
+                                name?: string;
+                                type?: string;
+                            }>;
+                            const candidate = Array.isArray(candidates) ? candidates.find((c) => typeof c?.uuid === 'string') : undefined;
                             if (candidate === undefined) {
                                 notes['inventory-generator-apply-to-actor'] = 'no compendium candidate available to apply';
                             } else {
                                 const beforeCount = live.items?.contents?.length ?? 0;
-                                const applied = await withTimeout(
-                                    IGM.applyToActor(live, [candidate.uuid]),
-                                    10_000,
-                                    'applyToActor',
-                                );
+                                const applied = await withTimeout(IGM.applyToActor(live, [candidate.uuid]), 10_000, 'applyToActor');
                                 const refreshed = getPc();
                                 const afterCount = refreshed?.items?.contents?.length ?? 0;
                                 const gained = afterCount > beforeCount;
@@ -905,11 +897,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                         }
                                     });
                                     fired['inventory-generator-apply-to-actor'] = true;
-                                    notes['inventory-generator-apply-to-actor'] =
-                                        `applied ${applied} item(s); actor inventory ${beforeCount} → ${afterCount}`;
+                                    notes['inventory-generator-apply-to-actor'] = `applied ${applied} item(s); actor inventory ${beforeCount} → ${afterCount}`;
                                 } else {
-                                    notes['inventory-generator-apply-to-actor'] =
-                                        `applied=${String(applied)} before=${beforeCount} after=${afterCount}`;
+                                    notes['inventory-generator-apply-to-actor'] = `applied=${String(applied)} before=${beforeCount} after=${afterCount}`;
                                 }
                             }
                         }
@@ -976,8 +966,8 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
         );
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

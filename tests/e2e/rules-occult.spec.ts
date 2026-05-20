@@ -102,7 +102,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (darkPact?.__importError) {
                 fail(['dark-pact-adjustDisposition', 'dark-pact-discoverySubtletyHit'], darkPact.__importError);
             } else {
-                guarded('dark-pact-adjustDisposition', () => darkPact.adjustPactDisposition(0, 5) === 3 && darkPact.adjustPactDisposition(0, -5) === -3 && darkPact.adjustPactDisposition(2, -1) === 1);
+                guarded(
+                    'dark-pact-adjustDisposition',
+                    () =>
+                        darkPact.adjustPactDisposition(0, 5) === 3 &&
+                        darkPact.adjustPactDisposition(0, -5) === -3 &&
+                        darkPact.adjustPactDisposition(2, -1) === 1,
+                );
                 guarded('dark-pact-discoverySubtletyHit', () => {
                     const pact = { id: 'p', boon: 'b', bane: 'x', initialDisposition: 0, discoverySubtletyPenalty: 5 };
                     const negative = { id: 'p', boon: 'b', bane: 'x', initialDisposition: 0, discoverySubtletyPenalty: -3 };
@@ -128,7 +134,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (malefic?.__importError) {
                 fail(['malefic-corruption-cost'], malefic.__importError);
             } else {
-                guarded('malefic-corruption-cost', () => malefic.getMaleficCorruptionCost('malefic', 4, true) === 4 && malefic.getMaleficCorruptionCost('malefic', 4, false) === 0 && malefic.getMaleficCorruptionCost('biomancy', 5, true) === 0);
+                guarded(
+                    'malefic-corruption-cost',
+                    () =>
+                        malefic.getMaleficCorruptionCost('malefic', 4, true) === 4 &&
+                        malefic.getMaleficCorruptionCost('malefic', 4, false) === 0 &&
+                        malefic.getMaleficCorruptionCost('biomancy', 5, true) === 0,
+                );
             }
 
             // ---------- possession ----------
@@ -148,7 +160,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const noop = possession.spendUnleashDaemon({ state: 'none', unleashUsed: 0, unleashMax: 3 });
                     return next.unleashUsed === 1 && noop.unleashUsed === 0 && typeof possession.resetSessionUnleash === 'function';
                 });
-                guarded('possession-resistTarget', () => possession.getResistDaemonTarget(40, 0) === 40 && possession.getResistDaemonTarget(40, 95) === 10 && possession.getResistDaemonTarget(5, 95) === 0);
+                guarded(
+                    'possession-resistTarget',
+                    () =>
+                        possession.getResistDaemonTarget(40, 0) === 40 &&
+                        possession.getResistDaemonTarget(40, 95) === 10 &&
+                        possession.getResistDaemonTarget(5, 95) === 0,
+                );
             }
 
             // ---------- psychic-push ----------
@@ -160,7 +178,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const fettered = psyPush.resolvePsyMode({ mode: 'fettered', basePR: 4 });
                     const unfettered = psyPush.resolvePsyMode({ mode: 'unfettered', basePR: 4 });
                     const pushed = psyPush.resolvePsyMode({ mode: 'push', basePR: 4, pushLevel: 1 });
-                    return fettered.effectivePR === 2 && fettered.focusModifier === 10 && unfettered.effectivePR === 4 && pushed.effectivePR === 5 && pushed.focusModifier === -10;
+                    return (
+                        fettered.effectivePR === 2 &&
+                        fettered.focusModifier === 10 &&
+                        unfettered.effectivePR === 4 &&
+                        pushed.effectivePR === 5 &&
+                        pushed.focusModifier === -10
+                    );
                 });
             }
 
@@ -173,7 +197,9 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 guarded('summoning-prepareRitual', () => {
                     const r = summoning.prepareSummoningRitual(baseRitual);
                     const floored = summoning.prepareSummoningRitual({ ...baseRitual, forbiddenLoreTotal: 50 });
-                    return r.forbiddenLoreTarget === 20 && floored.forbiddenLoreTarget === 0 && Array.isArray(r.masteryBreakdown) && r.masteryBreakdown.length > 0;
+                    return (
+                        r.forbiddenLoreTarget === 20 && floored.forbiddenLoreTarget === 0 && Array.isArray(r.masteryBreakdown) && r.masteryBreakdown.length > 0
+                    );
                 });
                 guarded('summoning-bindingDuration', () => summoning.bindingDurationHours(3) === 3 && summoning.bindingDurationHours(-2) === 0);
             }
@@ -183,10 +209,21 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (xenos?.__importError) {
                 fail(['xenos-equipment-condition', 'xenos-equipment-tickDegradation'], xenos.__importError);
             } else {
-                guarded('xenos-equipment-condition', () => xenos.getXenosCondition(8) === 'pristine' && xenos.getXenosCondition(4) === 'worn' && xenos.getXenosCondition(1) === 'degraded' && xenos.getXenosCondition(0) === 'ruined');
+                guarded(
+                    'xenos-equipment-condition',
+                    () =>
+                        xenos.getXenosCondition(8) === 'pristine' &&
+                        xenos.getXenosCondition(4) === 'worn' &&
+                        xenos.getXenosCondition(1) === 'degraded' &&
+                        xenos.getXenosCondition(0) === 'ruined',
+                );
                 guarded('xenos-equipment-tickDegradation', () => {
                     const ticked = xenos.tickXenosDegradation(8, 1);
-                    return typeof ticked.newCharges === 'number' && typeof ticked.newCondition === 'string' && typeof xenos.nextConditionUp('degraded') === 'string';
+                    return (
+                        typeof ticked.newCharges === 'number' &&
+                        typeof ticked.newCondition === 'string' &&
+                        typeof xenos.nextConditionUp('degraded') === 'string'
+                    );
                 });
             }
 
@@ -195,8 +232,20 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (inquest?.__importError) {
                 fail(['inquest-revelationsCrossed', 'inquest-currentTier'], inquest.__importError);
             } else {
-                guarded('inquest-revelationsCrossed', () => inquest.inquestRevelationsCrossed(300, 300) === 0 && inquest.inquestRevelationsCrossed(150, 250) === 1 && inquest.inquestRevelationsCrossed(0, 1200) === 5);
-                guarded('inquest-currentTier', () => inquest.getCurrentRevelationTier(0) === 0 && inquest.getCurrentRevelationTier(199) === 0 && Array.isArray([...inquest.INQUEST_THRESHOLDS]));
+                guarded(
+                    'inquest-revelationsCrossed',
+                    () =>
+                        inquest.inquestRevelationsCrossed(300, 300) === 0 &&
+                        inquest.inquestRevelationsCrossed(150, 250) === 1 &&
+                        inquest.inquestRevelationsCrossed(0, 1200) === 5,
+                );
+                guarded(
+                    'inquest-currentTier',
+                    () =>
+                        inquest.getCurrentRevelationTier(0) === 0 &&
+                        inquest.getCurrentRevelationTier(199) === 0 &&
+                        Array.isArray([...inquest.INQUEST_THRESHOLDS]),
+                );
             }
 
             // ---------- malignancy-test ----------
@@ -204,8 +253,20 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             if (malignancy?.__importError) {
                 fail(['malignancy-thresholdsCrossed', 'malignancy-testTarget'], malignancy.__importError);
             } else {
-                guarded('malignancy-thresholdsCrossed', () => malignancy.malignancyThresholdsCrossed(15, 15) === 0 && malignancy.malignancyThresholdsCrossed(8, 12) === 1 && malignancy.malignancyThresholdsCrossed(5, 35) === 3);
-                guarded('malignancy-testTarget', () => malignancy.getMalignancyTestTarget(40, 0) === 40 && malignancy.getMalignancyTestTarget(40, 25) === 20 && malignancy.getMalignancyTestTarget(5, 95) === 0);
+                guarded(
+                    'malignancy-thresholdsCrossed',
+                    () =>
+                        malignancy.malignancyThresholdsCrossed(15, 15) === 0 &&
+                        malignancy.malignancyThresholdsCrossed(8, 12) === 1 &&
+                        malignancy.malignancyThresholdsCrossed(5, 35) === 3,
+                );
+                guarded(
+                    'malignancy-testTarget',
+                    () =>
+                        malignancy.getMalignancyTestTarget(40, 0) === 40 &&
+                        malignancy.getMalignancyTestTarget(40, 25) === 20 &&
+                        malignancy.getMalignancyTestTarget(5, 95) === 0,
+                );
             }
 
             // ---------- chaos-backgrounds ----------

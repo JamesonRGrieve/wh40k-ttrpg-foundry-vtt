@@ -45,12 +45,7 @@ function renderPanel(ctx: PanelContext): HTMLElement {
     return renderTemplate(panelTpl, ctx);
 }
 
-function row(
-    statKey: string,
-    labelKey: string,
-    base: number,
-    sources: ModifierSource[],
-): BuildSummaryRow {
+function row(statKey: string, labelKey: string, base: number, sources: ModifierSource[]): BuildSummaryRow {
     const modifier = sources.reduce((acc, s) => acc + s.value, 0);
     return { statKey, labelKey, base, modifier, total: base + modifier, sources };
 }

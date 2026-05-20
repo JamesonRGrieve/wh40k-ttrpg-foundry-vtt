@@ -1,0 +1,134 @@
+{{!--
+    Black Crusade Alignment / Infamy advancement panel (#173).
+
+    Surfaces the actor's current Chaos Alignment, the per-god advance
+    tally (`tallyAdvancesByAlignment` in `bc-alignment-derivation.ts`),
+    the alignment they WOULD switch to if a 10-CP re-check fired right
+    now, the Corruption-Point checkpoint state, the Khorne-psyker lock
+    warning, and the Infamy advance affordance with cap state.
+
+    Context (set up by the BC character sheet — wiring lives outside
+    the file list this issue is allowed to edit; the panel is render-
+    only and reads exactly the fields documented below):
+
+      alignmentPanel: {
+        current:            ChaosAlignment           // sys.chaosAlignment
+        derived:            ChaosAlignment           // deriveAlignmentFor
+        tally:              { khorne, nurgle, slaanesh, tzeentch }
+        pendingFlip:        boolean                  // current !== derived
+        checkpoint:         number                   // sys.alignmentCheckpoint
+        corruption:         number                   // sys.corruption
+        nextCheckpoint:     number                   // floor(corruption / 10) * 10
+        recheckDue:         boolean                  // shouldRecheckAlignment
+        psykerLocked:       boolean                  // current === 'khorne'
+        infamy:             number                   // sys.infamy
+        infamyCost:         number | null            // null when capped
+        infamyCap:          number
+        infamyIncrement:    number
+      }
+
+    Rendered only for BC actors; the include in tab-status.hbs gates on
+    `actor._gameSystemId === 'bc'`.
+--}}
+<section class="wh40k-bc-alignment-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                bc:tw-border-crimson"
+         data-bc-current-alignment="{{alignmentPanel.current}}"
+         data-bc-derived-alignment="{{alignmentPanel.derived}}">
+
+    {{!-- Header: current alignment + pending-flip indicator --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-skull bc:tw-text-crimson"></i>
+            <span>{{localize "WH40K.BC.Advancement.PanelHeader"}}</span>
+        </h3>
+        <span class="wh40k-bc-current-alignment tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
+              data-alignment="{{alignmentPanel.current}}"
+              title="{{localize 'WH40K.BC.Advancement.CurrentAlignment'}}">
+            {{localize (concat "WH40K.BC.Advancement.Alignment." (capitalize alignmentPanel.current))}}
+        </span>
+    </header>
+
+    {{#if alignmentPanel.pendingFlip}}
+        <div class="wh40k-bc-pending-flip tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-crimson bc:tw-text-crimson-light"
+             data-pending-alignment="{{alignmentPanel.derived}}">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{localize "WH40K.BC.Advancement.PendingFlip" target=alignmentPanel.derived}}
+        </div>
+    {{/if}}
+
+    {{#if alignmentPanel.psykerLocked}}
+        <div class="wh40k-bc-psyker-lock tw-px-2 tw-py-1 tw-text-[0.75rem] tw-text-crimson bc:tw-text-crimson-light tw-border tw-border-solid tw-border-crimson tw-rounded">
+            <i class="fas fa-ban"></i>
+            {{localize "WH40K.BC.Advancement.PsykerLocked"}}
+        </div>
+    {{/if}}
+
+    {{!-- Per-god tally --}}
+    <div class="wh40k-bc-tally tw-flex tw-flex-col tw-gap-1">
+        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.BC.Advancement.TallyHeader"}}
+        </span>
+        <div class="wh40k-bc-tally-grid tw-grid tw-grid-cols-4 tw-gap-1">
+            <div class="wh40k-bc-tally-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-god="khorne">
+                <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Advancement.Alignment.Khorne"}}</span>
+                <span class="wh40k-bc-tally-count tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{alignmentPanel.tally.khorne}}</span>
+            </div>
+            <div class="wh40k-bc-tally-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-god="nurgle">
+                <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Advancement.Alignment.Nurgle"}}</span>
+                <span class="wh40k-bc-tally-count tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{alignmentPanel.tally.nurgle}}</span>
+            </div>
+            <div class="wh40k-bc-tally-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-god="slaanesh">
+                <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Advancement.Alignment.Slaanesh"}}</span>
+                <span class="wh40k-bc-tally-count tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{alignmentPanel.tally.slaanesh}}</span>
+            </div>
+            <div class="wh40k-bc-tally-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-god="tzeentch">
+                <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Advancement.Alignment.Tzeentch"}}</span>
+                <span class="wh40k-bc-tally-count tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{alignmentPanel.tally.tzeentch}}</span>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Corruption checkpoint state --}}
+    <div class="wh40k-bc-checkpoint tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.BC.Advancement.Checkpoint"}}
+        </span>
+        <span class="wh40k-bc-checkpoint-readout tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
+            {{alignmentPanel.checkpoint}} / {{alignmentPanel.corruption}} CP
+        </span>
+        {{#if alignmentPanel.recheckDue}}
+            <button type="button"
+                    class="wh40k-bc-recheck-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                    data-action="recheckBcAlignment"
+                    title="{{localize 'WH40K.BC.Advancement.RecheckTitle'}}">
+                {{localize "WH40K.BC.Advancement.RecheckButton"}}
+            </button>
+        {{/if}}
+    </div>
+
+    {{!-- Infamy advance affordance --}}
+    <div class="wh40k-bc-infamy tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-infamy="{{alignmentPanel.infamy}}">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.BC.Advancement.Infamy"}}
+        </span>
+        <span class="wh40k-bc-infamy-readout tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
+            {{alignmentPanel.infamy}} / {{alignmentPanel.infamyCap}}
+        </span>
+        {{#if alignmentPanel.infamyCost}}
+            <button type="button"
+                    class="wh40k-bc-infamy-buy-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                    data-action="buyBcInfamyAdvance"
+                    data-xp-cost="{{alignmentPanel.infamyCost}}"
+                    data-increment="{{alignmentPanel.infamyIncrement}}"
+                    title="{{localize 'WH40K.BC.Advancement.BuyInfamyTitle' xp=alignmentPanel.infamyCost step=alignmentPanel.infamyIncrement}}">
+                +{{alignmentPanel.infamyIncrement}} / {{alignmentPanel.infamyCost}} xp
+            </button>
+        {{else}}
+            <span class="wh40k-bc-infamy-capped tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.BC.Advancement.InfamyCapped"}}
+            </span>
+        {{/if}}
+    </div>
+</section>

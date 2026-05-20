@@ -20,7 +20,8 @@ test.describe.serial('psychic push selector', () => {
 
         const result = await page.evaluate(async () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any -- e2e probe runs in browser realm against untyped Foundry globals.
-            const mod = await import('/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js' as any);
+            const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
+            const mod = await import(/* @vite-ignore */ modUrl);
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing' };
