@@ -1,0 +1,51 @@
+{{!-- Only War Vehicle Movement action dispatch chat card (#156 — core.md §"VEHICLE MOVEMENT"). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-ow-vehicle-action-card tw-p-4 tw-rounded-md tw-border tw-border-brass tw-bg-[rgba(28,22,8,0.88)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-action-id="{{actionId}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-truck-fast tw-text-[1.1rem] tw-text-brass"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-brass">
+            {{localize "WH40K.OW.VehicleMovement.Chat.Title" action=(localize actionNameKey)}}
+        </div>
+    </div>
+
+    {{!-- Timing badge --}}
+    <div class="tw-flex tw-gap-2 tw-text-[0.78rem] tw-mb-3 tw-text-amber-200">
+        <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.4)]">
+            {{localize timingKey}}
+        </span>
+    </div>
+
+    {{!-- Rules-text description --}}
+    {{#if descriptionKey}}
+        <div class="tw-text-[0.85rem] tw-mb-3 tw-text-amber-50 tw-italic">
+            {{localize descriptionKey}}
+        </div>
+    {{/if}}
+
+    {{!-- Optional chase readout (posted when an active chase tick was rolled into this action) --}}
+    {{#if chase}}
+        <div class="wh40k-ow-vehicle-action-chase tw-p-2 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.22)] tw-flex tw-flex-col tw-gap-1">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-brass tw-mb-1">
+                {{localize "WH40K.OW.VehicleMovement.Chase.Title"}}
+            </div>
+            <div class="tw-flex tw-justify-between tw-text-[0.78rem] tw-text-amber-50">
+                <span>{{localize "WH40K.OW.VehicleMovement.Chase.PursuerDistance"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{chase.pursuerDistance}}</span>
+            </div>
+            <div class="tw-flex tw-justify-between tw-text-[0.78rem] tw-text-amber-50">
+                <span>{{localize "WH40K.OW.VehicleMovement.Chase.TurnCount"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{chase.turnCount}}</span>
+            </div>
+            {{#if chase.dangerZone}}
+                <div class="tw-mt-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-border tw-border-brass tw-bg-brass/20 tw-text-brass tw-font-semibold tw-text-[0.78rem]">
+                    <i class="fas fa-triangle-exclamation tw-mr-1"></i>
+                    {{localize "WH40K.OW.VehicleMovement.Chase.DangerZoneActive"}}
+                </div>
+            {{/if}}
+        </div>
+    {{/if}}
+</div>

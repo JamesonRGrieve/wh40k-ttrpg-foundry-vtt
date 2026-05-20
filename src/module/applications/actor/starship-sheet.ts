@@ -68,7 +68,7 @@ export default class StarshipSheet extends BaseActorSheet {
             rollShipCriticalHit: StarshipSheet.#rollShipCriticalHit,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
-        classes: ['starship'],
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'starship'],
         position: {
             width: 900,
             height: 700,

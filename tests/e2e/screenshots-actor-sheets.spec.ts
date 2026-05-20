@@ -151,221 +151,225 @@ async function probeActorSheetScreenshot(
     cleanup: () => Promise<void>;
     error: string | null;
 }> {
-    return page.evaluate(
-        async ({ actorType, systemId }) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
+    return page
+        .evaluate(
+            async ({ actorType, systemId }) => {
+                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                const g = globalThis as any;
+                const Actor = g.Actor;
+                const game = g.game;
 
-            // --- Deterministic LCG so repeated runs produce identical pixels.
-            // Park-Miller minimum-standard, seeded from a hash of the pair.
-            const seedHash = (s: string): number => {
-                let h = 2166136261;
-                for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
-                return (h >>> 0) || 1;
-            };
-            let _rng = seedHash(`${actorType}::${systemId}`) % 2147483647;
-            const seededRandom = (): number => {
-                _rng = (_rng * 48271) % 2147483647;
-                return (_rng - 1) / 2147483646;
-            };
-            const origRandom = Math.random;
-            Math.random = seededRandom;
-
-            const restoreRandom = (): void => {
-                Math.random = origRandom;
-            };
-
-            if (!Actor?.create) {
-                restoreRandom();
-                return {
-                    boundingBox: null,
-                    viewRendered: false,
-                    editToggled: false,
-                    actorId: null,
-                    error: 'Actor.create unavailable',
+                // --- Deterministic LCG so repeated runs produce identical pixels.
+                // Park-Miller minimum-standard, seeded from a hash of the pair.
+                const seedHash = (s: string): number => {
+                    let h = 2166136261;
+                    for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
+                    return h >>> 0 || 1;
                 };
-            }
-
-            // Seed shape per kind — kept minimal but non-empty so the sheet
-            // has data to render rather than the blank-actor placeholder.
-            // The DataModel fills in everything else from its schema defaults.
-            const baseName = `screenshot-${actorType}-${systemId}`;
-            const isCharacter = actorType.endsWith('-character');
-            const isNpc = actorType.endsWith('-npc');
-            const isVehicle = actorType.endsWith('-vehicle');
-            const isStarship = actorType.endsWith('-starship');
-            const isLoot = actorType === 'loot';
-
-            const seed: any = {
-                name: baseName,
-                type: actorType,
-                system: { gameSystem: systemId },
-            };
-            if (isCharacter) {
-                seed.system = {
-                    ...seed.system,
-                    wounds: { value: 10, max: 12, critical: 0 },
-                    fate: { value: 3, max: 4 },
-                    characteristics: {
-                        weaponSkill: { advance: 5, base: 30 },
-                        ballisticSkill: { advance: 10, base: 30 },
-                        strength: { advance: 0, base: 35 },
-                        toughness: { advance: 5, base: 35 },
-                        agility: { advance: 0, base: 30 },
-                        intelligence: { advance: 0, base: 30 },
-                        perception: { advance: 5, base: 30 },
-                        willpower: { advance: 0, base: 30 },
-                        fellowship: { advance: 0, base: 30 },
-                    },
+                let _rng = seedHash(`${actorType}::${systemId}`) % 2147483647;
+                const seededRandom = (): number => {
+                    _rng = (_rng * 48271) % 2147483647;
+                    return (_rng - 1) / 2147483646;
                 };
-            } else if (isNpc) {
-                seed.system = {
-                    ...seed.system,
-                    wounds: { value: 8, max: 10, critical: 0 },
-                    armour: { mode: 'simple', total: 3 },
-                };
-            } else if (isVehicle) {
-                seed.system = {
-                    ...seed.system,
-                    integrity: { value: 30, max: 40 },
-                    crew: { current: 2, max: 4 },
-                };
-            } else if (isStarship) {
-                seed.system = {
-                    ...seed.system,
-                    hull: { value: 50, max: 60 },
-                    morale: { value: 90, max: 100 },
-                    crewRating: { value: 35, max: 60 },
-                };
-            } else if (isLoot) {
-                seed.system = {
-                    ...seed.system,
-                    description: 'A pile of recovered equipment.',
-                };
-            }
+                const origRandom = Math.random;
+                Math.random = seededRandom;
 
-            let actor: any;
-            try {
-                actor = await Actor.create(seed);
-            } catch (err) {
-                restoreRandom();
-                return {
-                    boundingBox: null,
-                    viewRendered: false,
-                    editToggled: false,
-                    actorId: null,
-                    error: `Actor.create threw: ${String((err as Error)?.message ?? err)}`,
+                const restoreRandom = (): void => {
+                    Math.random = origRandom;
                 };
-            }
-            if (!actor?.id) {
-                restoreRandom();
-                return {
-                    boundingBox: null,
-                    viewRendered: false,
-                    editToggled: false,
-                    actorId: null,
-                    error: 'Actor.create returned null/no-id (silent failure)',
-                };
-            }
 
-            // Stash on the window so an outer cleanup pass can finalise even
-            // if the spec aborts before the explicit cleanup runs.
-            g.__screenshotActorIds = g.__screenshotActorIds ?? [];
-            g.__screenshotActorIds.push(actor.id);
-
-            const sheet = actor.sheet;
-            if (!sheet?.render) {
-                restoreRandom();
-                return {
-                    boundingBox: null,
-                    viewRendered: false,
-                    editToggled: false,
-                    actorId: actor.id,
-                    error: 'actor.sheet.render unavailable',
-                };
-            }
-
-            let viewRendered = false;
-            try {
-                await sheet.render({ force: true });
-                viewRendered = true;
-            } catch (err) {
-                restoreRandom();
-                return {
-                    boundingBox: null,
-                    viewRendered: false,
-                    editToggled: false,
-                    actorId: actor.id,
-                    error: `sheet.render threw: ${String((err as Error)?.message ?? err)}`,
-                };
-            }
-
-            // Let ApplicationV2 PARTS settle (CSS transitions, async tab
-            // content). 500ms matches the spec brief.
-            await new Promise((r) => setTimeout(r, 500));
-
-            // Find the sheet root element in the live DOM. ApplicationV2
-            // tags its outer element with data-appid matching sheet.id.
-            const appId = String(sheet.id ?? '');
-            const directEl = sheet.element instanceof HTMLElement ? sheet.element : null;
-            const lookupEl =
-                directEl ?? (document.querySelector(`[data-appid="${appId}"]`) as HTMLElement | null) ?? (document.querySelector(`#${appId}`) as HTMLElement | null);
-
-            let boundingBox: { x: number; y: number; width: number; height: number } | null = null;
-            if (lookupEl) {
-                const rect = lookupEl.getBoundingClientRect();
-                if (rect.width > 0 && rect.height > 0) {
-                    boundingBox = {
-                        x: Math.max(0, Math.floor(rect.x)),
-                        y: Math.max(0, Math.floor(rect.y)),
-                        width: Math.ceil(rect.width),
-                        height: Math.ceil(rect.height),
+                if (!Actor?.create) {
+                    restoreRandom();
+                    return {
+                        boundingBox: null,
+                        viewRendered: false,
+                        editToggled: false,
+                        actorId: null,
+                        error: 'Actor.create unavailable',
                     };
                 }
-            }
 
-            restoreRandom();
-            return {
-                boundingBox,
-                viewRendered,
-                editToggled: false,
-                actorId: actor.id,
-                error: null,
-            };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
-        },
-        { actorType, systemId },
-    ).then((result) => ({
-        boundingBox: result.boundingBox,
-        viewRendered: result.viewRendered,
-        editToggled: result.editToggled,
-        cleanup: async (): Promise<void> => {
-            if (result.actorId === null) return;
-            await page
-                .evaluate(async (id: string) => {
-                    /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                    const g = globalThis as any;
-                    const live = g.game?.actors?.get?.(id);
-                    try {
-                        await live?.sheet?.close?.();
-                    } catch {
-                        /* ignore */
+                // Seed shape per kind — kept minimal but non-empty so the sheet
+                // has data to render rather than the blank-actor placeholder.
+                // The DataModel fills in everything else from its schema defaults.
+                const baseName = `screenshot-${actorType}-${systemId}`;
+                const isCharacter = actorType.endsWith('-character');
+                const isNpc = actorType.endsWith('-npc');
+                const isVehicle = actorType.endsWith('-vehicle');
+                const isStarship = actorType.endsWith('-starship');
+                const isLoot = actorType === 'loot';
+
+                const seed: any = {
+                    name: baseName,
+                    type: actorType,
+                    system: { gameSystem: systemId },
+                };
+                if (isCharacter) {
+                    seed.system = {
+                        ...seed.system,
+                        wounds: { value: 10, max: 12, critical: 0 },
+                        fate: { value: 3, max: 4 },
+                        characteristics: {
+                            weaponSkill: { advance: 5, base: 30 },
+                            ballisticSkill: { advance: 10, base: 30 },
+                            strength: { advance: 0, base: 35 },
+                            toughness: { advance: 5, base: 35 },
+                            agility: { advance: 0, base: 30 },
+                            intelligence: { advance: 0, base: 30 },
+                            perception: { advance: 5, base: 30 },
+                            willpower: { advance: 0, base: 30 },
+                            fellowship: { advance: 0, base: 30 },
+                        },
+                    };
+                } else if (isNpc) {
+                    seed.system = {
+                        ...seed.system,
+                        wounds: { value: 8, max: 10, critical: 0 },
+                        armour: { mode: 'simple', total: 3 },
+                    };
+                } else if (isVehicle) {
+                    seed.system = {
+                        ...seed.system,
+                        integrity: { value: 30, max: 40 },
+                        crew: { current: 2, max: 4 },
+                    };
+                } else if (isStarship) {
+                    seed.system = {
+                        ...seed.system,
+                        hull: { value: 50, max: 60 },
+                        morale: { value: 90, max: 100 },
+                        crewRating: { value: 35, max: 60 },
+                    };
+                } else if (isLoot) {
+                    seed.system = {
+                        ...seed.system,
+                        description: 'A pile of recovered equipment.',
+                    };
+                }
+
+                let actor: any;
+                try {
+                    actor = await Actor.create(seed);
+                } catch (err) {
+                    restoreRandom();
+                    return {
+                        boundingBox: null,
+                        viewRendered: false,
+                        editToggled: false,
+                        actorId: null,
+                        error: `Actor.create threw: ${String((err as Error)?.message ?? err)}`,
+                    };
+                }
+                if (!actor?.id) {
+                    restoreRandom();
+                    return {
+                        boundingBox: null,
+                        viewRendered: false,
+                        editToggled: false,
+                        actorId: null,
+                        error: 'Actor.create returned null/no-id (silent failure)',
+                    };
+                }
+
+                // Stash on the window so an outer cleanup pass can finalise even
+                // if the spec aborts before the explicit cleanup runs.
+                g.__screenshotActorIds = g.__screenshotActorIds ?? [];
+                g.__screenshotActorIds.push(actor.id);
+
+                const sheet = actor.sheet;
+                if (!sheet?.render) {
+                    restoreRandom();
+                    return {
+                        boundingBox: null,
+                        viewRendered: false,
+                        editToggled: false,
+                        actorId: actor.id,
+                        error: 'actor.sheet.render unavailable',
+                    };
+                }
+
+                let viewRendered = false;
+                try {
+                    await sheet.render({ force: true });
+                    viewRendered = true;
+                } catch (err) {
+                    restoreRandom();
+                    return {
+                        boundingBox: null,
+                        viewRendered: false,
+                        editToggled: false,
+                        actorId: actor.id,
+                        error: `sheet.render threw: ${String((err as Error)?.message ?? err)}`,
+                    };
+                }
+
+                // Let ApplicationV2 PARTS settle (CSS transitions, async tab
+                // content). 500ms matches the spec brief.
+                await new Promise((r) => setTimeout(r, 500));
+
+                // Find the sheet root element in the live DOM. ApplicationV2
+                // tags its outer element with data-appid matching sheet.id.
+                const appId = String(sheet.id ?? '');
+                const directEl = sheet.element instanceof HTMLElement ? sheet.element : null;
+                const lookupEl =
+                    directEl ??
+                    (document.querySelector(`[data-appid="${appId}"]`) as HTMLElement | null) ??
+                    (document.querySelector(`#${appId}`) as HTMLElement | null);
+
+                let boundingBox: { x: number; y: number; width: number; height: number } | null = null;
+                if (lookupEl) {
+                    const rect = lookupEl.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0) {
+                        boundingBox = {
+                            x: Math.max(0, Math.floor(rect.x)),
+                            y: Math.max(0, Math.floor(rect.y)),
+                            width: Math.ceil(rect.width),
+                            height: Math.ceil(rect.height),
+                        };
                     }
-                    try {
-                        await live?.delete?.();
-                    } catch {
+                }
+
+                restoreRandom();
+                return {
+                    boundingBox,
+                    viewRendered,
+                    editToggled: false,
+                    actorId: actor.id,
+                    error: null,
+                };
+                /* eslint-enable @typescript-eslint/no-explicit-any */
+            },
+            { actorType, systemId },
+        )
+        .then((result) => ({
+            boundingBox: result.boundingBox,
+            viewRendered: result.viewRendered,
+            editToggled: result.editToggled,
+            cleanup: async (): Promise<void> => {
+                if (result.actorId === null) return;
+                await page
+                    .evaluate(async (id: string) => {
+                        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                        const g = globalThis as any;
+                        const live = g.game?.actors?.get?.(id);
+                        try {
+                            await live?.sheet?.close?.();
+                        } catch {
+                            /* ignore */
+                        }
+                        try {
+                            await live?.delete?.();
+                        } catch {
+                            /* ignore */
+                        }
+                        /* eslint-enable @typescript-eslint/no-explicit-any */
+                    }, result.actorId)
+                    .catch(() => {
                         /* ignore */
-                    }
-                    /* eslint-enable @typescript-eslint/no-explicit-any */
-                }, result.actorId)
-                .catch(() => {
-                    /* ignore */
-                });
-        },
-        error: result.error,
-    }));
+                    });
+            },
+            error: result.error,
+        }));
 }
 
 /**
@@ -408,7 +412,9 @@ async function toggleEditModeAndMeasure(
         const appId = String(sheet.id ?? '');
         const directEl = sheet.element instanceof HTMLElement ? sheet.element : null;
         const el =
-            directEl ?? (document.querySelector(`[data-appid="${appId}"]`) as HTMLElement | null) ?? (document.querySelector(`#${appId}`) as HTMLElement | null);
+            directEl ??
+            (document.querySelector(`[data-appid="${appId}"]`) as HTMLElement | null) ??
+            (document.querySelector(`#${appId}`) as HTMLElement | null);
         let boundingBox: { x: number; y: number; width: number; height: number } | null = null;
         if (el) {
             const rect = el.getBoundingClientRect();

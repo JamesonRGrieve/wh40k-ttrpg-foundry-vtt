@@ -477,11 +477,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                     continue;
                                 }
                                 try {
-                                    await withTimeout(
-                                        sheet.submit({ updateData, preventClose: true }),
-                                        5_000,
-                                        `${slug} sheet.submit ${path}`,
-                                    );
+                                    await withTimeout(sheet.submit({ updateData, preventClose: true }), 5_000, `${slug} sheet.submit ${path}`);
                                 } catch (err) {
                                     notes[key] = `submit threw: ${String((err as Error)?.message ?? err)}`;
                                     continue;
@@ -492,9 +488,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 await new Promise((r) => setTimeout(r, 150));
 
                                 const refreshed =
-                                    spec.kind === 'actor'
-                                        ? game?.actors?.get?.(actor.id) ?? doc
-                                        : (game?.actors?.get?.(actor.id)?.items?.get?.(item.id) ?? doc);
+                                    spec.kind === 'actor' ? game?.actors?.get?.(actor.id) ?? doc : game?.actors?.get?.(actor.id)?.items?.get?.(item.id) ?? doc;
                                 const after = getPath(refreshed, path);
 
                                 // Boolean: equality. Number: equality after Number() coerce

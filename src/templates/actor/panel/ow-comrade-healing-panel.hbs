@@ -1,0 +1,126 @@
+{{!--
+    Only War "Healing Comrades" panel (#157 — core.md §"Healing Comrades"
+    p.12269; replacement p.12261).
+
+    Surfaces the auto-recovery countdown for a wounded Comrade plus the
+    two RAW shortcuts:
+
+      • "Tick Day" — advance the clock by one day of in-fiction rest
+        (calls {@link tickComradeRecovery} with daysElapsed=1).
+      • "Medicae Attempt" — opens / drives a Difficult(-10) Medicae Test
+        whose DoS feeds {@link applyMedicaeAttempt}.
+      • "Replace at Camp" — fires {@link processReplacement}; only legal
+        when the existing Comrade is `dead` AND `refitAvailable` is true.
+
+    Sheet context (built by character-sheet `_prepareContext`):
+
+      comradeHealingPanel: {
+        recoveryDays:         number  // sys.comradeRecoveryDays
+        autoRecoveryTotal:    number  // OW_COMRADE_AUTO_RECOVERY_DAYS (7)
+        refitAvailable:       boolean // sys.refitAvailable
+        comradeState:         'unharmed' | 'wounded' | 'dead'
+        isRecovering:         boolean  // recoveryDays > 0
+        isReady:              boolean  // recoveryDays === 0 && state === 'unharmed'
+        canTick:              boolean  // recoveryDays > 0 (only meaningful while wounded)
+        canMedicae:           boolean  // recoveryDays > 0 (one attempt cap enforced upstream)
+        canReplace:           boolean  // state === 'dead' && refitAvailable
+        medicaeDifficulty:    number   // OW_COMRADE_MEDICAE_DIFFICULTY_MODIFIER (-10)
+      }
+
+    Rendered only for OW actors; the include in tab-status.hbs gates on
+    `isOW`.
+--}}
+<section class="wh40k-ow-healing-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                ow:tw-border-brass"
+         data-ow-healing-state="{{comradeHealingPanel.comradeState}}"
+         data-ow-healing-recovering="{{#if comradeHealingPanel.isRecovering}}true{{else}}false{{/if}}">
+
+    {{!-- Header: title + recovery / ready badge --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-staff-snake ow:tw-text-brass"></i>
+            <span class="wh40k-ow-healing-panel__label">{{localize "WH40K.OW.ComradeHealing.Label"}}</span>
+        </h3>
+        <span class="wh40k-ow-healing-panel__status-badge tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
+                     {{#if comradeHealingPanel.isReady}}tw-border-success tw-text-success tw-bg-success/10{{/if}}
+                     {{#if comradeHealingPanel.isRecovering}}tw-border-gold tw-text-gold tw-bg-gold/10{{/if}}"
+              data-recovery-status="{{#if comradeHealingPanel.isRecovering}}recovering{{else}}ready{{/if}}">
+            {{#if comradeHealingPanel.isRecovering}}
+                {{localize "WH40K.OW.ComradeHealing.Status.Recovering"}}
+            {{else}}
+                {{localize "WH40K.OW.ComradeHealing.Status.Ready"}}
+            {{/if}}
+        </span>
+    </header>
+
+    {{!-- Recovery clock readout --}}
+    <div class="wh40k-ow-healing-panel__clock tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-text-[0.78rem]"
+         data-field="recovery-days">
+        <span class="wh40k-ow-healing-panel__autoRecovery tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums">
+            {{localize "WH40K.OW.ComradeHealing.AutoRecoveryDays" days=comradeHealingPanel.autoRecoveryTotal}}
+        </span>
+        <span class="wh40k-ow-healing-panel__remaining tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold tw-tabular-nums"
+              data-remaining-days="{{comradeHealingPanel.recoveryDays}}">
+            {{#if comradeHealingPanel.isRecovering}}
+                {{localize "WH40K.OW.ComradeHealing.RemainingDays" days=comradeHealingPanel.recoveryDays}}
+            {{else}}
+                <i class="fas fa-check tw-text-success tw-mr-1"></i>
+                {{localize "WH40K.OW.ComradeHealing.Recovery.Complete"}}
+            {{/if}}
+        </span>
+    </div>
+
+    {{!-- Refit-availability readout --}}
+    <div class="wh40k-ow-healing-panel__refit tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-text-[0.78rem]"
+         data-field="refit-available">
+        <span class="tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.OW.ComradeHealing.Medicae.Difficulty"}}
+        </span>
+        <span class="wh40k-ow-healing-panel__refit-indicator tw-inline-flex tw-items-center tw-gap-1 tw-font-semibold
+                     {{#if comradeHealingPanel.refitAvailable}}tw-text-success{{else}}tw-text-crimson{{/if}}"
+              data-refit="{{#if comradeHealingPanel.refitAvailable}}available{{else}}unavailable{{/if}}">
+            <i class="fas {{#if comradeHealingPanel.refitAvailable}}fa-truck-medical{{else}}fa-ban{{/if}}"></i>
+            {{#if comradeHealingPanel.refitAvailable}}
+                {{localize "WH40K.OW.ComradeHealing.Status.RefitAvailable"}}
+            {{else}}
+                {{localize "WH40K.OW.ComradeHealing.Status.RefitUnavailable"}}
+            {{/if}}
+        </span>
+    </div>
+
+    {{!-- Action affordances --}}
+    <div class="wh40k-ow-healing-panel__actions tw-flex tw-flex-wrap tw-gap-1.5">
+        <button type="button"
+                class="wh40k-ow-healing-panel__tick-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="owComradeTickDay"
+                title="{{localize 'WH40K.OW.ComradeHealing.Action.TickDay'}}"
+                {{#unless comradeHealingPanel.canTick}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-clock tw-mr-1"></i>
+            {{localize "WH40K.OW.ComradeHealing.Action.TickDay"}}
+        </button>
+        <button type="button"
+                class="wh40k-ow-healing-panel__medicae-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="owComradeMedicae"
+                title="{{localize 'WH40K.OW.ComradeHealing.Medicae.Title'}}"
+                data-medicae-difficulty="{{comradeHealingPanel.medicaeDifficulty}}"
+                {{#unless comradeHealingPanel.canMedicae}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-staff-snake tw-mr-1"></i>
+            {{localize "WH40K.OW.ComradeHealing.Action.MedicaeAttempt"}}
+        </button>
+        <button type="button"
+                class="wh40k-ow-healing-panel__replace-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="owComradeReplace2"
+                title="{{localize 'WH40K.OW.ComradeHealing.Action.Replace'}}"
+                data-refit-available="{{#if comradeHealingPanel.refitAvailable}}true{{else}}false{{/if}}"
+                {{#unless comradeHealingPanel.canReplace}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-user-plus tw-mr-1"></i>
+            {{localize "WH40K.OW.ComradeHealing.Action.Replace"}}
+        </button>
+    </div>
+</section>

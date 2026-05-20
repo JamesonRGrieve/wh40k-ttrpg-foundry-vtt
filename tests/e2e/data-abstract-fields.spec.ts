@@ -169,7 +169,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                         (Mixed as any).syntheticMarker === 'mixed-in' &&
                         Array.isArray((Mixed as any)._schemaTemplates) &&
                         (Mixed as any)._schemaTemplates.includes(SyntheticTemplate);
-                    return rejected === true && happyOk === true;
+                    return rejected && happyOk;
                 });
                 guarded('system-data-model-initializationOrder-generator', () => {
                     // The generator yields schema-template entries first, then
@@ -366,17 +366,13 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     } catch (err) {
                         invalidThrew = String((err as Error)?.message ?? err).includes('must contain only');
                     }
-                    return validOk === true && legacyOk === true && invalidThrew === true;
+                    return validOk && legacyOk && invalidThrew;
                 });
                 guarded('identifier-field-fromName-kebab', () => {
                     const kebab = IdentifierField.fromName('Rogue Trader (Voidmaster)');
                     const trimmed = IdentifierField.fromName('  --Foo!! Bar?? --');
                     const collapsed = IdentifierField.fromName('multi   space');
-                    return (
-                        kebab === 'rogue-trader-voidmaster' &&
-                        trimmed === 'foo-bar' &&
-                        collapsed === 'multi-space'
-                    );
+                    return kebab === 'rogue-trader-voidmaster' && trimmed === 'foo-bar' && collapsed === 'multi-space';
                 });
             }
 
@@ -412,9 +408,8 @@ test.describe.serial('data/abstract + data/fields (Tier B)', () => {
             failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
         }
 
-        expect(
-            failures,
-            `${failures.length}/${DATA_ABSTRACT_FIELDS_FLOWS.length} data-abstract-fields flows failed:\n  - ${failures.join('\n  - ')}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${DATA_ABSTRACT_FIELDS_FLOWS.length} data-abstract-fields flows failed:\n  - ${failures.join('\n  - ')}`).toEqual(
+            [],
+        );
     });
 });

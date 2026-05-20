@@ -362,7 +362,9 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             fired['item-container-setNested-roundtrip'] = true;
                             notes['item-container-setNested-roundtrip'] = 'setNested + setNestedManual + getNested + hasNested round-tripped';
                         } else {
-                            notes['item-container-setNested-roundtrip'] = `round1=${JSON.stringify(round1)} round2=${JSON.stringify(round2)} has1=${String(has1)}`;
+                            notes['item-container-setNested-roundtrip'] = `round1=${JSON.stringify(round1)} round2=${JSON.stringify(round2)} has1=${String(
+                                has1,
+                            )}`;
                         }
                     } else {
                         notes['item-container-setNested-roundtrip'] = 'no backpack item available';
@@ -461,7 +463,9 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                                 fired['item-container-deleteNestedDocuments-removes'] = true;
                                 notes['item-container-deleteNestedDocuments-removes'] = `removed id=${firstId}; length ${before.length} -> ${after.length}`;
                             } else {
-                                notes['item-container-deleteNestedDocuments-removes'] = `delete failed: before=${before.length} after=${after.length} stillThere=${String(stillThere !== undefined)}`;
+                                notes['item-container-deleteNestedDocuments-removes'] = `delete failed: before=${before.length} after=${
+                                    after.length
+                                } stillThere=${String(stillThere !== undefined)}`;
                             }
                         } else {
                             notes['item-container-deleteNestedDocuments-removes'] = `no first id to delete (before=${JSON.stringify(before)})`;
@@ -501,7 +505,9 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             fired['item-container-convertNestedToItems-builds-collection'] = true;
                             notes['item-container-convertNestedToItems-builds-collection'] = 'convertNestedToItems built a Collection holding both seeded ids';
                         } else {
-                            notes['item-container-convertNestedToItems-builds-collection'] = `threw=${threw ?? 'no'} items=${typeof items} aPresent=${String(aPresent)} bPresent=${String(bPresent)}`;
+                            notes['item-container-convertNestedToItems-builds-collection'] = `threw=${threw ?? 'no'} items=${typeof items} aPresent=${String(
+                                aPresent,
+                            )} bPresent=${String(bPresent)}`;
                         }
                     } else {
                         notes['item-container-convertNestedToItems-builds-collection'] = 'no backpack item available';
@@ -593,11 +599,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                                 }
                             });
                         }
-                        const plain = (await withTimeout(
-                            ChatMessage.create({ content: 'documents-extra-plain' }),
-                            5_000,
-                            'ChatMessage.create (plain)',
-                        )) as any;
+                        const plain = (await withTimeout(ChatMessage.create({ content: 'documents-extra-plain' }), 5_000, 'ChatMessage.create (plain)')) as any;
                         if (plain?.id) {
                             cleanups.push(async () => {
                                 try {
@@ -624,8 +626,9 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             fired['chat-message-getters'] = true;
                             notes['chat-message-getters'] = `flag-bearing getters returned true/string/false; plain returned false/null`;
                         } else {
-                            notes['chat-message-getters'] =
-                                `isCard=${String(isCard)} uuid=${String(uuid)} isTargeted=${String(isTargeted)} plainIsCard=${String(plainIsCard)} plainUuid=${String(plainUuid)}`;
+                            notes['chat-message-getters'] = `isCard=${String(isCard)} uuid=${String(uuid)} isTargeted=${String(
+                                isTargeted,
+                            )} plainIsCard=${String(plainIsCard)} plainUuid=${String(plainUuid)}`;
                         }
                     }
                 } catch (err) {
@@ -666,7 +669,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             });
                         }
                         const dos = msg?.calculateDegrees?.();
-                        if (dos !== null && dos !== undefined && dos.success === true && dos.degrees === 1) {
+                        if (dos?.success && dos.degrees === 1) {
                             fired['chat-message-calculateDegrees-real-roll'] = true;
                             notes['chat-message-calculateDegrees-real-roll'] = `total=35 target=50 -> success=true degrees=1`;
                         } else {
@@ -825,12 +828,15 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                     const aeMatch = (CONFIG?.ActiveEffect as any)?.documentClass === (mod as any)?.WH40KActiveEffect;
                     const proxyMatch = (CONFIG?.Actor as any)?.documentClass === (proxyMod as any)?.WH40KActorProxy;
 
-                    if (missing.length === 0 && chatMatch === true && tokenMatch === true && aeMatch === true && proxyMatch === true) {
+                    if (missing.length === 0 && chatMatch && tokenMatch && aeMatch && proxyMatch) {
                         fired['module-exports-match-config-documentClass'] = true;
-                        notes['module-exports-match-config-documentClass'] = `${expectedExports.length} exports resolved; ChatMessage/Token/ActiveEffect/Actor identities match CONFIG registrations`;
+                        notes[
+                            'module-exports-match-config-documentClass'
+                        ] = `${expectedExports.length} exports resolved; ChatMessage/Token/ActiveEffect/Actor identities match CONFIG registrations`;
                     } else {
-                        notes['module-exports-match-config-documentClass'] =
-                            `missing=${missing.join(',')} chat=${String(chatMatch)} token=${String(tokenMatch)} ae=${String(aeMatch)} actor=${String(proxyMatch)}`;
+                        notes['module-exports-match-config-documentClass'] = `missing=${missing.join(',')} chat=${String(chatMatch)} token=${String(
+                            tokenMatch,
+                        )} ae=${String(aeMatch)} actor=${String(proxyMatch)}`;
                     }
                 } catch (err) {
                     notes['module-exports-match-config-documentClass'] = `flow threw: ${String((err as Error)?.message ?? err)}`;

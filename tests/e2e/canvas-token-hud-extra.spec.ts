@@ -241,7 +241,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     const RulerClassFromConfig = CONFIG?.Token?.rulerClass ?? null;
                     const RulerClass = TokenRulerWH40K ?? RulerClassFromConfig;
                     if (typeof RulerClass !== 'function') {
-                        notes['ruler-instantiates-with-token'] = `no ruler class — TokenRulerWH40K=${typeof TokenRulerWH40K} CONFIG.Token.rulerClass=${typeof RulerClassFromConfig}`;
+                        notes[
+                            'ruler-instantiates-with-token'
+                        ] = `no ruler class — TokenRulerWH40K=${typeof TokenRulerWH40K} CONFIG.Token.rulerClass=${typeof RulerClassFromConfig}`;
                     } else {
                         try {
                             ruler = new RulerClass(fakeToken);
@@ -254,7 +256,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             const fallback = Object.create(RulerClass.prototype) as { token: typeof fakeToken };
                             fallback.token = fakeToken;
                             ruler = fallback;
-                            notes['ruler-instantiates-with-token'] = `direct ctor threw (${String((err as Error)?.message ?? err)}); using prototype-mounted fallback`;
+                            notes['ruler-instantiates-with-token'] = `direct ctor threw (${String(
+                                (err as Error)?.message ?? err,
+                            )}); using prototype-mounted fallback`;
                         }
                         if (ruler !== null) {
                             fired['ruler-instantiates-with-token'] = true;
@@ -478,7 +482,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         if (activeBtn.dataset['movementType'] === 'full') {
                             fired['token-hud-active-button-class'] = true;
                         } else {
-                            notes['token-hud-active-button-class'] = `active button data-movement-type=${String(activeBtn.dataset['movementType'])} (expected 'full')`;
+                            notes['token-hud-active-button-class'] = `active button data-movement-type=${String(
+                                activeBtn.dataset['movementType'],
+                            )} (expected 'full')`;
                         }
                     } else {
                         notes['token-hud-active-button-class'] = `expected exactly 1 active button, got ${activeBtns.length}`;
@@ -559,7 +565,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['token-hud-button-localizes-label'] = `unexpected title: "${title}"`;
                         }
                     } else {
-                        notes['token-hud-button-localizes-label'] = `half button not found among ${htmlRoot.querySelectorAll('.wh40k-token-movement__btn').length} buttons`;
+                        notes['token-hud-button-localizes-label'] = `half button not found among ${
+                            htmlRoot.querySelectorAll('.wh40k-token-movement__btn').length
+                        } buttons`;
                     }
                 } catch (err) {
                     notes['token-hud-button-localizes-label'] = `localize probe threw: ${String((err as Error)?.message ?? err)}`;
@@ -600,7 +608,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         if (flagsPayload?.movementAction === 'charge') {
                             fired['token-hud-set-movement-action-flag-update'] = true;
                         } else {
-                            notes['token-hud-set-movement-action-flag-update'] = `update payload: ${JSON.stringify(lastUpdate)} (expected flags['wh40k-rpg'].movementAction='charge')`;
+                            notes['token-hud-set-movement-action-flag-update'] = `update payload: ${JSON.stringify(
+                                lastUpdate,
+                            )} (expected flags['wh40k-rpg'].movementAction='charge')`;
                         }
                     } else {
                         notes['token-hud-set-movement-action-flag-update'] = 'charge button not present in injected HUD';
@@ -645,7 +655,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         if (hoverBg !== baseBg && leaveBg === baseBg) {
                             fired['token-hud-button-mouseenter-mouseleave-styles'] = true;
                         } else {
-                            notes['token-hud-button-mouseenter-mouseleave-styles'] = `base=${baseBg} hover=${hoverBg} leave=${leaveBg} (expected hover!==base and leave===base)`;
+                            notes[
+                                'token-hud-button-mouseenter-mouseleave-styles'
+                            ] = `base=${baseBg} hover=${hoverBg} leave=${leaveBg} (expected hover!==base and leave===base)`;
                         }
                     } else {
                         notes['token-hud-button-mouseenter-mouseleave-styles'] = 'run button not present in injected HUD';
@@ -669,7 +681,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     const tokenMod: any = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(url);
                     const TokenDocumentWH40K = tokenMod?.TokenDocumentWH40K ?? tokenMod?.default ?? null;
                     if (typeof TokenDocumentWH40K?.registerMovementActions !== 'function') {
-                        notes['register-movement-actions-config-population'] = `registerMovementActions missing — keys: ${Object.keys(tokenMod ?? {}).join(',')}`;
+                        notes['register-movement-actions-config-population'] = `registerMovementActions missing — keys: ${Object.keys(tokenMod ?? {}).join(
+                            ',',
+                        )}`;
                     } else {
                         TokenDocumentWH40K.registerMovementActions();
                         const wh40kTypes = Object.keys((CONFIG?.wh40k?.movementTypes ?? {}) as Record<string, unknown>);
@@ -744,9 +758,8 @@ test.describe.serial('canvas ruler + token HUD depth (Tier B)', () => {
 
         const pageErrorTail = probe.pageErrors.length > 0 ? `\n  pageerrors: ${probe.pageErrors.slice(0, 5).join(' | ')}` : '';
 
-        expect(
-            failures,
-            `${failures.length}/${CANVAS_EXTRA_FLOWS.length} canvas-extra probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${CANVAS_EXTRA_FLOWS.length} canvas-extra probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`).toEqual(
+            [],
+        );
     });
 });

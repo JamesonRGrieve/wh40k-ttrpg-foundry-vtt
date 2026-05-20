@@ -208,8 +208,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['drag-drop-api-allowed-behaviors'] = true;
                             notes['drag-drop-api-allowed-behaviors'] = 'no-uuid → {copy,link}; with-uuid → {copy,move,link}';
                         } else {
-                            notes['drag-drop-api-allowed-behaviors'] =
-                                `noUuid=${Array.from(noUuid).join(',')} withUuid=${Array.from(withUuid).join(',')}`;
+                            notes['drag-drop-api-allowed-behaviors'] = `noUuid=${Array.from(noUuid).join(',')} withUuid=${Array.from(withUuid).join(',')}`;
                         }
                     }
                 } catch (err) {
@@ -244,8 +243,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['drag-drop-api-default-behavior'] = true;
                             notes['drag-drop-api-default-behavior'] = 'noString=copy; otherActor=copy; sameActor=move';
                         } else {
-                            notes['drag-drop-api-default-behavior'] =
-                                `noString=${String(noString)} copyAcross=${String(copyAcross)} moveSame=${String(moveSame)}`;
+                            notes['drag-drop-api-default-behavior'] = `noString=${String(noString)} copyAcross=${String(copyAcross)} moveSame=${String(
+                                moveSame,
+                            )}`;
                         }
                     }
                 } catch (err) {
@@ -290,8 +290,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['drag-drop-api-modifier-keys'] = true;
                             notes['drag-drop-api-modifier-keys'] = 'shift→copy; alt→link; no-mods→default(move)';
                         } else {
-                            notes['drag-drop-api-modifier-keys'] =
-                                `shiftCopy=${String(shiftCopy)} altLink=${String(altLink)} noMods=${String(noMods)}`;
+                            notes['drag-drop-api-modifier-keys'] = `shiftCopy=${String(shiftCopy)} altLink=${String(altLink)} noMods=${String(noMods)}`;
                         }
                     }
                 } catch (err) {
@@ -381,11 +380,13 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 const talentNotSplittable = inst._canSplitItem(talent) === false; // type talent
                                 if (ghostHasName && ghostHasQty && stackSplittable && singleNotSplittable && talentNotSplittable) {
                                     fired['drag-drop-visual-ghost-and-split'] = true;
-                                    notes['drag-drop-visual-ghost-and-split'] =
-                                        'ghost contains name + ×qty; split allowed only for qty>1 stackable types';
+                                    notes['drag-drop-visual-ghost-and-split'] = 'ghost contains name + ×qty; split allowed only for qty>1 stackable types';
                                 } else {
-                                    notes['drag-drop-visual-ghost-and-split'] =
-                                        `ghostHasName=${String(ghostHasName)} ghostHasQty=${String(ghostHasQty)} stackSplittable=${String(stackSplittable)} singleNotSplittable=${String(singleNotSplittable)} talentNotSplittable=${String(talentNotSplittable)}`;
+                                    notes['drag-drop-visual-ghost-and-split'] = `ghostHasName=${String(ghostHasName)} ghostHasQty=${String(
+                                        ghostHasQty,
+                                    )} stackSplittable=${String(stackSplittable)} singleNotSplittable=${String(
+                                        singleNotSplittable,
+                                    )} talentNotSplittable=${String(talentNotSplittable)}`;
                                 }
                             }
                         }
@@ -418,10 +419,12 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         const gearDefault = inst._validateEquipmentSlot({ type: 'gear' } as any, 'belt');
                         if (weaponInPrimary === true && weaponInArmor === false && armourInArmor === true && gearDefault === true) {
                             fired['drag-drop-visual-validate-slot'] = true;
-                            notes['drag-drop-visual-validate-slot'] = 'weapon→weapon-slot pass; weapon→armor slot fail; armour→armor slot pass; gear→default pass';
-                        } else {
                             notes['drag-drop-visual-validate-slot'] =
-                                `weaponInPrimary=${String(weaponInPrimary)} weaponInArmor=${String(weaponInArmor)} armourInArmor=${String(armourInArmor)} gearDefault=${String(gearDefault)}`;
+                                'weapon→weapon-slot pass; weapon→armor slot fail; armour→armor slot pass; gear→default pass';
+                        } else {
+                            notes['drag-drop-visual-validate-slot'] = `weaponInPrimary=${String(weaponInPrimary)} weaponInArmor=${String(
+                                weaponInArmor,
+                            )} armourInArmor=${String(armourInArmor)} gearDefault=${String(gearDefault)}`;
                         }
                     }
                 } catch (err) {
@@ -478,11 +481,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 const inst = new Mixed();
                                 // Seed the flag with both favorite ids — the
                                 // public API roundtrips with the actor flag scope.
-                                await withTimeout(
-                                    live.setFlag('wh40k-rpg', 'favorites', [fav1.id, fav2.id]),
-                                    5_000,
-                                    'setFlag favorites seed',
-                                );
+                                await withTimeout(live.setFlag('wh40k-rpg', 'favorites', [fav1.id, fav2.id]), 5_000, 'setFlag favorites seed');
                                 cleanups.push(async () => {
                                     try {
                                         await live.unsetFlag?.('wh40k-rpg', 'favorites');
@@ -502,8 +501,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                     fired['drag-drop-visual-favorites-api'] = true;
                                     notes['drag-drop-visual-favorites-api'] = 'getFavoriteItems→remove→clear flag-backed round-trip OK';
                                 } else {
-                                    notes['drag-drop-visual-favorites-api'] =
-                                        `initialOk=${String(initialOk)}(${initial.length}) removeOk=${String(removeOk)}(${afterRemove.length}) clearOk=${String(clearOk)}(${afterClear.length})`;
+                                    notes['drag-drop-visual-favorites-api'] = `initialOk=${String(initialOk)}(${initial.length}) removeOk=${String(removeOk)}(${
+                                        afterRemove.length
+                                    }) clearOk=${String(clearOk)}(${afterClear.length})`;
                                 }
                             }
                         }
@@ -556,8 +556,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 fired['expandable-tooltip-toggle-action'] = true;
                                 notes['expandable-tooltip-toggle-action'] = 'toggleExpandable opened then closed the panel; isPanelOpen tracked';
                             } else {
-                                notes['expandable-tooltip-toggle-action'] =
-                                    `openedAfter=${String(openedAfter)} openReported=${String(openReported)} closedAfter=${String(closedAfter)}`;
+                                notes['expandable-tooltip-toggle-action'] = `openedAfter=${String(openedAfter)} openReported=${String(
+                                    openReported,
+                                )} closedAfter=${String(closedAfter)}`;
                             }
                         }
                     }
@@ -607,8 +608,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['expandable-tooltip-programmatic-api'] = true;
                             notes['expandable-tooltip-programmatic-api'] = 'open(a,b) → close(a) leaves only b open; accessors report consistently';
                         } else {
-                            notes['expandable-tooltip-programmatic-api'] =
-                                `openedTwo=${String(openedTwo)} isOpenA=${String(isOpenA)} isOpenB=${String(isOpenB)} closedA=${String(closedA)} stillOpenB=${String(stillOpenB)}`;
+                            notes['expandable-tooltip-programmatic-api'] = `openedTwo=${String(openedTwo)} isOpenA=${String(isOpenA)} isOpenB=${String(
+                                isOpenB,
+                            )} closedA=${String(closedA)} stillOpenB=${String(stillOpenB)}`;
                         }
                     }
                 } catch (err) {
@@ -668,8 +670,11 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['visual-feedback-find-and-classify'] = true;
                             notes['visual-feedback-find-and-classify'] = 'selector fallbacks + animation routing all matched expected branches';
                         } else {
-                            notes['visual-feedback-find-and-classify'] =
-                                `find: name=${String(foundByName)} field=${String(foundByDataField)} stat=${String(foundByDataStat)} pattern=${String(foundByPattern)} notFound=${String(notFound)} | classify: heal=${woundsHeal} dmg=${woundsDamage} xp=${xpAdvance} up=${numericUp} dn=${numericDown} str=${stringFlash}`;
+                            notes['visual-feedback-find-and-classify'] = `find: name=${String(foundByName)} field=${String(foundByDataField)} stat=${String(
+                                foundByDataStat,
+                            )} pattern=${String(foundByPattern)} notFound=${String(
+                                notFound,
+                            )} | classify: heal=${woundsHeal} dmg=${woundsDamage} xp=${xpAdvance} up=${numericUp} dn=${numericDown} str=${stringFlash}`;
                         }
                     }
                 } catch (err) {
@@ -712,8 +717,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['visual-feedback-animate-counter'] = true;
                             notes['visual-feedback-animate-counter'] = 'counter settled to 7; brief notification injected';
                         } else {
-                            notes['visual-feedback-animate-counter'] =
-                                `counterSettled=${String(counterSettled)} text=${String(counterEl.textContent)} noteAppeared=${String(noteAppeared)}`;
+                            notes['visual-feedback-animate-counter'] = `counterSettled=${String(counterSettled)} text=${String(
+                                counterEl.textContent,
+                            )} noteAppeared=${String(noteAppeared)}`;
                         }
                     }
                 } catch (err) {
@@ -760,8 +766,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['visual-feedback-visualize-changes'] = true;
                             notes['visual-feedback-visualize-changes'] = 'capture→visualizeChanges→re-capture updated; _applyAnimation set class';
                         } else {
-                            notes['visual-feedback-visualize-changes'] =
-                                `seededWounds=${String(seededWounds)} woundsUpdated=${String(woundsUpdated)} applied=${String(applied)}`;
+                            notes['visual-feedback-visualize-changes'] = `seededWounds=${String(seededWounds)} woundsUpdated=${String(
+                                woundsUpdated,
+                            )} applied=${String(applied)}`;
                         }
                     }
                 } catch (err) {
@@ -810,7 +817,10 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         });
                         const modHtml = t._buildModifierTooltip({
                             title: 'Combat Bonuses',
-                            sources: [{ name: 'Aim', value: 10 }, { name: 'Cover', value: -10 }],
+                            sources: [
+                                { name: 'Aim', value: 10 },
+                                { name: 'Cover', value: -10 },
+                            ],
                         });
                         const qualityHtml = t._buildQualityTooltip({
                             label: 'Reliable',
@@ -832,8 +842,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['wh40k-tooltip-builders'] = true;
                             notes['wh40k-tooltip-builders'] = 'all six _build*Tooltip variants emit HTML containing payload markers';
                         } else {
-                            notes['wh40k-tooltip-builders'] =
-                                `char=${String(charOk)} armor=${String(armorOk)} weapon=${String(weaponOk)} mod=${String(modOk)} quality=${String(qualityOk)} generic=${String(genericOk)}`;
+                            notes['wh40k-tooltip-builders'] = `char=${String(charOk)} armor=${String(armorOk)} weapon=${String(weaponOk)} mod=${String(
+                                modOk,
+                            )} quality=${String(qualityOk)} generic=${String(genericOk)}`;
                         }
                     }
                 } catch (err) {
@@ -854,11 +865,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     if (typeof TooltipsWH40K !== 'function' || typeof prepareArmorTooltipData !== 'function') {
                         notes['wh40k-tooltip-static-data-helpers'] = 'exports missing';
                     } else {
-                        const armorJson = prepareArmorTooltipData(
-                            'body',
-                            { total: 5, toughnessBonus: 3, traitBonus: 0, value: 2 },
-                            [],
-                        );
+                        const armorJson = prepareArmorTooltipData('body', { total: 5, toughnessBonus: 3, traitBonus: 0, value: 2 }, []);
                         const armorParsed = JSON.parse(armorJson) as { location?: string; total?: number };
                         const modJson = prepareModifierTooltipData('Skill Mods', [
                             { name: 'Talent', value: 10 },
@@ -900,8 +907,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['wh40k-tooltip-static-data-helpers'] = true;
                             notes['wh40k-tooltip-static-data-helpers'] = 'static data helpers + getSkillDescription normalization OK';
                         } else {
-                            notes['wh40k-tooltip-static-data-helpers'] =
-                                `armor.loc=${armorParsed.location} mod.title=${modParsed.title} char.label=${charParsed.label} direct=${String(directHit)} norm=${String(normalizedHit)} miss=${String(missNull)}`;
+                            notes['wh40k-tooltip-static-data-helpers'] = `armor.loc=${armorParsed.location} mod.title=${modParsed.title} char.label=${
+                                charParsed.label
+                            } direct=${String(directHit)} norm=${String(normalizedHit)} miss=${String(missNull)}`;
                         }
                     }
                 } catch (err) {
@@ -928,7 +936,8 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         const has = hasIcon('fa:dice-d20');
                         const hasNot = hasIcon('fa:definitely-not-a-real-icon-name');
                         const list = listIcons();
-                        const listSortedAndContains = Array.isArray(list) && list.length > 0 && list.includes('fa:dice-d20') && list[0] <= list[list.length - 1];
+                        const listSortedAndContains =
+                            Array.isArray(list) && list.length > 0 && list.includes('fa:dice-d20') && list[0] <= list[list.length - 1];
                         const bareOk = bareSvg.includes('<svg') && bareSvg.includes('aria-hidden="true"') && bareSvg.includes('wh40k-icon--fa-dice-d20');
                         const labelOk = labelSvg.includes('role="img"') && labelSvg.includes('aria-label="Roll"') && labelSvg.includes('tw-w-4');
                         const numSizeOk = numSizeSvg.includes('width:16px') && numSizeSvg.includes('height:16px');
@@ -938,8 +947,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['icons-helper-resolution'] = true;
                             notes['icons-helper-resolution'] = 'icon() returns svg variants; hasIcon distinguishes; listIcons sorted & populated';
                         } else {
-                            notes['icons-helper-resolution'] =
-                                `bare=${String(bareOk)} label=${String(labelOk)} numSize=${String(numSizeOk)} strSize=${String(strSizeOk)} missing=${String(missingOk)} has=${String(has)} hasNot=${String(hasNot)} list=${String(listSortedAndContains)}`;
+                            notes['icons-helper-resolution'] = `bare=${String(bareOk)} label=${String(labelOk)} numSize=${String(numSizeOk)} strSize=${String(
+                                strSizeOk,
+                            )} missing=${String(missingOk)} has=${String(has)} hasNot=${String(hasNot)} list=${String(listSortedAndContains)}`;
                         }
                     }
                 } catch (err) {
@@ -966,7 +976,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             notes['icons-handlebars-registration'] = 'global Handlebars not present';
                         } else {
                             registerIconHelper();
-                            const helper = HB.helpers['iconSvg'] as ((key: unknown, opts: { hash?: Record<string, unknown> }) => { toString: () => string }) | undefined;
+                            const helper = HB.helpers['iconSvg'] as
+                                | ((key: unknown, opts: { hash?: Record<string, unknown> }) => { toString: () => string })
+                                | undefined;
                             if (typeof helper !== 'function') {
                                 notes['icons-handlebars-registration'] = 'iconSvg helper not registered';
                             } else {
@@ -1033,19 +1045,21 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             notes['appv2-mixin-subtitle-and-disable'] = '_disableFields not present on prototype';
                         } else {
                             disableFn.call(inst);
-                            const fooDisabled = (root.querySelector('input[name="foo"]') as HTMLInputElement).disabled === true;
-                            const barReadOnly = (root.querySelector('textarea[name="bar"]') as HTMLTextAreaElement).readOnly === true;
-                            const bazDisabled = (root.querySelector('select[name="baz"]') as HTMLSelectElement).disabled === true;
-                            const quxIntact = (root.querySelector('input[name="qux"]') as HTMLInputElement).disabled === false;
+                            const fooDisabled = (root.querySelector('input[name="foo"]') as HTMLInputElement).disabled;
+                            const barReadOnly = (root.querySelector('textarea[name="bar"]') as HTMLTextAreaElement).readOnly;
+                            const bazDisabled = (root.querySelector('select[name="baz"]') as HTMLSelectElement).disabled;
+                            const quxIntact = !(root.querySelector('input[name="qux"]') as HTMLInputElement).disabled;
                             // subtitle getter — empty string key localizes to ''.
                             const subtitle = inst.subtitle;
                             const subtitleOk = subtitle === '';
                             if (fooDisabled && barReadOnly && bazDisabled && quxIntact && subtitleOk) {
                                 fired['appv2-mixin-subtitle-and-disable'] = true;
-                                notes['appv2-mixin-subtitle-and-disable'] = '_disableFields disabled non-interactive inputs; subtitle getter returns localized value';
-                            } else {
                                 notes['appv2-mixin-subtitle-and-disable'] =
-                                    `fooDisabled=${String(fooDisabled)} barReadOnly=${String(barReadOnly)} bazDisabled=${String(bazDisabled)} quxIntact=${String(quxIntact)} subtitle="${String(subtitle)}"`;
+                                    '_disableFields disabled non-interactive inputs; subtitle getter returns localized value';
+                            } else {
+                                notes['appv2-mixin-subtitle-and-disable'] = `fooDisabled=${String(fooDisabled)} barReadOnly=${String(
+                                    barReadOnly,
+                                )} bazDisabled=${String(bazDisabled)} quxIntact=${String(quxIntact)} subtitle="${String(subtitle)}"`;
                             }
                         }
                     }
@@ -1121,13 +1135,13 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             class StubBase {
                                 document = live;
                                 element = el;
-                                render(): Promise<void> {
+                                async render(): Promise<void> {
                                     return Promise.resolve();
                                 }
-                                _prepareContext(): Promise<Record<string, unknown>> {
+                                async _prepareContext(): Promise<Record<string, unknown>> {
                                     return Promise.resolve({});
                                 }
-                                _onRender(): Promise<void> {
+                                async _onRender(): Promise<void> {
                                     return Promise.resolve();
                                 }
                             }
@@ -1136,11 +1150,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             // Branch 1: direct apply when inactive — write a
                             // tracker flag that we can read back.
                             const beforeFlag = live.getFlag?.('wh40k-rpg', 'probe-whatif-direct');
-                            await withTimeout(
-                                inst.previewChange('flags.wh40k-rpg.probe-whatif-direct', 'applied'),
-                                5_000,
-                                'previewChange(inactive)',
-                            );
+                            await withTimeout(inst.previewChange('flags.wh40k-rpg.probe-whatif-direct', 'applied'), 5_000, 'previewChange(inactive)');
                             const afterFlag = live.getFlag?.('wh40k-rpg', 'probe-whatif-direct') === 'applied';
                             cleanups.push(async () => {
                                 try {
@@ -1158,11 +1168,11 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             const previewCleared = inst._whatIfPreview === null;
                             if (beforeFlag !== 'applied' && afterFlag && inactive && changesCleared && previewCleared) {
                                 fired['whatif-mixin-exit-and-direct-apply'] = true;
-                                notes['whatif-mixin-exit-and-direct-apply'] =
-                                    'inactive previewChange forwarded to update; exitWhatIfMode cleared all state';
+                                notes['whatif-mixin-exit-and-direct-apply'] = 'inactive previewChange forwarded to update; exitWhatIfMode cleared all state';
                             } else {
-                                notes['whatif-mixin-exit-and-direct-apply'] =
-                                    `beforeFlag=${String(beforeFlag)} afterFlag=${String(afterFlag)} inactive=${String(inactive)} changesCleared=${String(changesCleared)} previewCleared=${String(previewCleared)}`;
+                                notes['whatif-mixin-exit-and-direct-apply'] = `beforeFlag=${String(beforeFlag)} afterFlag=${String(
+                                    afterFlag,
+                                )} inactive=${String(inactive)} changesCleared=${String(changesCleared)} previewCleared=${String(previewCleared)}`;
                             }
                         }
                     }
@@ -1226,10 +1236,12 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             const closedOk = popoverAfterClose === null;
                             if (hasTotal && hasBase && hasPositive && hasNegative && hasClickable && hasIcon && closedOk) {
                                 fired['statbreakdown-mixin-variant-rows'] = true;
-                                notes['statbreakdown-mixin-variant-rows'] = 'popover rendered positive + negative + uuid-clickable + icon variants; close button removed it';
-                            } else {
                                 notes['statbreakdown-mixin-variant-rows'] =
-                                    `total=${String(hasTotal)} base=${String(hasBase)} pos=${String(hasPositive)} neg=${String(hasNegative)} clickable=${String(hasClickable)} icon=${String(hasIcon)} closed=${String(closedOk)}`;
+                                    'popover rendered positive + negative + uuid-clickable + icon variants; close button removed it';
+                            } else {
+                                notes['statbreakdown-mixin-variant-rows'] = `total=${String(hasTotal)} base=${String(hasBase)} pos=${String(
+                                    hasPositive,
+                                )} neg=${String(hasNegative)} clickable=${String(hasClickable)} icon=${String(hasIcon)} closed=${String(closedOk)}`;
                                 // Force-remove leftover popover so subsequent flows start clean.
                                 document.querySelectorAll('.wh40k-stat-breakdown-popover').forEach((el) => el.remove());
                             }
@@ -1275,8 +1287,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             fired['collapsible-panel-roundtrip'] = true;
                             notes['collapsible-panel-roundtrip'] = 'expand → collapse round-trip flipped panel class and expandedSections value';
                         } else {
-                            notes['collapsible-panel-roundtrip'] =
-                                `beforeCollapsed=${String(beforeCollapsed)} afterExpand=${String(afterExpandClasses)} expandedSet=${String(expandedSet)} afterCollapse=${String(afterCollapseClasses)} collapsedSet=${String(collapsedSet)}`;
+                            notes['collapsible-panel-roundtrip'] = `beforeCollapsed=${String(beforeCollapsed)} afterExpand=${String(
+                                afterExpandClasses,
+                            )} expandedSet=${String(expandedSet)} afterCollapse=${String(afterCollapseClasses)} collapsedSet=${String(collapsedSet)}`;
                         }
                     }
                 } catch (err) {
@@ -1332,8 +1345,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             notes['collapsible-panel-apply-preset'] =
                                 'combat preset selectively expanded; none/all special presets delegated to collapseAll/expandAll';
                         } else {
-                            notes['collapsible-panel-apply-preset'] =
-                                `combat: weapons=${String(weaponsExpanded)} skills=${String(skillsCollapsed)} bio=${String(bioCollapsed)} | none-all=${String(allCollapsed)} | all-expand=${String(allExpanded)}`;
+                            notes['collapsible-panel-apply-preset'] = `combat: weapons=${String(weaponsExpanded)} skills=${String(
+                                skillsCollapsed,
+                            )} bio=${String(bioCollapsed)} | none-all=${String(allCollapsed)} | all-expand=${String(allExpanded)}`;
                         }
                     }
                 } catch (err) {
@@ -1379,8 +1393,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             notes['enhanced-animations-skip-and-flash'] =
                                 'animateCounter(from==to) skipped; _shouldSkipAnimation→bool; _flashElement applied then auto-cleared class';
                         } else {
-                            notes['enhanced-animations-skip-and-flash'] =
-                                `noClass=${String(noClass)} skipBoolean=${String(skipBoolean)} flashAppliedNow=${String(flashAppliedNow)} flashRemoved=${String(flashRemoved)}`;
+                            notes['enhanced-animations-skip-and-flash'] = `noClass=${String(noClass)} skipBoolean=${String(
+                                skipBoolean,
+                            )} flashAppliedNow=${String(flashAppliedNow)} flashRemoved=${String(flashRemoved)}`;
                         }
                     }
                 } catch (err) {
