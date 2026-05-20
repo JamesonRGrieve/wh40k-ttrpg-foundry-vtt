@@ -1528,6 +1528,31 @@
                     "DaemonicTrait": "Daemonic",
                     "ImmuneToConditions": "Immune to Conditions"
                 }
+            },
+            "Supplements": {
+                "Label": "Supplement Mechanics",
+                "Irradiated": {
+                    "Label": "Irradiated ({rating})",
+                    "TicksRemaining": "Ticks Remaining: {count}",
+                    "DamagePerTick": "Damage per Tick: {damage}"
+                },
+                "Overcharge": {
+                    "Label": "Overcharge",
+                    "Jammed": "Overcharge jammed — weapon discharge suppressed.",
+                    "Doubled": "Overcharge surge — damage doubled."
+                },
+                "LegacyWeapon": {
+                    "Tier": "Legacy Tier: {tier}",
+                    "Kills": "Confirmed Kills: {count}"
+                },
+                "DaemonEngine": {
+                    "Rating": "Daemon Engine ({rating})",
+                    "RageBonus": "Rage Bonus: +{bonus}"
+                },
+                "QuickAndTheDead": {
+                    "Initiative": "Quick and the Dead Initiative: {value}",
+                    "AlignmentBonus": "Alignment Bonus: +{bonus}"
+                }
             }
         },
         "DW": {
@@ -1582,6 +1607,27 @@
                 "Award": "Renown Awarded",
                 "Loss": "Renown Lost",
                 "GateFailure": "Renown rank insufficient to requisition this item."
+            },
+            "Distinction": {
+                "Label": "Distinction",
+                "Earn": {
+                    "RankTooLow": "Renown rank too low to earn this Distinction."
+                },
+                "Award": {
+                    "Granted": "Distinction granted."
+                },
+                "Mark": {
+                    "Label": "Mark of Distinction"
+                },
+                "Advanced": {
+                    "Label": "Advanced Special Ability",
+                    "RankTooLow": "Renown rank too low to use this Advanced Special Ability.",
+                    "InsufficientCohesion": "Insufficient Cohesion to activate this Advanced Special Ability."
+                },
+                "RenownReward": "Renown Reward",
+                "Merged": {
+                    "Title": "Combined Mark Effects"
+                }
             },
             "Cohesion": {
                 "Label": "Cohesion",
@@ -1756,6 +1802,36 @@
                     "StealthBonus": "Stealth Bonus",
                     "FireDamage": "Fire Damage",
                     "UnarmoredOnly": "Applies only against unarmored targets"
+                }
+            },
+            "Vehicle": {
+                "Label": "Vehicle",
+                "Crit": {
+                    "Roll": "Critical Hit Roll",
+                    "Result": {
+                        "Minor": "Jarring Blow",
+                        "Mobility": "Staggered",
+                        "Weapons": "Weapon Destroyed",
+                        "Crew": "Crew Casualty",
+                        "Engine": "Drive Damaged",
+                        "Fire": "Fire",
+                        "CatastrophicFire": "Catastrophic Fire",
+                        "Hull": "Penetrating Hit",
+                        "Cargo": "Cargo Destroyed",
+                        "Wrecked": "Explodes"
+                    }
+                },
+                "Repair": {
+                    "Difficulty": {
+                        "Routine": "Routine (+20)",
+                        "Challenging": "Challenging (+0)",
+                        "Hard": "Hard (-20)"
+                    }
+                },
+                "Acquisition": {
+                    "Title": "Kill-Team Vehicle Requisition",
+                    "InsufficientRp": "Kill-team Requisition Points insufficient to acquire this vehicle.",
+                    "RankTooLow": "Renown rank too low to requisition this vehicle."
                 }
             }
         },
