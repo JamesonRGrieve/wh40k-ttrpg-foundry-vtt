@@ -26,6 +26,9 @@ import { owRegimentEdit } from '../../actions/ow-regiment-actions.ts';
 import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
 import { owComradeMedicae, owComradeReplace2, owComradeTickDay } from '../../actions/ow-comrade-healing-actions.ts';
 import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
+import { owMountedAction } from '../../actions/ow-mount-actions.ts';
+import { owAddComrade, owRemoveComrade, owToggleDrawback } from '../../actions/ow-drawback-actions.ts';
+import { owRequestSupport, owToggleAward } from '../../actions/ow-battlefield-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
@@ -178,6 +181,9 @@ type CharacterSheetContextDeclaredFields = {
     vehicleMovementPanel?: OwVehicleMovementPanelContext;
     comradeHealingPanel?: OwComradeHealingPanelContext;
     craftsmanshipPanel?: OwCraftsmanshipPanelContext;
+    mountPanel?: Record<string, unknown>;
+    drawbackPanel?: Record<string, unknown>;
+    battlefieldPanel?: Record<string, unknown>;
     hideThroneGelt?: boolean;
     originPathSteps?: unknown;
     originPathSummary?: unknown;
@@ -747,6 +753,13 @@ export default class CharacterSheet extends BaseActorSheet {
             'owComradeTickDay': owComradeTickDay,
             'owComradeMedicae': owComradeMedicae,
             'owComradeReplace2': owComradeReplace2,
+            // Batch-4 actions (#159, #160, #161)
+            'owMountedAction': owMountedAction,
+            'owToggleDrawback': owToggleDrawback,
+            'owAddComrade': owAddComrade,
+            'owRemoveComrade': owRemoveComrade,
+            'owRequestSupport': owRequestSupport,
+            'owToggleAward': owToggleAward,
 
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
@@ -1121,6 +1134,20 @@ export default class CharacterSheet extends BaseActorSheet {
             context.vehicleMovementPanel = this._prepareOwVehicleMovementPanel();
             context.comradeHealingPanel = this._prepareOwComradeHealingPanel();
             context.craftsmanshipPanel = buildOwCraftsmanshipPanel(Array.from(this.actor.items.values()));
+            // Batch-4 OW panels (#159, #160, #161) — minimal pass-through; the
+            // panels read system.* directly. A future _prepare<Panel>() method
+            // can resolve compendium descriptors via uuidNameCache.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape is the union of CharacterData declarations; the panel partials walk specific fields
+            const sysAny = this.actor.system as unknown as Record<string, unknown>;
+            context.mountPanel = { mountedOn: sysAny['mountedOn'] ?? null };
+            context.drawbackPanel = {
+                drawbacks: (sysAny['regimentDrawbacks'] ?? []) as ReadonlyArray<string>,
+                multiComradeRoster: sysAny['multiComradeRoster'] ?? null,
+            };
+            context.battlefieldPanel = {
+                supportCooldown: sysAny['supportCooldown'] ?? 0,
+                awards: (sysAny['regimentalAwards'] ?? []) as ReadonlyArray<string>,
+            };
         }
 
         // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
