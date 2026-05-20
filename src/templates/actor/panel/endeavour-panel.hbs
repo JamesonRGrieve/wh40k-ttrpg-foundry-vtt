@@ -1,0 +1,61 @@
+{{!--
+    Endeavour Panel — Rogue Trader Dynasty goal tracker.
+
+    Renders every embedded `endeavour` item on the actor as a card with a
+    progress bar, AP totals, and per-objective checkboxes. The
+    `completeObjective` action toggles an objective's `complete` flag (and
+    rolls AP up / down accordingly); when an Endeavour reaches 100%, the
+    panel's `completeEndeavour` action grants the reward Profit Factor and
+    posts a chat card.
+
+    Context: rendered against an RT character sheet root with
+    `endeavours` (computed in the sheet's `_prepareContext`) — falls back
+    to a tree-walk of `actor.items` when that hash isn't supplied, so
+    Storybook stories can render this panel against a plain mock.
+
+    Block-partial usage:
+        {{> systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs
+            endeavours=endeavours
+            actorId=actor.id }}
+--}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
+    label=(localize "WH40K.Endeavours.Header")
+    icon="fa-flag"
+    rootClass="tw-col-span-6 wh40k-endeavour-panel"}}
+    <div class="tw-flex tw-flex-col tw-gap-3" data-testid="endeavour-panel">
+        {{#each endeavours as |endeavour|}}
+            <article class="tw-rounded-md tw-border tw-border-solid tw-border-gold rt:tw-border-gold tw-overflow-hidden" data-testid="endeavour-card" data-endeavour-id="{{endeavour.id}}" data-complete="{{endeavour.system.isComplete}}">
+                <header class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-bg-[rgba(201,162,39,0.08)]">
+                    <span class="material-icons tw-text-base tw-text-gold rt:tw-text-gold">flag</span>
+                    <span class="tw-font-display tw-text-base tw-text-gold rt:tw-text-gold tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{endeavour.name}}</span>
+                    <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-80" data-testid="endeavour-ap-summary">{{endeavour.system.apEarned}}/{{endeavour.system.apRequired}} {{localize "WH40K.Endeavours.APShort"}}</span>
+                    {{#if endeavour.system.isComplete}}
+                        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-text-xs tw-uppercase tw-cursor-pointer tw-bg-gold rt:tw-bg-gold tw-text-black tw-px-2 tw-py-1 tw-rounded-sm tw-border-none hover:tw-opacity-90" data-action="completeEndeavour" data-endeavour-id="{{endeavour.id}}" data-testid="complete-endeavour-btn">
+                            <span class="material-icons tw-text-sm">redeem</span>
+                            {{localize "WH40K.Endeavours.GrantReward"}}
+                        </button>
+                    {{/if}}
+                </header>
+                <div class="tw-px-3 tw-py-1">
+                    <div class="tw-h-2 tw-rounded-sm tw-bg-[var(--wh40k-border-faint,#3a2a1a)] tw-overflow-hidden" role="progressbar" aria-valuenow="{{endeavour.system.pctComplete}}" aria-valuemin="0" aria-valuemax="100" data-testid="endeavour-progress-bar">
+                        <div class="tw-h-full tw-bg-gold rt:tw-bg-gold tw-transition-[width] tw-duration-300" style="width: {{endeavour.system.pctComplete}}%;"></div>
+                    </div>
+                    <div class="tw-text-[0.7rem] tw-opacity-70 tw-mt-1">{{endeavour.system.pctComplete}}%</div>
+                </div>
+                <ul class="tw-list-none tw-m-0 tw-p-0 tw-border-t tw-border-solid tw-border-[var(--wh40k-border-faint,#3a2a1a)]">
+                    {{#each endeavour.system.objectives as |obj objIdx|}}
+                        <li class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-1 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-faint,#3a2a1a)] last:tw-border-b-0" data-testid="endeavour-objective">
+                            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100" data-action="completeObjective" data-endeavour-id="{{endeavour.id}}" data-objective-index="{{objIdx}}" aria-label="{{localize 'WH40K.Endeavours.ToggleObjective'}}">
+                                <span class="material-icons tw-text-base {{#if obj.complete}}tw-text-gold rt:tw-text-gold{{else}}tw-opacity-60{{/if}}">{{#if obj.complete}}check_box{{else}}check_box_outline_blank{{/if}}</span>
+                            </button>
+                            <span class="tw-flex-1 tw-text-sm {{#if obj.complete}}tw-line-through tw-opacity-70{{/if}}">{{obj.name}}</span>
+                            <span class="tw-text-xs tw-opacity-70">+{{obj.ap}} {{localize "WH40K.Endeavours.APShort"}}</span>
+                        </li>
+                    {{/each}}
+                </ul>
+            </article>
+        {{else}}
+            <p class="tw-text-sm tw-opacity-60 tw-italic tw-text-center tw-py-2" data-testid="endeavour-empty">{{localize "WH40K.Endeavours.None"}}</p>
+        {{/each}}
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

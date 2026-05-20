@@ -1,0 +1,67 @@
+{{!--
+    Dark Pact tracker panel (Enemies Beyond p. 72, issue #84).
+
+    Lists the actor's active pacts with per-pact disposition (clamped to
+    [-3..+3] via `adjustPactDisposition` in `src/module/rules/dark-pact.ts`),
+    a Discovered toggle that — on flip-to-true — fires the canonical
+    Subtlety hit via `WH40KBaseActor.applySubtletyFromSource(pactUuid)`, and
+    a Payment-Current toggle for tracking whether the most recent payment
+    was honoured.
+
+    Rendered only when at least one pact is active; the empty-state row is
+    deliberately omitted from the visible table when `system.pacts.length`
+    is zero (the panel itself does not render in that case — see the
+    consuming sheet template).
+
+    Row columns: Pact | Disposition (- value +) | Discovered | Payment | Boon | Bane.
+--}}
+{{#if system.pacts.length}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
+    label=(localize "WH40K.DarkPact.Header")
+    icon="fa-handshake"
+    rootClass="tw-col-span-6 wh40k-dark-pact-panel"}}
+    <div class="tw-rounded-[6px] tw-overflow-hidden tw-border tw-border-solid tw-border-gold bc:tw-border-crimson dh1e:tw-border-gold-raw-l5 dh2e:tw-border-bronze dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
+        {{!-- Header row: Pact | Disposition | Discovered | Payment | Boon | Bane --}}
+        <div class="tw-grid tw-grid-cols-[2fr_2fr_1fr_1fr_2fr_2fr] tw-items-center tw-text-[0.9em] tw-uppercase tw-tracking-[0.05em] tw-px-[4px] tw-py-[6px] tw-border-b tw-border-solid tw-border-gold bc:tw-border-crimson dh1e:tw-border-gold-raw-l5 dh2e:tw-border-bronze dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
+            <div class="tw-px-[4px]">{{localize "WH40K.DarkPact.Header"}}</div>
+            <div class="tw-px-[4px] tw-text-center">{{localize "WH40K.DarkPact.Disposition"}}</div>
+            <div class="tw-px-[4px] tw-text-center">{{localize "WH40K.DarkPact.Discovered"}}</div>
+            <div class="tw-px-[4px] tw-text-center">{{localize "WH40K.DarkPact.PaymentCurrent"}}</div>
+            <div class="tw-px-[4px]">{{localize "WH40K.DarkPact.Boon"}}</div>
+            <div class="tw-px-[4px]">{{localize "WH40K.DarkPact.Bane"}}</div>
+        </div>
+        {{#each system.pacts as |pact index|}}
+            <div class="wh40k-dark-pact-row tw-grid tw-grid-cols-[2fr_2fr_1fr_1fr_2fr_2fr] tw-items-center tw-px-[4px] tw-py-[6px]" data-pact-index="{{index}}" data-pact-uuid="{{pact.pactUuid}}">
+                <div class="wh40k-dark-pact-name tw-px-[4px] tw-truncate">
+                    {{uuid-name pact.pactUuid}}
+                </div>
+                <div class="wh40k-dark-pact-disposition tw-px-[4px] tw-flex tw-items-center tw-justify-center tw-gap-2">
+                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 tw-transition-[opacity,transform] tw-duration-200 hover:tw-opacity-100 hover:tw-scale-110" data-action="adjustPactDisposition" data-pact-index="{{index}}" data-delta="-1" title="-1">
+                        <span class="material-icons">remove_circle</span>
+                    </button>
+                    <span class="wh40k-dark-pact-disposition-value tw-min-w-[2ch] tw-text-center tw-font-semibold">{{pact.disposition}}</span>
+                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 tw-transition-[opacity,transform] tw-duration-200 hover:tw-opacity-100 hover:tw-scale-110" data-action="adjustPactDisposition" data-pact-index="{{index}}" data-delta="1" title="+1">
+                        <span class="material-icons">add_circle</span>
+                    </button>
+                </div>
+                <div class="wh40k-dark-pact-discovered tw-px-[4px] tw-text-center">
+                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100" data-action="togglePactDiscovered" data-pact-index="{{index}}" title="{{localize 'WH40K.DarkPact.Discovered'}}">
+                        <span class="material-icons">{{#if pact.discovered}}visibility{{else}}visibility_off{{/if}}</span>
+                    </button>
+                </div>
+                <div class="wh40k-dark-pact-payment tw-px-[4px] tw-text-center">
+                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100" data-action="togglePactPayment" data-pact-index="{{index}}" title="{{localize 'WH40K.DarkPact.PaymentCurrent'}}">
+                        <span class="material-icons">{{#if pact.paymentCurrent}}check_circle{{else}}cancel{{/if}}</span>
+                    </button>
+                </div>
+                <div class="wh40k-dark-pact-boon tw-px-[4px] tw-text-[0.9em]">
+                    {{#if pact.boon}}{{pact.boon}}{{else}}<span class="tw-opacity-60">—</span>{{/if}}
+                </div>
+                <div class="wh40k-dark-pact-bane tw-px-[4px] tw-text-[0.9em]">
+                    {{#if pact.bane}}{{pact.bane}}{{else}}<span class="tw-opacity-60">—</span>{{/if}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
+{{/if}}

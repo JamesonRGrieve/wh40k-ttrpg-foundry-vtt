@@ -1,0 +1,47 @@
+{{!-- Mutation roll dialog (#117) — GM-only. --}}
+{{!-- Choose Minor / Major track, roll 1d100 on Table 8-16, emit chat card. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-purple-300 tw-italic">
+        {{localize "WH40K.MutationRoll.DialogTitle"}}
+    </div>
+
+    {{!-- Track selector --}}
+    <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-4">
+        <button type="button"
+                data-action="selectTrack"
+                data-track="minor"
+                class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-3 tw-rounded-md tw-border tw-cursor-pointer tw-font-ui tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{#if trackIsMinor}}tw-border-purple-500 tw-bg-[rgba(94,52,124,0.35)] tw-text-purple-200{{else}}tw-border-[rgba(160,120,200,0.25)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[#9a9a8a]{{/if}}">
+            <i class="fas fa-virus"></i> {{localize "WH40K.MutationRoll.MinorTrack"}}
+        </button>
+        <button type="button"
+                data-action="selectTrack"
+                data-track="major"
+                class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-3 tw-rounded-md tw-border tw-cursor-pointer tw-font-ui tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{#if trackIsMajor}}tw-border-purple-400 tw-bg-[rgba(124,52,124,0.45)] tw-text-purple-100{{else}}tw-border-[rgba(160,120,200,0.25)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[#9a9a8a]{{/if}}">
+            <i class="fas fa-biohazard"></i> {{localize "WH40K.MutationRoll.MajorTrack"}}
+        </button>
+    </div>
+
+    {{!-- Range preview --}}
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-p-3 tw-rounded-md tw-border tw-border-purple-700 tw-bg-[rgba(40,20,60,0.35)] tw-mb-4">
+        <span class="tw-text-purple-300 tw-text-sm tw-uppercase tw-tracking-[0.08em]">
+            d100 Range
+        </span>
+        <span class="tw-font-display tw-font-bold tw-text-lg tw-tabular-nums tw-text-purple-200">{{rangeMin}}–{{rangeMax}}</span>
+    </div>
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-purple-900">
+        <button type="button"
+                data-action="rollMutation"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-purple-700 tw-to-[#3a1a4a] tw-text-[#f3e8ff] tw-shadow-[0_4px_12px_rgba(124,52,124,0.4)]">
+            <i class="fas fa-dice-d20"></i> {{localize "WH40K.MutationRoll.RollButton"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.Daemonhost.Cancel"}}
+        </button>
+    </div>
+
+</div>

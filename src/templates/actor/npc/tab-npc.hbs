@@ -184,6 +184,11 @@
     </div>
     {{/if}}
 
+    {{!-- ═══ INTERACTION COUNTS (DH2 errata p.125, #145) ═══ --}}
+    {{#if isGM}}
+    {{> 'systems/wh40k-rpg/templates/actor/panel/npc-interactions-panel.hbs'}}
+    {{/if}}
+
     {{!-- ═══ GM TOOLS ═══ --}}
     {{#if isGM}}
     <div class="wh40k-panel">

@@ -140,6 +140,20 @@
                                 <span>{{localize "WH40K.FateReroll"}}</span>
                             </button>
                         </div>
+                        {{!-- Assassin's Strike post-attack Acrobatics + Half Move (#149 — DH2 errata L75) --}}
+                        {{#if @root.hasAssassinsStrike}}
+                            {{#if success}}
+                                <button
+                                    class="roll-control__assassins-strike tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-gray-800/60 tw-border tw-border-gray-700 tw-rounded-md tw-text-gray-100 tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-gray-800/80 hover:tw-border-gray-500 hover:tw-shadow-[0_0_12px_rgba(0,0,0,0.6)] hover:-tw-translate-y-px active:tw-translate-y-0"
+                                    data-action="assassinsStrike"
+                                    data-roll-id="{{@root.id}}"
+                                    title="{{localize 'WH40K.AssassinsStrike.ButtonTooltip'}}"
+                                >
+                                    <span>🥷</span>
+                                    <span>{{localize "WH40K.AssassinsStrike.ButtonLabel"}}</span>
+                                </button>
+                            {{/if}}
+                        {{/if}}
                     </div>
                 {{/unless}}
             {{/with}}

@@ -34,3 +34,63 @@ export function getDispositionModifier(disposition: number, skill: 'charm' | 'co
     if (skill === 'intimidate') return -d * 10;
     return d * 10;
 }
+
+/**
+ * Cap on how many interactions can yield disposition gain for a PC.
+ *
+ * Per DH2 errata p.125, an NPC's affection / disposition can be shifted by
+ * social interactions only a number of times equal to the PC's Fellowship
+ * bonus. Once the cap is reached, further interactions produce no further
+ * disposition gain (though they may still produce role-play consequences
+ * and may still feed Influence elsewhere).
+ *
+ * Fellowship bonus is the tens digit of the Fellowship characteristic and
+ * is always non-negative; we clamp to a sensible floor of 0 to avoid
+ * negative caps from malformed input.
+ */
+export function getInteractionCap(fellowshipBonus: number): number {
+    return Math.max(0, Math.trunc(fellowshipBonus));
+}
+
+/** Inputs to the interaction-gated disposition gain resolver. */
+export interface InteractionDispositionGainInput {
+    /** The acting PC's Fellowship bonus (tens digit of Fellowship). */
+    pcFellowshipBonus: number;
+    /** How many qualifying interactions this PC has already had with this NPC. */
+    interactionsSoFar: number;
+    /** The raw disposition shift this interaction would produce before the cap. */
+    rawGain: number;
+}
+
+/** Result of {@link resolveInteractionDispositionGain}. */
+export interface InteractionDispositionGainResult {
+    /** Disposition shift actually applied (0 once the cap is reached). */
+    gain: number;
+    /** True if the cap has been reached and no further gains will be applied. */
+    atCap: boolean;
+    /** Remaining interactions that can still yield disposition gain (0 once at cap). */
+    remainingInteractions: number;
+}
+
+/**
+ * Resolve the actual disposition gain for a social interaction, gating by
+ * the PC's Fellowship-bonus cap (DH2 errata p.125).
+ *
+ * Below the cap the raw gain passes through unchanged; at or above the cap
+ * the gain is suppressed to 0 and `atCap` is set. `remainingInteractions`
+ * is the count of cap-relevant interactions still available BEFORE this
+ * interaction is recorded, so the caller can decide whether to increment
+ * the tally.
+ *
+ * @param input Fellowship bonus, prior interaction count, and raw gain.
+ * @returns Applied gain, cap flag, and remaining interaction count.
+ */
+export function resolveInteractionDispositionGain(input: InteractionDispositionGainInput): InteractionDispositionGainResult {
+    const cap = getInteractionCap(input.pcFellowshipBonus);
+    const used = Math.max(0, Math.trunc(input.interactionsSoFar));
+    const remaining = Math.max(0, cap - used);
+    if (remaining <= 0) {
+        return { gain: 0, atCap: true, remainingInteractions: 0 };
+    }
+    return { gain: input.rawGain, atCap: false, remainingInteractions: remaining };
+}

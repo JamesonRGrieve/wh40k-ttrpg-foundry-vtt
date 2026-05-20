@@ -1,0 +1,33 @@
+{{!--
+    Chat card for the Penitent "Mortification of the Flesh" action (#94).
+
+    Rendered into the chat log when CharacterSheet.#applyMortification
+    completes; the message DOM is decorated with `wh40k-rpg` by the
+    renderChatMessageHTML hook in basic-action-manager.ts so the Tailwind
+    utilities below resolve (see CLAUDE.md: chat templates need a
+    `.wh40k-rpg` ancestor for ALL `tw-*` utilities, not just per-system
+    variants).
+
+    Hash params: actorName, wpBonus, durationRounds, gameSystem (optional).
+--}}
+<div data-wh40k-system="{{gameSystem}}" class="wh40k-mortification-chat tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-red-900/70 tw-bg-red-900/[10%]">
+    <header class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b tw-border-solid tw-border-red-900/50">
+        <i class="fa-solid fa-droplet tw-text-red-400" aria-hidden="true"></i>
+        <h3 class="tw-m-0 tw-font-display tw-uppercase tw-tracking-[0.1em] tw-text-[1rem] tw-text-white">
+            {{localize "WH40K.Mortification.ChatTitle"}}
+        </h3>
+    </header>
+    <p class="tw-m-0 tw-text-[0.9rem] tw-italic tw-text-[var(--wh40k-text-muted,#cccccc)]">
+        {{#localize "WH40K.Mortification.ChatBody" name=actorName}}{{/localize}}
+    </p>
+    <dl class="tw-grid tw-grid-cols-2 tw-gap-x-3 tw-gap-y-1 tw-m-0 tw-text-[0.85rem]">
+        <dt class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted,#a0a0a0)]">
+            {{localize "WH40K.Mortification.WpBonusLabel"}}
+        </dt>
+        <dd class="tw-m-0 tw-text-white">+{{wpBonus}}</dd>
+        <dt class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted,#a0a0a0)]">
+            {{localize "WH40K.Mortification.DurationLabel"}}
+        </dt>
+        <dd class="tw-m-0 tw-text-white">{{durationRounds}}</dd>
+    </dl>
+</div>

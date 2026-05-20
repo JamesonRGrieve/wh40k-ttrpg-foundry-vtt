@@ -1,0 +1,51 @@
+{{!-- Sanctic Daemonology manifestation chat card (#130). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-sd-card tw-p-4 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.35)] dh2e:tw-border-gold tw-bg-[rgba(15,12,8,0.85)] dh2e:tw-bg-amber-900/30"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-shield-cross tw-text-[#c9a227] dh2e:tw-text-gold tw-text-[1.1rem]"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-gold dh2e:tw-text-gold">
+            {{localize "WH40K.SancticDaemonology.ChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        <strong class="tw-text-gold dh2e:tw-text-gold">{{powerName}}</strong>
+        &mdash; {{localize modeKey}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.SancticDaemonology.EffectivePR"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-gold dh2e:tw-text-gold">{{effectivePR}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.SancticDaemonology.FocusModifier"}}</span>
+            <span class="tw-font-bold tw-tabular-nums">{{focusModifier}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.SancticDaemonology.CorruptionCost"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-emerald-300">{{localize "WH40K.SancticDaemonology.NoCorruption"}}</span>
+        </li>
+    </ul>
+
+    {{#if phenomenaFires}}
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(220,38,38,0.45)] tw-bg-[rgba(127,29,29,0.22)] tw-text-[0.85rem] tw-text-[#fecaca]">
+        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-red-300 tw-mb-1">
+            {{localize "WH40K.SancticDaemonology.PhenomenaLabel"}}
+        </div>
+        <div>{{localize "WH40K.SancticDaemonology.PhenomenaFires"}} (+{{phenomenaModifier}})</div>
+        {{#if canSoulBindIgnore}}
+        <div class="tw-mt-1 tw-text-amber-200">{{localize "WH40K.SancticDaemonology.SoulBindingAvailable"}}</div>
+        {{/if}}
+        {{#if canFateNegate}}
+        <div class="tw-mt-1 tw-text-gold dh2e:tw-text-gold">{{localize "WH40K.SancticDaemonology.AnathemaAvailable"}}</div>
+        {{/if}}
+    </div>
+    {{else}}
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(52,211,153,0.4)] tw-bg-[rgba(6,78,59,0.2)] tw-text-[0.85rem] tw-text-emerald-200">
+        {{localize "WH40K.SancticDaemonology.NoPhenomena"}}
+    </div>
+    {{/if}}
+</div>

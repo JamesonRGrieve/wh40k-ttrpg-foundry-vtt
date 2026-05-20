@@ -31,6 +31,52 @@ const STORY_TAILWIND_CONFIG = path.resolve(__dirname, '../tailwind.storybook.con
  * the chrome stylesheet's `@apply bg-... text-...` directives. Running a
  * second Tailwind pass via a per-file plugin keeps both configs pure.
  */
+/**
+ * Vite middleware that intercepts `/icons/...` requests and returns a tiny
+ * inline SVG placeholder. The Storybook bundle does not ship Foundry's
+ * `/icons/` static tree (we are no longer allowed to redistribute it), so
+ * any template or story mock that references `icons/svg/d20.svg`,
+ * `icons/skills/...`, etc. would otherwise 404 and render as a broken-image
+ * placeholder in the captured screenshots. The placeholder keeps the layout
+ * intact and visually communicates "icon was here" without leaking Foundry
+ * assets — see the issue-198 / issue-201 / issue-205 regression history.
+ */
+function storyIconStubPlugin(): Plugin {
+    // Single 32×32 amber-tinted disc. ~200 bytes; rendered as `image/svg+xml`.
+    const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <circle cx="16" cy="16" r="14" fill="rgba(212,175,55,0.25)" stroke="rgba(212,175,55,0.6)" stroke-width="1.5"/>
+  <circle cx="16" cy="16" r="4" fill="rgba(212,175,55,0.6)"/>
+</svg>`;
+    return {
+        name: 'wh40k-story-icon-stub',
+        configureServer(server) {
+            server.middlewares.use((req, res, next) => {
+                if (req.url && /^\/icons\//.test(req.url)) {
+                    res.setHeader('Content-Type', 'image/svg+xml');
+                    res.setHeader('Cache-Control', 'public, max-age=3600');
+                    res.end(svg);
+                    return;
+                }
+                next();
+            });
+        },
+        // Build-time equivalent — serve the same stub from the static preview
+        // bundle so Playwright running against `pnpm build-storybook` output
+        // gets the same behaviour.
+        configurePreviewServer(server) {
+            server.middlewares.use((req, res, next) => {
+                if (req.url && /^\/icons\//.test(req.url)) {
+                    res.setHeader('Content-Type', 'image/svg+xml');
+                    res.end(svg);
+                    return;
+                }
+                next();
+            });
+        },
+    };
+}
+
 function storyChromeCssPlugin(): Plugin {
     return {
         name: 'wh40k-story-chrome-css',
@@ -66,6 +112,12 @@ const config: StorybookConfig = {
         '../stories/**/*.mdx',
         '../stories/**/*.stories.@(js|ts)',
         '../src/module/**/*.stories.@(js|ts)',
+        // Co-located stories under `src/templates/` (e.g. panel-only stories
+        // that target an .hbs partial directly). Without this glob Storybook
+        // silently misses them and Playwright specs that hit those story slugs
+        // get a "Couldn't find story matching ..." error page instead of the
+        // intended render — see the issue-190 regression history.
+        '../src/templates/**/*.stories.@(js|ts)',
     ],
     // Foundry's compiled `foundry2.css`, `mce.css`, and the rest of
     // `.foundry-release/public/` are NOT bundled. The Storybook deployment
@@ -83,7 +135,7 @@ const config: StorybookConfig = {
     },
     async viteFinal(viteConfig) {
         return mergeConfig(viteConfig, {
-            plugins: [storyChromeCssPlugin()],
+            plugins: [storyChromeCssPlugin(), storyIconStubPlugin()],
             css: {
                 postcss: {
                     plugins: [postcssNested(), tailwindcss(), autoprefixer()],

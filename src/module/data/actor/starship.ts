@@ -3,14 +3,52 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
 /** Subset of ship-component item.system fields used in starship preparation. */
 interface ShipComponentSystem {
     condition?: string;
+    componentType?: string;
+    essential?: boolean;
     power?: { generated?: number; used?: number } | number;
     space?: number;
+    shipPoints?: number;
     modifiers?: Record<string, number>;
 }
 
 interface ShipItemView {
+    id?: string;
+    uuid?: string;
+    name?: string;
     type: string;
     system: ShipComponentSystem;
+}
+
+/**
+ * RAW Rogue Trader requires every hull to be fitted with a fixed inventory of
+ * essential components before launch. These slots are content-agnostic — they
+ * apply to every hull class — so the slot list is a primitive enum maintained
+ * in code. Each slot's *filling* (which compendium component fills it) is the
+ * content-specific part and lives on the actor's owned items.
+ */
+export const ESSENTIAL_SHIP_SLOTS: readonly string[] = [
+    'plasmaDrive',
+    'warpDrive',
+    'gellarField',
+    'voidShields',
+    'bridge',
+    'lifeSupport',
+    'quarters',
+    'auger',
+] as const;
+
+/** Validation result for a starship build (computed in prepareDerivedData). */
+export interface StarshipBuildValidation {
+    /** SP currently allocated across owned components + weapons + upgrades. */
+    spent: number;
+    /** SP budget granted by the hull (mirrors `shipPoints.budget`). */
+    budget: number;
+    /** True when `spent > budget`. */
+    isOverBudget: boolean;
+    /** Essential slot names that have no owned component filling them. */
+    missingEssentialSlots: string[];
+    /** Convenience: build is valid iff !isOverBudget && missingEssentialSlots.length === 0. */
+    isValid: boolean;
 }
 
 /**
@@ -35,6 +73,17 @@ export default class StarshipData extends ActorDataModel {
     declare detection: number;
     declare armour: number;
     declare voidShields: number;
+    /**
+     * Combat-state tracking for void shields (issue #184). `voidShields` (above)
+     * is the hull's maximum shield count; this field tracks how many are
+     * currently raised (`active`) versus exhausted by absorbed hits this round
+     * (`exhausted`). Exhausted shields are reset each round by the GM via
+     * the "Restore Shields" action. Defaults to all shields up.
+     */
+    declare voidShieldsStatus: {
+        active: number;
+        exhausted: number;
+    };
     declare turretRating: number;
     declare hullIntegrity: {
         max: number;
@@ -55,7 +104,15 @@ export default class StarshipData extends ActorDataModel {
         generated?: number;
         consumed?: number;
     };
-    declare shipPoints: number;
+    declare shipPoints: {
+        /** Total SP allocated across owned components / weapons / upgrades. Recomputed. */
+        spent: number;
+        /** SP budget granted by the hull (set on hull selection / from compendium). */
+        budget: number;
+    };
+    declare components: Array<{ slot: string; itemUuid: string; sp: number }>;
+    /** Computed by `prepareDerivedData()` — see `StarshipBuildValidation`. */
+    declare buildValidation: StarshipBuildValidation;
     declare machineSpiritOddities: string;
     declare pastHistory: string;
     declare complications: string;
@@ -67,6 +124,21 @@ export default class StarshipData extends ActorDataModel {
         keel: number;
     };
     declare notes: string;
+
+    /**
+     * Active critical-hit statuses applied to the hull (issue #187).
+     * Each entry records the source roll-table draw and identifies the
+     * effect by a stable id (`vacuum` / `fire` / `bridge` / `drive` /
+     * `crew`) so localized labels and per-effect handlers can resolve at
+     * render / resolution time. Statuses persist until cleared by an
+     * Emergency Repair or Quick Repair Extended Action.
+     */
+    declare shipStatuses: Array<{
+        id: string;
+        rolled: number;
+        text: string;
+        appliedAt: number;
+    }>;
 
     /** Computed during _prepareCombatStats */
     declare detectionBonus: number;
@@ -103,6 +175,11 @@ export default class StarshipData extends ActorDataModel {
             detection: new fields.NumberField({ required: true, initial: 0, integer: true }),
             armour: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             voidShields: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            // Combat-state tracking for void shields (issue #184).
+            voidShieldsStatus: new fields.SchemaField({
+                active: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                exhausted: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            }),
             turretRating: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
             // Hull Integrity
@@ -121,8 +198,26 @@ export default class StarshipData extends ActorDataModel {
                 used: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
-            // Ship Points (for building)
-            shipPoints: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            // Ship Points budget vs spent (issue #190 — RAW build validation).
+            // `spent` is recomputed in prepareDerivedData from owned components;
+            // `budget` is the hull's SP budget (mirrors the hull entry's shipPoints
+            // value from the rt-core-actors-ships compendium).
+            shipPoints: new fields.SchemaField({
+                spent: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                budget: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            }),
+
+            // Slot → component assignments for the build (issue #190). Sheet-side
+            // UI fills this from drag-drops of compendium components; runtime
+            // resolution walks the array and matches against owned items by UUID.
+            components: new fields.ArrayField(
+                new fields.SchemaField({
+                    slot: new fields.StringField({ required: true, blank: false, initial: 'bridge' }),
+                    itemUuid: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    sp: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                }),
+                { required: true, initial: [] },
+            ),
 
             // Ship quirks
             machineSpiritOddities: new fields.StringField({ required: false, initial: '', blank: true }),
@@ -140,6 +235,22 @@ export default class StarshipData extends ActorDataModel {
 
             // Notes
             notes: new fields.StringField({ required: false, initial: '', blank: true }),
+
+            // Critical-hit statuses applied to the hull (issue #187).
+            // Each entry: { id: 'vacuum'|'fire'|'bridge'|'drive'|'crew', rolled: 1-5,
+            // text: <result text>, appliedAt: <epoch ms> }. Cleared by Emergency
+            // Repair / Quick Repair Extended Actions. Content-agnostic primitive
+            // (just a typed shape) per Direction #7 — the rolltable in the
+            // rt-core-rolltables-ship-combat compendium is the source of effect text.
+            shipStatuses: new fields.ArrayField(
+                new fields.SchemaField({
+                    id: new fields.StringField({ required: true, blank: false, initial: 'vacuum' }),
+                    rolled: new fields.NumberField({ required: true, initial: 1, min: 1, max: 5, integer: true }),
+                    text: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    appliedAt: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                }),
+                { required: true, initial: [] },
+            ),
         };
     }
 
@@ -152,6 +263,28 @@ export default class StarshipData extends ActorDataModel {
         super.prepareDerivedData();
         this._prepareResources();
         this._prepareCombatStats();
+        this._prepareBuildValidation();
+    }
+
+    /**
+     * Migrate legacy numeric `shipPoints` (pre-#190) to the `{spent, budget}` shape.
+     * Existing actors and compendium hull entries stored a single number — that
+     * value is the hull's SP budget. The `spent` field is recomputed each prep.
+     */
+    static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: SystemDataModel.migrateData inherits an untyped Foundry signature
+        const out = (super.migrateData(source) as Record<string, unknown>) ?? source;
+        const sp = out['shipPoints'];
+        if (typeof sp === 'number') {
+            out['shipPoints'] = { spent: 0, budget: sp };
+        } else if (sp !== undefined && sp !== null && typeof sp === 'object') {
+            // Ensure both keys exist even when one was omitted.
+            const obj = sp as Record<string, unknown>;
+            const budget = typeof obj['budget'] === 'number' ? obj['budget'] : 0;
+            const spent = typeof obj['spent'] === 'number' ? obj['spent'] : 0;
+            out['shipPoints'] = { spent, budget };
+        }
+        return out;
     }
 
     /**
@@ -172,6 +305,24 @@ export default class StarshipData extends ActorDataModel {
         // Detection Bonus (tens digit) for initiative
         this.detectionBonus = Math.floor(this.detection / 10);
 
+        // Void shield combat-state initialization (issue #184). When the shield
+        // hull is configured but combat state has never been seeded (active = 0
+        // and exhausted = 0), treat the ship as fully shielded — otherwise a
+        // freshly imported / migrated actor would enter combat with no shields
+        // raised, which contradicts the RAW assumption that shields are on by
+        // default.
+        if (
+            this.voidShields > 0 &&
+            this.voidShieldsStatus.active === 0 &&
+            this.voidShieldsStatus.exhausted === 0
+        ) {
+            this.voidShieldsStatus.active = this.voidShields;
+        }
+        // Cap active + exhausted against the configured maximum.
+        if (this.voidShieldsStatus.active > this.voidShields) {
+            this.voidShieldsStatus.active = this.voidShields;
+        }
+
         // Hull percentage for status display
         if (this.hullIntegrity.max > 0) {
             this.hullPercentage = Math.round((this.hullIntegrity.value / this.hullIntegrity.max) * 100);
@@ -185,6 +336,100 @@ export default class StarshipData extends ActorDataModel {
         } else {
             this.moralePercentage = 100;
         }
+    }
+
+    /**
+     * Seed `buildValidation` from current state. Called from `prepareDerivedData`
+     * before items are loaded; the post-items pass in `prepareEmbeddedData`
+     * refines `spent` and `missingEssentialSlots` once owned items are visible.
+     * @protected
+     */
+    _prepareBuildValidation(): void {
+        const budget = this.shipPoints.budget;
+        const spent = this.shipPoints.spent; // may be stale until prepareEmbeddedData
+        this.buildValidation = {
+            spent,
+            budget,
+            isOverBudget: spent > budget,
+            missingEssentialSlots: [...ESSENTIAL_SHIP_SLOTS],
+            isValid: false,
+        };
+    }
+
+    /**
+     * Recompute SP spent and essential-slot coverage from owned items.
+     * Walks every shipComponent / shipWeapon / shipUpgrade on the actor:
+     *   • sums their `system.shipPoints` into `shipPoints.spent`;
+     *   • marks each essential slot as covered when an owned component of that
+     *     `componentType` is functional.
+     * @protected
+     */
+    _refreshBuildValidation(items: Iterable<ShipItemView>): void {
+        let spSpent = 0;
+        const covered = new Set<string>();
+        for (const item of items) {
+            const sys = item.system;
+            if (item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade') {
+                spSpent += sys.shipPoints ?? 0;
+            }
+            if (item.type === 'shipComponent' && typeof sys.componentType === 'string') {
+                // Only "functional" components count toward filling a required slot —
+                // a destroyed bridge does not satisfy the bridge requirement.
+                if (sys.condition === undefined || sys.condition === 'functional') {
+                    covered.add(sys.componentType);
+                    // Some compendium components are tagged `essential: true` but use
+                    // an `essential` / `supplemental` componentType bucket; in that
+                    // case fall back to the explicit flag.
+                    if (sys.essential === true && sys.componentType === 'essential') {
+                        // Cannot determine which slot it fills without more data;
+                        // skip silently — the explicit slot types above are preferred.
+                    }
+                }
+            }
+        }
+
+        this.shipPoints.spent = spSpent;
+
+        const budget = this.shipPoints.budget;
+        const missing: string[] = ESSENTIAL_SHIP_SLOTS.filter((slot) => !covered.has(slot));
+        const isOverBudget = spSpent > budget;
+        this.buildValidation = {
+            spent: spSpent,
+            budget,
+            isOverBudget,
+            missingEssentialSlots: missing,
+            isValid: !isOverBudget && missing.length === 0,
+        };
+    }
+
+    /**
+     * Pure validator usable from tests and the sheet without prepping the full
+     * DataModel. Returns a `StarshipBuildValidation` for the given budget and
+     * iterable of component-like views.
+     */
+    static validateBuild(budget: number, items: Iterable<{ type: string; system: ShipComponentSystem }>): StarshipBuildValidation {
+        let spent = 0;
+        const covered = new Set<string>();
+        for (const item of items) {
+            const sys = item.system;
+            if (item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade') {
+                spent += sys.shipPoints ?? 0;
+            }
+            if (item.type === 'shipComponent' && typeof sys.componentType === 'string') {
+                if (sys.condition === undefined || sys.condition === 'functional') {
+                    covered.add(sys.componentType);
+                }
+            }
+        }
+        const missing: string[] = ESSENTIAL_SHIP_SLOTS.filter((slot) => !covered.has(slot));
+        const isOverBudget = spent > budget;
+        return {
+            spent,
+            budget,
+            isOverBudget,
+            missingEssentialSlots: missing,
+            isValid: !isOverBudget && missing.length === 0,
+        };
     }
 
     /**
@@ -270,6 +515,19 @@ export default class StarshipData extends ActorDataModel {
 
         // Store component modifiers for display
         this.componentModifiers = componentModifiers;
+
+        // Refresh SP-budget + essential-slot validation now that items are
+        // visible. The earlier `_prepareBuildValidation()` call seeded the
+        // shape with stale `spent` and the full essential-slot list; this pass
+        // computes the accurate state for the rendered sheet.
+        const itemsForValidation: ShipItemView[] = [];
+        for (const rawItem of items) {
+            const item = rawItem as ShipItemView;
+            if (item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade') {
+                itemsForValidation.push(item);
+            }
+        }
+        this._refreshBuildValidation(itemsForValidation);
     }
 
     /* -------------------------------------------- */

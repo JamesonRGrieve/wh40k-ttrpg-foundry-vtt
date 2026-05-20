@@ -1,0 +1,42 @@
+{{!-- Insanity Disorders roll dialog (#116) — GM-only. --}}
+{{!-- Pick a severity (Minor 40 IP / Severe 60 IP / Acute 80 IP), roll for a Disorder, emit chat card. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-indigo-300 tw-italic">
+        {{localize "WH40K.DisorderRoll.DialogTitle"}}
+    </div>
+
+    {{!-- Severity selector — three click-to-select cards --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-indigo-300">
+            {{localize "WH40K.DisorderRoll.SeverityLabel"}}
+        </label>
+        <div class="tw-grid tw-grid-cols-3 tw-gap-2">
+            {{#each severities}}
+                <button type="button"
+                        data-action="selectSeverity"
+                        data-severity="{{this.id}}"
+                        data-disorder-severity="{{this.id}}"
+                        class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-3 tw-rounded-md tw-border tw-cursor-pointer tw-transition-colors {{#if (eq this.id ../severity)}}tw-border-indigo-400 tw-bg-[rgba(99,102,241,0.18)] tw-text-indigo-200 tw-shadow-[0_0_0_1px_rgba(129,140,248,0.45)]{{else}}tw-border-[rgba(129,140,248,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-[#cbd5ff] hover:tw-border-indigo-300 hover:tw-bg-[rgba(99,102,241,0.12)]{{/if}}">
+                    <span class="tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em]">{{localize this.labelKey}}</span>
+                    <span class="tw-text-xs tw-tabular-nums tw-text-indigo-300">{{this.threshold}} IP</span>
+                </button>
+            {{/each}}
+        </div>
+    </div>
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(129,140,248,0.25)]">
+        <button type="button"
+                data-action="rollDisorder"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-indigo-500 tw-to-purple-700 tw-text-[#f5f3ff] tw-shadow-[0_4px_12px_rgba(99,102,241,0.35)]">
+            <i class="fas fa-dice-d20"></i> {{localize "WH40K.DisorderRoll.RollButton"}}
+        </button>
+        <button type="button"
+                data-action="cancel"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.Daemonhost.Cancel"}}
+        </button>
+    </div>
+
+</div>

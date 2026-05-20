@@ -43,9 +43,11 @@ import type {
     ConditionData,
     CriticalInjuryData,
     CyberneticData,
+    EndeavourData,
     ForceFieldData,
     GearData,
     JournalEntryItemData,
+    LeadData,
     MalignancyData,
     MentalDisorderData,
     MutationData,
@@ -197,6 +199,8 @@ declare module 'fvtt-types/configuration' {
             malignancy: typeof MalignancyData;
             mentalDisorder: typeof MentalDisorderData;
             journalEntry: typeof JournalEntryItemData;
+            endeavour: typeof EndeavourData;
+            lead: typeof LeadData;
             npcTemplate: typeof NPCTemplateData;
         };
     }

@@ -1,1 +1,16 @@
 <!-- Chrome styling is bundled via preview.ts (stories/css/foundry-chrome.css). -->
+<script>
+  // `tailwind/design-tokens.js` scopes the dark-theme variable block to
+  // `body.theme-dark` (matching Foundry V13+'s body-level theme class).
+  // Storybook does not set this class on body — its preview iframe ships
+  // a bare `<body>` — so without this script every `var(--wh40k-*)`
+  // resolves to the lightTheme defaults, producing translucent-white
+  // panel backgrounds and the washed-out olive-on-olive section headers
+  // captured in the issue-19 / issue-191 regression screenshots. Adding
+  // the class before render makes the darkTheme cascade take effect.
+  document.documentElement.classList.add('theme-dark');
+  document.body && document.body.classList.add('theme-dark');
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('theme-dark');
+  });
+</script>

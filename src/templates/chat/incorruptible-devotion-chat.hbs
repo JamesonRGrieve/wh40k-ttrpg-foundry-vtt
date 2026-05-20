@@ -1,0 +1,36 @@
+{{!-- Incorruptible Devotion chat card (GitHub #92). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
+<div class="wh40k-rpg wh40k-idv-card tw-p-4 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.35)] dh2e:tw-border-gold tw-bg-[rgba(15,12,8,0.85)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-hand-holding-heart tw-text-[#c4871d] dh2e:tw-text-gold tw-text-[1.1rem]"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-gold dh2e:tw-text-gold bc:tw-text-crimson-light rt:tw-text-amber-700 im:tw-text-failure">
+            {{localize "WH40K.IncorruptibleDevotion.ChatTitle"}}
+        </div>
+    </div>
+    {{#if traded}}
+        <div class="tw-text-[0.95rem] tw-mb-2 tw-text-[#e8e4d9]">
+            {{localize "WH40K.IncorruptibleDevotion.TradeMessage"}}
+        </div>
+        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.IncorruptibleDevotion.CorruptionAverted"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{corruptionAmount}}</span>
+            </li>
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.IncorruptibleDevotion.InsanityGained"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{insanityAmount}}</span>
+            </li>
+        </ul>
+    {{else}}
+        <div class="tw-text-[0.95rem] tw-mb-2 tw-text-[#e8e4d9]">
+            {{localize "WH40K.IncorruptibleDevotion.DeclinedMessage"}}
+        </div>
+        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.IncorruptibleDevotion.CorruptionGained"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{corruptionAmount}}</span>
+            </li>
+        </ul>
+    {{/if}}
+</div>

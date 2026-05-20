@@ -510,22 +510,33 @@ export class TooltipsWH40K {
             `;
         }
 
+        // Issue #27: the previous labels — "[Chrstc] Value" and "Base (/2 untrained):"
+        // — were jargon-y and unexplained. The replacements spell out exactly what
+        // each number is: the characteristic's name + total, and the untrained roll
+        // target after the ÷2 halving (RT rule). The `CharacteristicLabel` template
+        // takes both the characteristic name and its total so the row reads as a
+        // self-contained sentence ("Characteristic: Perception (35)").
+        const characteristicRow = game.i18n.format('WH40K.Tooltip.Skill.CharacteristicLabel', {
+            name: characteristic,
+            value: String(charValue),
+        });
         html += `
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__breakdown">
                 <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">${characteristic} ${localize('WH40K.Tooltip.Skill.CharacteristicValue')}:</span>
-                    <span class="wh40k-tooltip__value">${charValue}</span>
+                    <span class="wh40k-tooltip__label">${characteristicRow}</span>
                 </div>
         `;
 
         // The half-characteristic untrained base is RT-specific (FFG Rogue Trader rule);
         // DH2e and other aptitude/career systems apply a flat -20 penalty rather than halving.
         if (level === 0 && gameSystem === 'rt') {
+            const untrainedTargetRow = game.i18n.format('WH40K.Tooltip.Skill.UntrainedTargetLabel', {
+                value: String(calculatedBase),
+            });
             html += `
                 <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Skill.UntrainedBase')}:</span>
-                    <span class="wh40k-tooltip__value">${calculatedBase}</span>
+                    <span class="wh40k-tooltip__label">${untrainedTargetRow}</span>
                 </div>
             `;
         }
@@ -546,15 +557,43 @@ export class TooltipsWH40K {
             `;
         }
 
+        // Issue #26: render rank labels alongside their modifier so the progression
+        // makes the rule-correct values explicit (Known (0) → Trained (+10) → …).
+        // Untrained for aptitude systems shows the flat -20 penalty; career systems
+        // (RT) halve the characteristic instead and surface that as "(÷2)".
+        const formatBonus = (bonus: number): string => `${bonus >= 0 ? '+' : ''}${bonus}`;
+        const RANK_TOOLTIP_I18N: Record<string, string> = {
+            Known: 'WH40K.Skills.Rank.Known',
+            Trained: 'WH40K.Skills.Rank.Trained',
+            Experienced: 'WH40K.Skills.Rank.Experienced',
+            Veteran: 'WH40K.Skills.Rank.Veteran',
+        };
+        const localizeRankLabel = (raw: string): string => {
+            const key = RANK_TOOLTIP_I18N[raw];
+            return key === undefined ? raw : localize(key);
+        };
+        const renderRank = (rankLabel: string, bonus: number): string =>
+            game.i18n.format('WH40K.Tooltip.Skill.RankWithBonus', { rank: localizeRankLabel(rankLabel), bonus: formatBonus(bonus) });
+        const untrainedLabel =
+            gameSystem === 'rt'
+                ? localize('WH40K.Tooltip.Skill.UntrainedHalfBase')
+                : game.i18n.format('WH40K.Tooltip.Skill.UntrainedWithPenalty', { penalty: '-20' });
+
         html += `
             </div>
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__training">
                 <div class="wh40k-tooltip__training-title">${localize('WH40K.Tooltip.Skill.TrainingProgression')}:</div>
                 <div class="wh40k-tooltip__training-track">
-                    <span class="${level === 0 ? 'active' : ''}">${localize('WH40K.Skills.Untrained')}</span>
+                    <span class="${level === 0 ? 'active' : ''}">${untrainedLabel}</span>
                     ${skillRanks
-                        .map((rank, i) => `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${rank.tooltip}</span>`)
+                        .map(
+                            (rank, i) =>
+                                `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${renderRank(
+                                    rank.tooltip,
+                                    rank.bonus,
+                                )}</span>`,
+                        )
                         .join('')}
                 </div>
             </div>

@@ -1,0 +1,32 @@
+{{!--
+    Crusader role: Smite the Unholy action button (#141, beyond.md p.34/L807-841).
+
+    Fate-spend action that costs 1 Fate point in exchange for an automatic
+    pass on a Fear test with a number of Degrees of Success equal to the
+    actor's Willpower Bonus. The panel renders only when `hasCrusader` is
+    truthy (computed in CharacterSheet._prepareContext by walking the
+    actor's items for "Crusader" / "Smite the Unholy" — see
+    rules/crusader.ts::hasCrusaderRole).
+
+    The button itself dispatches `data-action="smiteTheUnholy"`, which
+    resolves to CharacterSheet.#smiteTheUnholy — see the action handler
+    for the Fate-decrement + chat-card pipeline. The melee Fear(X) rider
+    is passive and is applied by the damage pipeline via
+    rules/crusader.ts::applySmiteTheUnholyBonus rather than this button.
+--}}
+{{#if hasCrusader}}
+<div class="wh40k-crusader-panel tw-flex tw-flex-col tw-items-stretch tw-gap-2 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-amber-800/70 tw-bg-amber-900/[8%]">
+    <button
+        type="button"
+        class="wh40k-crusader-btn tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-solid tw-border-amber-800 tw-bg-amber-900/60 tw-text-white tw-font-display tw-uppercase tw-tracking-[0.08em] tw-text-[0.85rem] hover:tw-bg-amber-900/80 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-amber-700"
+        data-action="smiteTheUnholy"
+        data-tooltip="{{localize 'WH40K.Crusader.ButtonTooltip'}}"
+        aria-label="{{localize 'WH40K.Crusader.ButtonLabel'}}">
+        <i class="fa-solid fa-shield-cross" aria-hidden="true"></i>
+        <span>{{localize "WH40K.Crusader.ButtonLabel"}}</span>
+    </button>
+    <p class="tw-text-[0.75rem] tw-italic tw-text-[var(--wh40k-text-muted,#a0a0a0)] tw-m-0">
+        {{localize "WH40K.Crusader.ButtonTooltip"}}
+    </p>
+</div>
+{{/if}}

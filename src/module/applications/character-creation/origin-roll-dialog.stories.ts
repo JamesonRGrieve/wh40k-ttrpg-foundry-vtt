@@ -79,3 +79,66 @@ export const ActionFlow: Story = {
         clickAction(canvasElement, 'cancel');
     },
 };
+
+/**
+ * Issue #202 regression case: ten previous reroll attempts. Before the fix the
+ * history pushed the Reroll/Submit footer off the bottom of the dialog. After
+ * the fix the history scrolls inside its own container and the action footer
+ * stays pinned to the visible viewport.
+ */
+export const RerollOverflow: Story = {
+    decorators: [
+        (storyFn): HTMLElement => {
+            // Constrain viewport so the dialog actually hits its tw-max-h-[80vh]
+            // cap and the history-overflow behaviour is exercised. The dialog
+            // now uses tw-h-full to fill the parent, so size the frame at ~720
+            // (enough for header + result + 12rem history + footer) so the
+            // pinned-footer behaviour is what gets tested rather than the
+            // frame's own overflow:hidden clipping.
+            const frame = document.createElement('div');
+            frame.style.cssText = 'height:720px;width:640px;display:flex;flex-direction:column;overflow:hidden;';
+            frame.classList.add('wh40k-rpg', 'issue-202-viewport');
+            const slot = storyFn() as HTMLElement;
+            frame.appendChild(slot);
+            return frame;
+        },
+    ],
+    args: {
+        ...Rolled.args,
+        hasRolled: true,
+        showHistory: true,
+        rollResult: {
+            total: 17,
+            breakdown: '8 + [7] + 2',
+        },
+        rollHistory: [
+            { result: 11, breakdown: '8 + [1] + 2' },
+            { result: 12, breakdown: '8 + [2] + 2' },
+            { result: 13, breakdown: '8 + [3] + 2' },
+            { result: 14, breakdown: '8 + [4] + 2' },
+            { result: 15, breakdown: '8 + [5] + 2' },
+            { result: 11, breakdown: '8 + [1] + 2' },
+            { result: 13, breakdown: '8 + [3] + 2' },
+            { result: 16, breakdown: '8 + [6] + 2' },
+            { result: 12, breakdown: '8 + [2] + 2' },
+            { result: 17, breakdown: '8 + [7] + 2' },
+        ],
+    },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // History list must exist with 10 entries.
+        const list = canvasElement.querySelector('[data-testid="previous-attempts-list"]') as HTMLElement | null;
+        expect(list).toBeTruthy();
+        expect(list?.querySelectorAll('li').length).toBe(10);
+
+        // Action footer must be in the DOM AND visible in the viewport.
+        const footer = canvasElement.querySelector('[data-testid="origin-roll-actions"]') as HTMLElement | null;
+        expect(footer).toBeTruthy();
+
+        // The Reroll button is rendered inside the action footer (post-roll state).
+        const rerollBtn = canvas.getByText('Re-roll').closest('button');
+        expect(rerollBtn).toBeTruthy();
+        const acceptBtn = canvas.getByText('Accept').closest('button');
+        expect(acceptBtn).toBeTruthy();
+    },
+};

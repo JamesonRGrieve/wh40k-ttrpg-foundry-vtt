@@ -1,0 +1,324 @@
+import type { Meta, StoryObj } from '@storybook/html-vite';
+import Handlebars from 'handlebars';
+import { expect, within } from 'storybook/test';
+import qualityChatSrc from '../../src/templates/chat/weapon-quality-effect-chat.hbs?raw';
+import {
+    resolveGravitonBonusDamage,
+    resolveHitEffectSaveTarget,
+    resolveLanceBonus,
+    resolveMaximalEffect,
+    resolvePowerFieldParryDestroys,
+    resolveScatterRangeBand,
+    resolveStunDuration,
+    resolveTemplateRadius,
+    WEAPON_QUALITY_EFFECTS,
+} from '../../src/module/rules/weapon-quality-effects.ts';
+import { renderTemplate } from '../mocks';
+import { initializeStoryHandlebars } from '../template-support';
+
+/**
+ * Chat-card story coverage for the bespoke weapon-quality outcomes
+ * promoted in #57 (completion). Each story drives the
+ * `weapon-quality-effect-chat.hbs` partial through the per-quality
+ * pure resolvers (no hand-authored payload shape), so a regression in
+ * `WEAPON_QUALITY_EFFECTS` payload surfaces here as well as in the
+ * Vitest unit suite.
+ *
+ * Per-system theming: stories set `gameSystem: 'dh2e'` so the card's
+ * `data-wh40k-system` anchor activates the `dh2e:*` Tailwind variant
+ * chain on the border / accent.
+ */
+
+initializeStoryHandlebars();
+
+const qualityChatTemplate = Handlebars.compile(qualityChatSrc);
+
+interface QualityPayload {
+    radius?: number;
+    templateShape?: string;
+    rangeBand?: string;
+    rangeBandDelta?: number;
+    saveCharacteristic?: string;
+    saveTarget?: number;
+    savePenalty?: number;
+    failEffectKey?: string;
+    stunRounds?: number;
+    fatigue?: number;
+    bonusDamageDice?: string;
+    bonusDamage?: number;
+    bonusPenetration?: number;
+    triggersRecharge?: boolean;
+    appliesOverheats?: boolean;
+    powerFieldDestroyed?: boolean;
+    radiusUnit?: string;
+}
+
+function ctx(opts: {
+    qualityKey: keyof typeof WEAPON_QUALITY_EFFECTS;
+    accentClass: string;
+    iconClass: string;
+    payload: QualityPayload;
+    gameSystem?: string;
+}): Record<string, unknown> {
+    const labelKey = `WH40K.Quality.${capitalize(String(opts.qualityKey))}.Name`;
+    const descKey = `WH40K.Quality.${capitalize(String(opts.qualityKey))}.Description`;
+    return {
+        gameSystem: opts.gameSystem ?? 'dh2e',
+        qualityKey: opts.qualityKey,
+        qualityLabelKey: labelKey,
+        qualityDescKey: descKey,
+        accentClass: opts.accentClass,
+        iconClass: opts.iconClass,
+        payload: opts.payload,
+    };
+}
+
+function capitalize(s: string): string {
+    if (s.length === 0) return s;
+    // Power-field → PowerField; razor-sharp → RazorSharp.
+    return s
+        .split('-')
+        .map((part) => (part.length === 0 ? part : (part[0]?.toUpperCase() ?? '') + part.slice(1)))
+        .join('');
+}
+
+const meta: Meta = {
+    title: 'Chat/Weapon Quality (#57 completion)',
+};
+export default meta;
+
+type Story = StoryObj;
+
+export const SprayTemplate: Story = {
+    name: 'Spray — cone template + Agility avoidance',
+    render: () =>
+        renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'spray',
+                accentClass: 'tw-text-orange-300',
+                iconClass: 'fa-fan',
+                payload: {
+                    templateShape: 'cone',
+                    saveCharacteristic: 'agility',
+                    saveTarget: 35,
+                    failEffectKey: 'WH40K.Quality.FailEffect.hit',
+                },
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        const card = canvasElement.querySelector('.wh40k-quality-card');
+        expect(card).toBeTruthy();
+        expect(card?.getAttribute('data-quality-key')).toBe('spray');
+        expect(canvasElement.querySelector('[data-row="template-shape"]')).toBeTruthy();
+        expect(canvasElement.querySelector('[data-row="save"]')).toBeTruthy();
+    },
+};
+
+export const FlameBurning: Story = {
+    name: 'Flame — Agility test or Burning',
+    render: () => {
+        const target = resolveHitEffectSaveTarget({ characteristicTotal: 35, key: 'flame', level: 0 });
+        return renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'flame',
+                accentClass: 'tw-text-red-400',
+                iconClass: 'fa-fire',
+                payload: {
+                    saveCharacteristic: 'agility',
+                    saveTarget: target,
+                    failEffectKey: 'WH40K.Quality.FailEffect.burning',
+                },
+            }),
+        );
+    },
+    play: async ({ canvasElement }) => {
+        const fail = canvasElement.querySelector('[data-row="fail-effect"]');
+        expect(fail).toBeTruthy();
+    },
+};
+
+export const GravitonKnockdown: Story = {
+    name: 'Graviton — Strength test or Prone (+armour as damage)',
+    render: () =>
+        renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'graviton',
+                accentClass: 'tw-text-violet-300',
+                iconClass: 'fa-arrow-down',
+                payload: {
+                    saveCharacteristic: 'strength',
+                    saveTarget: 40,
+                    bonusDamage: resolveGravitonBonusDamage(5),
+                    failEffectKey: 'WH40K.Quality.FailEffect.prone',
+                },
+            }),
+        ),
+};
+
+export const LancePenByDoS: Story = {
+    name: 'Lance — Pen × DoS (4 base × 3 DoS → +8 delta)',
+    render: () =>
+        renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'lance',
+                accentClass: 'tw-text-sky-300',
+                iconClass: 'fa-bolt-lightning',
+                payload: {
+                    bonusPenetration: resolveLanceBonus(4, 3),
+                },
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        const row = canvasElement.querySelector('[data-row="bonus-pen"]');
+        expect(row?.textContent).toContain('+8');
+    },
+};
+
+export const MaximalRecharge: Story = {
+    name: 'Maximal — recharge / overheat package',
+    render: () => {
+        const r = resolveMaximalEffect();
+        return renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'maximal',
+                accentClass: 'tw-text-amber-300',
+                iconClass: 'fa-explosion',
+                payload: {
+                    bonusDamageDice: r.bonusDamageDice,
+                    bonusPenetration: r.bonusPenetration,
+                    appliesOverheats: r.appliesOverheats,
+                    triggersRecharge: r.triggersRecharge,
+                },
+            }),
+        );
+    },
+};
+
+export const PowerFieldParryDestroy: Story = {
+    name: 'Power Field — parry destroys ordinary weapon',
+    render: () => {
+        const pf = { system: { special: new Set(['power-field']) } } as Parameters<typeof resolvePowerFieldParryDestroys>[0];
+        const ord = { system: { special: new Set<string>() } } as Parameters<typeof resolvePowerFieldParryDestroys>[1];
+        const destroyed = resolvePowerFieldParryDestroys(pf, ord);
+        return renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'power-field',
+                accentClass: 'tw-text-cyan-300',
+                iconClass: 'fa-shield-halved',
+                payload: { powerFieldDestroyed: destroyed },
+            }),
+        );
+    },
+    play: async ({ canvasElement }) => {
+        const banner = canvasElement.querySelector('[data-row="parry-destroyed"]');
+        expect(banner).toBeTruthy();
+    },
+};
+
+export const ScatterPointBlank: Story = {
+    name: 'Scatter — Point Blank (+3 damage)',
+    render: () =>
+        renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'scatter',
+                accentClass: 'tw-text-amber-200',
+                iconClass: 'fa-burst',
+                payload: {
+                    rangeBand: 'Point Blank',
+                    rangeBandDelta: resolveScatterRangeBand('Point Blank'),
+                },
+            }),
+        ),
+};
+
+export const ScatterLongRange: Story = {
+    name: 'Scatter — Long Range (−3 damage)',
+    render: () =>
+        renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'scatter',
+                accentClass: 'tw-text-amber-200',
+                iconClass: 'fa-burst',
+                payload: {
+                    rangeBand: 'Long Range',
+                    rangeBandDelta: resolveScatterRangeBand('Long Range'),
+                },
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        const row = canvasElement.querySelector('[data-row="range-band"]');
+        expect(row?.textContent).toContain('-3');
+    },
+};
+
+export const ShockingStun: Story = {
+    name: 'Shocking — Toughness or 1-round Stun + Fatigue',
+    render: () =>
+        renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'shocking',
+                accentClass: 'tw-text-yellow-300',
+                iconClass: 'fa-bolt',
+                payload: {
+                    saveCharacteristic: 'toughness',
+                    saveTarget: 40,
+                    stunRounds: resolveStunDuration({ dof: 3, key: 'shocking' }),
+                    fatigue: 1,
+                    failEffectKey: 'WH40K.Quality.FailEffect.stunned',
+                },
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        const stun = canvasElement.querySelector('[data-row="stun-rounds"]');
+        expect(stun?.textContent).toMatch(/2/); // ceil(3/2) = 2
+        expect(canvasElement.querySelector('[data-row="fatigue"]')?.textContent).toContain('+1');
+    },
+};
+
+export const BlastRadius: Story = {
+    name: 'Blast (5) — 5m sphere',
+    render: () =>
+        renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'blast',
+                accentClass: 'tw-text-orange-400',
+                iconClass: 'fa-bomb',
+                payload: { radius: resolveTemplateRadius(5), templateShape: 'sphere' },
+            }),
+        ),
+};
+
+export const PerSystemImperiumMaledictum: Story = {
+    name: 'Per-system homologation check — IM Concussive variant',
+    render: () =>
+        renderTemplate(
+            qualityChatTemplate,
+            ctx({
+                qualityKey: 'concussive',
+                accentClass: 'tw-text-red-300',
+                iconClass: 'fa-hammer',
+                gameSystem: 'im',
+                payload: {
+                    saveCharacteristic: 'toughness',
+                    saveTarget: resolveHitEffectSaveTarget({ characteristicTotal: 40, key: 'concussive', level: 3 }),
+                    savePenalty: -30,
+                    stunRounds: 2,
+                    failEffectKey: 'WH40K.Quality.FailEffect.stunned',
+                },
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        const card = canvasElement.querySelector('[data-wh40k-system="im"]');
+        expect(card).toBeTruthy();
+    },
+};

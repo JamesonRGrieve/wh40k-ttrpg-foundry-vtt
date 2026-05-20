@@ -5,6 +5,21 @@
 
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
+import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
+import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
+import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
+import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
+import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
+import {
+    resolveBreakGrapple,
+    resolveDamageOpponent,
+    resolveMoveWhileGrappling,
+    resolveStandUpInGrapple,
+    resolveThrowDownOpponent,
+    type GrappleResolution,
+    type GrappleState,
+    type OpposedStrengthInput,
+} from '../../rules/grapple.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
@@ -12,6 +27,15 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
+import {
+    applyMismanifest,
+    canUnleashDaemon,
+    resetSessionUnleash,
+    resolveFrenzyTest,
+    resolveMismanifestPossession,
+    spendUnleashDaemon,
+    type PossessionSlot,
+} from '../../rules/possession.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -124,6 +148,10 @@ type CharacterSheetContextDeclaredFields = {
     encumbrancePercent?: number;
     backpackPercent?: number;
     transactionSourceCount?: number;
+    hasPenitent?: boolean;
+    hasFanatic?: boolean;
+    hasCrusader?: boolean;
+    grappleState?: GrappleState;
 };
 
 type OriginSummary = {
@@ -246,6 +274,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'toggleFavoriteAction': CharacterSheet.#toggleFavoriteAction,
             'combatAction': CharacterSheet.#combatAction,
             'vocalizeCombatAction': CharacterSheet.#vocalizeCombatAction,
+            'combatTalentDescribe': CharacterSheet.#combatTalentDescribe,
             'vocalizeMovement': CharacterSheet.#vocalizeMovement,
             'setMovementMode': CharacterSheet.#setMovementMode,
 
@@ -260,6 +289,42 @@ export default class CharacterSheet extends BaseActorSheet {
             'setInsanity': StatActions.setInsanity,
             'restoreFate': StatActions.restoreFate,
             'spendFate': StatActions.spendFate,
+
+            // Possession track (#82 — beyond.md p.69)
+            'unleashDaemon': CharacterSheet.#unleashDaemon,
+            'resetPossessionSession': CharacterSheet.#resetPossessionSession,
+            'possessionFrenzyTest': CharacterSheet.#possessionFrenzyTest,
+            'possessionMismanifest': CharacterSheet.#possessionMismanifest,
+
+            // Penitent role: Mortification of the Flesh (#94 — within.md p.36)
+            'applyMortification': CharacterSheet.#applyMortification,
+
+            // Shock / Snap-Out-Of-It (#66 — core.md §"Shock And Snapping Out Of It")
+            'snapOutOfShock': CharacterSheet.#snapOutOfShock,
+
+            // Fanatic role: Death to All Who Oppose Me (#93 — within.md p.34)
+            'deathToAllWhoOpposeMe': CharacterSheet.#deathToAllWhoOpposeMe,
+
+            // Crusader role: Smite the Unholy (#141 — beyond.md p.34)
+            'smiteTheUnholy': CharacterSheet.#smiteTheUnholy,
+
+            // Manacles condition (#105 — errata p.176)
+            'applyManacles': CharacterSheet.#applyManacles,
+            'liftManacles': CharacterSheet.#liftManacles,
+
+            // Ace role: Right Stuff Fate-spend (#100 — without.md p.39)
+            'openRightStuff': CharacterSheet.#openRightStuff,
+
+            // Grapple controller actions (#120 — core.md L10155-10180)
+            'grappleDamageOpponent': CharacterSheet.#grappleDamageOpponent,
+            'grappleThrowDownOpponent': CharacterSheet.#grappleThrowDownOpponent,
+            'grappleBreakFree': CharacterSheet.#grappleBreakFree,
+            'grappleStandUp': CharacterSheet.#grappleStandUp,
+            'grappleMove': CharacterSheet.#grappleMove,
+
+            // Subtlety panel (#87) — DH2 warband-subtlety stepper + breakdown popout.
+            'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
+            'viewSubtletyBreakdown': CharacterSheet.#viewSubtletyBreakdown,
 
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
@@ -308,6 +373,15 @@ export default class CharacterSheet extends BaseActorSheet {
             'removeAcquisition': CharacterSheet.#removeAcquisition,
             'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
             'openTransactionDialog': CharacterSheet.#openTransactionDialog,
+
+            // Dark Pact actions (Enemies Beyond p. 72, #84)
+            'adjustPactDisposition': CharacterSheet.#adjustPactDisposition,
+            'togglePactDiscovered': CharacterSheet.#togglePactDiscovered,
+            'togglePactPayment': CharacterSheet.#togglePactPayment,
+
+            // Endeavour actions (Rogue Trader)
+            'completeObjective': CharacterSheet.#completeObjective,
+            'completeEndeavour': CharacterSheet.#completeEndeavour,
 
             // Experience actions
             'customXP': CharacterSheet.#customXP,
@@ -417,6 +491,11 @@ export default class CharacterSheet extends BaseActorSheet {
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
+        status: {
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-status.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
         combat: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
@@ -453,6 +532,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static TABS: SheetTabConfig[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
+        { tab: 'status', label: 'WH40K.Tabs.Status', group: 'primary', cssClass: 'tab-status' },
         { tab: 'skills', label: 'WH40K.Tabs.Statistics', group: 'primary', cssClass: 'tab-skills' },
         // talents tab removed — content moved to overview and skills tabs
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
@@ -569,6 +649,15 @@ export default class CharacterSheet extends BaseActorSheet {
         const ruleset = WH40KSettings.getRuleset();
         context.ruleset = ruleset;
         context.isDH2 = isDH2;
+
+        // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
+        // (`src/templates/actor/panel/subtlety-panel.hbs`). Collected on the
+        // active actor via `WH40KBaseActor.collectSubtletyAdjusters()`; safe to
+        // compute on every render because it's a thin tree-walk of owned items.
+        if (isDH2) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload; the typed `CollectedAdjuster[]` is widened to fit the free-form CharacterSheetContext shape.
+            (context as Record<string, unknown>)['subtletyAdjusters'] = this.actor.collectSubtletyAdjusters();
+        }
         context.isHomebrew = isDH2 && ruleset === 'homebrew';
         const isRaw = isDH2 && ruleset === 'raw';
         context.isRaw = isRaw;
@@ -612,8 +701,46 @@ export default class CharacterSheet extends BaseActorSheet {
         // Prepare dynasty tab data
         context.dynastyData = this._prepareDynastyData();
 
+        // Prepare Endeavours (Rogue Trader) — embedded `endeavour` items the
+        // Dynasty is currently pursuing. The panel partial reads this hash.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: context is the Foundry render payload, a free-form record under fvtt-types
+        (context as Record<string, unknown>)['endeavours'] = this.actor.items.filter((item) => (item.type as string) === 'endeavour');
+
         // Prepare active modifiers panel (Phase 5 Integration)
         context.activeModifiers = this.prepareActiveModifiers();
+
+        // Penitent role detection (#94 — within.md p.36).
+        // A Penitent is identified by the presence of a talent/trait/role
+        // item whose name matches "Penitent" or "Mortification of the Flesh"
+        // (case-insensitive). This is intentionally name-based rather than
+        // UUID-based so it works for hand-authored / dropped-in talents in
+        // addition to compendium items.
+        context.hasPenitent = this.actor.items.some((item) => {
+            const itemName = item.name?.toLowerCase() ?? '';
+            return itemName.includes('penitent') || itemName.includes('mortification of the flesh');
+        });
+
+        // Fanatic role detection (#93 — within.md p.34).
+        // A Fanatic is identified by the presence of a talent/trait/role
+        // item whose name matches "Fanatic" or "Death to All Who Oppose Me"
+        // (case-insensitive). Name-based so it works for hand-authored /
+        // dropped-in talents in addition to compendium items.
+        context.hasFanatic = this.actor.items.some((item) => {
+            const itemName = item.name?.toLowerCase() ?? '';
+            return itemName.includes('fanatic') || itemName.includes('death to all who oppose me');
+        });
+
+        // Crusader role detection (#141 — beyond.md p.34). Same name-based
+        // pattern as Penitent/Fanatic above; matches "Crusader" or "Smite
+        // the Unholy".
+        context.hasCrusader = hasCrusaderRole(Array.from(this.actor.items));
+
+        // Grapple state (#120 — core.md L10155-10180). The flag is set by
+        // combat tooling (Charge / Standard Attack workflow) and read by
+        // the Status tab to surface the controller-actions panel.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
+        const grappleFlag = (this.actor.flags as { wh40k?: { grapple?: { state?: GrappleState } } } | undefined)?.wh40k?.grapple;
+        context.grappleState = grappleFlag?.state ?? 'none';
 
         return context;
     }
@@ -1352,13 +1479,23 @@ export default class CharacterSheet extends BaseActorSheet {
 
         type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
 
+        // Untrained-skill rules diverge by system. The aptitude/career family
+        // (DH2 + BC/DW/OW/IM, and DH1 Errata which extended aptitudes) applies
+        // a flat -20 penalty (DH2 core.md p.95 "Untrained Skill Use"). FFG
+        // Rogue Trader is the halving outlier and lives on its own sheet class.
+        // See wh40k-tooltip.ts for the same gate around the untrained-target
+        // display.
+        const systemId = this._resolveGameSystemId();
+        const isAptitudeSystem = systemId === 'dh2e' || systemId === 'dh1e' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
+        const adjustUntrained = (base: number): number => (isAptitudeSystem ? base - 20 : Math.floor(base / 2));
+
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
         const dodgeSkill = skills['dodge'] as unknown as SkillBits | undefined;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         let dodgeBase = chars['agility']?.total ?? 0;
         if (dodgeSkill?.plus20 === true) dodgeBase += 20;
         else if (dodgeSkill?.plus10 === true) dodgeBase += 10;
-        else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = Math.floor(dodgeBase / 2);
+        else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = adjustUntrained(dodgeBase);
         sheetContext.dodgeTarget = dodgeBase;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
@@ -1367,7 +1504,7 @@ export default class CharacterSheet extends BaseActorSheet {
         let parryBase = chars['weaponSkill']?.total ?? 0;
         if (parrySkill?.plus20 === true) parryBase += 20;
         else if (parrySkill?.plus10 === true) parryBase += 10;
-        else if (parrySkill?.trained !== true && parrySkill?.basic !== true) parryBase = Math.floor(parryBase / 2);
+        else if (parrySkill?.trained !== true && parrySkill?.basic !== true) parryBase = adjustUntrained(parryBase);
         sheetContext.parryTarget = parryBase;
     }
 
@@ -2455,6 +2592,70 @@ export default class CharacterSheet extends BaseActorSheet {
         }
     }
 
+    /* -------------------------------------------- */
+
+    /**
+     * Handle clicks on combat-talent buttons in the Actions tab.
+     *
+     * Default behavior (plain click): show the talent's name + description
+     * as a local in-sheet tooltip on the clicked button. This matches the
+     * default for {@link #vocalizeCombatAction} and the Reactions block —
+     * a plain click never auto-posts to chat (issue #19).
+     *
+     * Modifier behavior (Shift+Click): explicit opt-in to post the talent
+     * card to chat via the item's normal {@link sendToChat} path.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #combatTalentDescribe(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
+        if (itemId === undefined || itemId === '') {
+            console.warn('WH40K | combatTalentDescribe: No item ID found', target);
+            return;
+        }
+
+        const item = this.actor.items.get(itemId);
+        if (item === undefined) {
+            console.warn(`WH40K | combatTalentDescribe: Item ${itemId} not found on actor`);
+            return;
+        }
+
+        // Shift+Click is the explicit opt-in to post to chat.
+        const isShiftClick = event instanceof MouseEvent && event.shiftKey;
+        if (isShiftClick) {
+            try {
+                await item.sendToChat();
+            } catch (err) {
+                console.error('WH40K | combatTalentDescribe: Error sending item to chat', err);
+                ui.notifications.error(game.i18n.format('WH40K.Combat.Actions.TalentChatFailed', { name: item.name ?? '' }));
+            }
+            return;
+        }
+
+        // Default: show the talent description as a local in-sheet tooltip.
+        const itemSystem = item.system as { description?: { value?: string } } | undefined;
+        const rawDescription = itemSystem?.description?.value ?? '';
+        const descriptionText =
+            rawDescription !== ''
+                ? rawDescription
+                : game.i18n.localize('WH40K.Combat.Actions.TalentNoDescription');
+        const tooltipText = `<strong>${item.name ?? ''}</strong><br/>${descriptionText}`;
+        const tooltipManager = (
+            game as foundry.Game & {
+                tooltip?: { activate?: (element: HTMLElement, options?: { text?: string; direction?: string; cssClass?: string }) => void };
+            }
+        ).tooltip;
+        if (tooltipManager?.activate !== undefined) {
+            tooltipManager.activate(target, { text: tooltipText, direction: 'UP', cssClass: 'wh40k-action-description' });
+        } else {
+            // Fallback for environments without the tooltip manager (e.g., tests).
+            // Strip HTML tags so the title/data-tooltip attribute reads cleanly.
+            const plain = descriptionText.replace(/<[^>]*>/g, '').trim();
+            target.setAttribute('data-tooltip', `${item.name ?? ''}: ${plain}`);
+        }
+    }
+
     /**
      * Handle vocalizing movement to chat.
      * @this {CharacterSheet}
@@ -2910,6 +3111,175 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+    /*  Event Handlers - Dark Pacts (#84)           */
+    /* -------------------------------------------- */
+
+    /**
+     * Shift the per-pact disposition by ±n, clamped to [-3..+3] via the
+     * canonical helper in `src/module/rules/dark-pact.ts`. The target button
+     * carries `data-pact-index` (numeric index into `system.pacts`) and
+     * `data-delta` (signed integer).
+     */
+    static async #adjustPactDisposition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
+        const delta = parseInt(target.dataset['delta'] ?? '0', 10);
+        if (Number.isNaN(index) || index < 0 || Number.isNaN(delta) || delta === 0) return;
+
+        const pacts = this.actor.system.pacts;
+        if (!Array.isArray(pacts) || index >= pacts.length) return;
+
+        const updated = structuredClone(pacts);
+        const entry = updated[index];
+        if (!entry) return;
+        const current = (entry.disposition ?? 0) as PactDisposition;
+        entry.disposition = adjustPactDisposition(current, delta);
+        await this.actor.update({ 'system.pacts': updated });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle the `discovered` flag for a pact. When flipping from
+     * `false → true`, fire the canonical Subtlety hit through the actor's
+     * `applySubtletyFromSource(pactUuid)` — this is the same path used by
+     * compendium-driven Subtlety adjusters and ensures the
+     * `lastSubtletySource` flag and discovery audit trail are populated
+     * consistently.
+     */
+    static async #togglePactDiscovered(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
+        if (Number.isNaN(index) || index < 0) return;
+
+        const pacts = this.actor.system.pacts;
+        if (!Array.isArray(pacts) || index >= pacts.length) return;
+
+        const updated = structuredClone(pacts);
+        const entry = updated[index];
+        if (!entry) return;
+        const wasDiscovered = entry.discovered === true;
+        entry.discovered = !wasDiscovered;
+        await this.actor.update({ 'system.pacts': updated });
+
+        // Apply the canonical Subtlety hit only on the false → true edge.
+        if (!wasDiscovered && entry.pactUuid) {
+            await this.actor.applySubtletyFromSource(entry.pactUuid);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle the `paymentCurrent` flag for a pact. Disposition consequences
+     * of missed payments are GM-driven via the disposition stepper; this
+     * handler only flips the bookkeeping flag.
+     */
+    static async #togglePactPayment(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
+        if (Number.isNaN(index) || index < 0) return;
+
+        const pacts = this.actor.system.pacts;
+        if (!Array.isArray(pacts) || index >= pacts.length) return;
+
+        const updated = structuredClone(pacts);
+        const entry = updated[index];
+        if (!entry) return;
+        entry.paymentCurrent = !(entry.paymentCurrent === true);
+        await this.actor.update({ 'system.pacts': updated });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle the `complete` flag on an Endeavour's Objective. Updates the
+     * parent Endeavour item's `apEarned` total in lockstep — when an
+     * objective is checked, its AP contribution is added; when unchecked, it
+     * is reversed. Once `apEarned >= apRequired`, the actor sheet renders a
+     * "grant reward" button which calls `completeEndeavour`.
+     *
+     * The action's button carries:
+     *   - data-endeavour-id  → the parent Endeavour item id on the actor
+     *   - data-objective-index → numeric index into `system.objectives`
+     */
+    static async #completeObjective(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const endeavourId = target.dataset['endeavourId'];
+        const idxStr = target.dataset['objectiveIndex'];
+        if (endeavourId === undefined || idxStr === undefined) return;
+        const idx = Number.parseInt(idxStr, 10);
+        if (!Number.isFinite(idx)) return;
+        const item = this.actor.items.get(endeavourId);
+        if (!item || item.type !== 'endeavour') return;
+        const sys = item.system as unknown as {
+            apEarned: number;
+            apRequired: number;
+            objectives: Array<{ name: string; description: string; complete: boolean; ap: number }>;
+        };
+        if (idx < 0 || idx >= sys.objectives.length) return;
+        const objective = sys.objectives[idx];
+        if (objective === undefined) return;
+        const nextObjectives = sys.objectives.map((o, i) => (i === idx ? { ...o, complete: !o.complete } : o));
+        const delta = objective.complete ? -objective.ap : objective.ap;
+        const nextApEarned = Math.max(0, sys.apEarned + delta);
+        await item.update({
+            'system.objectives': nextObjectives,
+            'system.apEarned': nextApEarned,
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Grant the reward for a completed Endeavour: add the Endeavour's
+     * `reward.profitFactor` to `actor.system.rogueTrader.profitFactor.current`
+     * and post a chat card summarising the reward. The Endeavour item is
+     * left in place (with `apEarned >= apRequired`) so the GM still sees
+     * the historical record on the sheet.
+     *
+     * Guarded against double-spending: refuses to act unless
+     * `system.isComplete` evaluates to true on the embedded Endeavour.
+     */
+    static async #completeEndeavour(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const endeavourId = target.dataset['endeavourId'];
+        if (endeavourId === undefined) return;
+        const item = this.actor.items.get(endeavourId);
+        if (!item || item.type !== 'endeavour') return;
+        const sys = item.system as unknown as {
+            apEarned: number;
+            apRequired: number;
+            isComplete: boolean;
+            reward: { profitFactor: number; narrative: string };
+        };
+        if (!sys.isComplete) return;
+        const award = Math.max(0, sys.reward.profitFactor);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rogueTrader.profitFactor.current is a per-system actor schema field not exposed on the abstract WH40KBaseActor system surface
+        const currentPF = ((this.actor.system as { rogueTrader?: { profitFactor?: { current?: number } } }).rogueTrader?.profitFactor?.current) ?? 0;
+        if (award > 0) {
+            await this.actor.update({ 'system.rogueTrader.profitFactor.current': currentPF + award });
+        }
+        const headerLabel = game.i18n.localize('WH40K.Endeavours.RewardGrantedHeader');
+        const apLabel = game.i18n.localize('WH40K.Endeavours.APShort');
+        const pfLabel = game.i18n.localize('WH40K.Endeavours.RewardProfitFactor');
+        const narrative = sys.reward.narrative === '' ? '' : `<p>${foundry.utils.escapeHTML(sys.reward.narrative)}</p>`;
+        const content = `
+            <div class="endeavour-chat-card">
+                <h3>${headerLabel}: ${foundry.utils.escapeHTML(item.name)}</h3>
+                <p><strong>${apLabel}:</strong> ${sys.apEarned}/${sys.apRequired}</p>
+                ${award > 0 ? `<p><strong>${pfLabel}:</strong> +${award}</p>` : ''}
+                ${narrative}
+            </div>
+        `;
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content,
+            flags: {
+                'wh40k-rpg': {
+                    type: 'endeavour-reward',
+                    endeavourId,
+                },
+            },
+        });
+    }
+
+    /* -------------------------------------------- */
 
     /**
      * Open the Acquisition Dialog for rolling acquisition tests.
@@ -3009,6 +3379,489 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+    /*  Event Handlers - Possession Track (#82)     */
+    /* -------------------------------------------- */
+
+    /**
+     * Read the actor's possession slot, defaulting any missing field so the
+     * pure helpers in `module/rules/possession.ts` always see a complete
+     * shape. Centralized so both action methods stay tight.
+     * @returns {PossessionSlot}
+     * @private
+     */
+    _readPossessionSlot(): PossessionSlot {
+        const raw = (this.actor.system as { possession?: Partial<PossessionSlot> } | undefined)?.possession;
+        const state = raw?.state ?? 'none';
+        const unleashUsed = typeof raw?.unleashUsed === 'number' ? raw.unleashUsed : 0;
+        const unleashMax = typeof raw?.unleashMax === 'number' ? raw.unleashMax : 0;
+        return { state, unleashUsed, unleashMax };
+    }
+
+    /**
+     * Spend one Unleash Daemon charge for the current session. Routes
+     * through the pure `spendUnleashDaemon` helper to keep parity with the
+     * engine; no-ops with a warning when the actor is in the `none` state
+     * or has exhausted their per-session uses.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #unleashDaemon(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const slot = this._readPossessionSlot();
+            if (!canUnleashDaemon(slot)) {
+                this._notify('warning', game.i18n.localize('WH40K.Possession.UnleashUnavailable'), { duration: 3000 });
+                return;
+            }
+            const next = spendUnleashDaemon(slot);
+            await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
+            this._notify('info', game.i18n.localize('WH40K.Possession.UnleashSpent'), { duration: 2500 });
+        } catch (error) {
+            this._notify('error', `Failed to unleash daemon: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Unleash daemon error:', error);
+        }
+    }
+
+    /**
+     * Reset the per-session Unleash Daemon counter to zero. GM-only — the
+     * button only renders for GM users in the template, but we still gate
+     * server-side in case the action is dispatched via console.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #resetPossessionSession(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            if (!game.user?.isGM) {
+                this._notify('warning', game.i18n.localize('WH40K.Possession.ResetGmOnly'), { duration: 3000 });
+                return;
+            }
+            const slot = this._readPossessionSlot();
+            const next = resetSessionUnleash(slot);
+            await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
+            this._notify('info', game.i18n.localize('WH40K.Possession.ResetDone'), { duration: 2500 });
+        } catch (error) {
+            this._notify('error', `Failed to reset possession session: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Reset possession session error:', error);
+        }
+    }
+
+    /**
+     * Post a possession Frenzy/Mismanifest chat card. Mirrors the
+     * disorder-roll-dialog render+create pattern (chat templates render
+     * outside the sheet root; the renderChatMessageHTML hook supplies the
+     * `.wh40k-rpg` ancestor).
+     */
+    async _postPossessionChat(data: Record<string, unknown>): Promise<void> {
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/possession-frenzy-chat.hbs', data);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
+        const payload = { user: game.user?.id, content: html, speaker: { alias: this.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
+        await ChatMessage.create(payload);
+    }
+
+    /**
+     * Per-round Challenging (+0) Willpower test while the Possession power
+     * is sustained (#132 — beyond.md L2095-2116). Failure inflicts Frenzy
+     * this round; the power must still be sustained.
+     * @this {CharacterSheet}
+     */
+    static async #possessionFrenzyTest(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const slot = this._readPossessionSlot();
+            if (slot.state !== 'latent') {
+                this._notify('warning', game.i18n.localize('WH40K.Possession.FrenzyLoopUnavailable'), { duration: 3000 });
+                return;
+            }
+            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total ?? 0));
+            const rollResult = await new Roll('1d100').evaluate();
+            const roll = Number(rollResult.total ?? 0);
+            const result = resolveFrenzyTest(roll, wp);
+            await this._postPossessionChat({
+                mode: 'frenzy',
+                actorName: this.actor.name,
+                roll,
+                target: result.target,
+                success: result.passed,
+                stateBefore: 'latent',
+                stateAfter: 'latent',
+            });
+            this._notify(
+                result.passed ? 'info' : 'warning',
+                game.i18n.localize(result.passed ? 'WH40K.Possession.FrenzyResistedNotify' : 'WH40K.Possession.FrenzyEnteredNotify'),
+                { duration: 3000 },
+            );
+        } catch (error) {
+            this._notify('error', `Frenzy test failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Possession frenzy test error:', error);
+        }
+    }
+
+    /**
+     * Opposed-Willpower Mismanifest contest following a Psychic Phenomena
+     * result on Possession (#132). A loss escalates to full possession.
+     * The daemon's Willpower mirrors the actor's until combat targeting is
+     * wired (same placeholder convention as the grapple opposed roller).
+     * @this {CharacterSheet}
+     */
+    static async #possessionMismanifest(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const slot = this._readPossessionSlot();
+            if (slot.state !== 'latent') {
+                this._notify('warning', game.i18n.localize('WH40K.Possession.FrenzyLoopUnavailable'), { duration: 3000 });
+                return;
+            }
+            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total ?? 0));
+            const psykerRollResult = await new Roll('1d100').evaluate();
+            const daemonRollResult = await new Roll('1d100').evaluate();
+            const psykerRoll = Number(psykerRollResult.total ?? 0);
+            const daemonRoll = Number(daemonRollResult.total ?? 0);
+            const resolution = resolveMismanifestPossession(psykerRoll, wp, daemonRoll, wp, slot.state);
+            const next = applyMismanifest(slot, resolution);
+            await this._updateSystemField('system.possession.state', next.state);
+            await this._postPossessionChat({
+                mode: 'mismanifest',
+                actorName: this.actor.name,
+                roll: psykerRoll,
+                target: wp,
+                daemonRoll,
+                daemonTarget: wp,
+                psykerDoS: resolution.psykerDoS,
+                daemonDoS: resolution.daemonDoS,
+                success: resolution.psykerWon,
+                stateBefore: slot.state,
+                stateAfter: next.state,
+            });
+            this._notify(
+                resolution.psykerWon ? 'info' : 'error',
+                game.i18n.localize(resolution.psykerWon ? 'WH40K.Possession.MismanifestHeldNotify' : 'WH40K.Possession.MismanifestEscalated'),
+                { duration: 3500 },
+            );
+        } catch (error) {
+            this._notify('error', `Mismanifest contest failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Possession mismanifest error:', error);
+        }
+    }
+
+    /**
+     * Penitent role — Mortification of the Flesh (#94, within.md p.36).
+     *
+     * Applies the {@link MORTIFICATION_OF_THE_FLESH} effect:
+     *   - +N Fatigue via `actor.applyFatigue(fatigueCost)`
+     *   - temporary ActiveEffect granting +WP modifier for durationRounds rounds
+     *   - chat card narrating the action
+     *
+     * Errors surface as in-sheet notifications; the sheet re-renders on the
+     * subsequent fatigue mutation.
+     * @this {CharacterSheet}
+     */
+    static async #applyMortification(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            await this.actor.applyFatigue(MORTIFICATION_OF_THE_FLESH.fatigueCost);
+
+            const effectData = {
+                name: game.i18n.localize('WH40K.Mortification.ChatTitle'),
+                icon: 'icons/svg/aura.svg',
+                changes: [
+                    {
+                        key: 'system.characteristics.willpower.modifier',
+                        mode: 2,
+                        value: String(MORTIFICATION_OF_THE_FLESH.wpBonus),
+                        priority: 20,
+                    },
+                ],
+                duration: { rounds: MORTIFICATION_OF_THE_FLESH.durationRounds },
+                flags: { wh40k: { source: 'mortification' } },
+            };
+            // @ts-expect-error -- boundary: Foundry V14 ActiveEffect CreateData type omits name/icon/changes/duration; the structure matches runtime
+            await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+
+            const gameSystem = this._resolveGameSystemId() ?? '';
+            const content = await foundry.applications.handlebars.renderTemplate(
+                'systems/wh40k-rpg/templates/chat/mortification-chat.hbs',
+                {
+                    actorName: this.actor.name,
+                    wpBonus: MORTIFICATION_OF_THE_FLESH.wpBonus,
+                    durationRounds: MORTIFICATION_OF_THE_FLESH.durationRounds,
+                    gameSystem,
+                },
+            );
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+            });
+        } catch (error) {
+            this._notify('error', `Failed to apply Mortification of the Flesh: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Mortification of the Flesh error:', error);
+        }
+    }
+
+    /**
+     * Fanatic role — Death to All Who Oppose Me (#93, within.md p.34/967).
+     *
+     * RAW: the Fanatic spends a Fate point to count as having Hatred against
+     * their current foe for the duration of the encounter. We model the
+     * encounter window as {@link DEATH_TO_OPPOSE_DURATION_ROUNDS} rounds and
+     * surface the Hatred bonus mechanically as +10 WS / +10 BS via an
+     * ActiveEffect on the actor's characteristic modifiers.
+     *
+     * Pipeline:
+     *   - refuse if `system.fate.value` is 0 (in-sheet notification)
+     *   - decrement `system.fate.value` by 1
+     *   - create a temporary ActiveEffect granting +10 to both WS and BS
+     *     `.modifier` for DEATH_TO_OPPOSE_DURATION_ROUNDS rounds
+     *   - emit a chat card narrating the spend
+     *
+     * Errors surface as in-sheet notifications.
+     * @this {CharacterSheet}
+     */
+    static async #deathToAllWhoOpposeMe(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const fateValue = this.actor.system?.fate?.value ?? 0;
+            if (fateValue <= 0) {
+                this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoFatePoints'), { duration: 3000 });
+                return;
+            }
+
+            await this._updateSystemField('system.fate.value', fateValue - 1);
+
+            const wsBonus = 10;
+            const bsBonus = 10;
+            const effectData = {
+                name: game.i18n.localize('WH40K.Fanatic.ChatTitle'),
+                icon: 'icons/svg/sword.svg',
+                changes: [
+                    {
+                        key: 'system.characteristics.weaponSkill.modifier',
+                        mode: 2,
+                        value: String(wsBonus),
+                        priority: 20,
+                    },
+                    {
+                        key: 'system.characteristics.ballisticSkill.modifier',
+                        mode: 2,
+                        value: String(bsBonus),
+                        priority: 20,
+                    },
+                ],
+                duration: { rounds: DEATH_TO_OPPOSE_DURATION_ROUNDS },
+                flags: { wh40k: { source: 'fanatic-death-to-oppose' } },
+            };
+            // @ts-expect-error -- boundary: Foundry V14 ActiveEffect CreateData type omits name/icon/changes/duration; the structure matches runtime
+            await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+
+            const gameSystem = this._resolveGameSystemId() ?? '';
+            const content = await foundry.applications.handlebars.renderTemplate(
+                'systems/wh40k-rpg/templates/chat/fanatic-chat.hbs',
+                {
+                    actorName: this.actor.name,
+                    wsBonus,
+                    bsBonus,
+                    durationRounds: DEATH_TO_OPPOSE_DURATION_ROUNDS,
+                    gameSystem,
+                },
+            );
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+            });
+        } catch (error) {
+            this._notify('error', `Failed to apply Death to All Who Oppose Me: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Death to All Who Oppose Me error:', error);
+        }
+    }
+
+    /**
+     * Crusader role — Smite the Unholy (#141, beyond.md p.34).
+     * Spend 1 Fate to auto-pass a Fear test with DoS = WPB.
+     */
+    static async #smiteTheUnholy(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const fateValue = this.actor.system?.fate?.value ?? 0;
+            if (fateValue < SMITE_THE_UNHOLY_FATE_COST) {
+                this._notify('warning', game.i18n.localize('WH40K.Crusader.NoFatePoints'), { duration: 3000 });
+                return;
+            }
+            await this._updateSystemField('system.fate.value', fateValue - SMITE_THE_UNHOLY_FATE_COST);
+            const wp = this.actor.system?.characteristics?.willpower?.total ?? 0;
+            const dos = resolveSmiteTheUnholyDoS(wp);
+            const gameSystem = this._resolveGameSystemId() ?? '';
+            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/crusader-chat.hbs', {
+                actorName: this.actor.name,
+                willpowerBonus: dos,
+                gameSystem,
+            });
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+            });
+        } catch (error) {
+            this._notify('error', `Smite the Unholy failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Smite the Unholy error:', error);
+        }
+    }
+
+    /** Manacles condition — apply (#105, errata p.176). */
+    static async #applyManacles(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            await applyManaclesCondition(this.actor);
+            this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.AppliedNotification'), { duration: 2500 });
+        } catch (error) {
+            this._notify('error', `Failed to apply Manacled: ${(error as Error).message}`, { duration: 5000 });
+            console.error('applyManacles error:', error);
+        }
+    }
+
+    /** Manacles condition — lift (#105). */
+    static async #liftManacles(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const removed = await liftManaclesCondition(this.actor);
+            if (removed > 0) {
+                this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.LiftedNotification'), { duration: 2500 });
+            }
+        } catch (error) {
+            this._notify('error', `Failed to lift Manacled: ${(error as Error).message}`, { duration: 5000 });
+            console.error('liftManacles error:', error);
+        }
+    }
+
+    /** Ace role — Right Stuff Fate-spend (#100, without.md p.39). */
+    static async #openRightStuff(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            await openRightStuffDialog({ actor: this.actor });
+        } catch (error) {
+            this._notify('error', `Right Stuff dialog failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('openRightStuff error:', error);
+        }
+    }
+
+    /**
+     * Shared roller for the five grapple actions (#120 — core.md L10155-10180).
+     *
+     * Rolls 1d100 for the actor against their Strength total, rolls 1d100
+     * against a placeholder opponent Strength (the opponent is supplied
+     * through targeting in the live combat flow; for now the controller
+     * actions roll an unopposed test echoed through the resolver so the
+     * DoS math stays canonical), and dispatches the result through the
+     * requested resolver. Returns the resolution so the caller can decide
+     * follow-up (chat card, state flag flip).
+     */
+    private async _rollGrappleOpposed(
+        resolver: (input: OpposedStrengthInput) => GrappleResolution,
+    ): Promise<GrappleResolution | null> {
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is keyed by characteristic slug
+            const characteristics = (this.actor.system as { characteristics?: Record<string, { total?: number } | undefined> }).characteristics;
+            const strengthTotal = characteristics?.['strength']?.total ?? 30;
+            const actorRollObj = await new Roll('1d100').evaluate();
+            const opponentRollObj = await new Roll('1d100').evaluate();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.total is typed loosely; we know it's a number after evaluate()
+            const actorRoll = Math.trunc(Number((actorRollObj as unknown as { total?: number }).total ?? 0));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: same as above
+            const opponentRoll = Math.trunc(Number((opponentRollObj as unknown as { total?: number }).total ?? 0));
+            return resolver({
+                actorRoll,
+                actorStrength: strengthTotal,
+                opponentRoll,
+                opponentStrength: strengthTotal,
+            });
+        } catch (error) {
+            this._notify('error', `Grapple action failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Grapple action error:', error);
+            return null;
+        }
+    }
+
+    /** Grapple controller — Damage Opponent (#120, opposed Strength). */
+    static async #grappleDamageOpponent(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._rollGrappleOpposed(resolveDamageOpponent);
+    }
+
+    /** Grapple controller — Throw Down Opponent (#120, opposed Strength). */
+    static async #grappleThrowDownOpponent(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._rollGrappleOpposed(resolveThrowDownOpponent);
+    }
+
+    /** Grapple controlled — Break Free (#120, opposed Strength). */
+    static async #grappleBreakFree(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const result = await this._rollGrappleOpposed(resolveBreakGrapple);
+        if (result?.success) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
+            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag('wh40k-rpg', 'grapple', { state: 'none' });
+        }
+    }
+
+    /** Grapple controlled — Stand Up while gripped (#120, opposed Strength). */
+    static async #grappleStandUp(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._rollGrappleOpposed(resolveStandUpInGrapple);
+    }
+
+    /** Grapple controlled — Move while grappling (#120, opposed Strength). */
+    static async #grappleMove(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._rollGrappleOpposed(resolveMoveWhileGrappling);
+    }
+
+    /**
+     * Shock — Snap Out of It (#66, core.md §"Shock And Snapping Out Of It").
+     *
+     * Rolls a d100 Willpower test (Challenging +0 — target equals the
+     * actor's Willpower total). On success, decrements `system.shock.value`
+     * by 1 via `actor.applyShock(-1)`. Either outcome is narrated to chat
+     * via the shock-snap-chat template.
+     *
+     * Errors surface as in-sheet notifications.
+     * @this {CharacterSheet}
+     */
+    static async #snapOutOfShock(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: shock slot is optional on the typed system union; cast through unknown is necessary
+            const shock = (this.actor.system as { shock?: { value: number; max: number } }).shock;
+            const shockBefore = shock?.value ?? 0;
+            if (shockBefore <= 0) {
+                this._notify('info', game.i18n.localize('WH40K.Shock.Header'), { duration: 2500 });
+                return;
+            }
+
+            // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is keyed by characteristic slug
+            const characteristics = (this.actor.system as { characteristics?: Record<string, { total?: number } | undefined> }).characteristics;
+            const willpower = characteristics?.['willpower']?.total ?? 0;
+
+            // Challenging +0 — target equals the unmodified Willpower total.
+            const roll = await new Roll('1d100').evaluate();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.total is typed loosely; we know it's a number after evaluate()
+            const rollValue = Math.trunc(Number((roll as unknown as { total?: number }).total ?? 0));
+            const success = rollValue <= willpower;
+
+            if (success) {
+                await this.actor.applyShock(-1);
+            }
+            const shockAfter = Math.max(0, shockBefore - (success ? 1 : 0));
+
+            const content = await foundry.applications.handlebars.renderTemplate(
+                'systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs',
+                {
+                    actorName: this.actor.name,
+                    willpower,
+                    roll: rollValue,
+                    success,
+                    shockBefore,
+                    shockAfter,
+                },
+            );
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+            });
+        } catch (error) {
+            this._notify('error', `Failed to snap out of shock: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Snap Out of It error:', error);
+        }
+    }
+
+    /* -------------------------------------------- */
     /*  Event Handlers - Biography Actions          */
     /* -------------------------------------------- */
 
@@ -3059,6 +3912,49 @@ export default class CharacterSheet extends BaseActorSheet {
     static #viewFateUses(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         FateUsesDialog.open({
             gameSystem: this._resolveGameSystemId(),
+        });
+    }
+
+    /**
+     * GM-only manual stepper for the Warband Subtlety pool (#87).
+     * Reads `data-delta` (±1) from the clicked button and routes the
+     * adjustment through `WH40KBaseActor.applySubtlety(delta, 'manual')`
+     * so the loss-clamp adjusters discovered by
+     * `collectSubtletyAdjusters()` are honoured uniformly.
+     */
+    static async #adjustSubtletyManually(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        if (!game.user?.isGM) return;
+        const deltaAttr = target.dataset['delta'];
+        if (deltaAttr === undefined || deltaAttr === '') return;
+        const delta = Number.parseInt(deltaAttr, 10);
+        if (!Number.isFinite(delta) || delta === 0) return;
+        await this.actor.applySubtlety(delta, 'manual');
+    }
+
+    /**
+     * Open a read-only popout listing every Subtlety adjuster currently
+     * collected on this actor (#87). Uses Foundry's DialogV2 directly to
+     * keep the surface minimal — the list is computed inline from
+     * `collectSubtletyAdjusters()`.
+     */
+    static #viewSubtletyBreakdown(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        const adjusters = this.actor.collectSubtletyAdjusters();
+        const rows = adjusters.length
+            ? adjusters
+                  .map((adj) => {
+                      const right =
+                          adj.kind === 'clamp'
+                              ? game.i18n.format('WH40K.SubtletyPanel.Clamped', { value: String(adj.minAbsoluteDelta) })
+                              : `${adj.delta > 0 ? '+' : ''}${adj.delta}`;
+                      return `<li><strong>${foundry.utils.escapeHTML(adj.label)}</strong> — <span>${foundry.utils.escapeHTML(right)}</span></li>`;
+                  })
+                  .join('')
+            : `<li><em>${game.i18n.localize('WH40K.SubtletyPanel.EmptyAdjusters')}</em></li>`;
+        const content = `<ul class="wh40k-subtlety-breakdown-list">${rows}</ul>`;
+        void dialogV2.prompt({
+            window: { title: game.i18n.localize('WH40K.SubtletyPanel.BreakdownTitle') },
+            content,
+            ok: { label: 'OK' },
         });
     }
 
