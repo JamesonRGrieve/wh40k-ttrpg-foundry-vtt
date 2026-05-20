@@ -1,0 +1,81 @@
+{{!--
+  NPC Interactions panel (#145, DH2 errata p.125).
+
+  Per-PC tally of social interactions with this NPC, gated by each PC's
+  Fellowship bonus. Once a PC has spent their Fellowship-bonus worth of
+  interactions, additional interactions stop yielding disposition gain —
+  the GM tracks this manually via the +/− steppers below. The "AT CAP"
+  badge fires once `count` >= `cap`.
+
+  Expected context:
+    npcInteractions: {
+      empty: boolean,             // no PCs exist in the world
+      rows: [
+        { pcId: string, pcName: string, count: number, cap: number, atCap: boolean }
+      ]
+    }
+--}}
+<div class="wh40k-panel wh40k-npc-interactions-panel">
+    <div class="wh40k-panel-header">
+        <i class="fa-solid fa-comments"></i>
+        <span class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.NpcInteractions.Header"}}</span>
+        <span class="tw-ml-2 tw-text-xs tw-text-[color:var(--wh40k-text-muted)]" data-tooltip="{{localize "WH40K.NpcInteractions.CapTooltip"}}">
+            <i class="fa-solid fa-circle-info"></i>
+        </span>
+    </div>
+    <div class="wh40k-panel-body">
+        {{#if npcInteractions.empty}}
+            <p class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)] tw-italic">{{localize "WH40K.NpcInteractions.Empty"}}</p>
+        {{else}}
+            <table class="wh40k-npc-interactions-table tw-w-full tw-text-sm tw-border-collapse">
+                <thead>
+                    <tr class="tw-text-xs tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">
+                        <th class="tw-text-left tw-py-1 tw-pr-2 tw-font-semibold">{{localize "WH40K.NpcInteractions.PCColumn"}}</th>
+                        <th class="tw-text-right tw-py-1 tw-px-2 tw-font-semibold">{{localize "WH40K.NpcInteractions.CountColumn"}}</th>
+                        <th class="tw-text-right tw-py-1 tw-pl-2 tw-font-semibold"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each npcInteractions.rows}}
+                        <tr class="wh40k-npc-interactions-row tw-border-t tw-border-[color:var(--wh40k-border-color-light)]" data-pc-id="{{pcId}}">
+                            <td class="tw-py-1 tw-pr-2 tw-truncate">
+                                <span class="tw-font-semibold">{{pcName}}</span>
+                                {{#if atCap}}
+                                    <span class="wh40k-npc-interactions-atcap tw-ml-2 tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-wide tw-bg-gold/20 tw-text-gold-raw" data-tooltip="{{localize "WH40K.NpcInteractions.CapTooltip"}}">{{localize "WH40K.NpcInteractions.AtCapBadge"}}</span>
+                                {{/if}}
+                            </td>
+                            <td class="tw-py-1 tw-px-2 tw-text-right tw-font-mono">
+                                <span class="wh40k-npc-interactions-count">{{count}}</span>
+                                <span class="tw-text-[color:var(--wh40k-text-muted)]"> / {{cap}}</span>
+                            </td>
+                            <td class="tw-py-1 tw-pl-2 tw-text-right">
+                                <div class="tw-inline-flex tw-items-center tw-gap-1">
+                                    <button type="button"
+                                            class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-text-[color:var(--color-text-light-secondary,#888)] tw-cursor-pointer hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
+                                            data-action="adjustInteractionCount"
+                                            data-pc-id="{{pcId}}"
+                                            data-delta="-1"
+                                            {{#unless ../editable}}disabled{{/unless}}
+                                            aria-label="{{localize "WH40K.NpcInteractions.DecrementButton"}}"
+                                            title="{{localize "WH40K.NpcInteractions.DecrementButton"}}">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                    <button type="button"
+                                            class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-text-[color:var(--color-text-light-secondary,#888)] tw-cursor-pointer hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
+                                            data-action="adjustInteractionCount"
+                                            data-pc-id="{{pcId}}"
+                                            data-delta="1"
+                                            {{#unless ../editable}}disabled{{/unless}}
+                                            aria-label="{{localize "WH40K.NpcInteractions.IncrementButton"}}"
+                                            title="{{localize "WH40K.NpcInteractions.IncrementButton"}}">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{/if}}
+    </div>
+</div>

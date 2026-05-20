@@ -138,6 +138,111 @@
             "DegreesOfSuccess": "Degrees of Success",
             "DegreesOfFailure": "Degrees of Failure"
         },
+        "Assistance": {
+            "Label": "Assistants",
+            "Tooltip": "Each assistant grants +10 to the test, up to the table cap (core.md §\"Assistance\", p. 25).",
+            "PlusButton": "Add an assistant (+10)",
+            "MinusButton": "Remove an assistant",
+            "BreakdownLine": "Assistance"
+        },
+        "TryingAgain": {
+            "WarningTitle": "Trying Again",
+            "BlockedMessage": "RAW: this skill cannot be retried within the same scene without a meaningful change in circumstances.",
+            "CumulativeMessage": "RAW: each retry within the same scene takes a cumulative -10 to the test.",
+            "PenaltyLabel": "Cumulative penalty"
+        },
+        "ExtendedTest": {
+            "ToggleLabel": "Extended Test",
+            "ThresholdLabel": "Threshold",
+            "ProgressLabel": "Extended Progress",
+            "SuccessCount": "successes",
+            "FailureCount": "failures",
+            "Complete": "Threshold reached — test complete.",
+            "InProgress": "Roll again to accumulate more DoS."
+        },
+        "PsyMode": {
+            "Fettered": "Fettered",
+            "Unfettered": "Unfettered",
+            "Push": "Push",
+            "PushLevel": "Push Level",
+            "FetteredDesc": "Half PR. No phenomena chance.",
+            "UnfetteredDesc": "Full PR. Phenomena on doubles.",
+            "PushDesc": "PR + Push. Always triggers phenomena."
+        },
+        "UntrainedSkill": {
+            "CharacteristicLabel": "Characteristic",
+            "DefaultOption": "{name} (default)",
+            "HalvedIndicator": "Halved (untrained)",
+            "UntrainedAdvancedBlocked": "Advanced skill — cannot attempt untrained."
+        },
+        "Climbing": {
+            "SurfaceLabel": "Climbing Surface",
+            "Standard": "Standard (no modifier)",
+            "Sheer": "Sheer (Hard, -20)",
+            "Easy": "Easy / assisted (+10)",
+            "SheerTooltip": "Sheer cliffs, icy crevasses, smooth building walls, hive buttresses. Errata p. 113."
+        },
+        "Possession": {
+            "Title": "Possession",
+            "StateNone": "Uncompromised",
+            "StateLatent": "Latent",
+            "StatePossessed": "Possessed",
+            "UnleashTitle": "Unleash Daemon",
+            "UnleashCount": "Unleash Uses",
+            "UnleashUnavailable": "No Unleash Daemon uses remaining this session.",
+            "UnleashSpent": "Daemon unleashed.",
+            "ResetSession": "Reset",
+            "ResetSessionTitle": "Reset per-session Unleash Daemon counter (GM only)",
+            "ResetGmOnly": "Only the GM can reset the possession session counter.",
+            "ResetDone": "Possession session counter reset.",
+            "FrenzyLoopHint": "Possession sustained — roll the Frenzy test each round.",
+            "FrenzyTest": "Frenzy Test",
+            "FrenzyTestTitle": "Roll the per-round Challenging (+0) Willpower test; failure inflicts Frenzy this round (the power must still be sustained).",
+            "Mismanifest": "Mismanifest",
+            "MismanifestTitle": "Resolve a Psychic Phenomena result: opposed Willpower test vs the Daemon; a loss escalates to full possession.",
+            "FrenzyChatTitle": "Possession — Frenzy Test",
+            "MismanifestChatTitle": "Possession — Mismanifest",
+            "RollLabel": "Roll / WP",
+            "DaemonRollLabel": "Daemon Roll / WP",
+            "DegreesLabel": "Degrees (Psyker / Daemon)",
+            "StateLabel": "State",
+            "FrenzyResisted": "The psyker holds — no Frenzy this round.",
+            "FrenzyEntered": "The psyker's will buckles — Frenzied this round (the power must still be sustained).",
+            "MismanifestHeld": "The psyker restrains the intruding Daemon and retains control.",
+            "MismanifestLost": "The Daemon overwhelms the psyker — full possession.",
+            "FrenzyLoopUnavailable": "The Possession power is not currently sustained.",
+            "FrenzyEnteredNotify": "Frenzy test failed — the psyker is Frenzied this round.",
+            "FrenzyResistedNotify": "Frenzy test passed — control held this round.",
+            "MismanifestEscalated": "Mismanifest lost — escalated to full possession.",
+            "MismanifestHeldNotify": "Mismanifest contest won — control retained."
+        },
+        "Mortification": {
+            "ButtonLabel": "Mortification of the Flesh",
+            "ButtonTooltip": "Self-inflict 1 Fatigue to gain +10 to all Willpower tests for 60 rounds.",
+            "ChatTitle": "Mortification of the Flesh",
+            "ChatBody": "{name} mortifies the flesh, accepting fatigue in exchange for unshakable resolve.",
+            "DurationLabel": "Duration",
+            "WpBonusLabel": "Willpower bonus"
+        },
+        "Shock": {
+            "Header": "Shock",
+            "Value": "Current",
+            "SnapOutLabel": "Snap Out of It",
+            "SnapOutTooltip": "Willpower test (Challenging +0). Success: reduce Shock by 1.",
+            "ChatTitle": "Snap Out of It",
+            "SuccessText": "Resolve holds — shock recedes (−1).",
+            "FailureText": "The mind reels. Shock holds."
+        },
+        "Fanatic": {
+            "ButtonLabel": "Death to All Who Oppose Me",
+            "ButtonTooltip": "Spend 1 Fate point to gain +10 Weapon Skill and +10 Ballistic Skill for 5 rounds.",
+            "ChatTitle": "Death to All Who Oppose Me",
+            "ChatBody": "{name} screams defiance and hurls themselves at the foe — death to all who oppose them.",
+            "DurationLabel": "Duration (rounds)",
+            "WsBonusLabel": "Weapon Skill bonus",
+            "BsBonusLabel": "Ballistic Skill bonus",
+            "NoFatePoints": "No Fate points remaining to spend."
+        },
         "CharacteristicSetup": {
             "Title": "Characteristic Setup",
             "Instructions": "Enter your dice rolls in the bank, then drag them to assign to characteristics.",
@@ -202,6 +307,20 @@
             "CriticalLevel": "Critical Level",
             "DegreesOfSuccess": "{dos} Degrees of Success"
         },
+        "BeyondHomeworld": {
+            "DialogTitle": "Beyond — New Home Worlds (GM Reference)",
+            "DialogDescription": "Reference for the three new home worlds introduced in Enemies Beyond: Daemon World, Penal Colony, and Quarantine World.",
+            "DaemonWorld": "Daemon World",
+            "PenalColony": "Penal Colony",
+            "QuarantineWorld": "Quarantine World",
+            "Characteristics": "Characteristics",
+            "FateAdjust": "Fate Threshold",
+            "WoundsAdjust": "Starting Wounds",
+            "Aptitude": "Aptitude",
+            "KeyTalents": "Key Talents & Skills",
+            "RecommendedBackgrounds": "Recommended Backgrounds",
+            "MechanicalHook": "Mechanical Hook"
+        },
         "Characteristics": "Characteristics",
         "CharacteristicModifiers": "Characteristic Modifiers",
         "Skills": {
@@ -242,7 +361,12 @@
                 "UntrainedBase": "Untrained Test Base (Characteristic \u00f7 2)",
                 "Modifiers": "Modifiers",
                 "TrainingProgression": "Training Progression",
-                "ClickNameToRoll": "Use the die button to roll"
+                "ClickNameToRoll": "Use the die button to roll",
+                "RankWithBonus": "{rank} ({bonus})",
+                "UntrainedWithPenalty": "Untrained ({penalty})",
+                "UntrainedHalfBase": "Untrained (\u00f72)",
+                "CharacteristicLabel": "Characteristic: {name} ({value})",
+                "UntrainedTargetLabel": "Untrained target (characteristic \u00f7 2): {value}"
             }
         },
         "Favourites": {
@@ -310,6 +434,18 @@
         "FateAddDoSConfirmTitle": "Spend Fate: Add Degree of Success",
         "FateAddDoSConfirmContent": "Spend a Fate Point to add one Degree of Success to this test?",
         "FateAddDoSChat": "<strong>{name}</strong> spent a Fate Point to add a Degree of Success (now {dos} DoS).",
+        "DamageDieReplacement": {
+            "ButtonLabel": "Replace die with DoS",
+            "ButtonTooltip": "DH2 core rules (p. 247): replace one damage die with the attack's Degrees of Success ({dos}).",
+            "ReplacedDieMessage": "<strong>{weapon}</strong> replaced a damage die ({previous}) with {dos} DoS — new total: {total}."
+        },
+        "AssassinsStrike": {
+            "ButtonLabel": "Assassin's Strike: Acrobatics + Half Move",
+            "ButtonTooltip": "DH2 errata (L75): after a successful melee attack, attempt a Challenging (+0) Acrobatics Test. On success, move up to a Half Move distance as a Free Action.",
+            "TestTitle": "Assassin's Strike — Acrobatics Test",
+            "SuccessChatLine": "<strong>Assassin's Strike</strong>: on a successful Acrobatics test, move up to a Half Move (Agility bonus metres) as a Free Action.",
+            "FailureChatLine": "<strong>Assassin's Strike</strong>: the Acrobatics test failed — no Free Action movement is granted."
+        },
         "Name": "Name",
         "Stat": "Stat",
         "Current": "Current",
@@ -546,7 +682,9 @@
                 "ClickHintFullNote": "(full turn)",
                 "ClickHintReaction": "Reaction",
                 "ClickHintReactionNote": "(out of turn).",
-                "ButtonTitleClickForDescription": "Click for description, Shift+Click to post to chat"
+                "ButtonTitleClickForDescription": "Click for description, Shift+Click to post to chat",
+                "TalentNoDescription": "No description available for this talent.",
+                "TalentChatFailed": "Failed to send {name} to chat"
             }
         },
         "DamageType": {
@@ -642,6 +780,47 @@
                 "Stacked": "{name} stacked on {target} (\u00d7{stacks})"
             }
         },
+        "ProfaneObject": {
+            "Badge": "Profane Object",
+            "AuraLabel": "Aura",
+            "AuraRadius": "Radius",
+            "HookLabel": "Per-Action Hook",
+            "HookTrigger": "Trigger",
+            "Corruption": "Corruption",
+            "Insanity": "Insanity",
+            "EmptyHookText": "No per-action hook — aura only."
+        },
+        "Lead": {
+            "Label": "Investigation Lead",
+            "Type": {
+                "Label": "Lead Type",
+                "Witness": "Witness",
+                "Document": "Document",
+                "Location": "Location",
+                "Other": "Other"
+            },
+            "State": {
+                "Label": "State",
+                "Active": "Active",
+                "Pursued": "Pursued",
+                "DeadEnd": "Dead End"
+            },
+            "SourceClue": {
+                "Label": "Source Clue",
+                "Placeholder": "Which clue produced this lead?"
+            },
+            "Description": {
+                "Label": "Description"
+            },
+            "Notes": {
+                "Label": "GM Notes",
+                "Placeholder": "Follow-up tracking, planned scenes..."
+            },
+            "Section": {
+                "Properties": "Lead Properties"
+            },
+            "NamePlaceholder": "Lead Name"
+        },
         "Sheet": {
             "Biography": {
                 "Contacts": "Contacts",
@@ -671,6 +850,8 @@
             "StorageLocation": "Storage Location Sheet",
             "PeerEnemy": "Peer/Enemy Sheet",
             "JournalEntry": "Journal Entry Sheet",
+            "Endeavour": "Endeavour Sheet",
+            "Lead": "Investigation Lead Sheet",
             "OriginPath": "Origin Path Sheet",
             "WeaponModification": "Weapon Modification Sheet",
             "ArmourModification": "Armour Modification Sheet",
@@ -748,6 +929,493 @@
             "DamageRollTitle": "Damage Roll",
             "RollModifierTitle": "Roll Modifier",
             "AssignDamageTitle": "Assign Damage"
+        },
+        "Fear": {
+            "Rating": "Fear",
+            "RatingLabel": "Fear Rating",
+            "DialogTitle": "Trigger Fear Test",
+            "ObserverLabel": "Observer",
+            "FearRating": "Fear (X)",
+            "Target": "WP Target",
+            "ChatTitle": "Fear Test",
+            "SuccessText": "Resisted",
+            "FailureText": "Failed",
+            "ShockModifier": "Shock Table Roll"
+        },
+        "WithinGrenade": {
+            "DialogTitle": "Throw Grenade",
+            "GrenadeLabel": "Grenade",
+            "BlastRadius": "Blast",
+            "Damage": "Damage",
+            "SaveLabel": "Save",
+            "FailEffectLabel": "On Failed Save",
+            "ThrowButton": "Throw",
+            "ChatTitle": "Grenade Thrown",
+            "Names": {
+                "photonFlash": "Photon Flash Grenade",
+                "psychotroke": "Psychotroke Grenade",
+                "tearsOfTheEmperor": "Tears of the Emperor",
+                "smoke": "Smoke Grenade"
+            }
+        },
+        "Daemonhost": {
+            "DialogTitle": "Bind Daemonhost",
+            "DialogIntro": "Select a Binding Strength tier for the host being summoned.",
+            "TierMinor": "Minor Daemonhost",
+            "TierLesser": "Lesser Daemonhost",
+            "TierNormal": "Daemonhost",
+            "TierGreater": "Greater Daemonhost",
+            "TierMajor": "Major Daemonhost",
+            "UnholyChanges": "Unholy Changes",
+            "MinInfluence": "Influence (min)",
+            "ReinforcementMod": "Reinforcement Mod",
+            "BindButton": "Bind",
+            "Cancel": "Cancel",
+            "ChatTitle": "Daemonhost Bound",
+            "BoundAtTier": "Host bound at tier:"
+        },
+        "SancticPurity": {
+            "PromptTitle": "Sanctic Purity",
+            "PromptBody": "Spend 1 Fate to negate this Phenomena roll?",
+            "SpendButton": "Spend Fate",
+            "DeclineButton": "Let It Stand",
+            "NegatedChatTitle": "Phenomena Negated",
+            "NegatedChatBody": "The Emperor's Anathema rejects the warp's intrusion; the Phenomena roll is suppressed.",
+            "EmperorsAnathema": "Emperor's Anathema"
+        },
+        "DaemonicImmunities": {
+            "BadgeLabel": "Daemonic",
+            "DiseaseImmune": "Immune to Disease",
+            "PoisonImmune": "Immune to Poison",
+            "Undying": "Undying",
+            "Tooltip": "Daemonic creatures are immune to disease and poison, and possess the Undying trait — once per session, the first time they would die they instead recover to 1 wound."
+        },
+        "SisterOfBattle": {
+            "DialogTitle": "Apply Sister of Battle Elite Advance",
+            "Description": "Confirm the Adepta Sororitas elite advance for the applicant. The three Sister of Battle talents below will be granted on apply.",
+            "Prerequisites": "Prerequisites",
+            "Prereqs": {
+                "Fellowship": "Fellowship 40",
+                "Willpower": "Willpower 35",
+                "Female": "Female applicant (canonical)",
+                "Faith": "Imperial faith confirmed by GM"
+            },
+            "GrantsHeader": "Talents Granted",
+            "FaithOfEmperor": "Faith of the Emperor",
+            "FaithOfEmperorSummary": "+10 Willpower vs psychic powers.",
+            "HolyAegis": "Holy Aegis",
+            "HolyAegisSummary": "Once per round, ignore 1d10 damage from a daemonic source.",
+            "SistersResolve": "Sister's Resolve",
+            "SistersResolveSummary": "+20 to all Fear tests.",
+            "ApplyButton": "Apply",
+            "Cancel": "Cancel",
+            "ChatTitle": "Sister of Battle Elite Advance"
+        },
+        "WithinHomeworld": {
+            "DialogTitle": "Within Homeworld Traits",
+            "Description": "Reference card for the three homeworlds introduced by the Within supplement. GM use during character creation.",
+            "AgriWorld": "Agri World",
+            "FeudalWorld": "Feudal World",
+            "FrontierWorld": "Frontier World",
+            "HomeworldTag": "Within",
+            "Characteristics": "Characteristics",
+            "FateAdjust": "Fate Threshold",
+            "WoundsAdjust": "Starting Wounds",
+            "KeyTalents": "Key Talents",
+            "KeyAptitudes": "Key Aptitudes",
+            "Bonuses": "Home World Bonus",
+            "CloseButton": "Close"
+        },
+        "MutantBackground": {
+            "DialogTitle": "Apply Mutant Background",
+            "Description": "Confirm the Mutant origin path background. The applicant begins play with starting Corruption and the Twisted Flesh talent, allowing failed Malignancy tests to be converted into Mutations.",
+            "StartingCorruption": "Starting Corruption",
+            "CorruptionUnit": "Corruption Points at character generation",
+            "AppliedTo": "Applying to:",
+            "TwistedFleshLabel": "Twisted Flesh",
+            "TwistedFleshNote": "When you fail a Malignancy test, you may convert the malignancy into a Mutation instead. The GM resolves the conversion from the Mutation table.",
+            "Granted": "Granted",
+            "ApplyButton": "Apply",
+            "Cancel": "Cancel",
+            "ChatTitle": "Mutant Background Applied",
+            "AppliedMessage": "The Mutant background has been applied to",
+            "ConvertMalignancy": "Convert Failed Malignancy"
+        },
+        "MutationRoll": {
+            "DialogTitle": "Roll Mutation",
+            "ChatTitle": "Mutation",
+            "MinorTrack": "Minor Mutation",
+            "MajorTrack": "Major Mutation",
+            "RollButton": "Roll Mutation",
+            "MutationLabel": "Mutation",
+            "EffectLabel": "Effect",
+            "NoMutation": "No mutation (re-roll)",
+            "VisibleFlag": "Visible",
+            "HiddenFlag": "Hidden"
+        },
+        "DisorderRoll": {
+            "DialogTitle": "Roll Mental Disorder",
+            "ChatTitle": "Mental Disorder",
+            "SeverityLabel": "Severity",
+            "Minor": "Minor",
+            "Severe": "Severe",
+            "Acute": "Acute",
+            "RollButton": "Roll Disorder",
+            "DisorderLabel": "Disorder",
+            "EffectLabel": "Effect"
+        },
+        "Grapple": {
+            "PanelTitle": "Grapple",
+            "StateNone": "Not Grappling",
+            "StateGrappling": "Grappling",
+            "StateControlled": "Controlled",
+            "DamageOpponent": "Damage Opponent",
+            "ThrowDownOpponent": "Throw Down Opponent",
+            "BreakFree": "Break Free",
+            "StandUp": "Stand Up",
+            "Move": "Move While Grappling"
+        },
+        "AerialManoeuvre": {
+            "ChatTitle": "Aerial Manoeuvre",
+            "Success": "Success",
+            "Failure": "Failure",
+            "AltitudeLabel": "Resulting Altitude",
+            "PilotBonusLabel": "Pilot & Crew BS",
+            "EnemyBonusLabel": "Enemy BS (vs. craft)",
+            "OutcomeLabel": "Outcome",
+            "FreeAttack": "Pilot-controlled weapons may fire at the target immediately as a Free Action.",
+            "Altitude": {
+                "Ground": "Ground",
+                "Low": "Low Altitude",
+                "High": "High Altitude",
+                "Orbital": "Orbital"
+            },
+            "LockOn": {
+                "Name": "Lock On",
+                "OutcomeSuccess": "The pilot manoeuvres behind the foe. The pilot and crew gain +20 BS against that craft.",
+                "OutcomeFail": "The pilot fails to gain position. Other enemies gain +10 BS against the pilot's craft until the start of the pilot's next turn."
+            },
+            "TightTurn": {
+                "Name": "Tight Turn",
+                "OutcomeSuccess": "The flyer wrenches around — 90° turns this move, and Altitude may shift one level.",
+                "OutcomeFail": "The turn is mishandled; the flyer drops one Altitude tier.",
+                "OutcomeDestabilise": "The turn is mishandled at ground level; the flyer destabilises (resolve on the Out-of-Control table)."
+            }
+        },
+        "CriticalDamage": {
+            "ChatTitle": "Critical Damage",
+            "DamageTypeLabel": "Damage Type",
+            "LocationLabel": "Location",
+            "SeverityLabel": "Severity",
+            "EffectLabel": "Critical Effect",
+            "ConditionsLabel": "Conditions Inflicted",
+            "NoEffectText": "Critical Effect text unavailable (content pack not installed).",
+            "DamageType": {
+                "Energy": "Energy",
+                "Explosive": "Explosive",
+                "Impact": "Impact",
+                "Rending": "Rending"
+            },
+            "BodyPart": {
+                "Arm": "Arm",
+                "Body": "Body",
+                "Head": "Head",
+                "Leg": "Leg"
+            },
+            "Rider": {
+                "Stunned": "Stunned",
+                "Burning": "Burning",
+                "BloodLoss": "Blood Loss",
+                "Prone": "Prone",
+                "Blinded": "Blinded",
+                "Deafened": "Deafened",
+                "Fatigue": "Fatigue",
+                "LostLimb": "Lost Limb",
+                "Fatal": "Fatal"
+            }
+        },
+        "TwoWeaponWielder": {
+            "ChatTitle": "Two-Weapon Wielder — Refocus",
+            "RefocusSummary": "Errata p. 132: after a Half-Action attack with one weapon, make a single additional same-mode Half-Action attack with the other weapon as a Free Action.",
+            "MainHandLabel": "Main hand (Half Action)",
+            "OffHandLabel": "Off hand (Free Action)",
+            "FreeActionLabel": "Free Action follow-up",
+            "FreeActionNote": "The off-hand attack follows the same restrictions as the opener and costs no further Action."
+        },
+        "MedicaeMechadendrite": {
+            "DialogTitle": "Medicae Mechadendrite",
+            "DialogIntro": "Engage the flesh staplers to staunch Blood Loss as a Half Action.",
+            "OperatorLabel": "Operator",
+            "HalfActionNote": "Staunching Blood Loss with the flesh staplers costs a Half Action (errata p. 183).",
+            "BonusNote": "Includes the Medicae Mechadendrite bonus",
+            "NotEligible": "This actor has no Medicae Mechadendrite cybernetic, or this game system does not use it.",
+            "StaunchButton": "Staunch Blood Loss (Half)",
+            "Cancel": "Cancel",
+            "ChatTitle": "Medicae Mechadendrite",
+            "HalfActionTag": "Staunch Blood Loss (Half Action)",
+            "RollLabel": "Roll",
+            "TargetLabel": "Medicae Target",
+            "BonusLabel": "Mechadendrite Bonus",
+            "SuccessLabel": "Success",
+            "FailureLabel": "Failure",
+            "BloodLossStaunched": "The flesh staplers seal the wound. Blood Loss is staunched.",
+            "StaunchFailed": "The staplers fail to close the wound. Blood Loss persists."
+        },
+        "SancticDaemonology": {
+            "ChatTitle": "Sanctic Daemonology",
+            "EffectivePR": "Effective Psy Rating",
+            "FocusModifier": "Focus Power Modifier",
+            "CorruptionCost": "Corruption Cost",
+            "NoCorruption": "None (Sanctified)",
+            "PhenomenaLabel": "Psychic Phenomena",
+            "PhenomenaFires": "Phenomena triggered",
+            "NoPhenomena": "No Psychic Phenomena.",
+            "SoulBindingAvailable": "Soul Binding may ignore this Phenomena (once per session).",
+            "AnathemaAvailable": "Emperor's Anathema may spend 1 Fate to negate this Phenomena.",
+            "Mode": {
+                "Fettered": "Fettered",
+                "Unfettered": "Unfettered",
+                "Push": "Push"
+            }
+        },
+        "Cybernetics": {
+            "InstallDialogTitle": "Install Cybernetic — Surgery",
+            "ChatTitle": "Cybernetic Installation",
+            "CraftsmanshipLabel": "Craftsmanship",
+            "SiteLabel": "Install Site",
+            "SiteExternal": "External",
+            "SiteLimb": "Limb",
+            "SiteOrgan": "Organ",
+            "SiteNeural": "Neural",
+            "BaseDifficultyLabel": "Base Difficulty",
+            "SurgeonSkillLabel": "Surgeon Medicae Total",
+            "SurgeonModifierLabel": "Surgeon Modifier",
+            "ToughnessBonusLabel": "Recipient Toughness Bonus",
+            "RollInstallButton": "Roll Install",
+            "TargetLabel": "Target",
+            "RollLabel": "Roll",
+            "DoS": "DoS",
+            "DoF": "DoF",
+            "InstallSuccess": "Surgery Successful",
+            "InstallFailure": "Surgery Botched",
+            "RecoveryPrefix": "Recovery:",
+            "RecoveryDays": "days bed rest",
+            "ConsequenceBloodLoss": "Blood Loss + 1d5 damage at the install site",
+            "ConsequenceFaulty": "Implant fitted faulty — functions one craftsmanship tier lower until re-installed",
+            "Breakdown": {
+                "SkillTotal": "Skill Total",
+                "BaseDifficulty": "Base Difficulty",
+                "Craftsmanship": "Craftsmanship",
+                "Site": "Install Site",
+                "Surgeon": "Surgeon Modifier",
+                "Other": "Other"
+            }
+        },
+        "Crusader": {
+            "ButtonLabel": "Smite the Unholy",
+            "ButtonTooltip": "Spend 1 Fate point to automatically pass a Fear test with Degrees of Success equal to your Willpower Bonus.",
+            "ChatTitle": "Smite the Unholy",
+            "ChatBody": "{name} steels their soul and calls upon the Emperor's grace — the Fear test passes by sheer faith.",
+            "DegreesOfSuccessLabel": "Degrees of Success",
+            "AutoPassLabel": "Result",
+            "FearTestAutoPass": "Fear test auto-passed",
+            "NoFatePoints": "No Fate points remaining to spend."
+        },
+        "WithoutHomeworld": {
+            "DialogTitle": "Without — New Home Worlds (GM Reference)",
+            "DialogDescription": "Reference for the three new home worlds introduced in Enemies Without: Death World, Garden World, and Research Station.",
+            "DeathWorld": "Death World",
+            "GardenWorld": "Garden World",
+            "ResearchStation": "Research Station",
+            "Characteristics": "Characteristics",
+            "FateAdjust": "Fate Threshold",
+            "WoundsAdjust": "Starting Wounds",
+            "Aptitude": "Aptitude",
+            "KeyTalents": "Key Talents & Skills",
+            "RecommendedBackgrounds": "Recommended Backgrounds",
+            "MechanicalHook": "Mechanical Hook"
+        },
+        "WithoutTalents": {
+            "PushTheLimit": {
+                "ChatTitle": "Push the Limit",
+                "InvokedTag": "Talent invoked (+20 Operate)",
+                "NotInvokedTag": "Talent not invoked",
+                "BonusLabel": "Operate bonus",
+                "DegreesLabel": "Degrees",
+                "OutcomeLabel": "Outcome",
+                "Success": "Success",
+                "Failure": "Failure",
+                "CriticalLabel": "Catastrophic failure — roll on:",
+                "MotiveSystemsTable": "Table 7-32: Motive Systems Critical Hit Effects (DH Core p. 257)",
+                "ImpactLegTable": "Table 7-18: Impact Critical Effects — Leg (DH Core p. 239)"
+            }
+        },
+        "Condition": {
+            "Manacles": {
+                "Name": "Manacled",
+                "Description": "Bound in manacles — a -40 penalty applies to all Ballistic and Weapon Skill tests until the restraints are removed.",
+                "Source": "Manacles (errata p. 176)",
+                "AppliedNotification": "Manacled condition applied — -40 BS/WS until removed.",
+                "LiftedNotification": "Manacled condition lifted.",
+                "AppliedFromEquip": "Manacles equipped — -40 BS/WS applied.",
+                "LiftedFromUnequip": "Manacles removed — -40 BS/WS lifted.",
+                "ActionApply": "Apply Manacled",
+                "ActionLift": "Lift Manacled",
+                "BadgeLabel": "Manacled"
+            }
+        },
+        "Quality": {
+            "ChatTitle": "Weapon Quality Effect",
+            "Field": {
+                "Radius": "Radius",
+                "Template": "Template",
+                "RangeBand": "Range Band",
+                "Save": "Save",
+                "StunRounds": "Stunned (rounds)",
+                "Fatigue": "Fatigue",
+                "BonusDamageDice": "Bonus Damage",
+                "BonusDamage": "Bonus Damage",
+                "BonusPenetration": "Bonus Penetration",
+                "FailEffect": "On Failed Save"
+            },
+            "Save": {
+                "agility": "Agility",
+                "toughness": "Toughness",
+                "willpower": "Willpower",
+                "strength": "Strength"
+            },
+            "FailEffect": {
+                "hit": "Target is hit by the attack.",
+                "burning": "Target catches fire and gains the Burning condition.",
+                "stunned": "Target is Stunned.",
+                "snared": "Target is Snared (immobilised) until they break free.",
+                "prone": "Target is knocked Prone.",
+                "hallucinating": "Roll on the Hallucinogenic table.",
+                "haywire": "Technological items roll on the Haywire table.",
+                "poisoned": "Target suffers 1d10 additional damage from the toxin.",
+                "crippled": "Target gains the Crippled condition.",
+                "armour-melt": "Armour points are reduced by 1d10; overflow bypasses Toughness."
+            },
+            "PowerField": {
+                "Destroyed": "The parried weapon is destroyed by the power field!",
+                "Name": "Power Field",
+                "Description": "A successful parry against a non-Power, non-Force weapon destroys the parried weapon."
+            },
+            "Maximal": {
+                "Overheats": "Overheats",
+                "Recharge": "Recharge",
+                "Name": "Maximal",
+                "Description": "Once per encounter, fire at +1d10 damage and +2 penetration; the weapon gains Overheats this shot and must Recharge afterwards."
+            },
+            "Blast": {
+                "Name": "Blast (X)",
+                "Description": "Hits all targets within X metres of the impact point."
+            },
+            "Concussive": {
+                "Name": "Concussive (X)",
+                "Description": "On a hit, the target makes a Toughness test (-X×10) or is Stunned for 1 round per degree of failure; if damage exceeds the target's Strength Bonus, they are knocked Prone."
+            },
+            "Corrosive": {
+                "Name": "Corrosive",
+                "Description": "Rolls 1d10 against the struck location's armour; armour loses that many points and any overflow damage bypasses Toughness."
+            },
+            "Crippling": {
+                "Name": "Crippling (X)",
+                "Description": "If wounded, target gains the Crippled condition; taking more than a Half Action inflicts X damage ignoring Armour and Toughness."
+            },
+            "Flame": {
+                "Name": "Flame",
+                "Description": "Target makes an Agility test or catches fire."
+            },
+            "Flexible": {
+                "Name": "Flexible",
+                "Description": "This weapon cannot be parried."
+            },
+            "Graviton": {
+                "Name": "Graviton",
+                "Description": "On a hit, the target makes a Strength test or falls Prone (vehicles roll Agility instead). The attack deals additional damage equal to the struck location's Armour Points."
+            },
+            "Hallucinogenic": {
+                "Name": "Hallucinogenic (X)",
+                "Description": "Target makes a Toughness test (-X×10) or rolls on the Hallucinogenic table."
+            },
+            "Haywire": {
+                "Name": "Haywire (X)",
+                "Description": "On a hit, technological items within X×10 metres roll on the Haywire table at strength 1d10."
+            },
+            "Indirect": {
+                "Name": "Indirect (X)",
+                "Description": "Can be fired without line of sight; the firer suffers a -10×X BS penalty and the shot scatters 1d10-BSB metres on a miss."
+            },
+            "Lance": {
+                "Name": "Lance",
+                "Description": "Penetration is multiplied by degrees of success (minimum 1)."
+            },
+            "Primitive": {
+                "Name": "Primitive (X)",
+                "Description": "Each damage die counts as X if it would otherwise roll higher (against non-Primitive armour)."
+            },
+            "Scatter": {
+                "Name": "Scatter",
+                "Description": "Range-banded damage: +3 at Point Blank, +0 at Short Range, -3 at Standard / Long / Extreme Range."
+            },
+            "Shocking": {
+                "Name": "Shocking",
+                "Description": "On a hit, the target makes a Toughness test or suffers 1 level of Fatigue and is Stunned for a number of rounds equal to half the degrees of failure (round up)."
+            },
+            "Smoke": {
+                "Name": "Smoke (X)",
+                "Description": "On detonation, creates a smoke cloud X metres across that grants concealment."
+            },
+            "Snare": {
+                "Name": "Snare (X)",
+                "Description": "On a hit, the target makes an Agility test (-X×10) or is Snared until they escape with a Strength or Agility test (-X×10) as a Full Action."
+            },
+            "Spray": {
+                "Name": "Spray",
+                "Description": "No BS test required; all targets in a cone make a Challenging (+0) Agility test to avoid being hit. Leaping Dodge upgrades the test to Dodge."
+            },
+            "Toxic": {
+                "Name": "Toxic (X)",
+                "Description": "On a wound, target makes a Toughness test (-X×10) or suffers 1d10 additional damage of the weapon's damage type."
+            }
+        },
+        "RightStuff": {
+            "DialogTitle": "Right Stuff",
+            "DialogIntro": "Spend a Fate Point to automatically succeed at this Operate or Survival test with degrees of success equal to your Agility bonus.",
+            "OperatorLabel": "Ace",
+            "AgilityBonusLabel": "Agility Bonus",
+            "FateRemainingLabel": "Fate Points",
+            "SkillLabel": "Skill",
+            "AutoSuccessNote": "The test auto-succeeds — no dice are rolled. DoS equals your Agility bonus.",
+            "AutoSuccessLabel": "Automatic Success",
+            "AutoSuccessWithDoS": "The test succeeds with degrees of success equal to the Ace's Agility bonus.",
+            "AutoSuccessZeroDoS": "The test succeeds with 0 degrees of success (Agility bonus is 0).",
+            "FateSpentTag": "Spends a Fate Point — Right Stuff",
+            "DoSLabel": "Degrees of Success",
+            "ChatTitle": "Right Stuff",
+            "SpendButton": "Spend Fate (Right Stuff)",
+            "Cancel": "Cancel",
+            "NotAce": "Only an Ace may invoke Right Stuff (without.md p. 39).",
+            "NoFate": "No Fate points remaining to spend.",
+            "Skill": {
+                "operate": "Operate",
+                "survival": "Survival"
+            }
+        },
+        "IncorruptibleDevotion": {
+            "DialogTitle": "Convert Corruption to Insanity (Adepta Sororitas)",
+            "Description": "Your unwavering faith arms you against the Ruinous Powers. You may refuse this taint, taking the spiritual toll on your mind instead.",
+            "IncomingCorruption": "Incoming Corruption",
+            "InsanityInstead": "Insanity Instead",
+            "TradeButton": "Trade for Insanity",
+            "DeclineButton": "Accept Corruption",
+            "ChatTitle": "Incorruptible Devotion",
+            "TradeMessage": "Faith holds against the warp. Corruption is averted; the cost is paid in sanity.",
+            "DeclinedMessage": "The trade is refused. Corruption takes hold.",
+            "CorruptionAverted": "Corruption averted",
+            "InsanityGained": "Insanity gained",
+            "CorruptionGained": "Corruption gained"
         },
         "TalentCategory": {
             "General": "General",
@@ -884,7 +1552,23 @@
             "CompleteAllSteps": "Complete all 6 steps before committing",
             "CompleteAllChoices": "Complete all required choices before committing",
             "CharacteristicsRequiredBeforeCommit": "Roll or assign your characteristics before completing character creation.",
+            "StepInProgressEquipment": "The Equip Acolyte step is still in progress — finish picking starting gear before applying the origin path.",
+            "StepInProgressCharacteristics": "The Characteristic Roll step is still in progress — roll or assign your characteristics before applying the origin path.",
             "DuplicateAptitude": "Your origin path grants these aptitudes more than once: {aptitudes}. Duplicate aptitudes have no effect — under Dark Heresy 2e you may swap a duplicate for a characteristic aptitude (GM adjudication).",
+            "AptitudeDouble": {
+                "BannerTitle": "Duplicate aptitude detected",
+                "BannerBody": "One or more of your origin steps grants an aptitude your character already has. Per Dark Heresy 2e, pick a replacement aptitude you do not currently possess.",
+                "PickButton": "Pick replacement",
+                "ChangeButton": "Change",
+                "DialogTitle": "Replace Duplicate Aptitude",
+                "PromptBody": "Your origin grants the {aptitude} aptitude, but your character already has it. Pick a replacement aptitude.",
+                "PickerLabel": "Replacement aptitude",
+                "ConfirmLabel": "Pick",
+                "NoCandidates": "No replacement aptitudes are available. Ask the GM to adjudicate.",
+                "Resolved": "Replaced {from} with {to}.",
+                "ResolvedTitle": "Aptitude swap applied",
+                "ResolvedBody": "You resolved a duplicate aptitude by swapping it for the listed replacement. You can change your choice if you wish."
+            },
             "AllChoicesComplete": "All choices complete",
             "ChoicesPending": "choices pending",
             "RollsPending": "rolls pending",
@@ -1047,6 +1731,65 @@
             "ManualAdjustment": "GM adjustment",
             "Inquest": "Inquest pursued openly"
         },
+        "SubtletyPanel": {
+            "Header": "Warband Subtlety",
+            "Value": "Current",
+            "Max": "Maximum",
+            "ManualPlus": "Increase by 1 (GM)",
+            "ManualMinus": "Decrease by 1 (GM)",
+            "AdjusterList": "Active adjusters",
+            "EmptyAdjusters": "No adjusters active.",
+            "Clamped": "min loss {value}",
+            "BreakdownTitle": "Subtlety adjuster breakdown"
+        },
+        "DarkPact": {
+            "Header": "Dark Pacts",
+            "Boon": "Boon",
+            "Bane": "Bane",
+            "Disposition": "Disposition",
+            "Discovered": "Discovered",
+            "PaymentCurrent": "Payment Current",
+            "EmptyState": "No active Dark Pacts."
+        },
+        "RadicalServices": {
+            "DialogTitle": "Radical Services — Requisition",
+            "ChatTitle": "Radical Services Requisition",
+            "ServiceLabel": "Service",
+            "AvailabilityLabel": "Availability",
+            "ThreatLabel": "Threat",
+            "SubtletyLabel": "Subtlety",
+            "TargetLabel": "Target",
+            "RollLabel": "Roll",
+            "InfluenceLabel": "Influence",
+            "AttemptButton": "Attempt Requisition",
+            "Cancel": "Cancel",
+            "Success": "Service Acquired",
+            "Failure": "Requisition Failed",
+            "Names": {
+                "bountyHunter": "Bounty Hunter",
+                "darkOracle": "Dark Oracle",
+                "deathCult": "Death Cult",
+                "heretek": "Heretek",
+                "hiveGang": "Hive Gang",
+                "maleficScholar": "Malefic Scholar",
+                "mutantMercenary": "Mutant Mercenary",
+                "roguePsyker": "Rogue Psyker",
+                "recidivist": "Recidivist"
+            },
+            "Availability": {
+                "ubiquitous": "Ubiquitous",
+                "abundant": "Abundant",
+                "plentiful": "Plentiful",
+                "common": "Common",
+                "average": "Average",
+                "scarce": "Scarce",
+                "rare": "Rare",
+                "veryRare": "Very Rare",
+                "extremelyRare": "Extremely Rare",
+                "nearUnique": "Near Unique",
+                "unique": "Unique"
+            }
+        },
         "Orders": {
             "Header": "Orders",
             "Name": "Order",
@@ -1083,7 +1826,25 @@
             "Objectives": "Objectives",
             "AchievementPoints": "Achievement Points",
             "Completed": "Completed Endeavours",
-            "AddObjective": "Add Objective"
+            "AddObjective": "Add Objective",
+            "APShort": "AP",
+            "APEarned": "AP Earned",
+            "APRequired": "AP Required",
+            "Reward": "Reward",
+            "RewardProfitFactor": "Profit Factor Bonus",
+            "RewardNarrative": "Narrative Reward",
+            "RewardNarrativePlaceholder": "Notable beats, contacts, items or favours granted on completion...",
+            "RewardGrantedHeader": "Endeavour Completed",
+            "GrantReward": "Grant Reward",
+            "Complete": "Done",
+            "ObjectiveName": "Objective",
+            "ObjectiveDescription": "Description",
+            "RemoveObjective": "Remove objective",
+            "ToggleObjective": "Toggle objective",
+            "None": "No endeavours currently being pursued.",
+            "NamePlaceholder": "Endeavour title",
+            "DescriptionHeader": "Description",
+            "DescriptionPlaceholder": "Notes on the Endeavour, its origin, and what the Dynasty stands to gain or lose..."
         },
         "WH40KRPG": {
             "TabLabel": "WH40K RPG",
@@ -1151,7 +1912,35 @@
                 "Components": "Components",
                 "Weapons": "Weapons",
                 "Crew": "Crew",
-                "History": "History"
+                "History": "History",
+                "ExtendedActions": "Actions",
+                "ManoeuvreActions": "Manoeuvres"
+            },
+            "ExtendedAction": {
+                "Header": "Extended Actions",
+                "Description": "Per the Rogue Trader Stars of Inequity and Battlefleet Koronus rules, the bridge crew may dispatch one Extended Action per turn. Click an action below to post its rules card to chat.",
+                "Empty": "No Extended Actions found in the active compendiums. Compendium content may not yet be loaded.",
+                "Dispatch": "Dispatch",
+                "DispatchTitle": "Post this Extended Action to chat",
+                "Skill": "Skill",
+                "Modifier": "Modifier",
+                "Duration": "Duration",
+                "Requirements": "Requirements",
+                "ChatSubtitle": "Ship Extended Action",
+                "ChatHeader": "Extended Action Dispatched"
+            },
+            "ManoeuvreAction": {
+                "Header": "Manoeuvre Actions",
+                "Description": "Manoeuvre Actions are the bridge pilot's turn-by-turn ship handling options. Click an action below to post its rules card to chat.",
+                "Empty": "No Manoeuvre Actions found in the active compendiums. Compendium content may not yet be loaded.",
+                "Dispatch": "Dispatch",
+                "DispatchTitle": "Post this Manoeuvre Action to chat",
+                "Skill": "Skill",
+                "Modifier": "Modifier",
+                "Duration": "Duration",
+                "Requirements": "Requirements",
+                "ChatSubtitle": "Ship Manoeuvre Action",
+                "ChatHeader": "Manoeuvre Action Dispatched"
             },
             "Combat": {
                 "Header": "Combat Statistics",
@@ -1163,7 +1952,32 @@
                 "RollInitiative": "Roll Ship Initiative",
                 "Armour": "Armour",
                 "VoidShields": "Void Shields",
-                "TurretRating": "Turret Rating"
+                "TurretRating": "Turret Rating",
+                "BSTest": "BS Test",
+                "Success": "Hit",
+                "Miss": "Miss",
+                "Hits": "Hits",
+                "Pool": "Pool",
+                "Damage": "Damage",
+                "Strength": "Strength",
+                "DamageLabel": "Damage",
+                "CritLabel": "Crit Rating",
+                "RangeLabel": "Range",
+                "Special": "Special",
+                "Hull": "Hull Integrity",
+                "HullApplied": "Hull damage",
+                "ShieldAbsorbed": "Shield absorbed",
+                "NoShields": "No shields up",
+                "LanceBypass": "Lance bypasses shields",
+                "FireWeapon": "Fire",
+                "RaiseShield": "Raise Shield",
+                "LowerShield": "Lower Shield",
+                "RestoreShields": "Restore Shields",
+                "NoWeapon": "No ship weapon selected.",
+                "AllShieldsUp": "All void shields are already raised.",
+                "AllShieldsDown": "No void shields are currently raised.",
+                "NoShieldsExhausted": "No exhausted shields remain to bring back online.",
+                "ShieldsRestored": "All void shields restored."
             },
             "Resources": {
                 "Header": "Ship Resources",
@@ -1231,6 +2045,41 @@
             },
             "Errors": {
                 "InvalidShipWeapon": "Invalid ship weapon"
+            },
+            "Build": {
+                "Header": "Ship Points & Build",
+                "SpentLabel": "SP Spent",
+                "BudgetLabel": "SP Budget",
+                "OverBudget": "Build exceeds the hull's Ship Points budget.",
+                "EssentialSlots": "Essential Components",
+                "SlotFilled": "Filled",
+                "SlotMissing": "Missing",
+                "Valid": "Build complete",
+                "Invalid": "Build incomplete",
+                "Validate": "Validate Build",
+                "Commit": "Save Build",
+                "NotifyValid": "Starship build is valid.",
+                "NotifyOverBudgetBy": "Over budget by {amount} SP",
+                "NotifyMissingSlots": "{count} essential slot(s) unfilled",
+                "NotifyCannotCommit": "Cannot save: starship build is invalid.",
+                "NotifyCommitted": "Starship build saved."
+            },
+            "Critical": {
+                "Header": "Critical Hit",
+                "Roll": "Roll Critical Hit",
+                "RollTooltip": "Roll 1d5 on the Critical Hit chart (Battlefleet Koronus)",
+                "ChatSubtitle": "Ship Critical Hit",
+                "RollLabel": "Rolled {rolled} on 1d5",
+                "StatusApplied": "Status Applied",
+                "PersistsUntilRepaired": "Persists until cleared by Emergency Repair or Quick Repair.",
+                "TableUnavailable": "Critical Hit roll table unavailable — rolled {rolled} on 1d5. Apply the corresponding effect from Battlefleet Koronus by hand.",
+                "Effect": {
+                    "Vacuum": "Vacuum / Hull Breach",
+                    "Fire": "Fire",
+                    "Bridge": "Bridge Damage",
+                    "Drive": "Drive Damage",
+                    "Crew": "Crew Casualties"
+                }
             }
         },
         "ShipComponent": {
@@ -1739,6 +2588,16 @@
         "Weight": "Weight",
         "Notes": "Notes",
         "NotesAndSource": "Notes & Source",
+        "NpcInteractions": {
+            "Header": "Interaction Counts",
+            "PCColumn": "PC",
+            "CountColumn": "Count",
+            "IncrementButton": "Record one more interaction",
+            "DecrementButton": "Undo one interaction",
+            "Empty": "No player characters in the world yet.",
+            "AtCapBadge": "At Cap",
+            "CapTooltip": "Per DH2 errata p.125, a PC can shift this NPC's disposition through social interaction only a number of times equal to their Fellowship bonus. Above the cap, further interactions stop yielding disposition gain."
+        },
         "Description": "Description",
         "Source": {
             "Book": "Book",
@@ -2471,6 +3330,22 @@
                 "Received": "{buyer} received {quantity}x {item} for {cost} {resource}.",
                 "Rejected": "Transaction request rejected by the GM."
             }
+        },
+        "DaemonWeaponAttribute": {
+            "DialogTitle": "Daemon Weapon Attribute Roller",
+            "Alignment": "Alignment",
+            "BindingStrength": "Binding Strength",
+            "RollButton": "Roll Attributes",
+            "PostButton": "Post to Chat",
+            "ChatTitle": "Daemon Weapon Attributes",
+            "AttributeLabel": "Attribute",
+            "EffectLabel": "Effect",
+            "AlignmentKhorne": "Khorne",
+            "AlignmentNurgle": "Nurgle",
+            "AlignmentSlaanesh": "Slaanesh",
+            "AlignmentTzeentch": "Tzeentch",
+            "AlignmentGeneral": "Unaligned",
+            "AlignmentUnaligned": "Unaligned"
         }
     }
 }

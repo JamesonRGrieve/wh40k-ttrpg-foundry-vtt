@@ -13,6 +13,11 @@
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData } from '../../rolls/roll-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
+import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
+import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
+import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
+import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import {
     AIM_OPTIONS,
     aggregateSituationalDamageEffects,
@@ -89,6 +94,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _initialized: boolean;
     declare _cachedSituationalModifiers: Array<{ key: string; source: string; value: number; label: string }> | null;
     declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
+    declare _psyMode: PsyMode;
+    declare _pushLevel: number;
+    /** Number of assistants helping the active character (#60 — +10 per, capped by `DEFAULT_ASSISTANT_CAP`). */
+    declare _assistantCount: number;
+    /** Extended-test toggle (#59) — when true, rolled DoS accumulate against `_extendedThreshold`. */
+    declare _extended: boolean;
+    /** Threshold of cumulative DoS the extended test must reach (#59). */
+    declare _extendedThreshold: number;
+    /** Alt-characteristic override for skill rolls (#61). `null` = use the skill's listed characteristic. */
+    declare _charOverride: string | null;
+    /** Climbing-surface modifier for Athletics rolls (#146). Defaults to 'standard' (no modifier). */
+    declare _climbSurface: ClimbingSurface;
 
     /**
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
@@ -123,6 +140,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._initialized = false;
         this._cachedSituationalModifiers = null;
         this._pickerOutsideHandler = null;
+        this._psyMode = 'unfettered';
+        this._pushLevel = 1;
+        this._assistantCount = 0;
+        this._extended = false;
+        this._extendedThreshold = 5;
+        this._charOverride = null;
+        this._climbSurface = 'standard';
     }
 
     /* -------------------------------------------- */
@@ -156,6 +180,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             toggleSizeSection: UnifiedRollDialog.#onToggleSizeSection,
             toggleRangeSection: UnifiedRollDialog.#onToggleRangeSection,
             toggleSituationalSection: UnifiedRollDialog.#onToggleSituationalSection,
+            setPsyMode: UnifiedRollDialog.#onSetPsyMode,
+            incrementPushLevel: UnifiedRollDialog.#onIncrementPushLevel,
+            decrementPushLevel: UnifiedRollDialog.#onDecrementPushLevel,
+            incrementAssistant: UnifiedRollDialog.#onIncrementAssistant,
+            decrementAssistant: UnifiedRollDialog.#onDecrementAssistant,
+            setCharacteristicOverride: UnifiedRollDialog.#onSetCharacteristicOverride,
+            setClimbSurface: UnifiedRollDialog.#onSetClimbSurface,
+            toggleExtended: UnifiedRollDialog.#onToggleExtended,
+            setExtendedThreshold: UnifiedRollDialog.#onSetExtendedThreshold,
             cancel: UnifiedRollDialog.#onCancel,
         },
         form: {
@@ -314,11 +347,143 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const situationalMod = isForceField ? 0 : this._calculateSituationalModifiers();
         const customMod = isForceField ? 0 : this._customModifier;
         const combatSitMod = !isForceField && this.rollType === 'weapon' ? this._calculateCombatSituationalModifiers() : 0;
+        const psyMod = this.rollType === 'psychic'
+            ? resolvePsyMode({ mode: this._psyMode, basePR: Number(rollData['pr']) || 0, pushLevel: this._pushLevel }).focusModifier
+            : 0;
+        const assistanceMod = isForceField ? 0 : getAssistanceBonus(this._assistantCount);
 
-        const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : rollData.baseTarget || 0;
+        // Try-Again advisory (#62) — only for Skill rolls with a known rollKey.
+        // Reads actor.flags.wh40k['try-again'][rollKey] (a Record<string, number>)
+        // populated by chat-card emission. Surfaces a soft warning and pre-applies
+        // the cumulative penalty for CUMULATIVE_PENALTY_SKILLS.
+        let tryAgainAdvice: RetryAdvice | null = null;
+        let tryAgainPenalty = 0;
+        if (!isForceField && rollData['type'] === 'Skill') {
+            const skillKey = (rollData['rollKey'] as string | null | undefined) ?? null;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); getFlag is Foundry Document API
+            const actorRef = (rollData.sourceActor ?? rollData['actor']) as
+                | { getFlag?: (scope: string, key: string) => unknown }
+                | null
+                | undefined;
+            if (skillKey !== null && typeof actorRef?.getFlag === 'function') {
+                const flagBag = actorRef.getFlag('wh40k-rpg', 'try-again');
+                // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns unknown; the per-skill counter bag is Record<string, number> by construction
+                const attempts =
+                    flagBag != null && typeof flagBag === 'object'
+                        ? Number((flagBag as Record<string, unknown>)[skillKey] ?? 0)
+                        : 0;
+                if (attempts > 0) {
+                    const advice = getTryAgainAdvice(skillKey, attempts);
+                    if (advice.blocksByConvention || advice.cumulativePenalty !== 0) {
+                        tryAgainAdvice = advice;
+                        tryAgainPenalty = advice.cumulativePenalty;
+                    }
+                }
+            }
+        }
+
+        // Skill panel — alt-characteristic dropdown + untrained-halving indicator (#61).
+        // Reads `altCharacteristics` from the matching compendium/world skill item on the
+        // source actor, then runs `resolveUntrainedTarget` so the dialog can swap the
+        // characteristic and surface halving / blocked-advanced advisories. The override
+        // characteristic mutates `baseTarget` so every downstream modifier ramp re-computes.
+        let skillPanel: {
+            visible: boolean;
+            characteristic: string;
+            characteristicLabel: string;
+            altOptions: Array<{ value: string; label: string; isCurrent: boolean }>;
+            halved: boolean;
+            untrainedAdvanced: boolean;
+        } | null = null;
+        let skillBaseOverride: number | null = null;
+        if (this.rollType === 'simple' && rollData['type'] === 'Skill') {
+            const sourceActor = (rollData.sourceActor ?? rollData['actor']) as
+                | {
+                      // eslint-disable-next-line no-restricted-syntax -- boundary: per-actor skill / characteristic bags are typed loosely on WH40KBaseActor; structural read suffices
+                      skills?: Record<string, { advance?: number; characteristic?: string; current?: number; basic?: boolean }>;
+                      characteristics?: Record<string, { total?: number; label?: string; short?: string }>;
+                      items?: { find?: (cb: (i: { type?: string; name?: string; system?: { identifier?: string } }) => boolean) => unknown };
+                  }
+                | null
+                | undefined;
+            const rollKey = (rollData['rollKey'] as string | null | undefined) ?? null;
+            const actorSkill = rollKey !== null ? sourceActor?.skills?.[rollKey] : undefined;
+            const listedChar = actorSkill?.characteristic ?? '';
+            const advance = Number(actorSkill?.advance ?? 0);
+            const skillCurrent = Number(actorSkill?.current ?? rollData.baseTarget ?? 0);
+            const listedCharTotal = Number(sourceActor?.characteristics?.[listedChar]?.total ?? 0);
+            const trainingBonus = skillCurrent - listedCharTotal;
+
+            // Locate the matching skill item to read altCharacteristics off its DataModel.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: items.find is typed as returning unknown; per-system skill item schema is asserted via altCharacteristics presence
+            const skillItem = sourceActor?.items?.find?.((i) => i.type === 'skill' && (i.system?.identifier === rollKey || i.name === rollKey)) as
+                | { system?: { altCharacteristics?: string[]; isBasic?: boolean } }
+                | undefined;
+            const altCharacteristics = Array.isArray(skillItem?.system?.altCharacteristics) ? skillItem.system.altCharacteristics : [];
+            const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? false;
+
+            const effectiveChar = this._charOverride ?? listedChar;
+            const usingAlt = this._charOverride !== null && this._charOverride !== listedChar;
+            const altCharTotal = usingAlt ? Number(sourceActor?.characteristics?.[effectiveChar]?.total ?? 0) : 0;
+
+            // The aptitude/career family (DH2 + DH1e/BC/DW/OW/IM) lets any
+            // skill be attempted untrained — the -20 penalty is already
+            // baked into skillCurrent at actor prepare time (creature.ts
+            // line 999, `usesAptitudes === true ? charTotal - 20 : …`).
+            // Only RT/legacy systems block untrained Advanced skills.
+            const actorGameSystem = (sourceActor as { system?: { gameSystem?: string } } | null | undefined)?.system?.gameSystem ?? '';
+            const isAptitudeSystem = actorGameSystem === 'dh2e' || actorGameSystem === 'dh1e' || actorGameSystem === 'bc' || actorGameSystem === 'dw' || actorGameSystem === 'ow' || actorGameSystem === 'im';
+
+            const resolved = resolveUntrainedTarget({
+                advance,
+                isBasic,
+                characteristicTotal: listedCharTotal + trainingBonus,
+                altCharacteristicTotal: usingAlt ? altCharTotal + trainingBonus : undefined,
+                halveOnNonBasic: advance === 0 && !isBasic,
+                allowUntrainedAdvanced: isAptitudeSystem,
+            });
+            // Only override base target when we changed the characteristic or fired the halving rule.
+            // Otherwise leave rollData.baseTarget untouched so unrelated rolls behave identically.
+            if (usingAlt || resolved.halved || resolved.untrainedAdvanced) {
+                skillBaseOverride = resolved.target;
+            }
+
+            const charLabel = (c: string): string => {
+                if (c === '') return '';
+                const key = `WH40K.Characteristic.${c.charAt(0).toUpperCase()}${c.slice(1)}`;
+                const localized = game.i18n.localize(key);
+                return localized === key ? c : localized;
+            };
+            const altOptions: Array<{ value: string; label: string; isCurrent: boolean }> = [];
+            altOptions.push({
+                value: listedChar,
+                label: game.i18n.format('WH40K.UntrainedSkill.DefaultOption', { name: charLabel(listedChar) }),
+                isCurrent: !usingAlt,
+            });
+            for (const alt of altCharacteristics) {
+                if (alt === listedChar) continue;
+                altOptions.push({ value: alt, label: charLabel(alt), isCurrent: this._charOverride === alt });
+            }
+
+            const showPanel = altCharacteristics.length > 0 || resolved.halved || resolved.untrainedAdvanced;
+            skillPanel = {
+                visible: showPanel,
+                characteristic: effectiveChar,
+                characteristicLabel: charLabel(effectiveChar),
+                altOptions,
+                halved: resolved.halved,
+                untrainedAdvanced: resolved.untrainedAdvanced,
+            };
+        }
+
+        const baseTarget = isForceField
+            ? Number(rollData['protectionRating']) || 0
+            : skillBaseOverride !== null
+            ? skillBaseOverride
+            : rollData.baseTarget || 0;
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
-        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational']);
+        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational', 'psy-mode', 'assistance']);
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rollData.modifiers always present per type; runtime data may be uninitialised; ?? {} is defensive
         const safeModifiers = rollData.modifiers ?? {};
         const weaponModSum = !isForceField
@@ -327,7 +492,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   .reduce((sum, [, v]) => sum + (Number(v) || 0), 0) + (Number(rollData.rangeBonus) || 0)
             : 0;
 
-        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod);
+        // Climbing surface modifier (#146 — errata L113). Only applied on Athletics rolls.
+        const rollKeyValue = (rollData['rollKey'] as string | null | undefined) ?? null;
+        const isAthletics = this.rollType === 'simple' && rollData['type'] === 'Skill' && rollKeyValue === 'athletics';
+        const climbMod = isAthletics ? getClimbingModifier({ surfaceType: this._climbSurface }) : 0;
+
+        const finalTarget = Math.max(
+            0,
+            baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty + climbMod,
+        );
 
         // Build target breakdown tooltip
         const tooltipParts = [`Base: ${baseTarget}`];
@@ -336,6 +509,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (situationalMod !== 0) tooltipParts.push(`Situational: ${situationalMod >= 0 ? '+' : ''}${situationalMod}`);
         if (customMod !== 0) tooltipParts.push(`Custom: ${customMod >= 0 ? '+' : ''}${customMod}`);
         if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${combatSitMod >= 0 ? '+' : ''}${combatSitMod}`);
+        if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${psyMod >= 0 ? '+' : ''}${psyMod}`);
+        if (assistanceMod !== 0) tooltipParts.push(`Assistance: +${assistanceMod}`);
+        if (tryAgainPenalty !== 0) tooltipParts.push(`Try-Again: ${tryAgainPenalty}`);
+        if (climbMod !== 0) tooltipParts.push(`Climb Surface: ${climbMod >= 0 ? '+' : ''}${climbMod}`);
         tooltipParts.push(`= ${finalTarget}`);
         const targetBreakdownTooltip = tooltipParts.join('\n');
 
@@ -390,7 +567,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
         // Modifier aggregate
-        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod;
+        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty + climbMod;
 
         // Roll type specific data
         const isWeapon = this.rollType === 'weapon';
@@ -436,6 +613,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             situationalModifiers,
             hasSituationalModifiers,
             showCustomModifier: this._showCustomModifier || this._customModifier !== 0,
+            assistantCount: this._assistantCount,
+            assistanceBonus: assistanceMod,
+            assistantMax: DEFAULT_ASSISTANT_CAP,
+            canIncrementAssistant: this._assistantCount < DEFAULT_ASSISTANT_CAP,
+            canDecrementAssistant: this._assistantCount > 0,
+            extended: this._extended,
+            extendedThreshold: this._extendedThreshold,
+            tryAgainAdvice,
+            tryAgainPenalty,
+            tryAgainPenaltyLabel: tryAgainPenalty < 0 ? `${tryAgainPenalty}` : tryAgainPenalty > 0 ? `+${tryAgainPenalty}` : '0',
             rollResult,
             manualRollTens: this._manualRollTens,
             manualRollUnits: this._manualRollUnits,
@@ -449,8 +636,20 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             isWeapon,
             isPsychic,
             isForceField,
+            // Skill alt-characteristic panel (#61)
+            skillPanel,
+            hasSkillPanel: skillPanel !== null && skillPanel.visible,
             isSimple,
-            hasContextPanel: isWeapon || isPsychic || isForceField,
+            // Climbing-surface picker (#146 — errata L113). Visible only on Athletics rolls.
+            isAthletics,
+            climbSurface: this._climbSurface,
+            climbSurfaceOptions: [
+                { value: 'standard', label: game.i18n.localize('WH40K.Climbing.Standard'), isCurrent: this._climbSurface === 'standard' },
+                { value: 'sheer', label: game.i18n.localize('WH40K.Climbing.Sheer'), isCurrent: this._climbSurface === 'sheer' },
+                { value: 'easy', label: game.i18n.localize('WH40K.Climbing.Easy'), isCurrent: this._climbSurface === 'easy' },
+            ],
+            climbMod,
+            hasContextPanel: isWeapon || isPsychic || isForceField || isAthletics || (skillPanel !== null && skillPanel.visible),
             // Weapon data
             ...(isWeapon ? this._getWeaponContext() : {}),
             // Psychic data
@@ -744,6 +943,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     // eslint-disable-next-line no-restricted-syntax -- boundary: context bag returned to Handlebars template; keys are heterogeneous by design
     _getPsychicContext(): Record<string, unknown> {
         const rd = this.rollData;
+        const basePR = Number(rd['pr']) || 0;
+        const psyModeBreakdown = resolvePsyMode({ mode: this._psyMode, basePR, pushLevel: this._pushLevel });
         return {
             psychicPowers: Array.isArray(rd['psychicPowers']) ? rd['psychicPowers'] : [],
             power: rd.power,
@@ -756,6 +957,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             rangeName: rd.rangeName,
             maxRange: rd.maxRange,
             difficulties: rd.difficulties,
+            psyMode: this._psyMode,
+            pushLevel: this._pushLevel,
+            isFettered: this._psyMode === 'fettered',
+            isUnfettered: this._psyMode === 'unfettered',
+            isPush: this._psyMode === 'push',
+            psyModeBreakdown,
         };
     }
 
@@ -965,6 +1172,84 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.close();
     }
 
+    /* ---- Psychic Push / Fettered / Unfettered selector handlers (#69) ---- */
+
+    static async #onSetPsyMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const mode = target.dataset['psyMode'];
+        if (mode !== 'fettered' && mode !== 'unfettered' && mode !== 'push') return;
+        this._psyMode = mode;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    static async #onIncrementPushLevel(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._pushLevel >= 3) return;
+        this._pushLevel += 1;
+        if (this._psyMode !== 'push') this._psyMode = 'push';
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    static async #onDecrementPushLevel(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._pushLevel <= 1) return;
+        this._pushLevel -= 1;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    /* ---- Assistance stepper (#60) ----                                                  */
+    /* +10 per assistant up to DEFAULT_ASSISTANT_CAP (core.md §"Assistance", p. 25).        */
+
+    static async #onIncrementAssistant(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._assistantCount >= DEFAULT_ASSISTANT_CAP) return;
+        this._assistantCount += 1;
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    static async #onDecrementAssistant(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (this._assistantCount <= 0) return;
+        this._assistantCount -= 1;
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    /* ---- Alternate characteristic override for skill rolls (#61) ---- */
+
+    static async #onSetCharacteristicOverride(this: UnifiedRollDialog, event: Event, _target: HTMLElement): Promise<void> {
+        const select = event.target as HTMLSelectElement | null;
+        const value = select?.value ?? '';
+        // Empty string sentinel means "no override" — fall back to the skill's listed characteristic.
+        this._charOverride = value === '' ? null : value;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    /* ---- Climbing surface picker for Athletics rolls (#146) ----              */
+    /* Errata p. 113 — sheer surfaces add Hard (-20) to the Athletics test.      */
+
+    static async #onSetClimbSurface(this: UnifiedRollDialog, event: Event, _target: HTMLElement): Promise<void> {
+        const select = event.target as HTMLSelectElement | null;
+        const value = select?.value ?? 'standard';
+        const next: ClimbingSurface = value === 'sheer' || value === 'easy' ? value : 'standard';
+        if (next === this._climbSurface) return;
+        this._climbSurface = next;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    /* ---- Extended Test toggle (#59) ----                                                 */
+    /* When enabled, the rolled DoS feeds into an ExtendedTestData ladder on the chat card. */
+
+    static async #onToggleExtended(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        // Action may fire from either the checkbox itself or a wrapper label/button.
+        const checkbox = target instanceof HTMLInputElement ? target : target.querySelector<HTMLInputElement>('input[type="checkbox"]');
+        this._extended = checkbox?.checked ?? !this._extended;
+        await this.render(false, { parts: ['modifiers'] });
+    }
+
+    static async #onSetExtendedThreshold(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const input = target instanceof HTMLInputElement ? target : target.querySelector<HTMLInputElement>('input[type="number"]');
+        const raw = input?.valueAsNumber;
+        const next = Number.isFinite(raw) ? Math.max(1, Math.trunc(raw as number)) : this._extendedThreshold;
+        if (next === this._extendedThreshold) return;
+        this._extendedThreshold = next;
+        await this.render(false, { parts: ['modifiers'] });
+    }
+
     /* ---- Card-based Weapon Panel Handlers ---- */
 
     static async #onSelectAttackMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
@@ -1167,6 +1452,23 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.modifiers['difficulty'] = this._currentDifficulty.modifier;
         rd.modifiers['situational'] = this._calculateSituationalModifiers();
         rd.modifiers['modifier'] = this._customModifier;
+        // Assistance modifier (#60). +10 per assistant up to DEFAULT_ASSISTANT_CAP.
+        // Surfaces on chat cards via RollData.activeModifiers; key is uppercased
+        // for the modifier-breakdown partial, so "ASSISTANCE +N" appears in the
+        // chat-card row list when assistantCount > 0.
+        rd.modifiers['assistance'] = getAssistanceBonus(this._assistantCount);
+
+        // Apply psychic Push / Fettered / Unfettered selector (#69)
+        if (this.rollType === 'psychic') {
+            const basePR = Number(rd['pr']) || 0;
+            const breakdown = resolvePsyMode({ mode: this._psyMode, basePR, pushLevel: this._pushLevel });
+            rd.modifiers['psy-mode'] = breakdown.focusModifier;
+            rd['psyMode'] = this._psyMode;
+            rd['psyEffectivePR'] = breakdown.effectivePR;
+            rd['psyForcePhenomena'] = breakdown.forcePhenomena;
+            rd['psyPhenomenaModifier'] = breakdown.phenomenaModifier;
+            if (this._psyMode === 'push') rd['psyPushLevel'] = this._pushLevel;
+        }
 
         // Apply combat situational card modifiers (weapon panel)
         if (this.rollType === 'weapon') {

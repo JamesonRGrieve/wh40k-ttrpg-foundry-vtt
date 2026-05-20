@@ -17,6 +17,16 @@
 
             {{!-- Insanity Panel --}}
             {{> systems/wh40k-rpg/templates/actor/panel/insanity-panel.hbs}}
+
+            {{!-- Shock Panel (#66) — DH2-only Shock counter + Snap-Out-Of-It. --}}
+            {{#if isDH2}}
+                {{> systems/wh40k-rpg/templates/actor/panel/shock-panel.hbs}}
+            {{/if}}
+
+            {{!-- Possession Panel (#82) — only when the possession track is engaged --}}
+            {{#if (neq system.possession.state 'none')}}
+                {{> systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs}}
+            {{/if}}
         </div>
 
         {{!-- Right Column --}}
@@ -27,6 +37,13 @@
             {{!-- Fate Panel --}}
             {{> systems/wh40k-rpg/templates/actor/panel/fate-panel.hbs}}
 
+            {{!-- Subtlety Panel (#87) — DH2-only warband subtlety pool.
+                 Gate matches `_gameSystemId === 'dh2e'` from CharacterSheet
+                 (`isDH2` is the context flag set in _prepareContext). --}}
+            {{#if isDH2}}
+                {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
+            {{/if}}
+
             {{!-- Movement & Physical Capacity (Full Version) --}}
             {{> systems/wh40k-rpg/templates/actor/panel/movement-panel-full.hbs}}
             
@@ -34,4 +51,25 @@
             {{> systems/wh40k-rpg/templates/actor/panel/active-effects-panel.hbs}}
         </div>
     </div>
+
+    {{!-- Dark Pacts (Enemies Beyond p. 72, #84). Renders only when at least one pact is active. --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs}}
+
+    {{!-- Penitent role: Mortification of the Flesh action (#94, within.md p.36). --}}
+    {{!-- Hidden unless the actor has a Penitent role / Mortification talent (computed in CharacterSheet._prepareContext). --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/mortification-button.hbs hasPenitent=hasPenitent}}
+
+    {{!-- Fanatic role: Death to All Who Oppose Me action (#93, within.md p.34). --}}
+    {{!-- Hidden unless the actor has a Fanatic role/talent (computed in CharacterSheet._prepareContext). --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/fanatic-button.hbs hasFanatic=hasFanatic}}
+
+    {{!-- Crusader role: Smite the Unholy action (#141, beyond.md p.34). --}}
+    {{!-- Hidden unless the actor has a Crusader role/talent (computed in CharacterSheet._prepareContext). --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/crusader-button.hbs hasCrusader=hasCrusader}}
+
+    {{!-- Grapple Controller Actions (#120, core.md L10155-10180). --}}
+    {{!-- Rendered only when the actor is mid-grapple (flag set by combat tooling). --}}
+    {{#if (and grappleState (neq grappleState 'none'))}}
+        {{> systems/wh40k-rpg/templates/actor/panel/grapple-controller-panel.hbs grappleState=grappleState}}
+    {{/if}}
 </section>

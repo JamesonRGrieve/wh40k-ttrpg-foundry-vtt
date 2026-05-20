@@ -1,0 +1,48 @@
+{{!-- Medicae Mechadendrite Half-Action staunch chat card (#104, errata p. 183). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-medicae-mechadendrite-card tw-p-4 tw-rounded-md tw-border tw-border-emerald-500 tw-bg-[rgba(6,20,16,0.88)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-syringe tw-text-[1.1rem] tw-text-emerald-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-emerald-200">
+            {{localize "WH40K.MedicaeMechadendrite.ChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        <strong class="tw-text-emerald-200">{{actorName}}</strong>
+        — {{localize "WH40K.MedicaeMechadendrite.HalfActionTag"}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-emerald-300">{{localize "WH40K.MedicaeMechadendrite.RollLabel"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-emerald-100">{{roll}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-emerald-300">{{localize "WH40K.MedicaeMechadendrite.TargetLabel"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-emerald-100">{{target}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-emerald-300">{{localize "WH40K.MedicaeMechadendrite.BonusLabel"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-emerald-100">+{{medicaeBonus}}</span>
+        </li>
+    </ul>
+
+    {{#if success}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(16,185,129,0.5)] tw-bg-[rgba(6,78,59,0.25)] tw-text-[0.85rem] tw-text-emerald-100">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-emerald-300 tw-mb-1">
+                {{localize "WH40K.MedicaeMechadendrite.SuccessLabel"}}
+            </div>
+            <div>{{localize "WH40K.MedicaeMechadendrite.BloodLossStaunched"}}</div>
+        </div>
+    {{else}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(248,113,113,0.45)] tw-bg-[rgba(127,29,29,0.2)] tw-text-[0.85rem] tw-text-red-200">
+            <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-red-300 tw-mb-1">
+                {{localize "WH40K.MedicaeMechadendrite.FailureLabel"}}
+            </div>
+            <div>{{localize "WH40K.MedicaeMechadendrite.StaunchFailed"}}</div>
+        </div>
+    {{/if}}
+</div>

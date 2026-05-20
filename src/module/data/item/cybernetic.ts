@@ -1,3 +1,11 @@
+import {
+    type CyberneticCraftsmanship,
+    type CyberneticInstallSite,
+    classifyInstallSite,
+    composeInstallTest,
+    composeMaintenanceTest,
+    type InstallTestComposition,
+} from '../../rules/cybernetics.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -18,6 +26,9 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 export default class CyberneticData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, ModifiersTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
+    // Provided at runtime by PhysicalItemTemplate; surfaced for the
+    // install/maintain accessors (same bridge pattern as armour.ts).
+    declare craftsmanship: string;
     declare type: string;
     declare locations: Set<string>;
     declare hasArmourPoints: boolean;
@@ -154,6 +165,69 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
         return Array.from(this.locations)
             .map((l) => game.i18n.localize(`WH40K.BodyLocation.${l.capitalize()}`))
             .join(', ');
+    }
+
+    /* -------------------------------------------- */
+    /*  Install / Maintain bridge (#125)            */
+    /* -------------------------------------------- */
+
+    /**
+     * Resolve this cybernetic's `craftsmanship` (from PhysicalItemTemplate)
+     * onto the engine's four-tier ladder. Astartes-grade tiers
+     * (`exceptional` / `master`) clamp to `best` since the install /
+     * maintain math only models the RAW four bands.
+     */
+    get installCraftsmanship(): CyberneticCraftsmanship {
+        switch (this.craftsmanship) {
+            case 'poor':
+                return 'poor';
+            case 'good':
+                return 'good';
+            case 'best':
+            case 'exceptional':
+            case 'master':
+                return 'best';
+            default:
+                return 'common';
+        }
+    }
+
+    /**
+     * The riskiest surgical site this cybernetic touches, classified
+     * from its `locations` set by the install engine.
+     */
+    get installSite(): CyberneticInstallSite {
+        return classifyInstallSite(this.locations);
+    }
+
+    /**
+     * Compose the install Medicae test target for a chirurgeon with the
+     * given effective skill total. The base difficulty defaults to
+     * Challenging (0) — the GM overrides it in the install dialog. Pure
+     * pass-through to the engine; no content lives here.
+     */
+    composeInstallTest(surgeonSkillTotal: number, baseDifficulty = 0, surgeonModifier = 0): InstallTestComposition {
+        return composeInstallTest({
+            baseDifficulty,
+            craftsmanship: this.installCraftsmanship,
+            site: this.installSite,
+            surgeonSkillTotal,
+            surgeonModifier,
+        });
+    }
+
+    /**
+     * Compose the long-term maintenance test target for a maintainer
+     * with the given Tech-Use (or Medicae) skill total. Site is not a
+     * factor in upkeep — only the device craftsmanship.
+     */
+    composeMaintenanceTest(maintainerSkillTotal: number, baseDifficulty = 10, extraModifier = 0): InstallTestComposition {
+        return composeMaintenanceTest({
+            baseDifficulty,
+            craftsmanship: this.installCraftsmanship,
+            maintainerSkillTotal,
+            extraModifier,
+        });
     }
 
     /* -------------------------------------------- */

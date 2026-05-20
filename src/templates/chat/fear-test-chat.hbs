@@ -1,0 +1,50 @@
+{{!-- Fear (X) test chat card (#65). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
+<div class="wh40k-rpg wh40k-fear-card tw-p-4 tw-rounded-md tw-border tw-bg-[rgba(15,12,8,0.85)] {{#if (gt fearRating 2)}}tw-border-red-700{{else}}tw-border-[rgba(201,162,39,0.35)] dh2e:tw-border-bronze{{/if}}"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-skull tw-text-[1.1rem] {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-[#c4871d] dh2e:tw-text-bronze{{/if}}"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-gold dh2e:tw-text-bronze{{/if}}">
+            {{localize "WH40K.Fear.ChatTitle"}}
+        </div>
+    </div>
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        <strong>{{observerName}}</strong>
+        {{#if isNoOp}}
+            — {{localize "WH40K.Fear.RatingLabel"}} 0
+        {{else}}
+            — Fear ({{fearRating}})
+        {{/if}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">WP</span>
+            <span class="tw-font-bold tw-tabular-nums">{{willpower}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Fear.Target"}}</span>
+            <span class="tw-font-bold tw-tabular-nums {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-gold dh2e:tw-text-bronze{{/if}}">{{target}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">d100</span>
+            <span class="tw-font-display tw-font-bold tw-tabular-nums tw-text-base">{{rolled}}</span>
+        </li>
+    </ul>
+
+    {{#if success}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(80,180,80,0.4)] tw-bg-[rgba(40,80,40,0.25)] tw-text-[color:var(--wh40k-accent-green-bright,#7fdf7f)] tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-center">
+            {{localize "WH40K.Fear.SuccessText"}}
+        </div>
+    {{else}}
+        {{#unless isNoOp}}
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-red-700 tw-bg-[rgba(139,0,0,0.18)] tw-text-red-600 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-center tw-mb-2">
+            {{localize "WH40K.Fear.FailureText"}} ({{degreesOfFailure}} DoF)
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-px-1">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Fear.ShockModifier"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-red-600">1d100 {{shockModifierLabel}}</span>
+        </div>
+        {{/unless}}
+    {{/if}}
+</div>

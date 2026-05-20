@@ -1,0 +1,32 @@
+{{!-- Daemon Weapon Attribute chat card (issue #142) --}}
+<div class="wh40k-rpg wh40k-dwa-card tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-border tw-border-solid tw-border-[var(--wh40k-border-color,#444)] tw-rounded tw-bg-[var(--wh40k-panel-bg,#1a1a1a)]" data-wh40k-system="{{#if gameSystem}}{{gameSystem}}{{else}}dh2e{{/if}}">
+    <header class="tw-flex tw-flex-col tw-gap-0.5">
+        <h3 class="tw-font-display tw-text-base tw-font-bold tw-uppercase tw-tracking-[0.12em] tw-m-0 {{accentClass}}">
+            {{localize "WH40K.DaemonWeaponAttribute.ChatTitle"}}
+        </h3>
+        <div class="tw-text-xs tw-text-[var(--wh40k-text-medium,#aaa)]">
+            <span class="tw-uppercase tw-tracking-[0.08em]">{{localize "WH40K.DaemonWeaponAttribute.Alignment"}}:</span>
+            <span class="tw-font-semibold {{accentClass}}">{{localize (concat "WH40K.DaemonWeaponAttribute.Alignment" (capitalize alignment))}}</span>
+            <span class="tw-mx-1">·</span>
+            <span class="tw-uppercase tw-tracking-[0.08em]">{{localize "WH40K.DaemonWeaponAttribute.BindingStrength"}}:</span>
+            <span class="tw-font-semibold">{{bindingLabel}}</span>
+        </div>
+    </header>
+
+    <ol class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-2">
+        {{#each result.picks}}
+            <li class="tw-text-sm tw-p-2 tw-border tw-border-solid tw-border-[var(--wh40k-border-color,#444)] tw-rounded tw-bg-[var(--wh40k-bg-darker,#0f0f0f)]">
+                <div class="tw-flex tw-items-baseline tw-justify-between tw-gap-2">
+                    <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark,#ddd)]">
+                        {{localize "WH40K.DaemonWeaponAttribute.AttributeLabel"}} {{this.slot}}: {{this.attribute.label}}
+                    </span>
+                    <span class="tw-text-xs tw-opacity-70">{{this.table}} d10={{this.roll}}</span>
+                </div>
+                <div class="tw-text-xs tw-mt-1 tw-text-[var(--wh40k-text-medium,#aaa)]">
+                    <span class="tw-uppercase tw-tracking-[0.08em]">{{localize "WH40K.DaemonWeaponAttribute.EffectLabel"}}:</span>
+                    {{this.attribute.effect}}
+                </div>
+            </li>
+        {{/each}}
+    </ol>
+</div>

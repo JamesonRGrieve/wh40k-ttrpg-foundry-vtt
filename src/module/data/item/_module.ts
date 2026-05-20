@@ -48,6 +48,8 @@ export { default as MutationData } from './mutation.ts';
 export { default as MalignancyData } from './malignancy.ts';
 export { default as MentalDisorderData } from './mental-disorder.ts';
 export { default as JournalEntryItemData } from './journal-entry.ts';
+export { default as EndeavourData } from './endeavour.ts';
+export { default as LeadData } from './lead.ts';
 
 // NPC Templates
 export { default as NPCTemplateData } from './npc-template.ts';

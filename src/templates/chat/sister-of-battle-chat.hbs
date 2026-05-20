@@ -1,0 +1,22 @@
+{{!-- Sister of Battle elite advance chat card (GitHub #134). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
+<div class="wh40k-rpg wh40k-sob-card tw-p-4 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.35)] dh2e:tw-border-gold dh2e:tw-bg-amber-900/30 tw-bg-[rgba(15,12,8,0.85)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-cross tw-text-gold dh2e:tw-text-gold tw-text-[1.1rem]"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-gold dh2e:tw-text-gold bc:tw-text-crimson-light rt:tw-text-amber-700 im:tw-text-failure">
+            {{localize "WH40K.SisterOfBattle.ChatTitle"}}
+        </div>
+    </div>
+    <div class="tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-mb-2">
+        {{localize "WH40K.SisterOfBattle.GrantsHeader"}}
+    </div>
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-2 tw-text-[0.85rem]">
+        {{#each talents}}
+            <li class="tw-flex tw-flex-col tw-gap-0.5" data-talent="{{this.id}}">
+                <span class="tw-font-bold tw-text-gold dh2e:tw-text-gold">{{this.label}}</span>
+                <span class="tw-text-[#e8e4d9]">{{this.summary}}</span>
+            </li>
+        {{/each}}
+    </ul>
+</div>

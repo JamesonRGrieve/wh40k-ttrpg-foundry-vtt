@@ -28,6 +28,17 @@ describe('replaceDamageDieWithDoS (#129)', () => {
         expect(replaceDamageDieWithDoS([{ result: 2 }], -1)).toBeNull();
         expect(replaceDamageDieWithDoS([{ result: 2 }], 4, 5)).toBeNull();
     });
+
+    it('still mutates when DoS equals or is below the lowest die (negative delta is on the caller)', () => {
+        // Per core.md L10398-10414 the replacement is the attacker's choice;
+        // the rules engine does not gate on profitability. The mutation
+        // applies and the delta is reported so callers can decide whether
+        // to commit.
+        const dice: DamageDieResult[] = [{ result: 7 }, { result: 5 }, { result: 9 }];
+        const outcome = replaceDamageDieWithDoS(dice, 3);
+        expect(outcome).toEqual({ replacedIndex: 1, previous: 5, delta: -2 });
+        expect(dice[1]?.result).toBe(3);
+    });
 });
 
 describe('Hit.replaceDamageDieWithDoS (#129)', () => {

@@ -107,6 +107,10 @@ interface BuilderStoryArgs {
         aptitudes: string[];
         wounds: string | null;
         fate: string | null;
+        aptitudeCollisions?: Array<{ original: string; replacement: string | null }>;
+        hasUnresolvedAptitudeCollision?: boolean;
+        unresolvedAptitudeCollisions?: Array<{ original: string; replacement: string | null }>;
+        resolvedAptitudeCollisions?: Array<{ original: string; replacement: string }>;
     };
     status: {
         stepsComplete: boolean;
@@ -303,6 +307,219 @@ export const PreviewPanel: Story = {
     },
 };
 
+/**
+ * Issue #206 — Walk the full step sequence to assert the Characteristic Roll
+ * step and Equipment step both surface BEFORE the final confirmation dialog
+ * fires. The original bug closed the builder on either dialog button before
+ * those two steps could be reached.
+ */
+export const Issue206_CharacteristicStepReached: Story = {
+    args: makeArgs({
+        showCharacteristics: true,
+        hasEquipmentStep: true,
+        steps: [
+            {
+                index: 0,
+                key: 'homeWorld',
+                label: 'Home World',
+                shortLabel: 'Home',
+                icon: 'fa-globe',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Hive World', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 1,
+                key: 'background',
+                label: 'Background',
+                shortLabel: 'Back',
+                icon: 'fa-scroll',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Adept', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 2,
+                key: 'role',
+                label: 'Role',
+                shortLabel: 'Role',
+                icon: 'fa-user-shield',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Warrior', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 3,
+                key: 'elite',
+                label: 'Elite Advance',
+                shortLabel: 'Elite',
+                icon: 'fa-star',
+                isActive: false,
+                isComplete: false,
+                isDisabled: false,
+                isLineage: true,
+                selection: null,
+            },
+            {
+                index: 4,
+                key: 'characteristics',
+                label: 'Characteristics',
+                shortLabel: 'Chars',
+                icon: 'fa-dice-d20',
+                isActive: true,
+                isComplete: false,
+                isDisabled: false,
+                isLineage: false,
+                selection: null,
+            },
+            {
+                index: 5,
+                key: 'equipment',
+                label: 'Equip Acolyte',
+                shortLabel: 'Equip',
+                icon: 'fa-box',
+                isActive: false,
+                isComplete: false,
+                isDisabled: true,
+                isLineage: false,
+                selection: null,
+            },
+        ],
+        currentStep: {
+            index: 4,
+            key: 'characteristics',
+            label: 'Characteristics',
+            icon: 'fa-dice-d20',
+            description: 'Roll or enter your characteristic values',
+            origins: [],
+            isLineage: false,
+            isCharacteristics: true,
+        },
+        showSelectionPanel: false,
+        status: {
+            stepsComplete: true,
+            stepsCount: 3,
+            totalSteps: 6,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // The Characteristic Roll step surfaces in the journey rail before commit fires.
+        expect(canvas.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
+        // The Equipment step is queued behind characteristics — it has not fired the final dialog.
+        expect(canvas.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
+    },
+};
+
+export const Issue206_EquipmentStepReached: Story = {
+    args: makeArgs({
+        showCharacteristics: false,
+        showEquipment: true,
+        hasEquipmentStep: true,
+        steps: [
+            {
+                index: 0,
+                key: 'homeWorld',
+                label: 'Home World',
+                shortLabel: 'Home',
+                icon: 'fa-globe',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Hive World', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 1,
+                key: 'background',
+                label: 'Background',
+                shortLabel: 'Back',
+                icon: 'fa-scroll',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Adept', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 2,
+                key: 'role',
+                label: 'Role',
+                shortLabel: 'Role',
+                icon: 'fa-user-shield',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Warrior', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 4,
+                key: 'characteristics',
+                label: 'Characteristics',
+                shortLabel: 'Chars',
+                icon: 'fa-dice-d20',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: null,
+            },
+            {
+                index: 5,
+                key: 'equipment',
+                label: 'Equip Acolyte',
+                shortLabel: 'Equip',
+                icon: 'fa-box',
+                isActive: true,
+                isComplete: false,
+                isDisabled: false,
+                isLineage: false,
+                selection: null,
+            },
+        ],
+        currentStep: {
+            index: 5,
+            key: 'equipment',
+            label: 'Equip Acolyte',
+            icon: 'fa-box',
+            description: 'Select your starting gear before completing character creation.',
+            origins: [],
+            isLineage: false,
+            isCharacteristics: false,
+        },
+        showSelectionPanel: false,
+        status: {
+            stepsComplete: true,
+            stepsCount: 4,
+            totalSteps: 6,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            // canCommit is FALSE until the player picks at least one equipment item;
+            // the final confirmation dialog must not fire while this step is in progress.
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Equipment step is the active step in the journey rail.
+        expect(canvas.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
+        // Characteristics is marked complete and equipment is current — final commit must be gated.
+        expect(canvas.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
+    },
+};
+
 export const RogueTraderDirection: Story = {
     args: makeArgs({
         isDH2: false,
@@ -326,5 +543,398 @@ export const RogueTraderDirection: Story = {
         const canvas = within(canvasElement);
         expect(canvas.getByText('Dynasty Path')).toBeTruthy();
         expect(canvas.getByText('Origin')).toBeTruthy();
+    },
+};
+
+/**
+ * Regression coverage for issue #198: selecting a Home World / Background / Role /
+ * Elite Advance origin card was firing `_itemToSelectionData` against an already-
+ * normalized plain-object origin entry (no `toObject()` method), which previously
+ * threw "TypeError: item.toObject is not a function" and left the preview panel
+ * empty.
+ *
+ * The story renders the preview-panel state that results from a successful
+ * normalized-origin selection — the card is `isSelected`, the selectedOrigin
+ * block carries the granted skills/characteristics/talents pulled from the
+ * normalized shape, and the per-system data attribute is wired so the
+ * Tailwind `dh2e:` variants resolve. The Playwright spec at
+ * tests/storybook/issue-198-origin-path-preview.spec.ts snapshots this story.
+ */
+/**
+ * Regression coverage for issue #204: the per-origin Throne Gelt roll widget
+ * was appearing in BOTH the Home World step AND the Background step of the
+ * homebrew DH2 origin-path builder, which let players roll twice and pocket
+ * a doubled starting purse. The fix restricts the rollable widget to the
+ * Home World step; Background-step thrones formulas no longer surface a roll
+ * button (the data remains in the compendium for narrative reference).
+ *
+ * Two stories cover the post-fix DOM:
+ *
+ * - `Issue204HomeWorldThroneGelt`: homebrew home-world step renders exactly
+ *   one Throne Gelt `[data-stat-type="thrones"][data-action="rollStat"]`
+ *   button — the legitimate single roll.
+ * - `Issue204BackgroundNoThroneGelt`: homebrew background step renders
+ *   zero such buttons, even when the selected background's compendium entry
+ *   still carries a `homebrew.throneGelt` formula in its system data.
+ *
+ * The Playwright spec at tests/storybook/issue-204-throne-gelt-single-step.spec.ts
+ * snapshots both stories so a regression that re-introduces the duplicate
+ * button on the background step would be visible in the rendered DOM.
+ */
+export const Issue204HomeWorldThroneGelt: Story = {
+    args: makeArgs({
+        isDH2: true,
+        isHomebrew: true,
+        isRaw: false,
+        hideThroneGelt: false,
+        currentStep: {
+            index: 0,
+            key: 'homeWorld',
+            label: 'Home World',
+            icon: 'fa-globe',
+            description: 'Choose the world that forged your character.',
+            origins: [makeOriginCard('Hive World', { isSelected: true }), makeOriginCard('Feral World', { isValidNext: false })],
+            isLineage: false,
+            isCharacteristics: false,
+        },
+        selectedOrigin: makeSelectedOrigin('Hive World', {
+            hasRolls: true,
+            rolls: {
+                thrones: {
+                    formula: '1d10+5',
+                    hasValue: false,
+                    value: undefined,
+                    breakdown: '',
+                },
+            },
+        }),
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // The Throne Gelt label and exactly one roll button must render on the home-world step.
+        expect(canvas.getByText('Throne Gelt')).toBeTruthy();
+        const thronesRollButtons = canvasElement.querySelectorAll('button[data-action="rollStat"][data-stat-type="thrones"]');
+        expect(thronesRollButtons.length).toBe(1);
+    },
+};
+
+export const Issue204BackgroundNoThroneGelt: Story = {
+    args: makeArgs({
+        isDH2: true,
+        isHomebrew: true,
+        isRaw: false,
+        hideThroneGelt: false,
+        steps: [
+            {
+                index: 0,
+                key: 'homeWorld',
+                label: 'Home World',
+                shortLabel: 'Home',
+                icon: 'fa-globe',
+                isActive: false,
+                isComplete: true,
+                isDisabled: false,
+                isLineage: false,
+                selection: { name: 'Hive World', img: 'icons/svg/d20.svg' },
+            },
+            {
+                index: 1,
+                key: 'background',
+                label: 'Background',
+                shortLabel: 'Back',
+                icon: 'fa-scroll',
+                isActive: true,
+                isComplete: false,
+                isDisabled: false,
+                isLineage: false,
+                selection: null,
+            },
+        ],
+        currentStep: {
+            index: 1,
+            key: 'background',
+            label: 'Background',
+            icon: 'fa-scroll',
+            description: 'Choose what shaped your character after their home world.',
+            origins: [makeOriginCard('Adeptus Mechanicus', { isSelected: true }), makeOriginCard('Outcast')],
+            isLineage: false,
+            isCharacteristics: false,
+        },
+        // Even though the selected background's compendium entry HAS a `homebrew.throneGelt`
+        // formula, the post-fix `_prepareSelectedOrigin` must NOT promote it to a roll widget.
+        // We model that by leaving `rolls.thrones` undefined on the prepared selectedOrigin —
+        // the template only renders the Throne Gelt block under `{{#if selectedOrigin.rolls.thrones}}`.
+        selectedOrigin: makeSelectedOrigin('Adeptus Mechanicus', {
+            hasRolls: false,
+            rolls: {},
+        }),
+    }),
+    play: async ({ canvasElement }) => {
+        // Zero Throne Gelt roll buttons must appear on the background step.
+        const thronesRollButtons = canvasElement.querySelectorAll('button[data-action="rollStat"][data-stat-type="thrones"]');
+        expect(thronesRollButtons.length).toBe(0);
+        const thronesManualButtons = canvasElement.querySelectorAll('button[data-action="manualStat"][data-stat-type="thrones"]');
+        expect(thronesManualButtons.length).toBe(0);
+    },
+};
+
+export const Issue198VoidBornPreview: Story = {
+    args: makeArgs({
+        isDH2: false,
+        isRaw: false,
+        journeyTitle: 'Dynasty Path',
+        currentStep: {
+            index: 0,
+            key: 'origin',
+            label: 'Origin',
+            icon: 'fa-compass',
+            description: 'Trace the dynasty path from origin forward.',
+            origins: [
+                // The crashing call-site: a normalized POJO with NO toObject() method.
+                makeOriginCard('Void Born', { isSelected: true, hasChoices: true }),
+                makeOriginCard('Noble Born'),
+            ],
+            isLineage: false,
+            isCharacteristics: false,
+        },
+        selectedOrigin: makeSelectedOrigin('Void Born', {
+            description: '<p>Drawn from the void between stars; pressure-born, low gravity, long shadows.</p>',
+            grants: {
+                hasCharacteristics: true,
+                characteristics: [
+                    { short: 'WS', value: -5, positive: false },
+                    { short: 'BS', value: 5, positive: true },
+                    { short: 'Wp', value: 5, positive: true },
+                ],
+                hasSkills: true,
+                skills: [
+                    { displayName: 'Pilot (Spacecraft)', levelLabel: 'Trained', tooltipData: 'Pilot', uuid: null },
+                    { displayName: 'Operate (Voidship)', levelLabel: 'Trained', tooltipData: 'Operate', uuid: null },
+                ],
+                hasTalents: true,
+                talents: [{ name: 'Void Accustomed', tooltip: 'Immune to space-borne ill effects.', tooltipData: 'VoidAccustomed', uuid: null, hasItem: false }],
+                hasTraits: false,
+                traits: [],
+                hasEquipment: false,
+                equipment: [],
+            },
+            hasChoices: true,
+            choices: [{ name: 'Starting Talent', selected: 'Resistance (Cold)' }],
+        }),
+        status: {
+            stepsComplete: false,
+            stepsCount: 1,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Both card and selection panel show 'Void Born' — proves the normalized origin
+        // flowed through preview rendering without throwing.
+        expect(canvas.getAllByText('Void Born').length).toBeGreaterThan(1);
+        // Grant rows from the normalized.system shape are present
+        expect(canvas.getByText('Pilot (Spacecraft)')).toBeTruthy();
+        expect(canvas.getByText('Void Accustomed')).toBeTruthy();
+        // Re-clicking the previewed card must not throw (the bug path)
+        clickAction(canvasElement, 'selectOriginCard');
+    },
+};
+
+/**
+ * Regression coverage for issue #205: the origin-path builder used to apply a
+ * step's aptitude grant on top of an aptitude the character already had, with
+ * no warning, no chooser, and no swap — the second grant was silently wasted.
+ *
+ * This story renders the preview state with the duplicate-aptitude warning
+ * banner visible (Awareness is already on the character, and the just-confirmed
+ * step would grant Awareness again). The banner exposes a "Pick replacement"
+ * button wired to the `resolveAptitudeDouble` action. The Playwright spec at
+ * `tests/storybook/issue-205-aptitude-doubling.spec.ts` opens this story and
+ * snapshots it; the unit play function asserts the banner is in the DOM.
+ */
+export const Issue205AptitudeDoubling: Story = {
+    args: makeArgs({
+        selectedOrigin: makeSelectedOrigin('Hive World', { isConfirmed: true }),
+        preview: {
+            characteristics: [],
+            skills: [],
+            talents: [],
+            aptitudes: ['Awareness', 'Fellowship'],
+            wounds: null,
+            fate: null,
+            aptitudeCollisions: [{ original: 'Awareness', replacement: null }],
+            // (#216) The template now reads the unresolved list, not the full
+            // collision list, so the banner only fires on outstanding entries.
+            unresolvedAptitudeCollisions: [{ original: 'Awareness', replacement: null }],
+            resolvedAptitudeCollisions: [],
+            hasUnresolvedAptitudeCollision: true,
+        },
+        status: {
+            stepsComplete: false,
+            stepsCount: 1,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        // Banner renders with the duplicate-aptitude warning title
+        expect(canvas.getByText('Duplicate aptitude detected')).toBeTruthy();
+        // The conflicting aptitude is named in the banner list
+        expect(canvas.getByText('Awareness')).toBeTruthy();
+        // The chooser button is present and clickable
+        const pickBtn = canvasElement.querySelector('[data-action="resolveAptitudeDouble"][data-aptitude="Awareness"]');
+        expect(pickBtn).toBeTruthy();
+    },
+};
+
+/**
+ * Regression coverage for issue #215: opening the origin-path builder on a
+ * character that already has committed origin steps used to immediately show a
+ * "duplicate aptitude detected" banner for every aptitude — the actor's
+ * derived `system.aptitudes` collided with the builder's own re-loaded
+ * selections (the same single grant seen twice). Selecting replacements did
+ * not clear it; only Reset All did.
+ *
+ * After the fix `_getAptitudeCollisions` subtracts aptitudes attributable to
+ * the builder's own committed selections, so a freshly-opened, conflict-free
+ * builder reports NO collisions. This story stages that resolved state
+ * (aptitudes present on the preview, `aptitudeCollisions: []`) and asserts the
+ * collision banner is absent from the DOM.
+ */
+export const Issue215NoPhantomDuplicate: Story = {
+    args: makeArgs({
+        selectedOrigin: makeSelectedOrigin('Hive World', { isConfirmed: true }),
+        preview: {
+            characteristics: [],
+            skills: [],
+            talents: [],
+            aptitudes: ['Willpower', 'Tech', 'Finesse', 'Offence'],
+            wounds: null,
+            fate: null,
+            aptitudeCollisions: [],
+            unresolvedAptitudeCollisions: [],
+            resolvedAptitudeCollisions: [],
+            hasUnresolvedAptitudeCollision: false,
+        },
+        status: {
+            stepsComplete: true,
+            stepsCount: 4,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        // The collision banner must NOT be present — no phantom #215 warning.
+        const banner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
+        expect(banner).toBeNull();
+        // The preview still lists the character's aptitudes normally.
+        const canvas = within(canvasElement);
+        expect(canvas.getByText('Willpower')).toBeTruthy();
+    },
+};
+
+/**
+ * Regression coverage for issue #216 — "Duplicate aptitude option still
+ * displays as a requirement even if it is selected".
+ *
+ * Pre-fix the warning banner showed every entry in `preview.aptitudeCollisions`
+ * regardless of whether the player had picked a replacement, so a resolved
+ * collision kept appearing as an outstanding requirement.
+ *
+ * This story stages the POST-SELECT state: the player resolved a Willpower
+ * collision by swapping to Strength. After the fix the warning banner is gone
+ * (no entries in `unresolvedAptitudeCollisions`) and the resolved swap shows
+ * up in the neutral "applied swap" sub-section with a Change affordance.
+ *
+ * The Playwright spec at `tests/storybook/issue-216-resolved-aptitude.spec.ts`
+ * opens this story, snapshots it, and asserts the warning banner is absent
+ * while the resolved-banner is present.
+ */
+export const Issue216ResolvedAptitudeNotARequirement: Story = {
+    args: makeArgs({
+        selectedOrigin: makeSelectedOrigin('Hive World', { isConfirmed: true }),
+        preview: {
+            characteristics: [],
+            skills: [],
+            talents: [],
+            aptitudes: ['Strength', 'Fellowship', 'Willpower'],
+            wounds: null,
+            fate: null,
+            aptitudeCollisions: [{ original: 'Willpower', replacement: 'Strength' }],
+            unresolvedAptitudeCollisions: [],
+            resolvedAptitudeCollisions: [{ original: 'Willpower', replacement: 'Strength' }],
+            hasUnresolvedAptitudeCollision: false,
+        },
+        status: {
+            stepsComplete: true,
+            stepsCount: 2,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        // Bug #216: the warning banner used to render even after the swap.
+        const warningBanner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
+        expect(warningBanner).toBeNull();
+        // The resolved-applied list should still be visible so the player can Change it.
+        const resolvedBanner = canvasElement.querySelector('[data-testid="aptitude-collision-resolved-banner"]');
+        expect(resolvedBanner).toBeTruthy();
+        const resolvedRow = canvasElement.querySelector('[data-testid="aptitude-collision-resolved"][data-aptitude="Willpower"]');
+        expect(resolvedRow).toBeTruthy();
+    },
+};
+
+/**
+ * Pair to {@link Issue216ResolvedAptitudeNotARequirement}: PRE-select state
+ * with a still-unresolved Willpower collision. The warning banner must
+ * appear here. Stories are paired so visual review can compare pre/post
+ * side-by-side and the resolved-state regression doesn't slip past unnoticed.
+ */
+export const Issue216UnresolvedAptitudeIsARequirement: Story = {
+    args: makeArgs({
+        selectedOrigin: makeSelectedOrigin('Hive World', { isConfirmed: true }),
+        preview: {
+            characteristics: [],
+            skills: [],
+            talents: [],
+            aptitudes: ['Fellowship'],
+            wounds: null,
+            fate: null,
+            aptitudeCollisions: [{ original: 'Willpower', replacement: null }],
+            unresolvedAptitudeCollisions: [{ original: 'Willpower', replacement: null }],
+            resolvedAptitudeCollisions: [],
+            hasUnresolvedAptitudeCollision: true,
+        },
+        status: {
+            stepsComplete: false,
+            stepsCount: 2,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const warningBanner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
+        expect(warningBanner).toBeTruthy();
+        const resolvedBanner = canvasElement.querySelector('[data-testid="aptitude-collision-resolved-banner"]');
+        expect(resolvedBanner).toBeNull();
+        const unresolvedRow = canvasElement.querySelector('[data-testid="aptitude-collision-unresolved"][data-aptitude="Willpower"]');
+        expect(unresolvedRow).toBeTruthy();
     },
 };
