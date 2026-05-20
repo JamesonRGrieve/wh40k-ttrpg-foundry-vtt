@@ -1510,6 +1510,24 @@
                     "BaseDescription": "Base Effect",
                     "AppliedAlignment": "Applied Alignment"
                 }
+            },
+            "DaemonPrince": {
+                "Label": "Daemon Prince",
+                "Ascension": {
+                    "Title": "Apotheosis — Ascension to Daemon Prince",
+                    "Insufficient": {
+                        "Infamy": "Ascension blocked — Infamy below the apotheosis threshold (100).",
+                        "Corruption": "Ascension blocked — Corruption below the apotheosis threshold (70)."
+                    }
+                },
+                "Boost": {
+                    "UnnaturalStrength": "Unnatural Strength (x{multiplier})",
+                    "UnnaturalToughness": "Unnatural Toughness (x{multiplier})",
+                    "BonusWounds": "Bonus Wounds",
+                    "FearRating": "Fear ({rating})",
+                    "DaemonicTrait": "Daemonic",
+                    "ImmuneToConditions": "Immune to Conditions"
+                }
             }
         },
         "DW": {
@@ -1715,6 +1733,29 @@
                 },
                 "Complication": {
                     "Triggered": "Complication Triggered"
+                }
+            },
+            "SpecialAmmo": {
+                "Label": "Special-Issue Ammunition",
+                "Ammo": {
+                    "Hellfire": "Hellfire",
+                    "Kraken": "Kraken",
+                    "MetalStorm": "Metal Storm",
+                    "Tempest": "Tempest",
+                    "Stalker": "Stalker",
+                    "Vengeance": "Vengeance",
+                    "Dragonfire": "Dragonfire"
+                },
+                "Effect": {
+                    "BonusDamage": "Bonus Damage",
+                    "BonusPenetration": "Bonus Penetration",
+                    "BonusHits": "Bonus Hits per DoS",
+                    "IgnoresCover": "Ignores Cover",
+                    "IgnoresEnergyFields": "Ignores Energy Fields",
+                    "ReliabilityShift": "Reliability Shift",
+                    "StealthBonus": "Stealth Bonus",
+                    "FireDamage": "Fire Damage",
+                    "UnarmoredOnly": "Applies only against unarmored targets"
                 }
             }
         },
@@ -4156,6 +4197,28 @@
                     "DangerZone": "Danger Zone",
                     "TurnCount": "Turn",
                     "CloseRate": "Close Rate"
+                }
+            },
+            "Mount": {
+                "Label": "Mount",
+                "Action": {
+                    "Charge": "Charge",
+                    "Trample": "Trample",
+                    "RunDown": "Run Down",
+                    "MountedAttack": "Mounted Attack"
+                },
+                "Trait": {
+                    "Quadruped": "Quadruped",
+                    "SureFooted": "Sure-Footed",
+                    "Steadfast": "Steadfast",
+                    "UnnaturalSpeed": "Unnatural Speed",
+                    "Fearless": "Fearless",
+                    "BrutalCharge": "Brutal Charge"
+                },
+                "Modifier": {
+                    "BrutalCharge": "Brutal Charge (+20)",
+                    "Steadfast": "Steadfast (+10)",
+                    "SureFooted": "Sure-Footed on rough terrain (+10)"
                 }
             }
         }
