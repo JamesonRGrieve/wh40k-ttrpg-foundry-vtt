@@ -93,14 +93,14 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             // Wrap any awaitable with a 5s timeout so a blocking dialog or
             // socket-wait can't hang the spec (mirrors combat.spec.ts).
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                let timer: ReturnType<typeof setTimeout> | undefined;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer !== null) clearTimeout(timer);
+                    clearTimeout(timer);
                 }
             };
 
@@ -112,7 +112,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             async function closeOpenDialogs(): Promise<void> {
                 const windows = Object.values(browserUi?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
-                    const id = w?.id ?? '';
+                    const id = w.id ?? '';
                     if (
                         id.includes('dialog') ||
                         id.includes('prompt') ||
@@ -123,7 +123,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         id.includes('psychic')
                     ) {
                         try {
-                            await w?.close?.();
+                            await w.close?.();
                         } catch {
                             /* ignore */
                         }
@@ -157,7 +157,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     });
                 }
             } catch (err) {
-                for (const f of flows) notes[f] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
+                for (const f of flows) notes[f] = `PC create threw: ${String((err as Error).message)}`;
             }
 
             if (pc?.id == null) {
@@ -222,7 +222,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         try {
                             await withTimeout(Promise.resolve(live.rollWeaponAction?.(weapon)), 5_000, 'rollWeaponAction');
                         } catch (err) {
-                            threw = String((err as Error)?.message ?? err);
+                            threw = String((err as Error).message);
                         }
                         const windowsAfter = Object.keys(browserUi?.windows ?? {}).length;
                         if (threw === null) {
@@ -234,7 +234,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         await closeOpenDialogs();
                     }
                 } catch (err) {
-                    notes['weapon-attack-rolls-to-hit'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['weapon-attack-rolls-to-hit'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -295,7 +295,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['weapon-attack-consumes-ammo'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['weapon-attack-consumes-ammo'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -352,7 +352,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['weapon-attack-out-of-ammo'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['weapon-attack-out-of-ammo'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -388,7 +388,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         try {
                             await withTimeout(dialog.render?.({ force: true }), 5_000, 'RighteousFuryDialog.render');
                         } catch (err) {
-                            renderThrew = String((err as Error)?.message ?? err);
+                            renderThrew = String((err as Error).message);
                         }
                         const elementPresent = dialog.element !== null && dialog.element !== undefined;
                         if (renderThrew === null && elementPresent) {
@@ -405,7 +405,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         await closeOpenDialogs();
                     }
                 } catch (err) {
-                    notes['damage-roll-with-fury'] = `dynamic import threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['damage-roll-with-fury'] = `dynamic import threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -459,7 +459,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['damage-roll-applies-armour'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['damage-roll-applies-armour'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -502,7 +502,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         try {
                             await withTimeout(Promise.resolve(live.rollPsychicPower?.(power)), 5_000, 'rollPsychicPower');
                         } catch (err) {
-                            threw = String((err as Error)?.message ?? err);
+                            threw = String((err as Error).message);
                         }
                         if (threw === null) {
                             fired['psychic-power-roll'] = true;
@@ -513,7 +513,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         await closeOpenDialogs();
                     }
                 } catch (err) {
-                    notes['psychic-power-roll'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['psychic-power-roll'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -577,7 +577,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['weapon-modes'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['weapon-modes'] = `flow threw: ${String((err as Error).message)}`;
                 }
             } finally {
                 // Best-effort cleanup of everything we created.

@@ -43,7 +43,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
         const ActorCls = g.Actor;
-        if (!ActorCls?.create) {
+        if (ActorCls?.create == null) {
             return {
                 setupOk: false,
                 error: 'Actor.create unavailable',
@@ -93,7 +93,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
                 pageErrors,
             };
         }
-        if (!actor) {
+        if (actor == null) {
             window.removeEventListener('error', errorListener);
             return {
                 setupOk: false,

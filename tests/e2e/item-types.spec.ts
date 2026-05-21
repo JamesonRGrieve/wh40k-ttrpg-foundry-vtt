@@ -39,7 +39,7 @@ async function probeItemType(page: Page, itemType: string): Promise<ItemTypeProb
             try {
                 item = await ItemCtor.create({ name: `probe-${type}`, type });
             } catch (err) {
-                return { docId: null, sheetRendered: false, createError: String((err as Error)?.message ?? err) };
+                return { docId: null, sheetRendered: false, createError: String(err instanceof Error ? err.message : err) };
             }
             if (!item) return { docId: null, sheetRendered: false, createError: 'Item.create returned null (silent failure)' };
             let sheetRendered = false;
@@ -78,7 +78,7 @@ test.describe.serial('item types (Tier B)', () => {
                 type,
                 docId: null,
                 sheetRendered: false,
-                pageErrors: [String((err as Error)?.message ?? err)],
+                pageErrors: [String(err instanceof Error ? err.message : err)],
             }));
             if (probe.docId === null) {
                 const reason = probe.pageErrors[0] ?? 'Item.create returned null';

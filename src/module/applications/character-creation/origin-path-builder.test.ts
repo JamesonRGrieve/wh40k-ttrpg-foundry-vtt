@@ -127,7 +127,7 @@ class FakeRoll {
         this.total = 42;
     }
     async evaluate(): Promise<this> {
-        return this;
+        return Promise.resolve(this);
     }
 }
 (globalThis as Record<string, unknown>)['Roll'] = FakeRoll;
@@ -1012,7 +1012,7 @@ describe('OriginPathBuilder._calculatePreview aptitude collision split (issue #2
                 /* no talent modifier resolution needed */
             },
             _findSkillUuid: () => null,
-            _prepareGrantTooltipData: async () => null,
+            _prepareGrantTooltipData: async () => Promise.resolve(null),
         };
         const preview = await proto._calculatePreview.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
         return {

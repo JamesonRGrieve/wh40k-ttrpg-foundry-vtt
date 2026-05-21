@@ -70,14 +70,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 try {
                     return await import(`${base}/${name}.js`);
                 } catch (err) {
-                    return { __importError: String((err as Error)?.message ?? err) };
+                    return { __importError: String((err as Error).message) };
                 }
             };
             const guarded = (name: FlowName, fn: () => boolean): void => {
                 try {
                     record(name, fn(), null);
                 } catch (err) {
-                    record(name, false, String((err as Error)?.message ?? err));
+                    record(name, false, String((err as Error).message));
                 }
             };
             const fail = (keys: readonly FlowName[], detail: string): void => {
@@ -86,7 +86,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- daemonic-mastery ----------
             const dm = await loadModule('daemonic-mastery');
-            if (dm?.__importError) {
+            if (dm?.__importError != null) {
                 fail(['daemonic-mastery-buildTest'], dm.__importError);
             } else {
                 guarded('daemonic-mastery-buildTest', () => {
@@ -99,7 +99,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- dark-pact ----------
             const darkPact = await loadModule('dark-pact');
-            if (darkPact?.__importError) {
+            if (darkPact?.__importError != null) {
                 fail(['dark-pact-adjustDisposition', 'dark-pact-discoverySubtletyHit'], darkPact.__importError);
             } else {
                 guarded(
@@ -118,7 +118,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- exorcism ----------
             const exorcism = await loadModule('exorcism');
-            if (exorcism?.__importError) {
+            if (exorcism?.__importError != null) {
                 fail(['exorcism-threshold', 'exorcism-prepareAttempt', 'exorcism-hostSurvival'], exorcism.__importError);
             } else {
                 guarded('exorcism-threshold', () => exorcism.getExorcismThreshold(5) === 10 && exorcism.getExorcismThreshold(0) === 1);
@@ -131,7 +131,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- malefic-corruption ----------
             const malefic = await loadModule('malefic-corruption');
-            if (malefic?.__importError) {
+            if (malefic?.__importError != null) {
                 fail(['malefic-corruption-cost'], malefic.__importError);
             } else {
                 guarded(
@@ -145,7 +145,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- possession ----------
             const possession = await loadModule('possession');
-            if (possession?.__importError) {
+            if (possession?.__importError != null) {
                 fail(['possession-canUnleash', 'possession-spendUnleash', 'possession-resistTarget'], possession.__importError);
             } else {
                 guarded('possession-canUnleash', () => {
@@ -171,7 +171,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- psychic-push ----------
             const psyPush = await loadModule('psychic-push');
-            if (psyPush?.__importError) {
+            if (psyPush?.__importError != null) {
                 fail(['psychic-push-resolveMode'], psyPush.__importError);
             } else {
                 guarded('psychic-push-resolveMode', () => {
@@ -190,7 +190,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- summoning-ritual ----------
             const summoning = await loadModule('summoning-ritual');
-            if (summoning?.__importError) {
+            if (summoning?.__importError != null) {
                 fail(['summoning-prepareRitual', 'summoning-bindingDuration'], summoning.__importError);
             } else {
                 const baseRitual = { forbiddenLoreTotal: 80, willpowerTotal: 40, hasTrueName: false, hasComponents: true, extraFactors: [] };
@@ -206,7 +206,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- xenos-equipment ----------
             const xenos = await loadModule('xenos-equipment');
-            if (xenos?.__importError) {
+            if (xenos?.__importError != null) {
                 fail(['xenos-equipment-condition', 'xenos-equipment-tickDegradation'], xenos.__importError);
             } else {
                 guarded(
@@ -229,7 +229,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- inquest ----------
             const inquest = await loadModule('inquest');
-            if (inquest?.__importError) {
+            if (inquest?.__importError != null) {
                 fail(['inquest-revelationsCrossed', 'inquest-currentTier'], inquest.__importError);
             } else {
                 guarded(
@@ -250,7 +250,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- malignancy-test ----------
             const malignancy = await loadModule('malignancy-test');
-            if (malignancy?.__importError) {
+            if (malignancy?.__importError != null) {
                 fail(['malignancy-thresholdsCrossed', 'malignancy-testTarget'], malignancy.__importError);
             } else {
                 guarded(
@@ -271,7 +271,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- chaos-backgrounds ----------
             const chaosBg = await loadModule('chaos-backgrounds');
-            if (chaosBg?.__importError) {
+            if (chaosBg?.__importError != null) {
                 fail(['chaos-backgrounds-predicates'], chaosBg.__importError);
             } else {
                 guarded('chaos-backgrounds-predicates', () => {

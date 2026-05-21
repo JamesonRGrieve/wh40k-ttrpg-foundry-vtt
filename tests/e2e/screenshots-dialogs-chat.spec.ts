@@ -98,12 +98,13 @@ const DIALOGS_DIR = new Set([
     'TransactionRequestDialog',
 ]);
 
-const KEBAB_OVERRIDES: Record<string, string> = {
+const KEBAB_OVERRIDES: Partial<Record<string, string>> = {
     WH40KCreateActorDialog: 'create-actor-dialog',
 };
 
 function kebab(className: string): string {
-    if (KEBAB_OVERRIDES[className] !== undefined) return KEBAB_OVERRIDES[className];
+    const override = KEBAB_OVERRIDES[className];
+    if (override !== undefined) return override;
     return className
         .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
         .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
@@ -143,6 +144,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                 dialogResults = await page.evaluate(
                     async ({ probes }) => {
                         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side: Foundry globals are runtime-only */
+                        // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func -- browser-side: Playwright evaluate context requires Function constructor to perform dynamic import; static import() is hoisted and cannot be used here
                         const importer = new Function('u', 'return import(u)') as (u: string) => Promise<any>;
                         const out: Array<{ name: string; ok: boolean; elementSelector: string | null; error: string | null }> = [];
                         for (const probe of probes) {
@@ -161,7 +163,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                                     try {
                                         void Cls.open?.();
                                     } catch (err) {
-                                        error = String((err as Error)?.message ?? err);
+                                        error = err instanceof Error ? err.message : String(err);
                                     }
                                     await new Promise((r) => {
                                         setTimeout(r, 200);
@@ -182,14 +184,14 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                                         try {
                                             inst = new Cls();
                                         } catch (err) {
-                                            error = String((err as Error)?.message ?? err);
+                                            error = err instanceof Error ? err.message : String(err);
                                         }
                                     }
                                     if (inst !== undefined) {
                                         try {
                                             await inst.render?.({ force: true });
                                         } catch (err) {
-                                            error = String((err as Error)?.message ?? err);
+                                            error = err instanceof Error ? err.message : String(err);
                                         }
                                         await new Promise((r) => {
                                             setTimeout(r, 200);
@@ -203,7 +205,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                                     }
                                 }
                             } catch (err) {
-                                error = String((err as Error)?.message ?? err);
+                                error = err instanceof Error ? err.message : String(err);
                             }
                             out.push({ name: probe.name, ok, elementSelector, error });
                         }
@@ -213,21 +215,21 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                     { probes: probeManifest },
                 );
             } catch (err) {
-                failures.push(`dialog probe failed: ${String((err as Error)?.message ?? err)}`);
+                failures.push(`dialog probe failed: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             for (const r of dialogResults) {
                 try {
                     await page.screenshot({ path: `tests/e2e/screenshots/dialog/${r.name}.png`, fullPage: true });
                 } catch (err) {
-                    failures.push(`screenshot dialog::${r.name}: ${String((err as Error)?.message ?? err)}`);
+                    failures.push(`screenshot dialog::${r.name}: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 recordCoverage('screenshot.dialog-chat.flow', `dialog::${r.name}`);
                 // Tear down between renders so windows don't stack.
                 await page.evaluate(() => {
                     document.querySelectorAll('dialog.application,[data-screenshot-id^="dialog-"]').forEach((el) => {
                         try {
-                            (el as HTMLDialogElement).close?.();
+                            (el as HTMLDialogElement).close();
                         } catch {
                             /* ignore */
                         }
@@ -236,7 +238,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                     const g = globalThis as unknown as { ui?: { windows?: Record<string, { close?: () => Promise<unknown> }> } };
                     Object.values(g.ui?.windows ?? {}).forEach((w) => {
                         try {
-                            void w?.close?.();
+                            void w.close?.();
                         } catch {
                             /* ignore */
                         }
@@ -265,18 +267,18 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                         try {
                             html = await renderTemplateFn(`systems/wh40k-rpg/templates/chat/${template}.hbs`, {});
                         } catch (err) {
-                            throw new Error(`renderTemplate(${template}): ${String((err as Error)?.message ?? err)}`);
+                            throw new Error(`renderTemplate(${template}): ${err instanceof Error ? err.message : String(err)}`);
                         }
                         const msg = await g.ChatMessage.create({ content: html.length > 0 ? html : `<div data-chat-empty="${template}"></div>` });
                         return msg?.id ?? null;
                     }, tpl);
                 } catch (err) {
-                    postError = String((err as Error)?.message ?? err);
+                    postError = err instanceof Error ? err.message : String(err);
                 }
                 try {
                     await page.screenshot({ path: `tests/e2e/screenshots/chat/${tpl}.png`, fullPage: true });
                 } catch (err) {
-                    failures.push(`screenshot chat::${tpl}: ${String((err as Error)?.message ?? err)}`);
+                    failures.push(`screenshot chat::${tpl}: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 recordCoverage('screenshot.dialog-chat.flow', `chat::${tpl}`);
                 // Tear the message down so the chat log doesn't grow unbounded.

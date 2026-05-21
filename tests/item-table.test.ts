@@ -38,11 +38,12 @@ describe('item-table.hbs', () => {
         );
         const headRow = root.querySelector('[data-table-header]');
         expect(headRow).not.toBeNull();
+        const headRowEl = headRow as Element;
         // 3 header cells + 1 trailing add cell
-        expect(headRow!.children).toHaveLength(4);
-        expect(headRow!.textContent).toMatch(/Name/);
-        expect(headRow!.textContent).toMatch(/Class/);
-        expect(headRow!.textContent).toMatch(/Type/);
+        expect(headRowEl.children).toHaveLength(4);
+        expect(headRowEl.textContent).toMatch(/Name/);
+        expect(headRowEl.textContent).toMatch(/Class/);
+        expect(headRowEl.textContent).toMatch(/Type/);
     });
 
     it('omits the add cell when addAction is absent', () => {
@@ -54,7 +55,7 @@ describe('item-table.hbs', () => {
         const root = renderTable('addAction="itemCreate" addType="shipComponent" headers=(array (object label="X"))');
         const addBtn = root.querySelector('[data-action="itemCreate"]');
         expect(addBtn).not.toBeNull();
-        expect(addBtn!.getAttribute('data-type')).toBe('shipComponent');
+        expect((addBtn as Element).getAttribute('data-type')).toBe('shipComponent');
     });
 
     it('applies per-system theme variants on the table border', () => {
@@ -63,7 +64,7 @@ describe('item-table.hbs', () => {
         expect(tbl).not.toBeNull();
         // The literal class names must be present in the rendered DOM so
         // Tailwind's template scan picks them up at build time.
-        const cls = tbl!.className;
+        const cls = (tbl as Element).className;
         expect(cls).toMatch(/dh2e:tw-border-bronze/);
         expect(cls).toMatch(/rt:tw-border-amber-700/);
         expect(cls).toMatch(/im:tw-border-crimson/);
@@ -82,14 +83,16 @@ describe('item-table-row.hbs', () => {
         const root = renderRow('item=item', '', ctx);
         const editBtn = root.querySelector('.item-edit');
         expect(editBtn).not.toBeNull();
-        expect(editBtn!.getAttribute('data-action')).toBe('itemEdit');
-        expect(editBtn!.getAttribute('data-item-id')).toBe('itm-1');
+        const editBtnEl = editBtn as Element;
+        expect(editBtnEl.getAttribute('data-action')).toBe('itemEdit');
+        expect(editBtnEl.getAttribute('data-item-id')).toBe('itm-1');
     });
 
     it('honors a custom editAction override', () => {
         const root = renderRow('item=item editAction="customEdit"', '', ctx);
         const editBtn = root.querySelector('.item-edit');
-        expect(editBtn!.getAttribute('data-action')).toBe('customEdit');
+        expect(editBtn).not.toBeNull();
+        expect((editBtn as Element).getAttribute('data-action')).toBe('customEdit');
     });
 
     it('suppresses the leading edit cell when editAction is false', () => {
@@ -126,24 +129,26 @@ describe('item-table-row.hbs', () => {
         const svg = root.querySelector('[data-action="itemDelete"] svg');
         expect(svg).not.toBeNull();
         // Helper-emitted classes are namespaced with `wh40k-icon--<family>-<name>`.
-        expect(svg!.getAttribute('class')).toMatch(/wh40k-icon--fa-trash/);
+        expect((svg as Element).getAttribute('class')).toMatch(/wh40k-icon--fa-trash/);
     });
 
     it('emits the row-level data-item-id attr for drop-zone wiring', () => {
         const root = renderRow('item=item dragType="weapon"', '', ctx);
         const row = root.querySelector('[data-item-id]');
         expect(row).not.toBeNull();
-        expect(row!.getAttribute('data-item-id')).toBe('itm-1');
-        expect(row!.getAttribute('data-item-type')).toBe('weapon');
-        expect(row!.classList.contains('item-drag')).toBe(true);
+        const rowEl = row as Element;
+        expect(rowEl.getAttribute('data-item-id')).toBe('itm-1');
+        expect(rowEl.getAttribute('data-item-type')).toBe('weapon');
+        expect(rowEl.classList.contains('item-drag')).toBe(true);
     });
 
     it('renders a description toggle cell when nameToggleId is provided', () => {
         const root = renderRow('item=item nameToggleId="description_itm-1"', '<span class="custom-desc">desc body</span>', ctx);
         const descCell = root.querySelector('[data-description-id]');
         expect(descCell).not.toBeNull();
-        expect(descCell!.getAttribute('data-description-id')).toBe('description_itm-1');
-        expect(descCell!.querySelector('.custom-desc')?.textContent).toBe('desc body');
+        const descCellEl = descCell as Element;
+        expect(descCellEl.getAttribute('data-description-id')).toBe('description_itm-1');
+        expect(descCellEl.querySelector('.custom-desc')?.textContent).toBe('desc body');
     });
 
     it('omits the description cell when nameToggleId is unset', () => {

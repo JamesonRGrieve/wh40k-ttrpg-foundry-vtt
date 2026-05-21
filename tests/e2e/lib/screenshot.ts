@@ -105,8 +105,8 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
             // cover most sheets without forcing tiny dialogs to grow.
             await page.evaluate((selector: string) => {
                 const el = document.querySelectorAll<HTMLElement>(selector);
+                if (el.length === 0) return;
                 const last = el[el.length - 1];
-                if (last === undefined) return;
                 last.style.left = '24px';
                 last.style.top = '24px';
                 last.style.right = 'auto';

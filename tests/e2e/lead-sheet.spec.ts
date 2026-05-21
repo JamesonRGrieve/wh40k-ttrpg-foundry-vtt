@@ -29,7 +29,7 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
             const ItemCls = g.Item;
-            if (!ItemCls?.create) {
+            if (ItemCls?.create == null) {
                 return { created: false, rendered: false, createError: 'Item.create unavailable' };
             }
             let item;
@@ -47,11 +47,11 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
             } catch (createErr) {
                 return { created: false, rendered: false, createError: String((createErr as Error).message) };
             }
-            if (!item) return { created: false, rendered: false, createError: 'Item.create returned null' };
+            if (item == null) return { created: false, rendered: false, createError: 'Item.create returned null' };
 
             let rendered = false;
             try {
-                if (item.sheet?.render) {
+                if (item.sheet?.render != null) {
                     await item.sheet.render(true);
                     await new Promise((r) => {
                         setTimeout(r, 100);
@@ -84,7 +84,7 @@ async function cleanupLeadProbe(page: Page): Promise<void> {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
         const g = globalThis as any;
         const id = g.__leadProbeItemId;
-        if (!id) return;
+        if (id == null) return;
         const item = g.game?.items?.get?.(id);
         try {
             await item?.sheet?.close?.();

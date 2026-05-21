@@ -68,7 +68,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!ActorCls?.create) {
+            if (ActorCls?.create == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'deal-damage-reduces-wounds': 'Actor.create unavailable' },
@@ -133,7 +133,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                 notes['wounds-zero-marks-critical'] = `NPC create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (!pcActor?.id && !npcActor?.id) {
+            if (pcActor?.id == null && npcActor?.id == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { ...notes, 'deal-damage-reduces-wounds': 'no actors could be created' },
@@ -146,13 +146,13 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // Foundry returns the create() promise's resolved doc but the
             // canonical reference for subsequent reads is the world cache —
             // grab fresh handles after each update.
-            const getPc = (): any => (pcActor?.id ? gameGlobal?.actors?.get?.(pcActor.id) : null);
-            const getNpc = (): any => (npcActor?.id ? gameGlobal?.actors?.get?.(npcActor.id) : null);
+            const getPc = (): any => (pcActor?.id != null ? gameGlobal?.actors?.get?.(pcActor.id) : null);
+            const getNpc = (): any => (npcActor?.id != null ? gameGlobal?.actors?.get?.(npcActor.id) : null);
 
             // ---- 1. deal-damage-reduces-wounds (NPC.applyDamage path) ----
             try {
                 const npc = getNpc();
-                if (!npc) {
+                if (npc == null) {
                     notes['deal-damage-reduces-wounds'] = 'no NPC available';
                 } else if (typeof npc.applyDamage !== 'function') {
                     notes['deal-damage-reduces-wounds'] = 'npc.applyDamage missing';
@@ -175,7 +175,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // ---- 2. wounds-zero-marks-critical (NPC at 0 wounds → critical climbs) ----
             try {
                 const npc = getNpc();
-                if (!npc) {
+                if (npc == null) {
                     notes['wounds-zero-marks-critical'] = 'no NPC available';
                 } else if (typeof npc.applyDamage !== 'function') {
                     notes['wounds-zero-marks-critical'] = 'npc.applyDamage missing';
@@ -203,7 +203,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // ---- 3. fatigue-accumulation (base-actor.applyFatigue) ----
             try {
                 const pc = getPc();
-                if (!pc) {
+                if (pc == null) {
                     notes['fatigue-accumulation'] = 'no PC available';
                 } else if (typeof pc.applyFatigue !== 'function') {
                     notes['fatigue-accumulation'] = 'pc.applyFatigue missing';
@@ -228,7 +228,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // ---- 4. fate-spend-decrements-value (acolyte.spendFate) ----
             try {
                 const pc = getPc();
-                if (!pc) {
+                if (pc == null) {
                     notes['fate-spend-decrements-value'] = 'no PC available';
                 } else if (typeof pc.spendFate !== 'function') {
                     notes['fate-spend-decrements-value'] = 'pc.spendFate missing';
@@ -249,7 +249,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // ---- 5. fate-burn-decrements-max (direct update — burn is permanent loss of max) ----
             try {
                 const pc = getPc();
-                if (!pc) {
+                if (pc == null) {
                     notes['fate-burn-decrements-max'] = 'no PC available';
                 } else {
                     const beforeMax = pc.system?.fate?.max ?? 0;
@@ -275,7 +275,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // ---- 6. wound-recovery (NPC.healWounds) ----
             try {
                 const npc = getNpc();
-                if (!npc) {
+                if (npc == null) {
                     notes['wound-recovery'] = 'no NPC available';
                 } else if (typeof npc.healWounds !== 'function') {
                     notes['wound-recovery'] = 'npc.healWounds missing';
@@ -297,7 +297,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             try {
                 const pc = getPc();
                 const npc = getNpc();
-                if (!pc || !npc) {
+                if (pc == null || npc == null) {
                     notes['multi-step-damage-fatigue'] = 'PC or NPC unavailable';
                 } else {
                     // Reset NPC to full wounds, then apply 3 sequential strikes

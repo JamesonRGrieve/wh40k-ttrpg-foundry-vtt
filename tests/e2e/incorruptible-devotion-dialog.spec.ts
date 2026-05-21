@@ -55,7 +55,7 @@ test.describe.serial('IncorruptibleDevotionDialog (Tier B)', () => {
                             setTimeout(r, 60);
                         });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String((err as Error).message);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -64,7 +64,7 @@ test.describe.serial('IncorruptibleDevotionDialog (Tier B)', () => {
                         bodyHasAmount = (inst.element.textContent ?? '').includes('3');
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return { rendered, hasTradeButton, hasDeclineButton, bodyHasAmount, error };

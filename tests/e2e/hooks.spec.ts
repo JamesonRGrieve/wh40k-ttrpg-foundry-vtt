@@ -103,7 +103,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             const gameGbl = (globalThis as unknown as { game?: GameApi }).game;
             const uiGbl = (globalThis as unknown as { ui?: UiApi }).ui;
 
-            if (!HooksGbl?.on || !HooksGbl?.off) {
+            if (!HooksGbl?.on || !HooksGbl.off) {
                 notes.__global__ = 'Hooks API unavailable';
                 return { fired, notes };
             }
@@ -134,7 +134,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 try {
                     await ChatMessageGbl?.create?.({ content: 'hook-probe-chat' });
                 } catch (err) {
-                    notes.renderChatMessageHTML = `ChatMessage.create threw: ${String((err as Error)?.message ?? err)}`;
+                    notes.renderChatMessageHTML = `ChatMessage.create threw: ${String((err as Error).message)}`;
                 }
 
                 // updateActor + updateItem
@@ -159,7 +159,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                         try {
                             await live?.update?.({ name: 'hook-probe-actor-updated' });
                         } catch (err) {
-                            notes.updateActor = `actor.update threw: ${String((err as Error)?.message ?? err)}`;
+                            notes.updateActor = `actor.update threw: ${String((err as Error).message)}`;
                         }
                         try {
                             const created = await live?.createEmbeddedDocuments?.('Item', [{ name: 'hook-probe-item', type: 'gear' }]);
@@ -171,15 +171,15 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                                 notes.updateItem = 'embedded item creation returned no id';
                             }
                         } catch (err) {
-                            notes.updateItem = `item create/update threw: ${String((err as Error)?.message ?? err)}`;
+                            notes.updateItem = `item create/update threw: ${String((err as Error).message)}`;
                         }
                     } else {
                         notes.updateActor = 'probe actor create returned null';
                         notes.updateItem = 'probe actor create returned null';
                     }
                 } catch (err) {
-                    notes.updateActor = `probe actor create threw: ${String((err as Error)?.message ?? err)}`;
-                    notes.updateItem = `probe actor create threw: ${String((err as Error)?.message ?? err)}`;
+                    notes.updateActor = `probe actor create threw: ${String((err as Error).message)}`;
+                    notes.updateItem = `probe actor create threw: ${String((err as Error).message)}`;
                 }
 
                 // combat lifecycle: create, add combatant, start, nextTurn, nextRound, delete
@@ -228,22 +228,22 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                         try {
                             await combat.startCombat?.();
                         } catch (err) {
-                            notes.combatStart = `combat.startCombat threw: ${String((err as Error)?.message ?? err)}`;
+                            notes.combatStart = `combat.startCombat threw: ${String((err as Error).message)}`;
                         }
                         try {
                             await combat.nextTurn?.();
                         } catch (err) {
-                            notes.combatTurn = `combat.nextTurn threw: ${String((err as Error)?.message ?? err)}`;
+                            notes.combatTurn = `combat.nextTurn threw: ${String((err as Error).message)}`;
                         }
                         try {
                             await combat.nextRound?.();
                         } catch (err) {
-                            notes.combatRound = `combat.nextRound threw: ${String((err as Error)?.message ?? err)}`;
+                            notes.combatRound = `combat.nextRound threw: ${String((err as Error).message)}`;
                         }
                         try {
                             await combat.delete?.();
                         } catch (err) {
-                            notes.deleteCombat = `combat.delete threw: ${String((err as Error)?.message ?? err)}`;
+                            notes.deleteCombat = `combat.delete threw: ${String((err as Error).message)}`;
                         }
                     } else {
                         notes.combatStart = 'Combat.create returned null';
@@ -252,7 +252,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                         notes.deleteCombat = 'Combat.create returned null';
                     }
                 } catch (err) {
-                    const msg = `Combat lifecycle threw: ${String((err as Error)?.message ?? err)}`;
+                    const msg = `Combat lifecycle threw: ${String((err as Error).message)}`;
                     notes.combatStart = msg;
                     notes.combatTurn = msg;
                     notes.combatRound = msg;
@@ -286,7 +286,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                         });
                     }
                 } catch (err) {
-                    notes.getSceneControlButtons = `ui.controls.render threw: ${String((err as Error)?.message ?? err)}`;
+                    notes.getSceneControlButtons = `ui.controls.render threw: ${String((err as Error).message)}`;
                 }
             } finally {
                 for (const { name, id } of taps) {

@@ -180,7 +180,7 @@ async function probeDialogs(page: Page): Promise<{
                         results: [],
                     };
                 }
-                if (!actor) {
+                if (actor === null || actor === undefined) {
                     return { created: false, createError: 'Actor.create returned null', results: [] };
                 }
 
@@ -218,7 +218,7 @@ async function probeDialogs(page: Page): Promise<{
                 async function closeOpenDialogs(): Promise<void> {
                     const windows = Object.values(g.ui?.windows ?? {});
                     for (const w of windows as any[]) {
-                        const id = w?.id ?? '';
+                        const id = String(w?.id ?? '');
                         if (
                             id.includes('dialog') ||
                             id.includes('prompt') ||

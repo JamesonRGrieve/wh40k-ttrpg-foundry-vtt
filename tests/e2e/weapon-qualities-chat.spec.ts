@@ -118,7 +118,7 @@ function capitalize(s: string): string {
     if (s.length === 0) return s;
     return s
         .split('-')
-        .map((part) => (part.length === 0 ? part : (part[0]?.toUpperCase() ?? '') + part.slice(1)))
+        .map((part) => (part.length === 0 ? part : part[0].toUpperCase() + part.slice(1)))
         .join('');
 }
 
@@ -187,7 +187,7 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                         try {
                             html = await renderTemplateFn(templatePath, ctx);
                         } catch (err) {
-                            error = String((err as Error)?.message ?? err);
+                            error = String(err instanceof Error ? err.message : String(err));
                         }
 
                         if (html) {
@@ -214,7 +214,7 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                             hasQualityKeyAttr = card?.getAttribute('data-quality-key') === inputs.qualityKey;
                         }
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String(err instanceof Error ? err.message : String(err));
                     }
 
                     return {

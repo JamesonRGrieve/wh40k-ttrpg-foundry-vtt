@@ -22,7 +22,7 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
         const ActorCls = g.Actor;
-        if (!ActorCls?.create) return { setupOk: false, rowCount: 0, error: 'Actor.create unavailable' };
+        if (ActorCls?.create == null) return { setupOk: false, rowCount: 0, error: 'Actor.create unavailable' };
 
         let actor;
         try {
@@ -48,9 +48,9 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
                 },
             });
         } catch (err) {
-            return { setupOk: false, rowCount: 0, error: String((err as Error)?.message ?? err) };
+            return { setupOk: false, rowCount: 0, error: String((err as Error).message) };
         }
-        if (!actor) return { setupOk: false, rowCount: 0, error: 'Actor.create returned null' };
+        if (actor == null) return { setupOk: false, rowCount: 0, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
         await new Promise<void>((r) => {
