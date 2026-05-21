@@ -74,12 +74,14 @@ export const Smoke: Story = {
 export const RenderSmoke: Story = {
     args: { selectedId: 'smoke' },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Picker exposes all four grenades.
-        for (const id of Object.keys(WITHIN_GRENADES)) {
-            expect(canvasElement.querySelector(`[data-grenade-id="${id}"]`)).toBeTruthy();
-        }
+        await Promise.all(
+            Object.keys(WITHIN_GRENADES).map(async (id) => {
+                await expect(canvasElement.querySelector(`[data-grenade-id="${id}"]`)).toBeTruthy();
+            }),
+        );
         // Throw button is present.
-        expect(canvas.getByText(/Throw/i)).toBeTruthy();
+        await expect(view.getByText(/Throw/i)).toBeTruthy();
     },
 };

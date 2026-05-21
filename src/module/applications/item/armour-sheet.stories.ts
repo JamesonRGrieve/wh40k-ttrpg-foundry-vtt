@@ -2,14 +2,14 @@
  * Stories for ArmourSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockArmourSheetContext, renderTemplate } from '../../../../stories/mocks';
+import { mockArmourSheetContext, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-armour-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HbsLib.compile(templateSrc);
 
 interface Args {
     overrides?: Parameters<typeof mockArmourSheetContext>[0];
@@ -17,7 +17,7 @@ interface Args {
 
 const meta = {
     title: 'Item Sheets/ArmourSheet',
-    render: (args: Args) => renderTemplate(compiled, mockArmourSheetContext(args.overrides)),
+    render: (args: Args) => renderStoryTemplate(compiled, mockArmourSheetContext(args.overrides)),
     args: {},
 } satisfies Meta<Args>;
 export default meta;
@@ -44,9 +44,9 @@ export const EditMode: Story = {
 };
 
 export const RendersArmourName: Story = {
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Carapace Armour')).toBeTruthy();
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByDisplayValue('Carapace Armour')).toBeTruthy();
     },
 };
 
@@ -54,9 +54,9 @@ export const RendersEditModeToggle: Story = {
     args: {
         overrides: { canEdit: true },
     },
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         const btn = canvasElement.querySelector('[data-action="toggleEditMode"]');
-        expect(btn).toBeTruthy();
+        void expect(btn).toBeTruthy();
         btn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     },
 };

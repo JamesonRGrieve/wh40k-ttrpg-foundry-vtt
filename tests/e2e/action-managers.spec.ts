@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -47,9 +48,11 @@ interface ProbeResult {
     pageErrors: string[];
 }
 
-async function probeActionManagers(page: import('@playwright/test').Page): Promise<ProbeResult> {
+async function probeActionManagers(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
@@ -63,13 +66,13 @@ async function probeActionManagers(page: import('@playwright/test').Page): Promi
                 const game = g.game;
 
                 const flows: Array<{ flow: string; success: boolean; note: string }> = [];
-                const record = (flow: string, success: boolean, note: string) => {
+                const record = (flow: string, success: boolean, note: string): void => {
                     flows.push({ flow, success, note });
                 };
 
                 // Per-flow defaults (we'll overwrite with success: true as we go).
                 for (const f of flowNames) record(f, false, 'not attempted');
-                const setResult = (flow: string, success: boolean, note: string) => {
+                const setResult = (flow: string, success: boolean, note: string): void => {
                     const idx = flows.findIndex((r) => r.flow === flow);
                     if (idx >= 0) flows[idx] = { flow, success, note };
                 };

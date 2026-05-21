@@ -149,15 +149,14 @@ async function openTradeForToken(buyerToken: TokenLike): Promise<void> {
     if (!actor) return;
 
     const nearby = findNearbySources(buyerToken);
-    const nearest = nearby[0];
-    if (nearest === undefined) {
+    if (nearby.length === 0) {
         ui.notifications.warn(t('WH40K.Trade.NoSourcesNearby'));
         return;
     }
 
     const { default: TransactionRequestDialog } = await import('../applications/dialogs/transaction-request-dialog.ts');
     await TransactionRequestDialog.show(actor, {
-        sourceId: nearest.actorId,
+        sourceId: nearby[0]!.actorId,
         restrictToSourceIds: nearby.map((entry) => entry.actorId),
     });
 }

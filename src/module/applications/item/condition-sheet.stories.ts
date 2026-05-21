@@ -73,11 +73,11 @@ export const NotStackable: Story = {
 
 export const RendersTabs: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Details')).toBeTruthy();
-        expect(canvas.getByText('Description')).toBeTruthy();
-        expect(canvas.getByText('Effects')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText('Details')).toBeTruthy();
+        await expect(view.getByText('Description')).toBeTruthy();
+        await expect(view.getByText('Effects')).toBeTruthy();
         const tabBtn = canvasElement.querySelector('[data-tab="description"]');
-        expect(tabBtn).toBeTruthy();
+        await expect(tabBtn).toBeTruthy();
     },
 };

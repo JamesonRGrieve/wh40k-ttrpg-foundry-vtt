@@ -21,8 +21,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HbsLib from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { applyDrawbacksToBudget, mergeDrawbackPenalties, type RegimentDrawback } from '../../../module/rules/ow-regiment-drawback';
 import panelSrc from './ow-drawback-panel.hbs?raw';
@@ -124,13 +124,13 @@ function buildContext(opts: BuildOpts): DrawbackPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HbsLib.compile(panelSrc);
 
 function renderPanel(ctx: DrawbackPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
     return wrapper;
 }
 

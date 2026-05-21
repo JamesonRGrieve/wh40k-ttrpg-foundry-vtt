@@ -10,8 +10,8 @@
  *                          to four squad members.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HbsLib from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import panelSrc from './ow-orders-panel.hbs?raw';
 
@@ -41,13 +41,13 @@ interface OrdersPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HbsLib.compile(panelSrc);
 
 function renderPanel(ctx: OrdersPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderTpl(panelTpl, ctx));
     return wrapper;
 }
 

@@ -40,9 +40,9 @@ export const Enemy: Story = {
 
 export const RendersFields: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Adeptus Arbites')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Adeptus Arbites')).toBeTruthy();
         const modifier = canvasElement.querySelector<HTMLInputElement>('input[name="system.modifier"]');
-        expect(modifier?.value).toBe('10');
+        await expect(modifier?.value).toBe('10');
     },
 };

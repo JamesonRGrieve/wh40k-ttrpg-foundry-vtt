@@ -52,7 +52,7 @@ const baseSystem = (): CritArgs['item']['system'] => ({
 
 const meta = {
     title: 'Item Sheets/CriticalInjurySheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         item: { name: 'Cauterised Arm', img: 'icons/svg/wound.svg', system: baseSystem() },
         system: { description: { value: '<p>An ugly burn that mangles the arm.</p>' } },
@@ -83,8 +83,8 @@ export const Permanent: Story = {
 
 export const RendersHeader: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Cauterised Arm')).toBeTruthy();
-        expect(canvas.getByText(/Severity 4/)).toBeTruthy();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByDisplayValue('Cauterised Arm')).toBeTruthy();
+        await expect(withinCanvas.getByText(/Severity 4/)).toBeTruthy();
     },
 };

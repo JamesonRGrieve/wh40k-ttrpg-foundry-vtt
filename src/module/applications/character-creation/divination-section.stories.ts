@@ -74,13 +74,13 @@ type Story = StoryObj<Args>;
  */
 export const Empty: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const heading = canvas.getByText('Divination');
-        expect(heading).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        const heading = storyCanvas.getByText('Divination');
+        await expect(heading).toBeTruthy();
         const input = canvasElement.querySelector<HTMLInputElement>('input.csd-divination-input');
-        expect(input).toBeTruthy();
-        expect(input?.value).toBe('');
-        expect(input?.placeholder).toBe('Enter divination');
+        await expect(input).toBeTruthy();
+        await expect(input?.value).toBe('');
+        await expect(input?.placeholder).toBe('Enter divination');
         // Verify the action handle the runtime sheet's static actions table
         // reads. A regression that renames or drops the handle would silently
         // break the dice button.
@@ -99,9 +99,9 @@ export const Rolled: Story = {
     },
     play: async ({ canvasElement }) => {
         const input = canvasElement.querySelector<HTMLInputElement>('input.csd-divination-input');
-        expect(input).toBeTruthy();
-        expect(input?.value).toBe('Trust in your fear.');
-        expect(input?.value.length ?? 0).toBeGreaterThan(0);
+        await expect(input).toBeTruthy();
+        await expect(input?.value).toBe('Trust in your fear.');
+        await expect(input?.value.length ?? 0).toBeGreaterThan(0);
     },
 };
 
@@ -117,7 +117,7 @@ export const TableUnavailableFallback: Story = {
     },
     play: async ({ canvasElement }) => {
         const input = canvasElement.querySelector<HTMLInputElement>('input.csd-divination-input');
-        expect(input).toBeTruthy();
-        expect(input?.value).toContain('rolled 42 on 1d100');
+        await expect(input).toBeTruthy();
+        await expect(input?.value).toContain('rolled 42 on 1d100');
     },
 };

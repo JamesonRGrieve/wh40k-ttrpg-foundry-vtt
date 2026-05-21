@@ -16,11 +16,10 @@
  * for diff stability — no Math.random in this module.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-
-import { DW_SPECIAL_AMMO_EFFECTS, type DwSpecialAmmoId } from '../../../module/rules/dw-special-ammo.ts';
-import { renderTemplate } from '../../../../stories/mocks';
+import HandlebarsLib from 'handlebars';
+import { renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { DW_SPECIAL_AMMO_EFFECTS, type DwSpecialAmmoId } from '../../../module/rules/dw-special-ammo.ts';
 import panelSrc from './dw-ammo-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -105,13 +104,13 @@ function buildEffectCtx(id: DwSpecialAmmoId): AmmoEffectCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HandlebarsLib.compile(panelSrc);
 
 function renderPanel(ctx: AmmoPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderMockTemplate(panelTpl, ctx));
     return wrapper;
 }
 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import damageRollChatSrc from '../../src/templates/chat/damage-roll-chat.hbs?raw';
-import { mockDamageRollData, renderTemplate } from '../mocks';
+import { mockDamageRollData, renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -12,7 +12,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const damageRollTemplate = Handlebars.compile(damageRollChatSrc);
+const damageRollTemplate = Hbs.compile(damageRollChatSrc);
 
 const meta: Meta = {
     title: 'Chat/Damage Die Replacement (#129)',
@@ -25,7 +25,7 @@ type Story = StoryObj;
 export const ReplaceDieAvailable: Story = {
     name: 'Damage Card / Replacement button visible',
     render: () =>
-        renderTemplate(
+        renderTpl(
             damageRollTemplate,
             mockDamageRollData({
                 rollId: 'mock-roll-129',
@@ -51,7 +51,7 @@ export const ReplaceDieAvailable: Story = {
 export const ReplaceDieHiddenWhenZeroDoS: Story = {
     name: 'Damage Card / Hidden when DoS = 0',
     render: () =>
-        renderTemplate(
+        renderTpl(
             damageRollTemplate,
             mockDamageRollData({
                 rollId: 'mock-roll-129',
@@ -77,7 +77,7 @@ export const ReplaceDieHiddenWhenZeroDoS: Story = {
 export const ReplaceDieHiddenWhenFlagFalse: Story = {
     name: 'Damage Card / Hidden when canReplaceDie is false (re-rendered card)',
     render: () =>
-        renderTemplate(
+        renderTpl(
             damageRollTemplate,
             mockDamageRollData({
                 canReplaceDie: false,

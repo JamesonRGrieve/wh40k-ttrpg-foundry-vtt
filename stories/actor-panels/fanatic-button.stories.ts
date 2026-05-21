@@ -14,9 +14,9 @@
  * is created.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HB from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/fanatic-button.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as compileAndRender } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
@@ -25,10 +25,10 @@ interface FanaticContext {
     hasFanatic: boolean;
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HB.compile(panelSrc);
 
 function renderPanel(ctx: FanaticContext): HTMLElement {
-    return renderTemplate(panelTpl, ctx);
+    return compileAndRender(panelTpl, ctx);
 }
 
 const meta: Meta<FanaticContext> = {

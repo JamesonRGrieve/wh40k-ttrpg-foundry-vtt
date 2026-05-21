@@ -2,18 +2,18 @@
  * Stories for ShipUpgradeSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/ship-upgrade-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0x5a1b2c3);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('ship-upg', rng);
     const item = mockItem({
         _id: id,
@@ -53,23 +53,23 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderStoryTemplate(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderStoryTemplate(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersUpgradeName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderStoryTemplate(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Tenacious History')).toBeTruthy();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByDisplayValue('Tenacious History')).toBeTruthy();
     },
 };
 
 export const RendersDetailsTabActive: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderStoryTemplate(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
         const tab = canvasElement.querySelector('[data-tab="details"]');
-        expect(tab).toBeTruthy();
-        expect(tab?.classList.contains('active')).toBe(true);
+        await expect(tab).toBeTruthy();
+        await expect(tab?.classList.contains('active')).toBe(true);
     },
 };

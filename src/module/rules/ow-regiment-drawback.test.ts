@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { REGIMENT_BUDGET } from './ow-regiment-creation';
 import {
     applyDrawbacksToBudget,
     mergeDrawbackPenalties,
@@ -14,7 +15,6 @@ import {
     type RegimentDrawback,
     type MultiComradeRoster,
 } from './ow-regiment-drawback';
-import { REGIMENT_BUDGET } from './ow-regiment-creation';
 
 const drawbackA: RegimentDrawback = {
     id: 'dw-a',

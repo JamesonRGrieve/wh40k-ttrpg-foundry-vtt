@@ -59,14 +59,14 @@ describe('PROFANE_OBJECT_REGISTRY', () => {
     it('Eye of Tzeentch is a psy-amplifier aura with a manifestPower hook', () => {
         const eye = PROFANE_OBJECT_REGISTRY['eye-of-tzeentch'];
         expect(eye).toBeDefined();
-        expect(eye?.aura?.radiusMetres).toBe(10);
-        expect(eye?.hook?.trigger).toBe('manifestPower');
+        expect(eye?.aura?.radiusMetres).toBe(10); // eslint-disable-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard; eye could be undefined at runtime
+        expect(eye?.hook?.trigger).toBe('manifestPower'); // eslint-disable-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard
     });
 
     it('Libris Maleficarum has the highest corruption-per-trigger of the set', () => {
         const corruptions = Object.values(PROFANE_OBJECT_REGISTRY).map((def) => def.hook?.corruptionPerTrigger ?? 0);
         const libris = PROFANE_OBJECT_REGISTRY['libris-maleficarum'];
-        expect(libris?.hook?.corruptionPerTrigger).toBe(Math.max(...corruptions));
+        expect(libris?.hook?.corruptionPerTrigger).toBe(Math.max(...corruptions)); // eslint-disable-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard
     });
 });
 

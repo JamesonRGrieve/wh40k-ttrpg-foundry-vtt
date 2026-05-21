@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from './stat-box.hbs?raw';
@@ -112,13 +112,12 @@ export const ValueMaxNamesBind: Story = {
         max: 50,
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
         const valueInput = canvasElement.querySelector('input[name="system.hullIntegrity.value"]');
         const maxInput = canvasElement.querySelector('input[name="system.hullIntegrity.max"]');
-        expect(valueInput).toBeTruthy();
-        expect(maxInput).toBeTruthy();
-        expect((valueInput as HTMLInputElement).value).toBe('35');
-        expect((maxInput as HTMLInputElement).value).toBe('50');
+        await expect(valueInput).toBeTruthy();
+        await expect(maxInput).toBeTruthy();
+        await expect((valueInput as HTMLInputElement).value).toBe('35');
+        await expect((maxInput as HTMLInputElement).value).toBe('50');
         void canvas;
     },
 };

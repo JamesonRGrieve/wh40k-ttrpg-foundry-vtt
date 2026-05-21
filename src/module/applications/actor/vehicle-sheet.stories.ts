@@ -6,9 +6,9 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate, mockActor } from '../../../../stories/mocks';
+import { renderTemplate as renderTpl, mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/extended';
 import { mockVehicleSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
@@ -21,12 +21,12 @@ initializeStoryHandlebars();
 
 const rng = seedRandom(0xf00dcafe);
 
-const headerTpl = Handlebars.compile(headerSrc);
-const tabsTpl = Handlebars.compile(tabsSrc);
-const overviewTpl = Handlebars.compile(overviewTabSrc);
+const headerTpl = HBS.compile(headerSrc);
+const tabsTpl = HBS.compile(tabsSrc);
+const overviewTpl = HBS.compile(overviewTabSrc);
 
 function renderVehicleSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = Handlebars.compile(`
+    const tpl = HBS.compile(`
         <div class="tw-flex tw-flex-col">
             ${headerTpl(ctx)}
             ${tabsTpl(ctx)}
@@ -35,10 +35,8 @@ function renderVehicleSheet(ctx: SheetContextLike): HTMLElement {
             </main>
         </div>
     `);
-    return renderTemplate(tpl, ctx);
+    return renderTpl(tpl, ctx);
 }
-
-const _vehicleId = randomId('vehicle', rng);
 
 const meta: Meta<SheetContextLike> = {
     title: 'Actor/VehicleSheet',
@@ -85,9 +83,9 @@ export const Default: Story = {
     args: defaultVehicleCtx,
     render: (args) => renderVehicleSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Vehicle name in header
-        await expect(canvas.getByDisplayValue('Chimera APC')).toBeVisible();
+        await expect(view.getByDisplayValue('Chimera APC')).toBeVisible();
         // Overview tab renders handling field
         assertField(canvasElement, 'system.handling', 10);
     },
@@ -103,7 +101,7 @@ export const EditMode: Story = {
         editable: true,
     },
     render: (args) => renderVehicleSheet(args),
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         assertField(canvasElement, 'system.speed.cruising', 18);
         assertField(canvasElement, 'system.speed.tactical', 12);
         assertField(canvasElement, 'system.hull', 25);
@@ -120,7 +118,7 @@ export const SubmitSizeChange: Story = {
         editable: true,
     },
     render: (args) => renderVehicleSheet(args),
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         // Fill the size field and submit — submitForm throws if the named
         // element is absent, so this doubles as a render assertion.
         submitForm(canvasElement, { 'system.size': 5 });
@@ -147,7 +145,7 @@ export const OnlyWarVariant: Story = {
     })(),
     render: (args) => renderVehicleSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Leman Russ Battle Tank')).toBeVisible();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Leman Russ Battle Tank')).toBeVisible();
     },
 };

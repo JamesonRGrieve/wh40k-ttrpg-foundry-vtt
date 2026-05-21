@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/add-xp-prompt.hbs?raw';
 import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
@@ -55,13 +55,11 @@ export const SubtractingXP: Story = {
 export const ApplyDisabledAtZero: Story = {
     args: { xpAmount: 0, absAmount: 0, currentTotal: 0, newTotal: 0, isAddition: true },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
         const apply = canvasElement.querySelector<HTMLButtonElement>('[data-action="apply"]');
         const cancel = canvasElement.querySelector('[data-action="cancel"]');
-        expect(apply).toBeTruthy();
-        expect(cancel).toBeTruthy();
-        expect(apply!.disabled).toBe(true);
+        await expect(apply).toBeTruthy();
+        await expect(cancel).toBeTruthy();
+        await expect(apply?.disabled).toBe(true);
         clickAction(canvasElement, 'cancel');
-        void canvas;
     },
 };

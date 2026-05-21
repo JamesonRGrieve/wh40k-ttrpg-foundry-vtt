@@ -19,9 +19,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** Action handler bound with a `this` context, matching the Mixin's expectations. */
-type ActionHandler = (this: SisterOfBattleDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 /** Card view-model — one entry per talent rendered in the dialog + chat card. */
 interface TalentCard {
     id: string;
@@ -36,7 +33,7 @@ interface SisterOfBattleContext extends Record<string, unknown> {
 }
 
 function localize(key: string): string {
-    return game.i18n?.localize?.(key) ?? key;
+    return game.i18n.localize(key);
 }
 
 function buildTalentCards(): TalentCard[] {
@@ -116,7 +113,7 @@ export default class SisterOfBattleDialog extends ApplicationV2Mixin(Application
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/sister-of-battle-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
         await this.close();
     }

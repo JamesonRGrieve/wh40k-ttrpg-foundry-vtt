@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsStory from 'handlebars';
 import actionRollChatSrc from '../src/templates/chat/action-roll-chat.hbs?raw';
 import damageRollChatSrc from '../src/templates/chat/damage-roll-chat.hbs?raw';
 import simpleRollChatSrc from '../src/templates/chat/simple-roll-chat.hbs?raw';
-import { mockActionRollData, mockDamageRollData, mockRollData, renderTemplate } from './mocks';
+import { mockActionRollData, mockDamageRollData, mockRollData, renderTemplate as renderStoryTemplate } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();
 
-const simpleRollTemplate = Handlebars.compile(simpleRollChatSrc);
-const damageRollTemplate = Handlebars.compile(damageRollChatSrc);
-const actionRollTemplate = Handlebars.compile(actionRollChatSrc);
+const simpleRollTemplate = HbsStory.compile(simpleRollChatSrc);
+const damageRollTemplate = HbsStory.compile(damageRollChatSrc);
+const actionRollTemplate = HbsStory.compile(actionRollChatSrc);
 
 const meta: Meta = {
     title: 'Chat/Roll Cards',
@@ -22,13 +22,13 @@ type Story = StoryObj;
 
 export const SimpleSuccess: Story = {
     name: 'Simple Roll / Success',
-    render: () => renderTemplate(simpleRollTemplate, mockRollData()),
+    render: () => renderStoryTemplate(simpleRollTemplate, mockRollData()),
 };
 
 export const SimpleTargetOnly: Story = {
     name: 'Simple Roll / Target Only',
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             simpleRollTemplate,
             mockRollData({
                 rollData: {
@@ -44,18 +44,18 @@ export const SimpleTargetOnly: Story = {
 
 export const DamageWithAssignableHit: Story = {
     name: 'Damage Roll / Assignable',
-    render: () => renderTemplate(damageRollTemplate, mockDamageRollData()),
+    render: () => renderStoryTemplate(damageRollTemplate, mockDamageRollData()),
 };
 
 export const ActionSuccessWithControls: Story = {
     name: 'Action Roll / Success',
-    render: () => renderTemplate(actionRollTemplate, mockActionRollData()),
+    render: () => renderStoryTemplate(actionRollTemplate, mockActionRollData()),
 };
 
 export const ActionFailureWithoutDamage: Story = {
     name: 'Action Roll / Failure',
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             actionRollTemplate,
             mockActionRollData({
                 effectOutput: [],

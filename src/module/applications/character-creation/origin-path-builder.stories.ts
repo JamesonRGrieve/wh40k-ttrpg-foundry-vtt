@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/character-creation/origin-path-builder.hbs?raw';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction } from '../../../../stories/test-helpers';
 
 initializeStoryHandlebars();
 
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HBS.compile(templateSrc);
 const rng = seedRandom(0x0b1c2d3e);
 
 interface OriginCard {
@@ -173,7 +173,6 @@ function makeSelectedOrigin(name: string, overrides: Partial<SelectedOriginState
 function makeArgs(overrides: Partial<BuilderStoryArgs> = {}): BuilderStoryArgs {
     const hiveWorld = makeOriginCard('Hive World');
     const feralWorld = makeOriginCard('Feral World', { isValidNext: false });
-    const selectedOrigin = makeSelectedOrigin('Hive World');
 
     return {
         guidedMode: true,
@@ -259,7 +258,7 @@ function makeArgs(overrides: Partial<BuilderStoryArgs> = {}): BuilderStoryArgs {
 
 const meta: Meta<BuilderStoryArgs> = {
     title: 'Character Creation/OriginPathBuilder',
-    render: (args) => renderTemplate(compiled, args as unknown as Record<string, unknown>),
+    render: (args) => renderTpl(compiled, args as unknown as Record<string, unknown>),
 };
 
 export default meta;
@@ -269,9 +268,9 @@ type Story = StoryObj<BuilderStoryArgs>;
 export const Default: Story = {
     args: makeArgs(),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Acolyte Origins')).toBeTruthy();
-        expect(canvas.getByText('Hive World')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText('Acolyte Origins')).toBeTruthy();
+        await expect(view.getByText('Hive World')).toBeTruthy();
         clickAction(canvasElement, 'selectOriginCard');
     },
 };
@@ -300,9 +299,9 @@ export const PreviewPanel: Story = {
         },
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getAllByText('Hive World').length).toBeGreaterThan(1);
-        expect(canvas.getByText('Dodge')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getAllByText('Hive World').length).toBeGreaterThan(1);
+        await expect(view.getByText('Dodge')).toBeTruthy();
         clickAction(canvasElement, 'confirmSelection');
     },
 };
@@ -413,11 +412,11 @@ export const Issue206CharacteristicStepReached: Story = {
         },
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // The Characteristic Roll step surfaces in the journey rail before commit fires.
-        expect(canvas.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
+        await expect(view.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
         // The Equipment step is queued behind characteristics — it has not fired the final dialog.
-        expect(canvas.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
+        await expect(view.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
     },
 };
 
@@ -512,11 +511,11 @@ export const Issue206EquipmentStepReached: Story = {
         },
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Equipment step is the active step in the journey rail.
-        expect(canvas.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
+        await expect(view.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
         // Characteristics is marked complete and equipment is current — final commit must be gated.
-        expect(canvas.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
+        await expect(view.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
     },
 };
 
@@ -540,9 +539,9 @@ export const RogueTraderDirection: Story = {
         },
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Dynasty Path')).toBeTruthy();
-        expect(canvas.getByText('Origin')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText('Dynasty Path')).toBeTruthy();
+        await expect(view.getByText('Origin')).toBeTruthy();
     },
 };
 
@@ -610,11 +609,11 @@ export const Issue204HomeWorldThroneGelt: Story = {
         }),
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // The Throne Gelt label and exactly one roll button must render on the home-world step.
-        expect(canvas.getByText('Throne Gelt')).toBeTruthy();
+        await expect(view.getByText('Throne Gelt')).toBeTruthy();
         const thronesRollButtons = canvasElement.querySelectorAll('button[data-action="rollStat"][data-stat-type="thrones"]');
-        expect(thronesRollButtons.length).toBe(1);
+        await expect(thronesRollButtons.length).toBe(1);
     },
 };
 
@@ -672,9 +671,9 @@ export const Issue204BackgroundNoThroneGelt: Story = {
     play: async ({ canvasElement }) => {
         // Zero Throne Gelt roll buttons must appear on the background step.
         const thronesRollButtons = canvasElement.querySelectorAll('button[data-action="rollStat"][data-stat-type="thrones"]');
-        expect(thronesRollButtons.length).toBe(0);
+        await expect(thronesRollButtons.length).toBe(0);
         const thronesManualButtons = canvasElement.querySelectorAll('button[data-action="manualStat"][data-stat-type="thrones"]');
-        expect(thronesManualButtons.length).toBe(0);
+        await expect(thronesManualButtons.length).toBe(0);
     },
 };
 
@@ -734,13 +733,13 @@ export const Issue198VoidBornPreview: Story = {
         },
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Both card and selection panel show 'Void Born' — proves the normalized origin
         // flowed through preview rendering without throwing.
-        expect(canvas.getAllByText('Void Born').length).toBeGreaterThan(1);
+        await expect(view.getAllByText('Void Born').length).toBeGreaterThan(1);
         // Grant rows from the normalized.system shape are present
-        expect(canvas.getByText('Pilot (Spacecraft)')).toBeTruthy();
-        expect(canvas.getByText('Void Accustomed')).toBeTruthy();
+        await expect(view.getByText('Pilot (Spacecraft)')).toBeTruthy();
+        await expect(view.getByText('Void Accustomed')).toBeTruthy();
         // Re-clicking the previewed card must not throw (the bug path)
         clickAction(canvasElement, 'selectOriginCard');
     },
@@ -786,14 +785,14 @@ export const Issue205AptitudeDoubling: Story = {
         },
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Banner renders with the duplicate-aptitude warning title
-        expect(canvas.getByText('Duplicate aptitude detected')).toBeTruthy();
+        await expect(view.getByText('Duplicate aptitude detected')).toBeTruthy();
         // The conflicting aptitude is named in the banner list
-        expect(canvas.getByText('Awareness')).toBeTruthy();
+        await expect(view.getByText('Awareness')).toBeTruthy();
         // The chooser button is present and clickable
         const pickBtn = canvasElement.querySelector('[data-action="resolveAptitudeDouble"][data-aptitude="Awareness"]');
-        expect(pickBtn).toBeTruthy();
+        await expect(pickBtn).toBeTruthy();
     },
 };
 
@@ -839,10 +838,10 @@ export const Issue215NoPhantomDuplicate: Story = {
     play: async ({ canvasElement }) => {
         // The collision banner must NOT be present — no phantom #215 warning.
         const banner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
-        expect(banner).toBeNull();
+        await expect(banner).toBeNull();
         // The preview still lists the character's aptitudes normally.
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Willpower')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText('Willpower')).toBeTruthy();
     },
 };
 
@@ -891,12 +890,12 @@ export const Issue216ResolvedAptitudeNotARequirement: Story = {
     play: async ({ canvasElement }) => {
         // Bug #216: the warning banner used to render even after the swap.
         const warningBanner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
-        expect(warningBanner).toBeNull();
+        await expect(warningBanner).toBeNull();
         // The resolved-applied list should still be visible so the player can Change it.
         const resolvedBanner = canvasElement.querySelector('[data-testid="aptitude-collision-resolved-banner"]');
-        expect(resolvedBanner).toBeTruthy();
+        await expect(resolvedBanner).toBeTruthy();
         const resolvedRow = canvasElement.querySelector('[data-testid="aptitude-collision-resolved"][data-aptitude="Willpower"]');
-        expect(resolvedRow).toBeTruthy();
+        await expect(resolvedRow).toBeTruthy();
     },
 };
 
@@ -933,10 +932,10 @@ export const Issue216UnresolvedAptitudeIsARequirement: Story = {
     }),
     play: async ({ canvasElement }) => {
         const warningBanner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
-        expect(warningBanner).toBeTruthy();
+        await expect(warningBanner).toBeTruthy();
         const resolvedBanner = canvasElement.querySelector('[data-testid="aptitude-collision-resolved-banner"]');
-        expect(resolvedBanner).toBeNull();
+        await expect(resolvedBanner).toBeNull();
         const unresolvedRow = canvasElement.querySelector('[data-testid="aptitude-collision-unresolved"][data-aptitude="Willpower"]');
-        expect(unresolvedRow).toBeTruthy();
+        await expect(unresolvedRow).toBeTruthy();
     },
 };

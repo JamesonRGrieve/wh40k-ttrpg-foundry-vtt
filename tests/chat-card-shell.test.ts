@@ -14,14 +14,14 @@
  * Whitespace and attribute ordering are allowed to differ.
  */
 
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import shellSrc from '../src/templates/chat/partial/chat-card-shell.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-Handlebars.registerPartial('chat-card-shell', shellSrc);
+Hbs.registerPartial('chat-card-shell', shellSrc);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -31,7 +31,7 @@ function dom(html: string): HTMLElement {
 
 describe('chat-card-shell partial — basic structural contract', () => {
     it('emits outer card div with the configured cardClass and outerExtraClass', () => {
-        const tpl = Handlebars.compile(
+        const tpl = Hbs.compile(
             '{{#> chat-card-shell cardClass="wh40k-condition-card" outerExtraClass="tw-overflow-hidden tw-rounded-md" title="Stunned"}}body content{{/chat-card-shell}}',
         );
         const html = tpl({});
@@ -44,7 +44,7 @@ describe('chat-card-shell partial — basic structural contract', () => {
     });
 
     it('renders header with image, title, and badges when provided', () => {
-        const tpl = Handlebars.compile(
+        const tpl = Hbs.compile(
             '{{#> chat-card-shell cardClass="wh40k-condition-card" image="/img/test.png" imageAlt="Test" title="Stunned" subtitle="Status Effect" badges=badges}}body{{/chat-card-shell}}',
         );
         const html = tpl({
@@ -73,9 +73,7 @@ describe('chat-card-shell partial — basic structural contract', () => {
     });
 
     it('renders icon-wrapper variant when iconClass is provided instead of image', () => {
-        const tpl = Handlebars.compile(
-            '{{#> chat-card-shell cardClass="wh40k-trait-card" iconClass="fa-shield-halved" title="Resilient"}}body{{/chat-card-shell}}',
-        );
+        const tpl = Hbs.compile('{{#> chat-card-shell cardClass="wh40k-trait-card" iconClass="fa-shield-halved" title="Resilient"}}body{{/chat-card-shell}}');
         const html = tpl({});
         const root = dom(html);
         expect(root.querySelector('img')).toBeNull();
@@ -86,7 +84,7 @@ describe('chat-card-shell partial — basic structural contract', () => {
     });
 
     it('renders footer when footerLabel is provided', () => {
-        const tpl = Handlebars.compile(
+        const tpl = Hbs.compile(
             '{{#> chat-card-shell cardClass="wh40k-condition-card" title="X" footerLabel="Core Rulebook p.245" footerIcon="fa-book"}}body{{/chat-card-shell}}',
         );
         const html = tpl({});
@@ -100,12 +98,12 @@ describe('chat-card-shell partial — basic structural contract', () => {
     });
 
     it('omits footer when footerLabel is absent', () => {
-        const tpl = Handlebars.compile('{{#> chat-card-shell cardClass="wh40k-x" title="X"}}body{{/chat-card-shell}}');
+        const tpl = Hbs.compile('{{#> chat-card-shell cardClass="wh40k-x" title="X"}}body{{/chat-card-shell}}');
         expect(dom(tpl({})).querySelector('footer')).toBeNull();
     });
 
     it('renders body content from {{> @partial-block}}', () => {
-        const tpl = Handlebars.compile('{{#> chat-card-shell cardClass="wh40k-x" title="X"}}<div class="custom-body">hello body</div>{{/chat-card-shell}}');
+        const tpl = Hbs.compile('{{#> chat-card-shell cardClass="wh40k-x" title="X"}}<div class="custom-body">hello body</div>{{/chat-card-shell}}');
         const root = dom(tpl({}));
         const body = root.querySelector('.wh40k-card-body');
         expect(body).not.toBeNull();
@@ -114,7 +112,7 @@ describe('chat-card-shell partial — basic structural contract', () => {
     });
 
     it('omits legacy classes when legacyClasses=false (new-only chat messages)', () => {
-        const tpl = Handlebars.compile('{{#> chat-card-shell cardClass="wh40k-x" title="X" legacyClasses=false}}body{{/chat-card-shell}}');
+        const tpl = Hbs.compile('{{#> chat-card-shell cardClass="wh40k-x" title="X" legacyClasses=false}}body{{/chat-card-shell}}');
         const root = dom(tpl({}));
         expect(root.querySelector('.wh40k-card-header')).toBeNull();
         expect(root.querySelector('.wh40k-card-body')).toBeNull();
@@ -176,7 +174,7 @@ describe('chat-card-shell — HTML equivalence with legacy templates', () => {
     </footer>
 </div>`;
 
-        const tpl = Handlebars.compile(
+        const tpl = Hbs.compile(
             `{{#> chat-card-shell
                   cardClass="wh40k-condition-card wh40k-condition-card--harmful"
                   outerExtraClass="tw-overflow-hidden tw-rounded-md"
@@ -245,7 +243,7 @@ describe('chat-card-shell — HTML equivalence with legacy templates', () => {
             icon: 'fa-running',
         };
 
-        const tpl = Handlebars.compile(
+        const tpl = Hbs.compile(
             `{{#> chat-card-shell
                   cardClass="wh40k-movement-card wh40k-movement-card--run"
                   outerExtraClass="tw-relative tw-overflow-hidden tw-rounded-md"

@@ -40,10 +40,10 @@ export const DisabledApply: Story = {
 
 export const TwistedFleshGrantPresent: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         const grant = canvasElement.querySelector('[data-talent="twisted-flesh"]');
-        expect(grant).toBeTruthy();
-        expect(canvas.getByText(/Apply/i)).toBeTruthy();
-        expect(canvas.getByText(/Twisted Flesh/i)).toBeTruthy();
+        await expect(grant).toBeTruthy();
+        await expect(view.getByText(/Apply/i)).toBeTruthy();
+        await expect(view.getByText(/Twisted Flesh/i)).toBeTruthy();
     },
 };

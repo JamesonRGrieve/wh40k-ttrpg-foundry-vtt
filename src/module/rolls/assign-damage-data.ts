@@ -134,7 +134,7 @@ export class AssignDamageData {
      */
     private _isDwHordeTarget(): boolean {
         const horde = this.actor.system.horde;
-        if (!horde?.enabled) return false;
+        if (horde?.enabled !== true) return false;
         return this.actor.system.gameSystem === 'dw';
     }
 

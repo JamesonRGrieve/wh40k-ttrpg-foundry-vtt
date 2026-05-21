@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/effect-creation-dialog.hbs?raw';
 import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
@@ -60,12 +60,10 @@ export const CustomTab: Story = {
  */
 export const CategoryTabsDispatch: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
         const tabs = canvasElement.querySelectorAll('[data-action="selectCategory"]');
-        expect(tabs.length).toBe(5);
+        await expect(tabs.length).toBe(5);
         const categories = Array.from(tabs).map((b) => b.getAttribute('data-category'));
-        expect(categories).toEqual(['condition', 'characteristic', 'skill', 'combat', 'custom']);
+        await expect(categories).toEqual(['condition', 'characteristic', 'skill', 'combat', 'custom']);
         clickAction(canvasElement, 'selectCategory');
-        void canvas;
     },
 };

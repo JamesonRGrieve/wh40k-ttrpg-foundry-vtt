@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import type { RenownRank } from './dw-renown';
 import {
     activateSquadAbility,

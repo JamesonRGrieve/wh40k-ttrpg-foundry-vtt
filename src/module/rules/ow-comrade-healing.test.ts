@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import {
     OW_COMRADE_AUTO_RECOVERY_DAYS,
     OW_COMRADE_MEDICAE_DIFFICULTY_MODIFIER,

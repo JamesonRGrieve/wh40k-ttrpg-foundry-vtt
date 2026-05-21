@@ -67,13 +67,13 @@ export const Major: Story = {
 
 export const SelectFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Five tier cards rendered.
         const cards = canvasElement.querySelectorAll('[data-action="selectTier"]');
-        expect(cards.length).toBe(5);
+        await expect(cards.length).toBe(5);
 
         // Bind button is present and reachable.
-        expect(canvas.getByText(/Bind/i)).toBeTruthy();
+        await expect(view.getByText(/Bind/i)).toBeTruthy();
 
         // Clicking a tier card dispatches the selectTier action.
         clickAction(canvasElement, 'selectTier');

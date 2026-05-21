@@ -48,7 +48,7 @@ function installGlobals(actors: ActorStub[]): void {
     };
 }
 
-function makeItem(cost: number, quantity = 99) {
+function makeItem(cost: number, quantity = 99): { id: string; name: string; system: { cost: { value: number }; quantity: number } } {
     return { id: 'i-las', name: 'Lasgun', system: { cost: { value: cost }, quantity } };
 }
 
@@ -71,7 +71,13 @@ function makeBuyer(system: Record<string, unknown>): ActorStub {
     };
 }
 
-function quote(params: { buyer: ActorStub; source: ActorStub; quantity?: number; influenceBurn?: number; gmModifierPercent?: number }) {
+function quote(params: {
+    buyer: ActorStub;
+    source: ActorStub;
+    quantity?: number;
+    influenceBurn?: number;
+    gmModifierPercent?: number;
+}): ReturnType<typeof TransactionManager.prepareQuote> {
     installGlobals([params.buyer, params.source]);
     return TransactionManager.prepareQuote({
         buyerActorId: params.buyer.id,

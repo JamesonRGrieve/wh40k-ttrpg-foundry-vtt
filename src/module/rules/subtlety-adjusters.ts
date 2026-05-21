@@ -26,7 +26,7 @@ export type SubtletyPrimitive = 'manual' | 'inquest';
  * label is resolved from the live document name via `uuidNameCache`, so it is
  * never a hardcoded string) or a non-content primitive.
  */
-export type SubtletySourceRef = string | SubtletyPrimitive;
+export type SubtletySourceRef = string;
 
 /** True when `ref` is a non-content primitive rather than a compendium UUID. */
 export function isSubtletyPrimitive(ref: SubtletySourceRef): ref is SubtletyPrimitive {

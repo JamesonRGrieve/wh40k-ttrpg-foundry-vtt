@@ -21,8 +21,8 @@
  * the pure engine never touches actor state.
  */
 
-import { ascendCharacter, getDaemonPrinceBoost, isAscended, type DaemonPrinceAlignment } from '../rules/bc-daemon-prince.ts';
 import type { BcDaemonPrinceDeclarations } from '../data/actor/mixins/bc-daemon-prince-template.ts';
+import { ascendCharacter, getDaemonPrinceBoost, isAscended, type DaemonPrinceAlignment } from '../rules/bc-daemon-prince.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -135,14 +135,14 @@ export async function bcAscend(this: BcDaemonPrinceSheetLike, _event: Event, _ta
             gate.reason === 'insufficient-infamy'
                 ? 'WH40K.BC.DaemonPrince.Ascension.Insufficient.Infamy'
                 : 'WH40K.BC.DaemonPrince.Ascension.Insufficient.Corruption';
-        ui.notifications?.warn(game.i18n.localize(key));
+        ui.notifications.warn(game.i18n.localize(key));
         return;
     }
 
     const confirmed = await promptConfirm();
     if (!confirmed) return;
 
-    const ascendedAt = Math.trunc(Number(game.time?.worldTime ?? 0));
+    const ascendedAt = Math.trunc(Number(game.time.worldTime));
     const record = {
         ascendedAt,
         alignmentAtAscension: system.chaosAlignment,
@@ -161,7 +161,7 @@ export async function bcAscend(this: BcDaemonPrinceSheetLike, _event: Event, _ta
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
     await ChatMessage.create({
-        user: game.user?.id,
+        user: game.user.id,
         speaker: ChatMessage.getSpeaker(speakerActor),
         content,
     });

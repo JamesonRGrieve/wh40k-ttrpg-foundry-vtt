@@ -561,8 +561,8 @@ export class TooltipsWH40K {
         // makes the rule-correct values explicit (Known (0) → Trained (+10) → …).
         // Untrained for aptitude systems shows the flat -20 penalty; career systems
         // (RT) halve the characteristic instead and surface that as "(÷2)".
-        const formatBonus = (bonus: number): string => `${bonus >= 0 ? '+' : ''}${bonus}`;
-        const RANK_TOOLTIP_I18N: Record<string, string> = {
+        const formatBonus = (bonusValue: number): string => `${bonusValue >= 0 ? '+' : ''}${bonusValue}`;
+        const RANK_TOOLTIP_I18N: Record<string, string | undefined> = {
             Known: 'WH40K.Skills.Rank.Known',
             Trained: 'WH40K.Skills.Rank.Trained',
             Experienced: 'WH40K.Skills.Rank.Experienced',
@@ -572,8 +572,8 @@ export class TooltipsWH40K {
             const key = RANK_TOOLTIP_I18N[raw];
             return key === undefined ? raw : localize(key);
         };
-        const renderRank = (rankLabel: string, bonus: number): string =>
-            game.i18n.format('WH40K.Tooltip.Skill.RankWithBonus', { rank: localizeRankLabel(rankLabel), bonus: formatBonus(bonus) });
+        const renderRank = (rankLabel: string, rankBonus: number): string =>
+            game.i18n.format('WH40K.Tooltip.Skill.RankWithBonus', { rank: localizeRankLabel(rankLabel), bonus: formatBonus(rankBonus) });
         const untrainedLabel =
             gameSystem === 'rt'
                 ? localize('WH40K.Tooltip.Skill.UntrainedHalfBase')

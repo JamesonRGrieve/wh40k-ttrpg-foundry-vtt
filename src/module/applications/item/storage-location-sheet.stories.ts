@@ -37,10 +37,10 @@ type Story = StoryObj<Args>;
 export const Empty: Story = {};
 
 export const RendersTabs: Story = {
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Footlocker')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-tab="items"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-tab="description"]')).toBeTruthy();
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByDisplayValue('Footlocker')).toBeTruthy();
+        void expect(canvasElement.querySelector('[data-tab="items"]')).toBeTruthy();
+        void expect(canvasElement.querySelector('[data-tab="description"]')).toBeTruthy();
     },
 };

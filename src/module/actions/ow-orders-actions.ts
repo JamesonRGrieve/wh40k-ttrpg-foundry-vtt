@@ -31,8 +31,8 @@
  * orchestrator's `declare` block).
  */
 
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { ActiveOrderEntry } from '../data/actor/mixins/ow-orders-template.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { GENERIC_ORDERS, canIssueOrder, type OrderDef, type OrderBlockReason } from '../rules/ow-orders.ts';
 
 /**
@@ -54,7 +54,7 @@ export interface OwOrdersActionContext {
  * during chat-card prep. Speciality Orders carry these labels on their
  * compendium document; the engine layer reads them lazily.
  */
-const GENERIC_ORDER_I18N: Readonly<Record<string, { nameKey: string; effectKey: string }>> = Object.freeze({
+const GENERIC_ORDER_I18N: Readonly<Record<string, { nameKey: string; effectKey: string } | undefined>> = Object.freeze({
     'ranged-volley': {
         nameKey: 'WH40K.OW.Orders.Generic.RangedVolley',
         effectKey: 'WH40K.OW.Orders.Effect.RangedVolley',
@@ -158,6 +158,6 @@ export async function owIssueOrder(this: OwOrdersActionContext, event: Event, ta
 
     const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-orders-chat.hbs', templateData);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+    const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
     await ChatMessage.create(payload);
 }

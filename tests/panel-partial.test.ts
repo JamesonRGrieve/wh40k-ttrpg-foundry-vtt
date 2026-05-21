@@ -11,18 +11,18 @@
  *     hand-rolled originals.
  */
 
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import panelSrc from '../src/templates/actor/partial/panel.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-Handlebars.registerPartial('panel-test', panelSrc);
+Hbs.registerPartial('panel-test', panelSrc);
 
-const wrap = (innerBody: string) => Handlebars.compile(`{{#> panel-test ${'label="Armour" icon="fa-shield-alt"'} }}${innerBody}{{/panel-test}}`);
+const wrap = (innerBody: string): Hbs.TemplateDelegate => Hbs.compile(`{{#> panel-test ${'label="Armour" icon="fa-shield-alt"'} }}${innerBody}{{/panel-test}}`);
 
-const wrapWith = (hashLiteral: string, innerBody: string) => Handlebars.compile(`{{#> panel-test ${hashLiteral}}}${innerBody}{{/panel-test}}`);
+const wrapWith = (hashLiteral: string, innerBody: string): Hbs.TemplateDelegate => Hbs.compile(`{{#> panel-test ${hashLiteral}}}${innerBody}{{/panel-test}}`);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');

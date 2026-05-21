@@ -11,7 +11,7 @@
  *     optional badge slot.
  */
 
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import editBodySrc from '../src/templates/actor/partial/vital-edit-body.hbs?raw';
 import editInputSrc from '../src/templates/actor/partial/vital-edit-input.hbs?raw';
@@ -24,20 +24,21 @@ import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 let isExpandedReturn = false;
-Handlebars.registerHelper('isExpanded', () => isExpandedReturn);
+Hbs.registerHelper('isExpanded', () => isExpandedReturn);
 // `hideIfNot` is provided by initializeStoryHandlebars() in production; for
 // testing we mirror Foundry's behaviour: returns 'style="display:none"' when
 // the value is falsy, else an empty string. Some setups already register it;
 // guard against double-registration.
-if (!Handlebars.helpers.hideIfNot) {
-    Handlebars.registerHelper('hideIfNot', (cond: unknown) => (cond ? '' : new Handlebars.SafeString('style="display:none;"')));
+if ((Hbs.helpers.hideIfNot as Hbs.HelperDelegate | undefined) === undefined) {
+    Hbs.registerHelper('hideIfNot', (cond: unknown) =>
+        cond !== null && cond !== undefined && cond !== false && cond !== '' && cond !== 0 ? '' : new Hbs.SafeString('style="display:none;"'),
+    );
 }
 
-const shellTemplate = Handlebars.compile(shellSrc);
-const quickControlsTemplate = Handlebars.compile(quickControlsSrc);
-const progressBarTemplate = Handlebars.compile(progressBarSrc);
-const editInputTemplate = Handlebars.compile(editInputSrc);
-const quickAdjustTemplate = Handlebars.compile(quickAdjustSrc);
+const quickControlsTemplate = Hbs.compile(quickControlsSrc);
+const progressBarTemplate = Hbs.compile(progressBarSrc);
+const editInputTemplate = Hbs.compile(editInputSrc);
+const quickAdjustTemplate = Hbs.compile(quickAdjustSrc);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -200,8 +201,8 @@ describe('vital-quick-adjust partial', () => {
 describe('vital-panel-shell partial', () => {
     it('emits the panel header with the configured key/label/icon and a chevron toggle', () => {
         // Register inner partial-block so the shell compiles in isolation.
-        Handlebars.registerPartial('test-shell', shellSrc);
-        const wrapped = Handlebars.compile(
+        Hbs.registerPartial('test-shell', shellSrc);
+        const wrapped = Hbs.compile(
             '{{#> test-shell key="wounds" label="Wounds" icon="fa-heart-broken" actor=actor rootStateClass=rootStateClass}}<div class="body">body</div>{{/test-shell}}',
         );
         const html = wrapped({ actor: { id: 'a1', flags: {} }, rootStateClass: 'wh40k-wounds-warning' });
@@ -216,8 +217,8 @@ describe('vital-panel-shell partial', () => {
     });
 
     it('renders the optional degree badge when provided', () => {
-        Handlebars.registerPartial('test-shell-badge', shellSrc);
-        const wrapped = Handlebars.compile(
+        Hbs.registerPartial('test-shell-badge', shellSrc);
+        const wrapped = Hbs.compile(
             '{{#> test-shell-badge key="corruption" label="Corruption" icon="fa-skull" actor=actor badge=badge rootStateClass=rootStateClass}}body{{/test-shell-badge}}',
         );
         const html = wrapped({
@@ -236,8 +237,8 @@ describe('vital-panel-shell partial', () => {
 
 describe('vital-info-card partial', () => {
     it('renders icon, title and a body slot via partial-block (warn accent default)', () => {
-        Handlebars.registerPartial('test-info-card', infoCardSrc);
-        const wrapped = Handlebars.compile(
+        Hbs.registerPartial('test-info-card', infoCardSrc);
+        const wrapped = Hbs.compile(
             '{{#> test-info-card icon="fa-book" title="Fatigue Rules"}}<p class="rule">Any fatigue: -10 penalty.</p>{{/test-info-card}}',
         );
         const html = wrapped({});
@@ -254,10 +255,8 @@ describe('vital-info-card partial', () => {
     });
 
     it('switches accent classes for "gold" variant (fate)', () => {
-        Handlebars.registerPartial('test-info-card-gold', infoCardSrc);
-        const wrapped = Handlebars.compile(
-            '{{#> test-info-card-gold icon="fa-book-open" title="About Fate" accent="gold"}}<p>fate body</p>{{/test-info-card-gold}}',
-        );
+        Hbs.registerPartial('test-info-card-gold', infoCardSrc);
+        const wrapped = Hbs.compile('{{#> test-info-card-gold icon="fa-book-open" title="About Fate" accent="gold"}}<p>fate body</p>{{/test-info-card-gold}}');
         const root = dom(wrapped({}));
         const inner = root.querySelector('div.tw-rounded-lg > div');
         expect(inner?.className).toContain('tw-border-l-[color:var(--wh40k-fate-border)]');
@@ -265,10 +264,8 @@ describe('vital-info-card partial', () => {
     });
 
     it('switches accent classes and icon tint for "crimson" variant', () => {
-        Handlebars.registerPartial('test-info-card-crimson', infoCardSrc);
-        const wrapped = Handlebars.compile(
-            '{{#> test-info-card-crimson icon="fa-skull" title="Critical" accent="crimson"}}<p>danger</p>{{/test-info-card-crimson}}',
-        );
+        Hbs.registerPartial('test-info-card-crimson', infoCardSrc);
+        const wrapped = Hbs.compile('{{#> test-info-card-crimson icon="fa-skull" title="Critical" accent="crimson"}}<p>danger</p>{{/test-info-card-crimson}}');
         const root = dom(wrapped({}));
         const icon = root.querySelector('i.fa-skull');
         expect(icon?.className).toContain('tw-text-crimson');
@@ -277,8 +274,8 @@ describe('vital-info-card partial', () => {
     });
 
     it('applies optional wrapperClass / iconClass / innerClass extra utilities', () => {
-        Handlebars.registerPartial('test-info-card-extra', infoCardSrc);
-        const wrapped = Handlebars.compile(
+        Hbs.registerPartial('test-info-card-extra', infoCardSrc);
+        const wrapped = Hbs.compile(
             '{{#> test-info-card-extra icon="fa-book" title="T" wrapperClass="tw-mt-4" iconClass="tw-text-xl" innerClass="my-extra"}}body{{/test-info-card-extra}}',
         );
         const root = dom(wrapped({}));
@@ -291,8 +288,8 @@ describe('vital-info-card partial', () => {
     });
 
     it('does not crash when the body slot is omitted', () => {
-        Handlebars.registerPartial('test-info-card-empty', infoCardSrc);
-        const wrapped = Handlebars.compile('{{#> test-info-card-empty icon="fa-book" title="T"}}{{/test-info-card-empty}}');
+        Hbs.registerPartial('test-info-card-empty', infoCardSrc);
+        const wrapped = Hbs.compile('{{#> test-info-card-empty icon="fa-book" title="T"}}{{/test-info-card-empty}}');
         // Should compile and render without throwing.
         expect(() => wrapped({})).not.toThrow();
         const root = dom(wrapped({}));
@@ -304,11 +301,11 @@ describe('vital-edit-body partial', () => {
     // The body partial nests vital-edit-input, so we register both under their
     // canonical full paths so the {{> systems/.../vital-edit-input}} reference
     // resolves at compile time.
-    Handlebars.registerPartial('systems/wh40k-rpg/templates/actor/partial/vital-edit-input', editInputSrc);
-    Handlebars.registerPartial('test-edit-body', editBodySrc);
+    Hbs.registerPartial('systems/wh40k-rpg/templates/actor/partial/vital-edit-input', editInputSrc);
+    Hbs.registerPartial('test-edit-body', editBodySrc);
 
     function renderEditBody(ctx: Record<string, unknown>, body = '<p class="extras">extras</p>'): HTMLElement {
-        const wrapped = Handlebars.compile(
+        const wrapped = Hbs.compile(
             `{{#> test-edit-body key=key actor=actor fields=fields editIcon=editIcon editTitle=editTitle wrapperClass=wrapperClass}}${body}{{/test-edit-body}}`,
         );
         return dom(wrapped(ctx));

@@ -25,9 +25,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** Action handler bound with a `this` context, matching the Mixin's expectations. */
-type ActionHandler = (this: WithinHomeworldInfoDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 /** i18n label keys for each homeworld id. */
 const HOMEWORLD_LABEL_KEYS: Record<WithinHomeworldId, string> = {
     agriWorld: 'WH40K.WithinHomeworld.AgriWorld',
@@ -100,7 +97,7 @@ interface WithinHomeworldInfoContext extends Record<string, unknown> {
 }
 
 function localize(key: string): string {
-    return game.i18n?.localize?.(key) ?? key;
+    return game.i18n.localize(key);
 }
 
 function formatCharacteristicMods(def: WithinHomeworldDef): string {

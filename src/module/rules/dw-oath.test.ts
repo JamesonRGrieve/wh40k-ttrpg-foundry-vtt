@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { canSwearOath, isOathActive, releaseOath, swearOath, type OathBuff, type OathDef } from './dw-oath';
 
 const buff: OathBuff = {

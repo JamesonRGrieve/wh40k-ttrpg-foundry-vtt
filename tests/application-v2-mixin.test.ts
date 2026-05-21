@@ -7,7 +7,7 @@ interface FakeApplicationApi {
     HandlebarsApplicationMixin: <T extends Constructor>(base: T) => T;
 }
 
-function installFoundryStubs() {
+function installFoundryStubs(): void {
     const api: FakeApplicationApi = {
         HandlebarsApplicationMixin<T extends Constructor>(base: T): T {
             return class extends base {
@@ -72,7 +72,7 @@ describe('ApplicationV2Mixin', () => {
             };
         }
 
-        const renderMarkup = () => `
+        const renderMarkup = (): string => `
             <section data-application-part="header">header</section>
             <nav data-application-part="tabs">tabs</nav>
             <main data-application-part="equipment">equipment</main>

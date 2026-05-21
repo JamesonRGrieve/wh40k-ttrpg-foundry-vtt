@@ -16,9 +16,9 @@
  * against a live Foundry instance.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/dark-pact-panel.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
@@ -26,13 +26,11 @@ initializeStoryHandlebars();
 // uuid-name resolution is a runtime concern (see uuid-name-cache.ts); for
 // the static story we register a passthrough that returns the literal UUID
 // segment after the last `.` so rows show a human-recognisable label.
-if (!Handlebars.helpers['uuid-name']) {
-    Handlebars.registerHelper('uuid-name', (uuid: unknown) => {
-        const s = String(uuid ?? '');
-        const last = s.split('.').pop() ?? s;
-        return last || 'Unknown Pact';
-    });
-}
+HandlebarsLib.registerHelper('uuid-name', (uuid: string | undefined) => {
+    const s = uuid ?? '';
+    const last = s.split('.').pop() ?? s;
+    return last !== '' ? last : 'Unknown Pact';
+});
 
 interface PactRow {
     pactUuid: string;
@@ -47,10 +45,10 @@ interface PanelContext {
     system: { pacts: PactRow[] };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HandlebarsLib.compile(panelSrc);
 
 function renderPanel(ctx: PanelContext): HTMLElement {
-    return renderTemplate(panelTpl, ctx);
+    return renderStoryTemplate(panelTpl, ctx);
 }
 
 const meta: Meta<PanelContext> = {

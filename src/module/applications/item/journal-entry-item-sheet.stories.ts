@@ -2,18 +2,18 @@
  * Stories for JournalEntryItemSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-journal-entry-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = Hbs.compile(templateSrc);
 const rng = seedRandom(0xd0c5a3e);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('journal', rng);
     const item = mockItem({
         _id: id,
@@ -45,23 +45,23 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderTpl(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersTitle: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Encounter at Ore Processor 12')).toBeTruthy();
+    render: () => renderTpl(compiled, makeCtx()),
+    play: ({ canvasElement }) => {
+        const cv = within(canvasElement);
+        void expect(cv.getByDisplayValue('Encounter at Ore Processor 12')).toBeTruthy();
     },
 };
 
 export const RendersLocationField: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
-    play: async ({ canvasElement }) => {
+    render: () => renderTpl(compiled, makeCtx()),
+    play: ({ canvasElement }) => {
         const field = canvasElement.querySelector<HTMLInputElement>('[name="system.place"]');
-        expect(field).toBeTruthy();
-        expect(field?.value).toBe('Ore Processing District');
+        void expect(field).toBeTruthy();
+        void expect(field?.value).toBe('Ore Processing District');
     },
 };

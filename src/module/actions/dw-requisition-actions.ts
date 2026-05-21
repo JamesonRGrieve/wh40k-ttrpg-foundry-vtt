@@ -230,7 +230,7 @@ async function emitChatCard(
     const templateData = {
         gameSystem: 'dw' as const,
         mode: payload.mode,
-        actorName: actor.name ?? '',
+        actorName: actor.name,
         itemName: payload.itemName,
         craftsmanshipKey,
         baseCost: payload.baseCost,
@@ -241,12 +241,9 @@ async function emitChatCard(
     };
     try {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/dw-requisition-chat.hbs', templateData);
+        const messageData = { user: game.user.id, speaker: ChatMessage.getSpeaker({ actor }), content: html };
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const messagePayload = {
-            user: game.user?.id,
-            speaker: ChatMessage.getSpeaker({ actor }),
-            content: html,
-        } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const messagePayload = messageData as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(messagePayload);
     } catch (error) {
         console.error('DW requisition chat-card emission failed:', error);
@@ -368,7 +365,7 @@ export async function dwRequisitionPool(this: DwRequisitionActionContext, _event
         itemCost,
         rpAfter,
         contributions: [
-            { brotherName: actor.name ?? game.i18n.localize('WH40K.DW.Requisition.Pool.Holder'), rp: prompt.holderRp },
+            { brotherName: actor.name, rp: prompt.holderRp },
             { brotherName: game.i18n.localize('WH40K.DW.Requisition.Pool.Contributor'), rp: prompt.poolRp },
         ],
         totalContributed: decision.totalContributed,

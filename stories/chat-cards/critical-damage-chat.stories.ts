@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
 import criticalDamageChatSrc from '../../src/templates/chat/critical-damage-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -16,7 +16,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const criticalDamageTemplate = Handlebars.compile(criticalDamageChatSrc);
+const criticalDamageTemplate = HbsLib.compile(criticalDamageChatSrc);
 
 interface CriticalDamageCardArgs {
     damageType: 'Energy' | 'Explosive' | 'Impact' | 'Rending';
@@ -40,7 +40,7 @@ function buildContext(args: CriticalDamageCardArgs): Record<string, unknown> {
 
 const meta: Meta<CriticalDamageCardArgs> = {
     title: 'Chat/Critical Damage (#108)',
-    render: (args) => renderTemplate(criticalDamageTemplate, buildContext(args)),
+    render: (args) => renderStoryTemplate(criticalDamageTemplate, buildContext(args)),
     args: {
         damageType: 'Energy',
         bodyPart: 'Arm',
@@ -104,17 +104,17 @@ export const PackAbsentDegrades: Story = {
 };
 
 export const RenderSmoke: Story = {
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
         // Card root carries the per-system anchor and wh40k-rpg scope.
         const card = canvasElement.querySelector('.wh40k-critdmg-card');
-        expect(card).toBeTruthy();
-        expect(card?.getAttribute('data-wh40k-system')).toBe('dh2e');
-        expect(card?.classList.contains('wh40k-rpg')).toBe(true);
+        void expect(card).toBeTruthy();
+        void expect(card?.getAttribute('data-wh40k-system')).toBe('dh2e');
+        void expect(card?.classList.contains('wh40k-rpg')).toBe(true);
         // Effect text surfaces.
-        expect(canvas.getByText(/Stunned for 1 round/i)).toBeTruthy();
+        void expect(storyCanvas.getByText(/Stunned for 1 round/i)).toBeTruthy();
         // Rider pills render (two for the default args).
         const pills = canvasElement.querySelectorAll('.wh40k-critdmg-card span.tw-rounded-full');
-        expect(pills.length).toBe(2);
+        void expect(pills.length).toBe(2);
     },
 };

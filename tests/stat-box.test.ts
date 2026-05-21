@@ -5,14 +5,14 @@
  * and that base-class overrides (vehicle's wh40k-vehicle-stat-* prefix) do what they should.
  */
 
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import statBoxSrc from '../src/templates/actor/partial/stat-box.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-const statBoxTemplate = Handlebars.compile(statBoxSrc);
+const statBoxTemplate = Hbs.compile(statBoxSrc);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -41,6 +41,7 @@ describe('stat-box partial', () => {
         expect(inputs[0].getAttribute('name')).toBe('system.armour.total');
         expect(inputs[0].getAttribute('value')).toBe('7');
         expect(inputs[0].getAttribute('min')).toBe('0');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- textContent can be null at runtime
         const sep = Array.from(root.querySelectorAll('span')).find((s) => s.textContent?.trim() === '/');
         expect(sep).toBeUndefined();
     });
@@ -61,6 +62,7 @@ describe('stat-box partial', () => {
         expect(inputs[1].getAttribute('name')).toBe('system.hullIntegrity.max');
         expect(inputs[0].getAttribute('value')).toBe('24');
         expect(inputs[1].getAttribute('value')).toBe('30');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- textContent can be null at runtime
         const sep = Array.from(root.querySelectorAll('span')).find((s) => s.textContent?.trim() === '/');
         expect(sep).toBeDefined();
     });

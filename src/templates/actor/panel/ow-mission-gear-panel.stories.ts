@@ -11,8 +11,8 @@
  * RNG-free.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HandlebarsLib from 'handlebars';
+import { renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import panelSrc from './ow-mission-gear-panel.hbs?raw';
 
@@ -25,13 +25,13 @@ interface MissionGearPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HandlebarsLib.compile(panelSrc);
 
 function renderPanel(ctx: MissionGearPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx as unknown as Record<string, unknown>));
+    wrapper.appendChild(renderMockTemplate(panelTpl, ctx as unknown as Record<string, unknown>));
     return wrapper;
 }
 

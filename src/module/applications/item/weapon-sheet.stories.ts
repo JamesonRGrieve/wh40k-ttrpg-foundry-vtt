@@ -2,14 +2,14 @@
  * Stories for WeaponSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockWeaponSheetContext, renderTemplate } from '../../../../stories/mocks';
+import { mockWeaponSheetContext, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-weapon-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HandlebarsLib.compile(templateSrc);
 
 interface Args {
     overrides?: Parameters<typeof mockWeaponSheetContext>[0];
@@ -17,7 +17,7 @@ interface Args {
 
 const meta = {
     title: 'Item Sheets/WeaponSheet',
-    render: (args: Args) => renderTemplate(compiled, mockWeaponSheetContext(args.overrides)),
+    render: (args: Args) => renderStoryTemplate(compiled, mockWeaponSheetContext(args.overrides)),
     args: {},
 } satisfies Meta<Args>;
 export default meta;
@@ -49,15 +49,15 @@ export const NoAmmoLoaded: Story = {
 
 export const RendersWeaponName: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Godwyn-Deaz Boltgun')).toBeTruthy();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByDisplayValue('Godwyn-Deaz Boltgun')).toBeTruthy();
     },
 };
 
 export const RendersToggleBodyAction: Story = {
     play: async ({ canvasElement }) => {
         const btn = canvasElement.querySelector('[data-action="toggleBody"]');
-        expect(btn).toBeTruthy();
+        await expect(btn).toBeTruthy();
         // Dispatch click — verifies event wires without Foundry runtime
         btn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     },

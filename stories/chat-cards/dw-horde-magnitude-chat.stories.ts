@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import assignDamageChatSrc from '../../src/templates/chat/assign-damage-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -13,7 +13,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const assignDamageTemplate = Handlebars.compile(assignDamageChatSrc);
+const assignDamageTemplate = HandlebarsLib.compile(assignDamageChatSrc);
 
 interface HordeMagnitudeCardArgs {
     actorName: string;
@@ -25,7 +25,20 @@ interface HordeMagnitudeCardArgs {
     isExplosive: boolean;
 }
 
-function buildContext(args: HordeMagnitudeCardArgs): Record<string, unknown> {
+interface HordeMagnitudeCardContext {
+    gameSystem: string;
+    actor: { name: string; system: { wounds: { value: string; max: string; critical: string }; fatigue: { value: string; max: string } } };
+    hit: { location: string; damageType: string };
+    hasDamage: boolean;
+    hasCriticalDamage: boolean;
+    hasFatigueDamage: boolean;
+    hasHordeDamage: boolean;
+    magnitudeBefore: number;
+    magnitudeAfter: number;
+    magnitudeLost: number;
+}
+
+function buildContext(args: HordeMagnitudeCardArgs): HordeMagnitudeCardContext {
     return {
         gameSystem: args.gameSystem,
         actor: { name: args.actorName, system: { wounds: { value: '—', max: '—', critical: '—' }, fatigue: { value: '—', max: '—' } } },
@@ -42,7 +55,7 @@ function buildContext(args: HordeMagnitudeCardArgs): Record<string, unknown> {
 
 const meta: Meta<HordeMagnitudeCardArgs> = {
     title: 'Chat/DW Horde Magnitude (#166)',
-    render: (args) => renderTemplate(assignDamageTemplate, buildContext(args)),
+    render: (args) => renderStoryTemplate(assignDamageTemplate, buildContext(args)),
     args: {
         actorName: 'Tyranid Hormagaunt Horde',
         gameSystem: 'dw',

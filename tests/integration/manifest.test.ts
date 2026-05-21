@@ -17,9 +17,8 @@ describe.skipIf(!ok)('system manifest (Tier A)', () => {
 
     it('exposes CONFIG.Actor and CONFIG.Item once booted', async () => {
         const result = await bootFoundryOnce();
-        if (!result.booted) return;
         const config = result.runtime?.CONFIG as { Actor?: object; Item?: object } | undefined;
-        expect(config?.Actor).toBeDefined();
-        expect(config?.Item).toBeDefined();
+        expect(!result.booted || config?.Actor !== undefined).toBe(true);
+        expect(!result.booted || config?.Item !== undefined).toBe(true);
     });
 });

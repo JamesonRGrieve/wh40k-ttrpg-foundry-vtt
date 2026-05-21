@@ -145,13 +145,13 @@ export const HostileDisposition: Story = {
  */
 export const TransferInteractions: Story = {
     args: BarterWithInfluenceBurn.args,
-    play: ({ canvasElement }) => {
+    play: async ({ canvasElement }) => {
         const rows = canvasElement.querySelectorAll('[data-action="selectItem"]');
-        expect(rows.length).toBeGreaterThanOrEqual(2);
-        expect(canvasElement.querySelector('[data-item-id="item-stub"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-action="requestApproval"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[name="influenceBurn"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[name="quantity"]')).toBeTruthy();
+        await expect(rows.length).toBeGreaterThanOrEqual(2);
+        await expect(canvasElement.querySelector('[data-item-id="item-stub"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-action="requestApproval"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[name="influenceBurn"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[name="quantity"]')).toBeTruthy();
     },
 };
 
@@ -174,7 +174,7 @@ export const NoInfluenceBurnGate: Story = {
             adjustments: [],
         },
     },
-    play: ({ canvasElement }) => {
-        expect(canvasElement.querySelector('[name="influenceBurn"]')).toBeNull();
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[name="influenceBurn"]')).toBeNull();
     },
 };

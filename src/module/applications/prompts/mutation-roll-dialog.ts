@@ -16,8 +16,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-type ActionHandler = (this: MutationRollDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface MutationRollContext extends Record<string, unknown> {
     track: MutationTrack;

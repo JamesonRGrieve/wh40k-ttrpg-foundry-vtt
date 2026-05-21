@@ -67,8 +67,8 @@ export const GmSurcharge: Story = {
  */
 export const ApprovalControls: Story = {
     play: ({ canvasElement }) => {
-        expect(canvasElement.querySelector('[data-action="approve"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-action="reject"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[name="gmModifierPercent"]')).toBeTruthy();
+        void expect(canvasElement.querySelector('[data-action="approve"]')).toBeTruthy();
+        void expect(canvasElement.querySelector('[data-action="reject"]')).toBeTruthy();
+        void expect(canvasElement.querySelector('[name="gmModifierPercent"]')).toBeTruthy();
     },
 };

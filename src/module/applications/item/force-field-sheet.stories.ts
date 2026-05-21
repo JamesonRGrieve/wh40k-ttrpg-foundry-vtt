@@ -2,18 +2,19 @@
  * Stories for ForceFieldSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-force-field-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = Hbs.compile(templateSrc);
 const rng = seedRandom(0xf03ce1d);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+// eslint-disable-next-line no-restricted-syntax -- boundary: story overrides for freeform template testing
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('forcefield', rng);
     const item = mockItem({
         _id: id,
@@ -56,11 +57,11 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
 
 export const Overloaded: Story = {
     render: () =>
-        renderTemplate(
+        renderTpl(
             compiled,
             makeCtx({
                 system: {
@@ -79,17 +80,17 @@ export const Overloaded: Story = {
 };
 
 export const RendersFieldName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderTpl(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Conversion Field')).toBeTruthy();
+        const queries = within(canvasElement);
+        await expect(queries.getByDisplayValue('Conversion Field')).toBeTruthy();
     },
 };
 
 export const RendersStatusBadge: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderTpl(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Active')).toBeTruthy();
+        const queries = within(canvasElement);
+        await expect(queries.getByText('Active')).toBeTruthy();
     },
 };

@@ -12,11 +12,11 @@
  * in stories" rule in CLAUDE.md.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HbsLib from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import type { MissionRating } from '../../../module/rules/dw-requisition.ts';
 import type { RenownRank } from '../../../module/rules/dw-renown.ts';
+import type { MissionRating } from '../../../module/rules/dw-requisition.ts';
 import panelSrc from './dw-requisition-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -29,13 +29,13 @@ interface RequisitionPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HbsLib.compile(panelSrc);
 
 function renderPanel(ctx: RequisitionPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
     return wrapper;
 }
 
