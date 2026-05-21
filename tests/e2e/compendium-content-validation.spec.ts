@@ -127,7 +127,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -167,7 +167,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     const url = '/systems/wh40k-rpg/module/utils/uuid-name-cache.js';
                     const mod = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(url);
                     const cache = (mod as any).uuidNameCache ?? (mod as any).default;
-                    if (cache && typeof cache.getName === 'function') {
+                    if (cache != null && typeof cache.getName === 'function') {
                         const hit = cache.getName(uuid);
                         if (typeof hit === 'string' && hit !== '[broken link]' && hit.length > 0) return hit;
                         // Fall through to fromUuidSync — the cache could be
@@ -181,7 +181,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     const fn = g.fromUuidSync;
                     if (typeof fn === 'function') {
                         const doc = fn(uuid);
-                        if (doc && typeof doc === 'object' && typeof (doc as { name?: unknown }).name === 'string') {
+                        if (doc != null && typeof doc === 'object' && typeof (doc as { name?: unknown }).name === 'string') {
                             return (doc as { name: string }).name;
                         }
                     }
@@ -229,7 +229,6 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                             // gate honest without churning on cosmetic
                             // re-ordering.
                             if (
-                                srcVal !== null &&
                                 typeof srcVal === 'object' &&
                                 !Array.isArray(srcVal) &&
                                 serVal !== null &&
@@ -272,7 +271,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 outcomes[flow] = outcome;
 
                 const pack = gameCls?.packs?.get?.(packId);
-                if (!pack) {
+                if (pack == null) {
                     outcome.packError = `pack '${packId}' not registered`;
                     continue;
                 }
@@ -281,7 +280,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 try {
                     docs = await withTimeout(pack.getDocuments(), 30_000, `${packId}.getDocuments()`);
                 } catch (err) {
-                    outcome.packError = `getDocuments threw: ${String((err as Error)?.message ?? err)}`;
+                    outcome.packError = `getDocuments threw: ${String((err as Error).message)}`;
                     continue;
                 }
 
@@ -327,7 +326,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     // either a non-empty `schema.fields` or — for those two
                     // document kinds — just a non-null system object.
                     const fieldsObj = system.schema?.fields;
-                    const hasFields = fieldsObj !== null && fieldsObj !== undefined && typeof fieldsObj === 'object' && Object.keys(fieldsObj).length > 0;
+                    const hasFields = fieldsObj != null && typeof fieldsObj === 'object' && Object.keys(fieldsObj).length > 0;
                     if (!hasFields) {
                         // Best-effort: tolerate framework-doc kinds whose
                         // DataModel is implicit. Only flag when the doc
@@ -350,7 +349,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                         try {
                             serialized = system.toObject();
                         } catch (err) {
-                            if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: toObject threw: ${String((err as Error)?.message ?? err)}`);
+                            if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: toObject threw: ${String((err as Error).message)}`);
                             perDocFailures += 1;
                         }
                         if (serialized !== null && typeof serialized === 'object') {

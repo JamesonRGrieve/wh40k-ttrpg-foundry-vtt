@@ -109,7 +109,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     try {
                         return await Promise.race([p, timeout]);
                     } finally {
-                        if (timer) clearTimeout(timer);
+                        if (timer !== null) clearTimeout(timer);
                     }
                 };
 
@@ -118,10 +118,10 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime ui.windows is untyped Record<string, Application>; narrowing to the trio of fields we read
                     const windows = Object.values(uiGbl?.windows ?? {}) as Array<{ id?: string; title?: string; close?: () => Promise<unknown> }>;
                     for (const w of windows) {
-                        const id = `${w?.id ?? ''} ${w?.title ?? ''}`.toLowerCase();
+                        const id = `${w.id ?? ''} ${w.title ?? ''}`.toLowerCase();
                         if (id.includes('dialog') || id.includes('event tracker') || id.includes('tracker')) {
                             try {
-                                await w?.close?.();
+                                await w.close?.();
                             } catch {
                                 /* ignore */
                             }
@@ -155,7 +155,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             } catch (err) {
                                 // Duplicate-registration is expected if the
                                 // system already registered it during init.
-                                const msg = String((err as Error)?.message ?? err);
+                                const msg = err instanceof Error ? err.message : String(err);
                                 if (msg.toLowerCase().includes('already')) {
                                     registered = true;
                                 } else {
@@ -174,7 +174,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['event-tracker-register-settings'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['event-tracker-register-settings'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -194,7 +194,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             await withTimeout(ET.setResolved(eventId, true), 5_000, 'setResolved(true)');
                             const afterSet = ET.getResolved();
                             const present = afterSet != null && typeof afterSet === 'object' && eventId in afterSet;
-                            const stamped = present && typeof (afterSet as Record<string, { resolvedAt?: unknown }>)[eventId]?.resolvedAt === 'string';
+                            const stamped = present && typeof (afterSet as Record<string, { resolvedAt?: unknown }>)[eventId].resolvedAt === 'string';
                             await withTimeout(ET.setResolved(eventId, false), 5_000, 'setResolved(false)');
                             const afterClear = ET.getResolved();
                             const removed = afterClear != null && typeof afterClear === 'object' && !(eventId in afterClear);
@@ -206,7 +206,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['event-tracker-set-and-get-resolved'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['event-tracker-set-and-get-resolved'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -268,7 +268,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['event-tracker-is-available'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['event-tracker-is-available'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -314,7 +314,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['event-tracker-blocking-reasons'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['event-tracker-blocking-reasons'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -364,10 +364,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     }
                                 >;
                                 const vael = states['Inquisitor Vael'];
-                                const dispOk =
-                                    vael?.dispositions?.['party']?.attitude === 'hostile' && vael?.dispositions?.['party']?.trigger === 'evt-betrayal';
+                                const dispOk = vael.dispositions['party'].attitude === 'hostile' && vael.dispositions['party'].trigger === 'evt-betrayal';
                                 const relOk =
-                                    Array.isArray(vael?.relationships) &&
+                                    Array.isArray(vael.relationships) &&
                                     vael.relationships.length === 1 &&
                                     vael.relationships[0]?.currentState === 'ally' &&
                                     vael.relationships[0]?.trigger === 'evt-pact';
@@ -390,7 +389,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['event-tracker-compute-character-states'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['event-tracker-compute-character-states'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -456,7 +455,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['event-tracker-build-content-html'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['event-tracker-build-content-html'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -492,7 +491,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 const opened =
                                     Object.keys(uiGbl?.windows ?? {}).length > before ||
                                     windowList.some((w) =>
-                                        String(w?.title ?? '')
+                                        String(w.title ?? '')
                                             .toLowerCase()
                                             .includes('event tracker'),
                                     );
@@ -508,7 +507,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['event-tracker-open-dialog'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['event-tracker-open-dialog'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     // ---- shared actors for the item-drop / inventory flows ----
@@ -523,7 +522,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'PC Actor.create',
                         )) as any;
-                        if (pc?.id) {
+                        if (pc?.id != null) {
                             cleanups.push(async () => {
                                 try {
                                     await gameGbl?.actors?.get?.(pc.id)?.delete?.();
@@ -533,7 +532,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             });
                         }
                     } catch (err) {
-                        notes['item-drop-non-droppable-returns-null'] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['item-drop-non-droppable-returns-null'] = `PC create threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     // Yield a tick so the server-side create flushes before the
@@ -542,7 +541,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
-                    const getPc = (): any => (pc?.id ? gameGbl?.actors?.get?.(pc.id) : null);
+                    const getPc = (): any => (pc?.id != null ? gameGbl?.actors?.get?.(pc.id) : null);
 
                     /* ============================================================
                      * Flow 8: item-drop-non-droppable-returns-null
@@ -552,7 +551,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * ============================================================ */
                     try {
                         const live = getPc();
-                        if (!live) {
+                        if (live == null) {
                             notes['item-drop-non-droppable-returns-null'] = 'PC actor unavailable';
                         } else {
                             const mod = await import(itemDropUrl);
@@ -564,7 +563,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 'create talent',
                             )) as Array<{ id?: string }> | undefined;
                             const talent = created?.[0] ? live.items.get(created[0].id ?? '') : null;
-                            if (!talent) {
+                            if (talent == null) {
                                 notes['item-drop-non-droppable-returns-null'] = 'talent create failed';
                             } else {
                                 cleanups.push(async () => {
@@ -585,7 +584,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['item-drop-non-droppable-returns-null'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['item-drop-non-droppable-returns-null'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -597,7 +596,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * ============================================================ */
                     try {
                         const live = getPc();
-                        if (!live) {
+                        if (live == null) {
                             notes['item-drop-no-token-returns-null'] = 'PC actor unavailable';
                         } else {
                             const mod = await import(itemDropUrl);
@@ -609,7 +608,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 'create gear',
                             )) as Array<{ id?: string }> | undefined;
                             const gear = created?.[0] ? live.items.get(created[0].id ?? '') : null;
-                            if (!gear) {
+                            if (gear == null) {
                                 notes['item-drop-no-token-returns-null'] = 'gear create failed';
                             } else {
                                 cleanups.push(async () => {
@@ -630,7 +629,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['item-drop-no-token-returns-null'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['item-drop-no-token-returns-null'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -645,13 +644,13 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     let dropScene: any = null;
                     try {
                         const live = getPc();
-                        if (!live || !SceneGbl?.create) {
+                        if (live == null || SceneGbl?.create == null) {
                             notes['item-drop-creates-loot-pile'] = 'PC actor or Scene.create unavailable';
                         } else {
                             const mod = await import(itemDropUrl);
                             const IDM = mod.ItemDropManager ?? mod.default;
                             dropScene = await withTimeout(SceneGbl.create({ name: 'managers-extra-drop-scene' }), 5_000, 'Scene.create');
-                            if (dropScene?.id) {
+                            if (dropScene?.id != null) {
                                 cleanups.push(async () => {
                                     try {
                                         await dropScene.delete?.();
@@ -685,7 +684,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     'create drop gear',
                                 )) as Array<{ id?: string }> | undefined;
                                 const gear = created?.[0] ? live.items.get(created[0].id ?? '') : null;
-                                if (!gear) {
+                                if (gear == null) {
                                     notes['item-drop-creates-loot-pile'] = 'drop gear create failed';
                                 } else {
                                     // eslint-disable-next-line no-restricted-syntax -- boundary: dropItemFromActor returns an untyped Foundry actor doc
@@ -701,7 +700,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                         dropResult3?.type === 'loot' &&
                                         (dropResult3.items?.contents ?? []).some((i: { name?: string }) => i.name === 'probe-drop-gear');
                                     if (dropResult3 != null && gearGone && lootHasItem) {
-                                        if (dropResult3?.id) {
+                                        if (dropResult3.id != null) {
                                             cleanups.push(async () => {
                                                 try {
                                                     await gameGbl?.actors?.get?.(dropResult3.id)?.delete?.();
@@ -723,7 +722,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['item-drop-creates-loot-pile'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['item-drop-creates-loot-pile'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -736,7 +735,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * ============================================================ */
                     try {
                         const live = getPc();
-                        if (!live) {
+                        if (live == null) {
                             notes['item-drop-pickup-loot'] = 'PC actor unavailable';
                         } else {
                             const mod = await import(itemDropUrl);
@@ -747,7 +746,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     ? initialPile
                                     : await withTimeout(ActorGbl.create({ name: 'managers-extra-loot-pile', type: 'loot' }), 5_000, 'loot Actor.create');
                             if (initialPile?.type !== 'loot') {
-                                if (pile?.id) {
+                                if (pile?.id != null) {
                                     cleanups.push(async () => {
                                         try {
                                             await gameGbl?.actors?.get?.(pile.id)?.delete?.();
@@ -764,7 +763,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                             const pileId = pile?.id;
                             const itemCount = pile?.items?.contents?.length ?? 0;
-                            if (!pileId || itemCount === 0) {
+                            if (pileId == null || itemCount === 0) {
                                 notes['item-drop-pickup-loot'] = `no usable loot pile (id=${String(pileId)} items=${itemCount})`;
                             } else {
                                 const ok = await withTimeout(IDM.pickupLoot(live, pile), 5_000, 'pickupLoot');
@@ -773,7 +772,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     (i: any) => i.name === 'probe-drop-gear' || i.name === 'probe-pickup-gear',
                                 );
                                 const pileDeleted = gameGbl?.actors?.get?.(pileId) === undefined;
-                                if (ok === true && receivedSomething && pileDeleted) {
+                                if (ok === true && receivedSomething === true && pileDeleted) {
                                     fired['item-drop-pickup-loot'] = true;
                                     notes['item-drop-pickup-loot'] = 'pile items merged onto receiver and the empty pile was deleted';
                                 } else {
@@ -782,7 +781,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['item-drop-pickup-loot'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['item-drop-pickup-loot'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -820,21 +819,20 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 Array.isArray(im) &&
                                 dh2.every(
                                     (c) =>
-                                        typeof c?.uuid === 'string' &&
+                                        typeof c.uuid === 'string' &&
                                         c.uuid.startsWith('Compendium.') &&
-                                        typeof c?.name === 'string' &&
-                                        typeof c?.type === 'string' &&
-                                        Array.isArray(c?.profiles),
+                                        typeof c.name === 'string' &&
+                                        typeof c.type === 'string' &&
+                                        Array.isArray(c.profiles),
                                 );
                             // No candidate may be a non-droppable type (skill /
                             // talent / etc.) — collectCandidates filters via
                             // ItemDropManager.isDroppable.
                             const noOwnershipFacts = dh2.every(
-                                (c) => !['skill', 'talent', 'trait', 'aptitude', 'condition', 'originPath'].includes(c?.type ?? ''),
+                                (c) => !['skill', 'talent', 'trait', 'aptitude', 'condition', 'originPath'].includes(c.type ?? ''),
                             );
                             const sorted =
-                                dh2.length < 2 ||
-                                dh2.every((c, idx) => idx === 0 || String(dh2[idx - 1]?.name ?? '').localeCompare(String(c?.name ?? '')) <= 0);
+                                dh2.length < 2 || dh2.every((c, idx) => idx === 0 || String(dh2[idx - 1].name ?? '').localeCompare(String(c.name ?? '')) <= 0);
                             if (shapeOk && noOwnershipFacts && sorted) {
                                 fired['inventory-generator-collect-candidates'] = true;
                                 notes[
@@ -849,7 +847,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['inventory-generator-collect-candidates'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['inventory-generator-collect-candidates'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -867,7 +865,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         const live = getPc();
                         const igMod = await import(inventoryGeneratorUrl);
                         const IGM = igMod.InventoryGeneratorManager ?? igMod.default;
-                        if (!live) {
+                        if (live == null) {
                             notes['inventory-generator-apply-to-actor'] = 'PC actor unavailable';
                         } else if (typeof IGM?.applyToActor !== 'function' || typeof IGM?.collectCandidates !== 'function') {
                             notes['inventory-generator-apply-to-actor'] = 'applyToActor/collectCandidates unavailable';
@@ -878,7 +876,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 name?: string;
                                 type?: string;
                             }>;
-                            const candidate = Array.isArray(candidates) ? candidates.find((c) => typeof c?.uuid === 'string') : undefined;
+                            const candidate = Array.isArray(candidates) ? candidates.find((c) => typeof c.uuid === 'string') : undefined;
                             if (candidate === undefined) {
                                 notes['inventory-generator-apply-to-actor'] = 'no compendium candidate available to apply';
                             } else {
@@ -911,7 +909,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['inventory-generator-apply-to-actor'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['inventory-generator-apply-to-actor'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     /* ============================================================
@@ -943,7 +941,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        notes['inventory-generator-permission-denied'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['inventory-generator-permission-denied'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
                 } finally {
                     // Best-effort cleanup of everything we created.

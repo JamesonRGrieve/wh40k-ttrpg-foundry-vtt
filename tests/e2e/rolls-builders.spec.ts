@@ -111,7 +111,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                 for (const f of flows.filter((k) => k.startsWith('helpers-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 helpersMod = null;
             }
-            if (helpersMod) {
+            if (helpersMod != null) {
                 const { uuid, getDegree, getOpposedDegrees, recursiveUpdate, handleDotNotationUpdate } = helpersMod;
 
                 try {
@@ -179,7 +179,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                 for (const f of flows.filter((k) => k.startsWith('roll-data-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 rollDataMod = null;
             }
-            if (rollDataMod) {
+            if (rollDataMod != null) {
                 const { RollData, WeaponRollData, PsychicRollData, clampModifierToCap, ROLL_MODIFIER_CAP } = rollDataMod;
 
                 try {
@@ -261,8 +261,8 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     // -10 → "- @difficulty" with param 10; +20 → "+ @modifier" with
                     // param 20; 0-valued aim is omitted.
                     const ok =
-                        formula.includes('- @difficulty') &&
-                        formula.includes('+ @modifier') &&
+                        formula.includes('- @difficulty') === true &&
+                        formula.includes('+ @modifier') === true &&
                         params.difficulty === 10 &&
                         params.modifier === 20 &&
                         params.aim === undefined;
@@ -321,7 +321,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                 for (const f of flows.filter((k) => k.startsWith('action-data-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 actionDataMod = null;
             }
-            if (actionDataMod) {
+            if (actionDataMod != null) {
                 const { ActionData, WeaponActionData, PsychicActionData, SimpleSkillData } = actionDataMod;
 
                 try {
@@ -347,7 +347,11 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     ad.effects = ['jam', 'overheat', 'auto-failure'];
                     ad.createEffectData();
                     const names = ad.effectOutput.map((e: { name: string }) => e.name);
-                    const ok = names.includes('Manual') && names.includes('Jam') && names.includes('Overheats') && names.includes('Auto Failure');
+                    const ok =
+                        names.includes('Manual') === true &&
+                        names.includes('Jam') === true &&
+                        names.includes('Overheats') === true &&
+                        names.includes('Auto Failure') === true;
                     record('action-data-effect-switch', ok, `names=${names.join(',')}`);
                 } catch (err) {
                     record('action-data-effect-switch', false, String((err as Error)?.message ?? err));
@@ -391,7 +395,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                 for (const f of flows.filter((k) => k.startsWith('extended-test-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 extMod = null;
             }
-            if (extMod) {
+            if (extMod != null) {
                 const { ExtendedTestData } = extMod;
 
                 try {
@@ -445,7 +449,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                 for (const f of flows.filter((k) => k.startsWith('damage-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 damageMod = null;
             }
-            if (damageMod) {
+            if (damageMod != null) {
                 const { replaceDamageDieWithDoS, Hit, WeaponDamageData, scatterDirection } = damageMod;
 
                 try {
@@ -521,7 +525,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                 record('basic-roll-construct-formula', false, `import: ${String((err as Error)?.message ?? err)}`);
                 basicRollMod = null;
             }
-            if (basicRollMod) {
+            if (basicRollMod != null) {
                 try {
                     const BasicRollWH40K = basicRollMod.default ?? basicRollMod.BasicRollWH40K;
                     if (typeof BasicRollWH40K?.constructFormula !== 'function') {

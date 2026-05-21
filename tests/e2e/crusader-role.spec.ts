@@ -28,7 +28,7 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
         const ActorCls = g.Actor;
-        if (!ActorCls?.create) return { setupOk: false, error: 'Actor.create unavailable' };
+        if (ActorCls?.create == null) return { setupOk: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
@@ -51,7 +51,7 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
         } catch (err) {
             return { setupOk: false, error: String((err as Error)?.message ?? err) };
         }
-        if (!actor) return { setupOk: false, error: 'Actor.create returned null' };
+        if (actor == null) return { setupOk: false, error: 'Actor.create returned null' };
 
         const fateBefore = actor.system?.fate?.value ?? 0;
 

@@ -91,7 +91,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                             `keys=${JSON.stringify(field.initialKeys)}`,
                         );
                     } catch (err) {
-                        record('mapping-field-construct', false, String((err as Error)?.message ?? err));
+                        record('mapping-field-construct', false, String((err as Error).message));
                     }
                     try {
                         const field = new MappingField(inner, { initialKeys: ['head', 'body'] });
@@ -100,7 +100,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                         const ok = typeof initial === 'object' && Object.keys(initial).length >= 0;
                         record('mapping-field-getInitialValue', ok, `initial=${JSON.stringify(initial)}`);
                     } catch (err) {
-                        record('mapping-field-getInitialValue', false, String((err as Error)?.message ?? err));
+                        record('mapping-field-getInitialValue', false, String((err as Error).message));
                     }
                     try {
                         const field = new MappingField(inner, {});
@@ -111,12 +111,12 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                             `cleaned=${JSON.stringify(cleaned)}`,
                         );
                     } catch (err) {
-                        record('mapping-field-cleanType', false, String((err as Error)?.message ?? err));
+                        record('mapping-field-cleanType', false, String((err as Error).message));
                     }
                 }
             } catch (err) {
                 for (const k of ['mapping-field-construct', 'mapping-field-getInitialValue', 'mapping-field-cleanType'] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${String((err as Error).message)}`);
                 }
             }
 
@@ -132,7 +132,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                         `count=${careers?.length}`,
                     );
                 } catch (err) {
-                    record('advancements-getAvailableCareers', false, String((err as Error)?.message ?? err));
+                    record('advancements-getAvailableCareers', false, String((err as Error).message));
                 }
 
                 let firstCareerKey: string | null = null;
@@ -150,7 +150,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                         `resolved=${resolved} firstKey=${firstCareerKey}`,
                     );
                 } catch (err) {
-                    record('advancements-getCareerKeyFromName', false, String((err as Error)?.message ?? err));
+                    record('advancements-getCareerKeyFromName', false, String((err as Error).message));
                 }
 
                 try {
@@ -158,28 +158,28 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                     const no = mod.hasCareer?.('imaginary-career-zzz');
                     record('advancements-hasCareer', yes === true && no === false, `yes=${String(yes)} no=${String(no)}`);
                 } catch (err) {
-                    record('advancements-hasCareer', false, String((err as Error)?.message ?? err));
+                    record('advancements-hasCareer', false, String((err as Error).message));
                 }
 
                 try {
                     const career = mod.getCareerAdvancements?.(firstCareerKey ?? 'rogueTrader');
                     record('advancements-getCareerAdvancements', career !== null && typeof career === 'object', `type=${typeof career}`);
                 } catch (err) {
-                    record('advancements-getCareerAdvancements', false, String((err as Error)?.message ?? err));
+                    record('advancements-getCareerAdvancements', false, String((err as Error).message));
                 }
 
                 try {
                     const costs = mod.getCharacteristicCosts?.(firstCareerKey ?? 'rogueTrader');
                     record('advancements-getCharacteristicCosts', costs !== null && typeof costs === 'object', `type=${typeof costs}`);
                 } catch (err) {
-                    record('advancements-getCharacteristicCosts', false, String((err as Error)?.message ?? err));
+                    record('advancements-getCharacteristicCosts', false, String((err as Error).message));
                 }
 
                 try {
                     const ranks = mod.getRankAdvancements?.(firstCareerKey ?? 'rogueTrader', 1);
                     record('advancements-getRankAdvancements', ranks === null || Array.isArray(ranks), `type=${Array.isArray(ranks) ? 'array' : typeof ranks}`);
                 } catch (err) {
-                    record('advancements-getRankAdvancements', false, String((err as Error)?.message ?? err));
+                    record('advancements-getRankAdvancements', false, String((err as Error).message));
                 }
 
                 try {
@@ -190,7 +190,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                         `next=${JSON.stringify(next)}`,
                     );
                 } catch (err) {
-                    record('advancements-getNextCharacteristicCost', false, String((err as Error)?.message ?? err));
+                    record('advancements-getNextCharacteristicCost', false, String((err as Error).message));
                 }
             } catch (err) {
                 for (const k of [
@@ -202,7 +202,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                     'advancements-getRankAdvancements',
                     'advancements-getNextCharacteristicCost',
                 ] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${String((err as Error).message)}`);
                 }
             }
 
@@ -235,7 +235,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                         await grant._applyGrant?.(actor, {}, {}, result);
                         record('choice-grant-applyEmpty', result.errors.length === 0, `errors=${JSON.stringify(result.errors)}`);
                     } catch (err) {
-                        record('choice-grant-applyEmpty', false, String((err as Error)?.message ?? err));
+                        record('choice-grant-applyEmpty', false, String((err as Error).message));
                     }
                     try {
                         // Duplicate-selection rejection — when allowDuplicates=false
@@ -254,12 +254,12 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                         await grant._applyGrant?.(actor, { selected: ['A', 'A'] }, {}, result);
                         record('choice-grant-applyDuplicateRejected', result.errors.length >= 1, `errors=${JSON.stringify(result.errors)}`);
                     } catch (err) {
-                        record('choice-grant-applyDuplicateRejected', false, String((err as Error)?.message ?? err));
+                        record('choice-grant-applyDuplicateRejected', false, String((err as Error).message));
                     }
                 }
             } catch (err) {
                 for (const k of ['choice-grant-applyEmpty', 'choice-grant-applyDuplicateRejected'] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${String((err as Error).message)}`);
                 }
             }
 
@@ -276,11 +276,11 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                         // Empty resources is a no-op: no errors, may have notifications.
                         record('resource-grant-applyEmpty', result.errors.length === 0, `errors=${JSON.stringify(result.errors)}`);
                     } catch (err) {
-                        record('resource-grant-applyEmpty', false, String((err as Error)?.message ?? err));
+                        record('resource-grant-applyEmpty', false, String((err as Error).message));
                     }
                 }
             } catch (err) {
-                record('resource-grant-applyEmpty', false, `import: ${String((err as Error)?.message ?? err)}`);
+                record('resource-grant-applyEmpty', false, `import: ${String((err as Error).message)}`);
             }
 
             try {

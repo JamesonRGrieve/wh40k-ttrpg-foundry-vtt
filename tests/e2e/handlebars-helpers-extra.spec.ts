@@ -58,7 +58,9 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const pageErrors: string[] = [];
-        const listener = (err: Error) => pageErrors.push(err.message);
+        const listener = (err: Error): void => {
+            pageErrors.push(err.message);
+        };
         page.on('pageerror', listener);
 
         try {
@@ -112,7 +114,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = out === '+5|-3|5|3|5|6|12|3|0|2|10|25|75';
                     record('handlebars-number-formatters', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-number-formatters', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-number-formatters', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -128,7 +130,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const out = tpl({ myArr: ['a', 'b', 'c', 'd'] });
                     record('handlebars-iteration-helpers', out === '123|123|xy|bc', `out=${out}`);
                 } catch (err) {
-                    record('handlebars-iteration-helpers', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-iteration-helpers', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -159,7 +161,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = out === 'true|true|true|true|true|true|yes|fallback|T|F|def|success|error|success';
                     record('handlebars-logic-helpers', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-logic-helpers', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-logic-helpers', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -185,7 +187,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = out === 'true|false|true|true|2|1-2-3';
                     record('handlebars-collection-helpers', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-collection-helpers', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-collection-helpers', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -206,7 +208,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = out === 'Heretic|purge|character_name|home_world|bold text';
                     record('handlebars-string-helpers', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-string-helpers', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-string-helpers', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -231,7 +233,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = out === 'PURE|SOILED|DAMNED|-20|STABLE|TERMINALLY INSANE|+10|wh40k-degree-profane|wh40k-degree-unhinged';
                     record('handlebars-sanity-ladders', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-sanity-ladders', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-sanity-ladders', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -250,7 +252,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = out === 'S/3/-|4 ALL|4|Tearing, Razor Sharp';
                     record('handlebars-weapon-display-helpers', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-weapon-display-helpers', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-weapon-display-helpers', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -277,7 +279,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = out === 'fa-sword|fa-circle|tier-silver|fa-paw|trait-elite|Unnatural Strength (3)|WS 40+, Awareness, Quick Draw';
                     record('handlebars-talent-trait-helpers', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-talent-trait-helpers', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-talent-trait-helpers', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -294,7 +296,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         out.endsWith('25:Q');
                     record('handlebars-option-object-helpers', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-option-object-helpers', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-option-object-helpers', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -311,7 +313,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = out.includes('totallyMadeUpQuality:3;');
                     record('handlebars-specialQualities', ok, `out=${out}`);
                 } catch (err) {
-                    record('handlebars-specialQualities', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-specialQualities', false, `threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -346,7 +348,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         `cap=${cap} camel=${camel} str=${strHidden}/${strShown} crit=${critHidden}/${critShown} trunc=${trunc} sel=${sel}`,
                     );
                 } catch (err) {
-                    record('handlebars-standalone-exports', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
+                    record('handlebars-standalone-exports', false, `import/call threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -361,7 +363,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     const ok = hit === 'fa-brain' && miss === 'tier-none' && traitHit === 'fa-route' && colourHit === 'trait-unique';
                     record('helpers-icon-lookups', ok, `hit=${hit} miss=${miss} traitHit=${traitHit} colourHit=${colourHit}`);
                 } catch (err) {
-                    record('helpers-icon-lookups', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
+                    record('helpers-icon-lookups', false, `import/call threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -393,7 +395,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         meta?.characteristic === 'Int';
                     record('helpers-skillkey-rt-family', ok, `key=${key} name=${name} meta=${JSON.stringify(meta)}`);
                 } catch (err) {
-                    record('helpers-skillkey-rt-family', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
+                    record('helpers-skillkey-rt-family', false, `import/call threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -428,7 +430,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         names.includes('Stealth');
                     record('helpers-skillkey-dh2-family', ok, `athl=${athl} ling=${ling} op=${op} parry=${parryChar}`);
                 } catch (err) {
-                    record('helpers-skillkey-dh2-family', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
+                    record('helpers-skillkey-dh2-family', false, `import/call threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -469,7 +471,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         Array.isArray(summary);
                     record('helpers-craftsmanship', ok, `mods=${JSON.stringify(mods)} ffRange=${JSON.stringify(ffRange)} summary=${JSON.stringify(summary)}`);
                 } catch (err) {
-                    record('helpers-craftsmanship', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
+                    record('helpers-craftsmanship', false, `import/call threw: ${String((err as Error).message)}`);
                 }
 
                 // ---------------------------------------------------------
@@ -499,7 +501,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                         fallbackDefault.includes('perspective-dice-six');
                     record('helpers-game-icons', ok, `short=${short} full=${full} coloured=${coloured} known=${knownDefault} fallback=${fallbackDefault}`);
                 } catch (err) {
-                    record('helpers-game-icons', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
+                    record('helpers-game-icons', false, `import/call threw: ${String((err as Error).message)}`);
                 }
 
                 return results;

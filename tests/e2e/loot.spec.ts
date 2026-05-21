@@ -56,7 +56,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
 
             // 1 — actor type registered
             try {
-                const ok = !!g.CONFIG?.Actor?.dataModels?.loot;
+                const ok = Boolean(g.CONFIG?.Actor?.dataModels?.loot);
                 record('loot-actor-type-registered', ok, ok ? null : 'CONFIG.Actor.dataModels.loot missing');
             } catch (err) {
                 record('loot-actor-type-registered', false, String((err as Error)?.message ?? err));
@@ -67,14 +67,14 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
             try {
                 loot = await g.Actor.create({ type: 'loot', name: 'Dropped: E2E' });
                 trash.push(loot);
-                record('loot-datamodel-prepares', !!loot && loot.system?.isEmpty === true, `isEmpty=${loot?.system?.isEmpty}`);
+                record('loot-datamodel-prepares', Boolean(loot) && loot.system?.isEmpty === true, `isEmpty=${loot?.system?.isEmpty}`);
             } catch (err) {
                 record('loot-datamodel-prepares', false, String((err as Error)?.message ?? err));
             }
 
             // 3 — embedded item makes the pile report contents
             try {
-                if (loot?.createEmbeddedDocuments) {
+                if (loot?.createEmbeddedDocuments != null) {
                     await loot.createEmbeddedDocuments('Item', [{ name: 'E2E Knife', type: 'weapon', system: { weight: 2, quantity: 1 } }]);
                     const ok = loot.system?.isEmpty === false && loot.system?.itemCount === 1 && typeof loot.system?.totalWeight === 'number';
                     record('loot-pile-reports-contents', ok, `itemCount=${loot.system?.itemCount} weight=${loot.system?.totalWeight}`);
@@ -112,13 +112,13 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
 
             // 5 — loot sheet renders
             try {
-                if (loot?.sheet?.render) {
+                if (loot?.sheet?.render != null) {
                     await loot.sheet.render(true);
-                    await new Promise((r) => {
+                    await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
                     const el = loot.sheet.element;
-                    const ok = !!el && (el instanceof HTMLElement || !!el[0]);
+                    const ok = Boolean(el) && (el instanceof HTMLElement || Boolean(el[0]));
                     record('loot-sheet-renders', ok, ok ? null : 'sheet element absent after render');
                     await loot.sheet.close?.();
                 } else {
@@ -139,7 +139,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                 const before = receiver.items.size;
                 const ok = await M.pickupLoot(receiver, pile);
                 const transferred = receiver.items.size === before + 1;
-                const pileGone = !g.game.actors.get(pileId);
+                const pileGone = g.game.actors.get(pileId) == null;
                 record('pickup-transfers-items', ok === true && transferred && pileGone, `ok=${ok} transferred=${transferred} pileGone=${pileGone}`);
             } catch (err) {
                 record('pickup-transfers-items', false, String((err as Error)?.message ?? err));

@@ -45,7 +45,7 @@ test.describe.serial('DwVehicleCritPanel (Tier B)', () => {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
                     const HandlebarsGlobal = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsGlobal?.compile !== 'function') {
+                    if (typeof HandlebarsGlobal.compile !== 'function') {
                         return {
                             rendered,
                             hasIntegrityRow,
@@ -101,7 +101,7 @@ test.describe.serial('DwVehicleCritPanel (Tier B)', () => {
                     // outside this evaluate) captures the live DOM.
                     (globalThis as any).__dwVehiclePanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return {

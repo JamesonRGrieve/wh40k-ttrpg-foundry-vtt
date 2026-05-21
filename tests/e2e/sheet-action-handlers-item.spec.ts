@@ -135,10 +135,10 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
             async function closeOpenDialogs(): Promise<void> {
                 const windows = Object.values(uiObj?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
-                    const id = w?.id ?? '';
+                    const id = w.id ?? '';
                     if (id.includes('dialog') || id.includes('prompt') || id.includes('confirm') || id.includes('editor')) {
                         try {
-                            await w?.close?.();
+                            await w.close?.();
                         } catch {
                             /* ignore */
                         }
@@ -200,7 +200,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                 setTimeout(r, 250);
             });
 
-            const getPc = () => gameObj?.actors?.get?.(pc.id);
+            const getPc = (): any => gameObj?.actors?.get?.(pc.id);
 
             /**
              * Spin up an item of the given type, render its sheet, return

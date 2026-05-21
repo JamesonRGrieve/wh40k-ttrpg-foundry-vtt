@@ -72,7 +72,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!ActorCls?.create) {
+            if (ActorCls?.create == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'vehicle-hull-damage': 'Actor.create unavailable' },
@@ -90,7 +90,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -121,7 +121,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     'vehicle Actor.create',
                 );
             } catch (err) {
-                notes['vehicle-hull-damage'] = `vehicle create threw: ${String((err as Error)?.message ?? err)}`;
+                notes['vehicle-hull-damage'] = `vehicle create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- create rt-starship ----
@@ -154,10 +154,10 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     'starship Actor.create',
                 );
             } catch (err) {
-                notes['starship-component-install'] = `starship create threw: ${String((err as Error)?.message ?? err)}`;
+                notes['starship-component-install'] = `starship create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (!vehicleActor?.id && !starshipActor?.id) {
+            if (vehicleActor?.id == null && starshipActor?.id == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { ...notes, 'vehicle-hull-damage': 'no actors could be created' },
@@ -167,13 +167,13 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                 };
             }
 
-            const getVehicle = (): any => (vehicleActor?.id ? gme?.actors?.get?.(vehicleActor.id) : null);
-            const getStarship = (): any => (starshipActor?.id ? gme?.actors?.get?.(starshipActor.id) : null);
+            const getVehicle = (): any => (vehicleActor?.id != null ? gme?.actors?.get?.(vehicleActor.id) : null);
+            const getStarship = (): any => (starshipActor?.id != null ? gme?.actors?.get?.(starshipActor.id) : null);
 
             // ---- 1. vehicle-hull-damage (integrity.value reduces, isDamaged getter flips) ----
             try {
                 const v = getVehicle();
-                if (!v) {
+                if (v == null) {
                     notes['vehicle-hull-damage'] = 'no vehicle available';
                 } else {
                     const before = v.system?.integrity?.value ?? -1;
@@ -187,7 +187,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     }
                 }
             } catch (err) {
-                notes['vehicle-hull-damage'] = `hull damage threw: ${String((err as Error)?.message ?? err)}`;
+                notes['vehicle-hull-damage'] = `hull damage threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 2. vehicle-crew-management (crew.required update + passengers) ----
@@ -196,7 +196,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
             // `crew.required` + `passengers` scalar pair, so we walk those.
             try {
                 const v = getVehicle();
-                if (!v) {
+                if (v == null) {
                     notes['vehicle-crew-management'] = 'no vehicle available';
                 } else {
                     const beforeReq = v.system?.crew?.required ?? -1;
@@ -220,13 +220,13 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     }
                 }
             } catch (err) {
-                notes['vehicle-crew-management'] = `crew update threw: ${String((err as Error)?.message ?? err)}`;
+                notes['vehicle-crew-management'] = `crew update threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 3. vehicle-altitude-profile (ground → low → high) ----
             try {
                 const v = getVehicle();
-                if (!v) {
+                if (v == null) {
                     notes['vehicle-altitude-profile'] = 'no vehicle available';
                 } else {
                     await withTimeout(v.update({ 'system.altitude': 'low' }), 5_000, 'altitude low');
@@ -242,13 +242,13 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     }
                 }
             } catch (err) {
-                notes['vehicle-altitude-profile'] = `altitude flow threw: ${String((err as Error)?.message ?? err)}`;
+                notes['vehicle-altitude-profile'] = `altitude flow threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 4. starship-component-install (embed a shipComponent → prepareEmbeddedData walks it) ----
             try {
                 const s = getStarship();
-                if (!s) {
+                if (s == null) {
                     notes['starship-component-install'] = 'no starship available';
                 } else if (typeof s.createEmbeddedDocuments !== 'function') {
                     notes['starship-component-install'] = 'createEmbeddedDocuments missing';
@@ -278,17 +278,17 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     } else {
                         notes['starship-component-install'] = `expected items size ${
                             before + 1
-                        } + shipComponent type, got size=${after} created=${JSON.stringify(createdArr.map((c) => c?.type))}`;
+                        } + shipComponent type, got size=${after} created=${JSON.stringify(createdArr.map((c) => c.type))}`;
                     }
                 }
             } catch (err) {
-                notes['starship-component-install'] = `component embed threw: ${String((err as Error)?.message ?? err)}`;
+                notes['starship-component-install'] = `component embed threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 5. starship-crew-morale (morale.value update → moralePercentage derived) ----
             try {
                 const s = getStarship();
-                if (!s) {
+                if (s == null) {
                     notes['starship-crew-morale'] = 'no starship available';
                 } else {
                     const beforeMax = s.system?.crew?.morale?.max ?? 0;
@@ -302,13 +302,13 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     }
                 }
             } catch (err) {
-                notes['starship-crew-morale'] = `morale update threw: ${String((err as Error)?.message ?? err)}`;
+                notes['starship-crew-morale'] = `morale update threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 6. starship-hull-and-shields (hull damage + shield drop → hullPercentage / isDamaged / isCrippled) ----
             try {
                 const s = getStarship();
-                if (!s) {
+                if (s == null) {
                     notes['starship-hull-and-shields'] = 'no starship available';
                 } else {
                     const maxHull = s.system?.hullIntegrity?.max ?? 0;
@@ -336,7 +336,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     }
                 }
             } catch (err) {
-                notes['starship-hull-and-shields'] = `hull/shields threw: ${String((err as Error)?.message ?? err)}`;
+                notes['starship-hull-and-shields'] = `hull/shields threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 7. vehicle-weapon-fire (embed a shipWeapon on the vehicle and confirm the bucket lands) ----
@@ -346,7 +346,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
             // (`case 'shipWeapon'` in _prepareContext).
             try {
                 const v = getVehicle();
-                if (!v) {
+                if (v == null) {
                     notes['vehicle-weapon-fire'] = 'no vehicle available';
                 } else if (typeof v.createEmbeddedDocuments !== 'function') {
                     notes['vehicle-weapon-fire'] = 'createEmbeddedDocuments missing';
@@ -378,12 +378,12 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                         fired['vehicle-weapon-fire'] = true;
                     } else {
                         notes['vehicle-weapon-fire'] = `expected items size ${beforeSize + 1}, got ${afterSize} (types=${JSON.stringify(
-                            createdArr.map((c) => c?.type),
+                            createdArr.map((c) => c.type),
                         )})`;
                     }
                 }
             } catch (err) {
-                notes['vehicle-weapon-fire'] = `weapon embed threw: ${String((err as Error)?.message ?? err)}`;
+                notes['vehicle-weapon-fire'] = `weapon embed threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- cleanup ----

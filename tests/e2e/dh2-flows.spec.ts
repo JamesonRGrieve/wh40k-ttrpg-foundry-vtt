@@ -283,13 +283,13 @@ test.describe.serial('dh2 flows (Tier B)', () => {
                 return { error: `getDocuments: ${err instanceof Error ? err.message : String(err)}` };
             }
             const sample = docs[0];
-            const sampleStep = sample?.system?.['step'] ?? null;
-            const sampleGameSystem = sample?.system?.['gameSystem'] ?? null;
+            const sampleStep = sample.system?.['step'] ?? null;
+            const sampleGameSystem = sample.system?.['gameSystem'] ?? null;
             return {
                 packType,
                 docCount: docs.length,
-                sampleName: sample?.name ?? null,
-                sampleType: sample?.type ?? null,
+                sampleName: sample.name ?? null,
+                sampleType: sample.type ?? null,
                 sampleStep,
                 sampleGameSystem,
                 error: null,

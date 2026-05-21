@@ -104,7 +104,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!ActorCls?.create) {
+            if (ActorCls?.create == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'characteristic-total-and-bonus::dh2e': 'Actor.create unavailable' },
@@ -137,7 +137,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     5_000,
                     `${type} Actor.create`,
                 )) as any;
-                if (created?.id) {
+                if (created?.id != null) {
                     cleanups.push(async () => {
                         try {
                             await gameGlobal?.actors?.get?.(created.id)?.delete?.();
@@ -178,7 +178,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                                 agility: { base: 38 },
                             },
                         });
-                        if (!pc) {
+                        if (pc == null) {
                             note(sys.flow, `${sys.type} create returned null`);
                         } else {
                             const ws = pc.system?.characteristics?.weaponSkill;
@@ -206,7 +206,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     const pc = await createPc('dh2-character', 'dh2e', {
                         characteristics: { strength: { base: 50, unnatural: 2 } },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('characteristic-unnatural-multiplies-bonus::dh2e', 'create returned null');
                     } else {
                         const s = pc.system?.characteristics?.strength;
@@ -230,7 +230,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     const pc = await createPc('dh2-character', 'dh2e', {
                         characteristics: { toughness: { base: 40, damage: 7 } },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('characteristic-damage-subtracts::dh2e', 'create returned null');
                     } else {
                         const t = pc.system?.characteristics?.toughness;
@@ -256,7 +256,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     const pc = await createPc('dh2-character', 'dh2e', {
                         skills: { dodge: { advance: 3 } },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('skill-rank-flags::dh2e', 'create returned null');
                     } else {
                         const d = pc.system?.skills?.dodge;
@@ -302,7 +302,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         const pc = await createPc(sys.type, sys.system, {
                             characteristics: { agility: { base: 45 } },
                         });
-                        if (!pc) {
+                        if (pc == null) {
                             note(sys.flow, `${sys.type} create returned null`);
                         } else {
                             const dodge = pc.system?.skills?.dodge;
@@ -329,7 +329,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         const pc = await createPc(sys.type, sys.system, {
                             characteristics: { agility: { base: 45 } },
                         });
-                        if (!pc) {
+                        if (pc == null) {
                             note(sys.flow, `${sys.type} create returned null`);
                         } else {
                             const dodge = pc.system?.skills?.dodge;
@@ -359,7 +359,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         characteristics: { agility: { base: 40 } },
                         skills: { dodge: { advance: 2 } },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('skill-trained-uses-full-characteristic::dh2e', 'create returned null');
                     } else {
                         const dodge = pc.system?.skills?.dodge;
@@ -388,7 +388,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         characteristics: { agility: { base: 40 } },
                         size: 4,
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('movement-derives-from-ab-and-size::dh2e', 'create returned null');
                     } else {
                         const m = pc.system?.movement;
@@ -416,7 +416,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     const pc = await createPc('dh2-character', 'dh2e', {
                         characteristics: { strength: { base: 40 } },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('lifting-and-leap-from-strength-bonus::dh2e', 'create returned null');
                     } else {
                         const mv = pc.system?.movement;
@@ -444,7 +444,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     const pc = await createPc('dh2-character', 'dh2e', {
                         characteristics: { toughness: { base: 45 } },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('fatigue-max-from-toughness-bonus::dh2e', 'create returned null');
                     } else {
                         const fatigueMax = pc.system?.fatigue?.max ?? -1;
@@ -466,7 +466,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     const pc = await createPc('dh2-character', 'dh2e', {
                         psy: { rating: 4, sustained: 1 },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('psy-current-rating-and-isPsyker::dh2e', 'create returned null');
                     } else {
                         const currentRating = pc.system?.psy?.currentRating ?? -999;
@@ -492,7 +492,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     const pc = await createPc('dh2-character', 'dh2e', {
                         experience: { total: 1000, used: 350 },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('experience-available-derived::dh2e', 'create returned null');
                     } else {
                         const available = pc.system?.experience?.available ?? -999;
@@ -516,7 +516,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         wounds: { max: 14, value: 9, critical: 2 },
                         fate: { max: 3, value: 2, threshold: 1 },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('wounds-fate-resources-roundtrip::dh2e', 'create returned null');
                     } else {
                         const w = pc.system?.wounds;
@@ -547,7 +547,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         corruption: 65,
                         insanity: 34,
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('corruption-level-and-insanity-degrees::dh1e', 'create returned null');
                     } else {
                         const level = pc.system?.corruptionLevel ?? null;
@@ -575,7 +575,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         subtlety: { value: 40, max: 80 },
                         influence: 55,
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('subtlety-and-influence-roundtrip::dh2e', 'create returned null');
                     } else {
                         const sub = pc.system?.subtlety;
@@ -601,7 +601,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     const pc = await createPc('dh2-character', 'dh2e', {
                         influence: 150,
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('influence-clamps-to-percentile-ceiling::dh2e', 'create returned null');
                     } else {
                         const inf = pc.system?.influence ?? -1;
@@ -627,16 +627,16 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         characteristics: { weaponSkill: { base: 40 } },
                         psy: { rating: 5 },
                     });
-                    if (!pc) {
+                    if (pc == null) {
                         note('roll-data-exposes-characteristic-keys::dh2e', 'create returned null');
                     } else if (typeof pc.getRollData !== 'function') {
                         note('roll-data-exposes-characteristic-keys::dh2e', 'actor.getRollData missing');
                     } else {
                         const data = (await withTimeout(Promise.resolve(pc.getRollData()), 5_000, 'getRollData')) as Record<string, unknown>;
-                        const ws = data?.['WS'];
-                        const wsb = data?.['WSB'];
-                        const full = data?.['weaponSkill'];
-                        const pr = data?.['pr'];
+                        const ws = data['WS'];
+                        const wsb = data['WSB'];
+                        const full = data['weaponSkill'];
+                        const pr = data['pr'];
                         if (ws === 40 && wsb === 4 && full === 40 && pr === 5) {
                             fired['roll-data-exposes-characteristic-keys::dh2e'] = true;
                         } else {

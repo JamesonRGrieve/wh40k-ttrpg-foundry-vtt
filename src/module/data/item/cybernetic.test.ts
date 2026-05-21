@@ -46,10 +46,10 @@ describe('CyberneticData grants.activeEffects[] (#75)', () => {
     it('grants.activeEffects entries carry key / mode / value / durationRounds', () => {
         const [entry] = calculusLogi.grants.activeEffects;
         expect(entry).toBeDefined();
-        expect(entry?.key).toBe('system.characteristics.intelligence.modifier');
-        expect(entry?.mode).toBe(2);
-        expect(entry?.value).toBe(10);
-        expect(entry?.durationRounds).toBe(0);
+        expect(entry!.key).toBe('system.characteristics.intelligence.modifier');
+        expect(entry!.mode).toBe(2);
+        expect(entry!.value).toBe(10);
+        expect(entry!.durationRounds).toBe(0);
     });
 
     it('durationRounds = 0 represents a permanent installed effect', () => {

@@ -146,8 +146,8 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // Foundry returns the create() promise's resolved doc but the
             // canonical reference for subsequent reads is the world cache —
             // grab fresh handles after each update.
-            const getPc = () => (pcActor?.id ? gameGlobal?.actors?.get?.(pcActor.id) : null);
-            const getNpc = () => (npcActor?.id ? gameGlobal?.actors?.get?.(npcActor.id) : null);
+            const getPc = (): any => (pcActor?.id ? gameGlobal?.actors?.get?.(pcActor.id) : null);
+            const getNpc = (): any => (npcActor?.id ? gameGlobal?.actors?.get?.(npcActor.id) : null);
 
             // ---- 1. deal-damage-reduces-wounds (NPC.applyDamage path) ----
             try {

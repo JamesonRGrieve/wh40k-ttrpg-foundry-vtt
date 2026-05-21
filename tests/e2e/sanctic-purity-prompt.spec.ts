@@ -30,7 +30,7 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
                 const ActorCls = g.Actor;
-                if (!ActorCls?.create) {
+                if (ActorCls?.create == null) {
                     return { setupOk: false, rendered: false, hasSpend: false, hasDecline: false, fateText: '', error: 'Actor.create unavailable' };
                 }
 
@@ -45,9 +45,9 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
                         },
                     });
                 } catch (err) {
-                    return { setupOk: false, rendered: false, hasSpend: false, hasDecline: false, fateText: '', error: String((err as Error)?.message ?? err) };
+                    return { setupOk: false, rendered: false, hasSpend: false, hasDecline: false, fateText: '', error: String((err as Error).message) };
                 }
-                if (!actor) {
+                if (actor == null) {
                     return { setupOk: false, rendered: false, hasSpend: false, hasDecline: false, fateText: '', error: 'Actor.create returned null' };
                 }
 
@@ -91,7 +91,7 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
                         fateText = inst.element.textContent ?? '';
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return { setupOk: true, rendered, hasSpend, hasDecline, fateText, error };

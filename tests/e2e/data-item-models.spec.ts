@@ -95,7 +95,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!ActorCls?.create) {
+            if (ActorCls?.create == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'armour-ap-aggregation': 'Actor.create unavailable' },
@@ -141,7 +141,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     5_000,
                     'PC Actor.create',
                 )) as any;
-                if (pc?.id) {
+                if (pc?.id != null) {
                     cleanups.push(async () => {
                         try {
                             await gameG?.actors?.get?.(pc.id)?.delete?.();
@@ -154,7 +154,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 for (const f of flows) notes[f] = `PC create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (!pc?.id) {
+            if (pc?.id == null) {
                 return { flowsFired: fired, flowNotes: notes };
             }
 
@@ -177,7 +177,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 const itemId = created?.[0]?.id;
                 if (itemId === undefined || itemId === null) return null;
                 const item = live.items.get(itemId);
-                if (item) {
+                if (item != null) {
                     cleanups.push(async () => {
                         try {
                             await item.delete?.();
@@ -209,7 +209,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             coverage: ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'],
                         },
                     });
-                    if (!armour) {
+                    if (armour == null) {
                         notes['armour-ap-aggregation'] = 'failed to create armour';
                     } else {
                         const avg = armour.system?.averageAP;
@@ -250,7 +250,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             coverage: ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'],
                         },
                     });
-                    if (!armour) {
+                    if (armour == null) {
                         notes['armour-craftsmanship-ap'] = 'failed to create armour';
                     } else {
                         const baseBody = armour.system?.getAPForLocation?.('body');
@@ -290,7 +290,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             coverage: ['head', 'body'],
                         },
                     });
-                    if (!armour) {
+                    if (armour == null) {
                         notes['armour-coverage-derivation'] = 'failed to create armour';
                     } else {
                         const coversAll = armour.system?.coversAll;
@@ -335,7 +335,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             coverage: ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'],
                         },
                     });
-                    if (!armour) {
+                    if (armour == null) {
                         notes['armour-stealth-penalty'] = 'failed to create armour';
                     } else {
                         const imposes = armour.system?.imposesStealthPenalty;
@@ -372,7 +372,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             quantity: 3,
                         },
                     });
-                    if (!gear) {
+                    if (gear == null) {
                         notes['gear-weight-math'] = 'failed to create gear';
                     } else {
                         const total = gear.system?.totalWeight;
@@ -410,7 +410,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             uses: { value: 0, max: 5 },
                         },
                     });
-                    if (!gear) {
+                    if (gear == null) {
                         notes['gear-uses-exhausted'] = 'failed to create gear';
                     } else {
                         const hasUses = gear.system?.hasLimitedUses;
@@ -452,7 +452,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             },
                         },
                     });
-                    if (!talent) {
+                    if (talent == null) {
                         notes['talent-prerequisites'] = 'failed to create talent';
                     } else {
                         const has = talent.system?.hasPrerequisites;
@@ -491,7 +491,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             },
                         },
                     });
-                    if (!talent) {
+                    if (talent == null) {
                         notes['talent-grants-summary'] = 'failed to create talent';
                     } else {
                         const has = talent.system?.hasGrants;
@@ -534,7 +534,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             rollConfig: { characteristic: 'ballisticSkill', skill: '', modifier: 0, description: '' },
                         },
                     });
-                    if (!talent) {
+                    if (talent == null) {
                         notes['talent-specialization-fullname'] = 'failed to create talent';
                     } else {
                         const hasSpec = talent.system?.hasSpecialization;
@@ -574,7 +574,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             addedQualities: ['tearing'],
                         },
                     });
-                    if (!ammo) {
+                    if (ammo == null) {
                         notes['ammunition-modifiers'] = 'failed to create ammunition';
                     } else {
                         const hasMods = ammo.system?.hasModifiers;
@@ -618,7 +618,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             overloadMax: 15,
                         },
                     });
-                    if (!ff) {
+                    if (ff == null) {
                         notes['force-field-overload'] = 'failed to create force field';
                     } else {
                         const range = ff.system?.effectiveOverloadRange;
@@ -664,7 +664,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             overloadMax: 10,
                         },
                     });
-                    if (!ff) {
+                    if (ff == null) {
                         notes['force-field-craftsmanship'] = 'failed to create force field';
                     } else {
                         const range = ff.system?.effectiveOverloadRange;
@@ -704,7 +704,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             fearRating: 0,
                         },
                     });
-                    if (!trait) {
+                    if (trait == null) {
                         notes['trait-level-variable'] = 'failed to create trait';
                     } else {
                         const hasLevel = trait.system?.hasLevel;
@@ -749,7 +749,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             specializations: ['Armourer', 'Cook'],
                         },
                     });
-                    if (!skill) {
+                    if (skill == null) {
                         notes['skill-derived-labels'] = 'failed to create skill';
                     } else {
                         const abbr = skill.system?.characteristicAbbr;
@@ -787,7 +787,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             duration: { value: 4, units: 'rounds' },
                         },
                     });
-                    if (!condition) {
+                    if (condition == null) {
                         notes['condition-duration'] = 'failed to create condition';
                     } else {
                         const isTemp = condition.system?.isTemporary;
@@ -845,7 +845,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             addedQualities: ['accurate'],
                         },
                     });
-                    if (!mod) {
+                    if (mod == null) {
                         notes['weapon-modification-restrictions'] = 'failed to create weapon modification';
                     } else {
                         const restrictionsLabel = mod.system?.restrictionsLabel;

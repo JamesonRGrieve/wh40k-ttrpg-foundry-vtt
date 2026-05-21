@@ -17,7 +17,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
             const ActorCls = g.Actor;
-            if (!ActorCls?.create) {
+            if (ActorCls?.create == null) {
                 return { ok: false, reason: 'Actor.create unavailable' as const };
             }
 
@@ -31,7 +31,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
             } catch (err) {
                 return { ok: false, reason: `actor create failed: ${String((err as Error)?.message ?? err)}` };
             }
-            if (!actor) {
+            if (actor == null) {
                 return { ok: false, reason: 'actor null' };
             }
 

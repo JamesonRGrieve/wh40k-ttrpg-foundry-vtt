@@ -83,7 +83,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                 record('edit-mode-toggle-actor', false, `actor.create threw: ${String((err as Error).message)}`);
                 return results;
             }
-            if (!actor) {
+            if (actor == null) {
                 record('edit-mode-toggle-actor', false, 'ActorCls.create returned null');
                 return results;
             }
@@ -91,7 +91,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             /* ---------- flow 1: edit-mode-toggle-actor ---------- */
             try {
                 const sheet = actor.sheet;
-                if (!sheet) {
+                if (sheet == null) {
                     record('edit-mode-toggle-actor', false, 'actor.sheet undefined');
                 } else {
                     await sheet.render(true);
@@ -107,14 +107,14 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                         const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                         const target = document.createElement('div');
                         const rv = handler.call(sheet, event, target);
-                        if (rv && typeof rv.then === 'function') await rv;
+                        if (rv != null && typeof rv.then === 'function') await rv;
                         await new Promise<void>((r) => {
                             setTimeout(r, 60);
                         });
                         const afterFirst = sheet.inEditMode === true;
                         // Toggle back so we exercise both edges.
                         const rv2 = handler.call(sheet, event, target);
-                        if (rv2 && typeof rv2.then === 'function') await rv2;
+                        if (rv2 != null && typeof rv2.then === 'function') await rv2;
                         await new Promise<void>((r) => {
                             setTimeout(r, 60);
                         });
@@ -138,7 +138,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             /* ---------- flow 5: tab-switch-routes-via-mixin ---------- */
             try {
                 const sheet = actor.sheet;
-                if (!sheet) {
+                if (sheet == null) {
                     record('tab-switch-routes-via-mixin', false, 'actor.sheet undefined');
                 } else {
                     await sheet.render(true);
@@ -188,10 +188,10 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             }
 
             /* ---------- flow 3: owned-item-sheet-canEdit ---------- */
-            if (ownedItem) {
+            if (ownedItem != null) {
                 try {
                     const sheet = ownedItem.sheet;
-                    if (!sheet) {
+                    if (sheet == null) {
                         record('owned-item-sheet-canEdit', false, 'item.sheet undefined');
                     } else {
                         await sheet.render(true);
@@ -226,10 +226,10 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             }
 
             /* ---------- flow 2: edit-mode-toggle-item ---------- */
-            if (ownedItem) {
+            if (ownedItem != null) {
                 try {
                     const sheet = ownedItem.sheet;
-                    if (!sheet) {
+                    if (sheet == null) {
                         record('edit-mode-toggle-item', false, 'item.sheet undefined');
                     } else {
                         await sheet.render(true);
@@ -245,13 +245,13 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                             const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                             const target = document.createElement('div');
                             const rv = handler.call(sheet, event, target);
-                            if (rv && typeof rv.then === 'function') await rv;
+                            if (rv != null && typeof rv.then === 'function') await rv;
                             await new Promise<void>((r) => {
                                 setTimeout(r, 80);
                             });
                             const afterFirst = sheet.inEditMode === true;
                             const rv2 = handler.call(sheet, event, target);
-                            if (rv2 && typeof rv2.then === 'function') await rv2;
+                            if (rv2 != null && typeof rv2.then === 'function') await rv2;
                             await new Promise<void>((r) => {
                                 setTimeout(r, 80);
                             });
@@ -278,7 +278,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             /* ---------- flow 6: drop-event-on-sheet ---------- */
             try {
                 const sheet = actor.sheet;
-                if (!sheet) {
+                if (sheet == null) {
                     record('drop-event-on-sheet', false, 'actor.sheet undefined');
                 } else {
                     await sheet.render(true);
@@ -304,7 +304,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                         type: 'gear',
                         system: { gameSystem: 'dh2e' },
                     });
-                    if (!transient) {
+                    if (transient == null) {
                         record('drop-event-on-sheet', false, 'ItemCls.create for drop-source returned null');
                     } else {
                         const beforeCount = actor.items?.contents?.length ?? 0;
@@ -347,18 +347,18 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             let compendiumSheet: any = null;
             try {
                 const pack = gameMgr?.packs?.get?.(talentPackId);
-                if (!pack) {
+                if (pack == null) {
                     record('compendium-item-sheet-readonly', false, `pack ${talentPackId} not found`);
                     record('prosemirror-gated-in-readonly', false, `pack ${talentPackId} not found`);
                 } else {
                     const docs = (await pack.getDocuments()) as any[];
                     const sample: any = Array.isArray(docs) ? docs[0] : null;
-                    if (!sample) {
+                    if (sample == null) {
                         record('compendium-item-sheet-readonly', false, `pack ${talentPackId} empty`);
                         record('prosemirror-gated-in-readonly', false, `pack ${talentPackId} empty`);
                     } else {
                         compendiumSheet = sample.sheet;
-                        if (!compendiumSheet) {
+                        if (compendiumSheet == null) {
                             record('compendium-item-sheet-readonly', false, 'compendium item sheet undefined');
                             record('prosemirror-gated-in-readonly', false, 'compendium item sheet undefined');
                         } else {
@@ -395,7 +395,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                                 record(
                                     'prosemirror-gated-in-readonly',
                                     false,
-                                    `inEditMode=${String(compendiumSheet.inEditMode)} proseMirrorEl=${proseEl ? 'present' : 'absent'}`,
+                                    `inEditMode=${String(compendiumSheet.inEditMode)} proseMirrorEl=${proseEl != null ? 'present' : 'absent'}`,
                                 );
                             }
 

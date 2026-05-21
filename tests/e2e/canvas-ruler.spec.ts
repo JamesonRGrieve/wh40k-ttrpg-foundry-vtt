@@ -63,9 +63,9 @@ async function probeCanvasRuler(page: Page): Promise<{ results: FlowResult[]; pa
             let mod: any;
             try {
                 mod = await import(`${base}/ruler.js`);
-                record('ruler-module-imports', !!mod, null);
+                record('ruler-module-imports', mod != null, null);
             } catch (err) {
-                record('ruler-module-imports', false, String((err as Error)?.message ?? err));
+                record('ruler-module-imports', false, String((err as Error).message));
                 record('ruler-class-extends-token-ruler', false, 'module import failed; cannot validate prototype chain');
                 return out;
             }
@@ -88,7 +88,7 @@ async function probeCanvasRuler(page: Page): Promise<{ results: FlowResult[]; pa
                     );
                 }
             } catch (err) {
-                record('ruler-class-extends-token-ruler', false, String((err as Error)?.message ?? err));
+                record('ruler-class-extends-token-ruler', false, String((err as Error).message));
             }
 
             return out;

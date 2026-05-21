@@ -75,7 +75,8 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
             try {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- browser-side: Foundry `game` global is runtime-only
                 const g = globalThis as any;
-                if (g.game?.togglePause && g.game?.paused === true) g.game.togglePause(false);
+                const hasTogglePause = Boolean(g.game?.togglePause);
+                if (hasTogglePause && g.game?.paused === true) g.game.togglePause(false);
             } catch {
                 /* ignore */
             }

@@ -63,7 +63,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only and the builder's private state is reached structurally */
                 const g = globalThis as any;
                 const ActorCls = g.Actor;
-                if (!ActorCls?.create) {
+                if (ActorCls?.create == null) {
                     return {
                         created: false,
                         createError: 'Actor.create unavailable',
@@ -82,11 +82,11 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                 } catch (err) {
                     return {
                         created: false,
-                        createError: String((err as Error)?.message ?? err),
+                        createError: String((err as Error).message),
                         flows: [],
                     };
                 }
-                if (!actor) {
+                if (actor == null) {
                     return { created: false, createError: 'Actor.create returned null', flows: [] };
                 }
 
@@ -99,7 +99,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     } catch {
                         /* ignore */
                     }
-                    return { created: false, createError: `import builder: ${String((err as Error)?.message ?? err)}`, flows: [] };
+                    return { created: false, createError: `import builder: ${String((err as Error).message)}`, flows: [] };
                 }
                 const OriginPathBuilder = mod?.default;
                 if (typeof OriginPathBuilder !== 'function') {
@@ -134,7 +134,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     } catch {
                         /* ignore */
                     }
-                    return { created: false, createError: `builder.render: ${String((err as Error)?.message ?? err)}`, flows: [] };
+                    return { created: false, createError: `builder.render: ${String((err as Error).message)}`, flows: [] };
                 }
 
                 /**
@@ -153,14 +153,14 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                     try {
                         const rv = handler.call(builder, event, target);
-                        if (rv && typeof rv.then === 'function') await rv;
+                        if (rv != null && typeof rv.then === 'function') await rv;
                         // Allow the post-action re-render to settle.
                         await new Promise<void>((r) => {
                             setTimeout(r, 30);
                         });
                         return null;
                     } catch (err) {
-                        return String((err as Error)?.message ?? err);
+                        return String((err as Error).message);
                     }
                 }
 
@@ -190,7 +190,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         );
                     }
                 } catch (err) {
-                    record('builder-renders-step-list', false, String((err as Error)?.message ?? err));
+                    record('builder-renders-step-list', false, String((err as Error).message));
                 }
 
                 // ── 2. builder-advance-to-next-step ─────────────────────
@@ -202,7 +202,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     builder.currentStepIndex = 0;
                     const steps: any[] = builder.systemConfig?.coreSteps ?? [];
                     const targetStep = steps[1] ?? steps[0];
-                    if (!targetStep) {
+                    if (targetStep == null) {
                         record('builder-advance-to-next-step', false, 'no second coreStep in systemConfig');
                     } else {
                         const err = await callAction('goToStep', {
@@ -218,7 +218,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         }
                     }
                 } catch (err) {
-                    record('builder-advance-to-next-step', false, String((err as Error)?.message ?? err));
+                    record('builder-advance-to-next-step', false, String((err as Error).message));
                 }
 
                 // ── 3. builder-back-to-previous-step ────────────────────
@@ -237,7 +237,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         record('builder-back-to-previous-step', false, `currentStepIndex=${builder.currentStepIndex}, expected 0`);
                     }
                 } catch (err) {
-                    record('builder-back-to-previous-step', false, String((err as Error)?.message ?? err));
+                    record('builder-back-to-previous-step', false, String((err as Error).message));
                 }
 
                 // ── 4. builder-select-origin-card ───────────────────────
@@ -249,7 +249,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     builder.currentStepIndex = 0;
                     builder.previewedOrigin = null;
                     const origin = pickOriginForStep(firstStepKey);
-                    if (!origin) {
+                    if (origin == null) {
                         record(
                             'builder-select-origin-card',
                             false,
@@ -262,14 +262,14 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         });
                         if (err !== null) {
                             record('builder-select-origin-card', false, err);
-                        } else if (builder.previewedOrigin && builder.previewedOrigin.id === origin.id) {
+                        } else if (builder.previewedOrigin != null && builder.previewedOrigin.id === origin.id) {
                             record('builder-select-origin-card', true, null);
                         } else {
                             record('builder-select-origin-card', false, `previewedOrigin.id=${builder.previewedOrigin?.id ?? 'null'}, expected ${origin.id}`);
                         }
                     }
                 } catch (err) {
-                    record('builder-select-origin-card', false, String((err as Error)?.message ?? err));
+                    record('builder-select-origin-card', false, String((err as Error).message));
                 }
 
                 // ── 5. builder-confirm-origin-embeds-on-actor ───────────
@@ -284,7 +284,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     builder.selections.clear();
                     builder.previewedOrigin = null;
                     const origin = pickOriginForStep(firstStepKey);
-                    if (!origin) {
+                    if (origin == null) {
                         record('builder-confirm-origin-embeds-on-actor', false, `no origin available for step '${firstStepKey}'`);
                     } else {
                         const previewErr = await callAction('selectOriginCard', {
@@ -297,7 +297,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                             const confirmErr = await callAction('confirmSelection', {});
                             if (confirmErr !== null) {
                                 record('builder-confirm-origin-embeds-on-actor', false, `confirm: ${confirmErr}`);
-                            } else if (builder.selections.has(firstStepKey)) {
+                            } else if (builder.selections.has(firstStepKey) === true) {
                                 record('builder-confirm-origin-embeds-on-actor', true, null);
                             } else {
                                 record(
@@ -309,7 +309,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         }
                     }
                 } catch (err) {
-                    record('builder-confirm-origin-embeds-on-actor', false, String((err as Error)?.message ?? err));
+                    record('builder-confirm-origin-embeds-on-actor', false, String((err as Error).message));
                 }
 
                 // ── 6. builder-cancel-or-reset ──────────────────────────
@@ -338,7 +338,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         );
                     }
                 } catch (err) {
-                    record('builder-cancel-or-reset', false, String((err as Error)?.message ?? err));
+                    record('builder-cancel-or-reset', false, String((err as Error).message));
                 }
 
                 // ── 7. builder-completes-full-path ──────────────────────
@@ -361,7 +361,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         const step = coreSteps[i];
                         builder.currentStepIndex = i;
                         const origin = pickOriginForStep(String(step.key));
-                        if (!origin) {
+                        if (origin == null) {
                             walkErr = `no origin for step '${step.key}'`;
                             break;
                         }
@@ -402,7 +402,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         }
                     }
                 } catch (err) {
-                    record('builder-completes-full-path', false, String((err as Error)?.message ?? err));
+                    record('builder-completes-full-path', false, String((err as Error).message));
                 }
 
                 // ── Teardown ────────────────────────────────────────────

@@ -211,7 +211,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                         });
                         const searchResults = await inst._getFilteredResults();
                         const ok = searchResults.length > 0 && searchResults.every((r: any) => (r.name as string).toLowerCase().includes(term));
-                        record('browser-search-by-name', ok, ok ? null : `search '${term}' matched ${searchResults.length} (mismatch in name filter)`);
+                        record('browser-search-by-name', ok, ok === true ? null : `search '${term}' matched ${searchResults.length} (mismatch in name filter)`);
                         // reset for downstream flows
                         inst._filters.search = '';
                     } catch (err) {
@@ -271,7 +271,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                 if (uuidNameCache != null && probeItemUuid != null && probeItemName != null) {
                     try {
                         // Seed the cache if it's not yet warm.
-                        if (!uuidNameCache.isReady?.()) {
+                        if (uuidNameCache.isReady?.() !== true) {
                             await uuidNameCache.build();
                         }
                         let resolved = uuidNameCache.getName(probeItemUuid);

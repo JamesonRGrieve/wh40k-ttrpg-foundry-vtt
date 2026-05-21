@@ -156,10 +156,10 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as {
+                    const HandlebarsRuntime = (globalThis as any).Handlebars as {
                         compile: (s: string) => (ctx: unknown) => string;
                     };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    if (typeof HandlebarsRuntime.compile !== 'function') {
                         return {
                             rendered,
                             distinctionEntryCount,
@@ -174,7 +174,7 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                         };
                     }
 
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsRuntime.compile(src);
 
                     const initialEarned = ['honoured-of-the-chapter', 'iron-resolve', 'duty-unto-death'];
                     const initialMarks = ['iron-resolve'];
@@ -219,7 +219,7 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
 
                     (globalThis as any).__dwDistinctionPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return {

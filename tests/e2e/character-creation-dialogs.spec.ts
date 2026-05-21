@@ -65,7 +65,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                 for (const f of CHARGEN_FLOWS) record(f, false, `actor create threw: ${String((err as Error)?.message ?? err)}`);
                 return out;
             }
-            if (!actor?.id) {
+            if (actor?.id == null) {
                 for (const f of CHARGEN_FLOWS) record(f, false, 'actor not created');
                 return out;
             }
@@ -139,7 +139,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                 const OriginPathChoiceDialog = mod.default ?? mod.OriginPathChoiceDialog;
                 if (typeof OriginPathChoiceDialog !== 'function') {
                     record('origin-path-choice-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
-                } else if (!originItem) {
+                } else if (originItem == null) {
                     record('origin-path-choice-dialog-renders', false, 'origin item not created');
                 } else {
                     const dlg = new OriginPathChoiceDialog(originItem, actor, {});
@@ -160,7 +160,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                 const OriginDetailDialog = mod.default ?? mod.OriginDetailDialog;
                 if (typeof OriginDetailDialog !== 'function') {
                     record('origin-detail-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
-                } else if (!originItem) {
+                } else if (originItem == null) {
                     record('origin-detail-dialog-renders', false, 'origin item not created');
                 } else {
                     // OriginDetailDialog constructor signature is

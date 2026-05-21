@@ -69,10 +69,10 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                 assignMod = await import(`${base}/rolls/assign-damage-data.js`);
             } catch (err) {
                 for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('assign-damage-')))
-                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 assignMod = null;
             }
-            if (assignMod) {
+            if (assignMod != null) {
                 const { AssignDamageData } = assignMod;
                 const buildActor = (woundsValue: number): any => ({
                     system: {
@@ -104,7 +104,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                     });
                     record('assign-damage-constructor', ad instanceof AssignDamageData, null);
                 } catch (err) {
-                    record('assign-damage-constructor', false, String((err as Error)?.message ?? err));
+                    record('assign-damage-constructor', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // update — drives the location-armour lookup loop branch.
@@ -119,7 +119,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                     ad.update();
                     record('assign-damage-update-armour-resolved', ad.armour === 5 && ad.tb === 3, `armour=${ad.armour} tb=${ad.tb}`);
                 } catch (err) {
-                    record('assign-damage-update-armour-resolved', false, String((err as Error)?.message ?? err));
+                    record('assign-damage-update-armour-resolved', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // finalize — wounds reduced when damage > armour+tb but ≤ wounds.
@@ -140,7 +140,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                         `damageTaken=${ad.damageTaken} hasDamage=${ad.hasDamage}`,
                     );
                 } catch (err) {
-                    record('assign-damage-finalize-reduces-wounds', false, String((err as Error)?.message ?? err));
+                    record('assign-damage-finalize-reduces-wounds', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // finalize — wounds already 0 routes through the "critical"
@@ -161,7 +161,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                         `hasCrit=${ad.hasCriticalDamage} crit=${ad.criticalDamageTaken}`,
                     );
                 } catch (err) {
-                    record('assign-damage-finalize-empty-wounds-criticals', false, String((err as Error)?.message ?? err));
+                    record('assign-damage-finalize-empty-wounds-criticals', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // finalize — fatigue accumulator path.
@@ -181,7 +181,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                         `hasFatigue=${ad.hasFatigueDamage} fatigueTaken=${ad.fatigueTaken}`,
                     );
                 } catch (err) {
-                    record('assign-damage-finalize-fatigue', false, String((err as Error)?.message ?? err));
+                    record('assign-damage-finalize-fatigue', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
@@ -191,10 +191,10 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                 ffMod = await import(`${base}/rolls/force-field-data.js`);
             } catch (err) {
                 for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('force-field-')))
-                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 ffMod = null;
             }
-            if (ffMod) {
+            if (ffMod != null) {
                 const { ForceFieldData } = ffMod;
 
                 const fakeActor: any = {
@@ -224,7 +224,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                         `pr=${ff.protectionRating} or=${ff.overloadRating}`,
                     );
                 } catch (err) {
-                    record('force-field-constructor', false, String((err as Error)?.message ?? err));
+                    record('force-field-constructor', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -237,7 +237,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                     const ok = poor === 15 && common === 10 && good === 5 && dflt === 1;
                     record('force-field-craftsmanship-overload', ok, `poor=${poor} common=${common} good=${good} default=${dflt}`);
                 } catch (err) {
-                    record('force-field-craftsmanship-overload', false, String((err as Error)?.message ?? err));
+                    record('force-field-craftsmanship-overload', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -246,7 +246,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                     // With protectionRating=100, success should be true (roll ≤ 100).
                     record('force-field-finalize', ff.success === true && ff.roll !== null, `success=${ff.success} roll=${ff.roll?.total}`);
                 } catch (err) {
-                    record('force-field-finalize', false, String((err as Error)?.message ?? err));
+                    record('force-field-finalize', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
@@ -255,10 +255,10 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             try {
                 d100Mod = await import(`${base}/dice/d100-roll.js`);
             } catch (err) {
-                record('d100-roll-test', false, `import: ${String((err as Error)?.message ?? err)}`);
+                record('d100-roll-test', false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 d100Mod = null;
             }
-            if (d100Mod) {
+            if (d100Mod != null) {
                 try {
                     // D100Roll.test() runs a simple d100 check + posts to chat.
                     // Suppress any dialog opening by passing fastForward.
@@ -273,7 +273,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                         record('d100-roll-test', true, `result type=${typeof result}`);
                     }
                 } catch (err) {
-                    record('d100-roll-test', false, String((err as Error)?.message ?? err));
+                    record('d100-roll-test', false, err instanceof Error ? err.message : String(err));
                 }
             }
 

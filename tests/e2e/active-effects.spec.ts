@@ -160,7 +160,7 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
     return page.evaluate(async (aid) => {
         const gameGlobal2 = (globalThis as any).game;
         const actor = gameGlobal2?.actors?.get?.(aid);
-        if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
+        if (actor?.createEmbeddedDocuments == null) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
         try {
             const created = await actor.createEmbeddedDocuments('Item', [
                 {
@@ -197,7 +197,7 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
                 // 1) actor.effects (legacy / some V14 paths)
                 transferred = live?.effects?.find?.(matchesOrigin) ?? null;
                 // 2) actor.allApplicableEffects() generator
-                if (!transferred && typeof live?.allApplicableEffects === 'function') {
+                if (transferred == null && typeof live?.allApplicableEffects === 'function') {
                     for (const e of live.allApplicableEffects()) {
                         if (matchesOrigin(e) || e?.parent?.id === itemId) {
                             transferred = e;
@@ -206,12 +206,12 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
                     }
                 }
                 // 3) item.effects.contents — the effect is at least on the item
-                if (!transferred) {
+                if (transferred == null) {
                     const item = live?.items?.get?.(itemId);
                     const found = item?.effects?.find?.((e: any) => e?.name === 'probe-transfer-effect') ?? null;
                     if (found?.transfer === true) transferred = found;
                 }
-                if (!transferred) {
+                if (transferred == null) {
                     return { ok: false, error: 'transferred effect not found on actor.effects / allApplicableEffects / item.effects' };
                 }
                 return { ok: true, error: null };
@@ -239,7 +239,7 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
     return page.evaluate(async (aid) => {
         const root = globalThis as any;
         const actor = root.game?.actors?.get?.(aid);
-        if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
+        if (actor?.createEmbeddedDocuments == null) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
         let effectId: string | null = null;
         let combat: any = null;
         try {
@@ -250,7 +250,7 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
             // the new AE can adopt that combat id at creation time, then
             // verify both isTemporary and the round-tick decrement.
             combat = (await root.Combat?.create?.({})) ?? null;
-            if (!combat?.id) return { ok: false, error: 'Combat.create returned null' };
+            if (combat?.id == null) return { ok: false, error: 'Combat.create returned null' };
             try {
                 await combat.createEmbeddedDocuments?.('Combatant', [{ actorId: aid, initiative: 10 }]);
             } catch {
@@ -281,7 +281,7 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
             if (effectId === null) return { ok: false, error: 'temporary AE create returned no id' };
             const liveActor = root.game?.actors?.get?.(aid);
             const effect = liveActor?.effects?.get?.(effectId);
-            if (!effect) return { ok: false, error: 'created effect not retrievable' };
+            if (effect == null) return { ok: false, error: 'created effect not retrievable' };
             // V14 stores duration as `{value, units, remaining, expiry, ...}`;
             // the legacy `seconds`/`rounds`/`turns` slots may be null even
             // when the effect has a bounded duration. Treat any of:
@@ -338,7 +338,7 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
             return { ok: false, error: `temporary probe threw: ${err instanceof Error ? err.message : String(err)}` };
         } finally {
             try {
-                if (combat?.delete) await combat.delete();
+                if (combat?.delete != null) await combat.delete();
             } catch {
                 /* best-effort */
             }

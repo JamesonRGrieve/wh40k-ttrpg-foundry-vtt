@@ -41,7 +41,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                 let hasBreakdownBtn = false;
                 let hasPanel = false;
 
-                if (!ActorCls?.create) {
+                if (ActorCls?.create == null) {
                     return {
                         rendered,
                         valueText,
@@ -77,7 +77,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                             error: String((err as Error)?.message ?? err),
                         };
                     }
-                    if (!actor) {
+                    if (actor == null) {
                         return {
                             rendered,
                             valueText,
@@ -110,7 +110,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
 
                     const el = actor.sheet?.element ?? null;
                     rendered = el instanceof HTMLElement;
-                    if (rendered && el) {
+                    if (rendered && el !== null) {
                         hasPanel = el.querySelector('.wh40k-subtlety-panel') !== null;
                         valueText = el.querySelector('.wh40k-subtlety-value')?.textContent?.trim() ?? '';
                         maxText = el.querySelector('.wh40k-subtlety-max')?.textContent?.trim() ?? '';

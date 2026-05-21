@@ -102,7 +102,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },
                 });
-                if (!actor?.id) return null;
+                if (actor?.id == null) return null;
                 const a = actor as unknown as {
                     id: string;
                     uuid?: string;
@@ -154,7 +154,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
             if (setup === null) return;
 
             const probes = await page.evaluate(
-                async ({ templates, setup }) => {
+                async ({ templates, setup: evalSetup }) => {
                     const g = globalThis as unknown as {
                         foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
                         ChatMessage?: { create?: (data: object) => Promise<{ id?: string } | null> };
@@ -164,8 +164,8 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                             messages?: { get?: (id: string) => unknown; size?: number };
                         };
                     };
-                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate;
-                    if (!renderTemplate || !g.ChatMessage?.create || !g.Roll) {
+                    const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
+                    if (!renderTemplateFn || !g.ChatMessage?.create || !g.Roll) {
                         return templates.map((t: string) => ({
                             template: t,
                             renderedLen: 0,
@@ -176,11 +176,10 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         }));
                     }
 
-                    const actor = g.game?.actors?.get?.(setup.actorId) as
+                    const actor = g.game?.actors?.get?.(evalSetup.actorId) as
                         | { name?: string; img?: string; uuid?: string; system?: unknown; getRollData?: () => object }
                         | undefined;
                     const baseRoll = await new g.Roll('1d100').evaluate();
-                    const _damageRoll = await new g.Roll('1d10').evaluate();
                     const rollData = actor?.getRollData?.() ?? {};
 
                     // Rich union-context: every field any template might
@@ -190,16 +189,16 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         // Identity
                         gameSystem: 'dh2e',
                         actor: {
-                            _id: setup.actorId,
-                            id: setup.actorId,
-                            uuid: setup.actorUuid,
+                            _id: evalSetup.actorId,
+                            id: evalSetup.actorId,
+                            uuid: evalSetup.actorUuid,
                             name: actor?.name ?? 'e2e-chat-cards-actor',
-                            img: setup.actorImg,
+                            img: evalSetup.actorImg,
                             system: actor?.system ?? {},
                         },
                         actorName: actor?.name ?? 'e2e-chat-cards-actor',
-                        actorImg: setup.actorImg,
-                        actorId: setup.actorId,
+                        actorImg: evalSetup.actorImg,
+                        actorId: evalSetup.actorId,
                         system: { fatigue: { value: 0, max: 10 }, wounds: { value: 12, max: 12 } },
 
                         // Generic display fields
@@ -211,7 +210,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         effectString: 'effect',
                         timestamp: '00:00',
                         source: 'e2e',
-                        img: setup.actorImg,
+                        img: evalSetup.actorImg,
                         icon: 'fa-bolt',
                         iconClass: 'fa-bolt',
                         description: '<p>e2e description</p>',
@@ -273,7 +272,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         item: {
                             _id: 'probe-item',
                             id: 'probe-item',
-                            uuid: setup.weaponUuid ?? 'Item.probe',
+                            uuid: evalSetup.weaponUuid ?? 'Item.probe',
                             name: 'Probe Item',
                             img: 'icons/svg/item-bag.svg',
                             type: 'weapon',
@@ -282,7 +281,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         },
                         weapon: {
                             _id: 'probe-weapon',
-                            uuid: setup.weaponUuid ?? 'Item.probe',
+                            uuid: evalSetup.weaponUuid ?? 'Item.probe',
                             name: 'e2e-weapon',
                             img: 'icons/svg/sword.svg',
                             system: {
@@ -364,7 +363,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         let html = '';
                         let renderError: string | null = null;
                         try {
-                            html = await renderTemplate(`systems/wh40k-rpg/templates/chat/${tpl}.hbs`, ctx);
+                            html = await renderTemplateFn(`systems/wh40k-rpg/templates/chat/${tpl}.hbs`, ctx);
                         } catch (err) {
                             renderError = String((err as Error).message);
                         }
@@ -385,7 +384,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         try {
                             const msg = await g.ChatMessage.create({
                                 content: html,
-                                speaker: { actor: setup.actorId },
+                                speaker: { actor: evalSetup.actorId },
                             });
                             createdId = msg?.id ?? null;
                         } catch (err) {

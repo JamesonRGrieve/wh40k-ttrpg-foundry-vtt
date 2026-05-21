@@ -20,7 +20,7 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
         const ActorCls = g.Actor;
-        if (!ActorCls?.create) {
+        if (ActorCls?.create == null) {
             return { setupOk: false, panelPresent: false, rowCount: 0, error: 'Actor.create unavailable' };
         }
 
@@ -43,7 +43,7 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
             return { setupOk: false, panelPresent: false, rowCount: 0, error: String((err as Error)?.message ?? err) };
         }
 
-        if (!pc || !npc) {
+        if (pc == null || npc == null) {
             return { setupOk: false, panelPresent: false, rowCount: 0, error: 'Actor.create returned null' };
         }
 
