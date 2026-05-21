@@ -100,16 +100,109 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            // Runtime-loaded module surfaces. Each module is dynamic-imported by
+            // name; the interfaces below describe exactly the exports the probe
+            // touches, so the comparisons downstream stay fully typed.
+            interface ScatterVector {
+                direction: number;
+                metres: number;
+            }
+            interface AttackMode {
+                available?: boolean;
+            }
+            interface WeaponSystem {
+                attack?: { rateOfFire?: { semi?: number; full?: number } };
+            }
+            interface RuleModules {
+                'difficulties': { rollDifficulties: () => Record<string, string> };
+                'scatter': {
+                    buildScatterVector: (direction: number, metres: number) => ScatterVector;
+                    scaleScatterForArea: (radius: number) => number;
+                    labelForDirection: (direction: number) => string;
+                    DIRECTION_LABELS: readonly string[];
+                };
+                'surprise': {
+                    getSurpriseToHitBonus: (input: { targetIsSurprised: boolean; currentRound: number }) => number;
+                    canActThisRound: (surprised: boolean, round: number) => boolean;
+                    canUseReactions: (surprised: boolean, round: number) => boolean;
+                };
+                'trying-again': {
+                    getTryAgainAdvice: (skill: string, priorAttempts: number) => { blocksByConvention: boolean; cumulativePenalty: number };
+                };
+                'two-weapon-fighting': {
+                    resolveTwoWeaponPenalties: (input: { isMelee: boolean; talents: Set<string> }) => { mainPenalty: number; offPenalty: number };
+                };
+                'untrained-skill': {
+                    resolveUntrainedTarget: (input: {
+                        advance: number;
+                        isBasic: boolean;
+                        characteristicTotal: number;
+                        halveOnNonBasic?: boolean;
+                        altCharacteristicTotal?: number;
+                    }) => {
+                        target: number;
+                        untrainedAdvanced: boolean;
+                        halved: boolean;
+                        usedAltCharacteristic: boolean;
+                    };
+                };
+                'cover': {
+                    resolveCoverHit: (input: { incomingDamage: number; coverAP: number }) => { overflowToActor: number; coverDestroyed: boolean };
+                    startingCoverAP: (kind: string) => number;
+                    COVER_AP: Record<string, number>;
+                };
+                'pinning': {
+                    resolvePinningTest: (input: { willpowerTotal: number; triggerModifier?: number }) => { target: number };
+                    resolveEscapePinningTest: (input: { willpowerTotal: number; notBeingShotAt: boolean; inCover: boolean }) => {
+                        target: number;
+                        favourableBonus: boolean;
+                    };
+                };
+                'fatigue': {
+                    getFatigueThreshold: (input: { toughnessBonus: number; willpowerBonus: number }) => number;
+                    isFatigueUnconscious: (input: { toughnessBonus: number; willpowerBonus: number; fatigueLevel: number }) => boolean;
+                    isCharacteristicHalvedByFatigue: (fatigueLevel: number, threshold: number) => boolean;
+                };
+                'fear': {
+                    getFearTestPenalty: (fearRating: number) => number;
+                    resolveFearTest: (input: { willpowerTotal: number; fearRating: number }) => { isNoOp: boolean; target: number };
+                    getShockTableRollModifier: (fearRating: number) => number;
+                };
+                'hit-locations': {
+                    reverseAttackRollDigits: (roll: number) => number;
+                    getHitLocationForRoll: (roll: number) => string;
+                    hitDropdown: () => Record<string, string>;
+                    hitLocationNames: () => readonly string[];
+                };
+                'hazards': {
+                    getFallingDiceCount: (metres: number) => number;
+                    getFallingDamageFormula: (metres: number) => string;
+                    resolveDrowningTest: (input: { toughnessTotal: number; roundsSubmerged: number }) => { target: number };
+                };
+                'healing': {
+                    getDamageTier: (currentWounds: number, maxWounds: number) => string;
+                    getNaturalHealingDays: (tier: string) => number;
+                };
+                'attack-options': {
+                    getAvailableAttackModes: (weapon: { isRanged: boolean; system: WeaponSystem }) => AttackMode[];
+                    getSituationalModifiers: (isRanged: boolean) => readonly { label?: string }[];
+                    getAimModifier: (mode: string) => number;
+                };
+            }
+            type ImportError = { __importError: string };
+            type Loaded<T> = T | ImportError;
+            const isImportError = <T>(m: Loaded<T>): m is ImportError => typeof (m as ImportError).__importError === 'string';
+
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/rules`;
-            const loadModule = async (name: string): Promise<any> => {
+            const loadModule = async <K extends keyof RuleModules>(name: K): Promise<Loaded<RuleModules[K]>> => {
                 try {
-                    return await import(`${base}/${name}.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic runtime import of compiled module, shape asserted via RuleModules
+                    return (await import(`${base}/${name}.js`)) as RuleModules[K];
                 } catch (err) {
                     return { __importError: err instanceof Error ? err.message : String(err) };
                 }
@@ -126,18 +219,18 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- difficulties ----------
             const difficulties = await loadModule('difficulties');
-            if (difficulties?.__importError != null) {
+            if (isImportError(difficulties)) {
                 record('difficulties-rollDifficulties', false, difficulties.__importError);
             } else {
                 guarded('difficulties-rollDifficulties', () => {
                     const ladder = difficulties.rollDifficulties();
-                    return ladder !== null && typeof ladder === 'object' && ladder['0'] === 'Challenging (+0)' && Object.keys(ladder).length >= 13;
+                    return ladder['0'] === 'Challenging (+0)' && Object.keys(ladder).length >= 13;
                 });
             }
 
             // ---------- scatter ----------
             const scatter = await loadModule('scatter');
-            if (scatter?.__importError != null) {
+            if (isImportError(scatter)) {
                 for (const k of ['scatter-buildVector', 'scatter-scaleForArea', 'scatter-labelForDirection'] as const) record(k, false, scatter.__importError);
             } else {
                 guarded('scatter-buildVector', () => {
@@ -162,7 +255,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- surprise ----------
             const surprise = await loadModule('surprise');
-            if (surprise?.__importError != null) {
+            if (isImportError(surprise)) {
                 for (const k of ['surprise-toHitBonus', 'surprise-canActThisRound', 'surprise-canUseReactions'] as const)
                     record(k, false, surprise.__importError);
             } else {
@@ -174,10 +267,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 });
                 guarded(
                     'surprise-canActThisRound',
-                    () =>
-                        surprise.canActThisRound(false, 1) === true &&
-                        surprise.canActThisRound(true, 1) === false &&
-                        surprise.canActThisRound(true, 2) === true,
+                    () => surprise.canActThisRound(false, 1) && !surprise.canActThisRound(true, 1) && surprise.canActThisRound(true, 2),
                 );
                 guarded(
                     'surprise-canUseReactions',
@@ -187,7 +277,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- trying-again ----------
             const tryingAgain = await loadModule('trying-again');
-            if (tryingAgain?.__importError != null) {
+            if (isImportError(tryingAgain)) {
                 record('trying-again-advice', false, tryingAgain.__importError);
             } else {
                 guarded('trying-again-advice', () => {
@@ -195,18 +285,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const blocked = tryingAgain.getTryAgainAdvice('inquiry', 1);
                     const cumulative = tryingAgain.getTryAgainAdvice('charm', 2);
                     const neutral = tryingAgain.getTryAgainAdvice('weaponSkill', 5);
-                    return (
-                        first.blocksByConvention === false &&
-                        blocked.blocksByConvention === true &&
-                        cumulative.cumulativePenalty === -20 &&
-                        neutral.cumulativePenalty === 0
-                    );
+                    return !first.blocksByConvention && blocked.blocksByConvention && cumulative.cumulativePenalty === -20 && neutral.cumulativePenalty === 0;
                 });
             }
 
             // ---------- two-weapon-fighting ----------
             const twoWeapon = await loadModule('two-weapon-fighting');
-            if (twoWeapon?.__importError != null) {
+            if (isImportError(twoWeapon)) {
                 record('two-weapon-penalties', false, twoWeapon.__importError);
             } else {
                 guarded('two-weapon-penalties', () => {
@@ -225,7 +310,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- untrained-skill ----------
             const untrained = await loadModule('untrained-skill');
-            if (untrained?.__importError != null) {
+            if (isImportError(untrained)) {
                 record('untrained-skill-target', false, untrained.__importError);
             } else {
                 guarded('untrained-skill-target', () => {
@@ -233,32 +318,27 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const advanced = untrained.resolveUntrainedTarget({ advance: 0, isBasic: false, characteristicTotal: 35 });
                     const halved = untrained.resolveUntrainedTarget({ advance: 0, isBasic: true, characteristicTotal: 35, halveOnNonBasic: true });
                     const alt = untrained.resolveUntrainedTarget({ advance: 10, isBasic: true, characteristicTotal: 30, altCharacteristicTotal: 50 });
-                    return trained.target === 40 && advanced.untrainedAdvanced === true && halved.halved === true && alt.usedAltCharacteristic === true;
+                    return trained.target === 40 && advanced.untrainedAdvanced && halved.halved && alt.usedAltCharacteristic;
                 });
             }
 
             // ---------- cover ----------
             const cover = await loadModule('cover');
-            if (cover?.__importError != null) {
+            if (isImportError(cover)) {
                 for (const k of ['cover-resolveHit', 'cover-startingAP'] as const) record(k, false, cover.__importError);
             } else {
                 guarded('cover-resolveHit', () => {
                     const absorbed = cover.resolveCoverHit({ incomingDamage: 5, coverAP: 8 });
                     const destroyed = cover.resolveCoverHit({ incomingDamage: 4, coverAP: 4 });
                     const overflow = cover.resolveCoverHit({ incomingDamage: 10, coverAP: 4 });
-                    return (
-                        absorbed.overflowToActor === 0 &&
-                        absorbed.coverDestroyed === false &&
-                        destroyed.coverDestroyed === true &&
-                        overflow.overflowToActor === 6
-                    );
+                    return absorbed.overflowToActor === 0 && !absorbed.coverDestroyed && destroyed.coverDestroyed && overflow.overflowToActor === 6;
                 });
                 guarded('cover-startingAP', () => typeof cover.startingCoverAP('sandbags') === 'number' && cover.COVER_AP.barricade === 12);
             }
 
             // ---------- pinning ----------
             const pinning = await loadModule('pinning');
-            if (pinning?.__importError != null) {
+            if (isImportError(pinning)) {
                 for (const k of ['pinning-resolveTest', 'pinning-escapeTest'] as const) record(k, false, pinning.__importError);
             } else {
                 guarded('pinning-resolveTest', () => {
@@ -271,35 +351,32 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const noBonus = pinning.resolveEscapePinningTest({ willpowerTotal: 40, notBeingShotAt: false, inCover: false });
                     const inCover = pinning.resolveEscapePinningTest({ willpowerTotal: 40, notBeingShotAt: false, inCover: true });
                     const both = pinning.resolveEscapePinningTest({ willpowerTotal: 40, notBeingShotAt: true, inCover: true });
-                    return noBonus.target === 40 && noBonus.favourableBonus === false && inCover.target === 70 && both.target === 70;
+                    return noBonus.target === 40 && !noBonus.favourableBonus && inCover.target === 70 && both.target === 70;
                 });
             }
 
             // ---------- fatigue ----------
             const fatigue = await loadModule('fatigue');
-            if (fatigue?.__importError != null) {
+            if (isImportError(fatigue)) {
                 for (const k of ['fatigue-threshold', 'fatigue-unconscious', 'fatigue-characteristic-halved'] as const) record(k, false, fatigue.__importError);
             } else {
                 guarded('fatigue-threshold', () => fatigue.getFatigueThreshold({ toughnessBonus: 4, willpowerBonus: 3 }) === 7);
                 guarded('fatigue-unconscious', () => {
                     const profile = { toughnessBonus: 4, willpowerBonus: 3 };
-                    return (
-                        fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 7 }) === false &&
-                        fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 8 }) === true
-                    );
+                    return !fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 7 }) && fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 8 });
                 });
                 guarded(
                     'fatigue-characteristic-halved',
                     () =>
-                        fatigue.isCharacteristicHalvedByFatigue(2, 4) === true &&
-                        fatigue.isCharacteristicHalvedByFatigue(5, 4) === false &&
-                        fatigue.isCharacteristicHalvedByFatigue(3, 0) === false,
+                        fatigue.isCharacteristicHalvedByFatigue(2, 4) &&
+                        !fatigue.isCharacteristicHalvedByFatigue(5, 4) &&
+                        !fatigue.isCharacteristicHalvedByFatigue(3, 0),
                 );
             }
 
             // ---------- fear ----------
             const fear = await loadModule('fear');
-            if (fear?.__importError != null) {
+            if (isImportError(fear)) {
                 for (const k of ['fear-testPenalty', 'fear-resolveTest', 'fear-shockTableModifier'] as const) record(k, false, fear.__importError);
             } else {
                 guarded('fear-testPenalty', () => fear.getFearTestPenalty(2) === 20 && fear.getFearTestPenalty(10) === 40 && fear.getFearTestPenalty(-3) === 0);
@@ -307,14 +384,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const noOp = fear.resolveFearTest({ willpowerTotal: 40, fearRating: 0 });
                     const rated = fear.resolveFearTest({ willpowerTotal: 40, fearRating: 2 });
                     const floored = fear.resolveFearTest({ willpowerTotal: 20, fearRating: 4 });
-                    return noOp.isNoOp === true && rated.target === 20 && rated.isNoOp === false && floored.target === 0;
+                    return noOp.isNoOp && rated.target === 20 && !rated.isNoOp && floored.target === 0;
                 });
                 guarded('fear-shockTableModifier', () => fear.getShockTableRollModifier(1) === 0 && fear.getShockTableRollModifier(3) === 20);
             }
 
             // ---------- hit-locations ----------
             const hitLocations = await loadModule('hit-locations');
-            if (hitLocations?.__importError != null) {
+            if (isImportError(hitLocations)) {
                 for (const k of ['hit-locations-reverseDigits', 'hit-locations-forRoll', 'hit-locations-dropdown'] as const)
                     record(k, false, hitLocations.__importError);
             } else {
@@ -331,19 +408,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 });
                 guarded('hit-locations-dropdown', () => {
                     const dd = hitLocations.hitDropdown();
-                    return (
-                        dd !== null &&
-                        typeof dd === 'object' &&
-                        Object.keys(dd).length > 0 &&
-                        Array.isArray(hitLocations.hitLocationNames()) &&
-                        hitLocations.hitLocationNames().length > 0
-                    );
+                    return Object.keys(dd).length > 0 && Array.isArray(hitLocations.hitLocationNames()) && hitLocations.hitLocationNames().length > 0;
                 });
             }
 
             // ---------- hazards ----------
             const hazards = await loadModule('hazards');
-            if (hazards?.__importError != null) {
+            if (isImportError(hazards)) {
                 for (const k of ['hazards-fallingDice', 'hazards-fallingFormula', 'hazards-drowningTest'] as const) record(k, false, hazards.__importError);
             } else {
                 guarded(
@@ -366,7 +437,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- healing ----------
             const healing = await loadModule('healing');
-            if (healing?.__importError != null) {
+            if (isImportError(healing)) {
                 for (const k of ['healing-damageTier', 'healing-naturalDays'] as const) record(k, false, healing.__importError);
             } else {
                 guarded(
@@ -387,7 +458,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- attack-options ----------
             const attackOptions = await loadModule('attack-options');
-            if (attackOptions?.__importError != null) {
+            if (isImportError(attackOptions)) {
                 for (const k of ['attack-options-availableModes', 'attack-options-situationalModifiers', 'attack-options-aimModifier'] as const)
                     record(k, false, attackOptions.__importError);
             } else {
@@ -395,7 +466,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const weapon = { isRanged: true, system: { attack: { rateOfFire: { semi: 3, full: 10 } } } };
                     const ranged = attackOptions.getAvailableAttackModes(weapon);
                     const melee = attackOptions.getAvailableAttackModes({ isRanged: false, system: {} });
-                    const first = ranged[0] as { available?: unknown } | undefined;
+                    const first = ranged[0];
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: tsconfig.json types ranged[0] as possibly-undefined; tsconfig.test.json (eslint's program) does not
                     return Array.isArray(ranged) && ranged.length > 0 && typeof first?.available === 'boolean' && Array.isArray(melee) && melee.length > 0;
                 });
                 guarded('attack-options-situationalModifiers', () => {
@@ -410,7 +482,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

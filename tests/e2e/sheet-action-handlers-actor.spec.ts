@@ -84,8 +84,56 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals + erased sheet static handlers are runtime-only */
-            const g = globalThis as any;
+            // ---- Boundary shapes -------------------------------------------------
+            // Foundry document / sheet / collection surfaces arriving across the
+            // realm boundary have no shipped types. These structural interfaces
+            // describe exactly the members the probes touch; erased sheet static
+            // action handlers are typed via the shared `ActionHandler` shape.
+            type ActionHandler = (this: ProbeSheet, event: Event, target: HTMLElement) => Promise<void> | void;
+            interface ProbeSheet {
+                render?: (force: boolean) => Promise<void>;
+                close?: () => Promise<void>;
+                element?: HTMLElement | null;
+                options?: { actions?: Record<string, ActionHandler | undefined> };
+            }
+            // Concrete union of every actor/item system path the probes read.
+            interface ProbeSystem {
+                equipped?: boolean;
+                inBackpack?: boolean;
+                inShipStorage?: boolean;
+                horde?: { active?: boolean; magnitude?: number };
+                trainedSkills?: Record<string, { trained?: boolean } | undefined>;
+                tags?: string[];
+                wounds?: { value?: number; max?: number; critical?: number };
+                crew?: { rating?: number; morale?: number };
+                voidShields?: number;
+                voidShieldsStatus?: { active?: number; exhausted?: number };
+            }
+            interface ProbeItem {
+                id?: string;
+                system?: ProbeSystem;
+                delete?: () => Promise<void>;
+            }
+            interface ProbeActor {
+                id?: string;
+                sheet?: ProbeSheet;
+                system?: ProbeSystem;
+                items?: { get?: (id: string) => ProbeItem | undefined };
+                getFlag?: (scope: string, key: string) => string[] | Record<string, number> | undefined;
+                update?: (data: object) => Promise<void>;
+                createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id: string }>>;
+                delete?: () => Promise<void>;
+            }
+            interface ActorsCollection {
+                get?: (id: string) => ProbeActor | undefined;
+            }
+            interface FoundryGlobal {
+                Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
+                game?: { actors?: ActorsCollection; user?: { isGM?: boolean } };
+                ui?: { windows?: Record<string, { id?: string; close?: () => Promise<void> }> };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorClass = g.Actor;
             const gameCtx = g.game;
             const uiCtx = g.ui;
@@ -102,14 +150,19 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             }
 
             // Wrap a promise with a 5s timeout so a blocking dialog can't hang
-            // the spec (mirrors weapon-attack.spec.ts).
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
+            // the spec (mirrors weapon-attack.spec.ts). The optional-chained
+            // Foundry method calls that feed this may resolve to `undefined`
+            // when a member is absent; `Promise.race` passes that through.
+            const withTimeout = async <T>(p: Promise<T> | undefined | void, ms: number, label: string): Promise<T | undefined> => {
                 let timer: ReturnType<typeof setTimeout> | null = null;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
+                // A `void`/`undefined` input (sync handler or absent member) resolves
+                // immediately; only a real promise can win or lose against the timer.
+                const awaitable: Promise<T | undefined> = p instanceof Promise ? p : Promise.resolve(undefined);
                 try {
-                    return await Promise.race([p, timeout]);
+                    return await Promise.race([awaitable, timeout]);
                 } finally {
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
                     if (timer !== null) clearTimeout(timer);
@@ -118,7 +171,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
             // Drain stray dialogs so the next probe's window stack stays clean.
             async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(uiCtx?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                const windows = Object.values(uiCtx?.windows ?? {});
                 for (const w of windows) {
                     const id = w.id ?? '';
                     if (
@@ -132,6 +185,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         id.includes('characteristic')
                     ) {
                         try {
+                            // eslint-disable-next-line no-await-in-loop -- best-effort serial teardown; parallel closes race on Foundry's window registry
                             await w.close?.();
                         } catch {
                             /* ignore */
@@ -160,28 +214,33 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             // Shared cleanup registry — every doc we create gets registered.
             const cleanups: Array<() => Promise<void>> = [];
 
-            // Helper to create + register an actor with cleanup.
-            async function makeActor(type: string, gameSystem: string, system: Record<string, unknown> = {}): Promise<any> {
+            // Helper to create + register an actor with cleanup. `system` is the
+            // per-type seed payload spread into the Foundry `Actor.create` data.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create seed payload is an open Foundry document-data shape
+            async function makeActor(type: string, gameSystem: string, system: Record<string, unknown> = {}): Promise<ProbeActor | null> {
+                const createActor = ActorClass?.create;
+                if (createActor == null) return null;
                 try {
-                    const actor = (await withTimeout(
-                        ActorClass.create({
+                    const actor = await withTimeout(
+                        createActor({
                             name: `sheet-action-actor-${type}-${Math.random().toString(36).slice(2, 8)}`,
                             type,
                             system: { gameSystem, ...system },
                         }),
                         5_000,
                         `Actor.create(${type}/${gameSystem})`,
-                    )) as any;
-                    if (actor?.id != null) {
+                    );
+                    const actorId = actor?.id;
+                    if (actorId != null) {
                         cleanups.push(async () => {
                             try {
-                                await game.actors.get(actor.id).delete();
+                                await gameCtx?.actors?.get?.(actorId)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
                         });
                     }
-                    return actor;
+                    return actor ?? null;
                 } catch {
                     return null;
                 }
@@ -202,7 +261,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
-                    const livePc = (): any => gameCtx?.actors?.get?.(pc.id);
+                    const livePc = (): ProbeActor | undefined => (pc.id != null ? gameCtx?.actors?.get?.(pc.id) : undefined);
                     const sheet = livePc()?.sheet;
                     if (sheet == null) {
                         notes['character-sheet::toggleEquip'] = 'PC sheet undefined';
@@ -226,10 +285,10 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         const actions = sheet.options?.actions ?? {};
 
                         // Create one gear item we can equip / stow / unstow / favorite.
-                        let gear: any = null;
+                        let gear: ProbeItem | null = null;
                         try {
-                            const created = (await withTimeout(
-                                livePc().createEmbeddedDocuments?.('Item', [
+                            const created = await withTimeout(
+                                livePc()?.createEmbeddedDocuments?.('Item', [
                                     {
                                         name: 'probe-gear-belt',
                                         type: 'gear',
@@ -238,8 +297,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 ]),
                                 5_000,
                                 'create gear',
-                            )) as any[];
-                            gear = created[0] != null ? livePc().items.get(created[0].id) : null;
+                            );
+                            const first = created?.at(0);
+                            gear = first != null ? livePc()?.items?.get?.(first.id) ?? null : null;
                         } catch {
                             gear = null;
                         }
@@ -253,8 +313,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 notes['character-sheet::toggleEquip'] = 'gear missing';
                             } else {
                                 const before = gear.system?.equipped === true;
-                                await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id)), 5_000, 'toggleEquip');
-                                const fresh = livePc().items.get(gear.id);
+                                await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'toggleEquip');
+                                const fresh = livePc()?.items?.get?.(gear.id ?? '');
                                 const after = fresh?.system?.equipped === true;
                                 if (after !== before) {
                                     fired['character-sheet::toggleEquip'] = true;
@@ -275,8 +335,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             } else if (gear == null) {
                                 notes['character-sheet::stowItem'] = 'gear missing';
                             } else {
-                                await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id)), 5_000, 'stowItem');
-                                const fresh = livePc().items.get(gear.id);
+                                await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'stowItem');
+                                const fresh = livePc()?.items?.get?.(gear.id ?? '');
                                 const inBackpack = fresh?.system?.inBackpack === true;
                                 const equipped = fresh?.system?.equipped === true;
                                 if (inBackpack && !equipped) {
@@ -298,8 +358,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             } else if (gear == null) {
                                 notes['character-sheet::unstowItem'] = 'gear missing';
                             } else {
-                                await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id)), 5_000, 'unstowItem');
-                                const fresh = livePc().items.get(gear.id);
+                                await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'unstowItem');
+                                const fresh = livePc()?.items?.get?.(gear.id ?? '');
                                 const inBackpack = fresh?.system?.inBackpack === true;
                                 if (!inBackpack) {
                                     fired['character-sheet::unstowItem'] = true;
@@ -319,7 +379,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::filterEquipment'] = 'handler missing';
                             } else {
-                                handler.call(sheet, synthEvent(), synthTarget({}));
+                                void handler.call(sheet, synthEvent(), synthTarget({}));
                                 fired['character-sheet::filterEquipment'] = true;
                                 notes['character-sheet::filterEquipment'] = 'dispatch ok';
                             }
@@ -334,10 +394,12 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::toggleFavoriteSkill'] = 'handler missing';
                             } else {
-                                const flagBefore = (livePc().getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
+                                const favBefore = livePc()?.getFlag?.('wh40k-rpg', 'favoriteSkills');
+                                const flagBefore = Array.isArray(favBefore) ? favBefore : [];
                                 const includesBefore = flagBefore.includes('athletics');
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'athletics' })), 5_000, 'toggleFavoriteSkill');
-                                const flagAfter = (livePc().getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
+                                const favAfter = livePc()?.getFlag?.('wh40k-rpg', 'favoriteSkills');
+                                const flagAfter = Array.isArray(favAfter) ? favAfter : [];
                                 const includesAfter = flagAfter.includes('athletics');
                                 if (includesAfter !== includesBefore) {
                                     fired['character-sheet::toggleFavoriteSkill'] = true;
@@ -360,12 +422,13 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::toggleFavoriteTalent'] = 'handler missing';
                             } else {
-                                const talentCreated = (await withTimeout(
-                                    livePc().createEmbeddedDocuments?.('Item', [{ name: 'probe-talent', type: 'talent', system: {} }]),
+                                const talentCreated = await withTimeout(
+                                    livePc()?.createEmbeddedDocuments?.('Item', [{ name: 'probe-talent', type: 'talent', system: {} }]),
                                     5_000,
                                     'create talent',
-                                )) as any[];
-                                const talent = talentCreated[0] != null ? livePc().items.get(talentCreated[0].id) : null;
+                                );
+                                const firstTalent = talentCreated?.at(0);
+                                const talent = firstTalent != null ? livePc()?.items?.get?.(firstTalent.id) ?? null : null;
                                 if (talent == null) {
                                     notes['character-sheet::toggleFavoriteTalent'] = 'talent create failed';
                                 } else {
@@ -376,9 +439,11 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                             /* ignore */
                                         }
                                     });
-                                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(talent.id)), 5_000, 'toggleFavoriteTalent');
-                                    const flagAfter = (livePc().getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
-                                    if (flagAfter.includes(talent.id)) {
+                                    const talentId = talent.id ?? '';
+                                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(talentId)), 5_000, 'toggleFavoriteTalent');
+                                    const favTalentsFlag = livePc()?.getFlag?.('wh40k-rpg', 'favoriteTalents');
+                                    const flagAfter = Array.isArray(favTalentsFlag) ? favTalentsFlag : [];
+                                    if (flagAfter.includes(talentId)) {
                                         fired['character-sheet::toggleFavoriteTalent'] = true;
                                         notes['character-sheet::toggleFavoriteTalent'] = `flag added`;
                                     } else {
@@ -435,7 +500,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
-                    const liveNpc = (): any => gameCtx?.actors?.get?.(npc.id);
+                    const liveNpc = (): ProbeActor | undefined => (npc.id != null ? gameCtx?.actors?.get?.(npc.id) : undefined);
                     const sheet = liveNpc()?.sheet;
                     if (sheet == null) {
                         notes['npc-sheet::toggleHordeMode'] = 'NPC sheet undefined';
@@ -463,9 +528,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::toggleHordeMode'] = 'handler missing';
                             } else {
-                                const before = liveNpc().system?.horde?.active === true;
+                                const before = liveNpc()?.system?.horde?.active === true;
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'toggleHordeMode');
-                                const after = liveNpc().system?.horde?.active === true;
+                                const after = liveNpc()?.system?.horde?.active === true;
                                 if (after !== before) {
                                     fired['npc-sheet::toggleHordeMode'] = true;
                                     notes['npc-sheet::toggleHordeMode'] = `horde.active ${before} → ${after}`;
@@ -515,7 +580,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     5_000,
                                     'setSkillLevel',
                                 );
-                                const fresh = liveNpc().system?.trainedSkills?.awareness;
+                                const fresh = liveNpc()?.system?.trainedSkills?.awareness;
                                 if (fresh?.trained === true) {
                                     fired['npc-sheet::setSkillLevel'] = true;
                                     notes['npc-sheet::setSkillLevel'] = 'awareness set to trained';
@@ -538,7 +603,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             } else {
                                 let threw: string | null = null;
                                 try {
-                                    handler.call(sheet, synthEvent(), synthTarget({}));
+                                    void handler.call(sheet, synthEvent(), synthTarget({}));
                                 } catch (err) {
                                     threw = err instanceof Error ? err.message : String(err);
                                 }
@@ -562,9 +627,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['npc-sheet::removeTag'] = 'handler missing';
                             } else {
-                                await withTimeout(liveNpc().update?.({ 'system.tags': ['boss'] }), 5_000, 'seed npc tag');
+                                await withTimeout(liveNpc()?.update?.({ 'system.tags': ['boss'] }), 5_000, 'seed npc tag');
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ tag: 'boss' })), 5_000, 'removeTag');
-                                const tags = (liveNpc().system?.tags ?? []) as string[];
+                                const tags = liveNpc()?.system?.tags ?? [];
                                 if (!tags.includes('boss')) {
                                     fired['npc-sheet::removeTag'] = true;
                                     notes['npc-sheet::removeTag'] = 'tag removed';
@@ -588,7 +653,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     5_000,
                                     'adjustInteractionCount',
                                 );
-                                const interactions = (liveNpc().getFlag('wh40k-rpg', 'interactions') as Record<string, number> | undefined) ?? {};
+                                const interactionsFlag = liveNpc()?.getFlag?.('wh40k-rpg', 'interactions');
+                                const interactions: Record<string, number> =
+                                    Array.isArray(interactionsFlag) || interactionsFlag == null ? {} : interactionsFlag;
                                 if (interactions['probe-pc'] === 1) {
                                     fired['npc-sheet::adjustInteractionCount'] = true;
                                     notes['npc-sheet::adjustInteractionCount'] = 'tally incremented to 1';
@@ -616,7 +683,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         await new Promise<void>((r) => {
                             setTimeout(r, 250);
                         });
-                        const liveIm = (): any => gameCtx?.actors?.get?.(imNpc.id);
+                        const liveIm = (): ProbeActor | undefined => (imNpc.id != null ? gameCtx?.actors?.get?.(imNpc.id) : undefined);
                         const sheet = liveIm()?.sheet;
                         if (sheet == null) {
                             notes['npc-sheet::scaleToThreat-im'] = 'IM NPC sheet undefined';
@@ -674,7 +741,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
-                    const liveV = (): any => gameCtx?.actors?.get?.(vehicle.id);
+                    const liveV = (): ProbeActor | undefined => (vehicle.id != null ? gameCtx?.actors?.get?.(vehicle.id) : undefined);
                     const sheet = liveV()?.sheet;
                     if (sheet == null) {
                         notes['vehicle-sheet::adjustStructure'] = 'Vehicle sheet undefined';
@@ -702,9 +769,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['vehicle-sheet::adjustStructure'] = 'handler missing';
                             } else {
-                                const before = liveV().system?.wounds?.value ?? -1;
+                                const before = liveV()?.system?.wounds?.value ?? -1;
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })), 5_000, 'adjustStructure');
-                                const after = liveV().system?.wounds?.value ?? -1;
+                                const after = liveV()?.system?.wounds?.value ?? -1;
                                 if (after === Math.max(0, before - 3)) {
                                     fired['vehicle-sheet::adjustStructure'] = true;
                                     notes['vehicle-sheet::adjustStructure'] = `wounds ${before} → ${after}`;
@@ -722,10 +789,10 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['vehicle-sheet::repairDamage'] = 'handler missing';
                             } else {
-                                const before = liveV().system?.wounds?.value ?? -1;
-                                const max = liveV().system?.wounds?.max ?? before;
+                                const before = liveV()?.system?.wounds?.value ?? -1;
+                                const max = liveV()?.system?.wounds?.max ?? before;
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '2' })), 5_000, 'repairDamage');
-                                const after = liveV().system?.wounds?.value ?? -1;
+                                const after = liveV()?.system?.wounds?.value ?? -1;
                                 if (after === Math.min(max, before + 2)) {
                                     fired['vehicle-sheet::repairDamage'] = true;
                                     notes['vehicle-sheet::repairDamage'] = `wounds ${before} → ${after}`;
@@ -743,9 +810,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['vehicle-sheet::modifyCrew'] = 'handler missing';
                             } else {
-                                const before = liveV().system?.crew?.rating ?? 30;
+                                const before = liveV()?.system?.crew?.rating ?? 30;
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '5' })), 5_000, 'modifyCrew');
-                                const after = liveV().system?.crew?.rating ?? 30;
+                                const after = liveV()?.system?.crew?.rating ?? 30;
                                 if (after === Math.max(1, Math.min(100, before + 5))) {
                                     fired['vehicle-sheet::modifyCrew'] = true;
                                     notes['vehicle-sheet::modifyCrew'] = `crew.rating ${before} → ${after}`;
@@ -763,9 +830,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             if (typeof handler !== 'function') {
                                 notes['vehicle-sheet::adjustCrewMorale'] = 'handler missing';
                             } else {
-                                const before = liveV().system?.crew?.morale ?? 50;
+                                const before = liveV()?.system?.crew?.morale ?? 50;
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-10' })), 5_000, 'adjustCrewMorale');
-                                const after = liveV().system?.crew?.morale ?? 50;
+                                const after = liveV()?.system?.crew?.morale ?? 50;
                                 if (after === Math.max(0, Math.min(100, before - 10))) {
                                     fired['vehicle-sheet::adjustCrewMorale'] = true;
                                     notes['vehicle-sheet::adjustCrewMorale'] = `crew.morale ${before} → ${after}`;
@@ -794,7 +861,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
-                    const liveS = (): any => gameCtx?.actors?.get?.(starship.id);
+                    const liveS = (): ProbeActor | undefined => (starship.id != null ? gameCtx?.actors?.get?.(starship.id) : undefined);
                     const sheet = liveS()?.sheet;
                     if (sheet == null) {
                         notes['starship-sheet::raiseVoidShield'] = 'Starship sheet undefined';
@@ -824,8 +891,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 notes['starship-sheet::raiseVoidShield'] = 'handler missing';
                             } else {
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'raiseVoidShield');
-                                const active = liveS().system?.voidShieldsStatus?.active ?? -1;
-                                const exhausted = liveS().system?.voidShieldsStatus?.exhausted ?? -1;
+                                const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
+                                const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
                                 if (active === 2 && exhausted === 0) {
                                     fired['starship-sheet::raiseVoidShield'] = true;
                                     notes['starship-sheet::raiseVoidShield'] = `active=${active} exhausted=${exhausted}`;
@@ -845,8 +912,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 notes['starship-sheet::lowerVoidShield'] = 'handler missing';
                             } else {
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'lowerVoidShield');
-                                const active = liveS().system?.voidShieldsStatus?.active ?? -1;
-                                const exhausted = liveS().system?.voidShieldsStatus?.exhausted ?? -1;
+                                const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
+                                const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
                                 if (active === 1 && exhausted === 1) {
                                     fired['starship-sheet::lowerVoidShield'] = true;
                                     notes['starship-sheet::lowerVoidShield'] = `active=${active} exhausted=${exhausted}`;
@@ -866,9 +933,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 notes['starship-sheet::restoreVoidShields'] = 'handler missing';
                             } else {
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'restoreVoidShields');
-                                const active = liveS().system?.voidShieldsStatus?.active ?? -1;
-                                const exhausted = liveS().system?.voidShieldsStatus?.exhausted ?? -1;
-                                const max = liveS().system?.voidShields ?? -1;
+                                const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
+                                const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
+                                const max = liveS()?.system?.voidShields ?? -1;
                                 if (active === max && exhausted === 0) {
                                     fired['starship-sheet::restoreVoidShields'] = true;
                                     notes['starship-sheet::restoreVoidShields'] = `active=${active}=${max} exhausted=${exhausted}`;
@@ -893,7 +960,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             } else {
                                 let threw: string | null = null;
                                 try {
-                                    handler.call(sheet, synthEvent(), synthTarget({}));
+                                    void handler.call(sheet, synthEvent(), synthTarget({}));
                                 } catch (err) {
                                     threw = err instanceof Error ? err.message : String(err);
                                 }
@@ -921,7 +988,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
-                    const liveL = (): any => gameCtx?.actors?.get?.(loot.id);
+                    const liveL = (): ProbeActor | undefined => (loot.id != null ? gameCtx?.actors?.get?.(loot.id) : undefined);
                     const sheet = liveL()?.sheet;
                     if (sheet == null) {
                         notes['loot-sheet::pickupAll'] = 'Loot sheet undefined';
@@ -967,6 +1034,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 // Best-effort teardown of every created doc + lingering dialog.
                 for (const fn of cleanups) {
                     try {
+                        // eslint-disable-next-line no-await-in-loop -- best-effort serial cleanup; parallel deletes race on Foundry's collection writes
                         await fn();
                     } catch {
                         /* ignore */
@@ -980,7 +1048,6 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             }
 
             return { flowsFired: fired, flowNotes: notes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, SHEET_ACTION_ACTOR_FLOWS);
 
         return {

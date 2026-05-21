@@ -65,6 +65,110 @@ interface ProbeResult {
     pageErrors: string[];
 }
 
+/** Minimal item-document shape consumed by the item-drop / inventory probes. */
+interface XItem {
+    id?: string;
+    name?: string;
+    delete?: () => Promise<void>;
+}
+
+/** Minimal actor-document shape consumed by the probes. */
+interface XActor {
+    id?: string;
+    name?: string;
+    isOwner?: boolean;
+    type?: string;
+    items?: { contents?: XItem[]; get?: (id: string) => XItem | undefined };
+    prototypeToken?: { toObject?: () => XProtoToken };
+    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<XItem[]>;
+    deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
+    delete?: () => Promise<void>;
+    view?: () => void;
+}
+
+/** Loosely-typed prototype-token object built up before token creation. */
+interface XProtoToken {
+    name?: string;
+    actorId?: string;
+    x?: number;
+    y?: number;
+    delta?: { system?: object; items?: object[]; effects?: object[]; flags?: object };
+}
+
+interface XWindow {
+    id?: string;
+    title?: string;
+    close?: () => Promise<void>;
+}
+
+/** EventTracker static surface the probes drive. */
+interface EventTrackerLike {
+    registerSettings: () => void;
+    setResolved: (id: string, resolved: boolean) => Promise<void>;
+    getResolved: () => Record<string, { resolvedAt?: string | number }> | null | undefined;
+    isAvailable: (id: string) => boolean;
+    getBlockingReasons: (id: string) => string[];
+    computeCharacterStates: () => Record<
+        string,
+        { dispositions: Record<string, { attitude?: string; trigger?: string }>; relationships: Array<{ currentState?: string; trigger?: string }> }
+    >;
+    _buildEventsPane: () => string;
+    _buildNPCStatePane: () => string;
+    _buildContent: (tab: string) => string;
+    _stateColor: (state: string) => string;
+    open: () => void;
+    _graph?: Record<string, object> | null;
+    _characters?: Record<string, object> | null;
+}
+
+interface LootActor extends XActor {
+    type?: string;
+}
+
+interface ItemDropManagerLike {
+    dropItemFromActor?: (actor: object, item: object) => Promise<LootActor | null>;
+    pickupLoot?: (receiver: object, pile: object) => Promise<boolean>;
+}
+
+interface InventoryCandidate {
+    uuid?: string;
+    name?: string;
+    type?: string;
+    profiles?: object;
+}
+
+interface InventoryGeneratorManagerLike {
+    collectCandidates?: (gameSystem: string) => Promise<InventoryCandidate[]>;
+    applyToActor?: (actor: object, uuids: string[]) => Promise<number | null>;
+}
+
+interface SceneLike {
+    id?: string;
+    delete?: () => Promise<void>;
+    view?: () => void;
+    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<void>;
+}
+
+interface SceneCtor {
+    create?: (data: object) => Promise<SceneLike | null>;
+}
+
+interface ActorCtorX {
+    create?: (data: object) => Promise<XActor | null>;
+}
+
+/** Foundry runtime globals consumed by this spec's probe. */
+interface XGlobal {
+    Actor?: ActorCtorX;
+    Scene?: SceneCtor;
+    game?: {
+        actors?: { get?: (id: string) => XActor | undefined };
+        settings?: { get?: (namespace: string, key: string) => object | string | number | boolean | null | undefined };
+        user?: { isGM?: boolean };
+    };
+    ui?: { windows?: Record<string, XWindow> };
+}
+
 const EVENT_TRACKER_MODULE_URL = '/systems/wh40k-rpg/module/managers/event-tracker.js';
 const ITEM_DROP_MODULE_URL = '/systems/wh40k-rpg/module/managers/item-drop-manager.js';
 const INVENTORY_GENERATOR_MODULE_URL = '/systems/wh40k-rpg/module/managers/inventory-generator-manager.js';
@@ -87,9 +191,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                 eventTrackerUrl: string;
                 itemDropUrl: string;
                 inventoryGeneratorUrl: string;
-            }) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+            }): Promise<{ flowsFired: Record<string, boolean>; flowNotes: Record<string, string> }> => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to XGlobal
+                const g = globalThis as unknown as XGlobal;
                 const ActorGbl = g.Actor;
                 const SceneGbl = g.Scene;
                 const gameGbl = g.game;
@@ -116,8 +220,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
 
                 /** Drain any dialog the previous probe left open. */
                 async function closeOpenDialogs(): Promise<void> {
-                    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: Foundry runtime ui.windows is untyped Record<string, Application>; narrowing to the trio of fields we read
-                    const windows = Object.values(uiGbl?.windows ?? {}) as Array<{ id?: string; title?: string; close?: () => Promise<unknown> }>;
+                    const windows = Object.values(uiGbl?.windows ?? {});
                     for (const w of windows) {
                         const id = `${w.id ?? ''} ${w.title ?? ''}`.toLowerCase();
                         if (id.includes('dialog') || id.includes('event tracker') || id.includes('tracker')) {
@@ -144,9 +247,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * as success too. Assert the setting becomes gettable.
                      * ============================================================ */
                     try {
-                        const mod = await import(eventTrackerUrl);
+                        const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
-                        if (typeof ET?.registerSettings !== 'function') {
+                        if (ET == null) {
                             notes['event-tracker-register-settings'] = 'EventTracker.registerSettings unavailable';
                         } else {
                             let registered = false;
@@ -186,16 +289,16 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * the delete branch.
                      * ============================================================ */
                     try {
-                        const mod = await import(eventTrackerUrl);
+                        const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
-                        if (typeof ET?.setResolved !== 'function' || typeof ET?.getResolved !== 'function') {
+                        if (ET == null) {
                             notes['event-tracker-set-and-get-resolved'] = 'setResolved/getResolved unavailable';
                         } else {
                             const eventId = 'probe-event-alpha';
                             await withTimeout(ET.setResolved(eventId, true), 5_000, 'setResolved(true)');
                             const afterSet = ET.getResolved();
-                            const present = afterSet != null && typeof afterSet === 'object' && eventId in afterSet;
-                            const stamped = present && typeof (afterSet as Record<string, { resolvedAt?: unknown }>)[eventId].resolvedAt === 'string';
+                            const present = afterSet != null && eventId in afterSet;
+                            const stamped = present && typeof afterSet[eventId].resolvedAt === 'string';
                             await withTimeout(ET.setResolved(eventId, false), 5_000, 'setResolved(false)');
                             const afterClear = ET.getResolved();
                             const removed = afterClear != null && typeof afterClear === 'object' && !(eventId in afterClear);
@@ -218,9 +321,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * unknown-event, requires, and requires_any branches.
                      * ============================================================ */
                     try {
-                        const mod = await import(eventTrackerUrl);
+                        const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
-                        if (typeof ET?.isAvailable !== 'function') {
+                        if (ET == null) {
                             notes['event-tracker-is-available'] = 'EventTracker.isAvailable unavailable';
                         } else {
                             const prevGraph = ET._graph;
@@ -243,13 +346,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 const gateStillBlocked = ET.isAvailable('evt-gate'); // requires_any still unmet
                                 await withTimeout(ET.setResolved('evt-side-b', true), 5_000, 'resolve evt-side-b');
                                 const gateAfter = ET.isAvailable('evt-gate'); // both met → true
-                                if (
-                                    unknownEvent === false &&
-                                    rootAvailable === true &&
-                                    gateBefore === false &&
-                                    gateStillBlocked === false &&
-                                    gateAfter === true
-                                ) {
+                                if (!unknownEvent && rootAvailable && !gateBefore && !gateStillBlocked && gateAfter) {
                                     fired['event-tracker-is-available'] = true;
                                     notes['event-tracker-is-available'] = 'isAvailable resolves unknown/root/requires/requires_any branches correctly';
                                 } else {
@@ -280,9 +377,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * "Requires one of: ... OR ..." line.
                      * ============================================================ */
                     try {
-                        const mod = await import(eventTrackerUrl);
+                        const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
-                        if (typeof ET?.getBlockingReasons !== 'function') {
+                        if (ET == null) {
                             notes['event-tracker-blocking-reasons'] = 'EventTracker.getBlockingReasons unavailable';
                         } else {
                             const prevGraph = ET._graph;
@@ -299,7 +396,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             };
                             try {
                                 const unknownReasons = ET.getBlockingReasons('does-not-exist');
-                                const reasons = ET.getBlockingReasons('evt-gate') as string[];
+                                const reasons = ET.getBlockingReasons('evt-gate');
                                 const hasRequires = Array.isArray(reasons) && reasons.some((r) => r.includes('Root Event') && r.includes('Hive Sibellus'));
                                 const hasOneOf = Array.isArray(reasons) && reasons.some((r) => r.includes('Requires one of:') && r.includes(' OR '));
                                 if (Array.isArray(unknownReasons) && unknownReasons.length === 0 && hasRequires && hasOneOf) {
@@ -327,9 +424,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * disposition + walked relationship state.
                      * ============================================================ */
                     try {
-                        const mod = await import(eventTrackerUrl);
+                        const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
-                        if (typeof ET?.computeCharacterStates !== 'function') {
+                        if (ET == null) {
                             notes['event-tracker-compute-character-states'] = 'computeCharacterStates unavailable';
                         } else {
                             const prevGraph = ET._graph;
@@ -357,13 +454,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             try {
                                 await withTimeout(ET.setResolved('evt-betrayal', true), 5_000, 'resolve evt-betrayal');
                                 await withTimeout(ET.setResolved('evt-pact', true), 5_000, 'resolve evt-pact');
-                                const states = ET.computeCharacterStates() as Record<
-                                    string,
-                                    {
-                                        dispositions: Record<string, { attitude?: string; trigger?: string }>;
-                                        relationships: Array<{ currentState?: string; trigger?: string }>;
-                                    }
-                                >;
+                                const states = ET.computeCharacterStates();
                                 const vael = states['Inquisitor Vael'];
                                 const dispOk = vael.dispositions['party'].attitude === 'hostile' && vael.dispositions['party'].trigger === 'evt-betrayal';
                                 const relOk =
@@ -402,9 +493,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * State tab, and a coloured badge.
                      * ============================================================ */
                     try {
-                        const mod = await import(eventTrackerUrl);
+                        const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
-                        if (typeof ET?._buildContent !== 'function') {
+                        if (ET == null) {
                             notes['event-tracker-build-content-html'] = 'EventTracker._buildContent unavailable';
                         } else {
                             const prevGraph = ET._graph;
@@ -433,15 +524,15 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             try {
                                 const colorAlly = ET._stateColor('ally');
                                 const colorUnknown = ET._stateColor('not-a-state'); // → fallback grey
-                                const eventsPane = ET._buildEventsPane() as string;
-                                const npcPane = ET._buildNPCStatePane() as string;
-                                const html = ET._buildContent('events') as string;
-                                const npcHtml = ET._buildContent('npcs') as string;
-                                const hasEvent = typeof html === 'string' && html.includes('Arrival at the Spire');
-                                const hasTabs = typeof html === 'string' && html.includes('data-tab="events"') && html.includes('data-tab="npcs"');
-                                const hasBadge = typeof npcPane === 'string' && npcPane.includes('evt-badge') && npcPane.includes(colorAlly);
-                                const hasLockedReason = typeof eventsPane === 'string' && eventsPane.includes('Requires: Arrival at the Spire');
-                                const npcActive = typeof npcHtml === 'string' && npcHtml.includes('data-pane="npcs"');
+                                const eventsPane = ET._buildEventsPane();
+                                const npcPane = ET._buildNPCStatePane();
+                                const html = ET._buildContent('events');
+                                const npcHtml = ET._buildContent('npcs');
+                                const hasEvent = html.includes('Arrival at the Spire');
+                                const hasTabs = html.includes('data-tab="events"') && html.includes('data-tab="npcs"');
+                                const hasBadge = npcPane.includes('evt-badge') && npcPane.includes(colorAlly);
+                                const hasLockedReason = eventsPane.includes('Requires: Arrival at the Spire');
+                                const npcActive = npcHtml.includes('data-pane="npcs"');
                                 if (hasEvent && hasTabs && hasBadge && hasLockedReason && npcActive && colorAlly === '#2d6' && colorUnknown === '#888') {
                                     fired['event-tracker-build-content-html'] = true;
                                     notes['event-tracker-build-content-html'] = 'events pane + NPC pane + tab scaffold + _stateColor mapping rendered';
@@ -468,9 +559,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * element). Close it after to keep the spec unblocked.
                      * ============================================================ */
                     try {
-                        const mod = await import(eventTrackerUrl);
+                        const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
-                        if (typeof ET?.open !== 'function') {
+                        if (ET == null) {
                             notes['event-tracker-open-dialog'] = 'EventTracker.open unavailable';
                         } else if (gameGbl?.user?.isGM !== true) {
                             notes['event-tracker-open-dialog'] = 'not joined as GM — open() would short-circuit';
@@ -487,8 +578,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 await new Promise<void>((r) => {
                                     setTimeout(r, 250);
                                 });
-                                // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: Foundry runtime ui.windows is untyped
-                                const windowList = Object.values(uiGbl?.windows ?? {}) as Array<{ title?: string }>;
+                                const windowList = Object.values(uiGbl?.windows ?? {});
                                 const opened =
                                     Object.keys(uiGbl?.windows ?? {}).length > before ||
                                     windowList.some((w) =>
@@ -512,21 +602,24 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     }
 
                     // ---- shared actors for the item-drop / inventory flows ----
-                    let pc: any = null;
+                    let pc: XActor | null = null;
                     try {
-                        pc = (await withTimeout(
-                            ActorGbl.create({
-                                name: 'managers-extra-pc',
-                                type: 'dh2-character',
-                                system: { gameSystem: 'dh2e' },
-                            }),
-                            5_000,
-                            'PC Actor.create',
-                        )) as any;
-                        if (pc?.id != null) {
+                        pc = ActorGbl?.create
+                            ? await withTimeout(
+                                  ActorGbl.create({
+                                      name: 'managers-extra-pc',
+                                      type: 'dh2-character',
+                                      system: { gameSystem: 'dh2e' },
+                                  }),
+                                  5_000,
+                                  'PC Actor.create',
+                              )
+                            : null;
+                        const pcId = pc?.id;
+                        if (pcId != null) {
                             cleanups.push(async () => {
                                 try {
-                                    await gameGbl?.actors?.get?.(pc.id)?.delete?.();
+                                    await gameGbl?.actors?.get?.(pcId)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -542,7 +635,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
-                    const getPc = (): any => (pc?.id != null ? gameGbl?.actors?.get?.(pc.id) : null);
+                    const getPc = (): XActor | null => (pc?.id != null ? gameGbl?.actors?.get?.(pc.id) ?? null : null);
 
                     /* ============================================================
                      * Flow 8: item-drop-non-droppable-returns-null
@@ -555,16 +648,16 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         if (live == null) {
                             notes['item-drop-non-droppable-returns-null'] = 'PC actor unavailable';
                         } else {
-                            const mod = await import(itemDropUrl);
+                            const mod = (await import(itemDropUrl)) as { ItemDropManager?: ItemDropManagerLike; default?: ItemDropManagerLike };
                             const IDM = mod.ItemDropManager ?? mod.default;
-                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: createEmbeddedDocuments returns an untyped Foundry array
-                            const created = (await withTimeout(
-                                live.createEmbeddedDocuments?.('Item', [{ name: 'probe-nondrop-talent', type: 'talent' }]),
+                            const created = await withTimeout(
+                                live.createEmbeddedDocuments?.('Item', [{ name: 'probe-nondrop-talent', type: 'talent' }]) ?? Promise.resolve(undefined),
                                 5_000,
                                 'create talent',
-                            )) as Array<{ id?: string }> | undefined;
-                            const talent = created?.[0] ? live.items.get(created[0].id ?? '') : null;
-                            if (talent == null) {
+                            );
+                            const createdId = created?.at(0)?.id ?? '';
+                            const talent = createdId !== '' ? live.items?.get?.(createdId) : undefined;
+                            if (talent == null || typeof IDM?.dropItemFromActor !== 'function') {
                                 notes['item-drop-non-droppable-returns-null'] = 'talent create failed';
                             } else {
                                 cleanups.push(async () => {
@@ -575,12 +668,14 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     }
                                 });
                                 const dropResult1 = await withTimeout(IDM.dropItemFromActor(live, talent), 5_000, 'dropItemFromActor(talent)');
-                                const stillOwned = live.items.get(talent.id) !== undefined;
+                                const stillOwned = live.items?.get?.(talent.id ?? '') !== undefined;
                                 if (dropResult1 === null && stillOwned) {
                                     fired['item-drop-non-droppable-returns-null'] = true;
                                     notes['item-drop-non-droppable-returns-null'] = 'non-droppable talent short-circuited (null, item retained)';
                                 } else {
-                                    notes['item-drop-non-droppable-returns-null'] = `result=${String(dropResult1)} stillOwned=${stillOwned}`;
+                                    notes['item-drop-non-droppable-returns-null'] = `result=${
+                                        dropResult1 === null ? 'null' : dropResult1.type ?? 'actor'
+                                    } stillOwned=${stillOwned}`;
                                 }
                             }
                         }
@@ -600,16 +695,17 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         if (live == null) {
                             notes['item-drop-no-token-returns-null'] = 'PC actor unavailable';
                         } else {
-                            const mod = await import(itemDropUrl);
+                            const mod = (await import(itemDropUrl)) as { ItemDropManager?: ItemDropManagerLike; default?: ItemDropManagerLike };
                             const IDM = mod.ItemDropManager ?? mod.default;
-                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: createEmbeddedDocuments returns an untyped Foundry array
-                            const created = (await withTimeout(
-                                live.createEmbeddedDocuments?.('Item', [{ name: 'probe-notoken-gear', type: 'gear', system: { quantity: 1 } }]),
+                            const created = await withTimeout(
+                                live.createEmbeddedDocuments?.('Item', [{ name: 'probe-notoken-gear', type: 'gear', system: { quantity: 1 } }]) ??
+                                    Promise.resolve(undefined),
                                 5_000,
                                 'create gear',
-                            )) as Array<{ id?: string }> | undefined;
-                            const gear = created?.[0] ? live.items.get(created[0].id ?? '') : null;
-                            if (gear == null) {
+                            );
+                            const createdId = created?.at(0)?.id ?? '';
+                            const gear = createdId !== '' ? live.items?.get?.(createdId) : undefined;
+                            if (gear == null || typeof IDM?.dropItemFromActor !== 'function') {
                                 notes['item-drop-no-token-returns-null'] = 'gear create failed';
                             } else {
                                 cleanups.push(async () => {
@@ -620,12 +716,14 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     }
                                 });
                                 const dropResult2 = await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(no token)');
-                                const stillOwned = live.items.get(gear.id) !== undefined;
+                                const stillOwned = live.items?.get?.(gear.id ?? '') !== undefined;
                                 if (dropResult2 === null && stillOwned) {
                                     fired['item-drop-no-token-returns-null'] = true;
                                     notes['item-drop-no-token-returns-null'] = 'no-active-token branch returned null, item retained';
                                 } else {
-                                    notes['item-drop-no-token-returns-null'] = `result=${String(dropResult2)} stillOwned=${stillOwned}`;
+                                    notes['item-drop-no-token-returns-null'] = `result=${
+                                        dropResult2 === null ? 'null' : dropResult2.type ?? 'actor'
+                                    } stillOwned=${stillOwned}`;
                                 }
                             }
                         }
@@ -641,70 +739,74 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * token, transfer the item, and remove it from the PC.
                      * The created loot actor is reused by Flow 11 (pickup).
                      * ============================================================ */
-                    let lootActor: any = null;
-                    let dropScene: any = null;
+                    let lootActor: LootActor | null = null;
+                    let dropScene: SceneLike | null = null;
                     try {
                         const live = getPc();
                         if (live == null || SceneGbl?.create == null) {
                             notes['item-drop-creates-loot-pile'] = 'PC actor or Scene.create unavailable';
                         } else {
-                            const mod = await import(itemDropUrl);
+                            const mod = (await import(itemDropUrl)) as { ItemDropManager?: ItemDropManagerLike; default?: ItemDropManagerLike };
                             const IDM = mod.ItemDropManager ?? mod.default;
                             dropScene = await withTimeout(SceneGbl.create({ name: 'managers-extra-drop-scene' }), 5_000, 'Scene.create');
-                            if (dropScene?.id != null) {
+                            const scene = dropScene;
+                            if (scene?.id != null && typeof IDM?.dropItemFromActor === 'function') {
                                 cleanups.push(async () => {
                                     try {
-                                        await dropScene.delete?.();
+                                        await scene.delete?.();
                                     } catch {
                                         /* ignore */
                                     }
                                 });
                                 // View the scene so canvas.scene resolves.
                                 try {
-                                    await withTimeout(Promise.resolve(dropScene.view?.()), 5_000, 'scene.view');
+                                    await withTimeout(Promise.resolve(scene.view?.()), 5_000, 'scene.view');
                                 } catch {
                                     /* best-effort — canvas may be unavailable headlessly */
                                 }
-                                const protoData =
+                                const protoData: XProtoToken =
                                     typeof live.prototypeToken?.toObject === 'function'
                                         ? live.prototypeToken.toObject()
                                         : { name: live.name, actorId: live.id };
                                 protoData.actorId = live.id;
                                 protoData.x = 100;
                                 protoData.y = 100;
-                                protoData.delta = protoData.delta ?? {};
-                                protoData.delta.system = protoData.delta.system ?? {};
-                                protoData.delta.items = protoData.delta.items ?? [];
-                                protoData.delta.effects = protoData.delta.effects ?? [];
-                                protoData.delta.flags = protoData.delta.flags ?? {};
-                                await withTimeout(dropScene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
-                                // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: createEmbeddedDocuments returns an untyped Foundry array
-                                const created = (await withTimeout(
-                                    live.createEmbeddedDocuments?.('Item', [{ name: 'probe-drop-gear', type: 'gear', system: { quantity: 2 } }]),
+                                const priorDelta = protoData.delta ?? {};
+                                const { system: priorSystem, items: priorItems, effects: priorEffects, flags: priorFlags } = priorDelta;
+                                protoData.delta = {
+                                    system: priorSystem ?? {},
+                                    items: priorItems ?? [],
+                                    effects: priorEffects ?? [],
+                                    flags: priorFlags ?? {},
+                                };
+                                await withTimeout(
+                                    scene.createEmbeddedDocuments?.('Token', [protoData]) ?? Promise.resolve(),
+                                    5_000,
+                                    'createEmbeddedDocuments(Token)',
+                                );
+                                const created = await withTimeout(
+                                    live.createEmbeddedDocuments?.('Item', [{ name: 'probe-drop-gear', type: 'gear', system: { quantity: 2 } }]) ??
+                                        Promise.resolve(undefined),
                                     5_000,
                                     'create drop gear',
-                                )) as Array<{ id?: string }> | undefined;
-                                const gear = created?.[0] ? live.items.get(created[0].id ?? '') : null;
+                                );
+                                const createdId = created?.at(0)?.id ?? '';
+                                const gear = createdId !== '' ? live.items?.get?.(createdId) : undefined;
                                 if (gear == null) {
                                     notes['item-drop-creates-loot-pile'] = 'drop gear create failed';
                                 } else {
-                                    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: dropItemFromActor returns an untyped Foundry actor doc
-                                    const dropResult3 = (await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(with token)')) as {
-                                        id?: string;
-                                        type?: string;
-                                        items?: { contents?: Array<{ name?: string }> };
-                                    } | null;
+                                    const dropResult3 = await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(with token)');
                                     lootActor = dropResult3;
                                     const refreshed = getPc();
-                                    const gearGone = refreshed?.items?.get?.(gear.id) === undefined;
+                                    const gearGone = refreshed?.items?.get?.(gear.id ?? '') === undefined;
                                     const lootHasItem =
-                                        dropResult3?.type === 'loot' &&
-                                        (dropResult3.items?.contents ?? []).some((i: { name?: string }) => i.name === 'probe-drop-gear');
+                                        dropResult3?.type === 'loot' && (dropResult3.items?.contents ?? []).some((i) => i.name === 'probe-drop-gear');
                                     if (dropResult3 != null && gearGone && lootHasItem) {
-                                        if (dropResult3.id != null) {
+                                        const lootId = dropResult3.id;
+                                        if (lootId != null) {
                                             cleanups.push(async () => {
                                                 try {
-                                                    await gameGbl?.actors?.get?.(dropResult3.id)?.delete?.();
+                                                    await gameGbl?.actors?.get?.(lootId)?.delete?.();
                                                 } catch {
                                                     /* ignore */
                                                 }
@@ -714,8 +816,8 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                         notes['item-drop-creates-loot-pile'] = 'loot Actor created, item moved off the PC into the pile';
                                     } else {
                                         notes['item-drop-creates-loot-pile'] = `result=${
-                                            dropResult3 == null ? 'null' : dropResult3.type
-                                        } gearGone=${gearGone} lootHasItem=${lootHasItem} (canvas may be headless)`;
+                                            dropResult3 == null ? 'null' : dropResult3.type ?? 'unknown'
+                                        } gearGone=${gearGone} lootHasItem=${String(lootHasItem)} (canvas may be headless)`;
                                     }
                                 }
                             } else {
@@ -739,41 +841,44 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         if (live == null) {
                             notes['item-drop-pickup-loot'] = 'PC actor unavailable';
                         } else {
-                            const mod = await import(itemDropUrl);
+                            const mod = (await import(itemDropUrl)) as { ItemDropManager?: ItemDropManagerLike; default?: ItemDropManagerLike };
                             const IDM = mod.ItemDropManager ?? mod.default;
                             const initialPile = lootActor;
-                            const pile =
+                            const pile: LootActor | null =
                                 initialPile?.type === 'loot'
                                     ? initialPile
-                                    : await withTimeout(ActorGbl.create({ name: 'managers-extra-loot-pile', type: 'loot' }), 5_000, 'loot Actor.create');
-                            if (initialPile?.type !== 'loot') {
-                                if (pile?.id != null) {
-                                    cleanups.push(async () => {
-                                        try {
-                                            await gameGbl?.actors?.get?.(pile.id)?.delete?.();
-                                        } catch {
-                                            /* ignore */
-                                        }
-                                    });
-                                    await withTimeout(
-                                        pile.createEmbeddedDocuments('Item', [{ name: 'probe-pickup-gear', type: 'gear', system: { quantity: 3 } }]),
-                                        5_000,
-                                        'stock loot pile',
-                                    );
-                                }
-                            }
+                                    : (await withTimeout(
+                                          ActorGbl?.create?.({ name: 'managers-extra-loot-pile', type: 'loot' }) ?? Promise.resolve(null),
+                                          5_000,
+                                          'loot Actor.create',
+                                      )) ?? null;
                             const pileId = pile?.id;
+                            if (initialPile?.type !== 'loot' && pile != null && pileId != null) {
+                                cleanups.push(async () => {
+                                    try {
+                                        await gameGbl?.actors?.get?.(pileId)?.delete?.();
+                                    } catch {
+                                        /* ignore */
+                                    }
+                                });
+                                await withTimeout(
+                                    pile.createEmbeddedDocuments?.('Item', [{ name: 'probe-pickup-gear', type: 'gear', system: { quantity: 3 } }]) ??
+                                        Promise.resolve([]),
+                                    5_000,
+                                    'stock loot pile',
+                                );
+                            }
                             const itemCount = pile?.items?.contents?.length ?? 0;
-                            if (pileId == null || itemCount === 0) {
+                            if (pile == null || pileId == null || itemCount === 0 || typeof IDM?.pickupLoot !== 'function') {
                                 notes['item-drop-pickup-loot'] = `no usable loot pile (id=${String(pileId)} items=${itemCount})`;
                             } else {
                                 const ok = await withTimeout(IDM.pickupLoot(live, pile), 5_000, 'pickupLoot');
                                 const refreshedPc = getPc();
                                 const receivedSomething = (refreshedPc?.items?.contents ?? []).some(
-                                    (i: any) => i.name === 'probe-drop-gear' || i.name === 'probe-pickup-gear',
+                                    (i) => i.name === 'probe-drop-gear' || i.name === 'probe-pickup-gear',
                                 );
                                 const pileDeleted = gameGbl?.actors?.get?.(pileId) === undefined;
-                                if (ok === true && receivedSomething === true && pileDeleted) {
+                                if (ok && receivedSomething && pileDeleted) {
                                     fired['item-drop-pickup-loot'] = true;
                                     notes['item-drop-pickup-loot'] = 'pile items merged onto receiver and the empty pile was deleted';
                                 } else {
@@ -796,36 +901,24 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * homologated scoping path is exercised, not just dh2e.
                      * ============================================================ */
                     try {
-                        const mod = await import(inventoryGeneratorUrl);
+                        const mod = (await import(inventoryGeneratorUrl)) as {
+                            InventoryGeneratorManager?: InventoryGeneratorManagerLike;
+                            default?: InventoryGeneratorManagerLike;
+                        };
                         const IGM = mod.InventoryGeneratorManager ?? mod.default;
                         if (typeof IGM?.collectCandidates !== 'function') {
                             notes['inventory-generator-collect-candidates'] = 'collectCandidates unavailable';
                         } else {
-                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: probe-result shape varies per content registry; uuid/name/type/profiles asserted below
-                            const dh2 = (await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates(dh2e)')) as Array<{
-                                uuid?: string;
-                                name?: string;
-                                type?: string;
-                                profiles?: unknown;
-                            }>;
-                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: probe-result shape varies per content registry
-                            const im = (await withTimeout(IGM.collectCandidates('im'), 15_000, 'collectCandidates(im)')) as Array<{
-                                uuid?: string;
-                                name?: string;
-                                type?: string;
-                                profiles?: unknown;
-                            }>;
-                            const shapeOk =
-                                Array.isArray(dh2) &&
-                                Array.isArray(im) &&
-                                dh2.every(
-                                    (c) =>
-                                        typeof c.uuid === 'string' &&
-                                        c.uuid.startsWith('Compendium.') &&
-                                        typeof c.name === 'string' &&
-                                        typeof c.type === 'string' &&
-                                        Array.isArray(c.profiles),
-                                );
+                            const dh2 = await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates(dh2e)');
+                            const im = await withTimeout(IGM.collectCandidates('im'), 15_000, 'collectCandidates(im)');
+                            const shapeOk = dh2.every(
+                                (c) =>
+                                    typeof c.uuid === 'string' &&
+                                    c.uuid.startsWith('Compendium.') &&
+                                    typeof c.name === 'string' &&
+                                    typeof c.type === 'string' &&
+                                    Array.isArray(c.profiles),
+                            );
                             // No candidate may be a non-droppable type (skill /
                             // talent / etc.) — collectCandidates filters via
                             // ItemDropManager.isDroppable.
@@ -842,9 +935,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             } else {
                                 notes[
                                     'inventory-generator-collect-candidates'
-                                ] = `shapeOk=${shapeOk} noOwnershipFacts=${noOwnershipFacts} sorted=${sorted} dh2Len=${
-                                    Array.isArray(dh2) ? dh2.length : 'n/a'
-                                }`;
+                                ] = `shapeOk=${shapeOk} noOwnershipFacts=${noOwnershipFacts} sorted=${sorted} dh2Len=${dh2.length}`;
                             }
                         }
                     } catch (err) {
@@ -864,25 +955,24 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * ============================================================ */
                     try {
                         const live = getPc();
-                        const igMod = await import(inventoryGeneratorUrl);
+                        const igMod = (await import(inventoryGeneratorUrl)) as {
+                            InventoryGeneratorManager?: InventoryGeneratorManagerLike;
+                            default?: InventoryGeneratorManagerLike;
+                        };
                         const IGM = igMod.InventoryGeneratorManager ?? igMod.default;
                         if (live == null) {
                             notes['inventory-generator-apply-to-actor'] = 'PC actor unavailable';
-                        } else if (typeof IGM?.applyToActor !== 'function' || typeof IGM?.collectCandidates !== 'function') {
+                        } else if (typeof IGM?.applyToActor !== 'function' || typeof IGM.collectCandidates !== 'function') {
                             notes['inventory-generator-apply-to-actor'] = 'applyToActor/collectCandidates unavailable';
                         } else {
-                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: probe-result shape varies per content registry
-                            const candidates = (await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates for apply')) as Array<{
-                                uuid?: string;
-                                name?: string;
-                                type?: string;
-                            }>;
-                            const candidate = Array.isArray(candidates) ? candidates.find((c) => typeof c.uuid === 'string') : undefined;
-                            if (candidate === undefined) {
+                            const candidates = await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates for apply');
+                            const candidate = candidates.find((c) => typeof c.uuid === 'string');
+                            if (candidate?.uuid == null) {
                                 notes['inventory-generator-apply-to-actor'] = 'no compendium candidate available to apply';
                             } else {
+                                const candidateUuid = candidate.uuid;
                                 const beforeCount = live.items?.contents?.length ?? 0;
-                                const applied = await withTimeout(IGM.applyToActor(live, [candidate.uuid]), 10_000, 'applyToActor');
+                                const applied = await withTimeout(IGM.applyToActor(live, [candidateUuid]), 10_000, 'applyToActor');
                                 const refreshed = getPc();
                                 const afterCount = refreshed?.items?.contents?.length ?? 0;
                                 const gained = afterCount > beforeCount;
@@ -891,11 +981,11 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     cleanups.push(async () => {
                                         try {
                                             const a = getPc();
-                                            const extra = (a?.items?.contents ?? []).filter((i: any) => i?.name === candidate.name);
-                                            if (extra.length > 0) {
-                                                await a.deleteEmbeddedDocuments(
+                                            const extra = (a?.items?.contents ?? []).filter((i) => i.name === candidate.name);
+                                            if (extra.length > 0 && a != null) {
+                                                await a.deleteEmbeddedDocuments?.(
                                                     'Item',
-                                                    extra.map((i: any) => i.id),
+                                                    extra.map((i) => i.id ?? '').filter((id) => id !== ''),
                                                 );
                                             }
                                         } catch {
@@ -923,14 +1013,17 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                      * needs no real document.
                      * ============================================================ */
                     try {
-                        const mod = await import(inventoryGeneratorUrl);
+                        const mod = (await import(inventoryGeneratorUrl)) as {
+                            InventoryGeneratorManager?: InventoryGeneratorManagerLike;
+                            default?: InventoryGeneratorManagerLike;
+                        };
                         const IGM = mod.InventoryGeneratorManager ?? mod.default;
                         if (typeof IGM?.applyToActor !== 'function') {
                             notes['inventory-generator-permission-denied'] = 'applyToActor unavailable';
                         } else {
                             const notOwned = { isOwner: false, name: 'unowned-stub-actor', items: [] };
                             const permResult = await withTimeout(
-                                IGM.applyToActor(notOwned as any, ['Compendium.wh40k-rpg.dh2-gear.NonExistent']),
+                                IGM.applyToActor(notOwned, ['Compendium.wh40k-rpg.dh2-gear.NonExistent']),
                                 5_000,
                                 'applyToActor(not owner)',
                             );
@@ -938,7 +1031,6 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 fired['inventory-generator-permission-denied'] = true;
                                 notes['inventory-generator-permission-denied'] = 'non-owner short-circuited to null (permission gate)';
                             } else {
-                                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- permResult is any from Foundry boundary; JSON.stringify handles all value types safely
                                 notes['inventory-generator-permission-denied'] = `expected null, got ${JSON.stringify(permResult)}`;
                             }
                         }
@@ -962,7 +1054,6 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                 }
 
                 return { flowsFired: fired, flowNotes: notes };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             {
                 flows: MANAGERS_EXTRA_FLOWS,

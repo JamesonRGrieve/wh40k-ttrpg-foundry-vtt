@@ -95,8 +95,58 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals and dynamic-imported modules are runtime-only */
-            const g = globalThis as any;
+            // ---- Boundary shapes -------------------------------------------------
+            // Foundry document / collection / mixin surfaces arriving across the
+            // realm boundary have no shipped types. These structural interfaces
+            // describe exactly the members the probes touch; the few genuinely
+            // open fields use concrete narrow types (never `any`).
+            interface TourStep {
+                id?: string;
+                selector?: string;
+                title?: string;
+                content?: string;
+                action?: string;
+            }
+            interface ProbeItem {
+                id?: string;
+                delete?: () => Promise<void>;
+            }
+            interface ProbeActor {
+                id?: string;
+                items?: { get?: (id: string) => ProbeItem | undefined };
+                effects?: { get?: (id: string) => { disabled?: boolean } | undefined };
+                createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id: string }>>;
+                delete?: () => Promise<void>;
+            }
+            interface ActorsCollection {
+                get?: (id: string) => ProbeActor | undefined;
+            }
+            interface ProbeTour {
+                id?: string;
+                config?: { id?: string; steps?: TourStep[] };
+                steps?: TourStep[];
+            }
+            interface ToursCollection {
+                get?: (id: string) => ProbeTour | undefined;
+            }
+            interface ProbeWindow {
+                id?: string;
+                title?: string;
+                close?: () => Promise<void>;
+            }
+            interface ProbeWindowRecord {
+                windows?: Record<string, ProbeWindow>;
+            }
+            // Foundry's `nue.Tour` is a class; we only assert prototype-extension.
+            type TourBaseCtor = new (...args: never[]) => object;
+            interface FoundryGlobal {
+                Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
+                game?: { actors?: ActorsCollection; tours?: ToursCollection };
+                ui?: ProbeWindowRecord;
+                foundry?: { nue?: { Tour?: TourBaseCtor } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorCls = g.Actor;
             const foundryGame = g.game;
             const foundryUi = g.ui;
@@ -123,15 +173,14 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
 
             // Drain any dialog/prompt/tour windows a probe left open so the
             // next probe's window stack starts clean (mirrors dialogs.spec.ts).
-            type ProbeWindow = { id?: string; title?: string; close?: () => Promise<unknown> };
             async function closeOpenDialogs(): Promise<void> {
                 const winRecord = foundryUi?.windows;
                 if (winRecord != null) {
-                    for (const wRaw of Object.values(winRecord)) {
-                        const w = wRaw as ProbeWindow;
+                    for (const w of Object.values(winRecord)) {
                         const id = w.id ?? '';
                         if (id.includes('dialog') || id.includes('prompt') || id.includes('tour') || id.includes('talent-editor') || id.includes('breakdown')) {
                             try {
+                                // eslint-disable-next-line no-await-in-loop -- best-effort serial teardown; parallel closes race on Foundry's window registry
                                 await w.close?.();
                             } catch {
                                 /* ignore */
@@ -162,8 +211,21 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * (document.body is always present) — exercising the
                  * fast-path branch of wh40k-rpg-tour.ts.
                  * ============================================================ */
+                interface WH40KTourInstance {
+                    waitForElement: (selector: string) => Promise<Element | null>;
+                    reset?: () => void;
+                }
+                interface WH40KTourCtor {
+                    new (config: object): WH40KTourInstance;
+                    prototype: object;
+                }
+                interface WH40KTourModule {
+                    WH40KTour?: WH40KTourCtor;
+                    default?: WH40KTourCtor;
+                }
                 try {
-                    const mod = await import(`${base}/tours/wh40k-rpg-tour.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/tours/wh40k-rpg-tour.js`)) as unknown as WH40KTourModule;
                     const WH40KTour = mod.WH40KTour ?? mod.default;
                     if (typeof WH40KTour !== 'function') {
                         notes['tour-wh40k-base-class'] = 'WH40KTour export missing';
@@ -204,9 +266,18 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * (title / description / canBeResumed / display) — exercises
                  * the main-tour.ts constructor + WH40KTour super-call.
                  * ============================================================ */
-                let mainTour: any = null;
+                interface MainTourInstance {
+                    config?: { title?: string; description?: string; canBeResumed?: boolean; display?: boolean; steps?: TourStep[] };
+                    steps?: TourStep[];
+                }
+                interface MainTourModule {
+                    DHTourMain?: new () => MainTourInstance;
+                    default?: new () => MainTourInstance;
+                }
+                let mainTour: MainTourInstance | null = null;
                 try {
-                    const mod = await import(`${base}/tours/main-tour.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/tours/main-tour.js`)) as unknown as MainTourModule;
                     const DHTourMain = mod.DHTourMain ?? mod.default;
                     if (typeof DHTourMain !== 'function') {
                         notes['tour-main-construct'] = 'DHTourMain export missing';
@@ -241,16 +312,12 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     if (mainTour === null) {
                         notes['tour-main-steps-shape'] = 'mainTour not constructed (flow 2 failed)';
                     } else {
-                        const steps = (mainTour.config?.steps ?? mainTour.steps ?? []) as Array<Record<string, unknown>>;
+                        const steps = mainTour.config?.steps ?? mainTour.steps ?? [];
                         const allHaveCore = steps.every(
-                            (s) =>
-                                typeof s['id'] === 'string' &&
-                                typeof s['selector'] === 'string' &&
-                                typeof s['title'] === 'string' &&
-                                typeof s['content'] === 'string',
+                            (s) => typeof s.id === 'string' && typeof s.selector === 'string' && typeof s.title === 'string' && typeof s.content === 'string',
                         );
-                        const ids = steps.map((s) => s['id']);
-                        const firstClicks = steps[0]?.['action'] === 'click';
+                        const ids = steps.map((s) => s.id);
+                        const firstClicks = steps[0]?.action === 'click';
                         const hasAttackStep = ids.includes('goto-attack');
                         if (steps.length === 6 && allHaveCore && firstClicks && hasAttackStep) {
                             fired['tour-main-steps-shape'] = true;
@@ -278,7 +345,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     if (registered == null) {
                         notes['tour-registered-in-game'] = 'game.tours.get(wh40k-rpg.main-tour) returned null';
                     } else {
-                        const steps = (registered.config?.steps ?? registered.steps ?? []) as unknown[];
+                        const steps = registered.config?.steps ?? registered.steps ?? [];
                         const id = registered.id ?? registered.config?.id ?? '';
                         if (steps.length === 6) {
                             fired['tour-registered-in-game'] = true;
@@ -298,8 +365,19 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * helpers delegate to the wh40k-tooltip data builders and
                  * return parseable JSON payloads.
                  * ============================================================ */
+                interface TooltipInstance {
+                    prepareCharacteristicTooltip: (key: string, data: object) => string;
+                    prepareWeaponTooltip: (weapon: object) => string;
+                    prepareSkillTooltip: (key: string, skill: object, chars: object) => string;
+                }
+                type MixinFactory<T> = (base: new (...args: never[]) => object) => new (...args: never[]) => T;
+                interface TooltipModule {
+                    default?: MixinFactory<TooltipInstance>;
+                    TooltipMixin?: MixinFactory<TooltipInstance>;
+                }
                 try {
-                    const mod = await import(`${base}/applications/api/tooltip-mixin.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/tooltip-mixin.js`)) as unknown as TooltipModule;
                     const TooltipMixin = mod.default ?? mod.TooltipMixin;
                     if (typeof TooltipMixin !== 'function') {
                         notes['tooltip-mixin-prepare'] = 'TooltipMixin export missing';
@@ -307,7 +385,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         class StubBase {
                             document: { uuid?: string } | null = { uuid: 'Actor.probe' };
                         }
-                        const Mixed = TooltipMixin(StubBase as any);
+                        const Mixed = TooltipMixin(StubBase);
                         const inst = new Mixed();
                         const charJson = inst.prepareCharacteristicTooltip('weaponSkill', {
                             label: 'Weapon Skill',
@@ -354,11 +432,27 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * exercising the static helper source path. Tear the popup
                  * down after observing it.
                  * ============================================================ */
+                interface DialogInstance {
+                    render: (options: object) => Promise<DialogInstance>;
+                    _prepareContext: (options: object) => Promise<{ content?: string; buttons?: Array<{ cssClass?: string }> }>;
+                    element?: HTMLElement | null;
+                    close?: () => Promise<void>;
+                }
+                interface DialogCtor {
+                    new (options: object): DialogInstance;
+                    confirm?: (options: object) => Promise<void>;
+                    prompt?: (options: object) => Promise<void>;
+                }
+                interface DialogModule {
+                    default?: DialogCtor;
+                    DialogWH40K?: DialogCtor;
+                }
                 try {
-                    const mod = await import(`${base}/applications/api/dialog.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/dialog.js`)) as unknown as DialogModule;
                     const DialogWH40K = mod.default ?? mod.DialogWH40K;
-                    if (typeof DialogWH40K !== 'function' || typeof DialogWH40K.confirm !== 'function') {
-                        notes['dialog-wh40k-static-helpers'] = 'DialogWH40K.confirm missing';
+                    if (typeof DialogWH40K !== 'function' || typeof DialogWH40K.confirm !== 'function' || typeof DialogWH40K.prompt !== 'function') {
+                        notes['dialog-wh40k-static-helpers'] = 'DialogWH40K.confirm/prompt missing';
                     } else {
                         void DialogWH40K.confirm({ title: 'probe-confirm', content: 'probe?', defaultYes: true });
                         void DialogWH40K.prompt({ title: 'probe-prompt', content: 'enter', label: 'OK' });
@@ -385,7 +479,8 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * Close immediately to keep the stack clean.
                  * ============================================================ */
                 try {
-                    const mod = await import(`${base}/applications/api/dialog.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/dialog.js`)) as unknown as DialogModule;
                     const DialogWH40K = mod.default ?? mod.DialogWH40K;
                     if (typeof DialogWH40K !== 'function') {
                         notes['dialog-wh40k-instance-render'] = 'DialogWH40K export missing';
@@ -401,7 +496,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         } catch (err) {
                             renderThrew = String((err as Error).message);
                         }
-                        const ctx = (await dialog._prepareContext({})) as { content?: string; buttons?: Array<{ cssClass?: string }> };
+                        const ctx = await dialog._prepareContext({});
                         const contentOk = ctx.content === '<p>probe-content</p>';
                         const buttonOk = Array.isArray(ctx.buttons) && ctx.buttons[0]?.cssClass === 'primary';
                         const elementPresent = dialog.element != null;
@@ -430,30 +525,34 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * Used by what-if / effect-actions / active-modifiers /
                  * item-preview / talent-editor flows.
                  * ============================================================ */
-                let pc: any = null;
+                let pc: ProbeActor | null = null;
                 try {
-                    pc = await withTimeout(
-                        ActorCls.create({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
-                        5_000,
-                        'PC Actor.create',
-                    );
-                    if (pc?.id != null) {
+                    const createPc = ActorCls?.create;
+                    if (createPc != null) {
+                        pc = await withTimeout(
+                            createPc({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
+                            5_000,
+                            'PC Actor.create',
+                        );
+                    }
+                    const pcId = pc?.id;
+                    if (pcId != null) {
                         cleanups.push(async () => {
                             try {
-                                await foundryGame?.actors?.get?.(pc.id)?.delete?.();
+                                await foundryGame?.actors?.get?.(pcId)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
                         });
                     }
                 } catch (err) {
-                    notes['whatif-mixin-state'] = `PC create threw: ${String((err as Error).message)}`;
+                    notes['whatif-mixin-state'] = err instanceof Error ? `PC create threw: ${err.message}` : `PC create threw: ${String(err)}`;
                 }
                 // Yield a tick so the server create flushes before embeds.
                 await new Promise<void>((r) => {
                     setTimeout(r, 250);
                 });
-                const getPc = (): any => (pc?.id != null ? foundryGame?.actors?.get?.(pc.id) : null);
+                const getPc = (): ProbeActor | null => (pc?.id != null ? foundryGame?.actors?.get?.(pc.id) ?? null : null);
 
                 /* ============================================================
                  * Flow 8: whatif-mixin-state
@@ -463,12 +562,25 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * → previewChange → state, asserting changeCount tracks and
                  * the preview actor materialises.
                  * ============================================================ */
+                interface WhatIfInstance {
+                    getWhatIfState: () => { changeCount: number };
+                    isWhatIfActive: () => boolean;
+                    enterWhatIfMode: () => Promise<void>;
+                    exitWhatIfMode: () => Promise<void>;
+                    previewChange: (path: string, value: number) => Promise<void>;
+                    _whatIfPreview?: object | null;
+                }
+                interface WhatIfModule {
+                    default?: MixinFactory<WhatIfInstance>;
+                    WhatIfMixin?: MixinFactory<WhatIfInstance>;
+                }
                 try {
                     const live = getPc();
                     if (live == null) {
                         notes['whatif-mixin-state'] = notes['whatif-mixin-state'] ?? 'no PC actor';
                     } else {
-                        const mod = await import(`${base}/applications/api/what-if-mixin.js`);
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                        const mod = (await import(`${base}/applications/api/what-if-mixin.js`)) as unknown as WhatIfModule;
                         const WhatIfMixin = mod.default ?? mod.WhatIfMixin;
                         if (typeof WhatIfMixin !== 'function') {
                             notes['whatif-mixin-state'] = 'WhatIfMixin export missing';
@@ -483,19 +595,19 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 async render(): Promise<void> {
                                     return Promise.resolve();
                                 }
-                                async _prepareContext(): Promise<Record<string, unknown>> {
+                                async _prepareContext(): Promise<object> {
                                     return Promise.resolve({});
                                 }
                                 async _onRender(): Promise<void> {
                                     return Promise.resolve();
                                 }
                             }
-                            const Mixed = WhatIfMixin(StubBase as any);
+                            const Mixed = WhatIfMixin(StubBase);
                             const inst = new Mixed();
                             const before = inst.getWhatIfState();
-                            const inactiveBefore = inst.isWhatIfActive() === false && before.changeCount === 0;
+                            const inactiveBefore = !inst.isWhatIfActive() && before.changeCount === 0;
                             await withTimeout(inst.enterWhatIfMode(), 5_000, 'enterWhatIfMode');
-                            const activeAfterEnter = inst.isWhatIfActive() === true;
+                            const activeAfterEnter = inst.isWhatIfActive();
                             await withTimeout(inst.previewChange('system.characteristics.weaponSkill.advance', 10), 5_000, 'previewChange');
                             const after = inst.getWhatIfState();
                             const previewBuilt = inst._whatIfPreview != null;
@@ -526,8 +638,19 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * data-stat-key; assert a `.wh40k-stat-breakdown-popover`
                  * was appended to the body, then close it.
                  * ============================================================ */
+                type ActionHandler = (this: object, event: Event, target: HTMLElement) => void;
+                interface MixedWithActions {
+                    new (): object;
+                    DEFAULT_OPTIONS?: { actions?: Record<string, ActionHandler | undefined> };
+                }
+                type ActionMixinFactory = (base: new (...args: never[]) => object) => MixedWithActions;
+                interface StatBreakdownModule {
+                    default?: ActionMixinFactory;
+                    StatBreakdownMixin?: ActionMixinFactory;
+                }
                 try {
-                    const mod = await import(`${base}/applications/api/stat-breakdown-mixin.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/stat-breakdown-mixin.js`)) as unknown as StatBreakdownModule;
                     const StatBreakdownMixin = mod.default ?? mod.StatBreakdownMixin;
                     if (typeof StatBreakdownMixin !== 'function') {
                         notes['statbreakdown-mixin-action'] = 'StatBreakdownMixin export missing';
@@ -544,7 +667,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 }),
                             };
                         }
-                        const Mixed = StatBreakdownMixin(StubBase as any);
+                        const Mixed = StatBreakdownMixin(StubBase);
                         const action = Mixed.DEFAULT_OPTIONS?.actions?.showStatBreakdown;
                         if (typeof action !== 'function') {
                             notes['statbreakdown-mixin-action'] = 'showStatBreakdown action not registered';
@@ -580,8 +703,24 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * expandedSections state (game.user flag persistence is real
                  * as GM).
                  * ============================================================ */
+                interface CollapsibleInstance {
+                    togglePanel: (id: string, expanded: boolean) => Promise<void>;
+                    collapseAllPanels: () => Promise<void>;
+                    expandedSections: Map<string, boolean>;
+                }
+                interface CollapsibleClass {
+                    new (): CollapsibleInstance;
+                    PANEL_FLAG_SCOPE?: string;
+                    PANEL_PRESETS?: Record<string, { label?: string } | undefined>;
+                }
+                type CollapsibleFactory = (base: new (...args: never[]) => object) => CollapsibleClass;
+                interface CollapsibleModule {
+                    default?: CollapsibleFactory;
+                    CollapsiblePanelMixin?: CollapsibleFactory;
+                }
                 try {
-                    const mod = await import(`${base}/applications/api/collapsible-panel-mixin.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/collapsible-panel-mixin.js`)) as unknown as CollapsibleModule;
                     const CollapsiblePanelMixin = mod.default ?? mod.CollapsiblePanelMixin;
                     if (typeof CollapsiblePanelMixin !== 'function') {
                         notes['collapsible-panel-mixin-toggle'] = 'CollapsiblePanelMixin export missing';
@@ -592,7 +731,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             element = root;
                             expandedSections = new Map<string, boolean>();
                         }
-                        const Mixed = CollapsiblePanelMixin(StubBase as any);
+                        const Mixed = CollapsiblePanelMixin(StubBase);
                         const scopeOk = Mixed.PANEL_FLAG_SCOPE === 'wh40k-rpg.panels';
                         const presetsOk = typeof Mixed.PANEL_PRESETS?.combat === 'object' && Mixed.PANEL_PRESETS.combat.label === 'Combat Mode';
                         const inst = new Mixed();
@@ -600,7 +739,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         await withTimeout(inst.collapseAllPanels(), 5_000, 'collapseAllPanels');
                         const weaponsCollapsed = inst.expandedSections.get('weapons') === false;
                         const skillsTracked = inst.expandedSections.has('skills');
-                        if (scopeOk && presetsOk && weaponsCollapsed && skillsTracked === true) {
+                        if (scopeOk && presetsOk && weaponsCollapsed && skillsTracked) {
                             fired['collapsible-panel-mixin-toggle'] = true;
                             notes['collapsible-panel-mixin-toggle'] = 'static config OK; togglePanel/collapseAll wrote expandedSections';
                         } else {
@@ -621,14 +760,23 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * and clears the running-animation entry; assert the final
                  * state after the duration elapses.
                  * ============================================================ */
+                interface AnimationsInstance {
+                    animateCounter: (el: HTMLElement, from: number, to: number, opts: { duration: number }) => void;
+                    _runningAnimations: { size: number };
+                }
+                interface AnimationsModule {
+                    default?: MixinFactory<AnimationsInstance>;
+                    EnhancedAnimationsMixin?: MixinFactory<AnimationsInstance>;
+                }
                 try {
-                    const mod = await import(`${base}/applications/api/enhanced-animations-mixin.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/enhanced-animations-mixin.js`)) as unknown as AnimationsModule;
                     const EnhancedAnimationsMixin = mod.default ?? mod.EnhancedAnimationsMixin;
                     if (typeof EnhancedAnimationsMixin !== 'function') {
                         notes['enhanced-animations-counter'] = 'EnhancedAnimationsMixin export missing';
                     } else {
                         class StubBase {}
-                        const Mixed = EnhancedAnimationsMixin(StubBase as any);
+                        const Mixed = EnhancedAnimationsMixin(StubBase);
                         const inst = new Mixed();
                         const el = document.createElement('span');
                         el.textContent = '5';
@@ -658,8 +806,12 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * onto every number input under the supplied root. Dispatch a
                  * focus event and assert the input's text was selected.
                  * ============================================================ */
+                interface AppV2Module {
+                    setupNumberInputAutoSelect?: (root: HTMLElement) => void;
+                }
                 try {
-                    const mod = await import(`${base}/applications/api/application-v2-mixin.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/application-v2-mixin.js`)) as unknown as AppV2Module;
                     const setupNumberInputAutoSelect = mod.setupNumberInputAutoSelect;
                     if (typeof setupNumberInputAutoSelect !== 'function') {
                         notes['appv2-mixin-number-autoselect'] = 'setupNumberInputAutoSelect export missing';
@@ -695,8 +847,12 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * Build a row, listen for contextmenu, click a child, assert
                  * the synthetic contextmenu fired on the row.
                  * ============================================================ */
+                interface ContextMenuModule {
+                    WH40KContextMenu?: { triggerEvent?: (event: Event) => void };
+                }
                 try {
-                    const mod = await import(`${base}/applications/api/context-menu-mixin.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/context-menu-mixin.js`)) as unknown as ContextMenuModule;
                     const WH40KContextMenu = mod.WH40KContextMenu;
                     if (typeof WH40KContextMenu?.triggerEvent !== 'function') {
                         notes['contextmenu-trigger-event'] = 'WH40KContextMenu.triggerEvent missing';
@@ -738,15 +894,27 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * effectDelete. Assert each step round-trips through the
                  * Foundry ActiveEffect collection.
                  * ============================================================ */
+                interface ProbeEffect {
+                    id?: string;
+                    name?: string;
+                }
+                interface EffectActionsModule {
+                    effectIdFromTarget: (target: HTMLElement) => string | undefined;
+                    resolveEffect: (actor: ProbeActor, target: HTMLElement) => ProbeEffect | null | undefined;
+                    createEffect: (actor: ProbeActor, data: object) => Promise<ProbeEffect[] | null>;
+                    effectToggle: (this: { effectsOwner: ProbeActor }, event: Event, target: HTMLElement) => Promise<void>;
+                    effectDelete: (this: { effectsOwner: ProbeActor }, event: Event, target: HTMLElement) => Promise<void>;
+                }
                 try {
                     const live = getPc();
                     if (live == null) {
                         notes['effect-actions-crud'] = 'no PC actor';
                     } else {
-                        const mod = await import(`${base}/applications/api/effect-actions.js`);
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                        const mod = (await import(`${base}/applications/api/effect-actions.js`)) as unknown as EffectActionsModule;
                         const { effectIdFromTarget, resolveEffect, createEffect, effectToggle, effectDelete } = mod;
                         const created = await withTimeout(createEffect(live, { name: 'probe-effect' }), 5_000, 'createEffect');
-                        const effect = (Array.isArray(created) ? created[0] : null) as { id?: string; name?: string } | null;
+                        const effect: ProbeEffect | null = created != null ? created.at(0) ?? null : null;
                         if (effect?.id == null) {
                             notes['effect-actions-crud'] = 'createEffect did not return an ActiveEffect';
                         } else {
@@ -755,11 +923,12 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             const idResolved = effectIdFromTarget(target) === effect.id;
                             const resolved = resolveEffect(live, target);
                             const resolvedOk = resolved?.name === 'probe-effect';
-                            const disabledBefore = live.effects.get(effect.id)?.disabled === false;
+                            const effectId = effect.id;
+                            const disabledBefore = live.effects?.get?.(effectId)?.disabled === false;
                             await withTimeout(effectToggle.call({ effectsOwner: live }, new Event('click'), target), 5_000, 'effectToggle');
-                            const disabledAfter = live.effects.get(effect.id)?.disabled === true;
+                            const disabledAfter = live.effects?.get?.(effectId)?.disabled === true;
                             await withTimeout(effectDelete.call({ effectsOwner: live }, new Event('click'), target), 5_000, 'effectDelete');
-                            const deleted = live.effects.get(effect.id) == null;
+                            const deleted = live.effects?.get?.(effectId) == null;
                             if (idResolved && resolvedOk && disabledBefore && disabledAfter && deleted) {
                                 fired['effect-actions-crud'] = true;
                                 notes['effect-actions-crud'] = 'create → resolve → toggle (disabled flip) → delete round-tripped';
@@ -780,8 +949,12 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * ancestor, falls back to the element's own dataset, and
                  * returns undefined for absent / empty ids.
                  * ============================================================ */
+                interface ItemTargetModule {
+                    itemIdFromTarget?: (target: HTMLElement) => string | undefined;
+                }
                 try {
-                    const mod = await import(`${base}/applications/api/item-target.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                    const mod = (await import(`${base}/applications/api/item-target.js`)) as unknown as ItemTargetModule;
                     const itemIdFromTarget = mod.itemIdFromTarget;
                     if (typeof itemIdFromTarget !== 'function') {
                         notes['item-target-resolve'] = 'itemIdFromTarget export missing';
@@ -814,13 +987,26 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * live PC, and assert prepareActiveModifiers buckets the
                  * items into the conditions/talents/effects category lists.
                  * ============================================================ */
+                interface ActiveModifiersInstance {
+                    prepareActiveModifiers: () => {
+                        conditions: object[];
+                        talents: object[];
+                        traits: object[];
+                        equipment: object[];
+                        effects: object[];
+                    };
+                }
+                interface ActiveModifiersModule {
+                    ActiveModifiersMixin?: MixinFactory<ActiveModifiersInstance>;
+                    default?: MixinFactory<ActiveModifiersInstance>;
+                }
                 try {
                     const live = getPc();
                     if (live == null) {
                         notes['active-modifiers-panel-prepare'] = 'no PC actor';
                     } else {
                         const embeds = await withTimeout(
-                            live.createEmbeddedDocuments?.('Item', [
+                            live.createEmbeddedDocuments('Item', [
                                 { name: 'probe-condition', type: 'condition', system: { gameSystem: 'dh2e', description: 'probe', duration: 'Permanent' } },
                                 {
                                     name: 'probe-mod-talent',
@@ -831,9 +1017,8 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'embed condition+talent',
                         );
-                        const embedList = (embeds ?? []) as Array<{ id: string }>;
-                        for (const e of embedList) {
-                            const created = live.items.get(e.id);
+                        for (const e of embeds) {
+                            const created = live.items?.get?.(e.id);
                             if (created != null) {
                                 cleanups.push(async () => {
                                     try {
@@ -844,7 +1029,8 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 });
                             }
                         }
-                        const mod = await import(`${base}/applications/components/active-modifiers-panel.js`);
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                        const mod = (await import(`${base}/applications/components/active-modifiers-panel.js`)) as unknown as ActiveModifiersModule;
                         const ActiveModifiersMixin = mod.ActiveModifiersMixin ?? mod.default;
                         if (typeof ActiveModifiersMixin !== 'function') {
                             notes['active-modifiers-panel-prepare'] = 'ActiveModifiersMixin export missing';
@@ -852,15 +1038,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             class StubBase {
                                 actor = live;
                             }
-                            const Mixed = ActiveModifiersMixin(StubBase as any);
+                            const Mixed = ActiveModifiersMixin(StubBase);
                             const inst = new Mixed();
-                            const data = inst.prepareActiveModifiers() as {
-                                conditions: unknown[];
-                                talents: unknown[];
-                                traits: unknown[];
-                                equipment: unknown[];
-                                effects: unknown[];
-                            };
+                            const data = inst.prepareActiveModifiers();
                             const conditionBucketed = data.conditions.length >= 1;
                             const talentBucketed = data.talents.length >= 1;
                             const hasAllCategories = Array.isArray(data.traits) && Array.isArray(data.equipment) && Array.isArray(data.effects);
@@ -885,20 +1065,24 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * registered `toggleItemPreview` action twice: first inserts
                  * a .wh40k-item-preview sibling, second removes it.
                  * ============================================================ */
+                interface ItemPreviewModule {
+                    ItemPreviewMixin?: ActionMixinFactory;
+                    default?: ActionMixinFactory;
+                }
                 try {
                     const live = getPc();
                     if (live == null) {
                         notes['item-preview-card-toggle'] = 'no PC actor';
                     } else {
                         const created = await withTimeout(
-                            live.createEmbeddedDocuments?.('Item', [
+                            live.createEmbeddedDocuments('Item', [
                                 { name: 'probe-preview-gear', type: 'gear', system: { gameSystem: 'dh2e', quantity: 2, description: 'probe gear' } },
                             ]),
                             5_000,
                             'embed preview gear',
                         );
-                        const createdArr = created as Array<{ id: string }> | undefined | null;
-                        const gear = createdArr?.[0] ? live.items.get(createdArr[0].id) : null;
+                        const firstGear = created.at(0);
+                        const gear = firstGear ? live.items?.get?.(firstGear.id) : null;
                         if (gear == null) {
                             notes['item-preview-card-toggle'] = 'failed to embed gear';
                         } else {
@@ -909,25 +1093,27 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                     /* ignore */
                                 }
                             });
-                            const mod = await import(`${base}/applications/components/item-preview-card.js`);
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                            const mod = (await import(`${base}/applications/components/item-preview-card.js`)) as unknown as ItemPreviewModule;
                             const ItemPreviewMixin = mod.ItemPreviewMixin ?? mod.default;
                             if (typeof ItemPreviewMixin !== 'function') {
                                 notes['item-preview-card-toggle'] = 'ItemPreviewMixin export missing';
                             } else {
                                 const sheetRoot = document.createElement('div');
-                                sheetRoot.innerHTML = `<div class="item-row" data-item-id="${gear.id}"></div>`;
+                                sheetRoot.innerHTML = `<div class="item-row" data-item-id="${gear.id ?? ''}"></div>`;
+                                // element is a jQuery-like array (host sheet contract: this.element[0])
+                                const elementArray: HTMLElement[] = [sheetRoot];
                                 class StubBase {
                                     actor = live;
-                                    // element is a jQuery-like array (host sheet contract: this.element[0])
-                                    element = [sheetRoot] as unknown as HTMLElement[];
+                                    element = elementArray;
                                 }
-                                const Mixed = ItemPreviewMixin(StubBase as any);
+                                const Mixed = ItemPreviewMixin(StubBase);
                                 const action = Mixed.DEFAULT_OPTIONS?.actions?.toggleItemPreview;
-                                if (typeof action !== 'function') {
-                                    notes['item-preview-card-toggle'] = 'toggleItemPreview action not registered';
+                                const target = sheetRoot.querySelector<HTMLElement>(`[data-item-id="${gear.id ?? ''}"]`);
+                                if (typeof action !== 'function' || target == null) {
+                                    notes['item-preview-card-toggle'] = 'toggleItemPreview action / target not available';
                                 } else {
                                     const inst = new Mixed();
-                                    const target = sheetRoot.querySelector(`[data-item-id="${gear.id}"]`) as HTMLElement;
                                     action.call(inst, new Event('click'), target);
                                     await new Promise<void>((r) => {
                                         setTimeout(r, 60);
@@ -942,7 +1128,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                         fired['item-preview-card-toggle'] = true;
                                         notes['item-preview-card-toggle'] = 'toggleItemPreview injected then removed the preview card';
                                     } else {
-                                        notes['item-preview-card-toggle'] = `opened=${String(opened)} closed=${String(closed)}`;
+                                        notes['item-preview-card-toggle'] = `opened=${String(isOpened)} closed=${String(isClosed)}`;
                                     }
                                 }
                             }
@@ -959,18 +1145,29 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * sections + the title getter reflects the item name. Close
                  * to keep the window stack clean.
                  * ============================================================ */
+                interface TalentEditorInstance {
+                    render: (options: object) => Promise<TalentEditorInstance>;
+                    _prepareContext: (options: object) => Promise<{ activeSection?: string; sections?: Record<string, boolean> }>;
+                    title?: string;
+                    element?: HTMLElement | null;
+                    close?: () => Promise<void>;
+                }
+                interface TalentEditorModule {
+                    TalentEditorDialog?: new (options: object) => TalentEditorInstance;
+                    default?: new (options: object) => TalentEditorInstance;
+                }
                 try {
                     const live = getPc();
                     if (live == null) {
                         notes['talent-editor-dialog-render'] = 'no PC actor';
                     } else {
                         const created = await withTimeout(
-                            live.createEmbeddedDocuments?.('Item', [{ name: 'probe-editor-talent', type: 'talent', system: { gameSystem: 'dh2e' } }]),
+                            live.createEmbeddedDocuments('Item', [{ name: 'probe-editor-talent', type: 'talent', system: { gameSystem: 'dh2e' } }]),
                             5_000,
                             'embed talent',
                         );
-                        const createdArr = created as Array<{ id: string }> | undefined | null;
-                        const talent = createdArr?.[0] ? live.items.get(createdArr[0].id) : null;
+                        const firstTalent = created.at(0);
+                        const talent = firstTalent ? live.items?.get?.(firstTalent.id) : null;
                         if (talent == null) {
                             notes['talent-editor-dialog-render'] = 'failed to embed talent';
                         } else {
@@ -981,7 +1178,8 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                     /* ignore */
                                 }
                             });
-                            const mod = await import(`${base}/applications/item/talent-editor-dialog.js`);
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+                            const mod = (await import(`${base}/applications/item/talent-editor-dialog.js`)) as unknown as TalentEditorModule;
                             const TalentEditorDialog = mod.TalentEditorDialog ?? mod.default;
                             if (typeof TalentEditorDialog !== 'function') {
                                 notes['talent-editor-dialog-render'] = 'TalentEditorDialog export missing';
@@ -991,13 +1189,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 try {
                                     await withTimeout(dialog.render({ force: true }), 5_000, 'TalentEditorDialog.render');
                                 } catch (err) {
-                                    renderThrew = String((err as Error).message);
+                                    renderThrew = err instanceof Error ? err.message : String(err);
                                 }
-                                const ctx = (await dialog._prepareContext({})) as {
-                                    item?: unknown;
-                                    activeSection?: string;
-                                    sections?: Record<string, boolean>;
-                                };
+                                const ctx = await dialog._prepareContext({});
                                 const titleOk: boolean = typeof dialog.title === 'string' && String(dialog.title).includes('probe-editor-talent');
                                 const sectionOk: boolean = ctx.activeSection === 'modifiers' && ctx.sections?.modifiers === true;
                                 const elementPresent = dialog.element != null;
@@ -1025,6 +1219,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             } finally {
                 for (const fn of cleanups) {
                     try {
+                        // eslint-disable-next-line no-await-in-loop -- best-effort serial cleanup; parallel deletes race on Foundry's collection writes
                         await fn();
                     } catch {
                         /* ignore */
@@ -1038,7 +1233,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             }
 
             return { flowsFired: fired, flowNotes: notes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, APP_TOURS_EXTRA_FLOWS);
 
         return {
