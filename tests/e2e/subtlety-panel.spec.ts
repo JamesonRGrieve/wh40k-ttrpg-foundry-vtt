@@ -29,8 +29,22 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                interface ProbeSheet {
+                    render?: (force?: boolean) => Promise<void>;
+                    changeTab?: (tab: string, group: string) => void;
+                    element?: HTMLElement | null;
+                    close?: () => Promise<void>;
+                }
+                interface ProbeActor {
+                    sheet?: ProbeSheet;
+                    delete?: () => Promise<void>;
+                }
+                interface ProbeGlobals {
+                    Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
+                    __c9subtlety?: ProbeActor;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const g = globalThis as unknown as ProbeGlobals;
                 const ActorCls = g.Actor;
                 let error: string | null = null;
                 let rendered = false;
@@ -41,7 +55,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                 let hasBreakdownBtn = false;
                 let hasPanel = false;
 
-                if (ActorCls?.create == null) {
+                if (ActorCls?.create === undefined) {
                     return {
                         rendered,
                         valueText,
@@ -55,7 +69,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                 }
 
                 try {
-                    let actor;
+                    let actor: ProbeActor | null;
                     try {
                         actor = await ActorCls.create({
                             name: 'subtlety-panel-probe',
@@ -77,7 +91,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                             error: err instanceof Error ? err.message : String(err),
                         };
                     }
-                    if (actor == null) {
+                    if (actor === null) {
                         return {
                             rendered,
                             valueText,
@@ -91,7 +105,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                     }
 
                     try {
-                        await actor.sheet.render(true);
+                        await actor.sheet?.render?.(true);
                         await new Promise<void>((r) => {
                             setTimeout(r, 250);
                         });
@@ -112,8 +126,8 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                     rendered = el instanceof HTMLElement;
                     if (rendered && el !== null) {
                         hasPanel = el.querySelector('.wh40k-subtlety-panel') !== null;
-                        valueText = el.querySelector('.wh40k-subtlety-value')?.textContent?.trim() ?? '';
-                        maxText = el.querySelector('.wh40k-subtlety-max')?.textContent?.trim() ?? '';
+                        valueText = el.querySelector('.wh40k-subtlety-value')?.textContent.trim() ?? '';
+                        maxText = el.querySelector('.wh40k-subtlety-max')?.textContent.trim() ?? '';
                         const steppers = el.querySelectorAll('[data-action="adjustSubtletyManually"]');
                         stepperButtons = steppers.length;
                         hasStepper = steppers.length > 0;
@@ -137,7 +151,6 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                     hasPanel,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'subtlety-panel-render');
@@ -145,8 +158,19 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
             // Sheet captured; tear the probe actor down so it doesn't leak
             // into the next serial test's world / DOM.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const g = globalThis as any;
+                interface CleanupSheet {
+                    close?: () => Promise<void>;
+                }
+                interface CleanupActor {
+                    sheet?: CleanupSheet;
+                    delete?: () => Promise<void>;
+                }
+                interface CleanupGlobals {
+                    __c9subtlety?: CleanupActor;
+                    game?: { actors?: { getName?: (name: string) => CleanupActor | undefined } };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const g = globalThis as unknown as CleanupGlobals;
                 const a = g.__c9subtlety ?? g.game?.actors?.getName?.('subtlety-panel-probe');
                 try {
                     await a?.sheet?.close?.();
@@ -159,7 +183,6 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                     /* ignore */
                 }
                 g.__c9subtlety = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `subtlety panel probe error: ${result.error ?? ''}`).toBeNull();

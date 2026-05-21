@@ -6,15 +6,13 @@ test.describe('roll flows (Tier B)', () => {
         const joined = await joinAsGM(page);
         test.skip(!joined, 'no Gamemaster option appeared in the join select within 30s');
         const result = await page.evaluate(async () => {
-            const ChatMessageGlobal = (
-                globalThis as unknown as {
-                    ChatMessage?: { create?: (data: object) => Promise<{ id?: string } | null> };
-                    game?: { messages?: { size?: number } };
-                }
-            ).ChatMessage;
-            const msg = await ChatMessageGlobal?.create?.({ content: 'wh40k-rpg-tier-b-probe' });
-            const gameGlobal = (globalThis as unknown as { game?: { messages?: { size?: number } } }).game;
-            return { id: msg?.id ?? null, count: gameGlobal?.messages?.size ?? 0 };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `ChatMessage`/`game` globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                ChatMessage?: { create?: (data: object) => Promise<{ id?: string } | null> };
+                game?: { messages?: { size?: number } };
+            };
+            const msg = await g.ChatMessage?.create?.({ content: 'wh40k-rpg-tier-b-probe' });
+            return { id: msg?.id ?? null, count: g.game?.messages?.size ?? 0 };
         });
         expect(result.id).not.toBeNull();
         expect(result.count).toBeGreaterThan(0);

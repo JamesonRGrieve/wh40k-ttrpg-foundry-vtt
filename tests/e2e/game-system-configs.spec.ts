@@ -83,34 +83,107 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
         try {
             probes = await page.evaluate(
                 async ({ ids, aptitudeSystems, careerSystems, rolePrefix }) => {
-                    /* eslint-disable @typescript-eslint/no-explicit-any -- in-page probe: dist modules and Foundry globals are untyped at the evaluate boundary */
+                    interface SkillRank {
+                        level: number;
+                        key: string;
+                        bonus: number;
+                    }
+                    interface CharacteristicTier {
+                        key: string;
+                        label: string;
+                    }
+                    interface OriginCoreStep {
+                        key: string;
+                        step: string;
+                        icon: string;
+                        stepIndex: number;
+                    }
+                    interface OriginStepConfig {
+                        coreSteps?: OriginCoreStep[];
+                        optionalStep?: object | null;
+                        packs?: object[];
+                    }
+                    interface FatePointUse {
+                        key: string;
+                        label: string;
+                        description: string;
+                        burn?: boolean;
+                    }
+                    interface AdvanceMatchInfo {
+                        matches: number;
+                        matched: string[];
+                        unmatched: string[];
+                        all: string[];
+                    }
+                    interface CharacteristicAdvanceCost {
+                        cost: number;
+                    }
+                    interface ActorLike {
+                        system: Record<string, string | string[] | object>;
+                    }
+                    type Theme = { primary?: string; accent?: string; border?: string };
+                    interface SystemConfig {
+                        id: string;
+                        label: string;
+                        cssClass: string;
+                        theme: Theme;
+                        startingXP: number;
+                        skillRankCount: number;
+                        characteristicTierOrder: string[];
+                        usesAptitudes: boolean;
+                        usesCareerTables: boolean;
+                        getSkillRanks: () => SkillRank[];
+                        getCharacteristicTiers: () => CharacteristicTier[];
+                        getOriginStepConfig: () => OriginStepConfig;
+                        getStepShortLabels: () => Record<string, string>;
+                        getFatePointUses: () => FatePointUse[];
+                        getVisibleSkills: () => Set<string>;
+                        getSkillCostTable?: () => Record<number, number[]>;
+                        getCharacteristicCostTable?: () => Record<number, number[]>;
+                        getTalentCostTable?: () => Record<number, Record<number, number>>;
+                        countMatchingAptitudes?: (a: string[], b: string[]) => number;
+                        getSkillAptitudes?: (skill: string) => [string, string];
+                        getCharacteristicAptitudes?: (key: string) => [string, string];
+                        getAdvanceMatchInfo?: (actor: ActorLike, aptitudes: string[]) => AdvanceMatchInfo;
+                        getSkillAdvanceCost?: (actor: ActorLike, key: string, rank: number) => { cost: number } | null;
+                        getTalentAdvanceCost?: (actor: ActorLike, talent: object) => { cost: number } | null;
+                        getCharacteristicAdvanceCost?: (actor: ActorLike, key: string, tier: number) => CharacteristicAdvanceCost | null;
+                    }
+                    interface SystemConfigRegistryCls {
+                        get: (id: string) => SystemConfig | null;
+                        getOrNull: (id: string) => SystemConfig | null;
+                        getAll: () => SystemConfig[];
+                        getIds: () => string[];
+                        has: (id: string) => boolean;
+                    }
+                    interface BaseSystemConfigCls {
+                        skillLevelToRank?: (lvl: string) => number;
+                    }
+                    interface GameSystemsModule {
+                        SystemConfigRegistry?: SystemConfigRegistryCls;
+                        themeClassFor?: (id: string, role: string) => string;
+                        BaseSystemConfig?: BaseSystemConfigCls;
+                    }
+
                     const results: { name: string; ok: boolean; detail: string }[] = [];
                     const record = (name: string, ok: boolean, detail: string): void => {
                         results.push({ name, ok, detail });
                     };
 
-                    // Dynamic ESM import by URL — TS cannot resolve `/systems/...`
-                    // at type-check time, so route through a Function-based
-                    // importer that returns `unknown` and narrow on the result.
-                    const importByUrl = new Function('u', 'return import(u)') as (u: string) => Promise<any>;
-                    let mod: any = null;
+                    // Dynamic ESM import — use a non-static specifier so neither
+                    // the TS resolver nor knip tries to resolve `/systems/...`
+                    // at type-check time.
+                    const url = `${'/systems/wh40k-rpg'}/module/config/game-systems/index.js`;
+                    let mod: GameSystemsModule | null = null;
                     try {
-                        mod = await importByUrl('/systems/wh40k-rpg/module/config/game-systems/index.js');
+                        mod = (await import(url)) as GameSystemsModule;
                     } catch (err) {
                         record('registry-get-all-systems', false, `index.js import failed: ${String((err as Error).message)}`);
                         return results;
                     }
 
-                    const Registry = mod?.SystemConfigRegistry as
-                        | {
-                              get: (id: string) => any;
-                              getOrNull: (id: string) => any;
-                              getAll: () => any[];
-                              getIds: () => string[];
-                              has: (id: string) => boolean;
-                          }
-                        | undefined;
-                    const themeClassFor = mod?.themeClassFor as ((id: string, role: string) => string) | undefined;
+                    const Registry = mod.SystemConfigRegistry;
+                    const themeClassFor = mod.themeClassFor;
 
                     if (Registry === undefined || themeClassFor === undefined) {
                         record('registry-get-all-systems', false, 'index.js did not export SystemConfigRegistry / themeClassFor');
@@ -163,12 +236,12 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     for (const id of ids) {
                         try {
                             const cfg = Registry.get(id);
-                            const theme = cfg?.theme as { primary?: string; accent?: string; border?: string } | undefined;
+                            const theme = cfg?.theme;
                             const checks: boolean[] = [];
                             const detailParts: string[] = [];
                             for (const role of ['primary', 'accent', 'border'] as const) {
                                 const cls = themeClassFor(id, role);
-                                const expectedPrefix = (rolePrefix as Record<string, string>)[role] ?? '';
+                                const expectedPrefix = rolePrefix[role];
                                 const token = theme?.[role] ?? '';
                                 const okPrefix = typeof cls === 'string' && cls.startsWith(expectedPrefix);
                                 const okSuffix = token !== '' && cls === `${expectedPrefix}${token}`;
@@ -197,9 +270,9 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const isCareer = (careerSystems as readonly string[]).includes(id);
                             const flagsExclusive = cfg?.usesAptitudes !== cfg?.usesCareerTables;
                             const familyOk = isAptitude
-                                ? cfg?.usesAptitudes === true && cfg?.usesCareerTables === false
+                                ? cfg?.usesAptitudes === true && !cfg.usesCareerTables
                                 : isCareer
-                                ? cfg?.usesCareerTables === true && cfg?.usesAptitudes === false
+                                ? cfg?.usesCareerTables === true && !cfg.usesAptitudes
                                 : false;
                             record(
                                 `config-identity::${id}`,
@@ -218,7 +291,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     for (const id of ids) {
                         try {
                             const cfg = Registry.get(id);
-                            const ranks = cfg?.getSkillRanks() as Array<{ level: number; key: string; bonus: number }>;
+                            const ranks = cfg?.getSkillRanks() ?? [];
                             const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
                             const expectedCount = isAptitude ? 4 : 3;
                             const expectedBonuses = isAptitude ? [0, 10, 20, 30] : [0, 10, 20];
@@ -243,8 +316,8 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     for (const id of ids) {
                         try {
                             const cfg = Registry.get(id);
-                            const tiers = cfg?.getCharacteristicTiers() as Array<{ key: string; label: string }>;
-                            const order = cfg?.characteristicTierOrder as string[];
+                            const tiers = cfg?.getCharacteristicTiers() ?? [];
+                            const order = cfg?.characteristicTierOrder ?? [];
                             const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
                             const expectedCount = isAptitude ? 5 : 4;
                             const countOk = Array.isArray(tiers) && tiers.length === expectedCount;
@@ -268,24 +341,20 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     for (const id of ids) {
                         try {
                             const cfg = Registry.get(id);
-                            const osc = cfg?.getOriginStepConfig() as {
-                                coreSteps?: Array<{ key?: string; step?: string; icon?: string; stepIndex?: number }>;
-                                optionalStep?: unknown;
-                                packs?: unknown;
-                            };
+                            const osc: OriginStepConfig = cfg?.getOriginStepConfig() ?? {};
                             const coreOk =
                                 Array.isArray(osc.coreSteps) &&
                                 osc.coreSteps.every(
                                     (s) => typeof s.key === 'string' && s.step === s.key && typeof s.icon === 'string' && typeof s.stepIndex === 'number',
                                 );
-                            const optOk = osc.optionalStep === null || (typeof osc.optionalStep === 'object' && osc.optionalStep !== null);
+                            const optOk = osc.optionalStep == null || typeof osc.optionalStep === 'object';
                             const packsOk = Array.isArray(osc.packs);
                             record(
                                 `origin-step-config::${id}`,
-                                Boolean(coreOk && optOk && packsOk),
-                                `coreSteps=${osc.coreSteps?.length} optionalStep=${osc.optionalStep === null ? 'null' : 'obj'} packs=${
-                                    (osc.packs as unknown[]).length
-                                }`,
+                                coreOk && optOk && packsOk,
+                                `coreSteps=${String(osc.coreSteps?.length)} optionalStep=${osc.optionalStep == null ? 'null' : 'obj'} packs=${String(
+                                    osc.packs?.length ?? 0,
+                                )}`,
                             );
                         } catch (err) {
                             record(`origin-step-config::${id}`, false, `threw: ${String((err as Error).message)}`);
@@ -299,7 +368,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     for (const id of ids) {
                         try {
                             const cfg = Registry.get(id);
-                            const uses = cfg?.getFatePointUses() as Array<{ key: string; label: string; description: string; burn?: boolean }>;
+                            const uses = cfg?.getFatePointUses() ?? [];
                             const shapeOk =
                                 Array.isArray(uses) &&
                                 uses.length > 0 &&
@@ -327,7 +396,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     for (const id of ids) {
                         try {
                             const cfg = Registry.get(id);
-                            const skills = cfg?.getVisibleSkills() as Set<string>;
+                            const skills = cfg?.getVisibleSkills() ?? new Set<string>();
                             const isSet = skills instanceof Set && skills.size > 0;
                             const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
                             const dodgeShared = skills.has('dodge');
@@ -348,10 +417,11 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     // and countMatchingAptitudes is case-insensitive.
                     try {
                         const cfg = Registry.get('dh2e');
-                        const skillCost = cfg?.getSkillCostTable() as Record<number, number[]>;
-                        const charCost = cfg?.getCharacteristicCostTable() as Record<number, number[]>;
-                        const talentCost = cfg?.getTalentCostTable() as Record<number, Record<number, number>>;
-                        const eq = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
+                        const skillCost = cfg?.getSkillCostTable?.() ?? {};
+                        const charCost = cfg?.getCharacteristicCostTable?.() ?? {};
+                        const talentCost = cfg?.getTalentCostTable?.() ?? {};
+                        const eq = (a: number[] | Record<number, number> | undefined, b: number[] | Record<number, number>): boolean =>
+                            JSON.stringify(a) === JSON.stringify(b);
                         const skillOk =
                             eq(skillCost[2], [100, 200, 300, 400]) && eq(skillCost[1], [200, 400, 600, 800]) && eq(skillCost[0], [300, 600, 900, 1200]);
                         const charOk =
@@ -359,8 +429,8 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             eq(charCost[1], [250, 500, 750, 1000, 1500]) &&
                             eq(charCost[0], [500, 750, 1000, 1500, 2500]);
                         const talentOk = eq(talentCost[1], { 2: 200, 1: 300, 0: 600 }) && eq(talentCost[3], { 2: 400, 1: 600, 0: 1200 });
-                        const matchCI = cfg?.countMatchingAptitudes(['weapon skill', 'OFFENCE'], ['Weapon Skill', 'Offence']) === 2;
-                        const matchZero = cfg?.countMatchingAptitudes(['Fellowship'], ['Weapon Skill', 'Offence']) === 0;
+                        const matchCI = cfg?.countMatchingAptitudes?.(['weapon skill', 'OFFENCE'], ['Weapon Skill', 'Offence']) === 2;
+                        const matchZero = cfg?.countMatchingAptitudes?.(['Fellowship'], ['Weapon Skill', 'Offence']) === 0;
                         record(
                             'aptitude-cost-tables-dh2e',
                             Boolean(skillOk && charOk && talentOk && matchCI && matchZero),
@@ -380,10 +450,10 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         const detail: string[] = [];
                         for (const id of aptitudeSystems) {
                             const cfg = Registry.get(id);
-                            const known = cfg?.getSkillAptitudes('commonLore') as [string, string];
-                            const unknown = cfg?.getSkillAptitudes('definitely-not-a-skill') as [string, string];
-                            const charPair = cfg?.getCharacteristicAptitudes('weaponSkill') as [string, string];
-                            const charFallback = cfg?.getCharacteristicAptitudes('nope') as [string, string];
+                            const known = cfg?.getSkillAptitudes?.('commonLore') ?? ['', ''];
+                            const unknown = cfg?.getSkillAptitudes?.('definitely-not-a-skill') ?? ['', ''];
+                            const charPair = cfg?.getCharacteristicAptitudes?.('weaponSkill') ?? ['', ''];
+                            const charFallback = cfg?.getCharacteristicAptitudes?.('nope') ?? ['', ''];
                             const knownOk = JSON.stringify(known) === JSON.stringify(['Intelligence', 'General']);
                             const unknownOk = JSON.stringify(unknown) === JSON.stringify(['General', 'General']);
                             const charOk = JSON.stringify(charPair) === JSON.stringify(['Weapon Skill', 'Offence']);
@@ -403,12 +473,12 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     // needed — the method only reads `system.aptitudes`).
                     try {
                         const cfg = Registry.get('dh2e');
-                        const actorLike = { system: { aptitudes: ['Weapon Skill', 'Offence', 'Defence'] } };
-                        const info = cfg?.getAdvanceMatchInfo(actorLike, ['Weapon Skill', 'Knowledge']) as {
-                            matches: number;
-                            matched: string[];
-                            unmatched: string[];
-                            all: string[];
+                        const actorLike: ActorLike = { system: { aptitudes: ['Weapon Skill', 'Offence', 'Defence'] } };
+                        const info: AdvanceMatchInfo = cfg?.getAdvanceMatchInfo?.(actorLike, ['Weapon Skill', 'Knowledge']) ?? {
+                            matches: 0,
+                            matched: [],
+                            unmatched: [],
+                            all: [],
                         };
                         const matchesOk = info.matches === 1;
                         const matchedOk = JSON.stringify(info.matched) === JSON.stringify(['Weapon Skill']);
@@ -427,13 +497,15 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     try {
                         const checks: boolean[] = [];
                         const detail: string[] = [];
-                        const actorLike = { system: {} };
+                        const actorLike: ActorLike = { system: {} };
                         for (const id of careerSystems) {
                             const cfg = Registry.get(id);
-                            const skillNull = cfg?.getSkillAdvanceCost(actorLike, 'dodge', 0) === null;
-                            const talentNull = cfg?.getTalentAdvanceCost(actorLike, {}) === null;
-                            checks.push(Boolean(skillNull && talentNull));
-                            detail.push(`${id}:skill=${cfg?.getSkillAdvanceCost(actorLike, 'dodge', 0)} talent=${cfg?.getTalentAdvanceCost(actorLike, {})}`);
+                            const skillResult = cfg?.getSkillAdvanceCost?.(actorLike, 'dodge', 0);
+                            const talentResult = cfg?.getTalentAdvanceCost?.(actorLike, {});
+                            const skillNull = skillResult === null;
+                            const talentNull = talentResult === null;
+                            checks.push(skillNull && talentNull);
+                            detail.push(`${id}:skill=${JSON.stringify(skillResult)} talent=${JSON.stringify(talentResult)}`);
                         }
                         record('career-cost-null-contract', checks.every(Boolean), detail.join(' '));
                     } catch (err) {
@@ -449,16 +521,14 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     // (Khorne/Nurgle pair), Opposed (Khorne↔Slaanesh), and
                     // unaligned-character treated as Allied for every god.
                     try {
-                        const cfg = Registry.get('bc') as {
-                            getCharacteristicAdvanceCost: (a: { system: Record<string, unknown> }, k: string, t: number) => { cost: number } | null;
-                        } | null;
-                        const khorneActor = { system: { chaosAlignment: 'khorne', chaosAdvancements: [] } };
-                        const nurgleActor = { system: { chaosAlignment: 'nurgle', chaosAdvancements: [] } };
-                        const unalignedActor = { system: { chaosAlignment: 'unaligned', chaosAdvancements: [] } };
-                        const matchedCost = cfg?.getCharacteristicAdvanceCost(khorneActor, 'strength', 0)?.cost ?? null;
-                        const alliedCost = cfg?.getCharacteristicAdvanceCost(nurgleActor, 'strength', 0)?.cost ?? null;
-                        const opposedCost = cfg?.getCharacteristicAdvanceCost(khorneActor, 'fellowship', 0)?.cost ?? null;
-                        const unalignedCost = cfg?.getCharacteristicAdvanceCost(unalignedActor, 'strength', 0)?.cost ?? null;
+                        const cfg = Registry.get('bc');
+                        const khorneActor: ActorLike = { system: { chaosAlignment: 'khorne', chaosAdvancements: [] } };
+                        const nurgleActor: ActorLike = { system: { chaosAlignment: 'nurgle', chaosAdvancements: [] } };
+                        const unalignedActor: ActorLike = { system: { chaosAlignment: 'unaligned', chaosAdvancements: [] } };
+                        const matchedCost = cfg?.getCharacteristicAdvanceCost?.(khorneActor, 'strength', 0)?.cost ?? null;
+                        const alliedCost = cfg?.getCharacteristicAdvanceCost?.(nurgleActor, 'strength', 0)?.cost ?? null;
+                        const opposedCost = cfg?.getCharacteristicAdvanceCost?.(khorneActor, 'fellowship', 0)?.cost ?? null;
+                        const unalignedCost = cfg?.getCharacteristicAdvanceCost?.(unalignedActor, 'strength', 0)?.cost ?? null;
                         const ok = matchedCost === 100 && alliedCost === 250 && opposedCost === 500 && unalignedCost === 250;
                         record(
                             'bc-patron-status-matrix',
@@ -475,7 +545,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     // ('experienced') to the shared numeric rank, and unknown
                     // strings fall back to 0.
                     try {
-                        const base = mod?.BaseSystemConfig as { skillLevelToRank?: (lvl: string) => number } | undefined;
+                        const base = mod.BaseSystemConfig;
                         const fn = base?.skillLevelToRank;
                         const ok =
                             typeof fn === 'function' &&
@@ -516,8 +586,8 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         const detail: string[] = [];
                         for (const id of ids) {
                             const cfg = Registry.get(id);
-                            const labels = cfg?.getStepShortLabels() as Record<string, string>;
-                            const osc = cfg?.getOriginStepConfig() as { coreSteps?: Array<{ key: string }> };
+                            const labels = cfg?.getStepShortLabels() ?? {};
+                            const osc: OriginStepConfig = cfg?.getOriginStepConfig() ?? {};
                             const coreKeys = (osc.coreSteps ?? []).map((s) => s.key);
                             const everyKeyLabelled = coreKeys.every((k) => typeof labels[k] === 'string' && labels[k].length > 0);
                             checks.push(everyKeyLabelled);
@@ -528,13 +598,12 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         record('step-short-labels', false, `threw: ${String((err as Error).message)}`);
                     }
 
-                    /* eslint-enable @typescript-eslint/no-explicit-any */
                     return results;
                 },
                 {
-                    ids: GAME_SYSTEM_IDS as unknown as string[],
-                    aptitudeSystems: APTITUDE_SYSTEMS as unknown as string[],
-                    careerSystems: CAREER_SYSTEMS as unknown as string[],
+                    ids: [...GAME_SYSTEM_IDS] as string[],
+                    aptitudeSystems: [...APTITUDE_SYSTEMS] as string[],
+                    careerSystems: [...CAREER_SYSTEMS] as string[],
                     rolePrefix: ROLE_PREFIX,
                 },
             );

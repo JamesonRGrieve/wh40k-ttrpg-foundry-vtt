@@ -20,16 +20,22 @@ import { expect, test } from './lib/test';
  * single assertion message names every broken expectation.
  */
 
+interface BCEmbeddedItem {
+    id: string;
+    type: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: item.system varies by item-type and is read by name for cost assertions
+    system?: Record<string, unknown>;
+}
 interface BCCharacterActor {
     id?: string;
     system?: {
         experience?: { total?: number; used?: number; available?: number };
         skills?: Record<string, { advance?: number; trained?: boolean; plus10?: boolean; plus20?: boolean; plus30?: boolean }>;
     };
-    update?: (data: object) => Promise<unknown>;
+    update?: (data: object) => Promise<void>;
     createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id: string }>>;
-    items?: { contents: Array<{ id: string; type: string; system?: Record<string, unknown> }> };
-    delete?: () => Promise<unknown>;
+    items?: { contents: BCEmbeddedItem[] };
+    delete?: () => Promise<void>;
 }
 
 interface PageWindow {
@@ -39,6 +45,7 @@ interface PageWindow {
 
 async function createBCCharacter(page: Page, label: string): Promise<{ id: string | null; createError: string | null }> {
     return page.evaluate(async (name: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
         const { Actor: ActorCls } = globalThis as unknown as PageWindow;
         if (!ActorCls?.create) return { id: null, createError: 'Actor.create unavailable' };
         try {
@@ -56,6 +63,7 @@ async function createBCCharacter(page: Page, label: string): Promise<{ id: strin
 
 async function deleteActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
         const { game: gameObj } = globalThis as unknown as PageWindow;
         try {
             await gameObj?.actors?.get?.(actorId)?.delete?.();
@@ -79,6 +87,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
             const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
@@ -115,6 +124,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
             const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
@@ -151,6 +161,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
             const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
@@ -189,17 +200,28 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
-            const actor = g.game?.actors?.get?.(actorId);
-            if (actor == null) return { rendered: false, error: 'actor not found' };
-            let inst: any = null;
+            interface DialogInst {
+                element?: HTMLElement | null;
+                render: (force?: boolean) => Promise<void>;
+                close?: () => Promise<void>;
+            }
+            interface DialogCtor {
+                new (...args: never[]): DialogInst;
+            }
+            interface DialogModule {
+                default?: DialogCtor;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const { game: gameObj } = globalThis as unknown as PageWindow;
+            const actor = gameObj?.actors?.get?.(actorId);
+            if (actor === undefined) return { rendered: false, error: 'actor not found' };
+            let inst: DialogInst | null = null;
             try {
-                const url: string = '/systems/wh40k-rpg/module/applications/prompts/add-xp-dialog.js';
-                const mod = await import(/* @vite-ignore */ url);
+                const url = '/systems/wh40k-rpg/module/applications/prompts/add-xp-dialog.js';
+                const mod = (await import(/* @vite-ignore */ url)) as DialogModule;
                 const Cls = mod.default;
                 if (typeof Cls !== 'function') return { rendered: false, error: 'AddXPDialog default export not a constructor' };
-                inst = new Cls(actor);
+                inst = new Cls(actor as never);
                 await inst.render(true);
                 await new Promise<void>((r) => {
                     setTimeout(r, 30);
@@ -219,7 +241,6 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 }
                 return { rendered: false, error: String(err instanceof Error ? err.message : err) };
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, created.id);
 
         if (result.error != null) failures.push(result.error);
@@ -243,17 +264,28 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
-            const actor = g.game?.actors?.get?.(actorId);
-            if (actor == null) return { rendered: false, error: 'actor not found' };
-            let inst: any = null;
+            interface DialogInst {
+                element?: HTMLElement | null;
+                render: (force?: boolean) => Promise<void>;
+                close?: () => Promise<void>;
+            }
+            interface DialogCtor {
+                new (...args: never[]): DialogInst;
+            }
+            interface DialogModule {
+                default?: DialogCtor;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const { game: gameObj } = globalThis as unknown as PageWindow;
+            const actor = gameObj?.actors?.get?.(actorId);
+            if (actor === undefined) return { rendered: false, error: 'actor not found' };
+            let inst: DialogInst | null = null;
             try {
-                const url: string = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
-                const mod = await import(/* @vite-ignore */ url);
+                const url = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
+                const mod = (await import(/* @vite-ignore */ url)) as DialogModule;
                 const Cls = mod.default;
                 if (typeof Cls !== 'function') return { rendered: false, error: 'AdvancementDialog default export not a constructor' };
-                inst = new Cls(actor);
+                inst = new Cls(actor as never);
                 await inst.render(true);
                 await new Promise<void>((r) => {
                     setTimeout(r, 30);
@@ -273,7 +305,6 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 }
                 return { rendered: false, error: String(err instanceof Error ? err.message : err) };
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, created.id);
 
         if (result.error != null) failures.push(result.error);
@@ -297,6 +328,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
             const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
@@ -354,6 +386,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
             const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };

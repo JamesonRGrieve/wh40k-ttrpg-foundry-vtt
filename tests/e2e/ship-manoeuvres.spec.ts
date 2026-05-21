@@ -31,7 +31,6 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 let error: string | null = null;
                 let rendered = false;
                 let hasBarRoot = false;
@@ -46,9 +45,13 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                 let messageId: string | null = null;
 
                 try {
-                    const renderTemplateFn = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
-                        | ((p: string, c: object) => Promise<string>)
-                        | undefined;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry`/`ChatMessage`/`game` globals are injected by the licensed app; no shipped types
+                    const g = globalThis as unknown as {
+                        foundry?: { applications?: { handlebars?: { renderTemplate?: (p: string, c: object) => Promise<string> } } };
+                        ChatMessage?: { create: (data: object) => Promise<{ id: string } | null> };
+                        game?: { user?: { id?: string } };
+                    };
+                    const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
                     if (!renderTemplateFn) {
                         return {
                             rendered,
@@ -138,8 +141,7 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                     hasOpposedBadge = html.includes('wh40k-starship-manoeuvre-tile__opposed');
                     tileCount = (html.match(/wh40k-starship-manoeuvre-tile"/g) ?? []).length;
 
-                    const ChatMessageCls = (globalThis as any).ChatMessage as { create: (data: object) => Promise<{ id: string } | null> } | undefined;
-                    const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
+                    const msg = await g.ChatMessage?.create({ user: g.game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
@@ -159,7 +161,6 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                     messageId,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'ship-manoeuvres-action-bar');
@@ -167,14 +168,14 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
             // Bar captured; remove the chat message so it does not leak
             // into a sibling serial test's chat log.
             await page.evaluate(async (id: string | null) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
                 if (id === null) return;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game.messages` registry is injected by the licensed app; no shipped types
+                const g = globalThis as unknown as { game?: { messages?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } } };
                 try {
-                    await (globalThis as any).game?.messages?.get?.(id)?.delete?.();
+                    await g.game?.messages?.get?.(id)?.delete?.();
                 } catch {
                     /* ignore */
                 }
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, result.messageId);
 
             expect(result.error, `partial probe error: ${result.error ?? ''}`).toBeNull();

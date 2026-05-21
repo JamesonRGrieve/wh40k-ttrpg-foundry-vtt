@@ -28,9 +28,11 @@ interface ActorRef {
 
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor: ActorCls } = globalThis as unknown as {
+        interface FoundryGlobal {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+        const { Actor: ActorCls } = globalThis as unknown as FoundryGlobal;
         if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
@@ -47,7 +49,7 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error).message) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
     if (result.id === null) return { error: result.error ?? 'unknown create error' };
@@ -56,9 +58,15 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game: gameGlobal } = globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        };
+        interface ActorHandle {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.delete returns Promise<this> with no shipped types
+            delete?: () => Promise<unknown>;
+        }
+        interface CleanupGlobal {
+            game?: { actors?: { get?: (id: string) => ActorHandle | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+        const { game: gameGlobal } = globalThis as unknown as CleanupGlobal;
         const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -84,8 +92,22 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
 
         try {
             const result = await page.evaluate(async (id: string) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                interface ActorSheet {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 sheet.render returns Promise<this> with no shipped types
+                    render: (opts: object) => Promise<unknown>;
+                    element: HTMLElement | null;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 sheet.close returns Promise<this> with no shipped types
+                    close?: () => Promise<unknown>;
+                }
+                interface ActorInstance {
+                    sheet: ActorSheet | null;
+                }
+                interface FoundryGlobal {
+                    game?: { actors?: { get?: (id: string) => ActorInstance | undefined } };
+                    __c159sheet?: ActorSheet | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const g = globalThis as unknown as FoundryGlobal;
                 const actor = g.game?.actors?.get?.(id);
                 if (actor == null) return { error: 'actor lookup failed' };
 
@@ -109,7 +131,7 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
                     });
                     rendered = sheet.element instanceof HTMLElement;
 
-                    if (rendered && sheet.element != null) {
+                    if (rendered && sheet.element !== null) {
                         const el: HTMLElement = sheet.element;
                         const panel = el.querySelector('.wh40k-ow-mount-panel');
                         hasPanel = panel !== null;
@@ -134,7 +156,7 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
                     // captures the live DOM.
                     g.__c159sheet = sheet;
                 } catch (err) {
-                    probeError = String((err as Error).message);
+                    probeError = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
@@ -149,21 +171,26 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
                     issueDispatched,
                     error: probeError,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, actorId);
 
             await snap(page, 'ow-mount-panel');
 
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const g = globalThis as any;
+                interface SheetCloseable {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 sheet.close returns Promise<this> with no shipped types
+                    close?: () => Promise<unknown>;
+                }
+                interface CleanupGlobal {
+                    __c159sheet?: SheetCloseable | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const g = globalThis as unknown as CleanupGlobal;
                 try {
                     await g.__c159sheet?.close?.();
                 } catch {
                     /* ignore */
                 }
                 g.__c159sheet = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

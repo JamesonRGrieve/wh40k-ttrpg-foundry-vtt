@@ -29,7 +29,6 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const moduleUrl = '/systems/wh40k-rpg/module/rules/ow-mission-gear.js';
                 let error: string | null = null;
                 let hasApplyTable63Modifiers = false;
@@ -56,7 +55,7 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
                         };
                         rollRandomIssueGear?: (rng: () => number) => number;
                         ORDINARY_DIFFICULTY_BONUS?: number;
-                        GEAR_RESULT_LADDER?: ReadonlyArray<unknown>;
+                        GEAR_RESULT_LADDER?: ReadonlyArray<object>;
                     };
 
                     hasApplyTable63Modifiers = typeof mod.applyTable63Modifiers === 'function';
@@ -100,7 +99,6 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
                     bonusItemCount,
                     randomIssueRoll,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'ow-mission-gear-engine');

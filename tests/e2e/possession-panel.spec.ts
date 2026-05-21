@@ -19,12 +19,24 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
     const result = await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+        interface ActorSheet {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 sheet.render returns Promise<this> with no shipped types
+            render: (force: boolean) => Promise<unknown>;
+            changeTab?: (tab: string, group: string) => void;
+            element?: HTMLElement | null;
+        }
+        interface ActorInstance {
+            sheet: ActorSheet;
+        }
+        interface FoundryGlobal {
+            Actor?: { create?: (data: object) => Promise<ActorInstance | null> };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+        const g = globalThis as unknown as FoundryGlobal;
         const ActorCls = g.Actor;
         if (ActorCls?.create == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
 
-        let actor;
+        let actor: ActorInstance | null;
         try {
             actor = await ActorCls.create({
                 name: 'possession-panel-probe',
@@ -45,7 +57,7 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
         });
 
         try {
-            actor.sheet?.changeTab?.('status', 'primary');
+            actor.sheet.changeTab?.('status', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });
@@ -53,10 +65,11 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
             /* fall back to whatever tab is open */
         }
 
-        const root = actor.sheet?.element;
-        const panel = root?.querySelector?.('.wh40k-possession-panel');
-        const btnCount = panel != null ? panel.querySelectorAll('.wh40k-possession-frenzy-btn, .wh40k-possession-mismanifest-btn').length : 0;
-        const hasTitle = Boolean(panel?.querySelector?.('h3'));
+        const root = actor.sheet.element;
+        const panel = root?.querySelector('.wh40k-possession-panel');
+        const btnCount =
+            panel !== null && panel !== undefined ? panel.querySelectorAll('.wh40k-possession-frenzy-btn, .wh40k-possession-mismanifest-btn').length : 0;
+        const hasTitle = panel?.querySelector('h3') != null;
         return { setupOk: true, btnCount, hasTitle, error: null };
     });
 
@@ -78,8 +91,15 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
 
     // Cleanup
     await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const g = globalThis as any;
+        interface ActorHandle {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.delete returns Promise<this> with no shipped types
+            delete?: () => Promise<unknown>;
+        }
+        interface CleanupGlobal {
+            game?: { actors?: { getName?: (name: string) => ActorHandle | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+        const g = globalThis as unknown as CleanupGlobal;
         const a = g.game?.actors?.getName?.('possession-panel-probe');
         try {
             await a?.delete?.();

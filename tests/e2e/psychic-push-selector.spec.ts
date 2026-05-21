@@ -19,9 +19,16 @@ test.describe.serial('psychic push selector', () => {
         test.skip(!joined, 'GM join failed');
 
         const result = await page.evaluate(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- e2e probe runs in browser realm against untyped Foundry globals.
+            interface DialogInstance {
+                render: (force: boolean) => Promise<void>;
+                element?: HTMLElement;
+                close?: () => Promise<void>;
+            }
+            interface DialogModule {
+                default: new (actionData: object) => DialogInstance;
+            }
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
-            const mod = await import(/* @vite-ignore */ modUrl);
+            const mod = (await import(/* @vite-ignore */ modUrl)) as DialogModule;
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing' };
@@ -61,7 +68,7 @@ test.describe.serial('psychic push selector', () => {
                 },
             };
 
-            let dialog: { render: (force: boolean) => Promise<unknown>; element?: HTMLElement; close?: () => Promise<unknown> };
+            let dialog: DialogInstance;
             try {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
@@ -79,7 +86,19 @@ test.describe.serial('psychic push selector', () => {
                 return { error: 'dialog.element is not an HTMLElement' };
             }
 
-            function snap(el: HTMLElement, label: string): Record<string, unknown> {
+            interface PsySnap {
+                label: string;
+                selector: boolean;
+                fetteredActive: boolean;
+                unfetteredActive: boolean;
+                pushActive: boolean;
+                stepperVisible: boolean;
+                pushLevel: string | null;
+                effectivePR: string | null;
+                focusMod: string | null;
+                forcePhenomena: boolean;
+            }
+            function snap(el: HTMLElement, label: string): PsySnap {
                 const fett = el.querySelector<HTMLButtonElement>('[data-testid="psy-mode-fettered"]');
                 const unfett = el.querySelector<HTMLButtonElement>('[data-testid="psy-mode-unfettered"]');
                 const push = el.querySelector<HTMLButtonElement>('[data-testid="psy-mode-push"]');

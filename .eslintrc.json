@@ -134,7 +134,7 @@
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
         "no-shadow": "off",
-        "@typescript-eslint/no-shadow": ["warn", { "builtinGlobals": true, "hoist": "all", "allow": ["event", "name", "location", "origin", "parent", "prompt", "toolbar", "status", "length", "top", "close", "open", "stop", "history", "confirm", "document", "innerWidth", "innerHeight", "TextEditor", "CharacterData", "source", "Navigator", "selection", "match"] }],
+        "@typescript-eslint/no-shadow": ["error", { "builtinGlobals": true, "hoist": "all", "allow": ["event", "name", "location", "origin", "parent", "prompt", "toolbar", "status", "length", "top", "close", "open", "stop", "history", "confirm", "document", "innerWidth", "innerHeight", "TextEditor", "CharacterData", "source", "Navigator", "selection", "match"] }],
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["error", { "functions": false, "classes": false }],
         "@typescript-eslint/no-explicit-any": "error",

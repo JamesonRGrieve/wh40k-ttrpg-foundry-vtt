@@ -66,6 +66,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
         try {
             /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return -- browser-probe boundary: code runs in the Foundry page context where Handlebars / dynamic-imported dist modules are untyped at the Playwright type-check layer; every value is asserted on the Node side after marshalling */
             const probes = await page.evaluate(async () => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `Handlebars` global is injected by the licensed app; no shipped types
                 const g = globalThis as unknown as {
                     Handlebars?: {
                         compile: (src: string) => (ctx: object, opts?: object) => string;
@@ -85,6 +86,10 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                 // Dynamic ESM import by URL — TS cannot resolve `/systems/...`
                 // at type-check time, so route through a Function-based
                 // importer that returns `unknown` and narrow on the result.
+                // Function constructor is the only runtime path for a non-static
+                // import specifier; bundlers rewrite literal `import('/x')`
+                // patterns even with /* @vite-ignore */ in this context.
+                // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func -- boundary: dynamic ESM import by runtime URL string; bundler-safe alternative is not available in the browser probe
                 const importByUrl = new Function('u', 'return import(u)') as (u: string) => Promise<any>;
 
                 // ---------------------------------------------------------

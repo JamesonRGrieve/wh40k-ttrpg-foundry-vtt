@@ -28,7 +28,6 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/bc-supplements-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -41,9 +40,14 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                 let quickActiveAttr = '';
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fetch`/`Handlebars` globals are injected by the licensed app; Handlebars compile ctx is opaque */
+                    const g = globalThis as unknown as {
+                        fetch: (u: string) => Promise<Response>;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars compile context is opaque template data
+                        Handlebars: { compile: (s: string) => (ctx: unknown) => string };
+                    };
+                    const src = await (await g.fetch(templateUrl)).text();
+                    const HbsLib = g.Handlebars;
                     if (typeof HbsLib.compile !== 'function') {
                         return {
                             rendered,
@@ -102,7 +106,8 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                     // Hold the host on a global handle so snap() (called
                     // outside this evaluate) captures the live DOM. Tearing
                     // it down here would leave the screenshot empty.
-                    (globalThis as any).__bcSupplementsPanelHost = host;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing a DOM host on globalThis for cross-evaluate cleanup; no shipped types
+                    (globalThis as unknown as { __bcSupplementsPanelHost: HTMLElement | undefined }).__bcSupplementsPanelHost = host;
                 } catch (err) {
                     error = String(err instanceof Error ? err.message : err);
                 }
@@ -118,7 +123,6 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                     quickActiveAttr,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'bc-supplements-panel');
@@ -126,15 +130,14 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
             // Panel captured; tear it down so it doesn't leak into the
             // next serial test's DOM.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__bcSupplementsPanelHost as HTMLElement | undefined;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading back DOM host stashed on globalThis from the prior evaluate; no shipped types
+                const g = globalThis as unknown as { __bcSupplementsPanelHost: HTMLElement | undefined };
                 try {
-                    host?.remove();
+                    g.__bcSupplementsPanelHost?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__bcSupplementsPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__bcSupplementsPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

@@ -29,11 +29,12 @@ test.describe.serial("assassin's strike chat card (#149)", () => {
         page.on('pageerror', (err: Error) => errors.push(err.message));
 
         const result = await page.evaluate(async () => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const renderTemplate = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
-                | ((p: string, c: object) => Promise<string>)
-                | undefined;
-            if (!renderTemplate) return { withTalent: '', withoutTalent: '', withTalentMissed: '' };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                foundry?: { applications?: { handlebars?: { renderTemplate?: (p: string, c: object) => Promise<string> } } };
+            };
+            const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
+            if (!renderTemplateFn) return { withTalent: '', withoutTalent: '', withTalentMissed: '' };
             const template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
             const baseHit = {
                 id: 'e2e-roll-149',
@@ -56,15 +57,14 @@ test.describe.serial("assassin's strike chat card (#149)", () => {
                     showDamage: true,
                 },
             };
-            const withTalent = await renderTemplate(template, { ...baseHit, hasAssassinsStrike: true });
-            const withoutTalent = await renderTemplate(template, { ...baseHit, hasAssassinsStrike: false });
-            const withTalentMissed = await renderTemplate(template, {
+            const withTalent = await renderTemplateFn(template, { ...baseHit, hasAssassinsStrike: true });
+            const withoutTalent = await renderTemplateFn(template, { ...baseHit, hasAssassinsStrike: false });
+            const withTalentMissed = await renderTemplateFn(template, {
                 ...baseHit,
                 hasAssassinsStrike: true,
                 rollData: { ...baseHit.rollData, success: false, dos: 0, dof: 2, roll: { total: 78 }, showDamage: false },
             });
             return { withTalent, withoutTalent, withTalentMissed };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
 
         expect(errors, `pageerror events: ${errors.join('\n')}`).toEqual([]);

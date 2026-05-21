@@ -63,8 +63,57 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            type HookArg = string | number | boolean | object | null | undefined;
+            interface PlacedTokenRef {
+                id?: string;
+            }
+            interface ToolEntry {
+                onChange?: () => void | PromiseLike<void>;
+                onClick?: () => void | PromiseLike<void>;
+            }
+            interface ControlsEntry {
+                tools: Record<string, ToolEntry>;
+            }
+            interface HooksApi {
+                callAll: (event: string, ...args: HookArg[]) => void;
+            }
+            interface ActorRef {
+                id?: string;
+                name?: string;
+                prototypeToken?: { toObject?: () => { actorId?: string; name?: string } };
+            }
+            interface ActorCls {
+                create: (data: object) => Promise<ActorRef>;
+            }
+            interface SceneRef {
+                id?: string;
+                activate?: () => Promise<void>;
+                createEmbeddedDocuments: (kind: string, data: object[]) => Promise<Array<{ object?: PlacedTokenRef; id?: string }>>;
+                delete?: () => Promise<void>;
+            }
+            interface SceneCls {
+                create: (data: object) => Promise<SceneRef>;
+            }
+            interface CanvasTokens {
+                hud?: { bind?: (token: PlacedTokenRef) => void };
+                get?: (id: string | undefined) => PlacedTokenRef | undefined;
+            }
+            interface CanvasRef {
+                ready?: boolean;
+                tokens?: CanvasTokens;
+            }
+            interface GameRef {
+                actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined };
+            }
+            interface FoundryGlobal {
+                Hooks?: HooksApi;
+                Actor: ActorCls;
+                Scene: SceneCls;
+                canvas?: CanvasRef;
+                game?: GameRef;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const g = globalThis as unknown as FoundryGlobal;
             const hooksApi = g.Hooks;
             const ActorCls = g.Actor;
             const SceneCls = g.Scene;
@@ -88,7 +137,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             // BasicActionManager.initializeHooks (assignDamage) and
             // TargetedActionManager.initializeHooks (Attack) install
             // their buttons.
-            const controls: Record<string, { tools: Record<string, any> }> = {
+            const controls: Record<string, ControlsEntry> = {
                 tokens: { tools: {} },
                 measure: { tools: {} },
                 tiles: { tools: {} },
@@ -127,13 +176,15 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                     let dispatchedCount = 0;
                     let lastError: string | null = null;
                     for (const [name, tool] of toolEntries) {
-                        const handler = typeof tool?.onChange === 'function' ? tool.onChange : typeof tool?.onClick === 'function' ? tool.onClick : null;
+                        const handler: (() => void | PromiseLike<void>) | null =
+                            typeof tool.onChange === 'function' ? tool.onChange : typeof tool.onClick === 'function' ? tool.onClick : null;
                         if (handler === null) continue;
                         try {
-                            const handlerResult = handler();
+                            const handlerResult: void | PromiseLike<void> = handler();
                             if (handlerResult != null && typeof handlerResult.then === 'function') {
-                                await handlerResult.catch((err: unknown) => {
-                                    lastError = `tool ${name} threw async: ${err instanceof Error ? err.message : String(err)}`;
+                                // eslint-disable-next-line no-await-in-loop -- handlers are intentionally exercised one at a time so an early failure attributes to the right tool
+                                await Promise.resolve(handlerResult).catch((err: Error) => {
+                                    lastError = `tool ${name} threw async: ${err.message}`;
                                 });
                             }
                             dispatchedCount++;
@@ -174,7 +225,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             // --- flows 3, 4, 5 require a real scene + token + (for hud
             //      bind) canvas. Probe canvas readiness and skip gracefully
             //      when it isn't available.
-            const canvasReady = cvs?.ready === true && cvs?.tokens != null;
+            const canvasReady = cvs?.ready === true && cvs.tokens != null;
 
             // We attempt the renderTokenHUD probe regardless of canvas
             // readiness because the hook can be fired directly with a
@@ -187,20 +238,20 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             // hook handler injects the `.wh40k-token-movement` container
             // into the supplied HTML root.
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                let timer: ReturnType<typeof setTimeout> | undefined;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timer !== undefined) clearTimeout(timer);
                 }
             };
 
             // Create a transient actor whose system.movement has entries
             // so the onTokenHUDRender loop has something to iterate.
-            let actor: any = null;
+            let actor: ActorRef | null = null;
             try {
                 actor = await withTimeout(
                     ActorCls.create({
@@ -217,9 +268,10 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
 
             const cleanups: Array<() => Promise<void>> = [];
             if (actor?.id != null) {
+                const actorId = actor.id;
                 cleanups.push(async () => {
                     try {
-                        await gme?.actors?.get?.(actor.id)?.delete?.();
+                        await gme?.actors?.get?.(actorId)?.delete?.();
                     } catch {
                         /* ignore */
                     }
@@ -245,7 +297,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                         id: 'fake-token-id',
                         actor,
                         getFlag: (_scope: string, _key: string) => null,
-                        update: async (_data: unknown) => {
+                        update: async (_data: object) => {
                             await Promise.resolve();
                         },
                     };
@@ -309,16 +361,17 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             // When flow 4 fired successfully, count flow 3 as fired too —
             // they exercise the same source-coverage targets.
             if (canvasReady && actor?.id != null) {
-                let scene: any = null;
+                let scene: SceneRef | null = null;
                 try {
                     scene = await withTimeout(SceneCls.create({ name: 'scene-hud-spec' }), 5_000, 'Scene.create');
                 } catch (err) {
                     notes['token-hud-renders'] = `Scene.create threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
                 if (scene?.id != null) {
+                    const sceneRef = scene;
                     cleanups.push(async () => {
                         try {
-                            await scene.delete?.();
+                            await sceneRef.delete?.();
                         } catch {
                             /* ignore */
                         }
@@ -330,15 +383,17 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                         } catch {
                             /* best-effort */
                         }
-                        const protoData =
+                        const protoData: { name?: string; actorId?: string } =
                             typeof actor.prototypeToken?.toObject === 'function' ? actor.prototypeToken.toObject() : { name: actor.name, actorId: actor.id };
                         protoData.actorId = actor.id;
                         const created = await withTimeout(scene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
-                        const tokenDoc = (Array.isArray(created) ? created[0] : null) as { object?: unknown; id?: string } | null;
-                        const placedToken = tokenDoc?.object ?? cvs?.tokens?.get?.(tokenDoc?.id);
-                        if (placedToken != null && cvs?.tokens?.hud?.bind != null) {
+                        const tokenDoc = Array.isArray(created) ? created[0] : null;
+                        const canvasTokens = cvs.tokens;
+                        const placedToken = tokenDoc?.object ?? (tokenDoc?.id != null ? canvasTokens?.get?.(tokenDoc.id) : undefined);
+                        const bind = canvasTokens?.hud?.bind;
+                        if (placedToken != null && bind != null) {
                             try {
-                                cvs.tokens.hud.bind(placedToken);
+                                bind(placedToken);
                                 fired['token-hud-renders'] = true;
                             } catch (err) {
                                 notes['token-hud-renders'] = `hud.bind threw: ${err instanceof Error ? err.message : String(err)}`;
@@ -368,6 +423,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             }
 
             for (const fn of cleanups) {
+                // eslint-disable-next-line no-await-in-loop -- best-effort serial cleanup; parallel deletes race on Foundry's collection writes
                 await fn();
             }
 
@@ -376,7 +432,6 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                 flowNotes: notes,
                 canvasReady,
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, SCENE_HUD_FLOWS);
 
         return {

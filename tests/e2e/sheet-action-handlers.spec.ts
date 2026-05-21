@@ -66,7 +66,24 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            type SyntheticSystem = Record<string, boolean | number | string>;
+            interface SyntheticItem {
+                id: string;
+                type: string;
+                name: string;
+                system: SyntheticSystem;
+            }
+            interface ActionEntry {
+                action?: string;
+                label?: string;
+            }
+            interface QuickActionsBarCls {
+                getActionsForItem: (item: SyntheticItem) => ActionEntry[];
+            }
+            interface QuickActionsBarModule {
+                default?: QuickActionsBarCls;
+                QuickActionsBar?: QuickActionsBarCls;
+            }
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -75,14 +92,19 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
 
             // ---------- QuickActionsBar.getActionsForItem ----------
             try {
-                const mod = await import(`${base}/components/quick-actions-bar.js`);
+                const mod = (await import(`${base}/components/quick-actions-bar.js`)) as QuickActionsBarModule;
                 const QAB = mod.default ?? mod.QuickActionsBar;
                 if (typeof QAB?.getActionsForItem !== 'function') {
                     for (const k of ['quick-actions-weapon', 'quick-actions-armour', 'quick-actions-talent', 'quick-actions-gear'] as const) {
                         record(k, false, 'getActionsForItem missing');
                     }
                 } else {
-                    const synthetic = (type: string, system: Record<string, unknown>): any => ({ id: `synth-${type}`, type, name: `synth ${type}`, system });
+                    const synthetic = (type: string, system: SyntheticSystem): SyntheticItem => ({
+                        id: `synth-${type}`,
+                        type,
+                        name: `synth ${type}`,
+                        system,
+                    });
                     try {
                         const acts = QAB.getActionsForItem(synthetic('weapon', {}));
                         // Weapon surfaces attack + damage + reload (+ optional
@@ -90,8 +112,8 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         // attack-dispatch action is present.
                         record(
                             'quick-actions-weapon',
-                            Array.isArray(acts) && acts.length >= 3 && acts.some((a: any) => a.action === 'itemRoll'),
-                            `count=${acts?.length}`,
+                            Array.isArray(acts) && acts.length >= 3 && acts.some((a: ActionEntry) => a.action === 'itemRoll'),
+                            `count=${String(acts.length)}`,
                         );
                     } catch (err) {
                         record('quick-actions-weapon', false, err instanceof Error ? err.message : String(err));
@@ -101,7 +123,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         const unequipped = QAB.getActionsForItem(synthetic('armour', { equipped: false }));
                         // Equipped armour reports the "Unequip" label; unequipped reports "Equip".
                         const ok = equipped[0]?.label === 'Unequip' && unequipped[0]?.label === 'Equip';
-                        record('quick-actions-armour', ok, `equipped=${equipped[0]?.label} unequipped=${unequipped[0]?.label}`);
+                        record('quick-actions-armour', ok, `equipped=${String(equipped[0]?.label)} unequipped=${String(unequipped[0]?.label)}`);
                     } catch (err) {
                         record('quick-actions-armour', false, err instanceof Error ? err.message : String(err));
                     }
@@ -113,17 +135,17 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         // actions (inspect/delete on owned items). Just confirm
                         // the rollable branch's `itemRoll` action exists and
                         // the non-rollable branch lacks it.
-                        const hasRollAction = Boolean(rollable.some((a: any) => a.action === 'itemRoll'));
-                        const notRollAction = Boolean(notRollable.some((a: any) => a.action === 'itemRoll'));
+                        const hasRollAction = rollable.some((a: ActionEntry) => a.action === 'itemRoll');
+                        const notRollAction = notRollable.some((a: ActionEntry) => a.action === 'itemRoll');
                         const ok = hasRollAction && !notRollAction;
-                        record('quick-actions-talent', ok, `rollable=${rollable.length} notRollable=${notRollable.length}`);
+                        record('quick-actions-talent', ok, `rollable=${String(rollable.length)} notRollable=${String(notRollable.length)}`);
                     } catch (err) {
                         record('quick-actions-talent', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         const consumable = QAB.getActionsForItem(synthetic('gear', { consumable: true }));
-                        const ok = consumable.length >= 1 && consumable.some((a: any) => a.action === 'useItem');
-                        record('quick-actions-gear', ok, `count=${consumable.length}`);
+                        const ok = consumable.length >= 1 && consumable.some((a: ActionEntry) => a.action === 'useItem');
+                        record('quick-actions-gear', ok, `count=${String(consumable.length)}`);
                     } catch (err) {
                         record('quick-actions-gear', false, err instanceof Error ? err.message : String(err));
                     }
@@ -136,18 +158,40 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
 
             // ---------- stat-adjustment-actions ----------
             try {
-                const mod = await import(`${base}/api/stat-adjustment-actions.js`);
+                type FieldValue = number | string | boolean | object;
+                type ActorSystem = Record<string, FieldValue>;
+                interface HostActor {
+                    id: string;
+                    name: string;
+                    system: ActorSystem;
+                    update: () => Promise<void>;
+                }
+                type ThrottledFn = (...a: FieldValue[]) => FieldValue | Promise<FieldValue>;
+                interface HostStub {
+                    actor: HostActor;
+                    last: { field?: string; value?: FieldValue };
+                    _throttle: (key: string, wait: number, fn: ThrottledFn, ctx: HostStub, args: FieldValue[]) => Promise<FieldValue>;
+                    _notify: () => void;
+                    _updateSystemField: (field: string, value: FieldValue) => Promise<void>;
+                }
+                type ActionFn = (this: HostStub, event: MouseEvent, target: HTMLElement) => Promise<void> | void;
+                interface StatAdjustmentModule {
+                    adjustStat: ActionFn;
+                    increment: ActionFn;
+                    decrement: ActionFn;
+                    setCriticalPip: ActionFn;
+                    setFateStar: ActionFn;
+                    setFatigueBolt: ActionFn;
+                    setCorruption: ActionFn;
+                    setInsanity: ActionFn;
+                    restoreFate: ActionFn;
+                    spendFate: ActionFn;
+                }
+                const mod = (await import(`${base}/api/stat-adjustment-actions.js`)) as StatAdjustmentModule;
 
                 // Build a Host stub that captures calls. Each call records the
                 // last (field, value) pair so we can assert downstream.
-                interface HostStub {
-                    actor: any;
-                    last: { field?: string; value?: unknown };
-                    _throttle: (key: string, wait: number, fn: any, ctx: any, args: any[]) => Promise<unknown>;
-                    _notify: () => void;
-                    _updateSystemField: (field: string, value: unknown) => Promise<void>;
-                }
-                const buildHost = (system: Record<string, unknown>): HostStub => ({
+                const buildHost = (system: ActorSystem): HostStub => ({
                     actor: {
                         id: 'probe-actor',
                         name: 'Probe',
@@ -156,7 +200,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     },
                     last: {},
                     _throttle: async function (_k, _w, fn, ctx, args) {
-                        return Promise.resolve((fn as (...a: unknown[]) => unknown).apply(ctx, args));
+                        return Promise.resolve(fn.apply(ctx, args));
                     },
                     _notify: () => undefined,
                     _updateSystemField: async function (this: HostStub, field, value) {
@@ -294,7 +338,6 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

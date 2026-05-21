@@ -31,7 +31,6 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-distinction-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -99,7 +98,17 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                     },
                 ];
 
-                function buildCtx(earnedIds: string[], borneMarkIds: string[]): unknown {
+                interface BuiltCtx {
+                    distinctionPanel: {
+                        distinctions: { id: string; name: string; renownReward: number; renownRequired: string; earned: boolean; rankTooLow: boolean }[];
+                        marks: { id: string; name: string; description: string; borne: boolean }[];
+                        merged: {
+                            characteristicDelta: { key: string; value: number; displayValue: string }[];
+                            traits: string[];
+                        };
+                    };
+                }
+                function buildCtx(earnedIds: string[], borneMarkIds: string[]): BuiltCtx {
                     const earned = new Set(earnedIds);
                     const borne = new Set(borneMarkIds);
                     const distinctions = CATALOGUE.map((entry) => ({
@@ -154,11 +163,14 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                 }
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HandlebarsRuntime = (globalThis as any).Handlebars as {
-                        compile: (s: string) => (ctx: unknown) => string;
+                    /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fetch`/`Handlebars` globals are injected by the licensed app; Handlebars compile ctx is opaque */
+                    const g = globalThis as unknown as {
+                        fetch: (u: string) => Promise<Response>;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars compile context is opaque template data
+                        Handlebars: { compile: (s: string) => (ctx: unknown) => string };
                     };
+                    const src = await (await g.fetch(templateUrl)).text();
+                    const HandlebarsRuntime = g.Handlebars;
                     if (typeof HandlebarsRuntime.compile !== 'function') {
                         return {
                             rendered,
@@ -217,7 +229,8 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                         toggleAfterPressed = dutyBtnAfter?.getAttribute('aria-pressed') ?? '';
                     }
 
-                    (globalThis as any).__dwDistinctionPanelHost = host;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing a DOM host on globalThis for cross-evaluate cleanup; no shipped types
+                    (globalThis as unknown as { __dwDistinctionPanelHost: HTMLElement | undefined }).__dwDistinctionPanelHost = host;
                 } catch (err) {
                     error = String((err as Error).message);
                 }
@@ -234,21 +247,19 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                     toggleAfterPressed,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'dw-distinction-panel');
 
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__dwDistinctionPanelHost as HTMLElement | undefined;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading back DOM host stashed on globalThis from the prior evaluate; no shipped types
+                const g = globalThis as unknown as { __dwDistinctionPanelHost: HTMLElement | undefined };
                 try {
-                    host?.remove();
+                    g.__dwDistinctionPanelHost?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__dwDistinctionPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__dwDistinctionPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
