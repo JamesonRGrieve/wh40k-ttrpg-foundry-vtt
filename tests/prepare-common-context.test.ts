@@ -25,15 +25,15 @@ afterEach(() => {
 
 describe('_prepareCommonContext (BaseActorSheet helper)', () => {
     it('writes isGM and dh into the context', () => {
-        const helper = (instance: { _prepareCommonContext: (ctx: Record<string, unknown>) => void }, ctx: Record<string, unknown>) =>
-            instance._prepareCommonContext(ctx);
+        const helper = (instance: { _prepareCommonContext: (sheetCtx: Record<string, unknown>) => void }, sheetCtx: Record<string, unknown>): void =>
+            instance._prepareCommonContext(sheetCtx);
 
         // Reproduce the helper inline to avoid pulling in the full BaseActorSheet
         // mixin chain. The shape is what the production helper uses verbatim.
         const fakeSheet = {
-            _prepareCommonContext(ctx: Record<string, unknown>) {
-                ctx.isGM = (globalThis as Record<string, any>).game?.user?.isGM ?? false;
-                ctx.dh = (globalThis as Record<string, any>).CONFIG?.wh40k ?? {};
+            _prepareCommonContext(sheetCtx: Record<string, unknown>): void {
+                sheetCtx.isGM = (globalThis as Record<string, any>).game?.user?.isGM ?? false;
+                sheetCtx.dh = (globalThis as Record<string, any>).CONFIG?.wh40k ?? {};
             },
         };
 
@@ -48,9 +48,9 @@ describe('_prepareCommonContext (BaseActorSheet helper)', () => {
         (globalThis as Record<string, unknown>).CONFIG = {};
 
         const fakeSheet = {
-            _prepareCommonContext(ctx: Record<string, unknown>) {
-                ctx.isGM = (globalThis as Record<string, any>).game?.user?.isGM ?? false;
-                ctx.dh = (globalThis as Record<string, any>).CONFIG?.wh40k ?? {};
+            _prepareCommonContext(sheetCtx: Record<string, unknown>): void {
+                sheetCtx.isGM = (globalThis as Record<string, any>).game?.user?.isGM ?? false;
+                sheetCtx.dh = (globalThis as Record<string, any>).CONFIG?.wh40k ?? {};
             },
         };
 

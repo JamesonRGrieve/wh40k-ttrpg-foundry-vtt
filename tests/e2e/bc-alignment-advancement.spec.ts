@@ -41,8 +41,8 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HandlebarsLib.compile !== 'function') {
                         return {
                             rendered,
                             tallyRows,
@@ -54,7 +54,7 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsLib.compile(src);
                     const html = tpl({
                         alignmentPanel: {
                             current: 'khorne',
@@ -102,7 +102,7 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
                     // it down here would leave the screenshot empty.
                     (globalThis as any).__bcAlignmentPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

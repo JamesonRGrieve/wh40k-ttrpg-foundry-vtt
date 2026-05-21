@@ -44,8 +44,8 @@ test.describe.serial('DwVehicleCritPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HandlebarsGlobal = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HandlebarsGlobal?.compile !== 'function') {
                         return {
                             rendered,
                             hasIntegrityRow,
@@ -59,7 +59,7 @@ test.describe.serial('DwVehicleCritPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsGlobal.compile(src);
                     const html = tpl({
                         vehiclePanel: {
                             integrity: 12,

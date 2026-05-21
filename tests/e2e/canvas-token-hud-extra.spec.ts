@@ -1,6 +1,5 @@
 // Keys MUST match the CANVAS_EXTRA_FLOWS constant in scripts/e2e-coverage.mjs (registered by the orchestrator).
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -82,28 +81,28 @@ interface ProbeResult {
 
 async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
+    const listener = (pageErr: Error): void => {
+        pageErrors.push(pageErr.message);
     };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only and the canvas/PIXI surface has no shipped typing */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const Scene = g.Scene;
-            const Hooks = g.Hooks;
-            const CONFIG = g.CONFIG;
-            const game = g.game;
+            const ActorCls = g.Actor;
+            const SceneCls = g.Scene;
+            const HooksMgr = g.Hooks;
+            const ConfigObj = g.CONFIG;
+            const gameMgr = g.game;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create) {
+            if (!ActorCls?.create) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'ruler-instantiates-with-token': 'Actor.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'ruler-instantiates-with-token': 'ActorCls.create unavailable' } as Record<string, string>,
                 };
             }
 
@@ -147,25 +146,25 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             let actor: any = null;
             try {
                 actor = (await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'canvas-token-hud-extra-actor',
                         type: 'bc-character',
                         system: { gameSystem: 'bc', movement: { half: 3, full: 6, charge: 9, run: 18 } },
                     }),
                     5_000,
-                    'Actor.create',
+                    'ActorCls.create',
                 )) as any;
                 if (actor?.id) {
                     cleanups.push(async () => {
                         try {
-                            await game?.actors?.get?.(actor.id)?.delete?.();
+                            await gameMgr?.actors?.get?.(actor.id)?.delete?.();
                         } catch {
                             /* ignore */
                         }
                     });
                 }
             } catch (err) {
-                for (const f of flows) notes[f] = `Actor.create threw: ${String((err as Error)?.message ?? err)}`;
+                for (const f of flows) notes[f] = `ActorCls.create threw: ${String((err as Error).message)}`;
             }
 
             if (!actor?.id) {
@@ -179,18 +178,18 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             let actorNoMovement: any = null;
             try {
                 actorNoMovement = (await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'canvas-token-hud-extra-actor-no-movement',
                         type: 'bc-npc',
                         system: { gameSystem: 'bc' },
                     }),
                     5_000,
-                    'Actor.create (no movement)',
+                    'ActorCls.create (no movement)',
                 )) as any;
                 if (actorNoMovement?.id) {
                     cleanups.push(async () => {
                         try {
-                            await game?.actors?.get?.(actorNoMovement.id)?.delete?.();
+                            await gameMgr?.actors?.get?.(actorNoMovement.id)?.delete?.();
                         } catch {
                             /* ignore */
                         }
@@ -212,7 +211,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     const mod: any = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(url);
                     TokenRulerWH40K = mod?.default ?? mod?.TokenRulerWH40K ?? null;
                 } catch (err) {
-                    notes['ruler-instantiates-with-token'] = `ruler module import threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['ruler-instantiates-with-token'] = `ruler module import threw: ${String((err as Error).message)}`;
                 }
 
                 // Synthesized token shape the ruler reads from. The class
@@ -222,7 +221,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                 // ruler also reads `this.token._plannedMovement` (Foundry
                 // sets it during a drag) — we set a sentinel object so the
                 // !=null branch passes.
-                const liveActor = game?.actors?.get?.(actor.id);
+                const liveActor = gameMgr?.actors?.get?.(actor.id);
                 const fakeToken = {
                     _plannedMovement: { distance: 1 },
                     actor: liveActor ?? actor,
@@ -230,7 +229,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
 
                 /* ============================================================
                  * Flow 1: ruler-instantiates-with-token
-                 * Either via CONFIG.Token.rulerClass (the production
+                 * Either via ConfigObj.Token.rulerClass (the production
                  * registration path) or directly through the dynamic
                  * import. Success = constructor returns a non-null
                  * instance whose prototype chain reaches the imported
@@ -238,12 +237,12 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 let ruler: any = null;
                 try {
-                    const RulerClassFromConfig = CONFIG?.Token?.rulerClass ?? null;
+                    const RulerClassFromConfig = ConfigObj?.Token?.rulerClass ?? null;
                     const RulerClass = TokenRulerWH40K ?? RulerClassFromConfig;
                     if (typeof RulerClass !== 'function') {
                         notes[
                             'ruler-instantiates-with-token'
-                        ] = `no ruler class — TokenRulerWH40K=${typeof TokenRulerWH40K} CONFIG.Token.rulerClass=${typeof RulerClassFromConfig}`;
+                        ] = `no ruler class — TokenRulerWH40K=${typeof TokenRulerWH40K} ConfigObj.Token.rulerClass=${typeof RulerClassFromConfig}`;
                     } else {
                         try {
                             ruler = new RulerClass(fakeToken);
@@ -256,16 +255,14 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             const fallback = Object.create(RulerClass.prototype) as { token: typeof fakeToken };
                             fallback.token = fakeToken;
                             ruler = fallback;
-                            notes['ruler-instantiates-with-token'] = `direct ctor threw (${String(
-                                (err as Error)?.message ?? err,
-                            )}); using prototype-mounted fallback`;
+                            notes['ruler-instantiates-with-token'] = `direct ctor threw (${String((err as Error).message)}); using prototype-mounted fallback`;
                         }
                         if (ruler !== null) {
                             fired['ruler-instantiates-with-token'] = true;
                         }
                     }
                 } catch (err) {
-                    notes['ruler-instantiates-with-token'] = `ruler instantiation outer threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['ruler-instantiates-with-token'] = `ruler instantiation outer threw: ${String((err as Error).message)}`;
                 }
 
                 // Helper: build a synthetic waypoint shape the speed-based
@@ -297,21 +294,21 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     try {
                         stubSuperReturns(ruler);
                     } catch (err) {
-                        notes['ruler-waypoint-style-budget-green'] = `super stub threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['ruler-waypoint-style-budget-green'] = `super stub threw: ${String((err as Error).message)}`;
                     }
                 }
 
-                // Ensure CONFIG.wh40k.tokenRulerColors is populated — it's
+                // Ensure ConfigObj.wh40k.tokenRulerColors is populated — it's
                 // seeded by config.ts at init, but a fresh Chromium tab can
                 // race. Default to a deterministic palette if missing.
-                if (CONFIG?.wh40k !== undefined) {
-                    CONFIG.wh40k.tokenRulerColors = CONFIG.wh40k.tokenRulerColors ?? {
+                if (ConfigObj?.wh40k !== undefined) {
+                    ConfigObj.wh40k.tokenRulerColors = ConfigObj.wh40k.tokenRulerColors ?? {
                         normal: 0x33bc4e,
                         double: 0xf1d836,
                         triple: 0xe72124,
                     };
                 }
-                const colors = CONFIG?.wh40k?.tokenRulerColors ?? { normal: 0x33bc4e, double: 0xf1d836, triple: 0xe72124 };
+                const colors = ConfigObj?.wh40k?.tokenRulerColors ?? { normal: 0x33bc4e, double: 0xf1d836, triple: 0xe72124 };
 
                 /* ============================================================
                  * Flow 2: ruler-waypoint-style-budget-green
@@ -328,7 +325,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['ruler-waypoint-style-budget-green'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
                         }
                     } catch (err) {
-                        notes['ruler-waypoint-style-budget-green'] = `_getWaypointStyle threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['ruler-waypoint-style-budget-green'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                     }
                 }
 
@@ -346,7 +343,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['ruler-waypoint-style-double-yellow'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
                         }
                     } catch (err) {
-                        notes['ruler-waypoint-style-double-yellow'] = `_getWaypointStyle threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['ruler-waypoint-style-double-yellow'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                     }
                 }
 
@@ -364,7 +361,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['ruler-waypoint-style-triple-red'] = `expected triple=${String(colors.triple)}, got ${String(style?.color)}`;
                         }
                     } catch (err) {
-                        notes['ruler-waypoint-style-triple-red'] = `_getWaypointStyle threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['ruler-waypoint-style-triple-red'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                     }
                 }
 
@@ -382,7 +379,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['ruler-segment-style-respects-speed'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
                         }
                     } catch (err) {
-                        notes['ruler-segment-style-respects-speed'] = `_getSegmentStyle threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['ruler-segment-style-respects-speed'] = `_getSegmentStyle threw: ${String((err as Error).message)}`;
                     }
                 }
 
@@ -400,7 +397,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['ruler-grid-highlight-style'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
                         }
                     } catch (err) {
-                        notes['ruler-grid-highlight-style'] = `_getGridHighlightStyle threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['ruler-grid-highlight-style'] = `_getGridHighlightStyle threw: ${String((err as Error).message)}`;
                     }
                 }
 
@@ -409,12 +406,12 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                  * Waypoint whose action is registered as `teleport: true`
                  * short-circuits the speed-based helper and returns the
                  * base style untouched. Inject a synthetic teleport action
-                 * into CONFIG.Token.movement.actions for the assertion.
+                 * into ConfigObj.Token.movement.actions for the assertion.
                  * ============================================================ */
                 if (ruler !== null) {
                     try {
-                        if (CONFIG?.Token?.movement?.actions !== undefined) {
-                            CONFIG.Token.movement.actions['teleport-probe'] = CONFIG.Token.movement.actions['teleport-probe'] ?? { teleport: true };
+                        if (ConfigObj?.Token?.movement?.actions !== undefined) {
+                            ConfigObj.Token.movement.actions['teleport-probe'] = ConfigObj.Token.movement.actions['teleport-probe'] ?? { teleport: true };
                         }
                         const style = ruler._getWaypointStyle(makeWaypoint('teleport-probe', 100));
                         if (style?.color === baseColor) {
@@ -423,7 +420,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['ruler-teleport-action-skips-color'] = `expected base color preserved (${String(baseColor)}), got ${String(style?.color)}`;
                         }
                     } catch (err) {
-                        notes['ruler-teleport-action-skips-color'] = `teleport probe threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['ruler-teleport-action-skips-color'] = `teleport probe threw: ${String((err as Error).message)}`;
                     }
                 }
 
@@ -447,7 +444,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['ruler-no-movement-returns-default'] = `expected base color preserved (${String(baseColor)}), got ${String(style?.color)}`;
                         }
                     } catch (err) {
-                        notes['ruler-no-movement-returns-default'] = `no-movement probe threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['ruler-no-movement-returns-default'] = `no-movement probe threw: ${String((err as Error).message)}`;
                     }
                 }
 
@@ -466,7 +463,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     statusEffects.className = 'status-effects';
                     htmlRoot.appendChild(statusEffects);
 
-                    const liveActor2 = game?.actors?.get?.(actor.id) ?? actor;
+                    const liveActor2 = gameMgr?.actors?.get?.(actor.id) ?? actor;
                     const fakeTokenDoc = {
                         id: 'fake-token-active',
                         actor: liveActor2,
@@ -474,8 +471,10 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         update: async (_data: unknown) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
-                    Hooks.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise((r) => setTimeout(r, 30));
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
                     const activeBtns = htmlRoot.querySelectorAll('.wh40k-token-movement__btn.active');
                     if (activeBtns.length === 1) {
                         const activeBtn = activeBtns[0] as HTMLElement;
@@ -490,7 +489,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         notes['token-hud-active-button-class'] = `expected exactly 1 active button, got ${activeBtns.length}`;
                     }
                 } catch (err) {
-                    notes['token-hud-active-button-class'] = `active-button probe threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['token-hud-active-button-class'] = `active-button probe threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -505,7 +504,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         const statusEffects = document.createElement('div');
                         statusEffects.className = 'status-effects';
                         htmlRoot.appendChild(statusEffects);
-                        const liveActorNoMove = game?.actors?.get?.(actorNoMovement.id) ?? actorNoMovement;
+                        const liveActorNoMove = gameMgr?.actors?.get?.(actorNoMovement.id) ?? actorNoMovement;
                         const fakeTokenDoc = {
                             id: 'fake-token-no-move',
                             actor: liveActorNoMove,
@@ -513,8 +512,10 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             update: async (_data: unknown) => undefined,
                         };
                         const fakeHud = { object: { document: fakeTokenDoc } };
-                        Hooks.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                        await new Promise((r) => setTimeout(r, 30));
+                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 30);
+                        });
                         const container = htmlRoot.querySelector('.wh40k-token-movement');
                         if (container === null) {
                             fired['token-hud-no-movement-skips-injection'] = true;
@@ -522,7 +523,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             notes['token-hud-no-movement-skips-injection'] = `expected no container, found one with ${container.children.length} children`;
                         }
                     } catch (err) {
-                        notes['token-hud-no-movement-skips-injection'] = `no-movement probe threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['token-hud-no-movement-skips-injection'] = `no-movement probe threw: ${String((err as Error).message)}`;
                     }
                 } else {
                     notes['token-hud-no-movement-skips-injection'] = 'movement-less actor not created; cannot probe';
@@ -531,7 +532,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                 /* ============================================================
                  * Flow 11: token-hud-button-localizes-label
                  * Every injected button's `title` attribute is built via
-                 * `game.i18n.localize(config.label) + ': <speed>m'`. With
+                 * `gameMgr.i18n.localize(config.label) + ': <speed>m'`. With
                  * the registered movement type config, the title should
                  * contain ':' and a numeric speed value matching the
                  * actor's movement map.
@@ -541,7 +542,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     const statusEffects = document.createElement('div');
                     statusEffects.className = 'status-effects';
                     htmlRoot.appendChild(statusEffects);
-                    const liveActor3 = game?.actors?.get?.(actor.id) ?? actor;
+                    const liveActor3 = gameMgr?.actors?.get?.(actor.id) ?? actor;
                     const fakeTokenDoc = {
                         id: 'fake-token-localize',
                         actor: liveActor3,
@@ -549,8 +550,10 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         update: async (_data: unknown) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
-                    Hooks.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise((r) => setTimeout(r, 30));
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
                     const halfBtn = htmlRoot.querySelector('.wh40k-token-movement__btn[data-movement-type="half"]') as HTMLElement | null;
                     if (halfBtn !== null) {
                         const title = halfBtn.title ?? '';
@@ -570,7 +573,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         } buttons`;
                     }
                 } catch (err) {
-                    notes['token-hud-button-localizes-label'] = `localize probe threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['token-hud-button-localizes-label'] = `localize probe threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -586,7 +589,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     const statusEffects = document.createElement('div');
                     statusEffects.className = 'status-effects';
                     htmlRoot.appendChild(statusEffects);
-                    const liveActor4 = game?.actors?.get?.(actor.id) ?? actor;
+                    const liveActor4 = gameMgr?.actors?.get?.(actor.id) ?? actor;
                     const recordedUpdates: any[] = [];
                     const fakeTokenDoc = {
                         id: 'fake-token-update',
@@ -597,12 +600,16 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         },
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
-                    Hooks.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise((r) => setTimeout(r, 30));
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
                     const chargeBtn = htmlRoot.querySelector('.wh40k-token-movement__btn[data-movement-type="charge"]') as HTMLElement | null;
                     if (chargeBtn !== null) {
                         chargeBtn.click();
-                        await new Promise((r) => setTimeout(r, 50));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 50);
+                        });
                         const lastUpdate = recordedUpdates[recordedUpdates.length - 1];
                         const flagsPayload = lastUpdate?.flags?.['wh40k-rpg'];
                         if (flagsPayload?.movementAction === 'charge') {
@@ -616,7 +623,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         notes['token-hud-set-movement-action-flag-update'] = 'charge button not present in injected HUD';
                     }
                 } catch (err) {
-                    notes['token-hud-set-movement-action-flag-update'] = `flag-update probe threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['token-hud-set-movement-action-flag-update'] = `flag-update probe threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -633,7 +640,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     const statusEffects = document.createElement('div');
                     statusEffects.className = 'status-effects';
                     htmlRoot.appendChild(statusEffects);
-                    const liveActor5 = game?.actors?.get?.(actor.id) ?? actor;
+                    const liveActor5 = gameMgr?.actors?.get?.(actor.id) ?? actor;
                     const fakeTokenDoc = {
                         id: 'fake-token-hover',
                         actor: liveActor5,
@@ -641,16 +648,22 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         update: async (_data: unknown) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
-                    Hooks.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise((r) => setTimeout(r, 30));
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
                     const runBtn = htmlRoot.querySelector('.wh40k-token-movement__btn[data-movement-type="run"]') as HTMLElement | null;
                     if (runBtn !== null) {
                         const baseBg = runBtn.style.background;
                         runBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-                        await new Promise((r) => setTimeout(r, 10));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 10);
+                        });
                         const hoverBg = runBtn.style.background;
                         runBtn.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
-                        await new Promise((r) => setTimeout(r, 10));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 10);
+                        });
                         const leaveBg = runBtn.style.background;
                         if (hoverBg !== baseBg && leaveBg === baseBg) {
                             fired['token-hud-button-mouseenter-mouseleave-styles'] = true;
@@ -663,15 +676,15 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         notes['token-hud-button-mouseenter-mouseleave-styles'] = 'run button not present in injected HUD';
                     }
                 } catch (err) {
-                    notes['token-hud-button-mouseenter-mouseleave-styles'] = `hover probe threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['token-hud-button-mouseenter-mouseleave-styles'] = `hover probe threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
                  * Flow 14: register-movement-actions-config-population
                  * Dynamic-import the token document module and call
                  * `TokenDocumentWH40K.registerMovementActions()`. Assert
-                 * every movement type key from CONFIG.wh40k.movementTypes
-                 * landed in CONFIG.Token.movement.actions with the
+                 * every movement type key from ConfigObj.wh40k.movementTypes
+                 * landed in ConfigObj.Token.movement.actions with the
                  * expected static shape (`measure: true`, `walls: 'move'`).
                  * The function is idempotent — it uses `??=` — so calling
                  * it twice is fine.
@@ -686,8 +699,8 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         )}`;
                     } else {
                         TokenDocumentWH40K.registerMovementActions();
-                        const wh40kTypes = Object.keys((CONFIG?.wh40k?.movementTypes ?? {}) as Record<string, unknown>);
-                        const registered = (CONFIG?.Token?.movement?.actions ?? {}) as Record<string, any>;
+                        const wh40kTypes = Object.keys((ConfigObj?.wh40k?.movementTypes ?? {}) as Record<string, unknown>);
+                        const registered = (ConfigObj?.Token?.movement?.actions ?? {}) as Record<string, any>;
                         const missing = wh40kTypes.filter((k) => registered[k] === undefined);
                         if (wh40kTypes.length > 0 && missing.length === 0) {
                             // Sample one entry to confirm the populated
@@ -708,7 +721,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['register-movement-actions-config-population'] = `register probe threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['register-movement-actions-config-population'] = `register probe threw: ${String((err as Error).message)}`;
                 }
             } finally {
                 // Best-effort cleanup of everything we created.

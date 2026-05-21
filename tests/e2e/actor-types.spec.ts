@@ -48,7 +48,7 @@ async function probeActorType(page: Page, type: string, gameSystem: string): Pro
                         system: { gameSystem: actorGameSystem },
                     });
                 } catch (err) {
-                    return { docId: null, sheetRendered: false, createError: String((err as Error)?.message ?? err) };
+                    return { docId: null, sheetRendered: false, createError: String(err instanceof Error ? err.message : String(err)) };
                 }
                 if (!actor) return { docId: null, sheetRendered: false, createError: 'Actor.create returned null (silent failure)' };
                 let sheetRendered = false;
@@ -124,7 +124,7 @@ test.describe.serial('actor types × systems (Tier B)', () => {
                     type,
                     docId: null,
                     sheetRendered: false,
-                    pageErrors: [String((err as Error)?.message ?? err)],
+                    pageErrors: [String(err instanceof Error ? err.message : String(err))],
                 }));
                 if (probe.docId === null) {
                     const reason = probe.pageErrors[0] ?? 'Actor.create returned null';

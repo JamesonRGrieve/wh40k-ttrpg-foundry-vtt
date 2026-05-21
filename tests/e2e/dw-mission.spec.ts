@@ -47,8 +47,8 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HandlebarsLib?.compile !== 'function') {
                         return {
                             rendered,
                             missionActiveAttr,
@@ -65,7 +65,7 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsLib.compile(src);
                     const html = tpl({
                         missionPanel: {
                             hasMission: true,

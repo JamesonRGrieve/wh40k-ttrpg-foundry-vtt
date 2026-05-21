@@ -42,8 +42,8 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HandlebarsLib?.compile !== 'function') {
                         return {
                             notAscendedRendered,
                             ascendedRendered,
@@ -56,7 +56,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsLib.compile(src);
 
                     // ---- Not-ascended view: thresholds met → button enabled ----
                     const notAscendedHtml = tpl({

@@ -26,8 +26,8 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) {
+        const ActorCls = g.Actor;
+        if (ActorCls?.create == null) {
             return {
                 setupOk: false,
                 hasSummaryPanel: false,
@@ -41,7 +41,7 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'ship-mod-probe',
                 type: 'rt-starship',
                 system: {
@@ -98,10 +98,10 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
                 detectionTotal: 0,
                 armourTotal: 0,
                 manoeuvrabilityTotal: 0,
-                error: String((err as Error)?.message ?? err),
+                error: err instanceof Error ? err.message : String(err),
             };
         }
-        if (!actor) {
+        if (actor == null) {
             return {
                 setupOk: false,
                 hasSummaryPanel: false,
@@ -121,23 +121,27 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
         }
 
         await actor.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 400));
+        await new Promise<void>((r) => {
+            setTimeout(r, 400);
+        });
 
         try {
             actor.sheet?.changeTab?.('components', 'primary');
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
         } catch {
             /* fall back to whatever tab is open */
         }
 
         const root = actor.sheet?.element;
         const panel = root?.querySelector?.('.wh40k-ship-build-summary-panel');
-        const rowCount = panel ? panel.querySelectorAll('.wh40k-ship-build-summary__row').length : 0;
+        const rowCount = panel != null ? panel.querySelectorAll('.wh40k-ship-build-summary__row').length : 0;
 
         const applied = actor.system?.appliedModifiers ?? {};
-        const detectionTotal = applied?.detection?.total ?? 0;
-        const armourTotal = applied?.armour?.total ?? 0;
-        const manoeuvrabilityTotal = applied?.manoeuvrability?.total ?? 0;
+        const detectionTotal = applied.detection?.total ?? 0;
+        const armourTotal = applied.armour?.total ?? 0;
+        const manoeuvrabilityTotal = applied.manoeuvrability?.total ?? 0;
 
         // Stash for post-snap cleanup; intentionally not deleted yet.
         g.__ship196ProbeActor = actor;

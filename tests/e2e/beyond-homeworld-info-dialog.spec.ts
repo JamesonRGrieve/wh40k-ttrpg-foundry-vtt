@@ -55,9 +55,11 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                     const inst = new Cls({});
                     try {
                         await inst.render({ force: true });
-                        await new Promise((r) => setTimeout(r, 80));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 80);
+                        });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = err instanceof Error ? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -75,7 +77,7 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                         /* ignore */
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

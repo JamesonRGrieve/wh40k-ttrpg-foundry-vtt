@@ -296,7 +296,9 @@ function groupFlowsBySheet(flows: readonly string[]): Record<string, string[]> {
 
 async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (pageErr: Error): void => {
+        pageErrors.push(pageErr.message);
+    };
     page.on('pageerror', listener);
     try {
         const groupedFlows = groupFlowsBySheet(SHEET_FORM_SUBMIT_EXTRA_FLOWS);
@@ -418,7 +420,9 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                             // Yield a tick so V14's backend has committed the
                             // parent create before the embedded child write
                             // (the same race weapon-attack.spec.ts works around).
-                            await new Promise((r) => setTimeout(r, 250));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 250);
+                            });
 
                             const live = game?.actors?.get?.(actor.id) ?? actor;
                             const created = (await withTimeout(
@@ -456,12 +460,14 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
 
                         try {
                             await withTimeout(sheet.render?.(true), 5_000, `${slug} sheet.render`);
-                        } catch (err) {
-                            for (const p of paths) notes[`${slug}::${p}`] = `sheet.render threw: ${String((err as Error)?.message ?? err)}`;
+                        } catch (renderErr) {
+                            for (const p of paths) notes[`${slug}::${p}`] = `sheet.render threw: ${String((renderErr as Error).message)}`;
                             return;
                         }
                         // Let PARTS settle into the DOM before we probe.
-                        await new Promise((r) => setTimeout(r, 100));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 100);
+                        });
 
                         // Per field — set the new value, submit, settle, re-read.
                         for (const path of paths) {
@@ -478,14 +484,16 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 }
                                 try {
                                     await withTimeout(sheet.submit({ updateData, preventClose: true }), 5_000, `${slug} sheet.submit ${path}`);
-                                } catch (err) {
-                                    notes[key] = `submit threw: ${String((err as Error)?.message ?? err)}`;
+                                } catch (submitErr) {
+                                    notes[key] = `submit threw: ${String((submitErr as Error).message)}`;
                                     continue;
                                 }
                                 // Foundry's submit chain resolves before
                                 // the document update commit lands; give it
                                 // a small settle window per weapon-attack.spec.ts.
-                                await new Promise((r) => setTimeout(r, 150));
+                                await new Promise<void>((r) => {
+                                    setTimeout(r, 150);
+                                });
 
                                 const refreshed =
                                     spec.kind === 'actor' ? game?.actors?.get?.(actor.id) ?? doc : game?.actors?.get?.(actor.id)?.items?.get?.(item.id) ?? doc;
@@ -509,8 +517,8 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 } else {
                                     notes[key] = `expected ${String(next)} got ${String(after)} (was ${String(before)})`;
                                 }
-                            } catch (err) {
-                                notes[key] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            } catch (flowErr) {
+                                notes[key] = `flow threw: ${String((flowErr as Error).message)}`;
                             }
                         }
 
@@ -519,8 +527,8 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                         } catch {
                             /* ignore */
                         }
-                    } catch (err) {
-                        const msg = String((err as Error)?.message ?? err);
+                    } catch (outerErr) {
+                        const msg = String((outerErr as Error).message);
                         for (const p of paths) {
                             const key = `${slug}::${p}`;
                             if (!notes[key]) notes[key] = `sheet probe threw: ${msg}`;

@@ -4692,7 +4692,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #deathToAllWhoOpposeMe(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
-            const fateValue = this.actor.system?.fate?.value ?? 0;
+            const fateValue = this.actor.system.fate.value;
             if (fateValue <= 0) {
                 this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoFatePoints'), { duration: 3000 });
                 return;
@@ -4734,7 +4734,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 gameSystem,
             });
             await ChatMessage.create({
-                user: game.user?.id,
+                user: game.user.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content,
             });
@@ -4750,13 +4750,13 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #smiteTheUnholy(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
-            const fateValue = this.actor.system?.fate?.value ?? 0;
+            const fateValue = this.actor.system.fate.value;
             if (fateValue < SMITE_THE_UNHOLY_FATE_COST) {
                 this._notify('warning', game.i18n.localize('WH40K.Crusader.NoFatePoints'), { duration: 3000 });
                 return;
             }
             await this._updateSystemField('system.fate.value', fateValue - SMITE_THE_UNHOLY_FATE_COST);
-            const wp = this.actor.system?.characteristics?.willpower?.total ?? 0;
+            const wp = this.actor.system.characteristics.willpower.total;
             const dos = resolveSmiteTheUnholyDoS(wp);
             const gameSystem = this._resolveGameSystemId() ?? '';
             const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/crusader-chat.hbs', {
@@ -4765,7 +4765,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 gameSystem,
             });
             await ChatMessage.create({
-                user: game.user?.id,
+                user: game.user.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content,
             });
@@ -4857,7 +4857,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /** Grapple controlled — Break Free (#120, opposed Strength). */
     static async #grappleBreakFree(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         const result = await this._rollGrappleOpposed(resolveBreakGrapple);
-        if (result?.success) {
+        if (result?.success === true) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
             await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag('wh40k-rpg', 'grapple', {
                 state: 'none',
@@ -4920,7 +4920,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 shockAfter,
             });
             await ChatMessage.create({
-                user: game.user?.id,
+                user: game.user.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content,
             });
@@ -4980,7 +4980,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * `collectSubtletyAdjusters()` are honoured uniformly.
      */
     static async #adjustSubtletyManually(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        if (!game.user?.isGM) return;
+        if (!game.user.isGM) return;
         const deltaAttr = target.dataset['delta'];
         if (deltaAttr === undefined || deltaAttr === '') return;
         const delta = Number.parseInt(deltaAttr, 10);
@@ -5035,7 +5035,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const previousCheckpoint = system.alignmentCheckpoint;
         if (!shouldRecheckAlignment(corruption, previousCheckpoint)) return;
         const previous = system.chaosAlignment;
-        const tally = tallyAdvancesByAlignment(system.chaosAdvancements ?? []);
+        const tally = tallyAdvancesByAlignment(system.chaosAdvancements);
         const next = deriveAlignmentFromTally(tally);
         const newCheckpoint = nextAlignmentCheckpoint(corruption);
         try {
@@ -5052,7 +5052,7 @@ export default class CharacterSheet extends BaseActorSheet {
                   })
                 : game.i18n.localize(messageKey);
             await ChatMessage.create({
-                user: game.user?.id,
+                user: game.user.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content: `<p><strong>${game.i18n.localize('WH40K.BC.Advancement.RecheckChatTitle')}</strong></p><p>${formatted}</p>`,
             });
@@ -5113,7 +5113,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 'system.infamy': nextInfamy,
                 'system.experience.used': system.experience.used + cost,
                 'system.chaosAdvancements': [
-                    ...(system.chaosAdvancements ?? []),
+                    ...system.chaosAdvancements,
                     {
                         category: 'infamy',
                         key: `infamy:${nextInfamy}`,

@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -139,22 +140,24 @@ interface DialogProbeResult {
     error: string | null;
 }
 
-async function probeDialogs(page: import('@playwright/test').Page): Promise<{
+async function probeDialogs(page: Page): Promise<{
     created: boolean;
     createError: string | null;
     results: DialogProbeResult[];
     pageErrors: string[];
 }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
             async ({ probes }) => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor;
-                if (!Actor?.create) {
+                const ActorCls = g.Actor;
+                if (typeof ActorCls?.create !== 'function') {
                     return {
                         created: false,
                         createError: 'Actor.create unavailable',
@@ -165,7 +168,7 @@ async function probeDialogs(page: import('@playwright/test').Page): Promise<{
                 // ── Seed fixture actor + items ──────────────────────────
                 let actor: any;
                 try {
-                    actor = await Actor.create({
+                    actor = await ActorCls.create({
                         name: 'dialog-probe-actor',
                         type: 'dh2-character',
                         system: { gameSystem: 'dh2e' },
@@ -173,7 +176,7 @@ async function probeDialogs(page: import('@playwright/test').Page): Promise<{
                 } catch (err) {
                     return {
                         created: false,
-                        createError: String((err as Error)?.message ?? err),
+                        createError: String(err instanceof Error ? err.message : String(err)),
                         results: [],
                     };
                 }
@@ -430,7 +433,9 @@ async function probeDialogs(page: import('@playwright/test').Page): Promise<{
                             // ConvertActorSystemDialog.open(actor) — fire-and-forget;
                             // the promise resolves only when the user clicks a button.
                             void Cls.open(actor);
-                            await new Promise((r) => setTimeout(r, 60));
+                            await new Promise<void>((resolve) => {
+                                setTimeout(resolve, 60);
+                            });
                             rendered = document.querySelector('dialog.application') !== null;
                             if (!rendered) {
                                 // Some static dialogs warn-and-return when the
@@ -441,7 +446,9 @@ async function probeDialogs(page: import('@playwright/test').Page): Promise<{
                             }
                         } else if (probe.kind === 'staticOpenNone') {
                             void Cls.open();
-                            await new Promise((r) => setTimeout(r, 60));
+                            await new Promise<void>((resolve) => {
+                                setTimeout(resolve, 60);
+                            });
                             rendered = document.querySelector('dialog.application') !== null;
                             if (!rendered) rendered = true;
                         } else {
@@ -464,9 +471,11 @@ async function probeDialogs(page: import('@playwright/test').Page): Promise<{
                             let renderErr: string | null = null;
                             try {
                                 await inst.render(true);
-                                await new Promise((r) => setTimeout(r, 30));
+                                await new Promise<void>((resolve) => {
+                                    setTimeout(resolve, 30);
+                                });
                             } catch (err) {
-                                renderErr = String((err as Error)?.message ?? err);
+                                renderErr = String(err instanceof Error ? err.message : String(err));
                             }
                             // Source-coverage goal: constructor + _prepareContext
                             // + _renderHTML. The latter completes well before the
@@ -496,7 +505,7 @@ async function probeDialogs(page: import('@playwright/test').Page): Promise<{
                             }
                         }
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String(err instanceof Error ? err.message : String(err));
                     }
                     await closeOpenDialogs();
                     return { className: probe.className, rendered, error };

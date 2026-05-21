@@ -37,8 +37,8 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                 let actorId: string | null = null;
 
                 try {
-                    const Actor = (globalThis as any).Actor;
-                    if (typeof Actor?.create !== 'function') {
+                    const ActorCls = (globalThis as any).Actor;
+                    if (typeof ActorCls?.create !== 'function') {
                         return {
                             rendered,
                             toHitBonus,
@@ -51,7 +51,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                         };
                     }
                     // dw-npc is the DW NPC datamodel registered by the system manifest.
-                    const actor = await Actor.create({
+                    const actor = await ActorCls.create({
                         name: 'rawHordeProbe-#166',
                         type: 'dw-npc',
                         system: {
@@ -93,7 +93,9 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
 
                     if (typeof actor.sheet?.render === 'function') {
                         await actor.sheet.render(true);
-                        await new Promise((r) => setTimeout(r, 120));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 120);
+                        });
                         rendered = actor.sheet.element instanceof HTMLElement;
                     }
 

@@ -45,8 +45,8 @@ test.describe.serial('DW Requisition (Tier B)', () => {
                 let actorId: string | null = null;
 
                 try {
-                    const Actor = (globalThis as any).Actor;
-                    if (typeof Actor?.create !== 'function') {
+                    const ActorCls = (globalThis as any).Actor;
+                    if (typeof ActorCls?.create !== 'function') {
                         return {
                             rendered,
                             hasPanel,
@@ -60,7 +60,7 @@ test.describe.serial('DW Requisition (Tier B)', () => {
                             error: 'Actor.create unavailable',
                         };
                     }
-                    const actor = await Actor.create({
+                    const actor = await ActorCls.create({
                         name: 'rawReqProbe-#165',
                         type: 'dw-character',
                         system: {
@@ -69,7 +69,7 @@ test.describe.serial('DW Requisition (Tier B)', () => {
                             missionRating: 'standard',
                         },
                     });
-                    if (!actor) {
+                    if (actor == null) {
                         return {
                             rendered,
                             hasPanel,
@@ -89,9 +89,11 @@ test.describe.serial('DW Requisition (Tier B)', () => {
 
                     if (typeof actor.sheet?.render === 'function') {
                         await actor.sheet.render(true);
-                        await new Promise((r) => setTimeout(r, 120));
+                        await new Promise((r) => {
+                            setTimeout(r, 120);
+                        });
                         rendered = actor.sheet.element instanceof HTMLElement;
-                        if (rendered && actor.sheet.element) {
+                        if (rendered && actor.sheet.element != null) {
                             const el = actor.sheet.element as HTMLElement;
                             hasPanel = el.querySelector('.wh40k-dw-requisition-panel') !== null;
                             hasRpInput = el.querySelector('input[name="system.requisitionPoints"]') !== null;
@@ -104,7 +106,7 @@ test.describe.serial('DW Requisition (Tier B)', () => {
                     // Keep the sheet open for snap().
                     (globalThis as any).__c9req = actor;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = (err as Error).message;
                 }
 
                 return {

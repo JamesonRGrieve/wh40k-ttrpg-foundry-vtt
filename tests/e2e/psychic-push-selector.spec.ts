@@ -66,11 +66,13 @@ test.describe.serial('psychic push selector', () => {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
             } catch (err) {
-                return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}` };
+                return { error: `dialog render threw: ${(err as Error).message}` };
             }
 
             // Allow ApplicationV2 to flush its render frame.
-            await new Promise((r) => setTimeout(r, 50));
+            await new Promise((r) => {
+                setTimeout(r, 50);
+            });
 
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
@@ -93,9 +95,9 @@ test.describe.serial('psychic push selector', () => {
                     unfetteredActive: unfett?.className.includes('tw-bg-[rgba(201,162,39,0.15)]') ?? false,
                     pushActive: push?.className.includes('tw-bg-red-900/40') ?? false,
                     stepperVisible: stepper !== null,
-                    pushLevel: level?.textContent?.trim() ?? null,
-                    effectivePR: effPR?.textContent?.trim() ?? null,
-                    focusMod: focusMod?.textContent?.trim() ?? null,
+                    pushLevel: level?.textContent.trim() ?? null,
+                    effectivePR: effPR?.textContent.trim() ?? null,
+                    focusMod: focusMod?.textContent.trim() ?? null,
                     forcePhenomena: phenomena !== null,
                 };
             }
@@ -103,7 +105,9 @@ test.describe.serial('psychic push selector', () => {
             async function clickAction(action: string): Promise<void> {
                 const el = root!.querySelector<HTMLElement>(`[data-action="${action}"]`);
                 el?.click();
-                await new Promise((r) => setTimeout(r, 50));
+                await new Promise((r) => {
+                    setTimeout(r, 50);
+                });
             }
 
             // Open the context panel (it starts expanded but render order may
@@ -117,29 +121,41 @@ test.describe.serial('psychic push selector', () => {
             // Switch to Fettered.
             const fetteredBtn = root.querySelector<HTMLElement>('[data-testid="psy-mode-fettered"]');
             fetteredBtn?.click();
-            await new Promise((r) => setTimeout(r, 50));
+            await new Promise((r) => {
+                setTimeout(r, 50);
+            });
             const fettered = snap('fettered');
 
             // Switch to Push, then increment twice (1 -> 2 -> 3), then try to overshoot.
             const pushBtn = root.querySelector<HTMLElement>('[data-testid="psy-mode-push"]');
             pushBtn?.click();
-            await new Promise((r) => setTimeout(r, 50));
+            await new Promise((r) => {
+                setTimeout(r, 50);
+            });
             const push1 = snap('push-1');
 
             const inc = root.querySelector<HTMLElement>('[data-testid="psy-push-increment"]');
             inc?.click();
-            await new Promise((r) => setTimeout(r, 50));
+            await new Promise((r) => {
+                setTimeout(r, 50);
+            });
             const push2 = snap('push-2');
             inc?.click();
-            await new Promise((r) => setTimeout(r, 50));
+            await new Promise((r) => {
+                setTimeout(r, 50);
+            });
             const push3 = snap('push-3');
             inc?.click(); // should clamp at 3
-            await new Promise((r) => setTimeout(r, 50));
+            await new Promise((r) => {
+                setTimeout(r, 50);
+            });
             const push3Clamped = snap('push-3-clamped');
 
             const dec = root.querySelector<HTMLElement>('[data-testid="psy-push-decrement"]');
             dec?.click();
-            await new Promise((r) => setTimeout(r, 50));
+            await new Promise((r) => {
+                setTimeout(r, 50);
+            });
             const push2Back = snap('push-2-back');
 
             try {

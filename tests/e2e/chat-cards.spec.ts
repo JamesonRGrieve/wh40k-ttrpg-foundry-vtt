@@ -71,7 +71,9 @@ test.describe.serial('chat-card templates (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const errors: string[] = [];
-        const listener = (err: Error) => errors.push(err.message);
+        const listener = (pageErr: Error): void => {
+            errors.push(pageErr.message);
+        };
         page.on('pageerror', listener);
 
         let setup: {
@@ -178,7 +180,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         | { name?: string; img?: string; uuid?: string; system?: unknown; getRollData?: () => object }
                         | undefined;
                     const baseRoll = await new g.Roll('1d100').evaluate();
-                    const damageRoll = await new g.Roll('1d10').evaluate();
+                    const _damageRoll = await new g.Roll('1d10').evaluate();
                     const rollData = actor?.getRollData?.() ?? {};
 
                     // Rich union-context: every field any template might
@@ -364,7 +366,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         try {
                             html = await renderTemplate(`systems/wh40k-rpg/templates/chat/${tpl}.hbs`, ctx);
                         } catch (err) {
-                            renderError = String((err as Error)?.message ?? err);
+                            renderError = String((err as Error).message);
                         }
                         if (renderError !== null || html.trim().length === 0) {
                             out.push({
@@ -387,7 +389,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                             });
                             createdId = msg?.id ?? null;
                         } catch (err) {
-                            createError = String((err as Error)?.message ?? err);
+                            createError = String((err as Error).message);
                         }
                         const after = g.game?.messages?.size ?? 0;
                         const delta = after - before;

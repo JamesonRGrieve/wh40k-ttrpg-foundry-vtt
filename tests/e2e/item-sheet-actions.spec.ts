@@ -82,6 +82,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                 const actor = opts.withActor
                     ? {
                           rollSkill: async (name: string, _spec: unknown, options: unknown): Promise<void> => {
+                              await Promise.resolve();
                               cap.rollCalls.push({ name: name ?? null, options });
                           },
                       }
@@ -89,6 +90,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                 const itemSystem: Record<string, unknown> = {
                     ...system,
                     toChatSpecialUse: async (index: number): Promise<void> => {
+                        await Promise.resolve();
                         cap.chatCalls.push(index);
                     },
                 };
@@ -98,6 +100,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         system: itemSystem,
                         actor,
                         update: async (changes: Record<string, unknown>): Promise<void> => {
+                            await Promise.resolve();
                             cap.updates.push(changes);
                             // Mirror writes into the in-memory system so subsequent
                             // calls in the same scenario see them.

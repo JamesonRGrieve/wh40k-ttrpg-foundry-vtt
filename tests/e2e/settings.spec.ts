@@ -101,7 +101,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                 return {
                     kind: 'read' as const,
                     ok: false,
-                    error: `get threw: ${String((err as Error)?.message ?? err)}`,
+                    error: `get threw: ${String((err as Error).message)}`,
                 };
             }
 
@@ -120,13 +120,13 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                         ok: true,
                         error: null,
                         // Eat any reload-related error; we still got a clean read.
-                        _writeNote: `requiresReload write failed (eaten): ${String((err as Error)?.message ?? err)}`,
+                        _writeNote: `requiresReload write failed (eaten): ${String((err as Error).message)}`,
                     } as unknown as { kind: 'read'; ok: true; error: null };
                 }
             }
 
             const isBoolean = def.type === Boolean || typeof current === 'boolean';
-            const hasChoices = def.choices !== undefined && def.choices !== null && typeof def.choices === 'object';
+            const hasChoices = def.choices !== undefined && typeof def.choices === 'object';
             const isNumber = def.type === Number || typeof current === 'number';
             const isArray = def.type === Array || Array.isArray(current);
 
@@ -138,7 +138,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'toggle' as const,
                         ok: false,
-                        error: `set(${String(next)}) threw: ${String((err as Error)?.message ?? err)}`,
+                        error: `set(${String(next)}) threw: ${String((err as Error).message)}`,
                     };
                 }
                 const observed = settings.get(systemId, namespacedKey);
@@ -161,7 +161,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'toggle' as const,
                         ok: false,
-                        error: `restore set(${String(current)}) threw: ${String((err as Error)?.message ?? err)}`,
+                        error: `restore set(${String(current)}) threw: ${String((err as Error).message)}`,
                     };
                 }
                 return { kind: 'toggle' as const, ok: true, error: null };
@@ -180,7 +180,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'choice' as const,
                         ok: false,
-                        error: `set('${next}') threw: ${String((err as Error)?.message ?? err)}`,
+                        error: `set('${next}') threw: ${String((err as Error).message)}`,
                     };
                 }
                 const observed = settings.get(systemId, namespacedKey);
@@ -202,7 +202,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'choice' as const,
                         ok: false,
-                        error: `restore set('${String(current)}') threw: ${String((err as Error)?.message ?? err)}`,
+                        error: `restore set('${String(current)}') threw: ${String((err as Error).message)}`,
                     };
                 }
                 return { kind: 'choice' as const, ok: true, error: null };
@@ -220,7 +220,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     await settings.set(systemId, namespacedKey, current);
                     return { kind: 'toggle' as const, ok: true, error: null };
                 } catch (err) {
-                    return { kind: 'toggle' as const, ok: false, error: `number flip threw: ${String((err as Error)?.message ?? err)}` };
+                    return { kind: 'toggle' as const, ok: false, error: `number flip threw: ${String((err as Error).message)}` };
                 }
             }
 
@@ -232,7 +232,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     await settings.set(systemId, namespacedKey, current);
                     return { kind: 'toggle' as const, ok: true, error: null };
                 } catch (err) {
-                    return { kind: 'toggle' as const, ok: false, error: `array re-set threw: ${String((err as Error)?.message ?? err)}` };
+                    return { kind: 'toggle' as const, ok: false, error: `array re-set threw: ${String((err as Error).message)}` };
                 }
             }
 
@@ -273,7 +273,7 @@ async function probeAccessor(page: Page, name: (typeof SETTING_ACCESSORS)[number
             foundryBrowserCtx.game?.wh40k?.settings,
             foundryBrowserCtx.game?.system?.api?.settings,
         ];
-        let owner: Record<string, unknown> | undefined = globalCandidates.find((c) => c !== undefined && c !== null && typeof c[accessor] === 'function');
+        let owner: Record<string, unknown> | undefined = globalCandidates.find((c) => c !== undefined && typeof c[accessor] === 'function');
         if (!owner) {
             try {
                 // Indirect dynamic-import URL so TS doesn't try to resolve the
@@ -287,7 +287,7 @@ async function probeAccessor(page: Page, name: (typeof SETTING_ACCESSORS)[number
                     owner = mod.WH40KSettings;
                 }
             } catch (err) {
-                return { ok: false, error: `dynamic import failed: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `dynamic import failed: ${String((err as Error).message)}` };
             }
         }
         if (!owner) return { ok: false, error: `accessor ${accessor} not found on WH40KSettings surface` };
@@ -296,7 +296,7 @@ async function probeAccessor(page: Page, name: (typeof SETTING_ACCESSORS)[number
             const value = fn.call(owner);
             return { ok: value !== undefined, error: value === undefined ? 'accessor returned undefined' : null };
         } catch (err) {
-            return { ok: false, error: `accessor threw: ${String((err as Error)?.message ?? err)}` };
+            return { ok: false, error: `accessor threw: ${String((err as Error).message)}` };
         }
     }, name);
     return { name, ok: result.ok, error: result.error };
@@ -316,7 +316,7 @@ test.describe.serial('settings toggles (Tier B)', () => {
                 key: fullKey,
                 kind: 'read' as const,
                 ok: false,
-                error: String((err as Error)?.message ?? err),
+                error: String((err as Error).message),
             }));
             const shortKey = fullKey.startsWith(`${SYSTEM_ID}.`) ? fullKey.slice(SYSTEM_ID.length + 1) : fullKey;
             if (probe.ok) {
@@ -340,7 +340,7 @@ test.describe.serial('settings toggles (Tier B)', () => {
             const probe = await probeAccessor(page, accessor).catch((err) => ({
                 name: accessor,
                 ok: false,
-                error: String((err as Error)?.message ?? err),
+                error: String((err as Error).message),
             }));
             if (probe.ok) {
                 recordCoverage('setting.accessor', probe.name);

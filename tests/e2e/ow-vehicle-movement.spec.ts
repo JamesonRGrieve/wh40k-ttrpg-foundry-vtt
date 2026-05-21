@@ -1,3 +1,5 @@
+import type { Page } from '@playwright/test';
+
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -25,7 +27,7 @@ interface ActorRef {
     id: string;
 }
 
-async function createOwActor(page: import('@playwright/test').Page): Promise<ActorRef | { error: string }> {
+async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
         const { Actor } = globalThis as unknown as {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
@@ -46,15 +48,15 @@ async function createOwActor(page: import('@playwright/test').Page): Promise<Act
             });
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
-        } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+        } catch (createErr) {
+            return { id: null, error: String((createErr as Error).message) };
         }
     });
     if (!result.id) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
-async function deleteActor(page: import('@playwright/test').Page, actorId: string): Promise<void> {
+async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
         const { game } = globalThis as unknown as {
             game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
@@ -77,8 +79,8 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
         const actorId = created.id;
 
         const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
+        const listener = (pageErr: Error): void => {
+            pageErrors.push(pageErr.message);
         };
         page.on('pageerror', listener);
 
@@ -105,7 +107,9 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
                     const sheet = actor.sheet;
                     if (!sheet) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 120));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 120);
+                    });
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element) {
@@ -118,14 +122,14 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
                         hasJinkRow = el.querySelector('[data-action-id="jink"]') !== null;
                         hasTacticalRow = el.querySelector('[data-action-id="tactical-manoeuvring"]') !== null;
                         hasChaseReadout = el.querySelector('.wh40k-ow-vehicle-movement-chase-readout') !== null;
-                        const issueBtn = el.querySelector(
-                            'button[data-action="owVehicleAction"][data-action-id="evasive-manoeuvring"]',
-                        ) as HTMLButtonElement | null;
+                        const issueBtn = el.querySelector<HTMLButtonElement>('button[data-action="owVehicleAction"][data-action-id="evasive-manoeuvring"]');
                         hasIssueButton = issueBtn !== null;
 
-                        if (issueBtn && !issueBtn.disabled) {
+                        if (issueBtn !== null && !issueBtn.disabled) {
                             issueBtn.click();
-                            await new Promise((r) => setTimeout(r, 200));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 200);
+                            });
                             issueDispatched = true;
                         }
                     }
@@ -133,8 +137,8 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
                     // Keep the sheet open so snap() (outside this evaluate)
                     // captures the live DOM.
                     g.__c156sheet = sheet;
-                } catch (err) {
-                    probeError = String((err as Error)?.message ?? err);
+                } catch (probeErr) {
+                    probeError = String((probeErr as Error).message);
                 }
 
                 return {

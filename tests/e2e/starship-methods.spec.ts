@@ -83,7 +83,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 out.push({ name: name as FlowName, ok, detail });
             };
 
-            if (!ActorCls?.create) {
+            if (typeof ActorCls?.create !== 'function') {
                 for (const f of flows) record(f, false, 'Actor.create unavailable');
                 return out;
             }
@@ -96,7 +96,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -132,11 +132,11 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                     'starship Actor.create',
                 );
             } catch (err) {
-                for (const f of flows) record(f, false, `actor create threw: ${String((err as Error)?.message ?? err)}`);
+                for (const f of flows) record(f, false, `actor create threw: ${err instanceof Error ? err.message : String(err)}`);
                 return out;
             }
 
-            if (!actor?.id) {
+            if (actor?.id == null) {
                 for (const f of flows) record(f, false, 'actor not created');
                 return out;
             }
@@ -147,61 +147,61 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             try {
                 record('get-hullType', live()?.hullType === 'sword-frigate', String(live()?.hullType));
             } catch (err) {
-                record('get-hullType', false, String((err as Error)?.message ?? err));
+                record('get-hullType', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 record('get-hullClass', live()?.hullClass === 'frigate', String(live()?.hullClass));
             } catch (err) {
-                record('get-hullClass', false, String((err as Error)?.message ?? err));
+                record('get-hullClass', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const hi = live()?.hullIntegrity;
                 record('get-hullIntegrity', hi?.value === 40 && hi?.max === 40, JSON.stringify(hi));
             } catch (err) {
-                record('get-hullIntegrity', false, String((err as Error)?.message ?? err));
+                record('get-hullIntegrity', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 record('get-speed', live()?.speed === 8, String(live()?.speed));
             } catch (err) {
-                record('get-speed', false, String((err as Error)?.message ?? err));
+                record('get-speed', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 record('get-manoeuvrability', live()?.manoeuvrability === 15, String(live()?.manoeuvrability));
             } catch (err) {
-                record('get-manoeuvrability', false, String((err as Error)?.message ?? err));
+                record('get-manoeuvrability', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 record('get-detection', live()?.detection === 12, String(live()?.detection));
             } catch (err) {
-                record('get-detection', false, String((err as Error)?.message ?? err));
+                record('get-detection', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 // detectionBonus = system.detectionBonus || floor(detection/10) → floor(12/10) = 1
                 const db = live()?.detectionBonus;
                 record('get-detectionBonus', db === 1, String(db));
             } catch (err) {
-                record('get-detectionBonus', false, String((err as Error)?.message ?? err));
+                record('get-detectionBonus', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 record('get-armour', live()?.armour === 18, String(live()?.armour));
             } catch (err) {
-                record('get-armour', false, String((err as Error)?.message ?? err));
+                record('get-armour', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 record('get-voidShields', live()?.voidShields === 2, String(live()?.voidShields));
             } catch (err) {
-                record('get-voidShields', false, String((err as Error)?.message ?? err));
+                record('get-voidShields', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 record('get-turretRating', live()?.turretRating === 2, String(live()?.turretRating));
             } catch (err) {
-                record('get-turretRating', false, String((err as Error)?.message ?? err));
+                record('get-turretRating', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const c = live()?.crew;
                 record('get-crew', c?.crewRating === 30 && c?.population === 25_000, JSON.stringify(c));
             } catch (err) {
-                record('get-crew', false, String((err as Error)?.message ?? err));
+                record('get-crew', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 // Schema may recompute `used` from embedded components (start
@@ -211,32 +211,32 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 const p = live()?.power;
                 record('get-power', typeof p?.total === 'number' && typeof p?.used === 'number', JSON.stringify(p));
             } catch (err) {
-                record('get-power', false, String((err as Error)?.message ?? err));
+                record('get-power', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const s = live()?.space;
                 record('get-space', typeof s?.total === 'number' && typeof s?.used === 'number', JSON.stringify(s));
             } catch (err) {
-                record('get-space', false, String((err as Error)?.message ?? err));
+                record('get-space', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const wc = live()?.weaponCapacity;
                 const ok = wc?.prow === 1 && wc?.dorsal === 2 && wc?.port === 1 && wc?.starboard === 1 && wc?.keel === 0;
                 record('get-weaponCapacity', ok, JSON.stringify(wc));
             } catch (err) {
-                record('get-weaponCapacity', false, String((err as Error)?.message ?? err));
+                record('get-weaponCapacity', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- isCrippled / isDestroyed: false branch at full hull --------
             try {
                 record('get-isCrippled-false', live()?.isCrippled === false, String(live()?.isCrippled));
             } catch (err) {
-                record('get-isCrippled-false', false, String((err as Error)?.message ?? err));
+                record('get-isCrippled-false', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 record('get-isDestroyed-false', live()?.isDestroyed === false, String(live()?.isDestroyed));
             } catch (err) {
-                record('get-isDestroyed-false', false, String((err as Error)?.message ?? err));
+                record('get-isDestroyed-false', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- ship-* item getters with no items --------
@@ -244,19 +244,19 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 const comps = live()?.shipComponents;
                 record('get-shipComponents', Array.isArray(comps) && comps.length === 0, `len=${comps?.length}`);
             } catch (err) {
-                record('get-shipComponents', false, String((err as Error)?.message ?? err));
+                record('get-shipComponents', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const weps = live()?.shipWeapons;
                 record('get-shipWeapons', Array.isArray(weps) && weps.length === 0, `len=${weps?.length}`);
             } catch (err) {
-                record('get-shipWeapons', false, String((err as Error)?.message ?? err));
+                record('get-shipWeapons', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const ups = live()?.shipUpgrades;
                 record('get-shipUpgrades', Array.isArray(ups) && ups.length === 0, `len=${ups?.length}`);
             } catch (err) {
-                record('get-shipUpgrades', false, String((err as Error)?.message ?? err));
+                record('get-shipUpgrades', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- embed a couple of shipWeapons to exercise weaponsByLocation buckets --------
@@ -287,7 +287,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 createdWeaponId = createdArr[0]?.id ?? null;
                 const wbl = live()?.weaponsByLocation;
                 const ok =
-                    wbl &&
+                    wbl != null &&
                     Array.isArray(wbl.prow) &&
                     wbl.prow.length === 1 &&
                     Array.isArray(wbl.dorsal) &&
@@ -299,7 +299,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                     Array.isArray(wbl.keel);
                 record('get-weaponsByLocation', !!ok, JSON.stringify(Object.fromEntries(Object.entries(wbl ?? {}).map(([k, v]) => [k, (v as any[]).length]))));
             } catch (err) {
-                record('get-weaponsByLocation', false, String((err as Error)?.message ?? err));
+                record('get-weaponsByLocation', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- method: prepareData (triggered by an update that recomputes) --------
@@ -310,19 +310,19 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 await withTimeout(live()?.update?.({ 'system.armour': 19 }), 5_000, 'update for prepareData');
                 record('method-prepareData', live()?.armour === 19, String(live()?.armour));
             } catch (err) {
-                record('method-prepareData', false, String((err as Error)?.message ?? err));
+                record('method-prepareData', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- method: fireWeapon (valid id → creates a chat message; just no-throw) --------
             try {
-                if (!createdWeaponId) {
+                if (createdWeaponId === null) {
                     record('method-fireWeapon-valid', false, 'no weapon id available');
                 } else {
                     await withTimeout(live()?.fireWeapon?.(createdWeaponId), 8_000, 'fireWeapon valid');
                     record('method-fireWeapon-valid', true, null);
                 }
             } catch (err) {
-                record('method-fireWeapon-valid', false, String((err as Error)?.message ?? err));
+                record('method-fireWeapon-valid', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- method: fireWeapon (invalid id → warns + returns; no-throw) --------
@@ -330,7 +330,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 await withTimeout(live()?.fireWeapon?.('not-a-real-weapon-id'), 5_000, 'fireWeapon invalid');
                 record('method-fireWeapon-invalid', true, null);
             } catch (err) {
-                record('method-fireWeapon-invalid', false, String((err as Error)?.message ?? err));
+                record('method-fireWeapon-invalid', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- method: rollInitiative --------
@@ -339,7 +339,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 // The override returns null by contract; either way no-throw is the coverage signal.
                 record('method-rollInitiative', result === null || result === undefined || typeof result === 'object', `returned=${String(result)}`);
             } catch (err) {
-                record('method-rollInitiative', false, String((err as Error)?.message ?? err));
+                record('method-rollInitiative', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- isCrippled-true / isDestroyed-true: damage the hull --------
@@ -348,13 +348,13 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 // 10 <= floor(40/2)=20 → crippled
                 record('get-isCrippled-true', live()?.isCrippled === true, `value=${live()?.hullIntegrity?.value}`);
             } catch (err) {
-                record('get-isCrippled-true', false, String((err as Error)?.message ?? err));
+                record('get-isCrippled-true', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 0 }), 5_000, 'hull zero for destroyed');
                 record('get-isDestroyed-true', live()?.isDestroyed === true, `value=${live()?.hullIntegrity?.value}`);
             } catch (err) {
-                record('get-isDestroyed-true', false, String((err as Error)?.message ?? err));
+                record('get-isDestroyed-true', false, err instanceof Error ? err.message : String(err));
             }
 
             // -------- cleanup --------

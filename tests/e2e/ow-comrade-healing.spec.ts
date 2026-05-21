@@ -39,10 +39,10 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
@@ -79,7 +79,7 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
                 const actor = g.game?.actors?.get?.(id);
-                if (!actor) return { error: 'actor lookup failed' };
+                if (actor == null) return { error: 'actor lookup failed' };
                 let rendered = false;
                 let hasPanel = false;
                 let hasTickBtn = false;
@@ -94,14 +94,14 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                 try {
                     recoveryBefore = actor.system?.comradeRecoveryDays ?? null;
                     const sheet = actor.sheet;
-                    if (!sheet) return { error: 'actor.sheet is null' };
+                    if (sheet == null) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
                     await new Promise<void>((r) => {
                         setTimeout(r, 120);
                     });
                     rendered = sheet.element instanceof HTMLElement;
 
-                    if (rendered && sheet.element) {
+                    if (rendered && sheet.element != null) {
                         const el: HTMLElement = sheet.element;
                         const panel = el.querySelector('.wh40k-ow-healing-panel');
                         hasPanel = panel !== null;
@@ -123,7 +123,7 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
 
                     g.__c157sheet = sheet;
                 } catch (err) {
-                    probeError = String((err as Error)?.message ?? err);
+                    probeError = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
@@ -167,7 +167,7 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
             expect(result.hasReplaceBtn, 'Replace at Camp button should render').toBe(true);
             expect(result.hasStatusBadge, 'recovery status badge should render').toBe(true);
             expect(result.recoveryBefore, 'initial recovery days should be 5').toBe(5);
-            if (result.tickDispatched) {
+            if (result.tickDispatched === true) {
                 expect(result.recoveryAfter, 'recovery should tick 5 → 4 after one day').toBe(4);
             }
             expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);

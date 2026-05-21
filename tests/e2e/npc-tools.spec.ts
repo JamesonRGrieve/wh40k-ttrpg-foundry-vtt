@@ -178,7 +178,7 @@ async function probeParser(page: Page): Promise<FlowResult> {
 
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: `parser probe threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `parser probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             }
         },
         { moduleUrl: PARSER_URL, text: SAMPLE_STAT_BLOCK_TEXT },
@@ -197,7 +197,7 @@ async function probeExporter(page: Page): Promise<FlowResult> {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
             const ActorClass = g.Actor;
-            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
+            if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
             let npc: any;
             try {
@@ -215,14 +215,14 @@ async function probeExporter(page: Page): Promise<FlowResult> {
                     },
                 });
             } catch (err) {
-                return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `npc create failed: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
 
             try {
                 const expMod = (await import(exporterUrl)) as { default?: { toJSON: (a: unknown, opts?: unknown) => string; toText: (a: unknown) => string } };
                 const Exp = expMod.default;
-                if (typeof Exp?.toJSON !== 'function' || typeof Exp?.toText !== 'function') {
+                if (typeof Exp?.toJSON !== 'function' || typeof Exp.toText !== 'function') {
                     return { ok: false, error: 'exporter static methods unavailable' };
                 }
 
@@ -264,7 +264,7 @@ async function probeExporter(page: Page): Promise<FlowResult> {
 
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: `exporter probe threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `exporter probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             } finally {
                 try {
                     await npc.delete?.();
@@ -294,7 +294,7 @@ async function probeScaler(page: Page): Promise<FlowResult> {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
             const ActorClass = g.Actor;
-            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
+            if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
             let npc: any;
             try {
@@ -316,7 +316,7 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                     },
                 });
             } catch (err) {
-                return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `npc create failed: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
 
@@ -402,7 +402,7 @@ async function probeScaler(page: Page): Promise<FlowResult> {
 
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: `scaler probe threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `scaler probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             } finally {
                 try {
                     await npc.delete?.();
@@ -427,7 +427,7 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
             const ActorClass = g.Actor;
-            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
+            if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
             let npc: any;
             try {
@@ -437,7 +437,7 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
                     system: { gameSystem: 'bc', threatLevel: 8 },
                 });
             } catch (err) {
-                return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `npc create failed: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
 
@@ -468,8 +468,8 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
                 ];
                 for (const b of buckets) {
                     const result = dialog._getDifficultyRating(b.ratio);
-                    if (result?.key !== b.expected) {
-                        return { ok: false, error: `ratio ${b.ratio} → expected key ${b.expected}, got ${result?.key}` };
+                    if (result.key !== b.expected) {
+                        return { ok: false, error: `ratio ${b.ratio} → expected key ${b.expected}, got ${result.key}` };
                     }
                 }
 
@@ -491,7 +491,7 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
 
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: `difficulty probe threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `difficulty probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             } finally {
                 try {
                     await npc.delete?.();
@@ -517,7 +517,7 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
             const ActorClass = g.Actor;
-            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
+            if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
             const createdIds: string[] = [];
             const npcUuids: string[] = [];
@@ -598,7 +598,7 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
 
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: `builder probe threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `builder probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             } finally {
                 for (const id of createdIds) {
                     try {
@@ -628,7 +628,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
             const ActorClass = g.Actor;
-            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
+            if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
             let sourceNPC: any;
             let targetNPC: any;
@@ -674,7 +674,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
                     },
                 });
             } catch (err) {
-                return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `npc create failed: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             if (sourceNPC === null || sourceNPC === undefined || targetNPC === null || targetNPC === undefined)
                 return { ok: false, error: 'npc create returned null' };
@@ -746,7 +746,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
 
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: `preset probe threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `preset probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             } finally {
                 if (createdPresetId !== null) {
                     try {
