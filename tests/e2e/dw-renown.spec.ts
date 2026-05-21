@@ -26,7 +26,13 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface HandlebarsCompile {
+                    compile: (s: string) => (ctx: object) => string;
+                }
+                interface PanelGlobals {
+                    fetch?: (u: string) => Promise<Response>;
+                    Handlebars?: HandlebarsCompile;
+                }
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-renown-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -39,10 +45,25 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                 let hasLossButton = false;
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string } | undefined;
-                    if (typeof HbsLib?.compile !== 'function') {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                    const fg = globalThis as unknown as PanelGlobals;
+                    const fetchFn = fg.fetch;
+                    if (typeof fetchFn !== 'function') {
+                        return {
+                            rendered,
+                            rankReadout,
+                            rankAttr,
+                            renownAttr,
+                            progressPercent,
+                            hasProgressBar,
+                            hasAwardButton,
+                            hasLossButton,
+                            error: 'fetch not available on globalThis',
+                        };
+                    }
+                    const src = await (await fetchFn(templateUrl)).text();
+                    const HbsLib = fg.Handlebars;
+                    if (HbsLib === undefined || typeof HbsLib.compile !== 'function') {
                         return {
                             rendered,
                             rankReadout,
@@ -87,7 +108,7 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
 
                     if (rendered) {
                         const rankSpan = host.querySelector('.wh40k-dw-renown-rank');
-                        rankReadout = rankSpan?.textContent?.trim() ?? '';
+                        rankReadout = rankSpan?.textContent.trim() ?? '';
                         rankAttr = rankSpan?.getAttribute('data-rank') ?? '';
                         renownAttr = host.querySelector('section.wh40k-dw-renown-panel')?.getAttribute('data-dw-renown') ?? '';
                         const fill = host.querySelector('.wh40k-dw-renown-progress-fill');
@@ -98,7 +119,11 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                     }
 
                     // Anchor the rendered DOM so snap() captures live pixels.
-                    (globalThis as any).__dwRenownPanelHost = host;
+                    interface DwRenownHostGlobal {
+                        __dwRenownPanelHost?: HTMLElement | undefined;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                    (globalThis as unknown as DwRenownHostGlobal).__dwRenownPanelHost = host;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
@@ -114,22 +139,24 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                     hasLossButton,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'dw-renown-panel');
 
             // Tear down so the host doesn't leak into the next serial test.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__dwRenownPanelHost as HTMLElement | undefined;
+                interface DwRenownHostGlobal {
+                    __dwRenownPanelHost?: HTMLElement | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+                const fg = globalThis as unknown as DwRenownHostGlobal;
+                const host = fg.__dwRenownPanelHost;
                 try {
                     host?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__dwRenownPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__dwRenownPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

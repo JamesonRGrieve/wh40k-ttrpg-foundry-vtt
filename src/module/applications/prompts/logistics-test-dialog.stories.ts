@@ -83,7 +83,7 @@ const DEFAULT_TARGET = computeLogisticsTarget({
 
 const meta = {
     title: 'Prompts/LogisticsTestDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         baseRating: 10,
         troopCountOptions: makeTroopCountOptions('company'),

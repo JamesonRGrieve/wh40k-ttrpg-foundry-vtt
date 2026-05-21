@@ -20,9 +20,19 @@ test.describe.serial('climbing surface picker (#146)', () => {
         test.skip(!joined, 'GM join failed');
 
         const result = await page.evaluate(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- e2e probe runs in browser realm against untyped Foundry globals.
+            interface UnifiedRollDialogInstance {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                render: (force: boolean) => Promise<unknown>;
+                element?: HTMLElement;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                close?: () => Promise<unknown>;
+            }
+            interface UnifiedRollDialogModule {
+                default: new (actionData: object) => UnifiedRollDialogInstance;
+            }
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
-            const mod = await import(/* @vite-ignore */ modUrl);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
+            const mod = (await import(/* @vite-ignore */ modUrl)) as unknown as UnifiedRollDialogModule;
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing', snaps: null };
@@ -56,7 +66,7 @@ test.describe.serial('climbing surface picker (#146)', () => {
                 },
             };
 
-            let dialog: { render: (force: boolean) => Promise<unknown>; element?: HTMLElement; close?: () => Promise<unknown> };
+            let dialog: UnifiedRollDialogInstance;
             try {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
@@ -74,7 +84,13 @@ test.describe.serial('climbing surface picker (#146)', () => {
 
             const rootEl: HTMLElement = root;
 
-            function readState(label: string): Record<string, unknown> {
+            interface SurfaceState {
+                label: string;
+                rendered: boolean;
+                selectValue: string | null;
+                sheerVisible: boolean;
+            }
+            function readState(label: string): SurfaceState {
                 const wrapper = rootEl.querySelector<HTMLElement>('.wh40k-climb-surface-picker');
                 const select = rootEl.querySelector<HTMLSelectElement>('.wh40k-climb-surface-picker__select');
                 const sheerIndicator = rootEl.querySelector<HTMLElement>('.wh40k-climb-surface-picker__sheer-indicator');

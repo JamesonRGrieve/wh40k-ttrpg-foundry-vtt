@@ -24,7 +24,6 @@ test.describe.serial('DisorderRollDialog (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/disorder-roll-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -35,10 +34,19 @@ test.describe.serial('DisorderRollDialog (Tier B)', () => {
                 let hasRollButton = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts?: unknown): { render: (opts?: unknown) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    interface DialogInstance {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                        render: (opts?: object) => Promise<unknown>;
+                        element: HTMLElement | null;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                        close: () => Promise<unknown>;
+                    }
+                    interface DialogModule {
+                        default: new (opts?: object) => DialogInstance;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return {
                             rendered,
@@ -71,7 +79,11 @@ test.describe.serial('DisorderRollDialog (Tier B)', () => {
                     // Keep the dialog open and on a handle so snap() (called
                     // outside this evaluate) captures the live DOM. Closing
                     // here would leave the screenshot empty.
-                    (globalThis as any).__c9dialog = inst;
+                    interface DialogHostGlobal {
+                        __c9dialog?: DialogInstance | undefined;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm dialog on globalThis for cross-eval cleanup
+                    (globalThis as unknown as DialogHostGlobal).__c9dialog = inst;
                 } catch (err) {
                     error = String((err as Error).message);
                 }
@@ -85,7 +97,6 @@ test.describe.serial('DisorderRollDialog (Tier B)', () => {
                     hasRollButton,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'disorder-roll-dialog');
@@ -93,15 +104,22 @@ test.describe.serial('DisorderRollDialog (Tier B)', () => {
             // Dialog captured; tear it down so it doesn't leak into the
             // next serial test's DOM.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const d = (globalThis as any).__c9dialog;
+                interface DialogCloseable {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                    close: () => Promise<unknown>;
+                }
+                interface DialogHostGlobal {
+                    __c9dialog?: DialogCloseable | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm dialog stashed on globalThis
+                const fg = globalThis as unknown as DialogHostGlobal;
+                const d = fg.__c9dialog;
                 try {
-                    await d?.close?.();
+                    await d?.close();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__c9dialog = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__c9dialog = undefined;
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();

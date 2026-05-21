@@ -15,7 +15,7 @@ interface Args {
 
 const meta = {
     title: 'Prompts/RighteousFuryDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         weaponName: 'Bolter',
         characteristic: 'Ballistic Skill 45',

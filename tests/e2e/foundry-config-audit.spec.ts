@@ -319,7 +319,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 guarded('config::Actor.sheetClasses.no-anonymous-collisions', () => {
                     const anon: string[] = [];
                     for (const [type, sheets] of Object.entries(actorSheetClasses)) {
-                        for (const [sheetId, entry] of Object.entries(sheets)) {
+                        for (const [sheetId, entry] of Object.entries(sheets ?? {})) {
                             const cls = (entry as { cls?: { name?: string } } | undefined)?.cls;
                             const clsName = cls?.name;
                             if (clsName === undefined || clsName === '') {

@@ -22,7 +22,7 @@ interface ShipWeaponCtx {
     canEdit: boolean;
     inEditMode: boolean;
     editable: boolean;
-    effects: unknown[];
+    effects: object[];
     tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
 }
 

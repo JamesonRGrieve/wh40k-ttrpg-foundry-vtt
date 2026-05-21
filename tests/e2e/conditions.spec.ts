@@ -31,9 +31,11 @@ interface ActorRef {
 
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor: ActorGlobal } = globalThis as unknown as {
+        interface FoundryActorGlobal {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const { Actor: ActorGlobal } = globalThis as unknown as FoundryActorGlobal;
         if (!ActorGlobal?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorGlobal.create({
@@ -53,9 +55,15 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game: gameGlobal } = globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        };
+        interface FoundryActorRef {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.delete returns Promise<this> with no shipped types
+            delete?: () => Promise<unknown>;
+        }
+        interface FoundryGameGlobal {
+            game?: { actors?: { get?: (id: string) => FoundryActorRef | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const { game: gameGlobal } = globalThis as unknown as FoundryGameGlobal;
         const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -63,7 +71,11 @@ async function deleteActor(page: Page, actorId: string): Promise<void> {
 
 async function listStatusEffectIds(page: Page): Promise<string[]> {
     return page.evaluate(() => {
-        const cfg = (globalThis as unknown as { CONFIG?: { statusEffects?: Array<{ id?: string }> } }).CONFIG;
+        interface FoundryConfigGlobal {
+            CONFIG?: { statusEffects?: Array<{ id?: string }> };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const cfg = (globalThis as unknown as FoundryConfigGlobal).CONFIG;
         return (cfg?.statusEffects ?? []).map((s) => s.id).filter((id): id is string => typeof id === 'string' && id.length > 0);
     });
 }
@@ -77,19 +89,25 @@ async function probeStatusEffect(page: Page, actorId: string, effectId: string):
     try {
         const result = await page.evaluate(
             async ({ actorId: probeActorId, effectId: probeEffectId }) => {
-                const { game: gameGlobal } = globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      toggleStatusEffect?: (id: string, opts?: { active?: boolean }) => Promise<unknown>;
-                                      statuses?: Set<string>;
-                                      effects?: { find: (cb: (e: { statuses?: Set<string>; name?: string }) => boolean) => unknown };
-                                  }
-                                | undefined;
-                        };
-                    };
-                };
+                interface FoundryActorEffectRef {
+                    statuses?: Set<string>;
+                    name?: string;
+                }
+                interface FoundryActorEffects {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry effects.find returns ActiveEffect with no shipped types
+                    find: (cb: (e: FoundryActorEffectRef) => boolean) => unknown;
+                }
+                interface FoundryProbeActor {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.toggleStatusEffect returns Promise<ActiveEffect|undefined>
+                    toggleStatusEffect?: (id: string, opts?: { active?: boolean }) => Promise<unknown>;
+                    statuses?: Set<string>;
+                    effects?: FoundryActorEffects;
+                }
+                interface FoundryProbeGameGlobal {
+                    game?: { actors?: { get?: (id: string) => FoundryProbeActor | undefined } };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const { game: gameGlobal } = globalThis as unknown as FoundryProbeGameGlobal;
                 const actor = gameGlobal?.actors?.get?.(probeActorId);
                 if (!actor) return { appliedOk: false, removedOk: false, error: 'actor lookup failed' };
                 if (typeof actor.toggleStatusEffect !== 'function') {

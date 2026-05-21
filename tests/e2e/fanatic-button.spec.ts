@@ -16,13 +16,40 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
     const joined = await joinAsGM(page);
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
-    const result = await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+    interface ProbeResult {
+        setupOk: boolean;
+        buttonFound?: boolean;
+        fateBefore?: number;
+        fateAfter?: number;
+        fanaticEffectFound?: boolean;
+        error: string | null;
+    }
+    const result = await page.evaluate(async (): Promise<ProbeResult> => {
+        interface ActorEffect {
+            flags?: { wh40k?: { source?: string } };
+        }
+        interface ActorSheet {
+            render: (force?: boolean) => Promise<void>;
+            changeTab?: (tab: string, group: string) => void;
+            element?: HTMLElement | null;
+        }
+        interface ActorDoc {
+            sheet: ActorSheet;
+            system?: { fate?: { value?: number } };
+            effects?: Iterable<ActorEffect>;
+        }
+        interface ActorCtorShape {
+            create?: (data: object) => Promise<ActorDoc | null>;
+        }
+        interface ProbeGlobal {
+            Actor?: ActorCtorShape;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+        const g = globalThis as unknown as ProbeGlobal;
         const ActorCls = g.Actor;
         if (ActorCls?.create == null) return { setupOk: false, error: 'Actor.create unavailable' };
 
-        let actor;
+        let actor: ActorDoc | null;
         try {
             actor = await ActorCls.create({
                 name: 'fanatic-probe',
@@ -50,7 +77,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
 
         // Navigate to the Status tab if the sheet's tab API is reachable.
         try {
-            actor.sheet?.changeTab?.('status', 'primary');
+            actor.sheet.changeTab?.('status', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });
@@ -58,9 +85,9 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
             /* sheets without changeTab fall back to whatever tab is open */
         }
 
-        const btn = actor.sheet?.element?.querySelector?.('[data-action="deathToAllWhoOpposeMe"]') as HTMLElement | null;
+        const btn = actor.sheet.element?.querySelector<HTMLElement>('[data-action="deathToAllWhoOpposeMe"]') ?? null;
         const buttonFound = btn !== null;
-        if (btn) {
+        if (btn !== null) {
             btn.click();
             // Allow the async action handler to resolve fate.update + ActiveEffect create.
             await new Promise<void>((r) => {
@@ -69,7 +96,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
         }
 
         const fateAfter = actor.system?.fate?.value ?? 0;
-        const effects: Array<{ flags?: { wh40k?: { source?: string } } }> = Array.from(actor.effects ?? []);
+        const effects: ActorEffect[] = actor.effects !== undefined ? Array.from(actor.effects) : [];
         const fanaticEffect = effects.find((e) => e.flags?.wh40k?.source === 'fanatic-death-to-oppose');
 
         return {
@@ -98,9 +125,15 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
     expect(result.fanaticEffectFound, 'expected an ActiveEffect with flags.wh40k.source === "fanatic-death-to-oppose"').toBe(true);
 
     // Cleanup
-    await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const g = globalThis as any;
+    await page.evaluate(async (): Promise<void> => {
+        interface ActorDoc {
+            delete?: () => Promise<void>;
+        }
+        interface CleanupGlobal {
+            game?: { actors?: { getName?: (name: string) => ActorDoc | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+        const g = globalThis as unknown as CleanupGlobal;
         const a = g.game?.actors?.getName?.('fanatic-probe');
         try {
             await a?.delete?.();

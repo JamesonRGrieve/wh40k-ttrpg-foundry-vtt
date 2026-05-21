@@ -77,7 +77,7 @@ function makeBaseCtx(): ArmourModCtx {
     };
 }
 
-function makeCtx(overrides: Partial<ArmourModCtx> = {}): ArmourModCtx & Record<string, unknown> {
+function makeCtx(overrides: Partial<ArmourModCtx> = {}): ArmourModCtx {
     return { ...makeBaseCtx(), ...overrides };
 }
 

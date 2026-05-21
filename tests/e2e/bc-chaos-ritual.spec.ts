@@ -26,7 +26,6 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/bc-ritual-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -36,10 +35,29 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
                 let masteryValue = '';
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HBS = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HBS.compile !== 'function') {
+                    interface HandlebarsCompile {
+                        compile: (s: string) => (ctx: object) => string;
+                    }
+                    interface BcRitualGlobals {
+                        fetch?: (u: string) => Promise<Response>;
+                        Handlebars?: HandlebarsCompile;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                    const fg = globalThis as unknown as BcRitualGlobals;
+                    const fetchFn = fg.fetch;
+                    if (typeof fetchFn !== 'function') {
+                        return {
+                            rendered,
+                            hasMasteryInput,
+                            hasPerformButton,
+                            masteryAttr,
+                            masteryValue,
+                            error: 'fetch not available on globalThis',
+                        };
+                    }
+                    const src = await (await fetchFn(templateUrl)).text();
+                    const HBS = fg.Handlebars;
+                    if (HBS === undefined || typeof HBS.compile !== 'function') {
                         return {
                             rendered,
                             hasMasteryInput,
@@ -74,7 +92,11 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
                         masteryValue = host.querySelector<HTMLInputElement>('input.wh40k-bc-ritual-mastery-input')?.value ?? '';
                     }
 
-                    (globalThis as any).__bcRitualPanelHost = host;
+                    interface BcRitualHostGlobal {
+                        __bcRitualPanelHost?: HTMLElement | undefined;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                    (globalThis as unknown as BcRitualHostGlobal).__bcRitualPanelHost = host;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
@@ -87,21 +109,23 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
                     masteryValue,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'bc-chaos-ritual-panel');
 
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__bcRitualPanelHost as HTMLElement | undefined;
+                interface BcRitualHostGlobal {
+                    __bcRitualPanelHost?: HTMLElement | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+                const fg = globalThis as unknown as BcRitualHostGlobal;
+                const host = fg.__bcRitualPanelHost;
                 try {
                     host?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__bcRitualPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__bcRitualPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

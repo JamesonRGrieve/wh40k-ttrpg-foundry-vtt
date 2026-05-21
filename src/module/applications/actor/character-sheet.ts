@@ -1257,26 +1257,15 @@ export default class CharacterSheet extends BaseActorSheet {
         };
         const partContext = (await prototype._preparePartContext?.call(this, partId, context, options)) ?? {};
 
-        switch (partId) {
-            case 'header':
-                return this._prepareHeaderContext(partContext, options);
-            case 'tabs':
-                return this._prepareTabsContext(partContext, options);
-            case 'biography':
-                return this._prepareBiographyContext(partContext, options);
-            case 'overview':
-                return this._prepareOverviewDashboardContext(partContext, options);
-            case 'status':
-            case 'combat':
-            case 'skills':
-            case 'equipment':
-            case 'powers':
-            case 'dynasty':
-                // Provide tab object for the template
-                return this._prepareTabPartContext(partId, partContext, options);
-            default:
-                return partContext;
+        if (partId === 'header') return this._prepareHeaderContext(partContext, options);
+        if (partId === 'tabs') return this._prepareTabsContext(partContext, options);
+        if (partId === 'biography') return this._prepareBiographyContext(partContext, options);
+        if (partId === 'overview') return this._prepareOverviewDashboardContext(partContext, options);
+        if (partId === 'status' || partId === 'combat' || partId === 'skills' || partId === 'equipment' || partId === 'powers' || partId === 'dynasty') {
+            // Provide tab object for the template
+            return this._prepareTabPartContext(partId, partContext, options);
         }
+        return partContext;
     }
 
     /* -------------------------------------------- */
@@ -1692,8 +1681,10 @@ export default class CharacterSheet extends BaseActorSheet {
         const rankRange = RENOWN_THRESHOLDS[rank];
         const rankIdx = RENOWN_RANK_ORDER.indexOf(rank);
         const nextRank: RenownRank | null = RENOWN_RANK_ORDER[rankIdx + 1] ?? null;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser narrows nextRank to RenownRank by missing the union; strict tsconfig retains the | null branch
         const nextRankMin = nextRank != null ? RENOWN_THRESHOLDS[nextRank].min : null;
         const rankLabel = game.i18n.localize(`WH40K.DW.Renown.Rank.${rank.charAt(0).toUpperCase()}${rank.slice(1)}`);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser narrows nextRank to RenownRank by missing the union; strict tsconfig retains the | null branch
         const nextRankLabel = nextRank != null ? game.i18n.localize(`WH40K.DW.Renown.Rank.${nextRank.charAt(0).toUpperCase()}${nextRank.slice(1)}`) : null;
         const progressPercent =
             nextRankMin === null ? 100 : Math.max(0, Math.min(100, Math.round(((value - rankRange.min) / (nextRankMin - rankRange.min)) * 100)));
@@ -3564,24 +3555,25 @@ export default class CharacterSheet extends BaseActorSheet {
         if (actionKey === undefined || actionKey === '') return;
 
         // Route to specific handler based on action key
-        switch (actionKey) {
-            case 'dodge':
-                await CharacterSheet.#dodge.call(this, event, target);
-                break;
-            case 'parry':
-                await CharacterSheet.#parry.call(this, event, target);
-                break;
-            case 'assignDamage':
-                CharacterSheet.#assignDamage.call(this, event, target);
-                break;
-            case 'initiative':
-                await CharacterSheet.#rollInitiative.call(this, event, target);
-                break;
-            default:
-                this._notify('warning', `Unknown combat action: ${actionKey}`, {
-                    duration: 3000,
-                });
+        if (actionKey === 'dodge') {
+            await CharacterSheet.#dodge.call(this, event, target);
+            return;
         }
+        if (actionKey === 'parry') {
+            await CharacterSheet.#parry.call(this, event, target);
+            return;
+        }
+        if (actionKey === 'assignDamage') {
+            CharacterSheet.#assignDamage.call(this, event, target);
+            return;
+        }
+        if (actionKey === 'initiative') {
+            await CharacterSheet.#rollInitiative.call(this, event, target);
+            return;
+        }
+        this._notify('warning', `Unknown combat action: ${actionKey}`, {
+            duration: 3000,
+        });
     }
 
     /* -------------------------------------------- */
@@ -4076,54 +4068,44 @@ export default class CharacterSheet extends BaseActorSheet {
             const items = this.actor.items;
             let count = 0;
 
-            switch (action) {
-                case undefined:
-                    break;
-                case 'equip-armour': {
-                    const armourItems = items.filter((i: WH40KItem & { isArmour?: boolean }) => i.type === 'armour' || i.isArmour);
-                    const toEquip = armourItems.filter((item) => item.system.equipped !== true);
-                    await Promise.all(toEquip.map(async (item) => item.update({ 'system.equipped': true })));
-                    count = toEquip.length;
-                    this._notify('info', `Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
-                        duration: 3000,
-                    });
-                    break;
-                }
-
-                case 'unequip-all': {
-                    const equippedItems = items.filter((i: WH40KItem) => (i.system as { equipped?: boolean }).equipped === true);
-                    await Promise.all(equippedItems.map(async (item) => item.update({ 'system.equipped': false })));
-                    count = equippedItems.length;
-                    this._notify('info', `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
-                        duration: 3000,
-                    });
-                    break;
-                }
-
-                case 'stow-gear': {
-                    const gearItems = items.filter(
-                        (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { inBackpack?: boolean } }) =>
-                            (i.type === 'gear' || i.isGear) && i.system.inBackpack !== true,
-                    );
-                    await Promise.all(
-                        gearItems.map(async (item) =>
-                            item.update({
-                                'system.inBackpack': true,
-                                'system.equipped': false,
-                            }),
-                        ),
-                    );
-                    count = gearItems.length;
-                    this._notify('info', `Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
-                        duration: 3000,
-                    });
-                    break;
-                }
-
-                default:
-                    this._notify('warning', `Unknown bulk action: ${action}`, {
-                        duration: 3000,
-                    });
+            if (action === undefined) {
+                // no-op
+            } else if (action === 'equip-armour') {
+                const armourItems = items.filter((i: WH40KItem & { isArmour?: boolean }) => i.type === 'armour' || i.isArmour);
+                const toEquip = armourItems.filter((item) => item.system.equipped !== true);
+                await Promise.all(toEquip.map(async (item) => item.update({ 'system.equipped': true })));
+                count = toEquip.length;
+                this._notify('info', `Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
+                    duration: 3000,
+                });
+            } else if (action === 'unequip-all') {
+                const equippedItems = items.filter((i: WH40KItem) => (i.system as { equipped?: boolean }).equipped === true);
+                await Promise.all(equippedItems.map(async (item) => item.update({ 'system.equipped': false })));
+                count = equippedItems.length;
+                this._notify('info', `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
+                    duration: 3000,
+                });
+            } else if (action === 'stow-gear') {
+                const gearItems = items.filter(
+                    (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { inBackpack?: boolean } }) =>
+                        (i.type === 'gear' || i.isGear) && i.system.inBackpack !== true,
+                );
+                await Promise.all(
+                    gearItems.map(async (item) =>
+                        item.update({
+                            'system.inBackpack': true,
+                            'system.equipped': false,
+                        }),
+                    ),
+                );
+                count = gearItems.length;
+                this._notify('info', `Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
+                    duration: 3000,
+                });
+            } else {
+                this._notify('warning', `Unknown bulk action: ${action}`, {
+                    duration: 3000,
+                });
             }
         } catch (error) {
             this._notify('error', `Bulk operation failed: ${(error as Error).message}`, {
@@ -4193,7 +4175,9 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!Array.isArray(pacts) || index >= pacts.length) return;
 
         const updated = structuredClone(pacts);
-        const entry = updated[index]!;
+        const entry = updated[index];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees indexed access as possibly undefined
+        if (entry === undefined) return;
         const current = entry.disposition as PactDisposition;
         entry.disposition = adjustPactDisposition(current, delta);
         await this.actor.update({ 'system.pacts': updated });
@@ -4217,7 +4201,9 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!Array.isArray(pacts) || index >= pacts.length) return;
 
         const updated = structuredClone(pacts);
-        const entry = updated[index]!;
+        const entry = updated[index];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees indexed access as possibly undefined
+        if (entry === undefined) return;
         const wasDiscovered = entry.discovered;
         entry.discovered = !wasDiscovered;
         await this.actor.update({ 'system.pacts': updated });
@@ -4243,7 +4229,9 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!Array.isArray(pacts) || index >= pacts.length) return;
 
         const updated = structuredClone(pacts);
-        const entry = updated[index]!;
+        const entry = updated[index];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees indexed access as possibly undefined
+        if (entry === undefined) return;
         entry.paymentCurrent = !entry.paymentCurrent;
         await this.actor.update({ 'system.pacts': updated });
     }
@@ -4269,13 +4257,16 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!Number.isFinite(idx)) return;
         const item = this.actor.items.get(endeavourId);
         if (item?.type !== 'endeavour') return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel index signature widens; narrow to endeavour-specific surface via unknown
         const sys = item.system as unknown as {
             apEarned: number;
             apRequired: number;
             objectives: Array<{ name: string; description: string; complete: boolean; ap: number }>;
         };
         if (idx < 0 || idx >= sys.objectives.length) return;
-        const objective = sys.objectives[idx]!;
+        const objective = sys.objectives[idx];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees indexed access as possibly undefined
+        if (objective === undefined) return;
         const nextObjectives = sys.objectives.map((o, i) => (i === idx ? { ...o, complete: !o.complete } : o));
         const delta = objective.complete ? -objective.ap : objective.ap;
         const nextApEarned = Math.max(0, sys.apEarned + delta);
@@ -4302,6 +4293,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (endeavourId === undefined) return;
         const item = this.actor.items.get(endeavourId);
         if (item?.type !== 'endeavour') return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel index signature widens; narrow to endeavour-specific surface via unknown
         const sys = item.system as unknown as {
             apEarned: number;
             apRequired: number;
@@ -4529,6 +4521,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * outside the sheet root; the renderChatMessageHTML hook supplies the
      * `.wh40k-rpg` ancestor).
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: data is passed straight into foundry.applications.handlebars.renderTemplate which accepts an arbitrary template context
     async _postPossessionChat(data: Record<string, unknown>): Promise<void> {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/possession-frenzy-chat.hbs', data);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types

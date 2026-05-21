@@ -29,10 +29,13 @@ Hbs.registerHelper('isExpanded', () => isExpandedReturn);
 // testing we mirror Foundry's behaviour: returns 'style="display:none"' when
 // the value is falsy, else an empty string. Some setups already register it;
 // guard against double-registration.
+type HandlebarsHelperArg = boolean | number | string | null | undefined | object;
+
+function isTruthyHelperArg(cond: HandlebarsHelperArg): boolean {
+    return cond !== null && cond !== undefined && cond !== false && cond !== '' && cond !== 0;
+}
 if ((Hbs.helpers.hideIfNot as Hbs.HelperDelegate | undefined) === undefined) {
-    Hbs.registerHelper('hideIfNot', (cond: unknown) =>
-        cond !== null && cond !== undefined && cond !== false && cond !== '' && cond !== 0 ? '' : new Hbs.SafeString('style="display:none;"'),
-    );
+    Hbs.registerHelper('hideIfNot', (cond: HandlebarsHelperArg) => (isTruthyHelperArg(cond) ? '' : new Hbs.SafeString('style="display:none;"')));
 }
 
 const quickControlsTemplate = Hbs.compile(quickControlsSrc);
@@ -304,7 +307,7 @@ describe('vital-edit-body partial', () => {
     Hbs.registerPartial('systems/wh40k-rpg/templates/actor/partial/vital-edit-input', editInputSrc);
     Hbs.registerPartial('test-edit-body', editBodySrc);
 
-    function renderEditBody(ctx: Record<string, unknown>, body = '<p class="extras">extras</p>'): HTMLElement {
+    function renderEditBody(ctx: object, body = '<p class="extras">extras</p>'): HTMLElement {
         const wrapped = Hbs.compile(
             `{{#> test-edit-body key=key actor=actor fields=fields editIcon=editIcon editTitle=editTitle wrapperClass=wrapperClass}}${body}{{/test-edit-body}}`,
         );

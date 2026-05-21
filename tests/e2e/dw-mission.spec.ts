@@ -28,7 +28,13 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface HandlebarsCompile {
+                    compile: (s: string) => (ctx: object) => string;
+                }
+                interface PanelGlobals {
+                    fetch?: (u: string) => Promise<Response>;
+                    Handlebars?: HandlebarsCompile;
+                }
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -45,10 +51,29 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                 let completeBtnAction = '';
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsLib.compile !== 'function') {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                    const fg = globalThis as unknown as PanelGlobals;
+                    const fetchFn = fg.fetch;
+                    if (typeof fetchFn !== 'function') {
+                        return {
+                            rendered,
+                            missionActiveAttr,
+                            missionNameText,
+                            ratingAttr,
+                            objectiveButtonCount,
+                            firstObjectiveAction,
+                            firstObjectiveId,
+                            complicationButtonCount,
+                            firstComplicationAction,
+                            firstComplicationId,
+                            hasCompleteBtn,
+                            completeBtnAction,
+                            error: 'fetch not available on globalThis',
+                        };
+                    }
+                    const src = await (await fetchFn(templateUrl)).text();
+                    const HandlebarsLib = fg.Handlebars;
+                    if (HandlebarsLib === undefined || typeof HandlebarsLib.compile !== 'function') {
                         return {
                             rendered,
                             missionActiveAttr,
@@ -118,7 +143,7 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                     if (rendered) {
                         const section = host.querySelector('section.wh40k-dw-mission-panel');
                         missionActiveAttr = section?.getAttribute('data-dw-mission-active') ?? '';
-                        missionNameText = host.querySelector('.wh40k-dw-mission-name')?.textContent?.trim() ?? '';
+                        missionNameText = host.querySelector('.wh40k-dw-mission-name')?.textContent.trim() ?? '';
                         ratingAttr = host.querySelector('.wh40k-dw-mission-rating')?.getAttribute('data-rating') ?? '';
 
                         const objectiveButtons = Array.from(host.querySelectorAll('button.wh40k-dw-mission-objective-toggle'));
@@ -136,7 +161,11 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                         completeBtnAction = completeBtn?.getAttribute('data-action') ?? '';
                     }
 
-                    (globalThis as any).__dwMissionPanelHost = host;
+                    interface DwMissionHostGlobal {
+                        __dwMissionPanelHost?: HTMLElement | undefined;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                    (globalThis as unknown as DwMissionHostGlobal).__dwMissionPanelHost = host;
                 } catch (err) {
                     error = String(err instanceof Error ? err.message : err);
                 }
@@ -156,22 +185,24 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                     completeBtnAction,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'dw-mission-panel');
 
             // Tear down so the host doesn't leak into the next serial test.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__dwMissionPanelHost as HTMLElement | undefined;
+                interface DwMissionHostGlobal {
+                    __dwMissionPanelHost?: HTMLElement | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+                const fg = globalThis as unknown as DwMissionHostGlobal;
+                const host = fg.__dwMissionPanelHost;
                 try {
                     host?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__dwMissionPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__dwMissionPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

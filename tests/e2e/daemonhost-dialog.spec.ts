@@ -36,10 +36,19 @@ test.describe.serial('DaemonhostBindingDialog (Tier B)', () => {
                 let hasBindButton = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    interface DialogInstance {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                        render: (force?: boolean) => Promise<unknown>;
+                        element: HTMLElement | null;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                        close: () => Promise<unknown>;
+                    }
+                    interface DialogModule {
+                        default: new () => DialogInstance;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return { rendered, tierCardCount, hasBindButton, error: 'default export not a constructor' };
                     }

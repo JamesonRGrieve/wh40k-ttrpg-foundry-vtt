@@ -1,6 +1,19 @@
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>)['game'];
+interface GameI18nShim {
+    i18n: {
+        localize: (key: string) => string;
+        format: (key: string, data?: Record<string, string | number>) => string;
+    };
+}
+
+interface GlobalWithGame {
+    game?: GameI18nShim | undefined;
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: typed view onto Foundry's untyped global `game` object (unit-test shim, not a DataModel surface)
+const globalRef = globalThis as unknown as GlobalWithGame;
+const ORIGINAL_GAME = globalRef.game;
 
 vi.mock('../../config/game-systems/index.ts', () => ({
     SystemConfigRegistry: {
@@ -9,10 +22,10 @@ vi.mock('../../config/game-systems/index.ts', () => ({
     },
 }));
 
-(globalThis as Record<string, unknown>)['game'] = {
+globalRef.game = {
     i18n: {
         localize: (key: string) => key,
-        format: (key: string, data: Record<string, unknown> = {}) => {
+        format: (key: string, data: Record<string, string | number> = {}) => {
             // Trivial mock — replicate Foundry's `{name}` interpolation enough for
             // the tooltip's RankWithBonus / UntrainedWithPenalty etc. templates.
             return Object.entries(data).reduce<string>((acc, [name, value]) => acc.replaceAll(`{${name}}`, String(value)), key);
@@ -21,14 +34,14 @@ vi.mock('../../config/game-systems/index.ts', () => ({
 };
 
 afterAll(() => {
-    (globalThis as Record<string, unknown>)['game'] = ORIGINAL_GAME;
+    globalRef.game = ORIGINAL_GAME;
 });
 
 const { TooltipsWH40K } = await import('./wh40k-tooltip.ts');
 
 describe('skill tooltip fallback ladder (issues #26 / #27)', () => {
     it('renders a localized 4-tier ladder when the game system cannot be resolved', async () => {
-        const html = await TooltipsWH40K.prototype._buildSkillTooltip.call({} as unknown as InstanceType<typeof TooltipsWH40K>, {
+        const html = await TooltipsWH40K.prototype._buildSkillTooltip.call({} as InstanceType<typeof TooltipsWH40K>, {
             name: 'Awareness',
             characteristic: 'Per',
             charValue: 35,

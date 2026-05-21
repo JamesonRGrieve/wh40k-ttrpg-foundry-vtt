@@ -13,6 +13,7 @@ import {
 function rngOf(...samples: number[]): () => number {
     let i = 0;
     return () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: this file is in src/module/ and is included by tsconfig.json (flag on); tsconfig.test.json (flag off) drives ESLint and sees samples[i] as definitely number.
         const next = (i < samples.length ? samples[i] : samples[samples.length - 1]) ?? 0;
         i += 1;
         return next;

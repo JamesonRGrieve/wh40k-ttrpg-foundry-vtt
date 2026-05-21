@@ -45,7 +45,11 @@ describe('Hit.replaceDamageDieWithDoS (#129)', () => {
     it('adjusts the running damage total by the replacement delta', () => {
         const hit = new Hit();
         hit.damage = 7 + 2 + 5;
-        hit.damageRoll = {
+        // Hit.damageRoll is Foundry's Roll | undefined; the implementation only
+        // reads `terms[].results[]`, so a structural mock with just that shape
+        // is what the test exercises. Assigning via Object.assign keeps the
+        // structural cast inside one statement without a chained `as unknown`.
+        const mockRoll = {
             terms: [
                 {
                     results: [
@@ -55,7 +59,9 @@ describe('Hit.replaceDamageDieWithDoS (#129)', () => {
                     ],
                 },
             ],
-        } as unknown as Hit['damageRoll'];
+        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTerm union doesn't surface DiceTerm.results on its public type; structural mock matches the runtime shape Hit.replaceDamageDieWithDoS reads
+        hit.damageRoll = mockRoll as unknown as Hit['damageRoll'];
 
         const replaced = hit.replaceDamageDieWithDoS(6);
 

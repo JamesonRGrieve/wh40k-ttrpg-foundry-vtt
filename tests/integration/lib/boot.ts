@@ -18,12 +18,9 @@ import { pathToFileURL } from 'node:url';
 import * as vm from 'node:vm';
 import { FOUNDRY_RELEASE_DIR, hasFoundryTierA, skipBanner } from './has-foundry';
 
-interface BootResult {
-    booted: boolean;
-    skipped: boolean;
-    error?: Error;
-    runtime?: FoundryRuntime;
-}
+export type BootResult =
+    | { booted: true; skipped: false; runtime: FoundryRuntime; error?: undefined }
+    | { booted: false; skipped: boolean; runtime?: undefined; error?: Error };
 
 export interface FoundryRuntime {
     window: object;
@@ -53,6 +50,7 @@ export async function bootFoundryOnce(): Promise<BootResult> {
     }
     // Atomic check-and-set: a concurrent caller may have populated `cached`
     // while we were awaiting `doBoot()`; the first result wins.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: concurrency-safe one-shot cache write (not a schema default)
     cached ??= result;
     return cached;
 }
@@ -73,7 +71,26 @@ async function doBoot(): Promise<BootResult> {
         pretendToBeVisual: true,
     });
 
-    const win = dom.window as Record<string, unknown>;
+    // Browser-global shim shape. The jsdom Window is the source of truth here
+    // and provides hundreds of properties; we type only the slots we read or
+    // write and reach through the `string` index for the rest.
+    // Index-signature `object` accommodates the heterogenous mix of values we
+    // copy off the jsdom Window: DOM constructors (`OffscreenCanvas` is a class),
+    // FDB factory instances, PIXI stub objects, etc. The named slots refine the
+    // shape only where we read them back; assignment goes through the index.
+    interface BrowserGlobals {
+        [key: string]: object | undefined;
+        indexedDB?: object;
+        OffscreenCanvas?: object;
+        WebGL2RenderingContext?: object;
+        PIXI?: object;
+        Hooks?: { callAll?: (name: string) => void };
+        game?: object;
+        CONFIG?: object;
+        foundry?: object;
+    }
+    // eslint-disable-next-line no-restricted-syntax -- boundary: jsdom Window → our boot-time stub view (browser globals are the canonical Foundry framework boundary)
+    const win = dom.window as unknown as BrowserGlobals;
     // Foundry expects these but jsdom does not provide them.
     win.indexedDB = new FDBFactory();
     win.OffscreenCanvas = class {};
@@ -86,7 +103,8 @@ async function doBoot(): Promise<BootResult> {
     // are read-only getters and will throw on assignment; tolerate that
     // per-key rather than failing the whole boot. Explicit Foundry-only
     // additions come after so they always win.
-    const g = globalThis as unknown as Record<string, unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis as a writable browser global (the Foundry boot harness's job)
+    const g = globalThis as unknown as BrowserGlobals;
     for (const key of Object.getOwnPropertyNames(win)) {
         if (key in g) continue;
         try {
@@ -110,7 +128,7 @@ async function doBoot(): Promise<BootResult> {
     // Foundry's `init` / `setup` / `ready` are fired by its own entry, but
     // outside a browser the bootstrap sequence does not auto-run. Fire the
     // hooks manually so consumer code that listens for them executes.
-    const HooksApi = (win as { Hooks?: { callAll?: (name: string) => void } }).Hooks;
+    const HooksApi = win.Hooks;
     HooksApi?.callAll?.('init');
     HooksApi?.callAll?.('setup');
     HooksApi?.callAll?.('ready');
@@ -120,10 +138,10 @@ async function doBoot(): Promise<BootResult> {
         skipped: false,
         runtime: {
             window: win,
-            game: (win as { game: object }).game,
-            CONFIG: (win as { CONFIG: object }).CONFIG,
-            Hooks: (win as { Hooks: object }).Hooks,
-            foundry: (win as { foundry: object }).foundry,
+            game: win.game ?? {},
+            CONFIG: win.CONFIG ?? {},
+            Hooks: win.Hooks ?? {},
+            foundry: win.foundry ?? {},
         },
     };
 }
@@ -139,7 +157,7 @@ function makePixiStub(): object {
         Application: class {
             stage = {};
             renderer = { resize(): void {} };
-            destroy() {}
+            destroy(): void {}
         },
         Container: class {},
         Sprite: class {},
