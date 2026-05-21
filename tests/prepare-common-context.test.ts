@@ -7,54 +7,75 @@
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
-const ORIGINAL_CONFIG = (globalThis as Record<string, unknown>).CONFIG;
+interface FakeGame {
+    i18n?: { localize: (k: string) => string; format: (k: string) => string };
+    user?: { isGM: boolean };
+}
+
+interface FakeConfig {
+    wh40k?: { combatActions?: { foo: string } };
+}
+
+interface FakeGlobals {
+    game?: FakeGame;
+    CONFIG?: FakeConfig;
+}
+
+interface CommonContext {
+    isGM?: boolean;
+    dh?: object;
+}
+
+interface FakeSheet {
+    _prepareCommonContext: (ctx: CommonContext) => void;
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: globalThis test mocking has no upstream schema
+const fakeGlobals = globalThis as unknown as FakeGlobals;
+const ORIGINAL_GAME = fakeGlobals.game;
+const ORIGINAL_CONFIG = fakeGlobals.CONFIG;
 
 beforeEach(() => {
-    (globalThis as Record<string, unknown>).game = {
+    fakeGlobals.game = {
         i18n: { localize: (k: string) => k, format: (k: string) => k },
         user: { isGM: true },
     };
-    (globalThis as Record<string, unknown>).CONFIG = { wh40k: { combatActions: { foo: 'bar' } } };
+    fakeGlobals.CONFIG = { wh40k: { combatActions: { foo: 'bar' } } };
 });
 
 afterEach(() => {
-    (globalThis as Record<string, unknown>).game = ORIGINAL_GAME;
-    (globalThis as Record<string, unknown>).CONFIG = ORIGINAL_CONFIG;
+    fakeGlobals.game = ORIGINAL_GAME;
+    fakeGlobals.CONFIG = ORIGINAL_CONFIG;
+});
+
+const makeFakeSheet = (): FakeSheet => ({
+    _prepareCommonContext(ctx: CommonContext): void {
+        ctx.isGM = fakeGlobals.game?.user?.isGM ?? false;
+        ctx.dh = fakeGlobals.CONFIG?.wh40k ?? {};
+    },
 });
 
 describe('_prepareCommonContext (BaseActorSheet helper)', () => {
     it('writes isGM and dh into the context', () => {
-        const helper = (instance: { _prepareCommonContext: (sheetCtx: Record<string, unknown>) => void }, sheetCtx: Record<string, unknown>): void =>
-            instance._prepareCommonContext(sheetCtx);
+        const helper = (instance: FakeSheet, target: CommonContext): void => instance._prepareCommonContext(target);
 
         // Reproduce the helper inline to avoid pulling in the full BaseActorSheet
         // mixin chain. The shape is what the production helper uses verbatim.
-        const fakeSheet = {
-            _prepareCommonContext(sheetCtx: Record<string, unknown>): void {
-                sheetCtx.isGM = (globalThis as Record<string, any>).game?.user?.isGM ?? false;
-                sheetCtx.dh = (globalThis as Record<string, any>).CONFIG?.wh40k ?? {};
-            },
-        };
+        const fakeSheet = makeFakeSheet();
 
-        const ctx: Record<string, unknown> = {};
+        const ctx: CommonContext = {};
         helper(fakeSheet, ctx);
         expect(ctx.isGM).toBe(true);
         expect(ctx.dh).toEqual({ combatActions: { foo: 'bar' } });
     });
 
     it('falls back to false / empty when game.user / CONFIG are missing', () => {
-        (globalThis as Record<string, unknown>).game = {};
-        (globalThis as Record<string, unknown>).CONFIG = {};
+        fakeGlobals.game = {};
+        fakeGlobals.CONFIG = {};
 
-        const fakeSheet = {
-            _prepareCommonContext(sheetCtx: Record<string, unknown>): void {
-                sheetCtx.isGM = (globalThis as Record<string, any>).game?.user?.isGM ?? false;
-                sheetCtx.dh = (globalThis as Record<string, any>).CONFIG?.wh40k ?? {};
-            },
-        };
+        const fakeSheet = makeFakeSheet();
 
-        const ctx: Record<string, unknown> = {};
+        const ctx: CommonContext = {};
         fakeSheet._prepareCommonContext(ctx);
         expect(ctx.isGM).toBe(false);
         expect(ctx.dh).toEqual({});

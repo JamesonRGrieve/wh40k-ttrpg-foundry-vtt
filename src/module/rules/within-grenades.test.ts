@@ -14,6 +14,7 @@ describe('WITHIN_GRENADES (#135)', () => {
     });
 
     it('photon flash uses Agility +10 with no damage and a Blast (6) cloud', () => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: tsconfig.test.json has the flag off so the `!` reads as redundant, but tsconfig.json's stricter inclusion of this file requires it
         const g = WITHIN_GRENADES['photonFlash']!;
         expect(g).toBeDefined();
         expect(g.blastRadius).toBe(6);
@@ -24,6 +25,7 @@ describe('WITHIN_GRENADES (#135)', () => {
     });
 
     it('psychotroke uses Toughness Ordinary with Hallucinogenic (4) step-up rider', () => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: tsconfig.test.json has the flag off so the `!` reads as redundant, but tsconfig.json's stricter inclusion of this file requires it
         const g = WITHIN_GRENADES['psychotroke']!;
         expect(g).toBeDefined();
         expect(g.blastRadius).toBe(3);
@@ -34,6 +36,7 @@ describe('WITHIN_GRENADES (#135)', () => {
     });
 
     it('tears-of-the-emperor uses Willpower Hard (-20) and is Sanctified', () => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: tsconfig.test.json has the flag off so the `!` reads as redundant, but tsconfig.json's stricter inclusion of this file requires it
         const g = WITHIN_GRENADES['tearsOfTheEmperor']!;
         expect(g).toBeDefined();
         expect(g.blastRadius).toBe(2);
@@ -45,6 +48,7 @@ describe('WITHIN_GRENADES (#135)', () => {
     });
 
     it('smoke is Smoke (4) with no damage', () => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: tsconfig.test.json has the flag off so the `!` reads as redundant, but tsconfig.json's stricter inclusion of this file requires it
         const g = WITHIN_GRENADES['smoke']!;
         expect(g).toBeDefined();
         expect(g.blastRadius).toBe(4);

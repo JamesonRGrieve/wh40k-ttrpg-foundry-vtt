@@ -136,7 +136,9 @@ export function actorHasManaclesEquipped(actor: WH40KBaseActorDocument): boolean
 interface ManaclesEffectCandidate {
     id?: string | null;
     name?: string | null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ActiveEffect.flags is an untyped bag scoped per-module; values are not statically known
     flags?: Record<string, Record<string, unknown> | undefined> | undefined;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ActiveEffect.getFlag returns the raw stored flag value, which is untyped
     getFlag?: (scope: string, key: string) => unknown;
 }
 
@@ -191,6 +193,7 @@ export async function applyManaclesCondition(actor: WH40KBaseActorDocument, opti
     const existing = findManaclesEffect(actor);
     if (existing !== null) return existing;
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ActiveEffect.flags is an untyped per-scope bag; createConditionEffect's options.flags signature is Record<string, unknown>
     const flags: Record<string, Record<string, unknown>> = {
         [MANACLES_FLAG_SCOPE]: { [MANACLES_FLAG_KEY]: true },
     };

@@ -135,7 +135,11 @@ export function rollVehicleCrit(args: RollVehicleCritArgs): RollVehicleCritResul
     const modifier = Number.isFinite(args.overIntegrity) && args.overIntegrity > 0 ? args.overIntegrity : 0;
     const finalRoll = Math.min(MAX_CHART_ROLL, Math.max(1, rolled + modifier));
     // Chart is constructed densely above; finalRoll is clamped to [1, 10].
-    const row = DW_VEHICLE_CRIT_CHART[finalRoll - 1]!;
+    const row = DW_VEHICLE_CRIT_CHART[finalRoll - 1];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: tsconfig.test.json has the flag off so the existence check reads as redundant, but tsconfig.json includes this file with the flag on, where the indexed access returns `CritChartRow | undefined`
+    if (row === undefined) {
+        throw new Error(`dw-vehicle-crit chart row missing for clamped roll ${finalRoll}`);
+    }
     return {
         rolled,
         finalRoll,
@@ -153,24 +157,21 @@ export type RepairDifficulty = 'routine' | 'challenging' | 'hard';
  * by RAW; structural / fire / wrecked damage requires Hard work in a
  * properly-equipped repair bay.
  */
+const REPAIR_DIFFICULTY_BY_RESULT: Readonly<Record<DwVehicleCritResult, RepairDifficulty>> = {
+    'minor': 'routine',
+    'mobility': 'challenging',
+    'weapons': 'challenging',
+    'cargo': 'challenging',
+    'crew': 'hard',
+    'engine': 'hard',
+    'hull': 'hard',
+    'fire': 'hard',
+    'catastrophic-fire': 'hard',
+    'wrecked': 'hard',
+};
+
 export function repairDifficultyFor(result: DwVehicleCritResult): RepairDifficulty {
-    switch (result) {
-        case 'minor':
-            return 'routine';
-        case 'mobility':
-        case 'weapons':
-        case 'cargo':
-            return 'challenging';
-        case 'crew':
-        case 'engine':
-        case 'hull':
-        case 'fire':
-        case 'catastrophic-fire':
-        case 'wrecked':
-            return 'hard';
-        default:
-            return 'hard';
-    }
+    return REPAIR_DIFFICULTY_BY_RESULT[result];
 }
 
 /**
@@ -179,17 +180,14 @@ export function repairDifficultyFor(result: DwVehicleCritResult): RepairDifficul
  * +0, Hard -20); content-driven overrides (Tech-Marine omnissian
  * bonuses, machine-spirit boons) layer on top at the caller.
  */
+const REPAIR_MODIFIER_BY_DIFFICULTY: Readonly<Record<RepairDifficulty, number>> = {
+    routine: 20,
+    challenging: 0,
+    hard: -20,
+};
+
 export function repairModifierFor(difficulty: RepairDifficulty): number {
-    switch (difficulty) {
-        case 'routine':
-            return 20;
-        case 'challenging':
-            return 0;
-        case 'hard':
-            return -20;
-        default:
-            return 0;
-    }
+    return REPAIR_MODIFIER_BY_DIFFICULTY[difficulty];
 }
 
 /**

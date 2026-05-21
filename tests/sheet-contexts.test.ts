@@ -11,18 +11,29 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { GameSystemId } from '../src/module/config/game-systems/types';
 import { mockNpcSheetContext, mockPlayerSheetContext, mockStarshipSheetContext, mockVehicleSheetContext } from '../stories/mocks/sheet-contexts';
 
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
+interface GameI18nStub {
+    localize: (k: string) => string;
+    format: (k: string) => string;
+}
+interface GameStub {
+    i18n: GameI18nStub;
+}
+interface GlobalShim {
+    game?: GameStub | undefined;
+}
+const G = globalThis as GlobalShim;
+const ORIGINAL_GAME = G.game;
 
 beforeAll(() => {
     // Some configs call game.i18n.localize; the factory installs a stub if absent,
     // but tests that run in isolation rely on the same passthrough.
-    (globalThis as Record<string, unknown>).game = {
-        i18n: { localize: (k: string) => k, format: (k: string) => k },
+    G.game = {
+        i18n: { localize: (k: string): string => k, format: (k: string): string => k },
     };
 });
 
 afterAll(() => {
-    (globalThis as Record<string, unknown>).game = ORIGINAL_GAME;
+    G.game = ORIGINAL_GAME;
 });
 
 describe('mockPlayerSheetContext', () => {

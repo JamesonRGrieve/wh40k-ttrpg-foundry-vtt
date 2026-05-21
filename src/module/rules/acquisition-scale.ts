@@ -70,38 +70,27 @@ export const ACQUISITION_AVAILABILITY_MODIFIERS: Record<AvailabilityKey, number>
  * stores availability lowercased with space separators while ship
  * components stored hyphenated (`'very-rare'`) — see issue #192.
  */
+const AVAILABILITY_NORMALISATION: Readonly<Record<string, AvailabilityKey>> = {
+    ubiquitous: 'ubiquitous',
+    abundant: 'abundant',
+    plentiful: 'plentiful',
+    common: 'common',
+    average: 'average',
+    scarce: 'scarce',
+    rare: 'rare',
+    veryrare: 'veryRare',
+    extremelyrare: 'extremelyRare',
+    nearunique: 'nearUnique',
+    unique: 'unique',
+};
+
 export function normaliseAvailability(raw: string | null | undefined): AvailabilityKey | null {
     if (raw === null || raw === undefined) return null;
     const collapsed = raw
         .trim()
         .toLowerCase()
         .replace(/[\s_-]+/g, '');
-    switch (collapsed) {
-        case 'ubiquitous':
-            return 'ubiquitous';
-        case 'abundant':
-            return 'abundant';
-        case 'plentiful':
-            return 'plentiful';
-        case 'common':
-            return 'common';
-        case 'average':
-            return 'average';
-        case 'scarce':
-            return 'scarce';
-        case 'rare':
-            return 'rare';
-        case 'veryrare':
-            return 'veryRare';
-        case 'extremelyrare':
-            return 'extremelyRare';
-        case 'nearunique':
-            return 'nearUnique';
-        case 'unique':
-            return 'unique';
-        default:
-            return null;
-    }
+    return AVAILABILITY_NORMALISATION[collapsed] ?? null;
 }
 
 /* -------------------------------------------------------------------- */
@@ -121,24 +110,20 @@ export const ACQUISITION_CRAFTSMANSHIP_MODIFIERS: Record<CraftsmanshipKey, numbe
     best: -30,
 };
 
+const CRAFTSMANSHIP_NORMALISATION: Readonly<Record<string, CraftsmanshipKey>> = {
+    poor: 'poor',
+    common: 'common',
+    good: 'good',
+    best: 'best',
+};
+
 export function normaliseCraftsmanship(raw: string | null | undefined): CraftsmanshipKey | null {
     if (raw === null || raw === undefined) return null;
     const collapsed = raw
         .trim()
         .toLowerCase()
         .replace(/[\s_-]+/g, '');
-    switch (collapsed) {
-        case 'poor':
-            return 'poor';
-        case 'common':
-            return 'common';
-        case 'good':
-            return 'good';
-        case 'best':
-            return 'best';
-        default:
-            return null;
-    }
+    return CRAFTSMANSHIP_NORMALISATION[collapsed] ?? null;
 }
 
 /* -------------------------------------------------------------------- */
@@ -162,32 +147,25 @@ export const ACQUISITION_SCALE_MODIFIERS: Record<ScaleKey, number> = {
     vast: -30,
 };
 
+const SCALE_NORMALISATION: Readonly<Record<string, ScaleKey>> = {
+    negligible: 'negligible',
+    trivial: 'trivial',
+    minor: 'minor',
+    standard: 'standard',
+    major: 'major',
+    significant: 'significant',
+    // 'Significan' in the source MD is a transcription typo; accept both.
+    significan: 'significant',
+    vast: 'vast',
+};
+
 export function normaliseScale(raw: string | null | undefined): ScaleKey | null {
     if (raw === null || raw === undefined) return null;
     const collapsed = raw
         .trim()
         .toLowerCase()
         .replace(/[\s_-]+/g, '');
-    switch (collapsed) {
-        case 'negligible':
-            return 'negligible';
-        case 'trivial':
-            return 'trivial';
-        case 'minor':
-            return 'minor';
-        case 'standard':
-            return 'standard';
-        case 'major':
-            return 'major';
-        // 'Significan' in the source MD is a transcription typo; accept both.
-        case 'significant':
-        case 'significan':
-            return 'significant';
-        case 'vast':
-            return 'vast';
-        default:
-            return null;
-    }
+    return SCALE_NORMALISATION[collapsed] ?? null;
 }
 
 /* -------------------------------------------------------------------- */

@@ -12,27 +12,38 @@ import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts
 import type { GameSystemId, SidebarHeaderField } from '../src/module/config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../src/module/documents/base-actor.ts';
 
-type ActorLike = {
+interface ActorLike {
     system?: {
         bio?: Record<string, string | number>;
         originPath?: Record<string, string | number>;
         rank?: string | number;
     };
-};
+}
 
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
+interface I18nStub {
+    localize: (key: string) => string;
+    format: (key: string) => string;
+}
+interface GameStub {
+    i18n: I18nStub;
+}
+interface GlobalShim {
+    game?: GameStub | undefined;
+}
+const G = globalThis as GlobalShim;
+const ORIGINAL_GAME = G.game;
 
 beforeAll(() => {
-    (globalThis as Record<string, unknown>).game = {
+    G.game = {
         i18n: {
-            localize: (key: string) => key,
-            format: (key: string) => key,
+            localize: (key: string): string => key,
+            format: (key: string): string => key,
         },
     };
 });
 
 afterAll(() => {
-    (globalThis as Record<string, unknown>).game = ORIGINAL_GAME;
+    G.game = ORIGINAL_GAME;
 });
 
 function makeActor(overrides: ActorLike = {}): WH40KBaseActor {
@@ -51,6 +62,7 @@ function makeActor(overrides: ActorLike = {}): WH40KBaseActor {
             rank: 3,
             ...overrides.system,
         },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is the full Foundry actor type; this is a structural test mock satisfying only the surface getHeaderFields reaches into
     } as unknown as WH40KBaseActor;
 }
 

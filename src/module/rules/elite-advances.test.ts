@@ -17,16 +17,20 @@ describe('ELITE_ADVANCES registry (#86)', () => {
         for (const id of ['astropath', 'inquisitor', 'psyker', 'untouchable']) {
             const entry = ELITE_ADVANCES[id];
             expect(entry, `missing elite advance: ${id}`).toBeDefined();
-            expect(entry!.id).toBe(id);
-            expect(entry!.label.length).toBeGreaterThan(0);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: same file is included by tsconfig.json with the flag on, where `entry` is `Entry | undefined`
+            expect(entry?.id).toBe(id);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: same file is included by tsconfig.json with the flag on, where `entry` is `Entry | undefined`
+            expect(entry?.label.length).toBeGreaterThan(0);
         }
     });
 
     it('Astropath: 1000 XP cost, WP 40 + Psyniscience + Sanctioned prereqs', () => {
         const a = ELITE_ADVANCES['astropath'];
         expect(a, 'Astropath entry missing').toBeDefined();
-        expect(a!.xpCost).toBe(1000);
-        const prereqs = a!.prerequisites;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: same file is included by tsconfig.json with the flag on, where `a` is `Entry | undefined`
+        expect(a?.xpCost).toBe(1000);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: same file is included by tsconfig.json with the flag on, where `a` is `Entry | undefined`
+        const prereqs = a?.prerequisites ?? [];
         const wpPrereq = prereqs.find((p) => p.type === 'characteristic' && p.key === 'willpower');
         expect(wpPrereq?.minimum).toBe(40);
         expect(prereqs.some((p) => p.type === 'skill' && p.key === 'psyniscience')).toBe(true);
