@@ -63,7 +63,7 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
                     hasResolveGearOutcome = typeof mod.resolveGearOutcome === 'function';
                     hasRollRandomIssueGear = typeof mod.rollRandomIssueGear === 'function';
                     hasOrdinaryBonus = mod.ORDINARY_DIFFICULTY_BONUS === 10;
-                    hasGearResultLadder = Array.isArray(mod.GEAR_RESULT_LADDER) && (mod.GEAR_RESULT_LADDER?.length ?? 0) >= 4;
+                    hasGearResultLadder = Array.isArray(mod.GEAR_RESULT_LADDER) && mod.GEAR_RESULT_LADDER.length >= 4;
 
                     if (mod.applyTable63Modifiers !== undefined) {
                         const composed = mod.applyTable63Modifiers(50, [{ description: 'remote-warzone', value: -10 }]);
@@ -83,7 +83,7 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
                         randomIssueRoll = mod.rollRandomIssueGear(() => 0.5);
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String(err instanceof Error ? err.message : err);
                 }
 
                 return {

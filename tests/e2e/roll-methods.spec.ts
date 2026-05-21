@@ -115,7 +115,7 @@ async function probeRollMethods(
                         system: { gameSystem: sysId },
                     });
                 } catch (err) {
-                    return { created: false, createError: String((err as Error)?.message ?? err), results: [] };
+                    return { created: false, createError: err instanceof Error ? err.message : String(err), results: [] };
                 }
                 if (!actor) {
                     return { created: false, createError: 'Actor.create returned null', results: [] };
@@ -169,10 +169,10 @@ async function probeRollMethods(
                     for (const w of windows) {
                         // Heuristic: ids starting with 'app-' or containing
                         // 'dialog'/'prompt' are roll-flow surfaces.
-                        const id = w?.id ?? '';
+                        const id = w.id ?? '';
                         if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {
                             try {
-                                await w?.close?.();
+                                await w.close?.();
                             } catch {
                                 /* ignore */
                             }
@@ -255,7 +255,7 @@ async function probeRollMethods(
                                 error = `unknown method ${String(method)}`;
                         }
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = err instanceof Error ? err.message : String(err);
                     }
                     // Drain any dialog the method opened so the next probe
                     // doesn't stack windows.

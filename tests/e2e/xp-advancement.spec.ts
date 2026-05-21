@@ -49,7 +49,7 @@ async function createBCCharacter(page: Page, label: string): Promise<{ id: strin
             });
             return { id: actor?.id ?? null, createError: actor ? null : 'Actor.create returned null' };
         } catch (err) {
-            return { id: null, createError: String((err as Error)?.message ?? err) };
+            return { id: null, createError: String(err instanceof Error ? err.message : err) };
         }
     }, label);
 }
@@ -86,7 +86,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             try {
                 await actor.update?.({ 'system.experience.total': 500 });
             } catch (err) {
-                return { error: `set total: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set total: ${String(err instanceof Error ? err.message : err)}` };
             }
             const after = gameObj?.actors?.get?.(actorId)?.system?.experience?.total ?? null;
             return { initial, after, error: null };
@@ -122,7 +122,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 await actor.update?.({ 'system.experience.total': 1000, 'system.experience.used': 0 });
                 await actor.update?.({ 'system.experience.used': 250 });
             } catch (err) {
-                return { error: `set used: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set used: ${String(err instanceof Error ? err.message : err)}` };
             }
             const after = gameObj?.actors?.get?.(actorId)?.system?.experience?.used ?? null;
             return { after, error: null };
@@ -157,7 +157,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             try {
                 await actor.update?.({ 'system.experience.total': 800, 'system.experience.used': 300 });
             } catch (err) {
-                return { error: `set total/used: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set total/used: ${String(err instanceof Error ? err.message : err)}` };
             }
             const xp = gameObj?.actors?.get?.(actorId)?.system?.experience;
             return { total: xp?.total ?? null, used: xp?.used ?? null, available: xp?.available ?? null, error: null };
@@ -217,7 +217,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 } catch {
                     /* ignore */
                 }
-                return { rendered: false, error: String((err as Error)?.message ?? err) };
+                return { rendered: false, error: String(err instanceof Error ? err.message : err) };
             }
             /* eslint-enable @typescript-eslint/no-explicit-any */
         }, created.id);
@@ -271,7 +271,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 } catch {
                     /* ignore */
                 }
-                return { rendered: false, error: String((err as Error)?.message ?? err) };
+                return { rendered: false, error: String(err instanceof Error ? err.message : err) };
             }
             /* eslint-enable @typescript-eslint/no-explicit-any */
         }, created.id);
@@ -313,7 +313,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 // Simulate the purchase ledger update — adding the talent costs XP.
                 await actor.update?.({ 'system.experience.used': TALENT_COST });
             } catch (err) {
-                return { error: `purchase talent: ${String((err as Error)?.message ?? err)}` };
+                return { error: `purchase talent: ${String(err instanceof Error ? err.message : err)}` };
             }
             const fresh = gameObj?.actors?.get?.(actorId);
             const items = fresh?.items?.contents ?? [];
@@ -361,13 +361,13 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             try {
                 await actor.update?.({ 'system.skills.dodge.advance': 1 });
             } catch (err) {
-                return { error: `set advance=1: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set advance=1: ${String(err instanceof Error ? err.message : err)}` };
             }
             const atOne = gameObj?.actors?.get?.(actorId)?.system?.skills?.['dodge'];
             try {
                 await actor.update?.({ 'system.skills.dodge.advance': 2 });
             } catch (err) {
-                return { error: `set advance=2: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set advance=2: ${String(err instanceof Error ? err.message : err)}` };
             }
             const atTwo = gameObj?.actors?.get?.(actorId)?.system?.skills?.['dodge'];
             return {

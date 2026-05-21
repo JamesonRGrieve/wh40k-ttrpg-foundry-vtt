@@ -47,7 +47,7 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
                     const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HbsLib?.compile !== 'function') {
+                    if (typeof HbsLib.compile !== 'function') {
                         return {
                             rendered,
                             hasClassSelect,
@@ -115,7 +115,7 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
                     // it down here would leave the screenshot empty.
                     (globalThis as any).__bcPsychicPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

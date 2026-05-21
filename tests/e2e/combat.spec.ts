@@ -111,7 +111,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     if (actor?.id != null) npcIds.push(actor.id);
                 } catch (err) {
                     // best effort; we'll proceed if we got at least one
-                    notes['addCombatants'] = `npc create ${i} threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['addCombatants'] = `npc create ${i} threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
             }
 
@@ -132,14 +132,14 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // operation can't kill the Foundry server and take downstream
             // specs (dialogs, settings, sheet-interactions) with it.
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                const handle = { timer: undefined as ReturnType<typeof setTimeout> | undefined };
                 const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+                    handle.timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer !== null) clearTimeout(timer);
+                    clearTimeout(handle.timer);
                 }
             };
 
@@ -152,7 +152,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     notes['create'] = 'Combat.create returned null';
                 }
             } catch (err) {
-                notes['create'] = `Combat.create threw: ${String((err as Error)?.message ?? err)}`;
+                notes['create'] = `Combat.create threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             if (combat?.id == null) {
@@ -191,7 +191,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     notes['addCombatants'] = 'createEmbeddedDocuments returned empty';
                 }
             } catch (err) {
-                notes['addCombatants'] = `createEmbeddedDocuments threw: ${String((err as Error)?.message ?? err)}`;
+                notes['addCombatants'] = `createEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             // ---- roll initiative for all ----
@@ -203,7 +203,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     notes['rollAll'] = 'combat.rollAll is not a function';
                 }
             } catch (err) {
-                notes['rollAll'] = `rollAll threw: ${String((err as Error)?.message ?? err)}`;
+                notes['rollAll'] = `rollAll threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             // ---- activate combat (scene-less combat is activatable in V14) ----
@@ -215,7 +215,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     notes['activate'] = 'combat.activate is not a function';
                 }
             } catch (err) {
-                notes['activate'] = `activate threw: ${String((err as Error)?.message ?? err)}`;
+                notes['activate'] = `activate threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             // ---- startCombat ----
@@ -227,7 +227,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     notes['startCombat'] = 'combat.startCombat is not a function';
                 }
             } catch (err) {
-                notes['startCombat'] = `startCombat threw: ${String((err as Error)?.message ?? err)}`;
+                notes['startCombat'] = `startCombat threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             // ---- nextTurn x3 ----
@@ -244,7 +244,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 }
                 if (turnOk) fired['nextTurn'] = true;
             } catch (err) {
-                notes['nextTurn'] = `nextTurn threw: ${String((err as Error)?.message ?? err)}`;
+                notes['nextTurn'] = `nextTurn threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             // ---- nextRound x2 ----
@@ -261,7 +261,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 }
                 if (roundOk) fired['nextRound'] = true;
             } catch (err) {
-                notes['nextRound'] = `nextRound threw: ${String((err as Error)?.message ?? err)}`;
+                notes['nextRound'] = `nextRound threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             // ---- setInitiative on a combatant ----
@@ -273,7 +273,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     notes['setInitiative'] = combatantIds.length === 0 ? 'no combatants available' : 'combat.setInitiative is not a function';
                 }
             } catch (err) {
-                notes['setInitiative'] = `setInitiative threw: ${String((err as Error)?.message ?? err)}`;
+                notes['setInitiative'] = `setInitiative threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             // ---- delete a combatant ----
@@ -289,7 +289,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     notes['deleteCombatant'] = 'insufficient combatants to delete one safely';
                 }
             } catch (err) {
-                notes['deleteCombatant'] = `deleteEmbeddedDocuments threw: ${String((err as Error)?.message ?? err)}`;
+                notes['deleteCombatant'] = `deleteEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
             // ---- endCombat (falls back to combat.delete) ----
@@ -309,14 +309,14 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     await withTimeout(combat.delete?.(), 5_000, 'combat.delete fallback');
                     fired['endCombat'] = true;
                 } catch (err2) {
-                    notes['endCombat'] = `endCombat/delete threw: ${String((err2 as Error)?.message ?? err2)}`;
+                    notes['endCombat'] = `endCombat/delete threw: ${String(err2 instanceof Error ? err2.message : err2)}`;
                 }
             }
 
             // ---- cleanup actors ----
             for (const id of npcIds) {
                 try {
-                    await game?.actors?.get?.(id)?.delete?.();
+                    await gameGbl?.actors?.get?.(id)?.delete?.();
                 } catch {
                     /* ignore */
                 }
@@ -385,7 +385,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                     const mod = await import(/* @vite-ignore */ path);
                     return mod?.default ?? mod?.[name] ?? null;
                 } catch (err) {
-                    notes[name] = `dynamic import failed: ${String((err as Error)?.message ?? err)}`;
+                    notes[name] = `dynamic import failed: ${String(err instanceof Error ? err.message : err)}`;
                     return null;
                 }
             }
@@ -491,7 +491,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                         notes[name] = 'instance has no render method';
                     }
                 } catch (err) {
-                    notes[name] = `construction/render threw: ${String((err as Error)?.message ?? err)}`;
+                    notes[name] = `construction/render threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
             }
 

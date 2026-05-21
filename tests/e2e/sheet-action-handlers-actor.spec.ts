@@ -97,7 +97,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             if (ActorClass?.create == null) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'character-sheet::toggleEquip': 'Actor.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'character-sheet::toggleEquip': 'Actor.create unavailable' },
                 };
             }
 
@@ -121,7 +121,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- browser-side: uiCtx is `any` from globalThis cast
                 const windows = Object.values(uiCtx?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
-                    const id = w?.id ?? '';
+                    const id = w.id ?? '';
                     if (
                         id.includes('dialog') ||
                         id.includes('prompt') ||
@@ -133,7 +133,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         id.includes('characteristic')
                     ) {
                         try {
-                            await w?.close?.();
+                            await w.close?.();
                         } catch {
                             /* ignore */
                         }
@@ -176,7 +176,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     if (actor?.id != null) {
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(actor.id)?.delete?.();
+                                await game.actors.get(actor.id).delete();
                             } catch {
                                 /* ignore */
                             }
@@ -240,7 +240,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 5_000,
                                 'create gear',
                             )) as any[];
-                            gear = created?.[0] != null ? livePc().items.get(created[0].id) : null;
+                            gear = created[0] != null ? livePc().items.get(created[0].id) : null;
                         } catch {
                             gear = null;
                         }
@@ -265,7 +265,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['character-sheet::toggleEquip'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['character-sheet::toggleEquip'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- character-sheet::stowItem ----
@@ -288,7 +288,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['character-sheet::stowItem'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['character-sheet::stowItem'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- character-sheet::unstowItem ----
@@ -310,7 +310,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['character-sheet::unstowItem'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['character-sheet::unstowItem'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- character-sheet::filterEquipment ----
@@ -325,7 +325,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 notes['character-sheet::filterEquipment'] = 'dispatch ok';
                             }
                         } catch (err) {
-                            notes['character-sheet::filterEquipment'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['character-sheet::filterEquipment'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- character-sheet::toggleFavoriteSkill ----
@@ -351,7 +351,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['character-sheet::toggleFavoriteSkill'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['character-sheet::toggleFavoriteSkill'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- character-sheet::toggleFavoriteTalent ----
@@ -366,7 +366,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     5_000,
                                     'create talent',
                                 )) as any[];
-                                const talent = talentCreated?.[0] != null ? livePc().items.get(talentCreated[0].id) : null;
+                                const talent = talentCreated[0] != null ? livePc().items.get(talentCreated[0].id) : null;
                                 if (talent == null) {
                                     notes['character-sheet::toggleFavoriteTalent'] = 'talent create failed';
                                 } else {
@@ -390,7 +390,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['character-sheet::toggleFavoriteTalent'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['character-sheet::toggleFavoriteTalent'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- character-sheet::adjustSubtletyManually ----
@@ -406,7 +406,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 try {
                                     await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-2' })), 5_000, 'adjustSubtletyManually');
                                 } catch (err) {
-                                    threw = String((err as Error)?.message ?? err);
+                                    threw = err instanceof Error ? err.message : String(err);
                                 }
                                 if (threw === null) {
                                     fired['character-sheet::adjustSubtletyManually'] = true;
@@ -416,7 +416,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['character-sheet::adjustSubtletyManually'] = `outer threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['character-sheet::adjustSubtletyManually'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -477,7 +477,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['npc-sheet::toggleHordeMode'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-sheet::toggleHordeMode'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- npc-sheet::applyMagnitudeDamage ----
@@ -491,7 +491,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 try {
                                     await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '1' })), 5_000, 'applyMagnitudeDamage');
                                 } catch (err) {
-                                    threw = String((err as Error)?.message ?? err);
+                                    threw = err instanceof Error ? err.message : String(err);
                                 }
                                 if (threw === null) {
                                     fired['npc-sheet::applyMagnitudeDamage'] = true;
@@ -501,7 +501,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['npc-sheet::applyMagnitudeDamage'] = `outer threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-sheet::applyMagnitudeDamage'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- npc-sheet::setSkillLevel ----
@@ -527,7 +527,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['npc-sheet::setSkillLevel'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-sheet::setSkillLevel'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- npc-sheet::addTag ----
@@ -541,7 +541,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 try {
                                     handler.call(sheet, synthEvent(), synthTarget({}));
                                 } catch (err) {
-                                    threw = String((err as Error)?.message ?? err);
+                                    threw = err instanceof Error ? err.message : String(err);
                                 }
                                 if (threw === null) {
                                     fired['npc-sheet::addTag'] = true;
@@ -553,7 +553,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             // Make sure we don't leave the Add Tag dialog open.
                             await closeOpenDialogs();
                         } catch (err) {
-                            notes['npc-sheet::addTag'] = `outer threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-sheet::addTag'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- npc-sheet::removeTag ----
@@ -574,7 +574,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['npc-sheet::removeTag'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-sheet::removeTag'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- npc-sheet::adjustInteractionCount ----
@@ -598,7 +598,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['npc-sheet::adjustInteractionCount'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-sheet::adjustInteractionCount'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -648,7 +648,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     // reached the dialog".
                                     await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 2_000, 'scaleToThreat');
                                 } catch (err) {
-                                    threw = String((err as Error)?.message ?? err);
+                                    threw = err instanceof Error ? err.message : String(err);
                                 }
                                 if (threw === null || threw.includes('timed out')) {
                                     fired['npc-sheet::scaleToThreat-im'] = true;
@@ -714,7 +714,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['vehicle-sheet::adjustStructure'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['vehicle-sheet::adjustStructure'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- vehicle-sheet::repairDamage ----
@@ -735,7 +735,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['vehicle-sheet::repairDamage'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['vehicle-sheet::repairDamage'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- vehicle-sheet::modifyCrew ----
@@ -755,7 +755,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['vehicle-sheet::modifyCrew'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['vehicle-sheet::modifyCrew'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- vehicle-sheet::adjustCrewMorale ----
@@ -775,7 +775,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['vehicle-sheet::adjustCrewMorale'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['vehicle-sheet::adjustCrewMorale'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -835,7 +835,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['starship-sheet::raiseVoidShield'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['starship-sheet::raiseVoidShield'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- starship-sheet::lowerVoidShield ----
@@ -856,7 +856,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['starship-sheet::lowerVoidShield'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['starship-sheet::lowerVoidShield'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- starship-sheet::restoreVoidShields ----
@@ -880,7 +880,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['starship-sheet::restoreVoidShields'] = `threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['starship-sheet::restoreVoidShields'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // ---- starship-sheet::validateBuild ----
@@ -896,7 +896,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 try {
                                     handler.call(sheet, synthEvent(), synthTarget({}));
                                 } catch (err) {
-                                    threw = String((err as Error)?.message ?? err);
+                                    threw = err instanceof Error ? err.message : String(err);
                                 }
                                 if (threw === null) {
                                     fired['starship-sheet::validateBuild'] = true;
@@ -906,7 +906,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 }
                             }
                         } catch (err) {
-                            notes['starship-sheet::validateBuild'] = `outer threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['starship-sheet::validateBuild'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -953,7 +953,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             try {
                                 await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'pickupAll');
                             } catch (err) {
-                                threw = String((err as Error)?.message ?? err);
+                                threw = err instanceof Error ? err.message : String(err);
                             }
                             if (threw === null) {
                                 fired['loot-sheet::pickupAll'] = true;

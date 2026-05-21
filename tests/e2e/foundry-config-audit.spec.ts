@@ -196,7 +196,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                         if (typeof r === 'string') record(name, false, r);
                         else record(name, r, null);
                     } catch (err) {
-                        record(name, false, String((err as Error)?.message ?? err));
+                        record(name, false, String(err instanceof Error ? err.message : err));
                     }
                 };
 
@@ -257,12 +257,12 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 guarded('config::Dice.rolls.BasicRollWH40K', () => {
                     const rolls = cfg?.Dice?.rolls as Array<{ name?: string }> | undefined;
                     if (!Array.isArray(rolls)) return 'CONFIG.Dice.rolls is not an array';
-                    return rolls.some((r) => r?.name === 'BasicRollWH40K') ? true : 'BasicRollWH40K missing from CONFIG.Dice.rolls';
+                    return rolls.some((r) => r.name === 'BasicRollWH40K') ? true : 'BasicRollWH40K missing from CONFIG.Dice.rolls';
                 });
                 guarded('config::Dice.rolls.D100Roll', () => {
                     const rolls = cfg?.Dice?.rolls as Array<{ name?: string }> | undefined;
                     if (!Array.isArray(rolls)) return 'CONFIG.Dice.rolls is not an array';
-                    return rolls.some((r) => r?.name === 'D100Roll') ? true : 'D100Roll missing from CONFIG.Dice.rolls';
+                    return rolls.some((r) => r.name === 'D100Roll') ? true : 'D100Roll missing from CONFIG.Dice.rolls';
                 });
                 guarded('config::wh40k.config-installed', () => {
                     const w = cfg?.wh40k;
@@ -291,7 +291,9 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 }
 
                 // ---------- Actor sheetClasses (per game-system prefix) ----------
-                const actorSheetClasses = (cfg?.Actor?.sheetClasses ?? {}) as Record<string, Record<string, { cls?: unknown; id?: string; label?: string }>>;
+                const actorSheetClasses = (cfg?.Actor?.sheetClasses ?? {}) as Partial<
+                    Record<string, Record<string, { cls?: unknown; id?: string; label?: string }>>
+                >;
                 for (const [prefix, types] of Object.entries(actorTypesByPrefixInner)) {
                     const key = `config::Actor.sheetClasses.${prefix}-all`;
                     guarded(key, () => {
@@ -355,7 +357,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                     // /characteristic, /skill, /modifier, /armor. Each appears
                     // as a literal substring in its compiled RegExp source.
                     const required = ['characteristic', 'skill', 'modifier', 'armor'];
-                    const sources = enrichers.map((e) => (e?.pattern instanceof RegExp ? e.pattern.source : String(e?.pattern ?? '')));
+                    const sources = enrichers.map((e) => (e.pattern instanceof RegExp ? e.pattern.source : String(e.pattern ?? '')));
                     const missing = required.filter((needle) => !sources.some((s) => s.includes(needle)));
                     return missing.length === 0 ? true : `missing enricher patterns: ${missing.join(', ')}`;
                 });
@@ -368,7 +370,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                     // or `label` (V11), plus `img` (V12+) or `icon` (V11). The
                     // homologated condition list set up via the compendium
                     // resync should reach here as well.
-                    const malformed = effects.filter((e) => typeof e?.id !== 'string' || e.id.length === 0);
+                    const malformed = effects.filter((e) => typeof e.id !== 'string' || e.id.length === 0);
                     return malformed.length === 0 ? true : `${malformed.length} statusEffect entries missing an id`;
                 });
 
