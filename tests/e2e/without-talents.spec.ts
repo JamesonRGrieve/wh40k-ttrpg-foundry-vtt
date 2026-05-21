@@ -30,7 +30,20 @@ test.describe.serial('Without talents — Push the Limit chat card (Tier B)', ()
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface FoundryGlobal {
+                    foundry?: {
+                        applications?: {
+                            handlebars?: {
+                                renderTemplate?: (p: string, c: object) => Promise<string>;
+                            };
+                        };
+                    };
+                    ChatMessage?: { create: (data: object) => Promise<{ id: string } | null> };
+                    game?: { user?: { id?: string } };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const fg = globalThis as unknown as FoundryGlobal;
+
                 let error: string | null = null;
                 let rendered = false;
                 let hasCardRoot = false;
@@ -39,9 +52,7 @@ test.describe.serial('Without talents — Push the Limit chat card (Tier B)', ()
                 let messageId: string | null = null;
 
                 try {
-                    const renderTemplateFn = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
-                        | ((p: string, c: object) => Promise<string>)
-                        | undefined;
+                    const renderTemplateFn = fg.foundry?.applications?.handlebars?.renderTemplate;
                     if (!renderTemplateFn) {
                         return { rendered, hasCardRoot, hasSystemAnchor, hasCriticalBanner, messageId, error: 'renderTemplate unavailable' };
                     }
@@ -64,15 +75,14 @@ test.describe.serial('Without talents — Push the Limit chat card (Tier B)', ()
                     hasSystemAnchor = html.includes('data-wh40k-system="dh2e"');
                     hasCriticalBanner = html.includes('WH40K.WithoutTalents.PushTheLimit.CriticalLabel') || html.includes('fa-skull-crossbones');
 
-                    const ChatMessageCls = (globalThis as any).ChatMessage as { create: (data: object) => Promise<{ id: string } | null> } | undefined;
-                    const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
+                    const ChatMessageCls = fg.ChatMessage;
+                    const msg = await ChatMessageCls?.create({ user: fg.game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, hasCardRoot, hasSystemAnchor, hasCriticalBanner, messageId, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'without-talents-push-the-limit-chat');
@@ -80,14 +90,18 @@ test.describe.serial('Without talents — Push the Limit chat card (Tier B)', ()
             // Card captured; remove it so it doesn't leak into the next
             // serial test's chat log.
             await page.evaluate(async (id: string | null) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
+                interface CleanupGlobal {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.delete returns Promise<this> with no shipped types
+                    game?: { messages?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const fg = globalThis as unknown as CleanupGlobal;
                 if (id === null) return;
                 try {
-                    await (globalThis as any).game?.messages?.get?.(id)?.delete?.();
+                    await fg.game?.messages?.get?.(id)?.delete?.();
                 } catch {
                     /* ignore */
                 }
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, result.messageId);
 
             expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();

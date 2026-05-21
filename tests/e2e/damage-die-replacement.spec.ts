@@ -28,13 +28,14 @@ test.describe.serial('damage die replacement chat card (#129)', () => {
         page.on('pageerror', (err: Error) => errors.push(err.message));
 
         const result = await page.evaluate(async () => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const renderTemplate = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
-                | ((p: string, c: object) => Promise<string>)
-                | undefined;
-            if (!renderTemplate) return { withDoS: '', withoutDoS: '' };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                foundry?: { applications?: { handlebars?: { renderTemplate?: (p: string, c: object) => Promise<string> } } };
+            };
+            const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
+            if (!renderTemplateFn) return { withDoS: '', withoutDoS: '' };
             const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
-            const withDoS = await renderTemplate(template, {
+            const withDoS = await renderTemplateFn(template, {
                 weaponName: 'Bolt Pistol',
                 rollId: 'e2e-roll-129',
                 canReplaceDie: true,
@@ -54,7 +55,7 @@ test.describe.serial('damage die replacement chat card (#129)', () => {
                 ],
                 targetActor: null,
             });
-            const withoutDoS = await renderTemplate(template, {
+            const withoutDoS = await renderTemplateFn(template, {
                 weaponName: 'Bolt Pistol',
                 rollId: 'e2e-roll-129b',
                 canReplaceDie: true,
@@ -75,7 +76,6 @@ test.describe.serial('damage die replacement chat card (#129)', () => {
                 targetActor: null,
             });
             return { withDoS, withoutDoS };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
 
         expect(errors, `pageerror events: ${errors.join('\n')}`).toEqual([]);

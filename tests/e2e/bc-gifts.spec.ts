@@ -27,7 +27,6 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -40,10 +39,14 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
                 let hasSubTable = false;
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars compile context parameter is opaque; unknown is the correct parameter annotation here
-                    const HandlebarsInstance = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fetch`/`Handlebars` globals are injected by the licensed app; Handlebars compile ctx is opaque */
+                    const g = globalThis as unknown as {
+                        fetch: (u: string) => Promise<Response>;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars compile context is opaque template data
+                        Handlebars: { compile: (s: string) => (ctx: unknown) => string };
+                    };
+                    const src = await (await g.fetch(templateUrl)).text();
+                    const HandlebarsInstance = g.Handlebars;
                     if (typeof HandlebarsInstance.compile !== 'function') {
                         return {
                             rendered,
@@ -128,7 +131,8 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
                     // Hold the host on a global handle so snap() (called
                     // outside this evaluate) captures the live DOM. Tearing
                     // it down here would leave the screenshot empty.
-                    (globalThis as any).__bcGiftsPanelHost = host;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing a DOM host on globalThis for cross-evaluate cleanup; no shipped types
+                    (globalThis as unknown as { __bcGiftsPanelHost: HTMLElement | undefined }).__bcGiftsPanelHost = host;
                 } catch (err) {
                     error = String((err as Error).message);
                 }
@@ -144,7 +148,6 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
                     hasSubTable,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'bc-gifts-panel');
@@ -152,15 +155,14 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
             // Panel captured; tear it down so it doesn't leak into the next
             // serial test's DOM.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__bcGiftsPanelHost as HTMLElement | undefined;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading back DOM host stashed on globalThis from the prior evaluate; no shipped types
+                const g = globalThis as unknown as { __bcGiftsPanelHost: HTMLElement | undefined };
                 try {
-                    host?.remove();
+                    g.__bcGiftsPanelHost?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__bcGiftsPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__bcGiftsPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

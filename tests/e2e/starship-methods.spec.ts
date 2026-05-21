@@ -74,8 +74,77 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (flows: readonly string[]): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            interface HullIntegrity {
+                max: number;
+                value: number;
+            }
+            interface CrewInfo {
+                population: number;
+                crewRating: number;
+                morale: { max: number; value: number };
+            }
+            interface Pair {
+                total: number;
+                used: number;
+            }
+            interface WeaponCapacity {
+                prow: number;
+                dorsal: number;
+                port: number;
+                starboard: number;
+                keel: number;
+            }
+            interface ShipWeaponDoc {
+                id?: string;
+                type?: string;
+            }
+            interface WeaponsByLocation {
+                prow: ShipWeaponDoc[];
+                dorsal: ShipWeaponDoc[];
+                port: ShipWeaponDoc[];
+                starboard: ShipWeaponDoc[];
+                keel: ShipWeaponDoc[];
+            }
+            interface StarshipRef {
+                id?: string;
+                hullType?: string;
+                hullClass?: string;
+                hullIntegrity?: HullIntegrity;
+                speed?: number;
+                manoeuvrability?: number;
+                detection?: number;
+                detectionBonus?: number;
+                armour?: number;
+                voidShields?: number;
+                turretRating?: number;
+                crew?: CrewInfo;
+                power?: Pair;
+                space?: Pair;
+                weaponCapacity?: WeaponCapacity;
+                isCrippled?: boolean;
+                isDestroyed?: boolean;
+                shipComponents?: ShipWeaponDoc[];
+                shipWeapons?: ShipWeaponDoc[];
+                shipUpgrades?: ShipWeaponDoc[];
+                weaponsByLocation?: WeaponsByLocation;
+                createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<ShipWeaponDoc[]>;
+                update?: (data: Record<string, number | string>) => Promise<void>;
+                fireWeapon?: (weaponId: string) => Promise<void>;
+                rollInitiative?: () => Promise<object | null>;
+                delete?: () => Promise<void>;
+            }
+            interface ActorCls {
+                create: (data: object) => Promise<StarshipRef>;
+            }
+            interface GameRef {
+                actors?: { get?: (id: string) => StarshipRef | undefined };
+            }
+            interface FoundryGlobal {
+                Actor?: ActorCls;
+                game?: GameRef;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorCls = g.Actor;
             const foundryGame = g.game;
             const out: FlowResult[] = [];
@@ -88,19 +157,20 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 return out;
             }
 
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+            const withTimeout = async <T>(p: Promise<T> | undefined, ms: number, label: string): Promise<T | undefined> => {
+                if (p === undefined) return undefined;
+                let timer: ReturnType<typeof setTimeout> | undefined;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer !== null) clearTimeout(timer);
+                    if (timer !== undefined) clearTimeout(timer);
                 }
             };
 
-            let actor: any = null;
+            let actor: StarshipRef | null | undefined = null;
             try {
                 actor = await withTimeout(
                     ActorCls.create({
@@ -141,7 +211,8 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 return out;
             }
 
-            const live = (): any => foundryGame?.actors?.get?.(actor.id);
+            const actorId = actor.id;
+            const live = (): StarshipRef | undefined => (actorId != null ? foundryGame?.actors?.get?.(actorId) : undefined);
 
             // -------- getters that read directly off system fields --------
             try {
@@ -283,7 +354,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                     8_000,
                     'starship weapon embed',
                 );
-                const createdArr = (Array.isArray(created) ? created : []) as Array<{ id?: string; type?: string }>;
+                const createdArr: ShipWeaponDoc[] = Array.isArray(created) ? created : [];
                 createdWeaponId = createdArr[0]?.id ?? null;
                 const wbl = live()?.weaponsByLocation;
                 const ok =
@@ -297,7 +368,11 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                     wbl.port.length === 0 &&
                     Array.isArray(wbl.starboard) &&
                     Array.isArray(wbl.keel);
-                record('get-weaponsByLocation', !!ok, JSON.stringify(Object.fromEntries(Object.entries(wbl ?? {}).map(([k, v]) => [k, (v as any[]).length]))));
+                record(
+                    'get-weaponsByLocation',
+                    ok,
+                    JSON.stringify(Object.fromEntries(Object.entries(wbl ?? {}).map(([k, v]: [string, ShipWeaponDoc[]]) => [k, v.length]))),
+                );
             } catch (err) {
                 record('get-weaponsByLocation', false, err instanceof Error ? err.message : String(err));
             }
@@ -337,7 +412,11 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             try {
                 const result = await withTimeout(live()?.rollInitiative?.(), 8_000, 'rollInitiative');
                 // The override returns null by contract; either way no-throw is the coverage signal.
-                record('method-rollInitiative', result === null || result === undefined || typeof result === 'object', `returned=${String(result)}`);
+                record(
+                    'method-rollInitiative',
+                    result === null || result === undefined || typeof result === 'object',
+                    `returned=${typeof result === 'object' ? JSON.stringify(result) : String(result)}`,
+                );
             } catch (err) {
                 record('method-rollInitiative', false, err instanceof Error ? err.message : String(err));
             }
@@ -365,7 +444,6 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, STARSHIP_METHODS_FLOWS);
         return { results, pageErrors };
     } finally {

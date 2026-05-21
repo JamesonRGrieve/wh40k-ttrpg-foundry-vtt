@@ -20,6 +20,7 @@ interface QualityCase {
     qualityKey: string;
     iconClass: string;
     accentClass: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: per-quality payload is a heterogeneous static config object JSON-serialised to the browser probe
     payload: Record<string, unknown>;
 }
 
@@ -148,7 +149,6 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                 };
 
                 const result = await page.evaluate(async (inputs) => {
-                    /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                     const templatePath = '/systems/wh40k-rpg/templates/chat/weapon-quality-effect-chat.hbs';
                     let error: string | null = null;
                     let rendered = false;
@@ -158,10 +158,11 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                     let hasQualityKeyAttr = false;
 
                     try {
-                        const g = globalThis as any;
-                        const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate as
-                            | ((path: string, ctx: object) => Promise<string>)
-                            | undefined;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
+                        const g = globalThis as unknown as {
+                            foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
+                        };
+                        const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
                         if (typeof renderTemplateFn !== 'function') {
                             return {
                                 rendered,
@@ -225,7 +226,6 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                         hasQualityKeyAttr,
                         error,
                     };
-                    /* eslint-enable @typescript-eslint/no-explicit-any */
                 }, renderInputs);
 
                 // Card is left mounted; snap() captures the live DOM.

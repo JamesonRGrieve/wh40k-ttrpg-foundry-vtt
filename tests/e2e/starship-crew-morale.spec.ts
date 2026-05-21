@@ -29,7 +29,48 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface StarshipCrew {
+                    population?: number;
+                    crewRating?: number;
+                    morale?: { value?: number; max?: number };
+                }
+                interface StarshipSystem {
+                    hullIntegrity?: { value?: number; max?: number };
+                    crew?: StarshipCrew;
+                }
+                interface StarshipSheet {
+                    render?: (opts: { force: boolean }) => Promise<void>;
+                    close?: () => Promise<void>;
+                    changeTab?: (tab: string, group: string) => void;
+                    element?: { querySelector?: (sel: string) => Element | null } | null;
+                }
+                interface StarshipActor {
+                    id?: string;
+                    system?: StarshipSystem;
+                    applyHullDamage?: (n: number) => Promise<void>;
+                    cancelPriorTurnDamage?: () => Promise<void>;
+                    replenishBetweenCombat?: () => Promise<void>;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts arbitrary partial-update payloads
+                    update?: (data: Record<string, unknown>) => Promise<void>;
+                    delete?: () => Promise<void>;
+                    sheet?: StarshipSheet;
+                }
+                interface ActorClass {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create accepts arbitrary creation data
+                    create?: (data: Record<string, unknown>) => Promise<StarshipActor | null | undefined>;
+                }
+                interface FoundryGame {
+                    combats?: { active?: { round?: number } | null };
+                }
+                interface FoundryGlobal {
+                    Actor?: ActorClass;
+                    game?: FoundryGame;
+                    __c9starship?: StarshipActor | undefined;
+                    __c9starshipDh?: StarshipActor | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const fg = globalThis as unknown as FoundryGlobal;
+
                 let error: string | null = null;
                 let actorCreated = false;
                 let sheetRendered = false;
@@ -44,7 +85,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 let nonRtCrewUnchanged = false;
 
                 try {
-                    const ActorCls = (globalThis as any).Actor;
+                    const ActorCls = fg.Actor;
                     if (typeof ActorCls?.create !== 'function') {
                         return {
                             actorCreated,
@@ -93,14 +134,16 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
 
                     // Stub the active combat round so cancelPriorTurnDamage
                     // sees a strictly-prior turn relative to the snapshot.
-                    const foundryGame = (globalThis as any).game;
-                    const realActive = foundryGame?.combats?.active;
-                    if (foundryGame?.combats != null) foundryGame.combats.active = { round: (foundryGame?.combats?.active?.round ?? 0) + 2 };
+                    const foundryGame = fg.game;
+                    const realActive = foundryGame?.combats?.active ?? null;
+                    if (foundryGame?.combats != null) {
+                        foundryGame.combats.active = { round: (foundryGame.combats.active?.round ?? 0) + 2 };
+                    }
                     try {
                         if (typeof actor?.cancelPriorTurnDamage === 'function') {
                             await actor.cancelPriorTurnDamage();
                             cancelRestored =
-                                Number(actor?.system?.crew?.population ?? 0) === crewBefore && Number(actor?.system?.crew?.morale?.value ?? 0) === moraleBefore;
+                                Number(actor.system?.crew?.population ?? 0) === crewBefore && Number(actor.system?.crew?.morale?.value ?? 0) === moraleBefore;
                         }
                     } finally {
                         if (foundryGame?.combats != null) foundryGame.combats.active = realActive;
@@ -110,7 +153,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     await actor?.update?.({ 'system.crew.morale.value': 25 });
                     if (typeof actor?.replenishBetweenCombat === 'function') {
                         await actor.replenishBetweenCombat();
-                        replenishedMorale = Number(actor?.system?.crew?.morale?.value ?? 0);
+                        replenishedMorale = Number(actor.system?.crew?.morale?.value ?? 0);
                     }
 
                     // Per-system gating: a non-RT hull should NOT have crew
@@ -127,9 +170,9 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     if (typeof dhActor?.applyHullDamage === 'function') {
                         await dhActor.applyHullDamage(4);
                         nonRtCrewUnchanged =
-                            Number(dhActor?.system?.crew?.population ?? 0) === 50 &&
-                            Number(dhActor?.system?.crew?.morale?.value ?? 0) === 50 &&
-                            Number(dhActor?.system?.hullIntegrity?.value ?? 0) === 26;
+                            Number(dhActor.system?.crew?.population ?? 0) === 50 &&
+                            Number(dhActor.system?.crew?.morale?.value ?? 0) === 50 &&
+                            Number(dhActor.system?.hullIntegrity?.value ?? 0) === 26;
                     }
 
                     // Open the RT actor's sheet so snap() captures the Crew tab.
@@ -141,8 +184,8 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                         });
                         const sheetEl = actor.sheet.element;
                         if (sheetEl != null) {
-                            const crewTab = sheetEl.querySelector?.('[data-tab="crew"]');
-                            const crewNav = sheetEl.querySelector?.('nav [data-tab="crew"]');
+                            const crewTab = sheetEl.querySelector?.('[data-tab="crew"]') ?? null;
+                            const crewNav = sheetEl.querySelector?.('nav [data-tab="crew"]') ?? null;
                             if (crewNav != null && typeof actor.sheet.changeTab === 'function') {
                                 try {
                                     actor.sheet.changeTab('crew', 'primary');
@@ -156,10 +199,10 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
 
                     // Leak the actor on globalThis so the spec's cleanup
                     // evaluate can delete it after snap().
-                    (globalThis as any).__c9starship = actor;
-                    (globalThis as any).__c9starshipDh = dhActor;
+                    fg.__c9starship = actor ?? undefined;
+                    fg.__c9starshipDh = dhActor ?? undefined;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
@@ -176,7 +219,6 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     nonRtCrewUnchanged,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             // Snap the open sheet on the Crew tab. The sheet is left open
@@ -185,9 +227,21 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
 
             // Tear down so the actor doesn't leak into the next serial test.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const a = (globalThis as any).__c9starship;
-                const dh = (globalThis as any).__c9starshipDh;
+                interface StarshipSheet {
+                    close?: () => Promise<void>;
+                }
+                interface StarshipActor {
+                    delete?: () => Promise<void>;
+                    sheet?: StarshipSheet;
+                }
+                interface FoundryGlobal {
+                    __c9starship?: StarshipActor | undefined;
+                    __c9starshipDh?: StarshipActor | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const fg = globalThis as unknown as FoundryGlobal;
+                const a = fg.__c9starship;
+                const dh = fg.__c9starshipDh;
                 try {
                     await a?.sheet?.close?.();
                 } catch {
@@ -203,9 +257,8 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__c9starship = undefined;
-                (globalThis as any).__c9starshipDh = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__c9starship = undefined;
+                fg.__c9starshipDh = undefined;
             });
 
             expect(result.error, `probe error: ${result.error ?? ''}`).toBeNull();

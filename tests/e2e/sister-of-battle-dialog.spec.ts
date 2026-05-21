@@ -34,7 +34,6 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/sister-of-battle-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -42,11 +41,18 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
                 let hasApplyButton = false;
                 let hasCancelButton = false;
 
+                interface DialogInstance {
+                    render: (force?: boolean) => Promise<void>;
+                    element: HTMLElement | null;
+                    close: () => Promise<void>;
+                }
+                interface DialogModule {
+                    default: new () => DialogInstance;
+                }
+
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    const mod = (await import(moduleUrl)) as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error: 'default export not a constructor' };
                     }
@@ -70,7 +76,6 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
                 }
 
                 return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
@@ -86,7 +91,6 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
 
             // Best-effort cleanup so the dialog doesn't leak into later specs.
             await page.evaluate(() => {
-                /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- browser-side cleanup */
                 const root = document.querySelector<HTMLDialogElement>('.sister-of-battle-dialog');
                 if (root?.close) {
                     try {

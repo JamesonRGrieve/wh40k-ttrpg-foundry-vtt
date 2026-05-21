@@ -24,10 +24,31 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
     const result = await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+        interface AppliedTotal {
+            total?: number;
+        }
+        interface ShipSystem {
+            appliedModifiers?: Record<string, AppliedTotal | undefined>;
+        }
+        interface ShipSheet {
+            render?: (force?: boolean) => Promise<void>;
+            changeTab?: (tab: string, group: string) => void;
+            element?: HTMLElement | null;
+        }
+        interface ShipActor {
+            sheet?: ShipSheet;
+            system?: ShipSystem;
+            prepareData?: () => void;
+            delete?: () => Promise<void>;
+        }
+        interface ShipGlobals {
+            Actor?: { create?: (data: object) => Promise<ShipActor | null> };
+            __ship196ProbeActor?: ShipActor;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const g = globalThis as unknown as ShipGlobals;
         const ActorCls = g.Actor;
-        if (ActorCls?.create == null) {
+        if (ActorCls?.create === undefined) {
             return {
                 setupOk: false,
                 hasSummaryPanel: false,
@@ -39,7 +60,7 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
             };
         }
 
-        let actor;
+        let actor: ShipActor | null;
         try {
             actor = await ActorCls.create({
                 name: 'ship-mod-probe',
@@ -101,7 +122,7 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
                 error: err instanceof Error ? err.message : String(err),
             };
         }
-        if (actor == null) {
+        if (actor === null) {
             return {
                 setupOk: false,
                 hasSummaryPanel: false,
@@ -120,7 +141,7 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
             /* prepareData may be a no-op on this implementation */
         }
 
-        await actor.sheet.render(true);
+        await actor.sheet?.render?.(true);
         await new Promise<void>((r) => {
             setTimeout(r, 400);
         });
@@ -135,20 +156,20 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
         }
 
         const root = actor.sheet?.element;
-        const panel = root?.querySelector?.('.wh40k-ship-build-summary-panel');
-        const rowCount = panel != null ? panel.querySelectorAll('.wh40k-ship-build-summary__row').length : 0;
+        const panel = root?.querySelector('.wh40k-ship-build-summary-panel') ?? null;
+        const rowCount = panel !== null ? panel.querySelectorAll('.wh40k-ship-build-summary__row').length : 0;
 
         const applied = actor.system?.appliedModifiers ?? {};
-        const detectionTotal = applied.detection?.total ?? 0;
-        const armourTotal = applied.armour?.total ?? 0;
-        const manoeuvrabilityTotal = applied.manoeuvrability?.total ?? 0;
+        const detectionTotal = applied['detection']?.total ?? 0;
+        const armourTotal = applied['armour']?.total ?? 0;
+        const manoeuvrabilityTotal = applied['manoeuvrability']?.total ?? 0;
 
         // Stash for post-snap cleanup; intentionally not deleted yet.
         g.__ship196ProbeActor = actor;
 
         return {
             setupOk: true,
-            hasSummaryPanel: Boolean(panel),
+            hasSummaryPanel: panel !== null,
             rowCount,
             detectionTotal,
             armourTotal,
@@ -181,14 +202,21 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
 
     // Cleanup AFTER snap + assertions
     await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const g = globalThis as any;
+        interface CleanupActor {
+            delete?: () => Promise<void>;
+        }
+        interface CleanupGlobals {
+            __ship196ProbeActor?: CleanupActor;
+            game?: { actors?: { getName?: (name: string) => CleanupActor | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const g = globalThis as unknown as CleanupGlobals;
         const a = g.__ship196ProbeActor ?? g.game?.actors?.getName?.('ship-mod-probe');
         try {
             await a?.delete?.();
         } catch {
             /* ignore */
         }
-        delete g.__ship196ProbeActor;
+        g.__ship196ProbeActor = undefined;
     });
 });

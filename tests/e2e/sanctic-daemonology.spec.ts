@@ -28,8 +28,10 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
+                const g = globalThis as unknown as {
+                    foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
+                };
                 let error: string | null = null;
                 let rendered = false;
                 let corruption: number | null = null;
@@ -38,21 +40,25 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                 let hasSystemAttr = false;
                 let hasWh40kClass = false;
 
+                interface SancticResult {
+                    power: { name: string };
+                    effectivePR: number;
+                    focusModifier: number;
+                    corruption: number;
+                    phenomenaFires: boolean;
+                    phenomenaModifier: number;
+                    canSoulBindIgnore: boolean;
+                    canFateNegate: boolean;
+                }
+                interface SancticModule {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: deployed rules module input is heterogeneous content payload; consumer interface is opaque
+                    resolveSancticManifestation?: (input: unknown) => SancticResult;
+                }
+
                 try {
                     const moduleUrl = '/systems/wh40k-rpg/module/rules/sanctic-daemonology.js';
-                    const mod = await import(moduleUrl);
-                    const resolve = mod.resolveSancticManifestation as
-                        | ((input: unknown) => {
-                              power: { name: string };
-                              effectivePR: number;
-                              focusModifier: number;
-                              corruption: number;
-                              phenomenaFires: boolean;
-                              phenomenaModifier: number;
-                              canSoulBindIgnore: boolean;
-                              canFateNegate: boolean;
-                          })
-                        | undefined;
+                    const mod = (await import(moduleUrl)) as SancticModule;
+                    const resolve = mod.resolveSancticManifestation;
                     if (typeof resolve !== 'function') {
                         return {
                             rendered,
@@ -77,9 +83,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                     phenomenaFires = r.phenomenaFires;
                     canFateNegate = r.canFateNegate;
 
-                    const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate as
-                        | ((path: string, ctx: object) => Promise<string>)
-                        | undefined;
+                    const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
                     if (typeof renderTemplateFn !== 'function') {
                         return {
                             rendered,
@@ -138,7 +142,6 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                     hasWh40kClass,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'sanctic-daemonology');

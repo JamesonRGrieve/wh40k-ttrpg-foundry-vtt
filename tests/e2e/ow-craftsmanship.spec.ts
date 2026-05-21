@@ -28,21 +28,14 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                /* eslint-disable no-restricted-syntax -- boundary: page.evaluate cast; globalThis typed as unknown to access Foundry Actor; Promise<unknown> return types are opaque browser-side */
-                const ActorCls = (
-                    globalThis as unknown as {
-                        Actor?: {
-                            create?: (data: object) => Promise<{
-                                id?: string;
-                                createEmbeddedDocuments?: (type: string, data: object[]) => Promise<unknown>;
-                                sheet?: { render?: (force?: boolean) => Promise<unknown>; element?: HTMLElement | null; close?: () => Promise<unknown> };
-                                delete?: () => Promise<unknown>;
-                            } | null>;
-                        };
-                    }
-                ).Actor;
-                /* eslint-enable no-restricted-syntax */
+                interface CreatedActor {
+                    id?: string;
+                    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<void>;
+                    sheet?: { render?: (force?: boolean) => Promise<void>; element?: HTMLElement | null; close?: () => Promise<void> };
+                    delete?: () => Promise<void>;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `Actor` global is injected by the licensed app; no shipped types
+                const ActorCls = (globalThis as unknown as { Actor?: { create?: (data: object) => Promise<CreatedActor | null> } }).Actor;
                 if (!ActorCls?.create) {
                     return {
                         error: 'Actor.create not available',
@@ -138,7 +131,8 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                                 armourEffect?.getAttribute('data-flat-ap-bonus') === '1' && armourEffect.getAttribute('data-half-weight') === 'true';
                         }
                     }
-                    (globalThis as any).__owCraftsmanshipActor = actor;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing the created actor on globalThis for cross-evaluate cleanup; no shipped types
+                    (globalThis as unknown as { __owCraftsmanshipActor: CreatedActor | undefined }).__owCraftsmanshipActor = actor;
                 } catch (catchErr) {
                     error = String((catchErr as Error).message);
                 }
@@ -152,22 +146,25 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                     hasMeleeBestEffect,
                     hasArmourBestEffect,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'ow-craftsmanship-panel');
 
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const a = (globalThis as any).__owCraftsmanshipActor;
+                interface CreatedActor {
+                    sheet?: { close?: () => Promise<void> };
+                    delete?: () => Promise<void>;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading back actor stashed on globalThis from the prior evaluate; no shipped types
+                const g = globalThis as unknown as { __owCraftsmanshipActor: CreatedActor | undefined };
+                const a = g.__owCraftsmanshipActor;
                 try {
                     await a?.sheet?.close?.();
                     await a?.delete?.();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__owCraftsmanshipActor = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__owCraftsmanshipActor = undefined;
             });
 
             if (result.error !== null) {

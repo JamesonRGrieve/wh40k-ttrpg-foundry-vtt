@@ -25,9 +25,16 @@ test.describe.serial('assistance stepper (#60)', () => {
         test.skip(!joined, 'GM join failed');
 
         const result = await page.evaluate(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- e2e probe runs in browser realm against untyped Foundry globals.
+            interface DialogInstance {
+                render: (force: boolean) => Promise<void>;
+                element?: HTMLElement;
+                close?: () => Promise<void>;
+            }
+            interface DialogModule {
+                default: new (actionData: object) => DialogInstance;
+            }
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
-            const mod = await import(/* @vite-ignore */ modUrl);
+            const mod = (await import(/* @vite-ignore */ modUrl)) as DialogModule;
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing', snaps: null };
@@ -62,7 +69,7 @@ test.describe.serial('assistance stepper (#60)', () => {
                 },
             };
 
-            let dialog: { render: (force: boolean) => Promise<unknown>; element?: HTMLElement; close?: () => Promise<unknown> };
+            let dialog: DialogInstance;
             try {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
@@ -80,7 +87,15 @@ test.describe.serial('assistance stepper (#60)', () => {
             // Capture into a typed const so closures below don't need `!`.
             const safeRoot: HTMLElement = root;
 
-            function readState(label: string): Record<string, unknown> {
+            interface StepperState {
+                label: string;
+                rendered: boolean;
+                count: string | null;
+                badge: string | null;
+                plusDisabled: boolean | null;
+                minusDisabled: boolean | null;
+            }
+            function readState(label: string): StepperState {
                 const stepperEl = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper');
                 const count = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper__count');
                 const badge = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper__badge');
@@ -150,7 +165,6 @@ test.describe.serial('assistance stepper (#60)', () => {
 
         // Visual record at the cap state.
         await page.evaluate(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const root = document.querySelector<HTMLElement>('.application[data-application-part]');
             const plus = root?.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__plus');
             if (plus && !plus.disabled) {

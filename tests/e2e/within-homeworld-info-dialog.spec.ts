@@ -27,7 +27,19 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface DialogInstance {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                    render: (force?: boolean) => Promise<unknown>;
+                    element: HTMLElement | null;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                    close: () => Promise<unknown>;
+                }
+                interface DialogModule {
+                    default: new () => DialogInstance;
+                }
+                interface DialogHostWindow {
+                    __wh40kWithinHomeworldDialog?: DialogInstance | undefined;
+                }
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/within-homeworld-info-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -36,10 +48,9 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
                 let hasCloseButton = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return { rendered, cardCount, ids, hasCloseButton, error: 'default export not a constructor' };
                     }
@@ -60,13 +71,13 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
                         hasCloseButton = inst.element.querySelector('[data-action="close"]') !== null;
                     }
                     // intentionally leave open until after screenshot; will close below
-                    (window as unknown as { __wh40kWithinHomeworldDialog?: unknown }).__wh40kWithinHomeworldDialog = inst;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm dialog on window for cross-eval cleanup
+                    (window as unknown as DialogHostWindow).__wh40kWithinHomeworldDialog = inst;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, cardCount, ids, hasCloseButton, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
@@ -80,7 +91,15 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
 
             // Best-effort teardown — close the still-open dialog instance.
             await page.evaluate(async () => {
-                const handle = (window as unknown as { __wh40kWithinHomeworldDialog?: { close: () => Promise<unknown> } }).__wh40kWithinHomeworldDialog;
+                interface DialogCloseable {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                    close: () => Promise<unknown>;
+                }
+                interface DialogHostWindow {
+                    __wh40kWithinHomeworldDialog?: DialogCloseable | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm dialog stashed on window
+                const handle = (window as unknown as DialogHostWindow).__wh40kWithinHomeworldDialog;
                 try {
                     await handle?.close();
                 } catch {
