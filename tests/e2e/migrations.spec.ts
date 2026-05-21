@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -65,22 +66,22 @@ interface PageWindow {
     };
 }
 
-async function deleteWorldItem(page: import('@playwright/test').Page, id: string): Promise<void> {
+async function deleteWorldItem(page: Page, id: string): Promise<void> {
     await page.evaluate(async (itemId: string) => {
-        const { game } = globalThis as unknown as PageWindow;
+        const { game: foundryGame } = globalThis as unknown as PageWindow;
         try {
-            await game?.items?.get?.(itemId)?.delete?.();
+            await foundryGame?.items?.get?.(itemId)?.delete?.();
         } catch {
             /* ignore */
         }
     }, id);
 }
 
-async function deleteWorldActor(page: import('@playwright/test').Page, id: string): Promise<void> {
+async function deleteWorldActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
-        const { game } = globalThis as unknown as PageWindow;
+        const { game: foundryGame } = globalThis as unknown as PageWindow;
         try {
-            await game?.actors?.get?.(actorId)?.delete?.();
+            await foundryGame?.actors?.get?.(actorId)?.delete?.();
         } catch {
             /* ignore */
         }
@@ -98,12 +99,12 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
-            const { Item } = globalThis as unknown as PageWindow;
-            if (!Item?.create) return { error: 'Item.create unavailable' };
+            const { Item: ItemCtor } = globalThis as unknown as PageWindow;
+            if (!ItemCtor?.create) return { error: 'Item.create unavailable' };
             try {
                 // Legacy flat-string `prerequisites` and comma-separated `aptitudes`.
                 // TalentData._migrateData should restructure on create.
-                const item = await Item.create({
+                const item = await ItemCtor.create({
                     name: 'probe-talent-legacy-prereqs',
                     type: 'talent',
                     system: {
@@ -125,7 +126,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 return {
                     id: item.id ?? null,
                     prereqText: sys?.prerequisites?.text ?? null,
-                    prereqHasChars: typeof sys?.prerequisites?.characteristics === 'object' && sys?.prerequisites?.characteristics !== null,
+                    prereqHasChars: typeof sys?.prerequisites?.characteristics === 'object',
                     prereqSkillsIsArray: Array.isArray(sys?.prerequisites?.skills),
                     prereqTalentsIsArray: Array.isArray(sys?.prerequisites?.talents),
                     aptitudesIsArray: Array.isArray(sys?.aptitudes),
@@ -134,11 +135,11 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                     error: null,
                 };
             } catch (err) {
-                return { error: String((err as Error)?.message ?? err) };
+                return { error: String((err as Error).message) };
             }
         });
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (result.prereqText !== 'WS 30, Toughness 30') failures.push(`prereq.text was ${String(result.prereqText)}, expected the legacy string`);
             if (!result.prereqHasChars) failures.push('prereq.characteristics missing (should be object after migrate)');
@@ -149,7 +150,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
             if (result.hasSpecialization !== true)
                 failures.push(`hasSpecialization was ${result.hasSpecialization}, expected true (inferred from non-empty specialization)`);
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_TALENT_PREREQS);
-            if (result.id) await deleteWorldItem(page, result.id);
+            if (result.id !== null) await deleteWorldItem(page, result.id);
         }
 
         expect(failures, `talent prereqs migration failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
@@ -161,11 +162,11 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
-            const { Actor } = globalThis as unknown as PageWindow;
-            const { game } = globalThis as unknown as PageWindow;
-            if (!Actor?.create) return { error: 'Actor.create unavailable' };
+            const { Actor: ActorCtor } = globalThis as unknown as PageWindow;
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
+            if (!ActorCtor?.create) return { error: 'Actor.create unavailable' };
             try {
-                const created = await Actor.create({
+                const created = await ActorCtor.create({
                     name: 'migration-ae-label-probe',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },
@@ -174,7 +175,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 const actorId = created.id ?? null;
                 const live =
                     actorId !== null
-                        ? (game?.actors?.get?.(actorId) as
+                        ? (foundryGame?.actors?.get?.(actorId) as
                               | { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> }
                               | undefined)
                         : undefined;
@@ -197,7 +198,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                         changes: [],
                     },
                 ]);
-                const fresh = actorId !== null ? game?.actors?.get?.(actorId) : undefined;
+                const fresh = actorId !== null ? foundryGame?.actors?.get?.(actorId) : undefined;
                 const effects =
                     (
                         fresh as
@@ -214,17 +215,17 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                     error: null,
                 };
             } catch (err) {
-                return { error: String((err as Error)?.message ?? err) };
+                return { error: String((err as Error).message) };
             }
         });
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (result.createdCount === 0) failures.push('no ActiveEffect created');
             if (result.name !== 'Legacy-Label-Field')
                 failures.push(`AE.name was ${String(result.name)}, expected 'Legacy-Label-Field' (post-migration name surface)`);
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_AE_LABEL_TO_NAME);
-            if (result.actorId) await deleteWorldActor(page, result.actorId);
+            if (result.actorId !== null) await deleteWorldActor(page, result.actorId);
         }
 
         expect(failures, `AE label→name failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
@@ -235,15 +236,15 @@ test.describe('migrations + compendium resync (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const failures: string[] = [];
-        const result = await page.evaluate(async () => {
-            const { game } = globalThis as unknown as PageWindow;
-            const systemId = game?.system?.id ?? null;
-            const systemVersion = game?.system?.version ?? null;
+        const result = await page.evaluate(() => {
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
+            const systemId = foundryGame?.system?.id ?? null;
+            const systemVersion = foundryGame?.system?.version ?? null;
             let worldVersion: unknown = null;
             try {
-                worldVersion = game?.settings?.get?.('wh40k-rpg', 'world-version') ?? null;
+                worldVersion = foundryGame?.settings?.get?.('wh40k-rpg', 'world-version') ?? null;
             } catch (err) {
-                return { error: `settings.get(world-version): ${String((err as Error)?.message ?? err)}` };
+                return { error: `settings.get(world-version): ${String((err as Error).message)}` };
             }
             return {
                 systemId,
@@ -253,7 +254,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
             };
         });
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (result.systemId !== 'wh40k-rpg') failures.push(`system.id was ${String(result.systemId)}, expected 'wh40k-rpg'`);
             if (typeof result.systemVersion !== 'string' || result.systemVersion === '') failures.push('system.version not populated');
@@ -272,20 +273,20 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
-            const { game } = globalThis as unknown as PageWindow;
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
             // The setting is registered by WH40KSettings.registerSettings; if the
             // hooks-manager ready chain ran, world-version is set AND the resync
             // function will have iterated game.actors (a no-op when there are no
             // actors, but the function is still reached).
             let resyncEnabled: unknown = null;
             try {
-                resyncEnabled = game?.settings?.get?.('wh40k-rpg', 'resync-on-ready') ?? null;
+                resyncEnabled = foundryGame?.settings?.get?.('wh40k-rpg', 'resync-on-ready') ?? null;
             } catch (err) {
-                return { error: `settings.get(resync-on-ready): ${String((err as Error)?.message ?? err)}` };
+                return { error: `settings.get(resync-on-ready): ${String((err as Error).message)}` };
             }
             // Verify that at least one wh40k-rpg pack is registered and reachable —
             // resyncWorldFromCompendiums depends on game.packs.contents iteration.
-            const packs = game?.packs?.contents ?? [];
+            const packs = foundryGame?.packs?.contents ?? [];
             const systemPacks = packs.filter((p) => p.metadata?.packageName === 'wh40k-rpg');
             const itemPacks = systemPacks.filter((p) => p.metadata?.type === 'Item');
             // Spot-check name-index buildability for one DH2 pack — this is the
@@ -296,9 +297,9 @@ test.describe('migrations + compendium resync (Tier B)', () => {
             if (dh2Pack?.getIndex) {
                 try {
                     const idx = await dh2Pack.getIndex({ fields: ['type', 'name'] });
-                    for (const _entry of idx) indexCount += 1;
+                    indexCount = Array.from(idx).length;
                 } catch (err) {
-                    indexError = String((err as Error)?.message ?? err);
+                    indexError = String((err as Error).message);
                 }
             }
             return {
@@ -312,14 +313,14 @@ test.describe('migrations + compendium resync (Tier B)', () => {
             };
         });
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (typeof result.resyncEnabled !== 'boolean') failures.push(`resync-on-ready type was ${typeof result.resyncEnabled}, expected boolean`);
-            if ((result.systemPackCount ?? 0) === 0) failures.push('no wh40k-rpg compendium packs registered');
-            if ((result.itemPackCount ?? 0) === 0) failures.push('no Item compendium packs registered');
-            if (!result.dh2PackId) failures.push('no DH2 item pack found (compendium resync index-build would no-op)');
+            if (result.systemPackCount === 0) failures.push('no wh40k-rpg compendium packs registered');
+            if (result.itemPackCount === 0) failures.push('no Item compendium packs registered');
+            if (result.dh2PackId === null || result.dh2PackId === '') failures.push('no DH2 item pack found (compendium resync index-build would no-op)');
             if (result.indexError !== null) failures.push(`pack.getIndex failed: ${result.indexError}`);
-            if ((result.indexCount ?? 0) === 0) failures.push('DH2 pack index returned 0 entries');
+            if (result.indexCount === 0) failures.push('DH2 pack index returned 0 entries');
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_COMPENDIUM_RESYNC);
         }
 
@@ -332,11 +333,11 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
-            const { Actor } = globalThis as unknown as PageWindow;
-            const { game } = globalThis as unknown as PageWindow;
-            if (!Actor?.create) return { error: 'Actor.create unavailable' };
+            const { Actor: ActorCtor } = globalThis as unknown as PageWindow;
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
+            if (!ActorCtor?.create) return { error: 'Actor.create unavailable' };
             try {
-                const created = await Actor.create({
+                const created = await ActorCtor.create({
                     name: 'migration-ae-icon-probe',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },
@@ -348,7 +349,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 // canonical Document instance.
                 const live =
                     actorId !== null
-                        ? (game?.actors?.get?.(actorId) as
+                        ? (foundryGame?.actors?.get?.(actorId) as
                               | { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> }
                               | undefined)
                         : undefined;
@@ -359,7 +360,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                         changes: [],
                     },
                 ]);
-                const fresh = actorId !== null ? game?.actors?.get?.(actorId) : undefined;
+                const fresh = actorId !== null ? foundryGame?.actors?.get?.(actorId) : undefined;
                 const effects =
                     (fresh as { effects?: { contents?: Array<{ name?: string | null; img?: string | null }> } } | undefined)?.effects?.contents ?? [];
                 const found = effects.find((e) => e.name === 'icon-probe') ?? effects[0];
@@ -370,16 +371,16 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                     error: null,
                 };
             } catch (err) {
-                return { error: String((err as Error)?.message ?? err) };
+                return { error: String((err as Error).message) };
             }
         });
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (typeof result.img !== 'string' || result.img === '')
                 failures.push(`AE.img was ${String(result.img)}, expected a populated string after icon→img remap`);
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_ICON_TO_IMG);
-            if (result.actorId) await deleteWorldActor(page, result.actorId);
+            if (result.actorId !== null) await deleteWorldActor(page, result.actorId);
         }
 
         expect(failures, `AE icon→img failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
@@ -391,8 +392,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
-            const { game } = globalThis as unknown as PageWindow;
-            const packs = game?.packs?.contents ?? [];
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
+            const packs = foundryGame?.packs?.contents ?? [];
             // Pick a deterministic DH2 talents pack if present, else any system Item pack.
             const candidate =
                 packs.find((p) => p.metadata?.id === 'wh40k-rpg.dh2-core-stats-talents') ??
@@ -417,18 +418,18 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                     docId: doc?.id ?? null,
                     docType: doc?.type ?? null,
                     docName: doc?.name ?? null,
-                    hasSystem: doc?.system !== null && typeof doc?.system === 'object',
+                    hasSystem: typeof doc?.system === 'object',
                     error: null,
                 };
             } catch (err) {
-                return { error: `getDocument(${firstId}): ${String((err as Error)?.message ?? err)}` };
+                return { error: `getDocument(${firstId}): ${String((err as Error).message)}` };
             }
         });
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
-            if (!result.docId) failures.push('materialized doc has no id');
-            if (!result.docType) failures.push('materialized doc has no type (DataModel resolution likely failed)');
+            if (result.docId === null || result.docId === '') failures.push('materialized doc has no id');
+            if (result.docType === null || result.docType === '') failures.push('materialized doc has no type (DataModel resolution likely failed)');
             if (!result.hasSystem) failures.push('materialized doc has no system data');
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_NO_BREAK);
         }

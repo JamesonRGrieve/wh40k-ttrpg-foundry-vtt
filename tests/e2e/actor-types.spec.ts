@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { GAME_SYSTEM_IDS, joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -19,14 +20,16 @@ interface ActorTypeProbe {
     pageErrors: string[];
 }
 
-async function probeActorType(page: import('@playwright/test').Page, type: string, gameSystem: string): Promise<ActorTypeProbe> {
+async function probeActorType(page: Page, type: string, gameSystem: string): Promise<ActorTypeProbe> {
     const errors: string[] = [];
-    const listener = (err: Error) => errors.push(err.message);
+    const listener = (err: Error): void => {
+        errors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
-            async ({ type, gameSystem }) => {
-                const { Actor } = globalThis as unknown as {
+            async ({ actorType, actorGameSystem }) => {
+                const browserCtx = globalThis as unknown as {
                     Actor?: {
                         create?: (data: object) => Promise<{
                             id?: string;
@@ -35,13 +38,14 @@ async function probeActorType(page: import('@playwright/test').Page, type: strin
                         } | null>;
                     };
                 };
-                if (!Actor?.create) return { docId: null, sheetRendered: false, createError: 'Actor.create unavailable' };
+                const ActorClass = browserCtx.Actor;
+                if (!ActorClass?.create) return { docId: null, sheetRendered: false, createError: 'Actor.create unavailable' };
                 let actor;
                 try {
-                    actor = await Actor.create({
-                        name: `probe-${type}-${gameSystem}`,
-                        type,
-                        system: { gameSystem },
+                    actor = await ActorClass.create({
+                        name: `probe-${actorType}-${actorGameSystem}`,
+                        type: actorType,
+                        system: { gameSystem: actorGameSystem },
                     });
                 } catch (err) {
                     return { docId: null, sheetRendered: false, createError: String((err as Error)?.message ?? err) };
@@ -56,16 +60,16 @@ async function probeActorType(page: import('@playwright/test').Page, type: strin
                 await actor.delete?.();
                 return { docId: actor.id ?? null, sheetRendered, createError: null };
             },
-            { type, gameSystem },
+            { actorType: type, actorGameSystem: gameSystem },
         );
-        if (!result.docId && result.createError) errors.unshift(`create: ${result.createError}`);
+        if (result.docId === null && result.createError !== null) errors.unshift(`create: ${result.createError}`);
         return { type, docId: result.docId, sheetRendered: result.sheetRendered, pageErrors: errors };
     } finally {
         page.off('pageerror', listener);
     }
 }
 
-async function listActorTypes(page: import('@playwright/test').Page): Promise<string[]> {
+async function listActorTypes(page: Page): Promise<string[]> {
     return page.evaluate(() => {
         const cfg = (globalThis as unknown as { CONFIG?: { Actor?: { dataModels?: Record<string, unknown> } } }).CONFIG;
         return Object.keys(cfg?.Actor?.dataModels ?? {}).filter((t) => t !== 'base');

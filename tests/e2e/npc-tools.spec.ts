@@ -196,12 +196,12 @@ async function probeExporter(page: Page): Promise<FlowResult> {
         async ({ exporterUrl, parserUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            if (!Actor?.create) return { ok: false, error: 'Actor.create unavailable' };
+            const ActorClass = g.Actor;
+            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
 
             let npc: any;
             try {
-                npc = await Actor.create({
+                npc = await ActorClass.create({
                     name: 'probe-exporter-npc',
                     type: 'bc-npc',
                     system: {
@@ -217,7 +217,7 @@ async function probeExporter(page: Page): Promise<FlowResult> {
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
             }
-            if (!npc) return { ok: false, error: 'npc create returned null' };
+            if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
 
             try {
                 const expMod = (await import(exporterUrl)) as { default?: { toJSON: (a: unknown, opts?: unknown) => string; toText: (a: unknown) => string } };
@@ -293,12 +293,12 @@ async function probeScaler(page: Page): Promise<FlowResult> {
         async ({ scalerUrl, threatCalcUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            if (!Actor?.create) return { ok: false, error: 'Actor.create unavailable' };
+            const ActorClass = g.Actor;
+            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
 
             let npc: any;
             try {
-                npc = await Actor.create({
+                npc = await ActorClass.create({
                     name: 'probe-scaler-npc',
                     type: 'bc-npc',
                     system: {
@@ -318,14 +318,14 @@ async function probeScaler(page: Page): Promise<FlowResult> {
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
             }
-            if (!npc) return { ok: false, error: 'npc create returned null' };
+            if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
 
             try {
                 const dialogMod = (await import(scalerUrl)) as {
                     default?: new (a: unknown) => { render: (f: boolean) => Promise<void>; close: () => Promise<void>; element?: HTMLElement };
                 };
-                const Dialog = dialogMod.default;
-                if (typeof Dialog !== 'function') {
+                const ScalerDialog = dialogMod.default;
+                if (typeof ScalerDialog !== 'function') {
                     return { ok: false, error: 'NPCThreatScalerDialog default export not a constructor' };
                 }
 
@@ -341,9 +341,11 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                 // capture from actor.system.threatLevel.
                 let dialog: { render: (f: boolean) => Promise<void>; close: () => Promise<void>; element?: HTMLElement } | null = null;
                 try {
-                    dialog = new Dialog(npc);
+                    dialog = new ScalerDialog(npc);
                     await dialog.render(true).catch(() => undefined);
-                    await new Promise((r) => setTimeout(r, 30));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
                 } catch {
                     /* render is best-effort; the static-API drive below is what gates the probe */
                 }
@@ -424,12 +426,12 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
         async ({ difficultyUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            if (!Actor?.create) return { ok: false, error: 'Actor.create unavailable' };
+            const ActorClass = g.Actor;
+            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
 
             let npc: any;
             try {
-                npc = await Actor.create({
+                npc = await ActorClass.create({
                     name: 'probe-difficulty-npc',
                     type: 'bc-npc',
                     system: { gameSystem: 'bc', threatLevel: 8 },
@@ -437,7 +439,7 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
             }
-            if (!npc) return { ok: false, error: 'npc create returned null' };
+            if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
 
             try {
                 const mod = (await import(difficultyUrl)) as {
@@ -447,12 +449,12 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
                         _getDifficultyRating: (ratio: number) => { key: string; label: string; color: string };
                     };
                 };
-                const Dialog = mod.default;
-                if (typeof Dialog !== 'function') {
+                const DifficultyDialog = mod.default;
+                if (typeof DifficultyDialog !== 'function') {
                     return { ok: false, error: 'DifficultyCalculatorDialog default export not a constructor' };
                 }
 
-                const dialog = new Dialog(npc);
+                const dialog = new DifficultyDialog(npc);
 
                 // Drive every bucket in _getDifficultyRating. Each call
                 // covers one branch arm.
@@ -475,7 +477,9 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
                 // a real party computation.
                 try {
                     await dialog.render(true);
-                    await new Promise((r) => setTimeout(r, 30));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
                 } catch {
                     /* render is best-effort */
                 }
@@ -512,19 +516,19 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
         async ({ builderUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            if (!Actor?.create) return { ok: false, error: 'Actor.create unavailable' };
+            const ActorClass = g.Actor;
+            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
 
             const createdIds: string[] = [];
             const npcUuids: string[] = [];
             for (let i = 0; i < 3; i++) {
                 try {
-                    const a = await Actor.create({
+                    const a = await ActorClass.create({
                         name: `probe-builder-npc-${i}`,
                         type: 'bc-npc',
                         system: { gameSystem: 'bc', threatLevel: 3 + i },
                     });
-                    if (!a) continue;
+                    if (a === null || a === undefined) continue;
                     createdIds.push(a.id);
                     npcUuids.push(a.uuid);
                 } catch {
@@ -555,7 +559,9 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
                 // Ensure a clean slate (singleton may retain state from
                 // earlier specs — combat.spec.ts touches it).
                 builder.clear();
-                await new Promise((r) => setTimeout(r, 20));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 20);
+                });
 
                 for (const uuid of npcUuids) {
                     await builder.addNPC(uuid, 1);
@@ -621,13 +627,13 @@ async function probePreset(page: Page): Promise<FlowResult> {
         async ({ presetUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            if (!Actor?.create) return { ok: false, error: 'Actor.create unavailable' };
+            const ActorClass = g.Actor;
+            if (!ActorClass?.create) return { ok: false, error: 'Actor.create unavailable' };
 
             let sourceNPC: any;
             let targetNPC: any;
             try {
-                sourceNPC = await Actor.create({
+                sourceNPC = await ActorClass.create({
                     name: 'probe-preset-source',
                     type: 'bc-npc',
                     system: {
@@ -647,7 +653,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
                         horde: { enabled: false },
                     },
                 });
-                targetNPC = await Actor.create({
+                targetNPC = await ActorClass.create({
                     name: 'probe-preset-target',
                     type: 'bc-npc',
                     system: {
@@ -670,7 +676,8 @@ async function probePreset(page: Page): Promise<FlowResult> {
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
             }
-            if (!sourceNPC || !targetNPC) return { ok: false, error: 'npc create returned null' };
+            if (sourceNPC === null || sourceNPC === undefined || targetNPC === null || targetNPC === undefined)
+                return { ok: false, error: 'npc create returned null' };
 
             let createdPresetId: string | null = null;
             try {
@@ -685,8 +692,8 @@ async function probePreset(page: Page): Promise<FlowResult> {
                         deletePresetById: (id: string) => Promise<void>;
                     };
                 };
-                const Dialog = mod.default;
-                if (typeof Dialog?.showLibrary !== 'function') {
+                const PresetDialog = mod.default;
+                if (typeof PresetDialog?.showLibrary !== 'function') {
                     return { ok: false, error: 'CombatPresetDialog.showLibrary unavailable' };
                 }
 
@@ -694,17 +701,19 @@ async function probePreset(page: Page): Promise<FlowResult> {
                 // + _prepareContext.
                 let lib: { close: () => Promise<void> } | null = null;
                 try {
-                    lib = Dialog.showLibrary();
-                    await new Promise((r) => setTimeout(r, 40));
+                    lib = PresetDialog.showLibrary();
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 40);
+                    });
                 } catch {
                     /* render is best-effort */
                 }
 
-                const beforeCount = Dialog.getPresets().length;
-                const preset = Dialog.createPresetFromNPC(sourceNPC, 'probe-preset-name', 'probe-preset-description');
-                await Dialog.addPreset(preset);
+                const beforeCount = PresetDialog.getPresets().length;
+                const preset = PresetDialog.createPresetFromNPC(sourceNPC, 'probe-preset-name', 'probe-preset-description');
+                await PresetDialog.addPreset(preset);
 
-                const afterPresets = Dialog.getPresets();
+                const afterPresets = PresetDialog.getPresets();
                 if (afterPresets.length !== beforeCount + 1) {
                     return { ok: false, error: `expected presets length ${beforeCount + 1}, got ${afterPresets.length}` };
                 }
@@ -714,14 +723,14 @@ async function probePreset(page: Page): Promise<FlowResult> {
                 }
                 createdPresetId = saved.id;
 
-                const fetched = Dialog.getPreset(createdPresetId);
+                const fetched = PresetDialog.getPreset(createdPresetId);
                 if (fetched === null) {
                     return { ok: false, error: 'getPreset by id returned null after save' };
                 }
 
                 // Apply to target NPC — should mutate target.system.threatLevel
                 // from 1 → 9 (source's value).
-                await Dialog.applyPresetToNPC(targetNPC, fetched);
+                await PresetDialog.applyPresetToNPC(targetNPC, fetched);
                 const targetThreat = Number(g.game.actors.get(targetNPC.id)?.system?.threatLevel ?? 0);
                 if (targetThreat !== 9) {
                     return { ok: false, error: `applyPresetToNPC did not transfer threatLevel: ${targetThreat}` };

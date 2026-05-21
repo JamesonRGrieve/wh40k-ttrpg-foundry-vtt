@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { createConditionEffect } from './active-effects.ts';
 import {
     MANACLES_BS_PENALTY,
     MANACLES_CONDITION_KEY,
@@ -28,8 +29,6 @@ vi.mock('./active-effects.ts', () => ({
         origin: options['origin'] as string | undefined,
     })),
 }));
-
-import { createConditionEffect } from './active-effects.ts';
 
 /* -------------------------------------------- */
 /*  Constants (errata p. 176)                   */
@@ -80,7 +79,7 @@ describe('isManaclesItem', () => {
 });
 
 describe('isManaclesItemEquipped', () => {
-    const make = (overrides: Record<string, unknown>) => ({
+    const make = (overrides: Record<string, unknown>): { type: string; name: string; system: Record<string, unknown> } => ({
         type: 'gear',
         name: 'Manacles',
         system: { identifier: 'manacles', equipped: true, inBackpack: false, inShipStorage: false, ...overrides },
@@ -124,7 +123,7 @@ function makeActor(items: unknown[], effects: FakeEffect[] = []): FakeActor & WH
     const actor: FakeActor = {
         items,
         effects,
-        deleteEmbeddedDocuments: vi.fn(async (_type: string, _ids: string[]) => undefined),
+        deleteEmbeddedDocuments: vi.fn(async (_type: string, _ids: string[]) => Promise.resolve(undefined)),
     };
     return actor as unknown as FakeActor & WH40KBaseActorDocument;
 }
@@ -220,7 +219,7 @@ describe('liftManaclesCondition', () => {
         const a: FakeEffect = { id: 'a1', name: 'something', flags: { [MANACLES_FLAG_SCOPE]: { [MANACLES_FLAG_KEY]: true } } };
         const b: FakeEffect = { id: 'b2', name: MANACLES_EFFECT_NAME };
         const c: FakeEffect = { id: 'c3', name: 'Blessed' };
-        const deleted = vi.fn(async () => undefined);
+        const deleted = vi.fn(async () => Promise.resolve(undefined));
         const actor = { items: [], effects: [a, b, c], deleteEmbeddedDocuments: deleted } as unknown as WH40KBaseActorDocument;
         const removed = await liftManaclesCondition(actor);
         expect(removed).toBe(2);
@@ -238,7 +237,7 @@ describe('syncManaclesConditionForActor', () => {
 
     it('lifts the AE when no manacles are equipped but the AE is present', async () => {
         vi.mocked(createConditionEffect).mockClear();
-        const deleted = vi.fn(async () => undefined);
+        const deleted = vi.fn(async () => Promise.resolve(undefined));
         const actor = {
             items: [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: false } }],
             effects: [{ id: 'm', name: MANACLES_EFFECT_NAME }],
@@ -251,7 +250,7 @@ describe('syncManaclesConditionForActor', () => {
 
     it('is a no-op when equipped state and AE presence already agree', async () => {
         vi.mocked(createConditionEffect).mockClear();
-        const deleted = vi.fn(async () => undefined);
+        const deleted = vi.fn(async () => Promise.resolve(undefined));
         const actor = {
             items: [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: true } }],
             effects: [{ id: 'm', name: MANACLES_EFFECT_NAME }],

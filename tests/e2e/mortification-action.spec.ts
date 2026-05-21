@@ -19,12 +19,12 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, error: 'Actor.create unavailable' };
+        const ActorCls = g.Actor;
+        if (!ActorCls?.create) return { setupOk: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'mortification-probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e' },
@@ -44,12 +44,16 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
         const fatigueBefore = actor.system?.fatigue?.value ?? 0;
 
         await actor.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise<void>((r) => {
+            setTimeout(r, 250);
+        });
 
         // Navigate to the Status tab if the sheet's tab API is reachable.
         try {
             actor.sheet?.changeTab?.('status', 'primary');
-            await new Promise((r) => setTimeout(r, 150));
+            await new Promise<void>((r) => {
+                setTimeout(r, 150);
+            });
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }
@@ -59,7 +63,9 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
         if (btn) {
             btn.click();
             // Allow the async action handler to resolve fatigue.update + ActiveEffect create.
-            await new Promise((r) => setTimeout(r, 400));
+            await new Promise<void>((r) => {
+                setTimeout(r, 400);
+            });
         }
 
         const fatigueAfter = actor.system?.fatigue?.value ?? 0;

@@ -38,10 +38,10 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
                 let messageId: string | null = null;
 
                 try {
-                    const renderTemplate = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
+                    const renderTemplateFn = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
                         | ((p: string, c: object) => Promise<string>)
                         | undefined;
-                    if (!renderTemplate) {
+                    if (!renderTemplateFn) {
                         return { rendered, hasCardRoot, hasSystemAnchor, hasFreeAttackBanner, messageId, error: 'renderTemplate unavailable' };
                     }
 
@@ -57,7 +57,7 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
                         outcomeKey: 'WH40K.AerialManoeuvre.LockOn.OutcomeSuccess',
                     };
 
-                    const html = await renderTemplate(template, context);
+                    const html = await renderTemplateFn(template, context);
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-aerial-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="dh2e"');

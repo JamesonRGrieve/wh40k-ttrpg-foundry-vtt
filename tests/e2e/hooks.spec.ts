@@ -45,7 +45,9 @@ interface HookProbeResult {
 
 async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<HookProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (hookNames: readonly string[]) => {
@@ -61,9 +63,6 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             }
             interface ActorApi {
                 create?: (data: object) => Promise<{ id?: string } | null>;
-            }
-            interface ItemApi {
-                create?: (data: object, options?: object) => Promise<{ id?: string } | null>;
             }
             interface CombatApi {
                 create?: (data: object) => Promise<{
@@ -97,20 +96,20 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             const notes: NoteMap = {};
             for (const name of hookNames) fired[name] = false;
 
-            const Hooks = (globalThis as unknown as { Hooks?: HooksApi }).Hooks;
-            const ChatMessage = (globalThis as unknown as { ChatMessage?: { create?: (d: object) => Promise<{ id?: string } | null> } }).ChatMessage;
-            const Actor = (globalThis as unknown as { Actor?: ActorApi }).Actor;
-            const Combat = (globalThis as unknown as { Combat?: CombatApi }).Combat;
-            const game = (globalThis as unknown as { game?: GameApi }).game;
-            const ui = (globalThis as unknown as { ui?: UiApi }).ui;
+            const HooksGbl = (globalThis as unknown as { Hooks?: HooksApi }).Hooks;
+            const ChatMessageGbl = (globalThis as unknown as { ChatMessage?: { create?: (d: object) => Promise<{ id?: string } | null> } }).ChatMessage;
+            const ActorGbl = (globalThis as unknown as { Actor?: ActorApi }).Actor;
+            const CombatGbl = (globalThis as unknown as { Combat?: CombatApi }).Combat;
+            const gameGbl = (globalThis as unknown as { game?: GameApi }).game;
+            const uiGbl = (globalThis as unknown as { ui?: UiApi }).ui;
 
-            if (!Hooks?.on || !Hooks?.off) {
+            if (!HooksGbl?.on || !HooksGbl?.off) {
                 notes.__global__ = 'Hooks API unavailable';
                 return { fired, notes };
             }
 
             // init + ready already fired at world boot — game.ready proves it.
-            if (game?.ready === true) {
+            if (gameGbl?.ready === true) {
                 fired.init = true;
                 fired.ready = true;
             } else {
@@ -122,7 +121,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             const taps: Array<{ name: string; id: number }> = [];
             const tapNames = hookNames.filter((n) => n !== 'init' && n !== 'ready');
             for (const name of tapNames) {
-                const id = Hooks.on(name, () => {
+                const id = HooksGbl.on(name, () => {
                     fired[name] = true;
                 });
                 taps.push({ name, id });
@@ -133,7 +132,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             try {
                 // renderChatMessageHTML
                 try {
-                    await ChatMessage?.create?.({ content: 'hook-probe-chat' });
+                    await ChatMessageGbl?.create?.({ content: 'hook-probe-chat' });
                 } catch (err) {
                     notes.renderChatMessageHTML = `ChatMessage.create threw: ${String((err as Error)?.message ?? err)}`;
                 }
@@ -141,21 +140,22 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 // updateActor + updateItem
                 let probeActorId: string | null = null;
                 try {
-                    const actor = await Actor?.create?.({
+                    const actor = await ActorGbl?.create?.({
                         name: 'hook-probe-actor',
                         type: 'bc-character',
                         system: { gameSystem: 'bc' },
                     });
                     probeActorId = actor?.id ?? null;
-                    if (probeActorId) {
+                    if (probeActorId !== null) {
+                        const capturedActorId = probeActorId;
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(probeActorId!)?.delete?.();
+                                await gameGbl?.actors?.get?.(capturedActorId)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
                         });
-                        const live = game?.actors?.get?.(probeActorId);
+                        const live = gameGbl?.actors?.get?.(probeActorId);
                         try {
                             await live?.update?.({ name: 'hook-probe-actor-updated' });
                         } catch (err) {
@@ -164,7 +164,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                         try {
                             const created = await live?.createEmbeddedDocuments?.('Item', [{ name: 'hook-probe-item', type: 'gear' }]);
                             const itemId = created?.[0]?.id ?? null;
-                            if (itemId) {
+                            if (itemId !== null) {
                                 const item = live?.items?.get?.(itemId);
                                 await item?.update?.({ name: 'hook-probe-item-updated' });
                             } else {
@@ -189,16 +189,17 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 // probe actor so the turn order has two slots.
                 let probeActor2Id: string | null = null;
                 try {
-                    const actor2 = await Actor?.create?.({
+                    const actor2 = await ActorGbl?.create?.({
                         name: 'hook-probe-actor-2',
                         type: 'bc-character',
                         system: { gameSystem: 'bc' },
                     });
                     probeActor2Id = actor2?.id ?? null;
-                    if (probeActor2Id) {
+                    if (probeActor2Id !== null) {
+                        const capturedActor2Id = probeActor2Id;
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(probeActor2Id!)?.delete?.();
+                                await gameGbl?.actors?.get?.(capturedActor2Id)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
@@ -209,7 +210,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 }
 
                 try {
-                    const combat = await Combat?.create?.({});
+                    const combat = await CombatGbl?.create?.({});
                     if (combat?.id) {
                         const combatantIds: string[] = [];
                         if (probeActorId) combatantIds.push(probeActorId);
@@ -266,19 +267,23 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 // directly so the system's handler still runs and source
                 // coverage is recorded.
                 try {
-                    const renderResult = ui?.controls?.render?.(true);
+                    const renderResult = uiGbl?.controls?.render?.(true);
                     if (renderResult && typeof (renderResult as { then?: unknown }).then === 'function') {
                         await Promise.resolve(renderResult);
                     }
                     // Render is async; allow the hook callback to flush.
-                    await new Promise((r) => setTimeout(r, 100));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 100);
+                    });
                     if (!fired.getSceneControlButtons) {
-                        const HooksGlobal = (globalThis as unknown as { Hooks?: { callAll?: (name: string, ...args: unknown[]) => boolean } }).Hooks;
+                        const HooksCallAll = (globalThis as unknown as { Hooks?: { callAll?: (name: string, ...args: unknown[]) => boolean } }).Hooks;
                         // Fallback: call the hook with an empty controls map +
                         // tools array so the system's handler shape (which
                         // typically appends to that array) doesn't throw.
-                        HooksGlobal?.callAll?.('getSceneControlButtons', { controls: {} });
-                        await new Promise((r) => setTimeout(r, 30));
+                        HooksCallAll?.callAll?.('getSceneControlButtons', { controls: {} });
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 30);
+                        });
                     }
                 } catch (err) {
                     notes.getSceneControlButtons = `ui.controls.render threw: ${String((err as Error)?.message ?? err)}`;
@@ -286,7 +291,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             } finally {
                 for (const { name, id } of taps) {
                     try {
-                        Hooks.off?.(name, id);
+                        HooksGbl.off?.(name, id);
                     } catch {
                         /* ignore */
                     }

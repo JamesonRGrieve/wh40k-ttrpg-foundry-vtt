@@ -43,8 +43,8 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HbsLib?.compile !== 'function') {
                         return {
                             rendered,
                             hasDaemonEngineInput,
@@ -57,7 +57,7 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HbsLib.compile(src);
                     // Daemon Engine(3) idle 2 turns → rage = 3 + min(2,3) = 5.
                     // Khorne + Quick & the Dead active → +10 → init 35 → 45.
                     const html = tpl({

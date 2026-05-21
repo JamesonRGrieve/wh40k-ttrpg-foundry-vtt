@@ -135,7 +135,7 @@ function hasToObject(item: WH40KItem | NormalizedOrigin): item is WH40KItem {
     // toObject(); calling it threw "item.toObject is not a function" on
     // origin selection. Guard the type and the operand so neither a
     // non-callable toObject nor a non-object item can reach .toObject().
-    return typeof item === 'object' && item !== null && 'toObject' in item && typeof (item as { toObject?: unknown }).toObject === 'function';
+    return 'toObject' in item && typeof (item as { toObject?: unknown }).toObject === 'function';
 }
 
 /**
@@ -3921,7 +3921,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             try {
                 const rollTable = table as RollTable;
                 const draw = await rollTable.draw({ displayChat: true });
-                const [result] = draw.results ?? [];
+                const [result] = draw.results;
                 const resultText =
                     result !== undefined && typeof (result as unknown as Record<string, unknown>)['text'] === 'string'
                         ? ((result as unknown as Record<string, unknown>)['text'] as string)
@@ -3988,7 +3988,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const index = await pack.getIndex({ fields: ['name'] });
         const entry = index.find((candidate) => candidate.name === 'Divination');
-        if (!entry?._id) {
+        if (entry?._id === undefined || entry._id === '') {
             const availableTableNames = index
                 .map((candidate) => candidate.name)
                 .filter((name): name is string => typeof name === 'string')

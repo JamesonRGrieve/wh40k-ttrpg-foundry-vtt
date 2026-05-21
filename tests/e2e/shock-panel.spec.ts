@@ -21,12 +21,12 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, valueText: '', hasButton: false, error: 'Actor.create unavailable' };
+        const ActorGbl = g.Actor;
+        if (!ActorGbl?.create) return { setupOk: false, valueText: '', hasButton: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorGbl.create({
                 name: 'shock-panel-probe',
                 type: 'dh2-character',
                 system: {
@@ -40,11 +40,15 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
         if (!actor) return { setupOk: false, valueText: '', hasButton: false, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise<void>((r) => {
+            setTimeout(r, 250);
+        });
 
         try {
             actor.sheet?.changeTab?.('status', 'primary');
-            await new Promise((r) => setTimeout(r, 150));
+            await new Promise<void>((r) => {
+                setTimeout(r, 150);
+            });
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }

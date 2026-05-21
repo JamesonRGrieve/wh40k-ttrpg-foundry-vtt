@@ -68,17 +68,17 @@ interface ActorRef {
  */
 async function createCharacterActor(page: Page, name: string, system: Record<string, unknown> = {}): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(
-        async ({ name, system }) => {
+        async ({ name, system: actorSystem }) => {
             const g = globalThis as unknown as {
                 Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
             };
-            const Actor = g.Actor;
-            if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+            const ActorCls = g.Actor;
+            if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
             try {
-                const actor = await Actor.create({
+                const actor = await ActorCls.create({
                     name,
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e', ...system },
+                    system: { gameSystem: 'dh2e', ...actorSystem },
                 });
                 if (!actor) return { id: null, error: 'Actor.create returned null' };
                 return { id: actor.id ?? null, error: null };
@@ -119,10 +119,10 @@ async function deleteActor(page: Page, actorId: string): Promise<void> {
  */
 async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ actorId, moduleUrl }): Promise<FlowResult> => {
+        async ({ actorId: aid, moduleUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const actor = g.game?.actors?.get?.(actorId);
+            const actor = g.game?.actors?.get?.(aid);
             if (!actor) return { ok: false, error: 'actor missing' };
 
             const before = Boolean(actor.system?.skills?.dodge?.trained);
@@ -208,18 +208,18 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
         async ({ moduleUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            if (!Actor?.create) return { ok: false, error: 'Actor.create unavailable' };
+            const ActorCls = g.Actor;
+            if (!ActorCls?.create) return { ok: false, error: 'Actor.create unavailable' };
 
             let sourceActor: any;
             let parentActor: any;
             try {
-                sourceActor = await Actor.create({
+                sourceActor = await ActorCls.create({
                     name: 'probe-grants-source',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },
                 });
-                parentActor = await Actor.create({
+                parentActor = await ActorCls.create({
                     name: 'probe-grants-parent',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },
@@ -301,10 +301,10 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
  */
 async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ actorId, moduleUrl }): Promise<FlowResult> => {
+        async ({ actorId: aid, moduleUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const actor = g.game?.actors?.get?.(actorId);
+            const actor = g.game?.actors?.get?.(aid);
             if (!actor) return { ok: false, error: 'actor missing' };
 
             // Stub item — same rationale as the skill-grant probe (talent
@@ -314,7 +314,7 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
             const talent: any = {
                 id: 'probe-revoke-stub',
                 _id: 'probe-revoke-stub',
-                uuid: `Actor.${actorId}.Item.probe-revoke-stub`,
+                uuid: `Actor.${aid}.Item.probe-revoke-stub`,
                 name: 'probe-revoke-talent',
                 type: 'talent',
                 system: {
@@ -371,10 +371,10 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
  * and that `talent.hasGrants` reflects the presence of the ability.
  */
 async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowResult> {
-    return page.evaluate(async (actorId: string): Promise<FlowResult> => {
+    return page.evaluate(async (aid: string): Promise<FlowResult> => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
         const g = globalThis as any;
-        const actor = g.game?.actors?.get?.(actorId);
+        const actor = g.game?.actors?.get?.(aid);
         if (!actor) return { ok: false, error: 'actor missing' };
 
         let talent: any;
@@ -435,11 +435,11 @@ async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowRes
  */
 async function probeAcquire(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ buyerId, sourceId, moduleUrl }): Promise<FlowResult> => {
+        async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const buyer = g.game?.actors?.get?.(buyerId);
-            const source = g.game?.actors?.get?.(sourceId);
+            const buyer = g.game?.actors?.get?.(bid);
+            const source = g.game?.actors?.get?.(sid);
             if (!buyer || !source) return { ok: false, error: 'buyer/source missing' };
 
             const mod = await import(moduleUrl);
@@ -511,11 +511,11 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
  */
 async function probeSell(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ buyerId, sourceId, moduleUrl }): Promise<FlowResult> => {
+        async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const buyer = g.game?.actors?.get?.(buyerId);
-            const source = g.game?.actors?.get?.(sourceId);
+            const buyer = g.game?.actors?.get?.(bid);
+            const source = g.game?.actors?.get?.(sid);
             if (!buyer || !source) return { ok: false, error: 'buyer/source missing' };
 
             const mod = await import(moduleUrl);
@@ -579,11 +579,11 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
  */
 async function probeListSources(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ buyerId, sourceId, moduleUrl }): Promise<FlowResult> => {
+        async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
-            const buyer = g.game?.actors?.get?.(buyerId);
-            const source = g.game?.actors?.get?.(sourceId);
+            const buyer = g.game?.actors?.get?.(bid);
+            const source = g.game?.actors?.get?.(sid);
             if (!buyer || !source) return { ok: false, error: 'buyer/source missing' };
 
             const mod = await import(moduleUrl);

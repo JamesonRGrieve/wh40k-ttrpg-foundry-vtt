@@ -60,7 +60,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
+            const ActorCls = g.Actor;
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -81,7 +81,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             // (which read `actor.system.wounds`) have meaningful state.
             let actor: any;
             try {
-                actor = await Actor.create({
+                actor = await ActorCls.create({
                     name: 'active-effects-rules-spec-actor',
                     type: 'dh2-character',
                     system: {
@@ -104,7 +104,10 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
                 return out;
             }
 
-            const sleep = async (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
+            const sleep = async (ms: number): Promise<void> =>
+                new Promise<void>((r) => {
+                    setTimeout(r, ms);
+                });
             const liveActor = (): any => g.game?.actors?.get?.(actor.id);
             const effectCountBefore = (): number => liveActor()?.effects?.size ?? 0;
 

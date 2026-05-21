@@ -2,9 +2,9 @@
  * Stories for TalentSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/talent-sheet.hbs?raw';
@@ -15,10 +15,10 @@ initializeStoryHandlebars();
 // between the variable and the literal. Compiling at module load asserts the
 // template parses cleanly; if a future edit reintroduces the typo, Storybook
 // (and the regression spec in tests/storybook/issue-201-...) will fail loudly.
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0x7a1e47);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('talent', rng);
     // The talent sheet template gates each tab panel on `(eq activeTab "<id>")`
     // — `activeTab` is set at runtime from `this.tabGroups.primary` in
@@ -130,23 +130,23 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderMockTemplate(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderMockTemplate(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersTalentName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByRole('heading', { name: 'Mighty Shot' })).toBeTruthy();
+    render: () => renderMockTemplate(compiled, makeCtx()),
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByRole('heading', { name: 'Mighty Shot' })).toBeTruthy();
     },
 };
 
 export const RendersEditImageAction: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
-    play: async ({ canvasElement }) => {
+    render: () => renderMockTemplate(compiled, makeCtx()),
+    play: ({ canvasElement }) => {
         const btn = canvasElement.querySelector('[data-action="editImage"]');
-        expect(btn).toBeTruthy();
+        void expect(btn).toBeTruthy();
         btn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     },
 };
@@ -167,16 +167,16 @@ export const RendersEditImageAction: Story = {
  */
 export const CompendiumRender: Story = {
     name: 'Issue 201 — Compendium Render',
-    render: () => renderTemplate(compiled, makeCtx({ inEditMode: false, editable: false, isCompendiumItem: true })),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    render: () => renderMockTemplate(compiled, makeCtx({ inEditMode: false, editable: false, isCompendiumItem: true })),
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
         // No parse error => rendered output contains the tab nav.
-        expect(canvas.getByRole('heading', { name: 'Mighty Shot' })).toBeTruthy();
-        for (const tab of ['overview', 'effects', 'properties', 'description'] as const) {
-            const button = canvasElement.querySelector(`button[data-tab="${tab}"]`);
-            expect(button, `tab button [data-tab="${tab}"] should render`).toBeTruthy();
-            const panel = canvasElement.querySelector(`div[data-tab="${tab}"]`);
-            expect(panel, `tab panel [data-tab="${tab}"] should render`).toBeTruthy();
+        void expect(storyCanvas.getByRole('heading', { name: 'Mighty Shot' })).toBeTruthy();
+        for (const tabId of ['overview', 'effects', 'properties', 'description'] as const) {
+            const button = canvasElement.querySelector(`button[data-tab="${tabId}"]`);
+            void expect(button, `tab button [data-tab="${tabId}"] should render`).toBeTruthy();
+            const panel = canvasElement.querySelector(`div[data-tab="${tabId}"]`);
+            void expect(panel, `tab panel [data-tab="${tabId}"] should render`).toBeTruthy();
         }
     },
 };

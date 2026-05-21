@@ -31,7 +31,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
             const result = await page.evaluate(async () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor;
+                const ActorCls = g.Actor;
                 let error: string | null = null;
                 let rendered = false;
                 let valueText = '';
@@ -41,7 +41,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                 let hasBreakdownBtn = false;
                 let hasPanel = false;
 
-                if (!Actor?.create) {
+                if (!ActorCls?.create) {
                     return {
                         rendered,
                         valueText,
@@ -57,7 +57,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                 try {
                     let actor;
                     try {
-                        actor = await Actor.create({
+                        actor = await ActorCls.create({
                             name: 'subtlety-panel-probe',
                             type: 'dh2-character',
                             system: {
@@ -92,11 +92,15 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
 
                     try {
                         await actor.sheet.render(true);
-                        await new Promise((r) => setTimeout(r, 250));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 250);
+                        });
                         // Navigate to the Status tab where the panel lives.
                         try {
                             actor.sheet?.changeTab?.('status', 'primary');
-                            await new Promise((r) => setTimeout(r, 150));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 150);
+                            });
                         } catch {
                             /* sheets without changeTab fall back to the open tab */
                         }

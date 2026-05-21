@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { GAME_SYSTEM_IDS, joinAsGM, type GameSystemId } from './lib/join';
 import { expect, test } from './lib/test';
@@ -153,11 +152,10 @@ async function probeActorSheetScreenshot(
 }> {
     return page
         .evaluate(
-            async ({ actorType, systemId }) => {
+            async ({ actorType: actorTypeArg, systemId: systemIdArg }) => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor;
-                const game = g.game;
+                const ActorGlobal = g.Actor;
 
                 // --- Deterministic LCG so repeated runs produce identical pixels.
                 // Park-Miller minimum-standard, seeded from a hash of the pair.
@@ -166,7 +164,7 @@ async function probeActorSheetScreenshot(
                     for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
                     return h >>> 0 || 1;
                 };
-                let _rng = seedHash(`${actorType}::${systemId}`) % 2147483647;
+                let _rng = seedHash(`${actorTypeArg}::${systemIdArg}`) % 2147483647;
                 const seededRandom = (): number => {
                     _rng = (_rng * 48271) % 2147483647;
                     return (_rng - 1) / 2147483646;
@@ -178,7 +176,7 @@ async function probeActorSheetScreenshot(
                     Math.random = origRandom;
                 };
 
-                if (!Actor?.create) {
+                if (!ActorGlobal?.create) {
                     restoreRandom();
                     return {
                         boundingBox: null,
@@ -192,17 +190,17 @@ async function probeActorSheetScreenshot(
                 // Seed shape per kind — kept minimal but non-empty so the sheet
                 // has data to render rather than the blank-actor placeholder.
                 // The DataModel fills in everything else from its schema defaults.
-                const baseName = `screenshot-${actorType}-${systemId}`;
-                const isCharacter = actorType.endsWith('-character');
-                const isNpc = actorType.endsWith('-npc');
-                const isVehicle = actorType.endsWith('-vehicle');
-                const isStarship = actorType.endsWith('-starship');
-                const isLoot = actorType === 'loot';
+                const baseName = `screenshot-${actorTypeArg}-${systemIdArg}`;
+                const isCharacter = actorTypeArg.endsWith('-character');
+                const isNpc = actorTypeArg.endsWith('-npc');
+                const isVehicle = actorTypeArg.endsWith('-vehicle');
+                const isStarship = actorTypeArg.endsWith('-starship');
+                const isLoot = actorTypeArg === 'loot';
 
                 const seed: any = {
                     name: baseName,
-                    type: actorType,
-                    system: { gameSystem: systemId },
+                    type: actorTypeArg,
+                    system: { gameSystem: systemIdArg },
                 };
                 if (isCharacter) {
                     seed.system = {
@@ -249,7 +247,7 @@ async function probeActorSheetScreenshot(
 
                 let actor: any;
                 try {
-                    actor = await Actor.create(seed);
+                    actor = await ActorGlobal.create(seed);
                 } catch (err) {
                     restoreRandom();
                     return {
@@ -305,16 +303,15 @@ async function probeActorSheetScreenshot(
 
                 // Let ApplicationV2 PARTS settle (CSS transitions, async tab
                 // content). 500ms matches the spec brief.
-                await new Promise((r) => setTimeout(r, 500));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 500);
+                });
 
                 // Find the sheet root element in the live DOM. ApplicationV2
                 // tags its outer element with data-appid matching sheet.id.
                 const appId = String(sheet.id ?? '');
                 const directEl = sheet.element instanceof HTMLElement ? sheet.element : null;
-                const lookupEl =
-                    directEl ??
-                    (document.querySelector(`[data-appid="${appId}"]`) as HTMLElement | null) ??
-                    (document.querySelector(`#${appId}`) as HTMLElement | null);
+                const lookupEl = directEl ?? document.querySelector(`[data-appid="${appId}"]`) ?? document.querySelector(`#${appId}`);
 
                 let boundingBox: { x: number; y: number; width: number; height: number } | null = null;
                 if (lookupEl) {
@@ -407,14 +404,13 @@ async function toggleEditModeAndMeasure(
             }
         }
         // Allow the re-render triggered by the mode flip to settle.
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise<void>((r) => {
+            setTimeout(r, 500);
+        });
 
         const appId = String(sheet.id ?? '');
         const directEl = sheet.element instanceof HTMLElement ? sheet.element : null;
-        const el =
-            directEl ??
-            (document.querySelector(`[data-appid="${appId}"]`) as HTMLElement | null) ??
-            (document.querySelector(`#${appId}`) as HTMLElement | null);
+        const el = directEl ?? document.querySelector(`[data-appid="${appId}"]`) ?? document.querySelector(`#${appId}`);
         let boundingBox: { x: number; y: number; width: number; height: number } | null = null;
         if (el) {
             const rect = el.getBoundingClientRect();
@@ -434,7 +430,9 @@ async function toggleEditModeAndMeasure(
 
 async function runAllScreenshots(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
 
     const keysFired: Record<string, boolean> = {};
@@ -528,8 +526,8 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
     }
 
     return {
-        keysFired: keysFired as Record<ScreenshotFlow, boolean>,
-        keyNotes: keyNotes as Partial<Record<ScreenshotFlow, string>>,
+        keysFired: keysFired,
+        keyNotes: keyNotes,
         boundingBoxes,
         pageErrors,
     };

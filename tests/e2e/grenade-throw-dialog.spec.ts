@@ -42,7 +42,9 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
                     const inst = new Cls({ grenadeId: 'psychotroke' });
                     try {
                         await inst.render(true);
-                        await new Promise((r) => setTimeout(r, 60));
+                        await new Promise((r) => {
+                            setTimeout(r, 60);
+                        });
                     } catch (err) {
                         const e = err as Error;
                         error = String(e?.stack ?? e?.message ?? err);

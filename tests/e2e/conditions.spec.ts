@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -28,14 +29,14 @@ interface ActorRef {
     id: string;
 }
 
-async function createParentActor(page: import('@playwright/test').Page): Promise<ActorRef | { error: string }> {
+async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor } = globalThis as unknown as {
+        const { Actor: ActorGlobal } = globalThis as unknown as {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
         };
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        if (!ActorGlobal?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorGlobal.create({
                 name: 'probe-conditions-parent',
                 type: 'bc-character',
                 system: { gameSystem: 'bc' },
@@ -50,31 +51,33 @@ async function createParentActor(page: import('@playwright/test').Page): Promise
     return { id: result.id };
 }
 
-async function deleteActor(page: import('@playwright/test').Page, actorId: string): Promise<void> {
+async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game } = globalThis as unknown as {
+        const { game: gameGlobal } = globalThis as unknown as {
             game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
         };
-        const actor = game?.actors?.get?.(id);
+        const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
 
-async function listStatusEffectIds(page: import('@playwright/test').Page): Promise<string[]> {
+async function listStatusEffectIds(page: Page): Promise<string[]> {
     return page.evaluate(() => {
         const cfg = (globalThis as unknown as { CONFIG?: { statusEffects?: Array<{ id?: string }> } }).CONFIG;
         return (cfg?.statusEffects ?? []).map((s) => s.id).filter((id): id is string => typeof id === 'string' && id.length > 0);
     });
 }
 
-async function probeStatusEffect(page: import('@playwright/test').Page, actorId: string, effectId: string): Promise<ConditionProbe> {
+async function probeStatusEffect(page: Page, actorId: string, effectId: string): Promise<ConditionProbe> {
     const errors: string[] = [];
-    const listener = (err: Error) => errors.push(err.message);
+    const listener = (err: Error): void => {
+        errors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
-            async ({ actorId, effectId }) => {
-                const { game } = globalThis as unknown as {
+            async ({ actorId: probeActorId, effectId: probeEffectId }) => {
+                const { game: gameGlobal } = globalThis as unknown as {
                     game?: {
                         actors?: {
                             get?: (id: string) =>
@@ -87,26 +90,26 @@ async function probeStatusEffect(page: import('@playwright/test').Page, actorId:
                         };
                     };
                 };
-                const actor = game?.actors?.get?.(actorId);
+                const actor = gameGlobal?.actors?.get?.(probeActorId);
                 if (!actor) return { appliedOk: false, removedOk: false, error: 'actor lookup failed' };
                 if (typeof actor.toggleStatusEffect !== 'function') {
                     return { appliedOk: false, removedOk: false, error: 'actor.toggleStatusEffect unavailable' };
                 }
                 try {
-                    await actor.toggleStatusEffect(effectId, { active: true });
+                    await actor.toggleStatusEffect(probeEffectId, { active: true });
                 } catch (err) {
                     return { appliedOk: false, removedOk: false, error: `toggle-on threw: ${String((err as Error)?.message ?? err)}` };
                 }
-                const hasAfterOn = Boolean(actor.statuses?.has(effectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(effectId) ?? false));
+                const hasAfterOn = Boolean(actor.statuses?.has(probeEffectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(probeEffectId) ?? false));
                 if (!hasAfterOn) {
                     return { appliedOk: false, removedOk: false, error: 'effect not present after toggle-on' };
                 }
                 try {
-                    await actor.toggleStatusEffect(effectId, { active: false });
+                    await actor.toggleStatusEffect(probeEffectId, { active: false });
                 } catch (err) {
                     return { appliedOk: true, removedOk: false, error: `toggle-off threw: ${String((err as Error)?.message ?? err)}` };
                 }
-                const hasAfterOff = Boolean(actor.statuses?.has(effectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(effectId) ?? false));
+                const hasAfterOff = Boolean(actor.statuses?.has(probeEffectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(probeEffectId) ?? false));
                 if (hasAfterOff) {
                     return { appliedOk: true, removedOk: false, error: 'effect still present after toggle-off' };
                 }

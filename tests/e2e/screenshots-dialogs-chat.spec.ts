@@ -102,9 +102,9 @@ const KEBAB_OVERRIDES: Record<string, string> = {
     WH40KCreateActorDialog: 'create-actor-dialog',
 };
 
-function kebab(name: string): string {
-    if (KEBAB_OVERRIDES[name] !== undefined) return KEBAB_OVERRIDES[name];
-    return name
+function kebab(className: string): string {
+    if (KEBAB_OVERRIDES[className] !== undefined) return KEBAB_OVERRIDES[className];
+    return className
         .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
         .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
         .toLowerCase();
@@ -163,7 +163,9 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                                     } catch (err) {
                                         error = String((err as Error)?.message ?? err);
                                     }
-                                    await new Promise((r) => setTimeout(r, 200));
+                                    await new Promise((r) => {
+                                        setTimeout(r, 200);
+                                    });
                                     const el = document.querySelector('dialog.application');
                                     if (el !== null) {
                                         el.setAttribute('data-screenshot-id', `dialog-${probe.name}`);
@@ -189,7 +191,9 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                                         } catch (err) {
                                             error = String((err as Error)?.message ?? err);
                                         }
-                                        await new Promise((r) => setTimeout(r, 200));
+                                        await new Promise((r) => {
+                                            setTimeout(r, 200);
+                                        });
                                         const el = inst.element instanceof HTMLElement ? inst.element : null;
                                         if (el !== null) {
                                             el.setAttribute('data-screenshot-id', `dialog-${probe.name}`);
@@ -253,13 +257,13 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                             foundry?: { applications?: { handlebars?: { renderTemplate?: (p: string, ctx: object) => Promise<string> } } };
                             ChatMessage?: { create?: (data: object) => Promise<{ id?: string } | null> };
                         };
-                        const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate;
-                        if (renderTemplate === undefined || g.ChatMessage?.create === undefined) {
+                        const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
+                        if (renderTemplateFn === undefined || g.ChatMessage?.create === undefined) {
                             throw new Error('Foundry APIs unavailable (renderTemplate/ChatMessage)');
                         }
                         let html = '';
                         try {
-                            html = await renderTemplate(`systems/wh40k-rpg/templates/chat/${template}.hbs`, {});
+                            html = await renderTemplateFn(`systems/wh40k-rpg/templates/chat/${template}.hbs`, {});
                         } catch (err) {
                             throw new Error(`renderTemplate(${template}): ${String((err as Error)?.message ?? err)}`);
                         }

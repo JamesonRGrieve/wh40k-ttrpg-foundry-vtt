@@ -181,7 +181,7 @@ export default class FearTestDialog extends ApplicationV2Mixin(ApplicationV2 as 
         event.preventDefault();
 
         const observer = findObserver(this.selectedObserverId);
-        const observerName = observer?.name ?? game.i18n?.localize?.('WH40K.Fear.ObserverLabel') ?? 'Observer';
+        const observerName = observer?.name ?? game.i18n.localize('WH40K.Fear.ObserverLabel');
 
         const { target, isNoOp } = resolveFearTest({
             willpowerTotal: this.willpower,

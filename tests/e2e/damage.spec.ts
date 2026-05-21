@@ -53,20 +53,22 @@ interface ProbeResult {
 
 async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors: string[] }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
+            const ActorCls = g.Actor;
+            const gameGlobal = g.game;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create) {
+            if (!ActorCls?.create) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'deal-damage-reduces-wounds': 'Actor.create unavailable' },
@@ -86,7 +88,8 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -94,7 +97,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             let pcActor: any = null;
             try {
                 pcActor = await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'damage-spec-pc',
                         type: 'bc-character',
                         system: {
@@ -108,14 +111,14 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     'PC Actor.create',
                 );
             } catch (err) {
-                notes['deal-damage-reduces-wounds'] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
+                notes['deal-damage-reduces-wounds'] = `PC create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- create NPC (bc-npc) for applyDamage / healWounds API ----
             let npcActor: any = null;
             try {
                 npcActor = await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'damage-spec-npc',
                         type: 'bc-npc',
                         system: {
@@ -127,7 +130,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     'NPC Actor.create',
                 );
             } catch (err) {
-                notes['wounds-zero-marks-critical'] = `NPC create threw: ${String((err as Error)?.message ?? err)}`;
+                notes['wounds-zero-marks-critical'] = `NPC create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             if (!pcActor?.id && !npcActor?.id) {
@@ -143,8 +146,8 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // Foundry returns the create() promise's resolved doc but the
             // canonical reference for subsequent reads is the world cache —
             // grab fresh handles after each update.
-            const getPc = () => (pcActor?.id ? game?.actors?.get?.(pcActor.id) : null);
-            const getNpc = () => (npcActor?.id ? game?.actors?.get?.(npcActor.id) : null);
+            const getPc = () => (pcActor?.id ? gameGlobal?.actors?.get?.(pcActor.id) : null);
+            const getNpc = () => (npcActor?.id ? gameGlobal?.actors?.get?.(npcActor.id) : null);
 
             // ---- 1. deal-damage-reduces-wounds (NPC.applyDamage path) ----
             try {
@@ -166,7 +169,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     }
                 }
             } catch (err) {
-                notes['deal-damage-reduces-wounds'] = `applyDamage threw: ${String((err as Error)?.message ?? err)}`;
+                notes['deal-damage-reduces-wounds'] = `applyDamage threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 2. wounds-zero-marks-critical (NPC at 0 wounds → critical climbs) ----
@@ -194,7 +197,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     }
                 }
             } catch (err) {
-                notes['wounds-zero-marks-critical'] = `critical flow threw: ${String((err as Error)?.message ?? err)}`;
+                notes['wounds-zero-marks-critical'] = `critical flow threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 3. fatigue-accumulation (base-actor.applyFatigue) ----
@@ -219,7 +222,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     }
                 }
             } catch (err) {
-                notes['fatigue-accumulation'] = `applyFatigue threw: ${String((err as Error)?.message ?? err)}`;
+                notes['fatigue-accumulation'] = `applyFatigue threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 4. fate-spend-decrements-value (acolyte.spendFate) ----
@@ -240,7 +243,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     }
                 }
             } catch (err) {
-                notes['fate-spend-decrements-value'] = `spendFate threw: ${String((err as Error)?.message ?? err)}`;
+                notes['fate-spend-decrements-value'] = `spendFate threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 5. fate-burn-decrements-max (direct update — burn is permanent loss of max) ----
@@ -266,7 +269,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     }
                 }
             } catch (err) {
-                notes['fate-burn-decrements-max'] = `burnFate threw: ${String((err as Error)?.message ?? err)}`;
+                notes['fate-burn-decrements-max'] = `burnFate threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 6. wound-recovery (NPC.healWounds) ----
@@ -287,7 +290,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     }
                 }
             } catch (err) {
-                notes['wound-recovery'] = `healWounds threw: ${String((err as Error)?.message ?? err)}`;
+                notes['wound-recovery'] = `healWounds threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- 7. multi-step-damage-fatigue (realistic encounter sequence) ----
@@ -316,7 +319,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     }
                 }
             } catch (err) {
-                notes['multi-step-damage-fatigue'] = `sequence threw: ${String((err as Error)?.message ?? err)}`;
+                notes['multi-step-damage-fatigue'] = `sequence threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- cleanup ----

@@ -29,7 +29,7 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
         try {
             const result = await page.evaluate(async () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const Actor = (
+                const ActorCls = (
                     globalThis as unknown as {
                         Actor?: {
                             create?: (data: object) => Promise<{
@@ -41,7 +41,7 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                         };
                     }
                 ).Actor;
-                if (!Actor?.create) {
+                if (!ActorCls?.create) {
                     return {
                         error: 'Actor.create not available',
                         rendered: false,
@@ -64,7 +64,7 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                 let hasArmourBestEffect = false;
 
                 try {
-                    const actor = await Actor.create({
+                    const actor = await ActorCls.create({
                         name: 'OW Craftsmanship Probe',
                         type: 'character',
                         system: { gameSystem: 'ow' },
@@ -116,7 +116,9 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                         };
                     }
                     await sheet.render(true);
-                    await new Promise((r) => setTimeout(r, 200));
+                    await new Promise((r) => {
+                        setTimeout(r, 200);
+                    });
                     const el = sheet.element;
                     rendered = el instanceof HTMLElement;
                     if (rendered && el) {

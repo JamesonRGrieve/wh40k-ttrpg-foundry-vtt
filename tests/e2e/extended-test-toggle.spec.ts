@@ -61,7 +61,9 @@ test.describe.serial('extended test toggle (#59)', () => {
                 return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}`, snaps: null };
             }
 
-            await new Promise((r) => setTimeout(r, 80));
+            await new Promise<void>((r) => {
+                setTimeout(r, 80);
+            });
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
@@ -83,7 +85,9 @@ test.describe.serial('extended test toggle (#59)', () => {
             async function clickCheckbox(): Promise<void> {
                 const cb = root!.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
                 cb?.click();
-                await new Promise((r) => setTimeout(r, 60));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 60);
+                });
             }
 
             const initial = readState('initial-off');
@@ -120,7 +124,9 @@ test.describe.serial('extended test toggle (#59)', () => {
             const cb = root?.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
             if (cb !== null && cb !== undefined && !cb.checked) {
                 cb.click();
-                await new Promise((r) => setTimeout(r, 60));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 60);
+                });
             }
         });
         await snap(page, 'extended-test-toggle-on');

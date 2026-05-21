@@ -57,20 +57,22 @@ interface ProbeResult {
 
 async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pageErrors: string[] }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
+            const ActorCls = g.Actor;
+            const gme = g.game;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create) {
+            if (!ActorCls?.create) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'vehicle-hull-damage': 'Actor.create unavailable' },
@@ -96,7 +98,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
             let vehicleActor: any = null;
             try {
                 vehicleActor = await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'vehicle-spec-dh2',
                         type: 'dh2-vehicle',
                         system: {
@@ -126,7 +128,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
             let starshipActor: any = null;
             try {
                 starshipActor = await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'starship-spec-rt',
                         type: 'rt-starship',
                         system: {
@@ -165,8 +167,8 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                 };
             }
 
-            const getVehicle = () => (vehicleActor?.id ? game?.actors?.get?.(vehicleActor.id) : null);
-            const getStarship = () => (starshipActor?.id ? game?.actors?.get?.(starshipActor.id) : null);
+            const getVehicle = (): any => (vehicleActor?.id ? gme?.actors?.get?.(vehicleActor.id) : null);
+            const getStarship = (): any => (starshipActor?.id ? gme?.actors?.get?.(starshipActor.id) : null);
 
             // ---- 1. vehicle-hull-damage (integrity.value reduces, isDamaged getter flips) ----
             try {

@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -16,13 +17,15 @@ interface ItemTypeProbe {
     pageErrors: string[];
 }
 
-async function probeItemType(page: import('@playwright/test').Page, type: string): Promise<ItemTypeProbe> {
+async function probeItemType(page: Page, itemType: string): Promise<ItemTypeProbe> {
     const errors: string[] = [];
-    const listener = (err: Error) => errors.push(err.message);
+    const listener = (err: Error): void => {
+        errors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (type: string) => {
-            const { Item } = globalThis as unknown as {
+            const { Item: ItemCtor } = globalThis as unknown as {
                 Item?: {
                     create?: (data: object) => Promise<{
                         id?: string;
@@ -31,10 +34,10 @@ async function probeItemType(page: import('@playwright/test').Page, type: string
                     } | null>;
                 };
             };
-            if (!Item?.create) return { docId: null, sheetRendered: false, createError: 'Item.create unavailable' };
+            if (!ItemCtor?.create) return { docId: null, sheetRendered: false, createError: 'Item.create unavailable' };
             let item;
             try {
-                item = await Item.create({ name: `probe-${type}`, type });
+                item = await ItemCtor.create({ name: `probe-${type}`, type });
             } catch (err) {
                 return { docId: null, sheetRendered: false, createError: String((err as Error)?.message ?? err) };
             }
@@ -47,15 +50,15 @@ async function probeItemType(page: import('@playwright/test').Page, type: string
             }
             await item.delete?.();
             return { docId: item.id ?? null, sheetRendered, createError: null };
-        }, type);
+        }, itemType);
         if (!result.docId && result.createError) errors.unshift(`create: ${result.createError}`);
-        return { type, docId: result.docId, sheetRendered: result.sheetRendered, pageErrors: errors };
+        return { type: itemType, docId: result.docId, sheetRendered: result.sheetRendered, pageErrors: errors };
     } finally {
         page.off('pageerror', listener);
     }
 }
 
-async function listItemTypes(page: import('@playwright/test').Page): Promise<string[]> {
+async function listItemTypes(page: Page): Promise<string[]> {
     return page.evaluate(() => {
         const cfg = (globalThis as unknown as { CONFIG?: { Item?: { dataModels?: Record<string, unknown> } } }).CONFIG;
         // Skip Foundry's `base` sentinel — it isn't a creatable concrete type.

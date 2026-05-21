@@ -97,9 +97,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals and dynamic-imported modules are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
-            const ui = g.ui;
+            const ActorCls = g.Actor;
+            const foundryGame = g.game;
+            const foundryUi = g.ui;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
@@ -125,7 +125,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             // next probe's window stack starts clean (mirrors dialogs.spec.ts).
             type ProbeWindow = { id?: string; title?: string; close?: () => Promise<unknown> };
             async function closeOpenDialogs(): Promise<void> {
-                const winRecord = ui?.windows;
+                const winRecord = foundryUi?.windows;
                 if (winRecord) {
                     for (const wRaw of Object.values(winRecord)) {
                         const w = wRaw as ProbeWindow;
@@ -273,7 +273,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                  * the registration path executed end-to-end.
                  * ============================================================ */
                 try {
-                    const tours = game?.tours;
+                    const tours = foundryGame?.tours;
                     const registered = tours?.get?.('wh40k-rpg.main-tour') ?? tours?.get?.('main-tour');
                     if (registered == null) {
                         notes['tour-registered-in-game'] = 'game.tours.get(wh40k-rpg.main-tour) returned null';
@@ -362,7 +362,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         void DialogWH40K.confirm({ title: 'probe-confirm', content: 'probe?', defaultYes: true });
                         void DialogWH40K.prompt({ title: 'probe-prompt', content: 'enter', label: 'OK' });
-                        await new Promise((r) => setTimeout(r, 80));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 80);
+                        });
                         const popup = document.querySelector('dialog.application');
                         // The helper returned without throwing even when the
                         // DialogV2 markup is deferred; treat a present popup OR
@@ -431,14 +433,14 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 let pc: any = null;
                 try {
                     pc = await withTimeout(
-                        Actor.create({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
+                        ActorCls.create({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
                         5_000,
                         'PC Actor.create',
                     );
                     if (pc?.id) {
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(pc.id)?.delete?.();
+                                await foundryGame?.actors?.get?.(pc.id)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
@@ -448,8 +450,10 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     notes['whatif-mixin-state'] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
                 }
                 // Yield a tick so the server create flushes before embeds.
-                await new Promise((r) => setTimeout(r, 250));
-                const getPc = (): any => (pc?.id != null ? game?.actors?.get?.(pc.id) : null);
+                await new Promise<void>((r) => {
+                    setTimeout(r, 250);
+                });
+                const getPc = (): any => (pc?.id != null ? foundryGame?.actors?.get?.(pc.id) : null);
 
                 /* ============================================================
                  * Flow 8: whatif-mixin-state
@@ -550,7 +554,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             target.dataset['statKey'] = 'weaponSkill';
                             const evt = new MouseEvent('click', { bubbles: true, cancelable: true });
                             action.call(inst, evt, target);
-                            await new Promise((r) => setTimeout(r, 30));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 30);
+                            });
                             const popover = document.querySelector('.wh40k-stat-breakdown-popover');
                             if (popover !== null) {
                                 fired['statbreakdown-mixin-action'] = true;
@@ -627,7 +633,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         const el = document.createElement('span');
                         el.textContent = '5';
                         inst.animateCounter(el, 5, 12, { duration: 50 });
-                        await new Promise((r) => setTimeout(r, 220));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 220);
+                        });
                         const settled = el.textContent === '12';
                         const cleared = inst._runningAnimations.size === 0;
                         const counterClass = el.classList.contains('value-counter');
@@ -664,7 +672,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         document.body.appendChild(root);
                         setupNumberInputAutoSelect(root);
                         input.dispatchEvent(new FocusEvent('focus', { bubbles: false }));
-                        await new Promise((r) => setTimeout(r, 10));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 10);
+                        });
                         const selectionSpansValue = input.selectionStart === 0 && input.selectionEnd === input.value.length && input.value.length > 0;
                         root.remove();
                         if (selectionSpansValue) {
@@ -705,7 +715,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         Object.defineProperty(evt, 'target', { value: child });
                         Object.defineProperty(evt, 'currentTarget', { value: child });
                         WH40KContextMenu.triggerEvent(evt);
-                        await new Promise((r) => setTimeout(r, 10));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 10);
+                        });
                         row.remove();
                         if (contextFired) {
                             fired['contextmenu-trigger-event'] = true;
@@ -917,12 +929,16 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                     const inst = new Mixed();
                                     const target = sheetRoot.querySelector(`[data-item-id="${gear.id}"]`) as HTMLElement;
                                     action.call(inst, new Event('click'), target);
-                                    await new Promise((r) => setTimeout(r, 60));
-                                    const opened = sheetRoot.querySelector('.wh40k-item-preview') !== null;
+                                    await new Promise<void>((r) => {
+                                        setTimeout(r, 60);
+                                    });
+                                    const isOpened = sheetRoot.querySelector('.wh40k-item-preview') !== null;
                                     action.call(inst, new Event('click'), target);
-                                    await new Promise((r) => setTimeout(r, 260));
-                                    const closed = sheetRoot.querySelector('.wh40k-item-preview') === null;
-                                    if (opened && closed) {
+                                    await new Promise<void>((r) => {
+                                        setTimeout(r, 260);
+                                    });
+                                    const isClosed = sheetRoot.querySelector('.wh40k-item-preview') === null;
+                                    if (isOpened && isClosed) {
                                         fired['item-preview-card-toggle'] = true;
                                         notes['item-preview-card-toggle'] = 'toggleItemPreview injected then removed the preview card';
                                     } else {
