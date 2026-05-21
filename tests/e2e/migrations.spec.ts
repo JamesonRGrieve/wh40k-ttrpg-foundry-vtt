@@ -209,9 +209,9 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 return {
                     actorId,
                     createdCount: createdEffects?.length ?? 0,
-                    name: found?.name ?? null,
-                    img: found?.img ?? null,
-                    legacyIcon: found?.icon ?? null,
+                    name: found.name ?? null,
+                    img: found.img ?? null,
+                    legacyIcon: found.icon ?? null,
                     error: null,
                 };
             } catch (err) {
@@ -366,8 +366,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 const found = effects.find((e) => e.name === 'icon-probe') ?? effects[0];
                 return {
                     actorId,
-                    name: found?.name ?? null,
-                    img: found?.img ?? null,
+                    name: found.name ?? null,
+                    img: found.img ?? null,
                     error: null,
                 };
             } catch (err) {
@@ -397,15 +397,15 @@ test.describe('migrations + compendium resync (Tier B)', () => {
             // Pick a deterministic DH2 talents pack if present, else any system Item pack.
             const candidate =
                 packs.find((p) => p.metadata?.id === 'wh40k-rpg.dh2-core-stats-talents') ??
-                packs.find((p) => p.metadata?.packageName === 'wh40k-rpg' && p.metadata?.type === 'Item' && (p.metadata?.name ?? '').startsWith('dh2-')) ??
-                packs.find((p) => p.metadata?.packageName === 'wh40k-rpg' && p.metadata?.type === 'Item');
+                packs.find((p) => p.metadata?.packageName === 'wh40k-rpg' && p.metadata.type === 'Item' && (p.metadata.name ?? '').startsWith('dh2-')) ??
+                packs.find((p) => p.metadata?.packageName === 'wh40k-rpg' && p.metadata.type === 'Item');
             if (!candidate?.getIndex || !candidate.getDocument) {
                 return { error: 'no resolvable Item pack' };
             }
             const idx = await candidate.getIndex({ fields: ['type', 'name'] });
             let firstId: string | null = null;
             for (const entry of idx) {
-                if (typeof entry?._id === 'string') {
+                if (typeof entry._id === 'string') {
                     firstId = entry._id;
                     break;
                 }

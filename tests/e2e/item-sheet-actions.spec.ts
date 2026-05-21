@@ -79,7 +79,8 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                 opts: { withActor?: boolean; itemName?: string | null } = {},
             ): { host: any; cap: HostCapture } => {
                 const cap: HostCapture = { updates: [], chatCalls: [], rollCalls: [] };
-                const actor = opts.withActor
+                const hasActor = opts.withActor === true;
+                const actor = hasActor
                     ? {
                           rollSkill: async (name: string, _spec: unknown, options: unknown): Promise<void> => {
                               await Promise.resolve();

@@ -126,13 +126,13 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             type ProbeWindow = { id?: string; title?: string; close?: () => Promise<unknown> };
             async function closeOpenDialogs(): Promise<void> {
                 const winRecord = foundryUi?.windows;
-                if (winRecord) {
+                if (winRecord != null) {
                     for (const wRaw of Object.values(winRecord)) {
                         const w = wRaw as ProbeWindow;
-                        const id = w?.id ?? '';
+                        const id = w.id ?? '';
                         if (id.includes('dialog') || id.includes('prompt') || id.includes('tour') || id.includes('talent-editor') || id.includes('breakdown')) {
                             try {
-                                await w?.close?.();
+                                await w.close?.();
                             } catch {
                                 /* ignore */
                             }
@@ -182,7 +182,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             await withTimeout(tour.waitForElement('body'), 3_000, 'waitForElement(body)');
                             waitResolved = true;
                         } catch (err) {
-                            notes['tour-wh40k-base-class'] = `waitForElement threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['tour-wh40k-base-class'] = `waitForElement threw: ${String((err as Error).message)}`;
                         }
                         const hasReset = typeof tour.reset === 'function';
                         if (extendsTour && waitResolved && hasReset) {
@@ -195,7 +195,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['tour-wh40k-base-class'] = `import threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['tour-wh40k-base-class'] = `import threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -227,7 +227,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['tour-main-construct'] = `construct threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['tour-main-construct'] = `construct threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -262,7 +262,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['tour-main-steps-shape'] = `shape check threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['tour-main-steps-shape'] = `shape check threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -288,7 +288,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['tour-registered-in-game'] = `lookup threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['tour-registered-in-game'] = `lookup threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -343,7 +343,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['tooltip-mixin-prepare'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['tooltip-mixin-prepare'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -374,7 +374,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         await closeOpenDialogs();
                     }
                 } catch (err) {
-                    notes['dialog-wh40k-static-helpers'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['dialog-wh40k-static-helpers'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -399,7 +399,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         try {
                             await withTimeout(dialog.render({ force: true }), 5_000, 'DialogWH40K.render');
                         } catch (err) {
-                            renderThrew = String((err as Error)?.message ?? err);
+                            renderThrew = String((err as Error).message);
                         }
                         const ctx = (await dialog._prepareContext({})) as { content?: string; buttons?: Array<{ cssClass?: string }> };
                         const contentOk = ctx.content === '<p>probe-content</p>';
@@ -422,7 +422,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         await closeOpenDialogs();
                     }
                 } catch (err) {
-                    notes['dialog-wh40k-instance-render'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['dialog-wh40k-instance-render'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -437,7 +437,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         5_000,
                         'PC Actor.create',
                     );
-                    if (pc?.id) {
+                    if (pc?.id != null) {
                         cleanups.push(async () => {
                             try {
                                 await foundryGame?.actors?.get?.(pc.id)?.delete?.();
@@ -447,7 +447,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         });
                     }
                 } catch (err) {
-                    notes['whatif-mixin-state'] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['whatif-mixin-state'] = `PC create threw: ${String((err as Error).message)}`;
                 }
                 // Yield a tick so the server create flushes before embeds.
                 await new Promise<void>((r) => {
@@ -515,7 +515,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['whatif-mixin-state'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['whatif-mixin-state'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -568,7 +568,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['statbreakdown-mixin-action'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['statbreakdown-mixin-action'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -600,7 +600,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         await withTimeout(inst.collapseAllPanels(), 5_000, 'collapseAllPanels');
                         const weaponsCollapsed = inst.expandedSections.get('weapons') === false;
                         const skillsTracked = inst.expandedSections.has('skills');
-                        if (scopeOk && presetsOk && weaponsCollapsed && skillsTracked) {
+                        if (scopeOk && presetsOk && weaponsCollapsed && skillsTracked === true) {
                             fired['collapsible-panel-mixin-toggle'] = true;
                             notes['collapsible-panel-mixin-toggle'] = 'static config OK; togglePanel/collapseAll wrote expandedSections';
                         } else {
@@ -610,7 +610,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['collapsible-panel-mixin-toggle'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['collapsible-panel-mixin-toggle'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -649,7 +649,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['enhanced-animations-counter'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['enhanced-animations-counter'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -685,7 +685,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['appv2-mixin-number-autoselect'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['appv2-mixin-number-autoselect'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -727,7 +727,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['contextmenu-trigger-event'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['contextmenu-trigger-event'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -771,7 +771,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['effect-actions-crud'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['effect-actions-crud'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -804,7 +804,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['item-target-resolve'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-target-resolve'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -875,7 +875,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['active-modifiers-panel-prepare'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['active-modifiers-panel-prepare'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -949,7 +949,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['item-preview-card-toggle'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-preview-card-toggle'] = `flow threw: ${String((err as Error).message)}`;
                 }
 
                 /* ============================================================
@@ -991,7 +991,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 try {
                                     await withTimeout(dialog.render({ force: true }), 5_000, 'TalentEditorDialog.render');
                                 } catch (err) {
-                                    renderThrew = String((err as Error)?.message ?? err);
+                                    renderThrew = String((err as Error).message);
                                 }
                                 const ctx = (await dialog._prepareContext({})) as {
                                     item?: unknown;
@@ -1020,7 +1020,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['talent-editor-dialog-render'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['talent-editor-dialog-render'] = `flow threw: ${String((err as Error).message)}`;
                 }
             } finally {
                 for (const fn of cleanups) {

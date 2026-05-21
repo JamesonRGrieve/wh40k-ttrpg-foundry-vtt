@@ -29,7 +29,7 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
             const result = await page.evaluate(async () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor as
+                const ActorCls = g.Actor as
                     | {
                           create?: (data: object) => Promise<{
                               id?: string;
@@ -38,7 +38,7 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                           } | null>;
                       }
                     | undefined;
-                if (!Actor?.create) return { error: 'Actor.create unavailable' };
+                if (!ActorCls?.create) return { error: 'Actor.create unavailable' };
 
                 let actorId: string | null = null;
                 let sheetRendered = false;
@@ -47,7 +47,7 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                 let error: string | null = null;
 
                 try {
-                    const actor = await Actor.create({
+                    const actor = await ActorCls.create({
                         name: 'probe-daemonic-npc',
                         type: 'dh2-npc',
                         system: { gameSystem: 'dh2e' },
@@ -72,7 +72,7 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                         labelText = badge?.querySelector('.wh40k-daemonic-immunities-badge__label')?.textContent?.trim() ?? null;
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return { actorId, sheetRendered, badgeFound, labelText, error };

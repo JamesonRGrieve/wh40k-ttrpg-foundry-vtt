@@ -65,7 +65,7 @@ async function createDH2Parent(page: Page): Promise<ActorRef | { error: string }
             return { id: null, error: String((err as Error)?.message ?? err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id == null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
@@ -143,7 +143,7 @@ async function readItemPath(page: Page, actorId: string, itemId: string, path: s
             const foundryObj = (globalThis as unknown as { foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } } }).foundry;
             const item = gameObj?.actors?.get?.(evalActorId)?.items?.get?.(evalItemId);
             const getProp = foundryObj?.utils?.getProperty;
-            if (!item || !getProp) return null;
+            if (item == null || getProp == null) return null;
             return getProp(item, evalPath);
         },
         { actorId, itemId, path },
@@ -157,7 +157,7 @@ async function readActorPath(page: Page, actorId: string, path: string): Promise
             const foundryObj = (globalThis as unknown as { foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } } }).foundry;
             const actor = gameObj?.actors?.get?.(evalActorId);
             const getProp = foundryObj?.utils?.getProperty;
-            if (!actor || !getProp) return null;
+            if (actor == null || getProp == null) return null;
             const v = getProp(actor, evalPath);
             const num = Number(v);
             return Number.isFinite(num) ? num : null;

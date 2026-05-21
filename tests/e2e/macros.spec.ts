@@ -56,8 +56,8 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
+            const ActorClass = g.Actor;
+            const gameObj = g.game;
             const out: FlowResult[] = [];
 
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
@@ -85,7 +85,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             // --- shared setup: create a DH2 character with a known item ---
             let actor: any;
             try {
-                actor = await Actor.create({
+                actor = await ActorClass.create({
                     name: 'macros-spec-actor',
                     type: 'dh2-character',
                     system: {
@@ -114,7 +114,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             }
 
             const cleanupMacros: string[] = [];
-            const findCreatedMacro = (name: string): any => game?.macros?.find?.((m: any) => m?.name === name) ?? null;
+            const findCreatedMacro = (name: string): any => gameObj?.macros?.find?.((m: any) => m?.name === name) ?? null;
 
             // ---------- flow: create-item-macro ----------
             try {
@@ -217,7 +217,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             try {
                 for (const id of cleanupMacros) {
                     try {
-                        await game?.macros?.get?.(id)?.delete?.();
+                        await gameObj?.macros?.get?.(id)?.delete?.();
                     } catch {
                         /* ignore */
                     }
@@ -225,10 +225,10 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                 // Close any chat-card or roll prompt the dispatch flows opened.
                 const wins = Object.values(g.ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of wins) {
-                    const id: string = w?.id ?? '';
+                    const id: string = w.id ?? '';
                     if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {
                         try {
-                            await w?.close?.();
+                            await w.close?.();
                         } catch {
                             /* ignore */
                         }

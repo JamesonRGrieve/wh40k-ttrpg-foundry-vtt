@@ -44,10 +44,10 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: String((err as Error).message) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
@@ -98,7 +98,7 @@ async function probeStatusEffect(page: Page, actorId: string, effectId: string):
                 try {
                     await actor.toggleStatusEffect(probeEffectId, { active: true });
                 } catch (err) {
-                    return { appliedOk: false, removedOk: false, error: `toggle-on threw: ${String((err as Error)?.message ?? err)}` };
+                    return { appliedOk: false, removedOk: false, error: `toggle-on threw: ${String((err as Error).message)}` };
                 }
                 const hasAfterOn = Boolean(actor.statuses?.has(probeEffectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(probeEffectId) ?? false));
                 if (!hasAfterOn) {
@@ -107,7 +107,7 @@ async function probeStatusEffect(page: Page, actorId: string, effectId: string):
                 try {
                     await actor.toggleStatusEffect(probeEffectId, { active: false });
                 } catch (err) {
-                    return { appliedOk: true, removedOk: false, error: `toggle-off threw: ${String((err as Error)?.message ?? err)}` };
+                    return { appliedOk: true, removedOk: false, error: `toggle-off threw: ${String((err as Error).message)}` };
                 }
                 const hasAfterOff = Boolean(actor.statuses?.has(probeEffectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(probeEffectId) ?? false));
                 if (hasAfterOff) {
@@ -148,13 +148,13 @@ test.describe.serial('conditions / status effects (Tier B)', () => {
                     id: effectId,
                     appliedOk: false,
                     removedOk: false,
-                    error: String((err as Error)?.message ?? err),
+                    error: String((err as Error).message),
                     pageErrors: [] as string[],
                 }));
                 if (probe.appliedOk) {
                     recordCoverage('condition.toggle', probe.id);
                 }
-                if (probe.error) {
+                if (probe.error !== null) {
                     failures.push(`${probe.id}: ${probe.error}`);
                     continue;
                 }

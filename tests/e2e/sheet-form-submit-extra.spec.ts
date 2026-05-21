@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -306,14 +305,14 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
             async ({ flows, specs, grouped }) => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor;
-                const game = g.game;
+                const FoundryActor = g.Actor;
+                const foundryGame = g.game;
 
                 const fired: Record<string, boolean> = {};
                 const notes: Record<string, string> = {};
                 for (const f of flows) fired[f] = false;
 
-                if (!Actor?.create) {
+                if (FoundryActor?.create == null) {
                     for (const f of flows) notes[f] = 'Actor.create unavailable';
                     return { flowsFired: fired, flowNotes: notes };
                 }
@@ -372,7 +371,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                     try {
                         if (spec.kind === 'actor') {
                             actor = await withTimeout(
-                                Actor.create({
+                                FoundryActor.create({
                                     name: `${slug}-probe`,
                                     type: spec.type,
                                     system: spec.initialSystem,
@@ -380,25 +379,25 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 5_000,
                                 `${slug} Actor.create`,
                             );
-                            if (!actor?.id) {
+                            if (actor?.id == null) {
                                 for (const p of paths) notes[`${slug}::${p}`] = 'Actor.create returned null';
                                 return;
                             }
                             cleanups.push(async () => {
                                 try {
-                                    await game?.actors?.get?.(actor.id)?.delete?.();
+                                    await foundryGame?.actors?.get?.(actor.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
                             });
-                            doc = game?.actors?.get?.(actor.id) ?? actor;
+                            doc = foundryGame?.actors?.get?.(actor.id) ?? actor;
                             sheet = doc.sheet;
                         } else {
                             // Item path: spin up a temporary host actor (dh2-character)
                             // and embed the item on it so the BaseItemSheet
                             // submits through an actor-owned document.
                             actor = await withTimeout(
-                                Actor.create({
+                                FoundryActor.create({
                                     name: `${slug}-host`,
                                     type: 'dh2-character',
                                     system: { gameSystem: spec.embedHostGameSystem },
@@ -406,13 +405,13 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 5_000,
                                 `${slug} host Actor.create`,
                             );
-                            if (!actor?.id) {
+                            if (actor?.id == null) {
                                 for (const p of paths) notes[`${slug}::${p}`] = 'host Actor.create returned null';
                                 return;
                             }
                             cleanups.push(async () => {
                                 try {
-                                    await game?.actors?.get?.(actor.id)?.delete?.();
+                                    await foundryGame?.actors?.get?.(actor.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -424,7 +423,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 setTimeout(r, 250);
                             });
 
-                            const live = game?.actors?.get?.(actor.id) ?? actor;
+                            const live = foundryGame?.actors?.get?.(actor.id) ?? actor;
                             const created = (await withTimeout(
                                 live.createEmbeddedDocuments?.('Item', [
                                     {
@@ -437,8 +436,8 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 `${slug} createEmbeddedDocuments`,
                             )) as any[];
                             const createdId = created?.[0]?.id;
-                            item = createdId ? live.items.get(createdId) : null;
-                            if (!item) {
+                            item = createdId != null ? live.items.get(createdId) : null;
+                            if (item == null) {
                                 for (const p of paths) notes[`${slug}::${p}`] = 'createEmbeddedDocuments returned no item';
                                 return;
                             }
@@ -453,7 +452,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                             sheet = doc.sheet;
                         }
 
-                        if (!sheet) {
+                        if (sheet == null) {
                             for (const p of paths) notes[`${slug}::${p}`] = 'doc.sheet undefined';
                             return;
                         }
@@ -496,7 +495,9 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 });
 
                                 const refreshed =
-                                    spec.kind === 'actor' ? game?.actors?.get?.(actor.id) ?? doc : game?.actors?.get?.(actor.id)?.items?.get?.(item.id) ?? doc;
+                                    spec.kind === 'actor'
+                                        ? foundryGame?.actors?.get?.(actor.id) ?? doc
+                                        : foundryGame?.actors?.get?.(actor.id)?.items?.get?.(item.id) ?? doc;
                                 const after = getPath(refreshed, path);
 
                                 // Boolean: equality. Number: equality after Number() coerce
@@ -540,7 +541,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                     for (const slug of Object.keys(grouped)) {
                         const spec = specs[slug];
                         const paths = grouped[slug];
-                        if (!spec) {
+                        if (spec == null) {
                             for (const p of paths) notes[`${slug}::${p}`] = 'no spec registered for sheet slug';
                             continue;
                         }

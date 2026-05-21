@@ -68,7 +68,7 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
                             setTimeout(r, 80);
                         });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String((err as Error).message);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -82,7 +82,7 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
                     // Keep the dialog open through snap(); cleanup runs afterward.
                     (globalThis as any).__c9dialog = inst;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return {
@@ -182,7 +182,7 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
                     const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return { rendered, hasCardRoot, hasSystemAnchor, hasAutoSuccessBanner, messageId, error };

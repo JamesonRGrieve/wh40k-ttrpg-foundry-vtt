@@ -90,7 +90,6 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only and the canvas/PIXI surface has no shipped typing */
             const g = globalThis as any;
             const ActorCls = g.Actor;
-            const SceneCls = g.Scene;
             const HooksMgr = g.Hooks;
             const ConfigObj = g.CONFIG;
             const gameMgr = g.game;
@@ -102,7 +101,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             if (!ActorCls?.create) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'ruler-instantiates-with-token': 'ActorCls.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'ruler-instantiates-with-token': 'ActorCls.create unavailable' },
                 };
             }
 
@@ -468,7 +467,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         id: 'fake-token-active',
                         actor: liveActor2,
                         getFlag: (scope: string, key: string) => (scope === 'wh40k-rpg' && key === 'movementAction' ? 'full' : null),
-                        update: async (_data: unknown) => undefined,
+                        update: (_data: unknown) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
@@ -509,7 +508,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             id: 'fake-token-no-move',
                             actor: liveActorNoMove,
                             getFlag: (_scope: string, _key: string) => null,
-                            update: async (_data: unknown) => undefined,
+                            update: (_data: unknown) => undefined,
                         };
                         const fakeHud = { object: { document: fakeTokenDoc } };
                         HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
@@ -547,7 +546,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         id: 'fake-token-localize',
                         actor: liveActor3,
                         getFlag: (_scope: string, _key: string) => null,
-                        update: async (_data: unknown) => undefined,
+                        update: (_data: unknown) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
@@ -595,7 +594,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         id: 'fake-token-update',
                         actor: liveActor4,
                         getFlag: (_scope: string, _key: string) => null,
-                        update: async (data: unknown) => {
+                        update: (data: unknown) => {
                             recordedUpdates.push(data);
                         },
                     };
@@ -645,7 +644,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         id: 'fake-token-hover',
                         actor: liveActor5,
                         getFlag: (_scope: string, _key: string) => null,
-                        update: async (_data: unknown) => undefined,
+                        update: (_data: unknown) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
@@ -706,7 +705,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             // Sample one entry to confirm the populated
                             // shape matches the static config in the
                             // source (measure / walls / visualize).
-                            const sample = registered[wh40kTypes[0] as string];
+                            const sample = registered[wh40kTypes[0]];
                             if (sample?.measure === true && sample?.walls === 'move' && sample?.visualize === true) {
                                 fired['register-movement-actions-config-population'] = true;
                             } else {
@@ -739,8 +738,8 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
         }, CANVAS_EXTRA_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

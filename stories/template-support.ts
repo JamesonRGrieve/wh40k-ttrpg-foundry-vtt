@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import enLang from '../src/lang/en.json';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
 
@@ -79,70 +79,79 @@ function normalizeSelectOptions(options: unknown): Array<{ value: string; label:
 function buildOptionTag(option: { value: string; label: string }, selected: unknown, extraAttributes: Record<string, unknown>): string {
     const attrs = Object.entries(extraAttributes)
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
-        .map(([key, value]) => ` ${key}="${Handlebars.escapeExpression(String(value))}"`)
+        .map(([key, value]) => ` ${key}="${HandlebarsLib.escapeExpression(String(value))}"`)
         .join('');
     const isSelected = Array.isArray(selected) ? selected.includes(option.value) : selected === option.value;
     const selectedAttr = isSelected ? ' selected' : '';
-    return `<option value="${Handlebars.escapeExpression(option.value)}"${selectedAttr}${attrs}>${Handlebars.escapeExpression(option.label)}</option>`;
+    return `<option value="${HandlebarsLib.escapeExpression(option.value)}"${selectedAttr}${attrs}>${HandlebarsLib.escapeExpression(option.label)}</option>`;
 }
 
-export function initializeStoryHandlebars(): typeof Handlebars {
+export function initializeStoryHandlebars(): typeof HandlebarsLib {
     const globalState = globalThis as typeof globalThis & { [INIT_KEY]?: boolean };
-    if (globalState[INIT_KEY] === true) return Handlebars;
+    if (globalState[INIT_KEY] === true) return HandlebarsLib;
 
-    Handlebars.registerHelper('join', (arr: unknown, sep: string) => asArray(arr).join(typeof sep === 'string' ? sep : ', '));
-    Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b);
-    Handlebars.registerHelper('ne', (a: unknown, b: unknown) => a !== b);
-    Handlebars.registerHelper('gt', (a: number, b: number) => Number(a) > Number(b));
-    Handlebars.registerHelper('lt', (a: number, b: number) => Number(a) < Number(b));
-    Handlebars.registerHelper('gte', (a: number, b: number) => Number(a) >= Number(b));
-    Handlebars.registerHelper('lte', (a: number, b: number) => Number(a) <= Number(b));
-    Handlebars.registerHelper('divide', (a: number, b: number) => {
+    HandlebarsLib.registerHelper('join', (arr: unknown, sep: string) => asArray(arr).join(typeof sep === 'string' ? sep : ', '));
+    HandlebarsLib.registerHelper('eq', (a: unknown, b: unknown) => a === b);
+    HandlebarsLib.registerHelper('ne', (a: unknown, b: unknown) => a !== b);
+    HandlebarsLib.registerHelper('gt', (a: number, b: number) => Number(a) > Number(b));
+    HandlebarsLib.registerHelper('lt', (a: number, b: number) => Number(a) < Number(b));
+    HandlebarsLib.registerHelper('gte', (a: number, b: number) => Number(a) >= Number(b));
+    HandlebarsLib.registerHelper('lte', (a: number, b: number) => Number(a) <= Number(b));
+    HandlebarsLib.registerHelper('divide', (a: number, b: number) => {
         const denom = Number(b);
         return denom === 0 ? 0 : Number(a) / denom;
     });
-    Handlebars.registerHelper('concat', (...args: unknown[]) => {
+    HandlebarsLib.registerHelper('concat', (...args: unknown[]) => {
         args.pop();
         return args.join('');
     });
-    Handlebars.registerHelper('isExpanded', () => false);
-    Handlebars.registerHelper('hideIfNot', (check) => (check ? '' : new Handlebars.SafeString('style="display:none;"')));
-    Handlebars.registerHelper('defaultVal', (value, fallback) => value || fallback);
-    Handlebars.registerHelper('and', (...args: unknown[]) => {
+    HandlebarsLib.registerHelper('isExpanded', () => false);
+    HandlebarsLib.registerHelper('hideIfNot', (check: unknown) => {
+        const b = Boolean(check);
+        return b ? '' : new HandlebarsLib.SafeString('style="display:none;"');
+    });
+    HandlebarsLib.registerHelper('defaultVal', (value: unknown, fallback: unknown) => (value != null && value !== false && value !== '' ? value : fallback));
+    HandlebarsLib.registerHelper('and', (...args: unknown[]) => {
         args.pop();
         return args.every(Boolean);
     });
-    Handlebars.registerHelper('or', (...args: unknown[]) => {
+    HandlebarsLib.registerHelper('or', (...args: unknown[]) => {
         args.pop();
         return args.find(Boolean) ?? args[args.length - 1] ?? '';
     });
-    Handlebars.registerHelper('add', (...args: unknown[]) => {
+    HandlebarsLib.registerHelper('add', (...args: unknown[]) => {
         args.pop();
         return args.reduce<number>((sum, value) => sum + Number(value ?? 0), 0);
     });
-    Handlebars.registerHelper('multiply', (a: unknown, b: unknown) => Number(a ?? 0) * Number(b ?? 0));
-    Handlebars.registerHelper('inc', (value: unknown) => Number(value) + 1);
-    Handlebars.registerHelper('iff', (cond: unknown, ifTrue: unknown, ifFalse: unknown) => (cond ? ifTrue : ifFalse ?? ''));
-    Handlebars.registerHelper('object', (options: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('multiply', (a: unknown, b: unknown) => Number(a ?? 0) * Number(b ?? 0));
+    HandlebarsLib.registerHelper('inc', (value: unknown) => Number(value) + 1);
+    HandlebarsLib.registerHelper('iff', (cond: unknown, ifTrue: unknown, ifFalse: unknown) => {
+        const b = Boolean(cond);
+        return b ? ifTrue : ifFalse ?? '';
+    });
+    HandlebarsLib.registerHelper('object', (options: { hash?: Record<string, unknown> }) => {
         return options.hash ?? {};
     });
-    Handlebars.registerHelper('array', (...args: unknown[]) => args.slice(0, -1));
-    Handlebars.registerHelper('checked', (value: unknown) => (value ? 'checked' : ''));
-    Handlebars.registerHelper('signedNumber', (value: unknown) => {
+    HandlebarsLib.registerHelper('array', (...args: unknown[]) => args.slice(0, -1));
+    HandlebarsLib.registerHelper('checked', (value: unknown) => {
+        const b = Boolean(value);
+        return b ? 'checked' : '';
+    });
+    HandlebarsLib.registerHelper('signedNumber', (value: unknown) => {
         const num = Number(value ?? 0);
         if (num > 0) return `+${num}`;
         if (num === 0) return '0';
         return String(num);
     });
-    Handlebars.registerHelper('truncate', (value: unknown, length: unknown) => {
+    HandlebarsLib.registerHelper('truncate', (value: unknown, length: unknown) => {
         const text = unknownToStr(value ?? '');
         const limit = Number(length ?? 0);
         if (!Number.isFinite(limit) || limit <= 0 || text.length <= limit) return text;
         return `${text.slice(0, limit).trimEnd()}...`;
     });
-    Handlebars.registerHelper('setToArray', (value: unknown) => asArray(value));
-    Handlebars.registerHelper('specialQualities', (value: unknown) => asArray(value));
-    Handlebars.registerHelper('arrayToObject', (array: unknown): Record<string, string> => {
+    HandlebarsLib.registerHelper('setToArray', (value: unknown) => asArray(value));
+    HandlebarsLib.registerHelper('specialQualities', (value: unknown) => asArray(value));
+    HandlebarsLib.registerHelper('arrayToObject', (array: unknown): Record<string, string> => {
         const obj: Record<string, string> = {};
         if (array === null || array === undefined) return obj;
         if (Array.isArray(array)) {
@@ -158,27 +167,30 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         }
         return obj;
     });
-    Handlebars.registerHelper('capitalize', (text: unknown): string => {
+    HandlebarsLib.registerHelper('capitalize', (text: unknown): string => {
         const s = unknownToStr(text ?? '');
         return s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : '';
     });
-    Handlebars.registerHelper('toLowerCase', (str: unknown): string => unknownToStr(str ?? '').toLowerCase());
-    Handlebars.registerHelper('removeMarkup', (text: unknown): string => unknownToStr(text ?? '').replace(/<[^>]*>/g, ''));
-    Handlebars.registerHelper('cleanFieldName', (text: unknown): string => unknownToStr(text ?? '').replace(/[^a-zA-Z0-9]/g, ''));
-    Handlebars.registerHelper('hideIf', (check: unknown) => (check ? new Handlebars.SafeString('style="display:none;"') : ''));
-    Handlebars.registerHelper('arrayIncludes', (field: unknown, list: unknown): boolean => Array.isArray(list) && list.includes(field));
-    Handlebars.registerHelper('includes', (list: unknown, value: unknown): boolean => Array.isArray(list) && list.includes(value));
-    Handlebars.registerHelper('option', (option: unknown, current: unknown, name: unknown): string => {
+    HandlebarsLib.registerHelper('toLowerCase', (str: unknown): string => unknownToStr(str ?? '').toLowerCase());
+    HandlebarsLib.registerHelper('removeMarkup', (text: unknown): string => unknownToStr(text ?? '').replace(/<[^>]*>/g, ''));
+    HandlebarsLib.registerHelper('cleanFieldName', (text: unknown): string => unknownToStr(text ?? '').replace(/[^a-zA-Z0-9]/g, ''));
+    HandlebarsLib.registerHelper('hideIf', (check: unknown) => {
+        const b = Boolean(check);
+        return b ? new HandlebarsLib.SafeString('style="display:none;"') : '';
+    });
+    HandlebarsLib.registerHelper('arrayIncludes', (field: unknown, list: unknown): boolean => Array.isArray(list) && list.includes(field));
+    HandlebarsLib.registerHelper('includes', (list: unknown, value: unknown): boolean => Array.isArray(list) && list.includes(value));
+    HandlebarsLib.registerHelper('option', (option: unknown, current: unknown, name: unknown): string => {
         const v = unknownToStr(option ?? '');
         const label = name !== undefined ? unknownToStr(name) : v;
         const selected = current === option ? ' selected' : '';
-        return `<option value="${Handlebars.escapeExpression(v)}"${selected}>${Handlebars.escapeExpression(label)}</option>`;
+        return `<option value="${HandlebarsLib.escapeExpression(v)}"${selected}>${HandlebarsLib.escapeExpression(label)}</option>`;
     });
-    Handlebars.registerHelper('slice', (arr: unknown, start: unknown, end: unknown) => {
+    HandlebarsLib.registerHelper('slice', (arr: unknown, start: unknown, end: unknown) => {
         if (!Array.isArray(arr)) return [];
         return arr.slice(Number(start ?? 0), end === undefined ? undefined : Number(end));
     });
-    Handlebars.registerHelper('range', (start: unknown, end: unknown) => {
+    HandlebarsLib.registerHelper('range', (start: unknown, end: unknown) => {
         const s = Number(start ?? 0);
         const e = Number(end ?? 0);
         const result: number[] = [];
@@ -186,7 +198,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         for (let i = s; i <= e; i++) result.push(i);
         return result;
     });
-    Handlebars.registerHelper('times', function timesHelper(this: unknown, count: unknown, options: { fn: (ctx: number) => string }): string {
+    HandlebarsLib.registerHelper('times', function timesHelper(this: unknown, count: unknown, options: { fn: (ctx: number) => string }): string {
         const n = Number(count ?? 0);
         let out = '';
         for (let i = 0; i < n; i++) out += options.fn(i);
@@ -196,20 +208,22 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     // `{{percent}}` as a plain context variable (e.g. vital-progress-bar.hbs)
     // and a same-named helper shadows the lookup, returning 0. Use a distinct
     // identifier for the helper version if/when needed.
-    Handlebars.registerHelper('inversePercent', (value: unknown, max: unknown): number => {
+    HandlebarsLib.registerHelper('inversePercent', (value: unknown, max: unknown): number => {
         const v = Number(value ?? 0);
         const m = Number(max ?? 0);
         return m > 0 ? Math.max(0, 100 - Math.round((v / m) * 100)) : 0;
     });
-    Handlebars.registerHelper('colorCode', (positive: unknown, negative: unknown): string => {
-        return positive ? 'positive' : negative ? 'negative' : 'neutral';
+    HandlebarsLib.registerHelper('colorCode', (positive: unknown, negative: unknown): string => {
+        const isPositive = Boolean(positive);
+        const isNegative = Boolean(negative);
+        return isPositive ? 'positive' : isNegative ? 'negative' : 'neutral';
     });
-    Handlebars.registerHelper('isError', (value: unknown): boolean => value === 'error' || value === false);
-    Handlebars.registerHelper('isSuccess', (value: unknown): boolean => value === 'success' || value === true);
-    Handlebars.registerHelper('themeClassFor', (role: unknown): string => {
+    HandlebarsLib.registerHelper('isError', (value: unknown): boolean => value === 'error' || value === false);
+    HandlebarsLib.registerHelper('isSuccess', (value: unknown): boolean => value === 'success' || value === true);
+    HandlebarsLib.registerHelper('themeClassFor', (role: unknown): string => {
         return typeof role === 'string' ? `wh40k-theme-${role}` : '';
     });
-    Handlebars.registerHelper('select', function selectHelper(this: unknown, selected: unknown, options: { fn: (ctx: unknown) => string }): string {
+    HandlebarsLib.registerHelper('select', function selectHelper(this: unknown, selected: unknown, options: { fn: (ctx: unknown) => string }): string {
         const html = options.fn(this);
         const target = typeof selected === 'string' || typeof selected === 'number' || typeof selected === 'boolean' ? String(selected) : '';
         return html.replace(/<option([^>]*?)value=(["'])(.*?)\2([^>]*)>/g, (_match, before: string, q: string, value: string, after: string) => {
@@ -219,18 +233,18 @@ export function initializeStoryHandlebars(): typeof Handlebars {
             return `<option${before}value=${q}${value}${q}${after}${tail}>`;
         });
     });
-    Handlebars.registerHelper('any', (list: unknown, prop: unknown) => {
+    HandlebarsLib.registerHelper('any', (list: unknown, prop: unknown) => {
         if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return false;
         return list.some((item) => item !== null && typeof item === 'object' && Boolean((item as Record<string, unknown>)[prop]));
     });
-    Handlebars.registerHelper('countType', (list: unknown, prop: unknown) => {
+    HandlebarsLib.registerHelper('countType', (list: unknown, prop: unknown) => {
         if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return 0;
         return list.filter((item) => item !== null && typeof item === 'object' && Boolean((item as Record<string, unknown>)[prop])).length;
     });
-    Handlebars.registerHelper('hash', function hashHelper(this: unknown, options?: { hash?: Record<string, unknown> }) {
+    HandlebarsLib.registerHelper('hash', function hashHelper(this: unknown, options?: { hash?: Record<string, unknown> }) {
         return options?.hash ?? {};
     });
-    Handlebars.registerHelper('specialDisplay', (special: unknown): string => {
+    HandlebarsLib.registerHelper('specialDisplay', (special: unknown): string => {
         if (special === null || special === undefined || special === '') return '';
         if (Array.isArray(special)) {
             return special
@@ -249,7 +263,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         }
         return unknownToStr(special);
     });
-    Handlebars.registerHelper('armourDisplay', (armour: unknown): string => {
+    HandlebarsLib.registerHelper('armourDisplay', (armour: unknown): string => {
         if (armour === null || armour === undefined || typeof armour !== 'object') return '0';
         const a = armour as Record<string, unknown>;
         const num = (v: unknown): number => Number(v ?? 0);
@@ -258,19 +272,19 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         const same = locations.every((loc) => num(a[loc]) === body);
         return same ? String(body) : locations.map((loc) => num(a[loc])).join('/');
     });
-    Handlebars.registerHelper('armourLocation', (armour: unknown, location: unknown): number => {
+    HandlebarsLib.registerHelper('armourLocation', (armour: unknown, location: unknown): number => {
         if (armour === null || armour === undefined || typeof armour !== 'object' || typeof location !== 'string') return 0;
         return Number((armour as Record<string, unknown>)[location] ?? 0);
     });
-    Handlebars.registerHelper('displayStrength', (strength: unknown): string => {
+    HandlebarsLib.registerHelper('displayStrength', (strength: unknown): string => {
         const n = Number(strength ?? 0);
         return n > 0 ? String(n) : '-';
     });
-    Handlebars.registerHelper('displayCrit', (crit: unknown): string => {
+    HandlebarsLib.registerHelper('displayCrit', (crit: unknown): string => {
         const n = Number(crit ?? 0);
         return n > 0 ? `${n}+` : '-';
     });
-    Handlebars.registerHelper('selectOptions', (options: unknown, helperOptions?: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('selectOptions', (options: unknown, helperOptions?: { hash?: Record<string, unknown> }) => {
         const hash = helperOptions?.hash ?? {};
         const selected = hash.selected;
         const labelAttr = typeof hash.labelAttr === 'string' ? hash.labelAttr : null;
@@ -286,27 +300,29 @@ export function initializeStoryHandlebars(): typeof Handlebars {
             return option;
         });
 
+        const isDisabled = Boolean(hash.disabled);
         const html = normalized
             .map((option) =>
                 buildOptionTag(option, selected, {
-                    disabled: hash.disabled ? 'disabled' : '',
+                    disabled: isDisabled ? 'disabled' : '',
                 }),
             )
             .join('');
 
-        return new Handlebars.SafeString(html);
+        return new HandlebarsLib.SafeString(html);
     });
-    Handlebars.registerHelper('editor', (value: unknown, options?: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('editor', (value: unknown, options?: { hash?: Record<string, unknown> }) => {
         const target = options?.hash?.target;
         const classes = ['wh40k-story-editor'];
-        if (options?.hash?.button) classes.push('wh40k-story-editor--button');
-        return new Handlebars.SafeString(
-            `<div class="${classes.join(' ')}" data-editor-target="${Handlebars.escapeExpression(unknownToStr(target ?? ''))}">${unknownToStr(
+        const hasButton = Boolean(options?.hash?.button);
+        if (hasButton) classes.push('wh40k-story-editor--button');
+        return new HandlebarsLib.SafeString(
+            `<div class="${classes.join(' ')}" data-editor-target="${HandlebarsLib.escapeExpression(unknownToStr(target ?? ''))}">${unknownToStr(
                 value ?? '',
             )}</div>`,
         );
     });
-    Handlebars.registerHelper('localize', (key: string, options?: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('localize', (key: string, options?: { hash?: Record<string, unknown> }) => {
         const resolved = lookupLocalization(key, enLang);
         if (resolved === null) return key;
         if (options?.hash && Object.keys(options.hash).length > 0) {
@@ -314,7 +330,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         }
         return resolved;
     });
-    Handlebars.registerHelper('format', (key: string, options?: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('format', (key: string, options?: { hash?: Record<string, unknown> }) => {
         const resolved = lookupLocalization(key, enLang);
         const template = resolved ?? key;
         return applySubstitutions(template, options?.hash ?? {});
@@ -333,22 +349,22 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         const idx = path.indexOf(SOURCE_ROOT);
         if (idx === -1) continue;
         const relative = path.slice(idx + SOURCE_ROOT.length);
-        Handlebars.registerPartial(`${TEMPLATE_PREFIX}${relative}`, source);
+        HandlebarsLib.registerPartial(`${TEMPLATE_PREFIX}${relative}`, source);
         // Foundry's renderTemplate accepts paths without .hbs; many templates
         // (e.g. corruption-panel, insanity-panel) `{{> ... }}` partials by
         // bare path. Register that alias too.
         if (relative.endsWith('.hbs')) {
             const noExt = relative.slice(0, -4);
-            Handlebars.registerPartial(`${TEMPLATE_PREFIX}${noExt}`, source);
+            HandlebarsLib.registerPartial(`${TEMPLATE_PREFIX}${noExt}`, source);
         }
     }
 
     // Register the {{icon}} helper using the same registry the runtime uses.
     // We don't import src/module/icons/helper.ts directly because it touches
     // the global Handlebars (Foundry-style) and not the bundled storybook copy.
-    Handlebars.registerHelper('iconSvg', function iconStoryHelper(key: unknown, options: { hash?: Record<string, unknown> }) {
+    HandlebarsLib.registerHelper('iconSvg', function iconStoryHelper(key: unknown, options: { hash?: Record<string, unknown> }) {
         if (typeof key !== 'string' || !Object.hasOwn(ICON_REGISTRY, key)) {
-            return new Handlebars.SafeString('');
+            return new HandlebarsLib.SafeString('');
         }
         const hash = options.hash ?? {};
         const svg = ICON_REGISTRY[key];
@@ -361,9 +377,9 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         const classes = ['wh40k-icon', `wh40k-icon--${key.replace(':', '-')}`];
         if (klass) classes.push(klass);
         const out = svg.replace(/^<svg([^>]*)>/, `<svg$1 class="${classes.join(' ')}" ${labelAttrs}${sizeAttr}>`);
-        return new Handlebars.SafeString(out);
+        return new HandlebarsLib.SafeString(out);
     });
 
     globalState[INIT_KEY] = true;
-    return Handlebars;
+    return HandlebarsLib;
 }

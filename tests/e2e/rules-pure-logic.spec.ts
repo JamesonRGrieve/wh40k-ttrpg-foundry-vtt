@@ -126,7 +126,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- difficulties ----------
             const difficulties = await loadModule('difficulties');
-            if (difficulties?.__importError) {
+            if (difficulties?.__importError != null) {
                 record('difficulties-rollDifficulties', false, difficulties.__importError);
             } else {
                 guarded('difficulties-rollDifficulties', () => {
@@ -137,7 +137,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- scatter ----------
             const scatter = await loadModule('scatter');
-            if (scatter?.__importError) {
+            if (scatter?.__importError != null) {
                 for (const k of ['scatter-buildVector', 'scatter-scaleForArea', 'scatter-labelForDirection'] as const) record(k, false, scatter.__importError);
             } else {
                 guarded('scatter-buildVector', () => {
@@ -162,7 +162,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- surprise ----------
             const surprise = await loadModule('surprise');
-            if (surprise?.__importError) {
+            if (surprise?.__importError != null) {
                 for (const k of ['surprise-toHitBonus', 'surprise-canActThisRound', 'surprise-canUseReactions'] as const)
                     record(k, false, surprise.__importError);
             } else {
@@ -187,7 +187,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- trying-again ----------
             const tryingAgain = await loadModule('trying-again');
-            if (tryingAgain?.__importError) {
+            if (tryingAgain?.__importError != null) {
                 record('trying-again-advice', false, tryingAgain.__importError);
             } else {
                 guarded('trying-again-advice', () => {
@@ -206,7 +206,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- two-weapon-fighting ----------
             const twoWeapon = await loadModule('two-weapon-fighting');
-            if (twoWeapon?.__importError) {
+            if (twoWeapon?.__importError != null) {
                 record('two-weapon-penalties', false, twoWeapon.__importError);
             } else {
                 guarded('two-weapon-penalties', () => {
@@ -225,7 +225,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- untrained-skill ----------
             const untrained = await loadModule('untrained-skill');
-            if (untrained?.__importError) {
+            if (untrained?.__importError != null) {
                 record('untrained-skill-target', false, untrained.__importError);
             } else {
                 guarded('untrained-skill-target', () => {
@@ -239,7 +239,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- cover ----------
             const cover = await loadModule('cover');
-            if (cover?.__importError) {
+            if (cover?.__importError != null) {
                 for (const k of ['cover-resolveHit', 'cover-startingAP'] as const) record(k, false, cover.__importError);
             } else {
                 guarded('cover-resolveHit', () => {
@@ -258,7 +258,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- pinning ----------
             const pinning = await loadModule('pinning');
-            if (pinning?.__importError) {
+            if (pinning?.__importError != null) {
                 for (const k of ['pinning-resolveTest', 'pinning-escapeTest'] as const) record(k, false, pinning.__importError);
             } else {
                 guarded('pinning-resolveTest', () => {
@@ -277,7 +277,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- fatigue ----------
             const fatigue = await loadModule('fatigue');
-            if (fatigue?.__importError) {
+            if (fatigue?.__importError != null) {
                 for (const k of ['fatigue-threshold', 'fatigue-unconscious', 'fatigue-characteristic-halved'] as const) record(k, false, fatigue.__importError);
             } else {
                 guarded('fatigue-threshold', () => fatigue.getFatigueThreshold({ toughnessBonus: 4, willpowerBonus: 3 }) === 7);
@@ -299,7 +299,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- fear ----------
             const fear = await loadModule('fear');
-            if (fear?.__importError) {
+            if (fear?.__importError != null) {
                 for (const k of ['fear-testPenalty', 'fear-resolveTest', 'fear-shockTableModifier'] as const) record(k, false, fear.__importError);
             } else {
                 guarded('fear-testPenalty', () => fear.getFearTestPenalty(2) === 20 && fear.getFearTestPenalty(10) === 40 && fear.getFearTestPenalty(-3) === 0);
@@ -314,7 +314,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- hit-locations ----------
             const hitLocations = await loadModule('hit-locations');
-            if (hitLocations?.__importError) {
+            if (hitLocations?.__importError != null) {
                 for (const k of ['hit-locations-reverseDigits', 'hit-locations-forRoll', 'hit-locations-dropdown'] as const)
                     record(k, false, hitLocations.__importError);
             } else {
@@ -343,7 +343,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- hazards ----------
             const hazards = await loadModule('hazards');
-            if (hazards?.__importError) {
+            if (hazards?.__importError != null) {
                 for (const k of ['hazards-fallingDice', 'hazards-fallingFormula', 'hazards-drowningTest'] as const) record(k, false, hazards.__importError);
             } else {
                 guarded(
@@ -366,7 +366,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- healing ----------
             const healing = await loadModule('healing');
-            if (healing?.__importError) {
+            if (healing?.__importError != null) {
                 for (const k of ['healing-damageTier', 'healing-naturalDays'] as const) record(k, false, healing.__importError);
             } else {
                 guarded(
@@ -387,7 +387,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- attack-options ----------
             const attackOptions = await loadModule('attack-options');
-            if (attackOptions?.__importError) {
+            if (attackOptions?.__importError != null) {
                 for (const k of ['attack-options-availableModes', 'attack-options-situationalModifiers', 'attack-options-aimModifier'] as const)
                     record(k, false, attackOptions.__importError);
             } else {

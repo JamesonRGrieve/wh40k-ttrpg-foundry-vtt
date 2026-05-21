@@ -97,7 +97,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     try {
                         mod = await importByUrl('/systems/wh40k-rpg/module/config/game-systems/index.js');
                     } catch (err) {
-                        record('registry-get-all-systems', false, `index.js import failed: ${String((err as Error)?.message ?? err)}`);
+                        record('registry-get-all-systems', false, `index.js import failed: ${String((err as Error).message)}`);
                         return results;
                     }
 
@@ -136,7 +136,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             `getAll=${all.length} getIds=${JSON.stringify(regIds)} everyIdResolves=${everyIdResolves}`,
                         );
                     } catch (err) {
-                        record('registry-get-all-systems', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('registry-get-all-systems', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── registry-getOrNull-and-has ─────────────────────────
@@ -153,7 +153,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             `unknownNull=${unknownNull} unknownHas=${unknownHas} knownNonNull=${knownNonNull} knownHas=${knownHas}`,
                         );
                     } catch (err) {
-                        record('registry-getOrNull-and-has', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('registry-getOrNull-and-has', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── themeClassFor::<id> (7 keys) ───────────────────────
@@ -179,7 +179,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             }
                             record(`themeClassFor::${id}`, checks.every(Boolean), detailParts.join(' '));
                         } catch (err) {
-                            record(`themeClassFor::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
+                            record(`themeClassFor::${id}`, false, `threw: ${String((err as Error).message)}`);
                         }
                     }
 
@@ -207,7 +207,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                                 `label=${cfg?.label} css=${cfg?.cssClass} apt=${cfg?.usesAptitudes} career=${cfg?.usesCareerTables}`,
                             );
                         } catch (err) {
-                            record(`config-identity::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
+                            record(`config-identity::${id}`, false, `threw: ${String((err as Error).message)}`);
                         }
                     }
 
@@ -229,10 +229,10 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             record(
                                 `skill-rank-shape::${id}`,
                                 Boolean(countOk && bonusesOk && levelsOk && countMirrors),
-                                `count=${ranks?.length} bonuses=${JSON.stringify(ranks?.map((r) => r.bonus))} skillRankCount=${cfg?.skillRankCount}`,
+                                `count=${ranks.length} bonuses=${JSON.stringify(ranks.map((r) => r.bonus))} skillRankCount=${cfg?.skillRankCount}`,
                             );
                         } catch (err) {
-                            record(`skill-rank-shape::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
+                            record(`skill-rank-shape::${id}`, false, `threw: ${String((err as Error).message)}`);
                         }
                     }
 
@@ -250,14 +250,14 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const countOk = Array.isArray(tiers) && tiers.length === expectedCount;
                             const orderOk = Array.isArray(order) && order.length === expectedCount && order.every((k, i) => k === tiers[i]?.key);
                             const labelsOk = countOk && tiers.every((t) => typeof t.label === 'string' && t.label.startsWith('WH40K.'));
-                            const firstSimple = tiers?.[0]?.key === 'simple';
+                            const firstSimple = tiers[0]?.key === 'simple';
                             record(
                                 `characteristic-tier-shape::${id}`,
                                 Boolean(countOk && orderOk && labelsOk && firstSimple),
-                                `count=${tiers?.length} order=${JSON.stringify(order)}`,
+                                `count=${tiers.length} order=${JSON.stringify(order)}`,
                             );
                         } catch (err) {
-                            record(`characteristic-tier-shape::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
+                            record(`characteristic-tier-shape::${id}`, false, `threw: ${String((err as Error).message)}`);
                         }
                     }
 
@@ -274,21 +274,21 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                                 packs?: unknown;
                             };
                             const coreOk =
-                                Array.isArray(osc?.coreSteps) &&
+                                Array.isArray(osc.coreSteps) &&
                                 osc.coreSteps.every(
                                     (s) => typeof s.key === 'string' && s.step === s.key && typeof s.icon === 'string' && typeof s.stepIndex === 'number',
                                 );
-                            const optOk = osc?.optionalStep === null || (typeof osc?.optionalStep === 'object' && osc.optionalStep !== null);
-                            const packsOk = Array.isArray(osc?.packs);
+                            const optOk = osc.optionalStep === null || (typeof osc.optionalStep === 'object' && osc.optionalStep !== null);
+                            const packsOk = Array.isArray(osc.packs);
                             record(
                                 `origin-step-config::${id}`,
                                 Boolean(coreOk && optOk && packsOk),
-                                `coreSteps=${osc?.coreSteps?.length} optionalStep=${osc?.optionalStep === null ? 'null' : 'obj'} packs=${
-                                    (osc?.packs as unknown[])?.length
+                                `coreSteps=${osc.coreSteps?.length} optionalStep=${osc.optionalStep === null ? 'null' : 'obj'} packs=${
+                                    (osc.packs as unknown[]).length
                                 }`,
                             );
                         } catch (err) {
-                            record(`origin-step-config::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
+                            record(`origin-step-config::${id}`, false, `threw: ${String((err as Error).message)}`);
                         }
                     }
 
@@ -312,11 +312,11 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                                         typeof u.description === 'string' &&
                                         u.description.startsWith('WH40K.'),
                                 );
-                            const survive = uses?.find((u) => u.key === 'survive');
+                            const survive = uses.find((u) => u.key === 'survive');
                             const burnOk = survive?.burn === true;
-                            record(`fate-point-uses::${id}`, Boolean(shapeOk && burnOk), `count=${uses?.length} surviveBurn=${survive?.burn}`);
+                            record(`fate-point-uses::${id}`, Boolean(shapeOk && burnOk), `count=${uses.length} surviveBurn=${survive?.burn}`);
                         } catch (err) {
-                            record(`fate-point-uses::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
+                            record(`fate-point-uses::${id}`, false, `threw: ${String((err as Error).message)}`);
                         }
                     }
 
@@ -330,15 +330,15 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const skills = cfg?.getVisibleSkills() as Set<string>;
                             const isSet = skills instanceof Set && skills.size > 0;
                             const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
-                            const dodgeShared = skills?.has('dodge');
-                            const familyOk = isAptitude ? skills?.has('parry') && !skills?.has('barter') : skills?.has('barter') && !skills?.has('parry');
+                            const dodgeShared = skills.has('dodge');
+                            const familyOk = isAptitude ? skills.has('parry') && !skills.has('barter') : skills.has('barter') && !skills.has('parry');
                             record(
                                 `visible-skills::${id}`,
                                 Boolean(isSet && dodgeShared && familyOk),
-                                `size=${skills?.size} hasParry=${skills?.has('parry')} hasBarter=${skills?.has('barter')}`,
+                                `size=${skills.size} hasParry=${skills.has('parry')} hasBarter=${skills.has('barter')}`,
                             );
                         } catch (err) {
-                            record(`visible-skills::${id}`, false, `threw: ${String((err as Error)?.message ?? err)}`);
+                            record(`visible-skills::${id}`, false, `threw: ${String((err as Error).message)}`);
                         }
                     }
 
@@ -353,12 +353,12 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         const talentCost = cfg?.getTalentCostTable() as Record<number, Record<number, number>>;
                         const eq = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
                         const skillOk =
-                            eq(skillCost?.[2], [100, 200, 300, 400]) && eq(skillCost?.[1], [200, 400, 600, 800]) && eq(skillCost?.[0], [300, 600, 900, 1200]);
+                            eq(skillCost[2], [100, 200, 300, 400]) && eq(skillCost[1], [200, 400, 600, 800]) && eq(skillCost[0], [300, 600, 900, 1200]);
                         const charOk =
-                            eq(charCost?.[2], [100, 250, 500, 750, 1250]) &&
-                            eq(charCost?.[1], [250, 500, 750, 1000, 1500]) &&
-                            eq(charCost?.[0], [500, 750, 1000, 1500, 2500]);
-                        const talentOk = eq(talentCost?.[1], { 2: 200, 1: 300, 0: 600 }) && eq(talentCost?.[3], { 2: 400, 1: 600, 0: 1200 });
+                            eq(charCost[2], [100, 250, 500, 750, 1250]) &&
+                            eq(charCost[1], [250, 500, 750, 1000, 1500]) &&
+                            eq(charCost[0], [500, 750, 1000, 1500, 2500]);
+                        const talentOk = eq(talentCost[1], { 2: 200, 1: 300, 0: 600 }) && eq(talentCost[3], { 2: 400, 1: 600, 0: 1200 });
                         const matchCI = cfg?.countMatchingAptitudes(['weapon skill', 'OFFENCE'], ['Weapon Skill', 'Offence']) === 2;
                         const matchZero = cfg?.countMatchingAptitudes(['Fellowship'], ['Weapon Skill', 'Offence']) === 0;
                         record(
@@ -367,7 +367,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             `skillOk=${skillOk} charOk=${charOk} talentOk=${talentOk} matchCI=${matchCI}`,
                         );
                     } catch (err) {
-                        record('aptitude-cost-tables-dh2e', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('aptitude-cost-tables-dh2e', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── aptitude-resolution-fallback ───────────────────────
@@ -393,7 +393,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         }
                         record('aptitude-resolution-fallback', checks.every(Boolean), detail.join(' '));
                     } catch (err) {
-                        record('aptitude-resolution-fallback', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('aptitude-resolution-fallback', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── advance-match-info ─────────────────────────────────
@@ -410,13 +410,13 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             unmatched: string[];
                             all: string[];
                         };
-                        const matchesOk = info?.matches === 1;
-                        const matchedOk = JSON.stringify(info?.matched) === JSON.stringify(['Weapon Skill']);
-                        const unmatchedOk = JSON.stringify(info?.unmatched) === JSON.stringify(['Knowledge']);
-                        const allOk = JSON.stringify(info?.all) === JSON.stringify(['Weapon Skill', 'Knowledge']);
+                        const matchesOk = info.matches === 1;
+                        const matchedOk = JSON.stringify(info.matched) === JSON.stringify(['Weapon Skill']);
+                        const unmatchedOk = JSON.stringify(info.unmatched) === JSON.stringify(['Knowledge']);
+                        const allOk = JSON.stringify(info.all) === JSON.stringify(['Weapon Skill', 'Knowledge']);
                         record('advance-match-info', Boolean(matchesOk && matchedOk && unmatchedOk && allOk), `info=${JSON.stringify(info)}`);
                     } catch (err) {
-                        record('advance-match-info', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('advance-match-info', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── career-cost-null-contract ──────────────────────────
@@ -437,7 +437,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         }
                         record('career-cost-null-contract', checks.every(Boolean), detail.join(' '));
                     } catch (err) {
-                        record('career-cost-null-contract', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('career-cost-null-contract', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── bc-patron-status-matrix ────────────────────────────
@@ -466,7 +466,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             `true=${matchedCost} allied=${alliedCost} opposed=${opposedCost} unalignedActor=${unalignedCost}`,
                         );
                     } catch (err) {
-                        record('bc-patron-status-matrix', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('bc-patron-status-matrix', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── skill-level-to-rank ────────────────────────────────
@@ -489,7 +489,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             fn('garbage') === 0;
                         record('skill-level-to-rank', Boolean(ok), `fn=${typeof fn}`);
                     } catch (err) {
-                        record('skill-level-to-rank', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('skill-level-to-rank', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── starting-xp-divergence ─────────────────────────────
@@ -503,7 +503,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         const ok = dh2 === 1000 && dh1 === 1000 && typeof rt === 'number';
                         record('starting-xp-divergence', Boolean(ok), `dh2e=${dh2} dh1e=${dh1} rt=${rt}`);
                     } catch (err) {
-                        record('starting-xp-divergence', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('starting-xp-divergence', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     // ── step-short-labels ──────────────────────────────────
@@ -518,14 +518,14 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const cfg = Registry.get(id);
                             const labels = cfg?.getStepShortLabels() as Record<string, string>;
                             const osc = cfg?.getOriginStepConfig() as { coreSteps?: Array<{ key: string }> };
-                            const coreKeys = (osc?.coreSteps ?? []).map((s) => s.key);
-                            const everyKeyLabelled = labels != null && coreKeys.every((k) => typeof labels[k] === 'string' && (labels[k]?.length ?? 0) > 0);
+                            const coreKeys = (osc.coreSteps ?? []).map((s) => s.key);
+                            const everyKeyLabelled = coreKeys.every((k) => typeof labels[k] === 'string' && labels[k].length > 0);
                             checks.push(everyKeyLabelled);
                             detail.push(`${id}:${coreKeys.length}keys`);
                         }
                         record('step-short-labels', checks.every(Boolean), detail.join(' '));
                     } catch (err) {
-                        record('step-short-labels', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('step-short-labels', false, `threw: ${String((err as Error).message)}`);
                     }
 
                     /* eslint-enable @typescript-eslint/no-explicit-any */
