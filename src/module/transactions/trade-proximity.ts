@@ -155,8 +155,9 @@ async function openTradeForToken(buyerToken: TokenLike): Promise<void> {
     }
 
     const { default: TransactionRequestDialog } = await import('../applications/dialogs/transaction-request-dialog.ts');
+    const [primary] = nearby;
     await TransactionRequestDialog.show(actor, {
-        sourceId: nearby[0]!.actorId,
+        sourceId: primary!.actorId,
         restrictToSourceIds: nearby.map((entry) => entry.actorId),
     });
 }

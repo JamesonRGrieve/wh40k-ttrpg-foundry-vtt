@@ -37,10 +37,10 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
                 let messageId: string | null = null;
 
                 try {
-                    const renderTemplate = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
+                    const renderTemplateFn = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
                         | ((p: string, c: object) => Promise<string>)
                         | undefined;
-                    if (!renderTemplate) {
+                    if (!renderTemplateFn) {
                         return { rendered, hasCardRoot, hasSystemAnchor, hasDamageBlock, messageId, error: 'renderTemplate unavailable' };
                     }
 
@@ -62,7 +62,7 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
                         },
                     };
 
-                    const html = await renderTemplate(template, context);
+                    const html = await renderTemplateFn(template, context);
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-ship-ramming-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="rt"');
@@ -72,7 +72,7 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
                     const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, hasCardRoot, hasSystemAnchor, hasDamageBlock, messageId, error };

@@ -134,11 +134,8 @@ export function rollVehicleCrit(args: RollVehicleCritArgs): RollVehicleCritResul
     const rolled = Math.floor(safeSample * 10) + 1;
     const modifier = Number.isFinite(args.overIntegrity) && args.overIntegrity > 0 ? args.overIntegrity : 0;
     const finalRoll = Math.min(MAX_CHART_ROLL, Math.max(1, rolled + modifier));
-    const row = DW_VEHICLE_CRIT_CHART[finalRoll - 1];
-    // Chart is constructed densely above; the index is guaranteed in range.
-    if (!row) {
-        throw new Error(`dw-vehicle-crit: chart row missing for roll=${finalRoll}`);
-    }
+    // Chart is constructed densely above; finalRoll is clamped to [1, 10].
+    const row = DW_VEHICLE_CRIT_CHART[finalRoll - 1]!;
     return {
         rolled,
         finalRoll,

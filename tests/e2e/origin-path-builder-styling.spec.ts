@@ -79,7 +79,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
             window.removeEventListener('error', errorListener);
             return {
                 setupOk: false,
-                error: `Actor.create: ${String((err as Error)?.message ?? err)}`,
+                error: `Actor.create: ${err instanceof Error ? err.message : String(err)}`,
                 hasWh40kRpgClass: false,
                 hasHeader: false,
                 hasJourneyRail: false,
@@ -135,7 +135,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
             window.removeEventListener('error', errorListener);
             return {
                 setupOk: false,
-                error: `builder.render: ${String((err as Error)?.message ?? err)}`,
+                error: `builder.render: ${err instanceof Error ? err.message : String(err)}`,
                 hasWh40kRpgClass: false,
                 hasHeader: false,
                 hasJourneyRail: false,
@@ -151,20 +151,20 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
         }
 
         const root: HTMLElement | null = builder?.element ?? null;
-        const hasWh40kRpgClass = root?.classList?.contains('wh40k-rpg') === true;
-        const hasHeader = root?.querySelector?.('header') !== null && root?.querySelector?.('header') !== undefined;
-        const hasJourneyRail = root?.querySelector?.('nav') !== null;
-        const hasMainContent = root?.querySelector?.('main') !== null;
-        const hasFooter = root?.querySelector?.('footer') !== null;
-        const hasPreviewSection = (root?.querySelectorAll?.('section').length ?? 0) >= 2;
+        const hasWh40kRpgClass = root?.classList.contains('wh40k-rpg') === true;
+        const hasHeader = root?.querySelector('header') != null;
+        const hasJourneyRail = root?.querySelector('nav') != null;
+        const hasMainContent = root?.querySelector('main') != null;
+        const hasFooter = root?.querySelector('footer') != null;
+        const hasPreviewSection = (root?.querySelectorAll('section').length ?? 0) >= 2;
 
         // .csd-* hooks must remain in the DOM (JS selectors target them) AND
         // every element bearing a .csd-* class should also carry at least one
         // tw-* utility class — that is the post-port invariant.
-        const csdElements = root?.querySelectorAll?.('[class*="csd-"]') ?? ([] as never);
-        const csdHookCount = csdElements?.length ?? 0;
+        const csdElements = root?.querySelectorAll('[class*="csd-"]') ?? ([] as never);
+        const csdHookCount = csdElements.length;
         let twUtilityCount = 0;
-        csdElements?.forEach?.((el: Element) => {
+        csdElements.forEach((el: Element) => {
             const cls = el.getAttribute('class') ?? '';
             if (/\btw-[a-z0-9-]/i.test(cls)) twUtilityCount += 1;
         });
@@ -186,7 +186,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
                 await new Promise<void>((r) => {
                     setTimeout(r, 120);
                 });
-                const workspace = root?.querySelector?.('.csd-workspace');
+                const workspace = root?.querySelector('.csd-workspace');
                 if (workspace) {
                     const cls = workspace.getAttribute('class') ?? '';
                     workspaceHasTwGrid = /\btw-grid\b/.test(cls);

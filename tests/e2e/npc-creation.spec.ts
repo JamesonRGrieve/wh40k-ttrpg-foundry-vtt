@@ -66,7 +66,7 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
                     record('quick-create-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
-                record('quick-create-dialog-renders', false, String((err as Error)?.message ?? err));
+                record('quick-create-dialog-renders', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---------- batch-create-dialog ----------
@@ -85,7 +85,7 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
                     record('batch-create-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
-                record('batch-create-dialog-renders', false, String((err as Error)?.message ?? err));
+                record('batch-create-dialog-renders', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---------- template-selector ----------
@@ -104,7 +104,7 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
                     record('template-selector-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
-                record('template-selector-renders', false, String((err as Error)?.message ?? err));
+                record('template-selector-renders', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---------- cleanup ----------

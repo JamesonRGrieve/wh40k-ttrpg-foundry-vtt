@@ -75,9 +75,11 @@ export function deriveAlignmentFromTally(tally: AlignmentTally): ChaosAlignment 
     const entries = DARK_GODS.map((god) => ({ god, count: tally[god] }));
     entries.sort((a, b) => b.count - a.count);
     // entries always has 4 elements (one per dark god); indices 0 and 1 are always present.
-    const leader = entries[0];
-    const runnerUp = entries[1];
-    if (leader === undefined || runnerUp === undefined) return 'unaligned';
+    const [leader, runnerUp] = entries as [
+        { god: Exclude<ChaosAlignment, 'unaligned'>; count: number },
+        { god: Exclude<ChaosAlignment, 'unaligned'>; count: number },
+        ...{ god: Exclude<ChaosAlignment, 'unaligned'>; count: number }[],
+    ];
     if (leader.count - runnerUp.count >= BC_ALIGNMENT_SWITCH_THRESHOLD) return leader.god;
     return 'unaligned';
 }

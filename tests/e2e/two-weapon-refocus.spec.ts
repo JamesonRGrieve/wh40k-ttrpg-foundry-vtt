@@ -74,8 +74,8 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                     actionNames = plan.attacks.map((a) => a.actionName);
                     actionCosts = plan.attacks.map((a) => a.actionCost);
 
-                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
-                    if (typeof renderTemplate !== 'function') {
+                    const renderTpl = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
+                    if (typeof renderTpl !== 'function') {
                         return {
                             rendered,
                             granted,
@@ -88,7 +88,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                         };
                     }
 
-                    const html = await renderTemplate('systems/wh40k-rpg/templates/chat/two-weapon-refocus-chat.hbs', {
+                    const html = await renderTpl('systems/wh40k-rpg/templates/chat/two-weapon-refocus-chat.hbs', {
                         gameSystem: 'dh2e',
                         granted: plan.granted,
                         attacks: plan.attacks,
@@ -116,7 +116,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                         hasWh40kClass = card.closest('.wh40k-rpg') !== null;
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
