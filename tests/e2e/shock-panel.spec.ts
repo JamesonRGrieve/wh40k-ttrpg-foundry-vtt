@@ -22,7 +22,7 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
         const ActorGbl = g.Actor;
-        if (!ActorGbl?.create) return { setupOk: false, valueText: '', hasButton: false, error: 'Actor.create unavailable' };
+        if (ActorGbl?.create == null) return { setupOk: false, valueText: '', hasButton: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
@@ -35,9 +35,9 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
                 },
             });
         } catch (err) {
-            return { setupOk: false, valueText: '', hasButton: false, error: String((err as Error)?.message ?? err) };
+            return { setupOk: false, valueText: '', hasButton: false, error: String(err instanceof Error ? err.message : err) };
         }
-        if (!actor) return { setupOk: false, valueText: '', hasButton: false, error: 'Actor.create returned null' };
+        if (actor == null) return { setupOk: false, valueText: '', hasButton: false, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
         await new Promise<void>((r) => {

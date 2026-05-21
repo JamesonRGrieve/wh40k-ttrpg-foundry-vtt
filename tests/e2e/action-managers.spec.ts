@@ -276,11 +276,13 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             } catch {
                                 /* ignore */
                             }
-                            if (turnFired || roundFired) {
+                            const didTurnFire = Boolean(turnFired);
+                            const didRoundFire = Boolean(roundFired);
+                            if (didTurnFire || didRoundFire) {
                                 setResult(
                                     'combat-action-on-turn',
                                     true,
-                                    `combatTurn=${String(turnFired)} combatRound=${String(roundFired)} — CombatActionManager handler observed`,
+                                    `combatTurn=${String(didTurnFire)} combatRound=${String(didRoundFire)} — CombatActionManager handler observed`,
                                 );
                             } else {
                                 setResult('combat-action-on-turn', false, 'neither combatTurn nor combatRound fired during nextTurn/nextRound');
@@ -532,11 +534,11 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                      * ============================================================ */
                     try {
                         const uiObj = g.ui;
-                        let warnedMessage: string | null = null;
+                        const capture: { warnedMessage: string | null } = { warnedMessage: null };
                         const origWarn = uiObj?.notifications?.warn;
                         if (typeof origWarn === 'function') {
                             uiObj.notifications.warn = function (msg: string, ...rest: unknown[]) {
-                                warnedMessage = String(msg);
+                                capture.warnedMessage = String(msg);
                                 return origWarn.call(this, msg, ...rest);
                             };
                         }
@@ -558,8 +560,12 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             await new Promise<void>((r) => {
                                 setTimeout(r, 120);
                             });
-                            if (warnedMessage !== null) {
-                                setResult('chat-card-button-click', true, `handler ran end-to-end and surfaced notification: "${String(warnedMessage)}"`);
+                            if (capture.warnedMessage !== null) {
+                                setResult(
+                                    'chat-card-button-click',
+                                    true,
+                                    `handler ran end-to-end and surfaced notification: "${String(capture.warnedMessage)}"`,
+                                );
                             } else {
                                 // Even if the warn wasn't captured (handler took
                                 // a different branch), the handler attaching a

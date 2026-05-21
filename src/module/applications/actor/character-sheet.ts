@@ -67,7 +67,7 @@ import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS }
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import { ASTARTES_IMPLANTS, astartesStrengthBonus, astartesToughnessBonus, hasBlackCarapace, type AstartesImplantId } from '../../rules/dw-astartes.ts';
 import { isOathActive } from '../../rules/dw-oath.ts';
-import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS } from '../../rules/dw-renown.ts';
+import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS, type RenownRank } from '../../rules/dw-renown.ts';
 import { DW_SPECIAL_AMMO_EFFECTS, type AmmoEffect } from '../../rules/dw-special-ammo.ts';
 import { getSupportRange } from '../../rules/dw-squad-mode.ts';
 import {
@@ -1691,10 +1691,10 @@ export default class CharacterSheet extends BaseActorSheet {
         const rank = getRenownRank(value);
         const rankRange = RENOWN_THRESHOLDS[rank];
         const rankIdx = RENOWN_RANK_ORDER.indexOf(rank);
-        const nextRank = RENOWN_RANK_ORDER[rankIdx + 1] ?? null;
-        const nextRankMin = nextRank ? RENOWN_THRESHOLDS[nextRank].min : null;
+        const nextRank: RenownRank | null = RENOWN_RANK_ORDER[rankIdx + 1] ?? null;
+        const nextRankMin = nextRank != null ? RENOWN_THRESHOLDS[nextRank].min : null;
         const rankLabel = game.i18n.localize(`WH40K.DW.Renown.Rank.${rank.charAt(0).toUpperCase()}${rank.slice(1)}`);
-        const nextRankLabel = nextRank ? game.i18n.localize(`WH40K.DW.Renown.Rank.${nextRank.charAt(0).toUpperCase()}${nextRank.slice(1)}`) : null;
+        const nextRankLabel = nextRank != null ? game.i18n.localize(`WH40K.DW.Renown.Rank.${nextRank.charAt(0).toUpperCase()}${nextRank.slice(1)}`) : null;
         const progressPercent =
             nextRankMin === null ? 100 : Math.max(0, Math.min(100, Math.round(((value - rankRange.min) / (nextRankMin - rankRange.min)) * 100)));
         return {
@@ -4275,8 +4275,7 @@ export default class CharacterSheet extends BaseActorSheet {
             objectives: Array<{ name: string; description: string; complete: boolean; ap: number }>;
         };
         if (idx < 0 || idx >= sys.objectives.length) return;
-        const objective = sys.objectives[idx];
-        if (objective === undefined) return;
+        const objective = sys.objectives[idx]!;
         const nextObjectives = sys.objectives.map((o, i) => (i === idx ? { ...o, complete: !o.complete } : o));
         const delta = objective.complete ? -objective.ap : objective.ap;
         const nextApEarned = Math.max(0, sys.apEarned + delta);

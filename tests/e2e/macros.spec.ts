@@ -99,7 +99,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                 for (const f of MACRO_FLOWS) record(f, false, `actor create threw: ${String((err as Error).message)}`);
                 return out;
             }
-            if (!actor) {
+            if (actor == null) {
                 for (const f of MACRO_FLOWS) record(f, false, 'actor create returned null');
                 return out;
             }
@@ -118,7 +118,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
 
             // ---------- flow: create-item-macro ----------
             try {
-                if (!item?.id) {
+                if (item?.id == null) {
                     record('create-item-macro', false, 'no embedded item to drive item macro creation');
                 } else {
                     const data = {
@@ -129,7 +129,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     await macroManager.createItemMacro?.(data, SLOT);
                     const expectedName = `${actor.name}: ${item.name}`;
                     const created = findCreatedMacro(expectedName);
-                    if (created) {
+                    if (created != null) {
                         cleanupMacros.push(created.id);
                         record('create-item-macro', true, null);
                     } else {
@@ -150,7 +150,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                 await macroManager.createSkillMacro?.(data, SLOT);
                 const expectedName = `${actor.name}: Weapon Skill`;
                 const created = findCreatedMacro(expectedName);
-                if (created) {
+                if (created != null) {
                     cleanupMacros.push(created.id);
                     record('create-skill-macro', true, null);
                 } else {
@@ -170,7 +170,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                 await macroManager.createCharacteristicMacro?.(data, SLOT);
                 const expectedName = `${actor.name}: WS Check`;
                 const created = findCreatedMacro(expectedName);
-                if (created) {
+                if (created != null) {
                     cleanupMacros.push(created.id);
                     record('create-characteristic-macro', true, null);
                 } else {
@@ -182,11 +182,11 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
 
             // ---------- flow: roll-item-macro ----------
             try {
-                if (!item?.id) {
+                if (item?.id == null) {
                     record('roll-item-macro', false, 'no embedded item to dispatch roll against');
                 } else {
                     const result = macroManager.rollItemMacro?.(actor.id, item.id);
-                    if (result && typeof result.then === 'function') {
+                    if (result != null && typeof result.then === 'function') {
                         await result.catch(() => undefined);
                     }
                     record('roll-item-macro', true, null);
@@ -198,7 +198,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             // ---------- flow: roll-skill-macro ----------
             try {
                 const result = macroManager.rollSkillMacro?.(actor.id, 'weaponSkill');
-                if (result && typeof result.then === 'function') await result.catch(() => undefined);
+                if (result != null && typeof result.then === 'function') await result.catch(() => undefined);
                 record('roll-skill-macro', true, null);
             } catch (err) {
                 record('roll-skill-macro', false, `threw: ${String((err as Error).message)}`);
@@ -207,7 +207,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             // ---------- flow: roll-characteristic-macro ----------
             try {
                 const result = macroManager.rollCharacteristicMacro?.(actor.id, 'weaponSkill');
-                if (result && typeof result.then === 'function') await result.catch(() => undefined);
+                if (result != null && typeof result.then === 'function') await result.catch(() => undefined);
                 record('roll-characteristic-macro', true, null);
             } catch (err) {
                 record('roll-characteristic-macro', false, `threw: ${String((err as Error).message)}`);

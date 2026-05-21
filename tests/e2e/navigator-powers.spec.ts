@@ -112,7 +112,7 @@ test.describe.serial('NavigatorPowerChat (Tier B)', () => {
                     try {
                         html = await renderTemplateFn(templatePath, ctx);
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String(err instanceof Error ? err.message : err);
                     }
 
                     if (html) {
@@ -152,7 +152,7 @@ test.describe.serial('NavigatorPowerChat (Tier B)', () => {
                         hasNetDosText = (card?.textContent ?? '').includes('NetDoS') || (card?.textContent ?? '').toLowerCase().includes('net');
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String(err instanceof Error ? err.message : err);
                 }
 
                 return {

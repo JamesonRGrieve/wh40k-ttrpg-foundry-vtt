@@ -89,7 +89,7 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
                     const HBS = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HBS?.compile !== 'function') {
+                    if (typeof HBS.compile !== 'function') {
                         return {
                             rendered,
                             implantCount,
@@ -170,7 +170,7 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
                     // outside this evaluate) captures the live DOM.
                     (globalThis as any).__dwAstartesPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

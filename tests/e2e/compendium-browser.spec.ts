@@ -247,7 +247,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                         record('browser-select-result', ok, null);
                         // Best-effort: close any opened sheets so they don't
                         // pile up across the test.
-                        const wins = Object.values(g.ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                        const wins: Array<{ id?: string; close?: () => Promise<unknown> }> = Object.values(g.ui?.windows ?? {});
                         for (const w of wins) {
                             const id: string = w?.id ?? '';
                             if (id.includes('Item') || id.includes('item-sheet') || id.startsWith('app-')) {

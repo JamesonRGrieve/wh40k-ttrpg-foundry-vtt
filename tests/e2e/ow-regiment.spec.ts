@@ -53,7 +53,7 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
                         type: 'character',
                         system: { gameSystem: 'ow' },
                     });
-                    if (actor === null || actor === undefined) {
+                    if (actor == null) {
                         return { error: 'Actor.create returned null', rendered, hasBudget, hasKit, hasEditBtn, categoryCount };
                     }
                     const sheet = actor.sheet;
@@ -77,7 +77,7 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
                     }
                     (globalThis as any).__owRegimentActor = actor;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
                 return { error, rendered, hasBudget, hasKit, hasEditBtn, categoryCount };
                 /* eslint-enable @typescript-eslint/no-explicit-any */

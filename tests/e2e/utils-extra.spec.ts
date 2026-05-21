@@ -91,18 +91,18 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                     const b = mod.gameSystemPackPrefix?.('dh2e');
                     record('pack-prefix-dh-editions', a === 'dh1' && b === 'dh2', `dh1e=${String(a)} dh2e=${String(b)}`);
                 } catch (err) {
-                    record('pack-prefix-dh-editions', false, String((err as Error)?.message ?? err));
+                    record('pack-prefix-dh-editions', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const passthrough = mod.gameSystemPackPrefix?.('rt');
                     const absent = mod.gameSystemPackPrefix?.(undefined);
                     record('pack-prefix-passthrough', passthrough === 'rt' && absent === '', `rt=${String(passthrough)} undefined=${JSON.stringify(absent)}`);
                 } catch (err) {
-                    record('pack-prefix-passthrough', false, String((err as Error)?.message ?? err));
+                    record('pack-prefix-passthrough', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
                 for (const k of ['pack-prefix-dh-editions', 'pack-prefix-passthrough'] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
@@ -119,7 +119,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `cap(0)=${String(zero)} cap(5)=${String(high)} cap(999)=${String(clamped)}`,
                     );
                 } catch (err) {
-                    record('encumbrance-carry-capacity', false, String((err as Error)?.message ?? err));
+                    record('encumbrance-carry-capacity', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const table = mod.ENCUMBRANCE_TABLE;
@@ -129,11 +129,11 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `len=${Array.isArray(table) ? table.length : typeof table}`,
                     );
                 } catch (err) {
-                    record('encumbrance-table-exported', false, String((err as Error)?.message ?? err));
+                    record('encumbrance-table-exported', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
                 for (const k of ['encumbrance-carry-capacity', 'encumbrance-table-exported'] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
@@ -149,18 +149,18 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `known=${JSON.stringify(known)} fallback=${JSON.stringify(fallback)}`,
                     );
                 } catch (err) {
-                    record('origin-ui-characteristic-info', false, String((err as Error)?.message ?? err));
+                    record('origin-ui-characteristic-info', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const trained = mod.getTrainingLabel?.('trained');
                     const plus10 = mod.getTrainingLabel?.('plus10');
                     record('origin-ui-training-label', trained === 'Trained' && plus10 === '+10', `trained=${String(trained)} plus10=${String(plus10)}`);
                 } catch (err) {
-                    record('origin-ui-training-label', false, String((err as Error)?.message ?? err));
+                    record('origin-ui-training-label', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
                 for (const k of ['origin-ui-characteristic-info', 'origin-ui-training-label'] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
@@ -187,14 +187,14 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                             `split=${JSON.stringify(split)}`,
                         );
                     } catch (err) {
-                        record('text-pattern-split-list', false, String((err as Error)?.message ?? err));
+                        record('text-pattern-split-list', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         const key = TPE.toKey('Ballistic Skill');
                         const capped = TPE.toKey('Ballistic Skill', true);
                         record('text-pattern-to-key', key === 'ballisticSkill' && capped === 'BallisticSkill', `key=${String(key)} capped=${String(capped)}`);
                     } catch (err) {
-                        record('text-pattern-to-key', false, String((err as Error)?.message ?? err));
+                        record('text-pattern-to-key', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         const ranged = TPE.parseRange('30m');
@@ -206,7 +206,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                             `ranged=${JSON.stringify(ranged)} melee=${JSON.stringify(melee)} none=${JSON.stringify(none)}`,
                         );
                     } catch (err) {
-                        record('text-pattern-parse-range', false, String((err as Error)?.message ?? err));
+                        record('text-pattern-parse-range', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         const withBonus = TPE.parseValueWithModifier('Awareness +10');
@@ -221,13 +221,13 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                             `withBonus=${JSON.stringify(withBonus)} noBonus=${JSON.stringify(noBonus)}`,
                         );
                     } catch (err) {
-                        record('text-pattern-parse-value-with-modifier', false, String((err as Error)?.message ?? err));
+                        record('text-pattern-parse-value-with-modifier', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         const cleaned = TPE.cleanEntry('Power  Sword...');
                         record('text-pattern-clean-entry', cleaned === 'Power Sword', `cleaned=${JSON.stringify(cleaned)}`);
                     } catch (err) {
-                        record('text-pattern-clean-entry', false, String((err as Error)?.message ?? err));
+                        record('text-pattern-clean-entry', false, err instanceof Error ? err.message : String(err));
                     }
                 }
             } catch (err) {
@@ -238,7 +238,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                     'text-pattern-parse-value-with-modifier',
                     'text-pattern-clean-entry',
                 ] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
@@ -255,7 +255,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `dh2e=${String(dh)} rt=${String(rt)} bad=${JSON.stringify(bad)}`,
                     );
                 } catch (err) {
-                    record('item-variant-normalize-line-key', false, String((err as Error)?.message ?? err));
+                    record('item-variant-normalize-line-key', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const isContainer = mod.isLineVariantContainer?.({ dh2: { v: 1 }, rt: { v: 2 } });
@@ -266,7 +266,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `container=${String(isContainer)} notContainer=${String(notContainer)}`,
                     );
                 } catch (err) {
-                    record('item-variant-is-line-container', false, String((err as Error)?.message ?? err));
+                    record('item-variant-is-line-container', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const resolved = mod.resolveLineVariant?.({ dh2: 'dh-value', rt: 'rt-value' }, 'rt');
@@ -277,11 +277,11 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `resolved=${JSON.stringify(resolved)} passthrough=${JSON.stringify(passthrough)}`,
                     );
                 } catch (err) {
-                    record('item-variant-resolve-variant', false, String((err as Error)?.message ?? err));
+                    record('item-variant-resolve-variant', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
                 for (const k of ['item-variant-normalize-line-key', 'item-variant-is-line-container', 'item-variant-resolve-variant'] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
@@ -293,10 +293,10 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                     const summed = mod.calculateTotalCost?.([{ cost: 100 }, { cost: 250 }, { cost: 50 }]);
                     record('xp-calculate-total-cost', empty === 0 && summed === 400, `empty=${String(empty)} summed=${String(summed)}`);
                 } catch (err) {
-                    record('xp-calculate-total-cost', false, String((err as Error)?.message ?? err));
+                    record('xp-calculate-total-cost', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
-                record('xp-calculate-total-cost', false, `import: ${String((err as Error)?.message ?? err)}`);
+                record('xp-calculate-total-cost', false, `import: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             // ---------- actor-system-converter ----------
@@ -312,10 +312,10 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `char=${String(charType)} npc=${String(npcType)} bogus=${String(bogus)}`,
                     );
                 } catch (err) {
-                    record('actor-converter-is-convertible-type', false, String((err as Error)?.message ?? err));
+                    record('actor-converter-is-convertible-type', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
-                record('actor-converter-is-convertible-type', false, `import: ${String((err as Error)?.message ?? err)}`);
+                record('actor-converter-is-convertible-type', false, `import: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             // ---------- stat-block-validator ----------
@@ -342,10 +342,10 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `null=${JSON.stringify(nullResult)} ok.valid=${String(okResult?.valid)}`,
                     );
                 } catch (err) {
-                    record('stat-block-validator-validate', false, String((err as Error)?.message ?? err));
+                    record('stat-block-validator-validate', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
-                record('stat-block-validator-validate', false, `import: ${String((err as Error)?.message ?? err)}`);
+                record('stat-block-validator-validate', false, `import: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             // ---------- origin-chart-layout ----------
@@ -377,10 +377,10 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         `steps=${Array.isArray(chart?.steps) ? chart.steps.length : typeof chart} maxColumns=${String(chart?.maxColumns)}`,
                     );
                 } catch (err) {
-                    record('origin-chart-layout-compute-full-chart', false, String((err as Error)?.message ?? err));
+                    record('origin-chart-layout-compute-full-chart', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
-                record('origin-chart-layout-compute-full-chart', false, `import: ${String((err as Error)?.message ?? err)}`);
+                record('origin-chart-layout-compute-full-chart', false, `import: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             return out;

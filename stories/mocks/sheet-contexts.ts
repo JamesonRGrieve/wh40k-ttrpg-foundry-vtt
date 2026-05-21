@@ -116,17 +116,17 @@ const SYSTEM_ID_TO_WITH_SYSTEM: Record<GameSystemId, SystemId> = {
  */
 function ensureGameI18nStub(): void {
     const g = globalThis as Record<string, unknown>;
-    const game = (g.game as Record<string, unknown> | undefined) ?? {};
-    const i18n = (game.i18n as Record<string, unknown> | undefined) ?? undefined;
+    const gameObj = (g.game as Record<string, unknown> | undefined) ?? {};
+    const i18n = (gameObj.i18n as Record<string, unknown> | undefined) ?? undefined;
     if (i18n && typeof (i18n as { localize?: unknown }).localize === 'function') return;
 
     g.game = {
-        ...game,
+        ...gameObj,
         i18n: {
             localize: (key: string) => key,
             format: (key: string, data?: Record<string, unknown>) => {
                 if (!data) return key;
-                return key.replace(/\{(\w+)\}/g, (_, name) => String(data[name] ?? ''));
+                return key.replace(/\{(\w+)\}/g, (_, name: string) => String((data[name] as string | number | null | undefined) ?? ''));
             },
         },
     };
@@ -464,7 +464,7 @@ export function mockStarshipSheetContext(opts: StarshipSheetContextOptions = {})
  */
 function mergeActorInput(base: MockActorInput, override?: MockActorInput): MockActorInput {
     if (!override) return base;
-    const baseSystem = (base?.system ?? {}) as Record<string, unknown>;
+    const baseSystem = (base.system ?? {}) as Record<string, unknown>;
     const overrideSystem = (override.system ?? {}) as Record<string, unknown>;
     const mergedSystem: Record<string, unknown> = { ...baseSystem };
     for (const [key, value] of Object.entries(overrideSystem)) {

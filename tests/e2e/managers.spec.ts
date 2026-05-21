@@ -83,12 +83,12 @@ async function createCharacterActor(page: Page, name: string, system: Record<str
                 if (!actor) return { id: null, error: 'Actor.create returned null' };
                 return { id: actor.id ?? null, error: null };
             } catch (err) {
-                return { id: null, error: String((err as Error)?.message ?? err) };
+                return { id: null, error: err instanceof Error ? err.message : String(err) };
             }
         },
         { name, system },
     );
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
@@ -123,7 +123,7 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
             const actor = g.game?.actors?.get?.(aid);
-            if (!actor) return { ok: false, error: 'actor missing' };
+            if (actor == null) return { ok: false, error: 'actor missing' };
 
             const before = Boolean(actor.system?.skills?.dodge?.trained);
 
@@ -155,7 +155,7 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
                     return { ok: false, error: 'GrantsManager.applyItemGrants unavailable' };
                 }
                 const result = await Mgr.applyItemGrants(talent, actor, { force: true });
-                if (!result?.success && (result?.errors ?? []).length > 0) {
+                if (result?.success !== true && (result?.errors ?? []).length > 0) {
                     return { ok: false, error: `apply errors: ${(result.errors as string[]).join('; ')}` };
                 }
                 // Source bug to flag: SkillGrant writes
@@ -169,7 +169,7 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
                 // errors which IS the manager-flow coverage signal.
                 const refreshed = g.game?.actors?.get?.(actorId);
                 const flagSet = Mgr.hasAppliedGrants(refreshed, talent.uuid);
-                if (!flagSet) return { ok: false, error: `applied-grants flag not stored after apply (before=${before})` };
+                if (flagSet !== true) return { ok: false, error: `applied-grants flag not stored after apply (before=${before})` };
                 return { ok: true, error: null };
             } finally {
                 // Reset dodge + clear applied-grants flag for downstream flows.
@@ -209,7 +209,7 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
             const ActorCls = g.Actor;
-            if (!ActorCls?.create) return { ok: false, error: 'Actor.create unavailable' };
+            if (ActorCls?.create == null) return { ok: false, error: 'Actor.create unavailable' };
 
             let sourceActor: any;
             let parentActor: any;
@@ -225,9 +225,9 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
                     system: { gameSystem: 'dh2e' },
                 });
             } catch (err) {
-                return { ok: false, error: `actor create failed: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `actor create failed: ${err instanceof Error ? err.message : String(err)}` };
             }
-            if (!sourceActor || !parentActor) return { ok: false, error: 'actor create returned null' };
+            if (sourceActor == null || parentActor == null) return { ok: false, error: 'actor create returned null' };
             const parentActorId = parentActor.id;
             // Refetch the parent from the world collection so the live
             // bound API (items.contents, etc.) is exercised.
@@ -243,7 +243,7 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
                     },
                 ]);
                 const sourceTalent = sourceCreated[0];
-                if (!sourceTalent?.uuid) return { ok: false, error: 'source talent has no uuid' };
+                if (sourceTalent?.uuid == null) return { ok: false, error: 'source talent has no uuid' };
 
                 // Parent-talent stub carrying the item-grant config — see the
                 // skill-grant probe for why a stub is used instead of an
@@ -273,7 +273,7 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
                 const grantedItems = refreshedParent.items?.contents?.filter((i: any) => i.name === 'probe-granted-talent') ?? [];
                 if (grantedItems.length === 0) {
                     const errs = (result?.errors ?? []).join('; ');
-                    return { ok: false, error: `granted item not on actor (errors: ${errs || '(none)'})` };
+                    return { ok: false, error: `granted item not on actor (errors: ${errs.length > 0 ? errs : '(none)'})` };
                 }
                 return { ok: true, error: null };
             } finally {
@@ -305,7 +305,7 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
             const g = globalThis as any;
             const actor = g.game?.actors?.get?.(aid);
-            if (!actor) return { ok: false, error: 'actor missing' };
+            if (actor == null) return { ok: false, error: 'actor missing' };
 
             // Stub item — same rationale as the skill-grant probe (talent
             // schema lacks `grantsV2` so a real Item.create would lose the
@@ -335,16 +335,16 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
 
                 await Mgr.applyItemGrants(talent, actor, { force: true });
                 const hadBefore = Mgr.hasAppliedGrants(actor, sourceKey);
-                if (!hadBefore) return { ok: false, error: 'hasAppliedGrants false after apply' };
+                if (hadBefore !== true) return { ok: false, error: 'hasAppliedGrants false after apply' };
 
                 const reverseResult = await Mgr.reverseAppliedGrants(actor, sourceKey);
-                if (!reverseResult?.success) {
+                if (reverseResult?.success !== true) {
                     return { ok: false, error: `reverse failed: ${(reverseResult?.errors ?? []).join('; ')}` };
                 }
 
                 const refreshed = g.game?.actors?.get?.(actorId);
                 const hasFlagAfter = Mgr.hasAppliedGrants(refreshed, sourceKey);
-                if (hasFlagAfter) return { ok: false, error: 'applied-grants flag still set after reverse' };
+                if (hasFlagAfter === true) return { ok: false, error: 'applied-grants flag still set after reverse' };
                 // See skill-grant probe for why `awareness.trained` is not
                 // checked — the boolean is derived and overwritten on every
                 // prepareDerivedData. The reverse pipeline executed end-to-end
@@ -375,7 +375,7 @@ async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowRes
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
         const g = globalThis as any;
         const actor = g.game?.actors?.get?.(aid);
-        if (!actor) return { ok: false, error: 'actor missing' };
+        if (actor == null) return { ok: false, error: 'actor missing' };
 
         let talent: any;
         try {
@@ -397,9 +397,9 @@ async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowRes
             ]);
             talent = created[0];
         } catch (err) {
-            return { ok: false, error: `talent create failed: ${String((err as Error)?.message ?? err)}` };
+            return { ok: false, error: `talent create failed: ${err instanceof Error ? err.message : String(err)}` };
         }
-        if (!talent) return { ok: false, error: 'talent create returned null' };
+        if (talent == null) return { ok: false, error: 'talent create returned null' };
 
         try {
             const liveTalent = actor.items.get(talent.id);
@@ -440,7 +440,7 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
             const g = globalThis as any;
             const buyer = g.game?.actors?.get?.(bid);
             const source = g.game?.actors?.get?.(sid);
-            if (!buyer || !source) return { ok: false, error: 'buyer/source missing' };
+            if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
 
             const mod = await import(moduleUrl);
             const TM = mod.TransactionManager;
@@ -466,7 +466,7 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
                 },
             ]);
             const item = itemCreated[0];
-            if (!item) return { ok: false, error: 'source item create failed' };
+            if (item == null) return { ok: false, error: 'source item create failed' };
 
             // Give buyer enough throneGelt for the path to consider
             // `canAfford` true (any non-zero buffer is enough since
@@ -482,7 +482,7 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
                     influenceBurn: 0,
                 });
             } catch (err) {
-                return { ok: false, error: `commitTransaction threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `commitTransaction threw: ${err instanceof Error ? err.message : String(err)}` };
             }
 
             const refreshedBuyer = g.game.actors.get(buyerId);
@@ -516,7 +516,7 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
             const g = globalThis as any;
             const buyer = g.game?.actors?.get?.(bid);
             const source = g.game?.actors?.get?.(sid);
-            if (!buyer || !source) return { ok: false, error: 'buyer/source missing' };
+            if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
 
             const mod = await import(moduleUrl);
             const TM = mod.TransactionManager;
@@ -534,7 +534,7 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
                 },
             ]);
             const item = stocked[0];
-            if (!item) return { ok: false, error: 'item create on buyer-as-source failed' };
+            if (item == null) return { ok: false, error: 'item create on buyer-as-source failed' };
 
             await source.update({ 'system.throneGelt': 50 });
 
@@ -547,12 +547,12 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
                     influenceBurn: 0,
                 });
             } catch (err) {
-                return { ok: false, error: `commitTransaction threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `commitTransaction threw: ${err instanceof Error ? err.message : String(err)}` };
             }
 
             const refreshedBuyer = g.game.actors.get(buyerId);
             const refreshedSource = g.game.actors.get(sourceId);
-            const itemGone = !refreshedBuyer?.items?.contents?.some((i: any) => i.name === 'probe-sell-gear');
+            const itemGone = refreshedBuyer?.items?.contents?.some((i: any) => i.name === 'probe-sell-gear') !== true;
             const itemArrived = refreshedSource?.items?.contents?.some((i: any) => i.name === 'probe-sell-gear');
 
             // Reset the original buyer's mode so other flows aren't affected.
@@ -584,7 +584,7 @@ async function probeListSources(page: Page, buyerId: string, sourceId: string): 
             const g = globalThis as any;
             const buyer = g.game?.actors?.get?.(bid);
             const source = g.game?.actors?.get?.(sid);
-            if (!buyer || !source) return { ok: false, error: 'buyer/source missing' };
+            if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
 
             const mod = await import(moduleUrl);
             const TM = mod.TransactionManager;

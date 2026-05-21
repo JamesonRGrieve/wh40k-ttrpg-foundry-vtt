@@ -43,7 +43,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
                     const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsLib?.compile !== 'function') {
+                    if (typeof HandlebarsLib.compile !== 'function') {
                         return {
                             notAscendedRendered,
                             ascendedRendered,
@@ -139,7 +139,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
 
                     (globalThis as any).__bcDaemonPrincePanelHostAscended = ascendedHost;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String(err instanceof Error ? err.message : err);
                 }
 
                 return {
