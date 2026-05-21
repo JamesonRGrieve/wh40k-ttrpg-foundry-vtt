@@ -48,8 +48,8 @@ interface FlowResult {
 
 async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
+    const listener = (pageErr: Error): void => {
+        pageErrors.push(pageErr.message);
     };
     page.on('pageerror', listener);
     try {
@@ -74,7 +74,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             try {
                 macroManager = await import(macroModulePath);
             } catch (err) {
-                for (const f of MACRO_FLOWS) record(f, false, `macro-manager import failed: ${String((err as Error)?.message ?? err)}`);
+                for (const f of MACRO_FLOWS) record(f, false, `macro-manager import failed: ${String((err as Error).message)}`);
                 return out;
             }
 
@@ -96,7 +96,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     },
                 });
             } catch (err) {
-                for (const f of MACRO_FLOWS) record(f, false, `actor create threw: ${String((err as Error)?.message ?? err)}`);
+                for (const f of MACRO_FLOWS) record(f, false, `actor create threw: ${String((err as Error).message)}`);
                 return out;
             }
             if (!actor) {
@@ -137,7 +137,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     }
                 }
             } catch (err) {
-                record('create-item-macro', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                record('create-item-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: create-skill-macro ----------
@@ -157,7 +157,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     record('create-skill-macro', false, `expected macro '${expectedName}' not found in game.macros`);
                 }
             } catch (err) {
-                record('create-skill-macro', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                record('create-skill-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: create-characteristic-macro ----------
@@ -177,7 +177,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     record('create-characteristic-macro', false, `expected macro '${expectedName}' not found in game.macros`);
                 }
             } catch (err) {
-                record('create-characteristic-macro', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                record('create-characteristic-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: roll-item-macro ----------
@@ -192,7 +192,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     record('roll-item-macro', true, null);
                 }
             } catch (err) {
-                record('roll-item-macro', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                record('roll-item-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: roll-skill-macro ----------
@@ -201,7 +201,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                 if (result && typeof result.then === 'function') await result.catch(() => undefined);
                 record('roll-skill-macro', true, null);
             } catch (err) {
-                record('roll-skill-macro', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                record('roll-skill-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: roll-characteristic-macro ----------
@@ -210,7 +210,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                 if (result && typeof result.then === 'function') await result.catch(() => undefined);
                 record('roll-characteristic-macro', true, null);
             } catch (err) {
-                record('roll-characteristic-macro', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                record('roll-characteristic-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- cleanup ----------

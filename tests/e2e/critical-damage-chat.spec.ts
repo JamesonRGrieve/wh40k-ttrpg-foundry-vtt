@@ -64,8 +64,8 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
                     let html = '';
                     try {
                         html = await renderTemplate(templatePath, ctx);
-                    } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                    } catch (renderErr) {
+                        error = String((renderErr as Error).message);
                     }
 
                     if (html) {
@@ -91,8 +91,8 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
                         riderPills = host.querySelectorAll('.wh40k-critdmg-card span.tw-rounded-full').length;
                         hasEffectText = (card?.textContent ?? '').includes('Stunned for 1 round');
                     }
-                } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                } catch (outerErr) {
+                    error = String((outerErr as Error).message);
                 }
 
                 return {

@@ -82,9 +82,8 @@ describe('rollDaemonWeaponAttributes (#142)', () => {
 
     it('slot 1 always uses the General table even when alignment is set', () => {
         const result = rollDaemonWeaponAttributes('tzeentch', 'major', () => 0.5);
-        const firstPick = result.picks[0];
-        if (firstPick === undefined) throw new Error('expected at least one pick');
-        expect(firstPick.table).toBe('general');
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        expect(result.picks[0]!.table).toBe('general');
         for (const pick of result.picks.slice(1)) {
             expect(pick.table).toBe('tzeentch');
         }
@@ -104,12 +103,11 @@ describe('rollDaemonWeaponAttributes (#142)', () => {
         const rng = (): number => seq[idx++ % seq.length] ?? 0;
         const result = rollDaemonWeaponAttributes('khorne', 'normal', rng);
         expect(result.picks.map((p) => p.roll)).toEqual([1, 2, 10]);
-        const p0 = result.picks[0];
-        const p1 = result.picks[1];
-        const p2 = result.picks[2];
-        if (p0 === undefined || p1 === undefined || p2 === undefined) throw new Error('expected three picks');
-        expect(p0.table).toBe('general');
-        expect(p1.table).toBe('khorne');
-        expect(p2.table).toBe('khorne');
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        expect(result.picks[0]!.table).toBe('general');
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        expect(result.picks[1]!.table).toBe('khorne');
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        expect(result.picks[2]!.table).toBe('khorne');
     });
 });

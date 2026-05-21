@@ -94,7 +94,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                             `count=${acts?.length}`,
                         );
                     } catch (err) {
-                        record('quick-actions-weapon', false, String((err as Error)?.message ?? err));
+                        record('quick-actions-weapon', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         const equipped = QAB.getActionsForItem(synthetic('armour', { equipped: true }));
@@ -103,7 +103,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         const ok = equipped[0]?.label === 'Unequip' && unequipped[0]?.label === 'Equip';
                         record('quick-actions-armour', ok, `equipped=${equipped[0]?.label} unequipped=${unequipped[0]?.label}`);
                     } catch (err) {
-                        record('quick-actions-armour', false, String((err as Error)?.message ?? err));
+                        record('quick-actions-armour', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         const rollable = QAB.getActionsForItem(synthetic('talent', { isRollable: true }));
@@ -113,22 +113,24 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         // actions (inspect/delete on owned items). Just confirm
                         // the rollable branch's `itemRoll` action exists and
                         // the non-rollable branch lacks it.
-                        const ok = rollable.some((a: any) => a.action === 'itemRoll') && !notRollable.some((a: any) => a.action === 'itemRoll');
+                        const hasRollAction = Boolean(rollable.some((a: any) => a.action === 'itemRoll'));
+                        const notRollAction = Boolean(notRollable.some((a: any) => a.action === 'itemRoll'));
+                        const ok = hasRollAction && !notRollAction;
                         record('quick-actions-talent', ok, `rollable=${rollable.length} notRollable=${notRollable.length}`);
                     } catch (err) {
-                        record('quick-actions-talent', false, String((err as Error)?.message ?? err));
+                        record('quick-actions-talent', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         const consumable = QAB.getActionsForItem(synthetic('gear', { consumable: true }));
                         const ok = consumable.length >= 1 && consumable.some((a: any) => a.action === 'useItem');
                         record('quick-actions-gear', ok, `count=${consumable.length}`);
                     } catch (err) {
-                        record('quick-actions-gear', false, String((err as Error)?.message ?? err));
+                        record('quick-actions-gear', false, err instanceof Error ? err.message : String(err));
                     }
                 }
             } catch (err) {
                 for (const k of ['quick-actions-weapon', 'quick-actions-armour', 'quick-actions-talent', 'quick-actions-gear'] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
@@ -176,7 +178,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     await mod.adjustStat.call(host, evt, makeTarget({ field: 'system.wounds.value', delta: '2' }));
                     record('stat-adjustStat', host.last.field === 'system.wounds.value' && host.last.value === 7, `last=${JSON.stringify(host.last)}`);
                 } catch (err) {
-                    record('stat-adjustStat', false, String((err as Error)?.message ?? err));
+                    record('stat-adjustStat', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // increment — adds 1 to a numeric field
@@ -185,7 +187,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     await mod.increment.call(host, evt, makeTarget({ field: 'system.wounds.value' }));
                     record('stat-increment', host.last.value === 6, `last=${JSON.stringify(host.last)}`);
                 } catch (err) {
-                    record('stat-increment', false, String((err as Error)?.message ?? err));
+                    record('stat-increment', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // decrement — subtracts 1
@@ -194,7 +196,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     await mod.decrement.call(host, evt, makeTarget({ field: 'system.wounds.value' }));
                     record('stat-decrement', host.last.value === 4, `last=${JSON.stringify(host.last)}`);
                 } catch (err) {
-                    record('stat-decrement', false, String((err as Error)?.message ?? err));
+                    record('stat-decrement', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // setCriticalPip — driven by data-pip-index
@@ -204,7 +206,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     // setCriticalPip writes system.wounds.critical to pipIndex+1.
                     record('stat-setCriticalPip', host.last.field === 'system.wounds.critical', `last=${JSON.stringify(host.last)}`);
                 } catch (err) {
-                    record('stat-setCriticalPip', false, String((err as Error)?.message ?? err));
+                    record('stat-setCriticalPip', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // setFateStar — driven by data-star-index
@@ -217,7 +219,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         `last=${JSON.stringify(host.last)}`,
                     );
                 } catch (err) {
-                    record('stat-setFateStar', false, String((err as Error)?.message ?? err));
+                    record('stat-setFateStar', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // setFatigueBolt — driven by data-bolt-index
@@ -230,7 +232,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         `last=${JSON.stringify(host.last)}`,
                     );
                 } catch (err) {
-                    record('stat-setFatigueBolt', false, String((err as Error)?.message ?? err));
+                    record('stat-setFatigueBolt', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // setCorruption — driven by data-corruption-value (or similar)
@@ -239,7 +241,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     await mod.setCorruption.call(host, evt, makeTarget({ value: '10', pipIndex: '5' }));
                     record('stat-setCorruption', typeof host.last.field === 'string', `last=${JSON.stringify(host.last)}`);
                 } catch (err) {
-                    record('stat-setCorruption', false, String((err as Error)?.message ?? err));
+                    record('stat-setCorruption', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // setInsanity — same pattern
@@ -248,7 +250,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     await mod.setInsanity.call(host, evt, makeTarget({ value: '5', pipIndex: '2' }));
                     record('stat-setInsanity', typeof host.last.field === 'string', `last=${JSON.stringify(host.last)}`);
                 } catch (err) {
-                    record('stat-setInsanity', false, String((err as Error)?.message ?? err));
+                    record('stat-setInsanity', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // restoreFate — sets fate.value to fate.max
@@ -259,7 +261,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     // write to system.fate fired.
                     record('stat-restoreFate', typeof host.last.field === 'string' && host.last.field.includes('fate'), `last=${JSON.stringify(host.last)}`);
                 } catch (err) {
-                    record('stat-restoreFate', false, String((err as Error)?.message ?? err));
+                    record('stat-restoreFate', false, err instanceof Error ? err.message : String(err));
                 }
 
                 // spendFate — confirms via ConfirmationDialog. We provide a
@@ -272,7 +274,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     await mod.spendFate.call(host, evt, makeTarget({}));
                     record('stat-spendFate', true, `last=${JSON.stringify(host.last)}`);
                 } catch (err) {
-                    record('stat-spendFate', false, String((err as Error)?.message ?? err));
+                    record('stat-spendFate', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
                 for (const k of [
@@ -287,7 +289,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                     'stat-restoreFate',
                     'stat-spendFate',
                 ] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 

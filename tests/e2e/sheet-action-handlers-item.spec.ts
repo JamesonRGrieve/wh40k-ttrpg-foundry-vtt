@@ -102,18 +102,18 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
-            const ui = g.ui;
+            const ActorCls = g.Actor;
+            const gameObj = g.game;
+            const uiObj = g.ui;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create) {
+            if (ActorCls?.create == null) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'weapon-sheet::rollAttack': 'Actor.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'weapon-sheet::rollAttack': 'Actor.create unavailable' },
                 };
             }
 
@@ -127,13 +127,13 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
             /** Drain any open dialog / confirmation / sheet popouts spawned by an action. */
             async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                const windows = Object.values(uiObj?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
                     const id = w?.id ?? '';
                     if (id.includes('dialog') || id.includes('prompt') || id.includes('confirm') || id.includes('editor')) {
@@ -169,7 +169,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
             let pc: any = null;
             try {
                 pc = (await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'sheet-action-item-spec-pc',
                         type: 'dh2-character',
                         system: { gameSystem: 'dh2e' },
@@ -177,20 +177,20 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     5_000,
                     'PC Actor.create',
                 )) as any;
-                if (pc?.id) {
+                if (pc?.id != null) {
                     cleanups.push(async () => {
                         try {
-                            await game?.actors?.get?.(pc.id)?.delete?.();
+                            await gameObj?.actors?.get?.(pc.id)?.delete?.();
                         } catch {
                             /* ignore */
                         }
                     });
                 }
             } catch (err) {
-                for (const f of flows) notes[f] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
+                for (const f of flows) notes[f] = `PC create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (!pc?.id) {
+            if (pc?.id == null) {
                 return { flowsFired: fired, flowNotes: notes };
             }
 
@@ -200,7 +200,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                 setTimeout(r, 250);
             });
 
-            const getPc = () => game?.actors?.get?.(pc.id);
+            const getPc = () => gameObj?.actors?.get?.(pc.id);
 
             /**
              * Spin up an item of the given type, render its sheet, return
@@ -216,8 +216,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     return null;
                 }
                 const created = Array.isArray(createdRaw) ? (createdRaw as any[]) : [];
-                const item = created[0] ? live.items.get(created[0].id) : null;
-                if (!item) return null;
+                const item = created[0] != null ? live.items.get(created[0].id) : null;
+                if (item == null) return null;
                 cleanups.push(async () => {
                     try {
                         await item.delete?.();
@@ -226,7 +226,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     }
                 });
                 const sheet = item.sheet;
-                if (!sheet?.render) return { item, sheet: null };
+                if (sheet?.render == null) return { item, sheet: null };
                 try {
                     await withTimeout(sheet.render({ force: true }), 5_000, `render ${type} sheet`);
                 } catch {
@@ -260,7 +260,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     await withTimeout(Promise.resolve(handler.call(sheet, evt, target)), 5_000, `${actionName} dispatch`);
                     return { called: true, error: null };
                 } catch (err) {
-                    return { called: false, error: String((err as Error)?.message ?? err) };
+                    return { called: false, error: err instanceof Error ? err.message : String(err) };
                 }
             }
 
@@ -283,7 +283,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-weapon-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of [
                             'weapon-sheet::rollAttack',
                             'weapon-sheet::rollDamage',
@@ -308,14 +308,14 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             }
                             await closeOpenDialogs();
                         } catch (err) {
-                            notes['weapon-sheet::rollAttack'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['weapon-sheet::rollAttack'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // rollDamage — builds Roll, evaluates, posts to chat. We can detect via no-throw + a chat message delta.
                         try {
-                            const before = game?.messages?.size ?? 0;
+                            const before = gameObj?.messages?.size ?? 0;
                             const res = await runHandler(sheet, 'rollDamage', makeTarget({}));
-                            const after = game?.messages?.size ?? 0;
+                            const after = gameObj?.messages?.size ?? 0;
                             if (res.called) {
                                 fired['weapon-sheet::rollDamage'] = true;
                                 notes['weapon-sheet::rollDamage'] = `chat delta ${after - before}`;
@@ -323,7 +323,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['weapon-sheet::rollDamage'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['weapon-sheet::rollDamage'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['weapon-sheet::rollDamage'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // expendAmmo — decrements system.clip.value by 1.
@@ -339,7 +339,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['weapon-sheet::expendAmmo'] = res.error ?? `clip stayed at ${after} (expected ${before - 1})`;
                             }
                         } catch (err) {
-                            notes['weapon-sheet::expendAmmo'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['weapon-sheet::expendAmmo'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // loadAmmo — reads target.dataset.ammoUuid; the bogus UUID makes fromUuid return null which triggers a notification path. Either way, dispatch must not throw.
@@ -352,7 +352,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['weapon-sheet::loadAmmo'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['weapon-sheet::loadAmmo'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['weapon-sheet::loadAmmo'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // toggleFab — toggles internal flag + classList on .wh40k-fab-container. Dispatch must not throw.
@@ -365,7 +365,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['weapon-sheet::toggleFab'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['weapon-sheet::toggleFab'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['weapon-sheet::toggleFab'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // addModification — emits ui.notifications.info; dispatch must not throw.
@@ -378,7 +378,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['weapon-sheet::onAddModification'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['weapon-sheet::onAddModification'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['weapon-sheet::onAddModification'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -407,7 +407,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-armour-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of [
                             'armour-sheet::toggleCoverage',
                             'armour-sheet::addProperty',
@@ -432,7 +432,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['armour-sheet::toggleCoverage'] = res.error ?? `head not in ${JSON.stringify(coverage)}`;
                             }
                         } catch (err) {
-                            notes['armour-sheet::toggleCoverage'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-sheet::toggleCoverage'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // addProperty — reads "new-property" select; we inject a hidden input with the same name so the handler picks it up.
@@ -444,7 +444,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             opt.value = 'blessed';
                             opt.selected = true;
                             injected.appendChild(opt);
-                            if (root) root.appendChild(injected);
+                            if (root != null) root.appendChild(injected);
 
                             const res = await runHandler(sheet, 'addProperty', makeTarget({}));
                             const fresh = getPc()?.items?.get?.(item.id);
@@ -455,9 +455,9 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             } else {
                                 notes['armour-sheet::addProperty'] = res.error ?? `blessed not in ${JSON.stringify(props)}`;
                             }
-                            if (root) root.removeChild(injected);
+                            if (root != null) root.removeChild(injected);
                         } catch (err) {
-                            notes['armour-sheet::addProperty'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-sheet::addProperty'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // removeProperty — drops the given property identifier from the Set.
@@ -472,7 +472,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['armour-sheet::removeProperty'] = res.error ?? `sealed still in ${JSON.stringify(props)}`;
                             }
                         } catch (err) {
-                            notes['armour-sheet::removeProperty'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-sheet::removeProperty'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // addModification — emits a notification when availableModSlots <= 0. No throw is enough.
@@ -485,7 +485,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['armour-sheet::addModification'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['armour-sheet::addModification'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-sheet::addModification'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // removeMod — drops the modifications[modIndex] entry.
@@ -500,7 +500,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['armour-sheet::removeMod'] = res.error ?? `mods.length=${mods.length}`;
                             }
                         } catch (err) {
-                            notes['armour-sheet::removeMod'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-sheet::removeMod'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -520,7 +520,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-armour-mod-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of [
                             'armour-mod-sheet::toggleArmourType',
                             'armour-mod-sheet::adjustModifier',
@@ -544,7 +544,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['armour-mod-sheet::toggleArmourType'] = res.error ?? `medium not in ${JSON.stringify(types)}`;
                             }
                         } catch (err) {
-                            notes['armour-mod-sheet::toggleArmourType'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-mod-sheet::toggleArmourType'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // adjustModifier — applies a delta to modifiers.<field>.
@@ -557,7 +557,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['armour-mod-sheet::adjustModifier'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['armour-mod-sheet::adjustModifier'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-mod-sheet::adjustModifier'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // addProperty — adds to addedProperties.
@@ -572,7 +572,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['armour-mod-sheet::addProperty'] = res.error ?? `blessed not in ${JSON.stringify(added)}`;
                             }
                         } catch (err) {
-                            notes['armour-mod-sheet::addProperty'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-mod-sheet::addProperty'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // removeProperty — removes from addedProperties.
@@ -587,7 +587,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['armour-mod-sheet::removeProperty'] = res.error ?? `blessed still in ${JSON.stringify(added)}`;
                             }
                         } catch (err) {
-                            notes['armour-mod-sheet::removeProperty'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['armour-mod-sheet::removeProperty'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -605,7 +605,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-ammo-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of ['ammo-sheet::addQuality', 'ammo-sheet::removeAddedQuality', 'ammo-sheet::removeRemovedQuality']) {
                             notes[k] = 'ammo-sheet render failed';
                         }
@@ -618,7 +618,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             const injected = document.createElement('input');
                             injected.name = 'new-added-quality';
                             injected.value = 'powerful';
-                            if (root) root.appendChild(injected);
+                            if (root != null) root.appendChild(injected);
 
                             const res = await runHandler(sheet, 'addQuality', makeTarget({ type: 'added' }));
                             const fresh = getPc()?.items?.get?.(item.id);
@@ -629,9 +629,9 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             } else {
                                 notes['ammo-sheet::addQuality'] = res.error ?? `powerful not in ${JSON.stringify(added)}`;
                             }
-                            if (root) root.removeChild(injected);
+                            if (root != null) root.removeChild(injected);
                         } catch (err) {
-                            notes['ammo-sheet::addQuality'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['ammo-sheet::addQuality'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // removeAddedQuality — drops the given quality from addedQualities.
@@ -646,7 +646,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['ammo-sheet::removeAddedQuality'] = res.error ?? `accurate still in ${JSON.stringify(added)}`;
                             }
                         } catch (err) {
-                            notes['ammo-sheet::removeAddedQuality'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['ammo-sheet::removeAddedQuality'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // removeRemovedQuality — drops the given quality from removedQualities.
@@ -661,7 +661,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['ammo-sheet::removeRemovedQuality'] = res.error ?? `unreliable still in ${JSON.stringify(removed)}`;
                             }
                         } catch (err) {
-                            notes['ammo-sheet::removeRemovedQuality'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['ammo-sheet::removeRemovedQuality'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -684,7 +684,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-talent-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of ['talent-sheet::rollTalent', 'talent-sheet::postToChat', 'talent-sheet::adjustRank', 'talent-sheet::switchTab']) {
                             notes[k] = 'talent-sheet render failed';
                         }
@@ -702,7 +702,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             }
                             await closeOpenDialogs();
                         } catch (err) {
-                            notes['talent-sheet::rollTalent'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['talent-sheet::rollTalent'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // postToChat — calls system.toChat() + posts a card. No throw.
@@ -715,7 +715,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['talent-sheet::postToChat'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['talent-sheet::postToChat'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['talent-sheet::postToChat'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // adjustRank — writes system.rank with the delta. Talent must be stackable (it is — set above).
@@ -730,7 +730,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['talent-sheet::adjustRank'] = res.error ?? `rank=${rank} (expected 2)`;
                             }
                         } catch (err) {
-                            notes['talent-sheet::adjustRank'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['talent-sheet::adjustRank'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // switchTab — calls this.changeTab(tab, group). Dispatch must not throw.
@@ -743,7 +743,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['talent-sheet::switchTab'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['talent-sheet::switchTab'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['talent-sheet::switchTab'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -760,7 +760,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-gear-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of ['gear-sheet::resetUses', 'gear-sheet::consumeUse']) {
                             notes[k] = 'gear-sheet render failed';
                         }
@@ -777,7 +777,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['gear-sheet::resetUses'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['gear-sheet::resetUses'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['gear-sheet::resetUses'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // consumeUse — calls system.consume(). No throw.
@@ -790,7 +790,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['gear-sheet::consumeUse'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['gear-sheet::consumeUse'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['gear-sheet::consumeUse'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -811,7 +811,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-container-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of ['container-item-sheet::nestedItemCreate', 'container-item-sheet::nestedItemRoll']) {
                             notes[k] = 'container-item-sheet render failed';
                         }
@@ -831,7 +831,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['container-item-sheet::nestedItemCreate'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['container-item-sheet::nestedItemCreate'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['container-item-sheet::nestedItemCreate'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // nestedItemRoll — placeholder; just calls event.preventDefault().
@@ -844,7 +844,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['container-item-sheet::nestedItemRoll'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['container-item-sheet::nestedItemRoll'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['container-item-sheet::nestedItemRoll'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -864,7 +864,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-endeavour-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of ['endeavour-sheet::addObjective', 'endeavour-sheet::removeObjective']) {
                             notes[k] = 'endeavour-sheet render failed';
                         }
@@ -883,7 +883,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['endeavour-sheet::addObjective'] = res.error ?? `objectives.length=${objectives.length}`;
                             }
                         } catch (err) {
-                            notes['endeavour-sheet::addObjective'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['endeavour-sheet::addObjective'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // removeObjective — removes index 0 (the original entry); resulting length should be 1.
@@ -898,7 +898,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['endeavour-sheet::removeObjective'] = res.error ?? `objectives.length=${objectives.length}`;
                             }
                         } catch (err) {
-                            notes['endeavour-sheet::removeObjective'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['endeavour-sheet::removeObjective'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -935,7 +935,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         'probe-npc-template-actions',
                     );
 
-                    if (!made?.sheet) {
+                    if (made?.sheet == null) {
                         for (const k of [
                             'npc-template-sheet::addSkill',
                             'npc-template-sheet::removeSkill',
@@ -959,7 +959,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['npc-template-sheet::addSkill'] = res.error ?? `trainedSkills.length=${skills.length}`;
                             }
                         } catch (err) {
-                            notes['npc-template-sheet::addSkill'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-template-sheet::addSkill'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // removeSkill — pops the entry at the given index.
@@ -974,7 +974,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['npc-template-sheet::removeSkill'] = res.error ?? `trainedSkills.length=${skills.length}`;
                             }
                         } catch (err) {
-                            notes['npc-template-sheet::removeSkill'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-template-sheet::removeSkill'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // addTrait — appends a default new-trait stub.
@@ -989,7 +989,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['npc-template-sheet::addTrait'] = res.error ?? `traits.length=${traits.length}`;
                             }
                         } catch (err) {
-                            notes['npc-template-sheet::addTrait'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-template-sheet::addTrait'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
 
                         // updatePreview — re-renders the preview part. No throw + sheet still rendered.
@@ -1002,7 +1002,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 notes['npc-template-sheet::updatePreview'] = res.error ?? 'no error';
                             }
                         } catch (err) {
-                            notes['npc-template-sheet::updatePreview'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['npc-template-sheet::updatePreview'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                 }
@@ -1027,8 +1027,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
         }, SHEET_ACTION_ITEM_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

@@ -22,7 +22,7 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
         const ActorCls = g.Actor;
-        if (!ActorCls?.create) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
+        if (ActorCls?.create == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
@@ -35,9 +35,9 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
                 },
             });
         } catch (err) {
-            return { setupOk: false, btnCount: 0, hasTitle: false, error: String((err as Error)?.message ?? err) };
+            return { setupOk: false, btnCount: 0, hasTitle: false, error: err instanceof Error ? err.message : String(err) };
         }
-        if (!actor) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
+        if (actor == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
         await new Promise<void>((r) => {
@@ -55,7 +55,7 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
 
         const root = actor.sheet?.element;
         const panel = root?.querySelector?.('.wh40k-possession-panel');
-        const btnCount = panel ? panel.querySelectorAll('.wh40k-possession-frenzy-btn, .wh40k-possession-mismanifest-btn').length : 0;
+        const btnCount = panel != null ? panel.querySelectorAll('.wh40k-possession-frenzy-btn, .wh40k-possession-mismanifest-btn').length : 0;
         const hasTitle = Boolean(panel?.querySelector?.('h3'));
         return { setupOk: true, btnCount, hasTitle, error: null };
     });

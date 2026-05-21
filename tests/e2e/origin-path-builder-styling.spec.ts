@@ -42,8 +42,8 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) {
+        const ActorCls = g.Actor;
+        if (!ActorCls?.create) {
             return {
                 setupOk: false,
                 error: 'Actor.create unavailable',
@@ -70,7 +70,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
 
         let actor: any;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'origin-builder-styling-probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e' },
@@ -123,7 +123,9 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
             builder = new OriginPathBuilder(actor, {});
             await builder.render(true);
             // Allow _loadOrigins() and the first render() to settle.
-            await new Promise((r) => setTimeout(r, 300));
+            await new Promise<void>((r) => {
+                setTimeout(r, 300);
+            });
         } catch (err) {
             try {
                 await actor.delete?.();
@@ -181,7 +183,9 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
                 builder.currentStepIndex = charStepIdx;
                 builder.showCharacteristics = true;
                 await builder.render();
-                await new Promise((r) => setTimeout(r, 120));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 120);
+                });
                 const workspace = root?.querySelector?.('.csd-workspace');
                 if (workspace) {
                     const cls = workspace.getAttribute('class') ?? '';

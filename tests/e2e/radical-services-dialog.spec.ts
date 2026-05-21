@@ -16,14 +16,14 @@ test.describe.serial('Radical Services dialog (#89)', () => {
         const result = await page.evaluate(async () => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            if (!Actor?.create) {
+            const ActorCls = g.Actor;
+            if (!ActorCls?.create) {
                 return { ok: false, reason: 'Actor.create unavailable' as const };
             }
 
             let actor: any;
             try {
-                actor = await Actor.create({
+                actor = await ActorCls.create({
                     name: 'radical-services-probe',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e', influence: 40 },
@@ -38,8 +38,8 @@ test.describe.serial('Radical Services dialog (#89)', () => {
             try {
                 const modUrl = '/systems/wh40k-rpg/module/applications/prompts/radical-services-dialog.js';
                 const mod: any = await import(/* @vite-ignore */ modUrl);
-                const Dialog = mod.default;
-                const dialog = new Dialog(actor);
+                const DialogCls = mod.default;
+                const dialog = new DialogCls(actor);
                 await dialog.render({ force: true });
                 const root = dialog.element as HTMLElement | null;
                 if (!(root instanceof HTMLElement)) {
@@ -48,7 +48,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
                 const rows = root.querySelectorAll('[data-action="selectService"]');
                 const attempt = root.querySelector<HTMLButtonElement>('[data-action="attemptRequisition"]');
                 const cancel = root.querySelector('[data-action="cancel"]');
-                const snap = {
+                const snapData = {
                     rowCount: rows.length,
                     attemptDisabled: attempt?.disabled ?? null,
                     hasCancel: cancel !== null,
@@ -58,7 +58,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
                 } catch {
                     /* ignore */
                 }
-                return { ok: true as const, snap };
+                return { ok: true as const, snap: snapData };
             } catch (err) {
                 return { ok: false, reason: `render failed: ${String((err as Error)?.message ?? err)}` };
             }

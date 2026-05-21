@@ -49,7 +49,7 @@ describe.skipIf(!ok)('loot drop/pickup (Tier A)', () => {
         };
         if (!loot.createEmbeddedDocuments) return;
         const [created] = await loot.createEmbeddedDocuments('Item', [{ name: 'Charge Pack', type: 'ammunition', system: { quantity: 2 } }]);
-        const receiverExisting = [{ ...(created?.toObject() ?? {}), _id: 'existing' }] as never;
+        const receiverExisting = [{ ...created.toObject(), _id: 'existing' }] as never;
         const incoming = [{ name: 'Charge Pack', type: 'ammunition', system: { quantity: 3 } }];
         const plan = ItemDropManager.planStackMerge(receiverExisting, incoming);
         expect(plan.updates).toEqual([{ _id: 'existing', quantity: 5 }]);

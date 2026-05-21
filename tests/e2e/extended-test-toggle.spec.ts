@@ -58,7 +58,7 @@ test.describe.serial('extended test toggle (#59)', () => {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
             } catch (err) {
-                return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}`, snaps: null };
+                return { error: `dialog render threw: ${err instanceof Error ? err.message : String(err)}`, snaps: null };
             }
 
             await new Promise<void>((r) => {

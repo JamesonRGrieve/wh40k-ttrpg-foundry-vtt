@@ -58,7 +58,9 @@ test.describe.serial('WarpTravelDialog (Tier B)', () => {
                     const inst = new Cls({});
                     try {
                         await inst.render({ force: true });
-                        await new Promise((r) => setTimeout(r, 80));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 80);
+                        });
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);
                     }

@@ -51,7 +51,9 @@ test.describe.serial('IncorruptibleDevotionDialog (Tier B)', () => {
                     const inst = new Cls({ corruptionAmount: 3 });
                     try {
                         await inst.render(true);
-                        await new Promise((r) => setTimeout(r, 60));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 60);
+                        });
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);
                     }

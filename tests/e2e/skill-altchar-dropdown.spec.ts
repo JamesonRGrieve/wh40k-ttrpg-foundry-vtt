@@ -90,22 +90,24 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                 return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}`, snaps: null };
             }
 
-            await new Promise((r) => setTimeout(r, 100));
+            await new Promise<void>((resolve) => {
+                setTimeout(resolve, 100);
+            });
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
             }
 
             function readState(label: string): Record<string, unknown> {
-                const select = root!.querySelector<HTMLSelectElement>('.wh40k-skill-char-override__select');
+                const charSelect = root!.querySelector<HTMLSelectElement>('.wh40k-skill-char-override__select');
                 const target = root!.querySelector<HTMLElement>('.urd-target__number');
                 const halved = root!.querySelector<HTMLElement>('[data-testid="skill-untrained-halved"]');
                 const blocked = root!.querySelector<HTMLElement>('[data-testid="skill-untrained-advanced"]');
                 return {
                     label,
-                    rendered: select !== null,
-                    optionCount: select?.options.length ?? 0,
-                    currentValue: select?.value ?? null,
+                    rendered: charSelect !== null,
+                    optionCount: charSelect?.options.length ?? 0,
+                    currentValue: charSelect?.value ?? null,
                     target: target?.textContent?.trim() ?? null,
                     halvedVisible: halved !== null,
                     blockedVisible: blocked !== null,
@@ -120,7 +122,9 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                 select.value = 'toughness';
                 select.dispatchEvent(new Event('change', { bubbles: true }));
             }
-            await new Promise((r) => setTimeout(r, 80));
+            await new Promise<void>((resolve) => {
+                setTimeout(resolve, 80);
+            });
             const afterSwap = readState('after-toughness');
 
             return { error: null, snaps: { initial, afterSwap } };

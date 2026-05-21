@@ -40,7 +40,7 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
             return { id: null, error: String((err as Error)?.message ?? err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id == null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
@@ -77,7 +77,7 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
                 const actor = g.game?.actors?.get?.(id);
-                if (!actor) return { error: 'actor lookup failed' };
+                if (actor == null) return { error: 'actor lookup failed' };
                 let rendered = false;
                 let hasPanel = false;
                 let hasRequestBtn = false;
@@ -92,14 +92,14 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                     cooldownBefore = actor.system?.supportCooldown ?? null;
                     awardRosterSize = Array.isArray(actor.system?.regimentalAwards) ? actor.system.regimentalAwards.length : null;
                     const sheet = actor.sheet;
-                    if (!sheet) return { error: 'actor.sheet is null' };
+                    if (sheet == null) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
                     await new Promise((r) => {
                         setTimeout(r, 120);
                     });
                     rendered = sheet.element instanceof HTMLElement;
 
-                    if (rendered && sheet.element) {
+                    if (rendered && sheet.element != null) {
                         const el: HTMLElement = sheet.element;
                         const panel = el.querySelector('.wh40k-ow-battlefield-panel');
                         hasPanel = panel !== null;

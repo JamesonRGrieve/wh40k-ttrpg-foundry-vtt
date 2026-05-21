@@ -88,14 +88,14 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
+            const ActorCls = g.Actor;
+            const gameG = g.game;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create) {
+            if (!ActorCls?.create) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'armour-ap-aggregation': 'Actor.create unavailable' },
@@ -125,7 +125,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             let pc: any = null;
             try {
                 pc = (await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'data-item-model-spec-pc',
                         type: 'dh2-character',
                         system: {
@@ -144,7 +144,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 if (pc?.id) {
                     cleanups.push(async () => {
                         try {
-                            await game?.actors?.get?.(pc.id)?.delete?.();
+                            await gameG?.actors?.get?.(pc.id)?.delete?.();
                         } catch {
                             /* ignore */
                         }
@@ -165,7 +165,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 setTimeout(r, 250);
             });
 
-            const getPc = (): any => game?.actors?.get?.(pc.id);
+            const getPc = (): any => gameG?.actors?.get?.(pc.id);
 
             /**
              * Create one embedded item, register it for cleanup, return the

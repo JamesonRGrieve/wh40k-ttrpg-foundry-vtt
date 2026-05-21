@@ -37,8 +37,8 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e', fate: { max: 5, value: 3, threshold: 0 } },
             });
-        } catch (err) {
-            return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: String((err as Error)?.message ?? err) };
+        } catch (setupErr) {
+            return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: String((setupErr as Error).message) };
         }
 
         if (!withThreshold || !withoutThreshold) {
