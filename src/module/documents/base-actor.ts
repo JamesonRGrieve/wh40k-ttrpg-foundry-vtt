@@ -139,7 +139,7 @@ export class WH40KBaseActor extends Actor {
                 primitive: null,
                 // Owned-item name mirrors the compendium document (resync keeps
                 // it synced); never a hardcoded string.
-                label: item.name ?? '',
+                label: item.name,
                 kind: effect.kind,
                 delta: effect.delta,
                 minAbsoluteDelta: effect.minAbsoluteDelta,
@@ -201,6 +201,7 @@ export class WH40KBaseActor extends Actor {
         }
         if (delta === 0) return;
         const next = Math.max(0, Math.min(subtlety.max, subtlety.value + delta));
+        // eslint-disable-next-line no-restricted-syntax -- boundary: update() accepts Record<string, unknown>; this is a documented acceptable boundary per CLAUDE.md
         const updateData: Record<string, unknown> = { 'system.subtlety.value': next };
         if (source !== undefined) updateData['flags.wh40k-rpg.lastSubtletySource'] = source;
         await this.update(updateData);
@@ -925,7 +926,7 @@ export class WH40KBaseActor extends Actor {
     #collectItemModifiers(modifiersArray: WH40KModifierEntry[], pick: (modifiers: ItemModifierCarrier['system']['modifiers']) => number | undefined): void {
         for (const item of [...this.items] as ItemModifierCarrier[]) {
             const value = pick(item.system.modifiers);
-            if (value && value !== 0) {
+            if (value !== undefined && value !== 0) {
                 modifiersArray.push({
                     source: item.name,
                     value: value,

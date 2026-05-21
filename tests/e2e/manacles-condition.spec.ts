@@ -75,7 +75,7 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
         const root = actor.sheet?.element;
         const effectRows = root?.querySelectorAll?.('[data-effect-id]') ?? [];
         let aeFound = false;
-        for (const row of Array.from(effectRows) as Element[]) {
+        for (const row of Array.from(effectRows as Iterable<Element>)) {
             const text = row.textContent ?? '';
             if (text.includes('Manacled')) {
                 aeFound = true;

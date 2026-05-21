@@ -66,7 +66,7 @@ async function loadPackBatch(page: Page, packIds: string[]): Promise<PackResult[
                             return {
                                 id,
                                 documentCount: null,
-                                error: String((err as Error)?.message ?? err),
+                                error: err instanceof Error ? err.message : String(err),
                             };
                         }
                     }),

@@ -49,7 +49,7 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
                 ],
             });
         } catch (err) {
-            return { setupOk: false, error: String((err as Error)?.message ?? err) };
+            return { setupOk: false, error: (err as Error).message };
         }
         if (actor == null) return { setupOk: false, error: 'Actor.create returned null' };
 

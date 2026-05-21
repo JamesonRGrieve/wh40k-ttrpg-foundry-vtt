@@ -58,11 +58,11 @@ test('dump enumerable inventory + reset coverage tracker', async ({ page }) => {
         const itemTypes = Object.keys(cfg?.Item?.dataModels ?? {});
         const actorSheets: Record<string, string[]> = {};
         for (const [type, sheets] of Object.entries(cfg?.Actor?.sheetClasses ?? {})) {
-            actorSheets[type] = Object.keys(sheets ?? {});
+            actorSheets[type] = Object.keys(sheets);
         }
         const itemSheets: Record<string, string[]> = {};
         for (const [type, sheets] of Object.entries(cfg?.Item?.sheetClasses ?? {})) {
-            itemSheets[type] = Object.keys(sheets ?? {});
+            itemSheets[type] = Object.keys(sheets);
         }
         const statusEffects = (cfg?.statusEffects ?? []).map((s) => s.id);
         const compendiumPacks = gameRef?.packs ? Array.from(gameRef.packs.keys()) : [];
