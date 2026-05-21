@@ -78,7 +78,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 try {
                     return await import(`${base}/${name}.js`);
                 } catch (err) {
-                    return { __importError: String((err as Error)?.message ?? err) };
+                    return { __importError: err instanceof Error ? err.message : String(err) };
                 }
             };
 
@@ -91,19 +91,19 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const dd = damageType.damageTypeDropdown();
                     record('damage-type-dropdown', dd !== null && typeof dd === 'object' && Object.keys(dd).length > 0, null);
                 } catch (err) {
-                    record('damage-type-dropdown', false, String((err as Error)?.message ?? err));
+                    record('damage-type-dropdown', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const names = damageType.damageTypeNames();
                     record('damage-type-names', Array.isArray(names) && names.length > 0, null);
                 } catch (err) {
-                    record('damage-type-names', false, String((err as Error)?.message ?? err));
+                    record('damage-type-names', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const arr = damageType.damageType() as Array<{ name?: unknown }>;
                     record('damage-type-array', Array.isArray(arr) && arr.length > 0 && typeof arr[0]?.name === 'string', null);
                 } catch (err) {
-                    record('damage-type-array', false, String((err as Error)?.message ?? err));
+                    record('damage-type-array', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
@@ -122,7 +122,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                         null,
                     );
                 } catch (err) {
-                    record('weapon-jam-floor', false, String((err as Error)?.message ?? err));
+                    record('weapon-jam-floor', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const r1 = weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 96, success: false, hasReliable: false, hasUnreliable: true });
@@ -130,7 +130,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const r3 = weaponJam.shouldJamRoll({ action: 'full', rollTotal: 100, success: false, hasReliable: false, hasUnreliable: false });
                     record('weapon-jam-shouldRoll', typeof r1 === 'boolean' && typeof r2 === 'boolean' && typeof r3 === 'boolean', null);
                 } catch (err) {
-                    record('weapon-jam-shouldRoll', false, String((err as Error)?.message ?? err));
+                    record('weapon-jam-shouldRoll', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
@@ -157,14 +157,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                         `yes=${String(yes)} no=${String(no)} nullProbe=${String(nullProbe)}`,
                     );
                 } catch (err) {
-                    record('quality-weaponHasQuality', false, String((err as Error)?.message ?? err));
+                    record('quality-weaponHasQuality', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const yes = wq.rollDataHasQuality(fakeRollData, 'Tearing');
                     const no = wq.rollDataHasQuality(fakeRollData, 'Felling');
                     record('quality-rollDataHasQuality', yes === true && no === false, null);
                 } catch (err) {
-                    record('quality-rollDataHasQuality', false, String((err as Error)?.message ?? err));
+                    record('quality-rollDataHasQuality', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     // getWeaponParryModifier walks the same effectiveSpecial Set;
@@ -173,7 +173,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const noParry = wq.getWeaponParryModifier(null);
                     record('quality-getWeaponParryModifier', typeof parry === 'number' && typeof noParry === 'number', null);
                 } catch (err) {
-                    record('quality-getWeaponParryModifier', false, String((err as Error)?.message ?? err));
+                    record('quality-getWeaponParryModifier', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
@@ -190,7 +190,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const missing = cd.getFuzzy(obj, 'leg');
                     record('critical-damage-getFuzzy', head === 'head-result' && body === 'body-result' && missing === undefined, null);
                 } catch (err) {
-                    record('critical-damage-getFuzzy', false, String((err as Error)?.message ?? err));
+                    record('critical-damage-getFuzzy', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     // loadCriticalDamageTable resolves a roll-table compendium; in
@@ -201,13 +201,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const tbl = await cd.loadCriticalDamageTable();
                     record('critical-damage-loadTable', tbl !== null && typeof tbl === 'object', null);
                 } catch (err) {
-                    record('critical-damage-loadTable', false, String((err as Error)?.message ?? err));
+                    record('critical-damage-loadTable', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     cd.invalidateCriticalDamageCache();
                     record('critical-damage-invalidateCache', true, null);
                 } catch (err) {
-                    record('critical-damage-invalidateCache', false, String((err as Error)?.message ?? err));
+                    record('critical-damage-invalidateCache', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
@@ -221,13 +221,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const noMatch = cfg.fieldMatch('head', 'body');
                     record('config-fieldMatch', match === true && noMatch === false, null);
                 } catch (err) {
-                    record('config-fieldMatch', false, String((err as Error)?.message ?? err));
+                    record('config-fieldMatch', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     cfg.toggleUIExpanded('probe-section');
                     record('config-toggleUIExpanded', true, null);
                 } catch (err) {
-                    record('config-toggleUIExpanded', false, String((err as Error)?.message ?? err));
+                    record('config-toggleUIExpanded', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
@@ -255,7 +255,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                         `usesAmmo=${String(usesAmmo)} noAmmo=${String(noAmmo)}`,
                     );
                 } catch (err) {
-                    record('ammo-ammoText', false, String((err as Error)?.message ?? err));
+                    record('ammo-ammoText', false, err instanceof Error ? err.message : String(err));
                 }
             }
 

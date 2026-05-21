@@ -37,10 +37,10 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
-    if (result.id == null) return { error: result.error ?? 'unknown create error' };
+    if (result.id == null) return { error: result.error ?? 'unknown' };
     return { id: result.id };
 }
 
@@ -112,7 +112,7 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
 
                     g.__c161sheet = sheet;
                 } catch (err) {
-                    probeError = String((err as Error)?.message ?? err);
+                    probeError = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

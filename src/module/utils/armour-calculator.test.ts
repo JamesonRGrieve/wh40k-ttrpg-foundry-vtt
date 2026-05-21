@@ -14,6 +14,7 @@ import { computeArmour } from './armour-calculator';
  * of the trait-bonus accumulator cannot silently regress the errata fix.
  */
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: test mock type; system fields are structurally unknown outside the test helper
 type ItemLike = { type: string; name: string; system: Record<string, unknown> };
 
 interface MockActorOpts {

@@ -203,7 +203,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                                 : false;
                             record(
                                 `config-identity::${id}`,
-                                Boolean(labelOk && cssOk && flagsExclusive && familyOk),
+                                Boolean(labelOk) && Boolean(cssOk) && flagsExclusive && Boolean(familyOk),
                                 `label=${cfg?.label} css=${cfg?.cssClass} apt=${cfg?.usesAptitudes} career=${cfg?.usesCareerTables}`,
                             );
                         } catch (err) {

@@ -213,10 +213,12 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
         if (index === 0 && row.description === ORDINARY_BONUS_KEY) {
             return { labelKey: ORDINARY_LABEL_KEY, value: row.value };
         }
-        const sourceModifier = modifiers[index - 1]!;
+        // breakdown.length === modifiers.length + 1 (ordinary bonus at index 0 + one per modifier),
+        // so sourceModifier is always defined when index >= 1.
+        const sourceModifier = modifiers[index - 1];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ReadonlyArray index yields T | undefined under tsc strict; ESLint sees T only via tsconfig.test.json project
+        if (sourceModifier === undefined) return { labelKey: CUSTOM_LABEL_KEY, value: row.value };
         return {
-            // breakdown.length === modifiers.length + 1 (ordinary bonus at index 0 + one per modifier),
-            // so sourceModifier is always defined when index >= 1.
             labelKey: sourceModifier.labelKey,
             value: row.value,
         };

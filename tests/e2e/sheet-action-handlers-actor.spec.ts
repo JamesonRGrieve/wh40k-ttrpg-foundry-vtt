@@ -118,7 +118,6 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
             // Drain stray dialogs so the next probe's window stack stays clean.
             async function closeOpenDialogs(): Promise<void> {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- browser-side: uiCtx is `any` from globalThis cast
                 const windows = Object.values(uiCtx?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
                     const id = w.id ?? '';
@@ -985,8 +984,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
         }, SHEET_ACTION_ACTOR_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

@@ -26,9 +26,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** Action handler bound with a `this` context, matching the Mixin's expectations. */
-type ActionHandler = (this: SancticPurityPrompt, event: Event, target: HTMLElement) => Promise<void>;
-
 /**
  * Minimal duck-type for an actor that owns a Fate pool — both the
  * DH2 character DataModel and the NPC DataModel satisfy this shape.
@@ -183,7 +180,7 @@ export default class SancticPurityPrompt extends ApplicationV2Mixin(ApplicationV
         };
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/sanctic-purity-negated-chat.hbs', templateData);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
     }
 }

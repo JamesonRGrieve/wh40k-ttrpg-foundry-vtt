@@ -42,8 +42,9 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars compile context parameter is opaque; unknown is the correct parameter annotation here
                     const HandlebarsInstance = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsInstance?.compile !== 'function') {
+                    if (typeof HandlebarsInstance.compile !== 'function') {
                         return {
                             rendered,
                             giftEntries,
@@ -129,7 +130,7 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
                     // it down here would leave the screenshot empty.
                     (globalThis as any).__bcGiftsPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return {

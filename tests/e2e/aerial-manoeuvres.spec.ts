@@ -67,7 +67,7 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
                     const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, hasCardRoot, hasSystemAnchor, hasFreeAttackBanner, messageId, error };

@@ -17,21 +17,24 @@ describe.skipIf(!ok)('loot drop/pickup (Tier A)', () => {
     it('registers the content-agnostic loot actor type', async () => {
         const result = await bootFoundryOnce();
         if (!result.booted) return;
-        const cfg = result.runtime?.CONFIG as { Actor?: { dataModels?: Record<string, unknown> } } | undefined;
+        if (result.runtime === undefined) return;
+        const cfg = result.runtime.CONFIG as { Actor?: { dataModels?: Record<string, unknown> } } | undefined;
         expect(cfg?.Actor?.dataModels?.['loot']).toBeDefined();
     });
 
     it('creates a loot pile actor and prepareData runs without throwing', async () => {
         const result = await bootFoundryOnce();
         if (!result.booted) return;
-        const loot = await createActor(result.runtime!, { type: 'loot', name: 'Dropped: Test' });
+        if (result.runtime === undefined) return;
+        const loot = await createActor(result.runtime, { type: 'loot', name: 'Dropped: Test' });
         expect(loot).toBeDefined();
     });
 
     it('embeds an item in a loot pile and reports it as non-empty', async () => {
         const result = await bootFoundryOnce();
         if (!result.booted) return;
-        const loot = (await createActor(result.runtime!, { type: 'loot', name: 'Dropped: Knife' })) as {
+        if (result.runtime === undefined) return;
+        const loot = (await createActor(result.runtime, { type: 'loot', name: 'Dropped: Knife' })) as {
             createEmbeddedDocuments?: (t: string, d: object[]) => Promise<unknown[]>;
             system?: { isEmpty?: boolean; itemCount?: number };
         };
@@ -44,7 +47,8 @@ describe.skipIf(!ok)('loot drop/pickup (Tier A)', () => {
     it('the pure transfer planner stacks against real document toObject() shapes', async () => {
         const result = await bootFoundryOnce();
         if (!result.booted) return;
-        const loot = (await createActor(result.runtime!, { type: 'loot', name: 'Dropped: Ammo' })) as {
+        if (result.runtime === undefined) return;
+        const loot = (await createActor(result.runtime, { type: 'loot', name: 'Dropped: Ammo' })) as {
             createEmbeddedDocuments?: (t: string, d: object[]) => Promise<Array<{ toObject: () => Record<string, unknown> }>>;
         };
         if (!loot.createEmbeddedDocuments) return;

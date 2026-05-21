@@ -405,7 +405,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             const actorSkill = rollKey !== null ? sourceActor?.skills?.[rollKey] : undefined;
             const listedChar = actorSkill?.characteristic ?? '';
             const advance = Number(actorSkill?.advance ?? 0);
-            const skillCurrent = Number(actorSkill?.current ?? rollData.baseTarget ?? 0);
+            const skillCurrent = Number(actorSkill?.current ?? rollData.baseTarget);
             const listedCharTotal = Number(sourceActor?.characteristics?.[listedChar]?.total ?? 0);
             const trainingBonus = skillCurrent - listedCharTotal;
 
@@ -477,7 +477,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             };
         }
 
-        const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : skillBaseOverride !== null ? skillBaseOverride : rollData.baseTarget || 0;
+        const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : (skillBaseOverride ?? rollData.baseTarget) || 0;
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
         const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational', 'psy-mode', 'assistance']);

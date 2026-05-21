@@ -79,18 +79,18 @@ test.describe.serial('psychic push selector', () => {
                 return { error: 'dialog.element is not an HTMLElement' };
             }
 
-            function snap(label: string): Record<string, unknown> {
-                const fett = root!.querySelector<HTMLButtonElement>('[data-testid="psy-mode-fettered"]');
-                const unfett = root!.querySelector<HTMLButtonElement>('[data-testid="psy-mode-unfettered"]');
-                const push = root!.querySelector<HTMLButtonElement>('[data-testid="psy-mode-push"]');
-                const stepper = root!.querySelector<HTMLElement>('[data-testid="psy-push-stepper"]');
-                const level = root!.querySelector<HTMLElement>('[data-testid="psy-push-level-value"]');
-                const effPR = root!.querySelector<HTMLElement>('[data-testid="psy-effective-pr"]');
-                const focusMod = root!.querySelector<HTMLElement>('[data-testid="psy-focus-mod"]');
-                const phenomena = root!.querySelector<HTMLElement>('[data-testid="psy-force-phenomena"]');
+            function snap(el: HTMLElement, label: string): Record<string, unknown> {
+                const fett = el.querySelector<HTMLButtonElement>('[data-testid="psy-mode-fettered"]');
+                const unfett = el.querySelector<HTMLButtonElement>('[data-testid="psy-mode-unfettered"]');
+                const push = el.querySelector<HTMLButtonElement>('[data-testid="psy-mode-push"]');
+                const stepper = el.querySelector<HTMLElement>('[data-testid="psy-push-stepper"]');
+                const level = el.querySelector<HTMLElement>('[data-testid="psy-push-level-value"]');
+                const effPR = el.querySelector<HTMLElement>('[data-testid="psy-effective-pr"]');
+                const focusMod = el.querySelector<HTMLElement>('[data-testid="psy-focus-mod"]');
+                const phenomena = el.querySelector<HTMLElement>('[data-testid="psy-force-phenomena"]');
                 return {
                     label,
-                    selector: root!.querySelector('[data-testid="psy-mode-selector"]') !== null,
+                    selector: el.querySelector('[data-testid="psy-mode-selector"]') !== null,
                     fetteredActive: fett?.className.includes('tw-bg-blue-900/40') ?? false,
                     unfetteredActive: unfett?.className.includes('tw-bg-[rgba(201,162,39,0.15)]') ?? false,
                     pushActive: push?.className.includes('tw-bg-red-900/40') ?? false,
@@ -102,9 +102,9 @@ test.describe.serial('psychic push selector', () => {
                 };
             }
 
-            async function clickAction(action: string): Promise<void> {
-                const el = root!.querySelector<HTMLElement>(`[data-action="${action}"]`);
-                el?.click();
+            async function clickAction(el: HTMLElement, action: string): Promise<void> {
+                const btn = el.querySelector<HTMLElement>(`[data-action="${action}"]`);
+                btn?.click();
                 await new Promise((r) => {
                     setTimeout(r, 50);
                 });
@@ -113,10 +113,10 @@ test.describe.serial('psychic push selector', () => {
             // Open the context panel (it starts expanded but render order may
             // collapse it; toggle as a no-op if already open).
             if (!root.querySelector('[data-testid="psy-mode-selector"]')) {
-                await clickAction('toggleContextSection');
+                await clickAction(root, 'toggleContextSection');
             }
 
-            const initial = snap('initial-unfettered');
+            const initial = snap(root, 'initial-unfettered');
 
             // Switch to Fettered.
             const fetteredBtn = root.querySelector<HTMLElement>('[data-testid="psy-mode-fettered"]');
@@ -124,7 +124,7 @@ test.describe.serial('psychic push selector', () => {
             await new Promise((r) => {
                 setTimeout(r, 50);
             });
-            const fettered = snap('fettered');
+            const fettered = snap(root, 'fettered');
 
             // Switch to Push, then increment twice (1 -> 2 -> 3), then try to overshoot.
             const pushBtn = root.querySelector<HTMLElement>('[data-testid="psy-mode-push"]');
@@ -132,31 +132,31 @@ test.describe.serial('psychic push selector', () => {
             await new Promise((r) => {
                 setTimeout(r, 50);
             });
-            const push1 = snap('push-1');
+            const push1 = snap(root, 'push-1');
 
             const inc = root.querySelector<HTMLElement>('[data-testid="psy-push-increment"]');
             inc?.click();
             await new Promise((r) => {
                 setTimeout(r, 50);
             });
-            const push2 = snap('push-2');
+            const push2 = snap(root, 'push-2');
             inc?.click();
             await new Promise((r) => {
                 setTimeout(r, 50);
             });
-            const push3 = snap('push-3');
+            const push3 = snap(root, 'push-3');
             inc?.click(); // should clamp at 3
             await new Promise((r) => {
                 setTimeout(r, 50);
             });
-            const push3Clamped = snap('push-3-clamped');
+            const push3Clamped = snap(root, 'push-3-clamped');
 
             const dec = root.querySelector<HTMLElement>('[data-testid="psy-push-decrement"]');
             dec?.click();
             await new Promise((r) => {
                 setTimeout(r, 50);
             });
-            const push2Back = snap('push-2-back');
+            const push2Back = snap(root, 'push-2-back');
 
             try {
                 await dialog.close?.();

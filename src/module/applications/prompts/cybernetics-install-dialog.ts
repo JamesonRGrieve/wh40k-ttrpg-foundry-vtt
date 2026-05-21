@@ -27,8 +27,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-type ActionHandler = (this: CyberneticsInstallDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 const CRAFTSMANSHIP_OPTIONS: ReadonlyArray<{ id: CyberneticCraftsmanship; labelKey: string }> = Object.freeze([
     { id: 'poor', labelKey: 'WH40K.Craftsmanship.Poor' },
     { id: 'common', labelKey: 'WH40K.Craftsmanship.Common' },
@@ -207,7 +205,7 @@ export default class CyberneticsInstallDialog extends ApplicationV2Mixin(Applica
         });
 
         const rollResult = await new Roll('1d100').evaluate();
-        const roll = Number(rollResult.total ?? 1);
+        const roll = Number(rollResult.total);
         const resolution = resolveInstall(composition, roll);
         const recovery = rollRecoveryTime(this.toughnessBonus);
 

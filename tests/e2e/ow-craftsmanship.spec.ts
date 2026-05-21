@@ -29,6 +29,7 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
         try {
             const result = await page.evaluate(async () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                /* eslint-disable no-restricted-syntax -- boundary: page.evaluate cast; globalThis typed as unknown to access Foundry Actor; Promise<unknown> return types are opaque browser-side */
                 const ActorCls = (
                     globalThis as unknown as {
                         Actor?: {
@@ -41,6 +42,7 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                         };
                     }
                 ).Actor;
+                /* eslint-enable no-restricted-syntax */
                 if (!ActorCls?.create) {
                     return {
                         error: 'Actor.create not available',
@@ -130,10 +132,10 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                             hasRangedReliable = panel.querySelector('[data-weapon-kind="ranged"] [data-reliability-shift="reliable"]') !== null;
                             const meleeEffect = panel.querySelector('[data-weapon-kind="melee"][data-tier="best"] [data-ws-modifier]');
                             hasMeleeBestEffect =
-                                meleeEffect?.getAttribute('data-ws-modifier') === '10' && meleeEffect?.getAttribute('data-damage-bonus') === '1';
+                                meleeEffect?.getAttribute('data-ws-modifier') === '10' && meleeEffect.getAttribute('data-damage-bonus') === '1';
                             const armourEffect = panel.querySelector('[data-armour-row][data-tier="best"] [data-flat-ap-bonus]');
                             hasArmourBestEffect =
-                                armourEffect?.getAttribute('data-flat-ap-bonus') === '1' && armourEffect?.getAttribute('data-half-weight') === 'true';
+                                armourEffect?.getAttribute('data-flat-ap-bonus') === '1' && armourEffect.getAttribute('data-half-weight') === 'true';
                         }
                     }
                     (globalThis as any).__owCraftsmanshipActor = actor;

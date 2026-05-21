@@ -35,10 +35,10 @@ test.describe.serial('Ship Hit-and-Run chat card (Tier B)', () => {
                 let messageId: string | null = null;
 
                 try {
-                    const renderTemplate = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
+                    const renderHbsTemplate = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
                         | ((p: string, c: object) => Promise<string>)
                         | undefined;
-                    if (!renderTemplate) {
+                    if (!renderHbsTemplate) {
                         return {
                             rendered,
                             hasCardRoot,
@@ -74,7 +74,7 @@ test.describe.serial('Ship Hit-and-Run chat card (Tier B)', () => {
                         rolledCritB: 5,
                     };
 
-                    const html = await renderTemplate(template, context);
+                    const html = await renderHbsTemplate(template, context);
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-ship-har-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="rt"');
@@ -85,7 +85,7 @@ test.describe.serial('Ship Hit-and-Run chat card (Tier B)', () => {
                     const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return { rendered, hasCardRoot, hasSystemAnchor, hasCritPick, hasHullDamage, messageId, error };

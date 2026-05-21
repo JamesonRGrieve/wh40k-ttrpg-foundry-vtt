@@ -46,10 +46,10 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                 let messageId: string | null = null;
 
                 try {
-                    const renderTemplate = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
+                    const renderTemplateFn = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
                         | ((p: string, c: object) => Promise<string>)
                         | undefined;
-                    if (!renderTemplate) {
+                    if (!renderTemplateFn) {
                         return {
                             rendered,
                             hasBarRoot,
@@ -126,7 +126,7 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                         ],
                     };
 
-                    const html = await renderTemplate(template, context);
+                    const html = await renderTemplateFn(template, context);
                     rendered = typeof html === 'string' && html.length > 0;
                     hasBarRoot = html.includes('wh40k-starship-manoeuvre-bar');
                     hasAdjustBearing = html.includes('data-manoeuvre-id="adjust-bearing"');
@@ -142,7 +142,7 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                     const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

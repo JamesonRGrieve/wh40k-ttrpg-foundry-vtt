@@ -15,9 +15,9 @@
  * sheet on a DW horde actor and snaps the rendered panel.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { getHordeTier, bonusDamageDiceForMagnitude, toHitBonusForMagnitude } from '../../src/module/rules/dw-horde-magnitude';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderMockTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
@@ -81,7 +81,7 @@ const PANEL_TEMPLATE = `
 </section>
 `;
 
-const tpl = Handlebars.compile(PANEL_TEMPLATE);
+const tpl = HandlebarsLib.compile(PANEL_TEMPLATE);
 
 function buildContext(args: HordePanelArgs): HordePanelContext {
     const tier = getHordeTier(args.magnitudeCurrent);
@@ -105,7 +105,7 @@ function buildContext(args: HordePanelArgs): HordePanelContext {
 }
 
 function renderPanel(args: HordePanelArgs): HTMLElement {
-    return renderTemplate(tpl, buildContext(args));
+    return renderMockTemplate(tpl, buildContext(args));
 }
 
 const meta: Meta<HordePanelArgs> = {
