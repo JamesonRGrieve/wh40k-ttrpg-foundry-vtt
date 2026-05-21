@@ -37,10 +37,10 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: String((err as Error).message) };
         }
     });
-    if (result.id === null || result.id === undefined) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
@@ -78,10 +78,10 @@ async function addFearTrait(page: Page, actorId: string, fearRating: number): Pr
                         system: { fearRating: rating, category: 'creature' },
                     },
                 ]);
-                const first = made?.[0];
-                return { traitId: first?.id ?? null, fearRating: Number(first?.system?.fearRating ?? 0), error: null };
+                const first = made[0];
+                return { traitId: first.id ?? null, fearRating: Number(first.system?.fearRating ?? 0), error: null };
             } catch (err) {
-                return { traitId: null, fearRating: 0, error: String((err as Error)?.message ?? err) };
+                return { traitId: null, fearRating: 0, error: String((err as Error).message) };
             }
         },
         { targetActorId: actorId, rating: fearRating },
@@ -133,7 +133,7 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                             setTimeout(r, 60);
                         });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String((err as Error).message);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -148,7 +148,7 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                         /* ignore */
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return { rendered, hasFearInput, fearInputValue, hasRollButton, error };

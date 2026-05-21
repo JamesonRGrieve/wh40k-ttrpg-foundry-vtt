@@ -72,7 +72,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'xp-earned-probe');
-        if (!created.id) {
+        if (created.id == null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -92,7 +92,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             return { initial, after, error: null };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error != null) failures.push(result.error);
         else {
             if (result.after !== 500) failures.push(`experience.total after set was ${result.after}, expected 500`);
             if (failures.length === 0) recordCoverage('xp.flow', 'xp-earned-increments');
@@ -108,7 +108,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'xp-spent-probe');
-        if (!created.id) {
+        if (created.id == null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -128,7 +128,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             return { after, error: null };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error != null) failures.push(result.error);
         else {
             if (result.after !== 250) failures.push(`experience.used after set was ${result.after}, expected 250`);
             if (failures.length === 0) recordCoverage('xp.flow', 'xp-spent-tracks');
@@ -144,7 +144,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'xp-remaining-probe');
-        if (!created.id) {
+        if (created.id == null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -163,7 +163,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             return { total: xp?.total ?? null, used: xp?.used ?? null, available: xp?.available ?? null, error: null };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error != null) failures.push(result.error);
         else {
             if (result.total !== 800) failures.push(`experience.total was ${result.total}, expected 800`);
             if (result.used !== 300) failures.push(`experience.used was ${result.used}, expected 300`);
@@ -182,7 +182,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'add-xp-prompt-probe');
-        if (!created.id) {
+        if (created.id == null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -192,7 +192,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
             const actor = g.game?.actors?.get?.(actorId);
-            if (!actor) return { rendered: false, error: 'actor not found' };
+            if (actor == null) return { rendered: false, error: 'actor not found' };
             let inst: any = null;
             try {
                 const url: string = '/systems/wh40k-rpg/module/applications/prompts/add-xp-dialog.js';
@@ -222,7 +222,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             /* eslint-enable @typescript-eslint/no-explicit-any */
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error != null) failures.push(result.error);
         else if (!result.rendered) failures.push('AddXPDialog did not produce an HTMLElement');
         else recordCoverage('xp.flow', 'add-xp-prompt-render');
 
@@ -236,7 +236,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'advancement-dialog-probe');
-        if (!created.id) {
+        if (created.id == null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -246,7 +246,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
             const actor = g.game?.actors?.get?.(actorId);
-            if (!actor) return { rendered: false, error: 'actor not found' };
+            if (actor == null) return { rendered: false, error: 'actor not found' };
             let inst: any = null;
             try {
                 const url: string = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
@@ -276,7 +276,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             /* eslint-enable @typescript-eslint/no-explicit-any */
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error != null) failures.push(result.error);
         else if (!result.rendered) failures.push('AdvancementDialog did not produce an HTMLElement');
         else recordCoverage('xp.flow', 'advancement-dialog-render');
 
@@ -290,7 +290,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'purchase-talent-probe');
-        if (!created.id) {
+        if (created.id == null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -328,7 +328,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error != null) failures.push(result.error);
         else {
             if (!result.talentFound) failures.push('talent item not present after createEmbeddedDocuments');
             if (result.talentCost !== 200) failures.push(`talent.system.cost was ${result.talentCost}, expected 200`);
@@ -347,7 +347,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'purchase-skill-probe');
-        if (!created.id) {
+        if (created.id == null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -382,7 +382,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error != null) failures.push(result.error);
         else {
             if (result.beforeAdvance !== 0) failures.push(`initial dodge.advance was ${result.beforeAdvance}, expected 0`);
             if (result.atOneAdvance !== 1) failures.push(`dodge.advance after set 1 was ${result.atOneAdvance}, expected 1`);

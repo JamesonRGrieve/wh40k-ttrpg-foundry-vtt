@@ -165,9 +165,9 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     const happyOk =
                         typeof Mixed === 'function' &&
                         Mixed !== SystemDataModel &&
-                        (Mixed as any).syntheticMarker === 'mixed-in' &&
-                        Array.isArray((Mixed as any)._schemaTemplates) &&
-                        (Mixed as any)._schemaTemplates.includes(SyntheticTemplate);
+                        Mixed.syntheticMarker === 'mixed-in' &&
+                        Array.isArray(Mixed._schemaTemplates) &&
+                        Mixed._schemaTemplates.includes(SyntheticTemplate);
                     return rejected && happyOk;
                 });
                 guarded('system-data-model-initializationOrder-generator', () => {

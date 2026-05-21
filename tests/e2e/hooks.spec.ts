@@ -211,10 +211,10 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
 
                 try {
                     const combat = await CombatGbl?.create?.({});
-                    if (combat?.id) {
+                    if (combat?.id != null) {
                         const combatantIds: string[] = [];
-                        if (probeActorId) combatantIds.push(probeActorId);
-                        if (probeActor2Id) combatantIds.push(probeActor2Id);
+                        if (probeActorId !== null) combatantIds.push(probeActorId);
+                        if (probeActor2Id !== null) combatantIds.push(probeActor2Id);
                         if (combatantIds.length > 0) {
                             try {
                                 await combat.createEmbeddedDocuments?.(
@@ -268,7 +268,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 // coverage is recorded.
                 try {
                     const renderResult = uiGbl?.controls?.render?.(true);
-                    if (renderResult && typeof (renderResult as { then?: unknown }).then === 'function') {
+                    if (renderResult != null && typeof (renderResult as { then?: unknown }).then === 'function') {
                         await Promise.resolve(renderResult);
                     }
                     // Render is async; allow the hook callback to flush.

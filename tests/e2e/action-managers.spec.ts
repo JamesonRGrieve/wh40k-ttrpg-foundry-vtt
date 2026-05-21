@@ -77,7 +77,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     if (idx >= 0) flows[idx] = { flow, success, note };
                 };
 
-                if (!ActorCls?.create || !ChatMessageCls?.create || !HooksObj?.on) {
+                if (ActorCls?.create == null || ChatMessageCls?.create == null || HooksObj?.on == null) {
                     for (const f of flowNames) setResult(f, false, 'Foundry runtime missing Actor/ChatMessage/Hooks');
                     return { flows };
                 }
@@ -93,7 +93,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         type: 'dh2-character',
                         system: { gameSystem: 'dh2e' },
                     });
-                    if (probeActor) {
+                    if (probeActor != null) {
                         cleanups.push(async () => {
                             try {
                                 await gameObj?.actors?.get?.(probeActor.id)?.delete?.();
@@ -124,7 +124,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         <div id="probe-toggle-target" style="display:none">hidden body</div>
                     </div>`;
                         const msg = await ChatMessageCls.create({ content });
-                        if (!msg?.id) {
+                        if (msg?.id == null) {
                             setResult('basic-action-dispatch', false, 'ChatMessage.create returned no id');
                         } else {
                             cleanups.push(async () => {
@@ -216,7 +216,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 type: 'dh2-character',
                                 system: { gameSystem: 'dh2e' },
                             });
-                            if (probeActor2) {
+                            if (probeActor2 != null) {
                                 cleanups.push(async () => {
                                     try {
                                         await gameObj?.actors?.get?.(probeActor2.id)?.delete?.();
@@ -230,7 +230,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         }
 
                         const combat = await CombatCls?.create?.({});
-                        if (combat?.id) {
+                        if (combat?.id != null) {
                             cleanups.push(async () => {
                                 try {
                                     await gameObj?.combats?.get?.(combat.id)?.delete?.();
@@ -239,8 +239,8 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 }
                             });
                             const ids: string[] = [];
-                            if (probeActor?.id) ids.push(probeActor.id);
-                            if (probeActor2?.id) ids.push(probeActor2.id);
+                            if (probeActor?.id != null) ids.push(probeActor.id);
+                            if (probeActor2?.id != null) ids.push(probeActor2.id);
                             if (ids.length > 0) {
                                 try {
                                     await combat.createEmbeddedDocuments?.(
@@ -318,7 +318,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             setResult('reload-action-dispatch', false, 'ReloadActionManager.reloadWeapon not a function');
                         } else {
                             const live = gameObj?.actors?.get?.(probeActor.id);
-                            if (!live) {
+                            if (live == null) {
                                 setResult('reload-action-dispatch', false, 'probe actor not in collection');
                             } else {
                                 // Create an ammo item first so the weapon's
@@ -345,9 +345,9 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                         },
                                     },
                                 ]);
-                                const weapon = weaponCreated?.[0] ? live.items.get(weaponCreated[0].id) : null;
-                                const ammo = ammoCreated?.[0] ? live.items.get(ammoCreated[0].id) : null;
-                                if (!weapon || !ammo) {
+                                const weapon = weaponCreated?.[0] != null ? live.items.get(weaponCreated[0].id) : null;
+                                const ammo = ammoCreated?.[0] != null ? live.items.get(ammoCreated[0].id) : null;
+                                if (weapon == null || ammo == null) {
                                     setResult('reload-action-dispatch', false, 'failed to embed weapon/ammo on probe actor');
                                 } else {
                                     // Exercise the static helpers first — these
@@ -575,7 +575,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         }
 
                         // Restore the original warn so other tests aren't affected.
-                        if (typeof origWarn === 'function' && uiObj?.notifications) {
+                        if (typeof origWarn === 'function' && uiObj?.notifications != null) {
                             uiObj.notifications.warn = origWarn;
                         }
                     } catch (err) {

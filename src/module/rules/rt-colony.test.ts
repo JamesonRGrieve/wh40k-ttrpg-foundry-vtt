@@ -100,7 +100,7 @@ describe('tierForSize (Stars-of-Inequity Table 3-2)', () => {
         expect(COLONY_SIZE_TIERS).toHaveLength(11);
         for (let i = 0; i <= 10; i += 1) {
             const row = COLONY_SIZE_TIERS[i];
-            expect(row?.size).toBe(i);
+            expect(row?.size).toBe(i); // eslint-disable-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess is false in tsconfig.test.json but true in tsconfig.json; keep ?. for production-tsconfig safety
         }
     });
 });
@@ -409,6 +409,7 @@ describe('leadershipPfValueModifier (Table 3-4)', () => {
 
 describe('REFERENCE_COLONY_TYPES (spot-check RAW founding states)', () => {
     it('Research Mission starts Size 1, Complacency 2, all else 1', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: false in tsconfig.test.json, true in tsconfig.json
         expect(REFERENCE_COLONY_TYPES['research-mission']?.starting).toEqual({
             size: 1,
             complacency: 2,
@@ -418,14 +419,19 @@ describe('REFERENCE_COLONY_TYPES (spot-check RAW founding states)', () => {
         });
     });
     it('Mining and Industry starts Productivity 2', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: false in tsconfig.test.json, true in tsconfig.json
         expect(REFERENCE_COLONY_TYPES['mining-industry']?.starting.productivity).toBe(2);
     });
     it('Ecclesiastical starts Order 2, Piety 2', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: false in tsconfig.test.json, true in tsconfig.json
         expect(REFERENCE_COLONY_TYPES['ecclesiastical']?.starting.order).toBe(2);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: false in tsconfig.test.json, true in tsconfig.json
         expect(REFERENCE_COLONY_TYPES['ecclesiastical']?.starting.piety).toBe(2);
     });
     it('Agricultural starts Order 2, Piety 1', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: false in tsconfig.test.json, true in tsconfig.json
         expect(REFERENCE_COLONY_TYPES['agricultural']?.starting.order).toBe(2);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: false in tsconfig.test.json, true in tsconfig.json
         expect(REFERENCE_COLONY_TYPES['agricultural']?.starting.piety).toBe(1);
     });
     it('all four reference types have unique labelKeys under WH40K.RT.Colony.Type.*', () => {

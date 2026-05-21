@@ -65,24 +65,28 @@ interface ProbeResult {
 
 async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
-            const ui = g.ui;
+            const browserActor = g.Actor;
+            const browserGame = g.game;
+            const browserUi = g.ui;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create) {
+            if (browserActor?.create == null) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'weapon-attack-rolls-to-hit': 'Actor.create unavailable' },
+                    flowNotes: {
+                        'weapon-attack-rolls-to-hit': 'Actor.create unavailable',
+                    },
                 };
             }
 
@@ -96,7 +100,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -106,7 +110,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
              * roll-methods.spec.ts.
              */
             async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                const windows = Object.values(browserUi?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
                     const id = w?.id ?? '';
                     if (
@@ -135,7 +139,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             let pc: any = null;
             try {
                 pc = (await withTimeout(
-                    Actor.create({
+                    browserActor.create({
                         name: 'weapon-attack-spec-pc',
                         type: 'dh2-character',
                         system: { gameSystem: 'dh2e' },
@@ -143,10 +147,10 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     5_000,
                     'PC Actor.create',
                 )) as any;
-                if (pc?.id) {
+                if (pc?.id != null) {
                     cleanups.push(async () => {
                         try {
-                            await game?.actors?.get?.(pc.id)?.delete?.();
+                            await browserGame?.actors?.get?.(pc.id)?.delete?.();
                         } catch {
                             /* ignore */
                         }
@@ -156,7 +160,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 for (const f of flows) notes[f] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
             }
 
-            if (!pc?.id) {
+            if (pc?.id == null) {
                 return { flowsFired: fired, flowNotes: notes };
             }
 
@@ -166,9 +170,11 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             // array silently when the child create races with the parent's
             // initial commit (the server log shows "Actor [X] does not exist"
             // during the embedded create).
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
 
-            const getPc = () => game?.actors?.get?.(pc.id);
+            const getPc = () => browserGame?.actors?.get?.(pc.id);
 
             try {
                 /* ============================================================
@@ -201,7 +207,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     );
                     const meleeArr = meleeCreated as Array<{ id: string }> | undefined | null;
                     const weapon = meleeArr?.[0] ? live.items.get(meleeArr[0].id) : null;
-                    if (!weapon) {
+                    if (weapon == null) {
                         notes['weapon-attack-rolls-to-hit'] = 'failed to create melee weapon';
                     } else {
                         cleanups.push(async () => {
@@ -211,14 +217,14 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                                 /* ignore */
                             }
                         });
-                        const windowsBefore = Object.keys(ui?.windows ?? {}).length;
+                        const windowsBefore = Object.keys(browserUi?.windows ?? {}).length;
                         let threw: string | null = null;
                         try {
                             await withTimeout(Promise.resolve(live.rollWeaponAction?.(weapon)), 5_000, 'rollWeaponAction');
                         } catch (err) {
                             threw = String((err as Error)?.message ?? err);
                         }
-                        const windowsAfter = Object.keys(ui?.windows ?? {}).length;
+                        const windowsAfter = Object.keys(browserUi?.windows ?? {}).length;
                         if (threw === null) {
                             fired['weapon-attack-rolls-to-hit'] = true;
                             notes['weapon-attack-rolls-to-hit'] = `dispatch ok; window delta ${windowsAfter - windowsBefore}`;
@@ -265,7 +271,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     );
                     const rangedArr = rangedCreated as Array<{ id: string }> | undefined | null;
                     const weapon = rangedArr?.[0] ? live.items.get(rangedArr[0].id) : null;
-                    if (!weapon) {
+                    if (weapon == null) {
                         notes['weapon-attack-consumes-ammo'] = 'failed to create ranged weapon';
                     } else {
                         cleanups.push(async () => {
@@ -323,7 +329,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     );
                     const emptyArr = emptyCreated as Array<{ id: string }> | undefined | null;
                     const weapon = emptyArr?.[0] ? live.items.get(emptyArr[0].id) : null;
-                    if (!weapon) {
+                    if (weapon == null) {
                         notes['weapon-attack-out-of-ammo'] = 'failed to create empty weapon';
                     } else {
                         cleanups.push(async () => {
@@ -411,7 +417,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 try {
                     const npc = (await withTimeout(
-                        Actor.create({
+                        browserActor.create({
                             name: 'weapon-attack-spec-npc',
                             type: 'dh2-npc',
                             system: {
@@ -423,23 +429,23 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         5_000,
                         'NPC Actor.create',
                     )) as any;
-                    if (!npc?.id) {
+                    if (npc?.id == null) {
                         notes['damage-roll-applies-armour'] = 'NPC create returned null';
                     } else {
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(npc.id)?.delete?.();
+                                await browserGame?.actors?.get?.(npc.id)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
                         });
-                        const live = game?.actors?.get?.(npc.id);
+                        const live = browserGame?.actors?.get?.(npc.id);
                         if (typeof live?.applyDamage !== 'function') {
                             notes['damage-roll-applies-armour'] = 'npc.applyDamage missing';
                         } else {
                             const before = live.system?.wounds?.value ?? -1;
                             await withTimeout(live.applyDamage(6, 'body', { ignoreToughness: true }), 5_000, 'npc.applyDamage (armour)');
-                            const fresh = game?.actors?.get?.(npc.id);
+                            const fresh = browserGame?.actors?.get?.(npc.id);
                             const after = fresh?.system?.wounds?.value ?? -1;
                             // Expected net damage = max(0, 6 - 4) = 2.
                             // Wounds: before - 2. Branch exercised either way;
@@ -482,7 +488,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     );
                     const powerArr = powerCreated as Array<{ id: string }> | undefined | null;
                     const power = powerArr?.[0] ? live.items.get(powerArr[0].id) : null;
-                    if (!power) {
+                    if (power == null) {
                         notes['psychic-power-roll'] = 'failed to create psychic-power item';
                     } else {
                         cleanups.push(async () => {
@@ -543,8 +549,8 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         5_000,
                         'create fire-mode weapon',
                     );
-                    const weapon = modeCreated?.[0] ? live.items.get(modeCreated[0].id) : null;
-                    if (!weapon) {
+                    const weapon = modeCreated?.[0] != null ? live.items.get(modeCreated[0].id) : null;
+                    if (weapon == null) {
                         notes['weapon-modes'] = 'failed to create fire-mode weapon';
                     } else {
                         cleanups.push(async () => {

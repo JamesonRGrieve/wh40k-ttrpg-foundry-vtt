@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -95,7 +94,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!ActorClass?.create) {
+            if (ActorClass?.create == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'character-sheet::toggleEquip': 'Actor.create unavailable' } as Record<string, string>,
@@ -112,7 +111,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -162,7 +162,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             const cleanups: Array<() => Promise<void>> = [];
 
             // Helper to create + register an actor with cleanup.
-            async function makeActor(type: string, gameSystem: string, system: Record<string, unknown> = {}): Promise<any | null> {
+            async function makeActor(type: string, gameSystem: string, system: Record<string, unknown> = {}): Promise<any> {
                 try {
                     const actor = (await withTimeout(
                         ActorClass.create({
@@ -173,7 +173,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         5_000,
                         `Actor.create(${type}/${gameSystem})`,
                     )) as any;
-                    if (actor?.id) {
+                    if (actor?.id != null) {
                         cleanups.push(async () => {
                             try {
                                 await game?.actors?.get?.(actor.id)?.delete?.();
@@ -196,7 +196,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                  * as the auto-joined GM user.
                  * ================================================================= */
                 const pc = await makeActor('dh2-character', 'dh2e');
-                if (!pc?.id) {
+                if (pc?.id == null) {
                     notes['character-sheet::toggleEquip'] = 'PC create returned null';
                 } else {
                     // Yield so the create flush completes before the embedded create.
@@ -205,7 +205,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     });
                     const livePc = (): any => gameCtx?.actors?.get?.(pc.id);
                     const sheet = livePc()?.sheet;
-                    if (!sheet) {
+                    if (sheet == null) {
                         notes['character-sheet::toggleEquip'] = 'PC sheet undefined';
                     } else {
                         // Render once so this.element exists for filter/dom flows.
@@ -240,7 +240,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                 5_000,
                                 'create gear',
                             )) as any[];
-                            gear = created?.[0] ? livePc().items.get(created[0].id) : null;
+                            gear = created?.[0] != null ? livePc().items.get(created[0].id) : null;
                         } catch {
                             gear = null;
                         }
@@ -250,7 +250,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             const handler = actions.toggleEquip;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::toggleEquip'] = 'handler missing';
-                            } else if (!gear) {
+                            } else if (gear == null) {
                                 notes['character-sheet::toggleEquip'] = 'gear missing';
                             } else {
                                 const before = gear.system?.equipped === true;
@@ -273,7 +273,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             const handler = actions.stowItem;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::stowItem'] = 'handler missing';
-                            } else if (!gear) {
+                            } else if (gear == null) {
                                 notes['character-sheet::stowItem'] = 'gear missing';
                             } else {
                                 await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id)), 5_000, 'stowItem');
@@ -296,7 +296,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             const handler = actions.unstowItem;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::unstowItem'] = 'handler missing';
-                            } else if (!gear) {
+                            } else if (gear == null) {
                                 notes['character-sheet::unstowItem'] = 'gear missing';
                             } else {
                                 await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id)), 5_000, 'unstowItem');
@@ -366,8 +366,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                                     5_000,
                                     'create talent',
                                 )) as any[];
-                                const talent = talentCreated?.[0] ? livePc().items.get(talentCreated[0].id) : null;
-                                if (!talent) {
+                                const talent = talentCreated?.[0] != null ? livePc().items.get(talentCreated[0].id) : null;
+                                if (talent == null) {
                                     notes['character-sheet::toggleFavoriteTalent'] = 'talent create failed';
                                 } else {
                                     cleanups.push(async () => {
@@ -430,7 +430,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     horde: { active: false, magnitude: 0 },
                     tags: [],
                 });
-                if (!npc?.id) {
+                if (npc?.id == null) {
                     notes['npc-sheet::toggleHordeMode'] = 'NPC create returned null';
                 } else {
                     await new Promise<void>((r) => {
@@ -438,7 +438,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     });
                     const liveNpc = (): any => gameCtx?.actors?.get?.(npc.id);
                     const sheet = liveNpc()?.sheet;
-                    if (!sheet) {
+                    if (sheet == null) {
                         notes['npc-sheet::toggleHordeMode'] = 'NPC sheet undefined';
                     } else {
                         try {
@@ -611,7 +611,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         wounds: { max: 8, value: 8, critical: 0 },
                         tags: [],
                     });
-                    if (!imNpc?.id) {
+                    if (imNpc?.id == null) {
                         notes['npc-sheet::scaleToThreat-im'] = 'IM NPC create returned null';
                     } else {
                         await new Promise<void>((r) => {
@@ -619,7 +619,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         });
                         const liveIm = (): any => gameCtx?.actors?.get?.(imNpc.id);
                         const sheet = liveIm()?.sheet;
-                        if (!sheet) {
+                        if (sheet == null) {
                             notes['npc-sheet::scaleToThreat-im'] = 'IM NPC sheet undefined';
                         } else {
                             try {
@@ -669,7 +669,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     wounds: { max: 20, value: 10 },
                     crew: { rating: 30, morale: 50 },
                 });
-                if (!vehicle?.id) {
+                if (vehicle?.id == null) {
                     notes['vehicle-sheet::adjustStructure'] = 'Vehicle create returned null';
                 } else {
                     await new Promise<void>((r) => {
@@ -677,7 +677,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     });
                     const liveV = (): any => gameCtx?.actors?.get?.(vehicle.id);
                     const sheet = liveV()?.sheet;
-                    if (!sheet) {
+                    if (sheet == null) {
                         notes['vehicle-sheet::adjustStructure'] = 'Vehicle sheet undefined';
                     } else {
                         try {
@@ -789,7 +789,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     voidShieldsStatus: { active: 1, exhausted: 1 },
                     shipPoints: { budget: 30 },
                 });
-                if (!starship?.id) {
+                if (starship?.id == null) {
                     notes['starship-sheet::raiseVoidShield'] = 'Starship create returned null';
                 } else {
                     await new Promise<void>((r) => {
@@ -797,7 +797,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     });
                     const liveS = (): any => gameCtx?.actors?.get?.(starship.id);
                     const sheet = liveS()?.sheet;
-                    if (!sheet) {
+                    if (sheet == null) {
                         notes['starship-sheet::raiseVoidShield'] = 'Starship sheet undefined';
                     } else {
                         try {
@@ -916,7 +916,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                  * LootActorSheet flow (loot type — system-agnostic root)
                  * ================================================================= */
                 const loot = await makeActor('loot', 'dh2e');
-                if (!loot?.id) {
+                if (loot?.id == null) {
                     notes['loot-sheet::pickupAll'] = 'Loot create returned null';
                 } else {
                     await new Promise<void>((r) => {
@@ -924,7 +924,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     });
                     const liveL = (): any => gameCtx?.actors?.get?.(loot.id);
                     const sheet = liveL()?.sheet;
-                    if (!sheet) {
+                    if (sheet == null) {
                         notes['loot-sheet::pickupAll'] = 'Loot sheet undefined';
                     } else {
                         try {
