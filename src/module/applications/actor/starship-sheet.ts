@@ -415,7 +415,7 @@ export default class StarshipSheet extends BaseActorSheet {
     > {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
         const actor = this.actor as unknown as WH40KStarship;
-        const gameSystemId = (actor.system as { gameSystem?: string }).gameSystem ?? 'rt';
+        const gameSystemId = (actor.system as { gameSystem: string }).gameSystem;
 
         const out: Array<{
             uuid: string;
@@ -526,7 +526,7 @@ export default class StarshipSheet extends BaseActorSheet {
     > {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
         const actor = this.actor as unknown as WH40KStarship;
-        const gameSystemId = (actor.system as { gameSystem?: string }).gameSystem ?? 'rt';
+        const gameSystemId = (actor.system as { gameSystem: string }).gameSystem;
 
         const out: Array<{
             uuid: string;
@@ -687,13 +687,10 @@ export default class StarshipSheet extends BaseActorSheet {
         }
 
         // ── Apply void shields (issue #184 RAW: shields absorb hits) ────────
-        const shieldStatusBefore = (
-            actor.system as {
-                voidShieldsStatus?: { active?: number; exhausted?: number };
-            }
-        ).voidShieldsStatus ?? { active: 0, exhausted: 0 };
-        let shieldsActive = shieldStatusBefore.active ?? 0;
-        let shieldsExhausted = shieldStatusBefore.exhausted ?? 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarshipSystemData carries voidShieldsStatus on the concrete subclass not the shared ActorDataModel union; narrow via unknown
+        const shieldStatusBefore = (actor.system as unknown as { voidShieldsStatus: { active: number; exhausted: number } }).voidShieldsStatus;
+        let shieldsActive = shieldStatusBefore.active;
+        let shieldsExhausted = shieldStatusBefore.exhausted;
         let shieldedDamage = 0;
         let appliedDamage = totalDamage;
 
@@ -707,8 +704,8 @@ export default class StarshipSheet extends BaseActorSheet {
         }
 
         // ── Apply hull damage ───────────────────────────────────────────────
-        const hullBefore = (actor.system as { hullIntegrity?: { value?: number; max?: number } }).hullIntegrity ?? { value: 0, max: 0 };
-        const hullCurrentBefore = hullBefore.value ?? 0;
+        const hullBefore = (actor.system as { hullIntegrity: { value: number; max: number } }).hullIntegrity;
+        const hullCurrentBefore = hullBefore.value;
         const hullCurrentAfter = Math.max(0, hullCurrentBefore - appliedDamage);
 
         // ── Persist actor state (hull + shield exhaustion) ──────────────────
@@ -732,7 +729,7 @@ export default class StarshipSheet extends BaseActorSheet {
             actor,
             weapon,
             crewRating,
-            gameSystem: (actor.system as { gameSystem?: string }).gameSystem,
+            gameSystem: (actor.system as { gameSystem: string }).gameSystem,
             resolution: {
                 weaponType,
                 weaponTypeLabel: game.i18n.localize(
@@ -757,11 +754,11 @@ export default class StarshipSheet extends BaseActorSheet {
                 ignoresShields,
                 shieldedDamage,
                 appliedDamage,
-                shieldsBefore: shieldStatusBefore.active ?? 0,
-                shieldsAfter: ignoresShields ? shieldStatusBefore.active ?? 0 : shieldsActive,
+                shieldsBefore: shieldStatusBefore.active,
+                shieldsAfter: ignoresShields ? shieldStatusBefore.active : shieldsActive,
                 hullBefore: hullCurrentBefore,
                 hullAfter: hullCurrentAfter,
-                hullMax: hullBefore.max ?? 0,
+                hullMax: hullBefore.max,
             },
         };
         // Silence "unused-binding" lints; damagePerHit is computed for callers/tests.
@@ -773,12 +770,12 @@ export default class StarshipSheet extends BaseActorSheet {
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
             actor: actor as unknown as Actor.Implementation,
         });
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
         const payload = {
             user: game.user.id,
             speaker,
             content: html,
             rolls: [bsRoll, ...(hitsRoll ? [hitsRoll] : [])],
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
         } as unknown as Parameters<typeof ChatMessage.create>[0];
         void ChatMessage.create(payload);
     }
@@ -854,7 +851,7 @@ export default class StarshipSheet extends BaseActorSheet {
     static async #restoreVoidShields(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
         const actor = this.actor as unknown as WH40KStarship;
-        const max = (actor.system as { voidShields?: number }).voidShields ?? 0;
+        const max = (actor.system as { voidShields: number }).voidShields;
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
         await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
             'system.voidShieldsStatus.active': max,
@@ -1009,7 +1006,7 @@ export default class StarshipSheet extends BaseActorSheet {
                 description: sys.description?.value ?? '',
             },
             actorName: actor.name,
-            gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
+            gameSystem: (actor.system as { gameSystem: string }).gameSystem,
         };
 
         // Issue #189 — route content-agnostic shipActionEffect tags into the
@@ -1178,7 +1175,7 @@ export default class StarshipSheet extends BaseActorSheet {
             rolled,
             rollLabel: i18n.format('WH40K.Starship.Critical.RollLabel', { rolled: String(rolled) }),
             image: 'icons/svg/explosion.svg',
-            gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
+            gameSystem: (actor.system as { gameSystem: string }).gameSystem,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-critical-hit-chat.hbs', cardData);
@@ -1248,7 +1245,7 @@ export default class StarshipSheet extends BaseActorSheet {
                 description: sys.description?.value ?? '',
             },
             actorName: actor.name,
-            gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
+            gameSystem: (actor.system as { gameSystem: string }).gameSystem,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/manoeuvre-action-chat.hbs', cardData);

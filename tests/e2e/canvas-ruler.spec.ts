@@ -45,7 +45,6 @@ async function probeCanvasRuler(page: Page): Promise<{ results: FlowResult[]; pa
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -53,17 +52,44 @@ async function probeCanvasRuler(page: Page): Promise<{ results: FlowResult[]; pa
 
             const base = `${'/systems/wh40k-rpg'}/module/canvas`;
 
+            interface PixiPriority {
+                OBJECTS: number;
+                HIGH: number;
+                LOW: number;
+                NORMAL: number;
+            }
+            interface PixiNamespace {
+                UPDATE_PRIORITY?: PixiPriority;
+            }
+            interface PixiGlobal {
+                PIXI?: PixiNamespace;
+            }
             // Stub the PIXI namespace so the module's top-level eval doesn't
             // throw when running in headless mode (placeables/token.mjs
             // references PIXI.UPDATE_PRIORITY.OBJECTS during import).
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: PIXI global is a browser-realm runtime singleton with no shipped types
+            const g = globalThis as unknown as PixiGlobal;
             g.PIXI = g.PIXI ?? {};
             g.PIXI.UPDATE_PRIORITY = g.PIXI.UPDATE_PRIORITY ?? { OBJECTS: 1, HIGH: 25, LOW: -25, NORMAL: 0 };
 
-            let mod: any;
+            interface RulerCtor {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 TokenRuler constructor params are not exposed by type packages
+                new (...args: unknown[]): object;
+                readonly name: string;
+                readonly prototype: object;
+            }
+            interface RulerModule {
+                default?: RulerCtor;
+                TokenRulerWH40K?: RulerCtor;
+            }
+            interface FoundryRulerGlobal {
+                foundry?: { canvas?: { placeables?: { tokens?: { TokenRuler?: RulerCtor } } } };
+            }
+            let mod: RulerModule | undefined;
             try {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- boundary: dynamic import is `any`; assigned to typed RulerModule slot
                 mod = await import(`${base}/ruler.js`);
-                record('ruler-module-imports', mod != null, null);
+                record('ruler-module-imports', true, null);
             } catch (err) {
                 record('ruler-module-imports', false, String((err as Error).message));
                 record('ruler-class-extends-token-ruler', false, 'module import failed; cannot validate prototype chain');
@@ -71,10 +97,11 @@ async function probeCanvasRuler(page: Page): Promise<{ results: FlowResult[]; pa
             }
 
             try {
-                const TokenRulerWH40K = mod.default ?? mod.TokenRulerWH40K;
-                const foundryTokenRuler = (globalThis as any).foundry?.canvas?.placeables?.tokens?.TokenRuler;
+                const TokenRulerWH40K = mod?.default ?? mod?.TokenRulerWH40K;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const foundryTokenRuler = (globalThis as unknown as FoundryRulerGlobal).foundry?.canvas?.placeables?.tokens?.TokenRuler;
                 if (typeof TokenRulerWH40K !== 'function') {
-                    record('ruler-class-extends-token-ruler', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
+                    record('ruler-class-extends-token-ruler', false, `default export missing (keys: ${Object.keys(mod ?? {}).join(',')})`);
                 } else if (typeof foundryTokenRuler !== 'function') {
                     // Foundry's TokenRuler isn't exposed in the namespace
                     // we expected; record the class shape we DO have.
@@ -92,7 +119,6 @@ async function probeCanvasRuler(page: Page): Promise<{ results: FlowResult[]; pa
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

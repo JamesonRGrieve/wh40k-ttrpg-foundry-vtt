@@ -24,7 +24,16 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface DialogInstance {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render/close return Promise<this> with no shipped types
+                    render: (opts?: object) => Promise<unknown>;
+                    element: HTMLElement | null;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                    close: () => Promise<unknown>;
+                }
+                interface DialogModule {
+                    default: new (opts?: object) => DialogInstance;
+                }
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/beyond-homeworld-info-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -36,10 +45,9 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                 let hasSubtletyClampRider = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts?: unknown): { render: (opts?: unknown) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return {
                             rendered,
@@ -90,7 +98,6 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                     hasSubtletyClampRider,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'beyond-homeworld-info-dialog');

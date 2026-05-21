@@ -25,7 +25,7 @@ import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-function compileToElement(source: string, context: unknown): HTMLElement {
+function compileToElement(source: string, context: object): HTMLElement {
     const template = HandlebarsLib.compile(source);
     return renderMockTemplate(template, context);
 }
@@ -57,7 +57,7 @@ describe('storybook shared component templates', () => {
     it('renders expanded modifier groups and counts', () => {
         const element = compileToElement(activeModifiersPanelSrc, mockModifiersPanel());
 
-        expect(element.querySelector('.wh40k-modifier-count')?.textContent?.trim()).toBe('5');
+        expect((element.querySelector('.wh40k-modifier-count')?.textContent ?? '').trim()).toBe('5');
         expect(element.querySelectorAll('[data-action="toggleModifier"]')).toHaveLength(2);
         expect(element.textContent).toContain('On Fire');
     });

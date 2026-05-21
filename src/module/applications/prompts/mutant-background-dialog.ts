@@ -26,7 +26,9 @@ interface MutantTargetActor {
     id?: string | undefined;
     name?: string | undefined;
     system?: { corruption?: { value?: number } | number };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts a path-keyed payload and resolves to the updated Document (framework signature)
     update?: (data: Record<string, unknown>) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.setFlag stores arbitrary serializable values keyed by scope/key (framework signature)
     setFlag?: (scope: string, key: string, value: unknown) => Promise<unknown>;
 }
 
@@ -139,7 +141,7 @@ export default class MutantBackgroundDialog extends ApplicationV2Mixin(Applicati
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mutant-background-chat.hbs', templateData);
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: ChatMessage.create payload shape lives outside our shipped types; game.user can be undefined before login in some Foundry boot paths
         const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
         await this.close();

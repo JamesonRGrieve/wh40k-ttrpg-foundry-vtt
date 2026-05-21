@@ -29,7 +29,13 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface HandlebarsCompile {
+                    compile: (s: string) => (ctx: object) => string;
+                }
+                interface PanelGlobals {
+                    fetch?: (u: string) => Promise<Response>;
+                    Handlebars?: HandlebarsCompile;
+                }
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-mode-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -42,10 +48,25 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                 let hasEnterButton = false;
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HandlebarsGbl = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsGbl.compile !== 'function') {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                    const fg = globalThis as unknown as PanelGlobals;
+                    const fetchFn = fg.fetch;
+                    if (typeof fetchFn !== 'function') {
+                        return {
+                            rendered,
+                            mode,
+                            renownRank,
+                            visualDistance,
+                            vocalDistance,
+                            sustainedRows,
+                            hasLeaveButton,
+                            hasEnterButton,
+                            error: 'fetch not available on globalThis',
+                        };
+                    }
+                    const src = await (await fetchFn(templateUrl)).text();
+                    const HandlebarsGbl = fg.Handlebars;
+                    if (HandlebarsGbl === undefined || typeof HandlebarsGbl.compile !== 'function') {
                         return {
                             rendered,
                             mode,
@@ -101,7 +122,11 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
 
                     // Hold the host on a global handle so snap() (called
                     // outside this evaluate) captures the live DOM.
-                    (globalThis as any).__dwModePanelHost = host;
+                    interface DwModeHostGlobal {
+                        __dwModePanelHost?: HTMLElement | undefined;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                    (globalThis as unknown as DwModeHostGlobal).__dwModePanelHost = host;
                 } catch (err) {
                     error = (err as Error).message;
                 }
@@ -117,7 +142,6 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                     hasEnterButton,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'dw-squad-mode-panel');
@@ -125,15 +149,18 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
             // Panel captured; tear it down so it doesn't leak into the
             // next serial test's DOM.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__dwModePanelHost as HTMLElement | undefined;
+                interface DwModeHostGlobal {
+                    __dwModePanelHost?: HTMLElement | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+                const fg = globalThis as unknown as DwModeHostGlobal;
+                const host = fg.__dwModePanelHost;
                 try {
                     host?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__dwModePanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__dwModePanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

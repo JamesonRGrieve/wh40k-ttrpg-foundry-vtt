@@ -135,6 +135,7 @@ function hasToObject(item: WH40KItem | NormalizedOrigin): item is WH40KItem {
     // toObject(); calling it threw "item.toObject is not a function" on
     // origin selection. Guard the type and the operand so neither a
     // non-callable toObject nor a non-object item can reach .toObject().
+    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem | NormalizedOrigin lacks a typed `toObject`; the structural probe is the type guard's purpose
     return 'toObject' in item && typeof (item as { toObject?: unknown }).toObject === 'function';
 }
 
@@ -3924,11 +3925,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const rollTable = table as RollTable;
                 const draw = await rollTable.draw({ displayChat: true });
                 const [result] = draw.results;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry TableResult `.text` is not in our shipped types; structural read narrowed via typeof guard below
+                const resultRecord = result as { text?: unknown } | undefined;
                 const resultText =
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array destructure is T|undefined under main tsconfig; ESLint uses tsconfig.test.json where it's always T
-                    result !== undefined && typeof (result as unknown as Record<string, unknown>)['text'] === 'string'
-                        ? ((result as unknown as Record<string, unknown>)['text'] as string)
-                        : null;
+                    resultRecord !== undefined && typeof resultRecord.text === 'string' ? resultRecord.text : null;
                 if (resultText !== null) {
                     this._divination = resultText;
                     this._saveScrollPosition();
@@ -3963,6 +3964,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // user-facing "no available results" notification. Treat an
         // empty/absent table as unavailable so the caller can fall back
         // to a bare 1d100 instead.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: candidate is an untyped Foundry RollTable document; structural narrowing via typeof on the next line is the guard
         const hasResults = (candidate: unknown): boolean => {
             const size = (candidate as { results?: { size?: number } }).results?.size;
             return typeof size === 'number' && size > 0;

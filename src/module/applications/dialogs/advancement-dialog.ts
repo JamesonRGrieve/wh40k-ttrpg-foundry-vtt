@@ -433,27 +433,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 // PR advance disabled. Lower tier rows still render so the
                 // player can see what they'd unlock by becoming a psyker.
                 if (!isPsyker) {
-                    psychic.psyAdvance.canPurchase = false;
-                    psychic.psyAdvance.cantAfford = false;
-                    for (const d of psychic.disciplines) {
-                        for (const t of d.tiers) {
-                            t.accessible = false;
-                            for (const p of t.items) {
-                                if (!p.owned) {
-                                    p.blocked = true;
-                                    p.canPurchase = false;
-                                    p.cantAfford = false;
-                                }
-                            }
-                        }
-                        for (const p of d.items) {
-                            if (!p.owned) {
-                                p.blocked = true;
-                                p.canPurchase = false;
-                                p.cantAfford = false;
-                            }
-                        }
-                    }
+                    AdvancementDialog.#disablePsychicCatalogueForNonPsyker(psychic);
                 }
                 context['psychic'] = psychic;
             }
@@ -906,6 +886,34 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
         return { valid: unmet.length === 0, unmet };
+    }
+
+    /**
+     * Mark the psychic catalogue read-only for non-psykers: PR advance is
+     * blocked, every discipline tier is inaccessible, and any unowned power
+     * (tiered or discipline-level) is flagged blocked / not purchasable.
+     * Owned powers remain visible without their purchase state being changed.
+     */
+    static #disablePsychicCatalogueForNonPsyker(psychic: PreparedPsychicPanel): void {
+        psychic.psyAdvance.canPurchase = false;
+        psychic.psyAdvance.cantAfford = false;
+        for (const d of psychic.disciplines) {
+            for (const t of d.tiers) {
+                t.accessible = false;
+                AdvancementDialog.#blockUnownedPowers(t.items);
+            }
+            AdvancementDialog.#blockUnownedPowers(d.items);
+        }
+    }
+
+    static #blockUnownedPowers(items: PreparedPsychicPower[]): void {
+        for (const p of items) {
+            if (!p.owned) {
+                p.blocked = true;
+                p.canPurchase = false;
+                p.cantAfford = false;
+            }
+        }
     }
 
     // eslint-disable-next-line complexity -- existing complex aggregation across psychic-power tree branching; refactor tracked separately

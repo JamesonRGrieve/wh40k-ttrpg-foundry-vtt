@@ -656,10 +656,15 @@ type CareerKey = keyof typeof CAREER_TABLE_DATA;
  * (not lazily) so the iteration order of `Object.entries(CAREER_TABLES)` —
  * relied on by `getAvailableCareers()` — matches the literal definition order.
  */
-export const CAREER_TABLES: Record<CareerKey, CareerTable> = (() => {
-    const built = {} as Record<CareerKey, CareerTable>;
-    for (const key of Object.keys(CAREER_TABLE_DATA) as CareerKey[]) {
+// Map every CareerKey eagerly — iteration order matches the literal definition
+// order of CAREER_TABLE_DATA, which getAvailableCareers() relies on. The
+// `[K in CareerKey]:` mapped-type expression typechecks completeness without a
+// trailing Record cast.
+export const CAREER_TABLES: { [K in CareerKey]: CareerTable } = (() => {
+    const keys = Object.keys(CAREER_TABLE_DATA) as CareerKey[];
+    const built: { [K in CareerKey]?: CareerTable } = {};
+    for (const key of keys) {
         built[key] = { ...CAREER_TABLE_DATA[key], TIER_ORDER: STANDARD_TIER_ORDER };
     }
-    return built;
+    return built as { [K in CareerKey]: CareerTable };
 })();

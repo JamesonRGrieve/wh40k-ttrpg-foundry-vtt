@@ -8,17 +8,27 @@
 
 import type { FoundryRuntime } from './boot';
 
+interface CreateData {
+    type: string;
+    name?: string;
+    system?: object;
+}
+
+interface DocumentClass {
+    create?: (data: CreateData) => Promise<object>;
+}
+
 interface RuntimeWithActor {
     game: {
         documentTypes?: { Actor?: string[]; Item?: string[] };
     };
     CONFIG: {
-        Actor?: { documentClass?: { create?: (data: unknown) => Promise<unknown> } };
-        Item?: { documentClass?: { create?: (data: unknown) => Promise<unknown> } };
+        Actor?: { documentClass?: DocumentClass };
+        Item?: { documentClass?: DocumentClass };
     };
 }
 
-export async function createActor(runtime: FoundryRuntime, data: { type: string; name?: string; system?: object }): Promise<unknown> {
+export async function createActor(runtime: FoundryRuntime, data: CreateData): Promise<object> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: FoundryRuntime.CONFIG is typed as `object` in boot.ts; the integration helper needs to read the well-known shape
     const r = runtime as unknown as RuntimeWithActor;
     const klass = r.CONFIG.Actor?.documentClass;
@@ -28,7 +38,7 @@ export async function createActor(runtime: FoundryRuntime, data: { type: string;
     return klass.create({ name: data.name ?? 'Test Actor', ...data });
 }
 
-export async function createItem(runtime: FoundryRuntime, data: { type: string; name?: string; system?: object }): Promise<unknown> {
+export async function createItem(runtime: FoundryRuntime, data: CreateData): Promise<object> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: FoundryRuntime.CONFIG is typed as `object` in boot.ts
     const r = runtime as unknown as RuntimeWithActor;
     const klass = r.CONFIG.Item?.documentClass;

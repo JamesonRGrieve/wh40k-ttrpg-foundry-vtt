@@ -17,6 +17,12 @@ interface ItemTypeProbe {
     pageErrors: string[];
 }
 
+interface ProbeReturn {
+    docId: string | null;
+    sheetRendered: boolean;
+    createError: string | null;
+}
+
 async function probeItemType(page: Page, itemType: string): Promise<ItemTypeProbe> {
     const errors: string[] = [];
     const listener = (err: Error): void => {
@@ -24,18 +30,26 @@ async function probeItemType(page: Page, itemType: string): Promise<ItemTypeProb
     };
     page.on('pageerror', listener);
     try {
-        const result = await page.evaluate(async (type: string) => {
-            const { Item: ItemCtor } = globalThis as unknown as {
-                Item?: {
-                    create?: (data: object) => Promise<{
-                        id?: string;
-                        sheet?: { render?: (force?: boolean) => Promise<unknown>; close?: () => Promise<unknown> };
-                        delete?: () => Promise<unknown>;
-                    } | null>;
-                };
-            };
+        const result = await page.evaluate(async (type: string): Promise<ProbeReturn> => {
+            interface ItemSheet {
+                render?: (force?: boolean) => Promise<void>;
+                close?: () => Promise<void>;
+            }
+            interface ItemDoc {
+                id?: string;
+                sheet?: ItemSheet;
+                delete?: () => Promise<void>;
+            }
+            interface ItemCtorShape {
+                create?: (data: object) => Promise<ItemDoc | null>;
+            }
+            interface FoundryGlobal {
+                Item?: ItemCtorShape;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no type surface available in browser context
+            const { Item: ItemCtor } = globalThis as unknown as FoundryGlobal;
             if (!ItemCtor?.create) return { docId: null, sheetRendered: false, createError: 'Item.create unavailable' };
-            let item;
+            let item: ItemDoc | null;
             try {
                 item = await ItemCtor.create({ name: `probe-${type}`, type });
             } catch (err) {
@@ -59,8 +73,12 @@ async function probeItemType(page: Page, itemType: string): Promise<ItemTypeProb
 }
 
 async function listItemTypes(page: Page): Promise<string[]> {
-    return page.evaluate(() => {
-        const cfg = (globalThis as unknown as { CONFIG?: { Item?: { dataModels?: Record<string, unknown> } } }).CONFIG;
+    return page.evaluate((): string[] => {
+        interface FoundryConfigGlobal {
+            CONFIG?: { Item?: { dataModels?: Record<string, object> } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CONFIG global, no type surface in browser context
+        const cfg = (globalThis as unknown as FoundryConfigGlobal).CONFIG;
         // Skip Foundry's `base` sentinel — it isn't a creatable concrete type.
         return Object.keys(cfg?.Item?.dataModels ?? {}).filter((t) => t !== 'base');
     });
@@ -74,7 +92,7 @@ test.describe.serial('item types (Tier B)', () => {
         test.skip(itemTypes.length === 0, 'no item types discovered from CONFIG.Item.dataModels');
         const failures: string[] = [];
         for (const type of itemTypes) {
-            const probe = await probeItemType(page, type).catch((err: unknown) => ({
+            const probe = await probeItemType(page, type).catch((err) => ({
                 type,
                 docId: null,
                 sheetRendered: false,
