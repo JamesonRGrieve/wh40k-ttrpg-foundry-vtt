@@ -44,8 +44,10 @@ export interface DwOathActionHost {
             activeOathId: string | null;
             isLeader: boolean;
         };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update payload is an open bag; values are not statically known
         update: (data: Record<string, unknown>) => Promise<unknown>;
     };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications options bag is Foundry-untyped (duration, permanent, console, etc.)
     _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
 }
 
@@ -68,27 +70,25 @@ async function postOathChat(host: DwOathActionHost, ctx: ChatCardContext): Promi
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
     const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user?.id, content: html, speaker: { alias: host.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
+    const payload = { user: game.user.id, content: html, speaker: { alias: host.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
     await ChatMessage.create(payload);
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: thrown values are `unknown` per TS contract; this helper is fed directly into an `instanceof Error` type-guard
 function reportFailure(host: DwOathActionHost, label: string, error: unknown): void {
     const message = error instanceof Error ? error.message : String(error);
     host._notify('error', `${label}: ${message}`, { duration: 5000 });
     console.error(`${label} error:`, error);
 }
 
+const REASON_TO_KEY: Readonly<Record<Exclude<CanSwearOathFailureReason, 'none'>, I18nKey>> = {
+    'not-leader': 'WH40K.DW.Oath.Validation.NotLeader',
+    'already-sworn': 'WH40K.DW.Oath.Validation.AlreadySworn',
+};
+
 function reasonToKey(reason: CanSwearOathFailureReason | undefined): I18nKey {
-    switch (reason) {
-        case 'not-leader':
-            return 'WH40K.DW.Oath.Validation.NotLeader';
-        case 'already-sworn':
-            return 'WH40K.DW.Oath.Validation.AlreadySworn';
-        case 'none':
-        case undefined:
-        default:
-            return 'WH40K.DW.Oath.Label';
-    }
+    if (reason === undefined || reason === 'none') return 'WH40K.DW.Oath.Label';
+    return REASON_TO_KEY[reason];
 }
 
 /**
@@ -103,29 +103,45 @@ function reasonToKey(reason: CanSwearOathFailureReason | undefined): I18nKey {
  * notification rather than throwing — Oath authoring is a content
  * concern and we should not blow up the sheet over a typo.
  */
+// Boundary types for the Foundry fromUuid-returned Oath document.
+// Every `unknown` field below is narrowed by a `typeof` / value type-guard
+// at the consumer site before any non-boundary use.
+interface FromUuidOathSystem {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `fromUuid` returns the untyped Document handle; narrowed by typeof check before use.
+    leaderPrereq?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `fromUuid` returns the untyped Document handle; narrowed by typeof check before use.
+    buff?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `fromUuid` returns the untyped Document handle; narrowed by Array.isArray + per-entry filter before use.
+    grantedSquadAbilities?: unknown;
+}
+interface FromUuidOathDoc {
+    name?: string | null;
+    system?: FromUuidOathSystem;
+}
+interface FromUuidOathBuff {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `fromUuid` returns the untyped Document handle; narrowed by typeof check before use.
+    id?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `fromUuid` returns the untyped Document handle; narrowed by typeof check before use.
+    characteristic?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `fromUuid` returns the untyped Document handle; narrowed by typeof + Number.isFinite before use.
+    modifier?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `fromUuid` returns the untyped Document handle; narrowed by typeof check before use.
+    trait?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `fromUuid` returns the untyped Document handle; narrowed by typeof check before use.
+    description?: unknown;
+}
+
 async function resolveOathDef(uuid: string): Promise<{ def: OathDef; label: string } | null> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid is loosely typed at the Foundry surface; narrow with structural validation
-    const doc = (await fromUuid(uuid)) as {
-        name?: string | null;
-        system?: {
-            leaderPrereq?: unknown;
-            buff?: unknown;
-            grantedSquadAbilities?: unknown;
-        };
-    } | null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `fromUuid` returns the framework's untyped Document handle; narrowed to FromUuidOathDoc immediately.
+    const doc = (await fromUuid(uuid)) as FromUuidOathDoc | null;
     if (doc?.system === undefined) return null;
     const sys = doc.system;
     if (sys.leaderPrereq !== true) return null;
 
     const rawBuff = sys.buff;
     if (rawBuff === null || rawBuff === undefined || typeof rawBuff !== 'object') return null;
-    const buffShape = rawBuff as {
-        id?: unknown;
-        characteristic?: unknown;
-        modifier?: unknown;
-        trait?: unknown;
-        description?: unknown;
-    };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: narrowing the Foundry fromUuid-returned buff object; each field is typeof-checked below.
+    const buffShape = rawBuff as FromUuidOathBuff;
     if (typeof buffShape.id !== 'string') return null;
     const buff: OathBuff = { id: buffShape.id };
     if (typeof buffShape.characteristic === 'string') buff.characteristic = buffShape.characteristic;

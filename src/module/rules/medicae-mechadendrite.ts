@@ -120,6 +120,7 @@ export function resolveBloodLossStaunch(medicaeTarget: number, rollTotal: number
 
 /** Read the actor's Medicae skill total (0 when untrained / absent). */
 function getMedicaeTarget(actor: WH40KBaseActorDocument): number {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: derived `.skills` accessor lives on the WH40KBaseActor prototype but is not (yet) reflected on the document overrides type
     const skills = (actor as unknown as { skills?: Record<string, WH40KSkill | undefined> }).skills;
     const medicae = skills?.['medicae'];
     return medicae?.current ?? 0;
@@ -160,6 +161,7 @@ export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: () =
         bleedStopped = true;
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: `gameSystem` is declared on each concrete actor DataModel (character/NPC/vehicle) but not on the shared WH40KActorSystemData surface this helper is generic over, so a runtime fallback is required
     const gameSystem = (actor.system as { gameSystem?: string }).gameSystem ?? 'dh2e';
 
     const templateData = {
@@ -181,7 +183,7 @@ export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: () =
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
     const chatData: Record<string, unknown> = {
-        user: game.user?.id,
+        user: game.user.id,
         content: html,
     };
     applyRollModeWhispers(chatData);

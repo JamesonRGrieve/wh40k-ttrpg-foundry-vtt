@@ -14,23 +14,89 @@ import type { SimpleSkillData as SimpleSkillDataType } from '../src/module/rolls
 // `unified-roll-dialog.ts` (transitive import via base-actor.ts) reads
 // `foundry.applications.api.ApplicationV2` at module top-level, and `roll-helpers.ts`
 // references `foundry.applications.handlebars` lazily. We need the namespaces to exist.
-const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>).foundry;
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
-const ORIGINAL_ACTOR = (globalThis as Record<string, unknown>).Actor;
-const ORIGINAL_CONST = (globalThis as Record<string, unknown>).CONST;
+
+/**
+ * Boundary shape: globals we plant on `globalThis` to stand in for Foundry's runtime
+ * namespaces. The fake objects below intentionally satisfy only the surface that
+ * transitively-loaded modules read at import time.
+ */
+interface FoundryHandlebarsStub {
+    renderTemplate: () => Promise<string>;
+}
+interface FoundryApiStub {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructor signatures.
+    ApplicationV2: new (...args: any[]) => object;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for the HandlebarsApplicationMixin generic constraint.
+    HandlebarsApplicationMixin: <T extends new (...args: any[]) => object>(Base: T) => T;
+}
+interface FoundryUtilsStub {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's foundry.utils.Collection extends Map with framework-defined keys/values; matches the framework type.
+    Collection: new () => Map<unknown, unknown>;
+}
+interface FoundryStub {
+    applications: { api: FoundryApiStub; handlebars: FoundryHandlebarsStub };
+    utils: FoundryUtilsStub;
+}
+interface GameI18nStub {
+    localize: (key: string) => string;
+    format: (key: string) => string;
+}
+interface GameSettingsStub {
+    get: () => boolean;
+}
+interface GameWh40kStub {
+    log: () => void;
+    error: () => void;
+}
+interface GameStub {
+    i18n: GameI18nStub;
+    user: { id: string };
+    settings: GameSettingsStub;
+    wh40k: GameWh40kStub;
+}
+interface ConstStub {
+    TOKEN_DISPLAY_MODES: { OWNER_HOVER: number };
+    TOKEN_DISPOSITIONS: { NEUTRAL: number; HOSTILE: number };
+}
+
+interface FoundryStubs {
+    foundry?: FoundryStub | undefined;
+    game?: GameStub | undefined;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor constructor takes an open source data object (`Record<string, unknown>`) per the framework.
+    Actor?: (new (data?: Record<string, unknown>) => object) | undefined;
+    CONST?: ConstStub | undefined;
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: bridging globalThis to the FoundryStubs shape; no narrower alternative since `declare global` cannot augment `globalThis` itself in a vitest test file (would leak into the global scope).
+const stubs = globalThis as unknown as FoundryStubs;
+
+const ORIGINAL_FOUNDRY = stubs.foundry;
+const ORIGINAL_GAME = stubs.game;
+const ORIGINAL_ACTOR = stubs.Actor;
+const ORIGINAL_CONST = stubs.CONST;
 
 class FakeApplicationV2 {}
-const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {};
+
+// The HandlebarsApplicationMixin is a class-decorator-style mixin; we shim a
+// pass-through that preserves the constructor signature.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructor signatures; `never[]`/`unknown[]` are rejected.
+type ClassCtor = new (...args: any[]) => object;
+const fakeHandlebarsApplicationMixin = <T extends ClassCtor>(Base: T): T => class extends Base {};
+
 class FakeActor {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor.system is the DataModel slot — unknown until narrowed by the per-type DataModel; this stub never reads it.
     declare system: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor.items is a Collection of Item documents with system-specific shapes; this stub never reads it.
     declare items: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor derives characteristics from per-system DataModels; this stub never reads it.
     declare characteristics: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor constructor accepts an open source data object (`Record<string, unknown>`) per the framework.
     constructor(public _data: Record<string, unknown> = {}) {
         Object.assign(this, _data);
     }
 }
 
-(globalThis as Record<string, unknown>).foundry = {
+stubs.foundry = {
     applications: {
         api: {
             ApplicationV2: FakeApplicationV2,
@@ -41,22 +107,30 @@ class FakeActor {
         },
     },
     utils: {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's foundry.utils.Collection extends Map with arbitrary key/value types per the framework type.
         Collection: class FakeCollection extends Map<unknown, unknown> {},
     },
 };
-(globalThis as Record<string, unknown>).Actor = FakeActor;
-(globalThis as Record<string, unknown>).CONST = {
+stubs.Actor = FakeActor;
+stubs.CONST = {
     TOKEN_DISPLAY_MODES: { OWNER_HOVER: 0 },
     TOKEN_DISPOSITIONS: { NEUTRAL: 0, HOSTILE: -1 },
 };
-(globalThis as Record<string, unknown>).game = {
+stubs.game = {
     i18n: {
-        localize: (key: string) => key,
-        format: (key: string) => key,
+        localize: (key: string): string => key,
+        format: (key: string): string => key,
     },
     user: { id: 'test' },
-    settings: { get: () => false },
-    wh40k: { log: () => {}, error: () => {} },
+    settings: { get: (): boolean => false },
+    wh40k: {
+        log: (): void => {
+            /* noop */
+        },
+        error: (): void => {
+            /* noop */
+        },
+    },
 };
 
 // Imports must come AFTER the global stubs so module-init code finds the shims.
@@ -64,17 +138,20 @@ const { WH40KBaseActor } = await import('../src/module/documents/base-actor.ts')
 const { SimpleSkillData } = await import('../src/module/rolls/action-data.ts');
 
 afterAll(() => {
-    (globalThis as Record<string, unknown>).foundry = ORIGINAL_FOUNDRY;
-    (globalThis as Record<string, unknown>).game = ORIGINAL_GAME;
-    (globalThis as Record<string, unknown>).Actor = ORIGINAL_ACTOR;
-    (globalThis as Record<string, unknown>).CONST = ORIGINAL_CONST;
+    stubs.foundry = ORIGINAL_FOUNDRY;
+    stubs.game = ORIGINAL_GAME;
+    stubs.Actor = ORIGINAL_ACTOR;
+    stubs.CONST = ORIGINAL_CONST;
 });
 
 /* -------------------------------------------- */
 /*  Test harness                                 */
 /* -------------------------------------------- */
 
-type SituationalEntry = { key: string; value: number };
+interface SituationalEntry {
+    key: string;
+    value: number;
+}
 
 interface RollFixture {
     actorName: string;
@@ -87,6 +164,41 @@ interface RollFixture {
 }
 
 /**
+ * The runtime shape `_buildSimpleSkillRoll` writes onto `simpleSkillData.rollData`.
+ * Extracted as a single interface so each assertion targets the right field type
+ * without a per-call cast.
+ */
+interface RollDataShape {
+    // `actor` / `sourceActor` are assigned the test actor (which is a
+    // `WH40KBaseActor` proto with a `name` field); we compare by reference
+    // (`.toBe(actor)`), so the field type only needs `object`.
+    actor: object;
+    sourceActor: object;
+    nameOverride: string;
+    type: string;
+    rollKey: string;
+    baseTarget: number;
+    modifiers: {
+        modifier: number;
+        situational?: number;
+    };
+}
+
+type WH40KBaseActorInstance = InstanceType<typeof WH40KBaseActor>;
+type BuildOpts = Parameters<WH40KBaseActorInstance['_buildSimpleSkillRoll']>[0];
+
+interface SituationalProvider {
+    getCharacteristicSituationalModifiers?: (k: string) => SituationalEntry[];
+    getSkillSituationalModifiers?: (k: string) => SituationalEntry[];
+    getCombatSituationalModifiers?: (k: string) => SituationalEntry[];
+}
+
+type TestActor = WH40KBaseActorInstance &
+    SituationalProvider & {
+        name: string;
+    };
+
+/**
  * Construct a bare-bones helper consumer. We do not invoke `new WH40KBaseActor(...)`
  * because the Foundry Actor base class does heavy data preparation; instead we build a
  * plain object whose prototype is `WH40KBaseActor.prototype`, which is enough to exercise
@@ -97,29 +209,29 @@ function makeActor(opts: {
     situationalCharacteristics?: Record<string, SituationalEntry[]>;
     situationalSkills?: Record<string, SituationalEntry[]>;
     situationalCombat?: Record<string, SituationalEntry[]>;
-}): InstanceType<typeof WH40KBaseActor> {
-    const actor = Object.create(WH40KBaseActor.prototype) as InstanceType<typeof WH40KBaseActor> & {
-        name: string;
-        getCharacteristicSituationalModifiers?: (k: string) => SituationalEntry[];
-        getSkillSituationalModifiers?: (k: string) => SituationalEntry[];
-        getCombatSituationalModifiers?: (k: string) => SituationalEntry[];
-    };
+}): TestActor {
+    const actor = Object.create(WH40KBaseActor.prototype) as TestActor;
     actor.name = opts.name;
     if (opts.situationalCharacteristics) {
-        actor.getCharacteristicSituationalModifiers = (k) => opts.situationalCharacteristics?.[k] ?? [];
+        actor.getCharacteristicSituationalModifiers = (k): SituationalEntry[] => opts.situationalCharacteristics?.[k] ?? [];
     }
     if (opts.situationalSkills) {
-        actor.getSkillSituationalModifiers = (k) => opts.situationalSkills?.[k] ?? [];
+        actor.getSkillSituationalModifiers = (k): SituationalEntry[] => opts.situationalSkills?.[k] ?? [];
     }
     if (opts.situationalCombat) {
-        actor.getCombatSituationalModifiers = (k) => opts.situationalCombat?.[k] ?? [];
+        actor.getCombatSituationalModifiers = (k): SituationalEntry[] => opts.situationalCombat?.[k] ?? [];
     }
     return actor;
 }
 
-function assertShape(simpleSkillData: unknown, fixture: RollFixture, sourceActor: unknown): void {
+function rollDataOf(simpleSkillData: SimpleSkillDataType): RollDataShape {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: SimpleSkillData.rollData is typed as the wide RollData base; this narrows to the fields _buildSimpleSkillRoll writes
+    return simpleSkillData.rollData as unknown as RollDataShape;
+}
+
+function assertShape(simpleSkillData: SimpleSkillDataType, fixture: RollFixture, sourceActor: object): void {
     expect(simpleSkillData).toBeInstanceOf(SimpleSkillData);
-    const rollData = (simpleSkillData as { rollData: Record<string, unknown> }).rollData;
+    const rollData = rollDataOf(simpleSkillData);
 
     expect(rollData.actor, 'rollData.actor === source actor').toBe(sourceActor);
     expect(rollData.sourceActor, 'rollData.sourceActor === source actor').toBe(sourceActor);
@@ -127,19 +239,22 @@ function assertShape(simpleSkillData: unknown, fixture: RollFixture, sourceActor
     expect(rollData.type).toBe(fixture.type);
     expect(rollData.rollKey).toBe(fixture.rollKey);
     expect(rollData.baseTarget).toBe(fixture.baseTarget);
-    const modifiers = rollData.modifiers as { modifier: number; situational?: number };
-    expect(modifiers.modifier).toBe(fixture.modifierBaseline);
+    expect(rollData.modifiers.modifier).toBe(fixture.modifierBaseline);
     if (fixture.situational !== undefined) {
-        expect(modifiers.situational).toBe(fixture.situational);
+        expect(rollData.modifiers.situational).toBe(fixture.situational);
     } else {
-        expect(modifiers.situational).toBeUndefined();
+        expect(rollData.modifiers.situational).toBeUndefined();
     }
 }
 
 // Helper to invoke the protected `_buildSimpleSkillRoll` method without TS protection
 // errors at the call site — equivalent to calling it from a subclass.
-function buildRoll(actor: unknown, opts: Parameters<InstanceType<typeof WH40KBaseActor>['_buildSimpleSkillRoll']>[0]): SimpleSkillDataType {
-    return (actor as { _buildSimpleSkillRoll: (o: typeof opts) => SimpleSkillDataType })._buildSimpleSkillRoll(opts);
+interface BuildRollHost {
+    _buildSimpleSkillRoll: (o: BuildOpts) => SimpleSkillDataType;
+}
+function buildRoll(actor: TestActor, opts: BuildOpts): SimpleSkillDataType {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _buildSimpleSkillRoll is protected; the test invokes it as a subclass would
+    return (actor as unknown as BuildRollHost)._buildSimpleSkillRoll(opts);
 }
 
 /* -------------------------------------------- */
@@ -255,7 +370,7 @@ describe('_buildSimpleSkillRoll — PC (acolyte) paths honour situational modifi
             situationalKey: 'commonLore',
         });
 
-        expect((result.rollData as { nameOverride: string }).nameOverride).toBe('Common Lore: Imperium Test');
+        expect(rollDataOf(result).nameOverride).toBe('Common Lore: Imperium Test');
     });
 
     it('zero situational total leaves modifiers.situational unset (does not write 0)', () => {
@@ -277,8 +392,7 @@ describe('_buildSimpleSkillRoll — PC (acolyte) paths honour situational modifi
             situationalKey: 'weaponSkill',
         });
 
-        const modifiers = (result.rollData as unknown as { modifiers: { modifier: number; situational?: number } }).modifiers;
-        expect(modifiers.situational).toBeUndefined();
+        expect(rollDataOf(result).modifiers.situational).toBeUndefined();
     });
 });
 
@@ -327,7 +441,7 @@ describe('_buildSimpleSkillRoll — NPC paths skip situational lookup entirely',
             target: 30,
             nameOverride: 'Hasty Dodge',
         });
-        expect((result.rollData as { nameOverride: string }).nameOverride).toBe('Hasty Dodge');
+        expect(rollDataOf(result).nameOverride).toBe('Hasty Dodge');
     });
 
     it('rollSimpleWeapon: type maps to literal "Attack" and rollKey is the attack characteristic', () => {
@@ -404,7 +518,7 @@ describe('_buildSimpleSkillRoll — structural invariants', () => {
             target: 40,
             situationalKey: 'weaponSkill',
         });
-        const modifiers = (result.rollData as unknown as { modifiers: { modifier: number; situational?: number } }).modifiers;
+        const modifiers = rollDataOf(result).modifiers;
         expect(modifiers.modifier).toBe(0);
         expect(modifiers.situational).toBeUndefined();
     });

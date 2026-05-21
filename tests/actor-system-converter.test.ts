@@ -1,18 +1,31 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-type FakeActorSource = {
+interface FakeActorSystem {
+    gameSystem?: string;
+    wounds?: { value: number; max: number };
+    experience?: { current: number };
+    originPath?: Record<string, string>;
+    threat?: number;
+    imOnly?: { patron: string };
+    rtOnly?: { dynasty: string };
+}
+// FakeActorSource matches ActorDirectoryLike's `toObject: () => Record<string, unknown>`
+// expectation — the index signature is required so the structural cast at the
+// buildConvertedCharacterSource call site typechecks without a manual `as` boundary cast.
+// eslint-disable-next-line no-restricted-syntax -- boundary: matches ActorDirectoryLike's `toObject: () => Record<string, unknown>` framework contract.
+interface FakeActorSource extends Record<string, unknown> {
     _id: string;
     type: string;
-    system: Record<string, unknown>;
+    system: FakeActorSystem;
     flags: {
         core: {
             sheetClass?: string;
             extra?: string;
         };
     };
-};
+}
 
-function installFoundryStubs() {
+function installFoundryStubs(): void {
     Object.assign(globalThis, {
         CONFIG: {
             Actor: {
@@ -20,7 +33,7 @@ function installFoundryStubs() {
                     'rt-character': {
                         migrateData: vi.fn(),
                         shimData: vi.fn(),
-                        cleanData: vi.fn((source: Record<string, unknown>) => ({
+                        cleanData: vi.fn((source: FakeActorSystem) => ({
                             gameSystem: source.gameSystem,
                             wounds: source.wounds,
                             experience: source.experience,
@@ -30,7 +43,7 @@ function installFoundryStubs() {
                     'dh2-character': {
                         migrateData: vi.fn(),
                         shimData: vi.fn(),
-                        cleanData: vi.fn((source: Record<string, unknown>) => ({
+                        cleanData: vi.fn((source: FakeActorSystem) => ({
                             gameSystem: source.gameSystem,
                             wounds: source.wounds,
                             experience: source.experience,
@@ -40,7 +53,7 @@ function installFoundryStubs() {
                     'dh2-npc': {
                         migrateData: vi.fn(),
                         shimData: vi.fn(),
-                        cleanData: vi.fn((source: Record<string, unknown>) => ({
+                        cleanData: vi.fn((source: FakeActorSystem) => ({
                             wounds: source.wounds,
                             threat: source.threat,
                         })),
@@ -177,6 +190,7 @@ describe('actor-system-converter', () => {
                 gameSystem: 'dh2e',
                 wounds: { value: 11, max: 11 },
                 experience: { current: 250 },
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- vitest expect.objectContaining returns `any` by design
                 originPath: expect.objectContaining({
                     homeWorld: 'Void Born',
                     career: '',
