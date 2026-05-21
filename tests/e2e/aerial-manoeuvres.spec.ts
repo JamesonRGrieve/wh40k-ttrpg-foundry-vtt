@@ -29,7 +29,19 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface FoundryRenderGlobals {
+                    foundry?: {
+                        applications?: {
+                            handlebars?: {
+                                renderTemplate?: (p: string, c: object) => Promise<string>;
+                            };
+                        };
+                    };
+                    ChatMessage?: { create: (data: object) => Promise<{ id: string } | null> };
+                    game?: { user?: { id?: string } };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const fg = globalThis as unknown as FoundryRenderGlobals;
                 let error: string | null = null;
                 let rendered = false;
                 let hasCardRoot = false;
@@ -38,9 +50,7 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
                 let messageId: string | null = null;
 
                 try {
-                    const renderTemplateFn = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
-                        | ((p: string, c: object) => Promise<string>)
-                        | undefined;
+                    const renderTemplateFn = fg.foundry?.applications?.handlebars?.renderTemplate;
                     if (!renderTemplateFn) {
                         return { rendered, hasCardRoot, hasSystemAnchor, hasFreeAttackBanner, messageId, error: 'renderTemplate unavailable' };
                     }
@@ -63,15 +73,14 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
                     hasSystemAnchor = html.includes('data-wh40k-system="dh2e"');
                     hasFreeAttackBanner = html.includes('WH40K.AerialManoeuvre.FreeAttack') || html.includes('fa-crosshairs');
 
-                    const ChatMessageCls = (globalThis as any).ChatMessage as { create: (data: object) => Promise<{ id: string } | null> } | undefined;
-                    const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
+                    const ChatMessageCls = fg.ChatMessage;
+                    const msg = await ChatMessageCls?.create({ user: fg.game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, hasCardRoot, hasSystemAnchor, hasFreeAttackBanner, messageId, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'aerial-manoeuvre-chat');
@@ -79,14 +88,21 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
             // Card captured; remove it so it doesn't leak into the next
             // serial test's chat log.
             await page.evaluate(async (id: string | null) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
                 if (id === null) return;
+                interface FoundryMessageRef {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.delete returns a Document instance with no shipped types
+                    delete?: () => Promise<unknown>;
+                }
+                interface FoundryMessagesGlobal {
+                    game?: { messages?: { get?: (id: string) => FoundryMessageRef | undefined } };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const fg = globalThis as unknown as FoundryMessagesGlobal;
                 try {
-                    await (globalThis as any).game?.messages?.get?.(id)?.delete?.();
+                    await fg.game?.messages?.get?.(id)?.delete?.();
                 } catch {
                     /* ignore */
                 }
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, result.messageId);
 
             expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();

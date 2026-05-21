@@ -35,7 +35,24 @@ function dom(html: string): HTMLElement {
     return root;
 }
 
-function baseContext(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface HeaderItem {
+    name?: string;
+    img?: string;
+    type?: string;
+    icon?: string;
+}
+interface HeaderContext {
+    item: HeaderItem;
+    system: object;
+    namePlaceholder?: string;
+    namePlaceholderKey?: string;
+    typeLabel?: string;
+    typeLabelKey?: string;
+    hideTypeBadge?: boolean;
+    typeIcon?: string;
+}
+
+function baseContext(overrides: Partial<HeaderContext> = {}): HeaderContext {
     return {
         item: {
             name: 'Test Item',

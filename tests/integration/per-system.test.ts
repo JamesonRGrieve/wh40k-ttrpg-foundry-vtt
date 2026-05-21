@@ -10,7 +10,7 @@ describe.skipIf(!ok)('per-system homologation (Tier A)', () => {
         it(`creates a character actor with gameSystem='${gameSystem}'`, async () => {
             const result = await bootFoundryOnce();
             if (!result.booted) return;
-            const actor = await createActor(result.runtime!, {
+            const actor = await createActor(result.runtime, {
                 type: 'character',
                 name: `${gameSystem} Actor`,
                 system: { gameSystem },

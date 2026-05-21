@@ -30,19 +30,19 @@ const BATCH_SIZE = 6;
 async function loadPackBatch(page: Page, packIds: string[]): Promise<PackResult[]> {
     return page.evaluate(
         async ({ packIds: ids, batchSize }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        packs?: {
-                            get: (id: string) =>
-                                | {
-                                      getDocuments: () => Promise<Array<unknown>>;
-                                  }
-                                | undefined;
-                        };
+            interface FoundryPack {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumPack.getDocuments returns Document[] with no shipped types
+                getDocuments: () => Promise<Array<unknown>>;
+            }
+            interface FoundryGameGlobal {
+                game?: {
+                    packs?: {
+                        get: (id: string) => FoundryPack | undefined;
                     };
-                }
-            ).game;
+                };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const gameGlobal = (globalThis as unknown as FoundryGameGlobal).game;
             const results: Array<{ id: string; documentCount: number | null; error: string | null }> = [];
             const packs = gameGlobal?.packs;
             if (!packs) {
@@ -81,11 +81,11 @@ async function loadPackBatch(page: Page, packIds: string[]): Promise<PackResult[
 
 async function listPackIds(page: Page): Promise<string[]> {
     return page.evaluate(() => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: { packs?: { keys: () => IterableIterator<string> } };
-            }
-        ).game;
+        interface FoundryGameGlobal {
+            game?: { packs?: { keys: () => IterableIterator<string> } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const gameGlobal = (globalThis as unknown as FoundryGameGlobal).game;
         return gameGlobal?.packs ? Array.from(gameGlobal.packs.keys()) : [];
     });
 }

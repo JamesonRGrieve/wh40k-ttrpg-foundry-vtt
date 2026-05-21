@@ -27,17 +27,25 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
-                const ActorCls = g.Actor as
-                    | {
-                          create?: (data: object) => Promise<{
-                              id?: string;
-                              sheet?: { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                              createEmbeddedDocuments?: (collection: string, data: unknown[]) => Promise<unknown[]>;
-                          } | null>;
-                      }
-                    | undefined;
+                interface ActorSheet {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                    render: (force?: boolean) => Promise<unknown>;
+                    element: HTMLElement | null;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                    close: () => Promise<unknown>;
+                }
+                interface ActorInstance {
+                    id?: string;
+                    sheet?: ActorSheet;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments accepts arbitrary Document data and returns Document[]
+                    createEmbeddedDocuments?: (collection: string, data: object[]) => Promise<unknown[]>;
+                }
+                interface FoundryActorGlobal {
+                    Actor?: { create?: (data: object) => Promise<ActorInstance | null> };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const g = globalThis as unknown as FoundryActorGlobal;
+                const ActorCls = g.Actor;
                 if (!ActorCls?.create) return { error: 'Actor.create unavailable' };
 
                 let actorId: string | null = null;
@@ -69,14 +77,13 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                     if (sheetRendered && sheet.element) {
                         const badge = sheet.element.querySelector('.wh40k-daemonic-immunities-badge');
                         badgeFound = badge !== null;
-                        labelText = badge?.querySelector('.wh40k-daemonic-immunities-badge__label')?.textContent?.trim() ?? null;
+                        labelText = badge?.querySelector('.wh40k-daemonic-immunities-badge__label')?.textContent.trim() ?? null;
                     }
                 } catch (err) {
                     error = String((err as Error).message);
                 }
 
                 return { actorId, sheetRendered, badgeFound, labelText, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `probe error: ${result.error ?? ''}`).toBeNull();

@@ -13,7 +13,7 @@ import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-function compile(source: string, context: unknown): HTMLElement {
+function compile(source: string, context: object): HTMLElement {
     return compileAndRender(HB.compile(source), context);
 }
 

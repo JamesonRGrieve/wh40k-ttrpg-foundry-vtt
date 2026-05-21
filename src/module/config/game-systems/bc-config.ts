@@ -278,7 +278,8 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         const advAlignment = this.getCharacteristicAlignment(charKey);
         const cost = characteristicAdvanceCost(charAlignment, advAlignment, currentTier);
         if (cost === null) return null;
-        const tierKey = BC_CHARACTERISTIC_TIERS[currentTier];
+        const tierKey: (typeof BC_CHARACTERISTIC_TIERS)[number] | undefined = BC_CHARACTERISTIC_TIERS[currentTier];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; main tsconfig has it and requires this guard
         if (tierKey === undefined) return null;
         return { cost, tier: tierKey };
     }
@@ -336,6 +337,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     // ── Helpers ─────────────────────────────────────────────────
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context flows in from abstract base signature, narrowed via string-literal comparison below
     #extractAdvanceAlignment(context: Record<string, unknown> | undefined): ChaosAlignment | null {
         const raw = context?.['advanceAlignment'];
         if (raw === 'khorne' || raw === 'nurgle' || raw === 'slaanesh' || raw === 'tzeentch' || raw === 'unaligned') {
@@ -346,9 +348,10 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         return null;
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: talent flows in from abstract base signature (Foundry Item / raw compendium entry), validated by typeof guards before access
     #readTalentSystem(talent: unknown): { chaosAlignment?: ChaosAlignment; tier?: number } | null {
         if (talent === null || typeof talent !== 'object') return null;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: talent is untyped framework input (Foundry Item / raw compendium entry)
+        // eslint-disable-next-line no-restricted-syntax -- boundary: talent.system is per-talent-type-keyed; narrowing to the two BC fields we use
         const sys = (talent as { system?: unknown }).system;
         if (sys === null || typeof sys !== 'object') return null;
         // eslint-disable-next-line no-restricted-syntax -- boundary: talent.system is per-talent-type-keyed; narrowing to the two BC fields we use

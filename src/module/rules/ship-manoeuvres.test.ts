@@ -55,8 +55,7 @@ describe('SHIP_MANOEUVRES registry shape', () => {
     it('getShipManoeuvre returns the entry by id and undefined for misses', () => {
         const adj = getShipManoeuvre('adjust-bearing');
         expect(adj?.difficulty).toBe(0);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- intentional unknown id for negative case
-        expect(getShipManoeuvre('not-a-real-id' as any)).toBeUndefined();
+        expect(getShipManoeuvre('not-a-real-id')).toBeUndefined();
     });
 });
 

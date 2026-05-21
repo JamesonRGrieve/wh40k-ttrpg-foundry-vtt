@@ -14,7 +14,7 @@ const quickActionsTemplate = Hbs.compile(quickActionsBarSrc);
 
 interface QuickActionsArgs {
     item: MockItem;
-    system: Record<string, unknown>;
+    system: object;
     compact: boolean;
     inSheet: boolean;
 }

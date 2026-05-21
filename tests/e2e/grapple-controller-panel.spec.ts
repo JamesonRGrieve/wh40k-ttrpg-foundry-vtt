@@ -15,13 +15,33 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
     const joined = await joinAsGM(page);
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
-    const result = await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+    interface ProbeResult {
+        setupOk: boolean;
+        btnCount: number;
+        hasTitle: boolean;
+        error: string | null;
+    }
+    const result = await page.evaluate(async (): Promise<ProbeResult> => {
+        interface ActorSheet {
+            render: (force?: boolean) => Promise<void>;
+            changeTab?: (tab: string, group: string) => void;
+            element?: HTMLElement | null;
+        }
+        interface ActorDoc {
+            sheet: ActorSheet;
+        }
+        interface ActorCtorShape {
+            create?: (data: object) => Promise<ActorDoc | null>;
+        }
+        interface ProbeGlobal {
+            Actor?: ActorCtorShape;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+        const g = globalThis as unknown as ProbeGlobal;
         const ActorCls = g.Actor;
         if (ActorCls?.create == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
 
-        let actor;
+        let actor: ActorDoc | null;
         try {
             actor = await ActorCls.create({
                 name: 'grapple-panel-probe',
@@ -40,7 +60,7 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
         });
 
         try {
-            actor.sheet?.changeTab?.('status', 'primary');
+            actor.sheet.changeTab?.('status', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });
@@ -48,15 +68,15 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
             /* fall back to whatever tab is open */
         }
 
-        const root = actor.sheet?.element;
-        const panel = root?.querySelector?.('.wh40k-grapple-panel');
+        const root = actor.sheet.element;
+        const panel = root?.querySelector('.wh40k-grapple-panel') ?? null;
         const btnCount =
-            panel != null
+            panel !== null
                 ? panel.querySelectorAll(
                       '.wh40k-grapple-damage-btn, .wh40k-grapple-throw-btn, .wh40k-grapple-break-btn, .wh40k-grapple-stand-btn, .wh40k-grapple-move-btn',
                   ).length
                 : 0;
-        const hasTitle = Boolean(panel?.querySelector?.('h3'));
+        const hasTitle = Boolean(panel?.querySelector('h3'));
         return { setupOk: true, btnCount, hasTitle, error: null };
     });
 
@@ -77,9 +97,18 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
     expect(result.hasTitle, 'expected grapple panel header (h3) to be in the DOM').toBe(true);
 
     // Cleanup
-    await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const g = globalThis as any;
+    await page.evaluate(async (): Promise<void> => {
+        interface ActorDoc {
+            delete?: () => Promise<void>;
+        }
+        interface ActorsCollection {
+            getName?: (name: string) => ActorDoc | undefined;
+        }
+        interface CleanupGlobal {
+            game?: { actors?: ActorsCollection };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+        const g = globalThis as unknown as CleanupGlobal;
         const a = g.game?.actors?.getName?.('grapple-panel-probe');
         try {
             await a?.delete?.();

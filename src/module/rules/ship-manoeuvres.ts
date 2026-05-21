@@ -124,8 +124,8 @@ export const SHIP_MANOEUVRES: readonly ShipManoeuvre[] = [
     },
 ] as const;
 
-/** Look up a Manoeuvre by its stable id (case-sensitive, exact match). */
-export function getShipManoeuvre(id: ShipManoeuvreId): ShipManoeuvre | undefined {
+/** Look up a Manoeuvre by its stable id (case-sensitive, exact match). Accepts any string so callers can probe for membership without a pre-cast. */
+export function getShipManoeuvre(id: string): ShipManoeuvre | undefined {
     return SHIP_MANOEUVRES.find((m) => m.id === id);
 }
 

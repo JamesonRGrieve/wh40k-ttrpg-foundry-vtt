@@ -24,7 +24,7 @@ interface ContainerCtx {
     inEditMode: boolean;
     editable: boolean;
     isOwnedByActor: boolean;
-    effects: unknown[];
+    effects: object[];
     tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
 }
 

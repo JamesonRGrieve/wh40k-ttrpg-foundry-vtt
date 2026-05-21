@@ -23,8 +23,27 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+            interface ProbeResult {
+                rendered: boolean;
+                grenadeIds: string[];
+                hasThrowButton: boolean;
+                error: string | null;
+            }
+            const result = await page.evaluate(async (): Promise<ProbeResult> => {
+                interface DialogInstance {
+                    render: (force?: boolean) => Promise<void>;
+                    element: HTMLElement | null;
+                    close: () => Promise<void>;
+                }
+                interface DialogCtor {
+                    new (opts?: { grenadeId?: string }): DialogInstance;
+                }
+                interface DialogModule {
+                    default: DialogCtor;
+                }
+                interface DialogGlobal {
+                    __c9dialog?: DialogInstance;
+                }
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/grenade-throw-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -32,24 +51,23 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
                 let hasThrowButton = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts?: unknown): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return { rendered, grenadeIds, hasThrowButton, error: 'default export not a constructor' };
                     }
                     const inst = new Cls({ grenadeId: 'psychotroke' });
                     try {
                         await inst.render(true);
-                        await new Promise((r) => {
+                        await new Promise<void>((r) => {
                             setTimeout(r, 60);
                         });
                     } catch (err) {
                         error = err instanceof Error ? err.stack ?? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
+                    if (rendered && inst.element !== null) {
                         for (const btn of Array.from(inst.element.querySelectorAll<HTMLElement>('[data-grenade-id]'))) {
                             const id = btn.dataset.grenadeId;
                             if (typeof id === 'string' && id !== '') grenadeIds.push(id);
@@ -59,28 +77,34 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
                     // Keep the dialog open and on a handle so snap() (called
                     // outside this evaluate) captures the live DOM. Closing
                     // here would leave the screenshot empty.
-                    (globalThis as any).__c9dialog = inst;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing instance on globalThis for cross-evaluate access
+                    (globalThis as unknown as DialogGlobal).__c9dialog = inst;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, grenadeIds, hasThrowButton, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'grenade-throw-dialog');
 
             // Dialog captured; tear it down so it doesn't leak into the next test's DOM.
-            await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const d = (globalThis as any).__c9dialog;
+            await page.evaluate(async (): Promise<void> => {
+                interface DialogInstance {
+                    close?: () => Promise<void>;
+                }
+                interface DialogGlobal {
+                    __c9dialog?: DialogInstance;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading stashed instance from globalThis
+                const gRef = globalThis as unknown as DialogGlobal;
+                const d = gRef.__c9dialog;
                 try {
                     await d?.close?.();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__c9dialog = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                gRef.__c9dialog = undefined;
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();

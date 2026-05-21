@@ -108,8 +108,8 @@ export const DISORDERS_TABLE: ReadonlyArray<DisorderDef> = Object.freeze([
     },
 ]);
 
-/** Quick lookup helper. Returns null when the id is unknown. */
-export function getDisorder(id: DisorderId): DisorderDef | null {
+/** Quick lookup helper. Returns null when the id is unknown. Accepts any string so callers can probe for membership without a pre-cast. */
+export function getDisorder(id: string): DisorderDef | null {
     return DISORDERS_TABLE.find((d) => d.id === id) ?? null;
 }
 

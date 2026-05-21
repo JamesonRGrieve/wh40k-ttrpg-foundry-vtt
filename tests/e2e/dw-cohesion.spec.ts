@@ -26,7 +26,6 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-cohesion-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -40,10 +39,33 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
                 let maxAttr = '';
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsLib.compile !== 'function') {
+                    interface HandlebarsCompile {
+                        compile: (s: string) => (ctx: object) => string;
+                    }
+                    interface DwCohesionGlobals {
+                        fetch?: (u: string) => Promise<Response>;
+                        Handlebars?: HandlebarsCompile;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                    const fg = globalThis as unknown as DwCohesionGlobals;
+                    const fetchFn = fg.fetch;
+                    if (typeof fetchFn !== 'function') {
+                        return {
+                            rendered,
+                            readout,
+                            hasRallyButton,
+                            hasRecoverButton,
+                            hasChallengeButton,
+                            rallyDisabled,
+                            recoverDisabled,
+                            currentAttr,
+                            maxAttr,
+                            error: 'fetch not available on globalThis',
+                        };
+                    }
+                    const src = await (await fetchFn(templateUrl)).text();
+                    const HandlebarsLib = fg.Handlebars;
+                    if (HandlebarsLib === undefined || typeof HandlebarsLib.compile !== 'function') {
                         return {
                             rendered,
                             readout,
@@ -105,7 +127,11 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
 
                     // Hold the host on a global handle so snap() (called
                     // outside this evaluate) captures the live DOM.
-                    (globalThis as any).__dwCohesionPanelHost = host;
+                    interface DwCohesionHostGlobal {
+                        __dwCohesionPanelHost?: HTMLElement | undefined;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                    (globalThis as unknown as DwCohesionHostGlobal).__dwCohesionPanelHost = host;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
@@ -122,22 +148,24 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
                     maxAttr,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'dw-cohesion-panel');
 
             // Tear down so the next serial test starts clean.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__dwCohesionPanelHost as HTMLElement | undefined;
+                interface DwCohesionHostGlobal {
+                    __dwCohesionPanelHost?: HTMLElement | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+                const fg = globalThis as unknown as DwCohesionHostGlobal;
+                const host = fg.__dwCohesionPanelHost;
                 try {
                     host?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__dwCohesionPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__dwCohesionPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

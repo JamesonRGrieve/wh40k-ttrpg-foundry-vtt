@@ -211,7 +211,7 @@ function renderExtendedActionsPanel(ctx: SheetContextLike): HTMLElement {
 // shield absorbed the volley. The story is data-driven so the visual snapshot
 // is deterministic across runs.
 
-interface ShipWeaponChatCtx extends Record<string, unknown> {
+interface ShipWeaponChatCtx {
     actor: { name: string };
     weapon: {
         _id: string;

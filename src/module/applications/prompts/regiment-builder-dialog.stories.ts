@@ -95,7 +95,7 @@ const SAMPLE_CATEGORIES: CategoryRow[] = [
 
 const meta = {
     title: 'Prompts/RegimentBuilderDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         budget: { spent: 0, total: 12, valid: false, over: false },
         categories: EMPTY_CATEGORIES,

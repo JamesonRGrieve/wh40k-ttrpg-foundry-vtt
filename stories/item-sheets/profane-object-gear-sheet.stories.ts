@@ -85,8 +85,7 @@ const baseArgs = (slug: keyof typeof PROFANE_OBJECT_REGISTRY): ProfaneGearArgs =
 
 const meta = {
     title: 'Item Sheets/ProfaneObjectGearSheet',
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Storybook render args typed as ProfaneGearArgs; renderSheet accepts Context (Record<string, unknown>); double-cast is the framework boundary
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: baseArgs('eye-of-tzeentch'),
 } satisfies Meta<ProfaneGearArgs>;
 

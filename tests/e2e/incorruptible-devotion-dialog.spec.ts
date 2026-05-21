@@ -27,8 +27,25 @@ test.describe.serial('IncorruptibleDevotionDialog (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+            interface ProbeResult {
+                rendered: boolean;
+                hasTradeButton: boolean;
+                hasDeclineButton: boolean;
+                bodyHasAmount: boolean;
+                error: string | null;
+            }
+            interface DialogInstance {
+                render: (force?: boolean) => Promise<void>;
+                element: HTMLElement | null;
+                close: () => Promise<void>;
+            }
+            interface DialogCtor {
+                new (opts: { corruptionAmount: number }): DialogInstance;
+            }
+            interface DialogModule {
+                default: DialogCtor;
+            }
+            const result = await page.evaluate(async (): Promise<ProbeResult> => {
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/incorruptible-devotion-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -37,14 +54,9 @@ test.describe.serial('IncorruptibleDevotionDialog (Tier B)', () => {
                 let bodyHasAmount = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts: { corruptionAmount: number }): {
-                            render: (force?: boolean) => Promise<unknown>;
-                            element: HTMLElement | null;
-                            close: () => Promise<unknown>;
-                        };
-                    };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return { rendered, hasTradeButton, hasDeclineButton, bodyHasAmount, error: 'default export not a constructor' };
                     }
@@ -58,17 +70,16 @@ test.describe.serial('IncorruptibleDevotionDialog (Tier B)', () => {
                         error = String((err as Error).message);
                     }
                     rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
+                    if (rendered && inst.element !== null) {
                         hasTradeButton = inst.element.querySelector('[data-action="trade"]') !== null;
                         hasDeclineButton = inst.element.querySelector('[data-action="decline"]') !== null;
-                        bodyHasAmount = (inst.element.textContent ?? '').includes('3');
+                        bodyHasAmount = inst.element.textContent.includes('3');
                     }
                 } catch (err) {
                     error = String((err as Error).message);
                 }
 
                 return { rendered, hasTradeButton, hasDeclineButton, bodyHasAmount, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();

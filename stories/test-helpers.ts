@@ -23,7 +23,11 @@ import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();
 
-type Context = Record<string, unknown>;
+// Story render context: Handlebars accepts arbitrary objects.
+// Use `object` (not `Record<string, unknown>`) so typed Storybook `args`
+// objects can flow in without `as unknown as Record<string, unknown>` casts
+// at every call site.
+type Context = object;
 
 /**
  * Compile a single Handlebars template source and render it against the

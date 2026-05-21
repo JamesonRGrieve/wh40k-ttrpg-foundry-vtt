@@ -29,7 +29,13 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface HandlebarsCompile {
+                    compile: (s: string) => (ctx: object) => string;
+                }
+                interface PanelGlobals {
+                    fetch?: (u: string) => Promise<Response>;
+                    Handlebars?: HandlebarsCompile;
+                }
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -42,10 +48,25 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                 let readout = '';
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HandlebarsInstance = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsInstance.compile !== 'function') {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                    const fg = globalThis as unknown as PanelGlobals;
+                    const fetchFn = fg.fetch;
+                    if (typeof fetchFn !== 'function') {
+                        return {
+                            rendered,
+                            hasSwearButton,
+                            hasReleaseButton,
+                            swearDisabled,
+                            releaseDisabled,
+                            activeAttr,
+                            idAttr,
+                            readout,
+                            error: 'fetch not available on globalThis',
+                        };
+                    }
+                    const src = await (await fetchFn(templateUrl)).text();
+                    const HandlebarsInstance = fg.Handlebars;
+                    if (HandlebarsInstance === undefined || typeof HandlebarsInstance.compile !== 'function') {
                         return {
                             rendered,
                             hasSwearButton,
@@ -96,12 +117,16 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                         releaseDisabled = releaseBtn?.disabled === true;
                         activeAttr = section?.getAttribute('data-dw-oath-active') ?? '';
                         idAttr = section?.getAttribute('data-dw-oath-id') ?? '';
-                        readout = readoutEl?.textContent?.trim().replace(/\s+/g, ' ') ?? '';
+                        readout = readoutEl?.textContent.trim().replace(/\s+/g, ' ') ?? '';
                     }
 
                     // Hold the host on a global handle so snap() (called
                     // outside this evaluate) captures the live DOM.
-                    (globalThis as any).__dwOathPanelHost = host;
+                    interface DwOathHostGlobal {
+                        __dwOathPanelHost?: HTMLElement | undefined;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                    (globalThis as unknown as DwOathHostGlobal).__dwOathPanelHost = host;
                 } catch (err) {
                     error = String((err as Error).message);
                 }
@@ -117,22 +142,24 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                     readout,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'dw-oath-panel');
 
             // Tear down so the next serial test starts clean.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__dwOathPanelHost as HTMLElement | undefined;
+                interface DwOathHostGlobal {
+                    __dwOathPanelHost?: HTMLElement | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+                const fg = globalThis as unknown as DwOathHostGlobal;
+                const host = fg.__dwOathPanelHost;
                 try {
                     host?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__dwOathPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__dwOathPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

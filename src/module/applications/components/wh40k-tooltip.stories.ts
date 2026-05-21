@@ -33,7 +33,10 @@ interface SkillTooltipStoryArgs {
 }
 
 async function renderSkillTooltip(args: SkillTooltipStoryArgs): Promise<HTMLElement> {
-    const html = await TooltipsWH40K.prototype._buildSkillTooltip.call({} as unknown as InstanceType<typeof TooltipsWH40K>, {
+    // `_buildSkillTooltip` does not read from `this`; bind an empty placeholder of the
+    // correct instance shape so we can invoke the prototype method directly from a story.
+    const builder = TooltipsWH40K.prototype._buildSkillTooltip.bind(Object.create(TooltipsWH40K.prototype) as InstanceType<typeof TooltipsWH40K>);
+    const html = await builder({
         name: args.name,
         label: args.label,
         characteristic: args.characteristic,

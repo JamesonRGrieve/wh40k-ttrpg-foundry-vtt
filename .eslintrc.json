@@ -157,7 +157,7 @@
         "@typescript-eslint/prefer-enum-initializers": "error",
         "@typescript-eslint/dot-notation": ["error", { "allowIndexSignaturePropertyAccess": true }],
         "dot-notation": "off",
-        "import/order": ["warn", { "groups": ["builtin", "external", "internal", "parent", "sibling", "index"], "newlines-between": "never", "alphabetize": { "order": "asc" } }],
+        "import/order": ["error", { "groups": ["builtin", "external", "internal", "parent", "sibling", "index"], "newlines-between": "never", "alphabetize": { "order": "asc" } }],
         "@typescript-eslint/require-await": "error",
         "@typescript-eslint/no-unnecessary-type-assertion": "warn",
         "@typescript-eslint/no-floating-promises": "error",

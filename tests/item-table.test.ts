@@ -26,7 +26,7 @@ function renderTable(hashLiteral: string, body = ''): HTMLElement {
     return dom(tpl({}));
 }
 
-function renderRow(hashLiteral: string, body = '', context: Record<string, unknown> = {}): HTMLElement {
+function renderRow(hashLiteral: string, body = '', context: object = {}): HTMLElement {
     const tpl = HbsLib.compile(`{{#> item-table-row-test ${hashLiteral}}}${body}{{/item-table-row-test}}`);
     return dom(tpl(context));
 }

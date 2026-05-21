@@ -18,6 +18,7 @@ type EndeavourSystem = Pick<EndeavourData, 'apEarned' | 'apRequired' | 'objectiv
  * Add a blank Objective to the current Endeavour.
  */
 async function addObjective(this: BaseItemSheet): Promise<void> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel surface widens to all item systems via index signature; narrowing to the concrete EndeavourSystem requires unknown-first
     const sys = this.item.system as unknown as EndeavourSystem;
     const next = [...sys.objectives, { name: '', description: '', complete: false, ap: 0 }];
     await this.item.update({ 'system.objectives': next });
@@ -33,11 +34,14 @@ async function removeObjective(this: BaseItemSheet, _event: Event, target: HTMLE
     if (idxStr === undefined) return;
     const idx = Number.parseInt(idxStr, 10);
     if (!Number.isFinite(idx)) return;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel surface widens to all item systems via index signature; narrowing to the concrete EndeavourSystem requires unknown-first
     const sys = this.item.system as unknown as EndeavourSystem;
     if (idx < 0 || idx >= sys.objectives.length) return;
     const removed = sys.objectives[idx];
     const next = sys.objectives.filter((_, i) => i !== idx);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Item.update accepts a path-keyed update payload (Foundry framework boundary)
     const update: Record<string, unknown> = { 'system.objectives': next };
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees removed as possibly undefined
     if (removed?.complete) {
         update['system.apEarned'] = Math.max(0, sys.apEarned - removed.ap);
     }

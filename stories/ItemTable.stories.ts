@@ -262,7 +262,7 @@ interface MockShipItem {
     isShipWeapon?: boolean;
     isShipComponent?: boolean;
     isShipUpgrade?: boolean;
-    system: Record<string, unknown>;
+    system: object;
 }
 
 function makeShipWeapons(): MockShipItem[] {

@@ -18,7 +18,7 @@ interface Args {
 
 const meta = {
     title: 'Prompts/SpecialistSkillDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         actor: { name: 'Acolyte Brennen', img: 'icons/svg/mystery-man.svg' },
         specialistSkills: [

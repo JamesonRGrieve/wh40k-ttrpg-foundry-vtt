@@ -36,7 +36,7 @@ describe('panel.hbs block-partial', () => {
         const root = dom(html);
         expect(root.querySelector('.wh40k-panel')).not.toBeNull();
         expect(root.querySelector('.wh40k-panel-header')).not.toBeNull();
-        expect(root.querySelector('.wh40k-panel-title')?.textContent?.trim()).toContain('Armour');
+        expect((root.querySelector('.wh40k-panel-title')?.textContent ?? '').trim()).toContain('Armour');
         expect(root.querySelector('.fa-shield-alt')).not.toBeNull();
         expect(root.querySelector('.wh40k-panel-body .custom-body')?.textContent).toBe('body markup');
     });
@@ -45,7 +45,7 @@ describe('panel.hbs block-partial', () => {
         const html = wrapWith('label="Bonuses"', '<span class="x">x</span>')({});
         const root = dom(html);
         expect(root.querySelector('.wh40k-panel-title i.fas')).toBeNull();
-        expect(root.querySelector('.wh40k-panel-title')?.textContent?.trim()).toBe('Bonuses');
+        expect((root.querySelector('.wh40k-panel-title')?.textContent ?? '').trim()).toBe('Bonuses');
     });
 
     it('passes rootClass / headerClass / bodyClass through verbatim', () => {

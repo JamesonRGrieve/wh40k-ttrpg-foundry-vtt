@@ -23,10 +23,15 @@ interface ActorRef {
 }
 
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async () => {
-        const browserCtx = globalThis as unknown as {
-            Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        };
+    const result = await page.evaluate(async (): Promise<{ id: string | null; error: string | null }> => {
+        interface ActorDocLite {
+            id?: string;
+        }
+        interface BrowserCtx {
+            Actor?: { create?: (data: object) => Promise<ActorDocLite | null> };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+        const browserCtx = globalThis as unknown as BrowserCtx;
         if (!browserCtx.Actor?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await browserCtx.Actor.create({
@@ -45,29 +50,41 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
 }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
-    await page.evaluate(async (id: string) => {
-        const browserCtx = globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        };
+    await page.evaluate(async (id: string): Promise<void> => {
+        interface ActorDocLite {
+            delete?: () => Promise<void>;
+        }
+        interface BrowserCtx {
+            game?: { actors?: { get?: (id: string) => ActorDocLite | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+        const browserCtx = globalThis as unknown as BrowserCtx;
         const actor = browserCtx.game?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
 
-async function addFearTrait(page: Page, actorId: string, fearRating: number): Promise<{ traitId: string | null; fearRating: number; error: string | null }> {
+interface FearTraitResult {
+    traitId: string | null;
+    fearRating: number;
+    error: string | null;
+}
+
+async function addFearTrait(page: Page, actorId: string, fearRating: number): Promise<FearTraitResult> {
     return page.evaluate(
-        async ({ targetActorId, rating }) => {
-            const browserCtx = globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (
-                            id: string,
-                        ) =>
-                            | { createEmbeddedDocuments?: (kind: string, data: unknown[]) => Promise<Array<{ id?: string; system?: { fearRating?: number } }>> }
-                            | undefined;
-                    };
-                };
-            };
+        async ({ targetActorId, rating }): Promise<FearTraitResult> => {
+            interface EmbeddedItemDoc {
+                id?: string;
+                system?: { fearRating?: number };
+            }
+            interface ActorDocLite {
+                createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<EmbeddedItemDoc[]>;
+            }
+            interface BrowserCtx {
+                game?: { actors?: { get?: (id: string) => ActorDocLite | undefined } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+            const browserCtx = globalThis as unknown as BrowserCtx;
             const actor = browserCtx.game?.actors?.get?.(targetActorId);
             if (!actor?.createEmbeddedDocuments) return { traitId: null, fearRating: 0, error: 'actor.createEmbeddedDocuments unavailable' };
             try {
@@ -109,8 +126,25 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
             expect(traitResult.traitId, 'trait id should be set').not.toBeNull();
             expect(traitResult.fearRating, 'system.fearRating should round-trip as 3').toBe(3);
 
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+            interface DialogProbeResult {
+                rendered: boolean;
+                hasFearInput: boolean;
+                fearInputValue: string | null;
+                hasRollButton: boolean;
+                error: string | null;
+            }
+            const result = await page.evaluate(async (): Promise<DialogProbeResult> => {
+                interface DialogInstance {
+                    render: (force?: boolean) => Promise<void>;
+                    element: HTMLElement | null;
+                    close: () => Promise<void>;
+                }
+                interface DialogCtor {
+                    new (opts?: { fearRating?: number }): DialogInstance;
+                }
+                interface DialogModule {
+                    default: DialogCtor;
+                }
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/fear-test-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -119,10 +153,9 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                 let hasRollButton = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts?: unknown): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return { rendered, hasFearInput, fearInputValue, hasRollButton, error: 'default export not a constructor' };
                     }
@@ -136,7 +169,7 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                         error = String((err as Error).message);
                     }
                     rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
+                    if (rendered && inst.element !== null) {
                         const fr = inst.element.querySelector<HTMLInputElement>('input[name="fearRating"]');
                         hasFearInput = fr !== null;
                         fearInputValue = fr?.value ?? null;
@@ -152,7 +185,6 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                 }
 
                 return { rendered, hasFearInput, fearInputValue, hasRollButton, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'fear-test-dialog-fr3');

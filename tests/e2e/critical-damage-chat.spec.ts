@@ -38,9 +38,19 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
                 let hasEffectText = false;
 
                 try {
-                    const g = globalThis as any;
-                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
-                    if (typeof renderTemplate !== 'function') {
+                    interface FoundryRenderGlobals {
+                        foundry?: {
+                            applications?: {
+                                handlebars?: {
+                                    renderTemplate?: (path: string, ctx: object) => Promise<string>;
+                                };
+                            };
+                        };
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                    const g = globalThis as unknown as FoundryRenderGlobals;
+                    const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
+                    if (typeof renderTemplateFn !== 'function') {
                         return {
                             rendered,
                             hasCardRoot,
@@ -63,7 +73,7 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
 
                     let html = '';
                     try {
-                        html = await renderTemplate(templatePath, ctx);
+                        html = await renderTemplateFn(templatePath, ctx);
                     } catch (renderErr) {
                         error = String((renderErr as Error).message);
                     }

@@ -30,7 +30,13 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface HandlebarsCompile {
+                    compile: (s: string) => (ctx: object) => string;
+                }
+                interface PanelGlobals {
+                    fetch?: (u: string) => Promise<Response>;
+                    Handlebars?: HandlebarsCompile;
+                }
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-ammo-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -43,10 +49,25 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
                 let actionAttr = '';
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HandlebarsGlobal = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsGlobal.compile !== 'function') {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                    const fg = globalThis as unknown as PanelGlobals;
+                    const fetchFn = fg.fetch;
+                    if (typeof fetchFn !== 'function') {
+                        return {
+                            rendered,
+                            loadedAttr,
+                            loadedText,
+                            radioCount,
+                            selectedRadioId,
+                            selectedRadioChecked,
+                            hasPenetrationLine,
+                            actionAttr,
+                            error: 'fetch not available on globalThis',
+                        };
+                    }
+                    const src = await (await fetchFn(templateUrl)).text();
+                    const HandlebarsGlobal = fg.Handlebars;
+                    if (HandlebarsGlobal === undefined || typeof HandlebarsGlobal.compile !== 'function') {
                         return {
                             rendered,
                             loadedAttr,
@@ -108,7 +129,7 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
 
                     if (rendered) {
                         const loadedSpan = host.querySelector('.wh40k-dw-ammo-loaded');
-                        loadedText = loadedSpan?.textContent?.trim() ?? '';
+                        loadedText = loadedSpan?.textContent.trim() ?? '';
                         loadedAttr = loadedSpan?.getAttribute('data-loaded') ?? '';
 
                         const radios = host.querySelectorAll<HTMLInputElement>('input.wh40k-dw-ammo-radio');
@@ -122,7 +143,11 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
                     }
 
                     // Anchor the rendered DOM so snap() captures live pixels.
-                    (globalThis as any).__dwAmmoPanelHost = host;
+                    interface DwAmmoHostGlobal {
+                        __dwAmmoPanelHost?: HTMLElement | undefined;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                    (globalThis as unknown as DwAmmoHostGlobal).__dwAmmoPanelHost = host;
                 } catch (err) {
                     error = String((err as Error).message);
                 }
@@ -138,22 +163,24 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
                     actionAttr,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'dw-special-ammo-panel');
 
             // Tear down so the host doesn't leak into the next serial test.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__dwAmmoPanelHost as HTMLElement | undefined;
+                interface DwAmmoHostGlobal {
+                    __dwAmmoPanelHost?: HTMLElement | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+                const fg = globalThis as unknown as DwAmmoHostGlobal;
+                const host = fg.__dwAmmoPanelHost;
                 try {
                     host?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__dwAmmoPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                fg.__dwAmmoPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

@@ -28,31 +28,34 @@ test('dump enumerable inventory + reset coverage tracker', async ({ page }) => {
     expect(joined, 'GM join must succeed to dump the inventory').toBe(true);
 
     const inv = await page.evaluate(() => {
-        const cfg = (
-            globalThis as unknown as {
-                CONFIG?: {
-                    Actor?: {
-                        dataModels?: Record<string, unknown>;
-                        sheetClasses?: Record<string, Record<string, { id?: string }>>;
-                    };
-                    Item?: {
-                        dataModels?: Record<string, unknown>;
-                        sheetClasses?: Record<string, Record<string, { id?: string }>>;
-                    };
-                    statusEffects?: Array<{ id: string; name?: string }>;
-                };
-                game?: {
-                    system?: { id?: string; version?: string };
-                    release?: { version?: string; generation?: number };
-                    packs?: { keys: () => IterableIterator<string> };
-                };
-            }
-        ).CONFIG;
-        const gameRef = (
-            globalThis as unknown as {
-                game?: { packs?: { keys: () => IterableIterator<string> } };
-            }
-        ).game;
+        interface FoundryDataModelMap {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: DataModel registry values are Foundry-internal classes, only keys are used here
+            [type: string]: unknown;
+        }
+        interface FoundryConfig {
+            Actor?: {
+                dataModels?: FoundryDataModelMap;
+                sheetClasses?: Record<string, Record<string, { id?: string }>>;
+            };
+            Item?: {
+                dataModels?: FoundryDataModelMap;
+                sheetClasses?: Record<string, Record<string, { id?: string }>>;
+            };
+            statusEffects?: Array<{ id: string; name?: string }>;
+        }
+        interface FoundryGame {
+            system?: { id?: string; version?: string };
+            release?: { version?: string; generation?: number };
+            packs?: { keys: () => IterableIterator<string> };
+        }
+        interface FoundryGlobals {
+            CONFIG?: FoundryConfig;
+            game?: FoundryGame;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry globals in page.evaluate browser context have no shipped types
+        const fg = globalThis as unknown as FoundryGlobals;
+        const cfg = fg.CONFIG;
+        const gameRef = fg.game;
 
         const actorTypes = Object.keys(cfg?.Actor?.dataModels ?? {});
         const itemTypes = Object.keys(cfg?.Item?.dataModels ?? {});

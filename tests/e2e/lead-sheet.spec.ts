@@ -18,6 +18,12 @@ interface LeadProbeResult {
     pageErrors: string[];
 }
 
+interface ProbeReturn {
+    created: boolean;
+    rendered: boolean;
+    createError: string | null;
+}
+
 async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
     const pageErrors: string[] = [];
     const listener = (pageErr: Error): void => {
@@ -25,14 +31,30 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
     };
     page.on('pageerror', listener);
     try {
-        const result = await page.evaluate(async () => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+        const result = await page.evaluate(async (): Promise<ProbeReturn> => {
+            interface ItemSheet {
+                render?: (force?: boolean) => Promise<void>;
+                close?: () => Promise<void>;
+            }
+            interface ItemDoc {
+                id?: string;
+                sheet?: ItemSheet;
+                delete?: () => Promise<void>;
+            }
+            interface ItemCtorShape {
+                create?: (data: object) => Promise<ItemDoc | null>;
+            }
+            interface ProbeGlobal {
+                Item?: ItemCtorShape;
+                __leadProbeItemId?: string;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+            const g = globalThis as unknown as ProbeGlobal;
             const ItemCls = g.Item;
             if (ItemCls?.create == null) {
                 return { created: false, rendered: false, createError: 'Item.create unavailable' };
             }
-            let item;
+            let item: ItemDoc | null;
             try {
                 item = await ItemCls.create({
                     name: 'probe-lead',
@@ -53,7 +75,7 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
             try {
                 if (item.sheet?.render != null) {
                     await item.sheet.render(true);
-                    await new Promise((r) => {
+                    await new Promise<void>((r) => {
                         setTimeout(r, 100);
                     });
                     rendered = true;
@@ -66,7 +88,6 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
             // capture it; cleanup happens after snap() in the test below.
             g.__leadProbeItemId = item.id;
             return { created: true, rendered, createError: null };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return {
             created: result.created,
@@ -80,9 +101,23 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
 }
 
 async function cleanupLeadProbe(page: Page): Promise<void> {
-    await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-        const g = globalThis as any;
+    await page.evaluate(async (): Promise<void> => {
+        interface ItemSheet {
+            close?: () => Promise<void>;
+        }
+        interface ItemDoc {
+            sheet?: ItemSheet;
+            delete?: () => Promise<void>;
+        }
+        interface ItemsCollection {
+            get?: (id: string) => ItemDoc | undefined;
+        }
+        interface CleanupGlobal {
+            __leadProbeItemId?: string;
+            game?: { items?: ItemsCollection };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+        const g = globalThis as unknown as CleanupGlobal;
         const id = g.__leadProbeItemId;
         if (id == null) return;
         const item = g.game?.items?.get?.(id);
@@ -97,7 +132,6 @@ async function cleanupLeadProbe(page: Page): Promise<void> {
             /* ignore */
         }
         delete g.__leadProbeItemId;
-        /* eslint-enable @typescript-eslint/no-explicit-any */
     });
 }
 

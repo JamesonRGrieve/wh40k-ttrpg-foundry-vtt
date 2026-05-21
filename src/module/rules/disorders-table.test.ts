@@ -40,8 +40,7 @@ describe('getDisorder (#116)', () => {
     });
 
     it('returns null for unknown ids', () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test boundary: probing the unknown-id branch
-        expect(getDisorder('ghost-of-titan' as any)).toBeNull();
+        expect(getDisorder('ghost-of-titan')).toBeNull();
     });
 });
 

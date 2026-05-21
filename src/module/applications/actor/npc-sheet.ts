@@ -403,6 +403,7 @@ export default class NPCSheet extends CharacterSheet {
      *
      * @param context The render context to mutate.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: matches ApplicationV2._prepareContext return shape (Foundry render-context contract)
     protected _prepareInteractionsContext(context: Record<string, unknown>): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry game globals are runtime-only.
         const g = globalThis as unknown as { game?: { actors?: Iterable<{ id?: string; name?: string; type?: string; system?: unknown }> } };
@@ -614,26 +615,30 @@ export default class NPCSheet extends CharacterSheet {
         }
 
         // NPC-flavoured data prep (sparse skills, simple weapons, horde, notes).
-        switch (partId) {
-            case 'overview':
+        const partPreparers: Record<string, () => void> = {
+            overview: () => {
                 this._prepareOverviewContext(partContext);
                 this._prepareAbilitiesContext(partContext);
-                break;
-            case 'skills':
+            },
+            skills: () => {
                 this._prepareSkillsContext(partContext);
-                break;
-            case 'combat':
-            case 'equipment':
+            },
+            combat: () => {
                 this._prepareCombatContext(partContext);
-                break;
-            case 'biography':
+            },
+            equipment: () => {
+                this._prepareCombatContext(partContext);
+            },
+            biography: () => {
                 this._prepareNotesContext(partContext);
-                break;
-            case 'npc':
+            },
+            npc: () => {
                 this._prepareNotesContext(partContext);
                 this._prepareAbilitiesContext(partContext);
-                break;
-        }
+            },
+        };
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; partId may not be a key
+        partPreparers[partId]?.();
 
         return partContext;
     }
@@ -1278,20 +1283,18 @@ export default class NPCSheet extends CharacterSheet {
 
     /** Compute the next skill-entry state when the user clicks a level button. */
     static #resolveSkillLevelToggle(skillKey: string, level: string, prior: NPCV2TrainedSkillData | undefined): NPCV2TrainedSkillData {
-        switch (level) {
-            case 'trained':
-                return buildSkillEntry(skillKey, 'trained', prior);
-            case 'plus10':
-                // Toggle +10: if already at +10 (and not +20), drop to trained; otherwise set to +10
-                return prior?.plus10 === true && prior.plus20 !== true
-                    ? buildSkillEntry(skillKey, 'trained', prior)
-                    : buildSkillEntry(skillKey, 'plus10', prior);
-            case 'plus20':
-                // Toggle +20: if already at +20, drop to +10; otherwise set to +20
-                return prior?.plus20 === true ? buildSkillEntry(skillKey, 'plus10', prior) : buildSkillEntry(skillKey, 'plus20', prior);
-            default:
-                return prior ?? { name: skillKey };
+        if (level === 'trained') {
+            return buildSkillEntry(skillKey, 'trained', prior);
         }
+        if (level === 'plus10') {
+            // Toggle +10: if already at +10 (and not +20), drop to trained; otherwise set to +10
+            return prior?.plus10 === true && prior.plus20 !== true ? buildSkillEntry(skillKey, 'trained', prior) : buildSkillEntry(skillKey, 'plus10', prior);
+        }
+        if (level === 'plus20') {
+            // Toggle +20: if already at +20, drop to +10; otherwise set to +20
+            return prior?.plus20 === true ? buildSkillEntry(skillKey, 'plus10', prior) : buildSkillEntry(skillKey, 'plus20', prior);
+        }
+        return prior ?? { name: skillKey };
     }
 
     /* -------------------------------------------- */

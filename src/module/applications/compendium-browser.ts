@@ -41,11 +41,19 @@ const { ApplicationV2 } = foundry.applications.api;
  * moment it hits a non-Set entry. Mirrors the same normalization shape
  * found inside `ArmourData.prepareDerivedData()`.
  */
+/**
+ * Legacy coverage payloads use any truthy/falsy primitive as values
+ * (boolean per current schema, 0/1 in old DH1 packs, occasional strings).
+ * The full primitive set is fine here — `Boolean(v)` narrows them all.
+ */
+type CoverageMap = { readonly [k: string]: boolean | number | string | null | undefined };
+
 function normalizeCoverage(raw: unknown): string[] {
     if (raw instanceof Set) return [...raw] as string[];
     if (Array.isArray(raw)) return raw as string[];
-    if (raw !== null && typeof raw === 'object') {
-        return Object.keys(raw).filter((k) => Boolean((raw as Record<string, unknown>)[k]));
+    if (raw !== null && raw !== undefined && typeof raw === 'object') {
+        const map = raw as CoverageMap;
+        return Object.keys(map).filter((k) => Boolean(map[k]));
     }
     return [];
 }
