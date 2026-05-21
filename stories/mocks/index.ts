@@ -1,17 +1,29 @@
 type DeepPartial<T> = T extends (infer U)[] ? U[] : T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
+/**
+ * Open-shape map used internally for deep merging. Mock builders walk arbitrary
+ * per-type item / system blobs whose individual entry types are not known at
+ * the merge layer — type discrimination happens at each leaf via type guards.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: deep-merge walks DeepPartial<T> blobs whose leaf types are unknown until inspected
+type MockObjectMap = { [key: string]: unknown };
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard input on next line
+function isPlainObject(value: unknown): value is MockObjectMap {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
     if (!override) return base;
-    if (!isPlainObject(base)) return (override as T) ?? base;
-    const result: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+    if (!isPlainObject(base)) {
+        return override as T;
+    }
+    const result: MockObjectMap = { ...base };
+    const baseMap = base as MockObjectMap;
     for (const [key, ovVal] of Object.entries(override)) {
-        const baseVal = (base as Record<string, unknown>)[key];
+        const baseVal = baseMap[key];
         if (isPlainObject(ovVal) && isPlainObject(baseVal)) {
-            result[key] = deepMerge(baseVal, ovVal as DeepPartial<typeof baseVal>);
+            result[key] = deepMerge(baseVal, ovVal);
         } else {
             result[key] = ovVal;
         }
@@ -73,7 +85,7 @@ export interface MockItem {
     icon?: string;
     isOwner?: boolean;
     isEmbedded?: boolean;
-    system: Record<string, unknown>;
+    system: MockObjectMap;
 }
 
 export function mockItem(overrides?: DeepPartial<MockItem>): MockItem {
@@ -306,7 +318,7 @@ export function mockWeaponQuality(overrides?: DeepPartial<MockWeaponQuality>): M
     );
 }
 
-export function mockModifiersPanel(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
+export function mockModifiersPanel(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
     return deepMerge(
         {
             modifiers: {
@@ -359,7 +371,7 @@ export function mockModifiersPanel(overrides?: DeepPartial<Record<string, unknow
     );
 }
 
-export function mockRollData(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
+export function mockRollData(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
     return deepMerge(
         {
             rollData: {
@@ -390,7 +402,7 @@ export function mockRollData(overrides?: DeepPartial<Record<string, unknown>>): 
     );
 }
 
-export function mockDamageRollData(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
+export function mockDamageRollData(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
     return deepMerge(
         {
             weaponName: 'Godwyn-Deaz Boltgun',
@@ -420,7 +432,7 @@ export function mockDamageRollData(overrides?: DeepPartial<Record<string, unknow
     );
 }
 
-export function mockActionRollData(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
+export function mockActionRollData(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
     return deepMerge(
         {
             id: 'roll-attack-1',
@@ -537,7 +549,7 @@ export function mockQuickActionItem(type: string, overrides?: DeepPartial<MockIt
     return deepMerge(baseByType[type] ?? mockItem({ type }), overrides);
 }
 
-export function mockActiveEffectsContext(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
+export function mockActiveEffectsContext(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
     return deepMerge(
         {
             item: mockItem({
@@ -551,7 +563,7 @@ export function mockActiveEffectsContext(overrides?: DeepPartial<Record<string, 
     );
 }
 
-export function mockWeaponSheetContext(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
+export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
     const item = mockItem({
         type: 'weapon',
         name: 'Godwyn-Deaz Boltgun',
@@ -667,7 +679,7 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<Record<string, un
     );
 }
 
-export function mockArmourSheetContext(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
+export function mockArmourSheetContext(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
     const item = mockItem({
         type: 'armour',
         name: 'Carapace Armour',
@@ -721,7 +733,7 @@ export function mockArmourSheetContext(overrides?: DeepPartial<Record<string, un
     );
 }
 
-export function mockGearSheetContext(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
+export function mockGearSheetContext(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
     const item = mockItem({
         type: 'gear',
         name: 'Medi-Kit',
@@ -766,6 +778,7 @@ export function mockGearSheetContext(overrides?: DeepPartial<Record<string, unkn
 
 // ── Sheet rendering helpers ──────────────────────────────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-shadow -- intentional shadow: storybook replacement for Foundry's global renderTemplate
 export function renderTemplate<T>(template: HandlebarsTemplateDelegate, context: T): HTMLElement {
     // Mirror Foundry V14's app-window.html shell exactly (.app.window-app + .window-content)
     // under the theme-dark scope so foundry2.css's variables, reset, and chrome cascade

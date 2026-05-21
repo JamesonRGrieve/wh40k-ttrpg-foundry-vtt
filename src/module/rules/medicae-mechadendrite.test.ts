@@ -104,39 +104,60 @@ interface FakeItem {
     isCybernetic: boolean;
 }
 
-function makeActor(opts: { gameSystem?: string; items?: FakeItem[]; medicae?: number }): WH40KBaseActorDocument {
-    const items = opts.items ?? [];
+interface FakeEffect {
+    id: string;
+    flags?: Record<string, Record<string, boolean | string>>;
+}
+
+type DeleteEmbeddedDocumentsFn = (type: string, ids: string[]) => Promise<FakeEffect[]>;
+
+interface FakeMedicaeActor {
+    name: string;
+    system: { gameSystem: string };
+    skills: { medicae: { current: number } };
+    items: FakeItem[];
+    effects: FakeEffect[];
+    deleteEmbeddedDocuments: DeleteEmbeddedDocumentsFn;
+}
+
+function makeActor(opts: { gameSystem?: string; items?: FakeItem[]; medicae?: number }): FakeMedicaeActor {
     return {
         name: 'Brother Medicae',
         system: { gameSystem: opts.gameSystem ?? 'dh2e' },
         skills: { medicae: { current: opts.medicae ?? 0 } },
-        items,
-        effects: [] as unknown[],
-        deleteEmbeddedDocuments: vi.fn(async () => Promise.resolve([])),
-    } as unknown as WH40KBaseActorDocument;
+        items: opts.items ?? [],
+        effects: [],
+        deleteEmbeddedDocuments: vi.fn(async (_type: string, _ids: string[]) => Promise.resolve([])),
+    };
+}
+
+/** Cast a FakeMedicaeActor to the Foundry WH40KBaseActorDocument surface the rule helpers consume. */
+function asActor(a: FakeMedicaeActor): WH40KBaseActorDocument {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: FakeMedicaeActor is a structural subset of Foundry's WH40KBaseActorDocument; the rule helpers only read the listed fields
+    return a as unknown as WH40KBaseActorDocument;
 }
 
 describe('findMedicaeMechadendrite / actorHasMedicaeMechadendrite', () => {
     it('finds the cybernetic on a DH2 actor that owns one', () => {
         const actor = makeActor({ gameSystem: 'dh2e', items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
-        expect(findMedicaeMechadendrite(actor)).not.toBeNull();
-        expect(actorHasMedicaeMechadendrite(actor)).toBe(true);
+        expect(findMedicaeMechadendrite(asActor(actor))).not.toBeNull();
+        expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(true);
     });
 
     it('returns null when the actor owns no matching cybernetic', () => {
         const actor = makeActor({ gameSystem: 'dh2e', items: [{ name: 'Bionic Arm', isCybernetic: true }] });
-        expect(actorHasMedicaeMechadendrite(actor)).toBe(false);
+        expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(false);
     });
 
     it('returns null on Imperium Maledictum even with a matching item (homologation gate)', () => {
         const actor = makeActor({ gameSystem: 'im', items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
-        expect(actorHasMedicaeMechadendrite(actor)).toBe(false);
+        expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(false);
     });
 
     it('remains eligible across the other five FFG systems', () => {
         for (const sys of ['dh1e', 'bc', 'dw', 'ow', 'rt']) {
             const actor = makeActor({ gameSystem: sys, items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
-            expect(actorHasMedicaeMechadendrite(actor)).toBe(true);
+            expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(true);
         }
     });
 });
@@ -161,11 +182,16 @@ describe('staunchBloodLoss (runtime, #104)', () => {
             }),
             getWhisperRecipients: () => [],
         });
+        interface StaunchCardContext {
+            success?: boolean;
+            bleedStopped?: boolean;
+            gameSystem?: string;
+        }
         vi.stubGlobal('foundry', {
             applications: {
                 handlebars: {
-                    renderTemplate: vi.fn(async (_tpl: string, ctx: Record<string, unknown>) =>
-                        Promise.resolve(`<card success="${String(ctx['success'])}" bleed="${String(ctx['bleedStopped'])}" sys="${String(ctx['gameSystem'])}">`),
+                    renderTemplate: vi.fn(async (_tpl: string, ctx: StaunchCardContext) =>
+                        Promise.resolve(`<card success="${String(ctx.success)}" bleed="${String(ctx.bleedStopped)}" sys="${String(ctx.gameSystem)}">`),
                     ),
                 },
             },
@@ -178,51 +204,48 @@ describe('staunchBloodLoss (runtime, #104)', () => {
     });
 
     it('on success removes the Blood Loss Active Effect and emits a success card', async () => {
-        const bloodLossEffect = { id: 'ae-1', flags: { 'wh40k-rpg': { bloodloss: true } } };
+        const bloodLossEffect: FakeEffect = { id: 'ae-1', flags: { 'wh40k-rpg': { bloodloss: true } } };
         const actor = makeActor({ gameSystem: 'dh2e', medicae: 40 });
-        (actor as unknown as { effects: unknown[] }).effects = [bloodLossEffect];
+        actor.effects = [bloodLossEffect];
 
         // Roll 30 vs target 40+10=50 → success.
-        const res = await staunchBloodLoss(actor, () => 30);
+        const res = await staunchBloodLoss(asActor(actor), () => 30);
 
         expect(res.success).toBe(true);
         expect(res.target).toBe(50);
-        const del = (actor as unknown as { deleteEmbeddedDocuments: ReturnType<typeof vi.fn> }).deleteEmbeddedDocuments;
-        expect(del).toHaveBeenCalledWith('ActiveEffect', ['ae-1']);
+        expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', ['ae-1']);
         expect(createdContent).toContain('success="true"');
         expect(createdContent).toContain('bleed="true"');
     });
 
     it('on failure leaves the Blood Loss effect intact and emits a failure card', async () => {
-        const bloodLossEffect = { id: 'ae-1', flags: { 'wh40k-rpg': { bloodloss: true } } };
+        const bloodLossEffect: FakeEffect = { id: 'ae-1', flags: { 'wh40k-rpg': { bloodloss: true } } };
         const actor = makeActor({ gameSystem: 'dh2e', medicae: 20 });
-        (actor as unknown as { effects: unknown[] }).effects = [bloodLossEffect];
+        actor.effects = [bloodLossEffect];
 
         // Roll 90 vs target 20+10=30 → failure.
-        const res = await staunchBloodLoss(actor, () => 90);
+        const res = await staunchBloodLoss(asActor(actor), () => 90);
 
         expect(res.success).toBe(false);
-        const del = (actor as unknown as { deleteEmbeddedDocuments: ReturnType<typeof vi.fn> }).deleteEmbeddedDocuments;
-        expect(del).not.toHaveBeenCalled();
+        expect(actor.deleteEmbeddedDocuments).not.toHaveBeenCalled();
         expect(createdContent).toContain('success="false"');
         expect(createdContent).toContain('bleed="false"');
     });
 
     it('only removes effects flagged as blood loss, not other harmful AEs', async () => {
-        const bloodLoss = { id: 'ae-blood', flags: { 'wh40k-rpg': { bloodloss: true } } };
-        const stunned = { id: 'ae-stun', flags: { 'wh40k-rpg': { nature: 'harmful' } } };
+        const bloodLoss: FakeEffect = { id: 'ae-blood', flags: { 'wh40k-rpg': { bloodloss: true } } };
+        const stunned: FakeEffect = { id: 'ae-stun', flags: { 'wh40k-rpg': { nature: 'harmful' } } };
         const actor = makeActor({ gameSystem: 'dh2e', medicae: 60 });
-        (actor as unknown as { effects: unknown[] }).effects = [bloodLoss, stunned];
+        actor.effects = [bloodLoss, stunned];
 
-        await staunchBloodLoss(actor, () => 10);
+        await staunchBloodLoss(asActor(actor), () => 10);
 
-        const del = (actor as unknown as { deleteEmbeddedDocuments: ReturnType<typeof vi.fn> }).deleteEmbeddedDocuments;
-        expect(del).toHaveBeenCalledWith('ActiveEffect', ['ae-blood']);
+        expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', ['ae-blood']);
     });
 
     it('propagates the actor game system onto the chat card for per-system theming', async () => {
         const actor = makeActor({ gameSystem: 'rt', medicae: 50 });
-        await staunchBloodLoss(actor, () => 5);
+        await staunchBloodLoss(asActor(actor), () => 5);
         expect(createdContent).toContain('sys="rt"');
     });
 });

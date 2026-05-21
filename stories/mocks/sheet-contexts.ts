@@ -69,15 +69,26 @@ export interface SheetBiographyContext {
 }
 
 /**
+ * Per-system templates project extra surface fields onto actor / system blobs
+ * (horde rollups, transaction profile, threat tiering, etc.). The mock keeps
+ * these as an open additional-property map so a test can drop a new key in
+ * without widening MockActor — the extension shape itself is the boundary.
+ */
+type SheetContextExtensions = {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: storybook mocks accept arbitrary per-system extras (horde / transactionProfile / threat tier)
+    [key: string]: unknown;
+};
+
+/**
  * The shape consumed by player and NPC sheet templates.
  *
  * Kept loose (extra-property-friendly) because per-system templates assert on
  * additional fields (horde, transactionProfile, threat tier, etc.).
  */
 export interface SheetContextLike {
-    actor: MockActor & { inCombat?: boolean } & Record<string, unknown>;
-    system: MockActor['system'] & Record<string, unknown>;
-    source: MockActor['system'] & Record<string, unknown>;
+    actor: MockActor & { inCombat?: boolean } & SheetContextExtensions;
+    system: MockActor['system'] & SheetContextExtensions;
+    source: MockActor['system'] & SheetContextExtensions;
     editable: boolean;
     inEditMode: boolean;
     isGM: boolean;
@@ -89,6 +100,7 @@ export interface SheetContextLike {
     headerFields: SidebarHeaderField[];
     originPathComplete: boolean;
     originPathSteps: OriginPathStep[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: extends SheetContextExtensions via index signature
     [key: string]: unknown;
 }
 
@@ -114,19 +126,39 @@ const SYSTEM_ID_TO_WITH_SYSTEM: Record<GameSystemId, SystemId> = {
  * Tests that already install their own `game` stub keep it — we only fill in
  * a missing surface, never overwrite.
  */
+interface I18nStub {
+    localize: (key: string) => string;
+    format: (key: string, data?: Record<string, string | number | boolean>) => string;
+}
+
+interface PartialI18nStub {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: existing game.i18n surface may not implement localize
+    localize?: unknown;
+}
+
+interface GameStub {
+    i18n?: I18nStub | PartialI18nStub;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: third-party Foundry `game` global carries arbitrary subsystems
+    [key: string]: unknown;
+}
+
+interface GlobalWithGame {
+    game?: GameStub;
+}
+
 function ensureGameI18nStub(): void {
-    const g = globalThis as Record<string, unknown>;
-    const gameObj = (g.game as Record<string, unknown> | undefined) ?? {};
-    const i18n = (gameObj.i18n as Record<string, unknown> | undefined) ?? undefined;
-    if (i18n && typeof (i18n as { localize?: unknown }).localize === 'function') return;
+    const g = globalThis as typeof globalThis & GlobalWithGame;
+    const existingGame: GameStub = g.game ?? {};
+    const existingI18n = existingGame.i18n;
+    if (existingI18n && typeof existingI18n.localize === 'function') return;
 
     g.game = {
-        ...gameObj,
+        ...existingGame,
         i18n: {
             localize: (key: string) => key,
-            format: (key: string, data?: Record<string, unknown>) => {
+            format: (key: string, data?: Record<string, string | number | boolean>) => {
                 if (!data) return key;
-                return key.replace(/\{(\w+)\}/g, (_, name: string) => String((data[name] as string | number | null | undefined) ?? ''));
+                return key.replace(/\{(\w+)\}/g, (_, name: string) => String(data[name] ?? ''));
             },
         },
     };
@@ -239,6 +271,7 @@ export function mockPlayerSheetContext(opts: PlayerSheetContextOptions = {}): Sh
     });
     const actor = withSystem(playerActor, SYSTEM_ID_TO_WITH_SYSTEM[systemId], 'character');
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mock actor structurally satisfies WH40KBaseActor for getHeaderFields() but full Document class is impractical to mock
     const headerFields = SystemConfigRegistry.get(systemId).getHeaderFields(actor as unknown as WH40KBaseActor);
 
     const context: SheetContextLike = {
@@ -333,7 +366,7 @@ export function mockNpcSheetContext(opts: NpcSheetContextOptions = {}): SheetCon
         source: 'IM Core p.214',
         quickNotes: '<p>Uses bodyguards aggressively.</p>',
         tactics: '<p>Opens with suppression and retreats to elevation.</p>',
-    } as MockActor['system'] & Record<string, unknown>;
+    } as MockActor['system'] & SheetContextExtensions;
     baseActor.system = npcSystem;
 
     const actor = withSystem(baseActor, SYSTEM_ID_TO_WITH_SYSTEM[systemId], 'npc');
@@ -462,17 +495,31 @@ export function mockStarshipSheetContext(opts: StarshipSheetContextOptions = {})
  * preserved for `system.bio` and `system.originPath` so caller overrides don't
  * blow away unrelated keys.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: MockActorInput['system'] is the DeepPartial recursive blob; entries are unknown until walked here
+type SystemEntryMap = { [key: string]: unknown };
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard input on next line
+function isObjectLikeEntry(v: unknown): v is SystemEntryMap {
+    return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
+
 function mergeActorInput(base: MockActorInput, override?: MockActorInput): MockActorInput {
     if (!override) return base;
-    const baseSystem = (base.system ?? {}) as Record<string, unknown>;
-    const overrideSystem = (override.system ?? {}) as Record<string, unknown>;
-    const mergedSystem: Record<string, unknown> = { ...baseSystem };
-    for (const [key, value] of Object.entries(overrideSystem)) {
-        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-            const baseVal = (baseSystem[key] ?? {}) as Record<string, unknown>;
-            mergedSystem[key] = { ...baseVal, ...(value as Record<string, unknown>) };
+    type SystemMap = NonNullable<MockActorInput['system']>;
+    const EMPTY_SYSTEM = {} as SystemMap;
+    let baseSystem: SystemMap = EMPTY_SYSTEM;
+    if (base.system !== undefined) baseSystem = base.system;
+    let overrideSystem: SystemMap = EMPTY_SYSTEM;
+    if (override.system !== undefined) overrideSystem = override.system;
+    const mergedSystem: SystemMap = { ...baseSystem };
+    const merged = mergedSystem as SystemEntryMap;
+    const baseAsMap = baseSystem as SystemEntryMap;
+    for (const [key, value] of Object.entries(overrideSystem as SystemEntryMap)) {
+        if (isObjectLikeEntry(value)) {
+            const baseVal = baseAsMap[key];
+            merged[key] = { ...(isObjectLikeEntry(baseVal) ? baseVal : {}), ...value };
         } else {
-            mergedSystem[key] = value;
+            merged[key] = value;
         }
     }
     return {

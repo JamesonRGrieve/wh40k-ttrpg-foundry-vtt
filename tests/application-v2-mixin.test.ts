@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ApplicationV2Ctor } from '../src/module/applications/api/application-types.ts';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructors; `unknown[]` is rejected.
 type Constructor<T = object> = new (...args: any[]) => T;
 
 interface FakeApplicationApi {
@@ -13,22 +14,18 @@ function installFoundryStubs(): void {
             return class extends base {
                 static DEFAULT_OPTIONS = {};
 
-                async _onFirstRender(): Promise<void> {
-                    await Promise.resolve();
-                }
+                async _onFirstRender(): Promise<void> {}
 
-                async _onRender(): Promise<void> {
-                    await Promise.resolve();
-                }
+                async _onRender(): Promise<void> {}
 
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's ApplicationV2._prepareContext returns the template-context object whose shape is sheet-defined; the framework type is open.
                 async _prepareContext(): Promise<Record<string, unknown>> {
-                    await Promise.resolve();
-                    return {};
+                    return Promise.resolve({});
                 }
 
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's ApplicationV2._preparePartContext returns the per-part context whose shape is sheet-defined.
                 async _preparePartContext(): Promise<Record<string, unknown>> {
-                    await Promise.resolve();
-                    return {};
+                    return Promise.resolve({});
                 }
 
                 _configureRenderOptions(): void {}
@@ -58,6 +55,7 @@ class BaseTestApplication {
     hasFrame = false;
     options = {};
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructors; matches Foundry's ApplicationV2.
     constructor(...args: any[]) {
         this.element = args[0] as HTMLElement;
     }
@@ -70,6 +68,7 @@ describe('ApplicationV2Mixin', () => {
 
         const { default: ApplicationV2Mixin } = await import('../src/module/applications/api/application-v2-mixin.ts');
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: bridging the structural BaseTestApplication into Foundry's ApplicationV2Ctor shape for the mixin.
         class TestApplication extends ApplicationV2Mixin(BaseTestApplication as unknown as ApplicationV2Ctor) {
             static PARTS = {
                 header: { template: '', container: { id: 'sidebar', classes: ['wh40k-sidebar'] } },

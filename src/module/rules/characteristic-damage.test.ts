@@ -10,26 +10,40 @@ import { CHARACTERISTIC_AT_ZERO, getAtZeroEffect, getCharacteristicDamageHealed,
  * characteristic effective value hits 0) remains follow-up.
  */
 
+// noUncheckedIndexedAccess parser mismatch: tsconfig.test.json has the flag off so
+// ESLint reports the `?.` on CHARACTERISTIC_AT_ZERO[slug] as unnecessary, but the
+// same files are also included by tsconfig.json with the flag on, where tsc requires
+// the guard. Each access is annotated inline below.
 describe('CHARACTERISTIC_AT_ZERO (#115)', () => {
     it('WS / BS at 0 → cannot-test', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(CHARACTERISTIC_AT_ZERO['weaponSkill']?.effect).toBe('cannot-test');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(CHARACTERISTIC_AT_ZERO['ballisticSkill']?.effect).toBe('cannot-test');
     });
     it('Strength / Willpower at 0 → unconscious', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(CHARACTERISTIC_AT_ZERO['strength']?.effect).toBe('unconscious');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(CHARACTERISTIC_AT_ZERO['willpower']?.effect).toBe('unconscious');
     });
     it('Toughness at 0 → death', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(CHARACTERISTIC_AT_ZERO['toughness']?.effect).toBe('death');
     });
     it('Agility / Intelligence / Fellowship at 0 → helpless', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(CHARACTERISTIC_AT_ZERO['agility']?.effect).toBe('helpless');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(CHARACTERISTIC_AT_ZERO['intelligence']?.effect).toBe('helpless');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(CHARACTERISTIC_AT_ZERO['fellowship']?.effect).toBe('helpless');
     });
     it('Perception at 0 → global-penalty −30', () => {
         const entry = CHARACTERISTIC_AT_ZERO['perception'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(entry?.effect).toBe('global-penalty');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch (see file header).
         expect(entry?.globalPenalty).toBe(-30);
     });
 });

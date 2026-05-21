@@ -11,18 +11,49 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StatAdjustmentHost } from '../src/module/applications/api/stat-adjustment-actions.ts';
 
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
-const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>).foundry;
+interface I18nStub {
+    localize: (k: string) => string;
+    format: (k: string) => string;
+}
+interface UserStub {
+    isGM: boolean;
+}
+interface GameStub {
+    i18n: I18nStub;
+    user: UserStub;
+}
+interface FoundryApiStub {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS requires `any[]` rest for mixin-compatible constructor signatures (TS2545); matches Foundry's ApplicationV2.
+    ApplicationV2: new (...args: any[]) => object;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS requires `any[]` rest for the HandlebarsApplicationMixin generic constraint (TS2545).
+    HandlebarsApplicationMixin: <T extends new (...args: any[]) => object>(Base: T) => T;
+}
+interface FoundryUtilsStub {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns `unknown` per the framework contract (deep property access).
+    getProperty: (obj: Record<string, unknown>, path: string) => unknown;
+}
+interface FoundryStub {
+    applications: { api: FoundryApiStub };
+    utils: FoundryUtilsStub;
+}
+
+interface GlobalShim {
+    game?: GameStub | undefined;
+    foundry?: FoundryStub | undefined;
+}
+const G = globalThis as GlobalShim;
+const ORIGINAL_GAME = G.game;
+const ORIGINAL_FOUNDRY = G.foundry;
 
 class FakeApplicationV2 {}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin class requires (...args: any[]) constructor signature per TS rules
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS requires `any[]` for mixin class constructors (TS error TS2545); `unknown[]` is rejected.
 const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {};
 
-(globalThis as Record<string, unknown>).game = {
+G.game = {
     i18n: { localize: (k: string) => k, format: (k: string) => k },
     user: { isGM: true },
 };
-(globalThis as Record<string, unknown>).foundry = {
+G.foundry = {
     applications: {
         api: {
             ApplicationV2: FakeApplicationV2,
@@ -30,9 +61,12 @@ const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object
         },
     },
     utils: {
-        getProperty: (obj: Record<string, unknown>, path: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty takes/returns `unknown` per the framework's deep-property-access contract.
+        getProperty: (obj: Record<string, unknown>, path: string): unknown => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: reduce accumulator mirrors getProperty's `unknown` return.
             return path.split('.').reduce<unknown>((acc, key) => {
-                if (acc !== null && acc !== undefined && typeof acc === 'object' && key in (acc as Record<string, unknown>)) {
+                if (acc !== null && typeof acc === 'object' && key in acc) {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: walking the framework-shaped property tree; each step yields `unknown`.
                     return (acc as Record<string, unknown>)[key];
                 }
                 return undefined;
@@ -42,17 +76,26 @@ const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object
 };
 
 afterAll(() => {
-    (globalThis as Record<string, unknown>).game = ORIGINAL_GAME;
-    (globalThis as Record<string, unknown>).foundry = ORIGINAL_FOUNDRY;
+    G.game = ORIGINAL_GAME;
+    G.foundry = ORIGINAL_FOUNDRY;
 });
 
 const StatActions = await import('../src/module/applications/api/stat-adjustment-actions.ts');
 
-function makeHost(
-    systemOverrides: Record<string, unknown> = {},
-): StatAdjustmentHost & { _updates: Record<string, unknown>[]; _notifies: Array<[string, string]> } {
+// HostUpdate mirrors the StatAdjustmentHost actor.update(data: Record<string, unknown>)
+// payload shape — the Foundry Document.update boundary.
+interface HostUpdate {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: matches the actor.update payload (Foundry Document.update accepts `Record<string, unknown>`).
+    [field: string]: unknown;
+}
+type HostSystem = StatAdjustmentHost['actor']['system'];
+
+function makeHost(systemOverrides: Partial<HostSystem> = {}): StatAdjustmentHost & {
+    _updates: HostUpdate[];
+    _notifies: Array<[string, string]>;
+} {
     const host = {
-        _updates: [] as Record<string, unknown>[],
+        _updates: [] as HostUpdate[],
         _notifies: [] as Array<[string, string]>,
         actor: {
             id: 'a1',
@@ -65,19 +108,23 @@ function makeHost(
                 insanity: 5,
                 ...systemOverrides,
             },
-            update: async (data: Record<string, unknown>): Promise<void> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: matches StatAdjustmentHost.actor.update — Foundry Document.update returns Promise<unknown>.
+            async update(data: Record<string, unknown>): Promise<unknown> {
                 host._updates.push(data);
-                return Promise.resolve();
+                return Promise.resolve(undefined);
             },
         },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: matches StatAdjustmentHost._throttle's framework pass-through signature `(fn: (...args: unknown[]) => unknown, ctx: unknown, args: unknown[]) => Promise<unknown>`.
         async _throttle(_key: string, _wait: number, fn: (...args: unknown[]) => unknown, ctx: unknown, args: unknown[]): Promise<unknown> {
-            return await fn.apply(ctx, args);
+            return Promise.resolve(fn.apply(ctx, args));
         },
         _notify(type: 'info' | 'warning' | 'error', message: string): void {
             host._notifies.push([type, message]);
         },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: matches StatAdjustmentHost._updateSystemField(field: string, value: unknown) — value flows into actor.update().
         async _updateSystemField(field: string, value: unknown): Promise<void> {
             host._updates.push({ [field]: value });
+            return Promise.resolve();
         },
     };
     return host;
@@ -89,7 +136,11 @@ function btn(dataset: Record<string, string>): HTMLElement {
     return el;
 }
 
-const ev = (): Event => ({ stopPropagation: vi.fn() } as unknown as Event);
+const ev = (): Event => {
+    const e = new Event('click');
+    vi.spyOn(e, 'stopPropagation');
+    return e;
+};
 
 describe('increment / decrement / adjustStat', () => {
     let host: ReturnType<typeof makeHost>;

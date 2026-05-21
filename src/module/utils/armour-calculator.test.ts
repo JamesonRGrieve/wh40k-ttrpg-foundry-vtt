@@ -14,8 +14,17 @@ import { computeArmour } from './armour-calculator';
  * of the trait-bonus accumulator cannot silently regress the errata fix.
  */
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: test mock type; system fields are structurally unknown outside the test helper
-type ItemLike = { type: string; name: string; system: Record<string, unknown> };
+interface ItemSystemLike {
+    level?: number;
+    equipped?: boolean;
+    craftsmanship?: string;
+    armourPoints?: Record<string, number>;
+}
+interface ItemLike {
+    type: string;
+    name: string;
+    system: ItemSystemLike;
+}
 
 interface MockActorOpts {
     toughnessBonus?: number;
@@ -47,6 +56,22 @@ function makeWornArmourItem(name: string, ap: number): ItemLike {
     };
 }
 
+/**
+ * Pull the body armour entry out of computeArmour()'s result.
+ * computeArmour returns Record<string, ArmourLocationData>; under
+ * noUncheckedIndexedAccess the lookup is `... | undefined`. We assert presence
+ * once here (every test populates body) so test bodies can read `body.total`
+ * etc. as a narrowed value — keeping the assertion noise (`?.` everywhere)
+ * out of the actual expectations.
+ */
+function bodyOf(armour: ReturnType<typeof computeArmour>): NonNullable<ReturnType<typeof computeArmour>[string]> {
+    const body = armour['body'];
+    expect(body, 'computeArmour returned no body entry').toBeDefined();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json has the flag off so ESLint sees `body` as ArmourLocationData; tsconfig.json has the flag on so tsc sees `ArmourLocationData | undefined` and requires this guard.
+    if (body === undefined) throw new Error('unreachable — expect.toBeDefined would have thrown');
+    return body;
+}
+
 function mockActor(opts: MockActorOpts): WH40KBaseActor {
     const items = opts.items ?? [];
     // Minimal actor surface that computeArmour reaches into:
@@ -72,11 +97,11 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
             toughnessBonus: 3,
             items: [makeTraitItem('Machine', 4), makeWornArmourItem('Flak Cloak', 4)],
         });
-        const armour = computeArmour(actor);
-        expect(armour['body']?.total).toBe(11);
-        expect(armour['body']?.traitBonus).toBe(4);
-        expect(armour['body']?.value).toBe(4); // worn armour AP at body
-        expect(armour['body']?.toughnessBonus).toBe(3);
+        const body = bodyOf(computeArmour(actor));
+        expect(body.total).toBe(11);
+        expect(body.traitBonus).toBe(4);
+        expect(body.value).toBe(4); // worn armour AP at body
+        expect(body.toughnessBonus).toBe(3);
     });
 
     it('Natural Armour 5 alone — body total = TB 3 + Natural 5 = 8', () => {
@@ -84,10 +109,10 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
             toughnessBonus: 3,
             items: [makeTraitItem('Natural Armour', 5)],
         });
-        const armour = computeArmour(actor);
-        expect(armour['body']?.total).toBe(8);
-        expect(armour['body']?.traitBonus).toBe(5);
-        expect(armour['body']?.value).toBe(0);
+        const body = bodyOf(computeArmour(actor));
+        expect(body.total).toBe(8);
+        expect(body.traitBonus).toBe(5);
+        expect(body.value).toBe(0);
     });
 
     it('Machine 4 + Natural Armour 5 DOES NOT STACK — picks higher (5), body total = TB 3 + 5 = 8', () => {
@@ -95,9 +120,9 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
             toughnessBonus: 3,
             items: [makeTraitItem('Machine', 4), makeTraitItem('Natural Armour', 5)],
         });
-        const armour = computeArmour(actor);
-        expect(armour['body']?.total).toBe(8);
-        expect(armour['body']?.traitBonus).toBe(5);
+        const body = bodyOf(computeArmour(actor));
+        expect(body.total).toBe(8);
+        expect(body.traitBonus).toBe(5);
     });
 
     it('Machine 6 + Natural Armour 3 — picks higher Machine (6), body total = TB 3 + 6 = 9', () => {
@@ -105,9 +130,9 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
             toughnessBonus: 3,
             items: [makeTraitItem('Machine', 6), makeTraitItem('Natural Armour', 3)],
         });
-        const armour = computeArmour(actor);
-        expect(armour['body']?.total).toBe(9);
-        expect(armour['body']?.traitBonus).toBe(6);
+        const body = bodyOf(computeArmour(actor));
+        expect(body.total).toBe(9);
+        expect(body.traitBonus).toBe(6);
     });
 
     it('Machine 4 + Natural Armour 5 + worn flak 4 — Natural wins trait slot, worn stacks: TB 3 + Natural 5 + AP 4 = 12', () => {
@@ -115,17 +140,17 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
             toughnessBonus: 3,
             items: [makeTraitItem('Machine', 4), makeTraitItem('Natural Armour', 5), makeWornArmourItem('Flak', 4)],
         });
-        const armour = computeArmour(actor);
-        expect(armour['body']?.total).toBe(12);
-        expect(armour['body']?.traitBonus).toBe(5);
-        expect(armour['body']?.value).toBe(4);
+        const body = bodyOf(computeArmour(actor));
+        expect(body.total).toBe(12);
+        expect(body.traitBonus).toBe(5);
+        expect(body.value).toBe(4);
     });
 
     it('no traits, no armour — body total = TB only', () => {
         const actor = mockActor({ toughnessBonus: 4 });
-        const armour = computeArmour(actor);
-        expect(armour['body']?.total).toBe(4);
-        expect(armour['body']?.traitBonus).toBe(0);
+        const body = bodyOf(computeArmour(actor));
+        expect(body.total).toBe(4);
+        expect(body.traitBonus).toBe(0);
     });
 
     it('both `Natural Armor` (US spelling) and `Natural Armour` are recognised', () => {
@@ -133,7 +158,7 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
             toughnessBonus: 3,
             items: [makeTraitItem('Natural Armor', 4)],
         });
-        const armour = computeArmour(actor);
-        expect(armour['body']?.traitBonus).toBe(4);
+        const body = bodyOf(computeArmour(actor));
+        expect(body.traitBonus).toBe(4);
     });
 });

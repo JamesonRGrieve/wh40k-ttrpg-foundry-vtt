@@ -21,12 +21,17 @@ import {
     syncManaclesConditionForActor,
 } from './manacles.ts';
 
+interface MockedConditionEffectOptions {
+    flags?: Record<string, Record<string, boolean>>;
+    origin?: string;
+}
+
 vi.mock('./active-effects.ts', () => ({
-    createConditionEffect: vi.fn((_actor: unknown, condition: string, options: Record<string, unknown>) => ({
+    createConditionEffect: vi.fn((_actor: object | null, condition: string, options: MockedConditionEffectOptions) => ({
         id: `ae-${condition}`,
         name: 'Manacled',
-        flags: options['flags'] as Record<string, Record<string, unknown>>,
-        origin: options['origin'] as string | undefined,
+        flags: options.flags,
+        origin: options.origin,
     })),
 }));
 
@@ -78,8 +83,21 @@ describe('isManaclesItem', () => {
     });
 });
 
+interface ManaclesItemSystem {
+    identifier?: string;
+    equipped?: boolean;
+    inBackpack?: boolean;
+    inShipStorage?: boolean;
+}
+
+interface ManaclesItemShape {
+    type: string;
+    name: string;
+    system: ManaclesItemSystem;
+}
+
 describe('isManaclesItemEquipped', () => {
-    const make = (overrides: Record<string, unknown>): { type: string; name: string; system: Record<string, unknown> } => ({
+    const make = (overrides: ManaclesItemSystem): ManaclesItemShape => ({
         type: 'gear',
         name: 'Manacles',
         system: { identifier: 'manacles', equipped: true, inBackpack: false, inShipStorage: false, ...overrides },
@@ -109,23 +127,26 @@ describe('isManaclesItemEquipped', () => {
 interface FakeEffect {
     id: string;
     name: string;
-    flags?: Record<string, Record<string, unknown>>;
-    getFlag?: (scope: string, key: string) => unknown;
+    flags?: Record<string, Record<string, boolean>>;
+    getFlag?: (scope: string, key: string) => boolean;
 }
 
 interface FakeActor {
-    items: Iterable<unknown>;
+    items: Iterable<ManaclesItemShape>;
     effects: Iterable<FakeEffect>;
-    deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
+    deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
 }
 
-function makeActor(items: unknown[], effects: FakeEffect[] = []): FakeActor & WH40KBaseActorDocument {
-    const actor: FakeActor = {
-        items,
-        effects,
-        deleteEmbeddedDocuments: vi.fn(async (_type: string, _ids: string[]) => Promise.resolve(undefined)),
-    };
-    return actor as unknown as FakeActor & WH40KBaseActorDocument;
+type DeleteEmbeddedDocumentsFn = (type: string, ids: string[]) => Promise<void>;
+
+function makeActor(
+    items: ManaclesItemShape[],
+    effects: FakeEffect[] = [],
+    deleteEmbeddedDocuments: DeleteEmbeddedDocumentsFn = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve()),
+): WH40KBaseActorDocument {
+    const actor: FakeActor = { items, effects, deleteEmbeddedDocuments };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: FakeActor is a structural subset of WH40KBaseActorDocument exposing only the surface these helpers read
+    return actor as unknown as WH40KBaseActorDocument;
 }
 
 describe('findEquippedManacles / actorHasManaclesEquipped', () => {
@@ -219,8 +240,8 @@ describe('liftManaclesCondition', () => {
         const a: FakeEffect = { id: 'a1', name: 'something', flags: { [MANACLES_FLAG_SCOPE]: { [MANACLES_FLAG_KEY]: true } } };
         const b: FakeEffect = { id: 'b2', name: MANACLES_EFFECT_NAME };
         const c: FakeEffect = { id: 'c3', name: 'Blessed' };
-        const deleted = vi.fn(async () => Promise.resolve(undefined));
-        const actor = { items: [], effects: [a, b, c], deleteEmbeddedDocuments: deleted } as unknown as WH40KBaseActorDocument;
+        const deleted = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve());
+        const actor = makeActor([], [a, b, c], deleted);
         const removed = await liftManaclesCondition(actor);
         expect(removed).toBe(2);
         expect(deleted).toHaveBeenCalledWith('ActiveEffect', ['a1', 'b2']);
@@ -237,12 +258,12 @@ describe('syncManaclesConditionForActor', () => {
 
     it('lifts the AE when no manacles are equipped but the AE is present', async () => {
         vi.mocked(createConditionEffect).mockClear();
-        const deleted = vi.fn(async () => Promise.resolve(undefined));
-        const actor = {
-            items: [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: false } }],
-            effects: [{ id: 'm', name: MANACLES_EFFECT_NAME }],
-            deleteEmbeddedDocuments: deleted,
-        } as unknown as WH40KBaseActorDocument;
+        const deleted = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve());
+        const actor = makeActor(
+            [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: false } }],
+            [{ id: 'm', name: MANACLES_EFFECT_NAME }],
+            deleted,
+        );
         await syncManaclesConditionForActor(actor);
         expect(deleted).toHaveBeenCalledWith('ActiveEffect', ['m']);
         expect(createConditionEffect).not.toHaveBeenCalled();
@@ -250,12 +271,12 @@ describe('syncManaclesConditionForActor', () => {
 
     it('is a no-op when equipped state and AE presence already agree', async () => {
         vi.mocked(createConditionEffect).mockClear();
-        const deleted = vi.fn(async () => Promise.resolve(undefined));
-        const actor = {
-            items: [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: true } }],
-            effects: [{ id: 'm', name: MANACLES_EFFECT_NAME }],
-            deleteEmbeddedDocuments: deleted,
-        } as unknown as WH40KBaseActorDocument;
+        const deleted = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve());
+        const actor = makeActor(
+            [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: true } }],
+            [{ id: 'm', name: MANACLES_EFFECT_NAME }],
+            deleted,
+        );
         await syncManaclesConditionForActor(actor);
         expect(createConditionEffect).not.toHaveBeenCalled();
         expect(deleted).not.toHaveBeenCalled();

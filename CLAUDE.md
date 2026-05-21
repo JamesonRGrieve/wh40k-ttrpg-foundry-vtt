@@ -244,6 +244,26 @@ The auto-fix tooling (`.auto-fix/run.py`) prompt encodes the same policy — che
 
 **Where boundary types belong**: extending Foundry's surface shapes is the job of `foundry-v14-overrides.d.ts`. When a Record cast is genuinely required at a Foundry boundary, the fix is to add the narrower shape to that overrides file as a `declare global` or `declare module 'fvtt-types/configuration'` augmentation — not to scatter `// eslint-disable` suppressions across every call site. Inline suppression is a last resort for shapes that don't yet exist in the overrides; the path to zero suppression is moving each unique boundary pattern into the overrides file once.
 
+### No `eslint-disable` cop-outs
+
+**File-level `/* eslint-disable <rule> */` blocks are forbidden anywhere in the codebase.** No exemptions, no "boundary file" rationale, no exception for storybook helpers or test harnesses. A file-level disable buries dozens of warnings in one stroke and disables enforcement on every future edit to that file. If a file would surface many warnings without the block, fix the warnings properly or drop the file from the current batch — never paper-over with a block disable.
+
+**Inline `// eslint-disable-next-line` is only acceptable for these three categories. Anything else is a regression.**
+
+1. **`noUncheckedIndexedAccess` parser mismatch** — when `tsconfig.test.json` (flag off) and `tsconfig.json` (flag on) both include the file, ESLint may report a `?.` / `!` / `if (x === undefined)` guard as `no-unnecessary-condition`, while `tsc` requires it. The disable comment must explicitly cite the parser mismatch.
+2. **TRUE Foundry framework boundary** — methods/properties the framework itself types as untyped (`actor.update(payload)`, `ChatMessage.create(data)`, `renderTemplate(template, ctx)`, `fromUuid(uuid)` returning `unknown`, `ActiveEffect.getFlag(scope, key)` returning `unknown`, `foundry.utils.getProperty(obj, path)` returning `unknown`, `foundry.utils.deepClone(o)` taking/returning `unknown`, `DialogV2.prompt(...)` returning `unknown`, `CONFIG.<X>` access, FormDataExtended `.object`, raw hook payloads, `JSON.parse()` return). The comment must NAME the specific framework method/global being bounded; vague "boundary: opaque shape" is not enough.
+3. **Mixin/super `as any` widening** — when a TS mixin constructor signature requires `any[]` (TS2545) because `unknown[]` is rejected, OR when calling `super.method as any` because the framework type-system genuinely admits no narrower type.
+
+**Cop-outs that are NOT in the three allowed categories:**
+- **Structural test mocks of our own types** (`WH40KBaseActor`, `OriginPathBuilder`, `BaseItemSheet`, `WH40KActorSystemData`) are NOT framework boundaries. Define a precise local interface that captures only the surface the test reaches into, OR narrow the function-under-test's parameter type so the mock satisfies it structurally.
+- **`@typescript-eslint/require-await` suppressions** are cop-outs. Fix by replacing `async fn(...): Promise<X> { return x; }` with `fn(...): Promise<X> { return Promise.resolve(x); }`. No `async` keyword = no `require-await` violation.
+- **"`globalThis` stubbing has no upstream schema"** is not a free boundary. Type the stub interface and use `vi.stubGlobal('game', stub satisfies GameStub)` or `Object.assign(globalThis, stub as TypedGlobalShape)` — the cast is at the stub-installation site only, and the surface is typed.
+- **"Deep-merge walks `DeepPartial<T>` blobs"** — type the merge function with proper generics. `unknown` propagation through generic helpers is fixable via type narrowing at each call site.
+
+**Enforcement applies retroactively when you touch a file.** Per Direction #5, any pre-existing file-level disable in a file you edit must be removed in the same change — not preserved. If removing the disable would surface warnings you cannot fix in scope, the file is not ready to be touched; either widen scope to address them or skip the edit.
+
+**When briefing background agents for a lint sweep:** list the three allowed inline categories explicitly, list the cop-out anti-patterns above by name, and forbid file-level disables outright. After the agent runs, audit `git diff` for every new `eslint-disable` — strip every one that doesn't match the three categories.
+
 ### Null and undefined: choose the operator that matches the type
 
 This codebase runs with `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` strict. Both flags produce `T | undefined` (never `T | null`) for many constructs. Using the wrong null-check operator creates an unreachable branch that ESLint's `no-unnecessary-condition` correctly flags — and is then suppressed, masking what is really a wrong-operator mistake.

@@ -12,62 +12,114 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { EventTracker } from '../src/module/managers/event-tracker';
+import { TransactionManager } from '../src/module/transactions/transaction-manager';
 
 vi.mock('../src/module/applications/dialogs/transaction-approval-dialog.ts', () => ({
     default: { show: vi.fn() },
 }));
 
-import { EventTracker } from '../src/module/managers/event-tracker';
-import { TransactionManager } from '../src/module/transactions/transaction-manager';
-
+interface ActorSystemLike {
+    gameSystem?: string;
+    influence?: number;
+    throneGelt?: number;
+    requisition?: number;
+}
+interface ItemStub {
+    id: string;
+    name: string;
+    system: { cost: { value: number }; quantity: number };
+}
 interface ActorStub {
     id: string;
     name: string;
-    system: Record<string, unknown>;
+    system: ActorSystemLike;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `Document.getFlag(scope, key)` returns `unknown` per the framework contract.
     getFlag: (scope: string, key: string) => unknown;
-    items?: { get: (id: string) => unknown };
+    items?: { get: (id: string) => ItemStub | undefined };
 }
+
+interface I18nStub {
+    localize: (k: string) => string;
+    format: (k: string) => string;
+    lang: string;
+}
+interface SettingsStub {
+    get: (system: string, key: string) => string | undefined;
+}
+interface ActorsStub {
+    get: (id: string) => ActorStub | undefined;
+}
+interface GameStub {
+    i18n: I18nStub;
+    settings: SettingsStub;
+    actors: ActorsStub;
+}
+interface FoundryUtilsStub {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.deepClone mirrors Foundry's framework helper signature `(o: unknown) => unknown`.
+    deepClone: (o: unknown) => unknown;
+}
+interface FoundryStub {
+    utils: FoundryUtilsStub;
+}
+
+interface GlobalShim {
+    game?: GameStub | undefined;
+    foundry?: FoundryStub | undefined;
+}
+const G = globalThis as GlobalShim;
 
 let rulesetSetting: string | undefined;
 
 function installGlobals(actors: ActorStub[]): void {
     const byId = new Map(actors.map((a) => [a.id, a]));
-    (globalThis as Record<string, unknown>).game = {
+    G.game = {
         i18n: {
-            localize: (k: string) => k,
-            format: (k: string) => k,
+            localize: (k: string): string => k,
+            format: (k: string): string => k,
             lang: 'en',
         },
         settings: {
-            get: (_system: string, key: string) => (key === 'dh2-ruleset' ? rulesetSetting : undefined),
+            get: (_system: string, key: string): string | undefined => (key === 'dh2-ruleset' ? rulesetSetting : undefined),
         },
-        actors: { get: (id: string) => byId.get(id) },
+        actors: { get: (id: string): ActorStub | undefined => byId.get(id) },
     };
-    (globalThis as Record<string, unknown>).foundry = {
-        utils: { deepClone: (o: unknown) => JSON.parse(JSON.stringify(o)) },
+    G.foundry = {
+        utils: {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.deepClone takes/returns `unknown` per Foundry's framework signature.
+            deepClone: (o: unknown): unknown => JSON.parse(JSON.stringify(o)),
+        },
     };
 }
 
-function makeItem(cost: number, quantity = 99): { id: string; name: string; system: { cost: { value: number }; quantity: number } } {
+function makeItem(cost: number, quantity = 99): ItemStub {
     return { id: 'i-las', name: 'Lasgun', system: { cost: { value: cost }, quantity } };
 }
 
-function makeSource(profile: Record<string, unknown>, item = makeItem(100)): ActorStub {
+interface TransactionProfile {
+    mode: string;
+    requisition?: { costMultiplier?: number };
+    barter?: { maxInfluenceBurn?: number; influenceDiscountPercent?: number };
+}
+
+function makeSource(profile: TransactionProfile, item = makeItem(100)): ActorStub {
     return {
         id: 'src-1',
         name: 'Quartermaster',
         system: {},
-        getFlag: (_s, key) => (key === 'transactionProfile' ? profile : undefined),
-        items: { get: (id: string) => (id === item.id ? item : undefined) },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag mirrors Foundry's framework signature returning `unknown`.
+        getFlag: (_s, key): unknown => (key === 'transactionProfile' ? profile : undefined),
+        items: { get: (id: string): ItemStub | undefined => (id === item.id ? item : undefined) },
     };
 }
 
-function makeBuyer(system: Record<string, unknown>): ActorStub {
+function makeBuyer(system: ActorSystemLike): ActorStub {
     return {
         id: 'buy-1',
         name: 'Trooper',
         system,
-        getFlag: () => undefined,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag mirrors Foundry's framework signature returning `unknown`.
+        getFlag: (): unknown => undefined,
     };
 }
 

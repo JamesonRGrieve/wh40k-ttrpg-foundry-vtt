@@ -10,27 +10,72 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
+import defineSimpleItemSheet from '../src/module/applications/item/define-simple-item-sheet.ts';
 
 // Stub the BaseItemSheet import surface so the factory can extend a class
 // without dragging the full Foundry/ApplicationV2 mixin chain into the test.
+// These two aliases are framework-boundary shapes for ApplicationV2 _prepareContext/_onRender
+// payloads, which Foundry types as untyped objects.
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext options payload is untyped in Foundry
+type PrepareContextOptions = Record<string, unknown>;
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render context is free-form by framework contract
+type RenderContext = Record<string, unknown>;
+
 vi.mock('../src/module/applications/item/base-item-sheet.ts', () => {
     class FakeBaseItemSheet {
         static DEFAULT_OPTIONS = { tag: 'form' };
         static PARTS = {};
         static TABS = [];
         tabGroups: Record<string, string> = {};
-        async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
-            await Promise.resolve();
-            return { fromBase: true };
+        // Async signature is the framework contract (ApplicationV2._prepareContext); body is sync.
+        async _prepareContext(_options: PrepareContextOptions): Promise<RenderContext> {
+            return Promise.resolve({ fromBase: true });
         }
-        async _onRender(_context: Record<string, unknown>, _options: Record<string, unknown>): Promise<void> {
-            await Promise.resolve();
+        async _onRender(_context: RenderContext, _options: PrepareContextOptions): Promise<void> {
+            return Promise.resolve();
         }
     }
     return { default: FakeBaseItemSheet };
 });
 
-import defineSimpleItemSheet from '../src/module/applications/item/define-simple-item-sheet.ts';
+/**
+ * Local descriptor of the static shape emitted by `defineSimpleItemSheet`.
+ * The factory's return type is `typeof BaseItemSheet`, which doesn't expose
+ * the override fields we want to assert on — this interface is the test-side
+ * mirror of what the factory writes to the class.
+ */
+interface SimpleItemSheetStatic {
+    DEFAULT_OPTIONS: {
+        classes?: string[];
+        position?: { width: number; height: number };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 actions map is an arbitrary handler dictionary
+        actions?: Record<string, unknown>;
+    };
+    PARTS: Record<string, { template: string; scrollable: string[] }>;
+    TABS: Array<{ tab: string; group: string; label: string }>;
+}
+
+interface SimpleItemSheetInstance {
+    tabGroups: Record<string, string>;
+    _prepareContext: (o: PrepareContextOptions) => Promise<RenderContext>;
+}
+
+/**
+ * Narrow a factory-returned class to its concrete emitted static shape. The
+ * factory return type is intentionally `typeof BaseItemSheet` (so callers can
+ * pass it straight to `DocumentSheetConfig.registerSheet`); the test asserts
+ * against the additional fields the factory writes on top, hence the cast.
+ */
+function asStatic<T>(Cls: T): T & SimpleItemSheetStatic {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: factory returns `typeof BaseItemSheet`; this widens to the runtime-emitted static shape
+    return Cls as unknown as T & SimpleItemSheetStatic;
+}
+
+function instantiate<T>(Cls: T): SimpleItemSheetInstance {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: factory returns `typeof BaseItemSheet`; narrow to constructor signature for test instantiation
+    const Ctor = Cls as unknown as new () => SimpleItemSheetInstance;
+    return new Ctor();
+}
 
 describe('defineSimpleItemSheet', () => {
     it('sets static DEFAULT_OPTIONS, PARTS, and TABS from config', () => {
@@ -50,15 +95,15 @@ describe('defineSimpleItemSheet', () => {
         // V14 collision fix: emitted class must carry an explicit name.
         expect(Cls.name).toBe('TestSheet');
 
-        const opts = (Cls as unknown as { DEFAULT_OPTIONS: Record<string, unknown> }).DEFAULT_OPTIONS;
+        const opts = asStatic(Cls).DEFAULT_OPTIONS;
         expect(opts.classes).toEqual(['wh40k-rpg', 'sheet', 'item', 'test']);
         expect(opts.position).toEqual({ width: 500, height: 400 });
 
-        const parts = (Cls as unknown as { PARTS: Record<string, { template: string; scrollable: string[] }> }).PARTS;
-        expect(parts.sheet.template).toBe('systems/wh40k-rpg/templates/item/item-test-sheet.hbs');
-        expect(parts.sheet.scrollable).toEqual(['.wh40k-tab-content']);
+        const parts = asStatic(Cls).PARTS;
+        expect(parts['sheet'].template).toBe('systems/wh40k-rpg/templates/item/item-test-sheet.hbs');
+        expect(parts['sheet'].scrollable).toEqual(['.wh40k-tab-content']);
 
-        const tabs = (Cls as unknown as { TABS: Array<{ tab: string }> }).TABS;
+        const tabs = asStatic(Cls).TABS;
         expect(tabs).toHaveLength(2);
         expect(tabs[0].tab).toBe('details');
     });
@@ -73,8 +118,8 @@ describe('defineSimpleItemSheet', () => {
             tabs: [{ tab: 'effect', group: 'primary', label: 'Effect' }],
             defaultTab: 'effect',
         });
-        const instance = new (Cls as unknown as new () => { tabGroups: Record<string, string> })();
-        expect(instance.tabGroups.primary).toBe('effect');
+        const instance = instantiate(Cls);
+        expect(instance.tabGroups['primary']).toBe('effect');
     });
 
     it('produces distinct class names so V14 registerSheet does not collide', () => {
@@ -111,7 +156,7 @@ describe('defineSimpleItemSheet', () => {
             tabs: [{ tab: 't', group: 'primary', label: 'T' }],
             defaultTab: 't',
         });
-        const opts = (Cls as unknown as { DEFAULT_OPTIONS: Record<string, unknown> }).DEFAULT_OPTIONS;
+        const opts = asStatic(Cls).DEFAULT_OPTIONS;
         expect('actions' in opts).toBe(false);
     });
 
@@ -127,8 +172,9 @@ describe('defineSimpleItemSheet', () => {
             defaultTab: 'details',
             actions: { changeSeverity: handler },
         });
-        const opts = (Cls as unknown as { DEFAULT_OPTIONS: { actions: Record<string, unknown> } }).DEFAULT_OPTIONS;
-        expect(opts.actions.changeSeverity).toBe(handler);
+        const opts = asStatic(Cls).DEFAULT_OPTIONS;
+        expect(opts.actions).toBeDefined();
+        expect(opts.actions['changeSeverity']).toBe(handler);
     });
 
     it('merges extraContext into _prepareContext output', async () => {
@@ -144,19 +190,22 @@ describe('defineSimpleItemSheet', () => {
                 natures: { beneficial: 'Beneficial' },
             },
         });
-        const instance = new (Cls as unknown as new () => {
-            _prepareContext: (o: Record<string, unknown>) => Promise<Record<string, unknown>>;
-        })();
+        const instance = instantiate(Cls);
         const ctx = await instance._prepareContext({});
-        expect(ctx.fromBase).toBe(true);
-        expect(ctx.natures).toEqual({ beneficial: 'Beneficial' });
+        expect(ctx['fromBase']).toBe(true);
+        expect(ctx['natures']).toEqual({ beneficial: 'Beneficial' });
     });
 
     it('invokes prepareContext callback with the rendered context', async () => {
-        const cb = vi.fn(async (_sheet: unknown, preparedCtx: Record<string, unknown>) => {
-            await Promise.resolve();
-            preparedCtx.injected = 42;
-        });
+        // The factory's `prepareContext` callback signature is `(this, ctx) => Promise<void>`,
+        // so the wrapper here is `async` to match the framework type even though the body is sync.
+        const cb = vi.fn(
+            // eslint-disable-next-line no-restricted-syntax -- boundary: prepareContext callback receives the sheet instance untyped at this layer (ApplicationV2 framework type).
+            async (_sheet: unknown, innerCtx: RenderContext): Promise<void> => {
+                innerCtx['injected'] = 42;
+                return Promise.resolve();
+            },
+        );
         const Cls = defineSimpleItemSheet({
             className: 'WithCallbackSheet',
             classes: ['wh40k-rpg', 'sheet', 'item', 'cb'],
@@ -167,12 +216,10 @@ describe('defineSimpleItemSheet', () => {
             defaultTab: 'details',
             prepareContext: cb,
         });
-        const instance = new (Cls as unknown as new () => {
-            _prepareContext: (o: Record<string, unknown>) => Promise<Record<string, unknown>>;
-        })();
+        const instance = instantiate(Cls);
         const ctx = await instance._prepareContext({});
         expect(cb).toHaveBeenCalledOnce();
-        expect(ctx.injected).toBe(42);
+        expect(ctx['injected']).toBe(42);
     });
 
     it('supports tabless sheets (e.g. SkillSheet)', () => {
@@ -184,12 +231,12 @@ describe('defineSimpleItemSheet', () => {
             height: 700,
             partOverrides: { scrollable: ['.wh40k-item-body'] },
         });
-        const tabs = (Cls as unknown as { TABS: Array<unknown> }).TABS;
+        const tabs = asStatic(Cls).TABS;
         expect(tabs).toEqual([]);
-        const instance = new (Cls as unknown as new () => { tabGroups: Record<string, string> })();
+        const instance = instantiate(Cls);
         expect(instance.tabGroups).toEqual({});
-        const parts = (Cls as unknown as { PARTS: Record<string, { scrollable: string[] }> }).PARTS;
-        expect(parts.sheet.scrollable).toEqual(['.wh40k-item-body']);
+        const parts = asStatic(Cls).PARTS;
+        expect(parts['sheet'].scrollable).toEqual(['.wh40k-item-body']);
     });
 
     it('throws if tabs is non-empty but defaultTab is missing', () => {
@@ -212,18 +259,21 @@ describe('defineSimpleItemSheet', () => {
             static TABS = [];
             tabGroups: Record<string, string> = {};
             customMarker = 'container';
-            async _prepareContext(_o: Record<string, unknown>): Promise<Record<string, unknown>> {
-                await Promise.resolve();
-                return { fromCustomBase: true };
+            async _prepareContext(_o: PrepareContextOptions): Promise<RenderContext> {
+                return Promise.resolve({ fromCustomBase: true });
             }
-            async _onRender(_c: Record<string, unknown>, _o: Record<string, unknown>): Promise<void> {
-                await Promise.resolve();
+            async _onRender(_c: RenderContext, _o: PrepareContextOptions): Promise<void> {
+                return Promise.resolve();
             }
         }
         const Cls = defineSimpleItemSheet({
             className: 'StorageLocationSheet',
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            baseClass: CustomBase as any,
+            // The factory's `TBase extends BaseItemSheetCtor` constraint is too narrow
+            // for an arbitrary fake base class authored only for this test, but the
+            // factory only uses the base via `extends`, so a runtime-correct cast
+            // through `unknown` to the constructor shape is the boundary.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: test custom base class does not satisfy BaseItemSheetCtor static shape but is structurally compatible
+            baseClass: CustomBase as unknown as Parameters<typeof defineSimpleItemSheet>[0]['baseClass'],
             classes: ['wh40k-rpg', 'storage-location'],
             template: 'x.hbs',
             width: 550,
@@ -231,7 +281,9 @@ describe('defineSimpleItemSheet', () => {
             tabs: [{ tab: 'contents', group: 'primary', label: 'Contents' }],
             defaultTab: 'contents',
         });
-        const instance = new (Cls as unknown as new () => CustomBase)();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: factory returns `typeof BaseItemSheet`; narrow to the custom base class for this test
+        const Ctor = Cls as unknown as new () => CustomBase;
+        const instance = new Ctor();
         expect(instance).toBeInstanceOf(CustomBase);
         expect(instance.customMarker).toBe('container');
     });

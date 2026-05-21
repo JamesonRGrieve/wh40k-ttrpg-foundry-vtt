@@ -3,33 +3,64 @@ import { TooltipsWH40K, prepareSkillTooltipData } from '../src/module/applicatio
 import type { WH40KBaseActor } from '../src/module/documents/base-actor.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../src/module/types/global.d.ts';
 
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
-const ORIGINAL_FROM_UUID = (globalThis as Record<string, unknown>).fromUuid;
+// Subset of the SkillTooltipPayload contract returned by prepareSkillTooltipData()
+// (which writes JSON). The interface is not exported from wh40k-tooltip.ts so
+// we mirror only the fields these tests assert on.
+interface SkillTooltipJsonPayload {
+    actorUuid?: string;
+    trained?: boolean;
+    plus10?: boolean;
+    plus20?: boolean;
+    plus30?: boolean;
+    trainingBonus?: number;
+    name?: string;
+    label?: string;
+}
+
+function makeCharacteristic(label: string, total: number): WH40KCharacteristic {
+    return { label, short: label.slice(0, 3), base: 30, advance: 0, modifier: 0, unnatural: 0, total, bonus: Math.floor(total / 10) };
+}
+
+interface GameI18nStub {
+    localize: (key: string) => string;
+    format: (key: string) => string;
+}
+interface GameStub {
+    i18n: GameI18nStub;
+}
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `fromUuid` global returns Promise<unknown> per the framework contract (Document | null | object).
+type FromUuidStub = (uuid?: string) => Promise<unknown>;
+
+interface GlobalShim {
+    game?: GameStub | undefined;
+    fromUuid?: FromUuidStub | undefined;
+}
+const G = globalThis as GlobalShim;
+const ORIGINAL_GAME = G.game;
+const ORIGINAL_FROM_UUID = G.fromUuid;
 
 beforeAll(() => {
-    (globalThis as Record<string, unknown>).game = {
+    const i18nMap: Record<string, string> = {
+        'WH40K.Skills.Untrained': 'Untrained',
+        'WH40K.Skills.Training': 'Training',
+        'WH40K.Tooltip.Skill.BasicUntrained': 'Basic (Untrained)',
+        'WH40K.Tooltip.Skill.CharacteristicValue': 'Characteristic Total',
+        'WH40K.Tooltip.Skill.UntrainedBase': 'Untrained Test Base (Characteristic ÷ 2)',
+        'WH40K.Tooltip.Skill.Modifiers': 'Modifiers',
+        'WH40K.Tooltip.Skill.TrainingProgression': 'Training Progression',
+        'WH40K.Tooltip.Skill.ClickNameToRoll': 'Use the die button to roll',
+    };
+    G.game = {
         i18n: {
-            localize: (key: string) =>
-                ((
-                    {
-                        'WH40K.Skills.Untrained': 'Untrained',
-                        'WH40K.Skills.Training': 'Training',
-                        'WH40K.Tooltip.Skill.BasicUntrained': 'Basic (Untrained)',
-                        'WH40K.Tooltip.Skill.CharacteristicValue': 'Characteristic Total',
-                        'WH40K.Tooltip.Skill.UntrainedBase': 'Untrained Test Base (Characteristic ÷ 2)',
-                        'WH40K.Tooltip.Skill.Modifiers': 'Modifiers',
-                        'WH40K.Tooltip.Skill.TrainingProgression': 'Training Progression',
-                        'WH40K.Tooltip.Skill.ClickNameToRoll': 'Use the die button to roll',
-                    } as Record<string, string>
-                )[key] ?? key),
-            format: (key: string) => key,
+            localize: (key: string): string => i18nMap[key] ?? key,
+            format: (key: string): string => key,
         },
     };
 });
 
 afterAll(() => {
-    (globalThis as Record<string, unknown>).game = ORIGINAL_GAME;
-    (globalThis as Record<string, unknown>).fromUuid = ORIGINAL_FROM_UUID;
+    G.game = ORIGINAL_GAME;
+    G.fromUuid = ORIGINAL_FROM_UUID;
 });
 
 describe('skill tooltip regressions', () => {
@@ -44,14 +75,11 @@ describe('skill tooltip regressions', () => {
             current: 67,
             bonus: 0,
         } as WH40KSkill;
-        const characteristics = {
-            perception: {
-                label: 'Perception',
-                total: 37,
-            },
-        } as unknown as Record<string, WH40KCharacteristic>;
+        const characteristics: Record<string, WH40KCharacteristic> = {
+            perception: makeCharacteristic('Perception', 37),
+        };
 
-        const data = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.mock')) as Record<string, unknown>;
+        const data = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.mock')) as SkillTooltipJsonPayload;
 
         expect(data.actorUuid).toBe('Actor.mock');
         expect(data.plus30).toBe(true);
@@ -82,10 +110,7 @@ describe('skill tooltip regressions', () => {
             },
         } as WH40KBaseActor;
 
-        (globalThis as Record<string, unknown>).fromUuid = async () => {
-            await Promise.resolve();
-            return actor;
-        };
+        G.fromUuid = async () => Promise.resolve(actor);
 
         const tooltip = new TooltipsWH40K();
         const html = await tooltip._buildSkillTooltip({
@@ -132,10 +157,7 @@ describe('skill tooltip regressions', () => {
             },
         } as WH40KBaseActor;
 
-        (globalThis as Record<string, unknown>).fromUuid = async () => {
-            await Promise.resolve();
-            return actor;
-        };
+        G.fromUuid = async () => Promise.resolve(actor);
 
         const tooltip = new TooltipsWH40K();
         const html = await tooltip._buildSkillTooltip({
@@ -178,10 +200,7 @@ describe('skill tooltip regressions', () => {
             },
         } as WH40KBaseActor;
 
-        (globalThis as Record<string, unknown>).fromUuid = async () => {
-            await Promise.resolve();
-            return actor;
-        };
+        G.fromUuid = async () => Promise.resolve(actor);
 
         const tooltip = new TooltipsWH40K();
         const html = await tooltip._buildSkillTooltip({
@@ -208,11 +227,11 @@ describe('skill tooltip regressions', () => {
             current: 47,
             bonus: 0,
         } as WH40KSkill;
-        const characteristics = {
-            perception: { label: 'Perception', total: 37 },
-        } as unknown as Record<string, WH40KCharacteristic>;
+        const characteristics: Record<string, WH40KCharacteristic> = {
+            perception: makeCharacteristic('Perception', 37),
+        };
 
-        const payload = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.fav')) as Record<string, unknown>;
+        const payload = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.fav')) as SkillTooltipJsonPayload;
         expect(payload.actorUuid).toBe('Actor.fav');
         expect(payload.trained).toBe(true);
         expect(payload.plus10).toBe(true);
@@ -226,13 +245,9 @@ describe('skill tooltip regressions', () => {
                 },
             },
         } as WH40KBaseActor;
-        (globalThis as Record<string, unknown>).fromUuid = async () => {
-            await Promise.resolve();
-            return actor;
-        };
+        G.fromUuid = async () => Promise.resolve(actor);
 
         const tooltip = new TooltipsWH40K();
-        // eslint-disable-next-line no-restricted-syntax -- boundary: SkillTooltipPayload shape is the JSON-parsed contract emitted by prepareSkillTooltipData; the cast is over the parsed payload.
         const html = await tooltip._buildSkillTooltip(payload);
 
         // Per issue #26 the rank labels now route through RankWithBonus;
@@ -265,10 +280,7 @@ describe('skill tooltip regressions', () => {
             },
         } as WH40KBaseActor;
 
-        (globalThis as Record<string, unknown>).fromUuid = async () => {
-            await Promise.resolve();
-            return actor;
-        };
+        G.fromUuid = async () => Promise.resolve(actor);
 
         const tooltip = new TooltipsWH40K();
         const html = await tooltip._buildSkillTooltip({

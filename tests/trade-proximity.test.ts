@@ -15,7 +15,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { selectNearbySources, TRADE_RANGE_METRES } from '../src/module/transactions/trade-proximity';
 
 vi.mock('../src/module/transactions/transaction-manager.ts', () => ({
-    TransactionManager: { isSourceActor: () => false },
+    TransactionManager: { isSourceActor: (): boolean => false },
 }));
 
 interface FakeActor {
@@ -31,13 +31,20 @@ function tk(tokenId: string, actorId: string | null, name = actorId ?? 'Unnamed'
     return { id: tokenId, actor: actorId === null ? null : { id: actorId, name } };
 }
 
+type BuyerArg = Parameters<typeof selectNearbySources>[0];
+type TokenArg = Parameters<typeof selectNearbySources>[1][number];
+type DistanceFn = Parameters<typeof selectNearbySources>[3];
+
 // Distance keyed off the candidate token id so each test can place sources.
-function distanceBy(map: Record<string, number>) {
-    return (_buyer: unknown, candidate: unknown) => map[(candidate as FakeToken).id] ?? Infinity;
+function distanceBy(map: Record<string, number>): DistanceFn {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: selectNearbySources distance callback receives Foundry Token objects; the test cast localises the FakeToken structural shape
+    return (_buyer, candidate) => map[(candidate as unknown as FakeToken).id] ?? Infinity;
 }
 
-const asTokens = (tokens: FakeToken[]): Parameters<typeof selectNearbySources>[1] => tokens as unknown as Parameters<typeof selectNearbySources>[1];
-const asBuyer = (token: FakeToken): Parameters<typeof selectNearbySources>[0] => token as unknown as Parameters<typeof selectNearbySources>[0];
+// eslint-disable-next-line no-restricted-syntax -- boundary: selectNearbySources expects Foundry Token instances; tests provide structural FakeToken mocks
+const asTokens = (tokens: FakeToken[]): TokenArg[] => tokens as unknown as TokenArg[];
+// eslint-disable-next-line no-restricted-syntax -- boundary: selectNearbySources expects a Foundry Token; tests provide a structural FakeToken mock
+const asBuyer = (token: FakeToken): BuyerArg => token as unknown as BuyerArg;
 
 describe('selectNearbySources', () => {
     const buyer = tk('t-buyer', 'a-buyer', 'Trooper');

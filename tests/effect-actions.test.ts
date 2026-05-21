@@ -34,7 +34,10 @@ function makeEffect(over: Partial<Pick<MockEffect, 'name' | 'disabled'>> = {}): 
 function makeOwner(effect?: MockEffect): EffectsOwner & { createEmbeddedDocuments: ReturnType<typeof vi.fn> } {
     return {
         uuid: 'Item.abc',
-        effects: { get: (id: string): ActiveEffectLike | undefined => (id === 'eff1' ? (effect as unknown as ActiveEffectLike) : undefined) },
+        effects: {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: MockEffect structurally satisfies ActiveEffectLike; full ActiveEffect interface is the Foundry document type
+            get: (id: string): ActiveEffectLike | undefined => (id === 'eff1' ? (effect as unknown as ActiveEffectLike) : undefined),
+        },
         createEmbeddedDocuments: vi.fn().mockResolvedValue([]),
     };
 }
@@ -64,6 +67,7 @@ describe('effectIdFromTarget', () => {
 describe('resolveEffect', () => {
     it('returns the matching effect', () => {
         const eff = makeEffect();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: MockEffect structurally satisfies ActiveEffectLike; full ActiveEffect interface is the Foundry document type
         expect(EffectActions.resolveEffect(makeOwner(eff), targetWith('eff1'))).toBe(eff as unknown as ActiveEffectLike);
     });
     it('returns undefined for unknown / missing id', () => {
