@@ -160,7 +160,7 @@ export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: () =
         bleedStopped = true;
     }
 
-    const gameSystem = (actor.system as { gameSystem?: string } | undefined)?.gameSystem ?? 'dh2e';
+    const gameSystem = (actor.system as { gameSystem?: string }).gameSystem ?? 'dh2e';
 
     const templateData = {
         actorName: actor.name,

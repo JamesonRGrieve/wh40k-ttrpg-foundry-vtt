@@ -2,18 +2,18 @@
  * Stories for WeaponModSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-weapon-mod-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = Hbs.compile(templateSrc);
 const rng = seedRandom(0xba55d);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('weapon-mod', rng);
     const item = mockItem({
         _id: id,
@@ -55,23 +55,23 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderTpl(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderTpl(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Red-Dot Sight')).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Red-Dot Sight')).toBeTruthy();
     },
 };
 
 export const RendersWeightField: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderTpl(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
         const field = canvasElement.querySelector<HTMLInputElement>('[name="system.weight"]');
-        expect(field).toBeTruthy();
-        expect(field?.value).toBe('0.5');
+        await expect(field).toBeTruthy();
+        await expect(field?.value).toBe('0.5');
     },
 };

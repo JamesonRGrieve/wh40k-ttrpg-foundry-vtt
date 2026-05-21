@@ -15,7 +15,9 @@
  * the static tables.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import {
     type ArmourCraftsmanshipEffect,
     type Craftsmanship,
@@ -25,8 +27,6 @@ import {
     type MeleeCraftsmanshipEffect,
     type RangedCraftsmanshipEffect,
 } from '../../../module/rules/ow-craftsmanship.ts';
-import { renderTemplate } from '../../../../stories/mocks';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import panelSrc from './ow-craftsmanship-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -74,13 +74,13 @@ function armour(itemId: string, name: string, tier: Craftsmanship): ArmourEntry 
     return { itemId, name, tier, effect: getArmourCraftsmanshipEffect(tier) };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = Hbs.compile(panelSrc);
 
 function renderPanel(ctx: CraftsmanshipPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderTpl(panelTpl, ctx));
     return wrapper;
 }
 

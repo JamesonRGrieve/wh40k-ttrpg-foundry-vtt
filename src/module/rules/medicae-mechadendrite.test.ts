@@ -112,7 +112,7 @@ function makeActor(opts: { gameSystem?: string; items?: FakeItem[]; medicae?: nu
         skills: { medicae: { current: opts.medicae ?? 0 } },
         items,
         effects: [] as unknown[],
-        deleteEmbeddedDocuments: vi.fn(async () => []),
+        deleteEmbeddedDocuments: vi.fn(async () => Promise.resolve([])),
     } as unknown as WH40KBaseActorDocument;
 }
 
@@ -157,16 +157,15 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         vi.stubGlobal('ChatMessage', {
             create: vi.fn(async (data: { content: string }) => {
                 createdContent = data.content;
-                return data;
+                return Promise.resolve(data);
             }),
             getWhisperRecipients: () => [],
         });
         vi.stubGlobal('foundry', {
             applications: {
                 handlebars: {
-                    renderTemplate: vi.fn(
-                        async (_tpl: string, ctx: Record<string, unknown>) =>
-                            `<card success="${String(ctx['success'])}" bleed="${String(ctx['bleedStopped'])}" sys="${String(ctx['gameSystem'])}">`,
+                    renderTemplate: vi.fn(async (_tpl: string, ctx: Record<string, unknown>) =>
+                        Promise.resolve(`<card success="${String(ctx['success'])}" bleed="${String(ctx['bleedStopped'])}" sys="${String(ctx['gameSystem'])}">`),
                     ),
                 },
             },

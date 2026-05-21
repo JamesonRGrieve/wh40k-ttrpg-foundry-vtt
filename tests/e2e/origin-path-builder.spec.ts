@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -50,9 +51,11 @@ interface BuilderProbeResult {
     pageErrors: string[];
 }
 
-async function probeOriginPathBuilder(page: import('@playwright/test').Page): Promise<BuilderProbeResult> {
+async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(

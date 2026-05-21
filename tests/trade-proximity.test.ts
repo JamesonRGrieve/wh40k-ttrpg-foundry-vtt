@@ -12,12 +12,11 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
+import { selectNearbySources, TRADE_RANGE_METRES } from '../src/module/transactions/trade-proximity';
 
 vi.mock('../src/module/transactions/transaction-manager.ts', () => ({
     TransactionManager: { isSourceActor: () => false },
 }));
-
-import { selectNearbySources, TRADE_RANGE_METRES } from '../src/module/transactions/trade-proximity';
 
 interface FakeActor {
     id: string | null;
@@ -37,8 +36,8 @@ function distanceBy(map: Record<string, number>) {
     return (_buyer: unknown, candidate: unknown) => map[(candidate as FakeToken).id] ?? Infinity;
 }
 
-const asTokens = (tokens: FakeToken[]) => tokens as unknown as Parameters<typeof selectNearbySources>[1];
-const asBuyer = (token: FakeToken) => token as unknown as Parameters<typeof selectNearbySources>[0];
+const asTokens = (tokens: FakeToken[]): Parameters<typeof selectNearbySources>[1] => tokens as unknown as Parameters<typeof selectNearbySources>[1];
+const asBuyer = (token: FakeToken): Parameters<typeof selectNearbySources>[0] => token as unknown as Parameters<typeof selectNearbySources>[0];
 
 describe('selectNearbySources', () => {
     const buyer = tk('t-buyer', 'a-buyer', 'Trooper');

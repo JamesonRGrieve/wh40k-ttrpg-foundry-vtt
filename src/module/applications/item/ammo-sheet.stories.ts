@@ -1,21 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-ammo-sheet.hbs?raw';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 
 initializeStoryHandlebars();
 // AmmoSheet exposes setIncludes / setToArray on its render context. The story
 // reproduces the same surface so the template can render without the sheet.
-if (!Handlebars.helpers.setIncludes) {
-    Handlebars.registerHelper('setIncludes', (key: unknown, set: unknown) => {
-        if (set instanceof Set) return set.has(key);
-        if (Array.isArray(set)) return set.includes(key);
-        return false;
-    });
-}
-const compiled = Handlebars.compile(templateSrc);
+HbsStory.registerHelper('setIncludes', (key: unknown, set: unknown) => {
+    if (set instanceof Set) return set.has(key);
+    if (Array.isArray(set)) return set.includes(key);
+    return false;
+});
+const compiled = HbsStory.compile(templateSrc);
 
 interface AmmoArgs {
     item: {
@@ -57,7 +55,7 @@ const baseSystem = (): AmmoArgs['item']['system'] => ({
 
 const meta: Meta<AmmoArgs> = {
     title: 'Item Sheets/AmmoSheet',
-    render: (args) => renderTemplate(compiled, args),
+    render: (args) => renderStoryTemplate(compiled, args),
     args: {
         item: { name: 'Bolt Rounds (Standard)', img: 'icons/svg/bullet.svg', system: baseSystem() },
         system: baseSystem(),
@@ -84,9 +82,9 @@ export const HighDamage: Story = {
 
 export const RendersTabs: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Bolt Rounds (Standard)')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-tab="modifiers"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-tab="qualities"]')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Bolt Rounds (Standard)')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-tab="modifiers"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-tab="qualities"]')).toBeTruthy();
     },
 };

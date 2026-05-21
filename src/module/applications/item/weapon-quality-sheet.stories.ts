@@ -49,8 +49,8 @@ export const Levelled: Story = {
 
 export const RendersIdentifier: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Tearing')).toBeTruthy();
-        expect(canvas.getAllByText('tearing').length).toBeGreaterThan(0);
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Tearing')).toBeTruthy();
+        await expect(view.getAllByText('tearing').length).toBeGreaterThan(0);
     },
 };

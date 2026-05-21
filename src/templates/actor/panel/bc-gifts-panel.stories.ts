@@ -14,8 +14,8 @@
  * gifts with no matching rider }).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HB from 'handlebars';
+import { renderTemplate as compileAndRender } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import type { ChaosAlignment } from '../../../module/config/game-systems/types';
 import { mergeGiftDeltas, resolveGiftForAlignment, type GiftDef } from '../../../module/rules/bc-gifts';
@@ -43,13 +43,13 @@ interface GiftsPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HB.compile(panelSrc);
 
 function renderPanel(ctx: GiftsPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(compileAndRender(panelTpl, ctx));
     return wrapper;
 }
 
@@ -101,7 +101,6 @@ const GIFT_CATALOGUE: Record<string, GiftDef> = {
 function buildCtx(currentAlignment: ChaosAlignment, giftIds: ReadonlyArray<keyof typeof GIFT_CATALOGUE>): GiftsPanelCtx {
     const gifts: RenderedGift[] = giftIds.map((id) => {
         const gift = GIFT_CATALOGUE[id];
-        if (!gift) throw new Error(`Unknown gift id in story catalogue: ${id}`);
         const resolved = resolveGiftForAlignment(gift, currentAlignment);
         const matchingRider = gift.riders.find((r) => r.alignment === resolved.appliedAlignment);
         return {

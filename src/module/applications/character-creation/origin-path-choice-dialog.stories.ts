@@ -104,9 +104,9 @@ export const CompleteSelection: Story = {
 export const ConfirmFlow: Story = {
     args: CompleteSelection.args,
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Schola Progenium')).toBeTruthy();
-        expect(canvas.getByText('Weapon Training')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText('Schola Progenium')).toBeTruthy();
+        await expect(view.getByText('Weapon Training')).toBeTruthy();
         clickAction(canvasElement, 'confirm');
         clickAction(canvasElement, 'cancel');
     },

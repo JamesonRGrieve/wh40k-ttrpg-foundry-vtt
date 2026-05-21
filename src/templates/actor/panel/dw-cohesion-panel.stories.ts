@@ -11,8 +11,8 @@
  * Every value is fixed for diff stability (no Math.random).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HB from 'handlebars';
+import { renderTemplate as compileAndRender } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import panelSrc from './dw-cohesion-panel.hbs?raw';
 
@@ -29,13 +29,13 @@ interface CohesionPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HB.compile(panelSrc);
 
 function renderPanel(ctx: CohesionPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(compileAndRender(panelTpl, ctx));
     return wrapper;
 }
 

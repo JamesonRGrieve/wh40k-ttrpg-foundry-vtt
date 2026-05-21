@@ -822,25 +822,34 @@ export class GrantsManager {
         if (!legacy) return [];
         const out: GrantConfig[] = [];
         if (Array.isArray(legacy.skills) && legacy.skills.length > 0) {
+            const filteredSkills = legacy.skills.filter(
+                (s): s is Required<Pick<typeof s, 'name'>> & typeof s => typeof s.name === 'string' && s.name.length > 0,
+            );
             out.push({
                 type: 'skill',
-                skills: legacy.skills
-                    .filter((s) => typeof s?.name === 'string' && s.name.length > 0)
-                    .map((s) => ({ key: s.name!.toLowerCase().replace(/\s+/g, ''), level: s.level ?? 'trained', specialization: s.specialization })),
+                skills: filteredSkills.map((s) => ({
+                    key: s.name.toLowerCase().replace(/\s+/g, ''),
+                    level: s.level ?? 'trained',
+                    specialization: s.specialization,
+                })),
             });
         }
         if (Array.isArray(legacy.talents) && legacy.talents.length > 0) {
+            const filteredTalents = legacy.talents.filter(
+                (t): t is Required<Pick<typeof t, 'uuid'>> & typeof t => typeof t.uuid === 'string' && t.uuid.length > 0,
+            );
             out.push({
                 type: 'item',
-                items: legacy.talents
-                    .filter((t) => typeof t?.uuid === 'string' && t.uuid.length > 0)
-                    .map((t) => ({ uuid: t.uuid!, specialization: t.specialization })),
+                items: filteredTalents.map((t) => ({ uuid: t.uuid, specialization: t.specialization })),
             });
         }
         if (Array.isArray(legacy.traits) && legacy.traits.length > 0) {
+            const filteredTraits = legacy.traits.filter(
+                (t): t is Required<Pick<typeof t, 'uuid'>> & typeof t => typeof t.uuid === 'string' && t.uuid.length > 0,
+            );
             out.push({
                 type: 'item',
-                items: legacy.traits.filter((t) => typeof t?.uuid === 'string' && t.uuid.length > 0).map((t) => ({ uuid: t.uuid!, level: t.level })),
+                items: filteredTraits.map((t) => ({ uuid: t.uuid, level: t.level })),
             });
         }
         return out;

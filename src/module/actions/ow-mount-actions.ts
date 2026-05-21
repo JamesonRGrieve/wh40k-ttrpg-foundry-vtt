@@ -30,8 +30,8 @@
  * the orchestrator's `declare` block).
  */
 
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { MountedOnEntry } from '../data/actor/mixins/ow-mount-template.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { getMountedAction, type MountedAction, type MountedActionId, type MountedActionTiming } from '../rules/ow-mount.ts';
 import type { I18nKey } from '../types/i18n-keys';
 

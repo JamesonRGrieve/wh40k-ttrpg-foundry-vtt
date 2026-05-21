@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from './vital-inline-row.hbs?raw';
@@ -26,7 +26,7 @@ interface Args {
 
 const meta = {
     title: 'Actor/Partials/VitalInlineRow',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         icon: 'fa-heart',
         label: 'Wounds',
@@ -100,14 +100,12 @@ export const FatigueWithPenalty: Story = {
 export const ClickDispatch: Story = {
     args: { current: 8, max: 12 },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
         // The +/- buttons resolve through the same data-action handles the
         // ApplicationV2 sheet's static-actions table reads.
         clickAction(canvasElement, 'increment');
         clickAction(canvasElement, 'decrement');
         // Field path threaded onto both buttons.
         const inc = canvasElement.querySelector<HTMLElement>('[data-action="increment"]');
-        expect(inc?.dataset.field).toBe('system.wounds.value');
-        void canvas;
+        await expect(inc?.dataset.field).toBe('system.wounds.value');
     },
 };

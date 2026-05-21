@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect } from 'storybook/test';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 
@@ -16,11 +16,11 @@ interface Args {
 }
 
 const callerSrc = `{{#> systems/wh40k-rpg/templates/actor/partial/header-base variant=variant gameSystem=gameSystem cardClass=cardClass innerClass=innerClass}}{{{body}}}{{/systems/wh40k-rpg/templates/actor/partial/header-base}}`;
-const callerTemplate = Handlebars.compile(callerSrc);
+const callerTemplate = HandlebarsLib.compile(callerSrc);
 
 const meta = {
     title: 'Actor/Partials/HeaderBase',
-    render: (args) => renderTemplate(callerTemplate, args as unknown as Record<string, unknown>),
+    render: (args) => renderMockTemplate(callerTemplate, args as unknown as Record<string, unknown>),
     args: {
         variant: 'sidebar',
         gameSystem: 'dh2',
@@ -42,7 +42,7 @@ export const SidebarIM: Story = {
         // The wrapper carries data-wh40k-system so per-system Tailwind variants
         // (im:tw-border-crimson-light, etc.) fire on inner content.
         const wrapper = canvasElement.querySelector('[data-wh40k-system="im"]');
-        expect(wrapper).toBeTruthy();
+        await expect(wrapper).toBeTruthy();
     },
 };
 
@@ -64,10 +64,10 @@ export const HorizontalStarship: Story = {
     },
     play: async ({ canvasElement }) => {
         const wrapper = canvasElement.querySelector('[data-wh40k-system="rt"]');
-        expect(wrapper).toBeTruthy();
+        await expect(wrapper).toBeTruthy();
         // Horizontal variant doesn't wrap content in the inner column flex.
         const innerCol = canvasElement.querySelector('.tw-flex-col.tw-items-center');
-        expect(innerCol).toBeNull();
+        await expect(innerCol).toBeNull();
     },
 };
 

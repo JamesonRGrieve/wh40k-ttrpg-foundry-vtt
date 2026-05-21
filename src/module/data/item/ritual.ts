@@ -111,12 +111,9 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get testLabel(): string {
-        let label = game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
-        if (this.test.skill) label = this.test.skill;
-        if (this.test.modifier !== 0) {
-            label += ` ${this.test.modifier >= 0 ? '+' : ''}${this.test.modifier}`;
-        }
-        return label;
+        const base = this.test.skill ? this.test.skill : game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
+        const suffix = this.test.modifier !== 0 ? ` ${this.test.modifier >= 0 ? '+' : ''}${this.test.modifier}` : '';
+        return base + suffix;
     }
 
     /* -------------------------------------------- */

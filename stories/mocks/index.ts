@@ -306,7 +306,7 @@ export function mockWeaponQuality(overrides?: DeepPartial<MockWeaponQuality>): M
     );
 }
 
-export function mockModifiersPanel(overrides?: DeepPartial<Record<string, unknown>>) {
+export function mockModifiersPanel(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
     return deepMerge(
         {
             modifiers: {
@@ -359,7 +359,7 @@ export function mockModifiersPanel(overrides?: DeepPartial<Record<string, unknow
     );
 }
 
-export function mockRollData(overrides?: DeepPartial<Record<string, unknown>>) {
+export function mockRollData(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
     return deepMerge(
         {
             rollData: {
@@ -390,7 +390,7 @@ export function mockRollData(overrides?: DeepPartial<Record<string, unknown>>) {
     );
 }
 
-export function mockDamageRollData(overrides?: DeepPartial<Record<string, unknown>>) {
+export function mockDamageRollData(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
     return deepMerge(
         {
             weaponName: 'Godwyn-Deaz Boltgun',
@@ -420,7 +420,7 @@ export function mockDamageRollData(overrides?: DeepPartial<Record<string, unknow
     );
 }
 
-export function mockActionRollData(overrides?: DeepPartial<Record<string, unknown>>) {
+export function mockActionRollData(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
     return deepMerge(
         {
             id: 'roll-attack-1',
@@ -537,7 +537,7 @@ export function mockQuickActionItem(type: string, overrides?: DeepPartial<MockIt
     return deepMerge(baseByType[type] ?? mockItem({ type }), overrides);
 }
 
-export function mockActiveEffectsContext(overrides?: DeepPartial<Record<string, unknown>>) {
+export function mockActiveEffectsContext(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
     return deepMerge(
         {
             item: mockItem({
@@ -551,7 +551,7 @@ export function mockActiveEffectsContext(overrides?: DeepPartial<Record<string, 
     );
 }
 
-export function mockWeaponSheetContext(overrides?: DeepPartial<Record<string, unknown>>) {
+export function mockWeaponSheetContext(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
     const item = mockItem({
         type: 'weapon',
         name: 'Godwyn-Deaz Boltgun',
@@ -667,7 +667,7 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<Record<string, un
     );
 }
 
-export function mockArmourSheetContext(overrides?: DeepPartial<Record<string, unknown>>) {
+export function mockArmourSheetContext(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
     const item = mockItem({
         type: 'armour',
         name: 'Carapace Armour',
@@ -721,7 +721,7 @@ export function mockArmourSheetContext(overrides?: DeepPartial<Record<string, un
     );
 }
 
-export function mockGearSheetContext(overrides?: DeepPartial<Record<string, unknown>>) {
+export function mockGearSheetContext(overrides?: DeepPartial<Record<string, unknown>>): Record<string, unknown> {
     const item = mockItem({
         type: 'gear',
         name: 'Medi-Kit',

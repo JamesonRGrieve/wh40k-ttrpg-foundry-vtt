@@ -170,7 +170,7 @@ export function resolveNavigatorPower(input: NavigatorTestInput): NavigatorTestR
  * the Navigator does not manifest.
  */
 export function resolveOpposedNavigatorPower(input: NavigatorOpposedInput): NavigatorOpposedResult {
-    const navigator = resolveNavigatorPower(input.navigator);
+    const navResult = resolveNavigatorPower(input.navigator);
     const opponentTarget = clampTarget(input.opponent.characteristic + (input.opponent.difficultyModifier ?? 0) + (input.opponent.situationalModifier ?? 0));
     const opponentRoll = clampRoll(input.opponent.roll);
     const opponentSuccess = opponentRoll <= opponentTarget;
@@ -188,13 +188,13 @@ export function resolveOpposedNavigatorPower(input: NavigatorOpposedInput): Navi
         level: 'novice',
     });
 
-    const netDos = navigator.dos - opponent.dos;
+    const netDos = navResult.dos - opponent.dos;
     // Pass + strictly beat the opponent's DoS → manifest. The RAW
     // convention for an opposed test is that the *active* side must win
     // outright; a tie means the target resists.
-    const success = navigator.success && netDos > 0;
+    const success = navResult.success && netDos > 0;
     return Object.freeze({
-        navigator,
+        navigator: navResult,
         opponent,
         success,
         netDos,
@@ -226,13 +226,11 @@ export interface NavigatorPowerEffectTier {
 export function emitNavigatorPowerEffects(levels: NavigatorPowerLevels, activeLevel: NavigatorPowerLevel): NavigatorPowerEffectTier[] {
     const out: NavigatorPowerEffectTier[] = [];
     for (const tier of NAVIGATOR_LEVEL_ORDER) {
-        if (tier === 'novice' || tier === 'adept' || tier === 'master') {
-            const text = levels[tier]?.effect ?? '';
-            if (text.length > 0) {
-                out.push({ level: tier, effect: text });
-            }
-            if (tier === activeLevel) break;
+        const text = levels[tier]?.effect ?? '';
+        if (text.length > 0) {
+            out.push({ level: tier, effect: text });
         }
+        if (tier === activeLevel) break;
     }
     return out;
 }

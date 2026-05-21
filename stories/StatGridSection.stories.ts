@@ -7,6 +7,7 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import HandlebarsLib from 'handlebars';
 import movementFullSrc from '../src/templates/actor/panel/movement-panel-full.hbs?raw';
 import statGridSrc from '../src/templates/actor/partial/stat-grid-section.hbs?raw';
 import vitalShellSrc from '../src/templates/actor/partial/vital-panel-shell.hbs?raw';
@@ -17,11 +18,10 @@ initializeStoryHandlebars();
 
 // Register vital-panel-shell so the movement-panel-full block partial resolves
 // during isolated story rendering.
-import Handlebars from 'handlebars';
-Handlebars.registerPartial('systems/wh40k-rpg/templates/actor/partial/vital-panel-shell', vitalShellSrc);
-Handlebars.registerPartial('systems/wh40k-rpg/templates/actor/partial/vital-panel-shell.hbs', vitalShellSrc);
-Handlebars.registerPartial('systems/wh40k-rpg/templates/actor/partial/stat-grid-section', statGridSrc);
-Handlebars.registerPartial('systems/wh40k-rpg/templates/actor/partial/stat-grid-section.hbs', statGridSrc);
+HandlebarsLib.registerPartial('systems/wh40k-rpg/templates/actor/partial/vital-panel-shell', vitalShellSrc);
+HandlebarsLib.registerPartial('systems/wh40k-rpg/templates/actor/partial/vital-panel-shell.hbs', vitalShellSrc);
+HandlebarsLib.registerPartial('systems/wh40k-rpg/templates/actor/partial/stat-grid-section', statGridSrc);
+HandlebarsLib.registerPartial('systems/wh40k-rpg/templates/actor/partial/stat-grid-section.hbs', statGridSrc);
 
 interface StatCell {
     label: string;

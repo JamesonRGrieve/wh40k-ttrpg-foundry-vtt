@@ -9,14 +9,14 @@
  *   - per-system rendering is identical (the partial is data-driven).
  */
 
-import Handlebars from 'handlebars';
+import HB from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import statGridSrc from '../src/templates/actor/partial/stat-grid-section.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-const tpl = Handlebars.compile(statGridSrc);
+const tpl = HB.compile(statGridSrc);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -71,12 +71,12 @@ describe('stat-grid-section partial', () => {
         expect(cells).toHaveLength(4);
         // First span in cell is the label, second is the value
         const labelSpans = cells[0].querySelectorAll('span');
-        expect(labelSpans[0]?.textContent?.trim()).toBe('Half');
-        expect(labelSpans[1]?.textContent).toContain('3');
+        expect(labelSpans[0].textContent.trim()).toBe('Half');
+        expect(labelSpans[1].textContent).toContain('3');
         // Unit is a nested span inside the value span
-        expect(labelSpans[1]?.querySelector('span')?.textContent).toBe('m');
+        expect(labelSpans[1].querySelector('span')?.textContent).toBe('m');
         const lastCellSpans = cells[3].querySelectorAll('span');
-        expect(lastCellSpans[1]?.textContent).toContain('18');
+        expect(lastCellSpans[1].textContent).toContain('18');
     });
 
     it('reflects the column count in the grid class', () => {

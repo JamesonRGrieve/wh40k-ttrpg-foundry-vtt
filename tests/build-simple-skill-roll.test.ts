@@ -7,7 +7,7 @@
  * the literal field assignments those methods used to make so any drift surfaces in CI.
  */
 
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it } from 'vitest';
 import type { SimpleSkillData as SimpleSkillDataType } from '../src/module/rolls/action-data.ts';
 
 // --- Stub Foundry globals before importing system modules. -----------------
@@ -37,7 +37,7 @@ class FakeActor {
             HandlebarsApplicationMixin: fakeHandlebarsApplicationMixin,
         },
         handlebars: {
-            renderTemplate: async () => '',
+            renderTemplate: async () => Promise.resolve(''),
         },
     },
     utils: {

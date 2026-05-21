@@ -7,7 +7,6 @@
  */
 
 import { describe, expect, it } from 'vitest';
-
 import { DW_SPECIAL_AMMO_EFFECTS, DW_SPECIAL_AMMO_IDS, applyAmmoEffect, getAmmoEffect, type DwSpecialAmmoId } from './dw-special-ammo.ts';
 
 describe('DW Special-Issue Ammunition registry', () => {

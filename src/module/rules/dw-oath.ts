@@ -128,9 +128,6 @@ export function canSwearOath(args: CanSwearOathArgs): CanSwearOathResult {
     if (args.currentOathId !== null) {
         return { allowed: false, reason: 'already-sworn' };
     }
-    if (!args.oath.leaderPrereq) {
-        return { allowed: false, reason: 'none' };
-    }
     return { allowed: true };
 }
 

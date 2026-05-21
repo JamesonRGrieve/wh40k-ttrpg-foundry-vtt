@@ -77,30 +77,30 @@ type Story = StoryObj<Args>;
 export const Default: Story = {};
 
 export const RendersThreeHomeworldCards: Story = {
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
+        const cv = within(canvasElement);
         const cards = canvasElement.querySelectorAll('[data-homeworld]');
-        expect(cards.length).toBe(3);
-        expect(canvas.getByText(/Agri World/i)).toBeTruthy();
-        expect(canvas.getByText(/Feudal World/i)).toBeTruthy();
-        expect(canvas.getByText(/Frontier World/i)).toBeTruthy();
+        void expect(cards.length).toBe(3);
+        void expect(cv.getByText(/Agri World/i)).toBeTruthy();
+        void expect(cv.getByText(/Feudal World/i)).toBeTruthy();
+        void expect(cv.getByText(/Frontier World/i)).toBeTruthy();
     },
 };
 
 export const AgriWorldShowsBrutalCharge: Story = {
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         const agri = canvasElement.querySelector('[data-homeworld="agriWorld"]');
-        expect(agri).toBeTruthy();
-        expect(agri?.textContent).toMatch(/Brutal Charge/);
-        expect(agri?.textContent).toMatch(/Strength from the Land/);
+        void expect(agri).toBeTruthy();
+        void expect(agri?.textContent).toMatch(/Brutal Charge/);
+        void expect(agri?.textContent).toMatch(/Strength from the Land/);
     },
 };
 
 export const FrontierWorldShowsTechUseBonus: Story = {
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         const frontier = canvasElement.querySelector('[data-homeworld="frontierWorld"]');
-        expect(frontier).toBeTruthy();
-        expect(frontier?.textContent).toMatch(/Tech-Use/);
-        expect(frontier?.textContent).toMatch(/Rely on None but Yourself/);
+        void expect(frontier).toBeTruthy();
+        void expect(frontier?.textContent).toMatch(/Tech-Use/);
+        void expect(frontier?.textContent).toMatch(/Rely on None but Yourself/);
     },
 };

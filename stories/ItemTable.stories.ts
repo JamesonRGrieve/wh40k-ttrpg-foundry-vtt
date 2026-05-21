@@ -6,7 +6,7 @@
  * recipe.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
 import armourPanelSrc from '../src/templates/actor/panel/armour-panel.hbs?raw';
 import shipComponentsPanelSrc from '../src/templates/actor/panel/ship-components-panel.hbs?raw';
@@ -159,7 +159,7 @@ export const RowSimple: Story = {
 export const RowExpanded: Story = {
     name: 'Row / With description toggle',
     render: () => {
-        const tpl = Handlebars.compile(itemTableRowSrc);
+        const tpl = HBS.compile(itemTableRowSrc);
         // Compose by hand to slot block content into the description.
         const wrapper = document.createElement('div');
         wrapper.classList.add('wh40k-rpg', 'sheet');
@@ -180,7 +180,7 @@ export const RowExpanded: Story = {
 };
 
 /** Composed: full weapon-panel using the new partials. */
-function makeWeaponContext(systemId: string) {
+function makeWeaponContext(systemId: string): { actor: { items: MockWeapon[] }; gameSystem: string } {
     return {
         actor: { items: makeWeapons() },
         gameSystem: systemId,
@@ -195,12 +195,12 @@ export const WeaponPanelDH2: Story = {
         return wrapper;
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const addBtn = canvas.getAllByText(/Lasgun/)[0];
-        expect(addBtn).toBeTruthy();
+        const view = within(canvasElement);
+        const addBtn = view.getAllByText(/Lasgun/)[0];
+        await expect(addBtn).toBeTruthy();
         // The toolbar dispatch action ids are intact.
         const rollBtns = canvasElement.querySelectorAll('[data-action="itemRoll"]');
-        expect(rollBtns.length).toBe(2);
+        await expect(rollBtns.length).toBe(2);
     },
 };
 
@@ -327,7 +327,12 @@ function makeShipUpgrades(): MockShipItem[] {
     ];
 }
 
-function shipContext(systemId: string) {
+function shipContext(systemId: string): {
+    actor: { items: MockShipItem[] };
+    source: { crew: { population: number; crewRating: number; morale: { value: number; max: number } } };
+    shipRoles: Array<{ id: string; name: string; img: string; system: { officer: string; effect: string } }>;
+    gameSystem: string;
+} {
     return {
         actor: { items: [...makeShipWeapons(), ...makeShipComponents(), ...makeShipUpgrades()] },
         source: {
@@ -354,10 +359,10 @@ export const ShipWeaponsPanelDH2: Story = {
     },
     play: async ({ canvasElement }) => {
         // Material Icons must NOT survive the migration.
-        expect(canvasElement.querySelector('.material-icons')).toBeNull();
+        await expect(canvasElement.querySelector('.material-icons')).toBeNull();
         // Each ship-weapon row carries the fire + delete actions.
-        expect(canvasElement.querySelectorAll('[data-action="itemFire"]').length).toBe(2);
-        expect(canvasElement.querySelectorAll('[data-action="itemDelete"]').length).toBe(2);
+        await expect(canvasElement.querySelectorAll('[data-action="itemFire"]').length).toBe(2);
+        await expect(canvasElement.querySelectorAll('[data-action="itemDelete"]').length).toBe(2);
     },
 };
 
@@ -378,9 +383,9 @@ export const ShipComponentsPanelDH2: Story = {
         return wrapper;
     },
     play: async ({ canvasElement }) => {
-        expect(canvasElement.querySelector('.material-icons')).toBeNull();
+        await expect(canvasElement.querySelector('.material-icons')).toBeNull();
         // Each row exposes both itemEdit (cog) and itemDelete actions in the toolbar.
-        expect(canvasElement.querySelectorAll('[data-action="itemEdit"]').length).toBeGreaterThanOrEqual(2);
+        await expect(canvasElement.querySelectorAll('[data-action="itemEdit"]').length).toBeGreaterThanOrEqual(2);
     },
 };
 
@@ -420,7 +425,13 @@ interface MockVehicleUpgrade {
     };
 }
 
-function vehicleContext(systemId: string) {
+function vehicleContext(systemId: string): {
+    weapons: MockVehicleWeapon[];
+    upgrades: MockVehicleUpgrade[];
+    editable: boolean;
+    system: { weapons: string };
+    gameSystem: string;
+} {
     const weapons: MockVehicleWeapon[] = [
         {
             id: 'vw-1',
@@ -458,10 +469,10 @@ export const VehicleWeaponsPanelDH2: Story = {
         return wrapper;
     },
     play: async ({ canvasElement }) => {
-        expect(canvasElement.querySelector('i.fa-trash')).toBeNull();
+        await expect(canvasElement.querySelector('i.fa-trash')).toBeNull();
         // The editor + add button live OUTSIDE the migrated table — they must remain.
         const addBtn = canvasElement.querySelector('[data-action="itemCreate"][data-type="weapon"]');
-        expect(addBtn).toBeTruthy();
+        await expect(addBtn).toBeTruthy();
     },
 };
 

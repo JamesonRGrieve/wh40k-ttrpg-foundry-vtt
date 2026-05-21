@@ -6,9 +6,9 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate, mockActor } from '../../../../stories/mocks';
+import { renderTemplate as renderTpl, mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/extended';
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
@@ -24,15 +24,15 @@ initializeStoryHandlebars();
 
 const rng = seedRandom(0xca5cade5);
 
-const headerTpl = Handlebars.compile(headerSrc);
-const tabsTpl = Handlebars.compile(tabsSrc);
-const statsTabTpl = Handlebars.compile(statsTabSrc);
-const extendedActionsTabTpl = Handlebars.compile(extendedActionsTabSrc);
-const crewTabTpl = Handlebars.compile(crewTabSrc);
-const shipWeaponChatTpl = Handlebars.compile(shipWeaponChatSrc);
+const headerTpl = Hbs.compile(headerSrc);
+const tabsTpl = Hbs.compile(tabsSrc);
+const statsTabTpl = Hbs.compile(statsTabSrc);
+const extendedActionsTabTpl = Hbs.compile(extendedActionsTabSrc);
+const crewTabTpl = Hbs.compile(crewTabSrc);
+const shipWeaponChatTpl = Hbs.compile(shipWeaponChatSrc);
 
 function renderStarshipSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = Handlebars.compile(`
+    const tpl = Hbs.compile(`
         <div class="tw-flex tw-flex-col">
             ${headerTpl(ctx)}
             ${tabsTpl(ctx)}
@@ -41,10 +41,11 @@ function renderStarshipSheet(ctx: SheetContextLike): HTMLElement {
             </main>
         </div>
     `);
-    return renderTemplate(tpl, ctx);
+    return renderTpl(tpl, ctx);
 }
 
-const _shipId = randomId('starship', rng);
+// Seed the RNG to keep subsequent randomId calls deterministic
+randomId('starship', rng);
 
 const meta: Meta<SheetContextLike> = {
     title: 'Actor/StarshipSheet',
@@ -83,9 +84,9 @@ export const Default: Story = {
     args: defaultCtxWithSource,
     render: (args) => renderStarshipSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const storyCanvas = within(canvasElement);
         // Ship name in header
-        await expect(canvas.getByDisplayValue('Sword of Terra')).toBeVisible();
+        await expect(storyCanvas.getByDisplayValue('Sword of Terra')).toBeVisible();
         // Stats tab renders speed field
         assertField(canvasElement, 'system.speed', 8);
     },
@@ -101,7 +102,7 @@ export const EditMode: Story = {
         editable: true,
     },
     render: (args) => renderStarshipSheet(args),
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         assertField(canvasElement, 'system.armour', 18);
         assertField(canvasElement, 'system.manoeuvrability', 15);
     },
@@ -113,7 +114,7 @@ export const RollInitiative: Story = {
     name: 'Interaction — rollInitiative fires',
     args: defaultCtxWithSource,
     render: (args) => renderStarshipSheet(args),
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         // Button has data-action="rollInitiative" — presence confirms it rendered.
         clickAction(canvasElement, 'rollInitiative');
     },
@@ -138,8 +139,8 @@ export const BlackCruisadeVariant: Story = {
     })(),
     render: (args) => renderStarshipSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Despoiler-class Battleship')).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Despoiler-class Battleship')).toBeVisible();
     },
 };
 
@@ -191,7 +192,7 @@ const issue186ExtendedActions = [
 ];
 
 function renderExtendedActionsPanel(ctx: SheetContextLike): HTMLElement {
-    const tpl = Handlebars.compile(`
+    const tpl = Hbs.compile(`
         <div class="wh40k-rpg starship sheet tw-flex tw-flex-col" data-wh40k-system="rt">
             ${headerTpl(ctx)}
             ${tabsTpl(ctx)}
@@ -200,7 +201,7 @@ function renderExtendedActionsPanel(ctx: SheetContextLike): HTMLElement {
             </main>
         </div>
     `);
-    return renderTemplate(tpl, ctx);
+    return renderTpl(tpl, ctx);
 }
 
 // ── Issue #184 — Macrobattery Firing chat card ──────────────────────────────
@@ -307,22 +308,22 @@ export const MacrobatteryFiring: StoryObj<ShipWeaponChatCtx> = {
         // by `important: '.wh40k-rpg'` actually take effect. Per-system
         // variants then cascade from `data-wh40k-system="rt"`.
         wrapper.className = 'wh40k-rpg tw-p-4';
-        wrapper.setAttribute('data-wh40k-system', String(args.gameSystem ?? 'rt'));
+        wrapper.setAttribute('data-wh40k-system', args.gameSystem);
         wrapper.innerHTML = shipWeaponChatTpl(args);
         return wrapper;
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const storyCanvas = within(canvasElement);
         // Weapon name and per-class label both render.
-        await expect(canvas.getByText('Sunsear Laser Battery')).toBeVisible();
-        await expect(canvas.getAllByText(/Macrobattery/).length).toBeGreaterThanOrEqual(1);
+        await expect(storyCanvas.getByText('Sunsear Laser Battery')).toBeVisible();
+        await expect(storyCanvas.getAllByText(/Macrobattery/).length).toBeGreaterThanOrEqual(1);
         // BS Test row renders with the success badge.
-        await expect(canvas.getByText(/BS Test/i)).toBeVisible();
+        await expect(storyCanvas.getByText(/BS Test/i)).toBeVisible();
         // Hits pool with total = 4.
-        await expect(canvas.getByText(/Hits/i)).toBeVisible();
+        await expect(storyCanvas.getByText(/Hits/i)).toBeVisible();
         // Aftermath panels.
-        await expect(canvas.getByText(/Shield absorbed/i)).toBeVisible();
-        await expect(canvas.getByText(/Hull/i)).toBeVisible();
+        await expect(storyCanvas.getByText(/Shield absorbed/i)).toBeVisible();
+        await expect(storyCanvas.getByText(/Hull/i)).toBeVisible();
     },
 };
 
@@ -367,14 +368,14 @@ export const LanceFiring: StoryObj<ShipWeaponChatCtx> = {
     render: (args) => {
         const wrapper = document.createElement('div');
         wrapper.className = 'wh40k-rpg tw-p-4';
-        wrapper.setAttribute('data-wh40k-system', String(args.gameSystem ?? 'rt'));
+        wrapper.setAttribute('data-wh40k-system', args.gameSystem);
         wrapper.innerHTML = shipWeaponChatTpl(args);
         return wrapper;
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('Titanforge Lance')).toBeVisible();
-        await expect(canvas.getByText(/Lance bypasses shields/i)).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText('Titanforge Lance')).toBeVisible();
+        await expect(storyCanvas.getByText(/Lance bypasses shields/i)).toBeVisible();
     },
 };
 
@@ -405,13 +406,13 @@ export const MacrobatteryMiss: StoryObj<ShipWeaponChatCtx> = {
     render: (args) => {
         const wrapper = document.createElement('div');
         wrapper.className = 'wh40k-rpg tw-p-4';
-        wrapper.setAttribute('data-wh40k-system', String(args.gameSystem ?? 'rt'));
+        wrapper.setAttribute('data-wh40k-system', args.gameSystem);
         wrapper.innerHTML = shipWeaponChatTpl(args);
         return wrapper;
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText(/Miss/i)).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText(/Miss/i)).toBeVisible();
     },
 };
 
@@ -423,7 +424,7 @@ export const MacrobatteryMiss: StoryObj<ShipWeaponChatCtx> = {
 // reflects the document's state change.
 
 function renderCrewPanel(ctx: SheetContextLike): HTMLElement {
-    const tpl = Handlebars.compile(`
+    const tpl = Hbs.compile(`
         <div class="wh40k-rpg starship sheet tw-flex tw-flex-col" data-wh40k-system="rt">
             ${headerTpl(ctx)}
             ${tabsTpl(ctx)}
@@ -432,7 +433,7 @@ function renderCrewPanel(ctx: SheetContextLike): HTMLElement {
             </main>
         </div>
     `);
-    return renderTemplate(tpl, ctx);
+    return renderTpl(tpl, ctx);
 }
 
 const crewTabCtxBase: SheetContextLike = {
@@ -452,8 +453,8 @@ export const CrewPanelFullStrength: Story = {
     args: crewTabCtxBase,
     render: (args) => renderCrewPanel(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText(/Population/i)).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText(/Population/i)).toBeVisible();
         // Population, Morale current, Morale max all = 100
         const populationInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.population"]');
         await expect(populationInputs.length).toBeGreaterThanOrEqual(1);
@@ -492,13 +493,13 @@ export const ExtendedActions: Story = {
     },
     render: (args) => renderExtendedActionsPanel(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const storyCanvas = within(canvasElement);
         // List heading must localize-render
-        await expect(canvas.getByText(/Extended Actions/i)).toBeVisible();
+        await expect(storyCanvas.getByText(/Extended Actions/i)).toBeVisible();
         // Every one of the 13 actions appears as a list item
-        await expect(canvas.getByText('Active Augury')).toBeVisible();
-        await expect(canvas.getByText('Brace for Impact')).toBeVisible();
-        await expect(canvas.getByText('Suppressive Fire')).toBeVisible();
+        await expect(storyCanvas.getByText('Active Augury')).toBeVisible();
+        await expect(storyCanvas.getByText('Brace for Impact')).toBeVisible();
+        await expect(storyCanvas.getByText('Suppressive Fire')).toBeVisible();
         // Every action exposes a dispatchExtendedAction button
         const dispatchButtons = canvasElement.querySelectorAll('[data-action="dispatchExtendedAction"]');
         await expect(dispatchButtons.length).toBeGreaterThanOrEqual(13);

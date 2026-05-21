@@ -55,6 +55,7 @@ export function isRightStuffSystem(gameSystem: string | undefined): boolean {
 export function actorIsAce(actor: WH40KBaseActorDocument): boolean {
     const gameSystem = (actor.system as { gameSystem?: string } | undefined)?.gameSystem;
     if (!isRightStuffSystem(gameSystem)) return false;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is untyped at this boundary; only role is narrowed below
     const originPath = (actor.system as { originPath?: { role?: unknown } } | undefined)?.originPath;
     const role = typeof originPath?.role === 'string' ? originPath.role.trim().toLowerCase() : '';
     if (role === '') return false;
@@ -154,7 +155,7 @@ export async function spendRightStuff(actor: WH40KBaseActorDocument, skill: Righ
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
     const chatData: Record<string, unknown> = {
-        user: game.user?.id,
+        user: game.user.id,
         content: html,
     };
     applyRollModeWhispers(chatData);

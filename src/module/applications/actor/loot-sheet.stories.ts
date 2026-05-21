@@ -7,15 +7,15 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import lootSrc from '../../../templates/actor/loot/loot-sheet.hbs?raw';
 
 initializeStoryHandlebars();
 
-const lootTpl = Handlebars.compile(lootSrc);
+const lootTpl = HandlebarsLib.compile(lootSrc);
 
 interface LootStoryCtx {
     actor: { name: string; img: string };
@@ -26,7 +26,7 @@ interface LootStoryCtx {
 }
 
 function renderLootSheet(ctx: LootStoryCtx): HTMLElement {
-    return renderTemplate(lootTpl, ctx);
+    return renderStoryTemplate(lootTpl, ctx);
 }
 
 const meta: Meta<LootStoryCtx> = {
@@ -59,10 +59,10 @@ export const Populated: Story = {
     args: populatedCtx,
     render: (args) => renderLootSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('Dropped: Bolt Pistol')).toBeVisible();
-        await expect(canvas.getByText('Bolt Pistol')).toBeVisible();
-        await expect(canvas.getByText('Bolt Shells')).toBeVisible();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByText('Dropped: Bolt Pistol')).toBeVisible();
+        await expect(withinCanvas.getByText('Bolt Pistol')).toBeVisible();
+        await expect(withinCanvas.getByText('Bolt Shells')).toBeVisible();
         const takeAll = canvasElement.querySelector<HTMLButtonElement>('[data-action="pickupAll"]');
         await expect(takeAll).not.toBeNull();
         await expect((takeAll as HTMLButtonElement).disabled).toBe(false);

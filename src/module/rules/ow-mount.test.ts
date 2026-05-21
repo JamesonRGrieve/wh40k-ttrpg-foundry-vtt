@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { MOUNTED_ACTIONS, applyMountedAttackModifier, getMountedAction, type MountedActionId } from './ow-mount';
 
 describe('ow-mount · MOUNTED_ACTIONS catalogue', () => {

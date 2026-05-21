@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -42,12 +43,12 @@ interface PageWindow {
     };
 }
 
-async function createDH2Character(page: import('@playwright/test').Page, label: string): Promise<{ id: string | null; createError: string | null }> {
+async function createDH2Character(page: Page, label: string): Promise<{ id: string | null; createError: string | null }> {
     return page.evaluate(async (name: string) => {
-        const { Actor } = globalThis as unknown as PageWindow;
-        if (!Actor?.create) return { id: null, createError: 'Actor.create unavailable' };
+        const { Actor: ActorCls } = globalThis as unknown as PageWindow;
+        if (!ActorCls?.create) return { id: null, createError: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name,
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e' },
@@ -59,11 +60,11 @@ async function createDH2Character(page: import('@playwright/test').Page, label: 
     }, label);
 }
 
-async function deleteActor(page: import('@playwright/test').Page, id: string): Promise<void> {
+async function deleteActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
-        const { game } = globalThis as unknown as { game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } } };
+        const { game: gameObj } = globalThis as unknown as { game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } } };
         try {
-            await game?.actors?.get?.(actorId)?.delete?.();
+            await gameObj?.actors?.get?.(actorId)?.delete?.();
         } catch {
             /* ignore */
         }
@@ -84,14 +85,14 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: gameObj } = globalThis as unknown as {
                 game?: {
                     actors?: {
                         get?: (id: string) => { system?: { fate?: { value: number; max: number } }; update?: (data: object) => Promise<unknown> } | undefined;
                     };
                 };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.fate?.value ?? null;
             try {
@@ -99,13 +100,13 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set fate=3: ${String((err as Error)?.message ?? err)}` };
             }
-            const after3 = (game?.actors?.get?.(actorId) as { system?: { fate?: { value: number } } } | undefined)?.system?.fate?.value ?? null;
+            const after3 = (gameObj?.actors?.get?.(actorId) as { system?: { fate?: { value: number } } } | undefined)?.system?.fate?.value ?? null;
             try {
                 await actor.update?.({ 'system.fate.value': 2 });
             } catch (err) {
                 return { error: `spend fate: ${String((err as Error)?.message ?? err)}` };
             }
-            const afterSpend = (game?.actors?.get?.(actorId) as { system?: { fate?: { value: number } } } | undefined)?.system?.fate?.value ?? null;
+            const afterSpend = (gameObj?.actors?.get?.(actorId) as { system?: { fate?: { value: number } } } | undefined)?.system?.fate?.value ?? null;
             return { initial, after3, afterSpend, error: null };
         }, created.id);
 
@@ -133,10 +134,10 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: gameObj } = globalThis as unknown as {
                 game?: { actors?: { get?: (id: string) => { system?: { corruption?: number }; update?: (data: object) => Promise<unknown> } | undefined } };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.corruption ?? null;
             try {
@@ -144,7 +145,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set corruption: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.corruption ?? null;
+            const after = gameObj?.actors?.get?.(actorId)?.system?.corruption ?? null;
             return { initial, after, error: null };
         }, created.id);
 
@@ -171,10 +172,10 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: gameObj } = globalThis as unknown as {
                 game?: { actors?: { get?: (id: string) => { system?: { insanity?: number }; update?: (data: object) => Promise<unknown> } | undefined } };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.insanity ?? null;
             try {
@@ -182,7 +183,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set insanity: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.insanity ?? null;
+            const after = gameObj?.actors?.get?.(actorId)?.system?.insanity ?? null;
             return { initial, after, error: null };
         }, created.id);
 
@@ -209,7 +210,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: gameObj } = globalThis as unknown as {
                 game?: {
                     actors?: {
                         get?: (id: string) =>
@@ -221,7 +222,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
                     };
                 };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.createEmbeddedDocuments?.('Item', [
@@ -271,8 +272,8 @@ test.describe.serial('dh2 flows (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
-            const { game } = globalThis as unknown as PageWindow;
-            const pack = game?.packs?.get?.('wh40k-rpg.dh2-core-stats-elite-advances');
+            const { game: gameObj } = globalThis as unknown as PageWindow;
+            const pack = gameObj?.packs?.get?.('wh40k-rpg.dh2-core-stats-elite-advances');
             if (!pack) return { error: 'pack not found' };
             const packType = pack.metadata?.type ?? null;
             let docs: Array<{ id?: string; name?: string; type?: string; system?: Record<string, unknown> }> = [];
@@ -300,7 +301,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             if (result.packType !== 'Item') failures.push(`pack.metadata.type was ${result.packType}, expected 'Item'`);
             if ((result.docCount ?? 0) === 0) failures.push('pack contained no documents');
             if (result.sampleType !== 'originPath') failures.push(`sample doc type was ${result.sampleType}, expected 'originPath'`);
-            if (result.sampleStep !== 'elite') failures.push(`sample doc step was ${result.sampleStep}, expected 'elite'`);
+            if (result.sampleStep !== 'elite') failures.push(`sample doc step was ${String(result.sampleStep)}, expected 'elite'`);
             if (failures.length === 0) recordCoverage('dh2.elite-advance', 'compendium-read');
         }
 

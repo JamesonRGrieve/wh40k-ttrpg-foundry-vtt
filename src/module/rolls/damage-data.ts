@@ -82,13 +82,15 @@ export function replaceDamageDieWithDoS(
     if (active.length === 0) return null;
 
     let target: DamageDieResult | undefined;
-    let replacedIndex: number;
+    let replacedIndex = 0;
     if (dieIndex === undefined) {
-        target = active[0];
-        replacedIndex = 0;
+        // active is non-empty (checked above); active[0] is defined.
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- noUncheckedIndexedAccess: active is provably non-empty (length > 0 checked above)
+        target = active[0]!;
         for (let i = 1; i < active.length; i += 1) {
             const candidate = active[i];
-            if (candidate !== undefined && (target === undefined || candidate.result < target.result)) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array element may be undefined at strict-level typechecks
+            if (candidate !== undefined && candidate.result < target.result) {
                 target = candidate;
                 replacedIndex = i;
             }
@@ -98,6 +100,7 @@ export function replaceDamageDieWithDoS(
         replacedIndex = dieIndex;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: dieIndex may be out-of-range at runtime even though TypeScript types it as DamageDieResult
     if (target === undefined) return null;
     const previous = target.result;
     target.result = dos;

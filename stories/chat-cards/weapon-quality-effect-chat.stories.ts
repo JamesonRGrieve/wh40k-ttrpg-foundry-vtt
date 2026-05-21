@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { expect, within } from 'storybook/test';
+import HandlebarsLib from 'handlebars';
+import { expect } from 'storybook/test';
 import {
     resolveGravitonBonusDamage,
     resolveHitEffectSaveTarget,
@@ -13,7 +13,7 @@ import {
     type WEAPON_QUALITY_EFFECTS,
 } from '../../src/module/rules/weapon-quality-effects.ts';
 import qualityChatSrc from '../../src/templates/chat/weapon-quality-effect-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderMockTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -31,7 +31,7 @@ import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
 
-const qualityChatTemplate = Handlebars.compile(qualityChatSrc);
+const qualityChatTemplate = HandlebarsLib.compile(qualityChatSrc);
 
 interface QualityPayload {
     radius?: number;
@@ -78,7 +78,7 @@ function capitalize(s: string): string {
     // Power-field → PowerField; razor-sharp → RazorSharp.
     return s
         .split('-')
-        .map((part) => (part.length === 0 ? part : (part[0]?.toUpperCase() ?? '') + part.slice(1)))
+        .map((part) => (part.length === 0 ? part : part[0].toUpperCase() + part.slice(1)))
         .join('');
 }
 
@@ -92,7 +92,7 @@ type Story = StoryObj;
 export const SprayTemplate: Story = {
     name: 'Spray — cone template + Agility avoidance',
     render: () =>
-        renderTemplate(
+        renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'spray',
@@ -108,10 +108,10 @@ export const SprayTemplate: Story = {
         ),
     play: async ({ canvasElement }) => {
         const card = canvasElement.querySelector('.wh40k-quality-card');
-        expect(card).toBeTruthy();
-        expect(card?.getAttribute('data-quality-key')).toBe('spray');
-        expect(canvasElement.querySelector('[data-row="template-shape"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-row="save"]')).toBeTruthy();
+        await expect(card).toBeTruthy();
+        await expect(card?.getAttribute('data-quality-key')).toBe('spray');
+        await expect(canvasElement.querySelector('[data-row="template-shape"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-row="save"]')).toBeTruthy();
     },
 };
 
@@ -119,7 +119,7 @@ export const FlameBurning: Story = {
     name: 'Flame — Agility test or Burning',
     render: () => {
         const target = resolveHitEffectSaveTarget({ characteristicTotal: 35, key: 'flame', level: 0 });
-        return renderTemplate(
+        return renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'flame',
@@ -135,14 +135,14 @@ export const FlameBurning: Story = {
     },
     play: async ({ canvasElement }) => {
         const fail = canvasElement.querySelector('[data-row="fail-effect"]');
-        expect(fail).toBeTruthy();
+        await expect(fail).toBeTruthy();
     },
 };
 
 export const GravitonKnockdown: Story = {
     name: 'Graviton — Strength test or Prone (+armour as damage)',
     render: () =>
-        renderTemplate(
+        renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'graviton',
@@ -161,7 +161,7 @@ export const GravitonKnockdown: Story = {
 export const LancePenByDoS: Story = {
     name: 'Lance — Pen × DoS (4 base × 3 DoS → +8 delta)',
     render: () =>
-        renderTemplate(
+        renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'lance',
@@ -174,7 +174,7 @@ export const LancePenByDoS: Story = {
         ),
     play: async ({ canvasElement }) => {
         const row = canvasElement.querySelector('[data-row="bonus-pen"]');
-        expect(row?.textContent).toContain('+8');
+        await expect(row?.textContent).toContain('+8');
     },
 };
 
@@ -182,7 +182,7 @@ export const MaximalRecharge: Story = {
     name: 'Maximal — recharge / overheat package',
     render: () => {
         const r = resolveMaximalEffect();
-        return renderTemplate(
+        return renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'maximal',
@@ -205,7 +205,7 @@ export const PowerFieldParryDestroy: Story = {
         const pf = { system: { special: new Set(['power-field']) } } as Parameters<typeof resolvePowerFieldParryDestroys>[0];
         const ord = { system: { special: new Set<string>() } } as Parameters<typeof resolvePowerFieldParryDestroys>[1];
         const destroyed = resolvePowerFieldParryDestroys(pf, ord);
-        return renderTemplate(
+        return renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'power-field',
@@ -217,14 +217,14 @@ export const PowerFieldParryDestroy: Story = {
     },
     play: async ({ canvasElement }) => {
         const banner = canvasElement.querySelector('[data-row="parry-destroyed"]');
-        expect(banner).toBeTruthy();
+        await expect(banner).toBeTruthy();
     },
 };
 
 export const ScatterPointBlank: Story = {
     name: 'Scatter — Point Blank (+3 damage)',
     render: () =>
-        renderTemplate(
+        renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'scatter',
@@ -241,7 +241,7 @@ export const ScatterPointBlank: Story = {
 export const ScatterLongRange: Story = {
     name: 'Scatter — Long Range (−3 damage)',
     render: () =>
-        renderTemplate(
+        renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'scatter',
@@ -255,14 +255,14 @@ export const ScatterLongRange: Story = {
         ),
     play: async ({ canvasElement }) => {
         const row = canvasElement.querySelector('[data-row="range-band"]');
-        expect(row?.textContent).toContain('-3');
+        await expect(row?.textContent).toContain('-3');
     },
 };
 
 export const ShockingStun: Story = {
     name: 'Shocking — Toughness or 1-round Stun + Fatigue',
     render: () =>
-        renderTemplate(
+        renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'shocking',
@@ -279,15 +279,15 @@ export const ShockingStun: Story = {
         ),
     play: async ({ canvasElement }) => {
         const stun = canvasElement.querySelector('[data-row="stun-rounds"]');
-        expect(stun?.textContent).toMatch(/2/); // ceil(3/2) = 2
-        expect(canvasElement.querySelector('[data-row="fatigue"]')?.textContent).toContain('+1');
+        await expect(stun?.textContent).toMatch(/2/); // ceil(3/2) = 2
+        await expect(canvasElement.querySelector('[data-row="fatigue"]')?.textContent).toContain('+1');
     },
 };
 
 export const BlastRadius: Story = {
     name: 'Blast (5) — 5m sphere',
     render: () =>
-        renderTemplate(
+        renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'blast',
@@ -301,7 +301,7 @@ export const BlastRadius: Story = {
 export const PerSystemImperiumMaledictum: Story = {
     name: 'Per-system homologation check — IM Concussive variant',
     render: () =>
-        renderTemplate(
+        renderMockTemplate(
             qualityChatTemplate,
             ctx({
                 qualityKey: 'concussive',
@@ -319,6 +319,6 @@ export const PerSystemImperiumMaledictum: Story = {
         ),
     play: async ({ canvasElement }) => {
         const card = canvasElement.querySelector('[data-wh40k-system="im"]');
-        expect(card).toBeTruthy();
+        await expect(card).toBeTruthy();
     },
 };

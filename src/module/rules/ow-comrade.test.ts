@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import {
     COMRADE_COHESION_RANGE_M,
     COMRADE_CORRUPTION_DEATH_THRESHOLD,

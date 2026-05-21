@@ -57,10 +57,10 @@ export const Basic: Story = {
 
 export const RendersSelectAndName: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Common Lore')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Common Lore')).toBeTruthy();
         const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.skillType"]');
-        expect(select).toBeTruthy();
-        expect(select?.value).toBe('specialist');
+        await expect(select).toBeTruthy();
+        await expect(select?.value).toBe('specialist');
     },
 };

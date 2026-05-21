@@ -4,7 +4,7 @@
  * supplies block content. Helpers from `stories/template-support.ts` register
  * the project-wide Handlebars helpers (localize, eq, defaultVal, iconSvg, …).
  */
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import itemTableRowSrc from '../src/templates/actor/partial/item-table-row.hbs?raw';
 import itemTableSrc from '../src/templates/actor/partial/item-table.hbs?raw';
@@ -12,8 +12,8 @@ import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-Handlebars.registerPartial('item-table-test', itemTableSrc);
-Handlebars.registerPartial('item-table-row-test', itemTableRowSrc);
+HbsLib.registerPartial('item-table-test', itemTableSrc);
+HbsLib.registerPartial('item-table-row-test', itemTableRowSrc);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -22,12 +22,12 @@ function dom(html: string): HTMLElement {
 }
 
 function renderTable(hashLiteral: string, body = ''): HTMLElement {
-    const tpl = Handlebars.compile(`{{#> item-table-test ${hashLiteral}}}${body}{{/item-table-test}}`);
+    const tpl = HbsLib.compile(`{{#> item-table-test ${hashLiteral}}}${body}{{/item-table-test}}`);
     return dom(tpl({}));
 }
 
 function renderRow(hashLiteral: string, body = '', context: Record<string, unknown> = {}): HTMLElement {
-    const tpl = Handlebars.compile(`{{#> item-table-row-test ${hashLiteral}}}${body}{{/item-table-row-test}}`);
+    const tpl = HbsLib.compile(`{{#> item-table-row-test ${hashLiteral}}}${body}{{/item-table-row-test}}`);
     return dom(tpl(context));
 }
 

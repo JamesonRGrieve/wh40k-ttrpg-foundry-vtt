@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect } from 'storybook/test';
-import { renderTemplate, mockActor } from '../../../../stories/mocks';
+import { renderTemplate as renderTpl, mockActor } from '../../../../stories/mocks';
 import { withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 
@@ -11,28 +11,35 @@ initializeStoryHandlebars();
 // vital-progress-bar, vital-edit-input, vital-quick-adjust, and section-card.
 // Several runtime helpers it transitively expects aren't part of the shared
 // story helper bundle — register reasonable stubs here.
-function ensureHelpers() {
-    if (!Handlebars.helpers.range) {
-        Handlebars.registerHelper('range', (start: number, end: number) => {
+function ensureHelpers(): void {
+    if (!('range' in Hbs.helpers)) {
+        Hbs.registerHelper('range', (start: number, end: number) => {
             const out: number[] = [];
             for (let i = Number(start); i <= Number(end); i++) out.push(i);
             return out;
         });
     }
-    if (!Handlebars.helpers.any) {
-        Handlebars.registerHelper('any', (list: unknown, prop: string) => {
+    if (!('any' in Hbs.helpers)) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars helper receives untyped runtime list
+        Hbs.registerHelper('any', (list: unknown, prop: string) => {
             if (!Array.isArray(list)) return false;
-            return list.some((entry) => Boolean((entry as Record<string, unknown>)?.[prop]));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: entry is untyped Handlebars context object
+            return list.some((entry) => Boolean((entry as Record<string, unknown>)[prop]));
         });
     }
-    if (!Handlebars.helpers.countType) {
-        Handlebars.registerHelper('countType', (list: unknown, prop: string) => {
+    if (!('countType' in Hbs.helpers)) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars helper receives untyped runtime list
+        Hbs.registerHelper('countType', (list: unknown, prop: string) => {
             if (!Array.isArray(list)) return 0;
-            return list.filter((entry) => Boolean((entry as Record<string, unknown>)?.[prop])).length;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: entry is untyped Handlebars context object
+            return list.filter((entry) => Boolean((entry as Record<string, unknown>)[prop])).length;
         });
     }
-    if (!Handlebars.helpers.hideIfNot) {
-        Handlebars.registerHelper('hideIfNot', (check: unknown) => (check ? '' : new Handlebars.SafeString('style="display:none"')));
+    if (!('hideIfNot' in Hbs.helpers)) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars helper receives untyped runtime value
+        Hbs.registerHelper('hideIfNot', (check: unknown) =>
+            check !== null && check !== undefined && check !== false && check !== '' && check !== 0 ? '' : new Hbs.SafeString('style="display:none"'),
+        );
     }
 }
 
@@ -45,7 +52,7 @@ export default meta;
 
 type Story = StoryObj;
 
-const wrapperTemplate = Handlebars.compile(
+const wrapperTemplate = Hbs.compile(
     `{{> systems/wh40k-rpg/templates/actor/partial/degree-meter-panel
         key=key label=label icon=icon actor=actor system=system value=value
         sourceValue=sourceValue field=field cssPrefix=cssPrefix
@@ -176,40 +183,40 @@ function insanityContext(value: number, systemId: SystemId): CorruptionLikeConte
 
 export const CorruptionDH2Pure: Story = {
     name: 'Corruption · DH2 · Pure',
-    render: () => renderTemplate(wrapperTemplate, corruptionContext(0, 'dh2')),
+    render: () => renderTpl(wrapperTemplate, corruptionContext(0, 'dh2')),
     play: async ({ canvasElement }) => {
         // No active warning at value=0.
         const banner = canvasElement.querySelector('.tw-text-warning, .tw-text-crimson, .tw-text-crimson-light');
-        expect(banner).toBeNull();
+        await expect(banner).toBeNull();
     },
 };
 
 export const CorruptionDH2Soiled: Story = {
     name: 'Corruption · DH2 · Soiled (45)',
-    render: () => renderTemplate(wrapperTemplate, corruptionContext(45, 'dh2')),
+    render: () => renderTpl(wrapperTemplate, corruptionContext(45, 'dh2')),
 };
 
 export const CorruptionDH2Debased: Story = {
     name: 'Corruption · DH2 · Debased (75)',
-    render: () => renderTemplate(wrapperTemplate, corruptionContext(75, 'dh2')),
+    render: () => renderTpl(wrapperTemplate, corruptionContext(75, 'dh2')),
     play: async ({ canvasElement }) => {
         // Warning banner is rendered when value >= 60.
         const icon = canvasElement.querySelector('.fa-skull-crossbones');
-        expect(icon).toBeTruthy();
+        await expect(icon).toBeTruthy();
     },
 };
 
 export const InsanityDH2: Story = {
     name: 'Insanity · DH2 · Mid (50)',
-    render: () => renderTemplate(wrapperTemplate, insanityContext(50, 'dh2')),
+    render: () => renderTpl(wrapperTemplate, insanityContext(50, 'dh2')),
 };
 
 export const CorruptionIM: Story = {
     name: 'Corruption · IM · Mid (40)',
-    render: () => renderTemplate(wrapperTemplate, corruptionContext(40, 'im')),
+    render: () => renderTpl(wrapperTemplate, corruptionContext(40, 'im')),
 };
 
 export const CorruptionRT: Story = {
     name: 'Corruption · RT · Profane (95)',
-    render: () => renderTemplate(wrapperTemplate, corruptionContext(95, 'rt')),
+    render: () => renderTpl(wrapperTemplate, corruptionContext(95, 'rt')),
 };

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from './panel.hbs?raw';
@@ -21,9 +21,10 @@ interface Args {
     body?: string;
 }
 
-const renderWithBody = (args: Args) => {
+const renderWithBody = (args: Args): HTMLElement => {
     const body = args.body ?? '<div class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">Body content goes here.</div>';
     const wrapped = templateSrc.replace('{{> @partial-block}}', body);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Storybook typed args passed to renderSheet generic Record parameter
     return renderSheet(wrapped, args as unknown as Record<string, unknown>);
 };
 
@@ -110,11 +111,9 @@ export const HeaderActionDispatch: Story = {
         headerActionTitle: 'Configure wounds',
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
         const btn = canvasElement.querySelector('[data-action="openWoundsEditor"]');
-        expect(btn).toBeTruthy();
-        expect((btn as HTMLElement).getAttribute('title')).toBe('Configure wounds');
+        await expect(btn).toBeTruthy();
+        await expect((btn as HTMLElement).getAttribute('title')).toBe('Configure wounds');
         clickAction(canvasElement, 'openWoundsEditor');
-        void canvas;
     },
 };

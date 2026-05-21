@@ -42,19 +42,19 @@ export const NoFate: Story = {
 
 export const SpendFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Title is wired through the langpack key.
-        expect(canvas.getByText(/Emperor's Anathema/i)).toBeTruthy();
+        await expect(view.getByText(/Emperor's Anathema/i)).toBeTruthy();
         // Both action buttons exist.
-        expect(canvasElement.querySelector('[data-action="spend"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-action="decline"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-action="spend"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-action="decline"]')).toBeTruthy();
         // Clicking the spend button dispatches the action.
         clickAction(canvasElement, 'spend');
     },
 };
 
 export const DeclineFlow: Story = {
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         clickAction(canvasElement, 'decline');
     },
 };

@@ -22,9 +22,10 @@ import {
 function scriptedRng(values: readonly number[]): CohesionRng {
     let i = 0;
     return (_size: number): number => {
-        const v = values[i] ?? values[values.length - 1] ?? 1;
+        // Clamp the index so the last value is repeated when the script is exhausted.
+        const idx = Math.min(i, values.length - 1);
         i++;
-        return v;
+        return values[idx] ?? 1;
     };
 }
 

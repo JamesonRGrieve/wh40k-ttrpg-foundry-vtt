@@ -173,6 +173,7 @@ export function mergeMarkGrants(marks: ReadonlyArray<MarkOfDistinction>): {
         if (deltas !== undefined) {
             for (const key of Object.keys(deltas)) {
                 const value = deltas[key];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: deltas[key] can be undefined at runtime despite Record<string, number> typing
                 if (value === undefined || !Number.isFinite(value)) continue;
                 const prior = characteristicDelta[key] ?? 0;
                 characteristicDelta[key] = prior + value;

@@ -2,26 +2,24 @@
  * Stories for NPCTemplateSheet — multi-part sheet for NPC templates.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/item/npc-template/header.hbs?raw';
-import abilitiesSrc from '../../../templates/item/npc-template/tab-abilities.hbs?raw';
 import basicsSrc from '../../../templates/item/npc-template/tab-basics.hbs?raw';
-import charsSrc from '../../../templates/item/npc-template/tab-characteristics.hbs?raw';
-import equipmentSrc from '../../../templates/item/npc-template/tab-equipment.hbs?raw';
 import tabsSrc from '../../../templates/item/npc-template/tabs.hbs?raw';
 
 initializeStoryHandlebars();
-const headerTpl = Handlebars.compile(headerSrc);
-const tabsTpl = Handlebars.compile(tabsSrc);
-const basicsTpl = Handlebars.compile(basicsSrc);
+const headerTpl = Hbs.compile(headerSrc);
+const tabsTpl = Hbs.compile(tabsSrc);
+const basicsTpl = Hbs.compile(basicsSrc);
 const rng = seedRandom(0x1a2b3c4);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+// eslint-disable-next-line no-restricted-syntax -- boundary: story overrides for freeform template testing
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('npc-tpl', rng);
     const item = mockItem({
         _id: id,
@@ -86,15 +84,15 @@ export default meta;
 type Story = StoryObj;
 
 export const Header: Story = {
-    render: () => renderTemplate(headerTpl, makeCtx()),
+    render: () => renderTpl(headerTpl, makeCtx()),
 };
 
 export const TabNav: Story = {
-    render: () => renderTemplate(tabsTpl, makeCtx()),
+    render: () => renderTpl(tabsTpl, makeCtx()),
 };
 
 export const BasicsTab: Story = {
-    render: () => renderTemplate(basicsTpl, makeCtx()),
+    render: () => renderTpl(basicsTpl, makeCtx()),
 };
 
 export const FullSheet: Story = {
@@ -110,19 +108,19 @@ export const FullSheet: Story = {
 };
 
 export const RendersNPCName: Story = {
-    render: () => renderTemplate(headerTpl, makeCtx()),
+    render: () => renderTpl(headerTpl, makeCtx()),
     play: async ({ canvasElement }) => {
         const field = canvasElement.querySelector<HTMLInputElement>('[name="name"]');
-        expect(field).toBeTruthy();
-        expect(field?.value).toBe('Hive Ganger');
+        await expect(field).toBeTruthy();
+        await expect(field?.value).toBe('Hive Ganger');
     },
 };
 
 export const RendersTabButtons: Story = {
-    render: () => renderTemplate(tabsTpl, makeCtx()),
+    render: () => renderTpl(tabsTpl, makeCtx()),
     play: async ({ canvasElement }) => {
         const basicBtn = canvasElement.querySelector('[data-tab="basics"]');
-        expect(basicBtn).toBeTruthy();
+        await expect(basicBtn).toBeTruthy();
         basicBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     },
 };

@@ -6,7 +6,6 @@
  * and the composed `resolvePsychicTest` helper.
  */
 import { describe, expect, it } from 'vitest';
-
 import {
     BC_PSY_SUSTAIN_PENALTY_PER_POWER,
     BC_PSYKER_PUSH_CEILING,

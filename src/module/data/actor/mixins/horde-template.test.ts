@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 /**
  * Horde mixin derived-data tests (#166).
  *
@@ -16,6 +14,7 @@ import { describe, expect, it } from 'vitest';
  * the live Actor is exercised in the e2e suite
  * (`tests/e2e/dw-horde-magnitude.spec.ts`).
  */
+import { describe, expect, it } from 'vitest';
 import { bonusDamageDiceForMagnitude, getHordeTier, toHitBonusForMagnitude } from '../../../rules/dw-horde-magnitude';
 
 interface HordePrepShape {

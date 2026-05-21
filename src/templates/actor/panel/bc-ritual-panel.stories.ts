@@ -14,8 +14,8 @@
  * rating) is the literal input.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import Hbs from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import panelSrc from './bc-ritual-panel.hbs?raw';
 
@@ -27,13 +27,13 @@ interface RitualPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = Hbs.compile(panelSrc);
 
 function renderPanel(ctx: RitualPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderTpl(panelTpl, ctx));
     return wrapper;
 }
 

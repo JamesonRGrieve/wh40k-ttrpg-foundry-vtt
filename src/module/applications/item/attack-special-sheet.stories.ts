@@ -50,10 +50,10 @@ export const Disabled: Story = {
 };
 
 export const RendersAndAcceptsName: Story = {
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const nameInput = canvas.getByDisplayValue('Lightning Arc');
-        expect(nameInput).toBeTruthy();
-        expect(nameInput.getAttribute('name')).toBe('name');
+    play: ({ canvasElement }) => {
+        const cv = within(canvasElement);
+        const nameInput = cv.getByDisplayValue('Lightning Arc');
+        void expect(nameInput).toBeTruthy();
+        void expect(nameInput.getAttribute('name')).toBe('name');
     },
 };

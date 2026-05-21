@@ -12,8 +12,8 @@
  *                          completed objectives.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../stories/mocks';
+import Hbs from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import cardSrc from './dw-mission-reward-chat.hbs?raw';
 
@@ -49,13 +49,13 @@ interface MissionRewardChatCtx {
     };
 }
 
-const cardTpl = Handlebars.compile(cardSrc);
+const cardTpl = Hbs.compile(cardSrc);
 
 function renderCard(ctx: MissionRewardChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTemplate(cardTpl, ctx));
+    wrapper.appendChild(renderTpl(cardTpl, ctx));
     return wrapper;
 }
 

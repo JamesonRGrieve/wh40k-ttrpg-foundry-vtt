@@ -155,8 +155,8 @@ export const PassNovice: Story = {
             }),
         ),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('The Course Untravelled')).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText('The Course Untravelled')).toBeTruthy();
     },
 };
 
@@ -213,10 +213,10 @@ export const Failure: Story = {
             }),
         ),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const btn = canvas.getByRole('button');
-        expect(btn).toBeTruthy();
-        expect(btn.getAttribute('data-action')).toBe('rollNavigatorMutation');
+        const storyCanvas = within(canvasElement);
+        const btn = storyCanvas.getByRole('button');
+        await expect(btn).toBeTruthy();
+        await expect(btn.getAttribute('data-action')).toBe('rollNavigatorMutation');
     },
 };
 
