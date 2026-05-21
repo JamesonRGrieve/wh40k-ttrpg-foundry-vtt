@@ -38,14 +38,14 @@ interface FlowResult {
 
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const Actor = (
+        const ActorCls = (
             globalThis as unknown as {
                 Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
             }
         ).Actor;
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name: 'probe-modifiers-parent',
                 type: 'bc-character',
                 system: {
@@ -59,24 +59,24 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
                     },
                 },
             });
-            if (!actor) return { id: null, error: 'Actor.create returned null' };
+            if (actor === null) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const game = (
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
             }
         ).game;
-        const actor = game?.actors?.get?.(id);
+        const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
@@ -86,22 +86,21 @@ async function deleteActor(page: Page, actorId: string): Promise<void> {
  */
 async function readActorPath(page: Page, actorId: string, path: string): Promise<number | null> {
     return page.evaluate(
-        ({ actorId, path }) => {
-            const game = (
+        ({ actorId: actorIdArg, path: pathArg }) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: { actors?: { get?: (id: string) => unknown } };
-                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
                 }
             ).game;
-            const foundry = (
+            const foundryGlobal = (
                 globalThis as unknown as {
                     foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
                 }
             ).foundry;
-            const actor = game?.actors?.get?.(actorId);
-            const getProperty = foundry?.utils?.getProperty;
-            if (!actor || !getProperty) return null;
-            const v = getProperty(actor, path);
+            const actor = gameGlobal?.actors?.get?.(actorIdArg);
+            const getPropertyUtil = foundryGlobal?.utils?.getProperty;
+            if (actor === undefined || getPropertyUtil === undefined) return null;
+            const v = getPropertyUtil(actor, pathArg);
             const num = Number(v);
             return Number.isFinite(num) ? num : null;
         },
@@ -114,8 +113,8 @@ async function readActorPath(page: Page, actorId: string, path: string): Promise
  */
 async function createItems(page: Page, actorId: string, items: object[]): Promise<string[]> {
     return page.evaluate(
-        async ({ actorId, items }) => {
-            const game = (
+        async ({ actorId: actorIdArg, items: itemsArg }) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -128,10 +127,10 @@ async function createItems(page: Page, actorId: string, items: object[]): Promis
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameGlobal?.actors?.get?.(actorIdArg);
             if (!actor?.createEmbeddedDocuments) return [];
             try {
-                const created = await actor.createEmbeddedDocuments('Item', items);
+                const created = await actor.createEmbeddedDocuments('Item', itemsArg);
                 return created.map((c) => c.id).filter((id): id is string => typeof id === 'string');
             } catch {
                 return [];
@@ -144,8 +143,8 @@ async function createItems(page: Page, actorId: string, items: object[]): Promis
 async function deleteItems(page: Page, actorId: string, itemIds: string[]): Promise<void> {
     if (itemIds.length === 0) return;
     await page.evaluate(
-        async ({ actorId, itemIds }) => {
-            const game = (
+        async ({ actorId: actorIdArg, itemIds: itemIdsArg }) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -154,9 +153,9 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameGlobal?.actors?.get?.(actorIdArg);
             try {
-                await actor?.deleteEmbeddedDocuments?.('Item', itemIds);
+                await actor?.deleteEmbeddedDocuments?.('Item', itemIdsArg);
             } catch {
                 /* best-effort */
             }
@@ -167,8 +166,8 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
 
 async function updateItem(page: Page, actorId: string, itemId: string, patch: object): Promise<boolean> {
     return page.evaluate(
-        async ({ actorId, itemId, patch }) => {
-            const game = (
+        async ({ actorId: actorIdArg, itemId: itemIdArg, patch: patchArg }) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -177,10 +176,10 @@ async function updateItem(page: Page, actorId: string, itemId: string, patch: ob
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(actorId);
-            const item = actor?.items?.get?.(itemId);
+            const actor = gameGlobal?.actors?.get?.(actorIdArg);
+            const item = actor?.items?.get?.(itemIdArg);
             try {
-                await item?.update?.(patch);
+                await item?.update?.(patchArg);
                 return true;
             } catch {
                 return false;
@@ -300,7 +299,6 @@ async function probeUnequipRollback(page: Page, actorId: string): Promise<FlowRe
     ]);
     if (ids.length === 0) return { ok: false, error: 'cybernetic item create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'cybernetic item id missing' };
     try {
         const equipped = (await readActorPath(page, actorId, 'system.characteristics.toughness.total')) ?? 0;
         if (equipped !== baseline + 2) {
@@ -378,8 +376,8 @@ async function probeSkillModifier(page: Page, actorId: string): Promise<FlowResu
  */
 async function probeConditionMagnitude(page: Page, actorId: string): Promise<FlowResult> {
     const baseline = (await readActorPath(page, actorId, 'system.characteristics.weaponSkill.total')) ?? 0;
-    const result = await page.evaluate(async (actorId: string) => {
-        const game = (
+    const result = await page.evaluate(async (actorIdArg: string) => {
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: {
                     actors?: {
@@ -393,7 +391,7 @@ async function probeConditionMagnitude(page: Page, actorId: string): Promise<Flo
                 };
             }
         ).game;
-        const actor = game?.actors?.get?.(actorId);
+        const actor = gameGlobal?.actors?.get?.(actorIdArg);
         if (!actor?.createEmbeddedDocuments) return { effectId: null, error: 'actor missing createEmbeddedDocuments' };
         try {
             const created = await actor.createEmbeddedDocuments('ActiveEffect', [
@@ -406,10 +404,10 @@ async function probeConditionMagnitude(page: Page, actorId: string): Promise<Flo
             const id = created[0]?.id ?? null;
             return { effectId: id, error: null };
         } catch (err) {
-            return { effectId: null, error: String((err as Error)?.message ?? err) };
+            return { effectId: null, error: err instanceof Error ? err.message : String(err) };
         }
     }, actorId);
-    if (!result.effectId) return { ok: false, error: `condition AE create failed: ${result.error ?? 'unknown'}` };
+    if (result.effectId === null) return { ok: false, error: `condition AE create failed: ${result.error ?? 'unknown'}` };
     const effectId = result.effectId;
     try {
         const after = (await readActorPath(page, actorId, 'system.characteristics.weaponSkill.total')) ?? 0;
@@ -418,8 +416,8 @@ async function probeConditionMagnitude(page: Page, actorId: string): Promise<Flo
     } finally {
         await page
             .evaluate(
-                async ({ actorId, effectId }) => {
-                    const game = (
+                async ({ actorId: actorIdCleanup, effectId: effectIdCleanup }) => {
+                    const gameGlobal = (
                         globalThis as unknown as {
                             game?: {
                                 actors?: {
@@ -428,9 +426,9 @@ async function probeConditionMagnitude(page: Page, actorId: string): Promise<Flo
                             };
                         }
                     ).game;
-                    const actor = game?.actors?.get?.(actorId);
+                    const actor = gameGlobal?.actors?.get?.(actorIdCleanup);
                     try {
-                        await actor?.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
+                        await actor?.deleteEmbeddedDocuments?.('ActiveEffect', [effectIdCleanup]);
                     } catch {
                         /* best-effort */
                     }

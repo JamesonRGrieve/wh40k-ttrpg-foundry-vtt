@@ -41,10 +41,10 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
@@ -81,7 +81,7 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
                 const actor = g.game?.actors?.get?.(id);
-                if (!actor) return { error: 'actor lookup failed' };
+                if (actor == null) return { error: 'actor lookup failed' };
 
                 let rendered = false;
                 let hasPanel = false;
@@ -98,14 +98,14 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
                 try {
                     ordersBefore = Array.isArray(actor.system?.activeOrders) ? actor.system.activeOrders.length : 0;
                     const sheet = actor.sheet;
-                    if (!sheet) return { error: 'actor.sheet is null' };
+                    if (sheet == null) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
                     await new Promise<void>((r) => {
                         setTimeout(r, 120);
                     });
                     rendered = sheet.element instanceof HTMLElement;
 
-                    if (rendered && sheet.element) {
+                    if (rendered && sheet.element != null) {
                         const el: HTMLElement = sheet.element;
                         const panel = el.querySelector('.wh40k-ow-orders-panel');
                         hasPanel = panel !== null;
@@ -132,7 +132,7 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
                     // captures the live DOM.
                     g.__c153sheet = sheet;
                 } catch (err) {
-                    probeError = String((err as Error)?.message ?? err);
+                    probeError = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
@@ -173,7 +173,7 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
             expect(result.hasTakeCoverRow, 'Take Cover! row should render').toBe(true);
             expect(result.hasIssueButton, 'Issue button for Ranged Volley should render').toBe(true);
             expect(result.ordersBefore, 'activeOrders should start empty').toBe(0);
-            if (result.issueDispatched) {
+            if (result.issueDispatched === true) {
                 expect(result.ordersAfter, 'activeOrders should append one entry after Issue').toBe(1);
                 expect(result.firstOrderId, 'persisted entry should match the clicked orderId').toBe('ranged-volley');
             }

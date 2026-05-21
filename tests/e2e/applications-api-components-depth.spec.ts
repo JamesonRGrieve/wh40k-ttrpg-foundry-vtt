@@ -128,9 +128,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals and dynamic-imported modules are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
-            const ui = g.ui;
+            const ActorCls = g.Actor;
+            const foundryGame = g.game;
+            const foundryUi = g.ui;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
@@ -148,7 +148,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -156,7 +156,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
             // the next probe's window stack starts clean (mirrors
             // applications-tours-extra.spec.ts).
             async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                const windows = Object.values(foundryUi?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
                     const id = w?.id ?? '';
                     if (id.includes('dialog') || id.includes('prompt') || id.includes('breakdown')) {
@@ -212,7 +212,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['drag-drop-api-allowed-behaviors'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['drag-drop-api-allowed-behaviors'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -249,7 +249,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['drag-drop-api-default-behavior'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['drag-drop-api-default-behavior'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -294,7 +294,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['drag-drop-api-modifier-keys'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['drag-drop-api-modifier-keys'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -304,24 +304,26 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 let pc: any = null;
                 try {
                     pc = await withTimeout(
-                        Actor.create({ name: 'app-api-depth-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
+                        ActorCls.create({ name: 'app-api-depth-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
                         5_000,
                         'PC Actor.create',
                     );
-                    if (pc?.id) {
+                    if (pc?.id != null) {
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(pc.id)?.delete?.();
+                                await foundryGame?.actors?.get?.(pc.id)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
                         });
                     }
                 } catch (err) {
-                    notes['drag-drop-visual-ghost-and-split'] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['drag-drop-visual-ghost-and-split'] = `PC create threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
-                await new Promise((r) => setTimeout(r, 250));
-                const getPc = (): any => (pc?.id != null ? game?.actors?.get?.(pc.id) : null);
+                await new Promise<void>((resolve) => {
+                    setTimeout(resolve, 250);
+                });
+                const getPc = (): any => (pc?.id != null ? foundryGame?.actors?.get?.(pc.id) : null);
 
                 /* ============================================================
                  * Flow 4: drag-drop-visual-ghost-and-split
@@ -344,9 +346,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'embed gear stack',
                         )) as any[];
-                        const stack = created?.[0] ? live.items.get(created[0].id) : null;
-                        const single = created?.[1] ? live.items.get(created[1].id) : null;
-                        const talent = created?.[2] ? live.items.get(created[2].id) : null;
+                        const stack = created?.[0] != null ? live.items.get(created[0].id) : null;
+                        const single = created?.[1] != null ? live.items.get(created[1].id) : null;
+                        const talent = created?.[2] != null ? live.items.get(created[2].id) : null;
                         for (const it of [stack, single, talent]) {
                             if (it != null) {
                                 cleanups.push(async () => {
@@ -392,7 +394,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['drag-drop-visual-ghost-and-split'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['drag-drop-visual-ghost-and-split'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -428,7 +430,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['drag-drop-visual-validate-slot'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['drag-drop-visual-validate-slot'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -452,8 +454,8 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'embed favorite gear',
                         )) as any[];
-                        const fav1 = createdItems?.[0] ? live.items.get(createdItems[0].id) : null;
-                        const fav2 = createdItems?.[1] ? live.items.get(createdItems[1].id) : null;
+                        const fav1 = createdItems?.[0] != null ? live.items.get(createdItems[0].id) : null;
+                        const fav2 = createdItems?.[1] != null ? live.items.get(createdItems[1].id) : null;
                         for (const it of [fav1, fav2]) {
                             if (it != null) {
                                 cleanups.push(async () => {
@@ -509,7 +511,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['drag-drop-visual-favorites-api'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['drag-drop-visual-favorites-api'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -563,7 +565,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['expandable-tooltip-toggle-action'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['expandable-tooltip-toggle-action'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -614,7 +616,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['expandable-tooltip-programmatic-api'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['expandable-tooltip-programmatic-api'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -678,7 +680,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['visual-feedback-find-and-classify'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['visual-feedback-find-and-classify'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -703,7 +705,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         const counterEl = document.createElement('span');
                         counterEl.textContent = '0';
                         inst._animateCounter(counterEl, 0, 7, 50);
-                        await new Promise((r) => setTimeout(r, 200));
+                        await new Promise<void>((resolve) => {
+                            setTimeout(resolve, 200);
+                        });
                         const counterSettled = counterEl.textContent === '7';
                         const anchor = document.createElement('div');
                         document.body.appendChild(anchor);
@@ -723,7 +727,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['visual-feedback-animate-counter'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['visual-feedback-animate-counter'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -772,7 +776,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['visual-feedback-visualize-changes'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['visual-feedback-visualize-changes'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -848,7 +852,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['wh40k-tooltip-builders'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['wh40k-tooltip-builders'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -913,7 +917,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['wh40k-tooltip-static-data-helpers'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['wh40k-tooltip-static-data-helpers'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -953,7 +957,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['icons-helper-resolution'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['icons-helper-resolution'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -982,9 +986,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             if (typeof helper !== 'function') {
                                 notes['icons-handlebars-registration'] = 'iconSvg helper not registered';
                             } else {
-                                const result = helper('fa:dice-d20', { hash: { class: 'tw-w-4', label: 'Roll' } });
+                                const helperResult = helper('fa:dice-d20', { hash: { class: 'tw-w-4', label: 'Roll' } });
                                 const direct = icon('fa:dice-d20', { class: 'tw-w-4', label: 'Roll' });
-                                const helperOut = String(result);
+                                const helperOut = String(helperResult);
                                 const matched = helperOut === direct;
                                 const unknownResult = helper('fa:bogus-not-real', { hash: {} });
                                 const unknownEmpty = String(unknownResult) === '';
@@ -998,7 +1002,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['icons-handlebars-registration'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['icons-handlebars-registration'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -1064,7 +1068,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['appv2-mixin-subtitle-and-disable'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['appv2-mixin-subtitle-and-disable'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -1091,7 +1095,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         // needing the render to materialise.
                         const waitPromise = dialog.wait();
                         // Yield a tick so wait() installs its 'close' listener.
-                        await new Promise((r) => setTimeout(r, 30));
+                        await new Promise<void>((resolve) => {
+                            setTimeout(resolve, 30);
+                        });
                         dialog.resolve('probe-value');
                         const submittedFlag = dialog._submitted === true;
                         const settled = await withTimeout(waitPromise, 5_000, 'DialogWH40K.wait');
@@ -1109,7 +1115,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         await closeOpenDialogs();
                     }
                 } catch (err) {
-                    notes['dialog-wait-and-resolve'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['dialog-wait-and-resolve'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -1177,7 +1183,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['whatif-mixin-exit-and-direct-apply'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['whatif-mixin-exit-and-direct-apply'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -1219,7 +1225,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             const target = document.createElement('div');
                             target.dataset['statKey'] = 'weaponSkill';
                             action.call(inst, new MouseEvent('click', { bubbles: true, cancelable: true }), target);
-                            await new Promise((r) => setTimeout(r, 30));
+                            await new Promise<void>((resolve) => {
+                                setTimeout(resolve, 30);
+                            });
                             const popover = document.querySelector('.wh40k-stat-breakdown-popover');
                             const html = popover?.innerHTML ?? '';
                             const hasTotal = html.includes('Weapon Skill: 32');
@@ -1231,7 +1239,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             // Close via the registered button.
                             const closeBtn = popover?.querySelector<HTMLButtonElement>('[data-action="closeBreakdown"]');
                             closeBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                            await new Promise((r) => setTimeout(r, 30));
+                            await new Promise<void>((resolve) => {
+                                setTimeout(resolve, 30);
+                            });
                             const popoverAfterClose = document.querySelector('.wh40k-stat-breakdown-popover');
                             const closedOk = popoverAfterClose === null;
                             if (hasTotal && hasBase && hasPositive && hasNegative && hasClickable && hasIcon && closedOk) {
@@ -1243,12 +1253,12 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                     hasPositive,
                                 )} neg=${String(hasNegative)} clickable=${String(hasClickable)} icon=${String(hasIcon)} closed=${String(closedOk)}`;
                                 // Force-remove leftover popover so subsequent flows start clean.
-                                document.querySelectorAll('.wh40k-stat-breakdown-popover').forEach((el) => el.remove());
+                                document.querySelectorAll('.wh40k-stat-breakdown-popover').forEach((popoverEl) => popoverEl.remove());
                             }
                         }
                     }
                 } catch (err) {
-                    notes['statbreakdown-mixin-variant-rows'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['statbreakdown-mixin-variant-rows'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -1293,7 +1303,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['collapsible-panel-roundtrip'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['collapsible-panel-roundtrip'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -1351,7 +1361,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['collapsible-panel-apply-preset'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['collapsible-panel-apply-preset'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -1377,7 +1387,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         // Branch 1: identical from/to → no class swap.
                         const el = document.createElement('span');
                         inst.animateCounter(el, 7, 7, { duration: 30 });
-                        await new Promise((r) => setTimeout(r, 50));
+                        await new Promise<void>((resolve) => {
+                            setTimeout(resolve, 50);
+                        });
                         const noClass = !el.classList.contains('value-counter');
                         // Branch 2: _shouldSkipAnimation is callable and returns boolean.
                         const shouldSkip = inst._shouldSkipAnimation();
@@ -1386,7 +1398,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         const flashEl = document.createElement('div');
                         inst._flashElement(flashEl, 'tw-animate-stat-heal', 30);
                         const flashAppliedNow = flashEl.classList.contains('tw-animate-stat-heal');
-                        await new Promise((r) => setTimeout(r, 80));
+                        await new Promise<void>((resolve) => {
+                            setTimeout(resolve, 80);
+                        });
                         const flashRemoved = !flashEl.classList.contains('tw-animate-stat-heal');
                         if (noClass && skipBoolean && flashAppliedNow && flashRemoved) {
                             fired['enhanced-animations-skip-and-flash'] = true;
@@ -1399,7 +1413,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['enhanced-animations-skip-and-flash'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['enhanced-animations-skip-and-flash'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
             } finally {
                 for (const fn of cleanups) {

@@ -88,8 +88,8 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HBS = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HBS?.compile !== 'function') {
                         return {
                             rendered,
                             implantCount,
@@ -101,7 +101,16 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const buildCtx = (present: Set<string>) => ({
+                    const buildCtx = (
+                        present: Set<string>,
+                    ): {
+                        astartesPanel: {
+                            implants: { id: string; nameKey: string; categoryKey: string; has: boolean }[];
+                            strengthBonus: number;
+                            toughnessBonus: number;
+                            hasBlackCarapace: boolean;
+                        };
+                    } => ({
                         astartesPanel: {
                             implants: IMPLANT_IDS.map((id) => ({
                                 id,
@@ -115,7 +124,7 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
                         },
                     });
 
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HBS.compile(src);
 
                     // Initial render: full implant set, Black Carapace ON.
                     const fullSet = new Set<string>(IMPLANT_IDS);

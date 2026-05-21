@@ -62,14 +62,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 try {
                     return await import(`${base}/${name}.js`);
                 } catch (err) {
-                    return { __importError: String((err as Error)?.message ?? err) };
+                    return { __importError: String(err instanceof Error ? err.message : String(err)) };
                 }
             };
             const guarded = (name: FlowName, fn: () => boolean): void => {
                 try {
                     record(name, fn(), null);
                 } catch (err) {
-                    record(name, false, String((err as Error)?.message ?? err));
+                    record(name, false, String(err instanceof Error ? err.message : String(err)));
                 }
             };
             const fail = (keys: readonly FlowName[], detail: string): void => {
@@ -79,7 +79,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- aim ----------
             const aim = await loadModule('aim');
-            if (aim?.__importError) {
+            if (typeof aim?.__importError === 'string') {
                 fail(['aim-modifiers', 'aim-calculateBonus'], aim.__importError);
             } else {
                 guarded('aim-modifiers', () => {
@@ -97,7 +97,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- altitude ----------
             const altitude = await loadModule('altitude');
-            if (altitude?.__importError) {
+            if (typeof altitude?.__importError === 'string') {
                 fail(['altitude-canChange', 'altitude-profiles'], altitude.__importError);
             } else {
                 guarded('altitude-canChange', () => {
@@ -115,13 +115,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- attack-specials ----------
             const attackSpecials = await loadModule('attack-specials');
-            if (attackSpecials?.__importError) {
+            if (typeof attackSpecials?.__importError === 'string') {
                 fail(['attack-specials-list', 'attack-specials-names'], attackSpecials.__importError);
             } else {
                 guarded('attack-specials-list', () => {
                     const list = attackSpecials.attackSpecials();
                     const first = list[0] as { name?: unknown; hasLevel?: unknown } | undefined;
-                    return Array.isArray(list) && list.length > 0 && typeof first?.name === 'string' && typeof first?.hasLevel === 'boolean';
+                    return Array.isArray(list) && list.length > 0 && typeof first?.name === 'string' && typeof first.hasLevel === 'boolean';
                 });
                 guarded('attack-specials-names', () => {
                     const names = attackSpecials.attackSpecialsNames();
@@ -131,7 +131,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- explication ----------
             const explication = await loadModule('explication');
-            if (explication?.__importError) {
+            if (typeof explication?.__importError === 'string') {
                 fail(['explication-breakthroughsCrossed', 'explication-isComplete'], explication.__importError);
             } else {
                 guarded('explication-breakthroughsCrossed', () => {
@@ -148,7 +148,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- medicae-mechadendrite ----------
             const medicae = await loadModule('medicae-mechadendrite');
-            if (medicae?.__importError) {
+            if (typeof medicae?.__importError === 'string') {
                 fail(['medicae-mechadendrite-data'], medicae.__importError);
             } else {
                 guarded('medicae-mechadendrite-data', () => isPopulatedObject(medicae.MEDICAE_MECHADENDRITE));
@@ -156,7 +156,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- combat-actions ----------
             const combatActions = await loadModule('combat-actions');
-            if (combatActions?.__importError) {
+            if (typeof combatActions?.__importError === 'string') {
                 fail(['combat-actions-all'], combatActions.__importError);
             } else {
                 guarded('combat-actions-all', () => {
@@ -173,7 +173,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- daemon-weapon ----------
             const daemonWeapon = await loadModule('daemon-weapon');
-            if (daemonWeapon?.__importError) {
+            if (typeof daemonWeapon?.__importError === 'string') {
                 fail(['daemon-weapon-profiles'], daemonWeapon.__importError);
             } else {
                 guarded(
@@ -184,7 +184,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- daemonhost ----------
             const daemonhost = await loadModule('daemonhost');
-            if (daemonhost?.__importError) {
+            if (typeof daemonhost?.__importError === 'string') {
                 fail(['daemonhost-tiers'], daemonhost.__importError);
             } else {
                 guarded('daemonhost-tiers', () => isPopulatedObject(daemonhost.DAEMONHOST_TIERS));

@@ -46,8 +46,7 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
                             setTimeout(r, 60);
                         });
                     } catch (err) {
-                        const e = err as Error;
-                        error = String(e?.stack ?? e?.message ?? err);
+                        error = err instanceof Error ? err.stack ?? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -62,7 +61,7 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
                     // here would leave the screenshot empty.
                     (globalThis as any).__c9dialog = inst;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, grenadeIds, hasThrowButton, error };

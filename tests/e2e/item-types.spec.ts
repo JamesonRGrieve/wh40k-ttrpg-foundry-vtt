@@ -51,7 +51,7 @@ async function probeItemType(page: Page, itemType: string): Promise<ItemTypeProb
             await item.delete?.();
             return { docId: item.id ?? null, sheetRendered, createError: null };
         }, itemType);
-        if (!result.docId && result.createError) errors.unshift(`create: ${result.createError}`);
+        if (result.docId == null && result.createError != null) errors.unshift(`create: ${result.createError}`);
         return { type: itemType, docId: result.docId, sheetRendered: result.sheetRendered, pageErrors: errors };
     } finally {
         page.off('pageerror', listener);

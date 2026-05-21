@@ -87,19 +87,21 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
                     const inst = new Cls(actor);
                     try {
                         await inst.render(true);
-                        await new Promise((r) => setTimeout(r, 40));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 40);
+                        });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = err instanceof Error ? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
-                        hasCorruptionCallout = (inst.element.textContent ?? '').includes('+10');
+                        hasCorruptionCallout = inst.element.textContent.includes('+10');
                         hasTwistedFleshRow = inst.element.querySelector('[data-talent="twisted-flesh"]') !== null;
                         hasApplyButton = inst.element.querySelector('[data-action="apply"]') !== null;
                         hasCancelButton = inst.element.querySelector('[data-action="cancel"]') !== null;
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

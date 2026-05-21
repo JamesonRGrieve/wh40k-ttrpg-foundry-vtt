@@ -54,7 +54,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                 async ({ moduleUrl }): Promise<BannerProbeResult> => {
                     /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals + builder private state are runtime-only */
                     const g = globalThis as any;
-                    const Actor = g.Actor;
+                    const ActorCls = g.Actor;
                     let created = false;
                     let rendered = false;
                     let hasWarningBanner = false;
@@ -63,7 +63,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                     let resolvedRowCount = 0;
                     let error: string | null = null;
 
-                    if (!Actor?.create) {
+                    if (typeof ActorCls?.create !== 'function') {
                         return {
                             created,
                             rendered,
@@ -77,7 +77,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
 
                     let actor: any;
                     try {
-                        actor = await Actor.create({
+                        actor = await ActorCls.create({
                             name: 'issue-216-probe',
                             type: 'dh2-character',
                             system: { gameSystem: 'dh2e' },
@@ -91,7 +91,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                             hasResolvedBanner,
                             unresolvedRowCount,
                             resolvedRowCount,
-                            error: `Actor.create: ${String((err as Error)?.message ?? err)}`,
+                            error: `Actor.create: ${err instanceof Error ? err.message : String(err)}`,
                         };
                     }
                     if (!created) {
@@ -110,7 +110,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                     try {
                         mod = await import(moduleUrl);
                     } catch (err) {
-                        error = `import builder: ${String((err as Error)?.message ?? err)}`;
+                        error = `import builder: ${err instanceof Error ? err.message : String(err)}`;
                         return {
                             created,
                             rendered,
@@ -146,7 +146,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                             hasResolvedBanner,
                             unresolvedRowCount,
                             resolvedRowCount,
-                            error: `new OriginPathBuilder: ${String((err as Error)?.message ?? err)}`,
+                            error: `new OriginPathBuilder: ${err instanceof Error ? err.message : String(err)}`,
                         };
                     }
 
@@ -197,7 +197,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                         ]);
                         builder.aptitudeOverrides = new Map<string, string>([['Willpower', 'Strength']]);
                     } catch (err) {
-                        error = `state seed: ${String((err as Error)?.message ?? err)}`;
+                        error = `state seed: ${err instanceof Error ? err.message : String(err)}`;
                         return {
                             created,
                             rendered,
@@ -215,11 +215,11 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                             setTimeout(r, 120);
                         });
                     } catch (err) {
-                        error = `render: ${String((err as Error)?.message ?? err)}`;
+                        error = `render: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
                     rendered = builder.element instanceof HTMLElement;
-                    if (rendered && builder.element) {
+                    if (rendered && builder.element != null) {
                         const el = builder.element as HTMLElement;
                         hasWarningBanner = el.querySelector('[data-testid="aptitude-collision-banner"]') !== null;
                         hasResolvedBanner = el.querySelector('[data-testid="aptitude-collision-resolved-banner"]') !== null;

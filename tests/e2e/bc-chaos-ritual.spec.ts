@@ -38,8 +38,8 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HBS = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HBS.compile !== 'function') {
                         return {
                             rendered,
                             hasMasteryInput,
@@ -49,7 +49,7 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HBS.compile(src);
                     const html = tpl({ ritualPanel: { ritualMastery: 5 } });
                     const host = document.createElement('div');
                     // Tailwind utilities are scoped to .wh40k-rpg via tailwind.config.js
@@ -71,12 +71,12 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
                         hasMasteryInput = host.querySelector('input.wh40k-bc-ritual-mastery-input') !== null;
                         hasPerformButton = host.querySelector('button.wh40k-bc-ritual-perform-btn[data-action="bcPerformRitual"]') !== null;
                         masteryAttr = host.querySelector('section.wh40k-bc-ritual-panel')?.getAttribute('data-bc-ritual-mastery') ?? '';
-                        masteryValue = (host.querySelector('input.wh40k-bc-ritual-mastery-input') as HTMLInputElement | null)?.value ?? '';
+                        masteryValue = host.querySelector<HTMLInputElement>('input.wh40k-bc-ritual-mastery-input')?.value ?? '';
                     }
 
                     (globalThis as any).__bcRitualPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

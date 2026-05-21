@@ -19,14 +19,14 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) {
+        const ActorCls = g.Actor;
+        if (!ActorCls?.create) {
             return { setupOk: false, panelPresent: false, rowCount: 0, error: 'Actor.create unavailable' };
         }
 
         let pc, npc;
         try {
-            pc = await Actor.create({
+            pc = await ActorCls.create({
                 name: 'npc-interactions-pc-probe',
                 type: 'dh2-character',
                 system: {
@@ -34,7 +34,7 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
                     characteristics: { fellowship: { base: 40, total: 40, bonus: 4 } },
                 },
             });
-            npc = await Actor.create({
+            npc = await ActorCls.create({
                 name: 'npc-interactions-npc-probe',
                 type: 'bc-npc',
                 system: { gameSystem: 'dh2e' },
@@ -48,7 +48,9 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
         }
 
         await npc.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise<void>((r) => {
+            setTimeout(r, 250);
+        });
 
         // The panel lives on the dedicated NPC tab.
         try {
@@ -56,7 +58,9 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
         } catch {
             /* tab name may vary in older sheets */
         }
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise<void>((r) => {
+            setTimeout(r, 200);
+        });
 
         const root = npc.sheet.element as HTMLElement | null;
         const panel = root?.querySelector?.('.wh40k-npc-interactions-panel') ?? null;

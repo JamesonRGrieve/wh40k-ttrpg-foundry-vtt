@@ -73,7 +73,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 out.push({ name: name as FlowName, ok, detail });
             };
 
-            if (!ActorCls?.create) {
+            if (typeof ActorCls?.create !== 'function') {
                 for (const f of flows) record(f, false, 'Actor.create unavailable');
                 return out;
             }
@@ -124,10 +124,10 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                     'vehicle Actor.create',
                 );
             } catch (err) {
-                for (const f of flows) record(f, false, `vehicle create threw: ${String((err as Error)?.message ?? err)}`);
+                for (const f of flows) record(f, false, `vehicle create threw: ${err instanceof Error ? err.message : String(err)}`);
                 return out;
             }
-            if (!vehicleActor?.id) {
+            if (vehicleActor?.id == null) {
                 for (const f of flows) record(f, false, 'vehicle not created');
                 return out;
             }
@@ -141,25 +141,25 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 const v = live();
                 record('getter-faction', v?.faction === 'Chaos', `got ${String(v?.faction)}`);
             } catch (err) {
-                record('getter-faction', false, String((err as Error)?.message ?? err));
+                record('getter-faction', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-subfaction', v?.subfaction === 'World Eaters', `got ${String(v?.subfaction)}`);
             } catch (err) {
-                record('getter-subfaction', false, String((err as Error)?.message ?? err));
+                record('getter-subfaction', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-subtype', v?.subtype === 'tank', `got ${String(v?.subtype)}`);
             } catch (err) {
-                record('getter-subtype', false, String((err as Error)?.message ?? err));
+                record('getter-subtype', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-threat-level', v?.threatLevel === 3, `got ${String(v?.threatLevel)}`);
             } catch (err) {
-                record('getter-threat-level', false, String((err as Error)?.message ?? err));
+                record('getter-threat-level', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
@@ -170,50 +170,50 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                     `got ${JSON.stringify({ f: a?.front?.value, s: a?.side?.value, r: a?.rear?.value })}`,
                 );
             } catch (err) {
-                record('getter-armour', false, String((err as Error)?.message ?? err));
+                record('getter-armour', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-front', v?.front === 32, `got ${String(v?.front)}`);
             } catch (err) {
-                record('getter-front', false, String((err as Error)?.message ?? err));
+                record('getter-front', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-side', v?.side === 24, `got ${String(v?.side)}`);
             } catch (err) {
-                record('getter-side', false, String((err as Error)?.message ?? err));
+                record('getter-side', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-rear', v?.rear === 16, `got ${String(v?.rear)}`);
             } catch (err) {
-                record('getter-rear', false, String((err as Error)?.message ?? err));
+                record('getter-rear', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-availability', v?.availability === 'rare', `got ${String(v?.availability)}`);
             } catch (err) {
-                record('getter-availability', false, String((err as Error)?.message ?? err));
+                record('getter-availability', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-manoeuverability', v?.manoeuverability === 5, `got ${String(v?.manoeuverability)}`);
             } catch (err) {
-                record('getter-manoeuverability', false, String((err as Error)?.message ?? err));
+                record('getter-manoeuverability', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-carrying-capacity', v?.carryingCapacity === 12, `got ${String(v?.carryingCapacity)}`);
             } catch (err) {
-                record('getter-carrying-capacity', false, String((err as Error)?.message ?? err));
+                record('getter-carrying-capacity', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 const i = v?.integrity;
                 record('getter-integrity', i?.max === 40 && i?.value === 35, `got ${JSON.stringify({ max: i?.max, value: i?.value })}`);
             } catch (err) {
-                record('getter-integrity', false, String((err as Error)?.message ?? err));
+                record('getter-integrity', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
@@ -224,26 +224,26 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 const ok = sp?.cruising === 60 || sp === 60 || typeof sp === 'number' || typeof sp === 'object';
                 record('getter-speed', Boolean(ok), `got ${JSON.stringify(sp)}`);
             } catch (err) {
-                record('getter-speed', false, String((err as Error)?.message ?? err));
+                record('getter-speed', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 const c = v?.crew;
                 record('getter-crew', c?.required === 3, `got ${JSON.stringify(c)}`);
             } catch (err) {
-                record('getter-crew', false, String((err as Error)?.message ?? err));
+                record('getter-crew', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-vehicle-class', v?.vehicleClass === 'ground', `got ${String(v?.vehicleClass)}`);
             } catch (err) {
-                record('getter-vehicle-class', false, String((err as Error)?.message ?? err));
+                record('getter-vehicle-class', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const v = live();
                 record('getter-size', v?.size === 6, `got ${String(v?.size)}`);
             } catch (err) {
-                record('getter-size', false, String((err as Error)?.message ?? err));
+                record('getter-size', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- rollItem branches ----
@@ -261,7 +261,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             } catch (err) {
                 // V8 still attributes the line hits even if a UI helper threw.
                 // Treat thrown-on-warn as success so we don't lose coverage.
-                record('rollItem-missing-item', true, `tolerated: ${String((err as Error)?.message ?? err)}`);
+                record('rollItem-missing-item', true, `tolerated: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             // Branch 2: itemId found but game.user.character is null
@@ -269,7 +269,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             // Ensure user.character is null before we try.
             try {
                 const user = gme?.user;
-                if (user && typeof user.update === 'function' && user.character) {
+                if (user != null && typeof user.update === 'function' && user.character != null) {
                     await withTimeout(user.update({ character: null }), 5_000, 'clear user.character');
                 }
             } catch {
@@ -298,14 +298,14 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             try {
                 const v = live();
                 const itemId = armourItemId ?? v?.items?.contents?.[0]?.id;
-                if (!itemId) {
+                if (itemId == null) {
                     record('rollItem-no-character', false, 'no item available to roll');
                 } else {
                     await withTimeout(v.rollItem(itemId), 5_000, 'rollItem no-character');
                     record('rollItem-no-character', true, null);
                 }
             } catch (err) {
-                record('rollItem-no-character', true, `tolerated: ${String((err as Error)?.message ?? err)}`);
+                record('rollItem-no-character', true, `tolerated: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             // Branch 3 & 4: assign user.character to a real PC, then roll a
@@ -356,7 +356,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             }
             try {
                 const user = gme?.user;
-                if (user && typeof user.update === 'function' && characterActor?.id) {
+                if (user != null && typeof user.update === 'function' && characterActor?.id != null) {
                     await withTimeout(user.update({ character: characterActor.id }), 5_000, 'set user.character');
                 }
             } catch {
@@ -367,14 +367,14 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             try {
                 const v = live();
                 const itemId = armourItemId ?? v?.items?.contents?.find?.((it: any) => it?.type !== 'weapon')?.id;
-                if (!itemId) {
+                if (itemId == null) {
                     record('rollItem-non-weapon', false, 'no non-weapon item available');
                 } else {
                     await withTimeout(v.rollItem(itemId), 5_000, 'rollItem non-weapon');
                     record('rollItem-non-weapon', true, null);
                 }
             } catch (err) {
-                record('rollItem-non-weapon', true, `tolerated: ${String((err as Error)?.message ?? err)}`);
+                record('rollItem-non-weapon', true, `tolerated: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             // Branch 4: weapon item with character set → delegates to DHTargetedActionManager
@@ -406,7 +406,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             }
             try {
                 const v = live();
-                if (!weaponItemId) {
+                if (weaponItemId === null) {
                     record('rollItem-weapon-delegation', false, 'no weapon item created');
                 } else {
                     await withTimeout(v.rollItem(weaponItemId), 8_000, 'rollItem weapon');
@@ -415,13 +415,13 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             } catch (err) {
                 // The weapon attack pipeline may open a prompt or throw on
                 // missing combat context — coverage is still attributed.
-                record('rollItem-weapon-delegation', true, `tolerated: ${String((err as Error)?.message ?? err)}`);
+                record('rollItem-weapon-delegation', true, `tolerated: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             // ---- cleanup ----
             try {
                 const user = gme?.user;
-                if (user && typeof user.update === 'function') {
+                if (user != null && typeof user.update === 'function') {
                     await user.update({ character: null });
                 }
             } catch {

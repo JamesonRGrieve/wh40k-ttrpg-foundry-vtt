@@ -44,8 +44,8 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 let nonRtCrewUnchanged = false;
 
                 try {
-                    const Actor = (globalThis as any).Actor;
-                    if (typeof Actor?.create !== 'function') {
+                    const ActorCls = (globalThis as any).Actor;
+                    if (typeof ActorCls?.create !== 'function') {
                         return {
                             actorCreated,
                             sheetRendered,
@@ -64,7 +64,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
 
                     // Ephemeral RT starship — RT system gating drives the
                     // crew/morale tick.
-                    const actor = await Actor.create({
+                    const actor = await ActorCls.create({
                         name: 'Crew Economy Probe',
                         type: 'rt-starship',
                         system: {
@@ -93,9 +93,9 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
 
                     // Stub the active combat round so cancelPriorTurnDamage
                     // sees a strictly-prior turn relative to the snapshot.
-                    const game = (globalThis as any).game;
-                    const realActive = game?.combats?.active;
-                    if (game?.combats) game.combats.active = { round: (game?.combats?.active?.round ?? 0) + 2 };
+                    const foundryGame = (globalThis as any).game;
+                    const realActive = foundryGame?.combats?.active;
+                    if (foundryGame?.combats != null) foundryGame.combats.active = { round: (foundryGame?.combats?.active?.round ?? 0) + 2 };
                     try {
                         if (typeof actor?.cancelPriorTurnDamage === 'function') {
                             await actor.cancelPriorTurnDamage();
@@ -103,7 +103,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                                 Number(actor?.system?.crew?.population ?? 0) === crewBefore && Number(actor?.system?.crew?.morale?.value ?? 0) === moraleBefore;
                         }
                     } finally {
-                        if (game?.combats) game.combats.active = realActive;
+                        if (foundryGame?.combats != null) foundryGame.combats.active = realActive;
                     }
 
                     // Drop morale, then replenishBetweenCombat → morale back to max.
@@ -115,7 +115,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
 
                     // Per-system gating: a non-RT hull should NOT have crew
                     // touched by applyHullDamage.
-                    const dhActor = await Actor.create({
+                    const dhActor = await ActorCls.create({
                         name: 'DH2 Hull Probe',
                         type: 'rt-starship',
                         system: {
@@ -136,7 +136,9 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     if (actor?.sheet?.render !== undefined) {
                         await actor.sheet.render({ force: true });
                         // Activate the Crew tab so the screenshot captures it.
-                        await new Promise((r) => setTimeout(r, 120));
+                        await new Promise<void>((resolve) => {
+                            setTimeout(resolve, 120);
+                        });
                         const sheetEl = actor.sheet.element;
                         if (sheetEl) {
                             const crewTab = sheetEl.querySelector?.('[data-tab="crew"]');

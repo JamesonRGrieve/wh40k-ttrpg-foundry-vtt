@@ -28,7 +28,7 @@ async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> 
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
         const ItemCls = g.Item;
-        if (!ItemCls?.create) {
+        if (ItemCls?.create == null) {
             return {
                 created: false,
                 rendered: false,
@@ -57,10 +57,10 @@ async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> 
                 badgePresent: false,
                 auraPresent: false,
                 hookPresent: false,
-                createError: String((err as Error)?.message ?? err),
+                createError: err instanceof Error ? err.message : String(err),
             };
         }
-        if (!item) {
+        if (item == null) {
             return {
                 created: false,
                 rendered: false,
@@ -73,7 +73,7 @@ async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> 
 
         let rendered = false;
         try {
-            if (item.sheet?.render) {
+            if (item.sheet?.render != null) {
                 await item.sheet.render(true);
                 await new Promise((r) => {
                     setTimeout(r, 200);
@@ -87,7 +87,7 @@ async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> 
                 badgePresent: false,
                 auraPresent: false,
                 hookPresent: false,
-                createError: String((err as Error)?.message ?? err),
+                createError: err instanceof Error ? err.message : String(err),
             };
         }
 
@@ -115,7 +115,7 @@ async function cleanupProfaneObjectProbe(page: Page): Promise<void> {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
         const g = globalThis as any;
         const id = g.__profaneObjectProbeId;
-        if (!id) return;
+        if (id == null) return;
         const item = g.game?.items?.get?.(id);
         try {
             await item?.sheet?.close?.();

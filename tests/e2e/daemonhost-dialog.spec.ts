@@ -46,7 +46,9 @@ test.describe.serial('DaemonhostBindingDialog (Tier B)', () => {
                     const inst = new Cls();
                     try {
                         await inst.render(true);
-                        await new Promise((r) => setTimeout(r, 40));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 40);
+                        });
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);
                     }

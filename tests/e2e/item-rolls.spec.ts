@@ -58,8 +58,8 @@ interface ItemRollProbe {
 
 async function probeItemRoll(page: Page, outerActorId: string, spec: ItemRollSpec): Promise<ItemRollProbe> {
     const errors: string[] = [];
-    const listener = (err: Error): void => {
-        errors.push(err.message);
+    const listener = (pageErr: Error): void => {
+        errors.push(pageErr.message);
     };
     page.on('pageerror', listener);
     try {
@@ -98,10 +98,10 @@ async function probeItemRoll(page: Page, outerActorId: string, spec: ItemRollSpe
                 let error: string | null = null;
                 try {
                     const ret = await fn.call(item);
-                    returnedKind = ret ? 'truthy' : 'falsy';
-                } catch (err) {
+                    returnedKind = ret != null ? 'truthy' : 'falsy';
+                } catch (rollErr) {
                     returnedKind = 'threw';
-                    error = String((err as Error)?.message ?? err);
+                    error = String((rollErr as Error).message);
                 }
                 const after = g.game?.messages?.size ?? 0;
                 await item.delete?.();
@@ -145,12 +145,12 @@ test.describe.serial('item roll methods (Tier B)', () => {
         const failures: string[] = [];
         try {
             for (const spec of ITEM_ROLL_SPECS) {
-                const probe = await probeItemRoll(page, actorId, spec).catch((err: unknown) => ({
+                const probe = await probeItemRoll(page, actorId, spec).catch((caughtErr: unknown) => ({
                     method: spec.method,
                     chatDelta: 0,
                     returned: 'threw' as const,
-                    pageErrors: [String((err as Error)?.message ?? err)],
-                    error: String((err as Error)?.message ?? err),
+                    pageErrors: [String((caughtErr as Error).message)],
+                    error: String((caughtErr as Error).message),
                 }));
 
                 if (probe.returned === 'threw') {

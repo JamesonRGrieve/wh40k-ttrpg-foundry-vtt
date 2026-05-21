@@ -14,8 +14,8 @@ describe('WITHIN_GRENADES (#135)', () => {
     });
 
     it('photon flash uses Agility +10 with no damage and a Blast (6) cloud', () => {
-        const g = WITHIN_GRENADES['photonFlash'];
-        if (g === undefined) throw new Error('photonFlash grenade definition missing');
+        const g = WITHIN_GRENADES['photonFlash']!;
+        expect(g).toBeDefined();
         expect(g.blastRadius).toBe(6);
         expect(g.damage).toBe('');
         expect(g.specialQualities).toContain('Blast (6)');
@@ -24,8 +24,8 @@ describe('WITHIN_GRENADES (#135)', () => {
     });
 
     it('psychotroke uses Toughness Ordinary with Hallucinogenic (4) step-up rider', () => {
-        const g = WITHIN_GRENADES['psychotroke'];
-        if (g === undefined) throw new Error('psychotroke grenade definition missing');
+        const g = WITHIN_GRENADES['psychotroke']!;
+        expect(g).toBeDefined();
         expect(g.blastRadius).toBe(3);
         expect(g.specialQualities).toContain('Hallucinogenic (4)');
         expect(g.save.characteristic).toBe('toughness');
@@ -34,8 +34,8 @@ describe('WITHIN_GRENADES (#135)', () => {
     });
 
     it('tears-of-the-emperor uses Willpower Hard (-20) and is Sanctified', () => {
-        const g = WITHIN_GRENADES['tearsOfTheEmperor'];
-        if (g === undefined) throw new Error('tearsOfTheEmperor grenade definition missing');
+        const g = WITHIN_GRENADES['tearsOfTheEmperor']!;
+        expect(g).toBeDefined();
         expect(g.blastRadius).toBe(2);
         expect(g.damage).toBe('1d10 X');
         expect(g.specialQualities).toContain('Sanctified');
@@ -45,8 +45,8 @@ describe('WITHIN_GRENADES (#135)', () => {
     });
 
     it('smoke is Smoke (4) with no damage', () => {
-        const g = WITHIN_GRENADES['smoke'];
-        if (g === undefined) throw new Error('smoke grenade definition missing');
+        const g = WITHIN_GRENADES['smoke']!;
+        expect(g).toBeDefined();
         expect(g.blastRadius).toBe(4);
         expect(g.damage).toBe('');
         expect(g.specialQualities).toEqual(['Smoke (4)']);

@@ -54,7 +54,7 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
             try {
                 mod = await import(`${'/systems/wh40k-rpg'}/module/dice/d100-roll.js`);
             } catch (err) {
-                for (const f of D100_ROLL_EXTRAS_FLOWS) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of D100_ROLL_EXTRAS_FLOWS) record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 return out;
             }
             const D100Roll = mod.default ?? mod.D100Roll;
@@ -78,7 +78,7 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
                     `total=${roll.total} isSuccess=${roll.isSuccess}`,
                 );
             } catch (err) {
-                record('evaluate-roll-isSuccess', false, String((err as Error)?.message ?? err));
+                record('evaluate-roll-isSuccess', false, err instanceof Error ? err.message : String(err));
                 for (const f of ['prepareTemplateData-base', 'prepareTemplateData-with-modifiers', 'prepareChatData-base'] as const) {
                     record(f, false, 'roll evaluation failed');
                 }
@@ -91,7 +91,7 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
                 const okShape = data !== null && typeof data === 'object' && data.rollData !== undefined;
                 record('prepareTemplateData-base', okShape, `keys=${Object.keys(data ?? {}).join(',')}`);
             } catch (err) {
-                record('prepareTemplateData-base', false, String((err as Error)?.message ?? err));
+                record('prepareTemplateData-base', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- _prepareTemplateData with modifiers (drives the activeModifiers branch) ----
@@ -106,7 +106,7 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
                 const ok = 'AIMING' in am && 'RANGE' in am && !('COVER' in am);
                 record('prepareTemplateData-with-modifiers', ok, `activeModifiers=${JSON.stringify(am)}`);
             } catch (err) {
-                record('prepareTemplateData-with-modifiers', false, String((err as Error)?.message ?? err));
+                record('prepareTemplateData-with-modifiers', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- _prepareChatData ----
@@ -115,7 +115,7 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
                 const ok = chat !== null && typeof chat === 'object';
                 record('prepareChatData-base', ok, `keys=${Object.keys(chat ?? {}).join(',')}`);
             } catch (err) {
-                record('prepareChatData-base', false, String((err as Error)?.message ?? err));
+                record('prepareChatData-base', false, err instanceof Error ? err.message : String(err));
             }
 
             return out;

@@ -176,7 +176,7 @@ async function probeActorSheetScreenshot(
                     Math.random = origRandom;
                 };
 
-                if (!ActorGlobal?.create) {
+                if (typeof ActorGlobal?.create !== 'function') {
                     restoreRandom();
                     return {
                         boundingBox: null,
@@ -255,10 +255,10 @@ async function probeActorSheetScreenshot(
                         viewRendered: false,
                         editToggled: false,
                         actorId: null,
-                        error: `Actor.create threw: ${String((err as Error)?.message ?? err)}`,
+                        error: `Actor.create threw: ${String(err instanceof Error ? err.message : String(err))}`,
                     };
                 }
-                if (!actor?.id) {
+                if (actor?.id == null) {
                     restoreRandom();
                     return {
                         boundingBox: null,
@@ -275,7 +275,7 @@ async function probeActorSheetScreenshot(
                 g.__screenshotActorIds.push(actor.id);
 
                 const sheet = actor.sheet;
-                if (!sheet?.render) {
+                if (typeof sheet?.render !== 'function') {
                     restoreRandom();
                     return {
                         boundingBox: null,
@@ -297,7 +297,7 @@ async function probeActorSheetScreenshot(
                         viewRendered: false,
                         editToggled: false,
                         actorId: actor.id,
-                        error: `sheet.render threw: ${String((err as Error)?.message ?? err)}`,
+                        error: `sheet.render threw: ${String(err instanceof Error ? err.message : String(err))}`,
                     };
                 }
 
@@ -314,7 +314,7 @@ async function probeActorSheetScreenshot(
                 const lookupEl = directEl ?? document.querySelector(`[data-appid="${appId}"]`) ?? document.querySelector(`#${appId}`);
 
                 let boundingBox: { x: number; y: number; width: number; height: number } | null = null;
-                if (lookupEl) {
+                if (lookupEl !== null) {
                     const rect = lookupEl.getBoundingClientRect();
                     if (rect.width > 0 && rect.height > 0) {
                         boundingBox = {
@@ -383,7 +383,7 @@ async function toggleEditModeAndMeasure(
         const g = globalThis as any;
         const live = g.game?.actors?.get?.(id);
         const sheet = live?.sheet;
-        if (!sheet) {
+        if (sheet == null) {
             return { boundingBox: null, editToggled: false, error: 'sheet missing after view render' };
         }
         const actionMap = sheet.options?.actions ?? {};
@@ -397,10 +397,10 @@ async function toggleEditModeAndMeasure(
                 const target = document.createElement('div');
                 const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                 const rv = handler.call(sheet, event, target);
-                if (rv && typeof rv.then === 'function') await rv;
+                if (rv != null && typeof rv.then === 'function') await rv;
                 editToggled = true;
             } catch (err) {
-                error = `toggleEditMode threw: ${String((err as Error)?.message ?? err)}`;
+                error = `toggleEditMode threw: ${String(err instanceof Error ? err.message : String(err))}`;
             }
         }
         // Allow the re-render triggered by the mode flip to settle.
@@ -412,7 +412,7 @@ async function toggleEditModeAndMeasure(
         const directEl = sheet.element instanceof HTMLElement ? sheet.element : null;
         const el = directEl ?? document.querySelector(`[data-appid="${appId}"]`) ?? document.querySelector(`#${appId}`);
         let boundingBox: { x: number; y: number; width: number; height: number } | null = null;
-        if (el) {
+        if (el !== null) {
             const rect = el.getBoundingClientRect();
             if (rect.width > 0 && rect.height > 0) {
                 boundingBox = {
@@ -453,7 +453,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
                 try {
                     probe = await probeActorSheetScreenshot(page, actorType, systemId);
                 } catch (err) {
-                    keyNotes[viewKey] = `probe threw: ${String((err as Error)?.message ?? err)}`;
+                    keyNotes[viewKey] = `probe threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     keyNotes[editKey] = `view-mode probe threw, skipping edit-mode`;
                     continue;
                 }
@@ -479,7 +479,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
                         ? `view captured at clip ${clip.width}x${clip.height} @ (${clip.x},${clip.y})`
                         : 'view captured as full page (no bounding box)';
                 } catch (err) {
-                    keyNotes[viewKey] = `view screenshot threw: ${String((err as Error)?.message ?? err)}`;
+                    keyNotes[viewKey] = `view screenshot threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 // Toggle edit mode and re-screenshot. Need the actor id to
@@ -515,7 +515,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
                             : 'edit captured as full page (no bounding box)';
                     }
                 } catch (err) {
-                    keyNotes[editKey] = `edit screenshot threw: ${String((err as Error)?.message ?? err)}`;
+                    keyNotes[editKey] = `edit screenshot threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 } finally {
                     await probe.cleanup();
                 }

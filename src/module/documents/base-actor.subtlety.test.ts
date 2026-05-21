@@ -213,8 +213,7 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             });
             const collected = actor.collectSubtletyAdjusters();
             expect(collected).toHaveLength(1);
-            const row = collected[0];
-            if (row === undefined) throw new Error('expected at least one collected adjuster row');
+            const row = collected[0]!;
             expect(row.kind).toBe('passive');
             expect(row.delta).toBe(-5);
             expect(row.label).toBe('Hunger for Knowledge');
@@ -239,8 +238,7 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             });
             const collected = actor.collectSubtletyAdjusters();
             expect(collected).toHaveLength(1);
-            const row = collected[0];
-            if (row === undefined) throw new Error('expected at least one collected adjuster row');
+            const row = collected[0]!;
             expect(row.delta).toBe(-3);
         });
 
@@ -250,8 +248,7 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             const { actor } = makeActor(mod.WH40KBaseActor, {
                 items: [adjusterItem('Homebrew Talent', { kind: 'event', delta: -2, minAbsoluteDelta: 0, requiresEquipped: false })],
             });
-            const row = actor.collectSubtletyAdjusters()[0];
-            if (row === undefined) throw new Error('expected at least one collected adjuster row');
+            const row = actor.collectSubtletyAdjusters()[0]!;
             expect(row.sourceUuid).toBeNull();
         });
     });

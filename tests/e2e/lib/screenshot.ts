@@ -105,7 +105,7 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
             await page.evaluate((selector: string) => {
                 const el = document.querySelectorAll<HTMLElement>(selector);
                 const last = el[el.length - 1];
-                if (!last) return;
+                if (last === undefined) return;
                 last.style.left = '24px';
                 last.style.top = '24px';
                 last.style.right = 'auto';

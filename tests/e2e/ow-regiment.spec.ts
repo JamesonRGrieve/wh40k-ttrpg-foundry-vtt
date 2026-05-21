@@ -25,7 +25,7 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
         try {
             const result = await page.evaluate(async () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const Actor = (
+                const ActorCls = (
                     globalThis as unknown as {
                         Actor?: {
                             create?: (data: object) => Promise<{
@@ -36,7 +36,7 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
                         };
                     }
                 ).Actor;
-                if (!Actor?.create) {
+                if (!ActorCls?.create) {
                     return { error: 'Actor.create not available', rendered: false, hasBudget: false, hasKit: false, hasEditBtn: false, categoryCount: 0 };
                 }
 
@@ -48,7 +48,7 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
                 let categoryCount = 0;
 
                 try {
-                    const actor = await Actor.create({
+                    const actor = await ActorCls.create({
                         name: 'OW Regiment Probe',
                         type: 'character',
                         system: { gameSystem: 'ow' },
@@ -61,7 +61,9 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
                         return { error: 'actor.sheet.render missing', rendered, hasBudget, hasKit, hasEditBtn, categoryCount };
                     }
                     await sheet.render(true);
-                    await new Promise((r) => setTimeout(r, 150));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 150);
+                    });
                     const el = sheet.element;
                     rendered = el instanceof HTMLElement;
                     if (rendered && el) {

@@ -60,7 +60,9 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
                     const dlg = new NPCQuickCreateDialog({}, {});
                     opened.push(dlg);
                     await dlg.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 50));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 50);
+                    });
                     record('quick-create-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
@@ -77,7 +79,9 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
                     const dlg = new BatchCreateDialog({}, {});
                     opened.push(dlg);
                     await dlg.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 50));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 50);
+                    });
                     record('batch-create-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
@@ -94,7 +98,9 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
                     const dlg = new TemplateSelector({});
                     opened.push(dlg);
                     await dlg.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 50));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 50);
+                    });
                     record('template-selector-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {

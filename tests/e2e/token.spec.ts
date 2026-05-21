@@ -51,21 +51,23 @@ interface TokenProbeResult {
 
 async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErrors: string[] }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const Scene = g.Scene;
-            const game = g.game;
+            const ActorCls = g.Actor;
+            const SceneCls = g.Scene;
+            const gameCls = g.game;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create || !Scene?.create) {
+            if (!ActorCls?.create || !SceneCls?.create) {
                 return {
                     flowsFired: fired,
                     flowNotes: {
@@ -116,7 +118,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
             let actor: any = null;
             try {
                 actor = await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'token-spec-actor',
                         type: 'bc-character',
                         system: { gameSystem: 'bc' },
@@ -143,7 +145,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
             // ---- create a transient scene ----
             let scene: any = null;
             try {
-                scene = await withTimeout(Scene.create({ name: 'token-spec' }), 5_000, 'Scene.create');
+                scene = await withTimeout(SceneCls.create({ name: 'token-spec' }), 5_000, 'Scene.create');
             } catch (err) {
                 notes['scene-create-and-token-place'] = `Scene.create threw: ${String((err as Error)?.message ?? err)}`;
             }
@@ -151,7 +153,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
             if (!scene?.id) {
                 // Cleanup actor before bailing.
                 try {
-                    await game?.actors?.get?.(actor.id)?.delete?.();
+                    await gameCls?.actors?.get?.(actor.id)?.delete?.();
                 } catch {
                     /* ignore */
                 }
@@ -165,14 +167,14 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                 };
             }
 
-            const cleanup = async () => {
+            const cleanup = async (): Promise<void> => {
                 try {
                     await scene.delete?.();
                 } catch {
                     /* ignore */
                 }
                 try {
-                    await game?.actors?.get?.(actor.id)?.delete?.();
+                    await gameCls?.actors?.get?.(actor.id)?.delete?.();
                 } catch {
                     /* ignore */
                 }
@@ -284,7 +286,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                         }
                     } catch (innerErr) {
                         const innerMsg = String((innerErr as Error)?.message ?? innerErr);
-                        if (updateErr === null) updateErr = innerMsg;
+                        updateErr ??= innerMsg;
                     }
                     live = scene.tokens?.get?.(token.id) ?? token;
                     flag = live.getFlag?.('wh40k-rpg', 'probe') ?? live._source?.flags?.['wh40k-rpg']?.probe;
@@ -398,8 +400,8 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     liveToken._source?.delta?.name === 'override-name';
                 if (overrideApplied) {
                     fired['token-overrides-actor-data'] = true;
-                } else if (notes['token-overrides-actor-data'] === undefined) {
-                    notes['token-overrides-actor-data'] = `delta override took no effect — token.actor.name=${String(
+                } else {
+                    notes['token-overrides-actor-data'] ??= `delta override took no effect — token.actor.name=${String(
                         liveToken.actor?.name,
                     )} delta.name=${String(liveToken.delta?.name)} _source.delta.name=${String(liveToken._source?.delta?.name)}`;
                 }

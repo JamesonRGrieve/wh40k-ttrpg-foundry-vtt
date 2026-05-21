@@ -2714,8 +2714,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const characteristicKeys = new Set<string>();
         const charInfo = getAllCharacteristicDisplayInfo();
         for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
-            const label = charInfo[key]?.label;
-            if (label !== undefined && label !== '') characteristicKeys.add(this._aptitudeKey(label));
+            const label = charInfo[key]?.label ?? '';
+            if (label !== '') characteristicKeys.add(this._aptitudeKey(label));
         }
         // Exclude taken aptitudes by canonical identity so a "willpower"
         // candidate is not offered when "Willpower" is already taken (#205).
@@ -2736,8 +2736,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // canonical characteristic list so the player can always pick any
         // characteristic aptitude they don't already have, per RAW.
         for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
-            const label = charInfo[key]?.label;
-            if (label === undefined || label === '') continue;
+            const label = charInfo[key]?.label ?? '';
+            if (label === '') continue;
             const canon = this._aptitudeKey(label);
             if (takenKeys.has(canon) || seenKeys.has(canon)) continue;
             seenKeys.add(canon);

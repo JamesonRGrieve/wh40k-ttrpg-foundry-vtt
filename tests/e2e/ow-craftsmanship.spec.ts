@@ -21,8 +21,8 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
+        const listener = (pageErr: Error): void => {
+            pageErrors.push(pageErr.message);
         };
         page.on('pageerror', listener);
 
@@ -69,7 +69,7 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                         type: 'character',
                         system: { gameSystem: 'ow' },
                     });
-                    if (actor === null || actor === undefined) {
+                    if (actor == null) {
                         return {
                             error: 'Actor.create returned null',
                             rendered,
@@ -137,8 +137,8 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                         }
                     }
                     (globalThis as any).__owCraftsmanshipActor = actor;
-                } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                } catch (catchErr) {
+                    error = String((catchErr as Error).message);
                 }
                 return {
                     error,

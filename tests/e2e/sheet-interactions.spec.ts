@@ -71,7 +71,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
                 const ActorCls = g.Actor;
-                if (!ActorCls?.create) {
+                if (typeof ActorCls?.create !== 'function') {
                     return {
                         created: false,
                         createError: 'Actor.create unavailable',
@@ -90,13 +90,13 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                 } catch (err) {
                     return {
                         created: false,
-                        createError: String((err as Error)?.message ?? err),
+                        createError: String(err instanceof Error ? err.message : String(err)),
                         tabs: [],
                         actions: [],
                         form: null,
                     };
                 }
-                if (!actor) {
+                if (actor == null) {
                     return {
                         created: false,
                         createError: 'Actor.create returned null',
@@ -107,7 +107,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                 }
 
                 const sheet = actor.sheet;
-                if (!sheet) {
+                if (sheet == null) {
                     try {
                         await actor.delete?.();
                     } catch {
@@ -147,7 +147,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                             error = 'sheet.changeTab not a function';
                         }
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String(err instanceof Error ? err.message : String(err));
                     }
                     tabResults.push({ tabId, switched, error });
                 }
@@ -171,10 +171,10 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                         // ApplicationV2 binds `this` to the sheet at click time;
                         // we replicate that here with .call().
                         const rv = handler.call(sheet, event, target);
-                        if (rv && typeof rv.then === 'function') await rv;
+                        if (rv != null && typeof rv.then === 'function') await rv;
                         invoked = true;
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String(err instanceof Error ? err.message : String(err));
                     }
                     actionResults.push({ action: actionName, invoked, error });
                 }
@@ -200,7 +200,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                             error = 'sheet.submit not a function';
                         }
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String(err instanceof Error ? err.message : String(err));
                     }
                     // Re-read from the live document.
                     const refreshed = g.game?.actors?.get?.(actor.id) ?? actor;
@@ -218,7 +218,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                         submitted: false,
                         valueBefore: null,
                         valueAfter: null,
-                        error: String((err as Error)?.message ?? err),
+                        error: String(err instanceof Error ? err.message : String(err)),
                     };
                 }
 
@@ -284,7 +284,7 @@ test.describe.serial('sheet interactions (Tier B)', () => {
             failures.push(`action ${action.action}: ${action.error ?? 'not invoked'}`);
         }
 
-        if (probe.form?.submitted && probe.form.error === null) {
+        if (probe.form?.submitted === true && probe.form.error === null) {
             recordCoverage('sheet.form-submit', `character::${probe.form.field}`);
         } else {
             const err = probe.form?.error ?? `did not submit (before=${probe.form?.valueBefore ?? '?'}, after=${probe.form?.valueAfter ?? '?'})`;

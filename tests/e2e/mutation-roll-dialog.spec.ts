@@ -43,9 +43,11 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
                     const inst = new Cls({ track: 'major' });
                     try {
                         await inst.render(true);
-                        await new Promise((r) => setTimeout(r, 60));
+                        await new Promise((r) => {
+                            setTimeout(r, 60);
+                        });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = (err as Error).message;
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -58,7 +60,7 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
                     // here would leave the screenshot empty.
                     (globalThis as any).__c9dialog = inst;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = (err as Error).message;
                 }
 
                 return { rendered, hasMinorBtn, hasMajorBtn, hasRollBtn, error };

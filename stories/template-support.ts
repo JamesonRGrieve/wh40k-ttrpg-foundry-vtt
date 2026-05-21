@@ -8,11 +8,21 @@ const INIT_KEY = '__wh40kStoryHandlebarsInitialized';
 
 type LocalizationDict = Record<string, unknown>;
 
+/** Safely convert an unknown value to string, returning '' for objects/functions. */
+function unknownToStr(value: unknown): string {
+    if (value === null || value === undefined) return '';
+    if (typeof value === 'boolean') return String(value);
+    if (typeof value === 'number') return String(value);
+    if (typeof value === 'bigint') return String(value);
+    if (typeof value === 'string') return value;
+    return '';
+}
+
 function lookupLocalization(key: string, dict: LocalizationDict): string | null {
     const segments = key.split('.');
     let cursor: unknown = dict;
     for (const segment of segments) {
-        if (cursor && typeof cursor === 'object' && segment in cursor) {
+        if (cursor !== null && cursor !== undefined && typeof cursor === 'object' && segment in cursor) {
             cursor = (cursor as Record<string, unknown>)[segment];
         } else {
             return null;
@@ -24,14 +34,14 @@ function lookupLocalization(key: string, dict: LocalizationDict): string | null 
 function applySubstitutions(value: string, data: Record<string, unknown>): string {
     return value.replace(/\{(\w+)\}/g, (_, name) => {
         const replacement = data[name];
-        return replacement === undefined || replacement === null ? '' : String(replacement);
+        return unknownToStr(replacement);
     });
 }
 
 function asArray(value: unknown): unknown[] {
     if (Array.isArray(value)) return value;
     if (value instanceof Set) return Array.from(value);
-    if (value && typeof value === 'object' && Array.isArray((value as { values?: unknown[] }).values)) {
+    if (value !== null && value !== undefined && typeof value === 'object' && Array.isArray((value as { values?: unknown[] }).values)) {
         return (value as { values: unknown[] }).values;
     }
     return [];
@@ -45,24 +55,24 @@ function normalizeSelectOptions(options: unknown): Array<{ value: string; label:
             }
             const record = entry as Record<string, unknown>;
             return {
-                value: String(record.value ?? record.id ?? record.key ?? ''),
-                label: String(record.label ?? record.name ?? record.value ?? record.id ?? ''),
+                value: unknownToStr(record.value ?? record.id ?? record.key ?? ''),
+                label: unknownToStr(record.label ?? record.name ?? record.value ?? record.id ?? ''),
             };
         });
     }
 
-    if (!options || typeof options !== 'object') return [];
+    if (options === null || options === undefined || typeof options !== 'object') return [];
 
     return Object.entries(options as Record<string, unknown>).map(([key, value]) => {
-        if (value && typeof value === 'object') {
+        if (value !== null && value !== undefined && typeof value === 'object') {
             const record = value as Record<string, unknown>;
             return {
                 value: key,
-                label: String(record.label ?? record.name ?? key),
+                label: unknownToStr(record.label ?? record.name ?? key),
             };
         }
 
-        return { value: key, label: String(value) };
+        return { value: key, label: unknownToStr(value) };
     });
 }
 
@@ -78,7 +88,7 @@ function buildOptionTag(option: { value: string; label: string }, selected: unkn
 
 export function initializeStoryHandlebars(): typeof Handlebars {
     const globalState = globalThis as typeof globalThis & { [INIT_KEY]?: boolean };
-    if (globalState[INIT_KEY]) return Handlebars;
+    if (globalState[INIT_KEY] === true) return Handlebars;
 
     Handlebars.registerHelper('join', (arr: unknown, sep: string) => asArray(arr).join(typeof sep === 'string' ? sep : ', '));
     Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b);
@@ -125,7 +135,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         return String(num);
     });
     Handlebars.registerHelper('truncate', (value: unknown, length: unknown) => {
-        const text = String(value ?? '');
+        const text = unknownToStr(value ?? '');
         const limit = Number(length ?? 0);
         if (!Number.isFinite(limit) || limit <= 0 || text.length <= limit) return text;
         return `${text.slice(0, limit).trimEnd()}...`;
@@ -149,18 +159,18 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         return obj;
     });
     Handlebars.registerHelper('capitalize', (text: unknown): string => {
-        const s = String(text ?? '');
+        const s = unknownToStr(text ?? '');
         return s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : '';
     });
-    Handlebars.registerHelper('toLowerCase', (str: unknown): string => String(str ?? '').toLowerCase());
-    Handlebars.registerHelper('removeMarkup', (text: unknown): string => String(text ?? '').replace(/<[^>]*>/g, ''));
-    Handlebars.registerHelper('cleanFieldName', (text: unknown): string => String(text ?? '').replace(/[^a-zA-Z0-9]/g, ''));
+    Handlebars.registerHelper('toLowerCase', (str: unknown): string => unknownToStr(str ?? '').toLowerCase());
+    Handlebars.registerHelper('removeMarkup', (text: unknown): string => unknownToStr(text ?? '').replace(/<[^>]*>/g, ''));
+    Handlebars.registerHelper('cleanFieldName', (text: unknown): string => unknownToStr(text ?? '').replace(/[^a-zA-Z0-9]/g, ''));
     Handlebars.registerHelper('hideIf', (check: unknown) => (check ? new Handlebars.SafeString('style="display:none;"') : ''));
     Handlebars.registerHelper('arrayIncludes', (field: unknown, list: unknown): boolean => Array.isArray(list) && list.includes(field));
     Handlebars.registerHelper('includes', (list: unknown, value: unknown): boolean => Array.isArray(list) && list.includes(value));
     Handlebars.registerHelper('option', (option: unknown, current: unknown, name: unknown): string => {
-        const v = String(option ?? '');
-        const label = name !== undefined ? String(name) : v;
+        const v = unknownToStr(option ?? '');
+        const label = name !== undefined ? unknownToStr(name) : v;
         const selected = current === option ? ' selected' : '';
         return `<option value="${Handlebars.escapeExpression(v)}"${selected}>${Handlebars.escapeExpression(label)}</option>`;
     });
@@ -228,16 +238,16 @@ export function initializeStoryHandlebars(): typeof Handlebars {
                     if (typeof q === 'string') return q;
                     if (q !== null && typeof q === 'object') {
                         const obj = q as Record<string, unknown>;
-                        const name = String(obj.name ?? obj.label ?? '');
+                        const name = unknownToStr(obj.name ?? obj.label ?? '');
                         const value = obj.value;
-                        return value !== undefined && value !== null && value !== '' ? `${name} (${String(value)})` : name;
+                        return value !== undefined && value !== null && value !== '' ? `${name} (${unknownToStr(value)})` : name;
                     }
-                    return String(q);
+                    return unknownToStr(q);
                 })
                 .filter((s) => s !== '')
                 .join(', ');
         }
-        return String(special);
+        return unknownToStr(special);
     });
     Handlebars.registerHelper('armourDisplay', (armour: unknown): string => {
         if (armour === null || armour === undefined || typeof armour !== 'object') return '0';
@@ -265,13 +275,13 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         const selected = hash.selected;
         const labelAttr = typeof hash.labelAttr === 'string' ? hash.labelAttr : null;
         const normalized = normalizeSelectOptions(options).map((option) => {
-            if (!labelAttr) return option;
+            if (labelAttr === null) return option;
             const sourceValue = Array.isArray(options)
                 ? options.find((entry) => String((entry as Record<string, unknown>).value ?? entry) === option.value)
                 : null;
-            if (sourceValue && typeof sourceValue === 'object') {
+            if (sourceValue !== null && sourceValue !== undefined && typeof sourceValue === 'object') {
                 const label = (sourceValue as Record<string, unknown>)[labelAttr];
-                if (label !== undefined) return { ...option, label: String(label) };
+                if (label !== undefined) return { ...option, label: unknownToStr(label) };
             }
             return option;
         });
@@ -291,7 +301,9 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         const classes = ['wh40k-story-editor'];
         if (options?.hash?.button) classes.push('wh40k-story-editor--button');
         return new Handlebars.SafeString(
-            `<div class="${classes.join(' ')}" data-editor-target="${Handlebars.escapeExpression(String(target ?? ''))}">${String(value ?? '')}</div>`,
+            `<div class="${classes.join(' ')}" data-editor-target="${Handlebars.escapeExpression(unknownToStr(target ?? ''))}">${unknownToStr(
+                value ?? '',
+            )}</div>`,
         );
     });
     Handlebars.registerHelper('localize', (key: string, options?: { hash?: Record<string, unknown> }) => {

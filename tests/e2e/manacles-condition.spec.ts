@@ -23,20 +23,20 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create unavailable' };
+        const ActorCls = g.Actor;
+        if (ActorCls?.create == null) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create unavailable' };
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'manacles-probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e' },
             });
         } catch (err) {
-            return { setupOk: false, aeFound: false, effectCount: 0, error: String((err as Error)?.message ?? err) };
+            return { setupOk: false, aeFound: false, effectCount: 0, error: String((err as Error).message) };
         }
-        if (!actor) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create returned null' };
+        if (actor == null) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create returned null' };
 
         // Apply the Manacled ActiveEffect directly. This mirrors what
         // `applyManaclesCondition` does at runtime; using the raw API
@@ -55,7 +55,7 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
                 },
             ]);
         } catch (err) {
-            return { setupOk: false, aeFound: false, effectCount: 0, error: `AE create failed: ${String((err as Error)?.message ?? err)}` };
+            return { setupOk: false, aeFound: false, effectCount: 0, error: `AE create failed: ${(err as Error).message}` };
         }
 
         await actor.sheet.render(true);

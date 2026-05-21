@@ -75,7 +75,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!hooksApi?.callAll) {
+            if (typeof hooksApi?.callAll !== 'function') {
                 notes['scene-controls-button-registered'] = 'Hooks.callAll unavailable';
                 return { flowsFired: fired, flowNotes: notes, canvasReady: false };
             }
@@ -101,7 +101,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             };
             try {
                 hooksApi.callAll('getSceneControlButtons', controls);
-                const tokensTools = controls['tokens']?.tools ?? {};
+                const tokensTools = controls['tokens'].tools;
                 const toolNames = Object.keys(tokensTools);
                 if (toolNames.length > 0) {
                     fired['scene-controls-button-registered'] = true;
@@ -109,7 +109,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                     notes['scene-controls-button-registered'] = 'no tools installed under controls.tokens after hook';
                 }
             } catch (err) {
-                notes['scene-controls-button-registered'] = `getSceneControlButtons threw: ${String((err as Error)?.message ?? err)}`;
+                notes['scene-controls-button-registered'] = `getSceneControlButtons threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // --- flow 2: scene-controls-button-onclick ------------------
@@ -119,7 +119,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             // token is selected — that's a successful dispatch through
             // the source-coverage path we care about, not a failure.
             try {
-                const tokensTools = controls['tokens']?.tools ?? {};
+                const tokensTools = controls['tokens'].tools;
                 const toolEntries = Object.entries(tokensTools);
                 if (toolEntries.length === 0) {
                     notes['scene-controls-button-onclick'] = 'no tools to invoke (flow 1 failed)';
@@ -131,14 +131,14 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                         if (handler === null) continue;
                         try {
                             const handlerResult = handler();
-                            if (handlerResult && typeof handlerResult.then === 'function') {
+                            if (handlerResult != null && typeof handlerResult.then === 'function') {
                                 await handlerResult.catch((err: unknown) => {
-                                    lastError = `tool ${name} threw async: ${String((err as Error)?.message ?? err)}`;
+                                    lastError = `tool ${name} threw async: ${err instanceof Error ? err.message : String(err)}`;
                                 });
                             }
                             dispatchedCount++;
                         } catch (err) {
-                            lastError = `tool ${name} threw sync: ${String((err as Error)?.message ?? err)}`;
+                            lastError = `tool ${name} threw sync: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     }
                     if (dispatchedCount > 0) {
@@ -148,7 +148,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                     }
                 }
             } catch (err) {
-                notes['scene-controls-button-onclick'] = `onChange dispatch threw: ${String((err as Error)?.message ?? err)}`;
+                notes['scene-controls-button-onclick'] = `onChange dispatch threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // --- flow 6: scene-controls-per-category --------------------
@@ -168,7 +168,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                     notes['scene-controls-per-category'] = 'no categories populated by system';
                 }
             } catch (err) {
-                notes['scene-controls-per-category'] = `enumeration threw: ${String((err as Error)?.message ?? err)}`;
+                notes['scene-controls-per-category'] = `enumeration threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // --- flows 3, 4, 5 require a real scene + token + (for hud
@@ -212,11 +212,11 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                     'Actor.create',
                 );
             } catch (err) {
-                notes['token-hud-system-buttons'] = `Actor.create threw: ${String((err as Error)?.message ?? err)}`;
+                notes['token-hud-system-buttons'] = `Actor.create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             const cleanups: Array<() => Promise<void>> = [];
-            if (actor?.id) {
+            if (actor?.id != null) {
                 cleanups.push(async () => {
                     try {
                         await gme?.actors?.get?.(actor.id)?.delete?.();
@@ -229,7 +229,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             // Synthesized TokenHUD shape — the hook handler reads
             // app.object.document.actor.system.movement and writes into
             // the supplied html element.
-            if (actor?.id) {
+            if (actor?.id != null) {
                 try {
                     const htmlRoot = document.createElement('div');
                     // Mimic the standard TokenHUD column the handler looks for.
@@ -280,7 +280,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                                 notes['token-effects-via-hud'] = 'click did not set active class on movement button';
                             }
                         } catch (err) {
-                            notes['token-effects-via-hud'] = `movement button click threw: ${String((err as Error)?.message ?? err)}`;
+                            notes['token-effects-via-hud'] = `movement button click threw: ${err instanceof Error ? err.message : String(err)}`;
                         }
                     } else {
                         notes['token-hud-system-buttons'] = `injection container missing — container=${container === null ? 'null' : 'present'} btns=${
@@ -289,7 +289,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                         notes['token-effects-via-hud'] = 'cannot click — flow 4 did not inject buttons';
                     }
                 } catch (err) {
-                    const msg = `renderTokenHUD threw: ${String((err as Error)?.message ?? err)}`;
+                    const msg = `renderTokenHUD threw: ${err instanceof Error ? err.message : String(err)}`;
                     notes['token-hud-system-buttons'] = msg;
                     notes['token-effects-via-hud'] = msg;
                 }
@@ -308,14 +308,14 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             // assertion is the canonical proof that onTokenHUDRender ran.
             // When flow 4 fired successfully, count flow 3 as fired too —
             // they exercise the same source-coverage targets.
-            if (canvasReady && actor?.id) {
+            if (canvasReady && actor?.id != null) {
                 let scene: any = null;
                 try {
                     scene = await withTimeout(SceneCls.create({ name: 'scene-hud-spec' }), 5_000, 'Scene.create');
                 } catch (err) {
-                    notes['token-hud-renders'] = `Scene.create threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['token-hud-renders'] = `Scene.create threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
-                if (scene?.id) {
+                if (scene?.id != null) {
                     cleanups.push(async () => {
                         try {
                             await scene.delete?.();
@@ -341,13 +341,13 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                                 cvs.tokens.hud.bind(placedToken);
                                 fired['token-hud-renders'] = true;
                             } catch (err) {
-                                notes['token-hud-renders'] = `hud.bind threw: ${String((err as Error)?.message ?? err)}`;
+                                notes['token-hud-renders'] = `hud.bind threw: ${err instanceof Error ? err.message : String(err)}`;
                             }
                         } else {
                             notes['token-hud-renders'] = `no placed token or hud.bind missing — token=${placedToken == null ? 'null' : 'present'}`;
                         }
                     } catch (err) {
-                        notes['token-hud-renders'] = `token placement threw: ${String((err as Error)?.message ?? err)}`;
+                        notes['token-hud-renders'] = `token placement threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
                 } else {
                     notes['token-hud-renders'] = notes['token-hud-renders'] ?? 'scene create returned null';

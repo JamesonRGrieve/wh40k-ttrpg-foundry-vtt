@@ -19,12 +19,12 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, error: 'Actor.create unavailable' };
+        const ActorCls = g.Actor;
+        if (ActorCls?.create == null) return { setupOk: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'fanatic-probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e', fate: { max: 3, value: 3 } },
@@ -37,9 +37,9 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
                 ],
             });
         } catch (err) {
-            return { setupOk: false, error: String((err as Error)?.message ?? err) };
+            return { setupOk: false, error: (err as Error).message };
         }
-        if (!actor) return { setupOk: false, error: 'Actor.create returned null' };
+        if (actor == null) return { setupOk: false, error: 'Actor.create returned null' };
 
         const fateBefore = actor.system?.fate?.value ?? 0;
 
@@ -70,7 +70,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
 
         const fateAfter = actor.system?.fate?.value ?? 0;
         const effects: Array<{ flags?: { wh40k?: { source?: string } } }> = Array.from(actor.effects ?? []);
-        const fanaticEffect = effects.find((e) => e?.flags?.wh40k?.source === 'fanatic-death-to-oppose');
+        const fanaticEffect = effects.find((e) => e.flags?.wh40k?.source === 'fanatic-death-to-oppose');
 
         return {
             setupOk: true,

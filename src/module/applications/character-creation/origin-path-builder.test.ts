@@ -1156,13 +1156,9 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
                     const parts = path.split('.').slice(1); // drop leading "system"
                     let cursor: Record<string, unknown> = system as unknown as Record<string, unknown>;
                     for (let i = 0; i < parts.length - 1; i++) {
-                        const seg = parts[i];
-                        if (seg === undefined) throw new Error(`Unexpected undefined path segment at index ${i} for path '${path}'.`);
-                        cursor = cursor[seg] as Record<string, unknown>;
+                        cursor = cursor[parts[i]!] as Record<string, unknown>;
                     }
-                    const tail = parts[parts.length - 1];
-                    if (tail === undefined) throw new Error(`Empty path: '${path}'.`);
-                    cursor[tail] = value;
+                    cursor[parts[parts.length - 1]!] = value;
                 }
                 return actor;
             }),

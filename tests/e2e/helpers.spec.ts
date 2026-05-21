@@ -38,7 +38,9 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const pageErrors: string[] = [];
-        const listener = (err: Error) => pageErrors.push(err.message);
+        const listener = (err: Error): void => {
+            pageErrors.push(err.message);
+        };
         page.on('pageerror', listener);
 
         try {
@@ -78,7 +80,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         const dh2Match = parts[0] === parts[1];
                         record('handlebars-themeClassFor-helper', allPrefixed && dh2Match, `out=${out}`);
                     } catch (err) {
-                        record('handlebars-themeClassFor-helper', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('handlebars-themeClassFor-helper', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 2. {{#select 'b'}} block helper — should mark <option value="b"> as selected.
@@ -89,7 +91,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         const bSelected = /value="b"[^>]*\sselected/.test(out);
                         record('handlebars-select-block-helper', !aSelected && bSelected, `out=${out}`);
                     } catch (err) {
-                        record('handlebars-select-block-helper', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('handlebars-select-block-helper', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 3. concat — string concatenation with options-arg trim.
@@ -98,7 +100,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         const out = tpl({});
                         record('handlebars-concat-helper', out === 'abc', `out=${out}`);
                     } catch (err) {
-                        record('handlebars-concat-helper', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('handlebars-concat-helper', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 4. dhlog — must not throw; renders nothing visible.
@@ -109,7 +111,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         // care about is that the helper does not crash the render.
                         record('handlebars-dhlog-helper', out === 'prepost' || out.startsWith('pre'), `out=${out}`);
                     } catch (err) {
-                        record('handlebars-dhlog-helper', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('handlebars-dhlog-helper', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 5. isPsychicAttack — a power without subtype 'Attack' returns false.
@@ -121,7 +123,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         });
                         record('handlebars-isPsychicAttack', out === 'false|true', `out=${out}`);
                     } catch (err) {
-                        record('handlebars-isPsychicAttack', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('handlebars-isPsychicAttack', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 6. uuid-name — resolves a real DH2 talent UUID to its display name.
@@ -134,7 +136,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         const looksLikeName = out.length > 0 && !out.includes('Compendium.');
                         record('handlebars-uuid-name', looksLikeName || out === '', `out="${out}" expected~${talentNameLower}`);
                     } catch (err) {
-                        record('handlebars-uuid-name', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('handlebars-uuid-name', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 7. uuid-expand — replaces {{Compendium.…}} tokens in freeform text.
@@ -148,7 +150,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         const surroundOk = out.startsWith('prefix ') && out.endsWith(' suffix');
                         record('handlebars-uuid-expand', surroundOk, `out=${out}`);
                     } catch (err) {
-                        record('handlebars-uuid-expand', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('handlebars-uuid-expand', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 8. t(...) i18n wrapper — must return a string and resolve a known
@@ -172,7 +174,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                             record('i18n-t-wrapper', ok, `localized="${localized}"`);
                         }
                     } catch (err) {
-                        record('i18n-t-wrapper', false, `import/call threw: ${String((err as Error)?.message ?? err)}`);
+                        record('i18n-t-wrapper', false, `import/call threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 9. @UUID enricher — Foundry's native enricher resolves a Compendium
@@ -191,7 +193,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                             record('enricher-@UUID-resolves', hasContentLink, `out=${out.slice(0, 200)}`);
                         }
                     } catch (err) {
-                        record('enricher-@UUID-resolves', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        record('enricher-@UUID-resolves', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 10. skill-uuid-helper — drives `parseSkillName` and
@@ -211,7 +213,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                             `parse('Acrobatics (Tumbling)')=${JSON.stringify(parsed)} parse('Awareness')=${JSON.stringify(parsedBare)}`,
                         );
                     } catch (err) {
-                        record('skill-uuid-helper-parseSkillName', false, `parseSkillName threw: ${String((err as Error)?.message ?? err)}`);
+                        record('skill-uuid-helper-parseSkillName', false, `parseSkillName threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     try {
@@ -229,7 +231,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                             `findSkillUuid('Awareness')=${String(result)}`,
                         );
                     } catch (err) {
-                        record('skill-uuid-helper-findSkillUuid', false, `findSkillUuid threw: ${String((err as Error)?.message ?? err)}`);
+                        record('skill-uuid-helper-findSkillUuid', false, `findSkillUuid threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     // 11. helpers/effects — `summarizeChange` formats a raw
@@ -242,7 +244,7 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         const ok = typeof summary?.label === 'string' && summary.label.length > 0 && typeof summary.value === 'string';
                         record('helpers-effects-summarizeChange', Boolean(ok), `summary=${JSON.stringify(summary)}`);
                     } catch (err) {
-                        record('helpers-effects-summarizeChange', false, `summarizeChange threw: ${String((err as Error)?.message ?? err)}`);
+                        record('helpers-effects-summarizeChange', false, `summarizeChange threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
 
                     return results;

@@ -82,12 +82,12 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const ChatMessage = g.ChatMessage;
-            const CONFIG = g.CONFIG;
-            const Hooks = g.Hooks;
-            const game = g.game;
-            const Roll = g.Roll;
+            const ActorCls = g.Actor;
+            const ChatMessageCls = g.ChatMessage;
+            const FoundryConfig = g.CONFIG;
+            const HooksCls = g.Hooks;
+            const foundryGame = g.game;
+            const RollCls = g.Roll;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
@@ -125,7 +125,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 try {
                     const actor = (await withTimeout(
-                        Actor.create({
+                        ActorCls.create({
                             name: 'documents-extra-proxy-dh2',
                             type: 'dh2-character',
                             system: { gameSystem: 'dh2e' },
@@ -136,7 +136,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                     if (actor?.id) {
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(actor.id)?.delete?.();
+                                await foundryGame?.actors?.get?.(actor.id)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
@@ -167,7 +167,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * before the proxy is reached.
                  * ============================================================ */
                 try {
-                    const proxy = (CONFIG?.Actor as any)?.documentClass;
+                    const proxy = FoundryConfig?.Actor?.documentClass;
                     if (typeof proxy !== 'function') {
                         notes['actor-proxy-falls-back-on-unknown-type'] = 'CONFIG.Actor.documentClass is not a constructor';
                     } else {
@@ -217,8 +217,8 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * proxy depends on.
                  * ============================================================ */
                 try {
-                    const proxy = (CONFIG?.Actor as any)?.documentClass;
-                    const dc = (CONFIG?.Actor as any)?.documentClasses;
+                    const proxy = FoundryConfig?.Actor?.documentClass;
+                    const dc = FoundryConfig?.Actor?.documentClasses;
                     const expectedKeys = ['dh2-character', 'dh1-character', 'rt-character', 'bc-character', 'ow-character', 'dw-character', 'im-character'];
                     const missing = expectedKeys.filter((k) => typeof dc?.[k] !== 'function');
                     if (typeof proxy === 'function' && missing.length === 0) {
@@ -239,7 +239,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 let host: any = null;
                 try {
                     host = (await withTimeout(
-                        Actor.create({
+                        ActorCls.create({
                             name: 'documents-extra-container-host',
                             type: 'dh2-character',
                             system: { gameSystem: 'dh2e' },
@@ -250,7 +250,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                     if (host?.id) {
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(host.id)?.delete?.();
+                                await foundryGame?.actors?.get?.(host.id)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
@@ -279,7 +279,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                     });
                 }
 
-                const getHost = (): any => (host?.id !== undefined ? game?.actors?.get?.(host.id) : null);
+                const getHost = (): any => (host?.id !== undefined ? foundryGame?.actors?.get?.(host.id) : null);
 
                 /* ============================================================
                  * Flow 4: item-container-isNestedItem-false-on-owned
@@ -422,7 +422,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 try {
                     if (backpackItem) {
                         const before = backpackItem.getNested?.() ?? [];
-                        const firstId = (before[0] as any)?._id;
+                        const firstId = before[0]?._id;
                         if (typeof firstId === 'string' && firstId.length > 0) {
                             await withTimeout(
                                 backpackItem.updateNestedDocuments?.([{ _id: firstId, addedField: 'merged-value' }]),
@@ -455,7 +455,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 try {
                     if (backpackItem) {
                         const before = backpackItem.getNested?.() ?? [];
-                        const firstId = (before[0] as any)?._id;
+                        const firstId = before[0]?._id;
                         if (typeof firstId === 'string' && firstId.length > 0) {
                             await withTimeout(backpackItem.deleteNestedDocuments?.([firstId]), 5_000, 'deleteNestedDocuments');
                             const after = backpackItem.getNested?.() ?? [];
@@ -553,7 +553,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * an instance of our subclass.
                  * ============================================================ */
                 try {
-                    const cls = (CONFIG?.ChatMessage as any)?.documentClass;
+                    const cls = FoundryConfig?.ChatMessage?.documentClass;
                     const name = String(cls?.name ?? '');
                     if (typeof cls === 'function' && name === 'ChatMessageWH40K') {
                         fired['chat-message-class-registered'] = true;
@@ -575,11 +575,11 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * assert `isItemCard === false` / `itemUuid === null`.
                  * ============================================================ */
                 try {
-                    if (typeof ChatMessage?.create !== 'function') {
+                    if (typeof ChatMessageCls?.create !== 'function') {
                         notes['chat-message-getters'] = 'ChatMessage.create unavailable';
                     } else {
                         const withFlags = (await withTimeout(
-                            ChatMessage.create({
+                            ChatMessageCls.create({
                                 content: 'documents-extra-with-flags',
                                 flags: {
                                     'wh40k-rpg': {
@@ -594,17 +594,21 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         if (withFlags?.id) {
                             cleanups.push(async () => {
                                 try {
-                                    await game?.messages?.get?.(withFlags.id)?.delete?.();
+                                    await foundryGame?.messages?.get?.(withFlags.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
                             });
                         }
-                        const plain = (await withTimeout(ChatMessage.create({ content: 'documents-extra-plain' }), 5_000, 'ChatMessage.create (plain)')) as any;
+                        const plain = (await withTimeout(
+                            ChatMessageCls.create({ content: 'documents-extra-plain' }),
+                            5_000,
+                            'ChatMessage.create (plain)',
+                        )) as any;
                         if (plain?.id) {
                             cleanups.push(async () => {
                                 try {
-                                    await game?.messages?.get?.(plain.id)?.delete?.();
+                                    await foundryGame?.messages?.get?.(plain.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -644,15 +648,15 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * arithmetic over a real Foundry Roll.
                  * ============================================================ */
                 try {
-                    if (typeof Roll !== 'function' || typeof ChatMessage?.create !== 'function') {
+                    if (typeof RollCls !== 'function' || typeof ChatMessageCls?.create !== 'function') {
                         notes['chat-message-calculateDegrees-real-roll'] = 'Roll or ChatMessage.create unavailable';
                     } else {
                         // Construct a Roll for a deterministic constant 35;
                         // evaluating yields total=35 reliably without RNG.
-                        const roll = new Roll('35');
+                        const roll = new RollCls('35');
                         await withTimeout(roll.evaluate?.() ?? Promise.resolve(roll), 5_000, 'roll.evaluate');
                         const msg = (await withTimeout(
-                            ChatMessage.create({
+                            ChatMessageCls.create({
                                 content: 'documents-extra-degrees',
                                 rolls: [roll],
                                 flags: { 'wh40k-rpg': { target: 50 } },
@@ -663,7 +667,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         if (msg?.id) {
                             cleanups.push(async () => {
                                 try {
-                                    await game?.messages?.get?.(msg.id)?.delete?.();
+                                    await foundryGame?.messages?.get?.(msg.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -693,19 +697,19 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * taken.
                  * ============================================================ */
                 try {
-                    const cls = (CONFIG?.ChatMessage as any)?.documentClass;
+                    const cls = FoundryConfig?.ChatMessage?.documentClass;
                     if (typeof cls?.onChatCardAction !== 'function') {
                         notes['chat-message-onChatCardAction-routes'] = 'onChatCardAction static is not a function';
                     } else {
                         const routerMsg = (await withTimeout(
-                            ChatMessage.create({ content: 'documents-extra-router' }),
+                            ChatMessageCls.create({ content: 'documents-extra-router' }),
                             5_000,
                             'ChatMessage.create (router)',
                         )) as any;
                         if (routerMsg?.id) {
                             cleanups.push(async () => {
                                 try {
-                                    await game?.messages?.get?.(routerMsg.id)?.delete?.();
+                                    await foundryGame?.messages?.get?.(routerMsg.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -763,7 +767,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * stamped while the pre-existing one was preserved.
                  * ============================================================ */
                 try {
-                    const cls = (CONFIG?.ChatMessage as any)?.documentClass;
+                    const cls = FoundryConfig?.ChatMessage?.documentClass;
                     if (typeof cls?.enrichActionButtons !== 'function') {
                         notes['chat-message-enrichActionButtons-stamps-messageId'] = 'enrichActionButtons static is not a function';
                     } else {
@@ -824,10 +828,10 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                     ];
                     const missing = expectedExports.filter((k) => typeof (mod as any)[k] !== 'function');
 
-                    const chatMatch = (CONFIG?.ChatMessage as any)?.documentClass === (mod as any)?.ChatMessageWH40K;
-                    const tokenMatch = (CONFIG?.Token as any)?.documentClass === (mod as any)?.TokenDocumentWH40K;
-                    const aeMatch = (CONFIG?.ActiveEffect as any)?.documentClass === (mod as any)?.WH40KActiveEffect;
-                    const proxyMatch = (CONFIG?.Actor as any)?.documentClass === (proxyMod as any)?.WH40KActorProxy;
+                    const chatMatch = FoundryConfig?.ChatMessage?.documentClass === (mod as any)?.ChatMessageWH40K;
+                    const tokenMatch = FoundryConfig?.Token?.documentClass === (mod as any)?.TokenDocumentWH40K;
+                    const aeMatch = FoundryConfig?.ActiveEffect?.documentClass === (mod as any)?.WH40KActiveEffect;
+                    const proxyMatch = FoundryConfig?.Actor?.documentClass === (proxyMod as any)?.WH40KActorProxy;
 
                     if (missing.length === 0 && chatMatch && tokenMatch && aeMatch && proxyMatch) {
                         fired['module-exports-match-config-documentClass'] = true;
@@ -859,7 +863,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
             // Suppress unused-variable lint on the destructured Foundry
             // hook reference — pulled into local scope only to verify
             // the global is available before the chat-message flows run.
-            void Hooks;
+            void HooksCls;
 
             return { flowsFired: fired, flowNotes: notes };
             /* eslint-enable @typescript-eslint/no-explicit-any */

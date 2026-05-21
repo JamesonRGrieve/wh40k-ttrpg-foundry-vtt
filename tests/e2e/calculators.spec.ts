@@ -59,14 +59,14 @@ interface FlowResult {
  */
 async function createProbeActor(page: Page): Promise<{ id: string | null; error: string | null }> {
     return page.evaluate(async () => {
-        const Actor = (
+        const ActorCls = (
             globalThis as unknown as {
                 Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
             }
         ).Actor;
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name: 'calc-spec-probe',
                 type: 'bc-character',
                 system: {
@@ -87,19 +87,19 @@ async function createProbeActor(page: Page): Promise<{ id: string | null; error:
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
 }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const game = (
+        const gameObj = (
             globalThis as unknown as {
                 game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
             }
         ).game;
-        await game?.actors?.get?.(id)?.delete?.();
+        await gameObj?.actors?.get?.(id)?.delete?.();
     }, actorId);
 }
 
@@ -115,8 +115,8 @@ async function setArmourItems(
     items: Array<{ name: string; equipped: boolean; armourPoints: Record<string, number> }>,
 ): Promise<{ ok: boolean; error: string | null }> {
     return page.evaluate(
-        async ({ actorId, items }) => {
-            const game = (
+        async ({ actorId: aid, items: armourItems }) => {
+            const gameObj = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -131,17 +131,17 @@ async function setArmourItems(
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameObj?.actors?.get?.(aid);
             if (!actor) return { ok: false, error: 'actor missing' };
             try {
                 const existing: string[] = (actor.items?.filter?.((i) => i.type === 'armour') ?? []).map((i) => i.id ?? '').filter((id) => id !== '');
                 if (existing.length > 0 && actor.deleteEmbeddedDocuments) {
                     await actor.deleteEmbeddedDocuments('Item', existing);
                 }
-                if (items.length > 0 && actor.createEmbeddedDocuments) {
+                if (armourItems.length > 0 && actor.createEmbeddedDocuments) {
                     await actor.createEmbeddedDocuments(
                         'Item',
-                        items.map((it) => ({
+                        armourItems.map((it) => ({
                             name: it.name,
                             type: 'armour',
                             system: {
@@ -153,7 +153,7 @@ async function setArmourItems(
                 }
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: String((err as Error)?.message ?? err) };
+                return { ok: false, error: err instanceof Error ? err.message : String(err) };
             }
         },
         { actorId, items },
@@ -168,7 +168,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(
-            async ({ urls, actorId }) => {
+            async ({ urls, actorId: aid }) => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- in-page probe: dist modules and Foundry globals are untyped at the evaluate boundary */
                 const g = globalThis as any;
                 const out: Array<{ name: string; passed: boolean; detail: string | null }> = [];
@@ -184,28 +184,28 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                 try {
                     armourMod = await import(urls.armour);
                 } catch (err) {
-                    record('armour-calculator-aggregates-locations', false, `armour import failed: ${String((err as Error)?.message ?? err)}`);
-                    record('armour-calculator-equipped-only', false, `armour import failed: ${String((err as Error)?.message ?? err)}`);
+                    record('armour-calculator-aggregates-locations', false, `armour import failed: ${err instanceof Error ? err.message : String(err)}`);
+                    record('armour-calculator-equipped-only', false, `armour import failed: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 try {
                     rangeMod = await import(urls.range);
                 } catch (err) {
-                    record('range-calculator-band', false, `range import failed: ${String((err as Error)?.message ?? err)}`);
-                    record('range-calculator-extreme', false, `range import failed: ${String((err as Error)?.message ?? err)}`);
+                    record('range-calculator-band', false, `range import failed: ${err instanceof Error ? err.message : String(err)}`);
+                    record('range-calculator-extreme', false, `range import failed: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 try {
                     formulaMod = await import(urls.formula);
                 } catch (err) {
-                    record('formula-evaluator-evaluates-string', false, `formula import failed: ${String((err as Error)?.message ?? err)}`);
-                    record('formula-evaluator-with-actor-data', false, `formula import failed: ${String((err as Error)?.message ?? err)}`);
+                    record('formula-evaluator-evaluates-string', false, `formula import failed: ${err instanceof Error ? err.message : String(err)}`);
+                    record('formula-evaluator-with-actor-data', false, `formula import failed: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 try {
                     subtletyMod = await import(urls.subtlety);
                 } catch (err) {
-                    record('subtlety-clamp-edge-cases', false, `subtlety import failed: ${String((err as Error)?.message ?? err)}`);
+                    record('subtlety-clamp-edge-cases', false, `subtlety import failed: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
-                const actor = g.game?.actors?.get?.(actorId);
+                const actor = g.game?.actors?.get?.(aid);
 
                 // ── 1. armour-calculator-aggregates-locations ───────────
                 // Setup (done outside this evaluate by the test harness):
@@ -234,7 +234,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                             ok ? null : `head=${JSON.stringify(head)} body=${JSON.stringify(body)} leftArm=${JSON.stringify(leftArm)}`,
                         );
                     } catch (err) {
-                        record('armour-calculator-aggregates-locations', false, `computeArmour threw: ${String((err as Error)?.message ?? err)}`);
+                        record('armour-calculator-aggregates-locations', false, `computeArmour threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 } else if (armourMod != null) {
                     record(
@@ -255,7 +255,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                         const ok = head?.value === 4 && body?.value === 0;
                         record('armour-calculator-equipped-only', ok, ok ? null : `head.value=${head?.value} body.value=${body?.value} (expected 4 / 0)`);
                     } catch (err) {
-                        record('armour-calculator-equipped-only', false, `computeArmour threw: ${String((err as Error)?.message ?? err)}`);
+                        record('armour-calculator-equipped-only', false, `computeArmour threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
 
@@ -297,7 +297,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                                   )} melta.isMelta=${meltaResult?.isMeltaRange}`,
                         );
                     } catch (err) {
-                        record('range-calculator-band', false, `range band threw: ${String((err as Error)?.message ?? err)}`);
+                        record('range-calculator-band', false, `range band threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
 
@@ -342,7 +342,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                                   )}`,
                         );
                     } catch (err) {
-                        record('range-calculator-extreme', false, `range extreme threw: ${String((err as Error)?.message ?? err)}`);
+                        record('range-calculator-extreme', false, `range extreme threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
 
@@ -390,7 +390,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                                 : `tbMult=${tbMult} tbMultPlain=${tbMultPlain} tbMultNone=${tbMultNone} dice=${dice} diceNone=${diceNone} descW=${descWounds} descF=${descFate} descFP=${descFatePlain} fate=${fateVal} ew=${emptyWounds} ef=${emptyFate} invF=${invalidFate}`,
                         );
                     } catch (err) {
-                        record('formula-evaluator-evaluates-string', false, `formula pure-helpers threw: ${String((err as Error)?.message ?? err)}`);
+                        record('formula-evaluator-evaluates-string', false, `formula pure-helpers threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
 
@@ -412,7 +412,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                         const ok = wounds === 13;
                         record('formula-evaluator-with-actor-data', ok, ok ? null : `evaluateWoundsFormula('2xTB+5') = ${wounds} (expected 13)`);
                     } catch (err) {
-                        record('formula-evaluator-with-actor-data', false, `evaluateWoundsFormula threw: ${String((err as Error)?.message ?? err)}`);
+                        record('formula-evaluator-with-actor-data', false, `evaluateWoundsFormula threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 } else if (formulaMod != null) {
                     record('formula-evaluator-with-actor-data', false, `missing evaluateWoundsFormula or actor (actor=${actor != null})`);
@@ -455,7 +455,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                                 : `zero=${zeroDelta} pos=${positiveDelta} negCap=${negativeCap} clamped=${clamped} exact=${exact} truncD=${truncDelta} truncC=${truncCap} negCap2=${negCap} manual=${isManual} inquest=${isInquest} uuid=${isUuid}`,
                         );
                     } catch (err) {
-                        record('subtlety-clamp-edge-cases', false, `clampSubtletyLoss threw: ${String((err as Error)?.message ?? err)}`);
+                        record('subtlety-clamp-edge-cases', false, `clampSubtletyLoss threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
 

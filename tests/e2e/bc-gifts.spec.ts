@@ -42,8 +42,8 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HandlebarsInstance = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HandlebarsInstance?.compile !== 'function') {
                         return {
                             rendered,
                             giftEntries,
@@ -56,7 +56,7 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsInstance.compile(src);
                     const html = tpl({
                         giftsPanel: {
                             currentAlignment: 'khorne',

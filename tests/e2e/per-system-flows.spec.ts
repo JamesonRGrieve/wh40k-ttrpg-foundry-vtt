@@ -65,7 +65,7 @@ async function createActor(page: Page, label: string, actorType: string, gameSys
                 const actor = await ActorCtor.create({ name, type, system: { gameSystem: sys } });
                 return { id: actor?.id ?? null, createError: actor ? null : 'Actor.create returned null' };
             } catch (err) {
-                return { id: null, createError: String((err as Error)?.message ?? err) };
+                return { id: null, createError: String(err instanceof Error ? err.message : String(err)) };
             }
         },
         { name: label, type: actorType, sys: gameSystem },
@@ -93,7 +93,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'bc-infamy-probe', 'bc-character', 'bc');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -113,19 +113,19 @@ test.describe.serial('per-system flows (Tier B)', () => {
             try {
                 await actor.update?.({ 'system.chaosAlignment': 'khorne' });
             } catch (err) {
-                return { error: `set chaosAlignment=khorne: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set chaosAlignment=khorne: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             const afterKhorne = foundryGame?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
             try {
                 await actor.update?.({ 'system.chaosAlignment': 'tzeentch' });
             } catch (err) {
-                return { error: `set chaosAlignment=tzeentch: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set chaosAlignment=tzeentch: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             const afterTzeentch = foundryGame?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
             return { initial, afterKhorne, afterTzeentch, error: null };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (result.initial !== 'unaligned') failures.push(`initial chaosAlignment was ${result.initial}, expected 'unaligned'`);
             if (result.afterKhorne !== 'khorne') failures.push(`chaosAlignment after set was ${result.afterKhorne}, expected 'khorne'`);
@@ -143,7 +143,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'dh1-corruption-insanity-probe', 'dh1-character', 'dh1e');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -162,13 +162,13 @@ test.describe.serial('per-system flows (Tier B)', () => {
             try {
                 await actor.update?.({ 'system.corruption': 8, 'system.insanity': 15 });
             } catch (err) {
-                return { error: `set corruption+insanity: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set corruption+insanity: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system;
             return { afterCorruption: after?.corruption ?? null, afterInsanity: after?.insanity ?? null, error: null };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (result.afterCorruption !== 8) failures.push(`corruption after set was ${result.afterCorruption}, expected 8`);
             if (result.afterInsanity !== 15) failures.push(`insanity after set was ${result.afterInsanity}, expected 15`);
@@ -188,7 +188,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'dw-renown-chapter-probe', 'dw-character', 'dw');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -212,13 +212,13 @@ test.describe.serial('per-system flows (Tier B)', () => {
                     'system.originPath.chapterUuid': 'Compendium.wh40k-rpg.dw-core-chapters.Item.placeholder',
                 });
             } catch (err) {
-                return { error: `set chapter: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set chapter: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system?.originPath;
             return { afterChapter: after?.chapter ?? null, afterChapterUuid: after?.chapterUuid ?? null, error: null };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (result.afterChapter !== 'Ultramarines') failures.push(`chapter after set was ${result.afterChapter}, expected 'Ultramarines'`);
             if (result.afterChapterUuid !== 'Compendium.wh40k-rpg.dw-core-chapters.Item.placeholder')
@@ -240,7 +240,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'ow-comrades-regiment-probe', 'ow-character', 'ow');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -261,13 +261,13 @@ test.describe.serial('per-system flows (Tier B)', () => {
             try {
                 await actor.update?.({ 'system.originPath.regiment': 'Cadian Shock Troopers', 'system.originPath.speciality': 'Heavy Gunner' });
             } catch (err) {
-                return { error: `set regiment+speciality: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set regiment+speciality: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system?.originPath;
             return { afterRegiment: after?.regiment ?? null, afterSpeciality: after?.speciality ?? null, error: null };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (result.afterRegiment !== 'Cadian Shock Troopers')
                 failures.push(`regiment after set was ${result.afterRegiment}, expected 'Cadian Shock Troopers'`);
@@ -289,7 +289,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'rt-profit-dynasty-probe', 'rt-character', 'rt');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -326,7 +326,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
                     'system.rogueTrader.endeavour.reward': 5,
                 });
             } catch (err) {
-                return { error: `set rogueTrader fields: ${String((err as Error)?.message ?? err)}` };
+                return { error: `set rogueTrader fields: ${String(err instanceof Error ? err.message : String(err))}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system?.rogueTrader;
             return {
@@ -341,7 +341,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
             };
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             if (result.pfCurrent !== 42) failures.push(`profitFactor.current was ${result.pfCurrent}, expected 42`);
             if (result.pfStarting !== 35) failures.push(`profitFactor.starting was ${result.pfStarting}, expected 35`);

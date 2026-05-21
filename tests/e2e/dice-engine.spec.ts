@@ -110,7 +110,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 d100Mod = await import(`${base}/module/dice/d100-roll.js`);
                 barrelMod = await import(`${base}/module/dice/_module.js`);
             } catch (err) {
-                for (const f of flows) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of flows) record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 return out;
             }
 
@@ -149,7 +149,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const ok = hasBasic && hasD100 && hasDialog;
                 record('dice-module-barrel-exports', ok, `BasicRollWH40K=${hasBasic} D100Roll=${hasD100} RollConfigurationDialog=${hasDialog}`);
             } catch (err) {
-                record('dice-module-barrel-exports', false, String((err as Error)?.message ?? err));
+                record('dice-module-barrel-exports', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: basic-roll-construct-formula-base ----
@@ -157,7 +157,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const f = BasicRollWH40K.constructFormula({});
                 record('basic-roll-construct-formula-base', f === '1d100', `formula=${String(f)}`);
             } catch (err) {
-                record('basic-roll-construct-formula-base', false, String((err as Error)?.message ?? err));
+                record('basic-roll-construct-formula-base', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: basic-roll-construct-formula-positive-mod ----
@@ -165,7 +165,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const f = BasicRollWH40K.constructFormula({ modifier: 5 });
                 record('basic-roll-construct-formula-positive-mod', typeof f === 'string' && f.includes('+ 5'), `formula=${String(f)}`);
             } catch (err) {
-                record('basic-roll-construct-formula-positive-mod', false, String((err as Error)?.message ?? err));
+                record('basic-roll-construct-formula-positive-mod', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: basic-roll-construct-formula-negative-mod ----
@@ -174,7 +174,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const ok = typeof f === 'string' && f.startsWith('2d10') && f.includes('- 3');
                 record('basic-roll-construct-formula-negative-mod', ok, `formula=${String(f)}`);
             } catch (err) {
-                record('basic-roll-construct-formula-negative-mod', false, String((err as Error)?.message ?? err));
+                record('basic-roll-construct-formula-negative-mod', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: basic-roll-evaluate-static-no-chat ----
@@ -190,7 +190,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     evaluated instanceof BasicRollWH40K;
                 record('basic-roll-evaluate-static-no-chat', ok, `total=${evaluated?.total} hasConfig=${evaluated?.configuration !== undefined}`);
             } catch (err) {
-                record('basic-roll-evaluate-static-no-chat', false, String((err as Error)?.message ?? err));
+                record('basic-roll-evaluate-static-no-chat', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: basic-roll-tojson-fromdata-roundtrip ----
@@ -212,7 +212,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     restoredConfig.flavor === 'roundtrip-probe';
                 record('basic-roll-tojson-fromdata-roundtrip', ok, `serialized=${JSON.stringify(serializedConfig)} restored=${JSON.stringify(restoredConfig)}`);
             } catch (err) {
-                record('basic-roll-tojson-fromdata-roundtrip', false, String((err as Error)?.message ?? err));
+                record('basic-roll-tojson-fromdata-roundtrip', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-construct-formula-ignores-modifier ----
@@ -222,7 +222,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const f = D100Roll.constructFormula({ modifier: 30, base: '3d6' });
                 record('d100-construct-formula-ignores-modifier', f === '1d100', `formula=${String(f)}`);
             } catch (err) {
-                record('d100-construct-formula-ignores-modifier', false, String((err as Error)?.message ?? err));
+                record('d100-construct-formula-ignores-modifier', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-target-getter ----
@@ -233,7 +233,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const defaultsToZero = noConfigRoll.target === 0;
                 record('d100-target-getter', withTarget && defaultsToZero, `target=${roll.target} default=${noConfigRoll.target}`);
             } catch (err) {
-                record('d100-target-getter', false, String((err as Error)?.message ?? err));
+                record('d100-target-getter', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-success-degrees-of-success ----
@@ -243,7 +243,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const ok = roll.isSuccess === true && roll.isFailure === false && roll.degreesOfSuccess === 4 && roll.degreesOfFailure === 0;
                 record('d100-success-degrees-of-success', ok, `isSuccess=${roll.isSuccess} dos=${roll.degreesOfSuccess} dof=${roll.degreesOfFailure}`);
             } catch (err) {
-                record('d100-success-degrees-of-success', false, String((err as Error)?.message ?? err));
+                record('d100-success-degrees-of-success', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-failure-degrees-of-failure ----
@@ -253,7 +253,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const ok = roll.isSuccess === false && roll.isFailure === true && roll.degreesOfFailure === 4 && roll.degreesOfSuccess === 0;
                 record('d100-failure-degrees-of-failure', ok, `isFailure=${roll.isFailure} dof=${roll.degreesOfFailure} dos=${roll.degreesOfSuccess}`);
             } catch (err) {
-                record('d100-failure-degrees-of-failure', false, String((err as Error)?.message ?? err));
+                record('d100-failure-degrees-of-failure', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-degrees-signed-and-absolute ----
@@ -269,7 +269,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     `success.degrees=${success.degrees} failure.degrees=${failure.degrees} abs=${failure.absoluteDegrees}`,
                 );
             } catch (err) {
-                record('d100-degrees-signed-and-absolute', false, String((err as Error)?.message ?? err));
+                record('d100-degrees-signed-and-absolute', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-critical-success ----
@@ -285,7 +285,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     `natural=${natural.isCriticalSuccess} byDos=${byDos.isCriticalSuccess} notCrit=${notCrit.isCriticalSuccess}`,
                 );
             } catch (err) {
-                record('d100-critical-success', false, String((err as Error)?.message ?? err));
+                record('d100-critical-success', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-critical-failure ----
@@ -301,7 +301,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     `natural=${natural.isCriticalFailure} byDof=${byDof.isCriticalFailure} notFumble=${notFumble.isCriticalFailure}`,
                 );
             } catch (err) {
-                record('d100-critical-failure', false, String((err as Error)?.message ?? err));
+                record('d100-critical-failure', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-doubles-righteous-fury ----
@@ -322,7 +322,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     `dblSucc=${doublesSuccess.isDoubles}/${doublesSuccess.triggersRighteousFury} dblFail.rf=${doublesFailure.triggersRighteousFury} notDbl=${notDoubles.isDoubles}`,
                 );
             } catch (err) {
-                record('d100-doubles-righteous-fury', false, String((err as Error)?.message ?? err));
+                record('d100-doubles-righteous-fury', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-evaluate-static-no-dialog ----
@@ -339,7 +339,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     evaluated.formula === '1d100';
                 record('d100-evaluate-static-no-dialog', ok, `total=${evaluated?.total} formula=${evaluated?.formula}`);
             } catch (err) {
-                record('d100-evaluate-static-no-dialog', false, String((err as Error)?.message ?? err));
+                record('d100-evaluate-static-no-dialog', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-get-tooltip-enhances ----
@@ -355,7 +355,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                     `len=${typeof html === 'string' ? html.length : 'n/a'} hasSummary=${typeof html === 'string' && html.includes('wh40k-dice-summary')}`,
                 );
             } catch (err) {
-                record('d100-get-tooltip-enhances', false, String((err as Error)?.message ?? err));
+                record('d100-get-tooltip-enhances', false, err instanceof Error ? err.message : String(err));
             }
 
             return out;

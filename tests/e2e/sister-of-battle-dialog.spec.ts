@@ -53,9 +53,11 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
                     const inst = new Cls();
                     try {
                         await inst.render(true);
-                        await new Promise((r) => setTimeout(r, 40));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 40);
+                        });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = err instanceof Error ? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -64,7 +66,7 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
                         hasCancelButton = inst.element.querySelector('[data-action="cancel"]') !== null;
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error };

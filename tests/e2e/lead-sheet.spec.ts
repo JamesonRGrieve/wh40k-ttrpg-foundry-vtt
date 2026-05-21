@@ -20,8 +20,8 @@ interface LeadProbeResult {
 
 async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
+    const listener = (pageErr: Error): void => {
+        pageErrors.push(pageErr.message);
     };
     page.on('pageerror', listener);
     try {
@@ -44,8 +44,8 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
                         notes: 'Follow up after the vox-window.',
                     },
                 });
-            } catch (err) {
-                return { created: false, rendered: false, createError: String((err as Error)?.message ?? err) };
+            } catch (createErr) {
+                return { created: false, rendered: false, createError: String((createErr as Error).message) };
             }
             if (!item) return { created: false, rendered: false, createError: 'Item.create returned null' };
 
@@ -58,8 +58,8 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
                     });
                     rendered = true;
                 }
-            } catch (err) {
-                return { created: true, rendered: false, createError: String((err as Error)?.message ?? err) };
+            } catch (renderErr) {
+                return { created: true, rendered: false, createError: String((renderErr as Error).message) };
             }
 
             // Leave the sheet open long enough for the screenshot caller to

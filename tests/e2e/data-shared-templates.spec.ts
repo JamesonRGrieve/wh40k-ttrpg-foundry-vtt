@@ -79,11 +79,11 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/data/shared`;
-            const loadModule = async (name: string): Promise<any | null> => {
+            const loadModule = async (name: string): Promise<any> => {
                 try {
                     return await import(`${base}/${name}.js`);
                 } catch (err) {
-                    return { __importError: String((err as Error)?.message ?? err) };
+                    return { __importError: err instanceof Error ? err.message : String(err) };
                 }
             };
             const guarded = (name: FlowName, fn: () => boolean | string): void => {
@@ -92,7 +92,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     if (typeof r === 'string') record(name, false, r);
                     else record(name, r, null);
                 } catch (err) {
-                    record(name, false, String((err as Error)?.message ?? err));
+                    record(name, false, err instanceof Error ? err.message : String(err));
                 }
             };
             const fail = (keys: readonly FlowName[], detail: string): void => {
@@ -104,7 +104,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             // (the synthetic subclass adds one extra slot on top of the
             // mixin's fields and we assert that slot round-trips alongside).
             const ff: any = (globalThis as any).foundry?.data?.fields;
-            if (!ff) {
+            if (ff == null) {
                 for (const k of [
                     'activation-schema-roundtrip',
                     'activation-derived-labels',
@@ -127,7 +127,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- _module.ts barrel ----------
             const barrel = await loadModule('_module');
-            if (barrel?.__importError) {
+            if (barrel?.__importError != null) {
                 record('module-barrel-exports', false, barrel.__importError);
             } else {
                 guarded('module-barrel-exports', () => {
@@ -150,7 +150,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- body-locations.ts (pure helpers) ----------
             const bodyLoc = await loadModule('body-locations');
-            if (bodyLoc?.__importError) {
+            if (bodyLoc?.__importError != null) {
                 record('body-locations-helpers', false, bodyLoc.__importError);
             } else {
                 guarded('body-locations-helpers', () => {
@@ -174,7 +174,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- origin-steps.ts (pure helpers) ----------
             const originSteps = await loadModule('origin-steps');
-            if (originSteps?.__importError) {
+            if (originSteps?.__importError != null) {
                 record('origin-steps-labels', false, originSteps.__importError);
             } else {
                 guarded('origin-steps-labels', () => {
@@ -198,9 +198,9 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- stat-fields.ts (pure builders) ----------
             const statFields = await loadModule('stat-fields');
-            if (statFields?.__importError) {
+            if (statFields?.__importError != null) {
                 record('stat-fields-builders', false, statFields.__importError);
-            } else if (ff) {
+            } else if (ff != null) {
                 guarded('stat-fields-builders', () => {
                     const pcChar = statFields.characteristicField('Weapon Skill', 'WS', { base: 0, total: 0, bonus: 0, advancement: true });
                     const npcChar = statFields.characteristicField('Weapon Skill', 'WS', { base: 30, total: 30, bonus: 3, advancement: false });
@@ -234,7 +234,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 });
             }
 
-            if (!ff) {
+            if (ff == null) {
                 return out;
             }
 
@@ -255,7 +255,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- activation-template.ts ----------
             const activationMod = await loadModule('activation-template');
-            if (activationMod?.__importError) {
+            if (activationMod?.__importError != null) {
                 fail(['activation-schema-roundtrip', 'activation-derived-labels', 'activation-uses-helpers'], activationMod.__importError);
             } else {
                 const ActivationTemplate = activationMod.default as Ctor;
@@ -400,7 +400,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- attack-template.ts ----------
             const attackMod = await loadModule('attack-template');
-            if (attackMod?.__importError) {
+            if (attackMod?.__importError != null) {
                 fail(['attack-schema-roundtrip', 'attack-derived-getters'], attackMod.__importError);
             } else {
                 const AttackTemplate = attackMod.default as Ctor;
@@ -507,7 +507,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- damage-template.ts ----------
             const damageMod = await loadModule('damage-template');
-            if (damageMod?.__importError) {
+            if (damageMod?.__importError != null) {
                 fail(['damage-schema-roundtrip', 'damage-derived-labels'], damageMod.__importError);
             } else {
                 const DamageTemplate = damageMod.default as Ctor;
@@ -595,7 +595,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- description-template.ts ----------
             const descMod = await loadModule('description-template');
-            if (descMod?.__importError) {
+            if (descMod?.__importError != null) {
                 fail(['description-schema-roundtrip', 'description-source-reference'], descMod.__importError);
             } else {
                 const DescriptionTemplate = descMod.default as Ctor;
@@ -680,7 +680,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- equippable-template.ts ----------
             const equipMod = await loadModule('equippable-template');
-            if (equipMod?.__importError) {
+            if (equipMod?.__importError != null) {
                 record('equippable-schema-roundtrip', false, equipMod.__importError);
             } else {
                 const EquippableTemplate = equipMod.default as Ctor;
@@ -733,7 +733,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
             // ---------- physical-item-template.ts ----------
             const physMod = await loadModule('physical-item-template');
-            if (physMod?.__importError) {
+            if (physMod?.__importError != null) {
                 fail(['physical-schema-roundtrip', 'physical-derived-labels'], physMod.__importError);
             } else {
                 const PhysicalItemTemplate = physMod.default as Ctor;
@@ -778,7 +778,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     const empty: Record<string, unknown> = {};
                     PhysicalItemTemplate._migrateData(empty);
                     const emptyCost = empty.cost as { dh1: { throneGelt: number | null } };
-                    if (emptyCost?.dh1?.throneGelt !== null) return 'empty cost normalisation failed';
+                    if (emptyCost.dh1.throneGelt !== null) return 'empty cost normalisation failed';
 
                     const stringy: Record<string, unknown> = {
                         cost: { dh1: { throneGelt: '50' }, dh2: { influence: '', homebrew: { requisition: 'nope', throneGelt: '7' } } },

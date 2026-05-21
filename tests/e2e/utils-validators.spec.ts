@@ -55,8 +55,8 @@ interface FlowResult {
 
 async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
+    const listener = (pageErr: Error): void => {
+        pageErrors.push(pageErr.message);
     };
     page.on('pageerror', listener);
     try {
@@ -83,21 +83,21 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                         `parsed=${JSON.stringify(parsed)}`,
                     );
                 } catch (err) {
-                    record('prereq-parse-characteristic', false, String((err as Error)?.message ?? err));
+                    record('prereq-parse-characteristic', false, String((err as Error).message));
                 }
 
                 try {
                     const parsed = mod.parsePrerequisiteString?.('Command');
                     record('prereq-parse-skill', parsed?.type === 'skill' && parsed.key === 'Command', `parsed=${JSON.stringify(parsed)}`);
                 } catch (err) {
-                    record('prereq-parse-skill', false, String((err as Error)?.message ?? err));
+                    record('prereq-parse-skill', false, String((err as Error).message));
                 }
 
                 try {
                     const parsed = mod.parsePrerequisiteString?.('   ');
                     record('prereq-parse-empty', parsed === null, `parsed=${JSON.stringify(parsed)}`);
                 } catch (err) {
-                    record('prereq-parse-empty', false, String((err as Error)?.message ?? err));
+                    record('prereq-parse-empty', false, String((err as Error).message));
                 }
 
                 // Seed an actor with known characteristic + skill state.
@@ -116,7 +116,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                     });
                 } catch (err) {
                     for (const k of ['prereq-check-empty', 'prereq-check-unmet-characteristic', 'prereq-check-unmet-skill'] as const) {
-                        record(k, false, `actor create: ${String((err as Error)?.message ?? err)}`);
+                        record(k, false, `actor create: ${String((err as Error).message)}`);
                     }
                 }
 
@@ -131,7 +131,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                             `result=${JSON.stringify(result)}`,
                         );
                     } catch (err) {
-                        record('prereq-check-empty', false, String((err as Error)?.message ?? err));
+                        record('prereq-check-empty', false, String((err as Error).message));
                     }
 
                     try {
@@ -139,7 +139,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                         const result = mod.checkPrerequisites?.(liveActor, [{ type: 'characteristic', key: 'fellowship', value: 40 }]);
                         record('prereq-check-unmet-characteristic', result?.valid === false && result.unmet.length === 1, `result=${JSON.stringify(result)}`);
                     } catch (err) {
-                        record('prereq-check-unmet-characteristic', false, String((err as Error)?.message ?? err));
+                        record('prereq-check-unmet-characteristic', false, String((err as Error).message));
                     }
 
                     try {
@@ -147,7 +147,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                         const result = mod.checkPrerequisites?.(liveActor, [{ type: 'skill', key: 'Probe Imaginary Skill' }]);
                         record('prereq-check-unmet-skill', result?.valid === false && result.unmet.length === 1, `result=${JSON.stringify(result)}`);
                     } catch (err) {
-                        record('prereq-check-unmet-skill', false, String((err as Error)?.message ?? err));
+                        record('prereq-check-unmet-skill', false, String((err as Error).message));
                     }
 
                     try {
@@ -165,7 +165,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                     'prereq-check-unmet-characteristic',
                     'prereq-check-unmet-skill',
                 ] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${String((err as Error).message)}`);
                 }
             }
 
@@ -181,7 +181,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                         const res = await RTU.findTableInCompendiums('Critical Damage - Energy');
                         record('roll-table-findInCompendiums', res === null || (typeof res === 'object' && res !== null), `type=${typeof res}`);
                     } catch (err) {
-                        record('roll-table-findInCompendiums', false, String((err as Error)?.message ?? err));
+                        record('roll-table-findInCompendiums', false, String((err as Error).message));
                     }
 
                     // All domain wrappers: accept null OR a TableResult.
@@ -204,7 +204,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                             // may be absent from the test world. Treat throw
                             // as a flow failure unless the err looks like a
                             // tolerable "no table" path.
-                            const msg = String((err as Error)?.message ?? err);
+                            const msg = String((err as Error).message);
                             const tolerable = /not found|no table|missing/i.test(msg);
                             record(name, tolerable, msg);
                         }
@@ -212,7 +212,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                 }
             } catch (err) {
                 for (const k of UTILS_VALIDATORS_FLOWS.filter((f) => f.startsWith('roll-table-'))) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${String((err as Error).message)}`);
                 }
             }
 

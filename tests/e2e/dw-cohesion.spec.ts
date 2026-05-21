@@ -42,8 +42,8 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HandlebarsLib.compile !== 'function') {
                         return {
                             rendered,
                             readout,
@@ -57,7 +57,7 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsLib.compile(src);
                     // Mid-fight state: pool partially depleted, already rallied
                     // this turn (rally button disabled), recovery still
                     // available (current < max).
@@ -90,7 +90,7 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
                     if (rendered) {
                         const section = host.querySelector('section.wh40k-dw-cohesion-panel');
                         const readoutEl = host.querySelector('.wh40k-dw-cohesion-readout');
-                        readout = readoutEl?.textContent?.trim().replace(/\s+/g, ' ') ?? '';
+                        readout = (readoutEl?.textContent ?? '').trim().replace(/\s+/g, ' ');
                         const rallyBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionRally"]');
                         const recoverBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionRecoverObjective"]');
                         const challengeBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionChallenge"]');
@@ -107,7 +107,7 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
                     // outside this evaluate) captures the live DOM.
                     (globalThis as any).__dwCohesionPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

@@ -73,18 +73,18 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/rules`;
-            const loadModule = async (name: string): Promise<any | null> => {
+            const loadModule = async (name: string): Promise<any> => {
                 try {
                     return await import(`${base}/${name}.js`);
                 } catch (err) {
-                    return { __importError: String((err as Error)?.message ?? err) };
+                    return { __importError: err instanceof Error ? err.message : String(err) };
                 }
             };
             const guarded = (name: FlowName, fn: () => boolean): void => {
                 try {
                     record(name, fn(), null);
                 } catch (err) {
-                    record(name, false, String((err as Error)?.message ?? err));
+                    record(name, false, err instanceof Error ? err.message : String(err));
                 }
             };
             const fail = (keys: readonly FlowName[], detail: string): void => {
@@ -93,7 +93,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- addiction ----------
             const addiction = await loadModule('addiction');
-            if (addiction?.__importError) {
+            if (typeof addiction?.__importError === 'string') {
                 fail(['addiction-resolveCheck', 'addiction-treatmentDays'], addiction.__importError);
             } else {
                 guarded('addiction-resolveCheck', () => {
@@ -110,7 +110,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- assistance ----------
             const assistance = await loadModule('assistance');
-            if (assistance?.__importError) {
+            if (typeof assistance?.__importError === 'string') {
                 fail(['assistance-bonus'], assistance.__importError);
             } else {
                 guarded('assistance-bonus', () => {
@@ -126,7 +126,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- characteristic-damage ----------
             const charDamage = await loadModule('characteristic-damage');
-            if (charDamage?.__importError) {
+            if (typeof charDamage?.__importError === 'string') {
                 fail(['characteristic-damage-atZero', 'characteristic-damage-effective', 'characteristic-damage-healed'], charDamage.__importError);
             } else {
                 guarded('characteristic-damage-atZero', () => {
@@ -147,7 +147,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- combat-circumstance-modifiers ----------
             const ccm = await loadModule('combat-circumstance-modifiers');
-            if (ccm?.__importError) {
+            if (typeof ccm?.__importError === 'string') {
                 fail(['combat-modifiers-registry', 'combat-modifiers-sumSelected'], ccm.__importError);
             } else {
                 guarded('combat-modifiers-registry', () => {
@@ -169,7 +169,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- disposition ----------
             const disposition = await loadModule('disposition');
-            if (disposition?.__importError) {
+            if (typeof disposition?.__importError === 'string') {
                 fail(['disposition-label', 'disposition-modifier'], disposition.__importError);
             } else {
                 guarded('disposition-label', () => {
@@ -192,7 +192,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- disease ----------
             const disease = await loadModule('disease');
-            if (disease?.__importError) {
+            if (typeof disease?.__importError === 'string') {
                 fail(['disease-exposure', 'disease-dailyTick'], disease.__importError);
             } else {
                 const profile = { id: 'redfly-plague', label: 'Redfly Plague', rating: 20, damagePerDay: 2, treatmentThreshold: 6 };
@@ -211,7 +211,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- poison ----------
             const poison = await loadModule('poison');
-            if (poison?.__importError) {
+            if (typeof poison?.__importError === 'string') {
                 fail(['poison-exposure', 'poison-failurePayload'], poison.__importError);
             } else {
                 const ulva = {
@@ -237,7 +237,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- hatred ----------
             const hatred = await loadModule('hatred');
-            if (hatred?.__importError) {
+            if (typeof hatred?.__importError === 'string') {
                 fail(['hatred-actorHasHatredFor'], hatred.__importError);
             } else {
                 guarded('hatred-actorHasHatredFor', () => {
@@ -252,7 +252,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- phenomena-modifier ----------
             const phenomena = await loadModule('phenomena-modifier');
-            if (phenomena?.__importError) {
+            if (typeof phenomena?.__importError === 'string') {
                 fail(['phenomena-modifier-compose'], phenomena.__importError);
             } else {
                 guarded('phenomena-modifier-compose', () => {
@@ -271,7 +271,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- reinforcement ----------
             const reinforcement = await loadModule('reinforcement');
-            if (reinforcement?.__importError) {
+            if (typeof reinforcement?.__importError === 'string') {
                 fail(['reinforcement-callTarget'], reinforcement.__importError);
             } else {
                 guarded('reinforcement-callTarget', () => {
@@ -290,7 +290,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- requisition-test ----------
             const requisition = await loadModule('requisition-test');
-            if (requisition?.__importError) {
+            if (typeof requisition?.__importError === 'string') {
                 fail(['requisition-test-target', 'requisition-test-influenceLoss'], requisition.__importError);
             } else {
                 guarded('requisition-test-target', () => {
@@ -307,7 +307,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- spray-avoidance ----------
             const spray = await loadModule('spray-avoidance');
-            if (spray?.__importError) {
+            if (typeof spray?.__importError === 'string') {
                 fail(['spray-avoidance-resolve'], spray.__importError);
             } else {
                 guarded('spray-avoidance-resolve', () => {
@@ -320,7 +320,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- vehicle-actions ----------
             const vehicleActions = await loadModule('vehicle-actions');
-            if (vehicleActions?.__importError) {
+            if (typeof vehicleActions?.__importError === 'string') {
                 fail(['vehicle-actions-registry'], vehicleActions.__importError);
             } else {
                 guarded('vehicle-actions-registry', () => {
@@ -339,7 +339,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- vehicle-hazards ----------
             const vehicleHazards = await loadModule('vehicle-hazards');
-            if (vehicleHazards?.__importError) {
+            if (typeof vehicleHazards?.__importError === 'string') {
                 fail(['vehicle-hazards-resolveRoll', 'vehicle-hazards-repairDifficulty'], vehicleHazards.__importError);
             } else {
                 guarded('vehicle-hazards-resolveRoll', () => {

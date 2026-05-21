@@ -70,21 +70,23 @@ test.describe.serial('assistance stepper (#60)', () => {
                 return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}`, snaps: null };
             }
 
-            await new Promise((r) => setTimeout(r, 80));
+            await new Promise<void>((r) => {
+                setTimeout(r, 80);
+            });
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
             }
 
             function readState(label: string): Record<string, unknown> {
-                const stepper = root!.querySelector<HTMLElement>('.wh40k-assistance-stepper');
+                const stepperEl = root!.querySelector<HTMLElement>('.wh40k-assistance-stepper');
                 const count = root!.querySelector<HTMLElement>('.wh40k-assistance-stepper__count');
                 const badge = root!.querySelector<HTMLElement>('.wh40k-assistance-stepper__badge');
                 const plus = root!.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__plus');
                 const minus = root!.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__minus');
                 return {
                     label,
-                    rendered: stepper !== null,
+                    rendered: stepperEl !== null,
                     count: count?.textContent?.trim() ?? null,
                     badge: badge?.textContent?.trim() ?? null,
                     plusDisabled: plus?.disabled ?? null,
@@ -95,7 +97,9 @@ test.describe.serial('assistance stepper (#60)', () => {
             async function clickAction(action: string): Promise<void> {
                 const el = root!.querySelector<HTMLElement>(`[data-action="${action}"]:not([disabled])`);
                 el?.click();
-                await new Promise((r) => setTimeout(r, 60));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 60);
+                });
             }
 
             const initial = readState('initial-0');
@@ -149,7 +153,9 @@ test.describe.serial('assistance stepper (#60)', () => {
             const plus = root?.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__plus');
             if (plus && !plus.disabled) {
                 plus.click();
-                await new Promise((r) => setTimeout(r, 60));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 60);
+                });
             }
         });
         await snap(page, 'assistance-stepper-2');

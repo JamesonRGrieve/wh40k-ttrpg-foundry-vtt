@@ -44,8 +44,8 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HandlebarsInstance = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HandlebarsInstance?.compile !== 'function') {
                         return {
                             rendered,
                             hasSwearButton,
@@ -58,7 +58,7 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsInstance.compile(src);
                     // Leader, no Oath sworn — swear available, release disabled.
                     const html = tpl({
                         oathPanel: {

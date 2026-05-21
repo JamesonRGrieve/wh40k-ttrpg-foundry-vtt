@@ -198,32 +198,32 @@ export default class StarshipSheet extends BaseActorSheet {
         let spaceUsed = 0;
 
         for (const component of context['shipComponents'] as WH40KItem[]) {
-            const sys = component.system as {
+            const compSys = component.system as {
                 condition?: string;
                 power?: { generated?: number; used?: number };
                 space?: number;
             };
-            if (sys.condition === 'functional') {
-                powerGenerated += sys.power?.generated ?? 0;
-                powerUsed += sys.power?.used ?? 0;
-                spaceUsed += sys.space ?? 0;
+            if (compSys.condition === 'functional') {
+                powerGenerated += compSys.power?.generated ?? 0;
+                powerUsed += compSys.power?.used ?? 0;
+                spaceUsed += compSys.space ?? 0;
             }
         }
 
         for (const weapon of context['shipWeapons'] as WH40KItem[]) {
-            const sys = weapon.system as { power?: number; space?: number };
-            powerUsed += sys.power ?? 0;
-            spaceUsed += sys.space ?? 0;
+            const weapSys = weapon.system as { power?: number; space?: number };
+            powerUsed += weapSys.power ?? 0;
+            spaceUsed += weapSys.space ?? 0;
         }
 
         for (const upgrade of context['shipUpgrades'] as WH40KItem[]) {
-            const sys = upgrade.system as {
+            const upgSys = upgrade.system as {
                 power?: { generated?: number; used?: number };
                 space?: number;
             };
-            powerGenerated += sys.power?.generated ?? 0;
-            powerUsed += sys.power?.used ?? 0;
-            spaceUsed += sys.space ?? 0;
+            powerGenerated += upgSys.power?.generated ?? 0;
+            powerUsed += upgSys.power?.used ?? 0;
+            spaceUsed += upgSys.space ?? 0;
         }
 
         context['powerGenerated'] = powerGenerated;
@@ -451,7 +451,7 @@ export default class StarshipSheet extends BaseActorSheet {
             out.push({
                 uuid,
                 id: item.id ?? '',
-                name: item.name ?? '',
+                name: item.name,
                 img: item.img ?? '',
                 skill: sys.skill ?? '',
                 modifier: sys.modifier ?? 0,
@@ -563,7 +563,7 @@ export default class StarshipSheet extends BaseActorSheet {
             out.push({
                 uuid,
                 id: item.id ?? '',
-                name: item.name ?? '',
+                name: item.name,
                 img: item.img ?? '',
                 skill: sys.skill ?? '',
                 modifier: sys.modifier ?? 0,
@@ -632,7 +632,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const weapon = actor.items.get(itemId ?? '');
         if (!weapon) {
-            ui.notifications?.warn(game.i18n.localize('WH40K.Starship.Combat.NoWeapon'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Starship.Combat.NoWeapon'));
             return;
         }
 
@@ -653,7 +653,7 @@ export default class StarshipSheet extends BaseActorSheet {
 
         // ── BS Test (1d100 vs crewRating) ───────────────────────────────────
         const bsRoll = await new Roll('1d100').evaluate();
-        const bsTotal = bsRoll.total ?? 100;
+        const bsTotal = bsRoll.total;
         const bsSucceeded = bsTotal <= crewRating;
         const dos = bsSucceeded ? Math.max(0, Math.floor((crewRating - bsTotal) / 10)) : 0;
 
@@ -675,14 +675,15 @@ export default class StarshipSheet extends BaseActorSheet {
         }
 
         // ── Damage roll (per hit) ───────────────────────────────────────────
-        const damageRolls: { total: number; formula: string }[] = [];
+        const dmgRolled = await Promise.all(Array.from({ length: hits }, async () => new Roll(damageFormula).evaluate()));
+        const damageRolls: { total: number; formula: string }[] = dmgRolled.map((r) => ({
+            total: Number(r.total),
+            formula: damageFormula,
+        }));
         let totalDamage = 0;
-        for (let i = 0; i < hits; i += 1) {
-            const dmgRoll = await new Roll(damageFormula).evaluate();
-            const dmgTotal = Number(dmgRoll.total ?? 0);
-            damagePerHit = dmgTotal;
-            totalDamage += dmgTotal;
-            damageRolls.push({ total: dmgTotal, formula: damageFormula });
+        for (const dr of damageRolls) {
+            damagePerHit = dr.total;
+            totalDamage += dr.total;
         }
 
         // ── Apply void shields (issue #184 RAW: shields absorb hits) ────────
@@ -802,11 +803,11 @@ export default class StarshipSheet extends BaseActorSheet {
         const active = sys.voidShieldsStatus?.active ?? 0;
         const exhausted = sys.voidShieldsStatus?.exhausted ?? 0;
         if (active >= max) {
-            ui.notifications?.info(game.i18n.localize('WH40K.Starship.Combat.AllShieldsUp'));
+            ui.notifications.info(game.i18n.localize('WH40K.Starship.Combat.AllShieldsUp'));
             return;
         }
         if (exhausted <= 0) {
-            ui.notifications?.warn(game.i18n.localize('WH40K.Starship.Combat.NoShieldsExhausted'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Starship.Combat.NoShieldsExhausted'));
             return;
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
@@ -833,7 +834,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const active = sys.voidShieldsStatus?.active ?? 0;
         const exhausted = sys.voidShieldsStatus?.exhausted ?? 0;
         if (active <= 0) {
-            ui.notifications?.info(game.i18n.localize('WH40K.Starship.Combat.AllShieldsDown'));
+            ui.notifications.info(game.i18n.localize('WH40K.Starship.Combat.AllShieldsDown'));
             return;
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
@@ -859,7 +860,7 @@ export default class StarshipSheet extends BaseActorSheet {
             'system.voidShieldsStatus.active': max,
             'system.voidShieldsStatus.exhausted': 0,
         });
-        ui.notifications?.info(game.i18n.localize('WH40K.Starship.Combat.ShieldsRestored'));
+        ui.notifications.info(game.i18n.localize('WH40K.Starship.Combat.ShieldsRestored'));
     }
 
     /* -------------------------------------------- */
@@ -890,7 +891,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const validation = this.computeBuildValidation();
         const i18n = game.i18n;
         if (validation.isValid) {
-            ui.notifications?.info(i18n.localize('WH40K.Starship.Build.NotifyValid'));
+            ui.notifications.info(i18n.localize('WH40K.Starship.Build.NotifyValid'));
         } else {
             const parts: string[] = [];
             if (validation.isOverBudget) {
@@ -907,7 +908,7 @@ export default class StarshipSheet extends BaseActorSheet {
                     }),
                 );
             }
-            ui.notifications?.warn(parts.join(' — '));
+            ui.notifications.warn(parts.join(' — '));
         }
     }
 
@@ -924,10 +925,10 @@ export default class StarshipSheet extends BaseActorSheet {
     static #commitBuild(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): void {
         const validation = this.computeBuildValidation();
         if (!validation.isValid) {
-            ui.notifications?.error(game.i18n.localize('WH40K.Starship.Build.NotifyCannotCommit'));
+            ui.notifications.error(game.i18n.localize('WH40K.Starship.Build.NotifyCannotCommit'));
             return;
         }
-        ui.notifications?.info(game.i18n.localize('WH40K.Starship.Build.NotifyCommitted'));
+        ui.notifications.info(game.i18n.localize('WH40K.Starship.Build.NotifyCommitted'));
     }
 
     /* -------------------------------------------- */
@@ -983,7 +984,7 @@ export default class StarshipSheet extends BaseActorSheet {
             item = actor.items.get(itemId);
         }
         if (item === undefined) {
-            ui.notifications?.warn(game.i18n.localize('WH40K.Starship.ExtendedAction.Empty'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Starship.ExtendedAction.Empty'));
             return;
         }
 
@@ -998,7 +999,7 @@ export default class StarshipSheet extends BaseActorSheet {
         };
         const cardData = {
             action: {
-                name: item.name ?? '',
+                name: item.name,
                 img: item.img ?? '',
                 skill: sys.skill ?? '',
                 modifier: sys.modifier ?? 0,
@@ -1007,7 +1008,7 @@ export default class StarshipSheet extends BaseActorSheet {
                 typeAndAction: sys.typeAndAction ?? '',
                 description: sys.description?.value ?? '',
             },
-            actorName: actor.name ?? '',
+            actorName: actor.name,
             gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
         };
 
@@ -1020,7 +1021,7 @@ export default class StarshipSheet extends BaseActorSheet {
             const restored = await actor.cancelPriorTurnDamage();
             const i18n = game.i18n;
             if (restored.hullRestored > 0 || restored.crewRestored > 0 || restored.moraleRestored > 0) {
-                ui.notifications?.info(
+                ui.notifications.info(
                     i18n.format('WH40K.Starship.Crew.NotifyCancelled', {
                         hull: String(restored.hullRestored),
                         crew: String(restored.crewRestored),
@@ -1028,11 +1029,11 @@ export default class StarshipSheet extends BaseActorSheet {
                     }),
                 );
             } else {
-                ui.notifications?.info(i18n.localize('WH40K.Starship.Crew.NotifyNothingToCancel'));
+                ui.notifications.info(i18n.localize('WH40K.Starship.Crew.NotifyNothingToCancel'));
             }
         } else if (effect === 'replenishMorale') {
             await actor.replenishBetweenCombat();
-            ui.notifications?.info(game.i18n.localize('WH40K.Starship.Crew.NotifyReplenished'));
+            ui.notifications.info(game.i18n.localize('WH40K.Starship.Crew.NotifyReplenished'));
         }
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/extended-action-chat.hbs', cardData);
@@ -1170,7 +1171,7 @@ export default class StarshipSheet extends BaseActorSheet {
 
         // Render and post chat card.
         const cardData = {
-            actorName: actor.name ?? '',
+            actorName: actor.name,
             resultName: statusLabel,
             resultText,
             statusLabel,
@@ -1223,7 +1224,7 @@ export default class StarshipSheet extends BaseActorSheet {
             item = actor.items.get(itemId);
         }
         if (item === undefined) {
-            ui.notifications?.warn(game.i18n.localize('WH40K.Starship.ManoeuvreAction.Empty'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Starship.ManoeuvreAction.Empty'));
             return;
         }
 
@@ -1237,7 +1238,7 @@ export default class StarshipSheet extends BaseActorSheet {
         };
         const cardData = {
             action: {
-                name: item.name ?? '',
+                name: item.name,
                 img: item.img ?? '',
                 skill: sys.skill ?? '',
                 modifier: sys.modifier ?? 0,
@@ -1246,7 +1247,7 @@ export default class StarshipSheet extends BaseActorSheet {
                 typeAndAction: sys.typeAndAction ?? '',
                 description: sys.description?.value ?? '',
             },
-            actorName: actor.name ?? '',
+            actorName: actor.name,
             gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
         };
 

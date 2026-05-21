@@ -458,9 +458,9 @@ export const CrewPanelFullStrength: Story = {
         // Population, Morale current, Morale max all = 100
         const populationInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.population"]');
         await expect(populationInputs.length).toBeGreaterThanOrEqual(1);
-        await expect(populationInputs[0]?.value).toBe('100');
+        await expect(populationInputs[0].value).toBe('100');
         const moraleInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.morale.value"]');
-        await expect(moraleInputs[0]?.value).toBe('100');
+        await expect(moraleInputs[0].value).toBe('100');
     },
 };
 
@@ -477,9 +477,9 @@ export const CrewPanelAfter5HullHit: Story = {
     render: (args) => renderCrewPanel(args),
     play: async ({ canvasElement }) => {
         const populationInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.population"]');
-        await expect(populationInputs[0]?.value).toBe('95');
+        await expect(populationInputs[0].value).toBe('95');
         const moraleInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.morale.value"]');
-        await expect(moraleInputs[0]?.value).toBe('95');
+        await expect(moraleInputs[0].value).toBe('95');
     },
 };
 

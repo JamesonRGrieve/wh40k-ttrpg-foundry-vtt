@@ -29,8 +29,8 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
                 system: { gameSystem: 'dh2e' },
                 flags: { wh40k: { grapple: { state: 'grappling' } } },
             });
-        } catch (err) {
-            return { setupOk: false, btnCount: 0, hasTitle: false, error: String((err as Error)?.message ?? err) };
+        } catch (createErr) {
+            return { setupOk: false, btnCount: 0, hasTitle: false, error: String((createErr as Error).message) };
         }
         if (!actor) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
 
