@@ -66,16 +66,133 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            // Runtime-loaded module surfaces. Each module is dynamic-imported by
+            // name; the interfaces below describe exactly the exports the probe
+            // touches, so the comparisons downstream stay fully typed.
+            interface CombatModifier {
+                id?: string;
+            }
+            interface RuleModules {
+                'addiction': {
+                    resolveAddictionCheck: (input: { willpowerTotal: number; substanceRating: number; currentTier: string }) => {
+                        target: number;
+                        nextTierOnFailure: string;
+                    };
+                    getTreatmentClockDays: (tier: string) => number;
+                    ADDICTION_TREATMENT_DAYS: Record<string, number>;
+                };
+                'assistance': {
+                    getAssistanceBonus: (assistants: number, perAssistant?: number) => number;
+                    DEFAULT_ASSISTANT_CAP: number;
+                };
+                'characteristic-damage': {
+                    getAtZeroEffect: (characteristic: string) => { effect: string } | undefined;
+                    getEffectiveCharacteristic: (total: number, damage: number) => number;
+                    getCharacteristicDamageHealed: (damage: number, healed: number) => number;
+                };
+                'combat-circumstance-modifiers': {
+                    COMBAT_CIRCUMSTANCE_MODIFIERS: readonly CombatModifier[];
+                    getCombatModifier: (id: string) => CombatModifier | undefined;
+                    getCombatModifiersForTarget: (target: string) => readonly CombatModifier[];
+                    sumSelectedCombatModifiers: (ids: readonly (string | undefined)[]) => number;
+                };
+                'disposition': {
+                    labelForDisposition: (value: number) => string;
+                    DISPOSITION_LABELS: readonly string[];
+                    getDispositionModifier: (value: number, kind: string) => number;
+                };
+                'disease': {
+                    resolveDiseaseExposure: (input: { toughnessTotal: number; diseaseRating: number }) => { target: number };
+                    applyInfectionDailyTick: (input: { profile: DiseaseProfile; cumulativeSoFar: number; treatmentSucceeded?: boolean }) => {
+                        damage: number;
+                        cumulative: number;
+                    };
+                };
+                'poison': {
+                    resolvePoisonExposure: (input: { toughnessTotal: number; poisonRating: number }) => { target: number };
+                    buildPoisonFailurePayload: (profile: PoisonProfile) => {
+                        immediateDamage: number;
+                        ongoingDamagePerRound: number;
+                        ongoingDurationRounds: number;
+                        ongoingTag: string;
+                    };
+                };
+                'hatred': {
+                    actorHasHatredFor: (actor: HatredActor, target: HatredTarget) => string | null;
+                    HATRED_BONUS: number;
+                    HATRED_SPECIALIZATIONS: readonly string[];
+                };
+                'phenomena-modifier': {
+                    composePhenomenaModifier: (input: { warpWeakness: boolean; taintedPsykerPushCP: number }) => {
+                        focusModifier: number;
+                        autoTriggerOnOddOr9: boolean;
+                        phenomenaModifier: number;
+                    };
+                };
+                'reinforcement': {
+                    getReinforcementCallTarget: (influence: number, tier: string) => number;
+                    isReinforcementTier: (tier: string) => boolean;
+                    REINFORCEMENT_MODIFIER: Record<string, number>;
+                };
+                'requisition-test': {
+                    getRequisitionTestTarget: (input: { influence: number; availability: string; craftsmanship: string }) => { target: number };
+                    applyInfluenceLossOnBigFailure: (influence: number, degrees: number) => number;
+                    AVAILABILITY_MODIFIERS: Record<string, number>;
+                    CRAFTSMANSHIP_MODIFIERS: Record<string, number>;
+                };
+                'spray-avoidance': {
+                    resolveSprayAvoidance: (input: { hasLeapingDodge: boolean; agilityTotal: number; dodgeTotal: number }) => {
+                        skill: string;
+                        target: number;
+                    };
+                };
+                'vehicle-actions': {
+                    getVehicleActionNames: () => readonly string[];
+                    getVehicleAction: (name: string) => { skill: string } | undefined;
+                    VEHICLE_ACTIONS: readonly { name?: string }[];
+                };
+                'vehicle-hazards': {
+                    resolveHazardRoll: (kind: string, roll: number) => { label: string } | undefined;
+                    getRepairDifficulty: (degrees: number, dc: number) => number;
+                };
+            }
+            interface DiseaseProfile {
+                id: string;
+                label: string;
+                rating: number;
+                damagePerDay: number;
+                treatmentThreshold: number;
+            }
+            interface PoisonProfile {
+                id: string;
+                label: string;
+                rating: number;
+                failureDamage: number;
+                ongoingDamagePerRound: number;
+                ongoingDurationRounds: number;
+                ongoingTag: string;
+            }
+            interface HatredActor {
+                items: readonly { type?: string; name?: string; system?: { specialization?: string } }[];
+            }
+            interface HatredTarget {
+                name: string;
+                system: { traits: readonly { name: string }[] };
+            }
+            type ImportError = { __importError: string };
+            type Loaded<T> = T | ImportError;
+            const isImportError = <T>(m: Loaded<T>): m is ImportError => typeof (m as ImportError).__importError === 'string';
+
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/rules`;
-            const loadModule = async (name: string): Promise<any> => {
+            const loadModule = async <K extends keyof RuleModules>(name: K): Promise<Loaded<RuleModules[K]>> => {
                 try {
-                    return await import(`${base}/${name}.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic runtime import of compiled module, shape asserted via RuleModules
+                    return (await import(`${base}/${name}.js`)) as RuleModules[K];
                 } catch (err) {
                     return { __importError: err instanceof Error ? err.message : String(err) };
                 }
@@ -93,7 +210,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- addiction ----------
             const addiction = await loadModule('addiction');
-            if (typeof addiction?.__importError === 'string') {
+            if (isImportError(addiction)) {
                 fail(['addiction-resolveCheck', 'addiction-treatmentDays'], addiction.__importError);
             } else {
                 guarded('addiction-resolveCheck', () => {
@@ -104,13 +221,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 });
                 guarded(
                     'addiction-treatmentDays',
-                    () => typeof addiction.getTreatmentClockDays('mild') === 'number' && addiction.ADDICTION_TREATMENT_DAYS !== undefined,
+                    () => typeof addiction.getTreatmentClockDays('mild') === 'number' && Object.keys(addiction.ADDICTION_TREATMENT_DAYS).length > 0,
                 );
             }
 
             // ---------- assistance ----------
             const assistance = await loadModule('assistance');
-            if (typeof assistance?.__importError === 'string') {
+            if (isImportError(assistance)) {
                 fail(['assistance-bonus'], assistance.__importError);
             } else {
                 guarded('assistance-bonus', () => {
@@ -126,7 +243,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- characteristic-damage ----------
             const charDamage = await loadModule('characteristic-damage');
-            if (typeof charDamage?.__importError === 'string') {
+            if (isImportError(charDamage)) {
                 fail(['characteristic-damage-atZero', 'characteristic-damage-effective', 'characteristic-damage-healed'], charDamage.__importError);
             } else {
                 guarded('characteristic-damage-atZero', () => {
@@ -147,20 +264,23 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- combat-circumstance-modifiers ----------
             const ccm = await loadModule('combat-circumstance-modifiers');
-            if (typeof ccm?.__importError === 'string') {
+            if (isImportError(ccm)) {
                 fail(['combat-modifiers-registry', 'combat-modifiers-sumSelected'], ccm.__importError);
             } else {
                 guarded('combat-modifiers-registry', () => {
                     const reg = ccm.COMBAT_CIRCUMSTANCE_MODIFIERS;
-                    if (!Array.isArray(reg) || reg.length === 0) return false;
-                    const first = reg[0] as { id?: string } | undefined;
+                    if (reg.length === 0) return false;
+                    const first = reg[0];
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: tsconfig.json types reg[0] as possibly-undefined; tsconfig.test.json (eslint's program) does not
                     const byId = ccm.getCombatModifier(first?.id ?? '');
                     const missing = ccm.getCombatModifier('does-not-exist');
-                    return byId?.id === first?.id && missing === undefined && Array.isArray(ccm.getCombatModifiersForTarget('bs'));
+                    const forTargetCount = ccm.getCombatModifiersForTarget('bs').length;
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: tsconfig.json types reg[0] as possibly-undefined; tsconfig.test.json (eslint's program) does not
+                    return byId?.id === first?.id && missing === undefined && Number.isInteger(forTargetCount);
                 });
                 guarded('combat-modifiers-sumSelected', () => {
                     const reg = ccm.COMBAT_CIRCUMSTANCE_MODIFIERS;
-                    const ids = reg.slice(0, 2).map((m: any) => m.id);
+                    const ids = reg.slice(0, 2).map((m) => m.id);
                     const sum = ccm.sumSelectedCombatModifiers(ids);
                     const empty = ccm.sumSelectedCombatModifiers([]);
                     return typeof sum === 'number' && empty === 0;
@@ -169,7 +289,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- disposition ----------
             const disposition = await loadModule('disposition');
-            if (typeof disposition?.__importError === 'string') {
+            if (isImportError(disposition)) {
                 fail(['disposition-label', 'disposition-modifier'], disposition.__importError);
             } else {
                 guarded('disposition-label', () => {
@@ -192,7 +312,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- disease ----------
             const disease = await loadModule('disease');
-            if (typeof disease?.__importError === 'string') {
+            if (isImportError(disease)) {
                 fail(['disease-exposure', 'disease-dailyTick'], disease.__importError);
             } else {
                 const profile = { id: 'redfly-plague', label: 'Redfly Plague', rating: 20, damagePerDay: 2, treatmentThreshold: 6 };
@@ -211,7 +331,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- poison ----------
             const poison = await loadModule('poison');
-            if (typeof poison?.__importError === 'string') {
+            if (isImportError(poison)) {
                 fail(['poison-exposure', 'poison-failurePayload'], poison.__importError);
             } else {
                 const ulva = {
@@ -237,7 +357,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- hatred ----------
             const hatred = await loadModule('hatred');
-            if (typeof hatred?.__importError === 'string') {
+            if (isImportError(hatred)) {
                 fail(['hatred-actorHasHatredFor'], hatred.__importError);
             } else {
                 guarded('hatred-actorHasHatredFor', () => {
@@ -252,7 +372,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- phenomena-modifier ----------
             const phenomena = await loadModule('phenomena-modifier');
-            if (typeof phenomena?.__importError === 'string') {
+            if (isImportError(phenomena)) {
                 fail(['phenomena-modifier-compose'], phenomena.__importError);
             } else {
                 guarded('phenomena-modifier-compose', () => {
@@ -261,9 +381,9 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const tainted = phenomena.composePhenomenaModifier({ warpWeakness: false, taintedPsykerPushCP: 1 });
                     return (
                         baseline.focusModifier === 0 &&
-                        baseline.autoTriggerOnOddOr9 === false &&
+                        !baseline.autoTriggerOnOddOr9 &&
                         warp.focusModifier === 10 &&
-                        warp.autoTriggerOnOddOr9 === true &&
+                        warp.autoTriggerOnOddOr9 &&
                         tainted.phenomenaModifier === 5
                     );
                 });
@@ -271,7 +391,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- reinforcement ----------
             const reinforcement = await loadModule('reinforcement');
-            if (typeof reinforcement?.__importError === 'string') {
+            if (isImportError(reinforcement)) {
                 fail(['reinforcement-callTarget'], reinforcement.__importError);
             } else {
                 guarded('reinforcement-callTarget', () => {
@@ -281,8 +401,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                         typeof standard === 'number' &&
                         typeof elite === 'number' &&
                         standard >= elite &&
-                        reinforcement.isReinforcementTier('standard') === true &&
-                        reinforcement.isReinforcementTier('apprentice') === false &&
+                        reinforcement.isReinforcementTier('standard') &&
+                        !reinforcement.isReinforcementTier('apprentice') &&
                         reinforcement.REINFORCEMENT_MODIFIER.master === -30
                     );
                 });
@@ -290,7 +410,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- requisition-test ----------
             const requisition = await loadModule('requisition-test');
-            if (typeof requisition?.__importError === 'string') {
+            if (isImportError(requisition)) {
                 fail(['requisition-test-target', 'requisition-test-influenceLoss'], requisition.__importError);
             } else {
                 guarded('requisition-test-target', () => {
@@ -307,7 +427,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- spray-avoidance ----------
             const spray = await loadModule('spray-avoidance');
-            if (typeof spray?.__importError === 'string') {
+            if (isImportError(spray)) {
                 fail(['spray-avoidance-resolve'], spray.__importError);
             } else {
                 guarded('spray-avoidance-resolve', () => {
@@ -320,7 +440,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- vehicle-actions ----------
             const vehicleActions = await loadModule('vehicle-actions');
-            if (typeof vehicleActions?.__importError === 'string') {
+            if (isImportError(vehicleActions)) {
                 fail(['vehicle-actions-registry'], vehicleActions.__importError);
             } else {
                 guarded('vehicle-actions-registry', () => {
@@ -339,7 +459,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- vehicle-hazards ----------
             const vehicleHazards = await loadModule('vehicle-hazards');
-            if (typeof vehicleHazards?.__importError === 'string') {
+            if (isImportError(vehicleHazards)) {
                 fail(['vehicle-hazards-resolveRoll', 'vehicle-hazards-repairDifficulty'], vehicleHazards.__importError);
             } else {
                 guarded('vehicle-hazards-resolveRoll', () => {
@@ -355,7 +475,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {
