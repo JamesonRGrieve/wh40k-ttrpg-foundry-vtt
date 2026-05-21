@@ -25,8 +25,8 @@
  * fixed for diff stability — no Math.random in this module.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HandlebarsLib from 'handlebars';
+import { renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { mergeMarkGrants, type MarkOfDistinction } from '../../../module/rules/dw-distinction.ts';
 import panelSrc from './dw-distinction-panel.hbs?raw';
@@ -66,13 +66,13 @@ interface DistinctionPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HandlebarsLib.compile(panelSrc);
 
 function renderPanel(ctx: DistinctionPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderMockTemplate(panelTpl, ctx));
     return wrapper;
 }
 

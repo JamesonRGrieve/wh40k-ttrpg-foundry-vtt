@@ -93,13 +93,13 @@ export const STAGE_LABEL_KEYS: Readonly<Record<WarpStageId, string>> = Object.fr
     'leave-warp': 'WH40K.WarpTravel.Stage.LeaveWarp',
 });
 
+/** Single-source registry of game systems that surface warp travel. */
+const WARP_TRAVEL_SYSTEMS: ReadonlySet<GameSystemId> = new Set<GameSystemId>(['rt']);
+
 /** RT-only gating helper. */
 export function isWarpTravelAvailable(systemId: GameSystemId): boolean {
     return WARP_TRAVEL_SYSTEMS.has(systemId);
 }
-
-/** Single-source registry of game systems that surface warp travel. */
-const WARP_TRAVEL_SYSTEMS: ReadonlySet<GameSystemId> = new Set<GameSystemId>(['rt']);
 
 // ---------------------------------------------------------------------------
 // d100 test math (degrees-of-success counting)

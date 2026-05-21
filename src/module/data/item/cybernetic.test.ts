@@ -44,7 +44,7 @@ describe('CyberneticData grants.activeEffects[] (#75)', () => {
     };
 
     it('grants.activeEffects entries carry key / mode / value / durationRounds', () => {
-        const entry = calculusLogi.grants.activeEffects[0];
+        const [entry] = calculusLogi.grants.activeEffects;
         expect(entry).toBeDefined();
         expect(entry?.key).toBe('system.characteristics.intelligence.modifier');
         expect(entry?.mode).toBe(2);

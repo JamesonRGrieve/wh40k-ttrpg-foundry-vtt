@@ -53,26 +53,26 @@ export const Default: Story = {};
 
 export const AllCardsPresent: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const storyCanvas = within(canvasElement);
         // All three cards render.
         const daemon = canvasElement.querySelector('[data-homeworld-id="daemonWorld"]');
         const penal = canvasElement.querySelector('[data-homeworld-id="penalColony"]');
         const quarantine = canvasElement.querySelector('[data-homeworld-id="quarantineWorld"]');
-        expect(daemon).not.toBeNull();
-        expect(penal).not.toBeNull();
-        expect(quarantine).not.toBeNull();
+        await expect(daemon).not.toBeNull();
+        await expect(penal).not.toBeNull();
+        await expect(quarantine).not.toBeNull();
 
         // Riders surface only on the cards that declare them.
-        expect(daemon?.querySelector('[data-rider="corruption"]')).not.toBeNull();
-        expect(quarantine?.querySelector('[data-rider="subtlety-clamp"]')).not.toBeNull();
-        expect(penal?.querySelector('[data-rider="corruption"]')).toBeNull();
-        expect(penal?.querySelector('[data-rider="subtlety-clamp"]')).toBeNull();
-        expect(daemon?.querySelector('[data-rider="subtlety-clamp"]')).toBeNull();
-        expect(quarantine?.querySelector('[data-rider="corruption"]')).toBeNull();
+        await expect(daemon?.querySelector('[data-rider="corruption"]')).not.toBeNull();
+        await expect(quarantine?.querySelector('[data-rider="subtlety-clamp"]')).not.toBeNull();
+        await expect(penal?.querySelector('[data-rider="corruption"]')).toBeNull();
+        await expect(penal?.querySelector('[data-rider="subtlety-clamp"]')).toBeNull();
+        await expect(daemon?.querySelector('[data-rider="subtlety-clamp"]')).toBeNull();
+        await expect(quarantine?.querySelector('[data-rider="corruption"]')).toBeNull();
 
         // Aptitudes appear on their respective cards.
-        expect(canvas.getByText('Willpower')).toBeTruthy();
-        expect(canvas.getByText('Toughness')).toBeTruthy();
-        expect(canvas.getByText('Fieldcraft')).toBeTruthy();
+        await expect(storyCanvas.getByText('Willpower')).toBeTruthy();
+        await expect(storyCanvas.getByText('Toughness')).toBeTruthy();
+        await expect(storyCanvas.getByText('Fieldcraft')).toBeTruthy();
     },
 };

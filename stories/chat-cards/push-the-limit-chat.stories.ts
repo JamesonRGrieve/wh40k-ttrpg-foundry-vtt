@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolvePushTheLimit } from '../../src/module/rules/without-talents.ts';
 import pushChatSrc from '../../src/templates/chat/push-the-limit-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -20,7 +20,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const pushChatTemplate = Handlebars.compile(pushChatSrc);
+const pushChatTemplate = HbsStory.compile(pushChatSrc);
 
 function cardContext(
     result: ReturnType<typeof resolvePushTheLimit>,
@@ -53,7 +53,7 @@ type Story = StoryObj;
 export const SuccessWithBonus: Story = {
     name: '+20 invoked — Operate test passes by 2',
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             pushChatTemplate,
             cardContext(
                 resolvePushTheLimit({
@@ -67,15 +67,15 @@ export const SuccessWithBonus: Story = {
             ),
         ),
     play: async ({ canvasElement }) => {
-        expect(canvasElement.querySelector('.wh40k-push-the-limit-card')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-wh40k-system="dh2e"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('.wh40k-push-the-limit-card')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh2e"]')).toBeTruthy();
     },
 };
 
 export const MotiveSystemsCritical: Story = {
     name: 'Catastrophic failure — Motive Systems critical (vehicle)',
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             pushChatTemplate,
             cardContext(
                 resolvePushTheLimit({
@@ -89,16 +89,16 @@ export const MotiveSystemsCritical: Story = {
             ),
         ),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.WithoutTalents\.PushTheLimit\.CriticalLabel/)).toBeTruthy();
-        expect(canvas.getByText(/WH40K\.WithoutTalents\.PushTheLimit\.MotiveSystemsTable/)).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText(/WH40K\.WithoutTalents\.PushTheLimit\.CriticalLabel/)).toBeTruthy();
+        await expect(view.getByText(/WH40K\.WithoutTalents\.PushTheLimit\.MotiveSystemsTable/)).toBeTruthy();
     },
 };
 
 export const ImpactLegCritical: Story = {
     name: 'Catastrophic failure — Impact Leg critical (living mount)',
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             pushChatTemplate,
             cardContext(
                 resolvePushTheLimit({
@@ -116,7 +116,7 @@ export const ImpactLegCritical: Story = {
 export const NotInvoked: Story = {
     name: 'Talent not invoked — raw test',
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             pushChatTemplate,
             cardContext(
                 resolvePushTheLimit({

@@ -70,13 +70,13 @@ export const NoFearDisabled: Story = {
 
 export const RenderSmoke: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const storyCanvas = within(canvasElement);
         // Observer selector renders.
-        expect(canvasElement.querySelector('select[name="observer"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('select[name="observer"]')).toBeTruthy();
         // WP + fear rating inputs render.
-        expect(canvasElement.querySelector('input[name="willpower"]')).toBeTruthy();
-        expect(canvasElement.querySelector('input[name="fearRating"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('input[name="willpower"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('input[name="fearRating"]')).toBeTruthy();
         // Roll button is present.
-        expect(canvas.getByText(/Trigger Fear Test/i)).toBeTruthy();
+        await expect(storyCanvas.getByText(/Trigger Fear Test/i)).toBeTruthy();
     },
 };

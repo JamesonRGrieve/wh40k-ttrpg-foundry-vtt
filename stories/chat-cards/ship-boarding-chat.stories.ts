@@ -11,16 +11,16 @@
  *   3. Boarders Lost — defender wins by 3+ DoS.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveBoarding, type BoardingResolution } from '../../src/module/rules/ship-boarding.ts';
 import shipBoardingChatSrc from '../../src/templates/chat/ship-boarding-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
 
-const shipBoardingTemplate = Handlebars.compile(shipBoardingChatSrc);
+const shipBoardingTemplate = HandlebarsLib.compile(shipBoardingChatSrc);
 
 interface CardArgs {
     attackerName: string;
@@ -41,7 +41,7 @@ function cardContext(args: CardArgs): Record<string, unknown> {
 
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Boarding (#188)',
-    render: (args) => renderTemplate(shipBoardingTemplate, cardContext(args)),
+    render: (args) => renderStoryTemplate(shipBoardingTemplate, cardContext(args)),
 };
 
 export default meta;
@@ -65,10 +65,10 @@ export const Breach: Story = {
     },
     play: async ({ canvasElement }) => {
         const card = canvasElement.querySelector('.wh40k-ship-boarding-card');
-        expect(card).toBeTruthy();
-        expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.Boarding\.HullDamage/)).toBeTruthy();
+        await expect(card).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByText(/WH40K\.Starship\.Boarding\.HullDamage/)).toBeTruthy();
     },
 };
 
@@ -85,8 +85,8 @@ export const Repelled: Story = {
         }),
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.Boarding\.OutcomeRepelled/)).toBeTruthy();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByText(/WH40K\.Starship\.Boarding\.OutcomeRepelled/)).toBeTruthy();
     },
 };
 
@@ -103,7 +103,7 @@ export const BoardersLost: Story = {
         }),
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.Boarding\.OutcomeBoardersLost/)).toBeTruthy();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByText(/WH40K\.Starship\.Boarding\.OutcomeBoardersLost/)).toBeTruthy();
     },
 };

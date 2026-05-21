@@ -136,8 +136,8 @@ export const Untrained: Story = {
     name: 'Issue #26 — Untrained renders 5-tier progression',
     play: async ({ canvasElement }) => {
         // Wait for the deferred render to land before reading the DOM.
-        const canvas = within(canvasElement);
-        const host = await canvas.findByTestId('skill-tooltip-host');
+        const view = within(canvasElement);
+        const host = await view.findByTestId('skill-tooltip-host');
         const track = host.querySelector<HTMLElement>('.wh40k-tooltip__training-track');
         await expect(track).not.toBeNull();
         const text = track?.textContent ?? '';
@@ -166,8 +166,8 @@ export const TrainedPlus10: Story = {
         plus30: false,
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const host = await canvas.findByTestId('skill-tooltip-host');
+        const view = within(canvasElement);
+        const host = await view.findByTestId('skill-tooltip-host');
         const active = host.querySelector<HTMLElement>('.wh40k-tooltip__training-track span.active');
         await expect(active).not.toBeNull();
         const activeText = active?.textContent ?? '';
@@ -189,8 +189,8 @@ export const Veteran: Story = {
         plus30: true,
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const host = await canvas.findByTestId('skill-tooltip-host');
+        const view = within(canvasElement);
+        const host = await view.findByTestId('skill-tooltip-host');
         const active = host.querySelector<HTMLElement>('.wh40k-tooltip__training-track span.active');
         await expect(active).not.toBeNull();
         const activeText = active?.textContent ?? '';

@@ -75,8 +75,8 @@ export const AgriculturalSoftener: Story = {
 /** Roll-button click flow (smoke). */
 export const RollFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/Colony/)).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText(/Colony/)).toBeTruthy();
         clickAction(canvasElement, 'rollGrowth');
     },
 };

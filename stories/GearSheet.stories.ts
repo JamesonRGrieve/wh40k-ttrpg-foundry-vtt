@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import gearSheetSrc from '../src/templates/item/item-gear-sheet.hbs?raw';
-import { mockGearSheetContext, renderTemplate } from './mocks';
+import { mockGearSheetContext, renderTemplate as renderTpl } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();
 
-const template = Handlebars.compile(gearSheetSrc);
+const template = HbsLib.compile(gearSheetSrc);
 
 const meta: Meta = {
     title: 'Item Sheets/Gear Sheet',
@@ -17,12 +17,12 @@ export default meta;
 type Story = StoryObj;
 
 export const Standard: Story = {
-    render: () => renderTemplate(template, mockGearSheetContext()),
+    render: () => renderTpl(template, mockGearSheetContext()),
 };
 
 export const UsesExhausted: Story = {
     render: () =>
-        renderTemplate(
+        renderTpl(
             template,
             mockGearSheetContext({
                 usesExhausted: true,
@@ -36,7 +36,7 @@ export const UsesExhausted: Story = {
 
 export const HiddenCostReadOnly: Story = {
     render: () =>
-        renderTemplate(
+        renderTpl(
             template,
             mockGearSheetContext({
                 hasLimitedUses: false,

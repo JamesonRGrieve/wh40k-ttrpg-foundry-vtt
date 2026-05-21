@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import type { SidebarHeaderField } from '../src/module/config/game-systems/types';
 import npcTabSrc from '../src/templates/actor/npc/tab-npc.hbs?raw';
@@ -12,12 +12,12 @@ import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-const headerTemplate = Handlebars.compile(headerSrc);
-const headerRtTemplate = Handlebars.compile(headerRtSrc);
-const tabsTemplate = Handlebars.compile(tabsSrc);
-const biographyTemplate = Handlebars.compile(biographyTabSrc);
-const skillsTemplate = Handlebars.compile(skillsTabSrc);
-const npcTemplate = Handlebars.compile(npcTabSrc);
+const headerTemplate = Hbs.compile(headerSrc);
+const headerRtTemplate = Hbs.compile(headerRtSrc);
+const tabsTemplate = Hbs.compile(tabsSrc);
+const biographyTemplate = Hbs.compile(biographyTabSrc);
+const skillsTemplate = Hbs.compile(skillsTabSrc);
+const npcTemplate = Hbs.compile(npcTabSrc);
 
 function wrap(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -38,7 +38,7 @@ const LEGACY_DH2_HEADER_FIELDS: SidebarHeaderField[] = [
     { label: 'Rank', name: 'system.rank', type: 'number', value: 3, placeholder: 'Rank', inputClass: 'wh40k-rank-input' },
 ];
 
-function playerContext(systemId: 'dh2e' | 'im' | 'rt') {
+function playerContext(systemId: 'dh2e' | 'im' | 'rt'): ReturnType<typeof mockPlayerSheetContext> {
     return mockPlayerSheetContext({
         systemId,
         actorOverrides: {
@@ -61,7 +61,7 @@ function playerContext(systemId: 'dh2e' | 'im' | 'rt') {
     });
 }
 
-function npcContext() {
+function npcContext(): ReturnType<typeof mockNpcSheetContext> {
     return mockNpcSheetContext({ systemId: 'im' });
 }
 

@@ -25,8 +25,8 @@
  * actor.
  */
 
-import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../rules/bc-psychic-strength.ts';
 import type { BcPsychicDeclarations } from '../data/actor/mixins/bc-psychic-template.ts';
+import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../rules/bc-psychic-strength.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -125,8 +125,8 @@ async function promptBcPsychicTestInputs(args: {
                 const rawMode = (form?.elements.namedItem('mode') as HTMLSelectElement | null)?.value;
                 const rawPush = Number((form?.elements.namedItem('pushLevel') as HTMLInputElement | null)?.value ?? 0);
                 const mode: PsyMode = isPsyMode(rawMode) ? rawMode : 'unfettered';
-                const pushLevel = Number.isFinite(rawPush) ? Math.max(0, Math.trunc(rawPush)) : 0;
-                return { mode, pushLevel };
+                const clampedPush = Number.isFinite(rawPush) ? Math.max(0, Math.trunc(rawPush)) : 0;
+                return { mode, pushLevel: clampedPush };
             },
         },
         rejectClose: false,
@@ -198,7 +198,7 @@ export async function bcPsychicTest(this: BcPsychicSheetLike, _event: Event, _ta
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
     await ChatMessage.create({
-        user: game.user?.id,
+        user: game.user.id,
         speaker: ChatMessage.getSpeaker(speakerActor),
         content,
     });

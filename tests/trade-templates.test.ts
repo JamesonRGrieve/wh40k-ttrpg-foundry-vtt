@@ -4,17 +4,17 @@
  * regression fails here (fast) instead of only in the Playwright story run.
  */
 
-import Handlebars from 'handlebars';
+import HB from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import approvalSrc from '../src/templates/dialogs/transaction-approval-dialog.hbs?raw';
 import requestSrc from '../src/templates/dialogs/transaction-request-dialog.hbs?raw';
-import { renderTemplate } from '../stories/mocks';
+import { renderTemplate as compileAndRender } from '../stories/mocks';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
 function compile(source: string, context: unknown): HTMLElement {
-    return renderTemplate(Handlebars.compile(source), context);
+    return compileAndRender(HB.compile(source), context);
 }
 
 const baseRequestCtx = {

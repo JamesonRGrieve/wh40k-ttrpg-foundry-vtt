@@ -108,12 +108,12 @@ export const DeadEnd: Story = {
 
 export const RendersFields: Story = {
     play: ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByPlaceholderText('Which clue produced this lead?')).toBeTruthy();
+        const cv = within(canvasElement);
+        void expect(cv.getByPlaceholderText('Which clue produced this lead?')).toBeTruthy();
         // The select for state/type should be in the DOM.
         const stateSelect = canvasElement.querySelector('select[name="system.state"]');
         const typeSelect = canvasElement.querySelector('select[name="system.leadType"]');
-        expect(stateSelect).toBeTruthy();
-        expect(typeSelect).toBeTruthy();
+        void expect(stateSelect).toBeTruthy();
+        void expect(typeSelect).toBeTruthy();
     },
 };

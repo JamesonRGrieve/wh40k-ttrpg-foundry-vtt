@@ -2,9 +2,9 @@
  * Stories for ArmourModSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheetParts } from '../../../../stories/test-helpers';
@@ -16,15 +16,40 @@ import restrictionsSrc from '../../../templates/item/armour-mod-restrictions.hbs
 
 initializeStoryHandlebars();
 
-const headerTpl = Handlebars.compile(headerSrc);
-const restrictionsTpl = Handlebars.compile(restrictionsSrc);
-const modifiersTpl = Handlebars.compile(modifiersSrc);
-const propertiesTpl = Handlebars.compile(propertiesSrc);
-const effectTpl = Handlebars.compile(effectSrc);
+const headerTpl = HbsStory.compile(headerSrc);
+const restrictionsTpl = HbsStory.compile(restrictionsSrc);
+const modifiersTpl = HbsStory.compile(modifiersSrc);
 
 const rng = seedRandom(0xaf1200d);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+interface TabEntry {
+    id: string;
+    tab: string;
+    group: string;
+    active: boolean;
+    cssClass: string;
+}
+
+interface ArmourModCtx {
+    item: ReturnType<typeof mockItem>;
+    system: {
+        icon: string;
+        modifiers: { ap: number; weight: number };
+        restrictions: { armourTypes: never[] };
+        addedProperties: never[];
+        removedProperties: never[];
+        restrictionsLabelEnhanced: string;
+        modifierSummary: string;
+        effect: string;
+        notes: string;
+    };
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    tabs: Record<string, TabEntry>;
+}
+
+function makeBaseCtx(): ArmourModCtx {
     const id = randomId('armour-mod', rng);
     const item = mockItem({ _id: id, id, name: 'Ceramite Plating', type: 'armourMod' });
     return {
@@ -32,9 +57,9 @@ function makeCtx(overrides: Record<string, unknown> = {}) {
         system: {
             icon: 'fa-shield',
             modifiers: { ap: 2, weight: 1 },
-            restrictions: { armourTypes: [] },
-            addedProperties: [],
-            removedProperties: [],
+            restrictions: { armourTypes: [] as never[] },
+            addedProperties: [] as never[],
+            removedProperties: [] as never[],
             restrictionsLabelEnhanced: 'Light, Flak only',
             modifierSummary: '+2 AP, +1 Weight',
             effect: '<p>Grants extra protection versus flame.</p>',
@@ -49,8 +74,11 @@ function makeCtx(overrides: Record<string, unknown> = {}) {
             properties: { id: 'properties', tab: 'properties', group: 'primary', active: false, cssClass: '' },
             effect: { id: 'effect', tab: 'effect', group: 'primary', active: false, cssClass: '' },
         },
-        ...overrides,
     };
+}
+
+function makeCtx(overrides: Partial<ArmourModCtx> = {}): ArmourModCtx & Record<string, unknown> {
+    return { ...makeBaseCtx(), ...overrides };
 }
 
 const meta: Meta = {
@@ -61,15 +89,15 @@ export default meta;
 type Story = StoryObj;
 
 export const Header: Story = {
-    render: () => renderTemplate(headerTpl, makeCtx()),
+    render: () => renderStoryTemplate(headerTpl, makeCtx()),
 };
 
 export const Restrictions: Story = {
-    render: () => renderTemplate(restrictionsTpl, makeCtx()),
+    render: () => renderStoryTemplate(restrictionsTpl, makeCtx()),
 };
 
 export const Modifiers: Story = {
-    render: () => renderTemplate(modifiersTpl, makeCtx()),
+    render: () => renderStoryTemplate(modifiersTpl, makeCtx()),
 };
 
 export const FullSheet: Story = {
@@ -87,18 +115,18 @@ export const FullSheet: Story = {
 };
 
 export const RendersItemName: Story = {
-    render: () => renderTemplate(headerTpl, makeCtx()),
+    render: () => renderStoryTemplate(headerTpl, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Ceramite Plating')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Ceramite Plating')).toBeTruthy();
     },
 };
 
 export const RendersEditImageAction: Story = {
-    render: () => renderTemplate(headerTpl, makeCtx()),
+    render: () => renderStoryTemplate(headerTpl, makeCtx()),
     play: async ({ canvasElement }) => {
         const btn = canvasElement.querySelector('[data-action="editImage"]');
-        expect(btn).toBeTruthy();
+        await expect(btn).toBeTruthy();
         btn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     },
 };

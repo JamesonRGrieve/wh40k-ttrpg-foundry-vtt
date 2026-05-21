@@ -7,7 +7,6 @@
  */
 
 import { describe, expect, it } from 'vitest';
-
 import {
     applyIrradiatedTick,
     daemonEngineRageBonus,

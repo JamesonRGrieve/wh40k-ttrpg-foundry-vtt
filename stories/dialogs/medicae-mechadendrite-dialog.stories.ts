@@ -44,14 +44,14 @@ export const Ineligible: Story = {
 
 export const RenderSmoke: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         const staunch = canvasElement.querySelector('button[data-action="staunchBloodLoss"]');
         const cancel = canvasElement.querySelector('button[data-action="cancel"]');
-        expect(staunch).toBeTruthy();
-        expect(cancel).toBeTruthy();
+        await expect(staunch).toBeTruthy();
+        await expect(cancel).toBeTruthy();
         // Eligible default → staunch button enabled.
-        expect((staunch as HTMLButtonElement).disabled).toBe(false);
-        expect(canvas.getByText(/Brother Medicae Voss/i)).toBeTruthy();
+        await expect((staunch as HTMLButtonElement).disabled).toBe(false);
+        await expect(view.getByText(/Brother Medicae Voss/i)).toBeTruthy();
     },
 };
 
@@ -59,6 +59,6 @@ export const IneligibleDisablesButton: Story = {
     args: { eligible: false },
     play: async ({ canvasElement }) => {
         const staunch = canvasElement.querySelector('button[data-action="staunchBloodLoss"]');
-        expect((staunch as HTMLButtonElement).disabled).toBe(true);
+        await expect((staunch as HTMLButtonElement).disabled).toBe(true);
     },
 };

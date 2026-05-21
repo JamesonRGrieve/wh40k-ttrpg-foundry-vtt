@@ -21,7 +21,7 @@ import {
 } from './manacles.ts';
 
 vi.mock('./active-effects.ts', () => ({
-    createConditionEffect: vi.fn(async (_actor: unknown, condition: string, options: Record<string, unknown>) => ({
+    createConditionEffect: vi.fn((_actor: unknown, condition: string, options: Record<string, unknown>) => ({
         id: `ae-${condition}`,
         name: 'Manacled',
         flags: options['flags'] as Record<string, Record<string, unknown>>,

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/characteristic-setup.hbs?raw';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
@@ -86,12 +86,10 @@ export const EmptyBank: Story = {
  */
 export const RollIndexAttributes: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
         const tiles = canvasElement.querySelectorAll('[data-roll-index]');
-        expect(tiles.length).toBe(9);
+        await expect(tiles.length).toBe(9);
         // Tile 0 should be a populated, non-assigned roll → draggable.
         const first = tiles[0] as HTMLElement;
-        expect(first.getAttribute('draggable')).toBe('true');
-        void canvas;
+        await expect(first.getAttribute('draggable')).toBe('true');
     },
 };

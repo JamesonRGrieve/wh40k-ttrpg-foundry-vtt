@@ -59,9 +59,9 @@ export const Variable: Story = {
 };
 
 export const RendersBadges: Story = {
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Sturdy')).toBeTruthy();
-        expect(canvas.getAllByText('Physical').length).toBeGreaterThan(0);
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByDisplayValue('Sturdy')).toBeTruthy();
+        void expect(storyCanvas.getAllByText('Physical').length).toBeGreaterThan(0);
     },
 };

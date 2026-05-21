@@ -18,8 +18,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-type ActionHandler = (this: GrenadeThrowDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 interface GrenadeChoice {
     id: string;
     label: string;
@@ -158,7 +156,7 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
         await this.close();
     }

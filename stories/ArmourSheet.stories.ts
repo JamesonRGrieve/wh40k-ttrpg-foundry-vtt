@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import armourSheetSrc from '../src/templates/item/item-armour-sheet.hbs?raw';
-import { mockArmourSheetContext, renderTemplate } from './mocks';
+import { mockArmourSheetContext, renderTemplate as renderTpl } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();
 
-const template = Handlebars.compile(armourSheetSrc);
+const template = Hbs.compile(armourSheetSrc);
 
 const meta: Meta = {
     title: 'Item Sheets/Armour Sheet',
@@ -17,12 +17,12 @@ export default meta;
 type Story = StoryObj;
 
 export const Standard: Story = {
-    render: () => renderTemplate(template, mockArmourSheetContext()),
+    render: () => renderTpl(template, mockArmourSheetContext()),
 };
 
 export const StowedReadOnly: Story = {
     render: () =>
-        renderTemplate(
+        renderTpl(
             template,
             mockArmourSheetContext({
                 isOwnedByActor: false,
@@ -43,7 +43,7 @@ export const StowedReadOnly: Story = {
 
 export const EditMode: Story = {
     render: () =>
-        renderTemplate(
+        renderTpl(
             template,
             mockArmourSheetContext({
                 inEditMode: true,

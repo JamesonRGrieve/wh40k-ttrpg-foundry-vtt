@@ -27,11 +27,11 @@
  * intact.
  */
 
+import type { DwActiveMissionData, DwMissionComplicationData, DwMissionObjectiveData } from '../data/actor/mixins/dw-mission-template.ts';
 import { t } from '../i18n/t.ts';
 import { computeMissionRewards, type DwMission, type MissionObjective, type MissionRewardResult, type ObjectiveStatus } from '../rules/dw-mission.ts';
 import { awardRenown } from '../rules/dw-renown.ts';
 import type { I18nKey } from '../types/i18n-keys';
-import type { DwActiveMissionData, DwMissionComplicationData, DwMissionObjectiveData } from '../data/actor/mixins/dw-mission-template.ts';
 
 /* -------------------------------------------- */
 /*  Host shape                                  */
@@ -153,7 +153,7 @@ async function postMissionRewardChat(host: DwMissionActionHost, ctx: ChatCardCon
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
     const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user?.id, content: html, speaker: { alias: host.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
+    const payload = { user: game.user.id, content: html, speaker: { alias: host.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
     await ChatMessage.create(payload);
 }
 
@@ -176,13 +176,12 @@ export async function dwToggleObjective(this: DwMissionActionHost, _event: Event
         const objectiveId = readDatasetId(target, 'objectiveId');
         if (objectiveId === null) return;
 
-        let mutated = false;
+        const found = active.objectives.some((o) => o.id === objectiveId);
+        if (!found) return;
         const nextObjectives: DwMissionObjectiveData[] = active.objectives.map((objective) => {
             if (objective.id !== objectiveId) return objective;
-            mutated = true;
             return { ...objective, status: STATUS_CYCLE[objective.status] };
         });
-        if (!mutated) return;
 
         await this.actor.update({ 'system.activeMission.objectives': nextObjectives });
     } catch (error: unknown) {
@@ -207,13 +206,12 @@ export async function dwToggleComplication(this: DwMissionActionHost, _event: Ev
         const complicationId = readDatasetId(target, 'complicationId');
         if (complicationId === null) return;
 
-        let mutated = false;
+        const found = active.complications.some((c) => c.id === complicationId);
+        if (!found) return;
         const nextComplications: DwMissionComplicationData[] = active.complications.map((complication) => {
             if (complication.id !== complicationId) return complication;
-            mutated = true;
             return { ...complication, triggered: !complication.triggered };
         });
-        if (!mutated) return;
 
         await this.actor.update({ 'system.activeMission.complications': nextComplications });
     } catch (error: unknown) {

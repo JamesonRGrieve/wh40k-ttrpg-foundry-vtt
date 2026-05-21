@@ -14,8 +14,8 @@
  * any change to the 5 m radius / visual-line gate surfaces here first.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HBS from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { COMRADE_COHESION_RANGE_M, type ComradeState, inCohesion } from '../../../module/rules/ow-comrade';
 import panelSrc from './ow-comrade-panel.hbs?raw';
@@ -72,13 +72,13 @@ function buildContext(opts: { name: string; state: ComradeState; distanceM: numb
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HBS.compile(panelSrc);
 
 function renderPanel(ctx: ComradePanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderTpl(panelTpl, ctx));
     return wrapper;
 }
 

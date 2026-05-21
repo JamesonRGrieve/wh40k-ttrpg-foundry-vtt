@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import {
     GENERIC_ORDERS,
     GENERIC_ORDER_CLOSE_QUARTERS,

@@ -9,8 +9,8 @@
  *                            even though the panel disables the button).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../stories/mocks';
+import HbsLib from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import cardSrc from './ow-mount-action-chat.hbs?raw';
 
@@ -30,13 +30,13 @@ interface MountActionChatCtx {
     mount: MountChatLink | null;
 }
 
-const cardTpl = Handlebars.compile(cardSrc);
+const cardTpl = HbsLib.compile(cardSrc);
 
 function renderCard(ctx: MountActionChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(cardTpl, ctx));
+    wrapper.appendChild(renderStoryTemplate(cardTpl, ctx));
     return wrapper;
 }
 

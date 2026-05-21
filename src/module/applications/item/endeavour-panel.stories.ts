@@ -11,14 +11,14 @@
  * pass that array directly so the partial works without a full sheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HandlebarsLib from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { randomId, seedRandom } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/actor/panel/endeavour-panel.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0xe7de8a04);
 
 interface EndeavourObjectiveLike {
@@ -44,7 +44,8 @@ interface EndeavourLike {
 
 function makeEndeavour(overrides: Partial<EndeavourLike> & { system?: Partial<EndeavourLike['system']> } = {}): EndeavourLike {
     const id = overrides.id ?? randomId('endeavour', rng);
-    const sysOverride: Partial<EndeavourLike['system']> = overrides.system ?? {};
+    const { system: sysOverrideRaw = {} } = overrides;
+    const sysOverride: Partial<EndeavourLike['system']> = sysOverrideRaw;
     const objectives: EndeavourObjectiveLike[] = sysOverride.objectives ?? [];
     const apEarned: number = sysOverride.apEarned ?? objectives.filter((o) => o.complete).reduce((sum, o) => sum + o.ap, 0);
     const apRequired: number = sysOverride.apRequired ?? objectives.reduce((sum, o) => sum + o.ap, 0);
@@ -65,7 +66,7 @@ function makeEndeavour(overrides: Partial<EndeavourLike> & { system?: Partial<En
     };
 }
 
-function makeCtx(endeavours: EndeavourLike[], actorId = 'mock-actor') {
+function makeCtx(endeavours: EndeavourLike[], actorId = 'mock-actor'): { endeavours: EndeavourLike[]; actor: { id: string }; system: Record<string, never> } {
     return {
         endeavours,
         actor: { id: actorId },
@@ -81,13 +82,13 @@ type Story = StoryObj;
 
 /** No embedded endeavour items — placeholder line renders. */
 export const Empty: Story = {
-    render: () => renderTemplate(compiled, makeCtx([])),
+    render: () => renderStoryTemplate(compiled, makeCtx([])),
 };
 
 /** One Endeavour mid-flight: two of four objectives complete, 50%. */
 export const InProgress: Story = {
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             compiled,
             makeCtx([
                 makeEndeavour({
@@ -110,7 +111,7 @@ export const InProgress: Story = {
 /** One Endeavour fully complete — the "Grant Reward" header button appears. */
 export const Completed: Story = {
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             compiled,
             makeCtx([
                 makeEndeavour({

@@ -105,7 +105,7 @@ function toggleSelection(selection: RegimentSelection, category: RegimentCategor
     }
 
     // Single-pick: clicking the active option clears it; otherwise replace.
-    const slotKey = category as SinglePickCategory;
+    const slotKey: SinglePickCategory = category;
     const currentValue = selection[slotKey];
     return { ...selection, [slotKey]: currentValue === optionId ? '' : optionId };
 }
@@ -118,7 +118,8 @@ function selectionContainsForCategory(selection: RegimentSelection, category: Re
         const key = category === 'trainingDoctrine' ? 'trainingDoctrines' : 'specialEquipmentDoctrines';
         return selection[key].includes(optionId);
     }
-    return selection[category as SinglePickCategory] === optionId;
+    const singleKey: SinglePickCategory = category;
+    return selection[singleKey] === optionId;
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern (matches colony-growth-dialog)
@@ -270,8 +271,8 @@ function readSelectionFromActor(actor: WH40KBaseActor | null): RegimentSelection
         homeWorld: slot.homeWorld ?? '',
         commandingOfficer: slot.commandingOfficer ?? '',
         regimentType: slot.regimentType ?? '',
-        trainingDoctrines: [...(slot.trainingDoctrines ?? [])],
-        specialEquipmentDoctrines: [...(slot.specialEquipmentDoctrines ?? [])],
+        trainingDoctrines: [...slot.trainingDoctrines],
+        specialEquipmentDoctrines: [...slot.specialEquipmentDoctrines],
         favouredWeapons: {
             close: slot.favouredWeapons.close ?? '',
             ranged: slot.favouredWeapons.ranged ?? '',

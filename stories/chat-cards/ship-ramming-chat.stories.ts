@@ -15,16 +15,16 @@
  * fire outside the sheet root.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveRamming, type RammingResolution } from '../../src/module/rules/ship-ramming.ts';
 import shipRammingChatSrc from '../../src/templates/chat/ship-ramming-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
 
-const shipRammingTemplate = Handlebars.compile(shipRammingChatSrc);
+const shipRammingTemplate = Hbs.compile(shipRammingChatSrc);
 
 interface CardArgs {
     attackerName: string;
@@ -45,7 +45,7 @@ function cardContext(args: CardArgs): Record<string, unknown> {
 
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Ramming (#188)',
-    render: (args) => renderTemplate(shipRammingTemplate, cardContext(args)),
+    render: (args) => renderTpl(shipRammingTemplate, cardContext(args)),
 };
 
 export default meta;
@@ -68,11 +68,11 @@ export const Hit: Story = {
     },
     play: async ({ canvasElement }) => {
         const card = canvasElement.querySelector('.wh40k-ship-ramming-card');
-        expect(card).toBeTruthy();
-        expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
+        await expect(card).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
         // Damage block must render hull-damage rows when the ram lands.
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.Ramming\.DefenderHull/)).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText(/WH40K\.Starship\.Ramming\.DefenderHull/)).toBeTruthy();
     },
 };
 
@@ -88,9 +88,9 @@ export const Miss: Story = {
         }),
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.Ramming\.OutcomeMiss/)).toBeTruthy();
-        expect(canvas.getByText(/WH40K\.Starship\.Ramming\.MissExplain/)).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText(/WH40K\.Starship\.Ramming\.OutcomeMiss/)).toBeTruthy();
+        await expect(storyCanvas.getByText(/WH40K\.Starship\.Ramming\.MissExplain/)).toBeTruthy();
     },
 };
 
@@ -126,7 +126,7 @@ export const ImposingProwBonus: Story = {
         }),
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.Ramming\.BonusDamage/)).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText(/WH40K\.Starship\.Ramming\.BonusDamage/)).toBeTruthy();
     },
 };

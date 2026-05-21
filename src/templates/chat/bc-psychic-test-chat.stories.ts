@@ -9,8 +9,8 @@
  *                    sustain penalty engaged.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../stories/mocks';
+import HbsLib from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../../module/rules/bc-psychic-strength';
 import cardSrc from './bc-psychic-test-chat.hbs?raw';
@@ -32,13 +32,13 @@ interface PsychicTestChatCtx {
     phenomenaRolls: number;
 }
 
-const cardTpl = Handlebars.compile(cardSrc);
+const cardTpl = HbsLib.compile(cardSrc);
 
 function renderCard(ctx: PsychicTestChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderTemplate(cardTpl, ctx));
+    wrapper.appendChild(renderStoryTemplate(cardTpl, ctx));
     return wrapper;
 }
 

@@ -17,8 +17,8 @@
  *         },
  *     };
  */
-import Handlebars from 'handlebars';
-import { renderTemplate } from './mocks';
+import HbsStory from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();
@@ -40,12 +40,12 @@ export function renderSheet(templateSource: string, context: Context = {}): HTML
     // `{{#> name}}{{/name}}`.
     if (templateSource.includes('@partial-block')) {
         const name = `__renderSheet_${renderSheetCounter++}`;
-        Handlebars.registerPartial(name, templateSource);
-        const wrapper = Handlebars.compile(`{{#> ${name}}}{{/${name}}}`);
-        return renderTemplate(wrapper, context);
+        HbsStory.registerPartial(name, templateSource);
+        const wrapper = HbsStory.compile(`{{#> ${name}}}{{/${name}}}`);
+        return renderStoryTemplate(wrapper, context);
     }
-    const tpl = Handlebars.compile(templateSource);
-    return renderTemplate(tpl, context);
+    const tpl = HbsStory.compile(templateSource);
+    return renderStoryTemplate(tpl, context);
 }
 
 /**
@@ -61,10 +61,10 @@ export function renderSheetParts(parts: Array<{ template: string; context?: Cont
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg', 'sheet');
     for (const part of parts) {
-        const tpl = Handlebars.compile(part.template);
+        const tpl = HbsStory.compile(part.template);
         const html = tpl({ ...baseContext, ...(part.context ?? {}) });
         const slot = document.createElement('div');
-        if (part.partClass) slot.className = part.partClass;
+        if (part.partClass !== undefined) slot.className = part.partClass;
         slot.innerHTML = html;
         wrapper.appendChild(slot);
     }
@@ -81,9 +81,9 @@ function asParent(node: ParentNode | HTMLElement): ParentNode {
  * silently passing. Pair with the @testing-library `expect`/`within` from
  * `storybook/test` for assertions.
  */
-export function clickAction(canvas: ParentNode | HTMLElement, action: string): void {
-    const el = asParent(canvas).querySelector<HTMLElement>(`[data-action="${action}"]`);
-    if (!el) throw new Error(`clickAction: no element with [data-action="${action}"] in canvas`);
+export function clickAction(container: ParentNode | HTMLElement, action: string): void {
+    const el = asParent(container).querySelector<HTMLElement>(`[data-action="${action}"]`);
+    if (!el) throw new Error(`clickAction: no element with [data-action="${action}"] in container`);
     el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 }
 
@@ -92,8 +92,8 @@ export function clickAction(canvas: ParentNode | HTMLElement, action: string): v
  * map to `name="..."` attributes (e.g. `system.wounds.value`). Throws if a
  * named field is not present in the canvas.
  */
-export function submitForm(canvas: ParentNode | HTMLElement, values: Record<string, string | number | boolean>): void {
-    const parent = asParent(canvas);
+export function submitForm(container: ParentNode | HTMLElement, values: Record<string, string | number | boolean>): void {
+    const parent = asParent(container);
     let form: HTMLFormElement | null = null;
     for (const [name, value] of Object.entries(values)) {
         const el = parent.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`[name="${name}"]`);
@@ -114,9 +114,9 @@ export function submitForm(canvas: ParentNode | HTMLElement, values: Record<stri
  * Assert that the currently active tab matches `name`. Looks for the
  * `[data-tab="<name>"]` element and checks for the `.active` class.
  */
-export function assertActiveTab(canvas: ParentNode | HTMLElement, name: string): void {
-    const el = asParent(canvas).querySelector<HTMLElement>(`[data-tab="${name}"]`);
-    if (!el) throw new Error(`assertActiveTab: no [data-tab="${name}"] in canvas`);
+export function assertActiveTab(container: ParentNode | HTMLElement, name: string): void {
+    const el = asParent(container).querySelector<HTMLElement>(`[data-tab="${name}"]`);
+    if (!el) throw new Error(`assertActiveTab: no [data-tab="${name}"] in container`);
     if (!el.classList.contains('active')) {
         throw new Error(`assertActiveTab: [data-tab="${name}"] is not .active`);
     }
@@ -125,9 +125,9 @@ export function assertActiveTab(canvas: ParentNode | HTMLElement, name: string):
 /**
  * Assert the value of a named form field.
  */
-export function assertField(canvas: ParentNode | HTMLElement, name: string, expected: string | number | boolean): void {
-    const el = asParent(canvas).querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`[name="${name}"]`);
-    if (!el) throw new Error(`assertField: no [name="${name}"] in canvas`);
+export function assertField(container: ParentNode | HTMLElement, name: string, expected: string | number | boolean): void {
+    const el = asParent(container).querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`[name="${name}"]`);
+    if (!el) throw new Error(`assertField: no [name="${name}"] in container`);
     const actual = el instanceof HTMLInputElement && el.type === 'checkbox' ? el.checked : el.value;
     const expectedNorm = el instanceof HTMLInputElement && el.type === 'checkbox' ? Boolean(expected) : String(expected);
     if (actual !== expectedNorm) {

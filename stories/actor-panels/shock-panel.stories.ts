@@ -12,9 +12,9 @@
  * a live Foundry instance.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsStory from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/shock-panel.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
@@ -23,10 +23,10 @@ interface ShockContext {
     system: { shock: { value: number; max: number } };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HbsStory.compile(panelSrc);
 
 function renderPanel(ctx: ShockContext): HTMLElement {
-    return renderTemplate(panelTpl, ctx);
+    return renderStoryTemplate(panelTpl, ctx);
 }
 
 const meta: Meta<ShockContext> = {

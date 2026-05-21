@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import type { WH40KItem } from '../documents/item.ts';
 import { computeArmour } from './armour-calculator';
 
 /**

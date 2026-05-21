@@ -14,8 +14,8 @@
  * Every value is fixed for diff stability (no Math.random).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import Hbs from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import panelSrc from './ow-mount-panel.hbs?raw';
 
@@ -47,7 +47,7 @@ interface MountPanelCtx {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = Hbs.compile(panelSrc);
 
 const FOUR_ACTIONS: MountedActionRow[] = [
     {
@@ -84,7 +84,7 @@ function renderPanel(ctx: MountPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderTpl(panelTpl, ctx));
     return wrapper;
 }
 

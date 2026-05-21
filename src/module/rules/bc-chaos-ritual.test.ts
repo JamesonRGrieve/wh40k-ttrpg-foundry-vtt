@@ -6,7 +6,6 @@
  * and the Breaking Mastery opposed contest.
  */
 import { describe, expect, it } from 'vitest';
-
 import { computeRitualTarget, resolveBreakingMastery, resolveContemptOfTheWarp, type RitualModifier, type RitualTemplate } from './bc-chaos-ritual';
 
 const TEMPLATE: RitualTemplate = {

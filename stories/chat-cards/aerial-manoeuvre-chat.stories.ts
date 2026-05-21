@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveAerialManoeuvre } from '../../src/module/rules/vehicle-actions.ts';
 import aerialChatSrc from '../../src/templates/chat/aerial-manoeuvre-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -21,7 +21,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const aerialChatTemplate = Handlebars.compile(aerialChatSrc);
+const aerialChatTemplate = Hbs.compile(aerialChatSrc);
 
 const ALTITUDE_KEYS: Record<string, string> = {
     ground: 'WH40K.AerialManoeuvre.Altitude.Ground',
@@ -52,28 +52,28 @@ type Story = StoryObj;
 
 export const LockOnWin: Story = {
     name: 'Lock On — opposed win (+20 pilot / +10 enemies)',
-    render: () => renderTemplate(aerialChatTemplate, cardContext(resolveAerialManoeuvre('lock-on', true, { dosMargin: 1 }))),
+    render: () => renderTpl(aerialChatTemplate, cardContext(resolveAerialManoeuvre('lock-on', true, { dosMargin: 1 }))),
 };
 
 export const LockOnCrush: Story = {
     name: 'Lock On — 3+ DoS, Free Action unlocked',
-    render: () => renderTemplate(aerialChatTemplate, cardContext(resolveAerialManoeuvre('lock-on', true, { dosMargin: 3 }))),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.AerialManoeuvre\.FreeAttack/)).toBeTruthy();
+    render: () => renderTpl(aerialChatTemplate, cardContext(resolveAerialManoeuvre('lock-on', true, { dosMargin: 3 }))),
+    play: ({ canvasElement }) => {
+        const cv = within(canvasElement);
+        void expect(cv.getByText(/WH40K\.AerialManoeuvre\.FreeAttack/)).toBeTruthy();
     },
 };
 
 export const TightTurnSuccess: Story = {
     name: 'Tight Turn — success, climb one tier',
-    render: () => renderTemplate(aerialChatTemplate, cardContext(resolveAerialManoeuvre('tight-turn', true, { currentAltitude: 'low', altitudeDelta: 1 }))),
-    play: async ({ canvasElement }) => {
-        expect(canvasElement.querySelector('.wh40k-aerial-card')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-wh40k-system="dh2e"]')).toBeTruthy();
+    render: () => renderTpl(aerialChatTemplate, cardContext(resolveAerialManoeuvre('tight-turn', true, { currentAltitude: 'low', altitudeDelta: 1 }))),
+    play: ({ canvasElement }) => {
+        void expect(canvasElement.querySelector('.wh40k-aerial-card')).toBeTruthy();
+        void expect(canvasElement.querySelector('[data-wh40k-system="dh2e"]')).toBeTruthy();
     },
 };
 
 export const TightTurnFailure: Story = {
     name: 'Tight Turn — failure, forced descent',
-    render: () => renderTemplate(aerialChatTemplate, cardContext(resolveAerialManoeuvre('tight-turn', false, { currentAltitude: 'high' }))),
+    render: () => renderTpl(aerialChatTemplate, cardContext(resolveAerialManoeuvre('tight-turn', false, { currentAltitude: 'high' }))),
 };

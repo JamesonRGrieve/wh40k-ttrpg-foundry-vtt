@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HB from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveTwoWeaponRefocus, type TwoWeaponRefocusContext } from '../../src/module/rules/two-weapon-fighting.ts';
 import refocusChatSrc from '../../src/templates/chat/two-weapon-refocus-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as compileAndRender } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -16,7 +16,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const refocusTemplate = Handlebars.compile(refocusChatSrc);
+const refocusTemplate = HB.compile(refocusChatSrc);
 
 function cardContext(ctx: TwoWeaponRefocusContext, gameSystem = 'dh2e'): Record<string, unknown> {
     const plan = resolveTwoWeaponRefocus(ctx);
@@ -37,35 +37,37 @@ type Story = StoryObj;
 
 export const RangedSingleShotWielder: Story = {
     name: 'Ranged Wielder — single shot Half-Action ×2',
-    render: () => renderTemplate(refocusTemplate, cardContext({ isMelee: false, mode: 'Standard Attack', talents: new Set(['Two-Weapon Wielder (Ranged)']) })),
+    render: () =>
+        compileAndRender(refocusTemplate, cardContext({ isMelee: false, mode: 'Standard Attack', talents: new Set(['Two-Weapon Wielder (Ranged)']) })),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Two Standard Attack rows render (main Half + off Free).
-        expect(canvas.getAllByText(/Standard Attack/).length).toBe(2);
+        await expect(view.getAllByText(/Standard Attack/).length).toBe(2);
         // Action economy is Half + Free, never a Full-Action lump.
-        expect(canvas.getByText(/\(Half\)/)).toBeTruthy();
-        expect(canvas.getByText(/\(Free\)/)).toBeTruthy();
+        await expect(view.getByText(/\(Half\)/)).toBeTruthy();
+        await expect(view.getByText(/\(Free\)/)).toBeTruthy();
         // Per-system + outside-sheet cascade anchors must be present.
         const root = canvasElement.querySelector('.wh40k-twr-card');
-        expect(root?.classList.contains('wh40k-rpg')).toBe(true);
-        expect(root?.getAttribute('data-wh40k-system')).toBe('dh2e');
+        await expect(root?.classList.contains('wh40k-rpg')).toBe(true);
+        await expect(root?.getAttribute('data-wh40k-system')).toBe('dh2e');
     },
 };
 
 export const RangedSemiAutoSameRestrictions: Story = {
     name: 'Ranged Wielder — semi-auto opener, same-mode follow-up',
-    render: () => renderTemplate(refocusTemplate, cardContext({ isMelee: false, mode: 'Semi-Auto Burst', talents: new Set(['Two-Weapon Wielder (Ranged)']) })),
+    render: () =>
+        compileAndRender(refocusTemplate, cardContext({ isMelee: false, mode: 'Semi-Auto Burst', talents: new Set(['Two-Weapon Wielder (Ranged)']) })),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // The off-hand follows the same restrictions as the opener.
-        expect(canvas.getAllByText(/Semi-Auto Burst/).length).toBe(2);
+        await expect(view.getAllByText(/Semi-Auto Burst/).length).toBe(2);
     },
 };
 
 export const RangedMasterAmbidextrous: Story = {
     name: 'Ranged Master — both penalties 0',
     render: () =>
-        renderTemplate(
+        compileAndRender(
             refocusTemplate,
             cardContext({
                 isMelee: false,
@@ -77,10 +79,11 @@ export const RangedMasterAmbidextrous: Story = {
 
 export const MeleeSwiftAttackVariant: Story = {
     name: 'Melee Wielder (RT) — Swift Attack ×2',
-    render: () => renderTemplate(refocusTemplate, cardContext({ isMelee: true, mode: 'Swift Attack', talents: new Set(['Two-Weapon Wielder (Melee)']) }, 'rt')),
+    render: () =>
+        compileAndRender(refocusTemplate, cardContext({ isMelee: true, mode: 'Swift Attack', talents: new Set(['Two-Weapon Wielder (Melee)']) }, 'rt')),
     play: async ({ canvasElement }) => {
         // Per-system variant anchor differs across the seven systems.
         const root = canvasElement.querySelector('.wh40k-twr-card');
-        expect(root?.getAttribute('data-wh40k-system')).toBe('rt');
+        await expect(root?.getAttribute('data-wh40k-system')).toBe('rt');
     },
 };

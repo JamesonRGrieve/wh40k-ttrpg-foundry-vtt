@@ -2,18 +2,31 @@
  * Stories for ShipWeaponSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HB from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as compileAndRender } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/ship-weapon-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HB.compile(templateSrc);
 const rng = seedRandom(0x5a5b5c5);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+interface ShipWeaponCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    source: ReturnType<typeof mockItem>['system'];
+    weaponTypes: Record<string, { label: string }>;
+    locations: Record<string, { label: string }>;
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    effects: unknown[];
+    tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
+}
+
+function makeCtx(overrides: Partial<ShipWeaponCtx> = {}): ShipWeaponCtx {
     const id = randomId('ship-wpn', rng);
     const item = mockItem({
         _id: id,
@@ -70,23 +83,23 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => compileAndRender(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => compileAndRender(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersWeaponName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => compileAndRender(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Prow Lance Battery')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Prow Lance Battery')).toBeTruthy();
     },
 };
 
 export const RendersDetailsTabActive: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => compileAndRender(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
         const tab = canvasElement.querySelector('[data-tab="details"]');
-        expect(tab).toBeTruthy();
-        expect(tab?.classList.contains('active')).toBe(true);
+        await expect(tab).toBeTruthy();
+        await expect(tab?.classList.contains('active')).toBe(true);
     },
 };

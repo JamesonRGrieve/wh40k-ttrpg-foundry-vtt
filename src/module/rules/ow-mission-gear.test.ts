@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import {
     GEAR_RESULT_LADDER,
     ORDINARY_BONUS_KEY,

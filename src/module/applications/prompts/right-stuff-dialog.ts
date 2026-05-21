@@ -30,8 +30,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-type ActionHandler = (this: RightStuffDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 interface SkillChoice {
     key: RightStuffSkill;
     labelKey: string;

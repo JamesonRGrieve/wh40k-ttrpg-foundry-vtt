@@ -6,8 +6,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../stories/mocks';
+import HandlebarsLib from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { type LogisticsBreakdown, computeLogisticsTarget, resolveLogisticsTest } from '../../module/rules/ow-logistics.ts';
 import chatSrc from './ow-logistics-chat.hbs?raw';
@@ -24,11 +24,11 @@ interface LogisticsChatCtx {
     breakdown: LogisticsBreakdown;
 }
 
-const chatTpl = Handlebars.compile(chatSrc);
+const chatTpl = HandlebarsLib.compile(chatSrc);
 
 function renderChat(ctx: LogisticsChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.appendChild(renderTemplate(chatTpl, ctx as unknown as Record<string, unknown>));
+    wrapper.appendChild(renderStoryTemplate(chatTpl, { ...ctx }));
     return wrapper;
 }
 

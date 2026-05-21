@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
 import medicaeChatSrc from '../../src/templates/chat/medicae-mechadendrite-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -15,7 +15,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const medicaeTemplate = Handlebars.compile(medicaeChatSrc);
+const medicaeTemplate = HBS.compile(medicaeChatSrc);
 
 interface MedicaeCardArgs {
     actorName: string;
@@ -41,7 +41,7 @@ function buildContext(args: MedicaeCardArgs): Record<string, unknown> {
 
 const meta: Meta<MedicaeCardArgs> = {
     title: 'Chat/Medicae Mechadendrite (#104)',
-    render: (args) => renderTemplate(medicaeTemplate, buildContext(args)),
+    render: (args) => renderTpl(medicaeTemplate, buildContext(args)),
     args: {
         actorName: 'Brother Medicae Voss',
         roll: 32,
@@ -82,17 +82,17 @@ export const SuccessRogueTraderTheme: Story = {
 
 export const RenderSmoke: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         const card = canvasElement.querySelector('.wh40k-medicae-mechadendrite-card');
-        expect(card).toBeTruthy();
+        await expect(card).toBeTruthy();
         // Card carries the per-system anchor and the wh40k-rpg cascade scope.
-        expect(card?.getAttribute('data-wh40k-system')).toBe('dh2e');
-        expect(card?.classList.contains('wh40k-rpg')).toBe(true);
+        await expect(card?.getAttribute('data-wh40k-system')).toBe('dh2e');
+        await expect(card?.classList.contains('wh40k-rpg')).toBe(true);
         // Success branch surfaces the staunched-blood-loss copy.
-        expect(canvas.getByText(/Brother Medicae Voss/i)).toBeTruthy();
+        await expect(view.getByText(/Brother Medicae Voss/i)).toBeTruthy();
         // Roll / target / bonus rows render.
-        expect(card?.textContent).toContain('32');
-        expect(card?.textContent).toContain('50');
-        expect(card?.textContent).toContain('+10');
+        await expect(card?.textContent).toContain('32');
+        await expect(card?.textContent).toContain('50');
+        await expect(card?.textContent).toContain('+10');
     },
 };

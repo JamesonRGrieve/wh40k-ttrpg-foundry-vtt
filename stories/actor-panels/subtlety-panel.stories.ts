@@ -22,10 +22,10 @@
  * e2e spec (`tests/e2e/subtlety-panel.spec.ts`) snaps the live-Foundry render.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
 import panelSrc from '../../src/templates/actor/panel/subtlety-panel.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { seedRandom } from '../mocks/extended';
 import { initializeStoryHandlebars } from '../template-support';
 
@@ -50,7 +50,7 @@ interface SubtletyContext {
     subtletyAdjusters: SubtletyAdjusterRow[];
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HbsLib.compile(panelSrc);
 
 /**
  * Render the panel wrapped in the `.wh40k-rpg` + `data-wh40k-system="dh2e"`
@@ -61,7 +61,7 @@ function renderPanel(ctx: SubtletyContext): HTMLElement {
     const root = document.createElement('div');
     root.className = 'wh40k-rpg sheet actor character';
     root.dataset['wh40kSystem'] = 'dh2e';
-    root.append(renderTemplate(panelTpl, ctx));
+    root.append(renderStoryTemplate(panelTpl, ctx));
     return root;
 }
 
@@ -96,20 +96,20 @@ export const PlayerView: Story = {
         ],
     },
     render: (args) => renderPanel(args),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
         // Pool readout shows current / max.
-        expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('60');
-        expect(canvasElement.querySelector('.wh40k-subtlety-max')?.textContent?.trim()).toBe('100');
+        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('60');
+        void expect(canvasElement.querySelector('.wh40k-subtlety-max')?.textContent?.trim()).toBe('100');
         // Player view: the GM-only manual stepper must NOT render.
-        expect(canvasElement.querySelector('.wh40k-subtlety-manual')).toBeNull();
-        expect(canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]').length).toBe(0);
+        void expect(canvasElement.querySelector('.wh40k-subtlety-manual')).toBeNull();
+        void expect(canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]').length).toBe(0);
         // Both adjuster rows render; the clamp row shows its shield affordance.
-        expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(2);
-        expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
-        expect(canvas.getByText('Dark Pact — Hunger for Knowledge (discovered)')).toBeTruthy();
+        void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(2);
+        void expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
+        void expect(storyCanvas.getByText('Dark Pact — Hunger for Knowledge (discovered)')).toBeTruthy();
         // Breakdown affordance is always available.
-        expect(canvasElement.querySelector('[data-action="viewSubtletyBreakdown"]')).not.toBeNull();
+        void expect(canvasElement.querySelector('[data-action="viewSubtletyBreakdown"]')).not.toBeNull();
     },
 };
 
@@ -146,21 +146,21 @@ export const GmViewWithAdjusters: Story = {
         ],
     },
     render: (args) => renderPanel(args),
-    play: async ({ canvasElement }) => {
-        expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('45');
+    play: ({ canvasElement }) => {
+        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('45');
         // GM view: the manual stepper renders both +1 / -1 buttons.
         const steppers = canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]');
-        expect(steppers.length).toBe(2);
+        void expect(steppers.length).toBe(2);
         const deltas = Array.from(steppers).map((b) => b.getAttribute('data-delta'));
-        expect(deltas).toContain('1');
-        expect(deltas).toContain('-1');
+        void expect(deltas).toContain('1');
+        void expect(deltas).toContain('-1');
         // Three adjuster rows; the gains row (+5) and losses row (-3) render
         // signed deltas, the clamp row renders the shield affordance.
-        expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(3);
+        void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(3);
         const deltaCells = Array.from(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-delta')).map((n) => n.textContent?.trim());
-        expect(deltaCells).toContain('+5');
-        expect(deltaCells).toContain('-3');
-        expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
+        void expect(deltaCells).toContain('+5');
+        void expect(deltaCells).toContain('-3');
+        void expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
     },
 };
 
@@ -172,9 +172,9 @@ export const EmptyAdjusters: Story = {
         subtletyAdjusters: [],
     },
     render: (args) => renderPanel(args),
-    play: async ({ canvasElement }) => {
-        expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('80');
-        expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(0);
-        expect(canvasElement.querySelector('.wh40k-subtlety-adjusters-empty')).not.toBeNull();
+    play: ({ canvasElement }) => {
+        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('80');
+        void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(0);
+        void expect(canvasElement.querySelector('.wh40k-subtlety-adjusters-empty')).not.toBeNull();
     },
 };

@@ -10,7 +10,6 @@
  * lives in the compendium.
  */
 import { describe, expect, it } from 'vitest';
-
 import { mergeGiftDeltas, resolveGiftForAlignment, type GiftDef } from './bc-gifts.ts';
 
 function makeGift(overrides: Partial<GiftDef> = {}): GiftDef {

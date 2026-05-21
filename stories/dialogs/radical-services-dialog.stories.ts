@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import templateSrc from '../../src/templates/prompt/radical-services-dialog.hbs?raw';
 import { clickAction, renderSheet } from '../test-helpers';
 
@@ -145,13 +145,13 @@ type Story = StoryObj<Args>;
 
 export const Default: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
         const button = canvasElement.querySelector<HTMLButtonElement>('[data-action="attemptRequisition"]');
-        expect(button).toBeTruthy();
-        expect(button!.disabled).toBe(true);
+        await expect(button).toBeTruthy();
+        if (button !== null) {
+            await expect(button.disabled).toBe(true);
+        }
         const rows = canvasElement.querySelectorAll('[data-action="selectService"]');
-        expect(rows.length).toBe(9);
-        void canvas;
+        await expect(rows.length).toBe(9);
     },
 };
 
@@ -163,8 +163,10 @@ export const ServiceSelected: Story = {
     },
     play: async ({ canvasElement }) => {
         const button = canvasElement.querySelector<HTMLButtonElement>('[data-action="attemptRequisition"]');
-        expect(button).toBeTruthy();
-        expect(button!.disabled).toBe(false);
+        await expect(button).toBeTruthy();
+        if (button !== null) {
+            await expect(button.disabled).toBe(false);
+        }
         clickAction(canvasElement, 'cancel');
     },
 };

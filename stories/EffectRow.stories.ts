@@ -83,11 +83,11 @@ export const ActorActiveEffectsPanel: Story = {
             effects: makeEffects(),
             actor: { flags: { 'wh40k-rpg': { expanded: { effects_details: true } } } },
         }),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
         // Toolbar dispatches the actor's `effectToggle` action.
-        const toggleBtn = canvas.getAllByTitle(/Disable Effect|Enable Effect/i)[0];
-        expect(toggleBtn.getAttribute('data-action')).toBe('effectToggle');
+        const toggleBtn = storyCanvas.getAllByTitle(/Disable Effect|Enable Effect/i)[0];
+        void expect(toggleBtn.getAttribute('data-action')).toBe('effectToggle');
         clickAction(canvasElement, 'effectToggle');
     },
 };
@@ -100,10 +100,10 @@ export const ActorEffectsPanelLegacy: Story = {
             effects: makeEffects(),
             editable: true,
         }),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const toggleBtn = canvas.getAllByTitle(/Disable Effect|Enable Effect/i)[0];
-        expect(toggleBtn.getAttribute('data-action')).toBe('toggleEffect');
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        const toggleBtn = storyCanvas.getAllByTitle(/Disable Effect|Enable Effect/i)[0];
+        void expect(toggleBtn.getAttribute('data-action')).toBe('toggleEffect');
     },
 };
 

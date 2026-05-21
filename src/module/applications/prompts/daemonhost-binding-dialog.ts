@@ -18,9 +18,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** Action handler bound with a `this` context, matching the Mixin's expectations. */
-type ActionHandler = (this: DaemonhostBindingDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 /** Tier ids in display order — matches the brief's "five tier cards in a grid". */
 const TIER_ORDER: readonly BindingStrength[] = ['minor', 'lesser', 'normal', 'greater', 'major'] as const;
 
@@ -110,7 +107,7 @@ export default class DaemonhostBindingDialog extends ApplicationV2Mixin(Applicat
 
         const tiers: TierCard[] = TIER_ORDER.map((id) => {
             const tier: DaemonhostTier = DAEMONHOST_TIERS[id];
-            const label = game.i18n?.localize?.(TIER_LABEL_KEYS[id]) ?? tier.label;
+            const label = game.i18n.localize(TIER_LABEL_KEYS[id]);
             const mod = tier.reinforcementModifier;
             return {
                 id,
@@ -149,7 +146,7 @@ export default class DaemonhostBindingDialog extends ApplicationV2Mixin(Applicat
     static async #onBind(this: DaemonhostBindingDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const tier: DaemonhostTier = DAEMONHOST_TIERS[this.selectedTier];
-        const label = game.i18n?.localize?.(TIER_LABEL_KEYS[this.selectedTier]) ?? tier.label;
+        const label = game.i18n.localize(TIER_LABEL_KEYS[this.selectedTier]);
         const mod = tier.reinforcementModifier;
         const modLabel = mod > 0 ? `+${mod}` : String(mod);
 
@@ -166,7 +163,7 @@ export default class DaemonhostBindingDialog extends ApplicationV2Mixin(Applicat
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/daemonhost-binding-chat.hbs', templateData);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
         await this.close();
     }

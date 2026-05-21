@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { expect, within } from 'storybook/test';
+import Hbs from 'handlebars';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
 import templateSrc from './field-row.hbs?raw';
@@ -9,8 +9,9 @@ initializeStoryHandlebars();
 
 // `eq` is registered globally by the runtime helper bundle but is not part
 // of the shared story helper set; register a minimal version locally.
-if (!Handlebars.helpers.eq) {
-    Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b);
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Handlebars.helpers is a live object; `eq` may be absent in story env even when defined at runtime
+if (Hbs.helpers['eq'] === undefined) {
+    Hbs.registerHelper('eq', (a: unknown, b: unknown) => a === b);
 }
 
 interface Args {
@@ -44,14 +45,13 @@ export default meta;
 
 type Story = StoryObj<Args>;
 
-export const Text: Story = {};
+export const TextInput: Story = {};
 
 export const TextWithValue: Story = {
     args: { name: 'system.bio.name', label: 'Name', value: 'Marcus Steel' },
 };
 
 export const Number_: Story = {
-    name: 'Number',
     args: {
         name: 'system.bio.age',
         label: 'Age',
@@ -89,7 +89,7 @@ export const Textarea: Story = {
     },
 };
 
-export const Readonly: Story = {
+export const ReadonlyField: Story = {
     args: {
         name: 'system.bio.rank',
         label: 'Rank',
@@ -113,12 +113,10 @@ export const NumberDispatch: Story = {
         dataDtype: 'Number',
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
         const input = canvasElement.querySelector('input[name="system.combat.movement"]');
-        expect(input).toBeTruthy();
-        expect((input as HTMLInputElement).type).toBe('number');
-        expect((input as HTMLInputElement).getAttribute('data-dtype')).toBe('Number');
-        expect((input as HTMLInputElement).value).toBe('4');
-        void canvas;
+        await expect(input).toBeTruthy();
+        await expect((input as HTMLInputElement).type).toBe('number');
+        await expect((input as HTMLInputElement).getAttribute('data-dtype')).toBe('Number');
+        await expect((input as HTMLInputElement).value).toBe('4');
     },
 };

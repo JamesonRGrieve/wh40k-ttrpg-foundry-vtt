@@ -16,8 +16,8 @@
  * "Seeded RNG in stories" rule in CLAUDE.md.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HbsLib from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import {
     ASTARTES_IMPLANTS,
@@ -120,13 +120,13 @@ function buildCtx(presentIds: ReadonlyArray<AstartesImplantId>, rawSB: number, r
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HbsLib.compile(panelSrc);
 
 function renderPanel(ctx: AstartesPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
     return wrapper;
 }
 

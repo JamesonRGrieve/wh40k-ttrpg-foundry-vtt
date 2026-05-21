@@ -2,18 +2,18 @@
  * Stories for CyberneticSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-cybernetic-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0xc7b3a1c);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('cybernetic', rng);
     const item = mockItem({
         _id: id,
@@ -63,22 +63,22 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderMockTemplate(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderMockTemplate(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersCyberneticName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderMockTemplate(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Mechadendrite (Basic)')).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Mechadendrite (Basic)')).toBeTruthy();
     },
 };
 
 export const RendersTypeLabel: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderMockTemplate(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Mechadendrite')).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText('Mechadendrite')).toBeTruthy();
     },
 };

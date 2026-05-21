@@ -9,6 +9,7 @@
  */
 
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { StatAdjustmentHost } from '../src/module/applications/api/stat-adjustment-actions.ts';
 
 const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
 const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>).foundry;
@@ -30,7 +31,7 @@ const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object
     utils: {
         getProperty: (obj: Record<string, unknown>, path: string) => {
             return path.split('.').reduce<unknown>((acc, key) => {
-                if (acc && typeof acc === 'object' && key in (acc as Record<string, unknown>)) {
+                if (acc !== null && acc !== undefined && typeof acc === 'object' && key in (acc as Record<string, unknown>)) {
                     return (acc as Record<string, unknown>)[key];
                 }
                 return undefined;
@@ -45,7 +46,6 @@ afterAll(() => {
 });
 
 const StatActions = await import('../src/module/applications/api/stat-adjustment-actions.ts');
-type StatAdjustmentHost = import('../src/module/applications/api/stat-adjustment-actions.ts').StatAdjustmentHost;
 
 function makeHost(
     systemOverrides: Record<string, unknown> = {},
@@ -64,8 +64,9 @@ function makeHost(
                 insanity: 5,
                 ...systemOverrides,
             },
-            update: async (data: Record<string, unknown>) => {
+            update: async (data: Record<string, unknown>): Promise<void> => {
                 host._updates.push(data);
+                return Promise.resolve();
             },
         },
         async _throttle(_key: string, _wait: number, fn: (...args: unknown[]) => unknown, ctx: unknown, args: unknown[]): Promise<unknown> {

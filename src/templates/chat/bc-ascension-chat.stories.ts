@@ -10,8 +10,8 @@
  *                 package per the resolver).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../stories/mocks';
+import HBS from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { getDaemonPrinceBoost, type DaemonPrinceAlignment, type DaemonPrinceStatBoost } from '../../module/rules/bc-daemon-prince';
 import cardSrc from './bc-ascension-chat.hbs?raw';
@@ -25,13 +25,13 @@ interface AscensionChatCtx {
     boost: DaemonPrinceStatBoost;
 }
 
-const cardTpl = Handlebars.compile(cardSrc);
+const cardTpl = HBS.compile(cardSrc);
 
 function renderCard(ctx: AscensionChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderTemplate(cardTpl, ctx));
+    wrapper.appendChild(renderTpl(cardTpl, ctx));
     return wrapper;
 }
 

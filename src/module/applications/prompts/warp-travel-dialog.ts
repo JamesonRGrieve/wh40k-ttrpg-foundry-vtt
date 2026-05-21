@@ -22,8 +22,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-type ActionHandler = (this: WarpTravelDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 interface JourneyInputs {
     baseDays: number;
     awareness: number;
@@ -144,7 +142,7 @@ export default class WarpTravelDialog extends ApplicationV2Mixin(ApplicationV2 a
             gameSystem: 'rt',
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
         await this.close();
     }
@@ -158,7 +156,7 @@ export default class WarpTravelDialog extends ApplicationV2Mixin(ApplicationV2 a
             gameSystem: 'rt',
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
     }
 

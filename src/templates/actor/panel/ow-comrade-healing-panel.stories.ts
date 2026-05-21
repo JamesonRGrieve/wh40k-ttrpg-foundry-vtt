@@ -19,8 +19,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HandlebarsLib from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import type { ComradeState } from '../../../module/rules/ow-comrade';
 import {
@@ -68,13 +68,13 @@ function buildContext(opts: { recoveryDays: number; refitAvailable: boolean; com
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HandlebarsLib.compile(panelSrc);
 
 function renderPanel(ctx: ComradeHealingPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
     return wrapper;
 }
 

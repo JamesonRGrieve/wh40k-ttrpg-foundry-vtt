@@ -42,7 +42,7 @@ function buildContext(args: Args): Record<string, unknown> {
 
 const meta = {
     title: 'Dialogs/RightStuffDialog',
-    render: (args) => renderSheet(templateSrc, buildContext(args)),
+    render: (args: Args) => renderSheet(templateSrc, buildContext(args)),
     args: {
         actorName: 'Vex Tannor',
         isAce: true,
@@ -70,17 +70,17 @@ export const NotAce: Story = {
 
 export const RenderSmoke: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         const spend = canvasElement.querySelector('button[data-action="spendRightStuff"]');
         const cancel = canvasElement.querySelector('button[data-action="cancel"]');
         const selectButtons = canvasElement.querySelectorAll('button[data-action="selectSkill"]');
-        expect(spend).toBeTruthy();
-        expect(cancel).toBeTruthy();
+        await expect(spend).toBeTruthy();
+        await expect(cancel).toBeTruthy();
         // Eligible default → spend button enabled.
-        expect((spend as HTMLButtonElement).disabled).toBe(false);
+        await expect((spend as HTMLButtonElement).disabled).toBe(false);
         // Two applicable skills (Operate / Survival).
-        expect(selectButtons.length).toBe(2);
-        expect(canvas.getByText(/Vex Tannor/i)).toBeTruthy();
+        await expect(selectButtons.length).toBe(2);
+        await expect(view.getByText(/Vex Tannor/i)).toBeTruthy();
     },
 };
 
@@ -88,7 +88,7 @@ export const NoFateDisablesButton: Story = {
     args: { hasFate: false, eligible: false, fateValue: 0 },
     play: async ({ canvasElement }) => {
         const spend = canvasElement.querySelector('button[data-action="spendRightStuff"]');
-        expect((spend as HTMLButtonElement).disabled).toBe(true);
+        await expect((spend as HTMLButtonElement).disabled).toBe(true);
     },
 };
 
@@ -96,9 +96,9 @@ export const NotAceDisablesButton: Story = {
     args: { isAce: false, eligible: false },
     play: async ({ canvasElement }) => {
         const spend = canvasElement.querySelector('button[data-action="spendRightStuff"]');
-        expect((spend as HTMLButtonElement).disabled).toBe(true);
+        await expect((spend as HTMLButtonElement).disabled).toBe(true);
         // The eligibility-fail panel surfaces an Ace-only message.
         const text = canvasElement.textContent ?? '';
-        expect(text.length).toBeGreaterThan(0);
+        await expect(text.length).toBeGreaterThan(0);
     },
 };

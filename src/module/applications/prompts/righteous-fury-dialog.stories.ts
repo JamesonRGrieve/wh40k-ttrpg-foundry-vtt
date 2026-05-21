@@ -48,9 +48,9 @@ export const NotConfirmed: Story = {
 
 export const RollFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/Righteous Fury/)).toBeTruthy();
-        expect(canvas.getByText('Bolter')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText(/Righteous Fury/)).toBeTruthy();
+        await expect(view.getByText('Bolter')).toBeTruthy();
         clickAction(canvasElement, 'roll');
     },
 };

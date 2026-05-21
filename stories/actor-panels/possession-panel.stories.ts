@@ -15,10 +15,10 @@
  * a live Foundry instance.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HBS from 'handlebars';
 import { expect } from 'storybook/test';
 import panelSrc from '../../src/templates/actor/panel/possession-panel.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
@@ -34,10 +34,10 @@ interface PossessionContext {
     };
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HBS.compile(panelSrc);
 
 function renderPanel(ctx: PossessionContext): HTMLElement {
-    return renderTemplate(panelTpl, ctx);
+    return renderTpl(panelTpl, ctx);
 }
 
 const meta: Meta<PossessionContext> = {
@@ -61,8 +61,8 @@ export const Latent: Story = {
         // can be rolled.
         const frenzyBtn = canvasElement.querySelector('[data-action="possessionFrenzyTest"]');
         const mismanifestBtn = canvasElement.querySelector('[data-action="possessionMismanifest"]');
-        expect(frenzyBtn).toBeTruthy();
-        expect(mismanifestBtn).toBeTruthy();
+        await expect(frenzyBtn).toBeTruthy();
+        await expect(mismanifestBtn).toBeTruthy();
     },
 };
 
@@ -91,10 +91,10 @@ export const Possessed: Story = {
         // the contest — the Frenzy-test loop controls must be gone.
         const frenzyBtn = canvasElement.querySelector('[data-action="possessionFrenzyTest"]');
         const mismanifestBtn = canvasElement.querySelector('[data-action="possessionMismanifest"]');
-        expect(frenzyBtn).toBeNull();
-        expect(mismanifestBtn).toBeNull();
+        await expect(frenzyBtn).toBeNull();
+        await expect(mismanifestBtn).toBeNull();
         // The disabled Unleash button is still rendered.
         const unleash = canvasElement.querySelector('[data-action="unleashDaemon"]');
-        expect(unleash?.hasAttribute('disabled')).toBe(true);
+        await expect(unleash?.hasAttribute('disabled')).toBe(true);
     },
 };

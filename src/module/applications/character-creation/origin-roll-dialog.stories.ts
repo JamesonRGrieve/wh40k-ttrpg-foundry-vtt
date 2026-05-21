@@ -69,11 +69,11 @@ export const Rolled: Story = {
 
 export const ActionFlow: Story = {
     args: Rolled.args,
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Hive World')).toBeTruthy();
-        expect(canvas.getByText('Acolyte Voss')).toBeTruthy();
-        expect(canvas.getByText('Accept')).toBeTruthy();
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByText('Hive World')).toBeTruthy();
+        void expect(storyCanvas.getByText('Acolyte Voss')).toBeTruthy();
+        void expect(storyCanvas.getByText('Accept')).toBeTruthy();
         clickAction(canvasElement, 'reroll');
         clickAction(canvasElement, 'accept');
         clickAction(canvasElement, 'cancel');
@@ -124,21 +124,21 @@ export const RerollOverflow: Story = {
             { result: 17, breakdown: '8 + [7] + 2' },
         ],
     },
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
         // History list must exist with 10 entries.
         const list = canvasElement.querySelector('[data-testid="previous-attempts-list"]');
-        expect(list).toBeTruthy();
-        expect(list?.querySelectorAll('li').length).toBe(10);
+        void expect(list).toBeTruthy();
+        void expect(list?.querySelectorAll('li').length).toBe(10);
 
         // Action footer must be in the DOM AND visible in the viewport.
         const footer = canvasElement.querySelector('[data-testid="origin-roll-actions"]');
-        expect(footer).toBeTruthy();
+        void expect(footer).toBeTruthy();
 
         // The Reroll button is rendered inside the action footer (post-roll state).
-        const rerollBtn = canvas.getByText('Re-roll').closest('button');
-        expect(rerollBtn).toBeTruthy();
-        const acceptBtn = canvas.getByText('Accept').closest('button');
-        expect(acceptBtn).toBeTruthy();
+        const rerollBtn = storyCanvas.getByText('Re-roll').closest('button');
+        void expect(rerollBtn).toBeTruthy();
+        const acceptBtn = storyCanvas.getByText('Accept').closest('button');
+        void expect(acceptBtn).toBeTruthy();
     },
 };

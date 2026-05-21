@@ -40,11 +40,11 @@ export const Acquisition: Story = {
  */
 export const ConfirmFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const confirmBtn = canvas.getByText('Delete');
-        const cancelBtn = canvas.getByText('Cancel');
-        expect(confirmBtn).toBeTruthy();
-        expect(cancelBtn).toBeTruthy();
+        const view = within(canvasElement);
+        const confirmBtn = view.getByText('Delete');
+        const cancelBtn = view.getByText('Cancel');
+        await expect(confirmBtn).toBeTruthy();
+        await expect(cancelBtn).toBeTruthy();
         // Drive the same data-action handle the runtime sheet uses.
         clickAction(canvasElement, 'confirm');
         clickAction(canvasElement, 'cancel');

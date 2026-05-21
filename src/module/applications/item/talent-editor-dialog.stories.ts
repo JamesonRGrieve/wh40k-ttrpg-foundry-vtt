@@ -3,18 +3,18 @@
  * prerequisites, situational modifiers, and grants.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect } from 'storybook/test';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/dialogs/talent-editor-dialog.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0x7a1de0);
 
-function makeCtx(activeSection = 'prerequisites', overrides: Record<string, unknown> = {}) {
+function makeCtx(activeSection = 'prerequisites', overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('talent-editor', rng);
     return {
         id,
@@ -62,29 +62,29 @@ export default meta;
 
 type Story = StoryObj;
 
-export const PrerequisitesTab: Story = { render: () => renderTemplate(compiled, makeCtx('prerequisites')) };
+export const PrerequisitesTab: Story = { render: () => renderMockTemplate(compiled, makeCtx('prerequisites')) };
 
-export const ModifiersTab: Story = { render: () => renderTemplate(compiled, makeCtx('modifiers')) };
+export const ModifiersTab: Story = { render: () => renderMockTemplate(compiled, makeCtx('modifiers')) };
 
-export const GrantsTab: Story = { render: () => renderTemplate(compiled, makeCtx('grants')) };
+export const GrantsTab: Story = { render: () => renderMockTemplate(compiled, makeCtx('grants')) };
 
 export const RendersSectionTabs: Story = {
-    render: () => renderTemplate(compiled, makeCtx('prerequisites')),
+    render: () => renderMockTemplate(compiled, makeCtx('prerequisites')),
     play: async ({ canvasElement }) => {
         const prereqBtn = canvasElement.querySelector('[data-section="prerequisites"]');
         const modBtn = canvasElement.querySelector('[data-section="modifiers"]');
         const grantBtn = canvasElement.querySelector('[data-section="grants"]');
-        expect(prereqBtn).toBeTruthy();
-        expect(modBtn).toBeTruthy();
-        expect(grantBtn).toBeTruthy();
+        await expect(prereqBtn).toBeTruthy();
+        await expect(modBtn).toBeTruthy();
+        await expect(grantBtn).toBeTruthy();
     },
 };
 
 export const ClicksModifiersSection: Story = {
-    render: () => renderTemplate(compiled, makeCtx('prerequisites')),
+    render: () => renderMockTemplate(compiled, makeCtx('prerequisites')),
     play: async ({ canvasElement }) => {
         const modBtn = canvasElement.querySelector<HTMLElement>('[data-action="switchSection"][data-section="modifiers"]');
-        expect(modBtn).toBeTruthy();
+        await expect(modBtn).toBeTruthy();
         modBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     },
 };

@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { ALIGNMENT_ACCENT_CLASS } from '../../src/module/applications/prompts/daemon-weapon-attribute-dialog.ts';
 import type { ChaosAlignment } from '../../src/module/config/game-systems/types.ts';
 import { rollDaemonWeaponAttributes } from '../../src/module/rules/daemon-weapon-attributes.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../src/module/rules/daemon-weapon.ts';
 import chatSrc from '../../src/templates/chat/daemon-weapon-attribute-chat.hbs?raw';
 import dialogSrc from '../../src/templates/prompt/daemon-weapon-attribute-dialog.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
 
-const dialogTemplate = Handlebars.compile(dialogSrc);
-const chatTemplate = Handlebars.compile(chatSrc);
+const dialogTemplate = HbsLib.compile(dialogSrc);
+const chatTemplate = HbsLib.compile(chatSrc);
 
 interface Args {
     alignment: ChaosAlignment;
@@ -66,7 +66,7 @@ const meta: Meta<Args> = {
         seed: { control: { type: 'number', min: 1, max: 9999, step: 1 } },
     },
     args: { alignment: 'khorne', bindingStrength: 'normal', rolled: true, seed: 142 },
-    render: (args) => renderTemplate(dialogTemplate, buildDialogContext(args)),
+    render: (args) => renderStoryTemplate(dialogTemplate, buildDialogContext(args)),
 };
 
 export default meta;
@@ -106,5 +106,5 @@ export const UnalignedMinor: Story = {
 export const ChatCard: Story = {
     name: 'Chat card output',
     args: { alignment: 'tzeentch', bindingStrength: 'major', rolled: true, seed: 7 },
-    render: (args) => renderTemplate(chatTemplate, buildChatContext(args)),
+    render: (args) => renderStoryTemplate(chatTemplate, buildChatContext(args)),
 };

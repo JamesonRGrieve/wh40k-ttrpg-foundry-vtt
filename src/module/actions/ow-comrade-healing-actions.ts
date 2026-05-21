@@ -37,7 +37,6 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import type { ComradeState } from '../rules/ow-comrade.ts';
 import {
     applyMedicaeAttempt,
     OW_COMRADE_AUTO_RECOVERY_DAYS,
@@ -46,6 +45,7 @@ import {
     type ReplacementSkipReason,
     tickComradeRecovery,
 } from '../rules/ow-comrade-healing.ts';
+import type { ComradeState } from '../rules/ow-comrade.ts';
 
 /**
  * Structural type the OW Comrade-Healing handlers expect. The

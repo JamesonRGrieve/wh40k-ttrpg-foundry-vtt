@@ -81,7 +81,7 @@ export function resolveXenosRepairTarget(input: XenosRepairInput): XenosRepairRe
         return { target: input.techUseTotal, isNoOp: true, requiresFacility: false };
     }
     const tu = Math.max(0, Math.trunc(input.techUseTotal));
-    const modifier = AVAILABILITY_MODIFIERS[input.availability] ?? 0;
+    const modifier = AVAILABILITY_MODIFIERS[input.availability];
     const target = Math.max(0, tu + modifier);
     return {
         target,
@@ -94,6 +94,5 @@ export function resolveXenosRepairTarget(input: XenosRepairInput): XenosRepairRe
 export function nextConditionUp(current: XenosCondition): XenosCondition {
     const idx = CONDITION_LADDER.indexOf(current);
     if (idx <= 0) return current;
-    const better = CONDITION_LADDER[idx - 1];
-    return better ?? current;
+    return CONDITION_LADDER[idx - 1] ?? current;
 }

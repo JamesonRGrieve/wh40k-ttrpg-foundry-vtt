@@ -9,8 +9,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../stories/mocks';
+import Hbs from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { requestSupport, type SupportAssetDef, type SupportAssetKind } from '../../module/rules/ow-battlefield-support';
 import cardSrc from './ow-battlefield-chat.hbs?raw';
@@ -85,13 +85,13 @@ function awardContext(opts: { awardId: string; toggledOn: boolean; rosterSize: n
     };
 }
 
-const cardTpl = Handlebars.compile(cardSrc);
+const cardTpl = Hbs.compile(cardSrc);
 
 function renderCard(ctx: BattlefieldChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTemplate(cardTpl, ctx));
+    wrapper.appendChild(renderTpl(cardTpl, ctx));
     return wrapper;
 }
 

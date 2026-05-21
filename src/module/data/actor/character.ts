@@ -15,15 +15,15 @@ import { dwOathSchemaFields, type DwOathDeclarations } from './mixins/dw-oath-te
 import { dwRenownSchemaFields, type DwRenownDeclarations } from './mixins/dw-renown-template.ts';
 import { dwRequisitionSchemaFields, type DwRequisitionDeclarations } from './mixins/dw-requisition-template.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
-import { owComradeSchemaFields, type OwComradeDeclarations } from './mixins/ow-comrade-template.ts';
+import { owBattlefieldSchemaFields, type OwBattlefieldDeclarations } from './mixins/ow-battlefield-template.ts';
 import { owComradeHealingSchemaFields, type OwComradeHealingDeclarations } from './mixins/ow-comrade-healing-template.ts';
+import { owComradeSchemaFields, type OwComradeDeclarations } from './mixins/ow-comrade-template.ts';
+import { owDrawbackSchemaFields, type OwDrawbackDeclarations } from './mixins/ow-drawback-template.ts';
 import { owLogisticsSchemaFields, type OwLogisticsDeclarations } from './mixins/ow-logistics-template.ts';
 import { owMissionGearSchemaFields, type OwMissionGearDeclarations } from './mixins/ow-mission-gear-template.ts';
+import { owMountSchemaFields, type OwMountDeclarations } from './mixins/ow-mount-template.ts';
 import { owOrdersSchemaFields, type OwOrdersDeclarations } from './mixins/ow-orders-template.ts';
 import { owRegimentSchemaFields, type OwRegimentDeclarations } from './mixins/ow-regiment-template.ts';
-import { owBattlefieldSchemaFields, type OwBattlefieldDeclarations } from './mixins/ow-battlefield-template.ts';
-import { owDrawbackSchemaFields, type OwDrawbackDeclarations } from './mixins/ow-drawback-template.ts';
-import { owMountSchemaFields, type OwMountDeclarations } from './mixins/ow-mount-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
 import CreatureTemplate from './templates/creature.ts';
 

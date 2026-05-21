@@ -68,16 +68,16 @@ function buildContext(opts: { pilot: number; helmsman: string }): {
 export const Default: Story = {
     name: 'Default / Full RAW catalogue',
     render: () => renderSheet(actionBarSrc, buildContext({ pilot: 45, helmsman: 'Helmsmistress Vey' })),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
+        const cv = within(canvasElement);
         // The six RAW Manoeuvres render — assert by stable id on the
         // tile element so localized name drift does not break the test.
         for (const id of ['adjust-bearing', 'adjust-speed', 'adjust-speed-and-bearing', 'come-to-new-heading', 'disengage', 'evasive-manoeuvres']) {
             const tile = canvasElement.querySelector(`[data-manoeuvre-id="${id}"]`);
-            expect(tile, `tile missing for ${id}`).not.toBeNull();
+            void expect(tile, `tile missing for ${id}`).not.toBeNull();
         }
         // Disengage is the opposed Manoeuvre — its badge should render.
-        expect(canvas.getByText('WH40K.Starship.Manoeuvre.Opposed')).toBeTruthy();
+        void expect(cv.getByText('WH40K.Starship.Manoeuvre.Opposed')).toBeTruthy();
     },
 };
 
@@ -89,9 +89,9 @@ export const Empty: Story = {
             helmsmanName: '',
             manoeuvres: [],
         }),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('WH40K.Starship.Manoeuvre.Empty')).toBeTruthy();
+    play: ({ canvasElement }) => {
+        const cv = within(canvasElement);
+        void expect(cv.getByText('WH40K.Starship.Manoeuvre.Empty')).toBeTruthy();
     },
 };
 
@@ -139,8 +139,8 @@ export const HighDifficulty: Story = {
         ctx.manoeuvres = ctx.manoeuvres.filter((m) => m.id === 'adjust-speed-and-bearing');
         return renderSheet(actionBarSrc, ctx);
     },
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         const tile = canvasElement.querySelector('[data-manoeuvre-id="adjust-speed-and-bearing"]');
-        expect(tile).not.toBeNull();
+        void expect(tile).not.toBeNull();
     },
 };

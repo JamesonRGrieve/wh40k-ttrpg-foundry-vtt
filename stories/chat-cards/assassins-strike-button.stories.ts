@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import actionRollChatSrc from '../../src/templates/chat/action-roll-chat.hbs?raw';
-import { mockActionRollData, renderTemplate } from '../mocks';
+import { mockActionRollData, renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -20,7 +20,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const actionRollTemplate = Handlebars.compile(actionRollChatSrc);
+const actionRollTemplate = Hbs.compile(actionRollChatSrc);
 
 const meta: Meta = {
     title: "Chat/Assassin's Strike (#149)",
@@ -33,7 +33,7 @@ type Story = StoryObj;
 export const TalentSuccessShowsButton: Story = {
     name: 'Melee attack hit + talent present',
     render: () =>
-        renderTemplate(
+        renderTpl(
             actionRollTemplate,
             mockActionRollData({
                 label: 'Melee Attack',
@@ -54,7 +54,7 @@ export const TalentSuccessShowsButton: Story = {
 export const TalentMissHidesButton: Story = {
     name: 'Melee attack miss — button suppressed',
     render: () =>
-        renderTemplate(
+        renderTpl(
             actionRollTemplate,
             mockActionRollData({
                 label: 'Melee Attack',
@@ -75,7 +75,7 @@ export const TalentMissHidesButton: Story = {
 export const NoTalentHidesButton: Story = {
     name: "Melee attack hit — no Assassin's Strike talent",
     render: () =>
-        renderTemplate(
+        renderTpl(
             actionRollTemplate,
             mockActionRollData({
                 label: 'Melee Attack',

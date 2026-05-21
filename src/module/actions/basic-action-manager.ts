@@ -330,7 +330,7 @@ export class BasicActionManager {
         const flavorKey = modifier < 0 ? 'WH40K.DW.Horde.Break.TestPenalised' : 'WH40K.DW.Horde.Break.TestNormal';
         btn.disabled = true;
         try {
-            await Promise.resolve(actor.rollCharacteristic?.('willpower', game.i18n.localize(flavorKey)));
+            await Promise.resolve(actor.rollCharacteristic('willpower', game.i18n.localize(flavorKey)));
         } catch {
             btn.disabled = false;
         }

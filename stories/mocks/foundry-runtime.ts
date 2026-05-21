@@ -38,6 +38,7 @@ interface GameStub {
     // modules pulled in by sheet code paths may.
     i18n: {
         localize: (key: string) => string;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry i18n.format accepts freeform data bag
         format: (key: string, data?: Record<string, unknown>) => string;
         has: (key: string) => boolean;
     };
@@ -48,7 +49,9 @@ interface GameStub {
     // will get its default; mutation is a no-op. Not a Foundry-runtime
     // substitute.
     settings: {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry settings.get returns untyped value
         get: (namespace: string, key: string) => unknown;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry settings.set accepts and returns untyped value
         set: (namespace: string, key: string, value: unknown) => Promise<unknown>;
     };
 }
@@ -57,6 +60,7 @@ interface ConfigStub {
     // MOCK: CONFIG.WH40K — system config bag. Templates that reach for
     // `CONFIG.WH40K.<x>` should be passing a context-local copy instead;
     // this empty bag prevents a hard ReferenceError if one slips through.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CONFIG bag is untyped by design
     WH40K: Record<string, unknown>;
 }
 
@@ -74,34 +78,47 @@ interface HooksStub {
     // MOCK: Hooks — accept registration, never invoke. Stories that register
     // hooks won't see them fire; this is intentional, hook propagation is not
     // a story concern.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks callbacks are untyped variadic
     on: (event: string, fn: (...args: unknown[]) => unknown) => number;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks callbacks are untyped variadic
     once: (event: string, fn: (...args: unknown[]) => unknown) => number;
     off: (event: string, id: number) => void;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks.call passes untyped variadic args
     call: (event: string, ...args: unknown[]) => boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks.callAll passes untyped variadic args
     callAll: (event: string, ...args: unknown[]) => boolean;
 }
 
-const game: GameStub = {
+const gameStub: GameStub = {
     i18n: {
         localize: (key) => key,
         format: (key, data) => {
-            if (!data) return key;
-            return key.replace(/\{(\w+)\}/g, (_, name) => String(data[name] ?? ''));
+            if (data === undefined) return key;
+            return key.replace(/\{(\w+)\}/g, (_, name: string) => {
+                const val = data[name];
+                if (val === null || val === undefined) return '';
+                if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') return String(val);
+                return '';
+            });
         },
         has: () => false,
     },
     user: { isGM: false, id: 'story-user', name: 'Storybook User' },
     settings: {
         get: () => undefined,
-        set: async (_ns, _key, value) => value,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry settings.set stub accepts and returns untyped value
+        set: async (_ns: string, _key: string, value: unknown): Promise<unknown> => {
+            const resolved = await Promise.resolve(value);
+            return resolved;
+        },
     },
 };
 
-const CONFIG: ConfigStub = {
+const configStub: ConfigStub = {
     WH40K: {},
 };
 
-const ui: UiStub = {
+const uiStub: UiStub = {
     notifications: {
         info: () => undefined,
         warn: () => undefined,
@@ -109,7 +126,7 @@ const ui: UiStub = {
     },
 };
 
-const Hooks: HooksStub = {
+const hooksStub: HooksStub = {
     on: () => 0,
     once: () => 0,
     off: () => undefined,
@@ -125,11 +142,11 @@ const Hooks: HooksStub = {
  */
 export function installFoundryRuntimeStubs(): void {
     const target = globalThis as typeof globalThis & FoundryRuntimeGlobals;
-    if (!target.game) target.game = game;
-    if (!target.CONFIG) target.CONFIG = CONFIG;
-    if (!target.ui) target.ui = ui;
-    if (!target.Hooks) target.Hooks = Hooks;
+    if (target.game === undefined) target.game = gameStub;
+    if (target.CONFIG === undefined) target.CONFIG = configStub;
+    if (target.ui === undefined) target.ui = uiStub;
+    if (target.Hooks === undefined) target.Hooks = hooksStub;
 }
 
-export { game, CONFIG, ui, Hooks };
+export { gameStub as game, configStub as CONFIG, uiStub as ui, hooksStub as Hooks };
 export type { GameStub, ConfigStub, UiStub, HooksStub };

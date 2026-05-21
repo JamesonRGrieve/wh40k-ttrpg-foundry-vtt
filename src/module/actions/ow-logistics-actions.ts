@@ -16,8 +16,8 @@
  * runtime guards here are defensive against accidental invocation.
  */
 
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import LogisticsTestDialog from '../applications/prompts/logistics-test-dialog.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 /** Sheet-like host shape; the ApplicationV2 dispatcher binds the sheet as `this`. */
 interface LogisticsActionHost {
@@ -37,7 +37,7 @@ function isOwActor(host: LogisticsActionHost): boolean {
 /**
  * Open the Logistics Test dialog for the active actor (`data-action="owLogisticsTest"`).
  */
-export async function owLogisticsTest(this: LogisticsActionHost, event: Event, _target: HTMLElement): Promise<void> {
+export function owLogisticsTest(this: LogisticsActionHost, event: Event, _target: HTMLElement): void {
     event.preventDefault();
     if (!isOwActor(this)) return;
     LogisticsTestDialog.show(this.actor);

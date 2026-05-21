@@ -11,8 +11,8 @@
  * in visual review.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../../stories/mocks';
+import HBS from 'handlebars';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import panelSrc from './crusader-button.hbs?raw';
 
@@ -22,10 +22,10 @@ interface PanelContext {
     hasCrusader: boolean;
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HBS.compile(panelSrc);
 
 function renderPanel(ctx: PanelContext): HTMLElement {
-    return renderTemplate(panelTpl, ctx);
+    return renderTpl(panelTpl, ctx);
 }
 
 const meta: Meta<PanelContext> = {

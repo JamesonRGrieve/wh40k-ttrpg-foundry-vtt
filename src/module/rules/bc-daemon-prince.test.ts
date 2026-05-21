@@ -7,7 +7,6 @@
  * and the {@link isAscended} predicate.
  */
 import { describe, expect, it } from 'vitest';
-
 import {
     DAEMON_PRINCE_BONUS_WOUNDS,
     DAEMON_PRINCE_CORRUPTION_THRESHOLD,

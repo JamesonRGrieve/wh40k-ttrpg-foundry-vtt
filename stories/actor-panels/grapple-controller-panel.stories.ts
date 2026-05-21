@@ -10,9 +10,9 @@
  * `grappling` and `controlled` states.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/grapple-controller-panel.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderMockTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
@@ -21,10 +21,10 @@ interface GrappleContext {
     grappleState: 'none' | 'grappling' | 'controlled';
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = HandlebarsLib.compile(panelSrc);
 
 function renderPanel(ctx: GrappleContext): HTMLElement {
-    return renderTemplate(panelTpl, ctx);
+    return renderMockTemplate(panelTpl, ctx);
 }
 
 const meta: Meta<GrappleContext> = {

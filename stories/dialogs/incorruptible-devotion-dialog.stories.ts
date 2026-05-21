@@ -34,13 +34,13 @@ export const LargeBurst: Story = {
 
 export const TradeFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Trade + Decline action buttons must be present.
         const trade = canvasElement.querySelector('[data-action="trade"]');
         const decline = canvasElement.querySelector('[data-action="decline"]');
-        expect(trade).not.toBeNull();
-        expect(decline).not.toBeNull();
-        expect(canvas.getByText(/Trade for Insanity/i)).toBeTruthy();
+        await expect(trade).not.toBeNull();
+        await expect(decline).not.toBeNull();
+        await expect(view.getByText(/Trade for Insanity/i)).toBeTruthy();
 
         // Clicking the Trade action dispatches the correct data-action.
         clickAction(canvasElement, 'trade');

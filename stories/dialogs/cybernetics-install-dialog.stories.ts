@@ -88,19 +88,19 @@ export const PoorOrgan: Story = {
 
 export const RenderSmoke: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Four craftsmanship buttons render.
-        expect(canvasElement.querySelectorAll('button[data-action="selectCraftsmanship"]').length).toBe(4);
+        await expect(canvasElement.querySelectorAll('button[data-action="selectCraftsmanship"]').length).toBe(4);
         // Four install-site buttons render.
-        expect(canvasElement.querySelectorAll('button[data-action="selectSite"]').length).toBe(4);
+        await expect(canvasElement.querySelectorAll('button[data-action="selectSite"]').length).toBe(4);
         // Difficulty dropdown + numeric inputs render.
-        expect(canvasElement.querySelector('select[name="baseDifficulty"]')).toBeTruthy();
-        expect(canvasElement.querySelector('input[name="surgeonSkillTotal"]')).toBeTruthy();
-        expect(canvasElement.querySelector('input[name="surgeonModifier"]')).toBeTruthy();
-        expect(canvasElement.querySelector('input[name="toughnessBonus"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('select[name="baseDifficulty"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('input[name="surgeonSkillTotal"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('input[name="surgeonModifier"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('input[name="toughnessBonus"]')).toBeTruthy();
         // Roll button is present.
-        expect(canvasElement.querySelector('button[data-action="rollInstall"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('button[data-action="rollInstall"]')).toBeTruthy();
         // Device name surfaces.
-        expect(canvas.getByText(/Bionic Arm/i)).toBeTruthy();
+        await expect(view.getByText(/Bionic Arm/i)).toBeTruthy();
     },
 };

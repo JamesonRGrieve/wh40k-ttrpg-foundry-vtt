@@ -6,8 +6,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
-import { renderTemplate } from '../../../stories/mocks';
+import HbsStory from 'handlebars';
+import { renderTemplate as renderStoryTemplate } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { CRAFTSMANSHIP_MULTIPLIER, type Craftsmanship, computeItemCost } from '../../module/rules/dw-requisition.ts';
 import chatSrc from './dw-requisition-chat.hbs?raw';
@@ -27,11 +27,11 @@ interface RequisitionChatCtx {
     totalContributed?: number;
 }
 
-const chatTpl = Handlebars.compile(chatSrc);
+const chatTpl = HbsStory.compile(chatSrc);
 
 function renderChat(ctx: RequisitionChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.appendChild(renderTemplate(chatTpl, ctx as unknown as Record<string, unknown>));
+    wrapper.appendChild(renderStoryTemplate(chatTpl, ctx as unknown as Record<string, unknown>));
     return wrapper;
 }
 

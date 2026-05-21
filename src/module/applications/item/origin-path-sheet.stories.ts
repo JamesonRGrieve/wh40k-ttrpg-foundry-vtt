@@ -2,18 +2,18 @@
  * Stories for OriginPathSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-origin-path-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HBS.compile(templateSrc);
 const rng = seedRandom(0x0a1b2c);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('origin', rng);
     const item = mockItem({
         _id: id,
@@ -71,22 +71,22 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderTpl(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersOriginName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderTpl(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Hive World')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Hive World')).toBeTruthy();
     },
 };
 
 export const RendersStepBadge: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderTpl(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Home World')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText('Home World')).toBeTruthy();
     },
 };

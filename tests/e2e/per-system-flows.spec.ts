@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -55,18 +56,13 @@ interface PageWindow {
     };
 }
 
-async function createActor(
-    page: import('@playwright/test').Page,
-    label: string,
-    actorType: string,
-    gameSystem: string,
-): Promise<{ id: string | null; createError: string | null }> {
+async function createActor(page: Page, label: string, actorType: string, gameSystem: string): Promise<{ id: string | null; createError: string | null }> {
     return page.evaluate(
         async ({ name, type, sys }: { name: string; type: string; sys: string }) => {
-            const { Actor } = globalThis as unknown as PageWindow;
-            if (!Actor?.create) return { id: null, createError: 'Actor.create unavailable' };
+            const { Actor: ActorCtor } = globalThis as unknown as PageWindow;
+            if (!ActorCtor?.create) return { id: null, createError: 'Actor.create unavailable' };
             try {
-                const actor = await Actor.create({ name, type, system: { gameSystem: sys } });
+                const actor = await ActorCtor.create({ name, type, system: { gameSystem: sys } });
                 return { id: actor?.id ?? null, createError: actor ? null : 'Actor.create returned null' };
             } catch (err) {
                 return { id: null, createError: String((err as Error)?.message ?? err) };
@@ -76,11 +72,11 @@ async function createActor(
     );
 }
 
-async function deleteActor(page: import('@playwright/test').Page, id: string): Promise<void> {
+async function deleteActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
-        const { game } = globalThis as unknown as PageWindow;
+        const { game: foundryGame } = globalThis as unknown as PageWindow;
         try {
-            await game?.actors?.get?.(actorId)?.delete?.();
+            await foundryGame?.actors?.get?.(actorId)?.delete?.();
         } catch {
             /* ignore */
         }
@@ -104,14 +100,14 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: foundryGame } = globalThis as unknown as {
                 game?: {
                     actors?: {
                         get?: (id: string) => { system?: { chaosAlignment?: string }; update?: (data: object) => Promise<unknown> } | undefined;
                     };
                 };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.chaosAlignment ?? null;
             try {
@@ -119,13 +115,13 @@ test.describe.serial('per-system flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set chaosAlignment=khorne: ${String((err as Error)?.message ?? err)}` };
             }
-            const afterKhorne = game?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
+            const afterKhorne = foundryGame?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
             try {
                 await actor.update?.({ 'system.chaosAlignment': 'tzeentch' });
             } catch (err) {
                 return { error: `set chaosAlignment=tzeentch: ${String((err as Error)?.message ?? err)}` };
             }
-            const afterTzeentch = game?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
+            const afterTzeentch = foundryGame?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
             return { initial, afterKhorne, afterTzeentch, error: null };
         }, created.id);
 
@@ -154,21 +150,21 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: foundryGame } = globalThis as unknown as {
                 game?: {
                     actors?: {
                         get?: (id: string) => { system?: { corruption?: number; insanity?: number }; update?: (data: object) => Promise<unknown> } | undefined;
                     };
                 };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.update?.({ 'system.corruption': 8, 'system.insanity': 15 });
             } catch (err) {
                 return { error: `set corruption+insanity: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system;
+            const after = foundryGame?.actors?.get?.(actorId)?.system;
             return { afterCorruption: after?.corruption ?? null, afterInsanity: after?.insanity ?? null, error: null };
         }, created.id);
 
@@ -199,7 +195,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: foundryGame } = globalThis as unknown as {
                 game?: {
                     actors?: {
                         get?: (
@@ -208,7 +204,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
                     };
                 };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.update?.({
@@ -218,7 +214,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set chapter: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.originPath;
+            const after = foundryGame?.actors?.get?.(actorId)?.system?.originPath;
             return { afterChapter: after?.chapter ?? null, afterChapterUuid: after?.chapterUuid ?? null, error: null };
         }, created.id);
 
@@ -251,7 +247,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: foundryGame } = globalThis as unknown as {
                 game?: {
                     actors?: {
                         get?: (
@@ -260,14 +256,14 @@ test.describe.serial('per-system flows (Tier B)', () => {
                     };
                 };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.update?.({ 'system.originPath.regiment': 'Cadian Shock Troopers', 'system.originPath.speciality': 'Heavy Gunner' });
             } catch (err) {
                 return { error: `set regiment+speciality: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.originPath;
+            const after = foundryGame?.actors?.get?.(actorId)?.system?.originPath;
             return { afterRegiment: after?.regiment ?? null, afterSpeciality: after?.speciality ?? null, error: null };
         }, created.id);
 
@@ -300,7 +296,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as {
+            const { game: foundryGame } = globalThis as unknown as {
                 game?: {
                     actors?: {
                         get?: (id: string) =>
@@ -317,7 +313,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
                     };
                 };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.update?.({
@@ -332,7 +328,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set rogueTrader fields: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.rogueTrader;
+            const after = foundryGame?.actors?.get?.(actorId)?.system?.rogueTrader;
             return {
                 pfCurrent: after?.profitFactor?.current ?? null,
                 pfStarting: after?.profitFactor?.starting ?? null,

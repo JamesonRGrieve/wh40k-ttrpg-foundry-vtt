@@ -7,14 +7,14 @@
  * and the optional <label> wrapper used by the older vehicle/starship chrome.
  */
 
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import tabStripSrc from '../src/templates/actor/partial/tab-strip.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-const tabStripTemplate = Handlebars.compile(tabStripSrc);
+const tabStripTemplate = HbsLib.compile(tabStripSrc);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -70,8 +70,8 @@ describe('tab-strip partial', () => {
         const root = dom(html);
         const labels = root.querySelectorAll('label.wh40k-navigation__item');
         expect(labels).toHaveLength(2);
-        expect(labels[0].querySelector('.material-icons')?.textContent?.trim()).toBe('speed');
-        expect(labels[1].querySelector('.material-icons')?.textContent?.trim()).toBe('gps_fixed');
+        expect((labels[0].querySelector('.material-icons')?.textContent ?? '').trim()).toBe('speed');
+        expect((labels[1].querySelector('.material-icons')?.textContent ?? '').trim()).toBe('gps_fixed');
     });
 
     it('every <a> emits data-action="tab" so the V14 PrimarySheet handler picks up clicks', () => {

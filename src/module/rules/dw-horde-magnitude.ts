@@ -58,8 +58,8 @@ export const HORDE_DAMAGE_BONUS_DIE_CAP = 2;
 
 /** Resolve the active tier for a given Magnitude. */
 export function getHordeTier(magnitude: number): HordeMagnitudeTier {
-    const baseTier = HORDE_MAGNITUDE_TIERS[0];
-    if (baseTier === undefined) throw new Error('HORDE_MAGNITUDE_TIERS is empty.');
+    // HORDE_MAGNITUDE_TIERS is a non-empty const array; index 0 is always defined.
+    const baseTier = HORDE_MAGNITUDE_TIERS[0]!;
     if (!Number.isFinite(magnitude) || magnitude < 0) {
         // Fallback: a destroyed/invalid horde still resolves to the mob tier
         // so callers don't have to null-check; downstream `hordeDestroyed`

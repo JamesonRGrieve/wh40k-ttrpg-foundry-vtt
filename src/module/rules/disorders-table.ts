@@ -132,5 +132,5 @@ export function rollDisorder(severity: DisorderSeverity, rng: Rng = Math.random)
     const raw = Number(rng());
     const r = Number.isFinite(raw) ? Math.min(0.9999999, Math.max(0, raw)) : 0;
     const idx = Math.floor(r * pool.length);
-    return pool[idx] ?? pool[0] ?? null;
+    return pool[idx] ?? null;
 }

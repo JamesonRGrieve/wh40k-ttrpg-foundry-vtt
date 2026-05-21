@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { listIcons } from '../src/module/icons/icon.ts';
 import { initializeStoryHandlebars } from './template-support';
 
@@ -31,7 +31,7 @@ const sampleSrc = `
 </div>
 `;
 
-const sampleTemplate = Handlebars.compile(sampleSrc);
+const sampleTemplate = Hbs.compile(sampleSrc);
 
 const meta: Meta<{ system: string }> = {
     title: 'Foundation/Icons',
@@ -71,7 +71,7 @@ export const Catalogue: Story = {
                 (key) => `
                 <figure style="display:flex; flex-direction:column; align-items:center; gap:0.25rem; margin:0; padding:0.75rem; background:#222; border:1px solid #444;">
                     <span style="color:#d8c690; font-size:32px; line-height:1;">
-                        ${Handlebars.helpers.iconSvg(key, { hash: { size: 32 } })}
+                        ${Hbs.helpers.iconSvg(key, { hash: { size: 32 } })}
                     </span>
                     <figcaption style="font-family:monospace; font-size:11px; color:#aaa;">${key}</figcaption>
                 </figure>

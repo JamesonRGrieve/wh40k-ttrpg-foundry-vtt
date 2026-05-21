@@ -65,7 +65,7 @@ interface FakeFate {
 }
 
 function makeActor(opts: { gameSystem?: string; role?: string | undefined; fateValue?: number; agilityBonus?: number }): WH40KBaseActorDocument {
-    const update = vi.fn(async () => undefined);
+    const update = vi.fn(() => undefined);
     return {
         name: 'Vex Tannor',
         system: {
@@ -170,7 +170,7 @@ describe('spendRightStuff', () => {
             settings: { get: () => 'roll' },
         });
         vi.stubGlobal('ChatMessage', {
-            create: vi.fn(async (data: { content: string }) => {
+            create: vi.fn((data: { content: string }) => {
                 createdContent = data.content;
                 return data;
             }),
@@ -180,7 +180,7 @@ describe('spendRightStuff', () => {
             applications: {
                 handlebars: {
                     renderTemplate: vi.fn(
-                        async (_tpl: string, ctx: Record<string, unknown>) =>
+                        (_tpl: string, ctx: Record<string, unknown>) =>
                             `<card actor="${String(ctx['actorName'])}" skill="${String(ctx['skillRaw'])}" dos="${String(ctx['degrees'])}" sys="${String(
                                 ctx['gameSystem'],
                             )}">`,

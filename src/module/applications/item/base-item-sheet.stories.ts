@@ -2,19 +2,19 @@
  * Stories for BaseItemSheet — the fallback generic item sheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HandlebarsLib.compile(templateSrc);
 
 const rng = seedRandom(0xba5e1);
 
-function baseCtx(overrides: Record<string, unknown> = {}) {
+function baseCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('base-item', rng);
     const item = mockItem({ _id: id, id, name: 'Imperial Aquila Icon', type: 'gear' });
     return {
@@ -41,26 +41,26 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-    render: () => renderTemplate(compiled, baseCtx()),
+    render: () => renderStoryTemplate(compiled, baseCtx()),
 };
 
 export const EditMode: Story = {
-    render: () => renderTemplate(compiled, baseCtx({ inEditMode: true })),
+    render: () => renderStoryTemplate(compiled, baseCtx({ inEditMode: true })),
 };
 
 export const RendersTitle: Story = {
-    render: () => renderTemplate(compiled, baseCtx()),
+    render: () => renderStoryTemplate(compiled, baseCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Imperial Aquila Icon')).toBeTruthy();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByDisplayValue('Imperial Aquila Icon')).toBeTruthy();
     },
 };
 
 export const RendersDescriptionTab: Story = {
-    render: () => renderTemplate(compiled, baseCtx()),
+    render: () => renderStoryTemplate(compiled, baseCtx()),
     play: async ({ canvasElement }) => {
         const descTab = canvasElement.querySelector('[data-tab="description"]');
-        expect(descTab).toBeTruthy();
-        expect(descTab?.classList.contains('active')).toBe(true);
+        await expect(descTab).toBeTruthy();
+        await expect(descTab?.classList.contains('active')).toBe(true);
     },
 };

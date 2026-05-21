@@ -41,13 +41,13 @@ export const MajorTrack: Story = {
 export const RenderSmoke: Story = {
     args: { track: 'major' },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Both track buttons render.
-        expect(canvasElement.querySelector('[data-action="selectTrack"][data-track="minor"]')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-action="selectTrack"][data-track="major"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-action="selectTrack"][data-track="minor"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-action="selectTrack"][data-track="major"]')).toBeTruthy();
         // Roll button is present.
-        expect(canvasElement.querySelector('[data-action="rollMutation"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-action="rollMutation"]')).toBeTruthy();
         // Title localizes.
-        expect(canvas.getByText(/Roll Mutation/i)).toBeTruthy();
+        await expect(view.getByText(/Roll Mutation/i)).toBeTruthy();
     },
 };

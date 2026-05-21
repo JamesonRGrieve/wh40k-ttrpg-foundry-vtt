@@ -14,9 +14,9 @@
  * is created.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/mortification-button.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
@@ -25,10 +25,10 @@ interface MortificationContext {
     hasPenitent: boolean;
 }
 
-const panelTpl = Handlebars.compile(panelSrc);
+const panelTpl = Hbs.compile(panelSrc);
 
 function renderPanel(ctx: MortificationContext): HTMLElement {
-    return renderTemplate(panelTpl, ctx);
+    return renderTpl(panelTpl, ctx);
 }
 
 const meta: Meta<MortificationContext> = {

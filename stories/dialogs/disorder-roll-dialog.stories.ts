@@ -44,15 +44,15 @@ export const Acute: Story = {
 
 export const RenderSmoke: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Three severity buttons render.
         const buttons = canvasElement.querySelectorAll('button[data-action="selectSeverity"]');
-        expect(buttons.length).toBe(3);
+        await expect(buttons.length).toBe(3);
         // Roll button is present.
-        expect(canvas.getByText(/Roll Disorder/i)).toBeTruthy();
+        await expect(view.getByText(/Roll Disorder/i)).toBeTruthy();
         // All three severity tiers visible.
-        expect(canvasElement.querySelector('button[data-severity="minor"]')).toBeTruthy();
-        expect(canvasElement.querySelector('button[data-severity="severe"]')).toBeTruthy();
-        expect(canvasElement.querySelector('button[data-severity="acute"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('button[data-severity="minor"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('button[data-severity="severe"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('button[data-severity="acute"]')).toBeTruthy();
     },
 };

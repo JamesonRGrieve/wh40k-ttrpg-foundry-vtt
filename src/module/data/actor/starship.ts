@@ -376,7 +376,7 @@ export default class StarshipData extends ActorDataModel {
      */
     static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: SystemDataModel.migrateData inherits an untyped Foundry signature
-        const out = super.migrateData(source) ?? source;
+        const out = super.migrateData(source);
         const sp = out['shipPoints'];
         if (typeof sp === 'number') {
             out['shipPoints'] = { spent: 0, budget: sp };

@@ -6,6 +6,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/logistics-test-dialog.hbs?raw';
+import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 import {
     type Craftsmanship,
     type FrontActive,
@@ -14,7 +15,6 @@ import {
     type WarCondition,
     computeLogisticsTarget,
 } from '../../rules/ow-logistics.ts';
-import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
 interface OptionRow<T extends string> {
     id: T;
@@ -129,8 +129,8 @@ export const VeteranBest: Story = {
 /** Roll-button click flow (smoke). */
 export const RollFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/Logistics/)).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText(/Logistics/)).toBeTruthy();
         clickAction(canvasElement, 'owRollLogistics');
     },
 };

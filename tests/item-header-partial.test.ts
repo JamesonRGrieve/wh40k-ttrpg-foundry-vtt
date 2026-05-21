@@ -17,7 +17,7 @@
  *     who compose their own meta block do not double-render.
  */
 
-import Handlebars from 'handlebars';
+import HbsStory from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import itemHeaderSrc from '../src/templates/item/panel/item-header.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
@@ -26,8 +26,8 @@ initializeStoryHandlebars();
 
 // Register the partial under its real prefix path so block-partial composition
 // (`{{#> systems/wh40k-rpg/... }}`) resolves the same way it does at runtime.
-Handlebars.registerPartial('systems/wh40k-rpg/templates/item/panel/item-header.hbs', itemHeaderSrc);
-const directTemplate = Handlebars.compile(itemHeaderSrc);
+HbsStory.registerPartial('systems/wh40k-rpg/templates/item/panel/item-header.hbs', itemHeaderSrc);
+const directTemplate = HbsStory.compile(itemHeaderSrc);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -96,7 +96,7 @@ describe('item-header partial — type badge', () => {
         expect(badge).not.toBeNull();
         // The template-support localize helper resolves real i18n keys when
         // available; en.json defines TYPES.Item.trait => "Trait".
-        expect(badge?.textContent?.trim()).toBe('Trait');
+        expect(badge?.textContent.trim()).toBe('Trait');
         expect(badge?.querySelector('i')?.className).toContain('fa-shield-alt');
     });
 
@@ -109,7 +109,7 @@ describe('item-header partial — type badge', () => {
             }),
         );
         const badge = dom(html).querySelector('.wh40k-badge--type');
-        expect(badge?.textContent?.trim()).toBe('Custom Trait Label');
+        expect(badge?.textContent.trim()).toBe('Custom Trait Label');
         expect(badge?.getAttribute('title')).toBe('Custom Trait Label');
         expect(badge?.querySelector('i')?.className).toContain('fa-bolt');
     });
@@ -122,7 +122,7 @@ describe('item-header partial — type badge', () => {
             }),
         );
         const badge = dom(html).querySelector('.wh40k-badge--type');
-        expect(badge?.textContent?.trim()).toBe('WH40K.ShipComponent');
+        expect(badge?.textContent.trim()).toBe('WH40K.ShipComponent');
         expect(badge?.querySelector('i')?.className).toContain('fa-cog');
     });
 
@@ -138,14 +138,14 @@ describe('item-header partial — tier / category badges', () => {
         const html = directTemplate(baseContext({ system: { tier: 3 } }));
         const tier = dom(html).querySelector('.wh40k-badge--tier');
         expect(tier).not.toBeNull();
-        expect(tier?.textContent?.trim()).toBe('T3');
+        expect(tier?.textContent.trim()).toBe('T3');
     });
 
     it('renders the category badge when system.category is set', () => {
         const html = directTemplate(baseContext({ system: { category: 'Forbidden Lore' } }));
         const cat = dom(html).querySelector('.wh40k-badge--category');
         expect(cat).not.toBeNull();
-        expect(cat?.textContent?.trim()).toBe('Forbidden Lore');
+        expect(cat?.textContent.trim()).toBe('Forbidden Lore');
     });
 
     it('omits both default extras when system has neither field', () => {

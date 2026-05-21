@@ -6,9 +6,9 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { mockPlayerSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
@@ -21,12 +21,12 @@ initializeStoryHandlebars();
 
 const rng = seedRandom(0xba5eba11);
 
-const headerTpl = Handlebars.compile(headerSrc);
-const tabsTpl = Handlebars.compile(tabsSrc);
-const biographyTpl = Handlebars.compile(biographyTabSrc);
+const headerTpl = Hbs.compile(headerSrc);
+const tabsTpl = Hbs.compile(tabsSrc);
+const biographyTpl = Hbs.compile(biographyTabSrc);
 
 function renderBaseActorSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = Handlebars.compile(`
+    const tpl = Hbs.compile(`
         <div class="tw-grid tw-grid-cols-[260px_minmax(0,1fr)]">
             <aside class="wh40k-sidebar tw-flex tw-min-h-full tw-flex-col">
                 ${headerTpl(ctx)}
@@ -37,10 +37,10 @@ function renderBaseActorSheet(ctx: SheetContextLike): HTMLElement {
             </main>
         </div>
     `);
-    return renderTemplate(tpl, ctx);
+    return renderTpl(tpl, ctx);
 }
 
-const _actorId = randomId('base-actor', rng);
+void randomId('base-actor', rng);
 
 const meta: Meta<SheetContextLike> = {
     title: 'Actor/BaseActorSheet',
@@ -55,11 +55,11 @@ export const Default: Story = {
     args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'biography' }),
     render: (args) => renderBaseActorSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const cv = within(canvasElement);
         // Sidebar header renders the actor name
-        await expect(canvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
+        await expect(cv.getByDisplayValue('Acolyte Vex')).toBeVisible();
         // Biography tab content is present
-        await expect(canvas.getByText('Biography')).toBeVisible();
+        await expect(cv.getByText('Biography')).toBeVisible();
     },
 };
 
@@ -83,9 +83,9 @@ export const EditMode: Story = {
     }),
     render: (args) => renderBaseActorSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const cv = within(canvasElement);
         // Age field should show the value
-        await expect(canvas.getByDisplayValue('35')).toBeVisible();
+        await expect(cv.getByDisplayValue('35')).toBeVisible();
     },
 };
 
@@ -95,7 +95,7 @@ export const ItemCreateClick: Story = {
     name: 'Interaction — itemCreate fires',
     args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'biography' }),
     render: (args) => renderBaseActorSheet(args),
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         // clickAction throws if the element is not present — its presence
         // confirms the biography tab rendered the peer section.
         clickAction(canvasElement, 'itemCreate');
@@ -109,8 +109,8 @@ export const RogueTrader: Story = {
     args: mockPlayerSheetContext({ systemId: 'rt', activeTab: 'biography' }),
     render: (args) => renderBaseActorSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const cv = within(canvasElement);
         // RT system still renders the actor name in the header
-        await expect(canvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
+        await expect(cv.getByDisplayValue('Acolyte Vex')).toBeVisible();
     },
 };

@@ -28,8 +28,8 @@
  * per-test selections are dialog-scoped.
  */
 
-import { computeRitualTarget, resolveContemptOfTheWarp, type RitualModifier, type RitualModifierKind, type RitualTemplate } from '../rules/bc-chaos-ritual.ts';
 import type { BcRitualDeclarations } from '../data/actor/mixins/bc-ritual-template.ts';
+import { computeRitualTarget, resolveContemptOfTheWarp, type RitualModifier, type RitualModifierKind, type RitualTemplate } from '../rules/bc-chaos-ritual.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -77,6 +77,7 @@ interface BcRitualDialogResult {
     modifiers: readonly RitualModifier[];
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard accepts unknown to narrow external dialog form input
 function isRitualModifierKind(value: unknown): value is RitualModifierKind {
     return typeof value === 'string' && (MODIFIER_KINDS as readonly string[]).includes(value);
 }
@@ -169,14 +170,14 @@ async function promptBcRitualInputs(args: { initialMastery: number }): Promise<B
             label: 'WH40K.BC.Ritual.DialogSubmit',
             callback: (_evt: Event, button: HTMLButtonElement): BcRitualDialogResult => {
                 const form = button.form ?? null;
-                const rawTemplateId = ((form?.elements.namedItem('templateId') as HTMLInputElement | null)?.value ?? '').trim();
-                const rawBaseTarget = Number((form?.elements.namedItem('baseTarget') as HTMLInputElement | null)?.value ?? 0);
-                const baseTarget = Number.isFinite(rawBaseTarget) ? Math.max(0, Math.trunc(rawBaseTarget)) : 0;
-                const modifiers = readModifiersFromForm(form);
+                const cbRawTemplateId = ((form?.elements.namedItem('templateId') as HTMLInputElement | null)?.value ?? '').trim();
+                const cbRawBaseTarget = Number((form?.elements.namedItem('baseTarget') as HTMLInputElement | null)?.value ?? 0);
+                const cbBaseTarget = Number.isFinite(cbRawBaseTarget) ? Math.max(0, Math.trunc(cbRawBaseTarget)) : 0;
+                const cbModifiers = readModifiersFromForm(form);
                 return {
-                    templateId: rawTemplateId === '' ? 'unnamed-ritual' : rawTemplateId,
-                    baseTarget,
-                    modifiers,
+                    templateId: cbRawTemplateId === '' ? 'unnamed-ritual' : cbRawTemplateId,
+                    baseTarget: cbBaseTarget,
+                    modifiers: cbModifiers,
                 };
             },
         },
@@ -192,7 +193,7 @@ async function promptBcRitualInputs(args: { initialMastery: number }): Promise<B
     const rawTemplateId = shape.templateId;
     const templateId = typeof rawTemplateId === 'string' && rawTemplateId !== '' ? rawTemplateId : 'unnamed-ritual';
     const baseTarget = typeof shape.baseTarget === 'number' && Number.isFinite(shape.baseTarget) ? Math.max(0, Math.trunc(shape.baseTarget)) : 0;
-    const modifiers: readonly RitualModifier[] = Array.isArray(shape.modifiers) ? (shape.modifiers as readonly RitualModifier[]) : [];
+    const modifiers: readonly RitualModifier[] = Array.isArray(shape.modifiers) ? shape.modifiers : [];
     return { templateId, baseTarget, modifiers };
 }
 
@@ -279,7 +280,7 @@ export async function bcPerformRitual(this: BcRitualSheetLike, _event: Event, _t
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
     await ChatMessage.create({
-        user: game.user?.id,
+        user: game.user.id,
         speaker: ChatMessage.getSpeaker(speakerActor),
         content,
         rolls: [roll],

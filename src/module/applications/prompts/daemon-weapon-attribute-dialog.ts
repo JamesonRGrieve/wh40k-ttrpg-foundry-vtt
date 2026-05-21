@@ -99,10 +99,10 @@ export default class DaemonWeaponAttributeDialog extends ApplicationV2Mixin(Appl
         if (!(root instanceof HTMLElement)) return;
         const alignment = root.querySelector<HTMLSelectElement>('select[name="alignment"]')?.value;
         const binding = root.querySelector<HTMLSelectElement>('select[name="bindingStrength"]')?.value;
-        if (alignment && (ALIGNMENT_CHOICES as readonly string[]).includes(alignment)) {
+        if (alignment !== undefined && (ALIGNMENT_CHOICES as readonly string[]).includes(alignment)) {
             this.alignment = alignment as ChaosAlignment;
         }
-        if (binding && (BINDING_CHOICES as readonly string[]).includes(binding)) {
+        if (binding !== undefined && (BINDING_CHOICES as readonly string[]).includes(binding)) {
             this.bindingStrength = binding as BindingStrength;
         }
     }

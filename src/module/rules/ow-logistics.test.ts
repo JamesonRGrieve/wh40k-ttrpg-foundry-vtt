@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import {
     OW_CRAFTSMANSHIP_MODIFIER,
     OW_DEFAULT_LOGISTICS_RATING,

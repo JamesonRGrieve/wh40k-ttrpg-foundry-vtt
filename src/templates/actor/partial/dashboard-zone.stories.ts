@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import templateSrc from './dashboard-zone.hbs?raw';
 
 initializeStoryHandlebars();
 
@@ -13,8 +12,8 @@ function renderZone(args: { title: string; icon: string; body: string; zoneClass
     // Register the body as an inline partial under a stable name, then call
     // the dashboard-zone block partial with that body.
     const wrapper = `{{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title=title icon=icon zoneClass=zoneClass contentClass=contentClass}}{{{body}}}{{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}`;
-    const tpl = Handlebars.compile(wrapper);
-    return renderTemplate(tpl, args);
+    const tpl = HbsLib.compile(wrapper);
+    return renderTpl(tpl, args);
 }
 
 interface Args {
@@ -40,7 +39,8 @@ type Story = StoryObj<Args>;
 
 export const Default: Story = {};
 
-export const Combat: Story = {
+export const CombatZone: Story = {
+    name: 'Combat',
     args: {
         title: 'Combat',
         icon: 'fa-crosshairs',
@@ -57,13 +57,13 @@ export const CustomContentClass: Story = {
         contentClass: 'tw-p-3 tw-grid tw-grid-cols-2 tw-gap-1',
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // Title rendered, icon class threaded.
-        expect(canvas.getByText('Skills')).toBeTruthy();
+        await expect(view.getByText('Skills')).toBeTruthy();
         const icon = canvasElement.querySelector('.fa-list');
-        expect(icon).toBeTruthy();
+        await expect(icon).toBeTruthy();
         // Custom content class overrode the default.
         const grid = canvasElement.querySelector('.tw-grid');
-        expect(grid).toBeTruthy();
+        await expect(grid).toBeTruthy();
     },
 };

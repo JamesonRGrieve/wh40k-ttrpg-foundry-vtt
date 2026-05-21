@@ -2,8 +2,8 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
-import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
+import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 

@@ -67,9 +67,9 @@ export const SingleAmmo: Story = {
 
 export const SelectFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Bolt Rounds (Standard)')).toBeTruthy();
-        expect(canvas.getByText('loaded')).toBeTruthy();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText('Bolt Rounds (Standard)')).toBeTruthy();
+        await expect(storyCanvas.getByText('loaded')).toBeTruthy();
         clickAction(canvasElement, 'selectAmmo');
         clickAction(canvasElement, 'cancel');
     },

@@ -21,9 +21,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** Action handler bound with a `this` context, matching the Mixin's expectations. */
-type ActionHandler = (this: MutantBackgroundDialog, event: Event, target: HTMLElement) => Promise<void>;
-
 /** Minimal actor surface the dialog touches — kept narrow to avoid Document coupling. */
 interface MutantTargetActor {
     id?: string | undefined;
@@ -41,7 +38,7 @@ interface MutantBackgroundContext extends Record<string, unknown> {
 }
 
 function localize(key: string): string {
-    return game.i18n?.localize?.(key) ?? key;
+    return game.i18n.localize(key);
 }
 
 /**

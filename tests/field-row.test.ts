@@ -6,14 +6,14 @@
  * renders the correct element structure with Tailwind utility classes.
  */
 
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import fieldRowSrc from '../src/templates/shared/field-row.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-const fieldRowTemplate = Handlebars.compile(fieldRowSrc);
+const fieldRowTemplate = HandlebarsLib.compile(fieldRowSrc);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -32,7 +32,7 @@ describe('field-row partial', () => {
         const row = root.querySelector('div');
         expect(row).not.toBeNull();
         const labelEl = root.querySelector('label');
-        expect(labelEl?.textContent?.trim()).toBe('Gender');
+        expect(labelEl === null ? null : labelEl.textContent.trim()).toBe('Gender');
         const input = root.querySelector('input');
         expect(input?.getAttribute('type')).toBe('text');
         expect(input?.getAttribute('name')).toBe('system.bio.gender');

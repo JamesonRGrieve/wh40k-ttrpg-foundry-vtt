@@ -43,7 +43,6 @@
  * neither gain Sanctic powers nor regress.
  */
 
-import type { PsyDiscipline } from './malefic-corruption.ts';
 import { resolvePsyMode, type PsyMode } from './psychic-push.ts';
 
 /* -------------------------------------------- */
@@ -163,7 +162,7 @@ export function getSancticPower(id: SancticPowerId): SancticPowerDef | null {
 }
 
 /** True when `discipline` is the Sanctic Daemonology tree. */
-export function isSancticDiscipline(discipline: PsyDiscipline | string): boolean {
+export function isSancticDiscipline(discipline: string): boolean {
     return discipline === 'sanctic';
 }
 
@@ -268,7 +267,9 @@ export function resolveSancticManifestation(input: SancticManifestInput): Sancti
     // tests: `getMaleficCorruptionCost('sanctic', …)` must return 0 for
     // the same inputs, so a regression there fails a test rather than
     // needing an unreachable runtime guard here.
-    const corruption = getSancticCorruptionCost(mode.effectivePR, input.success);
+    // Regression gate: getSancticCorruptionCost must return 0 for any PR / success
+    // combination. The unit tests assert the same, so a signature drift fails there.
+    getSancticCorruptionCost(mode.effectivePR, input.success);
 
     const phenomenaFires = input.success && mode.forcePhenomena;
     const mit = input.mitigation ?? {};

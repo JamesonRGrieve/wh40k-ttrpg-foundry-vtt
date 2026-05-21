@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveSancticManifestation, type SancticManifestInput } from '../../src/module/rules/sanctic-daemonology.ts';
 import sancticChatSrc from '../../src/templates/chat/sanctic-daemonology-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 /**
@@ -15,7 +15,7 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 initializeStoryHandlebars();
 
-const sancticTemplate = Handlebars.compile(sancticChatSrc);
+const sancticTemplate = HandlebarsLib.compile(sancticChatSrc);
 
 const MODE_KEYS: Record<SancticManifestInput['mode'], string> = {
     fettered: 'WH40K.SancticDaemonology.Mode.Fettered',
@@ -48,35 +48,35 @@ type Story = StoryObj;
 
 export const UnfetteredNoPhenomena: Story = {
     name: 'Unfettered Banishment — no corruption, no phenomena',
-    render: () => renderTemplate(sancticTemplate, cardContext({ powerId: 'banishment', mode: 'unfettered', basePR: 4, success: true })),
+    render: () => renderStoryTemplate(sancticTemplate, cardContext({ powerId: 'banishment', mode: 'unfettered', basePR: 4, success: true })),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/Banishment/i)).toBeTruthy();
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByText(/Banishment/i)).toBeTruthy();
         // Per-system + outside-sheet cascade anchors must be present.
         const root = canvasElement.querySelector('.wh40k-sd-card');
-        expect(root?.classList.contains('wh40k-rpg')).toBe(true);
-        expect(root?.getAttribute('data-wh40k-system')).toBe('dh2e');
+        await expect(root?.classList.contains('wh40k-rpg')).toBe(true);
+        await expect(root?.getAttribute('data-wh40k-system')).toBe('dh2e');
     },
 };
 
 export const FetteredHolocaust: Story = {
     name: 'Fettered Holocaust — half PR, +10 focus',
-    render: () => renderTemplate(sancticTemplate, cardContext({ powerId: 'holocaust', mode: 'fettered', basePR: 5, success: true })),
+    render: () => renderStoryTemplate(sancticTemplate, cardContext({ powerId: 'holocaust', mode: 'fettered', basePR: 5, success: true })),
 };
 
 export const PushPhenomena: Story = {
     name: 'Pushed Cleansing Flame — Phenomena fires (no corruption)',
-    render: () => renderTemplate(sancticTemplate, cardContext({ powerId: 'cleansing-flame', mode: 'push', basePR: 4, pushLevel: 2, success: true })),
+    render: () => renderStoryTemplate(sancticTemplate, cardContext({ powerId: 'cleansing-flame', mode: 'push', basePR: 4, pushLevel: 2, success: true })),
     play: async ({ canvasElement }) => {
         // Phenomena block renders on a pushed success.
-        expect(canvasElement.querySelector('.tw-text-red-300')).toBeTruthy();
+        await expect(canvasElement.querySelector('.tw-text-red-300')).toBeTruthy();
     },
 };
 
 export const PushWithSoulBinding: Story = {
     name: 'Pushed Sanctuary — Soul Binding (#86) can ignore',
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             sancticTemplate,
             cardContext({
                 powerId: 'sanctuary',
@@ -92,7 +92,7 @@ export const PushWithSoulBinding: Story = {
 export const PushWithEmperorsAnathema: Story = {
     name: "Pushed Sanctuary — Emperor's Anathema (#131) can Fate-negate",
     render: () =>
-        renderTemplate(
+        renderStoryTemplate(
             sancticTemplate,
             cardContext({
                 powerId: 'sanctuary',

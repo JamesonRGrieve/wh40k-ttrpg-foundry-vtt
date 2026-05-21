@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from './section-card.hbs?raw';
@@ -23,7 +23,7 @@ interface Args {
     body?: string;
 }
 
-const renderWithBody = (args: Args) => {
+const renderWithBody = (args: Args): HTMLElement => {
     const body = args.body ?? '<div class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">Body content goes here.</div>';
     const wrapped = templateSrc.replace('{{> @partial-block}}', body);
     return renderSheet(wrapped, args as unknown as Record<string, unknown>);
@@ -96,12 +96,10 @@ export const AddButtonDispatch: Story = {
         addType: 'criticalInjury',
         addTitle: 'Add Critical Injury',
     },
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
         const btn = canvasElement.querySelector('[data-action="itemCreate"]');
-        expect(btn).toBeTruthy();
-        expect((btn as HTMLElement).getAttribute('data-type')).toBe('criticalInjury');
+        void expect(btn).toBeTruthy();
+        void expect((btn as HTMLElement).getAttribute('data-type')).toBe('criticalInjury');
         clickAction(canvasElement, 'itemCreate');
-        void canvas;
     },
 };

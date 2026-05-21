@@ -60,8 +60,8 @@ export const PillCompact: Story = {
     name: 'Pill / Compact row',
     render: () => renderSheet(effectRowSrc, { effect: manaclesEffect(), compact: true }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(MANACLES_EFFECT_NAME)).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText(MANACLES_EFFECT_NAME)).toBeTruthy();
     },
 };
 
@@ -76,10 +76,10 @@ export const PillFullExpanded: Story = {
             showDuration: true,
         }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // The two characteristic-modifier rows reveal the −40/−40 penalty.
-        expect(canvas.getByText('BallisticSkill')).toBeTruthy();
-        expect(canvas.getByText('WeaponSkill')).toBeTruthy();
+        await expect(view.getByText('BallisticSkill')).toBeTruthy();
+        await expect(view.getByText('WeaponSkill')).toBeTruthy();
     },
 };
 

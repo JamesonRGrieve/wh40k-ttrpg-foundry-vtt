@@ -5,9 +5,9 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { mockNpcSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
@@ -17,19 +17,18 @@ import npcTabSrc from '../../../templates/actor/npc/tab-npc.hbs?raw';
 initializeStoryHandlebars();
 
 const rng = seedRandom(0xdeadbeef);
+void randomId('npc', rng); // seed advance only — id not used at module level
 
-const npcTabTpl = Handlebars.compile(npcTabSrc);
+const npcTabTpl = HBS.compile(npcTabSrc);
 
 function renderNPCSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = Handlebars.compile(`
+    const tpl = HBS.compile(`
         <div class="wh40k-sheet-body tw-p-2">
             ${npcTabTpl(ctx)}
         </div>
     `);
-    return renderTemplate(tpl, ctx);
+    return renderTpl(tpl, ctx);
 }
-
-const _npcId = randomId('npc', rng);
 
 const meta: Meta<SheetContextLike> = {
     title: 'Actor/NPCSheet',
@@ -44,9 +43,9 @@ export const Default: Story = {
     args: mockNpcSheetContext({ systemId: 'im' }),
     render: (args) => renderNPCSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('GM Tools')).toBeVisible();
-        await expect(canvas.getByText('Scale to Threat')).toBeVisible();
+        const view = within(canvasElement);
+        await expect(view.getByText('GM Tools')).toBeVisible();
+        await expect(view.getByText('Scale to Threat')).toBeVisible();
     },
 };
 
@@ -70,7 +69,7 @@ export const HordeEnabled: Story = {
         },
     }),
     render: (args) => renderNPCSheet(args),
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         // Horde toggle button is present
         clickAction(canvasElement, 'toggleHordeMode');
     },
@@ -82,7 +81,7 @@ export const ScaleToThreatClick: Story = {
     name: 'Interaction — scaleToThreat fires',
     args: mockNpcSheetContext({ systemId: 'im' }),
     render: (args) => renderNPCSheet(args),
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         clickAction(canvasElement, 'scaleToThreat');
     },
 };
@@ -97,9 +96,9 @@ export const DarkHeresy2NPC: Story = {
     }),
     render: (args) => renderNPCSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const view = within(canvasElement);
         // GM Tools section always present regardless of system
-        await expect(canvas.getByText('GM Tools')).toBeVisible();
+        await expect(view.getByText('GM Tools')).toBeVisible();
     },
 };
 
@@ -114,8 +113,8 @@ export const BlackCrusadeNPC: Story = {
     args: mockNpcSheetContext({ systemId: 'bc', actorOverrides: { name: 'Chaos Space Marine' } }),
     render: (args) => renderNPCSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('GM Tools')).toBeVisible();
+        const view = within(canvasElement);
+        await expect(view.getByText('GM Tools')).toBeVisible();
     },
 };
 
@@ -124,8 +123,8 @@ export const DarkHeresy1eNPC: Story = {
     args: mockNpcSheetContext({ systemId: 'dh1e', actorOverrides: { name: 'Heretek' } }),
     render: (args) => renderNPCSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('GM Tools')).toBeVisible();
+        const view = within(canvasElement);
+        await expect(view.getByText('GM Tools')).toBeVisible();
     },
 };
 
@@ -134,8 +133,8 @@ export const DeathwatchNPC: Story = {
     args: mockNpcSheetContext({ systemId: 'dw', actorOverrides: { name: 'Tyranid Warrior' } }),
     render: (args) => renderNPCSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('GM Tools')).toBeVisible();
+        const view = within(canvasElement);
+        await expect(view.getByText('GM Tools')).toBeVisible();
     },
 };
 
@@ -144,8 +143,8 @@ export const OnlyWarNPC: Story = {
     args: mockNpcSheetContext({ systemId: 'ow', actorOverrides: { name: 'Chaos Renegade' } }),
     render: (args) => renderNPCSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('GM Tools')).toBeVisible();
+        const view = within(canvasElement);
+        await expect(view.getByText('GM Tools')).toBeVisible();
     },
 };
 
@@ -154,7 +153,7 @@ export const RogueTraderNPC: Story = {
     args: mockNpcSheetContext({ systemId: 'rt', actorOverrides: { name: 'Eldar Corsair' } }),
     render: (args) => renderNPCSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('GM Tools')).toBeVisible();
+        const view = within(canvasElement);
+        await expect(view.getByText('GM Tools')).toBeVisible();
     },
 };

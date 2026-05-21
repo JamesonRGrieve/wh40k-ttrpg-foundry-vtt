@@ -2,18 +2,18 @@
  * Stories for PsychicPowerSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-psychic-power-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HbsLib.compile(templateSrc);
 const rng = seedRandom(0x5a1e71);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('psychic', rng);
     const item = mockItem({
         _id: id,
@@ -56,22 +56,22 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderStoryTemplate(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderStoryTemplate(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersPowerName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Smite')).toBeTruthy();
+    render: () => renderStoryTemplate(compiled, makeCtx()),
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByDisplayValue('Smite')).toBeTruthy();
     },
 };
 
 export const RendersDisciplineBadge: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText('Biomancy Power')).toBeTruthy();
+    render: () => renderStoryTemplate(compiled, makeCtx()),
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByText('Biomancy Power')).toBeTruthy();
     },
 };

@@ -105,11 +105,11 @@ export const NoRecent: Story = {
 
 export const RollFlow: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const storyCanvas = within(canvasElement);
         // localize() in stories returns the raw key when no langpack is
         // mounted; the Header key resolves to itself.
-        expect(canvas.getByText(/AcquisitionScale\.Header|Profit Factor Acquisition/)).toBeTruthy();
-        expect(canvas.getByText('Bolt Pistol')).toBeTruthy();
+        await expect(storyCanvas.getByText(/AcquisitionScale\.Header|Profit Factor Acquisition/)).toBeTruthy();
+        await expect(storyCanvas.getByText('Bolt Pistol')).toBeTruthy();
         clickAction(canvasElement, 'roll');
         clickAction(canvasElement, 'close');
     },

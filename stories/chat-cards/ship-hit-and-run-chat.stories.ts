@@ -13,16 +13,16 @@
  *      damage per DoS.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveHitAndRun, type HitAndRunResolution } from '../../src/module/rules/ship-hit-and-run.ts';
 import shipHarChatSrc from '../../src/templates/chat/ship-hit-and-run-chat.hbs?raw';
-import { renderTemplate } from '../mocks';
+import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
 
 initializeStoryHandlebars();
 
-const shipHarTemplate = Handlebars.compile(shipHarChatSrc);
+const shipHarTemplate = HbsStory.compile(shipHarChatSrc);
 
 interface CardArgs {
     attackerName: string;
@@ -49,7 +49,7 @@ function cardContext(args: CardArgs): Record<string, unknown> {
 
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Hit-and-Run (#188)',
-    render: (args) => renderTemplate(shipHarTemplate, cardContext(args)),
+    render: (args) => renderStoryTemplate(shipHarTemplate, cardContext(args)),
 };
 
 export default meta;
@@ -105,10 +105,10 @@ export const ShotDown: Story = {
         critB: 5,
     }),
     play: async ({ canvasElement }) => {
-        expect(canvasElement.querySelector('.wh40k-ship-har-card')).toBeTruthy();
-        expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.HitAndRun\.OutcomeShotDown/)).toBeTruthy();
+        await expect(canvasElement.querySelector('.wh40k-ship-har-card')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText(/WH40K\.Starship\.HitAndRun\.OutcomeShotDown/)).toBeTruthy();
     },
 };
 
@@ -126,8 +126,8 @@ export const ApproachMiss: Story = {
         critB: 4,
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.HitAndRun\.OutcomeApproachMiss/)).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText(/WH40K\.Starship\.HitAndRun\.OutcomeApproachMiss/)).toBeTruthy();
     },
 };
 
@@ -145,8 +145,8 @@ export const CommandLost: Story = {
         critB: 4,
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.HitAndRun\.OutcomeCommandLose/)).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText(/WH40K\.Starship\.HitAndRun\.OutcomeCommandLose/)).toBeTruthy();
     },
 };
 
@@ -164,8 +164,8 @@ export const CriticalSuccess: Story = {
         critB: 5,
     }),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/WH40K\.Starship\.HitAndRun\.AppliedCrit/)).toBeTruthy();
-        expect(canvas.getByText(/WH40K\.Starship\.HitAndRun\.HullDamage/)).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText(/WH40K\.Starship\.HitAndRun\.AppliedCrit/)).toBeTruthy();
+        await expect(view.getByText(/WH40K\.Starship\.HitAndRun\.HullDamage/)).toBeTruthy();
     },
 };

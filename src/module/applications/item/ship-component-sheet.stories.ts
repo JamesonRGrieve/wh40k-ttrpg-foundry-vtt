@@ -2,18 +2,39 @@
  * Stories for ShipComponentSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/ship-component-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HbsStory.compile(templateSrc);
 const rng = seedRandom(0x5c0a200);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+interface TabEntry {
+    id: string;
+    tab: string;
+    group: string;
+    active: boolean;
+    cssClass: string;
+}
+
+interface ShipComponentCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    source: ReturnType<typeof mockItem>['system'];
+    componentTypes: Record<string, { label: string }>;
+    hullTypes: Record<string, { label: string }>;
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    effects: never[];
+    tabs: Record<string, TabEntry>;
+}
+
+function makeCtx(overrides: Partial<ShipComponentCtx> = {}): ShipComponentCtx {
     const id = randomId('ship-comp', rng);
     const item = mockItem({
         _id: id,
@@ -65,23 +86,23 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderStoryTemplate(compiled, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderStoryTemplate(compiled, makeCtx({ inEditMode: true })) };
 
 export const RendersComponentName: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderStoryTemplate(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByDisplayValue('Jovian Pattern Drive')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Jovian Pattern Drive')).toBeTruthy();
     },
 };
 
 export const RendersDetailsTab: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
+    render: () => renderStoryTemplate(compiled, makeCtx()),
     play: async ({ canvasElement }) => {
         const tab = canvasElement.querySelector('[data-tab="details"]');
-        expect(tab).toBeTruthy();
-        expect(tab?.classList.contains('active')).toBe(true);
+        await expect(tab).toBeTruthy();
+        await expect(tab?.classList.contains('active')).toBe(true);
     },
 };

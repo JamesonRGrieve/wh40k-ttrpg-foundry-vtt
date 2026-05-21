@@ -65,29 +65,29 @@ export const Default: Story = {};
 
 export const AllCardsPresent: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const storyCanvas = within(canvasElement);
         // All three cards render.
         const death = canvasElement.querySelector('[data-homeworld-id="deathWorld"]');
         const garden = canvasElement.querySelector('[data-homeworld-id="gardenWorld"]');
         const research = canvasElement.querySelector('[data-homeworld-id="researchStation"]');
-        expect(death).not.toBeNull();
-        expect(garden).not.toBeNull();
-        expect(research).not.toBeNull();
+        await expect(death).not.toBeNull();
+        await expect(garden).not.toBeNull();
+        await expect(research).not.toBeNull();
 
         // Riders surface only on the cards that declare them.
-        expect(death?.querySelector('[data-rider="surprise-suppression"]')).not.toBeNull();
-        expect(garden?.querySelector('[data-rider="serenity"]')).not.toBeNull();
-        expect(research?.querySelector('[data-rider="pursuit-of-data"]')).not.toBeNull();
-        expect(death?.querySelector('[data-rider="serenity"]')).toBeNull();
-        expect(death?.querySelector('[data-rider="pursuit-of-data"]')).toBeNull();
-        expect(garden?.querySelector('[data-rider="surprise-suppression"]')).toBeNull();
-        expect(garden?.querySelector('[data-rider="pursuit-of-data"]')).toBeNull();
-        expect(research?.querySelector('[data-rider="surprise-suppression"]')).toBeNull();
-        expect(research?.querySelector('[data-rider="serenity"]')).toBeNull();
+        await expect(death?.querySelector('[data-rider="surprise-suppression"]')).not.toBeNull();
+        await expect(garden?.querySelector('[data-rider="serenity"]')).not.toBeNull();
+        await expect(research?.querySelector('[data-rider="pursuit-of-data"]')).not.toBeNull();
+        await expect(death?.querySelector('[data-rider="serenity"]')).toBeNull();
+        await expect(death?.querySelector('[data-rider="pursuit-of-data"]')).toBeNull();
+        await expect(garden?.querySelector('[data-rider="surprise-suppression"]')).toBeNull();
+        await expect(garden?.querySelector('[data-rider="pursuit-of-data"]')).toBeNull();
+        await expect(research?.querySelector('[data-rider="surprise-suppression"]')).toBeNull();
+        await expect(research?.querySelector('[data-rider="serenity"]')).toBeNull();
 
         // Aptitudes appear on their respective cards.
-        expect(canvas.getByText('Fieldcraft')).toBeTruthy();
-        expect(canvas.getByText('Social')).toBeTruthy();
-        expect(canvas.getByText('Knowledge')).toBeTruthy();
+        await expect(storyCanvas.getByText('Fieldcraft')).toBeTruthy();
+        await expect(storyCanvas.getByText('Social')).toBeTruthy();
+        await expect(storyCanvas.getByText('Knowledge')).toBeTruthy();
     },
 };

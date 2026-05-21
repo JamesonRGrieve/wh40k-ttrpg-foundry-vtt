@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import {
     canKillTeamAcquire,
     DW_VEHICLE_CRIT_CHART,
@@ -14,7 +13,7 @@ import {
 function rngOf(...samples: number[]): () => number {
     let i = 0;
     return () => {
-        const next = samples[i] ?? samples[samples.length - 1] ?? 0;
+        const next = (i < samples.length ? samples[i] : samples[samples.length - 1]) ?? 0;
         i += 1;
         return next;
     };
