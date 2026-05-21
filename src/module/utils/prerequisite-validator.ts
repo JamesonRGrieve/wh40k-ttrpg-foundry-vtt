@@ -102,17 +102,9 @@ export function checkPrerequisites(actor: WH40KBaseActorDocument, prerequisites:
  * @returns {{valid: boolean, reason?: string}}
  */
 function checkSinglePrerequisite(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
-    switch (prereq.type) {
-        case 'characteristic':
-            return checkCharacteristicPrereq(actor, prereq);
-        case 'skill':
-            return checkSkillPrereq(actor, prereq);
-        case 'talent':
-            return checkTalentPrereq(actor, prereq);
-        default:
-            console.warn('Unknown prerequisite type:', prereq.type);
-            return { valid: true }; // Unknown types pass by default
-    }
+    if (prereq.type === 'characteristic') return checkCharacteristicPrereq(actor, prereq);
+    if (prereq.type === 'skill') return checkSkillPrereq(actor, prereq);
+    return checkTalentPrereq(actor, prereq);
 }
 
 /**
@@ -289,15 +281,10 @@ function getSkillKey(name: string): string {
  * @returns {boolean}
  */
 function checkSkillLevel(skill: SkillLike, requiredLevel: 'trained' | 'plus10' | 'plus20'): boolean {
-    switch (requiredLevel) {
-        case 'plus20':
-            return skill.plus20;
-        case 'plus10':
-            return skill.plus10 || skill.plus20;
-        case 'trained':
-        default:
-            return skill.trained || skill.plus10 || skill.plus20;
-    }
+    if (requiredLevel === 'plus20') return skill.plus20;
+    if (requiredLevel === 'plus10') return skill.plus10 || skill.plus20;
+    // 'trained'
+    return skill.trained || skill.plus10 || skill.plus20;
 }
 
 /**

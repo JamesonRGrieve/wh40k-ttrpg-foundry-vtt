@@ -50,10 +50,12 @@ interface ActorWithTalentLookup {
  * Tolerates the apostrophe / non-apostrophe spellings the compendium
  * data has historically shipped under.
  */
+function hasTalentLookup(value: object): value is ActorWithTalentLookup {
+    return 'hasTalent' in value && typeof (value as Partial<ActorWithTalentLookup>).hasTalent === 'function';
+}
+
 export function hasAssassinsStrike(actor: WH40KBaseActor | ActorWithTalentLookup | null | undefined): boolean {
     if (actor == null) return false;
-    const lookup = actor as unknown as Partial<ActorWithTalentLookup>;
-    const hasTalent = lookup.hasTalent;
-    if (typeof hasTalent !== 'function') return false;
-    return TALENT_NAMES.some((name) => hasTalent.call(lookup, name));
+    if (!hasTalentLookup(actor)) return false;
+    return TALENT_NAMES.some((name) => actor.hasTalent(name));
 }

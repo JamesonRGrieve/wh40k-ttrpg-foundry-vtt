@@ -29,7 +29,7 @@ const DEFAULT_ROWS: CharacteristicRow[] = [
 
 const meta = {
     title: 'Prompts/ColonyGrowthDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         characteristics: DEFAULT_ROWS,
         tierKey: 'WH40K.RT.Colony.Tier.Foothold',

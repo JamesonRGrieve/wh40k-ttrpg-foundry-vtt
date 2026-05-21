@@ -8,7 +8,7 @@ import { initializeStoryHandlebars } from '../../../../stories/template-support'
 initializeStoryHandlebars();
 // AmmoSheet exposes setIncludes / setToArray on its render context. The story
 // reproduces the same surface so the template can render without the sheet.
-HbsStory.registerHelper('setIncludes', (key: unknown, set: unknown) => {
+HbsStory.registerHelper('setIncludes', (key: string | number, set: Set<string | number> | ReadonlyArray<string | number> | null | undefined) => {
     if (set instanceof Set) return set.has(key);
     if (Array.isArray(set)) return set.includes(key);
     return false;

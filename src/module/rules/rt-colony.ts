@@ -134,6 +134,7 @@ export function tierForSize(size: number): ColonyTierKey {
     const row = COLONY_SIZE_TIERS[clamped];
     // Defensive: the table is exhaustive 0..10 but the type-system can't
     // see that, and noUncheckedIndexedAccess returns `… | undefined`.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test.json lacks noUncheckedIndexedAccess; main tsconfig requires this guard
     if (row === undefined) return 'abandoned';
     return row.tier;
 }
@@ -230,32 +231,28 @@ export function profitFactorValueAdjustment(state: ColonyState): PfValueAdjustme
     let delta = 0;
     let factor = 1;
     const contributors: ColonyEffectKind[] = [];
+    // 'orderly' / 'pious' / 'unhappy' / 'apostate' cascade on the other stats
+    // but do not directly modify PF Value, so they have no handler entry.
+    const PF_HANDLERS: Partial<Record<ColonyEffectKind, () => void>> = {
+        placated: () => {
+            delta += 1;
+        },
+        productive: () => {
+            delta += 2;
+        },
+        anarchy: () => {
+            factor = 0;
+        },
+        idle: () => {
+            // Combine multiplicatively; idle halves regardless of order.
+            factor = Math.min(factor, 0.5);
+        },
+    };
     for (const eff of activeColonyEffects(state)) {
-        switch (eff.id) {
-            case 'placated':
-                delta += 1;
-                contributors.push(eff.id);
-                break;
-            case 'productive':
-                delta += 2;
-                contributors.push(eff.id);
-                break;
-            case 'anarchy':
-                factor = 0;
-                contributors.push(eff.id);
-                break;
-            case 'idle':
-                // Combine multiplicatively; idle halves regardless of order.
-                factor = Math.min(factor, 0.5);
-                contributors.push(eff.id);
-                break;
-            // 'orderly' / 'pious' / 'unhappy' / 'apostate' cascade on the
-            // other stats but do not directly modify PF Value.
-            case 'orderly':
-            case 'pious':
-            case 'unhappy':
-            case 'apostate':
-                break;
+        const handler = PF_HANDLERS[eff.id];
+        if (handler) {
+            handler();
+            contributors.push(eff.id);
         }
     }
     return { delta, factor, contributors };

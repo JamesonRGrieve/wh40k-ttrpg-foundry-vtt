@@ -53,13 +53,23 @@ interface QualityPayload {
     radiusUnit?: string;
 }
 
+interface WeaponQualityCardContext {
+    gameSystem: string;
+    qualityKey: keyof typeof WEAPON_QUALITY_EFFECTS;
+    qualityLabelKey: string;
+    qualityDescKey: string;
+    accentClass: string;
+    iconClass: string;
+    payload: QualityPayload;
+}
+
 function ctx(opts: {
     qualityKey: keyof typeof WEAPON_QUALITY_EFFECTS;
     accentClass: string;
     iconClass: string;
     payload: QualityPayload;
     gameSystem?: string;
-}): Record<string, unknown> {
+}): WeaponQualityCardContext {
     const labelKey = `WH40K.Quality.${capitalize(String(opts.qualityKey))}.Name`;
     const descKey = `WH40K.Quality.${capitalize(String(opts.qualityKey))}.Description`;
     return {

@@ -13,7 +13,7 @@ interface Args {
 
 const meta = {
     title: 'Prompts/AddXPDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         currentTotal: 12500,
         xpAmount: 0,

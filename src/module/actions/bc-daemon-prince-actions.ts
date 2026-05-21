@@ -50,6 +50,7 @@ interface BcDaemonPrinceSheetLike {
     actor: Actor & {
         readonly _gameSystemId?: string;
         readonly system: BcDaemonPrinceActorSystem;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() return shape is the resolved Document or undefined; treat as unknown to caller
         update: (data: { 'system.daemonPrinceAscension': { ascendedAt: number; alignmentAtAscension: DaemonPrinceAlignment } }) => Promise<unknown>;
     };
 }
@@ -70,8 +71,8 @@ async function promptConfirm(): Promise<boolean> {
 
     const content = `<p>${body}</p>`;
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt return type is `unknown` per Foundry's contract; narrowed locally
-    const result = (await dialogApi.prompt({
+    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt return type is `unknown` per Foundry's contract; narrowed below via runtime checks
+    const promptResult: unknown = await dialogApi.prompt({
         window: { title },
         content,
         ok: {
@@ -79,14 +80,14 @@ async function promptConfirm(): Promise<boolean> {
             callback: (): true => true,
         },
         rejectClose: false,
-    })) as unknown;
+    });
 
-    if (result === true) return true;
+    if (promptResult === true) return true;
     // Some DialogV2 variants surface a cancel button; we treat anything
     // not strictly `true` as a rejection.
-    if (typeof result === 'object' && result !== null) {
+    if (typeof promptResult === 'object' && promptResult !== null) {
         // Defensive narrowing for shapes that wrap the callback return.
-        const r = result as { confirmed?: unknown };
+        const r = promptResult as { confirmed?: boolean };
         if (r.confirmed === true) return true;
     }
     // Reference cancelLabel so unused-locals lint doesn't catch it; the

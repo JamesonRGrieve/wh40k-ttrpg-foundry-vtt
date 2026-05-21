@@ -14,7 +14,17 @@ const compiled = HandlebarsLib.compile(templateSrc);
 
 const rng = seedRandom(0xba5e1);
 
-function baseCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface BaseItemCtx {
+    item: ReturnType<typeof mockItem>;
+    system: { description: { value: string }; notes: string };
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    isOwnedByActor: boolean;
+    effects: ReadonlyArray<never>;
+    tabs: Record<string, { id: string; tab: string; group: string; label: string; active: boolean; cssClass: string }>;
+}
+function baseCtx(overrides: Partial<BaseItemCtx> = {}): BaseItemCtx {
     const id = randomId('base-item', rng);
     const item = mockItem({ _id: id, id, name: 'Imperial Aquila Icon', type: 'gear' });
     return {

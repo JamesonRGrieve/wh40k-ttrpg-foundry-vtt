@@ -147,6 +147,7 @@ interface ArmourLike {
  * item). Anything outside `CRAFTSMANSHIP_TIERS` collapses to `common`,
  * which is the engine's identity row (no shift, no modifier).
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: coerces opaque persisted-field value via runtime type guard
 function coerceCraftsmanship(value: unknown): Craftsmanship {
     if (typeof value !== 'string') return 'common';
     const tiers = CRAFTSMANSHIP_TIERS as ReadonlyArray<string>;
@@ -159,7 +160,7 @@ function coerceCraftsmanship(value: unknown): Craftsmanship {
  * `WeaponLike` shape so we don't need to import the full DataModel.
  */
 function classifyWeapon(item: WeaponLike): 'ranged' | 'melee' | null {
-    const cls = item.system.class ?? '';
+    const cls = item.system.class;
     if (item.system.melee === true || cls === 'melee') return 'melee';
     if (cls === 'pistol' || cls === 'basic' || cls === 'heavy' || cls === 'launcher') return 'ranged';
     return null;
@@ -183,6 +184,7 @@ function classifyWeapon(item: WeaponLike): 'ranged' | 'melee' | null {
  * authored content.
  */
 export function buildOwCraftsmanshipPanel(
+    // eslint-disable-next-line no-restricted-syntax -- boundary: accepts raw owned-items from Foundry Document where system is untyped
     items: Iterable<WeaponLike | ArmourLike | { type: string; name?: string | null; id?: string | null; system: unknown }>,
 ): OwCraftsmanshipPanelContext {
     const weapons: OwCraftsmanshipWeaponEntry[] = [];
@@ -242,11 +244,13 @@ export function buildOwCraftsmanshipPanel(
  * `melee` / `craftsmanship`. Items whose `system` is unset or non-object
  * are silently skipped — they never reach the engine lookup.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard narrows raw item to WeaponLike
 function isWeaponLike(raw: { type: string; system: unknown }): raw is WeaponLike {
     return typeof raw.system === 'object' && raw.system !== null;
 }
 
 /** Type-guard for {@link ArmourLike}; same shape contract as {@link isWeaponLike}. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard narrows raw item to ArmourLike
 function isArmourLike(raw: { type: string; system: unknown }): raw is ArmourLike {
     return typeof raw.system === 'object' && raw.system !== null;
 }

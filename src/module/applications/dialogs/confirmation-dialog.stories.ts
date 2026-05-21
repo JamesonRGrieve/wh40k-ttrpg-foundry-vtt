@@ -11,7 +11,7 @@ interface Args {
 
 const meta = {
     title: 'Dialogs/ConfirmationDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         content: '<p>Are you sure you want to <strong>delete this item</strong>? This cannot be undone.</p>',
         confirmLabel: 'Delete',

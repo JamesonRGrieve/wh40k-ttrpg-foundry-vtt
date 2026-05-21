@@ -27,6 +27,24 @@ interface OriginCard {
     badges: boolean;
 }
 
+interface BuilderChoiceEntry {
+    name?: string;
+    label?: string;
+    choiceKey?: string;
+    selected?: string;
+}
+
+interface BuilderRollResult {
+    formula: string;
+    hasValue: boolean;
+    value: number | undefined;
+    breakdown: string;
+}
+
+interface BuilderRollsMap {
+    [key: string]: BuilderRollResult | undefined;
+}
+
 interface SelectedOriginGrants {
     hasCharacteristics: boolean;
     characteristics: Array<{ short: string; value: number; positive: boolean }>;
@@ -48,9 +66,9 @@ interface SelectedOriginState {
     isConfirmed: boolean;
     grants: SelectedOriginGrants;
     hasChoices: boolean;
-    choices: Array<Record<string, unknown>>;
+    choices: BuilderChoiceEntry[];
     hasRolls: boolean;
-    rolls: Record<string, unknown>;
+    rolls: BuilderRollsMap;
     resources: { showInfluence: boolean; influenceRolled: number | null; influenceMod: number };
 }
 
@@ -258,7 +276,7 @@ function makeArgs(overrides: Partial<BuilderStoryArgs> = {}): BuilderStoryArgs {
 
 const meta: Meta<BuilderStoryArgs> = {
     title: 'Character Creation/OriginPathBuilder',
-    render: (args) => renderTpl(compiled, args as unknown as Record<string, unknown>),
+    render: (args) => renderTpl(compiled, args),
 };
 
 export default meta;

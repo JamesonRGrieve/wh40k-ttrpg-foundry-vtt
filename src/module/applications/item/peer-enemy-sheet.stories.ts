@@ -3,13 +3,18 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-peer-enemy-sheet.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
 
+interface PeerEnemyItem {
+    name: string;
+    system: { modifier: number; description: { value: string } };
+}
 interface Args {
-    item: { name: string; system: { modifier: number; description: { value: string } } };
+    item: PeerEnemyItem;
+    [key: string]: PeerEnemyItem;
 }
 
 const meta = {
     title: 'Item Sheets/PeerEnemySheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         item: {
             name: 'Adeptus Arbites',

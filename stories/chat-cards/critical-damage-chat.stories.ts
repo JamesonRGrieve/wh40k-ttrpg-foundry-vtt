@@ -27,7 +27,16 @@ interface CriticalDamageCardArgs {
     gameSystem: string;
 }
 
-function buildContext(args: CriticalDamageCardArgs): Record<string, unknown> {
+interface CriticalDamageCardContext {
+    gameSystem: string;
+    damageTypeKey: string;
+    bodyPartKey: string;
+    severityLabel: string;
+    effect: string;
+    riderLabels: string[];
+}
+
+function buildContext(args: CriticalDamageCardArgs): CriticalDamageCardContext {
     return {
         gameSystem: args.gameSystem,
         damageTypeKey: `WH40K.CriticalDamage.DamageType.${args.damageType}`,

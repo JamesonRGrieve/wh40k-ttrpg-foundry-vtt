@@ -229,22 +229,17 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
         const value = target.dataset['value'];
         if (typeof axis !== 'string' || typeof value !== 'string') return;
         if (!isAxis(axis)) return;
-        switch (axis) {
-            case 'troopCount':
-                if (isTroopCount(value)) this.troopCount = value;
-                break;
-            case 'timeInFront':
-                if (isTimeInFront(value)) this.timeInFront = value;
-                break;
-            case 'frontActive':
-                if (isFrontActive(value)) this.frontActive = value;
-                break;
-            case 'warCondition':
-                if (isWarCondition(value)) this.warCondition = value;
-                break;
-            case 'craftsmanship':
-                if (isCraftsmanship(value)) this.craftsmanship = value;
-                break;
+        if (axis === 'troopCount') {
+            if (isTroopCount(value)) this.troopCount = value;
+        } else if (axis === 'timeInFront') {
+            if (isTimeInFront(value)) this.timeInFront = value;
+        } else if (axis === 'frontActive') {
+            if (isFrontActive(value)) this.frontActive = value;
+        } else if (axis === 'warCondition') {
+            if (isWarCondition(value)) this.warCondition = value;
+        } else if (isCraftsmanship(value)) {
+            // axis === 'craftsmanship'
+            this.craftsmanship = value;
         }
         await this.render();
     }
@@ -276,7 +271,7 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-logistics-chat.hbs', templateData);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
         await this.close();
     }

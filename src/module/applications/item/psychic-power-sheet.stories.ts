@@ -13,7 +13,16 @@ initializeStoryHandlebars();
 const compiled = HbsLib.compile(templateSrc);
 const rng = seedRandom(0x5a1e71);
 
-function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface PsychicPowerCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    effects: ReadonlyArray<never>;
+    tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
+}
+function makeCtx(overrides: Partial<PsychicPowerCtx> = {}): PsychicPowerCtx {
     const id = randomId('psychic', rng);
     const item = mockItem({
         _id: id,

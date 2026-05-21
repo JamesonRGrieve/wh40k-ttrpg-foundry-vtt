@@ -121,6 +121,7 @@ export function attributeAtRoll(table: DaemonWeaponAttributeTable, roll: number)
     if (found !== undefined) return found;
     // Tables cover 1..10 by construction; fall back defensively to the last entry to keep the signature non-undefined.
     const fallback = entries[entries.length - 1];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test.json lacks noUncheckedIndexedAccess; main tsconfig requires this guard
     if (fallback === undefined) throw new Error(`Daemon weapon attribute table '${table}' is empty.`);
     return fallback;
 }

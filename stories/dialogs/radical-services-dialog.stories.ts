@@ -132,7 +132,7 @@ const SAMPLE_ROWS: ServiceRow[] = [
 
 const meta = {
     title: 'Dialogs/RadicalServicesDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         influence: 40,
         services: SAMPLE_ROWS,

@@ -39,27 +39,14 @@ export function updateAttackSpecials(rollData: AttackSpecialSourceRollData): voi
 
     // Las Variable Setting
     if ('lasMode' in rollData && rollData.lasMode) {
-        switch (rollData.lasMode) {
-            case 'Standard':
-                break;
-            case 'Overload':
-                mutableRollData.attackSpecials.findSplice((i: AttackSpecialLike) => i.name === 'Reliable');
-                mutableRollData.attackSpecials.push({
-                    name: 'Unreliable',
-                    level: true,
-                });
-                mutableRollData.attackSpecials.push({
-                    name: rollData.lasMode,
-                    level: true,
-                });
-                break;
-            case 'Overcharge':
-                mutableRollData.attackSpecials.push({
-                    name: rollData.lasMode,
-                    level: true,
-                });
-                break;
+        if (rollData.lasMode === 'Overload') {
+            mutableRollData.attackSpecials.findSplice((i: AttackSpecialLike) => i.name === 'Reliable');
+            mutableRollData.attackSpecials.push({ name: 'Unreliable', level: true });
+            mutableRollData.attackSpecials.push({ name: rollData.lasMode, level: true });
+        } else if (rollData.lasMode === 'Overcharge') {
+            mutableRollData.attackSpecials.push({ name: rollData.lasMode, level: true });
         }
+        // 'Standard' → no change.
     }
 
     if (actionItem.isRanged) {
@@ -82,35 +69,43 @@ export function calculateAttackSpecialAttackBonuses(rollData: RollData): void {
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
 
+    const applySpecial = (name: string, rd: RollData): void => {
+        if (name === 'Scatter') {
+            if (rd.rangeName === 'Point Blank' || rd.rangeName === 'Short Range') {
+                rd.specialModifiers['Scatter'] = 10;
+            }
+            return;
+        }
+        if (name === 'Indirect') {
+            rd.specialModifiers['Indirect'] = 10;
+            return;
+        }
+        if (name === 'Twin-Linked') {
+            rd.specialModifiers['Twin-Linked'] = 20;
+            return;
+        }
+        if (name === 'Defensive') {
+            rd.specialModifiers['Defensive'] = -10;
+            return;
+        }
+        if (name === 'Accurate') {
+            if ((rd.modifiers['aim'] ?? 0) > 0) {
+                rd.specialModifiers['Accurate'] = 10;
+            }
+            return;
+        }
+        if (name === 'Inaccurate') {
+            const aim = rd.modifiers['aim'] ?? 0;
+            if (aim > 0) {
+                rd.specialModifiers['Inaccurate'] = -aim;
+            }
+        }
+    };
+
     // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is untyped in WH40KItemDocument; cast to structural type for attack-special access
     for (const item of actionItem.items as unknown as AttackSpecialCarrier[]) {
         if (!item.isAttackSpecial) continue;
-        switch (item.name) {
-            case 'Scatter':
-                if (rollData.rangeName === 'Point Blank' || rollData.rangeName === 'Short Range') {
-                    rollData.specialModifiers['Scatter'] = 10;
-                }
-                break;
-            case 'Indirect':
-                rollData.specialModifiers['Indirect'] = 10;
-                break;
-            case 'Twin-Linked':
-                rollData.specialModifiers['Twin-Linked'] = 20;
-                break;
-            case 'Defensive':
-                rollData.specialModifiers['Defensive'] = -10;
-                break;
-            case 'Accurate':
-                if ((rollData.modifiers['aim'] ?? 0) > 0) {
-                    rollData.specialModifiers['Accurate'] = 10;
-                }
-                break;
-            case 'Inaccurate':
-                if ((rollData.modifiers['aim'] ?? 0) > 0) {
-                    rollData.specialModifiers['Inaccurate'] = -1 * (rollData.modifiers['aim'] ?? 0);
-                }
-                break;
-        }
+        applySpecial(item.name, rollData);
     }
 
     // Apply weapon quality effects (Phase 1: Accurate aim bonus)

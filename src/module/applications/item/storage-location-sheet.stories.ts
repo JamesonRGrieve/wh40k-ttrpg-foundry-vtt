@@ -9,18 +9,20 @@ interface EmbeddedItem {
     name: string;
 }
 
+interface StorageLocationItem {
+    name: string;
+    img: string;
+    items: EmbeddedItem[];
+    system: { description: { value: string } };
+}
 interface Args {
-    item: {
-        name: string;
-        img: string;
-        items: EmbeddedItem[];
-        system: { description: { value: string } };
-    };
+    item: StorageLocationItem;
+    [key: string]: StorageLocationItem;
 }
 
 const meta = {
     title: 'Item Sheets/StorageLocationSheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         item: {
             name: 'Footlocker',

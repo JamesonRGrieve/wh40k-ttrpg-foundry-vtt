@@ -19,8 +19,8 @@
  * homologated sheet for a non-BC actor.
  */
 
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { BcSupplementsDeclarations } from '../data/actor/mixins/bc-supplements-template.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 /** Sheet-like host shape; the ApplicationV2 dispatcher binds the sheet as `this`. */
 interface BcSupplementsActionHost {

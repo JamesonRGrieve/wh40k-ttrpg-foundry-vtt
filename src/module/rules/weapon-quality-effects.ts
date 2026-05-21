@@ -785,20 +785,14 @@ export type ScatterRangeBand = 'Point Blank' | 'Short Range' | 'Standard Range' 
 export function resolveScatterRangeBand(rangeName: string | undefined): number {
     if (rangeName === undefined) return 0;
     const bands = WEAPON_QUALITY_EFFECTS.scatter.rangeBands;
-    switch (rangeName as ScatterRangeBand) {
-        case 'Point Blank':
-            return bands.pointBlank;
-        case 'Short Range':
-            return bands.shortRange;
-        case 'Standard Range':
-            return bands.standardRange;
-        case 'Long Range':
-            return bands.longRange;
-        case 'Extreme Range':
-            return bands.extremeRange;
-        default:
-            return 0;
-    }
+    const SCATTER_BAND_MAP: Record<ScatterRangeBand, number> = {
+        'Point Blank': bands.pointBlank,
+        'Short Range': bands.shortRange,
+        'Standard Range': bands.standardRange,
+        'Long Range': bands.longRange,
+        'Extreme Range': bands.extremeRange,
+    };
+    return rangeName in SCATTER_BAND_MAP ? SCATTER_BAND_MAP[rangeName as ScatterRangeBand] : 0;
 }
 
 /**

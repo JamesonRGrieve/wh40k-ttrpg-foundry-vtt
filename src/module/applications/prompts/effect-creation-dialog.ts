@@ -205,26 +205,17 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const Ctor = this.constructor as typeof EffectCreationDialog;
         // Handle based on effect type
-        switch (data.effectType) {
-            case 'condition':
-                effectData = Ctor._createConditionData(data);
-                break;
-
-            case 'characteristic':
-                effectData = Ctor._createCharacteristicData(data);
-                break;
-
-            case 'skill':
-                effectData = Ctor._createSkillData(data);
-                break;
-
-            case 'combat':
-                effectData = Ctor._createCombatData(data);
-                break;
-
-            case 'custom':
-                effectData = Ctor._createCustomData(data);
-                break;
+        if (data.effectType === 'condition') {
+            effectData = Ctor._createConditionData(data);
+        } else if (data.effectType === 'characteristic') {
+            effectData = Ctor._createCharacteristicData(data);
+        } else if (data.effectType === 'skill') {
+            effectData = Ctor._createSkillData(data);
+        } else if (data.effectType === 'combat') {
+            effectData = Ctor._createCombatData(data);
+        } else {
+            // data.effectType === 'custom'
+            effectData = Ctor._createCustomData(data);
         }
 
         if (!effectData) {

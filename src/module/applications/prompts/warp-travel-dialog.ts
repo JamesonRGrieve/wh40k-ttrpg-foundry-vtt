@@ -115,6 +115,7 @@ export default class WarpTravelDialog extends ApplicationV2Mixin(ApplicationV2 a
     static async #onResolveJourney(this: WarpTravelDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const form = this.element;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: ApplicationV2.element can be null before first render
         if (form === null) return;
         const inputs: JourneyInputs = {
             baseDays: readNumber(form, 'baseDays', this.journey.inputs.baseDays),

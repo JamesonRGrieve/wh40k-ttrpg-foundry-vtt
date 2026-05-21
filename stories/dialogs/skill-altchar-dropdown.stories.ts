@@ -24,7 +24,32 @@ const CHAR_LABEL: Record<string, string> = {
     agility: 'Agility',
 };
 
-function buildContext(args: SkillContextArgs): Record<string, unknown> {
+interface SkillAltCharOption {
+    value: string;
+    label: string;
+    isCurrent: boolean;
+}
+
+interface SkillAltCharSkillPanel {
+    visible: boolean;
+    characteristic: string;
+    characteristicLabel: string;
+    altOptions: SkillAltCharOption[];
+    halved: boolean;
+    untrainedAdvanced: boolean;
+}
+
+interface SkillAltCharContext {
+    hasContextPanel: boolean;
+    hasSkillPanel: boolean;
+    contextExpanded: boolean;
+    isWeapon: boolean;
+    isPsychic: boolean;
+    isForceField: boolean;
+    skillPanel: SkillAltCharSkillPanel;
+}
+
+function buildContext(args: SkillContextArgs): SkillAltCharContext {
     // Athletics — characteristic strength, alt = toughness, agility.
     const listedChar = 'strength';
     const altCharacteristics = ['toughness', 'agility'];
@@ -36,7 +61,7 @@ function buildContext(args: SkillContextArgs): Record<string, unknown> {
         altCharacteristicTotal: usingAlt ? 42 : undefined,
         halveOnNonBasic: args.advance === 0 && !args.isBasic,
     });
-    const altOptions = [
+    const altOptions: SkillAltCharOption[] = [
         { value: listedChar, label: `${CHAR_LABEL[listedChar]} (default)`, isCurrent: !usingAlt },
         ...altCharacteristics.map((c) => ({ value: c, label: CHAR_LABEL[c] ?? c, isCurrent: args.activeCharacteristic === c })),
     ];
@@ -87,10 +112,9 @@ export const UntrainedBasicHalved: Story = {
     args: { activeCharacteristic: 'strength', advance: 0, isBasic: true },
     render: (args) => {
         const ctx = buildContext(args);
-        const panel = ctx['skillPanel'] as Record<string, unknown>;
         // Story override: force the legacy halving rule on top of the resolver
         // so the visual indicator is exercised independently of the rules module.
-        panel['halved'] = true;
+        ctx.skillPanel.halved = true;
         return renderTpl(contextPanelTemplate, ctx);
     },
 };

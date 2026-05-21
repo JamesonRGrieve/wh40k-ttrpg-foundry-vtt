@@ -16,7 +16,16 @@ initializeStoryHandlebars();
 const compiled = Hbs.compile(templateSrc);
 const rng = seedRandom(0xd3f100);
 
-function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface SimpleSheetCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    source: ReturnType<typeof mockItem>['system'];
+    dh: { items: { availability: Record<string, { label: string }> } };
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+}
+function makeCtx(overrides: Partial<SimpleSheetCtx> = {}): SimpleSheetCtx {
     const id = randomId('simple', rng);
     const item = mockItem({ _id: id, id, name: 'Forearm Bayonet', type: 'weaponMod', system: { weight: 0.2, availability: 'common' } });
     return {

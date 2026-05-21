@@ -156,18 +156,11 @@ export interface OrderIssueContext {
 export function canIssueOrder(ctx: OrderIssueContext): OrderIssueCheck {
     const { order, hasFullAction, hasHalfAction, cohesionAvailable } = ctx;
 
-    let actionOk: boolean;
-    switch (order.actionCost) {
-        case 'free':
-            actionOk = true;
-            break;
-        case 'half':
-            actionOk = hasHalfAction || hasFullAction;
-            break;
-        case 'full':
-            actionOk = hasFullAction;
-            break;
-    }
+    const actionOk = ((): boolean => {
+        if (order.actionCost === 'free') return true;
+        if (order.actionCost === 'half') return hasHalfAction || hasFullAction;
+        return hasFullAction;
+    })();
 
     if (!actionOk) {
         return { allowed: false, reason: 'insufficient-action' };

@@ -478,45 +478,23 @@ export default class WeaponData extends ItemDataModel.mixin(
         if (!this.melee && !this.isMeleeWeapon) {
             const hasUnreliable = qualities.has('unreliable');
 
-            switch (this.craftsmanship) {
-                case 'poor':
-                    // Poor: Gain Unreliable quality
-                    // NOTE: If already Unreliable, jams on any miss (handled in roll logic, not here)
-                    qualities.add('unreliable');
-                    break;
-
-                case 'good':
-                    // Good: Gain Reliable OR cancel Unreliable
-                    if (hasUnreliable) {
-                        qualities.delete('unreliable');
-                    } else {
-                        qualities.add('reliable');
-                    }
-                    break;
-
-                case 'best':
-                    // Best: Never jams or overheats
-                    // Add Reliable quality and remove Overheats
-                    qualities.add('reliable');
+            const craft = this.craftsmanship;
+            if (craft === 'poor') {
+                // Poor: Gain Unreliable quality
+                // NOTE: If already Unreliable, jams on any miss (handled in roll logic, not here)
+                qualities.add('unreliable');
+            } else if (craft === 'good' || craft === 'exceptional') {
+                // Good / Exceptional (Astartes): Gain Reliable OR cancel Unreliable
+                if (hasUnreliable) {
                     qualities.delete('unreliable');
-                    qualities.delete('overheats');
-                    break;
-
-                case 'exceptional':
-                    // Exceptional (Astartes): Gain Reliable OR cancel Unreliable
-                    if (hasUnreliable) {
-                        qualities.delete('unreliable');
-                    } else {
-                        qualities.add('reliable');
-                    }
-                    break;
-
-                case 'master':
-                    // Master (Astartes): Never jams or overheats (like Best)
+                } else {
                     qualities.add('reliable');
-                    qualities.delete('unreliable');
-                    qualities.delete('overheats');
-                    break;
+                }
+            } else if (craft === 'best' || craft === 'master') {
+                // Best / Master (Astartes): Never jams or overheats
+                qualities.add('reliable');
+                qualities.delete('unreliable');
+                qualities.delete('overheats');
             }
         }
 
@@ -563,25 +541,20 @@ export default class WeaponData extends ItemDataModel.mixin(
         // Apply modifiers for MELEE weapons only
         // Ranged weapons get quality changes instead (see effectiveSpecial)
         if (this.melee || this.isMeleeWeapon) {
-            switch (this.craftsmanship) {
-                case 'poor':
-                    mods.toHit = -10; // -10 to attack and parry
-                    break;
-                case 'good':
-                    mods.toHit = 5; // +5 to attack
-                    break;
-                case 'best':
-                    mods.toHit = 10; // +10 to attack
-                    mods.damage = 1; // +1 damage
-                    break;
-                case 'exceptional': // Astartes-grade
-                    mods.toHit = 5; // +5 to attack
-                    mods.damage = 1; // +1 damage
-                    break;
-                case 'master': // Master-crafted Astartes
-                    mods.toHit = 10; // +10 to attack
-                    mods.damage = 2; // +2 damage
-                    break;
+            const MELEE_CRAFT_MODS: Record<string, { toHit: number; damage: number }> = {
+                poor: { toHit: -10, damage: 0 }, // -10 to attack and parry
+                good: { toHit: 5, damage: 0 }, // +5 to attack
+                best: { toHit: 10, damage: 1 }, // +10 to attack, +1 damage
+                exceptional: { toHit: 5, damage: 1 }, // Astartes-grade: +5 attack, +1 damage
+                master: { toHit: 10, damage: 2 }, // Master-crafted Astartes: +10 attack, +2 damage
+            };
+            if (Object.hasOwn(MELEE_CRAFT_MODS, this.craftsmanship)) {
+                const meleeMods = MELEE_CRAFT_MODS[this.craftsmanship];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test.json lacks noUncheckedIndexedAccess; main tsconfig requires this guard
+                if (meleeMods !== undefined) {
+                    mods.toHit = meleeMods.toHit;
+                    mods.damage = meleeMods.damage;
+                }
             }
         }
 
@@ -757,16 +730,10 @@ export default class WeaponData extends ItemDataModel.mixin(
         const rof = this.attack.rateOfFire;
         const hasStorm = this.effectiveSpecial.has('storm');
 
-        switch (mode) {
-            case 'single':
-                return 1;
-            case 'semi':
-                return hasStorm ? rof.semi * 2 : rof.semi;
-            case 'full':
-                return hasStorm ? rof.full * 2 : rof.full;
-            default:
-                return 1;
-        }
+        if (mode === 'semi') return hasStorm ? rof.semi * 2 : rof.semi;
+        if (mode === 'full') return hasStorm ? rof.full * 2 : rof.full;
+        // 'single' or unknown
+        return 1;
     }
 
     /**

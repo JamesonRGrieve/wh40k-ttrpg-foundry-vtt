@@ -37,7 +37,33 @@ const BASE: BaseCtx = {
     comradeName: 'Comrade Jaeger',
 };
 
-function hitTransferContext(opts: { reason: 'doubles' | 'blast-spray' }): Record<string, unknown> {
+interface ComradeHitTransferEvent {
+    kind: 'hit-transfer';
+    reason: string;
+    transitioned: boolean;
+    replaced: boolean;
+    previousState: ComradeState;
+    newState: ComradeState;
+    previousStateKey: string;
+    newStateKey: string;
+}
+
+interface ComradeStateChangeEvent {
+    kind: 'state-change';
+    reason: string;
+    previousState: ComradeState;
+    newState: ComradeState;
+    previousStateKey: string;
+    newStateKey: string;
+    transitioned: boolean;
+    replaced: boolean;
+}
+
+interface ComradeChatContext extends BaseCtx {
+    event: ComradeHitTransferEvent | ComradeStateChangeEvent;
+}
+
+function hitTransferContext(opts: { reason: 'doubles' | 'blast-spray' }): ComradeChatContext {
     const result =
         opts.reason === 'doubles'
             ? transfersToComrade({ pcRollDoubles: true, comradeInCohesion: true, weaponBlastOrSpray: false, comradeInBlastSprayRange: false })
@@ -57,7 +83,7 @@ function hitTransferContext(opts: { reason: 'doubles' | 'blast-spray' }): Record
     };
 }
 
-function stateChangeContext(previousState: ComradeState, transition: 'hit' | 'heal' | 'replace'): Record<string, unknown> {
+function stateChangeContext(previousState: ComradeState, transition: 'hit' | 'heal' | 'replace'): ComradeChatContext {
     let result: { newState: ComradeState; transitioned: boolean; replaced?: boolean };
     if (transition === 'hit') {
         result = applyComradeHit(previousState);
@@ -84,25 +110,25 @@ function stateChangeContext(previousState: ComradeState, transition: 'hit' | 'he
 
 export const HitTransferDoubles: Story = {
     name: 'Hit transfer — doubles roll while in Cohesion',
-    render: () => renderSheet(chatSrc, hitTransferContext({ reason: 'doubles' })),
+    render: () => renderSheet(chatSrc, { ...hitTransferContext({ reason: 'doubles' }) }),
 };
 
 export const HitTransferBlastSpray: Story = {
     name: 'Hit transfer — Blast/Spray catches the Comrade',
-    render: () => renderSheet(chatSrc, hitTransferContext({ reason: 'blast-spray' })),
+    render: () => renderSheet(chatSrc, { ...hitTransferContext({ reason: 'blast-spray' }) }),
 };
 
 export const StateHitUnharmedToWounded: Story = {
     name: 'State change — unharmed → wounded',
-    render: () => renderSheet(chatSrc, stateChangeContext('unharmed', 'hit')),
+    render: () => renderSheet(chatSrc, { ...stateChangeContext('unharmed', 'hit') }),
 };
 
 export const StateHealWoundedToUnharmed: Story = {
     name: 'State change — wounded → unharmed (heal)',
-    render: () => renderSheet(chatSrc, stateChangeContext('wounded', 'heal')),
+    render: () => renderSheet(chatSrc, { ...stateChangeContext('wounded', 'heal') }),
 };
 
 export const StateReplaceDeadToUnharmed: Story = {
     name: 'State change — dead → unharmed (replacement enters play)',
-    render: () => renderSheet(chatSrc, stateChangeContext('dead', 'replace')),
+    render: () => renderSheet(chatSrc, { ...stateChangeContext('dead', 'replace') }),
 };
