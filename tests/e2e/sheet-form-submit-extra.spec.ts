@@ -281,16 +281,20 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
  * per spec but exercises every field path declared against it.
  */
 function groupFlowsBySheet(flows: readonly string[]): Record<string, string[]> {
-    const grouped: Record<string, string[]> = {};
+    const grouped: Partial<Record<string, string[]>> = {};
     for (const flow of flows) {
         const idx = flow.indexOf('::');
         if (idx < 0) continue;
         const slug = flow.slice(0, idx);
         const path = flow.slice(idx + 2);
-        if (!grouped[slug]) grouped[slug] = [];
-        grouped[slug].push(path);
+        const existing = grouped[slug];
+        if (existing !== undefined) {
+            existing.push(path);
+        } else {
+            grouped[slug] = [path];
+        }
     }
-    return grouped;
+    return grouped as Record<string, string[]>;
 }
 
 async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
@@ -320,14 +324,14 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                 // Bounded await with timeout so a single hung render/submit
                 // doesn't tar-pit the whole spec.
                 const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                    let timer: ReturnType<typeof setTimeout> | null = null;
+                    const timerRef = { id: null as ReturnType<typeof setTimeout> | null };
                     const timeout = new Promise<T>((_, reject) => {
-                        timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+                        timerRef.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                     });
                     try {
                         return await Promise.race([p, timeout]);
                     } finally {
-                        if (timer) clearTimeout(timer);
+                        if (timerRef.id !== null) clearTimeout(timerRef.id);
                     }
                 };
 
@@ -539,12 +543,12 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
 
                 try {
                     for (const slug of Object.keys(grouped)) {
-                        const spec = specs[slug];
                         const paths = grouped[slug];
-                        if (spec == null) {
+                        if (!Object.hasOwn(specs, slug)) {
                             for (const p of paths) notes[`${slug}::${p}`] = 'no spec registered for sheet slug';
                             continue;
                         }
+                        const spec = specs[slug];
                         await probeSheet(slug, spec, paths);
                     }
                 } finally {
@@ -566,8 +570,8 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
         );
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

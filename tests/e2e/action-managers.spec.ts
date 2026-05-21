@@ -103,7 +103,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         });
                     }
                 } catch (err) {
-                    for (const f of flowNames) setResult(f, false, `probe actor create threw: ${String((err as Error)?.message ?? err)}`);
+                    for (const f of flowNames) setResult(f, false, `probe actor create threw: ${String(err instanceof Error ? err.message : err)}`);
                     return { flows };
                 }
 
@@ -187,7 +187,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        setResult('basic-action-dispatch', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        setResult('basic-action-dispatch', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
 
                     /* ============================================================
@@ -295,7 +295,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             setResult('combat-action-on-turn', false, 'Combat.create returned no document');
                         }
                     } catch (err) {
-                        setResult('combat-action-on-turn', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        setResult('combat-action-on-turn', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
 
                     /* ============================================================
@@ -374,7 +374,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                             }),
                                         ]);
                                     } catch (err) {
-                                        reloadError = String((err as Error)?.message ?? err);
+                                        reloadError = String(err instanceof Error ? err.message : err);
                                     }
 
                                     // Static helpers prove a substantial portion
@@ -414,7 +414,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        setResult('reload-action-dispatch', false, `dynamic import threw: ${String((err as Error)?.message ?? err)}`);
+                        setResult('reload-action-dispatch', false, `dynamic import threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
 
                     /* ============================================================
@@ -456,7 +456,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             try {
                                 fresh.performWeaponAttack(null, null, null);
                             } catch (err) {
-                                attackThrew = String((err as Error)?.message ?? err);
+                                attackThrew = String(err instanceof Error ? err.message : err);
                             }
 
                             if (src === undefined && tgt === undefined && srcAndTgt === undefined && attackThrew === null) {
@@ -474,7 +474,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        setResult('targeted-action-with-target', false, `dynamic import threw: ${String((err as Error)?.message ?? err)}`);
+                        setResult('targeted-action-with-target', false, `dynamic import threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
 
                     /* ============================================================
@@ -517,7 +517,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             );
                         }
                     } catch (err) {
-                        setResult('scene-control-buttons-registered', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        setResult('scene-control-buttons-registered', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
 
                     /* ============================================================
@@ -579,7 +579,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             uiObj.notifications.warn = origWarn;
                         }
                     } catch (err) {
-                        setResult('chat-card-button-click', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                        setResult('chat-card-button-click', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
                 } finally {
                     for (const fn of cleanups) {

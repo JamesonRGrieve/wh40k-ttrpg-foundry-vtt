@@ -77,13 +77,15 @@ test.describe.serial('assistance stepper (#60)', () => {
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
             }
+            // Capture into a typed const so closures below don't need `!`.
+            const safeRoot: HTMLElement = root;
 
             function readState(label: string): Record<string, unknown> {
-                const stepperEl = root!.querySelector<HTMLElement>('.wh40k-assistance-stepper');
-                const count = root!.querySelector<HTMLElement>('.wh40k-assistance-stepper__count');
-                const badge = root!.querySelector<HTMLElement>('.wh40k-assistance-stepper__badge');
-                const plus = root!.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__plus');
-                const minus = root!.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__minus');
+                const stepperEl = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper');
+                const count = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper__count');
+                const badge = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper__badge');
+                const plus = safeRoot.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__plus');
+                const minus = safeRoot.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__minus');
                 return {
                     label,
                     rendered: stepperEl !== null,
@@ -95,7 +97,7 @@ test.describe.serial('assistance stepper (#60)', () => {
             }
 
             async function clickAction(action: string): Promise<void> {
-                const el = root!.querySelector<HTMLElement>(`[data-action="${action}"]:not([disabled])`);
+                const el = safeRoot.querySelector<HTMLElement>(`[data-action="${action}"]:not([disabled])`);
                 el?.click();
                 await new Promise<void>((r) => {
                     setTimeout(r, 60);

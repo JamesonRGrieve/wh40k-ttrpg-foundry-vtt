@@ -109,13 +109,14 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     try {
                         return await Promise.race([p, timeout]);
                     } finally {
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
                         if (timer !== null) clearTimeout(timer);
                     }
                 };
 
                 /** Drain any dialog the previous probe left open. */
                 async function closeOpenDialogs(): Promise<void> {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime ui.windows is untyped Record<string, Application>; narrowing to the trio of fields we read
+                    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: Foundry runtime ui.windows is untyped Record<string, Application>; narrowing to the trio of fields we read
                     const windows = Object.values(uiGbl?.windows ?? {}) as Array<{ id?: string; title?: string; close?: () => Promise<unknown> }>;
                     for (const w of windows) {
                         const id = `${w.id ?? ''} ${w.title ?? ''}`.toLowerCase();
@@ -486,7 +487,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 await new Promise<void>((r) => {
                                     setTimeout(r, 250);
                                 });
-                                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime ui.windows is untyped
+                                // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: Foundry runtime ui.windows is untyped
                                 const windowList = Object.values(uiGbl?.windows ?? {}) as Array<{ title?: string }>;
                                 const opened =
                                     Object.keys(uiGbl?.windows ?? {}).length > before ||
@@ -556,7 +557,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const mod = await import(itemDropUrl);
                             const IDM = mod.ItemDropManager ?? mod.default;
-                            // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments returns an untyped Foundry array
+                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: createEmbeddedDocuments returns an untyped Foundry array
                             const created = (await withTimeout(
                                 live.createEmbeddedDocuments?.('Item', [{ name: 'probe-nondrop-talent', type: 'talent' }]),
                                 5_000,
@@ -601,7 +602,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const mod = await import(itemDropUrl);
                             const IDM = mod.ItemDropManager ?? mod.default;
-                            // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments returns an untyped Foundry array
+                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: createEmbeddedDocuments returns an untyped Foundry array
                             const created = (await withTimeout(
                                 live.createEmbeddedDocuments?.('Item', [{ name: 'probe-notoken-gear', type: 'gear', system: { quantity: 1 } }]),
                                 5_000,
@@ -677,7 +678,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 protoData.delta.effects = protoData.delta.effects ?? [];
                                 protoData.delta.flags = protoData.delta.flags ?? {};
                                 await withTimeout(dropScene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
-                                // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments returns an untyped Foundry array
+                                // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: createEmbeddedDocuments returns an untyped Foundry array
                                 const created = (await withTimeout(
                                     live.createEmbeddedDocuments?.('Item', [{ name: 'probe-drop-gear', type: 'gear', system: { quantity: 2 } }]),
                                     5_000,
@@ -687,7 +688,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 if (gear == null) {
                                     notes['item-drop-creates-loot-pile'] = 'drop gear create failed';
                                 } else {
-                                    // eslint-disable-next-line no-restricted-syntax -- boundary: dropItemFromActor returns an untyped Foundry actor doc
+                                    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: dropItemFromActor returns an untyped Foundry actor doc
                                     const dropResult3 = (await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(with token)')) as {
                                         id?: string;
                                         type?: string;
@@ -800,14 +801,14 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         if (typeof IGM?.collectCandidates !== 'function') {
                             notes['inventory-generator-collect-candidates'] = 'collectCandidates unavailable';
                         } else {
-                            // eslint-disable-next-line no-restricted-syntax -- boundary: probe-result shape varies per content registry; uuid/name/type/profiles asserted below
+                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: probe-result shape varies per content registry; uuid/name/type/profiles asserted below
                             const dh2 = (await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates(dh2e)')) as Array<{
                                 uuid?: string;
                                 name?: string;
                                 type?: string;
                                 profiles?: unknown;
                             }>;
-                            // eslint-disable-next-line no-restricted-syntax -- boundary: probe-result shape varies per content registry
+                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: probe-result shape varies per content registry
                             const im = (await withTimeout(IGM.collectCandidates('im'), 15_000, 'collectCandidates(im)')) as Array<{
                                 uuid?: string;
                                 name?: string;
@@ -870,7 +871,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         } else if (typeof IGM?.applyToActor !== 'function' || typeof IGM?.collectCandidates !== 'function') {
                             notes['inventory-generator-apply-to-actor'] = 'applyToActor/collectCandidates unavailable';
                         } else {
-                            // eslint-disable-next-line no-restricted-syntax -- boundary: probe-result shape varies per content registry
+                            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: probe-result shape varies per content registry
                             const candidates = (await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates for apply')) as Array<{
                                 uuid?: string;
                                 name?: string;
@@ -937,7 +938,8 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 fired['inventory-generator-permission-denied'] = true;
                                 notes['inventory-generator-permission-denied'] = 'non-owner short-circuited to null (permission gate)';
                             } else {
-                                notes['inventory-generator-permission-denied'] = `expected null, got ${String(permResult)}`;
+                                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- permResult is any from Foundry boundary; JSON.stringify handles all value types safely
+                                notes['inventory-generator-permission-denied'] = `expected null, got ${JSON.stringify(permResult)}`;
                             }
                         }
                     } catch (err) {

@@ -67,7 +67,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!ActorCls?.create || !SceneCls?.create) {
+            if (ActorCls?.create == null || SceneCls?.create == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: {
@@ -101,14 +101,16 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
             // call with a 5s timeout so a hanging operation can't take the
             // Foundry server down and damage downstream specs.
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                // TypeScript's control flow doesn't track Promise-executor assignments,
+                // so use an object wrapper that ESLint can see as always-initialized.
+                const timerRef = { id: null as ReturnType<typeof setTimeout> | null };
                 const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+                    timerRef.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timerRef.id !== null) clearTimeout(timerRef.id);
                 }
             };
 
@@ -128,10 +130,10 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     'Actor.create',
                 );
             } catch (err) {
-                notes['scene-create-and-token-place'] = `Actor.create threw: ${String((err as Error)?.message ?? err)}`;
+                notes['scene-create-and-token-place'] = `Actor.create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (!actor?.id) {
+            if (actor?.id == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: {
@@ -147,10 +149,10 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
             try {
                 scene = await withTimeout(SceneCls.create({ name: 'token-spec' }), 5_000, 'Scene.create');
             } catch (err) {
-                notes['scene-create-and-token-place'] = `Scene.create threw: ${String((err as Error)?.message ?? err)}`;
+                notes['scene-create-and-token-place'] = `Scene.create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (!scene?.id) {
+            if (scene?.id == null) {
                 // Cleanup actor before bailing.
                 try {
                     await gameCls?.actors?.get?.(actor.id)?.delete?.();
@@ -201,7 +203,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                 const created = await withTimeout(scene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
                 if (Array.isArray(created) && created.length > 0) {
                     token = created[0];
-                    if (token?.id) {
+                    if (token?.id != null) {
                         fired['scene-create-and-token-place'] = true;
                     } else {
                         notes['scene-create-and-token-place'] = 'created token has no id';
@@ -210,10 +212,10 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     notes['scene-create-and-token-place'] = 'createEmbeddedDocuments returned empty';
                 }
             } catch (err) {
-                notes['scene-create-and-token-place'] = `createEmbeddedDocuments threw: ${String((err as Error)?.message ?? err)}`;
+                notes['scene-create-and-token-place'] = `createEmbeddedDocuments threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (!token?.id) {
+            if (token?.id == null) {
                 await cleanup();
                 return {
                     flowsFired: fired,
@@ -243,7 +245,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     notes['token-default-artwork'] = `token.actor.id (${String(linkedActor?.id)}) did not match created actor.id (${String(actor.id)})`;
                 }
             } catch (err) {
-                notes['token-default-artwork'] = `artwork probe threw: ${String((err as Error)?.message ?? err)}`;
+                notes['token-default-artwork'] = `artwork probe threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- token-update-position: exercise the document subclass'
@@ -269,7 +271,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                 try {
                     await withTimeout(token.setFlag('wh40k-rpg', 'probe', 'spec'), 5_000, 'token.setFlag(probe)');
                 } catch (err) {
-                    updateErr = String((err as Error)?.message ?? err);
+                    updateErr = err instanceof Error ? err.message : String(err);
                 }
                 let live = scene.tokens?.get?.(token.id) ?? token;
                 let flag = live.getFlag?.('wh40k-rpg', 'probe') ?? live._source?.flags?.['wh40k-rpg']?.probe;
@@ -285,7 +287,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                             token.updateSource({ flags: { 'wh40k-rpg': { probe: 'spec' } } });
                         }
                     } catch (innerErr) {
-                        const innerMsg = String((innerErr as Error)?.message ?? innerErr);
+                        const innerMsg = innerErr instanceof Error ? innerErr.message : String(innerErr);
                         updateErr ??= innerMsg;
                     }
                     live = scene.tokens?.get?.(token.id) ?? token;
@@ -299,7 +301,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     notes['token-update-position'] = `update did not persist — flag=${String(flag)}`;
                 }
             } catch (err) {
-                notes['token-update-position'] = `token.update outer threw: ${String((err as Error)?.message ?? err)}`;
+                notes['token-update-position'] = `token.update outer threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- token-actor-link: toggle actorLink to false then back to
@@ -324,7 +326,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     await withTimeout(token.update({ actorLink: false }), 5_000, 'token.update(actorLink:false initial)');
                     await withTimeout(token.update({ actorLink: true }), 5_000, 'token.update(actorLink:true)');
                 } catch (err) {
-                    const msg = String((err as Error)?.message ?? err);
+                    const msg = err instanceof Error ? err.message : String(err);
                     if (msg.includes('OBJECTS') || msg.includes('validation errors')) {
                         // Headless / V14-delta-validation gap — exercise via
                         // updateSource so we still drive the document setter
@@ -333,7 +335,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                             token.updateSource?.({ actorLink: false });
                             token.updateSource?.({ actorLink: true });
                         } catch (innerErr) {
-                            updateErr = `updateSource fallback threw: ${String((innerErr as Error)?.message ?? innerErr)}`;
+                            updateErr = `updateSource fallback threw: ${innerErr instanceof Error ? innerErr.message : String(innerErr)}`;
                         }
                     } else {
                         updateErr = msg;
@@ -348,7 +350,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     notes['token-actor-link'] = `actorLink toggle did not settle — linked=${String(linked)}`;
                 }
             } catch (err) {
-                notes['token-actor-link'] = `actorLink toggle outer threw: ${String((err as Error)?.message ?? err)}`;
+                notes['token-actor-link'] = `actorLink toggle outer threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- token-overrides-actor-data: set an override on the
@@ -373,7 +375,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                 try {
                     await withTimeout(token.update({ delta: { name: 'override-name' } }), 5_000, 'token.update(delta)');
                 } catch (err) {
-                    const msg = String((err as Error)?.message ?? err);
+                    const msg = err instanceof Error ? err.message : String(err);
                     if (msg.includes('validation errors') || msg.includes('OBJECTS')) {
                         // Direct mutation fallback — drive the same
                         // observable assertion (delta.name === 'override-name')
@@ -406,7 +408,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     )} delta.name=${String(liveToken.delta?.name)} _source.delta.name=${String(liveToken._source?.delta?.name)}`;
                 }
             } catch (err) {
-                notes['token-overrides-actor-data'] = `delta override outer threw: ${String((err as Error)?.message ?? err)}`;
+                notes['token-overrides-actor-data'] = `delta override outer threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             // ---- token-delete: remove the token from the scene, verify
@@ -421,7 +423,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     const removed = await withTimeout(scene.deleteEmbeddedDocuments('Token', [token.id]), 5_000, 'deleteEmbeddedDocuments(Token)');
                     deleted = Array.isArray(removed) && removed.length > 0;
                 } catch (err) {
-                    const msg = String((err as Error)?.message ?? err);
+                    const msg = err instanceof Error ? err.message : String(err);
                     if (msg.includes('OBJECTS')) {
                         // If the embedded-collection delete partially ran
                         // (the document was removed before the canvas
@@ -433,7 +435,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                                 await withTimeout(token.delete?.() ?? Promise.resolve(), 5_000, 'token.delete fallback');
                                 deleted = true;
                             } catch (innerErr) {
-                                const innerMsg = String((innerErr as Error)?.message ?? innerErr);
+                                const innerMsg = innerErr instanceof Error ? innerErr.message : String(innerErr);
                                 // "does not exist in the EmbeddedCollection" =
                                 // already deleted by the outer failing call.
                                 if (innerMsg.includes('does not exist')) {
@@ -454,7 +456,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     notes['token-delete'] = `delete returned ok but collection still has ${stillThere} tokens`;
                 }
             } catch (err) {
-                notes['token-delete'] = notes['token-delete'] ?? `delete outer threw: ${String((err as Error)?.message ?? err)}`;
+                notes['token-delete'] = notes['token-delete'] ?? `delete outer threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             await cleanup();

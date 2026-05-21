@@ -22,7 +22,8 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
         const ActorCls = g.Actor;
-        if (!ActorCls?.create) return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: 'Actor.create unavailable' };
+        if (typeof ActorCls?.create !== 'function')
+            return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: 'Actor.create unavailable' };
 
         let withThreshold;
         let withoutThreshold;
@@ -41,7 +42,7 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
             return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: String((setupErr as Error).message) };
         }
 
-        if (!withThreshold || !withoutThreshold) {
+        if (withThreshold == null || withoutThreshold == null) {
             return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: 'Actor.create returned null' };
         }
 
@@ -70,7 +71,7 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         /* eslint-disable @typescript-eslint/no-explicit-any */
         const g = globalThis as any;
         const actor = g.game?.actors?.getName?.('fate-threshold-visible-probe');
-        if (actor?.sheet) {
+        if (actor?.sheet != null) {
             await actor.sheet.render(true);
             await new Promise<void>((r) => {
                 setTimeout(r, 200);
@@ -83,7 +84,7 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         /* eslint-disable @typescript-eslint/no-explicit-any */
         const g = globalThis as any;
         const actor = g.game?.actors?.getName?.('fate-threshold-hidden-probe');
-        if (actor?.sheet) {
+        if (actor?.sheet != null) {
             await actor.sheet.render(true);
             await new Promise<void>((r) => {
                 setTimeout(r, 200);

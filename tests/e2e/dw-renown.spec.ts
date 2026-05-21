@@ -41,7 +41,7 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string } | undefined;
                     if (typeof HbsLib?.compile !== 'function') {
                         return {
                             rendered,
@@ -100,7 +100,7 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                     // Anchor the rendered DOM so snap() captures live pixels.
                     (globalThis as any).__dwRenownPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

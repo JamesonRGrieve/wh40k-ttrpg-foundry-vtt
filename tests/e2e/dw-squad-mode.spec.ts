@@ -44,8 +44,8 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HandlebarsGbl = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HandlebarsGbl?.compile !== 'function') {
                         return {
                             rendered,
                             mode,
@@ -58,7 +58,7 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HandlebarsGbl.compile(src);
                     const html = tpl({
                         modePanel: {
                             mode: 'squad',

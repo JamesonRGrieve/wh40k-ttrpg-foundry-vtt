@@ -82,7 +82,10 @@ describe('skill tooltip regressions', () => {
             },
         } as WH40KBaseActor;
 
-        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+        (globalThis as Record<string, unknown>).fromUuid = async () => {
+            await Promise.resolve();
+            return actor;
+        };
 
         const tooltip = new TooltipsWH40K();
         const html = await tooltip._buildSkillTooltip({
@@ -129,7 +132,10 @@ describe('skill tooltip regressions', () => {
             },
         } as WH40KBaseActor;
 
-        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+        (globalThis as Record<string, unknown>).fromUuid = async () => {
+            await Promise.resolve();
+            return actor;
+        };
 
         const tooltip = new TooltipsWH40K();
         const html = await tooltip._buildSkillTooltip({
@@ -172,7 +178,10 @@ describe('skill tooltip regressions', () => {
             },
         } as WH40KBaseActor;
 
-        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+        (globalThis as Record<string, unknown>).fromUuid = async () => {
+            await Promise.resolve();
+            return actor;
+        };
 
         const tooltip = new TooltipsWH40K();
         const html = await tooltip._buildSkillTooltip({
@@ -217,7 +226,10 @@ describe('skill tooltip regressions', () => {
                 },
             },
         } as WH40KBaseActor;
-        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+        (globalThis as Record<string, unknown>).fromUuid = async () => {
+            await Promise.resolve();
+            return actor;
+        };
 
         const tooltip = new TooltipsWH40K();
         // eslint-disable-next-line no-restricted-syntax -- boundary: SkillTooltipPayload shape is the JSON-parsed contract emitted by prepareSkillTooltipData; the cast is over the parsed payload.
@@ -253,7 +265,10 @@ describe('skill tooltip regressions', () => {
             },
         } as WH40KBaseActor;
 
-        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+        (globalThis as Record<string, unknown>).fromUuid = async () => {
+            await Promise.resolve();
+            return actor;
+        };
 
         const tooltip = new TooltipsWH40K();
         const html = await tooltip._buildSkillTooltip({

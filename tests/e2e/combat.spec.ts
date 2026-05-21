@@ -85,7 +85,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!ActorGbl?.create || !CombatGbl?.create) {
+            if (ActorGbl?.create == null || CombatGbl?.create == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { create: 'Actor.create or Combat.create unavailable' },
@@ -108,7 +108,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                         type: 'bc-npc',
                         system: { gameSystem: 'bc' },
                     });
-                    if (actor?.id) npcIds.push(actor.id);
+                    if (actor?.id != null) npcIds.push(actor.id);
                 } catch (err) {
                     // best effort; we'll proceed if we got at least one
                     notes['addCombatants'] = `npc create ${i} threw: ${String((err as Error)?.message ?? err)}`;
@@ -139,14 +139,14 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
             let combat: any = null;
             try {
                 combat = await withTimeout(CombatGbl.create({}), 5_000, 'Combat.create');
-                if (combat?.id) {
+                if (combat?.id != null) {
                     fired['create'] = true;
                 } else {
                     notes['create'] = 'Combat.create returned null';
@@ -155,7 +155,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 notes['create'] = `Combat.create threw: ${String((err as Error)?.message ?? err)}`;
             }
 
-            if (!combat?.id) {
+            if (combat?.id == null) {
                 // Cleanup actors before bailing.
                 for (const id of npcIds) {
                     try {
@@ -402,7 +402,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
             } catch {
                 /* ignore — UI probes that need an NPC will note missing */
             }
-            const npc = npcId ? g.game?.actors?.get?.(npcId) : null;
+            const npc = npcId !== null ? g.game?.actors?.get?.(npcId) : null;
 
             for (const name of classNames) {
                 const Cls = await loadClass(name);
@@ -422,7 +422,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                         try {
                             const settings = g.game?.settings;
                             const registered = settings?.settings?.get?.('wh40k-rpg.combatPresets');
-                            if (!registered && typeof settings?.register === 'function') {
+                            if (registered == null && typeof settings?.register === 'function') {
                                 settings.register('wh40k-rpg', 'combatPresets', {
                                     scope: 'world',
                                     config: false,
@@ -457,14 +457,14 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                             instance = new Cls(null, 'library');
                             break;
                         case 'DifficultyCalculatorDialog':
-                            if (!npc) {
+                            if (npc == null) {
                                 notes[name] = 'NPC not available for dialog ctor';
                                 continue;
                             }
                             instance = new Cls(npc);
                             break;
                         case 'NPCThreatScalerDialog':
-                            if (!npc) {
+                            if (npc == null) {
                                 notes[name] = 'NPC not available for dialog ctor';
                                 continue;
                             }
@@ -475,7 +475,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                             continue;
                     }
 
-                    if (instance && typeof instance.render === 'function') {
+                    if (instance != null && typeof instance.render === 'function') {
                         await instance.render(true);
                         // Allow render microtasks to flush.
                         await new Promise<void>((r) => {
@@ -495,7 +495,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                 }
             }
 
-            if (npcId) {
+            if (npcId !== null) {
                 try {
                     await g.game?.actors?.get?.(npcId)?.delete?.();
                 } catch {

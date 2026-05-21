@@ -68,11 +68,12 @@ test.describe.serial('extended test toggle (#59)', () => {
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
             }
+            const rootEl: HTMLElement = root;
 
             function readState(label: string): Record<string, unknown> {
-                const wrapper = root!.querySelector<HTMLElement>('.wh40k-extended-test-controls');
-                const checkbox = root!.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
-                const thresholdInput = root!.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__threshold-input');
+                const wrapper = rootEl.querySelector<HTMLElement>('.wh40k-extended-test-controls');
+                const checkbox = rootEl.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
+                const thresholdInput = rootEl.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__threshold-input');
                 return {
                     label,
                     rendered: wrapper !== null,
@@ -83,7 +84,7 @@ test.describe.serial('extended test toggle (#59)', () => {
             }
 
             async function clickCheckbox(): Promise<void> {
-                const cb = root!.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
+                const cb = rootEl.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
                 cb?.click();
                 await new Promise<void>((r) => {
                     setTimeout(r, 60);

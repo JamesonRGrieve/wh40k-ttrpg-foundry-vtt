@@ -48,7 +48,7 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
                     const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsLib?.compile !== 'function') {
+                    if (typeof HandlebarsLib.compile !== 'function') {
                         return {
                             rendered,
                             missionActiveAttr,
@@ -138,7 +138,7 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
 
                     (globalThis as any).__dwMissionPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String(err instanceof Error ? err.message : err);
                 }
 
                 return {

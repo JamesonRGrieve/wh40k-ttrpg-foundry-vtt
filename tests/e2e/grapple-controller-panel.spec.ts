@@ -18,12 +18,12 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
+        const ActorCls = g.Actor;
+        if (ActorCls?.create == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'grapple-panel-probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e' },
@@ -32,7 +32,7 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
         } catch (createErr) {
             return { setupOk: false, btnCount: 0, hasTitle: false, error: String((createErr as Error).message) };
         }
-        if (!actor) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
+        if (actor == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
         await new Promise<void>((r) => {
@@ -50,11 +50,12 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
 
         const root = actor.sheet?.element;
         const panel = root?.querySelector?.('.wh40k-grapple-panel');
-        const btnCount = panel
-            ? panel.querySelectorAll(
-                  '.wh40k-grapple-damage-btn, .wh40k-grapple-throw-btn, .wh40k-grapple-break-btn, .wh40k-grapple-stand-btn, .wh40k-grapple-move-btn',
-              ).length
-            : 0;
+        const btnCount =
+            panel != null
+                ? panel.querySelectorAll(
+                      '.wh40k-grapple-damage-btn, .wh40k-grapple-throw-btn, .wh40k-grapple-break-btn, .wh40k-grapple-stand-btn, .wh40k-grapple-move-btn',
+                  ).length
+                : 0;
         const hasTitle = Boolean(panel?.querySelector?.('h3'));
         return { setupOk: true, btnCount, hasTitle, error: null };
     });

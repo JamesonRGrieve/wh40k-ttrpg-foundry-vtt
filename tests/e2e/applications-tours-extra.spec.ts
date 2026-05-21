@@ -110,14 +110,14 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             // Wrap any awaitable with a timeout so a blocking dialog or
             // socket-wait can't hang the spec (mirrors weapon-attack.spec.ts).
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                const timerRef = { id: null as ReturnType<typeof setTimeout> | null };
                 const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+                    timerRef.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timerRef.id !== null) clearTimeout(timerRef.id);
                 }
             };
 
@@ -706,10 +706,10 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         const child = document.createElement('i');
                         row.appendChild(child);
                         document.body.appendChild(row);
-                        let contextFired = false;
+                        const state = { contextFired: false };
                         row.addEventListener('contextmenu', (e) => {
                             e.preventDefault();
-                            contextFired = true;
+                            state.contextFired = true;
                         });
                         const evt = new PointerEvent('click', { bubbles: true, cancelable: true, clientX: 10, clientY: 10 });
                         Object.defineProperty(evt, 'target', { value: child });
@@ -719,7 +719,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             setTimeout(r, 10);
                         });
                         row.remove();
-                        if (contextFired) {
+                        if (state.contextFired) {
                             fired['contextmenu-trigger-event'] = true;
                             notes['contextmenu-trigger-event'] = 'triggerEvent re-dispatched contextmenu onto [data-item-id] ancestor';
                         } else {
@@ -998,8 +998,8 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                     activeSection?: string;
                                     sections?: Record<string, boolean>;
                                 };
-                                const titleOk = typeof dialog.title === 'string' && dialog.title.includes('probe-editor-talent');
-                                const sectionOk = ctx.activeSection === 'modifiers' && ctx.sections?.modifiers === true;
+                                const titleOk: boolean = typeof dialog.title === 'string' && String(dialog.title).includes('probe-editor-talent');
+                                const sectionOk: boolean = ctx.activeSection === 'modifiers' && ctx.sections?.modifiers === true;
                                 const elementPresent = dialog.element != null;
                                 const tolerable = renderThrew?.includes('must render a single HTML element') === true;
                                 if (titleOk && sectionOk && (elementPresent || tolerable)) {

@@ -64,7 +64,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                             },
                         },
                     });
-                    if (!actor) {
+                    if (actor === null || actor === undefined) {
                         return {
                             rendered,
                             toHitBonus,
@@ -102,7 +102,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                     // Keep the sheet open for the snap() call below.
                     (globalThis as any).__c9horde = actor;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String(err instanceof Error ? err.message : String(err));
                 }
 
                 return {

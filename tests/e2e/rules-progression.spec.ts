@@ -88,7 +88,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 try {
                     return await import(`${base}/${name}.js`);
                 } catch (err) {
-                    return { __importError: String((err as Error)?.message ?? err) };
+                    return { __importError: String((err as Error).message) };
                 }
             };
 
@@ -107,7 +107,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                         null,
                     );
                 } catch (err) {
-                    record('chaos-talents-constants', false, String((err as Error)?.message ?? err));
+                    record('chaos-talents-constants', false, String((err as Error).message));
                 }
             }
 
@@ -119,18 +119,18 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 try {
                     const reg = elite.ELITE_ADVANCES as Record<string, { id?: unknown; xpCost?: unknown }>;
                     const ids = Object.keys(reg);
-                    const allShaped = ids.every((id) => typeof reg[id]?.id === 'string' && typeof reg[id]?.xpCost === 'number');
+                    const allShaped = ids.every((id) => typeof reg[id].id === 'string' && typeof reg[id].xpCost === 'number');
                     record('elite-advances-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
                 } catch (err) {
-                    record('elite-advances-registry', false, String((err as Error)?.message ?? err));
+                    record('elite-advances-registry', false, String((err as Error).message));
                 }
                 try {
                     const astropath = (elite.ELITE_ADVANCES as Record<string, { prerequisites?: Array<{ type?: unknown; minimum?: unknown }> }>).astropath;
-                    const prereqs = astropath?.prerequisites ?? [];
+                    const prereqs = astropath.prerequisites ?? [];
                     const allValid = prereqs.length > 0 && prereqs.every((p) => typeof p.type === 'string' && typeof p.minimum === 'number');
                     record('elite-advances-prerequisites', allValid, null);
                 } catch (err) {
-                    record('elite-advances-prerequisites', false, String((err as Error)?.message ?? err));
+                    record('elite-advances-prerequisites', false, String((err as Error).message));
                 }
             }
 
@@ -143,11 +143,11 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const reg = radical.RADICAL_SERVICES as Record<string, { id?: unknown; threatLevel?: unknown; subtletyOnHire?: unknown }>;
                     const ids = Object.keys(reg);
                     const allShaped = ids.every(
-                        (id) => typeof reg[id]?.id === 'string' && typeof reg[id]?.threatLevel === 'number' && typeof reg[id]?.subtletyOnHire === 'number',
+                        (id) => typeof reg[id].id === 'string' && typeof reg[id].threatLevel === 'number' && typeof reg[id].subtletyOnHire === 'number',
                     );
                     record('radical-services-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
                 } catch (err) {
-                    record('radical-services-registry', false, String((err as Error)?.message ?? err));
+                    record('radical-services-registry', false, String((err as Error).message));
                 }
                 try {
                     const reg = radical.RADICAL_SERVICES as Record<string, { availability?: unknown }>;
@@ -155,7 +155,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const allStrings = availabilities.length > 0 && availabilities.every((a) => typeof a === 'string' && a.length > 0);
                     record('radical-services-availability', allStrings, null);
                 } catch (err) {
-                    record('radical-services-availability', false, String((err as Error)?.message ?? err));
+                    record('radical-services-availability', false, String((err as Error).message));
                 }
             }
 
@@ -170,15 +170,15 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const survivors = xenos.SURVIVORS_PARANOIA as { negatedSurpriseBonus?: unknown };
                     record(
                         'xenos-features-constants',
-                        Array.isArray(rightStuff?.applicableSkills) &&
+                        Array.isArray(rightStuff.applicableSkills) &&
                             rightStuff.applicableSkills.length > 0 &&
-                            typeof pushLimit?.operateBonus === 'number' &&
-                            typeof pushLimit?.failureThresholdForCritical === 'number' &&
-                            typeof survivors?.negatedSurpriseBonus === 'number',
+                            typeof pushLimit.operateBonus === 'number' &&
+                            typeof pushLimit.failureThresholdForCritical === 'number' &&
+                            typeof survivors.negatedSurpriseBonus === 'number',
                         null,
                     );
                 } catch (err) {
-                    record('xenos-features-constants', false, String((err as Error)?.message ?? err));
+                    record('xenos-features-constants', false, String((err as Error).message));
                 }
             }
 
@@ -192,7 +192,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 try {
                     record('profane-objects-module-shape', profane !== null && typeof profane === 'object', null);
                 } catch (err) {
-                    record('profane-objects-module-shape', false, String((err as Error)?.message ?? err));
+                    record('profane-objects-module-shape', false, String((err as Error).message));
                 }
             }
 
@@ -218,26 +218,26 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const r = wt.checkWeaponTraining(actor, freeWeapon);
                     record('weapon-training-check-noTraining', r?.trained === true && r?.talent === null, null);
                 } catch (err) {
-                    record('weapon-training-check-noTraining', false, String((err as Error)?.message ?? err));
+                    record('weapon-training-check-noTraining', false, String((err as Error).message));
                 }
                 try {
                     const r = wt.checkWeaponTraining(actor, untrainedWeapon);
                     record('weapon-training-check-untrained', r?.trained === false && r?.talent === null, null);
                 } catch (err) {
-                    record('weapon-training-check-untrained', false, String((err as Error)?.message ?? err));
+                    record('weapon-training-check-untrained', false, String((err as Error).message));
                 }
                 try {
                     const free = wt.getWeaponTrainingModifier(actor, freeWeapon);
                     const untrained = wt.getWeaponTrainingModifier(actor, untrainedWeapon);
                     record('weapon-training-modifier', free === 0 && untrained === -20, `free=${String(free)} untrained=${String(untrained)}`);
                 } catch (err) {
-                    record('weapon-training-modifier', false, String((err as Error)?.message ?? err));
+                    record('weapon-training-modifier', false, String((err as Error).message));
                 }
                 try {
                     const desc = wt.getWeaponTrainingDescription(actor, untrainedWeapon);
                     record('weapon-training-description', typeof desc === 'string' && desc.length > 0, null);
                 } catch (err) {
-                    record('weapon-training-description', false, String((err as Error)?.message ?? err));
+                    record('weapon-training-description', false, String((err as Error).message));
                 }
             }
 
@@ -257,7 +257,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     wm.updateWeaponModifiers(rollData);
                     record('weapon-modifiers-update', Array.isArray(rollData.weaponModifications) && rollData.weaponModifications.length === 0, null);
                 } catch (err) {
-                    record('weapon-modifiers-update', false, String((err as Error)?.message ?? err));
+                    record('weapon-modifiers-update', false, String((err as Error).message));
                 }
                 try {
                     const rollData: any = { weapon: actionItem, weaponModifiers: { stale: 1 }, modifiers: {}, attackSpecials: [], action: 'Standard Attack' };
@@ -265,7 +265,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     // The function resets weaponModifiers to {} before the loop.
                     record('weapon-modifiers-attackBonuses', Object.keys(rollData.weaponModifiers).length === 0, null);
                 } catch (err) {
-                    record('weapon-modifiers-attackBonuses', false, String((err as Error)?.message ?? err));
+                    record('weapon-modifiers-attackBonuses', false, String((err as Error).message));
                 }
                 try {
                     const rollData: any = {
@@ -277,7 +277,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     wm.calculateWeaponModifiersAttackSpecials(rollData);
                     record('weapon-modifiers-attackSpecials', Array.isArray(rollData.attackSpecials), null);
                 } catch (err) {
-                    record('weapon-modifiers-attackSpecials', false, String((err as Error)?.message ?? err));
+                    record('weapon-modifiers-attackSpecials', false, String((err as Error).message));
                 }
             }
 
@@ -301,7 +301,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     range.calculateWeaponRange(rollData);
                     record('range-calculateWeaponRange-melee', rollData.rangeName === 'Melee' && rollData.maxRange === 1, null);
                 } catch (err) {
-                    record('range-calculateWeaponRange-melee', false, String((err as Error)?.message ?? err));
+                    record('range-calculateWeaponRange-melee', false, String((err as Error).message));
                 }
                 try {
                     // No-weapon guard: maxRange resolves to 0, the ranged
@@ -317,7 +317,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     range.calculateWeaponRange(rollData);
                     record('range-calculateWeaponRange-noWeapon', rollData.maxRange === 0 && typeof rollData.rangeName === 'string', null);
                 } catch (err) {
-                    record('range-calculateWeaponRange-noWeapon', false, String((err as Error)?.message ?? err));
+                    record('range-calculateWeaponRange-noWeapon', false, String((err as Error).message));
                 }
             }
 

@@ -140,14 +140,14 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
             // Wrap any awaitable with a timeout so a blocking dialog or
             // socket-wait can't hang the spec (mirrors weapon-attack.spec.ts).
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                const timerHandle = { id: 0 };
                 const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+                    timerHandle.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms) as unknown as number;
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer !== null) clearTimeout(timer);
+                    clearTimeout(timerHandle.id);
                 }
             };
 
@@ -157,7 +157,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
             async function closeOpenDialogs(): Promise<void> {
                 const windows = Object.values(foundryUi?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
-                    const id = w?.id ?? '';
+                    const id = String(w?.id ?? '');
                     if (id.includes('dialog') || id.includes('prompt') || id.includes('breakdown')) {
                         try {
                             await w?.close?.();
@@ -199,10 +199,10 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                         const Mixed = DragDropMixin(StubBase as any);
                         const inst = new Mixed();
-                        const noUuid = inst._allowedDropBehaviors(new Event('drop') as DragEvent, {}) as Set<string>;
-                        const withUuid = inst._allowedDropBehaviors(new Event('drop') as DragEvent, { uuid: 'Item.foo' }) as Set<string>;
-                        const noUuidOk = noUuid.has('copy') && noUuid.has('link') && !noUuid.has('move');
-                        const withUuidOk = withUuid.has('copy') && withUuid.has('move') && withUuid.has('link');
+                        const noUuid = inst._allowedDropBehaviors(new Event('drop'), {});
+                        const withUuid = inst._allowedDropBehaviors(new Event('drop'), { uuid: 'Item.foo' });
+                        const noUuidOk = Boolean(noUuid.has('copy')) && Boolean(noUuid.has('link')) && noUuid.has('move') === false;
+                        const withUuidOk = Boolean(withUuid.has('copy')) && Boolean(withUuid.has('move')) && Boolean(withUuid.has('link'));
                         if (noUuidOk && withUuidOk) {
                             fired['drag-drop-api-allowed-behaviors'] = true;
                             notes['drag-drop-api-allowed-behaviors'] = 'no-uuid → {copy,link}; with-uuid → {copy,move,link}';
@@ -234,10 +234,10 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                         const Mixed = DragDropMixin(StubBase as any);
                         const inst = new Mixed();
-                        const noString = inst._defaultDropBehavior(new Event('drop') as DragEvent, {});
-                        const copyAcross = inst._defaultDropBehavior(new Event('drop') as DragEvent, { uuid: 'Actor.someone-else' });
+                        const noString = inst._defaultDropBehavior(new Event('drop'), {});
+                        const copyAcross = inst._defaultDropBehavior(new Event('drop'), { uuid: 'Actor.someone-else' });
                         // Same UUID as the host doc → same primary id+type+collection → move.
-                        const moveSame = inst._defaultDropBehavior(new Event('drop') as DragEvent, { uuid: 'Actor.probe-actor' });
+                        const moveSame = inst._defaultDropBehavior(new Event('drop'), { uuid: 'Actor.probe-actor' });
                         if (noString === 'copy' && copyAcross === 'copy' && moveSame === 'move') {
                             fired['drag-drop-api-default-behavior'] = true;
                             notes['drag-drop-api-default-behavior'] = 'noString=copy; otherActor=copy; sameActor=move';
@@ -345,9 +345,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'embed gear stack',
                         )) as any[];
-                        const stack = created?.[0] != null ? live.items.get(created[0].id) : null;
-                        const single = created?.[1] != null ? live.items.get(created[1].id) : null;
-                        const talent = created?.[2] != null ? live.items.get(created[2].id) : null;
+                        const stack = created[0] != null ? live.items.get(created[0].id) : null;
+                        const single = created[1] != null ? live.items.get(created[1].id) : null;
+                        const talent = created[2] != null ? live.items.get(created[2].id) : null;
                         for (const it of [stack, single, talent]) {
                             if (it != null) {
                                 cleanups.push(async () => {
@@ -373,9 +373,10 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 }
                                 const Mixed = EnhancedDragDropMixin(StubBase as any);
                                 const inst = new Mixed();
-                                const ghost = inst._createDragGhost(stack, new Event('dragstart') as DragEvent) as HTMLElement;
-                                const ghostHasName = ghost.innerHTML.includes('probe-stack');
-                                const ghostHasQty = ghost.innerHTML.includes('×5');
+                                const ghost = inst._createDragGhost(stack, new Event('dragstart'));
+                                const ghostInnerHtml = String(ghost.innerHTML);
+                                const ghostHasName = ghostInnerHtml.includes('probe-stack');
+                                const ghostHasQty = ghostInnerHtml.includes('×5');
                                 const stackSplittable = inst._canSplitItem(stack) === true;
                                 const singleNotSplittable = inst._canSplitItem(single) === false; // qty 1
                                 const talentNotSplittable = inst._canSplitItem(talent) === false; // type talent
@@ -453,8 +454,8 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'embed favorite gear',
                         )) as any[];
-                        const fav1 = createdItems?.[0] != null ? live.items.get(createdItems[0].id) : null;
-                        const fav2 = createdItems?.[1] != null ? live.items.get(createdItems[1].id) : null;
+                        const fav1 = createdItems[0] != null ? live.items.get(createdItems[0].id) : null;
+                        const fav2 = createdItems[1] != null ? live.items.get(createdItems[1].id) : null;
                         for (const it of [fav1, fav2]) {
                             if (it != null) {
                                 cleanups.push(async () => {
@@ -834,12 +835,17 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             mechanicalEffect: true,
                             source: 'Core',
                         });
-                        const genericHtml = t._buildGenericTooltip({ title: 'Info', content: '<p>generic</p>' });
-                        const charOk = charHtml.includes('Weapon Skill') && charHtml.includes('45') && charHtml.includes('Talent');
-                        const armorOk = armorHtml.includes('Body') && armorHtml.includes('AP 5') && armorHtml.includes('flak');
-                        const weaponOk = weaponHtml.includes('las') && weaponHtml.includes('reliable') && weaponHtml.includes('Click to attack');
-                        const modOk = modHtml.includes('Combat Bonuses') && modHtml.includes('Aim') && modHtml.includes('+10');
-                        const qualityOk = qualityHtml.includes('Reliable') && qualityHtml.includes('Simple Modifier') && qualityHtml.includes('Core');
+                        const genericHtml = String(t._buildGenericTooltip({ title: 'Info', content: '<p>generic</p>' }));
+                        const charStr = String(charHtml);
+                        const armorStr = String(armorHtml);
+                        const weaponStr = String(weaponHtml);
+                        const modStr = String(modHtml);
+                        const qualityStr = String(qualityHtml);
+                        const charOk = charStr.includes('Weapon Skill') && charStr.includes('45') && charStr.includes('Talent');
+                        const armorOk = armorStr.includes('Body') && armorStr.includes('AP 5') && armorStr.includes('flak');
+                        const weaponOk = weaponStr.includes('las') && weaponStr.includes('reliable') && weaponStr.includes('Click to attack');
+                        const modOk = modStr.includes('Combat Bonuses') && modStr.includes('Aim') && modStr.includes('+10');
+                        const qualityOk = qualityStr.includes('Reliable') && qualityStr.includes('Simple Modifier') && qualityStr.includes('Core');
                         const genericOk = genericHtml.includes('Info') && genericHtml.includes('generic');
                         if (charOk && armorOk && weaponOk && modOk && qualityOk && genericOk) {
                             fired['wh40k-tooltip-builders'] = true;
@@ -931,13 +937,13 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     if (typeof icon !== 'function' || typeof hasIcon !== 'function' || typeof listIcons !== 'function') {
                         notes['icons-helper-resolution'] = 'icon/hasIcon/listIcons export missing';
                     } else {
-                        const bareSvg = icon('fa:dice-d20');
-                        const labelSvg = icon('fa:dice-d20', { label: 'Roll', class: 'tw-w-4 tw-h-4' });
-                        const numSizeSvg = icon('fa:dice-d20', { size: 16 });
-                        const strSizeSvg = icon('fa:dice-d20', { size: '1em' });
-                        const missingSvg = icon('fa:definitely-not-a-real-icon-name' as any);
-                        const has = hasIcon('fa:dice-d20');
-                        const hasNot = hasIcon('fa:definitely-not-a-real-icon-name');
+                        const bareSvg = String(icon('fa:dice-d20'));
+                        const labelSvg = String(icon('fa:dice-d20', { label: 'Roll', class: 'tw-w-4 tw-h-4' }));
+                        const numSizeSvg = String(icon('fa:dice-d20', { size: 16 }));
+                        const strSizeSvg = String(icon('fa:dice-d20', { size: '1em' }));
+                        const missingSvg = String(icon('fa:definitely-not-a-real-icon-name' as any));
+                        const has = Boolean(hasIcon('fa:dice-d20'));
+                        const hasNot = Boolean(hasIcon('fa:definitely-not-a-real-icon-name'));
                         const list = listIcons();
                         const listSortedAndContains =
                             Array.isArray(list) && list.length > 0 && list.includes('fa:dice-d20') && list[0] <= list[list.length - 1];
@@ -1436,8 +1442,8 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
         }, APP_API_DEPTH_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {
