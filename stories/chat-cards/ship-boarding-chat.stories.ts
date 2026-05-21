@@ -29,7 +29,15 @@ interface CardArgs {
     resolution: BoardingResolution;
 }
 
-function cardContext(args: CardArgs): Record<string, unknown> {
+interface BoardingChatContext {
+    attackerName: string;
+    defenderName: string;
+    gameSystem: string;
+    opposed: BoardingResolution['opposed'];
+    damage: BoardingResolution['damage'];
+}
+
+function cardContext(args: CardArgs): BoardingChatContext {
     return {
         attackerName: args.attackerName,
         defenderName: args.defenderName,

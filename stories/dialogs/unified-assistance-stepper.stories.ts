@@ -13,7 +13,20 @@ interface AssistanceArgs {
     assistantCount: number;
 }
 
-function buildContext(args: AssistanceArgs): Record<string, unknown> {
+interface AssistanceCtx {
+    isForceField: boolean;
+    hasSituationalModifiers: boolean;
+    situationalModifiers: never[];
+    showCustomModifier: boolean;
+    customMod: number;
+    assistantCount: number;
+    assistanceBonus: number;
+    assistantMax: number;
+    canIncrementAssistant: boolean;
+    canDecrementAssistant: boolean;
+}
+
+function buildContext(args: AssistanceArgs): AssistanceCtx {
     const count = Math.max(0, Math.min(args.assistantCount, DEFAULT_ASSISTANT_CAP));
     const bonus = getAssistanceBonus(count);
     return {

@@ -210,7 +210,7 @@ export const WITHOUT_HOMEWORLDS: Record<WithoutHomeworldDef['id'], WithoutHomewo
 
 /** Look up a Without home-world definition by id, returning undefined when unknown. */
 export function getWithoutHomeworld(id: string): WithoutHomeworldDef | undefined {
-    return (WITHOUT_HOMEWORLDS as Record<string, WithoutHomeworldDef | undefined>)[id];
+    return Object.hasOwn(WITHOUT_HOMEWORLDS, id) ? WITHOUT_HOMEWORLDS[id as WithoutHomeworldDef['id']] : undefined;
 }
 
 /** Ordered list of definitions, suitable for rendering as cards in a UI. */

@@ -30,7 +30,18 @@ const ALTITUDE_KEYS: Record<string, string> = {
     orbital: 'WH40K.AerialManoeuvre.Altitude.Orbital',
 };
 
-function cardContext(result: ReturnType<typeof resolveAerialManoeuvre>): Record<string, unknown> {
+interface AerialChatContext {
+    gameSystem: string;
+    manoeuvreNameKey: string;
+    success: boolean;
+    pilotBsBonus: number;
+    enemyBsBonus: number;
+    freeAttack: boolean;
+    resultingAltitudeKey: string | undefined;
+    outcomeKey: string;
+}
+
+function cardContext(result: ReturnType<typeof resolveAerialManoeuvre>): AerialChatContext {
     return {
         gameSystem: 'dh2e',
         manoeuvreNameKey: `WH40K.AerialManoeuvre.${result.key}.Name`,

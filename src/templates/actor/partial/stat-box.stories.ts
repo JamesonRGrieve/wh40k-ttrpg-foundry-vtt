@@ -26,11 +26,12 @@ interface Args {
     min?: number;
     minMax?: number;
     maxAttr?: number;
+    [key: string]: string | number | undefined;
 }
 
 const meta = {
     title: 'Actor/Partials/StatBox',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         label: 'Hull Integrity',
         valueName: 'system.hullIntegrity.value',

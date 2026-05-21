@@ -48,7 +48,19 @@ function modsLabel(id: keyof typeof WITHIN_HOMEWORLDS): string {
     return [...pos, ...neg].join(', ');
 }
 
-function buildCards(): unknown[] {
+interface WithinHomeworldCardCtx {
+    id: keyof typeof accent;
+    label: string;
+    bonusName: string;
+    bonusDescription: string;
+    characteristicModsLabel: string;
+    fateThresholdLabel: string;
+    woundsLabel: string;
+    keyAptitudes: string[];
+    accent: (typeof accent)[keyof typeof accent];
+}
+
+function buildCards(): WithinHomeworldCardCtx[] {
     return WITHIN_HOMEWORLD_IDS.map((id) => {
         const def = WITHIN_HOMEWORLDS[id];
         return {

@@ -23,7 +23,19 @@ const MODE_KEYS: Record<SancticManifestInput['mode'], string> = {
     push: 'WH40K.SancticDaemonology.Mode.Push',
 };
 
-function cardContext(input: SancticManifestInput): Record<string, unknown> {
+interface SancticChatContext {
+    gameSystem: string;
+    powerName: string;
+    modeKey: string;
+    effectivePR: number;
+    focusModifier: string;
+    phenomenaFires: boolean;
+    phenomenaModifier: number;
+    canSoulBindIgnore: boolean;
+    canFateNegate: boolean;
+}
+
+function cardContext(input: SancticManifestInput): SancticChatContext {
     const r = resolveSancticManifestation(input);
     return {
         gameSystem: 'dh2e',

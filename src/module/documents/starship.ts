@@ -14,7 +14,7 @@ import type { WH40KItem } from './item.ts';
 type StarshipSystemData = WH40KBaseActor['system'] & {
     hullType: string;
     hullClass: string;
-    gameSystem?: string;
+    gameSystem: string;
     hullIntegrity: { value: number; max: number };
     speed: number;
     manoeuvrability: number;
@@ -37,7 +37,7 @@ type StarshipSystemData = WH40KBaseActor['system'] & {
         starboard: number;
         keel: number;
     };
-    priorTurnDamage?: PriorTurnDamageSnapshot;
+    priorTurnDamage: PriorTurnDamageSnapshot;
 };
 
 /**
@@ -224,7 +224,7 @@ export class WH40KStarship extends WH40KBaseActor {
      * see crew/morale tick when their ship hulls take damage.
      */
     get usesRTCrewEconomy(): boolean {
-        return (this.system.gameSystem ?? 'rt') === RT_CREW_ECONOMY_GAME_SYSTEM;
+        return this.system.gameSystem === RT_CREW_ECONOMY_GAME_SYSTEM;
     }
 
     /** Current combat-state snapshot consumed by the rules helpers. */
@@ -238,9 +238,9 @@ export class WH40KStarship extends WH40KBaseActor {
         };
     }
 
-    /** Current prior-turn damage snapshot, with a sane default. */
+    /** Current prior-turn damage snapshot. Schema defaults all fields to 0 (turn 0 = no snapshot). */
     private _readPriorTurnSnapshot(): PriorTurnDamageSnapshot {
-        return this.system.priorTurnDamage ?? emptySnapshot(0);
+        return this.system.priorTurnDamage;
     }
 
     /**
@@ -349,7 +349,7 @@ export class WH40KStarship extends WH40KBaseActor {
         if (!this.usesRTCrewEconomy) return;
         const before = this._readShipCombatState();
         const next = replenishBetweenCombatRule(before);
-        if (next.crew.morale.value === before.crew.morale.value && (this.system.priorTurnDamage?.turn ?? 0) === 0) {
+        if (next.crew.morale.value === before.crew.morale.value && this.system.priorTurnDamage.turn === 0) {
             return;
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view

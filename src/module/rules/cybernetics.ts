@@ -83,33 +83,25 @@ export const CYBERNETIC_SITE_MODIFIERS: Record<CyberneticInstallSite, number> = 
  * install site it touches (the test is gated by the riskiest location).
  * Pure: takes the raw location identifiers from `CyberneticData.locations`.
  */
+const LOCATION_TO_SITE: Record<string, CyberneticInstallSite> = {
+    brain: 'neural',
+    spine: 'neural',
+    organs: 'organ',
+    internal: 'organ',
+    leftArm: 'limb',
+    rightArm: 'limb',
+    leftLeg: 'limb',
+    rightLeg: 'limb',
+    body: 'limb',
+    head: 'limb',
+    // eyes / ears / mouth and any future external mounts fall through to 'external'.
+};
+
 export function classifyInstallSite(locations: Iterable<string>): CyberneticInstallSite {
     let worst: CyberneticInstallSite = 'external';
     const rank: Record<CyberneticInstallSite, number> = { external: 0, limb: 1, organ: 2, neural: 3 };
     for (const loc of locations) {
-        let site: CyberneticInstallSite;
-        switch (loc) {
-            case 'brain':
-            case 'spine':
-                site = 'neural';
-                break;
-            case 'organs':
-            case 'internal':
-                site = 'organ';
-                break;
-            case 'leftArm':
-            case 'rightArm':
-            case 'leftLeg':
-            case 'rightLeg':
-            case 'body':
-            case 'head':
-                site = 'limb';
-                break;
-            // eyes / ears / mouth and any future external mounts.
-            default:
-                site = 'external';
-                break;
-        }
+        const site: CyberneticInstallSite = LOCATION_TO_SITE[loc] ?? 'external';
         if (rank[site] > rank[worst]) worst = site;
     }
     return worst;

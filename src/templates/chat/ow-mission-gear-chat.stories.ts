@@ -37,7 +37,7 @@ const chatTpl = HBS.compile(chatSrc);
 
 function renderChat(ctx: MissionGearChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.appendChild(renderTpl(chatTpl, ctx as unknown as Record<string, unknown>));
+    wrapper.appendChild(renderTpl(chatTpl, ctx));
     return wrapper;
 }
 

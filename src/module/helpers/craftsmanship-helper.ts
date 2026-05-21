@@ -80,19 +80,11 @@ export default class CraftsmanshipHelper {
         // Determine item type and sub-type
         const itemType = item.parent?.type;
 
-        switch (itemType) {
-            case 'weapon':
-                return this.#getWeaponModifiers(item, craftsmanship, rules.weapon);
-            case 'armour':
-                return rules.armour[craftsmanship] ?? {};
-            case 'gear':
-                return rules.gear[craftsmanship] ?? {};
-            case 'forceField':
-                return rules.forceField[craftsmanship] ?? {};
-            case undefined:
-            default:
-                return {};
-        }
+        if (itemType === 'weapon') return this.#getWeaponModifiers(item, craftsmanship, rules.weapon);
+        if (itemType === 'armour') return rules.armour[craftsmanship] ?? {};
+        if (itemType === 'gear') return rules.gear[craftsmanship] ?? {};
+        if (itemType === 'forceField') return rules.forceField[craftsmanship] ?? {};
+        return {};
     }
 
     /**

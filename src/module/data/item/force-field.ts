@@ -151,20 +151,15 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
             overloadMax: 10,
         };
 
-        switch (this.craftsmanship) {
-            case 'poor':
-                mods.overloadMax = 20; // 01-20 overload (20% chance)
-                break;
-            case 'common':
-                mods.overloadMax = 10; // 01-10 overload (10% chance)
-                break;
-            case 'good':
-                mods.overloadMax = 5; // 01-05 overload (5% chance)
-                break;
-            case 'best':
-                mods.overloadMax = 1; // 01 only overload (1% chance)
-                break;
-        }
+        const OVERLOAD_MAX_BY_CRAFT: Record<string, number> = {
+            poor: 20, // 01-20 overload (20% chance)
+            common: 10, // 01-10 overload (10% chance)
+            good: 5, // 01-05 overload (5% chance)
+            best: 1, // 01 only overload (1% chance)
+        };
+        const overrideMax = OVERLOAD_MAX_BY_CRAFT[this.craftsmanship];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test.json lacks noUncheckedIndexedAccess; main tsconfig requires this guard
+        if (overrideMax !== undefined) mods.overloadMax = overrideMax;
 
         return mods;
     }

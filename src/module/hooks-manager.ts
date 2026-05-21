@@ -876,20 +876,20 @@ export class HooksManager {
     static hotbarDrop(_bar: unknown, data: Record<string, unknown>, slot: number): boolean {
         /* eslint-enable no-restricted-syntax */
         game.wh40k.log('Hotbar Drop:', data);
-        switch (data['type']) {
-            case 'characteristic':
-                void createCharacteristicMacro(data, slot);
-                return false;
-            case 'item':
-            case 'Item':
-                void createItemMacro(data, slot);
-                return false;
-            case 'skill':
-                void createSkillMacro(data, slot);
-                return false;
-            default:
-                return true;
+        const type = data['type'];
+        if (type === 'characteristic') {
+            void createCharacteristicMacro(data, slot);
+            return false;
         }
+        if (type === 'item' || type === 'Item') {
+            void createItemMacro(data, slot);
+            return false;
+        }
+        if (type === 'skill') {
+            void createSkillMacro(data, slot);
+            return false;
+        }
+        return true;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: CompendiumDirectory is the V14 hook global; Record<string, unknown> is the Foundry hook payload; migration tracked separately

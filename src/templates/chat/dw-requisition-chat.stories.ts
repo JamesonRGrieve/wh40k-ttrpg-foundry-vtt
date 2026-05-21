@@ -31,7 +31,7 @@ const chatTpl = HbsStory.compile(chatSrc);
 
 function renderChat(ctx: RequisitionChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.appendChild(renderStoryTemplate(chatTpl, ctx as unknown as Record<string, unknown>));
+    wrapper.appendChild(renderStoryTemplate(chatTpl, ctx));
     return wrapper;
 }
 

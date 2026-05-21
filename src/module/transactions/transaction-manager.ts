@@ -182,15 +182,9 @@ export class TransactionManager {
 
     static getSourceLabel(actor: Actor.Implementation): string {
         const profile = TransactionManager.getProfile(actor);
-        switch (profile.mode) {
-            case 'barter':
-                return 'Barter';
-            case 'requisition':
-                return 'Requisition';
-            case 'none':
-            default:
-                return 'Disabled';
-        }
+        if (profile.mode === 'barter') return 'Barter';
+        if (profile.mode === 'requisition') return 'Requisition';
+        return 'Disabled';
     }
 
     static listSourcesForBuyer(buyer: Actor.Implementation): Actor.Implementation[] {

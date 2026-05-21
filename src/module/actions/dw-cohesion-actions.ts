@@ -52,8 +52,10 @@ export interface DwCohesionActionHost {
             cohesionLostThisTurn: number;
             rallied: boolean;
         };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() signature accepts arbitrary diff records and returns the resolved Document or undefined
         update: (data: Record<string, unknown>) => Promise<unknown>;
     };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications.notify() forwards arbitrary options to Foundry's notification API
     _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
 }
 
@@ -78,10 +80,11 @@ async function postCohesionChat(host: DwCohesionActionHost, ctx: ChatCardContext
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
     const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user?.id, content: html, speaker: { alias: host.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
+    const payload = { user: game.user.id, content: html, speaker: { alias: host.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
     await ChatMessage.create(payload);
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: catch-clause exception payload is intrinsically unknown; narrowed on the next line via `instanceof Error`
 function reportFailure(host: DwCohesionActionHost, label: string, error: unknown): void {
     const message = error instanceof Error ? error.message : String(error);
     host._notify('error', `${label}: ${message}`, { duration: 5000 });

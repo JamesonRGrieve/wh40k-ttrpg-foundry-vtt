@@ -3,23 +3,26 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-skill-sheet.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
 
+interface SkillSystem {
+    skillType: 'basic' | 'advanced' | 'specialist';
+    characteristic: string;
+    aptitudes: string[];
+    specializations: string[];
+    descriptor: string;
+    uses: string;
+    exampleDifficulties: Array<{ difficulty: string; modifier: number; example: string }>;
+}
+interface SkillItem {
+    name: string;
+    img: string;
+    system: SkillSystem;
+}
 interface SkillArgs {
-    item: {
-        name: string;
-        img: string;
-        system: {
-            skillType: 'basic' | 'advanced' | 'specialist';
-            characteristic: string;
-            aptitudes: string[];
-            specializations: string[];
-            descriptor: string;
-            uses: string;
-            exampleDifficulties: Array<{ difficulty: string; modifier: number; example: string }>;
-        };
-    };
+    item: SkillItem;
+    [key: string]: SkillItem;
 }
 
-const baseSystem = (): SkillArgs['item']['system'] => ({
+const baseSystem = (): SkillSystem => ({
     skillType: 'specialist',
     characteristic: 'intelligence',
     aptitudes: ['Intelligence', 'Knowledge'],
@@ -34,7 +37,7 @@ const baseSystem = (): SkillArgs['item']['system'] => ({
 
 const meta = {
     title: 'Item Sheets/SkillSheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         item: { name: 'Common Lore', img: 'icons/svg/book.svg', system: baseSystem() },
     },

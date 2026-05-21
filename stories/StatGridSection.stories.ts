@@ -42,7 +42,7 @@ interface GridArgs {
 
 const meta: Meta<GridArgs> = {
     title: 'Partials/Stat Grid Section',
-    render: (args) => renderSheet(statGridSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(statGridSrc, { ...args }),
 };
 
 export default meta;

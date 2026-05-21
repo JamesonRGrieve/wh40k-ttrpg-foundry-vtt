@@ -57,7 +57,7 @@ export class RollTableUtils {
         // instead of evaluating the target". Clamp the rolled value to the
         // closest in-range result so the player always sees a resolved effect.
         if (rollResult.results.length === 0 && Array.isArray(table.results) && table.results.length > 0) {
-            const total = rollResult.roll?.total ?? 0;
+            const total = rollResult.roll.total ?? 0;
             // eslint-disable-next-line no-restricted-syntax -- boundary: table.results is Foundry's untyped Collection; iterating to compute closest range
             const results = Array.from(table.results as Iterable<{ range: [number, number] }>);
             const clamped = results.reduce(
@@ -68,6 +68,7 @@ export class RollTableUtils {
                 { distance: Number.POSITIVE_INFINITY, result: null as { range: [number, number] } | null },
             );
             if (clamped.result !== null) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable result Collection is untyped; structural [{range}] satisfies the shape at runtime
                 rollResult.results = [clamped.result] as unknown as typeof rollResult.results;
             }
         }

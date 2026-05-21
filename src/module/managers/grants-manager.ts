@@ -621,37 +621,25 @@ export class GrantsManager {
         const { type, applied } = grantState;
         const result: GrantReverseResult = { notifications: [] };
 
-        switch (type) {
-            case 'characteristic':
-                await this._reverseCharacteristicGrant(actor, applied, result);
-                break;
-
-            case 'skill':
-                await this._reverseSkillGrant(actor, applied, result);
-                break;
-
-            case 'item':
-                await this._reverseItemGrant(actor, applied, result);
-                break;
-
-            case 'resource':
-                await this._reverseResourceGrant(actor, applied, result);
-                break;
-
-            case 'choice': {
-                // Choice grants contain nested grants, reverse them
-                const choiceApplied = applied as { grantResults?: Record<string, AppliedGrantStateEntry> };
-                if (choiceApplied.grantResults !== undefined) {
-                    for (const [key, nestedState] of Object.entries(choiceApplied.grantResults)) {
-                        // eslint-disable-next-line no-await-in-loop -- nested grants must reverse sequentially
-                        await this._reverseGrant(actor, key, nestedState);
-                    }
+        if (type === 'characteristic') {
+            await this._reverseCharacteristicGrant(actor, applied, result);
+        } else if (type === 'skill') {
+            await this._reverseSkillGrant(actor, applied, result);
+        } else if (type === 'item') {
+            await this._reverseItemGrant(actor, applied, result);
+        } else if (type === 'resource') {
+            await this._reverseResourceGrant(actor, applied, result);
+        } else if (type === 'choice') {
+            // Choice grants contain nested grants, reverse them
+            const choiceApplied = applied as { grantResults?: Record<string, AppliedGrantStateEntry> };
+            if (choiceApplied.grantResults !== undefined) {
+                for (const [key, nestedState] of Object.entries(choiceApplied.grantResults)) {
+                    // eslint-disable-next-line no-await-in-loop -- nested grants must reverse sequentially
+                    await this._reverseGrant(actor, key, nestedState);
                 }
-                break;
             }
-
-            default:
-                console.warn(`GrantsManager: Unknown grant type to reverse: ${type} (grantId=${grantId})`);
+        } else {
+            console.warn(`GrantsManager: Unknown grant type to reverse: ${type} (grantId=${grantId})`);
         }
 
         return result;

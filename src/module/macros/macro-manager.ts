@@ -60,7 +60,7 @@ function checkExistingMacro(name: string, command: string): boolean {
  * characteristic macro builders. They differed only by img, command, and the
  * `flags.dh.<flag>` marker key.
  */
-async function createBoundMacro(opts: { name: string; img: unknown; command: string; flag: string; slot: number }): Promise<void> {
+async function createBoundMacro(opts: { name: string; img: string; command: string; flag: string; slot: number }): Promise<void> {
     if (checkExistingMacro(opts.name, opts.command)) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: flags.dh is a system-scoped namespace not declared in fvtt-types CoreFlags; cast is necessary
     const macro = await (Macro.create as (data: Record<string, unknown>) => ReturnType<typeof Macro.create>)({
@@ -84,7 +84,8 @@ export async function createItemMacro(data: Record<string, unknown>, slot: numbe
     const macroName = `${data['actorName'] as string}: ${macroData['name'] as string}`;
     // Create the macro command
     const command = `game.wh40k.rollItemMacro("${data['actorId'] as string}", "${macroData['_id'] as string}");`;
-    await createBoundMacro({ name: macroName, img: macroData['img'], command, flag: 'itemMacro', slot });
+    const img = typeof macroData['img'] === 'string' ? macroData['img'] : '';
+    await createBoundMacro({ name: macroName, img, command, flag: 'itemMacro', slot });
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: return type unknown because rollItem result is opaque at this layer

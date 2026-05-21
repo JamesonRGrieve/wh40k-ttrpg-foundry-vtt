@@ -3,28 +3,34 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-trait-sheet.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
 
-interface TraitArgs {
-    item: {
-        name: string;
-        img: string;
-        system: {
-            categoryLabel: string;
-            hasLevel: boolean;
-            level: number;
-            isVariable: boolean;
-            modifiers: {
-                characteristics: Record<string, number> | null;
-                skills: Record<string, number> | null;
-                combat: Record<string, number> | null;
-                wounds: number | null;
-            };
-            description: { value: string };
-        };
+interface TraitSystem {
+    categoryLabel: string;
+    hasLevel: boolean;
+    level: number;
+    isVariable: boolean;
+    modifiers: {
+        characteristics: Record<string, number> | null;
+        skills: Record<string, number> | null;
+        combat: Record<string, number> | null;
+        wounds: number | null;
     };
-    system: { description: { value: string } };
+    description: { value: string };
+}
+interface TraitItem {
+    name: string;
+    img: string;
+    system: TraitSystem;
+}
+interface TraitSystemArg {
+    description: { value: string };
+}
+interface TraitArgs {
+    item: TraitItem;
+    system: TraitSystemArg;
+    [key: string]: TraitItem | TraitSystemArg;
 }
 
-const baseSystem = (): TraitArgs['item']['system'] => ({
+const baseSystem = (): TraitSystem => ({
     categoryLabel: 'Physical',
     hasLevel: true,
     level: 3,
@@ -35,7 +41,7 @@ const baseSystem = (): TraitArgs['item']['system'] => ({
 
 const meta = {
     title: 'Item Sheets/TraitSheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         item: { name: 'Sturdy', img: 'icons/svg/shield.svg', system: baseSystem() },
         system: { description: { value: '<p>An ancient creature trait.</p>' } },

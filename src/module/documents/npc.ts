@@ -196,48 +196,44 @@ export class WH40KNPC extends WH40KBaseActor {
         const item = this.items.get(itemId);
         if (item === undefined) return;
 
-        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default branch handles all non-weapon/psychicPower item types via vocalize chat
-        switch (item.type) {
-            case 'weapon': {
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- game.settings.get returns unknown at runtime; coercion is intentional
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
-                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- isMeleeWeapon is typed as boolean | undefined; coercion is intentional
-                    const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
-                    this.rollCharacteristic(charKey, item.name ?? undefined);
-                } else {
-                    DHTargetedActionManager.performWeaponAttack(this, null, item);
-                }
-                return;
+        if (item.type === 'weapon') {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- game.settings.get returns unknown at runtime; coercion is intentional
+            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- isMeleeWeapon is typed as boolean | undefined; coercion is intentional
+                const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
+                this.rollCharacteristic(charKey, item.name ?? undefined);
+            } else {
+                DHTargetedActionManager.performWeaponAttack(this, null, item);
             }
-            case 'psychicPower': {
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- game.settings.get returns unknown at runtime; coercion is intentional
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
-                    this.rollCharacteristic('willpower', item.name ?? undefined);
-                } else {
-                    DHTargetedActionManager.performPsychicCast(this, null, item);
-                }
-                return;
-            }
-            default: {
-                const { DHBasicActionManager } = await import('../actions/basic-action-manager.ts');
-                const rawBenefit = item.system['benefit'];
-                const rawDescription = item.system.description;
-                const htmlContent = typeof rawBenefit === 'string' ? rawBenefit : typeof rawDescription === 'string' ? rawDescription : '';
-                await DHBasicActionManager.sendItemVocalizeChat({
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? is necessary here, not a DataModel schema gap
-                    actor: this.name ?? '',
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
-                    name: item.name ?? '',
-                    type: item.type.toUpperCase(),
-                    // eslint-disable-next-line @typescript-eslint/no-deprecated -- TextEditor is the V14 global; migration to foundry.applications.ux.TextEditor tracked separately
-                    description: await TextEditor.enrichHTML(htmlContent, {
-                        rollData: { actor: this, item },
-                    }),
-                });
-            }
+            return;
         }
+        if (item.type === 'psychicPower') {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- game.settings.get returns unknown at runtime; coercion is intentional
+            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
+                this.rollCharacteristic('willpower', item.name ?? undefined);
+            } else {
+                DHTargetedActionManager.performPsychicCast(this, null, item);
+            }
+            return;
+        }
+        // Default: vocalize benefit/description in chat.
+        const { DHBasicActionManager } = await import('../actions/basic-action-manager.ts');
+        const rawBenefit = item.system['benefit'];
+        const rawDescription = item.system.description;
+        const htmlContent = typeof rawBenefit === 'string' ? rawBenefit : typeof rawDescription === 'string' ? rawDescription : '';
+        await DHBasicActionManager.sendItemVocalizeChat({
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? is necessary here, not a DataModel schema gap
+            actor: this.name ?? '',
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
+            name: item.name ?? '',
+            type: item.type.toUpperCase(),
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- TextEditor is the V14 global; migration to foundry.applications.ux.TextEditor tracked separately
+            description: await TextEditor.enrichHTML(htmlContent, {
+                rollData: { actor: this, item },
+            }),
+        });
     }
 
     /**

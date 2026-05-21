@@ -240,6 +240,7 @@ export function emitNavigatorPowerEffects(levels: NavigatorPowerLevels, activeLe
  * Document layer to defensively coerce user-supplied input (`'master'`
  * arriving from a dialog) before calling the resolvers.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard for external/dialog input
 export function isNavigatorPowerLevel(value: unknown): value is NavigatorPowerLevel {
     return value === 'novice' || value === 'adept' || value === 'master';
 }

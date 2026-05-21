@@ -65,6 +65,45 @@ const NO_RIDERS: CriticalDamageRiders = Object.freeze({
     fatal: false,
 });
 
+const BURNING_KEYWORDS = ['catch fire', 'catches fire', 'on fire', 'immolate', 'burning'] as const;
+const BLINDED_KEYWORDS = ['blinded', 'lost eye', 'loses an eye', 'scooping out the eye'] as const;
+const LOST_LIMB_KEYWORDS = ['lost hand', 'lost arm', 'lost foot', 'lost leg', 'lost eye', 'useless', 'severed', 'amputat'] as const;
+const FATAL_KEYWORDS = [
+    'immediately dies',
+    'he immediately dies',
+    'dies instantly',
+    'killed instantly',
+    'killed the target',
+    'killing the target',
+    'killing him instantly',
+    'instantly fatal',
+    'instantly slain',
+    'instantly killing',
+    'messily fatal',
+    'is killed instantly',
+    'does not survive',
+    'does not get up',
+    'quite dead',
+    'very, very dead',
+    'deader than this',
+    'is dead before',
+    'dies in a',
+    'dies from shock',
+    'dies a horrible',
+    'death is instantaneous',
+    'death is instantane',
+    'a lifeless corpse',
+    'lifeless form',
+    'crumpling to\nthe ground dead',
+    'to the ground dead',
+    'the ground dead',
+    'before dying',
+    'he does not survive',
+    'ceases to exist',
+] as const;
+
+const anyKeyword = (haystack: string, needles: readonly string[]): boolean => needles.some((n) => haystack.includes(n));
+
 /**
  * Classify a Critical Effects row's prose into structured rider flags.
  * Pure keyword scan over the system's condition vocabulary — content-
@@ -75,53 +114,14 @@ export function classifyCriticalEffect(effectText: string | null | undefined): C
     const t = effectText.toLowerCase();
     return Object.freeze({
         stunned: t.includes('stunned'),
-        burning: t.includes('catch fire') || t.includes('catches fire') || t.includes('on fire') || t.includes('immolate') || t.includes('burning'),
+        burning: anyKeyword(t, BURNING_KEYWORDS),
         bloodLoss: t.includes('blood loss'),
         prone: t.includes('prone'),
-        blinded: t.includes('blinded') || t.includes('lost eye') || t.includes('loses an eye') || t.includes('scooping out the eye'),
+        blinded: anyKeyword(t, BLINDED_KEYWORDS),
         deafened: t.includes('deafened'),
         fatigue: t.includes('fatigue'),
-        lostLimb:
-            t.includes('lost hand') ||
-            t.includes('lost arm') ||
-            t.includes('lost foot') ||
-            t.includes('lost leg') ||
-            t.includes('lost eye') ||
-            t.includes('useless') ||
-            t.includes('severed') ||
-            t.includes('amputat'),
-        fatal:
-            t.includes('immediately dies') ||
-            t.includes('he immediately dies') ||
-            t.includes('dies instantly') ||
-            t.includes('killed instantly') ||
-            t.includes('killed the target') ||
-            t.includes('killing the target') ||
-            t.includes('killing him instantly') ||
-            t.includes('instantly fatal') ||
-            t.includes('instantly slain') ||
-            t.includes('instantly killing') ||
-            t.includes('messily fatal') ||
-            t.includes('is killed instantly') ||
-            t.includes('does not survive') ||
-            t.includes('does not get up') ||
-            t.includes('quite dead') ||
-            t.includes('very, very dead') ||
-            t.includes('deader than this') ||
-            t.includes('is dead before') ||
-            t.includes('dies in a') ||
-            t.includes('dies from shock') ||
-            t.includes('dies a horrible') ||
-            t.includes('death is instantaneous') ||
-            t.includes('death is instantane') ||
-            t.includes('a lifeless corpse') ||
-            t.includes('lifeless form') ||
-            t.includes('crumpling to\nthe ground dead') ||
-            t.includes('to the ground dead') ||
-            t.includes('the ground dead') ||
-            t.includes('before dying') ||
-            t.includes('he does not survive') ||
-            t.includes('ceases to exist'),
+        lostLimb: anyKeyword(t, LOST_LIMB_KEYWORDS),
+        fatal: anyKeyword(t, FATAL_KEYWORDS),
     });
 }
 

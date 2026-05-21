@@ -13,7 +13,18 @@ initializeStoryHandlebars();
 const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0x5a1b2c3);
 
-function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface ShipUpgradeCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    source: ReturnType<typeof mockItem>['system'];
+    availabilities: Record<string, { label: string }>;
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    effects: ReadonlyArray<never>;
+    tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
+}
+function makeCtx(overrides: Partial<ShipUpgradeCtx> = {}): ShipUpgradeCtx {
     const id = randomId('ship-upg', rng);
     const item = mockItem({
         _id: id,

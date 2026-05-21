@@ -43,6 +43,39 @@ function formatLevelBonus(level: NavigatorPowerLevel): string {
  * `rollNavigatorPower`. Stories use this so a refactor to the live
  * payload shape surfaces visually here first.
  */
+interface NavigatorEffectTier {
+    level: NavigatorPowerLevel;
+    levelLabelKey: string;
+    effect: string;
+}
+
+interface NavigatorOpposedContext {
+    navigatorRoll: number;
+    navigatorTarget: number;
+    navigatorDos: number;
+    opponentRoll: number;
+    opponentTarget: number;
+    opponentDos: number;
+    netDos: number;
+    success: boolean;
+}
+
+interface NavigatorChatContext {
+    item: { name: string; system: { description: { value: string }; sideEffects: string } };
+    actor: string;
+    gameSystem: string;
+    roll: { total: number };
+    targetValue: number;
+    success: boolean;
+    degrees: number;
+    degreesOfFailure: number;
+    levelLabelKey: string;
+    levelBonusLabel: string;
+    effectTiers: NavigatorEffectTier[];
+    sustainText: string;
+    opposed?: NavigatorOpposedContext;
+}
+
 function navigatorContext(opts: {
     powerName: string;
     level: NavigatorPowerLevel;
@@ -58,7 +91,7 @@ function navigatorContext(opts: {
     };
     opposed?: { opponentChar: number; opponentRoll: number };
     gameSystem: string;
-}): Record<string, unknown> {
+}): NavigatorChatContext {
     const result = resolveNavigatorPower({
         characteristic: opts.characteristic,
         level: opts.level,
@@ -70,7 +103,7 @@ function navigatorContext(opts: {
         levelLabelKey: LEVEL_LABEL_KEY[t.level],
         effect: t.effect,
     }));
-    const base: Record<string, unknown> = {
+    const base: NavigatorChatContext = {
         item: {
             name: opts.powerName,
             system: {
@@ -103,8 +136,8 @@ function navigatorContext(opts: {
                 roll: opts.opposed.opponentRoll,
             },
         });
-        base['success'] = opposed.success;
-        base['opposed'] = {
+        base.success = opposed.success;
+        base.opposed = {
             navigatorRoll: opposed.navigator.roll,
             navigatorTarget: opposed.navigator.target,
             navigatorDos: opposed.navigator.dos,
@@ -142,9 +175,8 @@ const COURSE_UNTRAVELLED_LEVELS = {
 export const PassNovice: Story = {
     name: 'Pass / Novice — Course Untravelled',
     render: () =>
-        renderSheet(
-            navigatorPowerChatSrc,
-            navigatorContext({
+        renderSheet(navigatorPowerChatSrc, {
+            ...navigatorContext({
                 powerName: 'The Course Untravelled',
                 level: 'novice',
                 characteristic: 45,
@@ -153,7 +185,7 @@ export const PassNovice: Story = {
                 levels: COURSE_UNTRAVELLED_LEVELS,
                 gameSystem: 'rt',
             }),
-        ),
+        }),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         await expect(storyCanvas.getByText('The Course Untravelled')).toBeTruthy();
@@ -164,9 +196,8 @@ export const PassNovice: Story = {
 export const PassAdept: Story = {
     name: 'Pass / Adept — Course Untravelled (additive effects)',
     render: () =>
-        renderSheet(
-            navigatorPowerChatSrc,
-            navigatorContext({
+        renderSheet(navigatorPowerChatSrc, {
+            ...navigatorContext({
                 powerName: 'The Course Untravelled',
                 level: 'adept',
                 characteristic: 45,
@@ -175,16 +206,15 @@ export const PassAdept: Story = {
                 levels: COURSE_UNTRAVELLED_LEVELS,
                 gameSystem: 'rt',
             }),
-        ),
+        }),
 };
 
 /** Master / non-opposed pass — Master text retains Novice + Adept. */
 export const PassMaster: Story = {
     name: 'Pass / Master — Course Untravelled (full tier ladder)',
     render: () =>
-        renderSheet(
-            navigatorPowerChatSrc,
-            navigatorContext({
+        renderSheet(navigatorPowerChatSrc, {
+            ...navigatorContext({
                 powerName: 'The Course Untravelled',
                 level: 'master',
                 characteristic: 45,
@@ -193,16 +223,15 @@ export const PassMaster: Story = {
                 levels: COURSE_UNTRAVELLED_LEVELS,
                 gameSystem: 'rt',
             }),
-        ),
+        }),
 };
 
 /** Failure — surfaces DoF and the Navigator-Mutation button. */
 export const Failure: Story = {
     name: 'Failure / Novice — DoF + Mutation prompt',
     render: () =>
-        renderSheet(
-            navigatorPowerChatSrc,
-            navigatorContext({
+        renderSheet(navigatorPowerChatSrc, {
+            ...navigatorContext({
                 powerName: 'The Course Untravelled',
                 level: 'novice',
                 characteristic: 35,
@@ -211,7 +240,7 @@ export const Failure: Story = {
                 levels: COURSE_UNTRAVELLED_LEVELS,
                 gameSystem: 'rt',
             }),
-        ),
+        }),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         const btn = storyCanvas.getByRole('button');
@@ -224,9 +253,8 @@ export const Failure: Story = {
 export const OpposedWin: Story = {
     name: 'Opposed / Master — Lidless Stare (Navigator wins)',
     render: () =>
-        renderSheet(
-            navigatorPowerChatSrc,
-            navigatorContext({
+        renderSheet(navigatorPowerChatSrc, {
+            ...navigatorContext({
                 powerName: 'The Lidless Stare',
                 level: 'master',
                 characteristic: 55,
@@ -236,16 +264,15 @@ export const OpposedWin: Story = {
                 opposed: { opponentChar: 40, opponentRoll: 35 },
                 gameSystem: 'rt',
             }),
-        ),
+        }),
 };
 
 /** Opposed test — Held in my Gaze tie favours the target. */
 export const OpposedTie: Story = {
     name: 'Opposed / Tie — Held in my Gaze (target resists)',
     render: () =>
-        renderSheet(
-            navigatorPowerChatSrc,
-            navigatorContext({
+        renderSheet(navigatorPowerChatSrc, {
+            ...navigatorContext({
                 powerName: 'Held in my Gaze',
                 level: 'adept',
                 characteristic: 45,
@@ -261,16 +288,15 @@ export const OpposedTie: Story = {
                 opposed: { opponentChar: 45, opponentRoll: 35 },
                 gameSystem: 'rt',
             }),
-        ),
+        }),
 };
 
 /** Per-system homologation: DH2 theme (degraded, but still renders). */
 export const ThemeDH2: Story = {
     name: 'Theme / DH2 fallback (non-RT call-site)',
     render: () =>
-        renderSheet(
-            navigatorPowerChatSrc,
-            navigatorContext({
+        renderSheet(navigatorPowerChatSrc, {
+            ...navigatorContext({
                 powerName: 'Foreshadowing',
                 level: 'novice',
                 characteristic: 40,
@@ -280,16 +306,15 @@ export const ThemeDH2: Story = {
                 },
                 gameSystem: 'dh2e',
             }),
-        ),
+        }),
 };
 
 /** Per-system homologation: IM theme. */
 export const ThemeIM: Story = {
     name: 'Theme / Imperium Maledictum',
     render: () =>
-        renderSheet(
-            navigatorPowerChatSrc,
-            navigatorContext({
+        renderSheet(navigatorPowerChatSrc, {
+            ...navigatorContext({
                 powerName: 'Foreshadowing',
                 level: 'adept',
                 characteristic: 40,
@@ -300,5 +325,5 @@ export const ThemeIM: Story = {
                 },
                 gameSystem: 'im',
             }),
-        ),
+        }),
 };

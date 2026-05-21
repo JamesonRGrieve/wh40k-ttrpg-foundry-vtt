@@ -12,6 +12,17 @@ import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 type CanvasToken = foundry.canvas.placeables.Token;
 
+/**
+ * Structural narrowing of WH40KBaseActor with the `rollSkill` method that
+ * system-specific subclasses (Acolyte, Npc) define but the base type does
+ * not surface. Foundry-side method shape; declared here so the cast at the
+ * Foundry boundary stays localised.
+ */
+type WithRollSkill = WH40KBaseActorDocument & {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rollSkill options object is forwarded to Foundry's roll dispatcher
+    rollSkill?: (skill: string, spec?: string, opts?: Record<string, unknown>) => Promise<void>;
+};
+
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
     storedRolls: Record<string, ActionData> = {};
@@ -259,10 +270,7 @@ export class BasicActionManager {
             return;
         }
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor.rollSkill comes from a system-specific Document subclass not visible on the base type; cast is the documented Foundry boundary
-        const sourceActor = actionData.rollData.sourceActor as
-            | (WH40KBaseActorDocument & { rollSkill?: (skill: string, spec?: string, opts?: Record<string, unknown>) => Promise<void> })
-            | null;
+        const sourceActor: WithRollSkill | null = actionData.rollData.sourceActor;
         if (sourceActor == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn("No source actor found for Assassin's Strike dispatch.");
@@ -317,14 +325,11 @@ export class BasicActionManager {
         }
 
         const doc = await fromUuid(targetUuid);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid result may be a TokenDocument with .actor; cast through unknown is necessary
-        const resolved = doc instanceof Actor ? doc : (doc as unknown as { actor?: unknown } | null)?.actor;
-        const actor =
-            // eslint-disable-next-line no-restricted-syntax -- boundary: actor is instanceof-narrowed from unknown
-            resolved instanceof Actor
-                ? (resolved as unknown as WH40KBaseActorDocument & { rollCharacteristic?: (key: string, flavor?: string) => void | Promise<void> })
-                : undefined;
-        if (actor == null) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid result may be a TokenDocument with .actor; the field is opaque on the base Document type
+        const resolved = doc instanceof Actor ? doc : (doc as { actor?: Actor | null } | null)?.actor;
+        if (!(resolved instanceof Actor)) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollCharacteristic comes from system-specific Actor subclasses not surfaced on the base Actor type
+        const actor = resolved as unknown as WH40KBaseActorDocument & { rollCharacteristic?: (key: string, flavor?: string) => void | Promise<void> };
 
         const modifier = modifierRaw !== undefined && modifierRaw !== '' ? Number.parseInt(modifierRaw, 10) : 0;
         const flavorKey = modifier < 0 ? 'WH40K.DW.Horde.Break.TestPenalised' : 'WH40K.DW.Horde.Break.TestNormal';

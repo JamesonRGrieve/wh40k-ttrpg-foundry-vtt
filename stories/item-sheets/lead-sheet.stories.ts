@@ -36,7 +36,7 @@ const baseSystem = (): LeadArgs['item']['system'] => ({
 
 const meta = {
     title: 'Item Sheets/LeadSheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         item: { name: 'Sister Mira, Lay-Cleric', img: 'icons/svg/eye.svg', system: baseSystem() },
         system: baseSystem(),

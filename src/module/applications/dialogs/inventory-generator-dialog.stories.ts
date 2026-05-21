@@ -45,7 +45,7 @@ const STAGED: Row[] = [row('Lasgun', 'weapon', 'common'), row('Flak Armour', 'ar
 
 const meta = {
     title: 'Dialogs/InventoryGeneratorDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         gameSystem: 'dh2e',
         actorName: 'Hive Quartermaster',

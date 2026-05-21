@@ -53,7 +53,7 @@ const STOCK: ItemArg[] = [
 
 const meta = {
     title: 'Dialogs/TransactionRequestDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         hasSources: true,
         selectedSource: { name: 'Black Market Contact' },

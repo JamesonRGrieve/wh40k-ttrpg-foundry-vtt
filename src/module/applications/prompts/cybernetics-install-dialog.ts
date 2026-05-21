@@ -209,6 +209,7 @@ export default class CyberneticsInstallDialog extends ApplicationV2Mixin(Applica
         const resolution = resolveInstall(composition, roll);
         const recovery = rollRecoveryTime(this.toughnessBonus);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `game` global is not typed on globalThis
         const g = globalThis as unknown as { game?: AnyGame };
         const localize = g.game?.i18n?.localize?.bind(g.game.i18n);
         const craftLabel = localize?.(`WH40K.Craftsmanship.${this.craftsmanship.charAt(0).toUpperCase()}${this.craftsmanship.slice(1)}`) ?? this.craftsmanship;
