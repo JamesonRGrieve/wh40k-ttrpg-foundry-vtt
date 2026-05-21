@@ -27,12 +27,12 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, error: 'Actor.create unavailable' };
+        const ActorCls = g.Actor;
+        if (!ActorCls?.create) return { setupOk: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'crusader-probe',
                 type: 'dh2-character',
                 system: {
@@ -56,12 +56,16 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
         const fateBefore = actor.system?.fate?.value ?? 0;
 
         await actor.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise<void>((r) => {
+            setTimeout(r, 250);
+        });
 
         // Navigate to the Status tab if the sheet's tab API is reachable.
         try {
             actor.sheet?.changeTab?.('status', 'primary');
-            await new Promise((r) => setTimeout(r, 150));
+            await new Promise<void>((r) => {
+                setTimeout(r, 150);
+            });
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }
@@ -71,7 +75,9 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
         if (btn) {
             btn.click();
             // Allow the async handler to settle (fate decrement + chat-card render).
-            await new Promise((r) => setTimeout(r, 400));
+            await new Promise<void>((r) => {
+                setTimeout(r, 400);
+            });
         }
 
         const fateAfter = actor.system?.fate?.value ?? 0;

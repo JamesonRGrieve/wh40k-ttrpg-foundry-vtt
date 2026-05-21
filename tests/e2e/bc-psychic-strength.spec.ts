@@ -46,8 +46,8 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HbsLib?.compile !== 'function') {
                         return {
                             rendered,
                             hasClassSelect,
@@ -63,7 +63,7 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HbsLib.compile(src);
                     // Bound psyker, base PR 4, push level 3 (at the
                     // bound ceiling), sustaining 2 powers — exercises
                     // every readout: effectivePR = 4 + 3 = 7,

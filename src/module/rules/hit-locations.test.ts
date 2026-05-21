@@ -69,6 +69,7 @@ describe('creatureHitLocations() — Table 7-3 location bands', () => {
             const cur = sorted[i];
             expect(prev).toBeDefined();
             expect(cur).toBeDefined();
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: sorted[i] / sorted[i-1] return T | undefined
             expect(cur?.min).toBe((prev?.max ?? 0) + 1);
         }
     });

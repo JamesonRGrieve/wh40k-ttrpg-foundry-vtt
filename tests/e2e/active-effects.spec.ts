@@ -45,14 +45,14 @@ interface FlowResult {
 
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const Actor = (
+        const ActorCls = (
             globalThis as unknown as {
                 Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
             }
         ).Actor;
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name: 'probe-active-effects-parent',
                 type: 'bc-character',
                 system: { gameSystem: 'bc' },
@@ -60,21 +60,21 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const game = (
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
             }
         ).game;
-        const actor = game?.actors?.get?.(id);
+        const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
@@ -91,8 +91,8 @@ async function probeMode(
     args: { mode: number; value: number; expected: number; key: string; nameSuffix: string },
 ): Promise<FlowResult> {
     return page.evaluate(
-        async ({ actorId, mode, value, expected, key, nameSuffix }) => {
-            const game = (
+        async ({ actorId: aid, mode, value, expected, key, nameSuffix }) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -109,14 +109,14 @@ async function probeMode(
                     foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
                 }
             ).game;
-            const foundry = (
+            const foundryGlobal = (
                 globalThis as unknown as {
                     foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
                 }
             ).foundry;
-            const getProperty = foundry?.utils?.getProperty;
-            if (!getProperty) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
-            const actor = game?.actors?.get?.(actorId);
+            const getPropertyFn = foundryGlobal?.utils?.getProperty;
+            if (!getPropertyFn) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
+            const actor = gameGlobal?.actors?.get?.(aid);
             if (!actor?.createEmbeddedDocuments || !actor.deleteEmbeddedDocuments) {
                 return { ok: false, error: 'actor missing embedded-document API' };
             }
@@ -129,11 +129,11 @@ async function probeMode(
                     },
                 ]);
                 const effectId = created[0]?.id ?? null;
-                if (!effectId) return { ok: false, error: 'createEmbeddedDocuments returned no id' };
+                if (effectId === null) return { ok: false, error: 'createEmbeddedDocuments returned no id' };
                 try {
                     // Re-fetch actor so derived data reflects the effect.
-                    const live = game?.actors?.get?.(actorId);
-                    const observed = Number(getProperty(live, key) ?? 0);
+                    const live = gameGlobal?.actors?.get?.(aid);
+                    const observed = Number(getPropertyFn(live, key) ?? 0);
                     const ok = observed === expected;
                     return { ok, error: ok ? null : `expected ${expected} at ${key}, got ${observed}` };
                 } finally {
@@ -144,7 +144,7 @@ async function probeMode(
                     }
                 }
             } catch (err) {
-                return { ok: false, error: `embedded AE create threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `embedded AE create threw: ${err instanceof Error ? err.message : String(err)}` };
             }
         },
         { actorId, ...args },
@@ -157,9 +157,9 @@ async function probeMode(
  */
 async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
     /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry V14 effect collections (.allApplicableEffects() iterator, .items.get(...).effects) have no shipped types here. */
-    return page.evaluate(async (actorId) => {
-        const game = (globalThis as any).game;
-        const actor = game?.actors?.get?.(actorId);
+    return page.evaluate(async (aid) => {
+        const gameGlobal2 = (globalThis as any).game;
+        const actor = gameGlobal2?.actors?.get?.(aid);
         if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
         try {
             const created = await actor.createEmbeddedDocuments('Item', [
@@ -183,9 +183,9 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
                 },
             ]);
             const itemId = created[0]?.id ?? null;
-            if (!itemId) return { ok: false, error: 'item create returned no id' };
+            if (itemId === null) return { ok: false, error: 'item create returned no id' };
             try {
-                const live = game?.actors?.get?.(actorId);
+                const live = gameGlobal2?.actors?.get?.(aid);
                 // V14: transfer=true effects live on the item's own .effects
                 // collection (not copied into actor.effects). They participate
                 // in derived data via actor.allApplicableEffects() — which is
@@ -223,7 +223,7 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
                 }
             }
         } catch (err) {
-            return { ok: false, error: `transfer probe threw: ${String((err as Error)?.message ?? err)}` };
+            return { ok: false, error: `transfer probe threw: ${err instanceof Error ? err.message : String(err)}` };
         }
     }, actorId);
     /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -236,9 +236,9 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
  */
 async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> {
     /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry V14 Combat / ActiveEffect collections aren't typed in this surface. */
-    return page.evaluate(async (actorId) => {
+    return page.evaluate(async (aid) => {
         const root = globalThis as any;
-        const actor = root.game?.actors?.get?.(actorId);
+        const actor = root.game?.actors?.get?.(aid);
         if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
         let effectId: string | null = null;
         let combat: any = null;
@@ -252,14 +252,14 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
             combat = (await root.Combat?.create?.({})) ?? null;
             if (!combat?.id) return { ok: false, error: 'Combat.create returned null' };
             try {
-                await combat.createEmbeddedDocuments?.('Combatant', [{ actorId, initiative: 10 }]);
+                await combat.createEmbeddedDocuments?.('Combatant', [{ actorId: aid, initiative: 10 }]);
             } catch {
                 /* combatant best-effort */
             }
             try {
                 await combat.startCombat?.();
             } catch (err) {
-                return { ok: false, error: `combat.startCombat threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `combat.startCombat threw: ${err instanceof Error ? err.message : String(err)}` };
             }
             // Anchor the duration to this combat + use seconds-equivalent so
             // isTemporary returns true regardless of combat-tick processing.
@@ -278,8 +278,8 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
                 },
             ]);
             effectId = created[0]?.id ?? null;
-            if (!effectId) return { ok: false, error: 'temporary AE create returned no id' };
-            const liveActor = root.game?.actors?.get?.(actorId);
+            if (effectId === null) return { ok: false, error: 'temporary AE create returned no id' };
+            const liveActor = root.game?.actors?.get?.(aid);
             const effect = liveActor?.effects?.get?.(effectId);
             if (!effect) return { ok: false, error: 'created effect not retrievable' };
             // V14 stores duration as `{value, units, remaining, expiry, ...}`;
@@ -306,14 +306,14 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
                     )})`,
                 };
             }
-            const beforeRoundEffect = root.game?.actors?.get?.(actorId)?.effects?.get?.(effectId);
+            const beforeRoundEffect = root.game?.actors?.get?.(aid)?.effects?.get?.(effectId);
             const beforeRemaining = beforeRoundEffect?.remainingDuration ?? beforeRoundEffect?.duration?.remaining ?? null;
             try {
                 await combat.nextRound?.();
             } catch (err) {
-                return { ok: false, error: `combat.nextRound threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `combat.nextRound threw: ${err instanceof Error ? err.message : String(err)}` };
             }
-            const afterRoundEffect = root.game?.actors?.get?.(actorId)?.effects?.get?.(effectId);
+            const afterRoundEffect = root.game?.actors?.get?.(aid)?.effects?.get?.(effectId);
             const afterRemaining = afterRoundEffect?.remainingDuration ?? afterRoundEffect?.duration?.remaining ?? null;
             if (beforeRemaining == null || afterRemaining == null) {
                 // Some V14 builds do not expose remainingDuration off-canvas.
@@ -335,7 +335,7 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
             }
             return { ok: true, error: null };
         } catch (err) {
-            return { ok: false, error: `temporary probe threw: ${String((err as Error)?.message ?? err)}` };
+            return { ok: false, error: `temporary probe threw: ${err instanceof Error ? err.message : String(err)}` };
         } finally {
             try {
                 if (combat?.delete) await combat.delete();
@@ -343,7 +343,7 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
                 /* best-effort */
             }
             try {
-                if (effectId) await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
+                if (effectId !== null) await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
             } catch {
                 /* best-effort */
             }
@@ -357,8 +357,8 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
  */
 async function probeDisabled(page: Page, actorId: string, key: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ actorId, key }) => {
-            const game = (
+        async ({ actorId: aid, key: fieldKey }) => {
+            const gameGlobal3 = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -373,37 +373,37 @@ async function probeDisabled(page: Page, actorId: string, key: string): Promise<
                     foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
                 }
             ).game;
-            const getProperty = (
+            const getPropertyFn3 = (
                 globalThis as unknown as {
                     foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
                 }
             ).foundry?.utils?.getProperty;
-            if (!getProperty) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
-            const actor = game?.actors?.get?.(actorId);
+            if (!getPropertyFn3) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
+            const actor = gameGlobal3?.actors?.get?.(aid);
             if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
-            const baseline = Number(getProperty(actor, key) ?? 0);
+            const baseline = Number(getPropertyFn3(actor, fieldKey) ?? 0);
             let effectId: string | null = null;
             try {
                 const created = await actor.createEmbeddedDocuments('ActiveEffect', [
                     {
                         name: 'probe-ae-disabled',
                         disabled: true,
-                        changes: [{ key, value: '99', mode: 2 /* ADD */ }],
+                        changes: [{ key: fieldKey, value: '99', mode: 2 /* ADD */ }],
                     },
                 ]);
                 effectId = created[0]?.id ?? null;
-                if (!effectId) return { ok: false, error: 'disabled AE create returned no id' };
-                const live = game?.actors?.get?.(actorId);
-                const observed = Number(getProperty(live, key) ?? 0);
+                if (effectId === null) return { ok: false, error: 'disabled AE create returned no id' };
+                const live = gameGlobal3?.actors?.get?.(aid);
+                const observed = Number(getPropertyFn3(live, fieldKey) ?? 0);
                 if (observed !== baseline) {
                     return { ok: false, error: `disabled effect modified field: baseline=${baseline}, observed=${observed}` };
                 }
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: `disabled probe threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `disabled probe threw: ${err instanceof Error ? err.message : String(err)}` };
             } finally {
                 try {
-                    if (effectId) await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
+                    if (effectId !== null) await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
                 } catch {
                     /* best-effort */
                 }
@@ -419,8 +419,8 @@ async function probeDisabled(page: Page, actorId: string, key: string): Promise<
  */
 async function probeDeleteRollback(page: Page, actorId: string, key: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ actorId, key }) => {
-            const game = (
+        async ({ actorId: aid, key: fieldKey }) => {
+            const gameGlobal4 = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -434,27 +434,27 @@ async function probeDeleteRollback(page: Page, actorId: string, key: string): Pr
                     };
                 }
             ).game;
-            const getProperty = (
+            const getPropertyFn4 = (
                 globalThis as unknown as {
                     foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
                 }
             ).foundry?.utils?.getProperty;
-            if (!getProperty) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
-            const actor = game?.actors?.get?.(actorId);
+            if (!getPropertyFn4) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
+            const actor = gameGlobal4?.actors?.get?.(aid);
             if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
-            const baseline = Number(getProperty(actor, key) ?? 0);
+            const baseline = Number(getPropertyFn4(actor, fieldKey) ?? 0);
             try {
                 const created = await actor.createEmbeddedDocuments('ActiveEffect', [
                     {
                         name: 'probe-ae-rollback',
                         disabled: false,
-                        changes: [{ key, value: '7', mode: 2 /* ADD */ }],
+                        changes: [{ key: fieldKey, value: '7', mode: 2 /* ADD */ }],
                     },
                 ]);
                 const effectId = created[0]?.id ?? null;
-                if (!effectId) return { ok: false, error: 'rollback AE create returned no id' };
-                const liveDuring = game?.actors?.get?.(actorId);
-                const during = Number(getProperty(liveDuring, key) ?? 0);
+                if (effectId === null) return { ok: false, error: 'rollback AE create returned no id' };
+                const liveDuring = gameGlobal4?.actors?.get?.(aid);
+                const during = Number(getPropertyFn4(liveDuring, fieldKey) ?? 0);
                 if (during === baseline) {
                     // Cleanup, then bail — the effect never applied so rollback is meaningless.
                     try {
@@ -465,14 +465,14 @@ async function probeDeleteRollback(page: Page, actorId: string, key: string): Pr
                     return { ok: false, error: `effect did not modify field before delete: baseline=${baseline}, during=${during}` };
                 }
                 await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
-                const liveAfter = game?.actors?.get?.(actorId);
-                const after = Number(getProperty(liveAfter, key) ?? 0);
+                const liveAfter = gameGlobal4?.actors?.get?.(aid);
+                const after = Number(getPropertyFn4(liveAfter, fieldKey) ?? 0);
                 if (after !== baseline) {
                     return { ok: false, error: `value did not roll back: baseline=${baseline}, after-delete=${after}` };
                 }
                 return { ok: true, error: null };
             } catch (err) {
-                return { ok: false, error: `rollback probe threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `rollback probe threw: ${err instanceof Error ? err.message : String(err)}` };
             }
         },
         { actorId, key },

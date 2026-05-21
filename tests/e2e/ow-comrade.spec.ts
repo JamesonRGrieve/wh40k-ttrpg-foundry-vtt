@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -19,14 +20,14 @@ interface ActorRef {
     id: string;
 }
 
-async function createOwActor(page: import('@playwright/test').Page): Promise<ActorRef | { error: string }> {
+async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor } = globalThis as unknown as {
+        const { Actor: ActorCls } = globalThis as unknown as {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
         };
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name: 'probe-ow-comrade-pc',
                 type: 'ow-character',
                 system: {
@@ -37,19 +38,19 @@ async function createOwActor(page: import('@playwright/test').Page): Promise<Act
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
-async function deleteActor(page: import('@playwright/test').Page, actorId: string): Promise<void> {
+async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game } = globalThis as unknown as {
+        const { game: gameGlobal } = globalThis as unknown as {
             game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
         };
-        const actor = game?.actors?.get?.(id);
+        const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
@@ -94,7 +95,9 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
                     const sheet = actor.sheet;
                     if (!sheet) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 120));
+                    await new Promise((r) => {
+                        setTimeout(r, 120);
+                    });
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element) {
@@ -106,10 +109,12 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
                         hasReplaceBtn = el.querySelector('button[data-action="owComradeReplace"]') !== null;
                         hasStateBadge = el.querySelector('[data-state-badge]') !== null;
 
-                        const woundBtn = el.querySelector('button[data-action="owComradeWound"]') as HTMLButtonElement | null;
+                        const woundBtn = el.querySelector<HTMLButtonElement>('button[data-action="owComradeWound"]');
                         if (woundBtn && !woundBtn.disabled) {
                             woundBtn.click();
-                            await new Promise((r) => setTimeout(r, 150));
+                            await new Promise((r) => {
+                                setTimeout(r, 150);
+                            });
                             woundDispatched = true;
                         }
                         stateAfter = actor.system?.comrade?.state ?? null;
@@ -120,7 +125,7 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
                     // screenshot empty.
                     g.__c152sheet = sheet;
                 } catch (err) {
-                    probeError = String((err as Error)?.message ?? err);
+                    probeError = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
@@ -165,7 +170,7 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
             expect(result.hasReplaceBtn, 'Replace button should render').toBe(true);
             expect(result.hasStateBadge, 'State badge should render').toBe(true);
             expect(result.stateBefore, 'initial state should be unharmed').toBe('unharmed');
-            if (result.woundDispatched) {
+            if (result.woundDispatched === true) {
                 expect(result.stateAfter, 'state should advance unharmed → wounded').toBe('wounded');
             }
             expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);

@@ -68,9 +68,9 @@ type Story = StoryObj<Args>;
 
 export const Generate: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText(/Stock Hive Quartermaster/)).toBeTruthy();
-        await expect(canvas.getByText('Lasgun')).toBeTruthy();
+        const scope = within(canvasElement);
+        await expect(scope.getByText(/Stock Hive Quartermaster/)).toBeTruthy();
+        await expect(scope.getByText('Lasgun')).toBeTruthy();
         // Action handles must exist for the real dialog to wire them up.
         clickAction(canvasElement, 'generate');
         clickAction(canvasElement, 'reroll');
@@ -86,8 +86,8 @@ export const Browse: Story = {
         browseTruncated: true,
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText('Bolt Pistol')).toBeTruthy();
+        const scope = within(canvasElement);
+        await expect(scope.getByText('Bolt Pistol')).toBeTruthy();
         clickAction(canvasElement, 'stage');
         clickAction(canvasElement, 'unstage');
     },
@@ -96,16 +96,16 @@ export const Browse: Story = {
 export const EmptyStaging: Story = {
     args: { staged: [], stagedCount: 0 },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText(/Nothing staged yet/)).toBeTruthy();
+        const scope = within(canvasElement);
+        await expect(scope.getByText(/Nothing staged yet/)).toBeTruthy();
     },
 };
 
 export const PoolEmpty: Story = {
     args: { poolEmpty: true },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByText(/No compendium items are available/)).toBeTruthy();
+        const scope = within(canvasElement);
+        await expect(scope.getByText(/No compendium items are available/)).toBeTruthy();
     },
 };
 

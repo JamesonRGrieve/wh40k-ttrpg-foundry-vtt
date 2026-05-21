@@ -66,14 +66,14 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
         const results = await page.evaluate(async (flows: readonly string[]): Promise<FlowResult[]> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
+            const ActorCls = g.Actor;
+            const gme = g.game;
             const out: FlowResult[] = [];
             const record = (name: string, ok: boolean, detail: string | null = null): void => {
                 out.push({ name: name as FlowName, ok, detail });
             };
 
-            if (!Actor?.create) {
+            if (!ActorCls?.create) {
                 for (const f of flows) record(f, false, 'Actor.create unavailable');
                 return out;
             }
@@ -94,7 +94,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             let vehicleActor: any = null;
             try {
                 vehicleActor = await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'vehicle-methods-spec',
                         type: 'bc-vehicle',
                         system: {
@@ -132,7 +132,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 return out;
             }
 
-            const live = (): any => game?.actors?.get?.(vehicleActor.id);
+            const live = (): any => gme?.actors?.get?.(vehicleActor.id);
 
             // ---- pure getter probes ----
             // Each reads the document getter directly — v8 attributes the
@@ -268,7 +268,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             // → warn + early return.
             // Ensure user.character is null before we try.
             try {
-                const user = game?.user;
+                const user = gme?.user;
                 if (user && typeof user.update === 'function' && user.character) {
                     await withTimeout(user.update({ character: null }), 5_000, 'clear user.character');
                 }
@@ -314,7 +314,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             let characterActor: any = null;
             try {
                 characterActor = await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'vehicle-methods-pc',
                         type: 'bc-character',
                         system: {
@@ -334,7 +334,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 // Fallback to dh2-character if bc-character is not registered in this build.
                 try {
                     characterActor = await withTimeout(
-                        Actor.create({
+                        ActorCls.create({
                             name: 'vehicle-methods-pc',
                             type: 'dh2-character',
                             system: {
@@ -355,7 +355,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 }
             }
             try {
-                const user = game?.user;
+                const user = gme?.user;
                 if (user && typeof user.update === 'function' && characterActor?.id) {
                     await withTimeout(user.update({ character: characterActor.id }), 5_000, 'set user.character');
                 }
@@ -420,7 +420,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
 
             // ---- cleanup ----
             try {
-                const user = game?.user;
+                const user = gme?.user;
                 if (user && typeof user.update === 'function') {
                     await user.update({ character: null });
                 }

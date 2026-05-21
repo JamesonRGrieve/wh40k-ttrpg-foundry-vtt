@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars';
+import HandlebarsLib from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import actionRollChatSrc from '../src/templates/chat/action-roll-chat.hbs?raw';
 import damageRollChatSrc from '../src/templates/chat/damage-roll-chat.hbs?raw';
@@ -19,15 +19,15 @@ import {
     mockQuickActionItem,
     mockRollData,
     mockWeaponSheetContext,
-    renderTemplate,
+    renderTemplate as renderMockTemplate,
 } from '../stories/mocks';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
 function compileToElement(source: string, context: unknown): HTMLElement {
-    const template = Handlebars.compile(source);
-    return renderTemplate(template, context);
+    const template = HandlebarsLib.compile(source);
+    return renderMockTemplate(template, context);
 }
 
 describe('storybook shared component templates', () => {

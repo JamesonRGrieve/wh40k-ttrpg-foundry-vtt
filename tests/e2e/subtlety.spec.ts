@@ -53,7 +53,7 @@ interface FlowResult {
  */
 async function readSubtlety(page: Page, actorId: string): Promise<number | null> {
     return page.evaluate((id: string) => {
-        const game = (
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: {
                     actors?: {
@@ -62,7 +62,7 @@ async function readSubtlety(page: Page, actorId: string): Promise<number | null>
                 };
             }
         ).game;
-        const v = game?.actors?.get?.(id)?.system?.subtlety?.value;
+        const v = gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value;
         return typeof v === 'number' ? v : null;
     }, actorId);
 }
@@ -74,7 +74,7 @@ async function readSubtlety(page: Page, actorId: string): Promise<number | null>
 async function resetSubtlety(page: Page, actorId: string, value: number): Promise<void> {
     await page.evaluate(
         async ({ id, v }) => {
-            const game = (
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -88,7 +88,7 @@ async function resetSubtlety(page: Page, actorId: string, value: number): Promis
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(id);
+            const actor = gameGlobal?.actors?.get?.(id);
             await actor?.update?.({ 'system.subtlety.value': v });
             try {
                 await actor?.unsetFlag?.('wh40k-rpg', 'lastSubtletySource');
@@ -102,14 +102,14 @@ async function resetSubtlety(page: Page, actorId: string, value: number): Promis
 
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const Actor = (
+        const ActorCls = (
             globalThis as unknown as {
                 Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
             }
         ).Actor;
-        if (!Actor?.create) return { id: null as string | null, error: 'Actor.create unavailable' };
+        if (!ActorCls?.create) return { id: null as string | null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name: 'probe-subtlety-parent',
                 type: 'bc-character',
                 system: { gameSystem: 'bc' },
@@ -117,21 +117,21 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null as string | null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: String(err instanceof Error ? err.message : err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const game = (
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
             }
         ).game;
-        const actor = game?.actors?.get?.(id);
+        const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
@@ -160,8 +160,8 @@ async function embedSubtletyTalent(
     },
 ): Promise<{ id: string | null; error: string | null }> {
     return page.evaluate(
-        async ({ actorId, args }) => {
-            const game = (
+        async ({ actorId: aId, args: embedArgs }) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -174,28 +174,28 @@ async function embedSubtletyTalent(
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameGlobal?.actors?.get?.(aId);
             if (!actor?.createEmbeddedDocuments) return { id: null as string | null, error: 'actor missing createEmbeddedDocuments' };
             try {
                 const created = await actor.createEmbeddedDocuments('Item', [
                     {
-                        name: args.name,
-                        type: args.itemType ?? 'talent',
+                        name: embedArgs.name,
+                        type: embedArgs.itemType ?? 'talent',
                         system: {
                             subtletyAdjuster: {
-                                kind: args.kind,
-                                delta: args.delta,
-                                minAbsoluteDelta: args.minAbsoluteDelta,
-                                requiresEquipped: args.requiresEquipped,
+                                kind: embedArgs.kind,
+                                delta: embedArgs.delta,
+                                minAbsoluteDelta: embedArgs.minAbsoluteDelta,
+                                requiresEquipped: embedArgs.requiresEquipped,
                             },
-                            equipped: args.equipped === true,
+                            equipped: embedArgs.equipped === true,
                         },
                     },
                 ]);
                 const id = created[0]?.id ?? null;
-                return { id, error: id ? null : 'createEmbeddedDocuments returned no id' };
+                return { id, error: id !== null ? null : 'createEmbeddedDocuments returned no id' };
             } catch (err) {
-                return { id: null as string | null, error: `embed item threw: ${String((err as Error)?.message ?? err)}` };
+                return { id: null as string | null, error: `embed item threw: ${String(err instanceof Error ? err.message : err)}` };
             }
         },
         { actorId, args },
@@ -204,8 +204,8 @@ async function embedSubtletyTalent(
 
 async function deleteItem(page: Page, actorId: string, itemId: string): Promise<void> {
     await page.evaluate(
-        async ({ actorId, itemId }) => {
-            const game = (
+        async ({ actorId: aId, itemId: iId }) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -219,7 +219,7 @@ async function deleteItem(page: Page, actorId: string, itemId: string): Promise<
                 }
             ).game;
             try {
-                await game?.actors?.get?.(actorId)?.deleteEmbeddedDocuments?.('Item', [itemId]);
+                await gameGlobal?.actors?.get?.(aId)?.deleteEmbeddedDocuments?.('Item', [iId]);
             } catch {
                 /* best-effort */
             }
@@ -247,8 +247,8 @@ async function probeBaseline(page: Page, actorId: string): Promise<FlowResult> {
  * primitive branch of `isSubtletyPrimitive`.
  */
 async function probeManualAdjustment(page: Page, actorId: string): Promise<FlowResult> {
-    return page.evaluate(async (actorId: string) => {
-        const game = (
+    return page.evaluate(async (id: string) => {
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: {
                     actors?: {
@@ -264,16 +264,16 @@ async function probeManualAdjustment(page: Page, actorId: string): Promise<FlowR
                 };
             }
         ).game;
-        const actor = game?.actors?.get?.(actorId);
+        const actor = gameGlobal?.actors?.get?.(id);
         if (!actor?.applySubtlety) return { ok: false, error: 'actor.applySubtlety unavailable' };
         const before = actor.system?.subtlety?.value ?? null;
         if (before === null) return { ok: false, error: 'subtlety missing before manual apply' };
         try {
             await actor.applySubtlety(-7, 'manual');
         } catch (err) {
-            return { ok: false, error: `applySubtlety(-7, manual) threw: ${String((err as Error)?.message ?? err)}` };
+            return { ok: false, error: `applySubtlety(-7, manual) threw: ${String(err instanceof Error ? err.message : err)}` };
         }
-        const live = game?.actors?.get?.(actorId);
+        const live = gameGlobal?.actors?.get?.(id);
         const after = live?.system?.subtlety?.value ?? null;
         if (after === null) return { ok: false, error: 'subtlety missing after manual apply' };
         if (after !== before - 7) return { ok: false, error: `expected ${before - 7}, got ${after}` };
@@ -291,8 +291,8 @@ async function probeManualAdjustment(page: Page, actorId: string): Promise<FlowR
  * arms and the inquest leg of `subtletySourceLabel`.
  */
 async function probeInquestAdjustment(page: Page, actorId: string): Promise<FlowResult> {
-    return page.evaluate(async (actorId: string) => {
-        const game = (
+    return page.evaluate(async (id: string) => {
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: {
                     actors?: {
@@ -307,16 +307,16 @@ async function probeInquestAdjustment(page: Page, actorId: string): Promise<Flow
                 };
             }
         ).game;
-        const actor = game?.actors?.get?.(actorId);
+        const actor = gameGlobal?.actors?.get?.(id);
         if (!actor?.applySubtlety) return { ok: false, error: 'actor.applySubtlety unavailable' };
         const before = actor.system?.subtlety?.value ?? null;
         if (before === null) return { ok: false, error: 'subtlety missing before inquest apply' };
         try {
             await actor.applySubtlety(-3, 'inquest');
         } catch (err) {
-            return { ok: false, error: `applySubtlety(-3, inquest) threw: ${String((err as Error)?.message ?? err)}` };
+            return { ok: false, error: `applySubtlety(-3, inquest) threw: ${String(err instanceof Error ? err.message : err)}` };
         }
-        const live = game?.actors?.get?.(actorId);
+        const live = gameGlobal?.actors?.get?.(id);
         const after = live?.system?.subtlety?.value ?? null;
         if (after === null) return { ok: false, error: 'subtlety missing after inquest apply' };
         if (after !== before - 3) return { ok: false, error: `expected ${before - 3}, got ${after}` };
@@ -344,11 +344,11 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
         minAbsoluteDelta: 0,
         requiresEquipped: false,
     });
-    if (!created.id) return { ok: false, error: `embed failed: ${created.error}` };
+    if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
     try {
         const result = await page.evaluate(
-            async ({ actorId, itemId }) => {
-                const game = (
+            async ({ actorId: aId, itemId: iId }) => {
+                const gameGlobal = (
                     globalThis as unknown as {
                         game?: {
                             actors?: {
@@ -369,13 +369,13 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
                         };
                     }
                 ).game;
-                const actor = game?.actors?.get?.(actorId);
+                const actor = gameGlobal?.actors?.get?.(aId);
                 if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
                 const collected = actor.collectSubtletyAdjusters();
                 const found = collected.find((a) => a.kind === 'event' && a.delta === -5);
                 if (!found) return { ok: false, error: `event adjuster not collected (got ${JSON.stringify(collected)})` };
                 // Drive the template getter directly.
-                const itemEffect = actor.items?.get?.(itemId)?.system?.subtletyAdjusterEffect;
+                const itemEffect = actor.items?.get?.(iId)?.system?.subtletyAdjusterEffect;
                 if (itemEffect == null) return { ok: false, error: 'item.system.subtletyAdjusterEffect getter returned null' };
                 const before = actor.system?.subtlety?.value ?? null;
                 if (before === null) return { ok: false, error: 'subtlety missing before delta apply' };
@@ -383,9 +383,9 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
                 try {
                     await actor.applySubtlety(found.delta);
                 } catch (err) {
-                    return { ok: false, error: `applySubtlety threw: ${String((err as Error)?.message ?? err)}` };
+                    return { ok: false, error: `applySubtlety threw: ${String(err instanceof Error ? err.message : err)}` };
                 }
-                const live = game?.actors?.get?.(actorId);
+                const live = gameGlobal?.actors?.get?.(aId);
                 const after = live?.system?.subtlety?.value ?? null;
                 if (after === null) return { ok: false, error: 'subtlety missing after delta apply' };
                 if (after !== before - 5) return { ok: false, error: `expected ${before - 5}, got ${after}` };
@@ -428,10 +428,10 @@ async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowR
         // Weapon forces equipped=true via prepareDerivedData (see weapon.ts:336).
         itemType: 'weapon',
     });
-    if (!created.id) return { ok: false, error: `embed failed: ${created.error}` };
+    if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
     try {
-        return await page.evaluate(async (actorId: string) => {
-            const game = (
+        return await page.evaluate((id: string) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -444,7 +444,7 @@ async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowR
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameGlobal?.actors?.get?.(id);
             if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
             const present = actor.collectSubtletyAdjusters().find((a) => a.label === 'probe-subtlety-passive-gated');
             if (!present) {
@@ -475,10 +475,10 @@ async function probeMinAbsoluteDeltaFloors(page: Page, actorId: string): Promise
         minAbsoluteDelta: 1,
         requiresEquipped: false,
     });
-    if (!created.id) return { ok: false, error: `embed failed: ${created.error}` };
+    if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
     try {
-        return await page.evaluate(async (actorId: string) => {
-            const game = (
+        return await page.evaluate(async (id: string) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -492,17 +492,17 @@ async function probeMinAbsoluteDeltaFloors(page: Page, actorId: string): Promise
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameGlobal?.actors?.get?.(id);
             if (!actor?.applySubtlety) return { ok: false, error: 'applySubtlety unavailable' };
             const before = actor.system?.subtlety?.value ?? null;
             if (before === null) return { ok: false, error: 'subtlety missing before clamp test' };
             try {
                 await actor.applySubtlety(-5);
-                await game?.actors?.get?.(actorId)?.applySubtlety?.(-5);
+                await gameGlobal?.actors?.get?.(id)?.applySubtlety?.(-5);
             } catch (err) {
-                return { ok: false, error: `clamped applySubtlety threw: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, error: `clamped applySubtlety threw: ${String(err instanceof Error ? err.message : err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.subtlety?.value ?? null;
+            const after = gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value ?? null;
             if (after === null) return { ok: false, error: 'subtlety missing after clamp test' };
             const expected = before - 2; // two -1 clamped losses
             if (after !== expected) return { ok: false, error: `expected ${expected} (two -1 clamps), got ${after}` };
@@ -527,9 +527,9 @@ async function probeClearsWhenRemoved(page: Page, actorId: string): Promise<Flow
         minAbsoluteDelta: 0,
         requiresEquipped: false,
     });
-    if (!created.id) return { ok: false, error: `embed failed: ${created.error}` };
-    const presentBefore = await page.evaluate((actorId: string) => {
-        const game = (
+    if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
+    const presentBefore = await page.evaluate((id: string) => {
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: {
                     actors?: {
@@ -543,8 +543,8 @@ async function probeClearsWhenRemoved(page: Page, actorId: string): Promise<Flow
             }
         ).game;
         return (
-            game?.actors
-                ?.get?.(actorId)
+            gameGlobal?.actors
+                ?.get?.(id)
                 ?.collectSubtletyAdjusters?.()
                 .some((a) => a.label === 'probe-subtlety-removable') ?? false
         );
@@ -554,8 +554,8 @@ async function probeClearsWhenRemoved(page: Page, actorId: string): Promise<Flow
         return { ok: false, error: 'passive adjuster did not surface before removal' };
     }
     await deleteItem(page, actorId, created.id);
-    const presentAfter = await page.evaluate((actorId: string) => {
-        const game = (
+    const presentAfter = await page.evaluate((id: string) => {
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: {
                     actors?: {
@@ -569,8 +569,8 @@ async function probeClearsWhenRemoved(page: Page, actorId: string): Promise<Flow
             }
         ).game;
         return (
-            game?.actors
-                ?.get?.(actorId)
+            gameGlobal?.actors
+                ?.get?.(id)
                 ?.collectSubtletyAdjusters?.()
                 .some((a) => a.label === 'probe-subtlety-removable') ?? false
         );

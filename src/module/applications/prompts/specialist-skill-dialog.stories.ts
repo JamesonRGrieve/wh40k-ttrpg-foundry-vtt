@@ -49,14 +49,14 @@ export const WithPreselectedSkillAndSpecializations: Story = {
  */
 export const ActionButtonsDispatch: Story = {
     args: { preSelectedSkillKey: 'commonLore', specializations: ['Imperium'] },
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
         const add = canvasElement.querySelector('[data-action="add"]');
         const cancel = canvasElement.querySelector('[data-action="cancel"]');
-        expect(add).toBeTruthy();
-        expect(cancel).toBeTruthy();
+        void expect(add).toBeTruthy();
+        void expect(cancel).toBeTruthy();
         clickAction(canvasElement, 'add');
         clickAction(canvasElement, 'cancel');
-        void canvas;
+        void storyCanvas;
     },
 };

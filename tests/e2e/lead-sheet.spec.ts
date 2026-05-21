@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -17,21 +18,23 @@ interface LeadProbeResult {
     pageErrors: string[];
 }
 
-async function probeLeadSheet(page: import('@playwright/test').Page): Promise<LeadProbeResult> {
+async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async () => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Item = g.Item;
-            if (!Item?.create) {
+            const ItemCls = g.Item;
+            if (!ItemCls?.create) {
                 return { created: false, rendered: false, createError: 'Item.create unavailable' };
             }
             let item;
             try {
-                item = await Item.create({
+                item = await ItemCls.create({
                     name: 'probe-lead',
                     type: 'lead',
                     system: {
@@ -50,7 +53,9 @@ async function probeLeadSheet(page: import('@playwright/test').Page): Promise<Le
             try {
                 if (item.sheet?.render) {
                     await item.sheet.render(true);
-                    await new Promise((r) => setTimeout(r, 100));
+                    await new Promise((r) => {
+                        setTimeout(r, 100);
+                    });
                     rendered = true;
                 }
             } catch (err) {
@@ -74,7 +79,7 @@ async function probeLeadSheet(page: import('@playwright/test').Page): Promise<Le
     }
 }
 
-async function cleanupLeadProbe(page: import('@playwright/test').Page): Promise<void> {
+async function cleanupLeadProbe(page: Page): Promise<void> {
     await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
         const g = globalThis as any;

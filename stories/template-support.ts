@@ -114,7 +114,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     Handlebars.registerHelper('inc', (value: unknown) => Number(value) + 1);
     Handlebars.registerHelper('iff', (cond: unknown, ifTrue: unknown, ifFalse: unknown) => (cond ? ifTrue : ifFalse ?? ''));
     Handlebars.registerHelper('object', (options: { hash?: Record<string, unknown> }) => {
-        return options?.hash ?? {};
+        return options.hash ?? {};
     });
     Handlebars.registerHelper('array', (...args: unknown[]) => args.slice(0, -1));
     Handlebars.registerHelper('checked', (value: unknown) => (value ? 'checked' : ''));
@@ -143,7 +143,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
             return obj;
         }
         if (typeof array === 'object') {
-            for (const key of Object.keys(array as Record<string, unknown>)) obj[key] = key;
+            for (const key of Object.keys(array)) obj[key] = key;
             return obj;
         }
         return obj;
@@ -242,7 +242,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     Handlebars.registerHelper('armourDisplay', (armour: unknown): string => {
         if (armour === null || armour === undefined || typeof armour !== 'object') return '0';
         const a = armour as Record<string, unknown>;
-        const num = (v: unknown) => Number(v ?? 0);
+        const num = (v: unknown): number => Number(v ?? 0);
         const body = num(a['body']);
         const locations = ['body', 'head', 'rightArm', 'leftArm', 'rightLeg', 'leftLeg'] as const;
         const same = locations.every((loc) => num(a[loc]) === body);
@@ -267,7 +267,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         const normalized = normalizeSelectOptions(options).map((option) => {
             if (!labelAttr) return option;
             const sourceValue = Array.isArray(options)
-                ? options.find((entry) => String((entry as Record<string, unknown>)?.value ?? entry) === option.value)
+                ? options.find((entry) => String((entry as Record<string, unknown>).value ?? entry) === option.value)
                 : null;
             if (sourceValue && typeof sourceValue === 'object') {
                 const label = (sourceValue as Record<string, unknown>)[labelAttr];
@@ -291,7 +291,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         const classes = ['wh40k-story-editor'];
         if (options?.hash?.button) classes.push('wh40k-story-editor--button');
         return new Handlebars.SafeString(
-            `<div class="${classes.join(' ')}" data-editor-target="${Handlebars.escapeExpression(String(target ?? ''))}">${value ?? ''}</div>`,
+            `<div class="${classes.join(' ')}" data-editor-target="${Handlebars.escapeExpression(String(target ?? ''))}">${String(value ?? '')}</div>`,
         );
     });
     Handlebars.registerHelper('localize', (key: string, options?: { hash?: Record<string, unknown> }) => {
@@ -338,7 +338,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         if (typeof key !== 'string' || !Object.hasOwn(ICON_REGISTRY, key)) {
             return new Handlebars.SafeString('');
         }
-        const hash = options?.hash ?? {};
+        const hash = options.hash ?? {};
         const svg = ICON_REGISTRY[key];
         const klass = typeof hash.class === 'string' ? hash.class : '';
         const label = typeof hash.label === 'string' ? hash.label : '';

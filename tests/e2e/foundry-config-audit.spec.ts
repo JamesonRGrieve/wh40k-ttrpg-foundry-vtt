@@ -171,7 +171,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(
-            async ({
+            ({
                 foundryConfigFlowsInner,
                 actorTypesByPrefixInner,
                 itemTypeCategoriesInner,
@@ -179,7 +179,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 foundryConfigFlowsInner: readonly string[];
                 actorTypesByPrefixInner: Record<string, readonly string[]>;
                 itemTypeCategoriesInner: Record<string, readonly string[]>;
-            }): Promise<FlowResult[]> => {
+            }): FlowResult[] => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: CONFIG / game.wh40k are dynamically-typed Foundry boundaries */
                 const out: FlowResult[] = [];
                 const allowedKeys = new Set(foundryConfigFlowsInner);
@@ -410,7 +410,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             {
-                foundryConfigFlowsInner: FOUNDRY_CONFIG_FLOWS as readonly string[],
+                foundryConfigFlowsInner: FOUNDRY_CONFIG_FLOWS,
                 actorTypesByPrefixInner: ACTOR_TYPES_BY_PREFIX,
                 itemTypeCategoriesInner: ITEM_TYPE_CATEGORIES,
             },

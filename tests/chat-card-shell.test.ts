@@ -63,8 +63,8 @@ describe('chat-card-shell partial — basic structural contract', () => {
         expect(img?.getAttribute('src')).toBe('/img/test.png');
         expect(img?.getAttribute('alt')).toBe('Test');
         expect(img?.classList.contains('wh40k-card-icon')).toBe(true);
-        expect(header?.querySelector('h3')?.textContent?.trim()).toBe('Stunned');
-        expect(header?.querySelector('.wh40k-card-subtitle')?.textContent?.trim()).toBe('Status Effect');
+        expect(header?.querySelector('h3')?.textContent.trim()).toBe('Stunned');
+        expect(header?.querySelector('.wh40k-card-subtitle')?.textContent.trim()).toBe('Status Effect');
         const badgeEls = header?.querySelectorAll('.wh40k-badge');
         expect(badgeEls?.length).toBe(2);
         expect(badgeEls?.[0]?.classList.contains('wh40k-badge--harmful')).toBe(true);
@@ -215,8 +215,8 @@ describe('chat-card-shell — HTML equivalence with legacy templates', () => {
 
         // Title-area, title, subtitle.
         expect(newDom.querySelector('.wh40k-card-title-area')).not.toBeNull();
-        expect(newDom.querySelector('h3.wh40k-card-title')?.textContent?.trim()).toBe(ctx.name);
-        expect(newDom.querySelector('.wh40k-card-subtitle')?.textContent?.trim()).toBe('Harmful Condition');
+        expect(newDom.querySelector('h3.wh40k-card-title')?.textContent.trim()).toBe(ctx.name);
+        expect(newDom.querySelector('.wh40k-card-subtitle')?.textContent.trim()).toBe('Harmful Condition');
 
         // Badges.
         const newBadges = newDom.querySelectorAll('.wh40k-card-badges .wh40k-badge');
@@ -259,8 +259,8 @@ describe('chat-card-shell — HTML equivalence with legacy templates', () => {
         expect(root.firstElementChild?.classList.contains('wh40k-movement-card--run')).toBe(true);
         expect(root.querySelector('.wh40k-card-icon-wrapper')).not.toBeNull();
         expect(root.querySelector(`i.${ctx.icon}`)).not.toBeNull();
-        expect(root.querySelector('h3.wh40k-card-title')?.textContent?.trim()).toBe(ctx.actor);
-        expect(root.querySelector('.wh40k-card-subtitle')?.textContent?.trim()).toBe('Movement: Run');
+        expect(root.querySelector('h3.wh40k-card-title')?.textContent.trim()).toBe(ctx.actor);
+        expect(root.querySelector('.wh40k-card-subtitle')?.textContent.trim()).toBe('Movement: Run');
         // No image (icon variant).
         expect(root.querySelector('header > img')).toBeNull();
     });

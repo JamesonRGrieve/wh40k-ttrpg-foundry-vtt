@@ -65,7 +65,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
+            const ActorCls = g.Actor;
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -212,7 +212,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
             // grant via its DataModel; call _applyGrant directly.
             let actor: any;
             try {
-                actor = await Actor.create({
+                actor = await ActorCls.create({
                     name: 'data-layer-spec-actor',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },

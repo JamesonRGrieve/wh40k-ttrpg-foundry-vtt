@@ -2,18 +2,18 @@
  * Stories for EndeavourSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { randomId, seedRandom } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../templates/item/item-endeavour-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Handlebars.compile(templateSrc);
+const compiled = HbsLib.compile(templateSrc);
 const rng = seedRandom(0xe7de8a04);
 
-function makeCtx(overrides: Record<string, unknown> = {}) {
+function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
     const id = randomId('endeavour', rng);
     const objectives = [
         { name: 'Make landfall on Solenne Minoris', description: '', complete: true, ap: 1 },
@@ -58,22 +58,22 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
 
 export const RendersProgressBar: Story = {
-    render: () => renderTemplate(compiled, makeCtx()),
-    play: async ({ canvasElement }) => {
+    render: () => renderTpl(compiled, makeCtx()),
+    play: async ({ canvasElement }): Promise<void> => {
         const bar = canvasElement.querySelector('[data-testid="endeavour-progress-bar"]');
-        expect(bar).toBeTruthy();
+        await expect(bar).toBeTruthy();
         const pct = bar?.getAttribute('aria-valuenow');
-        expect(pct).not.toBeNull();
-        expect(Number(pct)).toBeGreaterThan(0);
+        await expect(pct).not.toBeNull();
+        await expect(Number(pct)).toBeGreaterThan(0);
     },
 };
 
 export const RendersObjectiveRows: Story = {
     render: () =>
-        renderTemplate(
+        renderTpl(
             compiled,
             makeCtx({
                 tabs: {
@@ -97,8 +97,8 @@ export const RendersObjectiveRows: Story = {
                 },
             }),
         ),
-    play: async ({ canvasElement }) => {
+    play: async ({ canvasElement }): Promise<void> => {
         const rows = within(canvasElement).queryAllByTestId('endeavour-objective-row');
-        expect(rows.length).toBe(3);
+        await expect(rows.length).toBe(3);
     },
 };

@@ -35,11 +35,15 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
         if (!actor) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise<void>((r) => {
+            setTimeout(r, 250);
+        });
 
         try {
             actor.sheet?.changeTab?.('status', 'primary');
-            await new Promise((r) => setTimeout(r, 150));
+            await new Promise<void>((r) => {
+                setTimeout(r, 150);
+            });
         } catch {
             /* fall back to whatever tab is open */
         }

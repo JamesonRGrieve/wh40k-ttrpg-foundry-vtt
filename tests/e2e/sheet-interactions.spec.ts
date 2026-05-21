@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -58,17 +59,19 @@ interface SheetProbeResult {
     pageErrors: string[];
 }
 
-async function probeCharacterSheet(page: import('@playwright/test').Page): Promise<SheetProbeResult> {
+async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
             async ({ tabs, actions, formField }) => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor;
-                if (!Actor?.create) {
+                const ActorCls = g.Actor;
+                if (!ActorCls?.create) {
                     return {
                         created: false,
                         createError: 'Actor.create unavailable',
@@ -79,7 +82,7 @@ async function probeCharacterSheet(page: import('@playwright/test').Page): Promi
                 }
                 let actor;
                 try {
-                    actor = await Actor.create({
+                    actor = await ActorCls.create({
                         name: 'sheet-interactions-probe',
                         type: 'dh2-character',
                         system: { gameSystem: 'dh2e' },
@@ -121,7 +124,9 @@ async function probeCharacterSheet(page: import('@playwright/test').Page): Promi
 
                 await sheet.render(true);
                 // Allow the initial render to settle so PARTS are in the DOM.
-                await new Promise((r) => setTimeout(r, 100));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 100);
+                });
 
                 /* -------- tab switching -------- */
                 const tabResults: Array<{ tabId: string; switched: boolean; error: string | null }> = [];
@@ -131,7 +136,9 @@ async function probeCharacterSheet(page: import('@playwright/test').Page): Promi
                     try {
                         if (typeof sheet.changeTab === 'function') {
                             sheet.changeTab(tabId, 'primary');
-                            await new Promise((r) => setTimeout(r, 30));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 30);
+                            });
                             // Verify either tabGroups state OR a DOM element with .active
                             const groupActive = sheet.tabGroups?.primary === tabId;
                             const navActive = sheet.element?.querySelector?.(`[data-tab="${tabId}"].active, [data-group="primary"][data-tab="${tabId}"]`);

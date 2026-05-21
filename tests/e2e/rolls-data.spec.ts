@@ -84,8 +84,13 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                         fatigue: { value: 0 },
                     },
                     hasTalent: () => false,
-                    update: async () => undefined,
-                    createEmbeddedDocuments: async () => [],
+                    update: async () => {
+                        await Promise.resolve();
+                    },
+                    createEmbeddedDocuments: async () => {
+                        await Promise.resolve();
+                        return [];
+                    },
                 });
 
                 // ctor
@@ -192,12 +197,24 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             if (ffMod) {
                 const { ForceFieldData } = ffMod;
 
-                const fakeActor: any = { system: {}, update: async () => undefined };
+                const fakeActor: any = {
+                    system: {},
+                    update: async () => {
+                        await Promise.resolve();
+                    },
+                };
+                // fakeFFShared must be declared before buildFF so the closure captures the reference
+                // rather than the undefined value — reassigned below after buildFF is defined.
+                // eslint-disable-next-line prefer-const -- closure forward-reference requires let
+                let fakeFFShared: any;
                 const buildFF = (craftsmanship: string, rating: number): any => ({
                     system: { protectionRating: rating, craftsmanship },
-                    update: async (data: any) => Object.assign({}, fakeFFShared, { system: { ...fakeFFShared.system, ...data } }),
+                    update: async (data: any) => {
+                        await Promise.resolve();
+                        return Object.assign({}, fakeFFShared, { system: { ...fakeFFShared.system, ...data } });
+                    },
                 });
-                const fakeFFShared = buildFF('Common', 40);
+                fakeFFShared = buildFF('Common', 40);
 
                 try {
                     const ff = new ForceFieldData(fakeActor, fakeFFShared);

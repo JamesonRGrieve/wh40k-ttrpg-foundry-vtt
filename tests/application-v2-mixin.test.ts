@@ -13,15 +13,21 @@ function installFoundryStubs(): void {
             return class extends base {
                 static DEFAULT_OPTIONS = {};
 
-                async _onFirstRender(): Promise<void> {}
+                async _onFirstRender(): Promise<void> {
+                    await Promise.resolve();
+                }
 
-                async _onRender(): Promise<void> {}
+                async _onRender(): Promise<void> {
+                    await Promise.resolve();
+                }
 
                 async _prepareContext(): Promise<Record<string, unknown>> {
+                    await Promise.resolve();
                     return {};
                 }
 
                 async _preparePartContext(): Promise<Record<string, unknown>> {
+                    await Promise.resolve();
                     return {};
                 }
 

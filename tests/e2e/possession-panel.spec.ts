@@ -21,12 +21,12 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
+        const ActorCls = g.Actor;
+        if (!ActorCls?.create) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'possession-panel-probe',
                 type: 'dh2-character',
                 system: {
@@ -40,11 +40,15 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
         if (!actor) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise<void>((r) => {
+            setTimeout(r, 250);
+        });
 
         try {
             actor.sheet?.changeTab?.('status', 'primary');
-            await new Promise((r) => setTimeout(r, 150));
+            await new Promise<void>((r) => {
+                setTimeout(r, 150);
+            });
         } catch {
             /* fall back to whatever tab is open */
         }

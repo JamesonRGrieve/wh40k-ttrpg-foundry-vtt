@@ -62,8 +62,8 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
             async ({ moduleUrl }) => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only and the builder's private state is reached structurally */
                 const g = globalThis as any;
-                const Actor = g.Actor;
-                if (!Actor?.create) {
+                const ActorCls = g.Actor;
+                if (!ActorCls?.create) {
                     return {
                         created: false,
                         createError: 'Actor.create unavailable',
@@ -74,7 +74,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                 // ── Seed actor ──────────────────────────────────────────
                 let actor: any;
                 try {
-                    actor = await Actor.create({
+                    actor = await ActorCls.create({
                         name: 'origin-builder-probe',
                         type: 'dh2-character',
                         system: { gameSystem: 'dh2e' },
@@ -117,7 +117,9 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     builder = new OriginPathBuilder(actor, {});
                     await builder.render(true);
                     // _prepareContext → _loadOrigins is async; give it a beat.
-                    await new Promise((r) => setTimeout(r, 200));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 200);
+                    });
                     // Ensure origins loaded (compendium fetch can be slow on cold cache).
                     if ((builder.allOrigins?.length ?? 0) === 0 && typeof builder._loadOrigins === 'function') {
                         try {
@@ -153,7 +155,9 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         const rv = handler.call(builder, event, target);
                         if (rv && typeof rv.then === 'function') await rv;
                         // Allow the post-action re-render to settle.
-                        await new Promise((r) => setTimeout(r, 30));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 30);
+                        });
                         return null;
                     } catch (err) {
                         return String((err as Error)?.message ?? err);
@@ -161,7 +165,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                 }
 
                 /** Find the first origin in `allOrigins` matching the given step key. */
-                function pickOriginForStep(stepKey: string): any | null {
+                function pickOriginForStep(stepKey: string): any {
                     const pool = (builder.allOrigins ?? []) as any[];
                     return pool.find((o) => o?.system?.step === stepKey) ?? pool[0] ?? null;
                 }
@@ -321,7 +325,9 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     builder.showLineage = false;
                     builder.showCharacteristics = false;
                     await builder.render();
-                    await new Promise((r) => setTimeout(r, 30));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
                     if (builder.selections.size === 0 && builder.currentStepIndex === 0 && builder.previewedOrigin === null) {
                         record('builder-cancel-or-reset', true, null);
                     } else {
