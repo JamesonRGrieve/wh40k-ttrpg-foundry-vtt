@@ -80,8 +80,94 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            // Structural shapes for the Foundry runtime surfaces this probe
+            // touches. Members are deliberately minimal — only what the flows
+            // read. Foundry's own types are not available browser-side, so we
+            // describe the duck-typed surface rather than reaching for `any`.
+            interface DeleteableDoc {
+                id?: string | null;
+                delete?: () => Promise<void>;
+            }
+            interface NestedEntry {
+                _id?: string;
+                name?: string;
+                addedField?: string;
+                type?: string;
+                system?: object;
+            }
+            interface ItemCollection {
+                get?: (id: string) => ContainerItem | undefined;
+                has?: (id: string) => boolean;
+            }
+            interface ContainerItem extends DeleteableDoc {
+                name?: string;
+                actor?: { id?: string };
+                items?: ItemCollection;
+                isNestedItem?: () => boolean;
+                setNested?: (entries: NestedEntry[]) => Promise<void>;
+                setNestedManual?: (entry: NestedEntry | NestedEntry[]) => void;
+                getNested?: () => NestedEntry[] | undefined;
+                hasNested?: () => boolean;
+                createNestedDocuments?: (entries: NestedEntry[]) => Promise<void>;
+                updateNestedDocuments?: (entries: NestedEntry[]) => Promise<void>;
+                deleteNestedDocuments?: (ids: string[]) => Promise<void>;
+                convertNestedToItems?: () => void;
+                update?: (data: object) => Promise<void>;
+            }
+            interface HostActor extends DeleteableDoc {
+                items: ItemCollection & { get: (id: string) => ContainerItem | undefined };
+                createEmbeddedDocuments?: (type: string, data: object[]) => Promise<DeleteableDoc[]>;
+            }
+            interface DegreeResult {
+                success?: boolean;
+                degrees?: number;
+            }
+            interface ChatMessageDoc extends DeleteableDoc {
+                isItemCard?: boolean;
+                itemUuid?: string | null;
+                isTargetedRoll?: boolean;
+                calculateDegrees?: () => DegreeResult | undefined;
+            }
+            interface ActorCtor {
+                create: (data: object) => Promise<DeleteableDoc & { constructor?: { name?: string } }>;
+                new (data: object): { constructor?: { name?: string } };
+            }
+            interface ChatMessageCtor {
+                create?: (data: object) => Promise<ChatMessageDoc>;
+            }
+            interface RollCtor {
+                new (formula: string): { evaluate?: () => Promise<void> };
+            }
+            interface ChatDocClass {
+                name?: string;
+                onChatCardAction?: (event: Event, target: HTMLElement) => Promise<void>;
+                enrichActionButtons?: (html: HTMLElement, message: { id: string }) => void;
+            }
+            interface ConfigEntry {
+                documentClass?: object;
+                documentClasses?: Record<string, object>;
+            }
+            interface FoundryConfigShape {
+                Actor?: ConfigEntry;
+                ChatMessage?: ConfigEntry;
+                Token?: ConfigEntry;
+                ActiveEffect?: ConfigEntry;
+            }
+            interface FoundryGame {
+                actors?: { get?: (id: string) => HostActor | undefined };
+                messages?: { get?: (id: string) => DeleteableDoc | undefined };
+            }
+            interface FoundryGlobal {
+                Actor: ActorCtor;
+                ChatMessage: ChatMessageCtor;
+                CONFIG?: FoundryConfigShape;
+                Hooks: object;
+                game?: FoundryGame;
+                Roll: RollCtor;
+            }
+
+            // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis is the Foundry runtime; cast once into a typed surface
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorCls = g.Actor;
             const ChatMessageCls = g.ChatMessage;
             const FoundryConfig = g.CONFIG;
@@ -124,7 +210,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * `construct` handler ran and dispatched.
                  * ============================================================ */
                 try {
-                    const actor = (await withTimeout(
+                    const actor = await withTimeout(
                         ActorCls.create({
                             name: 'documents-extra-proxy-dh2',
                             type: 'dh2-character',
@@ -132,21 +218,22 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }),
                         5_000,
                         'proxy dh2-character Actor.create',
-                    )) as any;
-                    if (actor?.id != null) {
+                    );
+                    const actorId = actor.id;
+                    if (actorId != null) {
                         cleanups.push(async () => {
                             try {
-                                await foundryGame?.actors?.get?.(actor.id)?.delete?.();
+                                await foundryGame?.actors?.get?.(actorId)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
                         });
                     }
-                    const ctorName = String(actor?.constructor?.name ?? '');
+                    const ctorName = String(actor.constructor?.name ?? '');
                     // Concrete classes are WH40KDH2Character etc.; the base
                     // is WH40KBaseActor. Assert NOT the base — that means
                     // the proxy dispatched to the registered concrete class.
-                    const isConcrete = actor?.id !== undefined && ctorName !== 'WH40KBaseActor' && ctorName.length > 0;
+                    const isConcrete = actorId != null && ctorName !== 'WH40KBaseActor' && ctorName.length > 0;
                     if (isConcrete) {
                         fired['actor-proxy-dispatches-by-type'] = true;
                         notes['actor-proxy-dispatches-by-type'] = `dispatched to ${ctorName}`;
@@ -154,7 +241,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['actor-proxy-dispatches-by-type'] = `unexpected ctor: ${ctorName}`;
                     }
                 } catch (err) {
-                    notes['actor-proxy-dispatches-by-type'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['actor-proxy-dispatches-by-type'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -174,12 +261,13 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         // Direct construction with an unknown type — does not
                         // hit the server CRUD path; just exercises the
                         // construct handler's fallback branch.
-                        let instance: any = null;
+                        const ProxyCtor = proxy as new (data: object) => { constructor?: { name?: string } };
+                        let instance: { constructor?: { name?: string } } | null = null;
                         let threw: string | null = null;
                         try {
-                            instance = new proxy({ name: 'documents-extra-proxy-unknown', type: '__unknown_type__' });
+                            instance = new ProxyCtor({ name: 'documents-extra-proxy-unknown', type: '__unknown_type__' });
                         } catch (err) {
-                            threw = String(err instanceof Error ? err.message : String(err));
+                            threw = err instanceof Error ? err.message : String(err);
                         }
                         const ctorName = String(instance?.constructor?.name ?? '');
                         // The fallback class is WH40KBaseActor. A real
@@ -205,7 +293,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['actor-proxy-falls-back-on-unknown-type'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['actor-proxy-falls-back-on-unknown-type'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -228,7 +316,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['actor-proxy-registered-on-config'] = `proxy=${typeof proxy} missing=${missing.join(',')}`;
                     }
                 } catch (err) {
-                    notes['actor-proxy-registered-on-config'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['actor-proxy-registered-on-config'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -236,9 +324,9 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * Creating one actor for all five container probes avoids
                  * server-create churn and keeps the cleanup list short.
                  * ============================================================ */
-                let host: any = null;
+                let host: DeleteableDoc | null = null;
                 try {
-                    host = (await withTimeout(
+                    host = await withTimeout(
                         ActorCls.create({
                             name: 'documents-extra-container-host',
                             type: 'dh2-character',
@@ -246,11 +334,12 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }),
                         5_000,
                         'container-host Actor.create',
-                    )) as any;
-                    if (host?.id != null) {
+                    );
+                    const hostId = host.id;
+                    if (hostId != null) {
                         cleanups.push(async () => {
                             try {
-                                await foundryGame?.actors?.get?.(host.id)?.delete?.();
+                                await foundryGame?.actors?.get?.(hostId)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
@@ -266,7 +355,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         'item-container-convertNestedToItems-builds-collection',
                         'item-container-update-injects-id',
                     ]) {
-                        notes[f] = `container host create threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                        notes[f] = `container host create threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
                 }
 
@@ -279,7 +368,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                     });
                 }
 
-                const getHost = (): any => (host?.id !== undefined ? foundryGame?.actors?.get?.(host.id) : null);
+                const getHost = (): HostActor | null | undefined => (host?.id != null ? foundryGame?.actors?.get?.(host.id) : null);
 
                 /* ============================================================
                  * Flow 4: item-container-isNestedItem-false-on-owned
@@ -288,11 +377,11 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * an Item — the source guard is `this.parent instanceof
                  * Item`). Also asserts `getActor()` returns the parent.
                  * ============================================================ */
-                let backpackItem: any = null;
+                let backpackItem: ContainerItem | null = null;
                 try {
                     const live = getHost();
                     if (live?.createEmbeddedDocuments != null) {
-                        const created = (await withTimeout(
+                        const created = await withTimeout(
                             live.createEmbeddedDocuments('Item', [
                                 {
                                     name: 'documents-extra-backpack',
@@ -302,12 +391,14 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             ]),
                             5_000,
                             'create backpack item',
-                        )) as any[];
-                        backpackItem = created[0] != null ? live.items.get(created[0].id) : null;
+                        );
+                        const createdId = created[0]?.id;
+                        backpackItem = createdId != null ? live.items.get(createdId) ?? null : null;
                         if (backpackItem != null) {
+                            const created0 = backpackItem;
                             cleanups.push(async () => {
                                 try {
-                                    await backpackItem.delete?.();
+                                    await created0.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -327,7 +418,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-isNestedItem-false-on-owned'] = 'host actor unavailable';
                     }
                 } catch (err) {
-                    notes['item-container-isNestedItem-false-on-owned'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['item-container-isNestedItem-false-on-owned'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -341,7 +432,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 try {
                     if (backpackItem != null) {
                         const sample = [{ _id: 'aaaaaaaaaaaaaaaa', name: 'nested-a' }];
-                        await withTimeout(backpackItem.setNested?.(sample), 5_000, 'setNested');
+                        await withTimeout(backpackItem.setNested?.(sample) ?? Promise.resolve(), 5_000, 'setNested');
                         const round1 = backpackItem.getNested?.();
                         const has1 = backpackItem.hasNested?.();
 
@@ -354,11 +445,11 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         const ok =
                             Array.isArray(round1) &&
                             round1.length === 1 &&
-                            (round1[0] as any)?._id === 'aaaaaaaaaaaaaaaa' &&
+                            round1[0]?._id === 'aaaaaaaaaaaaaaaa' &&
                             has1 === true &&
                             Array.isArray(round2) &&
                             round2.length === 1 &&
-                            (round2[0] as any)?._id === 'bbbbbbbbbbbbbbbb';
+                            round2[0]?._id === 'bbbbbbbbbbbbbbbb';
                         if (ok) {
                             fired['item-container-setNested-roundtrip'] = true;
                             notes['item-container-setNested-roundtrip'] = 'setNested + setNestedManual + getNested + hasNested round-tripped';
@@ -371,7 +462,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-setNested-roundtrip'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-setNested-roundtrip'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['item-container-setNested-roundtrip'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -386,17 +477,17 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 try {
                     if (backpackItem != null) {
                         // Reset to empty so the append count is deterministic.
-                        await withTimeout(backpackItem.setNested?.([]), 5_000, 'reset nested array');
+                        await withTimeout(backpackItem.setNested?.([]) ?? Promise.resolve(), 5_000, 'reset nested array');
                         await withTimeout(
                             backpackItem.createNestedDocuments?.([
                                 { name: 'created-a', type: 'gear', system: {} },
                                 { name: 'created-b', type: 'gear', system: {} },
-                            ]),
+                            ]) ?? Promise.resolve(),
                             5_000,
                             'createNestedDocuments',
                         );
                         const after = backpackItem.getNested?.() ?? [];
-                        const ids = (after as any[]).map((e) => String(e?._id ?? ''));
+                        const ids = after.map((e) => String(e._id ?? ''));
                         const allFreshIds = ids.every((s) => s.length === 16);
                         if (after.length === 2 && allFreshIds) {
                             fired['item-container-createNestedDocuments-appends'] = true;
@@ -408,7 +499,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-createNestedDocuments-appends'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-createNestedDocuments-appends'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['item-container-createNestedDocuments-appends'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -425,12 +516,12 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         const firstId = before[0]?._id;
                         if (typeof firstId === 'string' && firstId.length > 0) {
                             await withTimeout(
-                                backpackItem.updateNestedDocuments?.([{ _id: firstId, addedField: 'merged-value' }]),
+                                backpackItem.updateNestedDocuments?.([{ _id: firstId, addedField: 'merged-value' }]) ?? Promise.resolve(),
                                 5_000,
                                 'updateNestedDocuments',
                             );
                             const after = backpackItem.getNested?.() ?? [];
-                            const updated = (after as any[]).find((e) => e?._id === firstId);
+                            const updated = after.find((e) => e._id === firstId);
                             const has = updated?.addedField === 'merged-value';
                             if (has) {
                                 fired['item-container-updateNestedDocuments-merges'] = true;
@@ -445,7 +536,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-updateNestedDocuments-merges'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-updateNestedDocuments-merges'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['item-container-updateNestedDocuments-merges'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -457,9 +548,9 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         const before = backpackItem.getNested?.() ?? [];
                         const firstId = before[0]?._id;
                         if (typeof firstId === 'string' && firstId.length > 0) {
-                            await withTimeout(backpackItem.deleteNestedDocuments?.([firstId]), 5_000, 'deleteNestedDocuments');
+                            await withTimeout(backpackItem.deleteNestedDocuments?.([firstId]) ?? Promise.resolve(), 5_000, 'deleteNestedDocuments');
                             const after = backpackItem.getNested?.() ?? [];
-                            const stillThere = (after as any[]).find((e) => e?._id === firstId);
+                            const stillThere = after.find((e) => e._id === firstId);
                             if (after.length === before.length - 1 && stillThere === undefined) {
                                 fired['item-container-deleteNestedDocuments-removes'] = true;
                                 notes['item-container-deleteNestedDocuments-removes'] = `removed id=${firstId}; length ${before.length} -> ${after.length}`;
@@ -475,7 +566,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-deleteNestedDocuments-removes'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-deleteNestedDocuments-removes'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['item-container-deleteNestedDocuments-removes'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -492,12 +583,12 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             { _id: 'cccccccccccccccc', name: 'conv-a', type: 'gear', system: {} },
                             { _id: 'dddddddddddddddd', name: 'conv-b', type: 'gear', system: {} },
                         ];
-                        await withTimeout(backpackItem.setNested?.(seed), 5_000, 'seed nested for convert');
+                        await withTimeout(backpackItem.setNested?.(seed) ?? Promise.resolve(), 5_000, 'seed nested for convert');
                         let threw: string | null = null;
                         try {
                             backpackItem.convertNestedToItems?.();
                         } catch (err) {
-                            threw = String(err instanceof Error ? err.message : String(err));
+                            threw = err instanceof Error ? err.message : String(err);
                         }
                         const items = backpackItem.items;
                         const aPresent = items?.has?.('cccccccccccccccc');
@@ -514,7 +605,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-convertNestedToItems-builds-collection'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-convertNestedToItems-builds-collection'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['item-container-convertNestedToItems-builds-collection'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -528,9 +619,10 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 try {
                     if (backpackItem != null) {
                         const newName = 'documents-extra-backpack-renamed';
-                        await withTimeout(backpackItem.update?.({ name: newName }), 5_000, 'backpack.update');
+                        await withTimeout(backpackItem.update?.({ name: newName }) ?? Promise.resolve(), 5_000, 'backpack.update');
                         const live = getHost();
-                        const fresh = live?.items?.get?.(backpackItem.id);
+                        const backpackId = backpackItem.id;
+                        const fresh = backpackId != null ? live?.items.get(backpackId) : undefined;
                         if (fresh?.name === newName) {
                             fired['item-container-update-injects-id'] = true;
                             notes['item-container-update-injects-id'] = `update() persisted name=${newName} via super.update branch`;
@@ -541,7 +633,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-update-injects-id'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-update-injects-id'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['item-container-update-injects-id'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -553,7 +645,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * an instance of our subclass.
                  * ============================================================ */
                 try {
-                    const cls = FoundryConfig?.ChatMessage?.documentClass;
+                    const cls = FoundryConfig?.ChatMessage?.documentClass as ChatDocClass | undefined;
                     const name = String(cls?.name ?? '');
                     if (typeof cls === 'function' && name === 'ChatMessageWH40K') {
                         fired['chat-message-class-registered'] = true;
@@ -562,7 +654,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['chat-message-class-registered'] = `unexpected: typeof=${typeof cls} name=${name}`;
                     }
                 } catch (err) {
-                    notes['chat-message-class-registered'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['chat-message-class-registered'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -575,10 +667,10 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * assert `isItemCard === false` / `itemUuid === null`.
                  * ============================================================ */
                 try {
-                    if (typeof ChatMessageCls?.create !== 'function') {
+                    if (typeof ChatMessageCls.create !== 'function') {
                         notes['chat-message-getters'] = 'ChatMessage.create unavailable';
                     } else {
-                        const withFlags = (await withTimeout(
+                        const withFlags = await withTimeout(
                             ChatMessageCls.create({
                                 content: 'documents-extra-with-flags',
                                 flags: {
@@ -590,36 +682,34 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             }),
                             5_000,
                             'ChatMessage.create (flags)',
-                        )) as any;
-                        if (withFlags?.id != null) {
+                        );
+                        const withFlagsId = withFlags.id;
+                        if (withFlagsId != null) {
                             cleanups.push(async () => {
                                 try {
-                                    await foundryGame?.messages?.get?.(withFlags.id)?.delete?.();
+                                    await foundryGame?.messages?.get?.(withFlagsId)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
                             });
                         }
-                        const plain = (await withTimeout(
-                            ChatMessageCls.create({ content: 'documents-extra-plain' }),
-                            5_000,
-                            'ChatMessage.create (plain)',
-                        )) as any;
-                        if (plain?.id != null) {
+                        const plain = await withTimeout(ChatMessageCls.create({ content: 'documents-extra-plain' }), 5_000, 'ChatMessage.create (plain)');
+                        const plainId = plain.id;
+                        if (plainId != null) {
                             cleanups.push(async () => {
                                 try {
-                                    await foundryGame?.messages?.get?.(plain.id)?.delete?.();
+                                    await foundryGame?.messages?.get?.(plainId)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
                             });
                         }
 
-                        const isCard = withFlags?.isItemCard;
-                        const uuid = withFlags?.itemUuid;
-                        const isTargeted = withFlags?.isTargetedRoll;
-                        const plainIsCard = plain?.isItemCard;
-                        const plainUuid = plain?.itemUuid;
+                        const isCard = withFlags.isItemCard;
+                        const uuid = withFlags.itemUuid;
+                        const isTargeted = withFlags.isTargetedRoll;
+                        const plainIsCard = plain.isItemCard;
+                        const plainUuid = plain.itemUuid;
                         const ok =
                             isCard === true &&
                             typeof uuid === 'string' &&
@@ -637,7 +727,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['chat-message-getters'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['chat-message-getters'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -648,14 +738,14 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * arithmetic over a real Foundry Roll.
                  * ============================================================ */
                 try {
-                    if (typeof RollCls !== 'function' || typeof ChatMessageCls?.create !== 'function') {
+                    if (typeof RollCls !== 'function' || typeof ChatMessageCls.create !== 'function') {
                         notes['chat-message-calculateDegrees-real-roll'] = 'Roll or ChatMessage.create unavailable';
                     } else {
                         // Construct a Roll for a deterministic constant 35;
                         // evaluating yields total=35 reliably without RNG.
                         const roll = new RollCls('35');
-                        await withTimeout(roll.evaluate?.() ?? Promise.resolve(roll), 5_000, 'roll.evaluate');
-                        const msg = (await withTimeout(
+                        await withTimeout(roll.evaluate?.() ?? Promise.resolve(), 5_000, 'roll.evaluate');
+                        const msg = await withTimeout(
                             ChatMessageCls.create({
                                 content: 'documents-extra-degrees',
                                 rolls: [roll],
@@ -663,17 +753,18 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             }),
                             5_000,
                             'ChatMessage.create (degrees)',
-                        )) as any;
-                        if (msg?.id != null) {
+                        );
+                        const msgId = msg.id;
+                        if (msgId != null) {
                             cleanups.push(async () => {
                                 try {
-                                    await foundryGame?.messages?.get?.(msg.id)?.delete?.();
+                                    await foundryGame?.messages?.get?.(msgId)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
                             });
                         }
-                        const dos = msg?.calculateDegrees?.();
+                        const dos = msg.calculateDegrees?.();
                         if (dos?.success === true && dos.degrees === 1) {
                             fired['chat-message-calculateDegrees-real-roll'] = true;
                             notes['chat-message-calculateDegrees-real-roll'] = `total=35 target=50 -> success=true degrees=1`;
@@ -682,7 +773,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['chat-message-calculateDegrees-real-roll'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['chat-message-calculateDegrees-real-roll'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -697,19 +788,18 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * taken.
                  * ============================================================ */
                 try {
-                    const cls = FoundryConfig?.ChatMessage?.documentClass;
-                    if (typeof cls?.onChatCardAction !== 'function') {
+                    const cls = FoundryConfig?.ChatMessage?.documentClass as ChatDocClass | undefined;
+                    const createMsg = ChatMessageCls.create;
+                    if (typeof cls?.onChatCardAction !== 'function' || typeof createMsg !== 'function') {
                         notes['chat-message-onChatCardAction-routes'] = 'onChatCardAction static is not a function';
                     } else {
-                        const routerMsg = (await withTimeout(
-                            ChatMessageCls.create({ content: 'documents-extra-router' }),
-                            5_000,
-                            'ChatMessage.create (router)',
-                        )) as any;
-                        if (routerMsg?.id != null) {
+                        const onChatCardAction = cls.onChatCardAction;
+                        const routerMsg = await withTimeout(createMsg({ content: 'documents-extra-router' }), 5_000, 'ChatMessage.create (router)');
+                        const routerMsgId = routerMsg.id;
+                        if (routerMsgId != null) {
                             cleanups.push(async () => {
                                 try {
-                                    await foundryGame?.messages?.get?.(routerMsg.id)?.delete?.();
+                                    await foundryGame?.messages?.get?.(routerMsgId)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -719,7 +809,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         const makeEvent = (action: string | null): Event => {
                             const card = document.createElement('div');
                             card.className = 'chat-message';
-                            card.dataset['messageId'] = String(routerMsg?.id ?? '');
+                            card.dataset['messageId'] = String(routerMsgId ?? '');
                             const btn = document.createElement('button');
                             if (action !== null) btn.dataset['action'] = action;
                             card.appendChild(btn);
@@ -743,10 +833,10 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
 
                         let routerThrew: string | null = null;
                         try {
-                            await withTimeout(cls.onChatCardAction(makeEvent('__unknown__'), document.body), 5_000, 'onChatCardAction (unknown)');
-                            await withTimeout(cls.onChatCardAction(makeEvent(null), document.body), 5_000, 'onChatCardAction (undefined)');
+                            await withTimeout(onChatCardAction(makeEvent('__unknown__'), document.body), 5_000, 'onChatCardAction (unknown)');
+                            await withTimeout(onChatCardAction(makeEvent(null), document.body), 5_000, 'onChatCardAction (undefined)');
                         } catch (err) {
-                            routerThrew = String(err instanceof Error ? err.message : String(err));
+                            routerThrew = err instanceof Error ? err.message : String(err);
                         }
                         if (routerThrew === null) {
                             fired['chat-message-onChatCardAction-routes'] = true;
@@ -756,7 +846,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['chat-message-onChatCardAction-routes'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['chat-message-onChatCardAction-routes'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -768,10 +858,11 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * stamped while the pre-existing one was preserved.
                  * ============================================================ */
                 try {
-                    const cls = FoundryConfig?.ChatMessage?.documentClass;
+                    const cls = FoundryConfig?.ChatMessage?.documentClass as ChatDocClass | undefined;
                     if (typeof cls?.enrichActionButtons !== 'function') {
                         notes['chat-message-enrichActionButtons-stamps-messageId'] = 'enrichActionButtons static is not a function';
                     } else {
+                        const enrichActionButtons = cls.enrichActionButtons;
                         const html = document.createElement('div');
                         const blankBtn = document.createElement('button');
                         blankBtn.dataset['action'] = 'do-thing';
@@ -781,7 +872,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         html.appendChild(blankBtn);
                         html.appendChild(stampedBtn);
                         const fakeMsg = { id: 'documents-extra-enrich-id' };
-                        cls.enrichActionButtons(html, fakeMsg);
+                        enrichActionButtons(html, fakeMsg);
                         const blankAfter = blankBtn.dataset['messageId'];
                         const stampedAfter = stampedBtn.dataset['messageId'];
                         if (blankAfter === 'documents-extra-enrich-id' && stampedAfter === 'preexisting-id') {
@@ -792,7 +883,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['chat-message-enrichActionButtons-stamps-messageId'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['chat-message-enrichActionButtons-stamps-messageId'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -809,10 +900,11 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * also dynamic-import that and check identity.
                  * ============================================================ */
                 try {
+                    const dynImport = new Function('u', 'return import(u)') as (u: string) => Promise<Record<string, object>>;
                     const url = '/systems/wh40k-rpg/module/documents/_module.js';
-                    const mod = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(url);
+                    const mod = await dynImport(url);
                     const proxyUrl = '/systems/wh40k-rpg/module/documents/actor-proxy.js';
-                    const proxyMod = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(proxyUrl);
+                    const proxyMod = await dynImport(proxyUrl);
                     const expectedExports = [
                         'WH40KAcolyte',
                         'WH40KActiveEffect',
@@ -827,12 +919,12 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         'TokenDocumentWH40K',
                         'WH40KVehicle',
                     ];
-                    const missing = expectedExports.filter((k) => typeof (mod as any)[k] !== 'function');
+                    const missing = expectedExports.filter((k) => typeof mod[k] !== 'function');
 
-                    const chatMatch = FoundryConfig?.ChatMessage?.documentClass === (mod as any)?.ChatMessageWH40K;
-                    const tokenMatch = FoundryConfig?.Token?.documentClass === (mod as any)?.TokenDocumentWH40K;
-                    const aeMatch = FoundryConfig?.ActiveEffect?.documentClass === (mod as any)?.WH40KActiveEffect;
-                    const proxyMatch = FoundryConfig?.Actor?.documentClass === (proxyMod as any)?.WH40KActorProxy;
+                    const chatMatch = FoundryConfig?.ChatMessage?.documentClass === mod['ChatMessageWH40K'];
+                    const tokenMatch = FoundryConfig?.Token?.documentClass === mod['TokenDocumentWH40K'];
+                    const aeMatch = FoundryConfig?.ActiveEffect?.documentClass === mod['WH40KActiveEffect'];
+                    const proxyMatch = FoundryConfig?.Actor?.documentClass === proxyMod['WH40KActorProxy'];
 
                     if (missing.length === 0 && chatMatch && tokenMatch && aeMatch && proxyMatch) {
                         fired['module-exports-match-config-documentClass'] = true;
@@ -845,7 +937,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         )} ae=${String(aeMatch)} actor=${String(proxyMatch)}`;
                     }
                 } catch (err) {
-                    notes['module-exports-match-config-documentClass'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
+                    notes['module-exports-match-config-documentClass'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
             } finally {
                 // Best-effort cleanup of every actor / item / message /
@@ -867,7 +959,6 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
             void HooksCls;
 
             return { flowsFired: fired, flowNotes: notes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, DOCUMENTS_EXTRA_FLOWS);
 
         return {

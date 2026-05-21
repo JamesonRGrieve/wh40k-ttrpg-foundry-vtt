@@ -66,9 +66,10 @@ interface ActorRef {
  * Create a dh2-character actor with a known baseline. Returns the new id
  * or an error payload for the caller to surface.
  */
-async function createCharacterActor(page: Page, name: string, system: Record<string, unknown> = {}): Promise<ActorRef | { error: string }> {
+async function createCharacterActor(page: Page, name: string, system: Record<string, string | number | boolean> = {}): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(
         async ({ name, system: actorSystem }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to the Actor surface
             const g = globalThis as unknown as {
                 Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
             };
@@ -95,8 +96,9 @@ async function createCharacterActor(page: Page, name: string, system: Record<str
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page
         .evaluate(async (id: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to the game.actors surface
             const g = globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
+                game?: { actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } };
             };
             const actor = g.game?.actors?.get?.(id);
             await actor?.delete?.();
@@ -117,11 +119,60 @@ async function deleteActor(page: Page, actorId: string): Promise<void> {
  * (which GrantsManager does not read). The stub bypasses the schema gap so
  * the manager's per-grant apply pipeline still runs end-to-end.
  */
+/** Minimal shape of an actor document as the probes consume it. */
+interface ProbeActor {
+    id?: string;
+    name?: string;
+    system?: { skills?: Record<string, { trained?: boolean } | undefined> };
+    items?: { contents?: ProbeItem[]; get?: (id: string) => ProbeItem | undefined };
+    update: (data: Record<string, string | number | boolean>) => Promise<void>;
+    delete: () => Promise<void>;
+    createEmbeddedDocuments: (type: string, data: object[]) => Promise<ProbeItem[]>;
+    deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<void>;
+}
+
+interface ProbeItem {
+    id?: string;
+    uuid?: string;
+    name?: string;
+    system?: { grants?: { specialAbilities?: Array<{ name?: string }> }; hasGrants?: boolean };
+    delete?: () => Promise<void>;
+}
+
+interface GrantsResult {
+    success?: boolean;
+    errors?: string[];
+}
+
+interface GrantsManagerLike {
+    applyItemGrants: (item: object, actor: object, opts?: object) => Promise<GrantsResult>;
+    reverseAppliedGrants: (actor: object, sourceKey: string) => Promise<GrantsResult>;
+    hasAppliedGrants: (actor: object, sourceKey: string) => boolean;
+    clearAppliedState?: (actor: object, sourceKey: string) => Promise<void>;
+}
+
+interface TransactionManagerLike {
+    commitTransaction: (request: object) => Promise<void>;
+    setMode: (actor: object, mode: string) => Promise<void>;
+    listSourcesForBuyer: (buyer: object) => Array<{ id?: string }>;
+    listItemsForSource: (source: object) => object[];
+}
+
+interface ActorCtor {
+    create?: (data: object) => Promise<ProbeActor | null>;
+}
+
+/** Foundry runtime globals consumed by the probes in this spec. */
+interface ProbeGlobal {
+    game?: { actors?: { get?: (id: string) => ProbeActor | undefined } };
+    Actor?: ActorCtor;
+}
+
 async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult> {
     return page.evaluate(
         async ({ actorId: aid, moduleUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
+            const g = globalThis as unknown as ProbeGlobal;
             const actor = g.game?.actors?.get?.(aid);
             if (actor == null) return { ok: false, error: 'actor missing' };
 
@@ -130,7 +181,7 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
             // Plain stub — GrantsManager reads `item.name`, `item.type`,
             // `item.uuid`/`_id`/`id`, and `item.system.grantsV2`. No live
             // Document required.
-            const talent: any = {
+            const talent = {
                 id: 'probe-skill-grant-stub',
                 _id: 'probe-skill-grant-stub',
                 uuid: `Actor.${actorId}.Item.probe-skill-grant-stub`,
@@ -149,14 +200,14 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
             };
 
             try {
-                const mod = await import(moduleUrl);
+                const mod = (await import(moduleUrl)) as { GrantsManager?: GrantsManagerLike; default?: GrantsManagerLike };
                 const Mgr = mod.GrantsManager ?? mod.default;
                 if (typeof Mgr?.applyItemGrants !== 'function') {
                     return { ok: false, error: 'GrantsManager.applyItemGrants unavailable' };
                 }
                 const result = await Mgr.applyItemGrants(talent, actor, { force: true });
-                if (result?.success !== true && (result?.errors ?? []).length > 0) {
-                    return { ok: false, error: `apply errors: ${(result.errors as string[]).join('; ')}` };
+                if (result.success !== true && (result.errors ?? []).length > 0) {
+                    return { ok: false, error: `apply errors: ${(result.errors ?? []).join('; ')}` };
                 }
                 // Source bug to flag: SkillGrant writes
                 // `system.skills.<key>.trained = true` directly, but
@@ -167,9 +218,9 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
                 // (or seeding the originPath rank) instead. So we can't observe
                 // the trained flag post-apply; the grant pipeline ran without
                 // errors which IS the manager-flow coverage signal.
-                const refreshed = g.game?.actors?.get?.(actorId);
+                const refreshed = g.game?.actors?.get?.(actorId) ?? actor;
                 const flagSet = Mgr.hasAppliedGrants(refreshed, talent.uuid);
-                if (flagSet !== true) return { ok: false, error: `applied-grants flag not stored after apply (before=${before})` };
+                if (!flagSet) return { ok: false, error: `applied-grants flag not stored after apply (before=${before})` };
                 return { ok: true, error: null };
             } finally {
                 // Reset dodge + clear applied-grants flag for downstream flows.
@@ -179,14 +230,13 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
                     /* best-effort */
                 }
                 try {
-                    const mod = await import(moduleUrl);
+                    const mod = (await import(moduleUrl)) as { GrantsManager?: GrantsManagerLike; default?: GrantsManagerLike };
                     const Mgr = mod.GrantsManager ?? mod.default;
                     await Mgr?.clearAppliedState?.(actor, talent.uuid);
                 } catch {
                     /* best-effort */
                 }
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { actorId, moduleUrl: GRANTS_MODULE_URL },
     );
@@ -206,13 +256,13 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
 async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
     return page.evaluate(
         async ({ moduleUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
+            const g = globalThis as unknown as ProbeGlobal;
             const ActorCls = g.Actor;
             if (ActorCls?.create == null) return { ok: false, error: 'Actor.create unavailable' };
 
-            let sourceActor: any;
-            let parentActor: any;
+            let sourceActor: ProbeActor | null;
+            let parentActor: ProbeActor | null;
             try {
                 sourceActor = await ActorCls.create({
                     name: 'probe-grants-source',
@@ -228,27 +278,28 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
                 return { ok: false, error: `actor create failed: ${err instanceof Error ? err.message : String(err)}` };
             }
             if (sourceActor == null || parentActor == null) return { ok: false, error: 'actor create returned null' };
-            const parentActorId = parentActor.id;
+            const parentActorId = parentActor.id ?? '';
+            const sourceActorId = sourceActor.id ?? '';
             // Refetch the parent from the world collection so the live
             // bound API (items.contents, etc.) is exercised.
             const liveParent = g.game?.actors?.get?.(parentActorId) ?? parentActor;
 
             try {
                 // Source talent that the item-grant will copy onto the parent.
-                const liveSource = g.game?.actors?.get?.(sourceActor.id) ?? sourceActor;
+                const liveSource = g.game?.actors?.get?.(sourceActorId) ?? sourceActor;
                 const sourceCreated = await liveSource.createEmbeddedDocuments('Item', [
                     {
                         name: 'probe-granted-talent',
                         type: 'talent',
                     },
                 ]);
-                const sourceTalent = sourceCreated[0];
+                const sourceTalent = sourceCreated.at(0);
                 if (sourceTalent?.uuid == null) return { ok: false, error: 'source talent has no uuid' };
 
                 // Parent-talent stub carrying the item-grant config — see the
                 // skill-grant probe for why a stub is used instead of an
                 // embedded document.
-                const parentTalent: any = {
+                const parentTalent = {
                     id: 'probe-parent-talent-stub',
                     _id: 'probe-parent-talent-stub',
                     uuid: `Actor.${parentActorId}.Item.probe-parent-talent-stub`,
@@ -265,20 +316,21 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
                     },
                 };
 
-                const mod = await import(moduleUrl);
+                const mod = (await import(moduleUrl)) as { GrantsManager?: GrantsManagerLike; default?: GrantsManagerLike };
                 const Mgr = mod.GrantsManager ?? mod.default;
+                if (typeof Mgr?.applyItemGrants !== 'function') return { ok: false, error: 'GrantsManager.applyItemGrants unavailable' };
                 const result = await Mgr.applyItemGrants(parentTalent, liveParent, { force: true });
 
                 const refreshedParent = g.game?.actors?.get?.(parentActorId) ?? liveParent;
-                const grantedItems = refreshedParent.items?.contents?.filter((i: any) => i.name === 'probe-granted-talent') ?? [];
+                const grantedItems = refreshedParent.items?.contents?.filter((i) => i.name === 'probe-granted-talent') ?? [];
                 if (grantedItems.length === 0) {
-                    const errs = (result?.errors ?? []).join('; ');
+                    const errs = (result.errors ?? []).join('; ');
                     return { ok: false, error: `granted item not on actor (errors: ${errs.length > 0 ? errs : '(none)'})` };
                 }
                 return { ok: true, error: null };
             } finally {
                 try {
-                    await (g.game?.actors?.get?.(sourceActor.id) ?? sourceActor).delete();
+                    await (g.game?.actors?.get?.(sourceActorId) ?? sourceActor).delete();
                 } catch {
                     /* best-effort */
                 }
@@ -288,7 +340,6 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
                     /* best-effort */
                 }
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { moduleUrl: GRANTS_MODULE_URL },
     );
@@ -302,8 +353,8 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
 async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResult> {
     return page.evaluate(
         async ({ actorId: aid, moduleUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
+            const g = globalThis as unknown as ProbeGlobal;
             const actor = g.game?.actors?.get?.(aid);
             if (actor == null) return { ok: false, error: 'actor missing' };
 
@@ -311,7 +362,7 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
             // schema lacks `grantsV2` so a real Item.create would lose the
             // payload). The stub satisfies GrantsManager.applyItemGrants'
             // `name`, `uuid`, `_id`/`id`, and `system.grantsV2` reads.
-            const talent: any = {
+            const talent = {
                 id: 'probe-revoke-stub',
                 _id: 'probe-revoke-stub',
                 uuid: `Actor.${aid}.Item.probe-revoke-stub`,
@@ -329,22 +380,23 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
             };
 
             try {
-                const mod = await import(moduleUrl);
+                const mod = (await import(moduleUrl)) as { GrantsManager?: GrantsManagerLike; default?: GrantsManagerLike };
                 const Mgr = mod.GrantsManager ?? mod.default;
+                if (typeof Mgr?.applyItemGrants !== 'function') return { ok: false, error: 'GrantsManager.applyItemGrants unavailable' };
                 const sourceKey = talent.uuid;
 
                 await Mgr.applyItemGrants(talent, actor, { force: true });
                 const hadBefore = Mgr.hasAppliedGrants(actor, sourceKey);
-                if (hadBefore !== true) return { ok: false, error: 'hasAppliedGrants false after apply' };
+                if (!hadBefore) return { ok: false, error: 'hasAppliedGrants false after apply' };
 
                 const reverseResult = await Mgr.reverseAppliedGrants(actor, sourceKey);
-                if (reverseResult?.success !== true) {
-                    return { ok: false, error: `reverse failed: ${(reverseResult?.errors ?? []).join('; ')}` };
+                if (reverseResult.success !== true) {
+                    return { ok: false, error: `reverse failed: ${(reverseResult.errors ?? []).join('; ')}` };
                 }
 
-                const refreshed = g.game?.actors?.get?.(actorId);
+                const refreshed = g.game?.actors?.get?.(actorId) ?? actor;
                 const hasFlagAfter = Mgr.hasAppliedGrants(refreshed, sourceKey);
-                if (hasFlagAfter === true) return { ok: false, error: 'applied-grants flag still set after reverse' };
+                if (hasFlagAfter) return { ok: false, error: 'applied-grants flag still set after reverse' };
                 // See skill-grant probe for why `awareness.trained` is not
                 // checked — the boolean is derived and overwritten on every
                 // prepareDerivedData. The reverse pipeline executed end-to-end
@@ -358,7 +410,6 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
                     /* best-effort */
                 }
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { actorId, moduleUrl: GRANTS_MODULE_URL },
     );
@@ -372,12 +423,12 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
  */
 async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowResult> {
     return page.evaluate(async (aid: string): Promise<FlowResult> => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-        const g = globalThis as any;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
+        const g = globalThis as unknown as ProbeGlobal;
         const actor = g.game?.actors?.get?.(aid);
         if (actor == null) return { ok: false, error: 'actor missing' };
 
-        let talent: any;
+        let talent: ProbeItem | undefined;
         try {
             const created = await actor.createEmbeddedDocuments('Item', [
                 {
@@ -395,17 +446,18 @@ async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowRes
                     },
                 },
             ]);
-            talent = created[0];
+            talent = created.at(0);
         } catch (err) {
             return { ok: false, error: `talent create failed: ${err instanceof Error ? err.message : String(err)}` };
         }
         if (talent == null) return { ok: false, error: 'talent create returned null' };
 
+        const talentId = talent.id ?? '';
         try {
-            const liveTalent = actor.items.get(talent.id);
-            const abilities = (liveTalent?.system?.grants?.specialAbilities ?? []) as Array<{ name?: string }>;
-            if (!Array.isArray(abilities) || abilities.length !== 1) {
-                return { ok: false, error: `expected 1 specialAbility, got ${Array.isArray(abilities) ? abilities.length : 'non-array'}` };
+            const liveTalent = actor.items?.get?.(talentId);
+            const abilities = liveTalent?.system?.grants?.specialAbilities ?? [];
+            if (abilities.length !== 1) {
+                return { ok: false, error: `expected 1 specialAbility, got ${abilities.length}` };
             }
             if (abilities[0]?.name !== 'Probe Ability') {
                 return { ok: false, error: `unexpected ability name: ${abilities[0]?.name ?? '(none)'}` };
@@ -418,12 +470,11 @@ async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowRes
             return { ok: true, error: null };
         } finally {
             try {
-                await actor.deleteEmbeddedDocuments('Item', [talent.id]);
+                await actor.deleteEmbeddedDocuments('Item', [talentId]);
             } catch {
                 /* best-effort */
             }
         }
-        /* eslint-enable @typescript-eslint/no-explicit-any */
     }, actorId);
 }
 
@@ -436,13 +487,13 @@ async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowRes
 async function probeAcquire(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
     return page.evaluate(
         async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
+            const g = globalThis as unknown as ProbeGlobal;
             const buyer = g.game?.actors?.get?.(bid);
             const source = g.game?.actors?.get?.(sid);
             if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
 
-            const mod = await import(moduleUrl);
+            const mod = (await import(moduleUrl)) as { TransactionManager?: TransactionManagerLike };
             const TM = mod.TransactionManager;
             if (typeof TM?.commitTransaction !== 'function') {
                 return { ok: false, error: 'TransactionManager.commitTransaction unavailable' };
@@ -465,7 +516,7 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
                     system: { quantity: 3 },
                 },
             ]);
-            const item = itemCreated[0];
+            const item = itemCreated.at(0);
             if (item == null) return { ok: false, error: 'source item create failed' };
 
             // Give buyer enough throneGelt for the path to consider
@@ -485,15 +536,14 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
                 return { ok: false, error: `commitTransaction threw: ${err instanceof Error ? err.message : String(err)}` };
             }
 
-            const refreshedBuyer = g.game.actors.get(buyerId);
-            const acquired = refreshedBuyer?.items?.contents?.find((i: any) => i.name === 'probe-acquire-gear');
+            const refreshedBuyer = g.game?.actors?.get?.(buyerId);
+            const acquired = refreshedBuyer?.items?.contents?.find((i) => i.name === 'probe-acquire-gear');
 
             const ok = acquired !== undefined;
             return {
                 ok,
                 error: ok ? null : `item did not transfer to buyer (commitTransaction completed but #transferItem produced no result)`,
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { buyerId, sourceId, moduleUrl: TRANSACTION_MODULE_URL },
     );
@@ -512,14 +562,15 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
 async function probeSell(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
     return page.evaluate(
         async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
+            const g = globalThis as unknown as ProbeGlobal;
             const buyer = g.game?.actors?.get?.(bid);
             const source = g.game?.actors?.get?.(sid);
             if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
 
-            const mod = await import(moduleUrl);
+            const mod = (await import(moduleUrl)) as { TransactionManager?: TransactionManagerLike };
             const TM = mod.TransactionManager;
+            if (typeof TM?.commitTransaction !== 'function') return { ok: false, error: 'TransactionManager.commitTransaction unavailable' };
 
             // Flip roles: buyer becomes the source (configure as barter),
             // original source becomes the buyer. Source bug — same as the
@@ -533,7 +584,7 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
                     system: { quantity: 1 },
                 },
             ]);
-            const item = stocked[0];
+            const item = stocked.at(0);
             if (item == null) return { ok: false, error: 'item create on buyer-as-source failed' };
 
             await source.update({ 'system.throneGelt': 50 });
@@ -550,10 +601,10 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
                 return { ok: false, error: `commitTransaction threw: ${err instanceof Error ? err.message : String(err)}` };
             }
 
-            const refreshedBuyer = g.game.actors.get(buyerId);
-            const refreshedSource = g.game.actors.get(sourceId);
-            const itemGone = refreshedBuyer?.items?.contents?.some((i: any) => i.name === 'probe-sell-gear') !== true;
-            const itemArrived = refreshedSource?.items?.contents?.some((i: any) => i.name === 'probe-sell-gear');
+            const refreshedBuyer = g.game?.actors?.get?.(buyerId);
+            const refreshedSource = g.game?.actors?.get?.(sourceId);
+            const itemGone = refreshedBuyer?.items?.contents?.some((i) => i.name === 'probe-sell-gear') !== true;
+            const itemArrived = refreshedSource?.items?.contents?.some((i) => i.name === 'probe-sell-gear') === true;
 
             // Reset the original buyer's mode so other flows aren't affected.
             try {
@@ -562,12 +613,11 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
                 /* best-effort */
             }
 
-            const ok = itemGone && itemArrived === true;
+            const ok = itemGone && itemArrived;
             return {
                 ok,
-                error: ok ? null : `sell flow: itemGone=${itemGone}, itemArrived=${itemArrived === true}`,
+                error: ok ? null : `sell flow: itemGone=${itemGone}, itemArrived=${itemArrived}`,
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { buyerId, sourceId, moduleUrl: TRANSACTION_MODULE_URL },
     );
@@ -580,14 +630,15 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
 async function probeListSources(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
     return page.evaluate(
         async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
+            const g = globalThis as unknown as ProbeGlobal;
             const buyer = g.game?.actors?.get?.(bid);
             const source = g.game?.actors?.get?.(sid);
             if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
 
-            const mod = await import(moduleUrl);
+            const mod = (await import(moduleUrl)) as { TransactionManager?: TransactionManagerLike };
             const TM = mod.TransactionManager;
+            if (typeof TM?.setMode !== 'function') return { ok: false, error: 'TransactionManager unavailable' };
 
             // Ensure source is in barter mode (it might have been reset by
             // the sell probe).
@@ -596,9 +647,9 @@ async function probeListSources(page: Page, buyerId: string, sourceId: string): 
             const sources = TM.listSourcesForBuyer(buyer);
             if (!Array.isArray(sources)) return { ok: false, error: 'listSourcesForBuyer did not return an array' };
 
-            const includesConfiguredSource = sources.some((s: any) => s.id === sourceId);
+            const includesConfiguredSource = sources.some((s) => s.id === sourceId);
             if (!includesConfiguredSource) {
-                const ids = sources.map((s: any) => s.id).join(', ');
+                const ids = sources.map((s) => s.id).join(', ');
                 return { ok: false, error: `configured source missing from list (got ids: ${ids || '(empty)'})` };
             }
 
@@ -607,7 +658,6 @@ async function probeListSources(page: Page, buyerId: string, sourceId: string): 
             if (!Array.isArray(items)) return { ok: false, error: 'listItemsForSource did not return an array' };
 
             return { ok: true, error: null };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { buyerId, sourceId, moduleUrl: TRANSACTION_MODULE_URL },
     );

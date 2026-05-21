@@ -92,7 +92,122 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (flows: readonly string[]): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            // Runtime-only shapes for the dynamically-imported Foundry-served
+            // modules. The probe drives a fixed, known surface of each module,
+            // so we describe exactly what we touch rather than reaching for
+            // `any`. Method bodies are intentionally loose (the probe asserts
+            // on the runtime values, not the types).
+            interface RollModifiers {
+                difficulty: number;
+                modifier: number;
+                aim: number;
+                [key: string]: number;
+            }
+            interface RollDataInstance {
+                baseTarget: number;
+                modifierTotal: number;
+                rawModifierTotal: number;
+                modifierCapFired: boolean;
+                success: boolean;
+                modifiers: RollModifiers;
+                attackSpecials: Array<{ name: string }>;
+                readonly modifiedTarget: number;
+                readonly activeModifiers: Record<string, number | undefined>;
+                hasAttackSpecial: (name: string) => boolean;
+                getAttackSpecial: (name: string) => { name: string } | undefined;
+                modifiersToRollData: () => { formula: string; params: Record<string, number | undefined> };
+                calculateTotalModifiers: () => Promise<void>;
+            }
+            interface WeaponRollDataInstance extends RollDataInstance {
+                template: string;
+                weapons: object[];
+                fireRate: number;
+            }
+            interface PsychicRollDataInstance extends RollDataInstance {
+                template: string;
+                psychicPowers: object[];
+                pr: number;
+            }
+            interface RollDataModule {
+                RollData: new () => RollDataInstance;
+                WeaponRollData: new () => WeaponRollDataInstance;
+                PsychicRollData: new () => PsychicRollDataInstance;
+                clampModifierToCap: (value: number) => { clamped: number; raw: number; capFired: boolean };
+                ROLL_MODIFIER_CAP: number;
+            }
+            interface HelpersModule {
+                uuid: () => string;
+                getDegree: (a: number, b: number) => number;
+                getOpposedDegrees: (dos: number, opposedDos: number, a: number, b: number) => number;
+                recursiveUpdate: (target: object, source: object) => void;
+                handleDotNotationUpdate: (target: object, path: string, value: null) => void;
+            }
+            interface ActionDataInstance {
+                id: string;
+                rollData: object | undefined;
+                hasDamage: boolean;
+                effects: string[];
+                effectOutput: Array<{ name: string }>;
+                addEffect: (name: string, effect: string) => void;
+                createEffectData: () => void;
+            }
+            interface WeaponActionDataInstance extends ActionDataInstance {
+                damageData: object | undefined;
+                template: string;
+            }
+            interface PsychicActionDataInstance extends ActionDataInstance {
+                damageData: object | undefined;
+            }
+            interface SimpleSkillDataInstance extends ActionDataInstance {
+                template: string;
+            }
+            interface ActionDataModule {
+                ActionData: new () => ActionDataInstance;
+                WeaponActionData: new () => WeaponActionDataInstance;
+                PsychicActionData: new () => PsychicActionDataInstance;
+                SimpleSkillData: new () => SimpleSkillDataInstance;
+            }
+            interface ExtendedTestInstance {
+                threshold: number;
+                accumulatedDoS: number;
+                successes: number;
+                failures: number;
+                readonly remaining: number;
+                readonly isComplete: boolean;
+                readonly isFailed: boolean;
+                recordAttempt: (dos: number) => void;
+            }
+            interface ExtendedTestModule {
+                ExtendedTestData: new (opts: { threshold: number; failureBudget?: number }) => ExtendedTestInstance;
+            }
+            interface HitInstance {
+                damage: number;
+                modifiers: Record<string, number>;
+                penetration: number;
+                penetrationModifiers: Record<string, number>;
+                totalDamage: number;
+                totalPenetration: number;
+                damageRoll: { terms: Array<{ results: Array<{ result: number; active: boolean }> }> };
+                _totalDamage: () => void;
+                _totalPenetration: () => void;
+                replaceDamageDieWithDoS: (dos: number) => boolean;
+            }
+            interface WeaponDamageDataInstance {
+                hits: HitInstance[];
+                additionalHits: number;
+                reset: () => void;
+            }
+            interface DamageModule {
+                replaceDamageDieWithDoS: (dice: Array<{ result: number }>, dos: number) => { replacedIndex: number; previous: number; delta: number } | null;
+                Hit: new () => HitInstance;
+                WeaponDamageData: new () => WeaponDamageDataInstance;
+                scatterDirection: () => string;
+            }
+            interface BasicRollModule {
+                default?: { constructFormula: (opts: { base?: string; modifier?: string }) => string };
+                BasicRollWH40K?: { constructFormula: (opts: { base?: string; modifier?: string }) => string };
+            }
+
             const out: FlowResult[] = [];
             const record = (name: string, ok: boolean, detail: string | null = null): void => {
                 out.push({ name: name as FlowName, ok, detail });
@@ -104,11 +219,11 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
             const base = '/systems/wh40k-rpg/module';
 
             // ---------- roll-helpers ----------
-            let helpersMod: any;
+            let helpersMod: HelpersModule | null;
             try {
-                helpersMod = await dynImport(`${base}/rolls/roll-helpers.js`);
+                helpersMod = (await dynImport(`${base}/rolls/roll-helpers.js`)) as HelpersModule;
             } catch (err) {
-                for (const f of flows.filter((k) => k.startsWith('helpers-'))) record(f, false, `import: ${String(err instanceof Error ? err.message : err)}`);
+                for (const f of flows.filter((k) => k.startsWith('helpers-'))) record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 helpersMod = null;
             }
             if (helpersMod != null) {
@@ -122,7 +237,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const distinct = idA !== idB;
                     record('helpers-uuid-shape', v4 && distinct, `id=${String(id)} v4=${v4} distinct=${distinct}`);
                 } catch (err) {
-                    record('helpers-uuid-shape', false, String(err instanceof Error ? err.message : err));
+                    record('helpers-uuid-shape', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -131,7 +246,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const b = getDegree(10, 90);
                     record('helpers-get-degree', a === 3 && b === -8, `getDegree(55,23)=${a} getDegree(10,90)=${b}`);
                 } catch (err) {
-                    record('helpers-get-degree', false, String(err instanceof Error ? err.message : err));
+                    record('helpers-get-degree', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -143,41 +258,43 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const ok = winBoth === 2 && winLose === 5 && loseWin === -3 && loseLose === -1;
                     record('helpers-opposed-degrees-matrix', ok, `winBoth=${winBoth} winLose=${winLose} loseWin=${loseWin} loseLose=${loseLose}`);
                 } catch (err) {
-                    record('helpers-opposed-degrees-matrix', false, String(err instanceof Error ? err.message : err));
+                    record('helpers-opposed-degrees-matrix', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
                     // recursiveUpdate merges nested objects and coerces a numeric
                     // leaf when the existing value is a number.
-                    const target: Record<string, unknown> = { system: { wounds: { value: 10, max: 12 } } };
+                    const target: { system: { wounds: { value: number; max: number } } } = {
+                        system: { wounds: { value: 10, max: 12 } },
+                    };
                     recursiveUpdate(target, { system: { wounds: { value: '7' } } });
-                    const wounds = (target['system'] as { wounds: { value: unknown; max: unknown } }).wounds;
+                    const { wounds } = target.system;
                     const ok = wounds.value === 7 && wounds.max === 12;
                     record('helpers-recursive-update-coerce', ok, `value=${String(wounds.value)} (${typeof wounds.value}) max=${String(wounds.max)}`);
                 } catch (err) {
-                    record('helpers-recursive-update-coerce', false, String(err instanceof Error ? err.message : err));
+                    record('helpers-recursive-update-coerce', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
                     // handleDotNotationUpdate with a string dot-path; null value
                     // deletes the leaf.
-                    const target: Record<string, unknown> = { a: { b: { c: 1, d: 2 } } };
+                    const target: { a: { b: { c?: number; d: number } } } = { a: { b: { c: 1, d: 2 } } };
                     handleDotNotationUpdate(target, 'a.b.c', null);
-                    const inner = (target['a'] as { b: Record<string, unknown> }).b;
-                    const deleted = !('c' in inner) && inner['d'] === 2;
+                    const inner = target.a.b;
+                    const deleted = !('c' in inner) && inner.d === 2;
                     record('helpers-handle-dotnotation-delete', deleted, `keys=${Object.keys(inner).join(',')}`);
                 } catch (err) {
-                    record('helpers-handle-dotnotation-delete', false, String(err instanceof Error ? err.message : err));
+                    record('helpers-handle-dotnotation-delete', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- roll-data ----------
-            let rollDataMod: any;
+            let rollDataMod: RollDataModule | null;
             try {
-                rollDataMod = await dynImport(`${base}/rolls/roll-data.js`);
+                rollDataMod = (await dynImport(`${base}/rolls/roll-data.js`)) as RollDataModule;
             } catch (err) {
                 for (const f of flows.filter((k) => k.startsWith('roll-data-')))
-                    record(f, false, `import: ${String(err instanceof Error ? err.message : err)}`);
+                    record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 rollDataMod = null;
             }
             if (rollDataMod != null) {
@@ -192,21 +309,21 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const ok =
                         cap === 60 &&
                         within.clamped === 45 &&
-                        within.capFired === false &&
+                        !within.capFired &&
                         over.clamped === 60 &&
                         over.raw === 100 &&
-                        over.capFired === true &&
+                        over.capFired &&
                         under.clamped === -60 &&
-                        under.capFired === true &&
+                        under.capFired &&
                         nan.clamped === 0 &&
-                        nan.capFired === false;
+                        !nan.capFired;
                     record(
                         'roll-data-clamp-modifier-cap',
                         ok,
                         `cap=${cap} within=${within.clamped} over=${over.clamped} under=${under.clamped} nan=${nan.clamped}`,
                     );
                 } catch (err) {
-                    record('roll-data-clamp-modifier-cap', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-clamp-modifier-cap', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -215,12 +332,12 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         rd instanceof RollData &&
                         rd.baseTarget === 0 &&
                         rd.modifierTotal === 0 &&
-                        rd.success === false &&
+                        !rd.success &&
                         typeof rd.modifiers === 'object' &&
                         rd.modifiers.difficulty === 0;
                     record('roll-data-constructor-defaults', ok, `baseTarget=${rd.baseTarget} success=${String(rd.success)}`);
                 } catch (err) {
-                    record('roll-data-constructor-defaults', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-constructor-defaults', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -229,7 +346,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     rd.modifierTotal = 15;
                     record('roll-data-modified-target-getter', rd.modifiedTarget === 55, `modifiedTarget=${rd.modifiedTarget}`);
                 } catch (err) {
-                    record('roll-data-modified-target-getter', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-modified-target-getter', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -240,7 +357,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const ok = active.DIFFICULTY === -10 && active.AIM === 5 && active.MODIFIER === undefined;
                     record('roll-data-active-modifiers-getter', ok, `active=${JSON.stringify(active)}`);
                 } catch (err) {
-                    record('roll-data-active-modifiers-getter', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-active-modifiers-getter', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -249,10 +366,10 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const has = rd.hasAttackSpecial('Tearing');
                     const missing = rd.hasAttackSpecial('Razor Sharp');
                     const got = rd.getAttackSpecial('Proven');
-                    const ok = has === true && missing === false && got?.name === 'Proven';
+                    const ok = has && !missing && got?.name === 'Proven';
                     record('roll-data-attack-special-lookup', ok, `has=${String(has)} missing=${String(missing)} got=${JSON.stringify(got)}`);
                 } catch (err) {
-                    record('roll-data-attack-special-lookup', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-attack-special-lookup', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -262,14 +379,14 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     // -10 → "- @difficulty" with param 10; +20 → "+ @modifier" with
                     // param 20; 0-valued aim is omitted.
                     const ok =
-                        formula.includes('- @difficulty') === true &&
-                        formula.includes('+ @modifier') === true &&
+                        formula.includes('- @difficulty') &&
+                        formula.includes('+ @modifier') &&
                         params.difficulty === 10 &&
                         params.modifier === 20 &&
                         params.aim === undefined;
                     record('roll-data-modifiers-to-rolldata', ok, `formula="${formula}" params=${JSON.stringify(params)}`);
                 } catch (err) {
-                    record('roll-data-modifiers-to-rolldata', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-modifiers-to-rolldata', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -277,14 +394,14 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     rd.modifiers = { difficulty: -10, modifier: 30, aim: 0 };
                     await rd.calculateTotalModifiers();
                     // Net: -10 + 30 = 20, within the ±60 cap.
-                    const ok = rd.modifierTotal === 20 && rd.modifierCapFired === false && rd.rawModifierTotal === 20;
+                    const ok = rd.modifierTotal === 20 && !rd.modifierCapFired && rd.rawModifierTotal === 20;
                     record(
                         'roll-data-calculate-total-modifiers',
                         ok,
                         `total=${rd.modifierTotal} raw=${rd.rawModifierTotal} capFired=${String(rd.modifierCapFired)}`,
                     );
                 } catch (err) {
-                    record('roll-data-calculate-total-modifiers', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-calculate-total-modifiers', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -297,7 +414,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         wrd.fireRate === 1;
                     record('roll-data-weapon-subclass-template', ok, `template=${wrd.template} fireRate=${wrd.fireRate}`);
                 } catch (err) {
-                    record('roll-data-weapon-subclass-template', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-weapon-subclass-template', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -310,17 +427,17 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         prd.pr === 0;
                     record('roll-data-psychic-subclass-template', ok, `template=${prd.template} pr=${prd.pr}`);
                 } catch (err) {
-                    record('roll-data-psychic-subclass-template', false, String(err instanceof Error ? err.message : err));
+                    record('roll-data-psychic-subclass-template', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- action-data ----------
-            let actionDataMod: any;
+            let actionDataMod: ActionDataModule | null;
             try {
-                actionDataMod = await dynImport(`${base}/rolls/action-data.js`);
+                actionDataMod = (await dynImport(`${base}/rolls/action-data.js`)) as ActionDataModule;
             } catch (err) {
                 for (const f of flows.filter((k) => k.startsWith('action-data-')))
-                    record(f, false, `import: ${String(err instanceof Error ? err.message : err)}`);
+                    record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 actionDataMod = null;
             }
             if (actionDataMod != null) {
@@ -333,12 +450,12 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         typeof ad.id === 'string' &&
                         ad.id.length === 36 &&
                         ad.rollData !== undefined &&
-                        ad.hasDamage === false &&
+                        !ad.hasDamage &&
                         Array.isArray(ad.effects) &&
                         ad.effects.length === 0;
                     record('action-data-constructor', ok, `id.len=${ad.id.length} hasDamage=${String(ad.hasDamage)}`);
                 } catch (err) {
-                    record('action-data-constructor', false, String(err instanceof Error ? err.message : err));
+                    record('action-data-constructor', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -349,14 +466,10 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     ad.effects = ['jam', 'overheat', 'auto-failure'];
                     ad.createEffectData();
                     const names = ad.effectOutput.map((e: { name: string }) => e.name);
-                    const ok =
-                        names.includes('Manual') === true &&
-                        names.includes('Jam') === true &&
-                        names.includes('Overheats') === true &&
-                        names.includes('Auto Failure') === true;
+                    const ok = names.includes('Manual') && names.includes('Jam') && names.includes('Overheats') && names.includes('Auto Failure');
                     record('action-data-effect-switch', ok, `names=${names.join(',')}`);
                 } catch (err) {
-                    record('action-data-effect-switch', false, String(err instanceof Error ? err.message : err));
+                    record('action-data-effect-switch', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -364,13 +477,13 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const ok =
                         wad instanceof WeaponActionData &&
                         wad instanceof ActionData &&
-                        wad.hasDamage === true &&
+                        wad.hasDamage &&
                         wad.rollData !== undefined &&
                         wad.damageData !== undefined &&
                         wad.template === 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
                     record('action-data-weapon-subclass', ok, `hasDamage=${String(wad.hasDamage)} template=${wad.template}`);
                 } catch (err) {
-                    record('action-data-weapon-subclass', false, String(err instanceof Error ? err.message : err));
+                    record('action-data-weapon-subclass', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -378,24 +491,24 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const ssd = new SimpleSkillData();
                     const ok =
                         pad instanceof PsychicActionData &&
-                        pad.hasDamage === true &&
+                        pad.hasDamage &&
                         pad.damageData !== undefined &&
                         ssd instanceof SimpleSkillData &&
-                        ssd.hasDamage === false &&
+                        !ssd.hasDamage &&
                         ssd.template === 'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs';
                     record('action-data-psychic-subclass', ok, `psychic.hasDamage=${String(pad.hasDamage)} simple.template=${ssd.template}`);
                 } catch (err) {
-                    record('action-data-psychic-subclass', false, String(err instanceof Error ? err.message : err));
+                    record('action-data-psychic-subclass', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- extended-test-data ----------
-            let extMod: any;
+            let extMod: ExtendedTestModule | null;
             try {
-                extMod = await dynImport(`${base}/rolls/extended-test-data.js`);
+                extMod = (await dynImport(`${base}/rolls/extended-test-data.js`)) as ExtendedTestModule;
             } catch (err) {
                 for (const f of flows.filter((k) => k.startsWith('extended-test-')))
-                    record(f, false, `import: ${String(err instanceof Error ? err.message : err)}`);
+                    record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 extMod = null;
             }
             if (extMod != null) {
@@ -417,7 +530,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         t.successes === 3 &&
                         t.failures === 1 &&
                         remainingBefore === 3 &&
-                        t.isComplete === true &&
+                        t.isComplete &&
                         t.remaining === 0;
                     record(
                         'extended-test-threshold-and-ladder',
@@ -425,31 +538,31 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         `acc=${t.accumulatedDoS} succ=${t.successes} fail=${t.failures} complete=${String(t.isComplete)}`,
                     );
                 } catch (err) {
-                    record('extended-test-threshold-and-ladder', false, String(err instanceof Error ? err.message : err));
+                    record('extended-test-threshold-and-ladder', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
                     const budgeted = new ExtendedTestData({ threshold: 10, failureBudget: 2 });
                     budgeted.recordAttempt(0);
-                    const notFailedYet = budgeted.isFailed === false;
+                    const notFailedYet = !budgeted.isFailed;
                     budgeted.recordAttempt(0);
-                    const failedNow = budgeted.isFailed === true;
+                    const failedNow = budgeted.isFailed;
                     const openEnded = new ExtendedTestData({ threshold: 10 });
                     for (let i = 0; i < 50; i += 1) openEnded.recordAttempt(0);
-                    const openEndedNeverFails = openEnded.isFailed === false;
+                    const openEndedNeverFails = !openEnded.isFailed;
                     const ok = notFailedYet && failedNow && openEndedNeverFails;
                     record('extended-test-failure-budget', ok, `notFailedYet=${notFailedYet} failedNow=${failedNow} openEnded=${openEndedNeverFails}`);
                 } catch (err) {
-                    record('extended-test-failure-budget', false, String(err instanceof Error ? err.message : err));
+                    record('extended-test-failure-budget', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- damage-data ----------
-            let damageMod: any;
+            let damageMod: DamageModule | null;
             try {
-                damageMod = await dynImport(`${base}/rolls/damage-data.js`);
+                damageMod = (await dynImport(`${base}/rolls/damage-data.js`)) as DamageModule;
             } catch (err) {
-                for (const f of flows.filter((k) => k.startsWith('damage-'))) record(f, false, `import: ${String(err instanceof Error ? err.message : err)}`);
+                for (const f of flows.filter((k) => k.startsWith('damage-'))) record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 damageMod = null;
             }
             if (damageMod != null) {
@@ -472,7 +585,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         nullNeg === null;
                     record('damage-replace-die-with-dos', ok, `outcome=${JSON.stringify(outcome)}`);
                 } catch (err) {
-                    record('damage-replace-die-with-dos', false, String(err instanceof Error ? err.message : err));
+                    record('damage-replace-die-with-dos', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -499,7 +612,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         ],
                     };
                     const replaced = hit.replaceDamageDieWithDoS(6);
-                    const replaceOk = replaced === true && hit.damage === 18 && hit.totalDamage === 18;
+                    const replaceOk = replaced && hit.damage === 18 && hit.totalDamage === 18;
                     // DamageData.reset() clears hits + additionalHits.
                     const dd = new WeaponDamageData();
                     dd.hits.push(hit);
@@ -508,7 +621,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const resetOk = dd.hits.length === 0 && dd.additionalHits === 0;
                     record('damage-hit-totals-and-reset', totalsOk && replaceOk && resetOk, `totals=${totalsOk} replace=${replaceOk} reset=${resetOk}`);
                 } catch (err) {
-                    record('damage-hit-totals-and-reset', false, String(err instanceof Error ? err.message : err));
+                    record('damage-hit-totals-and-reset', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
@@ -516,16 +629,16 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                     const valid = ['north west', 'north', 'north east', 'west', 'east', 'south west', 'south', 'south east'];
                     record('damage-scatter-direction', valid.includes(String(dir)), `dir="${String(dir)}"`);
                 } catch (err) {
-                    record('damage-scatter-direction', false, String(err instanceof Error ? err.message : err));
+                    record('damage-scatter-direction', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- dice/basic-roll ----------
-            let basicRollMod: any;
+            let basicRollMod: BasicRollModule | null;
             try {
-                basicRollMod = await dynImport(`${base}/dice/basic-roll.js`);
+                basicRollMod = (await dynImport(`${base}/dice/basic-roll.js`)) as BasicRollModule;
             } catch (err) {
-                record('basic-roll-construct-formula', false, `import: ${String(err instanceof Error ? err.message : err)}`);
+                record('basic-roll-construct-formula', false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 basicRollMod = null;
             }
             if (basicRollMod != null) {
@@ -541,12 +654,11 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
                         record('basic-roll-construct-formula', ok, `default="${dflt}" plus="${plus}" minus="${minus}"`);
                     }
                 } catch (err) {
-                    record('basic-roll-construct-formula', false, String(err instanceof Error ? err.message : err));
+                    record('basic-roll-construct-formula', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, ROLLS_BUILDER_FLOWS);
         return { results, pageErrors };
     } finally {
