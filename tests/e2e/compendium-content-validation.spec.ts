@@ -100,7 +100,7 @@ interface PackProbeOutcome {
 }
 
 interface ProbeResult {
-    outcomes: Record<FlowName, PackProbeOutcome>;
+    outcomes: Partial<Record<FlowName, PackProbeOutcome>>;
     pageErrors: string[];
 }
 
@@ -120,14 +120,14 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
             // hang the spec (pack.getDocuments() is genuinely slow on large
             // packs — 30s is the safe-side bound).
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                let timer: ReturnType<typeof setTimeout> | undefined;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer !== null) clearTimeout(timer);
+                    clearTimeout(timer);
                 }
             };
 

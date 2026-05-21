@@ -87,7 +87,7 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
             } catch (err) {
-                return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}`, snaps: null };
+                return { error: `dialog render threw: ${String(err instanceof Error ? err.message : err)}`, snaps: null };
             }
 
             await new Promise<void>((resolve) => {

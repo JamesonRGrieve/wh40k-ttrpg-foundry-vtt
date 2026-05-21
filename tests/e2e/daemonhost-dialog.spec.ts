@@ -50,7 +50,7 @@ test.describe.serial('DaemonhostBindingDialog (Tier B)', () => {
                             setTimeout(r, 40);
                         });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = String((err as Error).message);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -63,7 +63,7 @@ test.describe.serial('DaemonhostBindingDialog (Tier B)', () => {
                         /* ignore */
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return { rendered, tierCardCount, hasBindButton, error };

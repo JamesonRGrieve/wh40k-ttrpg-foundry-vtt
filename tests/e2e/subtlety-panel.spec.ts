@@ -74,7 +74,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                             stepperButtons,
                             hasBreakdownBtn,
                             hasPanel,
-                            error: String((err as Error)?.message ?? err),
+                            error: err instanceof Error ? err.message : String(err),
                         };
                     }
                     if (actor == null) {
@@ -105,7 +105,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                             /* sheets without changeTab fall back to the open tab */
                         }
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = err instanceof Error ? err.message : String(err);
                     }
 
                     const el = actor.sheet?.element ?? null;
@@ -124,7 +124,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                     // here would leave the screenshot empty.
                     g.__c9subtlety = actor;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {

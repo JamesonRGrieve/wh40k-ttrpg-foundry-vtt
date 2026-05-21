@@ -40,7 +40,7 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
                 system: { gameSystem: 'dh2e' },
             });
         } catch (err) {
-            return { setupOk: false, panelPresent: false, rowCount: 0, error: String((err as Error)?.message ?? err) };
+            return { setupOk: false, panelPresent: false, rowCount: 0, error: String((err as Error).message) };
         }
 
         if (pc == null || npc == null) {
@@ -63,9 +63,9 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
         });
 
         const root = npc.sheet.element as HTMLElement | null;
-        const panel = root?.querySelector?.('.wh40k-npc-interactions-panel') ?? null;
-        const rows = root?.querySelectorAll?.('.wh40k-npc-interactions-row') ?? { length: 0 };
-        const panelPresent = panel !== null && panel !== undefined;
+        const panel = root?.querySelector('.wh40k-npc-interactions-panel') ?? null;
+        const rows = root?.querySelectorAll('.wh40k-npc-interactions-row') ?? { length: 0 };
+        const panelPresent = panel !== null;
 
         return { setupOk: true, panelPresent, rowCount: rows.length, error: null };
     });

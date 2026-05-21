@@ -2714,6 +2714,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const characteristicKeys = new Set<string>();
         const charInfo = getAllCharacteristicDisplayInfo();
         for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: charInfo is Record<string,…> so indexed access is T|undefined under main tsconfig
             const label = charInfo[key]?.label ?? '';
             if (label !== '') characteristicKeys.add(this._aptitudeKey(label));
         }
@@ -2736,6 +2737,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // canonical characteristic list so the player can always pick any
         // characteristic aptitude they don't already have, per RAW.
         for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: charInfo is Record<string,…> so indexed access is T|undefined under main tsconfig
             const label = charInfo[key]?.label ?? '';
             if (label === '') continue;
             const canon = this._aptitudeKey(label);
@@ -3923,6 +3925,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const draw = await rollTable.draw({ displayChat: true });
                 const [result] = draw.results;
                 const resultText =
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array destructure is T|undefined under main tsconfig; ESLint uses tsconfig.test.json where it's always T
                     result !== undefined && typeof (result as unknown as Record<string, unknown>)['text'] === 'string'
                         ? ((result as unknown as Record<string, unknown>)['text'] as string)
                         : null;

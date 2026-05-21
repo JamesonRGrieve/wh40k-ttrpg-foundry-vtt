@@ -118,7 +118,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                 'system-data-model-mixin-both-branches',
                 'system-data-model-initializationOrder-generator',
             ] as const;
-            if (sdmMod?.__importError) {
+            if (sdmMod?.__importError !== undefined) {
                 for (const k of systemFlowKeys) record(k, false, sdmMod.__importError);
             } else {
                 const SystemDataModel = sdmMod.default;
@@ -189,7 +189,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                 'item-data-model-migrate-coverage-array-to-set',
                 'item-data-model-migrate-img-default-icon',
             ] as const;
-            if (idmMod?.__importError) {
+            if (idmMod?.__importError !== undefined) {
                 for (const k of itemFlowKeys) record(k, false, idmMod.__importError);
             } else {
                 const ItemDataModel = idmMod.default;
@@ -254,7 +254,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
             // ---------- abstract/actor-data-model ----------
             const admMod = await loadModule('abstract/actor-data-model');
             const actorFlowKeys = ['actor-data-model-metadata-supportsAdvancement', 'actor-data-model-migrate-noop'] as const;
-            if (admMod?.__importError) {
+            if (admMod?.__importError !== undefined) {
                 for (const k of actorFlowKeys) record(k, false, admMod.__importError);
             } else {
                 const ActorDataModel = admMod.default;
@@ -278,7 +278,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
             // ---------- fields/formula-field ----------
             const ffMod = await loadModule('fields/formula-field');
             const formulaFlowKeys = ['formula-field-defaults-deterministic', 'formula-field-validateType-branches'] as const;
-            if (ffMod?.__importError) {
+            if (ffMod?.__importError !== undefined) {
                 for (const k of formulaFlowKeys) record(k, false, ffMod.__importError);
             } else {
                 const FormulaField = ffMod.default;
@@ -326,7 +326,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                 'identifier-field-validateType-branches',
                 'identifier-field-fromName-kebab',
             ] as const;
-            if (ifMod?.__importError) {
+            if (ifMod?.__importError !== undefined) {
                 for (const k of identifierFlowKeys) record(k, false, ifMod.__importError);
             } else {
                 const IdentifierField = ifMod.default;

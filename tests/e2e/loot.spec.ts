@@ -59,7 +59,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                 const ok = Boolean(g.CONFIG?.Actor?.dataModels?.loot);
                 record('loot-actor-type-registered', ok, ok ? null : 'CONFIG.Actor.dataModels.loot missing');
             } catch (err) {
-                record('loot-actor-type-registered', false, String((err as Error)?.message ?? err));
+                record('loot-actor-type-registered', false, String((err as Error).message));
             }
 
             // 2 — DataModel prepares on a real loot Actor
@@ -69,7 +69,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                 trash.push(loot);
                 record('loot-datamodel-prepares', Boolean(loot) && loot.system?.isEmpty === true, `isEmpty=${loot?.system?.isEmpty}`);
             } catch (err) {
-                record('loot-datamodel-prepares', false, String((err as Error)?.message ?? err));
+                record('loot-datamodel-prepares', false, String((err as Error).message));
             }
 
             // 3 — embedded item makes the pile report contents
@@ -82,7 +82,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                     record('loot-pile-reports-contents', false, 'loot actor lacks createEmbeddedDocuments');
                 }
             } catch (err) {
-                record('loot-pile-reports-contents', false, String((err as Error)?.message ?? err));
+                record('loot-pile-reports-contents', false, String((err as Error).message));
             }
 
             // 4 — pure manager helpers (module loaded under coverage)
@@ -107,7 +107,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                     plan.updates[0].quantity === 5;
                 record('manager-pure-helpers', ok, ok ? null : `snap=${JSON.stringify(snap)} plan=${JSON.stringify(plan)}`);
             } catch (err) {
-                record('manager-pure-helpers', false, String((err as Error)?.message ?? err));
+                record('manager-pure-helpers', false, String((err as Error).message));
             }
 
             // 5 — loot sheet renders
@@ -125,7 +125,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                     record('loot-sheet-renders', false, 'loot.sheet.render unavailable');
                 }
             } catch (err) {
-                record('loot-sheet-renders', false, String((err as Error)?.message ?? err));
+                record('loot-sheet-renders', false, String((err as Error).message));
             }
 
             // 6 — pickup transfers items between two real actors and deletes the pile
@@ -142,7 +142,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                 const pileGone = g.game.actors.get(pileId) == null;
                 record('pickup-transfers-items', ok === true && transferred && pileGone, `ok=${ok} transferred=${transferred} pileGone=${pileGone}`);
             } catch (err) {
-                record('pickup-transfers-items', false, String((err as Error)?.message ?? err));
+                record('pickup-transfers-items', false, String((err as Error).message));
             }
 
             // 7 — non-droppable items are rejected (no token / canvas needed)
@@ -154,7 +154,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                 const result = await M.dropItemFromActor(owner, talent);
                 record('drop-non-droppable-rejected', result === null, `result=${String(result)}`);
             } catch (err) {
-                record('drop-non-droppable-rejected', false, String((err as Error)?.message ?? err));
+                record('drop-non-droppable-rejected', false, String((err as Error).message));
             }
 
             // Cleanup world documents created by the probe.

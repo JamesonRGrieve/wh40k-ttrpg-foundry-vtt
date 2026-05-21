@@ -96,14 +96,14 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
             // Wrap any awaitable with a 5s timeout so a hung op can't stall
             // the spec (mirrors weapon-attack.spec.ts / combat.spec.ts).
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                let timer: ReturnType<typeof setTimeout> | undefined;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    clearTimeout(timer);
                 }
             };
 
@@ -133,7 +133,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         5_000,
                         'proxy dh2-character Actor.create',
                     )) as any;
-                    if (actor?.id) {
+                    if (actor?.id != null) {
                         cleanups.push(async () => {
                             try {
                                 await foundryGame?.actors?.get?.(actor.id)?.delete?.();
@@ -154,7 +154,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['actor-proxy-dispatches-by-type'] = `unexpected ctor: ${ctorName}`;
                     }
                 } catch (err) {
-                    notes['actor-proxy-dispatches-by-type'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['actor-proxy-dispatches-by-type'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -179,7 +179,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         try {
                             instance = new proxy({ name: 'documents-extra-proxy-unknown', type: '__unknown_type__' });
                         } catch (err) {
-                            threw = String((err as Error)?.message ?? err);
+                            threw = String(err instanceof Error ? err.message : String(err));
                         }
                         const ctorName = String(instance?.constructor?.name ?? '');
                         // The fallback class is WH40KBaseActor. A real
@@ -205,7 +205,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['actor-proxy-falls-back-on-unknown-type'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['actor-proxy-falls-back-on-unknown-type'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -228,7 +228,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['actor-proxy-registered-on-config'] = `proxy=${typeof proxy} missing=${missing.join(',')}`;
                     }
                 } catch (err) {
-                    notes['actor-proxy-registered-on-config'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['actor-proxy-registered-on-config'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -247,7 +247,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         5_000,
                         'container-host Actor.create',
                     )) as any;
-                    if (host?.id) {
+                    if (host?.id != null) {
                         cleanups.push(async () => {
                             try {
                                 await foundryGame?.actors?.get?.(host.id)?.delete?.();
@@ -266,14 +266,14 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         'item-container-convertNestedToItems-builds-collection',
                         'item-container-update-injects-id',
                     ]) {
-                        notes[f] = `container host create threw: ${String((err as Error)?.message ?? err)}`;
+                        notes[f] = `container host create threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
                 }
 
                 // Yield a tick so the server-side actor create flushes
                 // before embedded item creates fire — mirrors the comment
                 // in weapon-attack.spec.ts about V14 race conditions.
-                if (host?.id) {
+                if (host?.id != null) {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
@@ -291,7 +291,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 let backpackItem: any = null;
                 try {
                     const live = getHost();
-                    if (live?.createEmbeddedDocuments) {
+                    if (live?.createEmbeddedDocuments != null) {
                         const created = (await withTimeout(
                             live.createEmbeddedDocuments('Item', [
                                 {
@@ -303,8 +303,8 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'create backpack item',
                         )) as any[];
-                        backpackItem = created?.[0] ? live.items.get(created[0].id) : null;
-                        if (backpackItem) {
+                        backpackItem = created[0] != null ? live.items.get(created[0].id) : null;
+                        if (backpackItem != null) {
                             cleanups.push(async () => {
                                 try {
                                     await backpackItem.delete?.();
@@ -327,7 +327,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-isNestedItem-false-on-owned'] = 'host actor unavailable';
                     }
                 } catch (err) {
-                    notes['item-container-isNestedItem-false-on-owned'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-container-isNestedItem-false-on-owned'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -339,7 +339,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * item by writing a different array.
                  * ============================================================ */
                 try {
-                    if (backpackItem) {
+                    if (backpackItem != null) {
                         const sample = [{ _id: 'aaaaaaaaaaaaaaaa', name: 'nested-a' }];
                         await withTimeout(backpackItem.setNested?.(sample), 5_000, 'setNested');
                         const round1 = backpackItem.getNested?.();
@@ -371,7 +371,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-setNested-roundtrip'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-setNested-roundtrip'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-container-setNested-roundtrip'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -384,7 +384,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * passed in).
                  * ============================================================ */
                 try {
-                    if (backpackItem) {
+                    if (backpackItem != null) {
                         // Reset to empty so the append count is deterministic.
                         await withTimeout(backpackItem.setNested?.([]), 5_000, 'reset nested array');
                         await withTimeout(
@@ -408,7 +408,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-createNestedDocuments-appends'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-createNestedDocuments-appends'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-container-createNestedDocuments-appends'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -420,7 +420,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * on the existing entry.
                  * ============================================================ */
                 try {
-                    if (backpackItem) {
+                    if (backpackItem != null) {
                         const before = backpackItem.getNested?.() ?? [];
                         const firstId = before[0]?._id;
                         if (typeof firstId === 'string' && firstId.length > 0) {
@@ -445,7 +445,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-updateNestedDocuments-merges'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-updateNestedDocuments-merges'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-container-updateNestedDocuments-merges'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -453,7 +453,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * Delete the first nested entry by id; assert it's gone.
                  * ============================================================ */
                 try {
-                    if (backpackItem) {
+                    if (backpackItem != null) {
                         const before = backpackItem.getNested?.() ?? [];
                         const firstId = before[0]?._id;
                         if (typeof firstId === 'string' && firstId.length > 0) {
@@ -475,7 +475,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-deleteNestedDocuments-removes'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-deleteNestedDocuments-removes'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-container-deleteNestedDocuments-removes'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -487,7 +487,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * `this.items` is now a Collection with both ids present.
                  * ============================================================ */
                 try {
-                    if (backpackItem) {
+                    if (backpackItem != null) {
                         const seed = [
                             { _id: 'cccccccccccccccc', name: 'conv-a', type: 'gear', system: {} },
                             { _id: 'dddddddddddddddd', name: 'conv-b', type: 'gear', system: {} },
@@ -497,7 +497,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         try {
                             backpackItem.convertNestedToItems?.();
                         } catch (err) {
-                            threw = String((err as Error)?.message ?? err);
+                            threw = String(err instanceof Error ? err.message : String(err));
                         }
                         const items = backpackItem.items;
                         const aPresent = items?.has?.('cccccccccccccccc');
@@ -514,7 +514,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-convertNestedToItems-builds-collection'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-convertNestedToItems-builds-collection'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-container-convertNestedToItems-builds-collection'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -526,7 +526,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                  * and the persisted field landed.
                  * ============================================================ */
                 try {
-                    if (backpackItem) {
+                    if (backpackItem != null) {
                         const newName = 'documents-extra-backpack-renamed';
                         await withTimeout(backpackItem.update?.({ name: newName }), 5_000, 'backpack.update');
                         const live = getHost();
@@ -541,7 +541,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['item-container-update-injects-id'] = 'no backpack item available';
                     }
                 } catch (err) {
-                    notes['item-container-update-injects-id'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['item-container-update-injects-id'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -562,7 +562,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['chat-message-class-registered'] = `unexpected: typeof=${typeof cls} name=${name}`;
                     }
                 } catch (err) {
-                    notes['chat-message-class-registered'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['chat-message-class-registered'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -591,7 +591,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'ChatMessage.create (flags)',
                         )) as any;
-                        if (withFlags?.id) {
+                        if (withFlags?.id != null) {
                             cleanups.push(async () => {
                                 try {
                                     await foundryGame?.messages?.get?.(withFlags.id)?.delete?.();
@@ -605,7 +605,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'ChatMessage.create (plain)',
                         )) as any;
-                        if (plain?.id) {
+                        if (plain?.id != null) {
                             cleanups.push(async () => {
                                 try {
                                     await foundryGame?.messages?.get?.(plain.id)?.delete?.();
@@ -637,7 +637,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['chat-message-getters'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['chat-message-getters'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -664,7 +664,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'ChatMessage.create (degrees)',
                         )) as any;
-                        if (msg?.id) {
+                        if (msg?.id != null) {
                             cleanups.push(async () => {
                                 try {
                                     await foundryGame?.messages?.get?.(msg.id)?.delete?.();
@@ -674,7 +674,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             });
                         }
                         const dos = msg?.calculateDegrees?.();
-                        if (dos?.success && dos.degrees === 1) {
+                        if (dos?.success === true && dos.degrees === 1) {
                             fired['chat-message-calculateDegrees-real-roll'] = true;
                             notes['chat-message-calculateDegrees-real-roll'] = `total=35 target=50 -> success=true degrees=1`;
                         } else {
@@ -682,7 +682,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['chat-message-calculateDegrees-real-roll'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['chat-message-calculateDegrees-real-roll'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -706,7 +706,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'ChatMessage.create (router)',
                         )) as any;
-                        if (routerMsg?.id) {
+                        if (routerMsg?.id != null) {
                             cleanups.push(async () => {
                                 try {
                                     await foundryGame?.messages?.get?.(routerMsg.id)?.delete?.();
@@ -736,6 +736,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                                 } catch {
                                     /* ignore */
                                 }
+                                return Promise.resolve();
                             });
                             return event;
                         };
@@ -745,7 +746,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             await withTimeout(cls.onChatCardAction(makeEvent('__unknown__'), document.body), 5_000, 'onChatCardAction (unknown)');
                             await withTimeout(cls.onChatCardAction(makeEvent(null), document.body), 5_000, 'onChatCardAction (undefined)');
                         } catch (err) {
-                            routerThrew = String((err as Error)?.message ?? err);
+                            routerThrew = String(err instanceof Error ? err.message : String(err));
                         }
                         if (routerThrew === null) {
                             fired['chat-message-onChatCardAction-routes'] = true;
@@ -755,7 +756,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['chat-message-onChatCardAction-routes'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['chat-message-onChatCardAction-routes'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -791,7 +792,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['chat-message-enrichActionButtons-stamps-messageId'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['chat-message-enrichActionButtons-stamps-messageId'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
 
                 /* ============================================================
@@ -844,7 +845,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         )} ae=${String(aeMatch)} actor=${String(proxyMatch)}`;
                     }
                 } catch (err) {
-                    notes['module-exports-match-config-documentClass'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['module-exports-match-config-documentClass'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
             } finally {
                 // Best-effort cleanup of every actor / item / message /
@@ -870,8 +871,8 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
         }, DOCUMENTS_EXTRA_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pageErrors,
         };
     } finally {

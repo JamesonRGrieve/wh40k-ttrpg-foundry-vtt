@@ -561,7 +561,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                         },
                         { parent: makeParent() },
                     );
-                    if (!positive.damageLabel.startsWith('1d10+3')) return `positive damageLabel ${positive.damageLabel}`;
+                    if (positive.damageLabel.startsWith('1d10+3') !== true) return `positive damageLabel ${positive.damageLabel}`;
                     if (positive.damageTypeAbbr !== 'R') return `positive abbr ${positive.damageTypeAbbr}`;
                     if (typeof positive.damageTypeLabel !== 'string') return 'damageTypeLabel non-string';
                     if (positive.hasSpecial('Tearing') !== true) return 'positive hasSpecial case-insensitive failed';
@@ -575,7 +575,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                         },
                         { parent: makeParent() },
                     );
-                    if (!negative.damageLabel.startsWith('2d10-2')) return `negative damageLabel ${negative.damageLabel}`;
+                    if (negative.damageLabel.startsWith('2d10-2') !== true) return `negative damageLabel ${negative.damageLabel}`;
                     if (negative.damageTypeAbbr !== 'S') return `negative abbr ${negative.damageTypeAbbr}`;
 
                     // Unknown damage type falls back to first-letter uppercase.
@@ -771,7 +771,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     if (instance.weight !== 2.5) return `weight ${instance.weight}`;
                     if (instance.quantity !== 3) return `quantity ${instance.quantity}`;
                     if (!(instance.homebrew.inventory.profiles instanceof Set)) return 'inventory.profiles not a Set';
-                    if (!instance.homebrew.inventory.profiles.has('vendor-a')) return 'inventory.profiles missing vendor-a';
+                    if (instance.homebrew.inventory.profiles.has('vendor-a') !== true) return 'inventory.profiles missing vendor-a';
                     if (instance.cost.dh2.influence !== 1) return `cost.dh2.influence ${instance.cost.dh2.influence}`;
 
                     // _migrateData branches for cost normalisation: empty / non-object / string-number.
@@ -795,7 +795,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     PhysicalItemTemplate._migrateData(hbLegacy);
                     const hb = hbLegacy.homebrew as any;
                     if (!Array.isArray(hb.inventory.profiles)) return 'profiles not normalised to array';
-                    if (hb.inventory.profiles.includes(12)) return 'profiles failed to drop non-string entry';
+                    if (hb.inventory.profiles.includes(12) === true) return 'profiles failed to drop non-string entry';
                     if (hb.inventory.weight !== 4) return `weight not coerced ${hb.inventory.weight}`;
                     return true;
                 });

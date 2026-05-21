@@ -72,10 +72,12 @@ test.describe.serial('climbing surface picker (#146)', () => {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
             }
 
+            const rootEl: HTMLElement = root;
+
             function readState(label: string): Record<string, unknown> {
-                const wrapper = root!.querySelector<HTMLElement>('.wh40k-climb-surface-picker');
-                const select = root!.querySelector<HTMLSelectElement>('.wh40k-climb-surface-picker__select');
-                const sheerIndicator = root!.querySelector<HTMLElement>('.wh40k-climb-surface-picker__sheer-indicator');
+                const wrapper = rootEl.querySelector<HTMLElement>('.wh40k-climb-surface-picker');
+                const select = rootEl.querySelector<HTMLSelectElement>('.wh40k-climb-surface-picker__select');
+                const sheerIndicator = rootEl.querySelector<HTMLElement>('.wh40k-climb-surface-picker__sheer-indicator');
                 return {
                     label,
                     rendered: wrapper !== null,
@@ -85,7 +87,7 @@ test.describe.serial('climbing surface picker (#146)', () => {
             }
 
             async function setSurface(value: string): Promise<void> {
-                const select = root!.querySelector<HTMLSelectElement>('.wh40k-climb-surface-picker__select');
+                const select = rootEl.querySelector<HTMLSelectElement>('.wh40k-climb-surface-picker__select');
                 if (select === null) return;
                 select.value = value;
                 select.dispatchEvent(new Event('change', { bubbles: true }));

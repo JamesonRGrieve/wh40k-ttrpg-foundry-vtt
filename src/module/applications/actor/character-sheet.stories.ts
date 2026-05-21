@@ -276,7 +276,9 @@ export const Issue19NonReactionLocalDescription: Story = {
         // not the legacy itemVocalize (which auto-posted to chat).
         const talentButton = root.querySelector<HTMLElement>('[data-action="combatTalentDescribe"][data-item-id="talent-iron-jaw"]');
         await expect(talentButton).not.toBeNull();
-        await expect(talentButton!.getAttribute('title') ?? '').toContain('Shift+Click');
+        if (talentButton !== null) {
+            await expect(talentButton.getAttribute('title') ?? '').toContain('Shift+Click');
+        }
 
         // No itemVocalize on combat talents — that path always auto-posted.
         await expect(root.querySelector('[data-action="itemVocalize"]')).toBeNull();
@@ -285,9 +287,11 @@ export const Issue19NonReactionLocalDescription: Story = {
         clickAction(root, 'vocalizeCombatAction');
         const attackButton = root.querySelector<HTMLElement>('[data-action="vocalizeCombatAction"]');
         await expect(attackButton).not.toBeNull();
-        await expect(attackButton!.getAttribute('data-issue19-described-locally')).toBe('true');
-        await expect(attackButton!.getAttribute('data-issue19-posted-to-chat')).toBeNull();
-        await expect(attackButton!.getAttribute('data-tooltip') ?? '').not.toBe('');
+        if (attackButton !== null) {
+            await expect(attackButton.getAttribute('data-issue19-described-locally')).toBe('true');
+            await expect(attackButton.getAttribute('data-issue19-posted-to-chat')).toBeNull();
+            await expect(attackButton.getAttribute('data-tooltip') ?? '').not.toBe('');
+        }
 
         // Chat-message DOM must NOT have been added by the click.
         await expect(root.querySelector('.chat-message')).toBeNull();

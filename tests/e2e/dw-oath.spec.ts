@@ -45,7 +45,7 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
                     const HandlebarsInstance = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsInstance?.compile !== 'function') {
+                    if (typeof HandlebarsInstance.compile !== 'function') {
                         return {
                             rendered,
                             hasSwearButton,
@@ -103,7 +103,7 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                     // outside this evaluate) captures the live DOM.
                     (globalThis as any).__dwOathPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String((err as Error).message);
                 }
 
                 return {

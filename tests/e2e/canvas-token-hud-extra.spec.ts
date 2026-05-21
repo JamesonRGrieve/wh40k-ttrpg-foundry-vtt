@@ -98,7 +98,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!ActorCls?.create) {
+            if (ActorCls?.create == null) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'ruler-instantiates-with-token': 'ActorCls.create unavailable' },
@@ -122,14 +122,14 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             };
 
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                let timer: ReturnType<typeof setTimeout> | undefined;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    clearTimeout(timer);
                 }
             };
 
@@ -153,7 +153,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     5_000,
                     'ActorCls.create',
                 )) as any;
-                if (actor?.id) {
+                if (actor?.id != null) {
                     cleanups.push(async () => {
                         try {
                             await gameMgr?.actors?.get?.(actor.id)?.delete?.();
@@ -166,7 +166,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                 for (const f of flows) notes[f] = `ActorCls.create threw: ${String((err as Error).message)}`;
             }
 
-            if (!actor?.id) {
+            if (actor?.id == null) {
                 return { flowsFired: fired, flowNotes: notes };
             }
 
@@ -185,7 +185,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     5_000,
                     'ActorCls.create (no movement)',
                 )) as any;
-                if (actorNoMovement?.id) {
+                if (actorNoMovement?.id != null) {
                     cleanups.push(async () => {
                         try {
                             await gameMgr?.actors?.get?.(actorNoMovement.id)?.delete?.();
@@ -553,9 +553,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 30);
                     });
-                    const halfBtn = htmlRoot.querySelector('.wh40k-token-movement__btn[data-movement-type="half"]') as HTMLElement | null;
+                    const halfBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="half"]');
                     if (halfBtn !== null) {
-                        const title = halfBtn.title ?? '';
+                        const title = halfBtn.title;
                         // Title format: "<localized label>: <speed>m" — the
                         // localized half label may be the raw key in
                         // headless mode (no langpack), but the ": 3m"
@@ -603,7 +603,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 30);
                     });
-                    const chargeBtn = htmlRoot.querySelector('.wh40k-token-movement__btn[data-movement-type="charge"]') as HTMLElement | null;
+                    const chargeBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="charge"]');
                     if (chargeBtn !== null) {
                         chargeBtn.click();
                         await new Promise<void>((r) => {
@@ -651,7 +651,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 30);
                     });
-                    const runBtn = htmlRoot.querySelector('.wh40k-token-movement__btn[data-movement-type="run"]') as HTMLElement | null;
+                    const runBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="run"]');
                     if (runBtn !== null) {
                         const baseBg = runBtn.style.background;
                         runBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));

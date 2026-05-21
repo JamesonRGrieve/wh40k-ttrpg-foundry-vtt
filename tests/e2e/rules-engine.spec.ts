@@ -84,7 +84,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- damage-type ----------
             const damageType = await loadModule('damage-type');
-            if (damageType?.__importError) {
+            if (damageType?.__importError != null) {
                 for (const k of ['damage-type-dropdown', 'damage-type-names', 'damage-type-array'] as const) record(k, false, damageType.__importError);
             } else {
                 try {
@@ -109,7 +109,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- weapon-jam ----------
             const weaponJam = await loadModule('weapon-jam');
-            if (weaponJam?.__importError) {
+            if (weaponJam?.__importError != null) {
                 for (const k of ['weapon-jam-floor', 'weapon-jam-shouldRoll'] as const) record(k, false, weaponJam.__importError);
             } else {
                 try {
@@ -136,7 +136,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- weapon-quality-effects ----------
             const wq = await loadModule('weapon-quality-effects');
-            if (wq?.__importError) {
+            if (wq?.__importError != null) {
                 for (const k of ['quality-weaponHasQuality', 'quality-rollDataHasQuality', 'quality-getWeaponParryModifier'] as const)
                     record(k, false, wq.__importError);
             } else {
@@ -179,7 +179,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- critical-damage ----------
             const cd = await loadModule('critical-damage');
-            if (cd?.__importError) {
+            if (cd?.__importError != null) {
                 for (const k of ['critical-damage-getFuzzy', 'critical-damage-loadTable', 'critical-damage-invalidateCache'] as const)
                     record(k, false, cd.__importError);
             } else {
@@ -213,7 +213,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- config ----------
             const cfg = await loadModule('config');
-            if (cfg?.__importError) {
+            if (cfg?.__importError != null) {
                 for (const k of ['config-fieldMatch', 'config-toggleUIExpanded'] as const) record(k, false, cfg.__importError);
             } else {
                 try {
@@ -233,7 +233,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- ammo ----------
             const ammo = await loadModule('ammo');
-            if (ammo?.__importError) {
+            if (ammo?.__importError != null) {
                 record('ammo-ammoText', false, ammo.__importError);
             } else {
                 try {
