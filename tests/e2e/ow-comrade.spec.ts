@@ -78,7 +78,7 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
                 const actor = g.game?.actors?.get?.(id);
-                if (!actor) return { error: 'actor lookup failed' };
+                if (actor == null) return { error: 'actor lookup failed' };
                 let rendered = false;
                 let hasPanel = false;
                 let hasWoundBtn = false;
@@ -93,14 +93,14 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
                 try {
                     stateBefore = actor.system?.comrade?.state ?? null;
                     const sheet = actor.sheet;
-                    if (!sheet) return { error: 'actor.sheet is null' };
+                    if (sheet == null) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
                     await new Promise((r) => {
                         setTimeout(r, 120);
                     });
                     rendered = sheet.element instanceof HTMLElement;
 
-                    if (rendered && sheet.element) {
+                    if (rendered && sheet.element != null) {
                         const el: HTMLElement = sheet.element;
                         const panel = el.querySelector('.wh40k-ow-comrade-panel');
                         hasPanel = panel !== null;

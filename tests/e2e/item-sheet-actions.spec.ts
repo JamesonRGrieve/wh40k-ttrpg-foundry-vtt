@@ -84,7 +84,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                     ? {
                           rollSkill: async (name: string, _spec: unknown, options: unknown): Promise<void> => {
                               await Promise.resolve();
-                              cap.rollCalls.push({ name: name ?? null, options });
+                              cap.rollCalls.push({ name, options });
                           },
                       }
                     : null;
@@ -140,7 +140,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const ok = cap.updates.length === 1 && (cap.updates[0] as any)['system.severity'] === 7;
                         record('critical-injury-changeSeverity', ok, `updates=${JSON.stringify(cap.updates)}`);
                     } catch (err) {
-                        record('critical-injury-changeSeverity', false, String((err as Error)?.message ?? err));
+                        record('critical-injury-changeSeverity', false, String((err as Error).message));
                     }
                     // Case 2: severity unchanged — no update.
                     try {
@@ -148,12 +148,12 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await changeSeverity.call(host, evt, makeTarget({}, '5'));
                         record('critical-injury-changeSeverity-noop', cap.updates.length === 0, `updates=${JSON.stringify(cap.updates)}`);
                     } catch (err) {
-                        record('critical-injury-changeSeverity-noop', false, String((err as Error)?.message ?? err));
+                        record('critical-injury-changeSeverity-noop', false, String((err as Error).message));
                     }
                 }
             } catch (err) {
                 for (const k of ['critical-injury-changeSeverity', 'critical-injury-changeSeverity-noop'] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${String((err as Error).message)}`);
                 }
             }
 
@@ -190,9 +190,9 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const { host, cap } = buildHost({ specialUses: [{ name: 'Existing', description: '', modifier: 0, difficulty: '' }] });
                         await specialUseAdd.call(host, evt, makeTarget({}));
                         const next = (cap.updates[0] as any)?.['system.specialUses'] as unknown[];
-                        record('skill-specialUseAdd', Array.isArray(next) && next.length === 2, `next.length=${next?.length}`);
+                        record('skill-specialUseAdd', Array.isArray(next) && next.length === 2, `next.length=${next.length}`);
                     } catch (err) {
-                        record('skill-specialUseAdd', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseAdd', false, String((err as Error).message));
                     }
 
                     // specialUseAdd — works when specialUses is missing / non-array.
@@ -202,7 +202,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const next = (cap.updates[0] as any)?.['system.specialUses'] as unknown[];
                         record('skill-specialUseAdd-fromEmpty', Array.isArray(next) && next.length === 1, `next=${JSON.stringify(next)}`);
                     } catch (err) {
-                        record('skill-specialUseAdd-fromEmpty', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseAdd-fromEmpty', false, String((err as Error).message));
                     }
 
                     // specialUseDelete — removes entry at data-index.
@@ -219,7 +219,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const ok = Array.isArray(next) && next.length === 2 && next[0]?.name === 'A' && next[1]?.name === 'C';
                         record('skill-specialUseDelete', ok, `next=${JSON.stringify(next)}`);
                     } catch (err) {
-                        record('skill-specialUseDelete', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseDelete', false, String((err as Error).message));
                     }
 
                     // specialUseDelete — no data-index attribute → no-op.
@@ -228,7 +228,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await specialUseDelete.call(host, evt, makeTarget({}));
                         record('skill-specialUseDelete-noIndex', cap.updates.length === 0, `updates=${JSON.stringify(cap.updates)}`);
                     } catch (err) {
-                        record('skill-specialUseDelete-noIndex', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseDelete-noIndex', false, String((err as Error).message));
                     }
 
                     // specialUseDelete — out-of-range index → no-op.
@@ -237,7 +237,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await specialUseDelete.call(host, evt, makeTarget({ index: '99' }));
                         record('skill-specialUseDelete-outOfRange', cap.updates.length === 0, `updates=${JSON.stringify(cap.updates)}`);
                     } catch (err) {
-                        record('skill-specialUseDelete-outOfRange', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseDelete-outOfRange', false, String((err as Error).message));
                     }
 
                     // specialUseChat — posts entry to chat.
@@ -251,7 +251,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await specialUseChat.call(host, evt, makeTarget({ index: '1' }));
                         record('skill-specialUseChat', cap.chatCalls.length === 1 && cap.chatCalls[0] === 1, `chatCalls=${JSON.stringify(cap.chatCalls)}`);
                     } catch (err) {
-                        record('skill-specialUseChat', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseChat', false, String((err as Error).message));
                     }
 
                     // specialUseChat — no index → no-op.
@@ -260,7 +260,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await specialUseChat.call(host, evt, makeTarget({}));
                         record('skill-specialUseChat-noIndex', cap.chatCalls.length === 0, `chatCalls=${JSON.stringify(cap.chatCalls)}`);
                     } catch (err) {
-                        record('skill-specialUseChat-noIndex', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseChat-noIndex', false, String((err as Error).message));
                     }
 
                     // specialUseRoll — actor-owned: posts to chat AND calls rollSkill.
@@ -273,7 +273,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const ok = cap.chatCalls.length === 1 && cap.rollCalls.length === 1 && cap.rollCalls[0]?.name === 'Tech-Use';
                         record('skill-specialUseRoll-withActor', ok, `chat=${cap.chatCalls.length} rolls=${cap.rollCalls.length}`);
                     } catch (err) {
-                        record('skill-specialUseRoll-withActor', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseRoll-withActor', false, String((err as Error).message));
                     }
 
                     // specialUseRoll — no actor: posts to chat only.
@@ -286,7 +286,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const ok = cap.chatCalls.length === 1 && cap.rollCalls.length === 0;
                         record('skill-specialUseRoll-noActor', ok, `chat=${cap.chatCalls.length} rolls=${cap.rollCalls.length}`);
                     } catch (err) {
-                        record('skill-specialUseRoll-noActor', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseRoll-noActor', false, String((err as Error).message));
                     }
 
                     // specialUseRoll — no data-index → no-op.
@@ -296,7 +296,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const ok = cap.chatCalls.length === 0 && cap.rollCalls.length === 0;
                         record('skill-specialUseRoll-noIndex', ok, `chat=${cap.chatCalls.length} rolls=${cap.rollCalls.length}`);
                     } catch (err) {
-                        record('skill-specialUseRoll-noIndex', false, String((err as Error)?.message ?? err));
+                        record('skill-specialUseRoll-noIndex', false, String((err as Error).message));
                     }
                 }
             } catch (err) {
@@ -312,7 +312,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                     'skill-specialUseRoll-noActor',
                     'skill-specialUseRoll-noIndex',
                 ] as const) {
-                    record(k, false, `import: ${String((err as Error)?.message ?? err)}`);
+                    record(k, false, `import: ${String((err as Error).message)}`);
                 }
             }
 

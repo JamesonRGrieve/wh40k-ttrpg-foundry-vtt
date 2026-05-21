@@ -84,10 +84,12 @@ test.describe.serial('trying again warning (#62)', () => {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
             } catch (err) {
-                return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}`, rendered: false };
+                return { error: `dialog render threw: ${err instanceof Error ? err.message : String(err)}`, rendered: false };
             }
 
-            await new Promise((r) => setTimeout(r, 100));
+            await new Promise<void>((r) => {
+                setTimeout(r, 100);
+            });
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', rendered: false };
@@ -98,7 +100,7 @@ test.describe.serial('trying again warning (#62)', () => {
             return {
                 error: null,
                 rendered: banner !== null,
-                hintText: hint?.textContent?.trim() ?? null,
+                hintText: hint !== null ? hint.textContent.trim() : null,
             };
         });
 

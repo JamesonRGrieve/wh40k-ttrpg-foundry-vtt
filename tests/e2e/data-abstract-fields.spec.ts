@@ -95,7 +95,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                 try {
                     return await import(`${base}/${path}.js`);
                 } catch (err) {
-                    return { __importError: String((err as Error)?.message ?? err) };
+                    return { __importError: String(err instanceof Error ? err.message : err) };
                 }
             };
             const guarded = (name: FlowName, fn: () => boolean | string): void => {
@@ -104,7 +104,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     if (typeof r === 'string') record(name, false, r);
                     else record(name, r, null);
                 } catch (err) {
-                    record(name, false, String((err as Error)?.message ?? err));
+                    record(name, false, String(err instanceof Error ? err.message : err));
                 }
             };
 
@@ -152,7 +152,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     try {
                         SystemDataModel.mixin(NotASDM as any);
                     } catch (err) {
-                        rejected = String((err as Error)?.message ?? err).includes('not a subclass of SystemDataModel');
+                        rejected = String(err instanceof Error ? err.message : err).includes('not a subclass of SystemDataModel');
                     }
                     // Branch 2: synthetic SystemDataModel subclass is accepted and produces a new Base class.
                     class SyntheticTemplate extends SystemDataModel {
@@ -302,7 +302,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     try {
                         field._validateType('this is not a roll formula @@@');
                     } catch (err) {
-                        invalidThrew = String((err as Error)?.message ?? err).includes('Invalid formula');
+                        invalidThrew = String(err instanceof Error ? err.message : err).includes('Invalid formula');
                     }
                     // Branch 4: deterministic=true rejects dice expressions.
                     let detRejected = false;
@@ -312,7 +312,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     } catch (err) {
                         // Either "must be deterministic" or "Invalid formula" wrapper — both
                         // exercise the deterministic branch of _validateType.
-                        const msg = String((err as Error)?.message ?? err);
+                        const msg = String(err instanceof Error ? err.message : err);
                         detRejected = msg.includes('deterministic') || msg.includes('Invalid formula');
                     }
                     return validOk && invalidThrew && detRejected;
@@ -363,7 +363,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     try {
                         field._validateType('not allowed here');
                     } catch (err) {
-                        invalidThrew = String((err as Error)?.message ?? err).includes('must contain only');
+                        invalidThrew = String(err instanceof Error ? err.message : err).includes('must contain only');
                     }
                     return validOk && legacyOk && invalidThrew;
                 });

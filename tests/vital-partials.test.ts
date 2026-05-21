@@ -60,7 +60,7 @@ describe('vital-quick-controls partial', () => {
         expect(decBtn?.getAttribute('data-field')).toBe('system.corruption');
         expect(decBtn?.getAttribute('data-min')).toBe('0');
         expect(incBtn?.getAttribute('data-field')).toBe('system.corruption');
-        expect(root.querySelector('.wh40k-corruption-current')?.textContent?.trim()).toBe('42');
+        expect(root.querySelector('.wh40k-corruption-current')?.textContent.trim()).toBe('42');
         expect(root.querySelector('.wh40k-corruption-sep')).toBeNull();
         expect(root.querySelector('.wh40k-corruption-max')).toBeNull();
     });
@@ -74,8 +74,8 @@ describe('vital-quick-controls partial', () => {
             maxLabel: 12,
         });
         const root = dom(html);
-        expect(root.querySelector('.wh40k-wounds-current')?.textContent?.trim()).toBe('8');
-        expect(root.querySelector('.wh40k-wounds-max')?.textContent?.trim()).toBe('12');
+        expect(root.querySelector('.wh40k-wounds-current')?.textContent.trim()).toBe('8');
+        expect(root.querySelector('.wh40k-wounds-max')?.textContent.trim()).toBe('12');
         expect(root.querySelector('.wh40k-wounds-sep')?.textContent).toBe('/');
     });
 
@@ -209,7 +209,7 @@ describe('vital-panel-shell partial', () => {
         const root = dom(html);
         const header = root.querySelector('.wh40k-panel-header');
         expect(header?.getAttribute('data-toggle')).toBe('wounds_details');
-        expect(root.querySelector('.wh40k-panel-title')?.textContent?.trim()).toContain('Wounds');
+        expect(root.querySelector('.wh40k-panel-title')?.textContent.trim()).toContain('Wounds');
         expect(root.querySelector('.fa-heart-broken')).not.toBeNull();
         expect(root.querySelector('.wh40k-panel')?.className).toContain('wh40k-wounds-warning');
         expect(root.querySelector('.body')?.textContent).toBe('body');
@@ -231,7 +231,7 @@ describe('vital-panel-shell partial', () => {
         expect(badge).not.toBeNull();
         expect(badge?.getAttribute('title')).toBe('TAINTED - 0 to tests');
         expect(badge?.querySelector('.fa-certificate')).not.toBeNull();
-        expect(badge?.querySelector('.wh40k-badge-label')?.textContent?.trim()).toBe('TAINTED');
+        expect(badge?.querySelector('.wh40k-badge-label')?.textContent.trim()).toBe('TAINTED');
     });
 });
 
@@ -249,7 +249,7 @@ describe('vital-info-card partial', () => {
         expect(icon?.className).toContain('tw-text-gold');
         // Title text appears in a strong element.
         const strong = root.querySelector('strong');
-        expect(strong?.textContent?.trim()).toBe('Fatigue Rules');
+        expect(strong?.textContent.trim()).toBe('Fatigue Rules');
         // Body slot is forwarded into the card.
         expect(root.querySelector('p.rule')?.textContent).toContain('Any fatigue: -10 penalty.');
     });
@@ -293,7 +293,7 @@ describe('vital-info-card partial', () => {
         // Should compile and render without throwing.
         expect(() => wrapped({})).not.toThrow();
         const root = dom(wrapped({}));
-        expect(root.querySelector('strong')?.textContent?.trim()).toBe('T');
+        expect(root.querySelector('strong')?.textContent.trim()).toBe('T');
     });
 });
 

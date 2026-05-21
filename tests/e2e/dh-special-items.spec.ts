@@ -62,7 +62,7 @@ async function createDH2Parent(page: Page): Promise<ActorRef | { error: string }
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String((err as Error)?.message ?? err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
     if (result.id == null) return { error: result.error ?? 'unknown create error' };
@@ -187,7 +187,6 @@ async function probeMutation(page: Page, actorId: string): Promise<FlowResult> {
     ]);
     if (ids.length === 0) return { ok: false, error: 'mutation create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'mutation id missing' };
     try {
         const category = await readItemPath(page, actorId, itemId, 'system.category');
         const visible = await readItemPath(page, actorId, itemId, 'system.visible');
@@ -222,7 +221,6 @@ async function probeMentalDisorder(page: Page, actorId: string): Promise<FlowRes
     ]);
     if (ids.length === 0) return { ok: false, error: 'mentalDisorder create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'mentalDisorder id missing' };
     try {
         const severity = await readItemPath(page, actorId, itemId, 'system.severity');
         const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
@@ -260,7 +258,6 @@ async function probeCriticalInjury(page: Page, actorId: string): Promise<FlowRes
     ]);
     if (ids.length === 0) return { ok: false, error: 'criticalInjury create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'criticalInjury id missing' };
     try {
         const currentEffect = await readItemPath(page, actorId, itemId, 'system.currentEffect');
         const isPermanent = await readItemPath(page, actorId, itemId, 'system.isPermanent');
@@ -306,7 +303,6 @@ async function probeMalignancy(page: Page, actorId: string): Promise<FlowResult>
     ]);
     if (ids.length === 0) return { ok: false, error: 'malignancy create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'malignancy id missing' };
     try {
         const identifier = await readItemPath(page, actorId, itemId, 'system.identifier');
         const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
@@ -349,7 +345,6 @@ async function probeDrug(page: Page, actorId: string): Promise<FlowResult> {
     ]);
     if (ids.length === 0) return { ok: false, error: 'drug create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'drug id missing' };
     try {
         const duration = await readItemPath(page, actorId, itemId, 'system.duration');
         const grants = await readItemPath(page, actorId, itemId, 'system.grants.activeEffects');
@@ -384,7 +379,6 @@ async function probePeer(page: Page, actorId: string): Promise<FlowResult> {
     ]);
     if (ids.length === 0) return { ok: false, error: 'peer create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'peer id missing' };
     try {
         const group = await readItemPath(page, actorId, itemId, 'system.group');
         const modifier = await readItemPath(page, actorId, itemId, 'system.modifier');
@@ -435,7 +429,6 @@ async function probeCybernetic(page: Page, actorId: string): Promise<FlowResult>
     ]);
     if (ids.length === 0) return { ok: false, error: 'cybernetic create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'cybernetic id missing' };
     try {
         const type = await readItemPath(page, actorId, itemId, 'system.type');
         const installationDifficulty = await readItemPath(page, actorId, itemId, 'system.installation.difficulty');
@@ -472,7 +465,7 @@ test.describe.serial('dh special items (Tier B)', () => {
                 { flow: FLOW_CYBERNETIC, run: async () => probeCybernetic(page, actorId) },
             ];
             for (const probe of probes) {
-                const result = await probe.run().catch((err: unknown) => ({ ok: false, error: String((err as Error)?.message ?? err) }));
+                const result = await probe.run().catch((err: unknown) => ({ ok: false, error: err instanceof Error ? err.message : String(err) }));
                 if (result.ok) {
                     recordCoverage('dh-special-item.flow', probe.flow);
                 } else {

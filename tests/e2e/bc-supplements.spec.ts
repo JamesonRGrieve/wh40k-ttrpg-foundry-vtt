@@ -44,7 +44,7 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
                     const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HbsLib?.compile !== 'function') {
+                    if (typeof HbsLib.compile !== 'function') {
                         return {
                             rendered,
                             hasDaemonEngineInput,
@@ -104,7 +104,7 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                     // it down here would leave the screenshot empty.
                     (globalThis as any).__bcSupplementsPanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String(err instanceof Error ? err.message : err);
                 }
 
                 return {

@@ -62,7 +62,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                     system: { gameSystem: 'dh2e' },
                 });
             } catch (err) {
-                for (const f of CHARGEN_FLOWS) record(f, false, `actor create threw: ${String((err as Error)?.message ?? err)}`);
+                for (const f of CHARGEN_FLOWS) record(f, false, `actor create threw: ${String(err instanceof Error ? err.message : err)}`);
                 return out;
             }
             if (actor?.id == null) {
@@ -130,7 +130,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                     record('origin-roll-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
-                record('origin-roll-dialog-renders', false, String((err as Error)?.message ?? err));
+                record('origin-roll-dialog-renders', false, String(err instanceof Error ? err.message : err));
             }
 
             // ---------- origin-path-choice-dialog ----------
@@ -151,7 +151,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                     record('origin-path-choice-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
-                record('origin-path-choice-dialog-renders', false, String((err as Error)?.message ?? err));
+                record('origin-path-choice-dialog-renders', false, String(err instanceof Error ? err.message : err));
             }
 
             // ---------- origin-detail-dialog ----------
@@ -176,7 +176,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                     record('origin-detail-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
-                record('origin-detail-dialog-renders', false, String((err as Error)?.message ?? err));
+                record('origin-detail-dialog-renders', false, String(err instanceof Error ? err.message : err));
             }
 
             await closeAll();

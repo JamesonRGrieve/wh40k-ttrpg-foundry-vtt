@@ -29,7 +29,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
                     system: { gameSystem: 'dh2e', influence: 40 },
                 });
             } catch (err) {
-                return { ok: false, reason: `actor create failed: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, reason: `actor create failed: ${(err as Error).message}` };
             }
             if (actor == null) {
                 return { ok: false, reason: 'actor null' };
@@ -60,7 +60,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
                 }
                 return { ok: true as const, snap: snapData };
             } catch (err) {
-                return { ok: false, reason: `render failed: ${String((err as Error)?.message ?? err)}` };
+                return { ok: false, reason: `render failed: ${(err as Error).message}` };
             }
             /* eslint-enable @typescript-eslint/no-explicit-any */
         });

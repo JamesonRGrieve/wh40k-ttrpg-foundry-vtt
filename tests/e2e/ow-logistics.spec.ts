@@ -69,7 +69,7 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
                             setTimeout(r, 80);
                         });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = err instanceof Error ? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {

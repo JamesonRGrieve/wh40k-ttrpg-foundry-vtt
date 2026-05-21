@@ -50,7 +50,7 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
                             setTimeout(r, 60);
                         });
                     } catch (err) {
-                        error = String((err as Error)?.message ?? err);
+                        error = err instanceof Error ? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -62,7 +62,7 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
                     // intentionally leave open until after screenshot; will close below
                     (window as unknown as { __wh40kWithinHomeworldDialog?: unknown }).__wh40kWithinHomeworldDialog = inst;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, cardCount, ids, hasCloseButton, error };

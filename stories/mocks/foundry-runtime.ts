@@ -142,10 +142,10 @@ const hooksStub: HooksStub = {
  */
 export function installFoundryRuntimeStubs(): void {
     const target = globalThis as typeof globalThis & FoundryRuntimeGlobals;
-    if (target.game === undefined) target.game = gameStub;
-    if (target.CONFIG === undefined) target.CONFIG = configStub;
-    if (target.ui === undefined) target.ui = uiStub;
-    if (target.Hooks === undefined) target.Hooks = hooksStub;
+    target.game = target.game ?? gameStub;
+    target.CONFIG = target.CONFIG ?? configStub;
+    target.ui = target.ui ?? uiStub;
+    target.Hooks = target.Hooks ?? hooksStub;
 }
 
 export { gameStub as game, configStub as CONFIG, uiStub as ui, hooksStub as Hooks };

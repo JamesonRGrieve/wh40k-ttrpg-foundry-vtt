@@ -111,7 +111,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 try {
                     return await import(`${base}/${name}.js`);
                 } catch (err) {
-                    return { __importError: String((err as Error)?.message ?? err) };
+                    return { __importError: err instanceof Error ? err.message : String(err) };
                 }
             };
             const guarded = (name: FlowName, fn: () => boolean | string): void => {
@@ -120,7 +120,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     if (typeof r === 'string') record(name, false, r);
                     else record(name, r, null);
                 } catch (err) {
-                    record(name, false, String((err as Error)?.message ?? err));
+                    record(name, false, err instanceof Error ? err.message : String(err));
                 }
             };
 

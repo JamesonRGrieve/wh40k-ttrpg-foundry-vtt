@@ -35,10 +35,9 @@ function collectFilterReadsInPrepareMethods(src: string): Set<string> {
     // we just need every `this._xxxFilter` read regardless of which prepare block it's in).
     const prepareBlocks = src.matchAll(/_prepare\w*Context\s*\([^)]*\)[^{]*\{([\s\S]*?)\n {4}\}/g);
     for (const block of prepareBlocks) {
-        const body = block[1] ?? '';
+        const body = block[1];
         for (const m of body.matchAll(/this\.(_\w+Filter)\b/g)) {
-            const name = m[1];
-            if (name !== undefined) found.add(name);
+            found.add(m[1]);
         }
     }
     return found;
@@ -92,9 +91,8 @@ describe('declare-only filters are not silently re-introduced', () => {
     const declareOnlyFilters: string[] = [];
     for (const src of [baseSrc, charSrc]) {
         for (const m of src.matchAll(/^\s*declare\s+(_\w+Filter)\b/gm)) {
-            const name = m[1];
-            if (name !== undefined && !hasFieldInitializer(combinedSrc, name)) {
-                declareOnlyFilters.push(name);
+            if (!hasFieldInitializer(combinedSrc, m[1])) {
+                declareOnlyFilters.push(m[1]);
             }
         }
     }

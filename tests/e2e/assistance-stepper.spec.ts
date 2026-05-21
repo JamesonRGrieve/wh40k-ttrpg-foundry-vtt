@@ -67,7 +67,7 @@ test.describe.serial('assistance stepper (#60)', () => {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
             } catch (err) {
-                return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}`, snaps: null };
+                return { error: `dialog render threw: ${(err as Error).message}`, snaps: null };
             }
 
             await new Promise<void>((r) => {
@@ -89,8 +89,8 @@ test.describe.serial('assistance stepper (#60)', () => {
                 return {
                     label,
                     rendered: stepperEl !== null,
-                    count: count?.textContent?.trim() ?? null,
-                    badge: badge?.textContent?.trim() ?? null,
+                    count: count?.textContent.trim() ?? null,
+                    badge: badge?.textContent.trim() ?? null,
                     plusDisabled: plus?.disabled ?? null,
                     minusDisabled: minus?.disabled ?? null,
                 };

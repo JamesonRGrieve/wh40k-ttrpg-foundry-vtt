@@ -74,7 +74,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
                     return null;
                 }
             })();
-            if (!ae) return out;
+            if (ae == null) return out;
 
             // Seed a dh2-character with characteristics + wounds so the
             // handleBleeding / handleBloodLoss / handleOnFire branches
@@ -99,7 +99,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
                 for (const f of ACTIVE_EFFECTS_RULES_FLOWS) record(f, false, `actor create threw: ${String((err as Error)?.message ?? err)}`);
                 return out;
             }
-            if (!actor?.id) {
+            if (actor?.id == null) {
                 for (const f of ACTIVE_EFFECTS_RULES_FLOWS) record(f, false, 'actor not created');
                 return out;
             }
@@ -187,8 +187,8 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             // ---- toggleEffect ----
             try {
                 const a = liveActor();
-                const target = Array.from(a?.effects ?? []).find((e: any) => e?.name?.startsWith('probe-temp-effect')) as any;
-                if (!target?.id) {
+                const target = Array.from(a?.effects ?? []).find((e: any) => e?.name?.startsWith('probe-temp-effect') === true) as any;
+                if (target?.id == null) {
                     record('toggleEffect', false, 'no temp-effect target found');
                 } else {
                     const wasDisabled = target.disabled === true;

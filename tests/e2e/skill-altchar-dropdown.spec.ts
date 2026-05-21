@@ -108,7 +108,7 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                     rendered: charSelect !== null,
                     optionCount: charSelect?.options.length ?? 0,
                     currentValue: charSelect?.value ?? null,
-                    target: target?.textContent?.trim() ?? null,
+                    target: target?.textContent.trim() ?? null,
                     halvedVisible: halved !== null,
                     blockedVisible: blocked !== null,
                 };

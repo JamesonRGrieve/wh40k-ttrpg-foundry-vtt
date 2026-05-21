@@ -140,10 +140,10 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                             setTimeout(resolve, 120);
                         });
                         const sheetEl = actor.sheet.element;
-                        if (sheetEl) {
+                        if (sheetEl != null) {
                             const crewTab = sheetEl.querySelector?.('[data-tab="crew"]');
                             const crewNav = sheetEl.querySelector?.('nav [data-tab="crew"]');
-                            if (crewNav && typeof actor.sheet.changeTab === 'function') {
+                            if (crewNav != null && typeof actor.sheet.changeTab === 'function') {
                                 try {
                                     actor.sheet.changeTab('crew', 'primary');
                                 } catch {

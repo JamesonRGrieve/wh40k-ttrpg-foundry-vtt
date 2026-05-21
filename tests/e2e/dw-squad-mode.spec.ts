@@ -45,7 +45,7 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
                     const HandlebarsGbl = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof HandlebarsGbl?.compile !== 'function') {
+                    if (typeof HandlebarsGbl.compile !== 'function') {
                         return {
                             rendered,
                             mode,
@@ -103,7 +103,7 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                     // outside this evaluate) captures the live DOM.
                     (globalThis as any).__dwModePanelHost = host;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = (err as Error).message;
                 }
 
                 return {

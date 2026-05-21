@@ -37,7 +37,7 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
                 ],
             });
         } catch (err) {
-            return { setupOk: false, error: String((err as Error)?.message ?? err) };
+            return { setupOk: false, error: String((err as Error).message) };
         }
         if (actor == null) return { setupOk: false, error: 'Actor.create returned null' };
 
@@ -70,7 +70,7 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
 
         const fatigueAfter = actor.system?.fatigue?.value ?? 0;
         const effects: Array<{ flags?: { wh40k?: { source?: string } } }> = Array.from(actor.effects ?? []);
-        const mortificationEffect = effects.find((e) => e?.flags?.wh40k?.source === 'mortification');
+        const mortificationEffect = effects.find((e) => e.flags?.wh40k?.source === 'mortification');
 
         return {
             setupOk: true,

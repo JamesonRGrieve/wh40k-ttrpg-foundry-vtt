@@ -1160,6 +1160,7 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
                     }
                     cursor[parts[parts.length - 1]!] = value;
                 }
+                await Promise.resolve();
                 return actor;
             }),
         };

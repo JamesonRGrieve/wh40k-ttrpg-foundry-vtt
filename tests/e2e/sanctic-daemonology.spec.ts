@@ -77,8 +77,10 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                     phenomenaFires = r.phenomenaFires;
                     canFateNegate = r.canFateNegate;
 
-                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
-                    if (typeof renderTemplate !== 'function') {
+                    const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate as
+                        | ((path: string, ctx: object) => Promise<string>)
+                        | undefined;
+                    if (typeof renderTemplateFn !== 'function') {
                         return {
                             rendered,
                             corruption,
@@ -90,7 +92,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                         };
                     }
 
-                    const html = await renderTemplate('systems/wh40k-rpg/templates/chat/sanctic-daemonology-chat.hbs', {
+                    const html = await renderTemplateFn('systems/wh40k-rpg/templates/chat/sanctic-daemonology-chat.hbs', {
                         gameSystem: 'dh2e',
                         powerName: r.power.name,
                         modeKey: 'WH40K.SancticDaemonology.Mode.Push',
@@ -124,7 +126,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                         hasWh40kClass = card.closest('.wh40k-rpg') !== null;
                     }
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = String(err instanceof Error ? err.message : err);
                 }
 
                 return {
