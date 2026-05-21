@@ -46,13 +46,61 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals + dynamic-imported modules are runtime-only */
-            const g = globalThis as any;
+            interface LootSystem {
+                isEmpty?: boolean;
+                itemCount?: number;
+                totalWeight?: number;
+            }
+            interface SheetRef {
+                render?: (force?: boolean) => Promise<void>;
+                close?: () => Promise<void>;
+                element?: HTMLElement | { 0?: HTMLElement } | null;
+            }
+            interface ItemRef {
+                _id?: string;
+                name?: string;
+                type?: string;
+                system?: { quantity?: number; weight?: number };
+            }
+            interface ActorRef {
+                id?: string;
+                system?: LootSystem;
+                sheet?: SheetRef;
+                items?: { size: number };
+                createEmbeddedDocuments?: (collection: string, data: ItemRef[]) => Promise<ItemRef[]>;
+                delete?: () => Promise<void>;
+            }
+            interface ActorCls {
+                create: (data: { type: string; name: string }) => Promise<ActorRef>;
+            }
+            interface PlanStackMergeUpdate {
+                quantity: number;
+            }
+            interface PlanStackMergeResult {
+                updates: PlanStackMergeUpdate[];
+            }
+            interface ItemDropManagerCls {
+                snapToGrid: (point: { x: number; y: number }, size: number) => { x: number; y: number };
+                planStackMerge: (existing: ItemRef[], incoming: ItemRef[]) => PlanStackMergeResult;
+                isDroppable: (type: string) => boolean;
+                pickupLoot: (receiver: ActorRef, pile: ActorRef) => Promise<boolean>;
+                dropItemFromActor: (owner: ActorRef, item: ItemRef) => Promise<ActorRef | null>;
+            }
+            interface ManagerModule {
+                ItemDropManager: ItemDropManagerCls;
+            }
+            interface FoundryGlobal {
+                CONFIG?: { Actor?: { dataModels?: { loot?: object } } };
+                Actor: ActorCls;
+                game: { actors: { get: (id: string) => ActorRef | undefined } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const g = globalThis as unknown as FoundryGlobal;
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
-            const trash: any[] = [];
+            const trash: ActorRef[] = [];
 
             // 1 — actor type registered
             try {
@@ -63,11 +111,11 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
             }
 
             // 2 — DataModel prepares on a real loot Actor
-            let loot: any;
+            let loot: ActorRef | undefined;
             try {
                 loot = await g.Actor.create({ type: 'loot', name: 'Dropped: E2E' });
                 trash.push(loot);
-                record('loot-datamodel-prepares', Boolean(loot) && loot.system?.isEmpty === true, `isEmpty=${loot?.system?.isEmpty}`);
+                record('loot-datamodel-prepares', loot.system?.isEmpty === true, `isEmpty=${String(loot.system?.isEmpty)}`);
             } catch (err) {
                 record('loot-datamodel-prepares', false, String((err as Error).message));
             }
@@ -76,8 +124,8 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
             try {
                 if (loot?.createEmbeddedDocuments != null) {
                     await loot.createEmbeddedDocuments('Item', [{ name: 'E2E Knife', type: 'weapon', system: { weight: 2, quantity: 1 } }]);
-                    const ok = loot.system?.isEmpty === false && loot.system?.itemCount === 1 && typeof loot.system?.totalWeight === 'number';
-                    record('loot-pile-reports-contents', ok, `itemCount=${loot.system?.itemCount} weight=${loot.system?.totalWeight}`);
+                    const ok = loot.system?.isEmpty === false && loot.system.itemCount === 1 && typeof loot.system.totalWeight === 'number';
+                    record('loot-pile-reports-contents', ok, `itemCount=${String(loot.system?.itemCount)} weight=${String(loot.system?.totalWeight)}`);
                 } else {
                     record('loot-pile-reports-contents', false, 'loot actor lacks createEmbeddedDocuments');
                 }
@@ -86,12 +134,12 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
             }
 
             // 4 — pure manager helpers (module loaded under coverage)
-            let mgr: any;
+            let mgr: ManagerModule | undefined;
             try {
                 // Non-static specifier so knip doesn't try to resolve a
                 // browser runtime URL (mirrors canvas-ruler.spec.ts).
                 const base = `${'/systems/wh40k-rpg'}/module/managers`;
-                mgr = await import(`${base}/item-drop-manager.js`);
+                mgr = (await import(`${base}/item-drop-manager.js`)) as ManagerModule;
                 const M = mgr.ItemDropManager;
                 const snap = M.snapToGrid({ x: 137, y: 268 }, 100);
                 const plan = M.planStackMerge(
@@ -99,12 +147,12 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                     [{ name: 'Charge Pack', type: 'ammunition', system: { quantity: 3 } }],
                 );
                 const ok =
-                    M.isDroppable('weapon') === true &&
-                    M.isDroppable('talent') === false &&
+                    M.isDroppable('weapon') &&
+                    !M.isDroppable('talent') &&
                     snap.x === 100 &&
                     snap.y === 200 &&
                     plan.updates.length === 1 &&
-                    plan.updates[0].quantity === 5;
+                    plan.updates[0]?.quantity === 5;
                 record('manager-pure-helpers', ok, ok ? null : `snap=${JSON.stringify(snap)} plan=${JSON.stringify(plan)}`);
             } catch (err) {
                 record('manager-pure-helpers', false, String((err as Error).message));
@@ -118,7 +166,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                         setTimeout(r, 250);
                     });
                     const el = loot.sheet.element;
-                    const ok = Boolean(el) && (el instanceof HTMLElement || Boolean(el[0]));
+                    const ok = Boolean(el) && (el instanceof HTMLElement || Boolean((el as { 0?: HTMLElement } | null)?.[0]));
                     record('loot-sheet-renders', ok, ok ? null : 'sheet element absent after render');
                     await loot.sheet.close?.();
                 } else {
@@ -130,29 +178,37 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
 
             // 6 — pickup transfers items between two real actors and deletes the pile
             try {
+                if (mgr == null) throw new Error('manager not loaded');
                 const M = mgr.ItemDropManager;
                 const receiver = await g.Actor.create({ type: 'dh2-character', name: 'E2E Receiver' });
                 trash.push(receiver);
                 const pile = await g.Actor.create({ type: 'loot', name: 'Dropped: Bolt Pistol' });
                 const pileId = pile.id;
-                await pile.createEmbeddedDocuments('Item', [{ name: 'Bolt Pistol', type: 'weapon', system: { weight: 5, quantity: 1 } }]);
-                const before = receiver.items.size;
+                await pile.createEmbeddedDocuments?.('Item', [{ name: 'Bolt Pistol', type: 'weapon', system: { weight: 5, quantity: 1 } }]);
+                const before = receiver.items?.size ?? 0;
                 const ok = await M.pickupLoot(receiver, pile);
-                const transferred = receiver.items.size === before + 1;
-                const pileGone = g.game.actors.get(pileId) == null;
-                record('pickup-transfers-items', ok === true && transferred && pileGone, `ok=${ok} transferred=${transferred} pileGone=${pileGone}`);
+                const transferred = (receiver.items?.size ?? 0) === before + 1;
+                const pileGone = pileId == null || g.game.actors.get(pileId) == null;
+                record(
+                    'pickup-transfers-items',
+                    ok && transferred && pileGone,
+                    `ok=${String(ok)} transferred=${String(transferred)} pileGone=${String(pileGone)}`,
+                );
             } catch (err) {
                 record('pickup-transfers-items', false, String((err as Error).message));
             }
 
             // 7 — non-droppable items are rejected (no token / canvas needed)
             try {
+                if (mgr == null) throw new Error('manager not loaded');
                 const M = mgr.ItemDropManager;
                 const owner = await g.Actor.create({ type: 'dh2-character', name: 'E2E Dropper' });
                 trash.push(owner);
-                const [talent] = await owner.createEmbeddedDocuments('Item', [{ name: 'Quick Draw', type: 'talent' }]);
+                const created = (await owner.createEmbeddedDocuments?.('Item', [{ name: 'Quick Draw', type: 'talent' }])) ?? [];
+                if (created.length === 0) throw new Error('talent creation returned empty');
+                const talent = created[0];
                 const result = await M.dropItemFromActor(owner, talent);
-                record('drop-non-droppable-rejected', result === null, `result=${String(result)}`);
+                record('drop-non-droppable-rejected', result === null, `result=${result == null ? 'null' : 'object'}`);
             } catch (err) {
                 record('drop-non-droppable-rejected', false, String((err as Error).message));
             }
@@ -160,14 +216,14 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
             // Cleanup world documents created by the probe.
             for (const doc of trash) {
                 try {
-                    await doc?.delete?.();
+                    // eslint-disable-next-line no-await-in-loop -- best-effort serial cleanup; parallel deletes race on Foundry's collection writes
+                    await doc.delete?.();
                 } catch {
                     /* best-effort */
                 }
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

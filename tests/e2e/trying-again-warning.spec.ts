@@ -23,9 +23,19 @@ test.describe.serial('trying again warning (#62)', () => {
         test.skip(!joined, 'GM join failed');
 
         const result = await page.evaluate(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- e2e probe runs in browser realm against untyped Foundry globals.
+            interface DialogInstance {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                render: (force: boolean) => Promise<unknown>;
+                element?: HTMLElement;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                close?: () => Promise<unknown>;
+            }
+            interface DialogModule {
+                default: new (actionData: object) => DialogInstance;
+            }
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
-            const mod = await import(/* @vite-ignore */ modUrl);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+            const mod = (await import(/* @vite-ignore */ modUrl)) as unknown as DialogModule;
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing', rendered: false };
@@ -35,15 +45,26 @@ test.describe.serial('trying again warning (#62)', () => {
             // returns the try-again bag. The dialog only reads getFlag('wh40k',
             // 'try-again') and ignores everything else on the actor for the
             // warning path.
-            const actorStub = {
+            interface TryAgainBag {
+                [key: string]: number | undefined;
+            }
+            interface ActorStub {
+                name: string;
+                img: string;
+                flags: { wh40k: { 'try-again': TryAgainBag } };
+                getFlag: (scope: string, key: string) => number | TryAgainBag | null;
+                getSituationalModifiers: () => never[];
+            }
+            const actorStub: ActorStub = {
                 name: 'Probe Acolyte',
                 img: '',
                 flags: { wh40k: { 'try-again': { inquiry: 1 } } },
-                getFlag(scope: string, key: string): unknown {
+                getFlag(scope: string, key: string): number | TryAgainBag | null {
                     if (scope !== 'wh40k') return null;
-                    return (this.flags.wh40k as Record<string, unknown>)[key] ?? null;
+                    if (key === 'try-again') return this.flags.wh40k['try-again'];
+                    return this.flags.wh40k['try-again'][key] ?? null;
                 },
-                getSituationalModifiers(): unknown[] {
+                getSituationalModifiers(): never[] {
                     return [];
                 },
             };
@@ -79,7 +100,7 @@ test.describe.serial('trying again warning (#62)', () => {
                 },
             };
 
-            let dialog: { render: (force: boolean) => Promise<unknown>; element?: HTMLElement; close?: () => Promise<unknown> };
+            let dialog: DialogInstance;
             try {
                 dialog = new Cls(actionData);
                 await dialog.render(true);

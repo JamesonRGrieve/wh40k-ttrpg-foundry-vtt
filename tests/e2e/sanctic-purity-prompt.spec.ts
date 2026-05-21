@@ -27,14 +27,33 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                interface ActorInstance {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.createEmbeddedDocuments returns Promise<Document[]> with no shipped types
+                    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<unknown[]>;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.delete returns Promise<this> with no shipped types
+                    delete?: () => Promise<unknown>;
+                }
+                interface FoundryGlobal {
+                    Actor?: { create?: (data: object) => Promise<ActorInstance | null> };
+                }
+                interface DialogInstance {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                    render: (force?: boolean) => Promise<unknown>;
+                    element: HTMLElement | null;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                    close: () => Promise<unknown>;
+                }
+                interface DialogModule {
+                    default: new (options: { actor: ActorInstance }) => DialogInstance;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const g = globalThis as unknown as FoundryGlobal;
                 const ActorCls = g.Actor;
                 if (ActorCls?.create == null) {
                     return { setupOk: false, rendered: false, hasSpend: false, hasDecline: false, fateText: '', error: 'Actor.create unavailable' };
                 }
 
-                let actor;
+                let actor: ActorInstance | null;
                 try {
                     actor = await ActorCls.create({
                         name: 'sanctic-purity-probe',
@@ -45,7 +64,14 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
                         },
                     });
                 } catch (err) {
-                    return { setupOk: false, rendered: false, hasSpend: false, hasDecline: false, fateText: '', error: String((err as Error).message) };
+                    return {
+                        setupOk: false,
+                        rendered: false,
+                        hasSpend: false,
+                        hasDecline: false,
+                        fateText: '',
+                        error: err instanceof Error ? err.message : String(err),
+                    };
                 }
                 if (actor == null) {
                     return { setupOk: false, rendered: false, hasSpend: false, hasDecline: false, fateText: '', error: 'Actor.create returned null' };
@@ -68,14 +94,9 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
 
                 try {
                     const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/sanctic-purity-prompt.js';
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (options: { actor: unknown }): {
-                            render: (force?: boolean) => Promise<unknown>;
-                            element: HTMLElement | null;
-                            close: () => Promise<unknown>;
-                        };
-                    };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return { setupOk: true, rendered, hasSpend, hasDecline, fateText, error: 'default export not a constructor' };
                     }
@@ -88,14 +109,13 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
                     if (rendered && inst.element) {
                         hasSpend = inst.element.querySelector('[data-action="spend"]') !== null;
                         hasDecline = inst.element.querySelector('[data-action="decline"]') !== null;
-                        fateText = inst.element.textContent ?? '';
+                        fateText = inst.element.textContent;
                     }
                 } catch (err) {
-                    error = String((err as Error).message);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { setupOk: true, rendered, hasSpend, hasDecline, fateText, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.setupOk, `setup error: ${result.error ?? ''}`).toBe(true);
@@ -112,15 +132,21 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
 
             // Cleanup
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any */
-                const g = globalThis as any;
+                interface ActorHandle {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.delete returns Promise<this> with no shipped types
+                    delete?: () => Promise<unknown>;
+                }
+                interface CleanupGlobal {
+                    game?: { actors?: { getName?: (name: string) => ActorHandle | undefined } };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const g = globalThis as unknown as CleanupGlobal;
                 const a = g.game?.actors?.getName?.('sanctic-purity-probe');
                 try {
                     await a?.delete?.();
                 } catch {
                     /* ignore */
                 }
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
         }
     });

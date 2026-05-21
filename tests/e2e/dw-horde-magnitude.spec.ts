@@ -26,7 +26,34 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface HordeData {
+                    toHitBonus?: number;
+                    bonusDamageDice?: number;
+                    sizeKeyword?: string;
+                    magnitude?: { current?: number; max?: number };
+                }
+                interface HordeSystem {
+                    horde?: HordeData;
+                    applyMagnitudeDamage?: (loss: number, source: string) => Promise<void>;
+                }
+                interface HordeSheet {
+                    render?: (force?: boolean) => Promise<void>;
+                    element?: HTMLElement | null;
+                    close?: () => Promise<void>;
+                }
+                interface HordeActor {
+                    id?: string;
+                    system?: HordeSystem;
+                    sheet?: HordeSheet;
+                    delete?: () => Promise<void>;
+                }
+                interface FoundryActorGlobal {
+                    Actor?: { create?: (data: object) => Promise<HordeActor | null> };
+                    __c9horde?: HordeActor;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const gt = globalThis as unknown as FoundryActorGlobal;
+
                 let error: string | null = null;
                 let rendered = false;
                 let toHitBonus: number | null = null;
@@ -37,7 +64,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                 let actorId: string | null = null;
 
                 try {
-                    const ActorCls = (globalThis as any).Actor;
+                    const ActorCls = gt.Actor;
                     if (typeof ActorCls?.create !== 'function') {
                         return {
                             rendered,
@@ -64,7 +91,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                             },
                         },
                     });
-                    if (actor === null || actor === undefined) {
+                    if (actor === null) {
                         return {
                             rendered,
                             toHitBonus,
@@ -100,7 +127,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                     }
 
                     // Keep the sheet open for the snap() call below.
-                    (globalThis as any).__c9horde = actor;
+                    gt.__c9horde = actor;
                 } catch (err) {
                     error = String(err instanceof Error ? err.message : String(err));
                 }
@@ -115,30 +142,40 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                     actorId,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'dw-horde-magnitude-sheet');
 
             // Tear down so the actor doesn't leak into a sibling spec.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const a = (globalThis as any).__c9horde;
+                interface HordeSheet {
+                    close?: () => Promise<void>;
+                }
+                interface HordeActor {
+                    sheet?: HordeSheet;
+                    delete?: () => Promise<void>;
+                }
+                interface FoundryGlobal {
+                    __c9horde?: HordeActor;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const gt = globalThis as unknown as FoundryGlobal;
+                const a = gt.__c9horde;
                 try {
                     await a?.sheet?.close?.();
                     await a?.delete?.();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__c9horde = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                gt.__c9horde = undefined;
             });
 
             // Skip the spec gracefully if the DW NPC datamodel isn't registered
             // in this test build (e.g., the manifest didn't include the dw-npc
             // type for some lane); we still want page errors to fail loudly.
-            if (result.error !== null && /Actor\.create returned null|datamodel|invalid type/i.test(result.error)) {
-                test.skip(true, `DW NPC datamodel not registered: ${result.error}`);
+            const datamodelMissing = result.error !== null && /Actor\.create returned null|datamodel|invalid type/i.exec(result.error) !== null;
+            if (datamodelMissing) {
+                test.skip(true, `DW NPC datamodel not registered: ${result.error ?? ''}`);
             }
 
             expect(result.error, `horde probe error: ${result.error ?? ''}`).toBeNull();

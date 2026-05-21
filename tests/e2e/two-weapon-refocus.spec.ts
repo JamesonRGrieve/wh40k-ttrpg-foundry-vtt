@@ -30,8 +30,10 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
+                const g = globalThis as unknown as {
+                    foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
+                };
                 let error: string | null = null;
                 let rendered = false;
                 let granted = false;
@@ -41,16 +43,20 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                 let hasSystemAttr = false;
                 let hasWh40kClass = false;
 
+                interface TwrPlan {
+                    granted: boolean;
+                    attacks: ReadonlyArray<{ hand: string; actionName: string; actionCost: string; modifier: number }>;
+                    aimAppliesToOffHand: boolean;
+                }
+                interface TwrModule {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: deployed rules module input is heterogeneous content payload; consumer interface is opaque
+                    resolveTwoWeaponRefocus?: (ctx: unknown) => TwrPlan;
+                }
+
                 try {
                     const moduleUrl = '/systems/wh40k-rpg/module/rules/two-weapon-fighting.js';
-                    const mod = await import(moduleUrl);
-                    const resolve = mod.resolveTwoWeaponRefocus as
-                        | ((ctx: unknown) => {
-                              granted: boolean;
-                              attacks: ReadonlyArray<{ hand: string; actionName: string; actionCost: string; modifier: number }>;
-                              aimAppliesToOffHand: boolean;
-                          })
-                        | undefined;
+                    const mod = (await import(moduleUrl)) as TwrModule;
+                    const resolve = mod.resolveTwoWeaponRefocus;
                     if (typeof resolve !== 'function') {
                         return {
                             rendered,
@@ -74,7 +80,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                     actionNames = plan.attacks.map((a) => a.actionName);
                     actionCosts = plan.attacks.map((a) => a.actionCost);
 
-                    const renderTpl = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
+                    const renderTpl = g.foundry?.applications?.handlebars?.renderTemplate;
                     if (typeof renderTpl !== 'function') {
                         return {
                             rendered,
@@ -129,7 +135,6 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                     hasWh40kClass,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'two-weapon-refocus');

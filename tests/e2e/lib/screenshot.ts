@@ -73,10 +73,10 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
         // Idempotent — if the game is already running this is a no-op.
         await page.evaluate(() => {
             try {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- browser-side: Foundry `game` global is runtime-only
-                const g = globalThis as any;
-                const hasTogglePause = Boolean(g.game?.togglePause);
-                if (hasTogglePause && g.game?.paused === true) g.game.togglePause(false);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global is injected by the licensed app; no shipped types
+                const g = globalThis as unknown as { game?: { paused?: boolean; togglePause?: (state: boolean) => void } };
+                const hasTogglePause = typeof g.game?.togglePause === 'function';
+                if (hasTogglePause && g.game?.paused === true) g.game.togglePause?.(false);
             } catch {
                 /* ignore */
             }

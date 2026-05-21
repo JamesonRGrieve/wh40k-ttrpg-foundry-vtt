@@ -28,7 +28,6 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/bc-psychic-panel.hbs';
                 let error: string | null = null;
                 let rendered = false;
@@ -44,9 +43,14 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
                 let modeAttr = '';
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fetch`/`Handlebars` globals are injected by the licensed app; Handlebars compile ctx is opaque */
+                    const g = globalThis as unknown as {
+                        fetch: (u: string) => Promise<Response>;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars compile context is opaque template data
+                        Handlebars: { compile: (s: string) => (ctx: unknown) => string };
+                    };
+                    const src = await (await g.fetch(templateUrl)).text();
+                    const HbsLib = g.Handlebars;
                     if (typeof HbsLib.compile !== 'function') {
                         return {
                             rendered,
@@ -113,7 +117,8 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
                     // Hold the host on a global handle so snap() (called
                     // outside this evaluate) captures the live DOM. Tearing
                     // it down here would leave the screenshot empty.
-                    (globalThis as any).__bcPsychicPanelHost = host;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing a DOM host on globalThis for cross-evaluate cleanup; no shipped types
+                    (globalThis as unknown as { __bcPsychicPanelHost: HTMLElement | undefined }).__bcPsychicPanelHost = host;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
@@ -132,7 +137,6 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
                     modeAttr,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'bc-psychic-strength-panel');
@@ -140,15 +144,14 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
             // Panel captured; tear it down so it doesn't leak into the next
             // serial test's DOM.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const host = (globalThis as any).__bcPsychicPanelHost as HTMLElement | undefined;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading back DOM host stashed on globalThis from the prior evaluate; no shipped types
+                const g = globalThis as unknown as { __bcPsychicPanelHost: HTMLElement | undefined };
                 try {
-                    host?.remove();
+                    g.__bcPsychicPanelHost?.remove();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__bcPsychicPanelHost = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__bcPsychicPanelHost = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

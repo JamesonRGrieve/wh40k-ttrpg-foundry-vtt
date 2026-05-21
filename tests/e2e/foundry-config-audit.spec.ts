@@ -180,7 +180,52 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 actorTypesByPrefixInner: Record<string, readonly string[]>;
                 itemTypeCategoriesInner: Record<string, readonly string[]>;
             }): FlowResult[] => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: CONFIG / game.wh40k are dynamically-typed Foundry boundaries */
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type -- boundary: Foundry document classes are runtime constructors with no shipped types
+                type DocCtor = Function;
+                interface SheetEntry {
+                    cls?: { name?: string };
+                    id?: string;
+                    label?: string;
+                }
+                interface DocumentClass {
+                    documentClass?: DocCtor;
+                    documentClasses?: Record<string, DocCtor>;
+                    dataModels?: Record<string, DocCtor>;
+                    sheetClasses?: Record<string, Record<string, SheetEntry>>;
+                }
+                interface TokenConfig extends DocumentClass {
+                    rulerClass?: DocCtor;
+                    movement?: {
+                        costAggregator?: (entries: Array<{ cost: number }>, a: undefined, b: undefined) => number;
+                    };
+                }
+                interface Wh40kNamespace {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: game.wh40k namespace is a dynamically-populated Foundry surface with no shipped types
+                    [key: string]: unknown;
+                }
+                interface FoundryCONFIG {
+                    Actor?: DocumentClass;
+                    Item?: DocumentClass;
+                    ActiveEffect?: DocumentClass;
+                    ChatMessage?: DocumentClass;
+                    Token?: TokenConfig;
+                    Combat?: { initiative?: { formula?: string } };
+                    MeasuredTemplate?: { defaults?: { angle?: number } };
+                    Dice?: { rolls?: Array<{ name?: string }> };
+                    wh40k?: Wh40kNamespace;
+                    TextEditor?: { enrichers?: Array<{ pattern?: RegExp | string }> };
+                    statusEffects?: Array<{ id?: string; name?: string; img?: string; icon?: string }>;
+                }
+                interface FoundryGame {
+                    wh40k?: Wh40kNamespace;
+                }
+                interface FoundryGlobals {
+                    CONFIG?: FoundryCONFIG;
+                    game?: FoundryGame;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const gt = globalThis as unknown as FoundryGlobals;
+
                 const out: FlowResult[] = [];
                 const allowedKeys = new Set(foundryConfigFlowsInner);
                 const record = (name: string, ok: boolean, detail: string | null = null): void => {
@@ -200,8 +245,8 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                     }
                 };
 
-                const cfg: any = (globalThis as any).CONFIG;
-                const gameRef: any = (globalThis as any).game;
+                const cfg = gt.CONFIG;
+                const gameRef = gt.game;
 
                 // ---------- CONFIG core document-class slots ----------
                 guarded('config::Actor.documentClass', () => {
@@ -210,7 +255,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                     return typeof cls === 'function' && typeof name === 'string' && name.length > 0 && name.includes('Actor');
                 });
                 guarded('config::Actor.documentClasses-map', () => {
-                    const map = cfg?.Actor?.documentClasses as Record<string, unknown> | undefined;
+                    const map = cfg?.Actor?.documentClasses;
                     if (map === undefined) return 'CONFIG.Actor.documentClasses is undefined';
                     const expected = ['dh2-character', 'dh2-npc', 'dh2-vehicle', 'rt-starship', 'bc-character', 'im-character', 'loot'];
                     const missing = expected.filter((k) => typeof map[k] !== 'function');
@@ -255,22 +300,22 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 });
                 guarded('config::MeasuredTemplate.defaults.angle', () => cfg?.MeasuredTemplate?.defaults?.angle === 30);
                 guarded('config::Dice.rolls.BasicRollWH40K', () => {
-                    const rolls = cfg?.Dice?.rolls as Array<{ name?: string }> | undefined;
+                    const rolls = cfg?.Dice?.rolls;
                     if (!Array.isArray(rolls)) return 'CONFIG.Dice.rolls is not an array';
                     return rolls.some((r) => r.name === 'BasicRollWH40K') ? true : 'BasicRollWH40K missing from CONFIG.Dice.rolls';
                 });
                 guarded('config::Dice.rolls.D100Roll', () => {
-                    const rolls = cfg?.Dice?.rolls as Array<{ name?: string }> | undefined;
+                    const rolls = cfg?.Dice?.rolls;
                     if (!Array.isArray(rolls)) return 'CONFIG.Dice.rolls is not an array';
                     return rolls.some((r) => r.name === 'D100Roll') ? true : 'D100Roll missing from CONFIG.Dice.rolls';
                 });
                 guarded('config::wh40k.config-installed', () => {
                     const w = cfg?.wh40k;
-                    return w !== null && w !== undefined && typeof w === 'object';
+                    return w !== undefined && typeof w === 'object';
                 });
 
                 // ---------- Actor dataModels (per game-system prefix) ----------
-                const actorDataModels = (cfg?.Actor?.dataModels ?? {}) as Record<string, unknown>;
+                const actorDataModels: Record<string, DocCtor> = cfg?.Actor?.dataModels ?? {};
                 for (const [prefix, types] of Object.entries(actorTypesByPrefixInner)) {
                     const key = `config::Actor.dataModels.${prefix}-all`;
                     guarded(key, () => {
@@ -281,7 +326,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 guarded('config::Actor.dataModels.loot', () => typeof actorDataModels['loot'] === 'function');
 
                 // ---------- Item dataModels (by category) ----------
-                const itemDataModels = (cfg?.Item?.dataModels ?? {}) as Record<string, unknown>;
+                const itemDataModels: Record<string, DocCtor> = cfg?.Item?.dataModels ?? {};
                 for (const [category, types] of Object.entries(itemTypeCategoriesInner)) {
                     const key = `config::Item.dataModels.${category}`;
                     guarded(key, () => {
@@ -291,9 +336,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 }
 
                 // ---------- Actor sheetClasses (per game-system prefix) ----------
-                const actorSheetClasses = (cfg?.Actor?.sheetClasses ?? {}) as Partial<
-                    Record<string, Record<string, { cls?: unknown; id?: string; label?: string }>>
-                >;
+                const actorSheetClasses: Record<string, Record<string, SheetEntry> | undefined> = cfg?.Actor?.sheetClasses ?? {};
                 for (const [prefix, types] of Object.entries(actorTypesByPrefixInner)) {
                     const key = `config::Actor.sheetClasses.${prefix}-all`;
                     guarded(key, () => {
@@ -330,7 +373,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                     return anon.length === 0 ? true : `anonymous sheet classes found: ${anon.slice(0, 5).join(', ')}`;
                 });
 
-                const itemSheetClasses = (cfg?.Item?.sheetClasses ?? {}) as Record<string, Record<string, { cls?: unknown; id?: string }>>;
+                const itemSheetClasses: Record<string, Record<string, SheetEntry>> = cfg?.Item?.sheetClasses ?? {};
                 guarded('config::Item.sheetClasses.populated', () => {
                     const totalEntries = Object.values(itemSheetClasses).reduce((sum, sheets) => sum + Object.keys(sheets).length, 0);
                     return totalEntries > 0 ? true : 'CONFIG.Item.sheetClasses is empty';
@@ -375,7 +418,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 });
 
                 // ---------- game.wh40k namespace surface ----------
-                const wh40k = gameRef?.wh40k as Record<string, unknown> | undefined;
+                const wh40k = gameRef?.wh40k;
                 guarded('config::game.wh40k.namespace', () => wh40k !== undefined && typeof wh40k === 'object');
                 guarded('config::game.wh40k.log', () => typeof wh40k?.['log'] === 'function');
                 guarded('config::game.wh40k.warn', () => typeof wh40k?.['warn'] === 'function');
@@ -409,7 +452,6 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 guarded('config::game.wh40k.D100Roll', () => typeof wh40k?.['D100Roll'] === 'function');
 
                 return out;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             {
                 foundryConfigFlowsInner: FOUNDRY_CONFIG_FLOWS,

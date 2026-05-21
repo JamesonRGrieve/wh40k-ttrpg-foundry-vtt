@@ -68,8 +68,29 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
     try {
         const result = await page.evaluate(
             async ({ tabs, actions, formField }) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                type ActionHandler = (event: Event, target: HTMLElement) => void | Promise<void>;
+                interface ProbeSheet {
+                    render?: (force?: boolean) => Promise<void>;
+                    changeTab?: (tab: string, group: string) => void;
+                    tabGroups?: Record<string, string>;
+                    element?: HTMLElement | null;
+                    options?: { actions?: Record<string, ActionHandler | undefined> };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.submit accepts arbitrary form-field payloads
+                    submit?: (opts: { updateData?: Record<string, unknown> }) => Promise<void>;
+                    close?: () => Promise<void>;
+                }
+                interface ProbeActor {
+                    id?: string;
+                    sheet?: ProbeSheet;
+                    system?: { wounds?: { value?: number } };
+                    delete?: () => Promise<void>;
+                }
+                interface ProbeGlobals {
+                    Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
+                    game?: { actors?: { get?: (id: string) => ProbeActor | undefined } };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const g = globalThis as unknown as ProbeGlobals;
                 const ActorCls = g.Actor;
                 if (typeof ActorCls?.create !== 'function') {
                     return {
@@ -80,7 +101,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                         form: null,
                     };
                 }
-                let actor;
+                let actor: ProbeActor | null;
                 try {
                     actor = await ActorCls.create({
                         name: 'sheet-interactions-probe',
@@ -96,7 +117,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                         form: null,
                     };
                 }
-                if (actor == null) {
+                if (actor === null) {
                     return {
                         created: false,
                         createError: 'Actor.create returned null',
@@ -107,7 +128,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                 }
 
                 const sheet = actor.sheet;
-                if (sheet == null) {
+                if (sheet === undefined) {
                     try {
                         await actor.delete?.();
                     } catch {
@@ -122,15 +143,14 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                     };
                 }
 
-                await sheet.render(true);
+                await sheet.render?.(true);
                 // Allow the initial render to settle so PARTS are in the DOM.
                 await new Promise<void>((r) => {
                     setTimeout(r, 100);
                 });
 
                 /* -------- tab switching -------- */
-                const tabResults: Array<{ tabId: string; switched: boolean; error: string | null }> = [];
-                for (const tabId of tabs) {
+                const probeTab = async (tabId: string): Promise<{ tabId: string; switched: boolean; error: string | null }> => {
                     let switched = false;
                     let error: string | null = null;
                     try {
@@ -139,9 +159,8 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                             await new Promise<void>((r) => {
                                 setTimeout(r, 30);
                             });
-                            // Verify either tabGroups state OR a DOM element with .active
                             const groupActive = sheet.tabGroups?.primary === tabId;
-                            const navActive = sheet.element?.querySelector?.(`[data-tab="${tabId}"].active, [data-group="primary"][data-tab="${tabId}"]`);
+                            const navActive = sheet.element?.querySelector(`[data-tab="${tabId}"].active, [data-group="primary"][data-tab="${tabId}"]`);
                             switched = groupActive || navActive !== null;
                         } else {
                             error = 'sheet.changeTab not a function';
@@ -149,46 +168,48 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                     } catch (err) {
                         error = String(err instanceof Error ? err.message : String(err));
                     }
-                    tabResults.push({ tabId, switched, error });
+                    return { tabId, switched, error };
+                };
+                const tabResults: Array<{ tabId: string; switched: boolean; error: string | null }> = [];
+                for (const tabId of tabs) {
+                    // eslint-disable-next-line no-await-in-loop -- tab switches must complete in series before the next probe runs
+                    tabResults.push(await probeTab(tabId));
                 }
 
                 /* -------- action invocation -------- */
-                const actionResults: Array<{ action: string; invoked: boolean; error: string | null }> = [];
                 const actionMap = sheet.options?.actions ?? {};
-                for (const actionName of actions) {
-                    let invoked = false;
-                    let error: string | null = null;
+                const probeAction = async (actionName: string): Promise<{ action: string; invoked: boolean; error: string | null }> => {
                     const handler = actionMap[actionName];
                     if (typeof handler !== 'function') {
-                        actionResults.push({ action: actionName, invoked: false, error: 'handler not registered' });
-                        continue;
+                        return { action: actionName, invoked: false, error: 'handler not registered' };
                     }
                     try {
-                        // Synthesize an event + target so handlers that consult
-                        // event.preventDefault() / target.dataset don't NPE.
                         const target = document.createElement('div');
                         const event = new MouseEvent('click', { bubbles: false, cancelable: true });
-                        // ApplicationV2 binds `this` to the sheet at click time;
-                        // we replicate that here with .call().
                         const rv = handler.call(sheet, event, target);
-                        if (rv != null && typeof rv.then === 'function') await rv;
-                        invoked = true;
+                        if (rv instanceof Promise) await rv;
+                        return { action: actionName, invoked: true, error: null };
                     } catch (err) {
-                        error = String(err instanceof Error ? err.message : String(err));
+                        return { action: actionName, invoked: false, error: String(err instanceof Error ? err.message : String(err)) };
                     }
-                    actionResults.push({ action: actionName, invoked, error });
+                };
+                const actionResults: Array<{ action: string; invoked: boolean; error: string | null }> = [];
+                for (const actionName of actions) {
+                    // eslint-disable-next-line no-await-in-loop -- actions execute in series so failures attribute to the right handler
+                    actionResults.push(await probeAction(actionName));
                 }
 
                 /* -------- form-submit round-trip -------- */
                 let formResult: { field: string; submitted: boolean; valueBefore: number | null; valueAfter: number | null; error: string | null } | null =
                     null;
                 try {
-                    const getPath = (obj: any, path: string): unknown => {
-                        return path.split('.').reduce<any>((acc, k) => (acc == null ? acc : acc[k]), obj);
-                    };
-                    const valueBefore = Number(getPath(actor, formField) ?? 0);
+                    interface WoundsHolder {
+                        system?: { wounds?: { value?: number } };
+                    }
+                    const readWounds = (a: WoundsHolder | undefined): number => a?.system?.wounds?.value ?? 0;
+                    const valueBefore = readWounds(actor);
                     const targetValue = valueBefore === 7 ? 8 : 7;
-                    const updateData: Record<string, unknown> = {};
+                    const updateData: Record<string, number> = {};
                     updateData[formField] = targetValue;
                     let submitted = false;
                     let error: string | null = null;
@@ -203,8 +224,8 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                         error = String(err instanceof Error ? err.message : String(err));
                     }
                     // Re-read from the live document.
-                    const refreshed = g.game?.actors?.get?.(actor.id) ?? actor;
-                    const valueAfter = Number(getPath(refreshed, formField) ?? 0);
+                    const refreshed = (actor.id !== undefined ? g.game?.actors?.get?.(actor.id) : undefined) ?? actor;
+                    const valueAfter = readWounds(refreshed);
                     formResult = {
                         field: formField,
                         submitted: submitted && valueAfter === targetValue,
@@ -241,7 +262,6 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                     actions: actionResults,
                     form: formResult,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             { tabs: [...CHARACTER_TABS], actions: [...CHARACTER_ACTIONS], formField: FORM_FIELD },
         );

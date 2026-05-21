@@ -18,7 +18,13 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     await page.selectOption('select[name="userid"]', { label: 'Gamemaster' });
     await page.click('button[name="join"]');
     await page.waitForURL(/\/game/, { timeout: 30_000 });
-    await page.waitForFunction(() => (globalThis as unknown as { game?: { ready?: boolean } }).game?.ready === true, undefined, { timeout: 60_000 });
+    await page.waitForFunction(
+        () =>
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global `game` is injected by the licensed app; no shipped types
+            (globalThis as unknown as { game?: { ready?: boolean } }).game?.ready === true,
+        undefined,
+        { timeout: 60_000 },
+    );
     return true;
 }
 
