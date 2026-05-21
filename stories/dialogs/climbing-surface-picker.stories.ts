@@ -19,7 +19,26 @@ const SURFACE_LABEL: Record<ClimbingSurface, string> = {
     easy: 'Easy / assisted (+10)',
 };
 
-function buildContext(args: ClimbSurfaceArgs): Record<string, unknown> {
+interface ClimbSurfaceOption {
+    value: ClimbingSurface;
+    label: string;
+    isCurrent: boolean;
+}
+
+interface ClimbSurfaceCtx {
+    hasContextPanel: boolean;
+    contextExpanded: boolean;
+    isWeapon: boolean;
+    isPsychic: boolean;
+    isForceField: boolean;
+    hasSkillPanel: boolean;
+    isAthletics: boolean;
+    climbSurface: ClimbingSurface;
+    climbSurfaceOptions: ClimbSurfaceOption[];
+    climbMod: number;
+}
+
+function buildContext(args: ClimbSurfaceArgs): ClimbSurfaceCtx {
     const options = (['standard', 'sheer', 'easy'] as const).map((value) => ({
         value,
         label: SURFACE_LABEL[value],

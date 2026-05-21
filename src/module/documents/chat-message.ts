@@ -213,59 +213,49 @@ export class ChatMessageWH40K extends ChatMessage {
         }
 
         // Route to appropriate handler
-        switch (action) {
-            case 'rollDamage':
-            case 'damage':
-                await (message as ChatMessageWH40K).rollDamage();
-                return;
-
-            case 'applyDamage': {
-                const damage = parseInt(button.dataset['damage'] ?? '0', 10) || 0;
-                const options = {
-                    damageType: button.dataset['damageType'],
-                    penetration: parseInt(button.dataset['penetration'] ?? '0', 10) || 0,
-                    location: button.dataset['location'],
-                };
-                await (message as ChatMessageWH40K).applyDamage(damage, options);
-                return;
-            }
-
-            case 'useItem':
-            case 'use':
-                await (message as ChatMessageWH40K).useItem();
-                return;
-
-            case 'attack': {
-                const itemUuid = button.dataset['itemUuid'] ?? (message as ChatMessageWH40K).itemUuid;
-                if (itemUuid !== null && itemUuid !== '') {
-                    const item = (await fromUuid(itemUuid)) as RollableItem | null;
-                    const actor = item?.actor;
-                    if (item !== null && actor !== null) {
-                        // Import and use targeted action manager
-                        const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
-                        DHTargetedActionManager.performWeaponAttack(actor as never, null, item as never);
-                    }
-                }
-                return;
-            }
-
-            case 'roll': {
-                const itemUuid = button.dataset['itemUuid'] ?? (message as ChatMessageWH40K).itemUuid;
-                if (itemUuid !== null && itemUuid !== '') {
-                    const item = (await fromUuid(itemUuid)) as RollableItem | null;
-                    if (item !== null && typeof item.roll === 'function') {
-                        await item.roll();
-                    }
-                }
-                return;
-            }
-
-            case undefined:
-                return;
-
-            default:
-                game.wh40k.log(`Unknown chat action: ${action}`);
+        if (action === undefined) return;
+        if (action === 'rollDamage' || action === 'damage') {
+            await (message as ChatMessageWH40K).rollDamage();
+            return;
         }
+        if (action === 'applyDamage') {
+            const damage = parseInt(button.dataset['damage'] ?? '0', 10) || 0;
+            const options = {
+                damageType: button.dataset['damageType'],
+                penetration: parseInt(button.dataset['penetration'] ?? '0', 10) || 0,
+                location: button.dataset['location'],
+            };
+            await (message as ChatMessageWH40K).applyDamage(damage, options);
+            return;
+        }
+        if (action === 'useItem' || action === 'use') {
+            await (message as ChatMessageWH40K).useItem();
+            return;
+        }
+        if (action === 'attack') {
+            const itemUuid = button.dataset['itemUuid'] ?? (message as ChatMessageWH40K).itemUuid;
+            if (itemUuid !== null && itemUuid !== '') {
+                const item = (await fromUuid(itemUuid)) as RollableItem | null;
+                const actor = item?.actor;
+                if (item !== null && actor !== null) {
+                    // Import and use targeted action manager
+                    const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
+                    DHTargetedActionManager.performWeaponAttack(actor as never, null, item as never);
+                }
+            }
+            return;
+        }
+        if (action === 'roll') {
+            const itemUuid = button.dataset['itemUuid'] ?? (message as ChatMessageWH40K).itemUuid;
+            if (itemUuid !== null && itemUuid !== '') {
+                const item = (await fromUuid(itemUuid)) as RollableItem | null;
+                if (item !== null && typeof item.roll === 'function') {
+                    await item.roll();
+                }
+            }
+            return;
+        }
+        game.wh40k.log(`Unknown chat action: ${action}`);
     }
 
     /**

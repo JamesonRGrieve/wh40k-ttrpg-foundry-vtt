@@ -53,8 +53,10 @@ export interface DwMissionActionHost {
             cohesionMax: number;
             experience?: { total?: number; available?: number };
         };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() signature accepts arbitrary diff records and returns the resolved Document or undefined
         update: (data: Record<string, unknown>) => Promise<unknown>;
     };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications.notify() forwards arbitrary options to Foundry's notification API
     _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
 }
 
@@ -77,6 +79,7 @@ const STATUS_CYCLE: Record<ObjectiveStatus, ObjectiveStatus> = {
     failed: 'pending',
 };
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: catch-clause exception payload is intrinsically unknown; narrowed on the next line via `instanceof Error`
 function reportFailure(host: DwMissionActionHost, label: string, error: unknown): void {
     const message = error instanceof Error ? error.message : String(error);
     host._notify('error', `${label}: ${message}`, { duration: 5000 });
@@ -248,6 +251,7 @@ export async function dwCompleteMission(this: DwMissionActionHost, _event: Event
         const nextCohesion =
             cohesionMax > 0 ? Math.min(cohesionMax, this.actor.system.cohesionCurrent + reward.cohesionRecovered) : this.actor.system.cohesionCurrent;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: assembled diff payload for Foundry Document.update(); keys use dotted system paths
         const updates: Record<string, unknown> = {
             'system.activeMission': null,
             'system.renown': nextRenown,

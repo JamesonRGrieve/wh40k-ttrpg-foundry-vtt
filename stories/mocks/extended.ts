@@ -90,34 +90,64 @@ export function withSystem(actor: MockActor, systemId: SystemId, role: 'characte
             systemExtensions: {
                 [systemId]: systemSpecificDefaults(systemId),
             },
-        } as MockActor['system'] & { systemExtensions: Record<string, unknown> },
+        } as MockActor['system'] & { systemExtensions: SystemExtensionsMap },
     };
 }
 
-function systemSpecificDefaults(systemId: SystemId): Record<string, unknown> {
-    switch (systemId) {
-        case 'im':
-            return {
-                patrons: [],
-                factions: [],
-                endeavours: [],
-                criticalHits: [],
-            };
-        case 'rt':
-            return { profitFactor: 30, misfortunes: [], shipShares: 1 };
-        case 'dw':
-            return { chapter: 'Ultramarines', deedHonours: [], successorChapter: '' };
-        case 'bc':
-            return { infamy: 0, alignment: 'Khorne', soulFate: 'unsworn' };
-        case 'ow':
-            return { regiment: 'Cadian Shock Troops', squadRole: 'guardsman', logisticsRating: 0 };
-        case 'dh1':
-            return { advanceScheme: 'core', insanityPoints: 0 };
-        case 'dh2':
-            return { background: 'imperial-guard', motivation: 'duty', divination: '' };
-        default:
-            return systemId satisfies never;
-    }
+interface ImSystemDefaults {
+    patrons: string[];
+    factions: string[];
+    endeavours: string[];
+    criticalHits: string[];
+}
+interface RtSystemDefaults {
+    profitFactor: number;
+    misfortunes: string[];
+    shipShares: number;
+}
+interface DwSystemDefaults {
+    chapter: string;
+    deedHonours: string[];
+    successorChapter: string;
+}
+interface BcSystemDefaults {
+    infamy: number;
+    alignment: string;
+    soulFate: string;
+}
+interface OwSystemDefaults {
+    regiment: string;
+    squadRole: string;
+    logisticsRating: number;
+}
+interface Dh1SystemDefaults {
+    advanceScheme: string;
+    insanityPoints: number;
+}
+interface Dh2SystemDefaults {
+    background: string;
+    motivation: string;
+    divination: string;
+}
+
+type SystemDefaults = ImSystemDefaults | RtSystemDefaults | DwSystemDefaults | BcSystemDefaults | OwSystemDefaults | Dh1SystemDefaults | Dh2SystemDefaults;
+
+interface SystemExtensionsMap {
+    [key: string]: SystemDefaults | undefined;
+}
+
+const SYSTEM_DEFAULTS_BY_ID: { readonly [K in SystemId]: () => SystemDefaults } = {
+    im: () => ({ patrons: [], factions: [], endeavours: [], criticalHits: [] }),
+    rt: () => ({ profitFactor: 30, misfortunes: [], shipShares: 1 }),
+    dw: () => ({ chapter: 'Ultramarines', deedHonours: [], successorChapter: '' }),
+    bc: () => ({ infamy: 0, alignment: 'Khorne', soulFate: 'unsworn' }),
+    ow: () => ({ regiment: 'Cadian Shock Troops', squadRole: 'guardsman', logisticsRating: 0 }),
+    dh1: () => ({ advanceScheme: 'core', insanityPoints: 0 }),
+    dh2: () => ({ background: 'imperial-guard', motivation: 'duty', divination: '' }),
+};
+
+function systemSpecificDefaults(systemId: SystemId): SystemDefaults {
+    return SYSTEM_DEFAULTS_BY_ID[systemId]();
 }
 
 // ── NPC / Vehicle / Starship actors ─────────────────────────────────────────

@@ -479,67 +479,66 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const item = this.items.get(itemId);
         if (!item) return;
 
-        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default: branch handles all unhandled item types
-        switch (item.type) {
-            case 'weapon':
-                if (item.system.equipped !== true) {
-                    // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.WeaponNotEquipped localization key not yet in en.json
-                    ui.notifications.warn('Actor must have weapon equipped!');
-                    return;
-                }
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {
-                    if (item.isRanged) {
-                        await this.rollCharacteristic('ballisticSkill', item.name);
-                    } else {
-                        await this.rollCharacteristic('weaponSkill', item.name);
-                    }
-                } else {
-                    DHTargetedActionManager.performWeaponAttack(this, null, item);
-                }
+        if (item.type === 'weapon') {
+            if (item.system.equipped !== true) {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.WeaponNotEquipped localization key not yet in en.json
+                ui.notifications.warn('Actor must have weapon equipped!');
                 return;
-            case 'psychicPower':
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
-                    await this.rollCharacteristic('willpower', item.name);
-                } else {
-                    DHTargetedActionManager.performPsychicCast(this, null, item);
-                }
-                return;
-            case 'forceField':
-                if (item.system.equipped !== true || item.system['activated'] !== true) {
-                    // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.ForceFieldNotReady localization key not yet in en.json
-                    ui.notifications.warn('Actor must have force field equipped and activated!');
-                    return;
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: ForceFieldData ctor accepts the item document via per-system-typed slot
-                prepareUnifiedRoll(new ForceFieldData(this, item as unknown as ConstructorParameters<typeof ForceFieldData>[1]) as unknown as ActionData);
-                return;
-            default: {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: per-item-type field narrowed inline before string-vs-object dispatch
-                const benefit = (item.system as { benefit?: unknown }).benefit;
-                // eslint-disable-next-line no-restricted-syntax -- boundary: per-item-type field narrowed inline before string-vs-object dispatch
-                const description = (item.system as { description?: unknown }).description;
-                const rawDescription =
-                    (typeof benefit === 'string' ? benefit : null) ??
-                    (typeof description === 'string'
-                        ? description
-                        : typeof description === 'object' && description !== null && 'value' in description
-                        ? (description as { value?: string }).value ?? ''
-                        : '');
-                await DHBasicActionManager.sendItemVocalizeChat({
-                    actor: this.name,
-                    name: item.name,
-                    type: item.type.toUpperCase(),
-                    // eslint-disable-next-line @typescript-eslint/no-deprecated -- TextEditor.enrichHTML still works in V14; foundry.applications.ux.TextEditor.implementation is the V15 path
-                    description: await TextEditor.enrichHTML(rawDescription, {
-                        rollData: {
-                            actor: this,
-                            item: item,
-                            pr: this.psy.rating,
-                        },
-                    }),
-                });
             }
+            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {
+                if (item.isRanged) {
+                    await this.rollCharacteristic('ballisticSkill', item.name);
+                } else {
+                    await this.rollCharacteristic('weaponSkill', item.name);
+                }
+            } else {
+                DHTargetedActionManager.performWeaponAttack(this, null, item);
+            }
+            return;
         }
+        if (item.type === 'psychicPower') {
+            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
+                await this.rollCharacteristic('willpower', item.name);
+            } else {
+                DHTargetedActionManager.performPsychicCast(this, null, item);
+            }
+            return;
+        }
+        if (item.type === 'forceField') {
+            if (item.system.equipped !== true || item.system['activated'] !== true) {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.ForceFieldNotReady localization key not yet in en.json
+                ui.notifications.warn('Actor must have force field equipped and activated!');
+                return;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ForceFieldData ctor accepts the item document via per-system-typed slot
+            prepareUnifiedRoll(new ForceFieldData(this, item as unknown as ConstructorParameters<typeof ForceFieldData>[1]) as unknown as ActionData);
+            return;
+        }
+        // Default: vocalize the item's benefit/description in chat.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-item-type field narrowed inline before string-vs-object dispatch
+        const benefit = (item.system as { benefit?: unknown }).benefit;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-item-type field narrowed inline before string-vs-object dispatch
+        const description = (item.system as { description?: unknown }).description;
+        const rawDescription =
+            (typeof benefit === 'string' ? benefit : null) ??
+            (typeof description === 'string'
+                ? description
+                : typeof description === 'object' && description !== null && 'value' in description
+                ? (description as { value?: string }).value ?? ''
+                : '');
+        await DHBasicActionManager.sendItemVocalizeChat({
+            actor: this.name,
+            name: item.name,
+            type: item.type.toUpperCase(),
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- TextEditor.enrichHTML still works in V14; foundry.applications.ux.TextEditor.implementation is the V15 path
+            description: await TextEditor.enrichHTML(rawDescription, {
+                rollData: {
+                    actor: this,
+                    item: item,
+                    pr: this.psy.rating,
+                },
+            }),
+        });
     }
 
     /**
@@ -549,17 +548,15 @@ export class WH40KAcolyte extends WH40KBaseActor {
     async damageItem(itemId: string): Promise<void> {
         const item = this.items.get(itemId);
         if (!item) return;
-        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default: branch handles all unhandled item types
-        switch (item.type) {
-            case 'weapon':
-                await this.rollWeaponDamage(item);
-                return;
-            case 'psychicPower':
-                await this.rollPsychicPowerDamage(item);
-                return;
-            default:
-                ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
+        if (item.type === 'weapon') {
+            await this.rollWeaponDamage(item);
+            return;
         }
+        if (item.type === 'psychicPower') {
+            await this.rollPsychicPowerDamage(item);
+            return;
+        }
+        ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
     }
 
     /* -------------------------------------------- */

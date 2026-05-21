@@ -14,7 +14,7 @@ interface Args {
 
 const meta = {
     title: 'Dialogs/EffectCreationDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         selectedCategory: 'condition',
         conditions: [

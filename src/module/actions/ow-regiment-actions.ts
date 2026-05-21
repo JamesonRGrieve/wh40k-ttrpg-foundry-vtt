@@ -12,8 +12,8 @@
  * options (the engine still validates the persisted selection).
  */
 
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import RegimentBuilderDialog from '../applications/prompts/regiment-builder-dialog.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { RegimentOption } from '../rules/ow-regiment-creation.ts';
 
 /**

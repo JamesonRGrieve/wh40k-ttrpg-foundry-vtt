@@ -13,7 +13,15 @@ initializeStoryHandlebars();
 const compiled = Hbs.compile(templateSrc);
 const rng = seedRandom(0xd0c5a3e);
 
-function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface JournalSheetCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
+}
+function makeCtx(overrides: Partial<JournalSheetCtx> = {}): JournalSheetCtx {
     const id = randomId('journal', rng);
     const item = mockItem({
         _id: id,

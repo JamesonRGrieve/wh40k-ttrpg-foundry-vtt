@@ -397,6 +397,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                       // eslint-disable-next-line no-restricted-syntax -- boundary: per-actor skill / characteristic bags are typed loosely on WH40KBaseActor; structural read suffices
                       skills?: Record<string, { advance?: number; characteristic?: string; current?: number; basic?: boolean }>;
                       characteristics?: Record<string, { total?: number; label?: string; short?: string }>;
+                      // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry items.find returns the matched document with `unknown` until cast at use site
                       items?: { find?: (cb: (i: { type?: string; name?: string; system?: { identifier?: string } }) => boolean) => unknown };
                   }
                 | null
@@ -417,7 +418,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             const altCharacteristics = Array.isArray(skillItem?.system?.altCharacteristics) ? skillItem.system.altCharacteristics : [];
             const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? false;
 
-            const effectiveChar = this._charOverride ?? listedChar;
+            const charOverride = this._charOverride;
+            const effectiveChar = charOverride ?? listedChar;
             const usingAlt = this._charOverride !== null && this._charOverride !== listedChar;
             const altCharTotal = usingAlt ? Number(sourceActor?.characteristics?.[effectiveChar]?.total ?? 0) : 0;
 

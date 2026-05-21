@@ -22,10 +22,21 @@ initializeStoryHandlebars();
 
 const pushChatTemplate = HbsStory.compile(pushChatSrc);
 
+interface PushTheLimitCardContext {
+    gameSystem: string;
+    actorName: string;
+    invoked: boolean;
+    modifier: number;
+    success: boolean;
+    degrees: number;
+    triggersCritical: boolean;
+    criticalTableKey: string;
+}
+
 function cardContext(
     result: ReturnType<typeof resolvePushTheLimit>,
     extras: { actorName: string; success: boolean; degrees: number },
-): Record<string, unknown> {
+): PushTheLimitCardContext {
     return {
         gameSystem: 'dh2e',
         actorName: extras.actorName,

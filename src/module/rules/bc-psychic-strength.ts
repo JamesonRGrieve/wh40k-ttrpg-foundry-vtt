@@ -94,19 +94,12 @@ export interface EffectivePsyRatingArgs {
  */
 export function effectivePsyRating(args: EffectivePsyRatingArgs): number {
     const base = sanitiseNonNegativeInt(args.basePR);
-    switch (args.mode) {
-        case 'fettered':
-            return Math.floor(base / 2);
-        case 'unfettered':
-            return base;
-        case 'push': {
-            const requested = sanitiseNonNegativeInt(args.pushLevel);
-            const ceiling = maxPushLevel(args.psykerClass);
-            return base + Math.min(requested, ceiling);
-        }
-        default:
-            return base;
-    }
+    if (args.mode === 'fettered') return Math.floor(base / 2);
+    if (args.mode === 'unfettered') return base;
+    // push
+    const requested = sanitiseNonNegativeInt(args.pushLevel);
+    const ceiling = maxPushLevel(args.psykerClass);
+    return base + Math.min(requested, ceiling);
 }
 
 /* -------------------------------------------- */
@@ -156,18 +149,12 @@ export interface PhenomenaRollCountArgs {
  *     count, pass the clamped push level in.
  */
 export function phenomenaRollCount(args: PhenomenaRollCountArgs): number {
-    switch (args.mode) {
-        case 'fettered':
-            return 0;
-        case 'unfettered':
-            return 1;
-        case 'push': {
-            const level = sanitiseNonNegativeInt(args.pushLevel);
-            return 1 + level;
-        }
-        default:
-            return 1;
+    if (args.mode === 'fettered') return 0;
+    if (args.mode === 'push') {
+        const level = sanitiseNonNegativeInt(args.pushLevel);
+        return 1 + level;
     }
+    return 1;
 }
 
 /* -------------------------------------------- */

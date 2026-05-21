@@ -56,7 +56,7 @@ interface Args {
 
 const meta: Meta<Args> = {
     title: 'Character Creation/Divination Section Issue 199',
-    render: (args) => renderSheet(TEMPLATE_SRC, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(TEMPLATE_SRC, { ...args }),
     args: {
         divination: '',
         placeholder: 'Enter divination',

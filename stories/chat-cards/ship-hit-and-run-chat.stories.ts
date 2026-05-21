@@ -33,7 +33,19 @@ interface CardArgs {
     rolledCritB: number;
 }
 
-function cardContext(args: CardArgs): Record<string, unknown> {
+interface HitAndRunChatContext {
+    attackerName: string;
+    defenderName: string;
+    gameSystem: string;
+    approach: HitAndRunResolution['approach'];
+    command: HitAndRunResolution['command'];
+    appliedCrit: HitAndRunResolution['appliedCrit'];
+    hullDamage: HitAndRunResolution['hullDamage'];
+    rolledCritA: number;
+    rolledCritB: number;
+}
+
+function cardContext(args: CardArgs): HitAndRunChatContext {
     return {
         attackerName: args.attackerName,
         defenderName: args.defenderName,

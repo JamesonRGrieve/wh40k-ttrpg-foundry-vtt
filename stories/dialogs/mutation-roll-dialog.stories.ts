@@ -8,7 +8,15 @@ interface Args {
     track: MutationTrack;
 }
 
-function buildContext(args: Args): Record<string, unknown> {
+interface MutationRollCtx {
+    track: MutationTrack;
+    trackIsMinor: boolean;
+    trackIsMajor: boolean;
+    rangeMin: number;
+    rangeMax: number;
+}
+
+function buildContext(args: Args): MutationRollCtx {
     const range = TRACK_RANGES[args.track];
     return {
         track: args.track,
@@ -21,7 +29,7 @@ function buildContext(args: Args): Record<string, unknown> {
 
 const meta = {
     title: 'Dialogs/MutationRollDialog',
-    render: (args) => renderSheet(templateSrc, buildContext(args)),
+    render: (args) => renderSheet(templateSrc, { ...buildContext(args) }),
     args: {
         track: 'minor',
     },

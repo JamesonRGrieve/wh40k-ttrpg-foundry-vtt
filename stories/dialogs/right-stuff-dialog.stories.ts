@@ -26,7 +26,19 @@ const SKILLS = [
     { key: 'survival', labelKey: 'WH40K.RightStuff.Skill.survival' },
 ];
 
-function buildContext(args: Args): Record<string, unknown> {
+interface RightStuffContext {
+    actorName: string;
+    isAce: boolean;
+    hasFate: boolean;
+    eligible: boolean;
+    agilityBonus: number;
+    fateValue: number;
+    skills: typeof SKILLS;
+    selectedSkill: 'operate' | 'survival';
+    gameSystem: string;
+}
+
+function buildContext(args: Args): RightStuffContext {
     return {
         actorName: args.actorName,
         isAce: args.isAce,
@@ -42,7 +54,7 @@ function buildContext(args: Args): Record<string, unknown> {
 
 const meta = {
     title: 'Dialogs/RightStuffDialog',
-    render: (args: Args) => renderSheet(templateSrc, buildContext(args)),
+    render: (args: Args) => renderSheet(templateSrc, { ...buildContext(args) }),
     args: {
         actorName: 'Vex Tannor',
         isAce: true,
@@ -98,7 +110,7 @@ export const NotAceDisablesButton: Story = {
         const spend = canvasElement.querySelector('button[data-action="spendRightStuff"]');
         await expect((spend as HTMLButtonElement).disabled).toBe(true);
         // The eligibility-fail panel surfaces an Ace-only message.
-        const text = canvasElement.textContent ?? '';
+        const text = canvasElement.textContent;
         await expect(text.length).toBeGreaterThan(0);
     },
 };

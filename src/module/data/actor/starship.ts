@@ -374,6 +374,7 @@ export default class StarshipData extends ActorDataModel {
      * Existing actors and compendium hull entries stored a single number — that
      * value is the hull's SP budget. The `spent` field is recomputed each prep.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: SystemDataModel.migrateData signature is Foundry-defined (raw source/return)
     static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: SystemDataModel.migrateData inherits an untyped Foundry signature
         const out = super.migrateData(source);
@@ -382,6 +383,7 @@ export default class StarshipData extends ActorDataModel {
             out['shipPoints'] = { spent: 0, budget: sp };
         } else if (sp !== undefined && sp !== null && typeof sp === 'object') {
             // Ensure both keys exist even when one was omitted.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: legacy source is opaque; narrow per-field with typeof below
             const obj = sp as Record<string, unknown>;
             const budget = typeof obj['budget'] === 'number' ? obj['budget'] : 0;
             const spent = typeof obj['spent'] === 'number' ? obj['spent'] : 0;

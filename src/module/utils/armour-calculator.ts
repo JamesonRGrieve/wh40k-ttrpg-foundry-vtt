@@ -74,17 +74,13 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
     let traitBonus = 0;
 
     // Compute highest trait bonus from Machine or Natural Armor traits
+    const ARMOUR_TRAIT_NAMES = new Set(['Machine', 'Natural Armor', 'Natural Armour']);
     const traits = actor.items.filter((item: WH40KItem) => item.type === 'trait');
     for (const trait of traits) {
+        if (!ARMOUR_TRAIT_NAMES.has(trait.name)) continue;
         const system = trait.system as { level?: number };
-        switch (trait.name) {
-            case 'Machine':
-            case 'Natural Armor':
-            case 'Natural Armour':
-                if (system.level !== undefined && system.level > traitBonus) {
-                    traitBonus = system.level;
-                }
-                break;
+        if (system.level !== undefined && system.level > traitBonus) {
+            traitBonus = system.level;
         }
     }
 

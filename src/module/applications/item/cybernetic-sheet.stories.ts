@@ -13,7 +13,17 @@ initializeStoryHandlebars();
 const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0xc7b3a1c);
 
-function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface CyberneticCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    source: ReturnType<typeof mockItem>['system'];
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    effects: ReadonlyArray<never>;
+    tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
+}
+function makeCtx(overrides: Partial<CyberneticCtx> = {}): CyberneticCtx {
     const id = randomId('cybernetic', rng);
     const item = mockItem({
         _id: id,

@@ -86,20 +86,12 @@ export function formatChangeValue(change: EffectChangeRaw): string {
     // CONST is provided by Foundry. Use literal mode codes so this helper
     // works in test environments where `CONST` is absent.
     // 0=CUSTOM, 1=MULTIPLY, 2=ADD, 3=DOWNGRADE, 4=UPGRADE, 5=OVERRIDE
-    switch (change.mode) {
-        case 2: // ADD
-            return numeric > 0 ? `+${numeric}` : `${numeric}`;
-        case 1: // MULTIPLY
-            return `×${numeric}`;
-        case 5: // OVERRIDE
-            return `= ${numeric}`;
-        case 4: // UPGRADE
-            return `↑${numeric}`;
-        case 3: // DOWNGRADE
-            return `↓${numeric}`;
-        default:
-            return `${change.value}`;
-    }
+    if (change.mode === 2) return numeric > 0 ? `+${numeric}` : `${numeric}`; // ADD
+    if (change.mode === 1) return `×${numeric}`; // MULTIPLY
+    if (change.mode === 5) return `= ${numeric}`; // OVERRIDE
+    if (change.mode === 4) return `↑${numeric}`; // UPGRADE
+    if (change.mode === 3) return `↓${numeric}`; // DOWNGRADE
+    return `${change.value}`;
 }
 
 /**

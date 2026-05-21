@@ -18,7 +18,65 @@ initializeStoryHandlebars();
 const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0x7a1e47);
 
-function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface TalentTab {
+    id: string;
+    tab: string;
+    group: string;
+    active: boolean;
+    cssClass: string;
+}
+interface TalentSummary {
+    identifier: string;
+    category: string;
+    categoryLabel: string;
+    tier: number;
+    tierLabel: string;
+    cost: number;
+    isPassive: boolean;
+    isRollable: boolean;
+    stackable: boolean;
+    rank: number;
+    hasSpecialization: boolean;
+    specialization: string;
+    notes: string;
+    source: string;
+    sourceBook: string;
+    sourcePage: string;
+    aptitudes: ReadonlyArray<string>;
+    hasAptitudes: boolean;
+    benefit: string;
+    hasBenefit: boolean;
+    fullName: string;
+}
+interface TalentPrerequisites {
+    hasAny: boolean;
+    text: string;
+    characteristics: ReadonlyArray<string>;
+    skills: ReadonlyArray<string>;
+    talents: ReadonlyArray<string>;
+    hasText: boolean;
+    hasCharacteristics: boolean;
+    hasSkills: boolean;
+    hasTalents: boolean;
+    label: string;
+}
+interface TalentCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    source: ReturnType<typeof mockItem>['system'];
+    talent: TalentSummary;
+    prerequisites: TalentPrerequisites;
+    modifierRows: ReadonlyArray<never>;
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    isOwnedByActor: boolean;
+    isCompendiumItem?: boolean;
+    effects: ReadonlyArray<never>;
+    tabs: Record<string, TalentTab>;
+    activeTab: string;
+}
+function makeCtx(overrides: Partial<TalentCtx> = {}): TalentCtx {
     const id = randomId('talent', rng);
     // The talent sheet template gates each tab panel on `(eq activeTab "<id>")`
     // — `activeTab` is set at runtime from `this.tabGroups.primary` in
@@ -26,7 +84,7 @@ function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknow
     // simultaneously (the issue-201 "duplicate Benefit" symptom). Stories that
     // need a different active tab should pass `activeTab: '<tab-id>'` via the
     // overrides argument.
-    const activeTab = (overrides as { activeTab?: string }).activeTab ?? 'overview';
+    const activeTab = overrides.activeTab ?? 'overview';
     const item = mockItem({
         _id: id,
         id,

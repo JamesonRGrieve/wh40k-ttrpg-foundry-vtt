@@ -13,7 +13,23 @@ initializeStoryHandlebars();
 const compiled = HbsLib.compile(templateSrc);
 const rng = seedRandom(0xe7de8a04);
 
-function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface EndeavourTab {
+    id: string;
+    tab: string;
+    group: string;
+    active: boolean;
+    cssClass: string;
+    label: string;
+}
+interface EndeavourCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    tabs: Record<string, EndeavourTab>;
+}
+function makeCtx(overrides: Partial<EndeavourCtx> = {}): EndeavourCtx {
     const id = randomId('endeavour', rng);
     const objectives = [
         { name: 'Make landfall on Solenne Minoris', description: '', complete: true, ap: 1 },

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import HandlebarsLib from 'handlebars';
-import { resolvePsyMode, type PsyMode } from '../../src/module/rules/psychic-push.ts';
+import { resolvePsyMode, type PsyMode, type PsyModeResolved } from '../../src/module/rules/psychic-push.ts';
 import psychicPanelSrc from '../../src/templates/prompt/unified/panels/psychic-panel.hbs?raw';
 import { renderTemplate as renderMockTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
@@ -15,7 +15,26 @@ interface PsyContextArgs {
     pr: number;
 }
 
-function buildContext(args: PsyContextArgs): Record<string, unknown> {
+interface PsychicPanelCtx {
+    power: { id: string; name: string; img: string; isSelected: boolean };
+    psychicPowers: never[];
+    powerSelect: boolean;
+    pr: number;
+    maxPr: number;
+    hasFocus: boolean;
+    distance: number;
+    rangeName: string;
+    maxRange: number;
+    rollData: { modifiers: { bonus: number } };
+    psyMode: PsyMode;
+    pushLevel: number;
+    isFettered: boolean;
+    isUnfettered: boolean;
+    isPush: boolean;
+    psyModeBreakdown: PsyModeResolved;
+}
+
+function buildContext(args: PsyContextArgs): PsychicPanelCtx {
     const breakdown = resolvePsyMode({ mode: args.mode, basePR: args.pr, pushLevel: args.pushLevel });
     return {
         // Power slot present so the panel renders its config + selector.

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import HB from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { resolveTwoWeaponRefocus, type TwoWeaponRefocusContext } from '../../src/module/rules/two-weapon-fighting.ts';
+import { resolveTwoWeaponRefocus, type TwoWeaponRefocusContext, type TwoWeaponRefocusPlan } from '../../src/module/rules/two-weapon-fighting.ts';
 import refocusChatSrc from '../../src/templates/chat/two-weapon-refocus-chat.hbs?raw';
 import { renderTemplate as compileAndRender } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
@@ -18,7 +18,13 @@ initializeStoryHandlebars();
 
 const refocusTemplate = HB.compile(refocusChatSrc);
 
-function cardContext(ctx: TwoWeaponRefocusContext, gameSystem = 'dh2e'): Record<string, unknown> {
+interface TwoWeaponRefocusChatContext {
+    gameSystem: string;
+    granted: TwoWeaponRefocusPlan['granted'];
+    attacks: TwoWeaponRefocusPlan['attacks'];
+}
+
+function cardContext(ctx: TwoWeaponRefocusContext, gameSystem = 'dh2e'): TwoWeaponRefocusChatContext {
     const plan = resolveTwoWeaponRefocus(ctx);
     return {
         gameSystem,

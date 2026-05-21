@@ -54,7 +54,7 @@ function baseArgs(): CardArgs {
 
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Critical Hit',
-    render: (args) => renderMockTemplate(shipCriticalHitTemplate, args as unknown as Record<string, unknown>),
+    render: (args) => renderMockTemplate(shipCriticalHitTemplate, args),
     args: baseArgs(),
 };
 

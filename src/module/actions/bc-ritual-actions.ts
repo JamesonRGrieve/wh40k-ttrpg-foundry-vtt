@@ -163,7 +163,11 @@ async function promptBcRitualInputs(args: { initialMastery: number }): Promise<B
         ${modifierRow(3, 'gm-other', 0)}
     `;
 
-    const result = await dialogApi.prompt({
+    // DialogV2.prompt resolves to the ok.callback return value OR null on close;
+    // Foundry's typing collapses both to unknown. Accept the looser shape at
+    // the boundary and narrow defensively below.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt resolves to callback return OR null on close; narrowed via shape guards below
+    const result = (await dialogApi.prompt({
         window: { title: 'WH40K.BC.Ritual.DialogTitle' },
         content,
         ok: {
@@ -182,14 +186,10 @@ async function promptBcRitualInputs(args: { initialMastery: number }): Promise<B
             },
         },
         rejectClose: false,
-    });
+    })) as Partial<BcRitualDialogResult> | null | undefined;
 
     if (result === null || result === undefined) return null;
-    // The ok.callback above returns BcRitualDialogResult on success;
-    // DialogV2 types the boundary as unknown, so we narrow defensively
-    // via shape guards rather than trusting the runtime contract blindly.
-    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt returns unknown; narrow via shape guards below
-    const shape = result as unknown as Partial<BcRitualDialogResult>;
+    const shape: Partial<BcRitualDialogResult> = result;
     const rawTemplateId = shape.templateId;
     const templateId = typeof rawTemplateId === 'string' && rawTemplateId !== '' ? rawTemplateId : 'unnamed-ritual';
     const baseTarget = typeof shape.baseTarget === 'number' && Number.isFinite(shape.baseTarget) ? Math.max(0, Math.trunc(shape.baseTarget)) : 0;

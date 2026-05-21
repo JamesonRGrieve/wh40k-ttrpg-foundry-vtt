@@ -13,7 +13,26 @@ initializeStoryHandlebars();
 const compiled = HBS.compile(templateSrc);
 const rng = seedRandom(0x0a1b2c);
 
-function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface OriginPathCtx {
+    item: ReturnType<typeof mockItem>;
+    system: ReturnType<typeof mockItem>['system'];
+    grants: ReturnType<typeof mockItem>['system']['grants'];
+    modifiers: ReturnType<typeof mockItem>['system']['modifiers'];
+    requirements: ReturnType<typeof mockItem>['system']['requirements'];
+    step: ReturnType<typeof mockItem>['system']['step'];
+    xpCost: ReturnType<typeof mockItem>['system']['xpCost'];
+    hasCharModifiers: boolean;
+    charModifiers: Array<{ key: string; label: string; short: string; value: number }>;
+    hasSkillGrants: boolean;
+    skillGrants: Array<{ name: string; level: string }>;
+    hasTalentGrants: boolean;
+    talentGrants: ReadonlyArray<never>;
+    canEdit: boolean;
+    inEditMode: boolean;
+    editable: boolean;
+    tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
+}
+function makeCtx(overrides: Partial<OriginPathCtx> = {}): OriginPathCtx {
     const id = randomId('origin', rng);
     const item = mockItem({
         _id: id,

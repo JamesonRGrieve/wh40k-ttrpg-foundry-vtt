@@ -178,18 +178,12 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
      * maintain math only models the RAW four bands.
      */
     get installCraftsmanship(): CyberneticCraftsmanship {
-        switch (this.craftsmanship) {
-            case 'poor':
-                return 'poor';
-            case 'good':
-                return 'good';
-            case 'best':
-            case 'exceptional':
-            case 'master':
-                return 'best';
-            default:
-                return 'common';
+        if (this.craftsmanship === 'poor') return 'poor';
+        if (this.craftsmanship === 'good') return 'good';
+        if (this.craftsmanship === 'best' || this.craftsmanship === 'exceptional' || this.craftsmanship === 'master') {
+            return 'best';
         }
+        return 'common';
     }
 
     /**

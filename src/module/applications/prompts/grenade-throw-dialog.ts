@@ -39,10 +39,15 @@ interface GrenadeThrowContext extends Record<string, unknown> {
 
 interface AnyGame {
     user?: { id?: string; isGM?: boolean };
-    i18n?: { localize?: (k: string) => string; format?: (k: string, data: Record<string, unknown>) => string };
+    i18n?: {
+        localize?: (k: string) => string;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's i18n.format signature accepts a free-form interpolation map
+        format?: (k: string, data: Record<string, unknown>) => string;
+    };
 }
 
 function localize(key: string): string {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `game` global is not typed on globalThis
     const g = globalThis as unknown as { game?: AnyGame };
     // Inline-chained call preserves `this` binding; extracting via
     // `const fn = g.game?.i18n?.localize` and calling `fn(key)` loses it,

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import HandlebarsLib from 'handlebars';
-import { getTryAgainAdvice } from '../../src/module/rules/trying-again.ts';
+import { getTryAgainAdvice, type RetryAdvice } from '../../src/module/rules/trying-again.ts';
 import modifiersSrc from '../../src/templates/prompt/unified/modifiers.hbs?raw';
 import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
@@ -14,7 +14,23 @@ interface TryingAgainArgs {
     previousAttempts: number;
 }
 
-function buildContext(args: TryingAgainArgs): Record<string, unknown> {
+interface TryingAgainCtx {
+    isForceField: boolean;
+    hasSituationalModifiers: boolean;
+    situationalModifiers: never[];
+    showCustomModifier: boolean;
+    customMod: number;
+    assistantCount: number;
+    assistanceBonus: number;
+    assistantMax: number;
+    canIncrementAssistant: boolean;
+    canDecrementAssistant: boolean;
+    tryAgainAdvice: RetryAdvice | null;
+    tryAgainPenalty: number;
+    tryAgainPenaltyLabel: string;
+}
+
+function buildContext(args: TryingAgainArgs): TryingAgainCtx {
     const advice = getTryAgainAdvice(args.skillKey, args.previousAttempts);
     const penalty = advice.cumulativePenalty;
     const showAdvice = advice.blocksByConvention || advice.cumulativePenalty !== 0;

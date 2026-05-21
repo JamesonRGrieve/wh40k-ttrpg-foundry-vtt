@@ -31,7 +31,7 @@ function renderPanel(ctx: MissionGearPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderMockTemplate(panelTpl, ctx as unknown as Record<string, unknown>));
+    wrapper.appendChild(renderMockTemplate(panelTpl, ctx));
     return wrapper;
 }
 

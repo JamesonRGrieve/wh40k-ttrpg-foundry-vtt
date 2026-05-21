@@ -62,13 +62,11 @@ export class WH40KTour extends foundry.nue.Tour {
             this.currentWh40KStep.target !== undefined && this.currentWh40KStep.target !== '' ? this.currentWh40KStep.target : this.currentWh40KStep.selector;
         const element = document.querySelector<HTMLElement>(target);
         if (!element) return;
-        switch (this.currentWh40KStep.action) {
-            case 'click':
-                element.click();
-                break;
-            case 'scrollTo':
-                element.scrollIntoView({ block: 'start', inline: 'nearest' });
-                break;
+        if (this.currentWh40KStep.action === 'click') {
+            element.click();
+        } else {
+            // 'scrollTo'
+            element.scrollIntoView({ block: 'start', inline: 'nearest' });
         }
     }
 

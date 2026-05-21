@@ -603,17 +603,13 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             firstAttackBonus: 0, // AP bonus on first attack (Good only)
         };
 
-        switch (this.craftsmanship) {
-            case 'poor':
-                mods.agility = -10; // -10 to Agility tests
-                break;
-            case 'good':
-                mods.firstAttackBonus = 1; // +1 AP on first attack per round
-                break;
-            case 'best':
-                mods.armourBonus = 1; // +1 AP permanent
-                mods.weight = 0.5; // Half weight
-                break;
+        if (this.craftsmanship === 'poor') {
+            mods.agility = -10; // -10 to Agility tests
+        } else if (this.craftsmanship === 'good') {
+            mods.firstAttackBonus = 1; // +1 AP on first attack per round
+        } else if (this.craftsmanship === 'best') {
+            mods.armourBonus = 1; // +1 AP permanent
+            mods.weight = 0.5; // Half weight
         }
 
         return mods;

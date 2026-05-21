@@ -7,17 +7,19 @@ import templateSrc from './field-row.hbs?raw';
 
 initializeStoryHandlebars();
 
+type Primitive = string | number | boolean | null | undefined;
+
 // `eq` is registered globally by the runtime helper bundle but is not part
 // of the shared story helper set; register a minimal version locally.
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Handlebars.helpers is a live object; `eq` may be absent in story env even when defined at runtime
 if (Hbs.helpers['eq'] === undefined) {
-    Hbs.registerHelper('eq', (a: unknown, b: unknown) => a === b);
+    Hbs.registerHelper('eq', (a: Primitive, b: Primitive) => a === b);
 }
 
 interface Args {
     name: string;
     label: string;
-    value?: unknown;
+    value?: string | number;
     type?: 'text' | 'number' | 'select' | 'textarea';
     options?: Record<string, string>;
     placeholder?: string;
@@ -29,11 +31,12 @@ interface Args {
     labelClass?: string;
     inputClass?: string;
     rowClass?: string;
+    [key: string]: Primitive | Record<string, string>;
 }
 
 const meta = {
     title: 'Shared/FieldRow',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         name: 'system.bio.gender',
         label: 'Gender',

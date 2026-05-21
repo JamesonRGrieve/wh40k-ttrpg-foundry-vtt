@@ -27,7 +27,7 @@ interface MedicaeCardArgs {
     gameSystem: string;
 }
 
-function buildContext(args: MedicaeCardArgs): Record<string, unknown> {
+function buildContext(args: MedicaeCardArgs): MedicaeCardArgs {
     return {
         actorName: args.actorName,
         roll: args.roll,

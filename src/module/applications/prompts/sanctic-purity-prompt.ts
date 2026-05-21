@@ -35,6 +35,7 @@ const { ApplicationV2 } = foundry.applications.api;
 interface ActorWithFate {
     name?: string;
     system?: { fate?: { value?: number } };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update returns an untyped promise
     update?: (data: { 'system.fate.value': number }) => Promise<unknown>;
 }
 

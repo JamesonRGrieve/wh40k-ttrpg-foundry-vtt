@@ -533,25 +533,19 @@ export class GrantsProcessor {
         if (!Array.isArray(grantArray) || grantArray.length === 0) return;
 
         for (const grant of grantArray) {
-            switch (type) {
-                case 'skill':
-                    this._processSkillGrant(grant, context);
-                    break;
-                case 'talent':
-                    // eslint-disable-next-line no-await-in-loop -- talent grants may chain into nested item grants; ordering matters
-                    await this._processTalentGrant(grant, context);
-                    break;
-                case 'trait':
-                    // eslint-disable-next-line no-await-in-loop -- trait grants may load from compendium; ordering matters
-                    await this._processTraitGrant(grant, context);
-                    break;
-                case 'equipment':
-                    // eslint-disable-next-line no-await-in-loop -- equipment grants may load from compendium; ordering matters
-                    await this._processEquipmentGrant(grant, context);
-                    break;
-                case 'specialAbility':
-                    this._processSpecialAbilityGrant(grant, context);
-                    break;
+            if (type === 'skill') {
+                this._processSkillGrant(grant, context);
+            } else if (type === 'talent') {
+                // eslint-disable-next-line no-await-in-loop -- talent grants may chain into nested item grants; ordering matters
+                await this._processTalentGrant(grant, context);
+            } else if (type === 'trait') {
+                // eslint-disable-next-line no-await-in-loop -- trait grants may load from compendium; ordering matters
+                await this._processTraitGrant(grant, context);
+            } else if (type === 'equipment') {
+                // eslint-disable-next-line no-await-in-loop -- equipment grants may load from compendium; ordering matters
+                await this._processEquipmentGrant(grant, context);
+            } else if (type === 'specialAbility') {
+                this._processSpecialAbilityGrant(grant, context);
             }
 
             if (choiceLabel !== null && context.showNotification) {

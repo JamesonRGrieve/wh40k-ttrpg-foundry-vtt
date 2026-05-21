@@ -37,6 +37,7 @@ export interface DwAmmoActionThis {
         system: {
             selectedAmmo: DwSelectedAmmoId;
         };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() signature accepts arbitrary diff records and returns the resolved Document or undefined
         update: (data: Record<string, unknown>) => Promise<unknown>;
     };
 }

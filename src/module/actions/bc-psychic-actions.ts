@@ -72,6 +72,7 @@ interface BcPsychicDialogResult {
     pushLevel: number;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard implementation; `unknown` is the canonical guard input
 function isPsyMode(value: unknown): value is PsyMode {
     return value === 'fettered' || value === 'unfettered' || value === 'push';
 }
@@ -115,7 +116,12 @@ async function promptBcPsychicTestInputs(args: {
         </div>
     `;
 
-    const result = await dialogApi.prompt({
+    // DialogV2.prompt returns the ok.callback's return value or null when the
+    // dialog is closed without confirming. Foundry's type lies that it always
+    // resolves to the callback return; we accept the looser shape at the
+    // boundary and narrow defensively below.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt resolves to callback return OR null on close; narrowed below
+    const result = (await dialogApi.prompt({
         window: { title: 'WH40K.BC.Psychic.DialogTitle' },
         content,
         ok: {
@@ -130,14 +136,10 @@ async function promptBcPsychicTestInputs(args: {
             },
         },
         rejectClose: false,
-    });
+    })) as BcPsychicDialogResult | null | undefined;
 
     if (result === null || result === undefined) return null;
-    // DialogV2.prompt returns the ok.callback's return type but is typed
-    // as `unknown` at the boundary. Narrow defensively before handing
-    // off — invalid shapes degrade to safe defaults, never throw.
-    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt returns unknown; narrow via shape guards below
-    const shape = result as unknown as BcPsychicDialogResult;
+    const shape: BcPsychicDialogResult = result;
     if (!isPsyMode(shape.mode)) return { mode: 'unfettered', pushLevel: 0 };
     const pushLevel = Number.isFinite(shape.pushLevel) ? Math.max(0, Math.trunc(shape.pushLevel)) : 0;
     return { mode: shape.mode, pushLevel };

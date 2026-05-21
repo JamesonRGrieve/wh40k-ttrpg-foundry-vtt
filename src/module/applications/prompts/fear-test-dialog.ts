@@ -57,6 +57,7 @@ interface AnyGame {
  * observer picker. Filters to actors that expose a Willpower stat.
  */
 function listObserverOptions(): ObserverOption[] {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `game` global is not typed on globalThis
     const g = globalThis as unknown as { game?: AnyGame };
     const actors = g.game?.actors?.contents ?? [];
     const out: ObserverOption[] = [];

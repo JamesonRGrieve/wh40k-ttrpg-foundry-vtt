@@ -126,5 +126,5 @@ export const WITHIN_HOMEWORLD_IDS: readonly WithinHomeworldId[] = ['agriWorld', 
 
 /** Convenience: typed lookup. Returns `undefined` for unknown ids. */
 export function getWithinHomeworld(id: string): WithinHomeworldDef | undefined {
-    return (WITHIN_HOMEWORLDS as Record<string, WithinHomeworldDef | undefined>)[id];
+    return Object.hasOwn(WITHIN_HOMEWORLDS, id) ? WITHIN_HOMEWORLDS[id as WithinHomeworldId] : undefined;
 }

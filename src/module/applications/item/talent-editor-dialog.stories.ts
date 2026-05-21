@@ -14,7 +14,48 @@ initializeStoryHandlebars();
 const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0x7a1de0);
 
-function makeCtx(activeSection = 'prerequisites', overrides: Record<string, unknown> = {}): Record<string, unknown> {
+interface CharacteristicEntry {
+    key: string;
+    label: string;
+    value: number;
+}
+interface SectionFlags {
+    prerequisites: boolean;
+    modifiers: boolean;
+    situational: boolean;
+    grants: boolean;
+}
+interface TalentEditorCtx {
+    id: string;
+    item: {
+        name: string;
+        system: {
+            prerequisites: { text: string; characteristics: ReadonlyArray<CharacteristicEntry>; skills: ReadonlyArray<string>; talents: ReadonlyArray<string> };
+            modifiers: {
+                characteristics: Record<string, number>;
+                skills: Record<string, number>;
+                combat: Record<string, number>;
+                resources: Record<string, number>;
+                other: ReadonlyArray<string>;
+            };
+            situationalModifiers: ReadonlyArray<string>;
+            grants: { skills: ReadonlyArray<string>; talents: ReadonlyArray<string>; traits: ReadonlyArray<string>; specialAbilities: ReadonlyArray<string> };
+        };
+    };
+    sections: SectionFlags;
+    prerequisites: { text: string; characteristics: ReadonlyArray<CharacteristicEntry>; skills: ReadonlyArray<string>; talents: ReadonlyArray<string> };
+    characteristicOptions: ReadonlyArray<{ value: string; label: string }>;
+    modifiers: {
+        charMods: ReadonlyArray<string>;
+        skillMods: ReadonlyArray<string>;
+        combatMods: ReadonlyArray<string>;
+        resourceMods: ReadonlyArray<string>;
+        otherMods: ReadonlyArray<string>;
+    };
+    situationalMods: ReadonlyArray<string>;
+    grants: { skills: ReadonlyArray<string>; talents: ReadonlyArray<string>; traits: ReadonlyArray<string>; specialAbilities: ReadonlyArray<string> };
+}
+function makeCtx(activeSection = 'prerequisites', overrides: Partial<TalentEditorCtx> = {}): TalentEditorCtx {
     const id = randomId('talent-editor', rng);
     return {
         id,

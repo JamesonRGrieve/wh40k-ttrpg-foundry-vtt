@@ -209,20 +209,12 @@ export class WH40KActiveEffect extends ActiveEffect {
         const modes = CONST.ACTIVE_EFFECT_MODES;
         const value = Number(change.value);
 
-        switch (change.mode) {
-            case modes.ADD:
-                return current + value;
-            case modes.MULTIPLY:
-                return current * value;
-            case modes.OVERRIDE:
-                return value;
-            case modes.UPGRADE:
-                return Math.max(current, value);
-            case modes.DOWNGRADE:
-                return Math.min(current, value);
-            default:
-                return current;
-        }
+        if (change.mode === modes.ADD) return current + value;
+        if (change.mode === modes.MULTIPLY) return current * value;
+        if (change.mode === modes.OVERRIDE) return value;
+        if (change.mode === modes.UPGRADE) return Math.max(current, value);
+        if (change.mode === modes.DOWNGRADE) return Math.min(current, value);
+        return current;
     }
 
     /* -------------------------------------------- */

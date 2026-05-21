@@ -14,7 +14,12 @@ const SEVERITY_OPTIONS = [
     { id: 'acute', labelKey: 'WH40K.DisorderRoll.Acute', threshold: 80 },
 ] as const;
 
-function buildContext(args: Args): Record<string, unknown> {
+interface DisorderCtx {
+    severities: typeof SEVERITY_OPTIONS;
+    severity: DisorderSeverity;
+}
+
+function buildContext(args: Args): DisorderCtx {
     return {
         severities: SEVERITY_OPTIONS,
         severity: args.severity,
@@ -23,7 +28,7 @@ function buildContext(args: Args): Record<string, unknown> {
 
 const meta = {
     title: 'Dialogs/DisorderRollDialog',
-    render: (args) => renderSheet(templateSrc, buildContext(args)),
+    render: (args) => renderSheet(templateSrc, { ...buildContext(args) }),
     args: {
         severity: 'minor' as DisorderSeverity,
     },

@@ -50,6 +50,7 @@ export interface DwVehicleActionHost {
             overIntegrity: number;
         };
     };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications.notify() forwards arbitrary options to Foundry's notification API
     _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
 }
 
@@ -100,6 +101,7 @@ async function postVehicleChat(host: DwVehicleActionHost, ctx: ChatCardContext):
     await ChatMessage.create(payload);
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: catch-clause exception payload is intrinsically unknown; narrowed on the next line via `instanceof Error`
 function reportFailure(host: DwVehicleActionHost, label: string, error: unknown): void {
     const message = error instanceof Error ? error.message : String(error);
     host._notify('error', `${label}: ${message}`, { duration: 5000 });

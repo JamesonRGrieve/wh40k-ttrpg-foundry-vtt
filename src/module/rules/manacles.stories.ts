@@ -14,12 +14,24 @@
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { mockActiveEffect } from '../../../stories/mocks';
+import { type MockActiveEffect, mockActiveEffect } from '../../../stories/mocks';
 import { renderSheet, renderSheetParts } from '../../../stories/test-helpers';
 import actorActiveEffectsPanelSrc from '../../templates/actor/panel/active-effects-panel.hbs?raw';
 import effectRowSrc from '../../templates/actor/partial/effect-row.hbs?raw';
 import unifiedModifiersSrc from '../../templates/prompt/unified/modifiers.hbs?raw';
 import { MANACLES_BS_PENALTY, MANACLES_EFFECT_NAME, MANACLES_WS_PENALTY } from './manacles.ts';
+
+type ActiveEffectOverrides = Parameters<typeof mockActiveEffect>[0];
+
+interface SituationalRow {
+    toggleKey: string;
+    source: string;
+    condition: string;
+    icon: string;
+    value: number;
+    valueLabel: string;
+    active: boolean;
+}
 
 const meta: Meta = {
     title: 'Rules / Manacles (#105)',
@@ -28,7 +40,7 @@ export default meta;
 
 type Story = StoryObj;
 
-function manaclesEffect(overrides: Record<string, unknown> = {}): ReturnType<typeof mockActiveEffect> {
+function manaclesEffect(overrides: ActiveEffectOverrides = {}): MockActiveEffect {
     return mockActiveEffect({
         id: 'ae-manacled',
         label: MANACLES_EFFECT_NAME,
@@ -43,7 +55,7 @@ function manaclesEffect(overrides: Record<string, unknown> = {}): ReturnType<typ
     });
 }
 
-function manaclesSituationalRow(): Record<string, unknown> {
+function manaclesSituationalRow(): SituationalRow {
     return {
         toggleKey: 'manacles',
         source: 'Manacled',

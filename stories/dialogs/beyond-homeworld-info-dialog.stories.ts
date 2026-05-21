@@ -18,7 +18,23 @@ interface Args {
     showAllRiders: boolean;
 }
 
-function buildContext(): Record<string, unknown> {
+interface BeyondHomeworldCardCtx {
+    id: string;
+    label: string;
+    accent: string;
+    bonusesLabel: string;
+    penaltiesLabel: string;
+    fateLabel: string;
+    woundsLabel: string;
+    aptitude: string;
+    keyTalents: readonly string[];
+    recommendedBackgrounds: readonly string[];
+    mechanicalHook: string;
+    corruptionRiderLabel: string | null;
+    subtletyClampLabel: string | null;
+}
+
+function buildContext(): { homeworlds: BeyondHomeworldCardCtx[] } {
     return {
         homeworlds: listBeyondHomeworlds().map((def) => ({
             id: def.id,

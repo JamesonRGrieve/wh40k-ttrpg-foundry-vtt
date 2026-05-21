@@ -22,7 +22,24 @@ const OBSERVERS: ObserverOption[] = [
     { id: 'acolyte-3', name: 'Scribe Thel', willpower: 24 },
 ];
 
-function buildContext(args: Args): Record<string, unknown> {
+interface FearTestPip {
+    index: number;
+    on: boolean;
+}
+
+interface FearTestCtx {
+    observers: ObserverOption[];
+    selectedObserverId: string | null;
+    willpower: number;
+    fearRating: number;
+    maxFearRating: number;
+    target: number;
+    isNoOp: boolean;
+    pips: FearTestPip[];
+    fearRatingHigh: boolean;
+}
+
+function buildContext(args: Args): FearTestCtx {
     const { target, isNoOp } = resolveFearTest({ willpowerTotal: args.willpower, fearRating: args.fearRating });
     const pips = Array.from({ length: MAX_FEAR_RATING }, (_v, i) => ({
         index: i + 1,
@@ -43,7 +60,7 @@ function buildContext(args: Args): Record<string, unknown> {
 
 const meta = {
     title: 'Dialogs/FearTestDialog',
-    render: (args) => renderSheet(templateSrc, buildContext(args)),
+    render: (args) => renderSheet(templateSrc, { ...buildContext(args) }),
     args: {
         willpower: 38,
         fearRating: 1,

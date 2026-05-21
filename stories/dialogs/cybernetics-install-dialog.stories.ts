@@ -28,7 +28,19 @@ const SITE_OPTIONS = [
     { id: 'neural', labelKey: 'WH40K.Cybernetics.SiteNeural' },
 ] as const;
 
-function buildContext(args: Args): Record<string, unknown> {
+interface CyberneticsCtx {
+    deviceName: string;
+    difficulties: { value: number; label: string }[];
+    craftsmanships: typeof CRAFTSMANSHIP_OPTIONS;
+    sites: typeof SITE_OPTIONS;
+    baseDifficulty: number;
+    craftsmanship: CyberneticCraftsmanship;
+    site: CyberneticInstallSite;
+    surgeonSkillTotal: number;
+    surgeonModifier: number;
+}
+
+function buildContext(args: Args): CyberneticsCtx {
     const difficulties = Object.entries(rollDifficulties()).map(([value, label]) => ({
         value: Number(value),
         label,
@@ -48,7 +60,7 @@ function buildContext(args: Args): Record<string, unknown> {
 
 const meta = {
     title: 'Dialogs/CyberneticsInstallDialog',
-    render: (args) => renderSheet(templateSrc, buildContext(args)),
+    render: (args) => renderSheet(templateSrc, { ...buildContext(args) }),
     args: {
         deviceName: 'Bionic Arm',
         craftsmanship: 'common' as CyberneticCraftsmanship,

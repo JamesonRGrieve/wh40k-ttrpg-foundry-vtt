@@ -13,7 +13,22 @@ interface ExtendedToggleArgs {
     extendedThreshold: number;
 }
 
-function buildContext(args: ExtendedToggleArgs): Record<string, unknown> {
+interface ExtendedTestCtx {
+    isForceField: boolean;
+    hasSituationalModifiers: boolean;
+    situationalModifiers: never[];
+    showCustomModifier: boolean;
+    customMod: number;
+    assistantCount: number;
+    assistanceBonus: number;
+    assistantMax: number;
+    canIncrementAssistant: boolean;
+    canDecrementAssistant: boolean;
+    extended: boolean;
+    extendedThreshold: number;
+}
+
+function buildContext(args: ExtendedToggleArgs): ExtendedTestCtx {
     return {
         // Force the modifiers partial down its non-force-field branch.
         isForceField: false,

@@ -3,20 +3,26 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-weapon-quality-sheet.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
 
+interface QualityItem {
+    name: string;
+    img: string;
+}
+interface QualitySystem {
+    identifier: string;
+    hasLevel: boolean;
+    level: number;
+    description: { value: string };
+    effect: string;
+    notes: string;
+    source: { book: string; page: string; custom: string };
+}
 interface QualityArgs {
-    item: { name: string; img: string };
-    system: {
-        identifier: string;
-        hasLevel: boolean;
-        level: number;
-        description: { value: string };
-        effect: string;
-        notes: string;
-        source: { book: string; page: string; custom: string };
-    };
+    item: QualityItem;
+    system: QualitySystem;
+    [key: string]: QualityItem | QualitySystem;
 }
 
-const baseSystem = (): QualityArgs['system'] => ({
+const baseSystem = (): QualitySystem => ({
     identifier: 'tearing',
     hasLevel: false,
     level: 0,
@@ -28,7 +34,7 @@ const baseSystem = (): QualityArgs['system'] => ({
 
 const meta = {
     title: 'Item Sheets/WeaponQualitySheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         item: { name: 'Tearing', img: 'icons/svg/weapon-quality.svg' },
         system: baseSystem(),

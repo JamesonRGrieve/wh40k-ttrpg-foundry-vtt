@@ -162,7 +162,7 @@ export const BEYOND_HOMEWORLDS: Record<BeyondHomeworldDef['id'], BeyondHomeworld
 
 /** Look up a Beyond home-world definition by id, returning undefined when unknown. */
 export function getBeyondHomeworld(id: string): BeyondHomeworldDef | undefined {
-    return (BEYOND_HOMEWORLDS as Record<string, BeyondHomeworldDef | undefined>)[id];
+    return Object.hasOwn(BEYOND_HOMEWORLDS, id) ? BEYOND_HOMEWORLDS[id as BeyondHomeworldDef['id']] : undefined;
 }
 
 /** Ordered list of definitions, suitable for rendering as cards in a UI. */

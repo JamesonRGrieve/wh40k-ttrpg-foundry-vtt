@@ -95,6 +95,7 @@ export default class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2
         event.preventDefault();
         const result = rollMutation(this.track);
         const mutation: MutationDef | null = result.mutation;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `game` global is not typed on globalThis
         const g = globalThis as unknown as { game?: AnyGame };
         const localize = g.game?.i18n?.localize?.bind(g.game.i18n);
 

@@ -3,32 +3,35 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-condition-sheet.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
 
+interface ConditionSystem {
+    nature: string;
+    natureIcon: string;
+    natureLabel: string;
+    appliesTo: string;
+    appliesToIcon: string;
+    appliesToLabel: string;
+    stackable: boolean;
+    stacks: number;
+    isTemporary: boolean;
+    durationDisplay: string;
+    duration: { value: number; units: string };
+    notes: string;
+    description: { value: string };
+    effect: string;
+    removal: string;
+}
+interface ConditionItem {
+    name: string;
+    img: string;
+    system: ConditionSystem;
+}
 interface ConditionArgs {
-    item: {
-        name: string;
-        img: string;
-        system: {
-            nature: string;
-            natureIcon: string;
-            natureLabel: string;
-            appliesTo: string;
-            appliesToIcon: string;
-            appliesToLabel: string;
-            stackable: boolean;
-            stacks: number;
-            isTemporary: boolean;
-            durationDisplay: string;
-            duration: { value: number; units: string };
-            notes: string;
-            description: { value: string };
-            effect: string;
-            removal: string;
-        };
-    };
-    system: ConditionArgs['item']['system'];
+    item: ConditionItem;
+    system: ConditionSystem;
+    [key: string]: ConditionItem | ConditionSystem;
 }
 
-const baseSystem = (): ConditionArgs['item']['system'] => ({
+const baseSystem = (): ConditionSystem => ({
     nature: 'mental',
     natureIcon: 'fa-brain',
     natureLabel: 'Mental',
@@ -48,7 +51,7 @@ const baseSystem = (): ConditionArgs['item']['system'] => ({
 
 const meta = {
     title: 'Item Sheets/ConditionSheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         item: { name: 'Shaken', img: 'icons/svg/skull.svg', system: baseSystem() },
         system: baseSystem(),

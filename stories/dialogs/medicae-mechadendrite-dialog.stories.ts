@@ -15,7 +15,7 @@ interface Args {
     medicaeBonus: number;
 }
 
-function buildContext(args: Args): Record<string, unknown> {
+function buildContext(args: Args): Args {
     return {
         actorName: args.actorName,
         eligible: args.eligible,
@@ -25,7 +25,7 @@ function buildContext(args: Args): Record<string, unknown> {
 
 const meta = {
     title: 'Dialogs/MedicaeMechadendriteDialog',
-    render: (args) => renderSheet(templateSrc, buildContext(args)),
+    render: (args) => renderSheet(templateSrc, { ...buildContext(args) }),
     args: {
         actorName: 'Brother Medicae Voss',
         eligible: true,

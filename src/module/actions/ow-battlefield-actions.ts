@@ -44,6 +44,7 @@ export interface OwBattlefieldHost {
             regimentalAwards: string[];
         };
     };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: forwards arbitrary system-field values to Foundry's Document.update() via the sheet helper
     _updateSystemField: (field: string, value: unknown) => Promise<void>;
 }
 

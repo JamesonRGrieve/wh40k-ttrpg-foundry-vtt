@@ -20,7 +20,7 @@ interface Args {
 
 const meta = {
     title: 'Dialogs/TransactionApprovalDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         summary: 'Trooper requests 2x Lasgun from Quartermaster.',
         modeLabel: 'Barter',

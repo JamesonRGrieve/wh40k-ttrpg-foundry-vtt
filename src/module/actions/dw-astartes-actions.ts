@@ -29,7 +29,8 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
  */
 export interface AstartesActionHandlerThis {
     readonly actor: WH40KBaseActor & {
-        readonly system: { readonly implants?: ReadonlyArray<string> };
+        readonly system: { readonly implants: ReadonlyArray<string> };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() signature accepts arbitrary diff records and returns the resolved Document or undefined
         update: (diff: Record<string, unknown>) => Promise<unknown>;
     };
 }
@@ -48,7 +49,7 @@ export async function dwAstartesToggleImplant(this: AstartesActionHandlerThis, _
     const implantId = target.dataset['implantId'];
     if (implantId === undefined || implantId === '') return;
 
-    const current = this.actor.system.implants ?? [];
+    const current = this.actor.system.implants;
     const seen = new Set<string>();
     const deduped: string[] = [];
     for (const id of current) {

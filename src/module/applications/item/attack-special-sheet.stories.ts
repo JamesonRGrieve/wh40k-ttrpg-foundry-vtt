@@ -3,18 +3,20 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-attack-special-sheet.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
 
-interface Args {
-    item: {
-        name: string;
-        img: string;
-        system: {
-            hasLevel: boolean;
-            enabled: boolean;
-            level: number;
-            source: string;
-            description: { value: string };
-        };
+interface ItemContext {
+    name: string;
+    img: string;
+    system: {
+        hasLevel: boolean;
+        enabled: boolean;
+        level: number;
+        source: string;
+        description: { value: string };
     };
+}
+interface Args {
+    item: ItemContext;
+    [key: string]: ItemContext;
 }
 
 const baseItem = (): Args['item'] => ({
@@ -31,7 +33,7 @@ const baseItem = (): Args['item'] => ({
 
 const meta = {
     title: 'Item Sheets/AttackSpecialSheet',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: { item: baseItem() },
 } satisfies Meta<Args>;
 export default meta;

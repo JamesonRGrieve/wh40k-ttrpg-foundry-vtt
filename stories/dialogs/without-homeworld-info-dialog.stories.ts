@@ -25,7 +25,24 @@ function accentFor(id: string): 'crimson' | 'green' | 'grey' {
     return 'grey';
 }
 
-function buildContext(): Record<string, unknown> {
+interface WithoutHomeworldCardCtx {
+    id: string;
+    label: string;
+    accent: 'crimson' | 'green' | 'grey';
+    bonusesLabel: string;
+    penaltiesLabel: string;
+    fateLabel: string;
+    woundsLabel: string;
+    aptitude: string;
+    keyTalents: readonly string[];
+    recommendedBackgrounds: readonly string[];
+    mechanicalHook: string;
+    surpriseSuppressionLabel: string | null;
+    serenityLabel: string | null;
+    pursuitOfDataLabel: string | null;
+}
+
+function buildContext(): { homeworlds: WithoutHomeworldCardCtx[] } {
     return {
         homeworlds: listWithoutHomeworlds().map((def) => ({
             id: def.id,

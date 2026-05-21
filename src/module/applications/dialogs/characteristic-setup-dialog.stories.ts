@@ -29,7 +29,7 @@ interface Args {
 
 const meta = {
     title: 'Dialogs/CharacteristicSetupDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         rollsBank: [
             { index: 0, displayIndex: 1, value: 38 },

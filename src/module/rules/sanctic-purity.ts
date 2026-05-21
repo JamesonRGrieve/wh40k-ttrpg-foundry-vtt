@@ -51,10 +51,12 @@ interface ActorWithTalentLookup {
  * for `null` / `undefined` actors and for actors without a
  * `hasTalent` method, so the caller can use it as a plain guard.
  */
+function hasTalentLookup(value: object): value is ActorWithTalentLookup {
+    return 'hasTalent' in value && typeof (value as Partial<ActorWithTalentLookup>).hasTalent === 'function';
+}
+
 export function hasEmperorsAnathema(actor: WH40KBaseActor | ActorWithTalentLookup | null | undefined): boolean {
     if (actor == null) return false;
-    const lookup = actor as unknown as Partial<ActorWithTalentLookup>;
-    const hasTalent = lookup.hasTalent;
-    if (typeof hasTalent !== 'function') return false;
-    return TALENT_NAMES.some((name) => hasTalent.call(lookup, name));
+    if (!hasTalentLookup(actor)) return false;
+    return TALENT_NAMES.some((name) => actor.hasTalent(name));
 }

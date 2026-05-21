@@ -249,17 +249,14 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
             weight: 1.0, // Weight multiplier
         };
 
-        switch (this.craftsmanship) {
-            case 'poor':
-                mods.weight = 1.1; // +10% weight
-                break;
-            case 'good':
-                mods.weight = 0.9; // -10% weight
-                break;
-            case 'best':
-                mods.weight = 0.8; // -20% weight
-                break;
-        }
+        const WEIGHT_MULT_BY_CRAFT: Record<string, number> = {
+            poor: 1.1, // +10% weight
+            good: 0.9, // -10% weight
+            best: 0.8, // -20% weight
+        };
+        const w = WEIGHT_MULT_BY_CRAFT[this.craftsmanship];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test.json lacks noUncheckedIndexedAccess; main tsconfig requires this guard
+        if (w !== undefined) mods.weight = w;
 
         return mods;
     }

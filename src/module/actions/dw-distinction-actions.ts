@@ -37,9 +37,10 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 export interface DistinctionActionHandlerThis {
     readonly actor: WH40KBaseActor & {
         readonly system: {
-            readonly distinctions?: ReadonlyArray<string>;
-            readonly marksOfDistinction?: ReadonlyArray<string>;
+            readonly distinctions: ReadonlyArray<string>;
+            readonly marksOfDistinction: ReadonlyArray<string>;
         };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() signature accepts arbitrary diff records and returns the resolved Document or undefined
         update: (diff: Record<string, unknown>) => Promise<unknown>;
     };
 }
@@ -75,18 +76,18 @@ export async function dwToggleDistinction(this: DistinctionActionHandlerThis, _e
     const distinctionId = target.dataset['distinctionId'];
     if (distinctionId === undefined || distinctionId === '') return;
 
-    const distinctions = dedup(this.actor.system.distinctions ?? []);
-    const marks = dedup(this.actor.system.marksOfDistinction ?? []);
+    const distinctions = dedup(this.actor.system.distinctions);
+    const marks = dedup(this.actor.system.marksOfDistinction);
 
     const hasDistinction = distinctions.includes(distinctionId);
     if (hasDistinction) {
         // Removing the Distinction also strips any matching Mark — a
         // Mark cannot persist without its parent honour.
-        const nextDistinctions = distinctions.filter((id) => id !== distinctionId);
-        const nextMarks = marks.filter((id) => id !== distinctionId);
+        const filteredDistinctions = distinctions.filter((id) => id !== distinctionId);
+        const filteredMarks = marks.filter((id) => id !== distinctionId);
         await this.actor.update({
-            'system.distinctions': nextDistinctions,
-            'system.marksOfDistinction': nextMarks,
+            'system.distinctions': filteredDistinctions,
+            'system.marksOfDistinction': filteredMarks,
         });
         return;
     }
@@ -110,21 +111,23 @@ export async function dwToggleMark(this: DistinctionActionHandlerThis, _event: E
     const markId = target.dataset['markId'];
     if (markId === undefined || markId === '') return;
 
-    const distinctions = dedup(this.actor.system.distinctions ?? []);
-    const marks = dedup(this.actor.system.marksOfDistinction ?? []);
+    const distinctions = dedup(this.actor.system.distinctions);
+    const marks = dedup(this.actor.system.marksOfDistinction);
 
     const hasMark = marks.includes(markId);
     if (hasMark) {
-        const nextMarks = marks.filter((id) => id !== markId);
-        await this.actor.update({ 'system.marksOfDistinction': nextMarks });
+        const filteredMarks = marks.filter((id) => id !== markId);
+        await this.actor.update({ 'system.marksOfDistinction': filteredMarks });
         return;
     }
 
-    const diff: Record<string, unknown> = {
-        'system.marksOfDistinction': [...marks, markId],
-    };
-    if (!distinctions.includes(markId)) {
-        diff['system.distinctions'] = [...distinctions, markId];
+    const nextMarks = [...marks, markId];
+    if (distinctions.includes(markId)) {
+        await this.actor.update({ 'system.marksOfDistinction': nextMarks });
+    } else {
+        await this.actor.update({
+            'system.marksOfDistinction': nextMarks,
+            'system.distinctions': [...distinctions, markId],
+        });
     }
-    await this.actor.update(diff);
 }

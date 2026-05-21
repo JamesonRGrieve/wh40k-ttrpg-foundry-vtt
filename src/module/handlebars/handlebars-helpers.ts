@@ -618,20 +618,16 @@ export function registerHandlebarsHelpers(): void {
         return foundry.utils.getRoute(icon);
     });
 
+    const DAMAGE_TYPE_KEYS: Record<string, string> = {
+        e: 'DAMAGE_TYPE.ENERGY',
+        i: 'DAMAGE_TYPE.IMPACT',
+        r: 'DAMAGE_TYPE.RENDING',
+        x: 'DAMAGE_TYPE.EXPLOSIVE',
+    };
     Handlebars.registerHelper('damageTypeLong', (damageType: TplValue) => {
         const normalizedType = (typeof damageType === 'string' && damageType !== '' ? damageType : 'i').toLowerCase();
-        switch (normalizedType) {
-            case 'e':
-                return game.i18n.localize('DAMAGE_TYPE.ENERGY');
-            case 'i':
-                return game.i18n.localize('DAMAGE_TYPE.IMPACT');
-            case 'r':
-                return game.i18n.localize('DAMAGE_TYPE.RENDING');
-            case 'x':
-                return game.i18n.localize('DAMAGE_TYPE.EXPLOSIVE');
-            default:
-                return game.i18n.localize('DAMAGE_TYPE.IMPACT');
-        }
+        const key = DAMAGE_TYPE_KEYS[normalizedType] ?? 'DAMAGE_TYPE.IMPACT';
+        return game.i18n.localize(key);
     });
 
     /**

@@ -33,7 +33,15 @@ interface CardArgs {
     resolution: RammingResolution;
 }
 
-function cardContext(args: CardArgs): Record<string, unknown> {
+interface RammingChatContext {
+    attackerName: string;
+    defenderName: string;
+    gameSystem: string;
+    toHit: RammingResolution['toHit'];
+    damage: RammingResolution['damage'];
+}
+
+function cardContext(args: CardArgs): RammingChatContext {
     return {
         attackerName: args.attackerName,
         defenderName: args.defenderName,

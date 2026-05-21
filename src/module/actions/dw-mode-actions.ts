@@ -36,6 +36,7 @@ export interface DwModeActionThis {
             combatMode: DwMode;
             sustainedAbilities: string[];
         };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() signature accepts arbitrary diff records and returns the resolved Document or undefined
         update: (data: Record<string, unknown>) => Promise<unknown>;
     };
 }
@@ -107,6 +108,6 @@ async function postModeTransitionChat(actor: DwModeActionThis['actor'], previous
     });
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user?.id, content } as unknown as Parameters<typeof ChatMessage.create>[0];
+    const payload = { user: game.user.id, content } as unknown as Parameters<typeof ChatMessage.create>[0];
     await ChatMessage.create(payload);
 }

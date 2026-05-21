@@ -27,7 +27,25 @@ const NAME_OVERRIDES: Record<string, string> = {
     smoke: 'Smoke Grenade',
 };
 
-function buildContext(args: Args): Record<string, unknown> {
+interface GrenadeCardCtx {
+    id: string;
+    label: string;
+    blastRadius: number;
+    damage: string;
+    specialQualities: readonly string[];
+    saveLabel: string;
+    failEffect: string;
+    accentClass: string;
+    isSelected: boolean;
+}
+
+interface GrenadeThrowCtx {
+    grenades: GrenadeCardCtx[];
+    selectedId: string;
+    selectedGrenade: GrenadeCardCtx | null;
+}
+
+function buildContext(args: Args): GrenadeThrowCtx {
     const grenades = listWithinGrenades().map((g) => ({
         id: g.id,
         label: NAME_OVERRIDES[g.id] ?? g.id,
@@ -48,7 +66,7 @@ function buildContext(args: Args): Record<string, unknown> {
 
 const meta = {
     title: 'Dialogs/GrenadeThrowDialog',
-    render: (args) => renderSheet(templateSrc, buildContext(args)),
+    render: (args) => renderSheet(templateSrc, { ...buildContext(args) }),
     args: {
         selectedId: 'psychotroke',
     },

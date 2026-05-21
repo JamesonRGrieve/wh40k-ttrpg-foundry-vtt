@@ -28,16 +28,13 @@ export interface ClimbingModifierInput {
     surfaceType: ClimbingSurface;
 }
 
+const CLIMBING_SURFACE_MODIFIERS: Record<ClimbingSurface, number> = {
+    sheer: SHEER_SURFACE_CLIMB_MODIFIER,
+    easy: EASY_SURFACE_CLIMB_MODIFIER,
+    standard: STANDARD_SURFACE_CLIMB_MODIFIER,
+};
+
 /** Returns the to-test modifier for the chosen climbing surface. */
 export function getClimbingModifier({ surfaceType }: ClimbingModifierInput): number {
-    switch (surfaceType) {
-        case 'sheer':
-            return SHEER_SURFACE_CLIMB_MODIFIER;
-        case 'easy':
-            return EASY_SURFACE_CLIMB_MODIFIER;
-        case 'standard':
-            return STANDARD_SURFACE_CLIMB_MODIFIER;
-        default:
-            return STANDARD_SURFACE_CLIMB_MODIFIER;
-    }
+    return CLIMBING_SURFACE_MODIFIERS[surfaceType];
 }

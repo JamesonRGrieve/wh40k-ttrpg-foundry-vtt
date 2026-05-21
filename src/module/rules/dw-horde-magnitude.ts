@@ -46,7 +46,7 @@ export interface HordeMagnitudeTier {
  * table treats Magnitude 30 as the canonical baseline; smaller mobs
  * remain on the Massive row until they break).
  */
-export const HORDE_MAGNITUDE_TIERS: readonly HordeMagnitudeTier[] = [
+export const HORDE_MAGNITUDE_TIERS: readonly [HordeMagnitudeTier, ...HordeMagnitudeTier[]] = [
     { minMagnitude: 0, descriptor: 'A mob', sizeKeyword: 'Massive', toHitBonus: 30 },
     { minMagnitude: 60, descriptor: 'A thronged phalanx', sizeKeyword: 'Immense', toHitBonus: 40 },
     { minMagnitude: 90, descriptor: 'A massed assault', sizeKeyword: 'Monumental', toHitBonus: 50 },
@@ -58,8 +58,8 @@ export const HORDE_DAMAGE_BONUS_DIE_CAP = 2;
 
 /** Resolve the active tier for a given Magnitude. */
 export function getHordeTier(magnitude: number): HordeMagnitudeTier {
-    // HORDE_MAGNITUDE_TIERS is a non-empty const array; index 0 is always defined.
-    const baseTier = HORDE_MAGNITUDE_TIERS[0]!;
+    // HORDE_MAGNITUDE_TIERS is typed as a non-empty tuple, so index 0 is always defined.
+    const baseTier = HORDE_MAGNITUDE_TIERS[0];
     if (!Number.isFinite(magnitude) || magnitude < 0) {
         // Fallback: a destroyed/invalid horde still resolves to the mob tier
         // so callers don't have to null-check; downstream `hordeDestroyed`

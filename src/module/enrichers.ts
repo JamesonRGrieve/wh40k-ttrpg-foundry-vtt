@@ -385,39 +385,29 @@ async function handleEnricherClick(event: MouseEvent): Promise<void> {
     event.preventDefault();
     event.stopPropagation();
 
-    switch (type) {
-        case 'characteristic':
-            if (actorUuid !== undefined && actorUuid.length > 0 && config !== undefined) {
-                const actor = (await fromUuid(actorUuid)) as RollCapableActor | null;
-                if (actor !== null && typeof actor.rollCharacteristic === 'function') {
-                    await actor.rollCharacteristic(config);
-                }
+    if (type === 'characteristic') {
+        if (actorUuid !== undefined && actorUuid.length > 0 && config !== undefined) {
+            const actor = (await fromUuid(actorUuid)) as RollCapableActor | null;
+            if (actor !== null && typeof actor.rollCharacteristic === 'function') {
+                await actor.rollCharacteristic(config);
             }
-            break;
-
-        case 'skill':
-            if (actorUuid !== undefined && actorUuid.length > 0 && config !== undefined) {
-                const actor = (await fromUuid(actorUuid)) as RollCapableActor | null;
-                if (actor !== null && typeof actor.rollSkill === 'function') {
-                    const [skillKey, specialization] = config.split(':') as [string, string | undefined];
-                    await actor.rollSkill(skillKey, specialization ?? '');
-                }
-            }
-            break;
-
-        case 'quality':
-        case 'property':
-        case 'condition':
-            await handleItemEnricherClick(itemUuid, event);
-            break;
-
-        // Modifiers and armor are display-only (no click action)
-        case 'modifier':
-        case 'armor':
-        case undefined:
-        default:
-            break;
+        }
+        return;
     }
+    if (type === 'skill') {
+        if (actorUuid !== undefined && actorUuid.length > 0 && config !== undefined) {
+            const actor = (await fromUuid(actorUuid)) as RollCapableActor | null;
+            if (actor !== null && typeof actor.rollSkill === 'function') {
+                const [skillKey, specialization] = config.split(':') as [string, string | undefined];
+                await actor.rollSkill(skillKey, specialization ?? '');
+            }
+        }
+        return;
+    }
+    if (type === 'quality' || type === 'property' || type === 'condition') {
+        await handleItemEnricherClick(itemUuid, event);
+    }
+    // 'modifier' / 'armor' / undefined / unknown — display-only (no click action).
 }
 
 /* -------------------------------------------- */

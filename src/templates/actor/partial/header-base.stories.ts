@@ -20,7 +20,7 @@ const callerTemplate = HandlebarsLib.compile(callerSrc);
 
 const meta = {
     title: 'Actor/Partials/HeaderBase',
-    render: (args) => renderMockTemplate(callerTemplate, args as unknown as Record<string, unknown>),
+    render: (args) => renderMockTemplate(callerTemplate, args),
     args: {
         variant: 'sidebar',
         gameSystem: 'dh2',

@@ -93,6 +93,7 @@ export default class BeyondHomeworldInfoDialog extends ApplicationV2Mixin(Applic
         classes: ['wh40k-rpg', 'dialog', 'beyond-homeworld-info-dialog'],
         position: {
             width: 720,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts the literal 'auto' at runtime but the type is `number`
             height: 'auto' as unknown as number,
         },
         window: {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import HbsLib from 'handlebars';
 import { ALIGNMENT_ACCENT_CLASS } from '../../src/module/applications/prompts/daemon-weapon-attribute-dialog.ts';
 import type { ChaosAlignment } from '../../src/module/config/game-systems/types.ts';
-import { rollDaemonWeaponAttributes } from '../../src/module/rules/daemon-weapon-attributes.ts';
+import { rollDaemonWeaponAttributes, type DaemonWeaponAttributeRollResult } from '../../src/module/rules/daemon-weapon-attributes.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../src/module/rules/daemon-weapon.ts';
 import chatSrc from '../../src/templates/chat/daemon-weapon-attribute-chat.hbs?raw';
 import dialogSrc from '../../src/templates/prompt/daemon-weapon-attribute-dialog.hbs?raw';
@@ -29,7 +29,31 @@ function seededRng(seed: number): () => number {
     };
 }
 
-function buildDialogContext(args: Args): Record<string, unknown> {
+interface BindingChoice {
+    value: BindingStrength;
+    label: string;
+}
+
+interface DaemonWeaponDialogContext {
+    alignment: ChaosAlignment;
+    bindingStrength: BindingStrength;
+    alignmentChoices: readonly ChaosAlignment[];
+    bindingChoices: BindingChoice[];
+    accentClass: string;
+    result: DaemonWeaponAttributeRollResult | null;
+    hasResult: boolean;
+}
+
+interface DaemonWeaponChatContext {
+    alignment: ChaosAlignment;
+    bindingStrength: BindingStrength;
+    bindingLabel: string;
+    accentClass: string;
+    result: DaemonWeaponAttributeRollResult;
+    gameSystem: string;
+}
+
+function buildDialogContext(args: Args): DaemonWeaponDialogContext {
     const result = args.rolled ? rollDaemonWeaponAttributes(args.alignment, args.bindingStrength, seededRng(args.seed)) : null;
     return {
         alignment: args.alignment,
@@ -45,7 +69,7 @@ function buildDialogContext(args: Args): Record<string, unknown> {
     };
 }
 
-function buildChatContext(args: Args): Record<string, unknown> {
+function buildChatContext(args: Args): DaemonWeaponChatContext {
     const result = rollDaemonWeaponAttributes(args.alignment, args.bindingStrength, seededRng(args.seed));
     return {
         alignment: args.alignment,

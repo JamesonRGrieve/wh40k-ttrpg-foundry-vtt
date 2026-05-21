@@ -44,7 +44,7 @@ interface Args {
 
 const meta = {
     title: 'Dialogs/AcquisitionDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         profitFactor: { current: 45 },
         item: {

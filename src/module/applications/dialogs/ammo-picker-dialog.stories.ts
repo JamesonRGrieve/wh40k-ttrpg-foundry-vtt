@@ -20,7 +20,7 @@ interface Args {
 
 const meta = {
     title: 'Dialogs/AmmoPickerDialog',
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
         weaponName: 'Bolter',
         clipMax: 24,

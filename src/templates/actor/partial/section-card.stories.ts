@@ -21,12 +21,13 @@ interface Args {
     actionBtnBorderClass?: string;
     iconColor?: string;
     body?: string;
+    [key: string]: string | undefined;
 }
 
 const renderWithBody = (args: Args): HTMLElement => {
     const body = args.body ?? '<div class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">Body content goes here.</div>';
     const wrapped = templateSrc.replace('{{> @partial-block}}', body);
-    return renderSheet(wrapped, args as unknown as Record<string, unknown>);
+    return renderSheet(wrapped, args);
 };
 
 const meta = {

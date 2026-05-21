@@ -255,6 +255,7 @@ export function removeComrade(roster: MultiComradeRoster, comradeId: string): Mu
 
     if (roster.primaryId === comradeId) {
         const first = roster.additionalIds[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test.json lacks noUncheckedIndexedAccess; main tsconfig requires this guard
         if (first === undefined) return roster;
         return {
             primaryId: first,
