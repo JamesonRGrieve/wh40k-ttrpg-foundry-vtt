@@ -59,11 +59,11 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
             async (flowNames: readonly string[]) => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor;
-                const Combat = g.Combat;
-                const ChatMessage = g.ChatMessage;
-                const Hooks = g.Hooks;
-                const game = g.game;
+                const ActorCls = g.Actor;
+                const CombatCls = g.Combat;
+                const ChatMessageCls = g.ChatMessage;
+                const HooksObj = g.Hooks;
+                const gameObj = g.game;
 
                 const flows: Array<{ flow: string; success: boolean; note: string }> = [];
                 const record = (flow: string, success: boolean, note: string): void => {
@@ -77,7 +77,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     if (idx >= 0) flows[idx] = { flow, success, note };
                 };
 
-                if (!Actor?.create || !ChatMessage?.create || !Hooks?.on) {
+                if (!ActorCls?.create || !ChatMessageCls?.create || !HooksObj?.on) {
                     for (const f of flowNames) setResult(f, false, 'Foundry runtime missing Actor/ChatMessage/Hooks');
                     return { flows };
                 }
@@ -88,7 +88,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                 // -------- shared probe actor --------
                 let probeActor: any = null;
                 try {
-                    probeActor = await Actor.create({
+                    probeActor = await ActorCls.create({
                         name: 'action-managers-probe-actor',
                         type: 'dh2-character',
                         system: { gameSystem: 'dh2e' },
@@ -96,7 +96,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     if (probeActor) {
                         cleanups.push(async () => {
                             try {
-                                await game?.actors?.get?.(probeActor.id)?.delete?.();
+                                await gameObj?.actors?.get?.(probeActor.id)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
@@ -123,19 +123,21 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         </button>
                         <div id="probe-toggle-target" style="display:none">hidden body</div>
                     </div>`;
-                        const msg = await ChatMessage.create({ content });
+                        const msg = await ChatMessageCls.create({ content });
                         if (!msg?.id) {
                             setResult('basic-action-dispatch', false, 'ChatMessage.create returned no id');
                         } else {
                             cleanups.push(async () => {
                                 try {
-                                    await game?.messages?.get?.(msg.id)?.delete?.();
+                                    await gameObj?.messages?.get?.(msg.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
                             });
                             // Give the chat log a tick to render the message DOM.
-                            await new Promise((r) => setTimeout(r, 100));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 100);
+                            });
                             const el = document.querySelector(`[data-message-id="${msg.id}"]`);
                             if (el === null) {
                                 // Foundry chat sidebar may not be mounted in the
@@ -146,7 +148,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 // a detached node is enough to wire and click.
                                 const detached = document.createElement('div');
                                 detached.innerHTML = content;
-                                Hooks.callAll?.('renderChatMessageHTML', msg, detached, {});
+                                HooksObj.callAll?.('renderChatMessageHTML', msg, detached, {});
                                 const btn = detached.querySelector<HTMLElement>('.roll-control__hide-control');
                                 const target = detached.querySelector<HTMLElement>('#probe-toggle-target');
                                 if (btn === null || target === null) {
@@ -154,7 +156,9 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 } else {
                                     const before = target.style.display;
                                     btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                                    await new Promise((r) => setTimeout(r, 30));
+                                    await new Promise<void>((r) => {
+                                        setTimeout(r, 30);
+                                    });
                                     const after = target.style.display;
                                     if (before !== after) {
                                         setResult('basic-action-dispatch', true, `toggle side-effect observed (display ${before}→${after})`);
@@ -170,7 +174,9 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 } else {
                                     const before = target.style.display;
                                     btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                                    await new Promise((r) => setTimeout(r, 30));
+                                    await new Promise<void>((r) => {
+                                        setTimeout(r, 30);
+                                    });
                                     const after = target.style.display;
                                     if (before !== after) {
                                         setResult('basic-action-dispatch', true, `toggle side-effect observed (display ${before}→${after})`);
@@ -196,16 +202,16 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     try {
                         let turnFired = false;
                         let roundFired = false;
-                        const turnTap = Hooks.on('combatTurn', () => {
+                        const turnTap = HooksObj.on('combatTurn', () => {
                             turnFired = true;
                         });
-                        const roundTap = Hooks.on('combatRound', () => {
+                        const roundTap = HooksObj.on('combatRound', () => {
                             roundFired = true;
                         });
 
                         let probeActor2: any = null;
                         try {
-                            probeActor2 = await Actor.create({
+                            probeActor2 = await ActorCls.create({
                                 name: 'action-managers-probe-combatant-2',
                                 type: 'dh2-character',
                                 system: { gameSystem: 'dh2e' },
@@ -213,7 +219,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             if (probeActor2) {
                                 cleanups.push(async () => {
                                     try {
-                                        await game?.actors?.get?.(probeActor2.id)?.delete?.();
+                                        await gameObj?.actors?.get?.(probeActor2.id)?.delete?.();
                                     } catch {
                                         /* ignore */
                                     }
@@ -223,11 +229,11 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             /* secondary actor best-effort */
                         }
 
-                        const combat = await Combat?.create?.({});
+                        const combat = await CombatCls?.create?.({});
                         if (combat?.id) {
                             cleanups.push(async () => {
                                 try {
-                                    await game?.combats?.get?.(combat.id)?.delete?.();
+                                    await gameObj?.combats?.get?.(combat.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -261,10 +267,12 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 /* best-effort */
                             }
                             // Wait for hook callbacks to flush.
-                            await new Promise((r) => setTimeout(r, 80));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 80);
+                            });
                             try {
-                                Hooks.off?.('combatTurn', turnTap);
-                                Hooks.off?.('combatRound', roundTap);
+                                HooksObj.off?.('combatTurn', turnTap);
+                                HooksObj.off?.('combatRound', roundTap);
                             } catch {
                                 /* ignore */
                             }
@@ -279,8 +287,8 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             }
                         } else {
                             try {
-                                Hooks.off?.('combatTurn', turnTap);
-                                Hooks.off?.('combatRound', roundTap);
+                                HooksObj.off?.('combatTurn', turnTap);
+                                HooksObj.off?.('combatRound', roundTap);
                             } catch {
                                 /* ignore */
                             }
@@ -309,7 +317,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         if (typeof ReloadActionManager?.reloadWeapon !== 'function') {
                             setResult('reload-action-dispatch', false, 'ReloadActionManager.reloadWeapon not a function');
                         } else {
-                            const live = game?.actors?.get?.(probeActor.id);
+                            const live = gameObj?.actors?.get?.(probeActor.id);
                             if (!live) {
                                 setResult('reload-action-dispatch', false, 'probe actor not in collection');
                             } else {
@@ -359,7 +367,11 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                     try {
                                         reloadResult = await Promise.race([
                                             ReloadActionManager.reloadWeapon(weapon, { skipValidation: true }),
-                                            new Promise((resolve) => setTimeout(() => resolve({ success: false, message: 'timeout' }), 800)),
+                                            new Promise((resolve) => {
+                                                setTimeout(() => {
+                                                    resolve({ success: false, message: 'timeout' });
+                                                }, 800);
+                                            }),
                                         ]);
                                     } catch (err) {
                                         reloadError = String((err as Error)?.message ?? err);
@@ -480,9 +492,11 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 tools: {} as Record<string, any>,
                             },
                         };
-                        Hooks.callAll?.('getSceneControlButtons', controls);
+                        HooksObj.callAll?.('getSceneControlButtons', controls);
                         // Allow the hook to flush.
-                        await new Promise((r) => setTimeout(r, 30));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 30);
+                        });
                         const toolKeys = Object.keys(controls.tokens.tools);
                         // BasicActionManager registers 'assignDamage'. TargetedActionManager
                         // conditionally registers 'Attack' (gated by the simple-attack-rolls
@@ -517,11 +531,11 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                      * to assert the handler ran end-to-end.
                      * ============================================================ */
                     try {
-                        const ui = g.ui;
+                        const uiObj = g.ui;
                         let warnedMessage: string | null = null;
-                        const origWarn = ui?.notifications?.warn;
+                        const origWarn = uiObj?.notifications?.warn;
                         if (typeof origWarn === 'function') {
-                            ui.notifications.warn = function (msg: string, ...rest: unknown[]) {
+                            uiObj.notifications.warn = function (msg: string, ...rest: unknown[]) {
                                 warnedMessage = String(msg);
                                 return origWarn.call(this, msg, ...rest);
                             };
@@ -534,16 +548,18 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         // Fire the renderChatMessageHTML hook against the
                         // detached element — BasicActionManager's handler binds
                         // a click listener to the .roll-control__refund button.
-                        Hooks.callAll?.('renderChatMessageHTML', { id: 'probe-chat-click' }, detached, {});
+                        HooksObj.callAll?.('renderChatMessageHTML', { id: 'probe-chat-click' }, detached, {});
                         const btn = detached.querySelector('.roll-control__refund');
                         if (btn === null) {
                             setResult('chat-card-button-click', false, 'refund button missing from detached element');
                         } else {
                             btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
                             // The handler is async; wait for the notification.
-                            await new Promise((r) => setTimeout(r, 120));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 120);
+                            });
                             if (warnedMessage !== null) {
-                                setResult('chat-card-button-click', true, `handler ran end-to-end and surfaced notification: "${warnedMessage}"`);
+                                setResult('chat-card-button-click', true, `handler ran end-to-end and surfaced notification: "${String(warnedMessage)}"`);
                             } else {
                                 // Even if the warn wasn't captured (handler took
                                 // a different branch), the handler attaching a
@@ -559,8 +575,8 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         }
 
                         // Restore the original warn so other tests aren't affected.
-                        if (typeof origWarn === 'function' && ui?.notifications) {
-                            ui.notifications.warn = origWarn;
+                        if (typeof origWarn === 'function' && uiObj?.notifications) {
+                            uiObj.notifications.warn = origWarn;
                         }
                     } catch (err) {
                         setResult('chat-card-button-click', false, `threw: ${String((err as Error)?.message ?? err)}`);

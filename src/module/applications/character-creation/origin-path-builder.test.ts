@@ -218,7 +218,15 @@ function makeOrigin(overrides: Partial<TestOrigin> = {}): TestOrigin {
     };
 }
 
-function makeBuilderHost() {
+function makeBuilderHost(): {
+    actor: { id: string };
+    allOrigins: TestOrigin[];
+    lineageOrigins: TestOrigin[];
+    previewedOrigin: TestOrigin | null;
+    render: ReturnType<typeof vi.fn>;
+    _findConfirmedSelectionMatching: ReturnType<typeof vi.fn>;
+    _itemToSelectionData: typeof OriginPathBuilder.prototype._itemToSelectionData;
+} {
     return {
         actor: { id: 'actor-1' },
         allOrigins: [] as TestOrigin[],
@@ -463,7 +471,7 @@ describe('OriginPathBuilder selection dispatch is total across all four steps (i
 });
 
 describe('OriginPathBuilder rollDivination (issue #199)', () => {
-    function makeDivinationHost() {
+    function makeDivinationHost(): { _divination: string; _saveScrollPosition: ReturnType<typeof vi.fn>; render: ReturnType<typeof vi.fn> } {
         return {
             _divination: '',
             _saveScrollPosition: vi.fn(),
@@ -599,7 +607,12 @@ describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
         system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> };
     }
 
-    function makeCountHost(selections: Array<[string, AptSelection]>) {
+    function makeCountHost(selections: Array<[string, AptSelection]>): {
+        selections: Map<string, AptSelection>;
+        _getSelectionSystem: (s: AptSelection) => AptSelection['system'];
+        _collectAptitudeChoices: typeof OriginPathBuilder.prototype._collectAptitudeChoices;
+        _selectionGrantedAptitudes: typeof OriginPathBuilder.prototype._selectionGrantedAptitudes;
+    } {
         return {
             selections: new Map(selections),
             _getSelectionSystem: (s: AptSelection) => s.system,
@@ -675,7 +688,18 @@ describe('OriginPathBuilder._getAptitudeCollisions (issues #205 & #215)', () => 
         _actorItemId?: string | null;
     };
 
-    function makeCollisionHost(opts: { selections: Array<[string, AptSel]>; actorAptitudes?: string[]; overrides?: Map<string, string> }) {
+    function makeCollisionHost(opts: { selections: Array<[string, AptSel]>; actorAptitudes?: string[]; overrides?: Map<string, string> }): {
+        selections: Map<string, AptSel>;
+        actor: { system: { aptitudes: string[] } };
+        aptitudeOverrides: Map<string, string>;
+        _getSelectionSystem: (s: AptSel) => AptSel['system'];
+        _collectAptitudeChoices: typeof OriginPathBuilder.prototype._collectAptitudeChoices;
+        _selectionGrantedAptitudes: typeof OriginPathBuilder.prototype._selectionGrantedAptitudes;
+        _collectAptitudeGrantCounts: typeof OriginPathBuilder.prototype._collectAptitudeGrantCounts;
+        _collectExistingAptitudes: typeof OriginPathBuilder.prototype._collectExistingAptitudes;
+        _lookupAptitudeOverride: typeof OriginPathBuilder.prototype._lookupAptitudeOverride;
+        _aptitudeKey: typeof OriginPathBuilder.prototype._aptitudeKey;
+    } {
         const proto = OriginPathBuilder.prototype;
         return {
             selections: new Map(opts.selections),
@@ -700,7 +724,7 @@ describe('OriginPathBuilder._getAptitudeCollisions (issues #205 & #215)', () => 
         return { system: { grants, selectedChoices }, _actorItemId: null };
     }
 
-    function collisions(host: ReturnType<typeof makeCollisionHost>) {
+    function collisions(host: ReturnType<typeof makeCollisionHost>): { original: string; replacement: string | null }[] {
         return OriginPathBuilder.prototype._getAptitudeCollisions.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
     }
 
@@ -871,7 +895,7 @@ describe('OriginPathBuilder._normalizeAptitudeIdentity (#205)', () => {
 describe('OriginPathBuilder._collectAvailableAptitudePool (#205, #216)', () => {
     it('excludes taken aptitudes by canonical identity and restricts to characteristic aptitudes (#216)', () => {
         const proto = OriginPathBuilder.prototype;
-        const mkOrigin = (apts: string[]) => ({ system: { grants: { aptitudes: apts } } });
+        const mkOrigin = (apts: string[]): { system: { grants: { aptitudes: string[] } } } => ({ system: { grants: { aptitudes: apts } } });
         const host = {
             allOrigins: [mkOrigin(['Willpower', 'willpower ', 'Tech', 'Offence', 'Strength', 'Fellowship'])],
             lineageOrigins: [],
@@ -957,7 +981,12 @@ describe('OriginPathBuilder._calculatePreview aptitude collision split (issue #2
         selections: Array<[string, { system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> }; _actorItemId?: string | null }]>;
         actorAptitudes?: string[];
         overrides?: Map<string, string>;
-    }) {
+    }): Promise<{
+        aptitudeCollisions: { original: string; replacement: string | null }[];
+        unresolvedAptitudeCollisions: { original: string; replacement: string | null }[];
+        resolvedAptitudeCollisions: { original: string; replacement: string | null }[];
+        hasUnresolvedAptitudeCollision: boolean;
+    }> {
         const proto = OriginPathBuilder.prototype;
         const host = {
             selections: new Map(opts.selections),
@@ -994,7 +1023,10 @@ describe('OriginPathBuilder._calculatePreview aptitude collision split (issue #2
         };
     }
 
-    const picked = (grants: Record<string, unknown>, selectedChoices: Record<string, string[]> = {}) => ({
+    const picked = (
+        grants: Record<string, unknown>,
+        selectedChoices: Record<string, string[]> = {},
+    ): { system: { grants: Record<string, unknown>; selectedChoices: Record<string, string[]> }; _actorItemId: null } => ({
         system: { grants, selectedChoices },
         _actorItemId: null,
     });

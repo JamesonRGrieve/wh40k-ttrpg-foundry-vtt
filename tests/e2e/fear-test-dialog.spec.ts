@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -21,14 +22,14 @@ interface ActorRef {
     id: string;
 }
 
-async function createParentActor(page: import('@playwright/test').Page): Promise<ActorRef | { error: string }> {
+async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor } = globalThis as unknown as {
+        const browserCtx = globalThis as unknown as {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
         };
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        if (!browserCtx.Actor?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await browserCtx.Actor.create({
                 name: 'probe-fear-test-parent',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2' },
@@ -39,28 +40,24 @@ async function createParentActor(page: import('@playwright/test').Page): Promise
             return { id: null, error: String((err as Error)?.message ?? err) };
         }
     });
-    if (!result.id) return { error: result.error ?? 'unknown create error' };
+    if (result.id === null || result.id === undefined) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
 
-async function deleteActor(page: import('@playwright/test').Page, actorId: string): Promise<void> {
+async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game } = globalThis as unknown as {
+        const browserCtx = globalThis as unknown as {
             game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
         };
-        const actor = game?.actors?.get?.(id);
+        const actor = browserCtx.game?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
 
-async function addFearTrait(
-    page: import('@playwright/test').Page,
-    actorId: string,
-    fearRating: number,
-): Promise<{ traitId: string | null; fearRating: number; error: string | null }> {
+async function addFearTrait(page: Page, actorId: string, fearRating: number): Promise<{ traitId: string | null; fearRating: number; error: string | null }> {
     return page.evaluate(
-        async ({ actorId, fearRating }) => {
-            const { game } = globalThis as unknown as {
+        async ({ targetActorId, rating }) => {
+            const browserCtx = globalThis as unknown as {
                 game?: {
                     actors?: {
                         get?: (
@@ -71,14 +68,14 @@ async function addFearTrait(
                     };
                 };
             };
-            const actor = game?.actors?.get?.(actorId);
+            const actor = browserCtx.game?.actors?.get?.(targetActorId);
             if (!actor?.createEmbeddedDocuments) return { traitId: null, fearRating: 0, error: 'actor.createEmbeddedDocuments unavailable' };
             try {
                 const made = await actor.createEmbeddedDocuments('Item', [
                     {
                         name: 'Fear (Test)',
                         type: 'trait',
-                        system: { fearRating, category: 'creature' },
+                        system: { fearRating: rating, category: 'creature' },
                     },
                 ]);
                 const first = made?.[0];
@@ -87,7 +84,7 @@ async function addFearTrait(
                 return { traitId: null, fearRating: 0, error: String((err as Error)?.message ?? err) };
             }
         },
-        { actorId, fearRating },
+        { targetActorId: actorId, rating: fearRating },
     );
 }
 
@@ -132,7 +129,9 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                     const inst = new Cls({ fearRating: 3 });
                     try {
                         await inst.render(true);
-                        await new Promise((r) => setTimeout(r, 60));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 60);
+                        });
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);
                     }

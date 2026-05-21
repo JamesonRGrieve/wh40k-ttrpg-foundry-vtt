@@ -87,15 +87,15 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals + erased sheet static handlers are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
-            const ui = g.ui;
+            const ActorClass = g.Actor;
+            const gameCtx = g.game;
+            const uiCtx = g.ui;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create) {
+            if (!ActorClass?.create) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'character-sheet::toggleEquip': 'Actor.create unavailable' } as Record<string, string>,
@@ -118,7 +118,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
             // Drain stray dialogs so the next probe's window stack stays clean.
             async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- browser-side: uiCtx is `any` from globalThis cast
+                const windows = Object.values(uiCtx?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
                 for (const w of windows) {
                     const id = w?.id ?? '';
                     if (
@@ -164,7 +165,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             async function makeActor(type: string, gameSystem: string, system: Record<string, unknown> = {}): Promise<any | null> {
                 try {
                     const actor = (await withTimeout(
-                        Actor.create({
+                        ActorClass.create({
                             name: `sheet-action-actor-${type}-${Math.random().toString(36).slice(2, 8)}`,
                             type,
                             system: { gameSystem, ...system },
@@ -199,8 +200,10 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     notes['character-sheet::toggleEquip'] = 'PC create returned null';
                 } else {
                     // Yield so the create flush completes before the embedded create.
-                    await new Promise((r) => setTimeout(r, 250));
-                    const livePc = (): any => game?.actors?.get?.(pc.id);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 250);
+                    });
+                    const livePc = (): any => gameCtx?.actors?.get?.(pc.id);
                     const sheet = livePc()?.sheet;
                     if (!sheet) {
                         notes['character-sheet::toggleEquip'] = 'PC sheet undefined';
@@ -208,7 +211,9 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         // Render once so this.element exists for filter/dom flows.
                         try {
                             await withTimeout(sheet.render?.(true), 5_000, 'PC sheet.render');
-                            await new Promise((r) => setTimeout(r, 50));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 50);
+                            });
                         } catch {
                             /* render best-effort; some flows do not require DOM */
                         }
@@ -394,7 +399,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             const handler = actions.adjustSubtletyManually;
                             if (typeof handler !== 'function') {
                                 notes['character-sheet::adjustSubtletyManually'] = 'handler missing';
-                            } else if (game?.user?.isGM !== true) {
+                            } else if (gameCtx?.user?.isGM !== true) {
                                 notes['character-sheet::adjustSubtletyManually'] = 'not GM (joinAsGM should have made us GM)';
                             } else {
                                 let threw: string | null = null;
@@ -428,15 +433,19 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (!npc?.id) {
                     notes['npc-sheet::toggleHordeMode'] = 'NPC create returned null';
                 } else {
-                    await new Promise((r) => setTimeout(r, 250));
-                    const liveNpc = (): any => game?.actors?.get?.(npc.id);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 250);
+                    });
+                    const liveNpc = (): any => gameCtx?.actors?.get?.(npc.id);
                     const sheet = liveNpc()?.sheet;
                     if (!sheet) {
                         notes['npc-sheet::toggleHordeMode'] = 'NPC sheet undefined';
                     } else {
                         try {
                             await withTimeout(sheet.render?.(true), 5_000, 'NPC sheet.render');
-                            await new Promise((r) => setTimeout(r, 50));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 50);
+                            });
                         } catch {
                             /* best-effort */
                         }
@@ -605,15 +614,19 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     if (!imNpc?.id) {
                         notes['npc-sheet::scaleToThreat-im'] = 'IM NPC create returned null';
                     } else {
-                        await new Promise((r) => setTimeout(r, 250));
-                        const liveIm = (): any => game?.actors?.get?.(imNpc.id);
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 250);
+                        });
+                        const liveIm = (): any => gameCtx?.actors?.get?.(imNpc.id);
                         const sheet = liveIm()?.sheet;
                         if (!sheet) {
                             notes['npc-sheet::scaleToThreat-im'] = 'IM NPC sheet undefined';
                         } else {
                             try {
                                 await withTimeout(sheet.render?.(true), 5_000, 'IM NPC sheet.render');
-                                await new Promise((r) => setTimeout(r, 50));
+                                await new Promise<void>((r) => {
+                                    setTimeout(r, 50);
+                                });
                             } catch {
                                 /* best-effort */
                             }
@@ -659,15 +672,19 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (!vehicle?.id) {
                     notes['vehicle-sheet::adjustStructure'] = 'Vehicle create returned null';
                 } else {
-                    await new Promise((r) => setTimeout(r, 250));
-                    const liveV = (): any => game?.actors?.get?.(vehicle.id);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 250);
+                    });
+                    const liveV = (): any => gameCtx?.actors?.get?.(vehicle.id);
                     const sheet = liveV()?.sheet;
                     if (!sheet) {
                         notes['vehicle-sheet::adjustStructure'] = 'Vehicle sheet undefined';
                     } else {
                         try {
                             await withTimeout(sheet.render?.(true), 5_000, 'Vehicle sheet.render');
-                            await new Promise((r) => setTimeout(r, 50));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 50);
+                            });
                         } catch {
                             /* best-effort */
                         }
@@ -775,15 +792,19 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (!starship?.id) {
                     notes['starship-sheet::raiseVoidShield'] = 'Starship create returned null';
                 } else {
-                    await new Promise((r) => setTimeout(r, 250));
-                    const liveS = (): any => game?.actors?.get?.(starship.id);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 250);
+                    });
+                    const liveS = (): any => gameCtx?.actors?.get?.(starship.id);
                     const sheet = liveS()?.sheet;
                     if (!sheet) {
                         notes['starship-sheet::raiseVoidShield'] = 'Starship sheet undefined';
                     } else {
                         try {
                             await withTimeout(sheet.render?.(true), 5_000, 'Starship sheet.render');
-                            await new Promise((r) => setTimeout(r, 50));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 50);
+                            });
                         } catch {
                             /* best-effort */
                         }
@@ -898,15 +919,19 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (!loot?.id) {
                     notes['loot-sheet::pickupAll'] = 'Loot create returned null';
                 } else {
-                    await new Promise((r) => setTimeout(r, 250));
-                    const liveL = (): any => game?.actors?.get?.(loot.id);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 250);
+                    });
+                    const liveL = (): any => gameCtx?.actors?.get?.(loot.id);
                     const sheet = liveL()?.sheet;
                     if (!sheet) {
                         notes['loot-sheet::pickupAll'] = 'Loot sheet undefined';
                     } else {
                         try {
                             await withTimeout(sheet.render?.(true), 5_000, 'Loot sheet.render');
-                            await new Promise((r) => setTimeout(r, 50));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 50);
+                            });
                         } catch {
                             /* best-effort */
                         }

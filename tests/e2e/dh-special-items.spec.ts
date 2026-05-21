@@ -41,10 +41,10 @@ interface FlowResult {
 
 async function createDH2Parent(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const Actor = (globalThis as unknown as { Actor?: { create?: (data: object) => Promise<{ id?: string } | null> } }).Actor;
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        const ActorCls = (globalThis as unknown as { Actor?: { create?: (data: object) => Promise<{ id?: string } | null> } }).Actor;
+        if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name: 'probe-dh-special-items-parent',
                 type: 'dh2-character',
                 system: {
@@ -71,19 +71,19 @@ async function createDH2Parent(page: Page): Promise<ActorRef | { error: string }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const game = (
+        const gameObj = (
             globalThis as unknown as {
                 game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
             }
         ).game;
-        await game?.actors?.get?.(id)?.delete?.();
+        await gameObj?.actors?.get?.(id)?.delete?.();
     }, actorId);
 }
 
 async function createItems(page: Page, actorId: string, items: object[]): Promise<string[]> {
     return page.evaluate(
-        async ({ actorId, items }) => {
-            const game = (
+        async ({ actorId: evalActorId, items: evalItems }) => {
+            const gameObj = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -92,10 +92,10 @@ async function createItems(page: Page, actorId: string, items: object[]): Promis
                     };
                 }
             ).game;
-            const actor = game?.actors?.get?.(actorId);
+            const actor = gameObj?.actors?.get?.(evalActorId);
             if (!actor?.createEmbeddedDocuments) return [];
             try {
-                const created = await actor.createEmbeddedDocuments('Item', items);
+                const created = await actor.createEmbeddedDocuments('Item', evalItems);
                 return created.map((c) => c.id).filter((id): id is string => typeof id === 'string');
             } catch {
                 return [];
@@ -108,8 +108,8 @@ async function createItems(page: Page, actorId: string, items: object[]): Promis
 async function deleteItems(page: Page, actorId: string, itemIds: string[]): Promise<void> {
     if (itemIds.length === 0) return;
     await page.evaluate(
-        async ({ actorId, itemIds }) => {
-            const game = (
+        async ({ actorId: evalActorId, itemIds: evalItemIds }) => {
+            const gameObj = (
                 globalThis as unknown as {
                     game?: {
                         actors?: {
@@ -119,7 +119,7 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
                 }
             ).game;
             try {
-                await game?.actors?.get?.(actorId)?.deleteEmbeddedDocuments?.('Item', itemIds);
+                await gameObj?.actors?.get?.(evalActorId)?.deleteEmbeddedDocuments?.('Item', evalItemIds);
             } catch {
                 /* best-effort */
             }
@@ -133,18 +133,18 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
  */
 async function readItemPath(page: Page, actorId: string, itemId: string, path: string): Promise<unknown> {
     return page.evaluate(
-        ({ actorId, itemId, path }) => {
-            const game = (
+        ({ actorId: evalActorId, itemId: evalItemId, path: evalPath }) => {
+            const gameObj = (
                 globalThis as unknown as {
                     game?: { actors?: { get?: (id: string) => { items?: { get?: (id: string) => unknown } } | undefined } };
                     foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
                 }
             ).game;
-            const foundry = (globalThis as unknown as { foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } } }).foundry;
-            const item = game?.actors?.get?.(actorId)?.items?.get?.(itemId);
-            const getProperty = foundry?.utils?.getProperty;
-            if (!item || !getProperty) return null;
-            return getProperty(item, path);
+            const foundryObj = (globalThis as unknown as { foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } } }).foundry;
+            const item = gameObj?.actors?.get?.(evalActorId)?.items?.get?.(evalItemId);
+            const getProp = foundryObj?.utils?.getProperty;
+            if (!item || !getProp) return null;
+            return getProp(item, evalPath);
         },
         { actorId, itemId, path },
     );
@@ -152,13 +152,13 @@ async function readItemPath(page: Page, actorId: string, itemId: string, path: s
 
 async function readActorPath(page: Page, actorId: string, path: string): Promise<number | null> {
     return page.evaluate(
-        ({ actorId, path }) => {
-            const game = (globalThis as unknown as { game?: { actors?: { get?: (id: string) => unknown } } }).game;
-            const foundry = (globalThis as unknown as { foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } } }).foundry;
-            const actor = game?.actors?.get?.(actorId);
-            const getProperty = foundry?.utils?.getProperty;
-            if (!actor || !getProperty) return null;
-            const v = getProperty(actor, path);
+        ({ actorId: evalActorId, path: evalPath }) => {
+            const gameObj = (globalThis as unknown as { game?: { actors?: { get?: (id: string) => unknown } } }).game;
+            const foundryObj = (globalThis as unknown as { foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } } }).foundry;
+            const actor = gameObj?.actors?.get?.(evalActorId);
+            const getProp = foundryObj?.utils?.getProperty;
+            if (!actor || !getProp) return null;
+            const v = getProp(actor, evalPath);
             const num = Number(v);
             return Number.isFinite(num) ? num : null;
         },

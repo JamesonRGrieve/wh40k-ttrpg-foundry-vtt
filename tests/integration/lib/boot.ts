@@ -53,7 +53,7 @@ export async function bootFoundryOnce(): Promise<BootResult> {
     }
     // Atomic check-and-set: a concurrent caller may have populated `cached`
     // while we were awaiting `doBoot()`; the first result wins.
-    if (!cached) cached = result;
+    cached ??= result;
     return cached;
 }
 
@@ -95,9 +95,9 @@ async function doBoot(): Promise<BootResult> {
             // Read-only — leave whatever the environment already provided.
         }
     }
-    for (const key of ['indexedDB', 'OffscreenCanvas', 'WebGL2RenderingContext', 'PIXI'] as const) {
+    for (const foundryKey of ['indexedDB', 'OffscreenCanvas', 'WebGL2RenderingContext', 'PIXI'] as const) {
         try {
-            g[key] = win[key];
+            g[foundryKey] = win[foundryKey];
         } catch {
             /* ignore */
         }
@@ -110,10 +110,10 @@ async function doBoot(): Promise<BootResult> {
     // Foundry's `init` / `setup` / `ready` are fired by its own entry, but
     // outside a browser the bootstrap sequence does not auto-run. Fire the
     // hooks manually so consumer code that listens for them executes.
-    const Hooks = (win as { Hooks?: { callAll?: (name: string) => void } }).Hooks;
-    Hooks?.callAll?.('init');
-    Hooks?.callAll?.('setup');
-    Hooks?.callAll?.('ready');
+    const HooksApi = (win as { Hooks?: { callAll?: (name: string) => void } }).Hooks;
+    HooksApi?.callAll?.('init');
+    HooksApi?.callAll?.('setup');
+    HooksApi?.callAll?.('ready');
 
     return {
         booted: true,
@@ -138,7 +138,7 @@ function makePixiStub(): object {
     return {
         Application: class {
             stage = {};
-            renderer = { resize() {} };
+            renderer = { resize(): void {} };
             destroy() {}
         },
         Container: class {},

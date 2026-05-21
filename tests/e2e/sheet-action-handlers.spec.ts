@@ -150,15 +150,16 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         id: 'probe-actor',
                         name: 'Probe',
                         system,
-                        update: async () => undefined,
+                        update: async () => Promise.resolve(undefined),
                     },
                     last: {},
                     _throttle: async function (_k, _w, fn, ctx, args) {
-                        return (fn as (...a: unknown[]) => unknown).apply(ctx, args);
+                        return Promise.resolve((fn as (...a: unknown[]) => unknown).apply(ctx, args));
                     },
                     _notify: () => undefined,
                     _updateSystemField: async function (this: HostStub, field, value) {
                         this.last = { field, value };
+                        return Promise.resolve();
                     },
                 });
 

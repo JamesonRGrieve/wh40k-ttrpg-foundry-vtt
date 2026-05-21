@@ -44,12 +44,16 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
         const fateBefore = actor.system?.fate?.value ?? 0;
 
         await actor.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise<void>((r) => {
+            setTimeout(r, 250);
+        });
 
         // Navigate to the Status tab if the sheet's tab API is reachable.
         try {
             actor.sheet?.changeTab?.('status', 'primary');
-            await new Promise((r) => setTimeout(r, 150));
+            await new Promise<void>((r) => {
+                setTimeout(r, 150);
+            });
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }
@@ -59,7 +63,9 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
         if (btn) {
             btn.click();
             // Allow the async action handler to resolve fate.update + ActiveEffect create.
-            await new Promise((r) => setTimeout(r, 400));
+            await new Promise<void>((r) => {
+                setTimeout(r, 400);
+            });
         }
 
         const fateAfter = actor.system?.fate?.value ?? 0;

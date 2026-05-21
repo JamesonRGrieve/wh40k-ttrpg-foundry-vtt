@@ -46,7 +46,9 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
                     const inst = new Cls();
                     try {
                         await inst.render(true);
-                        await new Promise((r) => setTimeout(r, 60));
+                        await new Promise((r) => {
+                            setTimeout(r, 60);
+                        });
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);
                     }

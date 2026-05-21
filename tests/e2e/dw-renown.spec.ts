@@ -41,8 +41,8 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                 try {
                     const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
                     const src = await (await fetchAny(templateUrl)).text();
-                    const Handlebars = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
-                    if (typeof Handlebars?.compile !== 'function') {
+                    const HbsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    if (typeof HbsLib?.compile !== 'function') {
                         return {
                             rendered,
                             rankReadout,
@@ -55,7 +55,7 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                             error: 'Handlebars not available on globalThis',
                         };
                     }
-                    const tpl = Handlebars.compile(src);
+                    const tpl = HbsLib.compile(src);
                     // Renown 50 falls in the Distinguished band (40..59 per RAW
                     // TABLE 5-2). Bar fills 50% of the 40-to-60 window.
                     const html = tpl({

@@ -80,7 +80,9 @@ interface ProbeResult {
 
 async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
@@ -110,7 +112,8 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -148,7 +151,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     });
                 }
             } catch (err) {
-                for (const f of flows) notes[f] = `PC create threw: ${String((err as Error)?.message ?? err)}`;
+                for (const f of flows) notes[f] = `PC create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
             if (!pc?.id) {
@@ -158,15 +161,17 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             // Yield a tick so the server-side create flushes its database write
             // before the first createEmbeddedDocuments fires (V14 race noted in
             // weapon-attack.spec.ts).
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => {
+                setTimeout(r, 250);
+            });
 
-            const getPc = () => game?.actors?.get?.(pc.id);
+            const getPc = (): any => game?.actors?.get?.(pc.id);
 
             /**
              * Create one embedded item, register it for cleanup, return the
              * live document (re-fetched off the actor so derived data is fresh).
              */
-            const embed = async (flow: string, data: Record<string, unknown>): Promise<any | null> => {
+            const embed = async (flow: string, data: Record<string, unknown>): Promise<any> => {
                 const live = getPc();
                 const created = await withTimeout(live.createEmbeddedDocuments?.('Item', [data]), 5_000, `create ${String(data['type'])} for ${flow}`);
                 const itemId = created?.[0]?.id;
@@ -222,7 +227,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['armour-ap-aggregation'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['armour-ap-aggregation'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -264,7 +269,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['armour-craftsmanship-ap'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['armour-craftsmanship-ap'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -310,7 +315,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['armour-coverage-derivation'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['armour-coverage-derivation'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -346,7 +351,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['armour-stealth-penalty'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['armour-stealth-penalty'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -386,7 +391,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['gear-weight-math'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['gear-weight-math'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -421,7 +426,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['gear-uses-exhausted'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['gear-uses-exhausted'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -462,7 +467,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['talent-prerequisites'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['talent-prerequisites'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -505,7 +510,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['talent-grants-summary'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['talent-grants-summary'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -549,7 +554,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['talent-specialization-fullname'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['talent-specialization-fullname'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -588,7 +593,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['ammunition-modifiers'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['ammunition-modifiers'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -635,7 +640,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['force-field-overload'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['force-field-overload'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -679,7 +684,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['force-field-craftsmanship'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['force-field-craftsmanship'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -724,7 +729,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['trait-level-variable'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['trait-level-variable'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -760,7 +765,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['skill-derived-labels'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['skill-derived-labels'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -809,7 +814,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['condition-duration'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['condition-duration'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 /* ============================================================
@@ -866,7 +871,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    notes['weapon-modification-restrictions'] = `flow threw: ${String((err as Error)?.message ?? err)}`;
+                    notes['weapon-modification-restrictions'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
             } finally {
                 // Best-effort cleanup of everything we created.

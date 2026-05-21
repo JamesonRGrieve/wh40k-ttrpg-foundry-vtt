@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { CollectedAdjuster } from '../rules/subtlety-adjusters.ts';
-import type { WH40KBaseActor } from './base-actor.ts';
+import type * as BaseActorModuleType from './base-actor.ts';
+
+type WH40KBaseActor = BaseActorModuleType.WH40KBaseActor;
 
 /**
  * Unit coverage for the DH2 Warband Subtlety surface on `WH40KBaseActor`
@@ -20,7 +21,7 @@ import type { WH40KBaseActor } from './base-actor.ts';
  * as `base-actor.test.ts` (no Foundry runtime required).
  */
 
-type BaseActorModule = typeof import('./base-actor.ts');
+type BaseActorModule = typeof BaseActorModuleType;
 
 async function loadModule(): Promise<BaseActorModule | undefined> {
     return import('./base-actor.ts').catch((err: unknown) => {

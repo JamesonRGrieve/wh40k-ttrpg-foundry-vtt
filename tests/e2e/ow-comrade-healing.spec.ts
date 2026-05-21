@@ -96,7 +96,9 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                     const sheet = actor.sheet;
                     if (!sheet) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 120));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 120);
+                    });
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element) {
@@ -108,10 +110,12 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                         hasReplaceBtn = el.querySelector('button[data-action="owComradeReplace2"]') !== null;
                         hasStatusBadge = el.querySelector('[data-recovery-status]') !== null;
 
-                        const tickBtn = el.querySelector('button[data-action="owComradeTickDay"]') as HTMLButtonElement | null;
-                        if (tickBtn && !tickBtn.disabled) {
+                        const tickBtn = el.querySelector<HTMLButtonElement>('button[data-action="owComradeTickDay"]');
+                        if (tickBtn !== null && !tickBtn.disabled) {
                             tickBtn.click();
-                            await new Promise((r) => setTimeout(r, 150));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 150);
+                            });
                             tickDispatched = true;
                         }
                         recoveryAfter = actor.system?.comradeRecoveryDays ?? null;

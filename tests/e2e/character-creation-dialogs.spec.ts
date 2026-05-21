@@ -44,7 +44,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
+            const ActorCls = g.Actor;
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -56,7 +56,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
             // all three dialogs can read for context.
             let actor: any;
             try {
-                actor = await Actor.create({
+                actor = await ActorCls.create({
                     name: 'chargen-spec-actor',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },
@@ -124,7 +124,9 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                     const dlg = new OriginRollDialog('wounds', '1d10+3', ctx, {});
                     opened.push(dlg);
                     await dlg.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 50));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 50);
+                    });
                     record('origin-roll-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
@@ -143,7 +145,9 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                     const dlg = new OriginPathChoiceDialog(originItem, actor, {});
                     opened.push(dlg);
                     await dlg.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 50));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 50);
+                    });
                     record('origin-path-choice-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
@@ -166,7 +170,9 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                     const dlg = new OriginDetailDialog(originItem, {});
                     opened.push(dlg);
                     await dlg.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 50));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 50);
+                    });
                     record('origin-detail-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {

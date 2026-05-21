@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -25,14 +26,14 @@ interface ActorRef {
     id: string;
 }
 
-async function createOwActor(page: import('@playwright/test').Page): Promise<ActorRef | { error: string }> {
+async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor } = globalThis as unknown as {
+        const { Actor: ActorCls } = globalThis as unknown as {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
         };
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name: 'probe-ow-mount-pc',
                 type: 'ow-character',
                 system: {
@@ -53,12 +54,12 @@ async function createOwActor(page: import('@playwright/test').Page): Promise<Act
     return { id: result.id };
 }
 
-async function deleteActor(page: import('@playwright/test').Page, actorId: string): Promise<void> {
+async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game } = globalThis as unknown as {
+        const { game: gameGlobal } = globalThis as unknown as {
             game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
         };
-        const actor = game?.actors?.get?.(id);
+        const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
@@ -103,7 +104,9 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
                     const sheet = actor.sheet;
                     if (!sheet) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 120));
+                    await new Promise((r) => {
+                        setTimeout(r, 120);
+                    });
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element) {
@@ -115,12 +118,14 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
                         hasRunDownRow = el.querySelector('[data-action-id="run-down"]') !== null;
                         hasMountedAttackRow = el.querySelector('[data-action-id="mounted-attack"]') !== null;
                         hasMountReadout = el.querySelector('.wh40k-ow-mount-current-readout') !== null;
-                        const issueBtn = el.querySelector('button[data-action="owMountedAction"][data-action-id="charge"]') as HTMLButtonElement | null;
+                        const issueBtn = el.querySelector<HTMLButtonElement>('button[data-action="owMountedAction"][data-action-id="charge"]');
                         hasIssueButton = issueBtn !== null;
 
-                        if (issueBtn && !issueBtn.disabled) {
+                        if (issueBtn !== null && !issueBtn.disabled) {
                             issueBtn.click();
-                            await new Promise((r) => setTimeout(r, 200));
+                            await new Promise((r) => {
+                                setTimeout(r, 200);
+                            });
                             issueDispatched = true;
                         }
                     }

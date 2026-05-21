@@ -64,7 +64,9 @@ test.describe.serial('climbing surface picker (#146)', () => {
                 return { error: `dialog render threw: ${String((err as Error)?.message ?? err)}`, snaps: null };
             }
 
-            await new Promise((r) => setTimeout(r, 80));
+            await new Promise((r) => {
+                setTimeout(r, 80);
+            });
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
@@ -87,7 +89,9 @@ test.describe.serial('climbing surface picker (#146)', () => {
                 if (select === null) return;
                 select.value = value;
                 select.dispatchEvent(new Event('change', { bubbles: true }));
-                await new Promise((r) => setTimeout(r, 80));
+                await new Promise((r) => {
+                    setTimeout(r, 80);
+                });
             }
 
             const initial = readState('initial-standard');
@@ -121,7 +125,9 @@ test.describe.serial('climbing surface picker (#146)', () => {
             if (select !== null && select !== undefined && select.value !== 'sheer') {
                 select.value = 'sheer';
                 select.dispatchEvent(new Event('change', { bubbles: true }));
-                await new Promise((r) => setTimeout(r, 80));
+                await new Promise((r) => {
+                    setTimeout(r, 80);
+                });
             }
         });
         await snap(page, 'climbing-sheer-surface');

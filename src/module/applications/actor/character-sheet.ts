@@ -18,22 +18,22 @@ import { dwReleaseOath, dwSwearOath } from '../../actions/dw-oath-actions.ts';
 import { dwRenownAward, dwRenownLoss } from '../../actions/dw-renown-actions.ts';
 import { dwRequisitionItem, dwRequisitionPool } from '../../actions/dw-requisition-actions.ts';
 import { dwVehicleRepair, dwVehicleRollCrit } from '../../actions/dw-vehicle-actions.ts';
-import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../actions/ow-logistics-actions.ts';
+import { owRequestSupport, owToggleAward } from '../../actions/ow-battlefield-actions.ts';
 import { owComradeHeal, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
+import { owComradeMedicae, owComradeReplace2, owComradeTickDay } from '../../actions/ow-comrade-healing-actions.ts';
+import { owAddComrade, owRemoveComrade, owToggleDrawback } from '../../actions/ow-drawback-actions.ts';
+import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../actions/ow-logistics-actions.ts';
 import { owRequestGear } from '../../actions/ow-mission-gear-actions.ts';
+import { owMountedAction } from '../../actions/ow-mount-actions.ts';
 import { owIssueOrder } from '../../actions/ow-orders-actions.ts';
 import { owRegimentEdit } from '../../actions/ow-regiment-actions.ts';
 import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
-import { owComradeMedicae, owComradeReplace2, owComradeTickDay } from '../../actions/ow-comrade-healing-actions.ts';
-import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
-import { owMountedAction } from '../../actions/ow-mount-actions.ts';
-import { owAddComrade, owRemoveComrade, owToggleDrawback } from '../../actions/ow-drawback-actions.ts';
-import { owRequestSupport, owToggleAward } from '../../actions/ow-battlefield-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/actor/mixins/dw-ammo-template.ts';
+import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
@@ -70,8 +70,6 @@ import { isOathActive } from '../../rules/dw-oath.ts';
 import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS } from '../../rules/dw-renown.ts';
 import { DW_SPECIAL_AMMO_EFFECTS, type AmmoEffect } from '../../rules/dw-special-ammo.ts';
 import { getSupportRange } from '../../rules/dw-squad-mode.ts';
-import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
-import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
 import {
     resolveBreakGrapple,
     resolveDamageOpponent,
@@ -83,6 +81,8 @@ import {
     type OpposedStrengthInput,
 } from '../../rules/grapple.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
+import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
+import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
 import {
     applyMismanifest,
     canUnleashDaemon,
@@ -1126,12 +1126,12 @@ export default class CharacterSheet extends BaseActorSheet {
             const sysAny = this.actor.system as unknown as Record<string, unknown>;
             context.mountPanel = { mountedOn: sysAny['mountedOn'] ?? null };
             context.drawbackPanel = {
-                drawbacks: (sysAny['regimentDrawbacks'] ?? []) as ReadonlyArray<string>,
+                drawbacks: sysAny['regimentDrawbacks'] ?? [],
                 multiComradeRoster: sysAny['multiComradeRoster'] ?? null,
             };
             context.battlefieldPanel = {
                 supportCooldown: sysAny['supportCooldown'] ?? 0,
-                awards: (sysAny['regimentalAwards'] ?? []) as ReadonlyArray<string>,
+                awards: sysAny['regimentalAwards'] ?? [],
             };
         }
 
@@ -1201,7 +1201,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // UUID-based so it works for hand-authored / dropped-in talents in
         // addition to compendium items.
         context.hasPenitent = this.actor.items.some((item) => {
-            const itemName = item.name?.toLowerCase() ?? '';
+            const itemName = item.name.toLowerCase();
             return itemName.includes('penitent') || itemName.includes('mortification of the flesh');
         });
 
@@ -1211,7 +1211,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // (case-insensitive). Name-based so it works for hand-authored /
         // dropped-in talents in addition to compendium items.
         context.hasFanatic = this.actor.items.some((item) => {
-            const itemName = item.name?.toLowerCase() ?? '';
+            const itemName = item.name.toLowerCase();
             return itemName.includes('fanatic') || itemName.includes('death to all who oppose me');
         });
 
@@ -1554,7 +1554,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareBcAlignmentPanel(): BcAlignmentPanelContext {
         const system = this.actor.system;
-        const advances: ReadonlyArray<ChaosAdvanceEntry> = system.chaosAdvancements ?? [];
+        const advances: ReadonlyArray<ChaosAdvanceEntry> = system.chaosAdvancements;
         const tally = tallyAdvancesByAlignment(advances);
         const derived = deriveAlignmentFromTally(tally);
         const current = system.chaosAlignment;
@@ -1764,7 +1764,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Conservative defaults — the actor sheet has no live action-economy
         // state yet, so assume full action + half action remain and let
         // the issue dialog refine. Cohesion gate uses the live pool.
-        const cohesionAvailable = (sys.cohesionCurrent ?? 0) > 0;
+        const cohesionAvailable = sys.cohesionCurrent > 0;
         const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
         const available = GENERIC_ORDERS.map((order) => {
             const check = canIssueOrder({ order, hasFullAction: true, hasHalfAction: true, cohesionAvailable });
@@ -1778,7 +1778,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 blockReasonKey: check.reason === undefined ? null : `WH40K.OW.Orders.BlockReason.${titleCase(check.reason)}`,
             };
         });
-        const sweepingActive = (sys.activeOrders ?? [])
+        const sweepingActive = sys.activeOrders
             .filter((o) => o.sweeping)
             .map((o) => ({
                 orderId: o.orderId,
@@ -3695,7 +3695,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 await item.sendToChat();
             } catch (err) {
                 console.error('WH40K | combatTalentDescribe: Error sending item to chat', err);
-                ui.notifications.error(game.i18n.format('WH40K.Combat.Actions.TalentChatFailed', { name: item.name ?? '' }));
+                ui.notifications.error(game.i18n.format('WH40K.Combat.Actions.TalentChatFailed', { name: item.name }));
             }
             return;
         }
@@ -3704,7 +3704,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemSystem = item.system as { description?: { value?: string } } | undefined;
         const rawDescription = itemSystem?.description?.value ?? '';
         const descriptionText = rawDescription !== '' ? rawDescription : game.i18n.localize('WH40K.Combat.Actions.TalentNoDescription');
-        const tooltipText = `<strong>${item.name ?? ''}</strong><br/>${descriptionText}`;
+        const tooltipText = `<strong>${item.name}</strong><br/>${descriptionText}`;
         const tooltipManager = (
             game as foundry.Game & {
                 tooltip?: { activate?: (element: HTMLElement, options?: { text?: string; direction?: string; cssClass?: string }) => void };
@@ -3716,7 +3716,7 @@ export default class CharacterSheet extends BaseActorSheet {
             // Fallback for environments without the tooltip manager (e.g., tests).
             // Strip HTML tags so the title/data-tooltip attribute reads cleanly.
             const plain = descriptionText.replace(/<[^>]*>/g, '').trim();
-            target.setAttribute('data-tooltip', `${item.name ?? ''}: ${plain}`);
+            target.setAttribute('data-tooltip', `${item.name}: ${plain}`);
         }
     }
 
@@ -4193,9 +4193,8 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!Array.isArray(pacts) || index >= pacts.length) return;
 
         const updated = structuredClone(pacts);
-        const entry = updated[index];
-        if (!entry) return;
-        const current = (entry.disposition ?? 0) as PactDisposition;
+        const entry = updated[index]!;
+        const current = entry.disposition as PactDisposition;
         entry.disposition = adjustPactDisposition(current, delta);
         await this.actor.update({ 'system.pacts': updated });
     }
@@ -4218,8 +4217,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!Array.isArray(pacts) || index >= pacts.length) return;
 
         const updated = structuredClone(pacts);
-        const entry = updated[index];
-        if (!entry) return;
+        const entry = updated[index]!;
         const wasDiscovered = entry.discovered;
         entry.discovered = !wasDiscovered;
         await this.actor.update({ 'system.pacts': updated });
@@ -4245,8 +4243,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!Array.isArray(pacts) || index >= pacts.length) return;
 
         const updated = structuredClone(pacts);
-        const entry = updated[index];
-        if (!entry) return;
+        const entry = updated[index]!;
         entry.paymentCurrent = !entry.paymentCurrent;
         await this.actor.update({ 'system.pacts': updated });
     }
@@ -4366,6 +4363,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event Triggering click event.
      * @param {HTMLElement} target Button that was clicked.
      */
+    // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers expect Promise<void>; concrete impl is synchronous
     static async #openColonyGrowthDialog(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         if (this._resolveGameSystemId() !== 'rt') return;
@@ -4512,7 +4510,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #resetPossessionSession(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
-            if (!game.user?.isGM) {
+            if (!game.user.isGM) {
                 this._notify('warning', game.i18n.localize('WH40K.Possession.ResetGmOnly'), { duration: 3000 });
                 return;
             }
@@ -4535,7 +4533,7 @@ export default class CharacterSheet extends BaseActorSheet {
     async _postPossessionChat(data: Record<string, unknown>): Promise<void> {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/possession-frenzy-chat.hbs', data);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user?.id, content: html, speaker: { alias: this.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
+        const payload = { user: game.user.id, content: html, speaker: { alias: this.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
         await ChatMessage.create(payload);
     }
 
@@ -4552,9 +4550,9 @@ export default class CharacterSheet extends BaseActorSheet {
                 this._notify('warning', game.i18n.localize('WH40K.Possession.FrenzyLoopUnavailable'), { duration: 3000 });
                 return;
             }
-            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total ?? 0));
+            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total));
             const rollResult = await new Roll('1d100').evaluate();
-            const roll = Number(rollResult.total ?? 0);
+            const roll = Number(rollResult.total);
             const result = resolveFrenzyTest(roll, wp);
             await this._postPossessionChat({
                 mode: 'frenzy',
@@ -4590,11 +4588,11 @@ export default class CharacterSheet extends BaseActorSheet {
                 this._notify('warning', game.i18n.localize('WH40K.Possession.FrenzyLoopUnavailable'), { duration: 3000 });
                 return;
             }
-            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total ?? 0));
+            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total));
             const psykerRollResult = await new Roll('1d100').evaluate();
             const daemonRollResult = await new Roll('1d100').evaluate();
-            const psykerRoll = Number(psykerRollResult.total ?? 0);
-            const daemonRoll = Number(daemonRollResult.total ?? 0);
+            const psykerRoll = Number(psykerRollResult.total);
+            const daemonRoll = Number(daemonRollResult.total);
             const resolution = resolveMismanifestPossession(psykerRoll, wp, daemonRoll, wp, slot.state);
             const next = applyMismanifest(slot, resolution);
             await this._updateSystemField('system.possession.state', next.state);
@@ -4663,7 +4661,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 gameSystem,
             });
             await ChatMessage.create({
-                user: game.user?.id,
+                user: game.user.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content,
             });

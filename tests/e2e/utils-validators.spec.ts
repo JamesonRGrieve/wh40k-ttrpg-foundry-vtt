@@ -63,7 +63,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
+            const ActorClass = g.Actor;
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -103,7 +103,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                 // Seed an actor with known characteristic + skill state.
                 let actor: any;
                 try {
-                    actor = await Actor.create({
+                    actor = await ActorClass.create({
                         name: 'utils-validators-spec-actor',
                         type: 'dh2-character',
                         system: {
@@ -120,7 +120,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                     }
                 }
 
-                if (actor) {
+                if (actor !== null && actor !== undefined) {
                     const liveActor = g.game?.actors?.get?.(actor.id);
 
                     try {

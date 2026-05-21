@@ -157,7 +157,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                     // (unresolvedAptitudeCollisions) must be empty and the
                     // resolved-banner data source must hold the entry.
                     try {
-                        const mkPicked = (apts: string[]) => ({
+                        const mkPicked = (apts: string[]): object => ({
                             id: `picked-${apts.join('-').toLowerCase()}`,
                             uuid: null,
                             name: `Stub ${apts.join('+')}`,
@@ -211,7 +211,9 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
 
                     try {
                         await builder.render({ force: true });
-                        await new Promise((r) => setTimeout(r, 120));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 120);
+                        });
                     } catch (err) {
                         error = `render: ${String((err as Error)?.message ?? err)}`;
                     }

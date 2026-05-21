@@ -71,7 +71,9 @@ const INVENTORY_GENERATOR_MODULE_URL = '/systems/wh40k-rpg/module/managers/inven
 
 async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
@@ -88,10 +90,10 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
             }) => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor;
-                const Scene = g.Scene;
-                const game = g.game;
-                const ui = g.ui;
+                const ActorGbl = g.Actor;
+                const SceneGbl = g.Scene;
+                const gameGbl = g.game;
+                const uiGbl = g.ui;
 
                 const fired: Record<string, boolean> = {};
                 const notes: Record<string, string> = {};
@@ -114,7 +116,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                 /** Drain any dialog the previous probe left open. */
                 async function closeOpenDialogs(): Promise<void> {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime ui.windows is untyped Record<string, Application>; narrowing to the trio of fields we read
-                    const windows = Object.values(ui?.windows ?? {}) as Array<{ id?: string; title?: string; close?: () => Promise<unknown> }>;
+                    const windows = Object.values(uiGbl?.windows ?? {}) as Array<{ id?: string; title?: string; close?: () => Promise<unknown> }>;
                     for (const w of windows) {
                         const id = `${w?.id ?? ''} ${w?.title ?? ''}`.toLowerCase();
                         if (id.includes('dialog') || id.includes('event tracker') || id.includes('tracker')) {
@@ -162,7 +164,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             }
                             if (registered) {
                                 // Setting must now resolve (default {} per the schema).
-                                const value = game?.settings?.get?.('wh40k-rpg', 'event-tracker-state');
+                                const value = gameGbl?.settings?.get?.('wh40k-rpg', 'event-tracker-state');
                                 if (value !== undefined && value !== null && typeof value === 'object') {
                                     fired['event-tracker-register-settings'] = true;
                                     notes['event-tracker-register-settings'] = 'world setting registered and resolves to an object';
@@ -470,7 +472,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         const ET = mod.EventTracker ?? mod.default;
                         if (typeof ET?.open !== 'function') {
                             notes['event-tracker-open-dialog'] = 'EventTracker.open unavailable';
-                        } else if (game?.user?.isGM !== true) {
+                        } else if (gameGbl?.user?.isGM !== true) {
                             notes['event-tracker-open-dialog'] = 'not joined as GM — open() would short-circuit';
                         } else {
                             const prevGraph = ET._graph;
@@ -478,15 +480,17 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 'evt-open-probe': { id: 'evt-open-probe', name: 'Open Probe Event', source_name: 'Probe Act' },
                             };
                             try {
-                                const before = Object.keys(ui?.windows ?? {}).length;
+                                const before = Object.keys(uiGbl?.windows ?? {}).length;
                                 ET.open();
                                 // open() calls Dialog#render synchronously; let
                                 // the render microtask settle.
-                                await new Promise((r) => setTimeout(r, 250));
+                                await new Promise<void>((r) => {
+                                    setTimeout(r, 250);
+                                });
                                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime ui.windows is untyped
-                                const windowList = Object.values(ui?.windows ?? {}) as Array<{ title?: string }>;
+                                const windowList = Object.values(uiGbl?.windows ?? {}) as Array<{ title?: string }>;
                                 const opened =
-                                    Object.keys(ui?.windows ?? {}).length > before ||
+                                    Object.keys(uiGbl?.windows ?? {}).length > before ||
                                     windowList.some((w) =>
                                         String(w?.title ?? '')
                                             .toLowerCase()
@@ -511,7 +515,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     let pc: any = null;
                     try {
                         pc = (await withTimeout(
-                            Actor.create({
+                            ActorGbl.create({
                                 name: 'managers-extra-pc',
                                 type: 'dh2-character',
                                 system: { gameSystem: 'dh2e' },
@@ -522,7 +526,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         if (pc?.id) {
                             cleanups.push(async () => {
                                 try {
-                                    await game?.actors?.get?.(pc.id)?.delete?.();
+                                    await gameGbl?.actors?.get?.(pc.id)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -535,8 +539,10 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     // Yield a tick so the server-side create flushes before the
                     // first createEmbeddedDocuments fires (V14 race guard,
                     // mirrors weapon-attack.spec.ts).
-                    await new Promise((r) => setTimeout(r, 250));
-                    const getPc = () => (pc?.id ? game?.actors?.get?.(pc.id) : null);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 250);
+                    });
+                    const getPc = (): any => (pc?.id ? gameGbl?.actors?.get?.(pc.id) : null);
 
                     /* ============================================================
                      * Flow 8: item-drop-non-droppable-returns-null
@@ -568,13 +574,13 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                         /* ignore */
                                     }
                                 });
-                                const result = await withTimeout(IDM.dropItemFromActor(live, talent), 5_000, 'dropItemFromActor(talent)');
+                                const dropResult1 = await withTimeout(IDM.dropItemFromActor(live, talent), 5_000, 'dropItemFromActor(talent)');
                                 const stillOwned = live.items.get(talent.id) !== undefined;
-                                if (result === null && stillOwned) {
+                                if (dropResult1 === null && stillOwned) {
                                     fired['item-drop-non-droppable-returns-null'] = true;
                                     notes['item-drop-non-droppable-returns-null'] = 'non-droppable talent short-circuited (null, item retained)';
                                 } else {
-                                    notes['item-drop-non-droppable-returns-null'] = `result=${String(result)} stillOwned=${stillOwned}`;
+                                    notes['item-drop-non-droppable-returns-null'] = `result=${String(dropResult1)} stillOwned=${stillOwned}`;
                                 }
                             }
                         }
@@ -613,13 +619,13 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                         /* ignore */
                                     }
                                 });
-                                const result = await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(no token)');
+                                const dropResult2 = await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(no token)');
                                 const stillOwned = live.items.get(gear.id) !== undefined;
-                                if (result === null && stillOwned) {
+                                if (dropResult2 === null && stillOwned) {
                                     fired['item-drop-no-token-returns-null'] = true;
                                     notes['item-drop-no-token-returns-null'] = 'no-active-token branch returned null, item retained';
                                 } else {
-                                    notes['item-drop-no-token-returns-null'] = `result=${String(result)} stillOwned=${stillOwned}`;
+                                    notes['item-drop-no-token-returns-null'] = `result=${String(dropResult2)} stillOwned=${stillOwned}`;
                                 }
                             }
                         }
@@ -639,12 +645,12 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     let dropScene: any = null;
                     try {
                         const live = getPc();
-                        if (!live || !Scene?.create) {
+                        if (!live || !SceneGbl?.create) {
                             notes['item-drop-creates-loot-pile'] = 'PC actor or Scene.create unavailable';
                         } else {
                             const mod = await import(itemDropUrl);
                             const IDM = mod.ItemDropManager ?? mod.default;
-                            dropScene = await withTimeout(Scene.create({ name: 'managers-extra-drop-scene' }), 5_000, 'Scene.create');
+                            dropScene = await withTimeout(SceneGbl.create({ name: 'managers-extra-drop-scene' }), 5_000, 'Scene.create');
                             if (dropScene?.id) {
                                 cleanups.push(async () => {
                                     try {
@@ -683,21 +689,22 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     notes['item-drop-creates-loot-pile'] = 'drop gear create failed';
                                 } else {
                                     // eslint-disable-next-line no-restricted-syntax -- boundary: dropItemFromActor returns an untyped Foundry actor doc
-                                    const result = (await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(with token)')) as {
+                                    const dropResult3 = (await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(with token)')) as {
                                         id?: string;
                                         type?: string;
                                         items?: { contents?: Array<{ name?: string }> };
                                     } | null;
-                                    lootActor = result;
+                                    lootActor = dropResult3;
                                     const refreshed = getPc();
                                     const gearGone = refreshed?.items?.get?.(gear.id) === undefined;
                                     const lootHasItem =
-                                        result?.type === 'loot' && (result.items?.contents ?? []).some((i: { name?: string }) => i.name === 'probe-drop-gear');
-                                    if (result != null && gearGone && lootHasItem) {
-                                        if (result?.id) {
+                                        dropResult3?.type === 'loot' &&
+                                        (dropResult3.items?.contents ?? []).some((i: { name?: string }) => i.name === 'probe-drop-gear');
+                                    if (dropResult3 != null && gearGone && lootHasItem) {
+                                        if (dropResult3?.id) {
                                             cleanups.push(async () => {
                                                 try {
-                                                    await game?.actors?.get?.(result.id)?.delete?.();
+                                                    await gameGbl?.actors?.get?.(dropResult3.id)?.delete?.();
                                                 } catch {
                                                     /* ignore */
                                                 }
@@ -707,7 +714,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                         notes['item-drop-creates-loot-pile'] = 'loot Actor created, item moved off the PC into the pile';
                                     } else {
                                         notes['item-drop-creates-loot-pile'] = `result=${
-                                            result == null ? 'null' : result.type
+                                            dropResult3 == null ? 'null' : dropResult3.type
                                         } gearGone=${gearGone} lootHasItem=${lootHasItem} (canvas may be headless)`;
                                     }
                                 }
@@ -738,12 +745,12 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             const pile =
                                 initialPile?.type === 'loot'
                                     ? initialPile
-                                    : await withTimeout(Actor.create({ name: 'managers-extra-loot-pile', type: 'loot' }), 5_000, 'loot Actor.create');
+                                    : await withTimeout(ActorGbl.create({ name: 'managers-extra-loot-pile', type: 'loot' }), 5_000, 'loot Actor.create');
                             if (initialPile?.type !== 'loot') {
                                 if (pile?.id) {
                                     cleanups.push(async () => {
                                         try {
-                                            await game?.actors?.get?.(pile.id)?.delete?.();
+                                            await gameGbl?.actors?.get?.(pile.id)?.delete?.();
                                         } catch {
                                             /* ignore */
                                         }
@@ -765,7 +772,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 const receivedSomething = (refreshedPc?.items?.contents ?? []).some(
                                     (i: any) => i.name === 'probe-drop-gear' || i.name === 'probe-pickup-gear',
                                 );
-                                const pileDeleted = game?.actors?.get?.(pileId) === undefined;
+                                const pileDeleted = gameGbl?.actors?.get?.(pileId) === undefined;
                                 if (ok === true && receivedSomething && pileDeleted) {
                                     fired['item-drop-pickup-loot'] = true;
                                     notes['item-drop-pickup-loot'] = 'pile items merged onto receiver and the empty pile was deleted';
@@ -923,16 +930,16 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             notes['inventory-generator-permission-denied'] = 'applyToActor unavailable';
                         } else {
                             const notOwned = { isOwner: false, name: 'unowned-stub-actor', items: [] };
-                            const result = await withTimeout(
+                            const permResult = await withTimeout(
                                 IGM.applyToActor(notOwned as any, ['Compendium.wh40k-rpg.dh2-gear.NonExistent']),
                                 5_000,
                                 'applyToActor(not owner)',
                             );
-                            if (result === null) {
+                            if (permResult === null) {
                                 fired['inventory-generator-permission-denied'] = true;
                                 notes['inventory-generator-permission-denied'] = 'non-owner short-circuited to null (permission gate)';
                             } else {
-                                notes['inventory-generator-permission-denied'] = `expected null, got ${String(result)}`;
+                                notes['inventory-generator-permission-denied'] = `expected null, got ${String(permResult)}`;
                             }
                         }
                     } catch (err) {

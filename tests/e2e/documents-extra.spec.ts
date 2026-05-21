@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -275,7 +274,9 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 // before embedded item creates fire — mirrors the comment
                 // in weapon-attack.spec.ts about V14 race conditions.
                 if (host?.id) {
-                    await new Promise((r) => setTimeout(r, 250));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 250);
+                    });
                 }
 
                 const getHost = (): any => (host?.id !== undefined ? game?.actors?.get?.(host.id) : null);

@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -22,12 +23,12 @@ interface ProfaneProbeResult {
     createError: string | null;
 }
 
-async function probeProfaneObjectSheet(page: import('@playwright/test').Page): Promise<ProfaneProbeResult> {
+async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> {
     return page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Item = g.Item;
-        if (!Item?.create) {
+        const ItemCls = g.Item;
+        if (!ItemCls?.create) {
             return {
                 created: false,
                 rendered: false,
@@ -39,7 +40,7 @@ async function probeProfaneObjectSheet(page: import('@playwright/test').Page): P
         }
         let item;
         try {
-            item = await Item.create({
+            item = await ItemCls.create({
                 name: 'profane-object-probe-eye',
                 type: 'gear',
                 system: {
@@ -74,7 +75,9 @@ async function probeProfaneObjectSheet(page: import('@playwright/test').Page): P
         try {
             if (item.sheet?.render) {
                 await item.sheet.render(true);
-                await new Promise((r) => setTimeout(r, 200));
+                await new Promise((r) => {
+                    setTimeout(r, 200);
+                });
                 rendered = true;
             }
         } catch (err) {
@@ -107,7 +110,7 @@ async function probeProfaneObjectSheet(page: import('@playwright/test').Page): P
     });
 }
 
-async function cleanupProfaneObjectProbe(page: import('@playwright/test').Page): Promise<void> {
+async function cleanupProfaneObjectProbe(page: Page): Promise<void> {
     await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
         const g = globalThis as any;

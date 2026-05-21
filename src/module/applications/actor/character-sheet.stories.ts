@@ -5,9 +5,9 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Handlebars from 'handlebars';
+import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate } from '../../../../stories/mocks';
+import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { mockPlayerSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
@@ -21,12 +21,12 @@ initializeStoryHandlebars();
 
 const rng = seedRandom(0xc4a4c7e2);
 
-const headerTpl = Handlebars.compile(headerSrc);
-const tabsTpl = Handlebars.compile(tabsSrc);
-const biographyTpl = Handlebars.compile(biographyTabSrc);
+const headerTpl = HbsLib.compile(headerSrc);
+const tabsTpl = HbsLib.compile(tabsSrc);
+const biographyTpl = HbsLib.compile(biographyTabSrc);
 
 function renderCharacterSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = Handlebars.compile(`
+    const tpl = HbsLib.compile(`
         <div class="tw-grid tw-grid-cols-[280px_minmax(0,1fr)]">
             <aside class="wh40k-sidebar tw-flex tw-min-h-full tw-flex-col tw-bg-[var(--color-bg-secondary,#252525)]">
                 ${headerTpl(ctx)}
@@ -37,10 +37,10 @@ function renderCharacterSheet(ctx: SheetContextLike): HTMLElement {
             </main>
         </div>
     `);
-    return renderTemplate(tpl, ctx);
+    return renderStoryTemplate(tpl, ctx);
 }
 
-const _actorId = randomId('character', rng);
+randomId('character', rng);
 
 const meta: Meta<SheetContextLike> = {
     title: 'Actor/CharacterSheet',
@@ -55,9 +55,9 @@ export const DarkHeresy2Default: Story = {
     args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
-        await expect(canvas.getByText('Biography')).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
+        await expect(storyCanvas.getByText('Biography')).toBeVisible();
     },
 };
 
@@ -68,11 +68,11 @@ export const ImperiumMaledictum: Story = {
     args: mockPlayerSheetContext({ systemId: 'im', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const storyCanvas = within(canvasElement);
         // IM uses 'Interrogator Hale' as the default actor name
-        await expect(canvas.getByDisplayValue('Interrogator Hale')).toBeVisible();
+        await expect(storyCanvas.getByDisplayValue('Interrogator Hale')).toBeVisible();
         // IM origin path step should be House Varonius
-        await expect(canvas.getByText('House Varonius')).toBeVisible();
+        await expect(storyCanvas.getByText('House Varonius')).toBeVisible();
     },
 };
 
@@ -99,9 +99,9 @@ export const EditModeBio: Story = {
     }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('29')).toBeVisible();
-        await expect(canvas.getByDisplayValue('Female')).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('29')).toBeVisible();
+        await expect(storyCanvas.getByDisplayValue('Female')).toBeVisible();
     },
 };
 
@@ -111,7 +111,7 @@ export const EnemyCreateClick: Story = {
     name: 'Interaction — itemCreate (enemy row)',
     args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
-    play: async ({ canvasElement }) => {
+    play: ({ canvasElement }) => {
         // The biography tab renders two itemCreate buttons (peer + enemy).
         // clickAction fires the first matching element; presence confirms rendering.
         clickAction(canvasElement, 'itemCreate');
@@ -128,9 +128,9 @@ export const BlackCrusadeVariant: Story = {
     args: mockPlayerSheetContext({ systemId: 'bc', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
-        await expect(canvas.getByText('Biography')).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
+        await expect(storyCanvas.getByText('Biography')).toBeVisible();
     },
 };
 
@@ -139,9 +139,9 @@ export const DarkHeresy1eVariant: Story = {
     args: mockPlayerSheetContext({ systemId: 'dh1e', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
-        await expect(canvas.getByText('Biography')).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
+        await expect(storyCanvas.getByText('Biography')).toBeVisible();
     },
 };
 
@@ -150,9 +150,9 @@ export const DeathwatchVariant: Story = {
     args: mockPlayerSheetContext({ systemId: 'dw', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
-        await expect(canvas.getByText('Biography')).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
+        await expect(storyCanvas.getByText('Biography')).toBeVisible();
     },
 };
 
@@ -161,9 +161,9 @@ export const OnlyWarVariant: Story = {
     args: mockPlayerSheetContext({ systemId: 'ow', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
-        await expect(canvas.getByText('Biography')).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
+        await expect(storyCanvas.getByText('Biography')).toBeVisible();
     },
 };
 
@@ -172,9 +172,9 @@ export const RogueTraderVariant: Story = {
     args: mockPlayerSheetContext({ systemId: 'rt', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
-        await expect(canvas.getByText('Biography')).toBeVisible();
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
+        await expect(storyCanvas.getByText('Biography')).toBeVisible();
     },
 };
 
@@ -186,7 +186,7 @@ export const RogueTraderVariant: Story = {
 // click handler that mirrors the static method's local-tooltip fallback so the
 // behaviour is observable without instantiating the full sheet class.
 
-const combatActionsPanelTpl = Handlebars.compile(combatActionsPanelSrc);
+const combatActionsPanelTpl = HbsLib.compile(combatActionsPanelSrc);
 
 interface MockTalent {
     id: string;

@@ -75,7 +75,9 @@ test.describe.serial('AcquisitionDialog Scale upgrade (Tier B)', () => {
                     const actorStub = {
                         system: { rogueTrader: { profitFactor: { current: 80, starting: 50 } }, gameSystem: 'rt' },
                         getFlag: () => undefined,
-                        setFlag: async () => undefined,
+                        setFlag: async () => {
+                            await Promise.resolve();
+                        },
                     } as unknown as Parameters<typeof Cls>[0];
 
                     const inst = new Cls(actorStub, {});
@@ -88,7 +90,9 @@ test.describe.serial('AcquisitionDialog Scale upgrade (Tier B)', () => {
 
                     try {
                         await inst.render({ force: true });
-                        await new Promise((r) => setTimeout(r, 80));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 80);
+                        });
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);
                     }

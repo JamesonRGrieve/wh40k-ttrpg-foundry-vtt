@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -36,12 +37,12 @@ interface PageWindow {
     game?: { actors?: { get?: (id: string) => BCCharacterActor | undefined } };
 }
 
-async function createBCCharacter(page: import('@playwright/test').Page, label: string): Promise<{ id: string | null; createError: string | null }> {
+async function createBCCharacter(page: Page, label: string): Promise<{ id: string | null; createError: string | null }> {
     return page.evaluate(async (name: string) => {
-        const { Actor } = globalThis as unknown as PageWindow;
-        if (!Actor?.create) return { id: null, createError: 'Actor.create unavailable' };
+        const { Actor: ActorCls } = globalThis as unknown as PageWindow;
+        if (!ActorCls?.create) return { id: null, createError: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorCls.create({
                 name,
                 type: 'bc-character',
                 system: { gameSystem: 'bc' },
@@ -53,11 +54,11 @@ async function createBCCharacter(page: import('@playwright/test').Page, label: s
     }, label);
 }
 
-async function deleteActor(page: import('@playwright/test').Page, id: string): Promise<void> {
+async function deleteActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
-        const { game } = globalThis as unknown as PageWindow;
+        const { game: gameObj } = globalThis as unknown as PageWindow;
         try {
-            await game?.actors?.get?.(actorId)?.delete?.();
+            await gameObj?.actors?.get?.(actorId)?.delete?.();
         } catch {
             /* ignore */
         }
@@ -78,8 +79,8 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as PageWindow;
-            const actor = game?.actors?.get?.(actorId);
+            const { game: gameObj } = globalThis as unknown as PageWindow;
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.experience?.total ?? null;
             try {
@@ -87,7 +88,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set total: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.experience?.total ?? null;
+            const after = gameObj?.actors?.get?.(actorId)?.system?.experience?.total ?? null;
             return { initial, after, error: null };
         }, created.id);
 
@@ -114,8 +115,8 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as PageWindow;
-            const actor = game?.actors?.get?.(actorId);
+            const { game: gameObj } = globalThis as unknown as PageWindow;
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.update?.({ 'system.experience.total': 1000, 'system.experience.used': 0 });
@@ -123,7 +124,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set used: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = game?.actors?.get?.(actorId)?.system?.experience?.used ?? null;
+            const after = gameObj?.actors?.get?.(actorId)?.system?.experience?.used ?? null;
             return { after, error: null };
         }, created.id);
 
@@ -150,15 +151,15 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as PageWindow;
-            const actor = game?.actors?.get?.(actorId);
+            const { game: gameObj } = globalThis as unknown as PageWindow;
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.update?.({ 'system.experience.total': 800, 'system.experience.used': 300 });
             } catch (err) {
                 return { error: `set total/used: ${String((err as Error)?.message ?? err)}` };
             }
-            const xp = game?.actors?.get?.(actorId)?.system?.experience;
+            const xp = gameObj?.actors?.get?.(actorId)?.system?.experience;
             return { total: xp?.total ?? null, used: xp?.used ?? null, available: xp?.available ?? null, error: null };
         }, created.id);
 
@@ -200,7 +201,9 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 if (typeof Cls !== 'function') return { rendered: false, error: 'AddXPDialog default export not a constructor' };
                 inst = new Cls(actor);
                 await inst.render(true);
-                await new Promise((r) => setTimeout(r, 30));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 30);
+                });
                 const rendered = inst.element instanceof HTMLElement;
                 try {
                     await inst.close?.();
@@ -252,7 +255,9 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 if (typeof Cls !== 'function') return { rendered: false, error: 'AdvancementDialog default export not a constructor' };
                 inst = new Cls(actor);
                 await inst.render(true);
-                await new Promise((r) => setTimeout(r, 30));
+                await new Promise<void>((r) => {
+                    setTimeout(r, 30);
+                });
                 const rendered = inst.element instanceof HTMLElement;
                 try {
                     await inst.close?.();
@@ -292,8 +297,8 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as PageWindow;
-            const actor = game?.actors?.get?.(actorId);
+            const { game: gameObj } = globalThis as unknown as PageWindow;
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const TALENT_COST = 200;
             try {
@@ -310,7 +315,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             } catch (err) {
                 return { error: `purchase talent: ${String((err as Error)?.message ?? err)}` };
             }
-            const fresh = game?.actors?.get?.(actorId);
+            const fresh = gameObj?.actors?.get?.(actorId);
             const items = fresh?.items?.contents ?? [];
             const talent = items.find((i) => i.type === 'talent') ?? null;
             const xp = fresh?.system?.experience;
@@ -349,8 +354,8 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game } = globalThis as unknown as PageWindow;
-            const actor = game?.actors?.get?.(actorId);
+            const { game: gameObj } = globalThis as unknown as PageWindow;
+            const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const before = actor.system?.skills?.['dodge'];
             try {
@@ -358,13 +363,13 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set advance=1: ${String((err as Error)?.message ?? err)}` };
             }
-            const atOne = game?.actors?.get?.(actorId)?.system?.skills?.['dodge'];
+            const atOne = gameObj?.actors?.get?.(actorId)?.system?.skills?.['dodge'];
             try {
                 await actor.update?.({ 'system.skills.dodge.advance': 2 });
             } catch (err) {
                 return { error: `set advance=2: ${String((err as Error)?.message ?? err)}` };
             }
-            const atTwo = game?.actors?.get?.(actorId)?.system?.skills?.['dodge'];
+            const atTwo = gameObj?.actors?.get?.(actorId)?.system?.skills?.['dodge'];
             return {
                 beforeAdvance: before?.advance ?? null,
                 beforeTrained: before?.trained ?? null,

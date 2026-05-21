@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -107,13 +106,15 @@ interface ProbeResult {
 
 async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const game = g.game;
+            const gameCls = g.game;
 
             // Wrap any awaitable with a 30s timeout so a slow pack can't
             // hang the spec (pack.getDocuments() is genuinely slow on large
@@ -146,7 +147,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     return;
                 }
                 if (typeof value === 'object') {
-                    for (const k of Object.keys(value as Record<string, unknown>)) {
+                    for (const k of Object.keys(value)) {
                         // Skip framework-internal slots whose traversal
                         // produces noise without UUIDs (parent chains,
                         // collection contents that re-enter the doc tree).
@@ -235,8 +236,8 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                                 typeof serVal === 'object' &&
                                 !Array.isArray(serVal)
                             ) {
-                                const srcKeys = Object.keys(srcVal as Record<string, unknown>);
-                                const serKeys = new Set(Object.keys(serVal as Record<string, unknown>));
+                                const srcKeys = Object.keys(srcVal);
+                                const serKeys = new Set(Object.keys(serVal));
                                 const lost = srcKeys.filter((sk) => !serKeys.has(sk));
                                 if (lost.length > 0) {
                                     diffs.push(`object '${key}' dropped subkeys: ${lost.join(', ')}`);
@@ -270,7 +271,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 };
                 outcomes[flow] = outcome;
 
-                const pack = game?.packs?.get?.(packId);
+                const pack = gameCls?.packs?.get?.(packId);
                 if (!pack) {
                     outcome.packError = `pack '${packId}' not registered`;
                     continue;
@@ -278,7 +279,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
 
                 let docs: unknown[] = [];
                 try {
-                    docs = (await withTimeout(pack.getDocuments(), 30_000, `${packId}.getDocuments()`)) as unknown[];
+                    docs = await withTimeout(pack.getDocuments(), 30_000, `${packId}.getDocuments()`);
                 } catch (err) {
                     outcome.packError = `getDocuments threw: ${String((err as Error)?.message ?? err)}`;
                     continue;
@@ -326,11 +327,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     // either a non-empty `schema.fields` or — for those two
                     // document kinds — just a non-null system object.
                     const fieldsObj = system.schema?.fields;
-                    const hasFields =
-                        fieldsObj !== null &&
-                        fieldsObj !== undefined &&
-                        typeof fieldsObj === 'object' &&
-                        Object.keys(fieldsObj as Record<string, unknown>).length > 0;
+                    const hasFields = fieldsObj !== null && fieldsObj !== undefined && typeof fieldsObj === 'object' && Object.keys(fieldsObj).length > 0;
                     if (!hasFields) {
                         // Best-effort: tolerate framework-doc kinds whose
                         // DataModel is implicit. Only flag when the doc
@@ -387,7 +384,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
         }, COMPENDIUM_CONTENT_FLOWS);
 
         return {
-            outcomes: result.outcomes as Record<FlowName, PackProbeOutcome>,
+            outcomes: result.outcomes,
             pageErrors,
         };
     } finally {

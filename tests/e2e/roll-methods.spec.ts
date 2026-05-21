@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { GAME_SYSTEM_IDS, joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -65,7 +66,7 @@ interface RollProbeResult {
 }
 
 async function probeRollMethods(
-    page: import('@playwright/test').Page,
+    page: Page,
     gameSystem: string,
 ): Promise<{
     created: boolean;
@@ -75,18 +76,20 @@ async function probeRollMethods(
     diag?: { ctorName: string };
 }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
-            async ({ gameSystem, prefix, methods }) => {
-                const { Actor, ui } = globalThis as unknown as {
+            async ({ gameSystem: sysId, prefix, methods }) => {
+                const { Actor: ActorCls, ui: foundryUi } = globalThis as unknown as {
                     Actor?: {
                         create?: (data: object) => Promise<{
                             id?: string;
                             type?: string;
                             items?: { contents: Array<{ id: string; type: string }> };
-                            rollCharacteristic?: (key: string) => Promise<unknown> | unknown;
+                            rollCharacteristic?: (key: string) => unknown;
                             rollCharacteristicCheck?: (key: string) => Promise<unknown>;
                             rollSkill?: (key: string) => Promise<unknown>;
                             rollCheck?: (target: number) => Promise<unknown>;
@@ -99,17 +102,17 @@ async function probeRollMethods(
                     };
                     ui?: { windows?: Record<string, { close?: () => Promise<unknown>; id?: string }> };
                 };
-                if (!Actor?.create) {
+                if (!ActorCls?.create) {
                     return { created: false, createError: 'Actor.create unavailable', results: [] };
                 }
 
                 const actorType = `${prefix}-character`;
                 let actor;
                 try {
-                    actor = await Actor.create({
+                    actor = await ActorCls.create({
                         name: `roll-probe-${prefix}`,
                         type: actorType,
-                        system: { gameSystem },
+                        system: { gameSystem: sysId },
                     });
                 } catch (err) {
                     return { created: false, createError: String((err as Error)?.message ?? err), results: [] };
@@ -162,7 +165,7 @@ async function probeRollMethods(
                  * sidebar or hotbar.
                  */
                 async function closeOpenDialogs(): Promise<void> {
-                    const windows = Object.values(ui?.windows ?? {});
+                    const windows = Object.values(foundryUi?.windows ?? {});
                     for (const w of windows) {
                         // Heuristic: ids starting with 'app-' or containing
                         // 'dialog'/'prompt' are roll-flow surfaces.
@@ -249,7 +252,7 @@ async function probeRollMethods(
                                 }
                                 break;
                             default:
-                                error = `unknown method ${method}`;
+                                error = `unknown method ${String(method)}`;
                         }
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);

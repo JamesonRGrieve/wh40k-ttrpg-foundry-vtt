@@ -20,10 +20,11 @@ vi.mock('../src/module/applications/item/base-item-sheet.ts', () => {
         static TABS = [];
         tabGroups: Record<string, string> = {};
         async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
+            await Promise.resolve();
             return { fromBase: true };
         }
         async _onRender(_context: Record<string, unknown>, _options: Record<string, unknown>): Promise<void> {
-            /* no-op */
+            await Promise.resolve();
         }
     }
     return { default: FakeBaseItemSheet };
@@ -152,8 +153,9 @@ describe('defineSimpleItemSheet', () => {
     });
 
     it('invokes prepareContext callback with the rendered context', async () => {
-        const cb = vi.fn(async (_sheet: unknown, ctx: Record<string, unknown>) => {
-            ctx.injected = 42;
+        const cb = vi.fn(async (_sheet: unknown, preparedCtx: Record<string, unknown>) => {
+            await Promise.resolve();
+            preparedCtx.injected = 42;
         });
         const Cls = defineSimpleItemSheet({
             className: 'WithCallbackSheet',
@@ -211,10 +213,11 @@ describe('defineSimpleItemSheet', () => {
             tabGroups: Record<string, string> = {};
             customMarker = 'container';
             async _prepareContext(_o: Record<string, unknown>): Promise<Record<string, unknown>> {
+                await Promise.resolve();
                 return { fromCustomBase: true };
             }
             async _onRender(_c: Record<string, unknown>, _o: Record<string, unknown>): Promise<void> {
-                /* no-op */
+                await Promise.resolve();
             }
         }
         const Cls = defineSimpleItemSheet({

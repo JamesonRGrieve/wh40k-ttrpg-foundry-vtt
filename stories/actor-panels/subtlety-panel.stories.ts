@@ -99,8 +99,8 @@ export const PlayerView: Story = {
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         // Pool readout shows current / max.
-        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('60');
-        void expect(canvasElement.querySelector('.wh40k-subtlety-max')?.textContent?.trim()).toBe('100');
+        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('60');
+        void expect(canvasElement.querySelector('.wh40k-subtlety-max')?.textContent.trim()).toBe('100');
         // Player view: the GM-only manual stepper must NOT render.
         void expect(canvasElement.querySelector('.wh40k-subtlety-manual')).toBeNull();
         void expect(canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]').length).toBe(0);
@@ -147,7 +147,7 @@ export const GmViewWithAdjusters: Story = {
     },
     render: (args) => renderPanel(args),
     play: ({ canvasElement }) => {
-        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('45');
+        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('45');
         // GM view: the manual stepper renders both +1 / -1 buttons.
         const steppers = canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]');
         void expect(steppers.length).toBe(2);
@@ -157,7 +157,7 @@ export const GmViewWithAdjusters: Story = {
         // Three adjuster rows; the gains row (+5) and losses row (-3) render
         // signed deltas, the clamp row renders the shield affordance.
         void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(3);
-        const deltaCells = Array.from(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-delta')).map((n) => n.textContent?.trim());
+        const deltaCells = Array.from(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-delta')).map((n) => n.textContent.trim());
         void expect(deltaCells).toContain('+5');
         void expect(deltaCells).toContain('-3');
         void expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
@@ -173,7 +173,7 @@ export const EmptyAdjusters: Story = {
     },
     render: (args) => renderPanel(args),
     play: ({ canvasElement }) => {
-        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent?.trim()).toBe('80');
+        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('80');
         void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(0);
         void expect(canvasElement.querySelector('.wh40k-subtlety-adjusters-empty')).not.toBeNull();
     },

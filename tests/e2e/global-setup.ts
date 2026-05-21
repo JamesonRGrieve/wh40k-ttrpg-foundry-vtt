@@ -47,7 +47,9 @@ async function waitForWorldReady(): Promise<void> {
             console.log('[global-setup] Foundry world ready');
             return;
         }
-        await new Promise((r) => setTimeout(r, 1_000));
+        await new Promise((r) => {
+            setTimeout(r, 1_000);
+        });
     }
     throw new Error('Foundry world did not become ready within 180s');
 }

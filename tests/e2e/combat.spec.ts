@@ -69,21 +69,23 @@ interface UIProbeResult {
 
 async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pageErrors: string[] }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const Combat = g.Combat;
-            const game = g.game;
+            const ActorGbl = g.Actor;
+            const CombatGbl = g.Combat;
+            const gameGbl = g.game;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create || !Combat?.create) {
+            if (!ActorGbl?.create || !CombatGbl?.create) {
                 return {
                     flowsFired: fired,
                     flowNotes: { create: 'Actor.create or Combat.create unavailable' },
@@ -101,7 +103,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // succeed.
             for (let i = 0; i < 3; i++) {
                 try {
-                    const actor = await Actor.create({
+                    const actor = await ActorGbl.create({
                         name: `combat-spec-npc-${i}`,
                         type: 'bc-npc',
                         system: { gameSystem: 'bc' },
@@ -143,7 +145,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
 
             let combat: any = null;
             try {
-                combat = await withTimeout(Combat.create({}), 5_000, 'Combat.create');
+                combat = await withTimeout(CombatGbl.create({}), 5_000, 'Combat.create');
                 if (combat?.id) {
                     fired['create'] = true;
                 } else {
@@ -157,7 +159,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 // Cleanup actors before bailing.
                 for (const id of npcIds) {
                     try {
-                        await game?.actors?.get?.(id)?.delete?.();
+                        await gameGbl?.actors?.get?.(id)?.delete?.();
                     } catch {
                         /* ignore */
                     }
@@ -301,7 +303,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 } else {
                     notes['endCombat'] = 'neither endCombat nor delete available';
                 }
-            } catch (err) {
+            } catch {
                 // endCombat may prompt; fall back to delete.
                 try {
                     await withTimeout(combat.delete?.(), 5_000, 'combat.delete fallback');
@@ -345,7 +347,9 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
 
 async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: string[] }> {
     const pageErrors: string[] = [];
-    const listener = (err: Error) => pageErrors.push(err.message);
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (classNames: readonly string[]) => {
@@ -474,7 +478,9 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                     if (instance && typeof instance.render === 'function') {
                         await instance.render(true);
                         // Allow render microtasks to flush.
-                        await new Promise((r) => setTimeout(r, 50));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 50);
+                        });
                         rendered[name] = true;
                         try {
                             await instance.close?.();

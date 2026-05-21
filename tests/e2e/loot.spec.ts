@@ -114,7 +114,9 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
             try {
                 if (loot?.sheet?.render) {
                     await loot.sheet.render(true);
-                    await new Promise((r) => setTimeout(r, 250));
+                    await new Promise((r) => {
+                        setTimeout(r, 250);
+                    });
                     const el = loot.sheet.element;
                     const ok = !!el && (el instanceof HTMLElement || !!el[0]);
                     record('loot-sheet-renders', ok, ok ? null : 'sheet element absent after render');

@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -55,9 +56,11 @@ interface ItemRollProbe {
     error: string | null;
 }
 
-async function probeItemRoll(page: import('@playwright/test').Page, actorId: string, spec: ItemRollSpec): Promise<ItemRollProbe> {
+async function probeItemRoll(page: Page, outerActorId: string, spec: ItemRollSpec): Promise<ItemRollProbe> {
     const errors: string[] = [];
-    const listener = (err: Error) => errors.push(err.message);
+    const listener = (err: Error): void => {
+        errors.push(err.message);
+    };
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
@@ -104,7 +107,7 @@ async function probeItemRoll(page: import('@playwright/test').Page, actorId: str
                 await item.delete?.();
                 return { chatDelta: after - before, returned: returnedKind, error };
             },
-            { actorId, itemType: spec.itemType, itemSystem: spec.itemSystem, method: spec.method },
+            { actorId: outerActorId, itemType: spec.itemType, itemSystem: spec.itemSystem, method: spec.method },
         );
         return {
             method: spec.method,
@@ -125,11 +128,11 @@ test.describe.serial('item roll methods (Tier B)', () => {
 
         // Create parent actor (dh2-character has characteristics).
         const actorId = await page.evaluate(async () => {
-            const { Actor } = globalThis as unknown as {
+            const { Actor: ActorCtor } = globalThis as unknown as {
                 Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
             };
-            if (!Actor?.create) return null;
-            const actor = await Actor.create({
+            if (!ActorCtor?.create) return null;
+            const actor = await ActorCtor.create({
                 name: 'e2e-item-rolls-parent',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e' },
@@ -170,13 +173,13 @@ test.describe.serial('item roll methods (Tier B)', () => {
             }
         } finally {
             // Clean up parent actor + any leftover chat messages from probes.
-            await page.evaluate(async (actorId: string) => {
+            await page.evaluate(async (cleanupActorId: string) => {
                 const g = globalThis as unknown as {
                     game?: {
                         actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined };
                     };
                 };
-                const a = g.game?.actors?.get?.(actorId);
+                const a = g.game?.actors?.get?.(cleanupActorId);
                 await a?.delete?.();
             }, actorId);
         }

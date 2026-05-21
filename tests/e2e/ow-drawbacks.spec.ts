@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -20,14 +21,14 @@ interface ActorRef {
     id: string;
 }
 
-async function createOwActor(page: import('@playwright/test').Page): Promise<ActorRef | { error: string }> {
+async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor } = globalThis as unknown as {
+        const { Actor: ActorGlobal } = globalThis as unknown as {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
         };
-        if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
+        if (!ActorGlobal?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
-            const actor = await Actor.create({
+            const actor = await ActorGlobal.create({
                 name: 'probe-ow-drawbacks-pc',
                 type: 'ow-character',
                 system: {
@@ -50,12 +51,12 @@ async function createOwActor(page: import('@playwright/test').Page): Promise<Act
     return { id: result.id };
 }
 
-async function deleteActor(page: import('@playwright/test').Page, actorId: string): Promise<void> {
+async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game } = globalThis as unknown as {
+        const { game: gameGlobal } = globalThis as unknown as {
             game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
         };
-        const actor = game?.actors?.get?.(id);
+        const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
@@ -101,7 +102,9 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
                     const sheet = actor.sheet;
                     if (!sheet) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
-                    await new Promise((r) => setTimeout(r, 120));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 120);
+                    });
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element) {
@@ -112,10 +115,12 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
                         hasBudgetRow = el.querySelector('[data-adjusted-budget]') !== null;
                         hasRoster = el.querySelector('[data-field="multi-comrade-roster"]') !== null;
 
-                        const toggleBtn = el.querySelector('button[data-action="owToggleDrawback"]') as HTMLButtonElement | null;
-                        if (toggleBtn && !toggleBtn.disabled) {
+                        const toggleBtn = el.querySelector('button[data-action="owToggleDrawback"]');
+                        if (toggleBtn instanceof HTMLButtonElement && !toggleBtn.disabled) {
                             toggleBtn.click();
-                            await new Promise((r) => setTimeout(r, 150));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 150);
+                            });
                             toggleDispatched = true;
                         }
                         drawbacksAfter = (actor.system?.regimentDrawbacks ?? []).length;

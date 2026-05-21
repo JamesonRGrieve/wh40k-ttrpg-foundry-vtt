@@ -66,7 +66,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/rules`;
-            const loadModule = async (name: string): Promise<any | null> => {
+            const loadModule = async (name: string): Promise<any> => {
                 try {
                     return await import(`${base}/${name}.js`);
                 } catch (err) {

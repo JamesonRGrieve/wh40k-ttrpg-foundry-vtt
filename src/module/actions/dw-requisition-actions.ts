@@ -131,7 +131,7 @@ async function promptItemDetails(): Promise<RequisitionItemPromptResult | null> 
         },
         rejectClose: false,
     });
-    if (result === null || result === undefined) return null;
+    if (result === null) return null;
     // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 prompt return is typed as unknown; the callback above narrows the shape
     return result as unknown as RequisitionItemPromptResult;
 }
@@ -202,7 +202,7 @@ async function promptPoolDetails(): Promise<PoolPromptResult | null> {
         },
         rejectClose: false,
     });
-    if (result === null || result === undefined) return null;
+    if (result === null) return null;
     // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 prompt return is typed as unknown; the callback above narrows the shape
     return result as unknown as PoolPromptResult;
 }

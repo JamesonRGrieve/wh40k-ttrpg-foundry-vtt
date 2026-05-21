@@ -29,14 +29,14 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
             const result = await page.evaluate(async () => {
                 /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
                 const g = globalThis as any;
-                const Actor = g.Actor;
-                if (!Actor?.create) {
+                const ActorCls = g.Actor;
+                if (!ActorCls?.create) {
                     return { setupOk: false, rendered: false, hasSpend: false, hasDecline: false, fateText: '', error: 'Actor.create unavailable' };
                 }
 
                 let actor;
                 try {
-                    actor = await Actor.create({
+                    actor = await ActorCls.create({
                         name: 'sanctic-purity-probe',
                         type: 'dh2-character',
                         system: {
@@ -81,7 +81,9 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
                     }
                     const inst = new Cls({ actor });
                     await inst.render(true);
-                    await new Promise((r) => setTimeout(r, 80));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 80);
+                    });
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
                         hasSpend = inst.element.querySelector('[data-action="spend"]') !== null;

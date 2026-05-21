@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -48,7 +49,7 @@ const FLOWS = [
 const BROWSER_MODULE_URL = '/systems/wh40k-rpg/module/applications/compendium-browser.js';
 const CACHE_MODULE_URL = '/systems/wh40k-rpg/module/utils/uuid-name-cache.js';
 
-async function runFlows(page: import('@playwright/test').Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
+async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
     const pageErrors: string[] = [];
     const listener = (err: Error): void => {
         pageErrors.push(err.message);
@@ -90,9 +91,9 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                 }
 
                 // ── Helper: close any browser window we opened ────────
-                async function closeBrowserWindow(inst: any): Promise<void> {
+                async function closeBrowserWindow(browserInst: any): Promise<void> {
                     try {
-                        await inst?.close?.();
+                        await browserInst?.close?.();
                     } catch {
                         /* ignore */
                     }
@@ -130,7 +131,9 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                     try {
                         inst = new RTCompendiumBrowser({});
                         await inst.render({ force: true });
-                        await new Promise((r) => setTimeout(r, 80));
+                        await new Promise((r) => {
+                            setTimeout(r, 80);
+                        });
                         const ok = inst.element instanceof HTMLElement;
                         record('browser-renders', ok, ok ? null : 'element is not an HTMLElement after render');
                     } catch (err) {
@@ -203,10 +206,12 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                         const evt = { target: { value: term } } as unknown as InputEvent;
                         inst._onSearch(evt);
                         // wait for the re-render the handler schedules
-                        await new Promise((r) => setTimeout(r, 60));
-                        const results = await inst._getFilteredResults();
-                        const ok = results.length > 0 && results.every((r: any) => (r.name as string).toLowerCase().includes(term));
-                        record('browser-search-by-name', ok, ok ? null : `search '${term}' matched ${results.length} (mismatch in name filter)`);
+                        await new Promise((r) => {
+                            setTimeout(r, 60);
+                        });
+                        const searchResults = await inst._getFilteredResults();
+                        const ok = searchResults.length > 0 && searchResults.every((r: any) => (r.name as string).toLowerCase().includes(term));
+                        record('browser-search-by-name', ok, ok ? null : `search '${term}' matched ${searchResults.length} (mismatch in name filter)`);
                         // reset for downstream flows
                         inst._filters.search = '';
                     } catch (err) {
@@ -232,7 +237,9 @@ async function runFlows(page: import('@playwright/test').Page): Promise<{ result
                             currentTarget: fakeTarget,
                         } as unknown as PointerEvent;
                         await inst._onItemClick(fakeEvent);
-                        await new Promise((r) => setTimeout(r, 60));
+                        await new Promise((r) => {
+                            setTimeout(r, 60);
+                        });
                         // Either the sheet rendered (best case) or fromUuid
                         // returned without throwing — both indicate the
                         // _onItemClick path executed end-to-end.

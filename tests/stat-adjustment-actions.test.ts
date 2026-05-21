@@ -15,6 +15,7 @@ const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
 const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>).foundry;
 
 class FakeApplicationV2 {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin class requires (...args: any[]) constructor signature per TS rules
 const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {};
 
 (globalThis as Record<string, unknown>).game = {
@@ -72,10 +73,10 @@ function makeHost(
         async _throttle(_key: string, _wait: number, fn: (...args: unknown[]) => unknown, ctx: unknown, args: unknown[]): Promise<unknown> {
             return await fn.apply(ctx, args);
         },
-        _notify(type: 'info' | 'warning' | 'error', message: string) {
+        _notify(type: 'info' | 'warning' | 'error', message: string): void {
             host._notifies.push([type, message]);
         },
-        async _updateSystemField(field: string, value: unknown) {
+        async _updateSystemField(field: string, value: unknown): Promise<void> {
             host._updates.push({ [field]: value });
         },
     };
@@ -88,7 +89,7 @@ function btn(dataset: Record<string, string>): HTMLElement {
     return el;
 }
 
-const ev = () => ({ stopPropagation: vi.fn() } as unknown as Event);
+const ev = (): Event => ({ stopPropagation: vi.fn() } as unknown as Event);
 
 describe('increment / decrement / adjustStat', () => {
     let host: ReturnType<typeof makeHost>;

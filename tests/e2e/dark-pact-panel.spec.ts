@@ -21,12 +21,12 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, rowCount: 0, error: 'Actor.create unavailable' };
+        const ActorCls = g.Actor;
+        if (!ActorCls?.create) return { setupOk: false, rowCount: 0, error: 'Actor.create unavailable' };
 
         let actor;
         try {
-            actor = await Actor.create({
+            actor = await ActorCls.create({
                 name: 'dark-pact-panel-probe',
                 type: 'dh2-character',
                 system: {
@@ -53,12 +53,16 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
         if (!actor) return { setupOk: false, rowCount: 0, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise<void>((r) => {
+            setTimeout(r, 250);
+        });
 
         // Navigate to the Status tab if the sheet's tab API is reachable.
         try {
             actor.sheet?.changeTab?.('status', 'primary');
-            await new Promise((r) => setTimeout(r, 150));
+            await new Promise<void>((r) => {
+                setTimeout(r, 150);
+            });
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }

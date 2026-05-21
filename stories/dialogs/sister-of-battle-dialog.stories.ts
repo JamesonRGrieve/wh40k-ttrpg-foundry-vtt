@@ -58,10 +58,10 @@ export const DisabledApply: Story = {
 };
 
 export const ApplyFlow: Story = {
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+    play: ({ canvasElement }) => {
+        const queries = within(canvasElement);
         const cards = canvasElement.querySelectorAll('[data-talent]');
-        expect(cards.length).toBe(3);
-        expect(canvas.getByText(/Apply/i)).toBeTruthy();
+        void expect(cards.length).toBe(3);
+        void expect(queries.getByText(/Apply/i)).toBeTruthy();
     },
 };

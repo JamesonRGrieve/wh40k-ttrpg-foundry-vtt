@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -52,32 +53,27 @@ interface PageWindow {
     };
 }
 
-async function createActor(
-    page: import('@playwright/test').Page,
-    label: string,
-    actorType: string,
-    gameSystem: string,
-): Promise<{ id: string | null; createError: string | null }> {
+async function createActor(page: Page, label: string, actorType: string, gameSystem: string): Promise<{ id: string | null; createError: string | null }> {
     return page.evaluate(
         async ({ name, type, sys }: { name: string; type: string; sys: string }) => {
-            const { Actor } = globalThis as unknown as PageWindow;
-            if (!Actor?.create) return { id: null, createError: 'Actor.create unavailable' };
+            const { Actor: ActorCtor } = globalThis as unknown as PageWindow;
+            if (!ActorCtor?.create) return { id: null, createError: 'Actor.create unavailable' };
             try {
-                const actor = await Actor.create({ name, type, system: { gameSystem: sys } });
+                const actor = await ActorCtor.create({ name, type, system: { gameSystem: sys } });
                 return { id: actor?.id ?? null, createError: actor ? null : 'Actor.create returned null' };
             } catch (err) {
-                return { id: null, createError: String((err as Error)?.message ?? err) };
+                return { id: null, createError: String((err as Error).message) };
             }
         },
         { name: label, type: actorType, sys: gameSystem },
     );
 }
 
-async function deleteActor(page: import('@playwright/test').Page, id: string): Promise<void> {
+async function deleteActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
-        const { game } = globalThis as unknown as PageWindow;
+        const { game: foundryGame } = globalThis as unknown as PageWindow;
         try {
-            await game?.actors?.get?.(actorId)?.delete?.();
+            await foundryGame?.actors?.get?.(actorId)?.delete?.();
         } catch {
             /* ignore */
         }
@@ -89,17 +85,17 @@ async function deleteActor(page: import('@playwright/test').Page, id: string): P
  * the round-trip. Returns the after-value or an error string.
  */
 async function probeScalarField(
-    page: import('@playwright/test').Page,
+    page: Page,
     actorId: string,
     fieldPath: string,
     value: number,
 ): Promise<{ before: number | null; after: number | null; error: string | null }> {
     return page.evaluate(
         async ({ id, path, val }: { id: string; path: string; val: number }) => {
-            const { game } = globalThis as unknown as {
+            const { game: foundryGame } = globalThis as unknown as {
                 game?: { actors?: { get?: (id: string) => { system?: Record<string, unknown>; update?: (data: object) => Promise<unknown> } | undefined } };
             };
-            const actor = game?.actors?.get?.(id);
+            const actor = foundryGame?.actors?.get?.(id);
             if (!actor) return { before: null, after: null, error: 'actor not found' };
 
             // Read nested field via dot path.
@@ -118,9 +114,9 @@ async function probeScalarField(
             try {
                 await actor.update?.({ [`system.${path}`]: val });
             } catch (err) {
-                return { before, after: null, error: `update ${path}=${val}: ${String((err as Error)?.message ?? err)}` };
+                return { before, after: null, error: `update ${path}=${val}: ${String((err as Error).message)}` };
             }
-            const refreshed = game?.actors?.get?.(id);
+            const refreshed = foundryGame?.actors?.get?.(id);
             const after = readPath(refreshed?.system, path);
             return { before, after, error: null };
         },
@@ -135,7 +131,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'dh2-influence-probe', 'dh2-character', 'dh2e');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -144,7 +140,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         // Influence is a 0-100 characteristic per DH2 RAW. 45 sits comfortably
         // inside the cap whether the homebrew ruleset is active or not.
         const result = await probeScalarField(page, created.id, 'influence', 45);
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else if (result.after !== 45) failures.push(`influence after set was ${result.after}, expected 45`);
 
         if (failures.length === 0) recordCoverage('wealth.flow', 'dh2-influence-track');
@@ -159,7 +155,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'dh1-influence-probe', 'dh1-character', 'dh1e');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -171,7 +167,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         // because the system can be Homebrewed in either direction; the
         // round-trip still exercises the update + clamp path.
         const result = await probeScalarField(page, created.id, 'influence', 20);
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else if (result.after !== 20) failures.push(`influence after set was ${result.after}, expected 20`);
 
         if (failures.length === 0) recordCoverage('wealth.flow', 'dh1-influence-track');
@@ -186,7 +182,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'dw-requisition-probe', 'dw-character', 'dw');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -195,7 +191,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         // Deathwatch Requisition is unbounded above (no `max` on the schema);
         // 50 represents a mission-grade allotment.
         const result = await probeScalarField(page, created.id, 'requisition', 50);
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else if (result.after !== 50) failures.push(`requisition after set was ${result.after}, expected 50`);
 
         if (failures.length === 0) recordCoverage('wealth.flow', 'dw-requisition-track');
@@ -210,7 +206,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'ow-requisition-probe', 'ow-character', 'ow');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -220,7 +216,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         // `requisition` field on CharacterBaseData; 25 represents a typical
         // squad Logistics rating.
         const result = await probeScalarField(page, created.id, 'requisition', 25);
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else if (result.after !== 25) failures.push(`requisition after set was ${result.after}, expected 25`);
 
         if (failures.length === 0) recordCoverage('wealth.flow', 'ow-requisition-track');
@@ -244,14 +240,14 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         // character's Throne Gelt purse.
         const failures: string[] = [];
         const created = await createActor(page, 'bc-gelt-probe', 'bc-character', 'bc');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
         }
 
         const result = await probeScalarField(page, created.id, 'throneGelt', 1500);
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else if (result.after !== 1500) failures.push(`throneGelt after set was ${result.after}, expected 1500`);
 
         if (failures.length === 0) recordCoverage('wealth.flow', 'bc-gelt-track');
@@ -266,7 +262,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
 
         const failures: string[] = [];
         const created = await createActor(page, 'rt-profit-factor-probe', 'rt-character', 'rt');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -278,11 +274,11 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         // the dynasty's PF baseline; step 2 spends 3 PF on a major
         // acquisition and confirms the persisted decrement.
         const setup = await probeScalarField(page, created.id, 'rogueTrader.profitFactor.current', 40);
-        if (setup.error) failures.push(setup.error);
+        if (setup.error !== null) failures.push(setup.error);
         else if (setup.after !== 40) failures.push(`PF baseline after set was ${setup.after}, expected 40`);
 
         const spend = await probeScalarField(page, created.id, 'rogueTrader.profitFactor.current', 37);
-        if (spend.error) failures.push(spend.error);
+        if (spend.error !== null) failures.push(spend.error);
         else if (spend.after !== 37) failures.push(`PF after spend was ${spend.after}, expected 37`);
 
         if (failures.length === 0) recordCoverage('wealth.flow', 'rt-profit-factor-spending');
@@ -298,7 +294,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         const failures: string[] = [];
         // RT actor so AcquisitionDialog can read system.rogueTrader.profitFactor.
         const created = await createActor(page, 'acquisition-dialog-probe', 'rt-character', 'rt');
-        if (!created.id) {
+        if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
             return;
@@ -307,7 +303,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         // Seed a starting PF so _prepareContext / finalTarget paths have
         // realistic data to work with.
         const setup = await probeScalarField(page, created.id, 'rogueTrader.profitFactor.current', 40);
-        if (setup.error) failures.push(`PF setup: ${setup.error}`);
+        if (setup.error !== null) failures.push(`PF setup: ${setup.error}`);
 
         const result = await page.evaluate(async (actorId: string) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
@@ -341,7 +337,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
                 const mod = await import(`${'/systems/wh40k-rpg'}/module/applications/dialogs/acquisition-dialog.js`);
                 DialogCls = mod.default;
             } catch (err) {
-                return { error: `import dialog: ${String((err as Error)?.message ?? err)}` };
+                return { error: `import dialog: ${String((err as Error).message)}` };
             }
             if (typeof DialogCls !== 'function') return { error: 'AcquisitionDialog default export not a constructor' };
 
@@ -349,7 +345,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             try {
                 dialog = new DialogCls(actor, { item });
             } catch (err) {
-                return { error: `construct dialog: ${String((err as Error)?.message ?? err)}` };
+                return { error: `construct dialog: ${String((err as Error).message)}` };
             }
 
             // Toggle a couple of common modifiers to drive the
@@ -360,7 +356,9 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             let context: any = null;
             try {
                 await dialog.render(true);
-                await new Promise((r) => setTimeout(r, 30));
+                await new Promise((r) => {
+                    setTimeout(r, 30);
+                });
                 context = await dialog._prepareContext({ force: true });
             } catch (err) {
                 try {
@@ -368,7 +366,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
                 } catch {
                     /* ignore */
                 }
-                return { error: `render/prepare: ${String((err as Error)?.message ?? err)}` };
+                return { error: `render/prepare: ${String((err as Error).message)}` };
             }
 
             const elementOk = dialog.element instanceof HTMLElement;
@@ -388,7 +386,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
                     timestamp: Date.now(),
                 });
             } catch (err) {
-                logErr = String((err as Error)?.message ?? err);
+                logErr = String((err as Error).message);
             }
             const history = (actor.getFlag?.('wh40k-rpg', 'acquisitionHistory') as unknown[] | undefined) ?? [];
 
@@ -400,7 +398,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             try {
                 await actor.update?.({ 'system.rogueTrader.profitFactor.current': Math.max(0, pfBefore - 1) });
             } catch (err) {
-                logErr ??= `pf decrement: ${String((err as Error)?.message ?? err)}`;
+                logErr ??= `pf decrement: ${String((err as Error).message)}`;
             }
             const refreshed = g.game?.actors?.get?.(actorId);
             const pfAfter = (refreshed?.system?.rogueTrader?.profitFactor?.current ?? null) as number | null;
@@ -426,7 +424,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             /* eslint-enable @typescript-eslint/no-explicit-any */
         }, created.id);
 
-        if (result.error) failures.push(result.error);
+        if (result.error !== null) failures.push(result.error);
         else {
             // RT Table 9-35: Scarce → +0, Good craftsmanship → -10.
             // (DH2's Scarce=-10 value lives in requisition-test.ts; RT
@@ -438,9 +436,9 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             if (result.craftsmanshipModifier !== -10) failures.push(`craftsmanshipModifier was ${result.craftsmanshipModifier}, expected -10`);
             // haggling (+10) + rare (-10) = 0
             if (result.commonTotal !== 0) failures.push(`commonTotal was ${result.commonTotal}, expected 0`);
-            if ((result.historyLen ?? 0) < 1) failures.push(`acquisitionHistory length was ${result.historyLen}, expected >= 1`);
+            if (result.historyLen < 1) failures.push(`acquisitionHistory length was ${result.historyLen}, expected >= 1`);
             if (result.pfAfter !== 39) failures.push(`PF after critical-failure decrement was ${result.pfAfter}, expected 39`);
-            if (result.logErr !== null) failures.push(`log path error: ${result.logErr ?? 'unknown'}`);
+            if (result.logErr !== null) failures.push(`log path error: ${result.logErr}`);
         }
 
         if (failures.length === 0) recordCoverage('wealth.flow', 'acquisition-dialog-flow');

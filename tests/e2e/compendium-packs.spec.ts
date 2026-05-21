@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -26,10 +27,10 @@ interface PackResult {
 
 const BATCH_SIZE = 6;
 
-async function loadPackBatch(page: import('@playwright/test').Page, packIds: string[]): Promise<PackResult[]> {
+async function loadPackBatch(page: Page, packIds: string[]): Promise<PackResult[]> {
     return page.evaluate(
-        async ({ packIds, batchSize }) => {
-            const game = (
+        async ({ packIds: ids, batchSize }) => {
+            const gameGlobal = (
                 globalThis as unknown as {
                     game?: {
                         packs?: {
@@ -43,17 +44,18 @@ async function loadPackBatch(page: import('@playwright/test').Page, packIds: str
                 }
             ).game;
             const results: Array<{ id: string; documentCount: number | null; error: string | null }> = [];
-            if (!game?.packs) {
-                for (const id of packIds) {
+            const packs = gameGlobal?.packs;
+            if (!packs) {
+                for (const id of ids) {
                     results.push({ id, documentCount: null, error: 'game.packs unavailable' });
                 }
                 return results;
             }
-            for (let i = 0; i < packIds.length; i += batchSize) {
-                const slice = packIds.slice(i, i + batchSize);
+            for (let i = 0; i < ids.length; i += batchSize) {
+                const slice = ids.slice(i, i + batchSize);
                 const sliceResults = await Promise.all(
                     slice.map(async (id) => {
-                        const pack = game.packs!.get(id);
+                        const pack = packs.get(id);
                         if (!pack) {
                             return { id, documentCount: null, error: 'pack not found' };
                         }
@@ -77,14 +79,14 @@ async function loadPackBatch(page: import('@playwright/test').Page, packIds: str
     );
 }
 
-async function listPackIds(page: import('@playwright/test').Page): Promise<string[]> {
+async function listPackIds(page: Page): Promise<string[]> {
     return page.evaluate(() => {
-        const game = (
+        const gameGlobal = (
             globalThis as unknown as {
                 game?: { packs?: { keys: () => IterableIterator<string> } };
             }
         ).game;
-        return game?.packs ? Array.from(game.packs.keys()) : [];
+        return gameGlobal?.packs ? Array.from(gameGlobal.packs.keys()) : [];
     });
 }
 

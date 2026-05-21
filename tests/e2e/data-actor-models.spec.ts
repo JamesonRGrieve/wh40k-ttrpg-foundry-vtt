@@ -97,14 +97,14 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
         const result = await page.evaluate(async (flows: readonly string[]) => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
+            const ActorCls = g.Actor;
+            const gameGlobal = g.game;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const f of flows) fired[f] = false;
 
-            if (!Actor?.create) {
+            if (!ActorCls?.create) {
                 return {
                     flowsFired: fired,
                     flowNotes: { 'characteristic-total-and-bonus::dh2e': 'Actor.create unavailable' },
@@ -121,7 +121,8 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
+                    if (timer !== null) clearTimeout(timer);
                 }
             };
 
@@ -132,22 +133,24 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
             // data is fully prepared) or null.
             const createPc = async (type: string, gameSystem: string, system: Record<string, unknown>): Promise<any> => {
                 const created = (await withTimeout(
-                    Actor.create({ name: `data-actor-model-${gameSystem}`, type, system: { gameSystem, ...system } }),
+                    ActorCls.create({ name: `data-actor-model-${gameSystem}`, type, system: { gameSystem, ...system } }),
                     5_000,
                     `${type} Actor.create`,
                 )) as any;
                 if (created?.id) {
                     cleanups.push(async () => {
                         try {
-                            await game?.actors?.get?.(created.id)?.delete?.();
+                            await gameGlobal?.actors?.get?.(created.id)?.delete?.();
                         } catch {
                             /* ignore */
                         }
                     });
                     // Yield a tick so the create write flushes before we read
                     // derived data (mirrors weapon-attack.spec.ts comment).
-                    await new Promise((r) => setTimeout(r, 100));
-                    return game?.actors?.get?.(created.id) ?? created;
+                    await new Promise((r) => {
+                        setTimeout(r, 100);
+                    });
+                    return gameGlobal?.actors?.get?.(created.id) ?? created;
                 }
                 return null;
             };
@@ -191,7 +194,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        note(sys.flow, `flow threw: ${String((err as Error)?.message ?? err)}`);
+                        note(sys.flow, `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
 
@@ -216,7 +219,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('characteristic-unnatural-multiplies-bonus::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('characteristic-unnatural-multiplies-bonus::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -240,7 +243,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('characteristic-damage-subtracts::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('characteristic-damage-subtracts::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -271,7 +274,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('skill-rank-flags::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('skill-rank-flags::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -312,7 +315,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        note(sys.flow, `flow threw: ${String((err as Error)?.message ?? err)}`);
+                        note(sys.flow, `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
 
@@ -340,7 +343,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                             }
                         }
                     } catch (err) {
-                        note(sys.flow, `flow threw: ${String((err as Error)?.message ?? err)}`);
+                        note(sys.flow, `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
 
@@ -372,7 +375,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('skill-trained-uses-full-characteristic::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('skill-trained-uses-full-characteristic::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -400,7 +403,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('movement-derives-from-ab-and-size::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('movement-derives-from-ab-and-size::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -429,7 +432,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('lifting-and-leap-from-strength-bonus::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('lifting-and-leap-from-strength-bonus::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -452,7 +455,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('fatigue-max-from-toughness-bonus::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('fatigue-max-from-toughness-bonus::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -478,7 +481,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('psy-current-rating-and-isPsyker::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('psy-current-rating-and-isPsyker::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -500,7 +503,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('experience-available-derived::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('experience-available-derived::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -529,7 +532,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('wounds-fate-resources-roundtrip::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('wounds-fate-resources-roundtrip::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -559,7 +562,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('corruption-level-and-insanity-degrees::dh1e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('corruption-level-and-insanity-degrees::dh1e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -587,7 +590,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('subtlety-and-influence-roundtrip::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('subtlety-and-influence-roundtrip::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -609,7 +612,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('influence-clamps-to-percentile-ceiling::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('influence-clamps-to-percentile-ceiling::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
 
                 /* ============================================================
@@ -646,7 +649,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    note('roll-data-exposes-characteristic-keys::dh2e', `flow threw: ${String((err as Error)?.message ?? err)}`);
+                    note('roll-data-exposes-characteristic-keys::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                 }
             } finally {
                 for (const fn of cleanups) {

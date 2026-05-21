@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -55,21 +56,21 @@ interface AccessorProbe {
     error: string | null;
 }
 
-async function listSettingKeys(page: import('@playwright/test').Page): Promise<string[]> {
+async function listSettingKeys(page: Page): Promise<string[]> {
     return page.evaluate((systemId: string) => {
-        const { game } = globalThis as unknown as {
+        const browserCtx = globalThis as unknown as {
             game?: { settings?: { settings?: Map<string, unknown> } };
         };
-        const settings = game?.settings?.settings;
+        const settings = browserCtx.game?.settings?.settings;
         if (!settings || typeof settings.keys !== 'function') return [];
         return Array.from(settings.keys()).filter((k): k is string => typeof k === 'string' && k.startsWith(`${systemId}.`));
     }, SYSTEM_ID);
 }
 
-async function probeSetting(page: import('@playwright/test').Page, fullKey: string): Promise<SettingProbe> {
+async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> {
     const result = await page.evaluate(
-        async ({ fullKey, systemId }) => {
-            const { game } = globalThis as unknown as {
+        async ({ fullKey: settingKey, systemId }) => {
+            const gameSettings = globalThis as unknown as {
                 game?: {
                     settings?: {
                         settings?: Map<
@@ -86,12 +87,12 @@ async function probeSetting(page: import('@playwright/test').Page, fullKey: stri
                     };
                 };
             };
-            const settings = game?.settings;
+            const settings = gameSettings.game?.settings;
             if (!settings) return { kind: 'read' as const, ok: false, error: 'game.settings unavailable' };
 
-            const namespacedKey = fullKey.startsWith(`${systemId}.`) ? fullKey.slice(systemId.length + 1) : fullKey;
-            const def = settings.settings?.get(fullKey);
-            if (!def) return { kind: 'read' as const, ok: false, error: `definition missing for ${fullKey}` };
+            const namespacedKey = settingKey.startsWith(`${systemId}.`) ? settingKey.slice(systemId.length + 1) : settingKey;
+            const def = settings.settings?.get(settingKey);
+            if (!def) return { kind: 'read' as const, ok: false, error: `definition missing for ${settingKey}` };
 
             let current: unknown;
             try {
@@ -125,12 +126,12 @@ async function probeSetting(page: import('@playwright/test').Page, fullKey: stri
             }
 
             const isBoolean = def.type === Boolean || typeof current === 'boolean';
-            const hasChoices = def.choices && typeof def.choices === 'object';
+            const hasChoices = def.choices !== undefined && def.choices !== null && typeof def.choices === 'object';
             const isNumber = def.type === Number || typeof current === 'number';
             const isArray = def.type === Array || Array.isArray(current);
 
             if (isBoolean) {
-                const next = !current;
+                const next = current !== true;
                 try {
                     await settings.set(systemId, namespacedKey, next);
                 } catch (err) {
@@ -254,7 +255,7 @@ async function probeSetting(page: import('@playwright/test').Page, fullKey: stri
     };
 }
 
-async function probeAccessor(page: import('@playwright/test').Page, name: (typeof SETTING_ACCESSORS)[number]): Promise<AccessorProbe> {
+async function probeAccessor(page: Page, name: (typeof SETTING_ACCESSORS)[number]): Promise<AccessorProbe> {
     const result = await page.evaluate(async (accessor: string) => {
         // The WH40KSettings class is not attached to any runtime global; the
         // canonical surface is the ES module shipped at
@@ -262,13 +263,17 @@ async function probeAccessor(page: import('@playwright/test').Page, name: (typeo
         // and call the static accessor directly. This mirrors how the system
         // code itself reaches the class (via `import { WH40KSettings }`),
         // which is the only path the source-coverage instrumentation sees.
-        const { CONFIG, game } = globalThis as unknown as {
+        const foundryBrowserCtx = globalThis as unknown as {
             CONFIG?: { WH40K?: { Settings?: Record<string, unknown> } };
             game?: { wh40k?: { settings?: Record<string, unknown> }; system?: { api?: { settings?: Record<string, unknown> } } };
         };
         // Fallback chain in case a future build re-exposes the class globally.
-        const globalCandidates: Array<Record<string, unknown> | undefined> = [CONFIG?.WH40K?.Settings, game?.wh40k?.settings, game?.system?.api?.settings];
-        let owner: Record<string, unknown> | undefined = globalCandidates.find((c) => c && typeof c[accessor] === 'function');
+        const globalCandidates: Array<Record<string, unknown> | undefined> = [
+            foundryBrowserCtx.CONFIG?.WH40K?.Settings,
+            foundryBrowserCtx.game?.wh40k?.settings,
+            foundryBrowserCtx.game?.system?.api?.settings,
+        ];
+        let owner: Record<string, unknown> | undefined = globalCandidates.find((c) => c !== undefined && c !== null && typeof c[accessor] === 'function');
         if (!owner) {
             try {
                 // Indirect dynamic-import URL so TS doesn't try to resolve the

@@ -26,9 +26,9 @@ import {
 function fixed(...values: number[]): () => number {
     let i = 0;
     return () => {
-        const v = values[i % values.length];
+        const v = values[i % values.length] ?? 0;
         i += 1;
-        return v ?? 0;
+        return v;
     };
 }
 

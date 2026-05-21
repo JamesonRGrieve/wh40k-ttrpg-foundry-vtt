@@ -26,7 +26,7 @@ describe.skipIf(!ok)('sheet render (Tier A)', () => {
         if (!classes) return;
         const names = new Set<string>();
         for (const typeMap of Object.values(classes)) {
-            for (const key of Object.keys(typeMap ?? {})) {
+            for (const key of Object.keys(typeMap)) {
                 expect(names.has(key)).toBe(false);
                 names.add(key);
             }

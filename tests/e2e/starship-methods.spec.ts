@@ -76,14 +76,14 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
         const results = await page.evaluate(async (flows: readonly string[]): Promise<FlowResult[]> => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
             const g = globalThis as any;
-            const Actor = g.Actor;
-            const game = g.game;
+            const ActorCls = g.Actor;
+            const foundryGame = g.game;
             const out: FlowResult[] = [];
             const record = (name: string, ok: boolean, detail: string | null = null): void => {
                 out.push({ name: name as FlowName, ok, detail });
             };
 
-            if (!Actor?.create) {
+            if (!ActorCls?.create) {
                 for (const f of flows) record(f, false, 'Actor.create unavailable');
                 return out;
             }
@@ -103,7 +103,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             let actor: any = null;
             try {
                 actor = await withTimeout(
-                    Actor.create({
+                    ActorCls.create({
                         name: 'starship-methods-spec-rt',
                         type: 'rt-starship',
                         system: {
@@ -141,7 +141,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 return out;
             }
 
-            const live = (): any => game?.actors?.get?.(actor.id);
+            const live = (): any => foundryGame?.actors?.get?.(actor.id);
 
             // -------- getters that read directly off system fields --------
             try {

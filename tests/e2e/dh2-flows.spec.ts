@@ -301,7 +301,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             if (result.packType !== 'Item') failures.push(`pack.metadata.type was ${result.packType}, expected 'Item'`);
             if ((result.docCount ?? 0) === 0) failures.push('pack contained no documents');
             if (result.sampleType !== 'originPath') failures.push(`sample doc type was ${result.sampleType}, expected 'originPath'`);
-            if (result.sampleStep !== 'elite') failures.push(`sample doc step was ${String(result.sampleStep)}, expected 'elite'`);
+            if (result.sampleStep !== 'elite') failures.push(`sample doc step was ${JSON.stringify(result.sampleStep)}, expected 'elite'`);
             if (failures.length === 0) recordCoverage('dh2.elite-advance', 'compendium-read');
         }
 

@@ -42,8 +42,10 @@ test.describe.serial('NavigatorPowerChat (Tier B)', () => {
 
                 try {
                     const g = globalThis as any;
-                    const renderTemplate = g.foundry?.applications?.handlebars?.renderTemplate as ((path: string, ctx: object) => Promise<string>) | undefined;
-                    if (typeof renderTemplate !== 'function') {
+                    const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate as
+                        | ((path: string, ctx: object) => Promise<string>)
+                        | undefined;
+                    if (typeof renderTemplateFn !== 'function') {
                         return {
                             rendered,
                             hasCardRoot,
@@ -108,7 +110,7 @@ test.describe.serial('NavigatorPowerChat (Tier B)', () => {
 
                     let html = '';
                     try {
-                        html = await renderTemplate(templatePath, ctx);
+                        html = await renderTemplateFn(templatePath, ctx);
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);
                     }

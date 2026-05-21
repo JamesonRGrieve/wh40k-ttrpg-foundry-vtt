@@ -1,7 +1,6 @@
 // Keys MUST match the SHEET_ACTION_ITEM_FLOWS constant in scripts/e2e-coverage.mjs (registered by the orchestrator).
 
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -197,7 +196,9 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
 
             // Let the server flush the parent create before we start
             // pumping embedded creates (mirrors weapon-attack.spec.ts).
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
 
             const getPc = () => game?.actors?.get?.(pc.id);
 

@@ -21,18 +21,18 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
     const result = await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
         const g = globalThis as any;
-        const Actor = g.Actor;
-        if (!Actor?.create) return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: 'Actor.create unavailable' };
+        const ActorCls = g.Actor;
+        if (!ActorCls?.create) return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: 'Actor.create unavailable' };
 
         let withThreshold;
         let withoutThreshold;
         try {
-            withThreshold = await Actor.create({
+            withThreshold = await ActorCls.create({
                 name: 'fate-threshold-visible-probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e', fate: { max: 5, value: 3, threshold: 2 } },
             });
-            withoutThreshold = await Actor.create({
+            withoutThreshold = await ActorCls.create({
                 name: 'fate-threshold-hidden-probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2e', fate: { max: 5, value: 3, threshold: 0 } },
@@ -46,13 +46,17 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         }
 
         await withThreshold.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise<void>((r) => {
+            setTimeout(r, 200);
+        });
         const visibleEl = withThreshold.sheet.element?.querySelector?.('.wh40k-fate-threshold');
         const visibleText = visibleEl?.textContent?.trim() ?? '';
         const withThresholdOk = visibleEl !== null && visibleEl !== undefined && /2/.test(visibleText);
 
         await withoutThreshold.sheet.render(true);
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise<void>((r) => {
+            setTimeout(r, 200);
+        });
         const hiddenEl = withoutThreshold.sheet.element?.querySelector?.('.wh40k-fate-threshold');
         const withoutThresholdOk = hiddenEl === null || hiddenEl === undefined;
 
@@ -68,7 +72,9 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         const actor = g.game?.actors?.getName?.('fate-threshold-visible-probe');
         if (actor?.sheet) {
             await actor.sheet.render(true);
-            await new Promise((r) => setTimeout(r, 200));
+            await new Promise<void>((r) => {
+                setTimeout(r, 200);
+            });
         }
     });
     await snap(page, 'fate-panel-with-threshold');
@@ -79,7 +85,9 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         const actor = g.game?.actors?.getName?.('fate-threshold-hidden-probe');
         if (actor?.sheet) {
             await actor.sheet.render(true);
-            await new Promise((r) => setTimeout(r, 200));
+            await new Promise<void>((r) => {
+                setTimeout(r, 200);
+            });
         }
     });
     await snap(page, 'fate-panel-without-threshold');
@@ -91,9 +99,8 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
     await page.evaluate(async () => {
         /* eslint-disable @typescript-eslint/no-explicit-any */
         const g = globalThis as any;
-        const game = g.game;
-        const a = game?.actors?.getName?.('fate-threshold-visible-probe');
-        const b = game?.actors?.getName?.('fate-threshold-hidden-probe');
+        const a = g.game?.actors?.getName?.('fate-threshold-visible-probe');
+        const b = g.game?.actors?.getName?.('fate-threshold-hidden-probe');
         try {
             await a?.delete?.();
         } catch {
