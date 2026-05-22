@@ -57,43 +57,96 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(
-            async ({ browserUrl, cacheUrl }) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
-                const out: Array<{ name: string; passed: boolean; detail: string | null }> = [];
+            async ({ browserUrl, cacheUrl }): Promise<FlowResult[]> => {
+                interface ResultRow {
+                    name: string;
+                    passed: boolean;
+                    detail: string | null;
+                }
+                interface FilterResult {
+                    packId: string;
+                    name: string;
+                }
+                interface BrowserInstance {
+                    element: object | null;
+                    render: (opts: { force: boolean }) => Promise<void>;
+                    close: () => Promise<void>;
+                    _getFilteredResults: () => Promise<FilterResult[]>;
+                    _onSearch: (evt: InputEvent) => void;
+                    _onItemClick: (evt: PointerEvent) => Promise<void>;
+                    _filters: { search: string };
+                }
+                type BrowserCtor = new (opts: Record<string, never>) => BrowserInstance;
+                interface UuidNameCache {
+                    isReady?: () => boolean;
+                    build: () => Promise<void>;
+                    getName: (uuid: string) => string;
+                    expandTemplates: (text: string) => string;
+                }
+                interface PackIndexEntry {
+                    _id?: string;
+                    name?: string;
+                }
+                interface CompendiumPack {
+                    metadata: { id: string; system?: string };
+                    documentName?: string;
+                    getIndex: (opts: { fields: string[] }) => Promise<Iterable<PackIndexEntry>>;
+                }
+                interface FoundryWindow {
+                    id?: string;
+                    close?: () => Promise<void>;
+                }
+                interface FoundryGlobal {
+                    FLOWS_BROWSER?: string[];
+                    FLOWS_CACHE?: string[];
+                    game?: { packs?: Iterable<CompendiumPack> };
+                    ui?: { windows?: Record<string, FoundryWindow> };
+                }
+                interface BrowserModule {
+                    RTCompendiumBrowser?: BrowserCtor;
+                    default?: BrowserCtor;
+                }
+                interface CacheModule {
+                    uuidNameCache?: UuidNameCache;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: catch-clause value is `unknown` and is narrowed by the `instanceof Error` guard on this same line
+                const errMsg = (err: unknown): string => (err instanceof Error ? err.message : String(err));
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game/ui/FLOWS_*) are injected on globalThis and have no static type here
+                const g = globalThis as unknown as FoundryGlobal;
+                const out: ResultRow[] = [];
 
                 function record(name: string, passed: boolean, detail: string | null = null): void {
                     out.push({ name, passed, detail });
                 }
 
                 // ── 1. Load the browser class + cache singleton ───────
-                const flowsBrowser: string[] = (g.FLOWS_BROWSER as string[] | undefined) ?? [];
-                const flowsCache: string[] = (g.FLOWS_CACHE as string[] | undefined) ?? [];
-                let RTCompendiumBrowser: any;
-                let uuidNameCache: any;
+                const flowsBrowser: string[] = g.FLOWS_BROWSER ?? [];
+                const flowsCache: string[] = g.FLOWS_CACHE ?? [];
+                let RTCompendiumBrowser: BrowserCtor | undefined;
+                let uuidNameCache: UuidNameCache | undefined;
                 try {
-                    const mod = await import(browserUrl);
+                    const mod = (await import(browserUrl)) as BrowserModule;
                     RTCompendiumBrowser = mod.RTCompendiumBrowser ?? mod.default;
                     if (typeof RTCompendiumBrowser !== 'function') {
                         for (const name of flowsBrowser) record(name, false, `browser module: no constructor export (keys: ${Object.keys(mod).join(',')})`);
                     }
                 } catch (err) {
-                    for (const name of flowsBrowser) record(name, false, `browser import failed: ${String((err as Error)?.message ?? err)}`);
+                    for (const name of flowsBrowser) record(name, false, `browser import failed: ${errMsg(err)}`);
                 }
                 try {
-                    const mod = await import(cacheUrl);
+                    const mod = (await import(cacheUrl)) as CacheModule;
                     uuidNameCache = mod.uuidNameCache;
                     if (uuidNameCache == null) {
                         for (const name of flowsCache) record(name, false, `cache module: no uuidNameCache export (keys: ${Object.keys(mod).join(',')})`);
                     }
                 } catch (err) {
-                    for (const name of flowsCache) record(name, false, `cache import failed: ${String((err as Error)?.message ?? err)}`);
+                    for (const name of flowsCache) record(name, false, `cache import failed: ${errMsg(err)}`);
                 }
 
                 // ── Helper: close any browser window we opened ────────
-                async function closeBrowserWindow(browserInst: any): Promise<void> {
+                async function closeBrowserWindow(browserInst: BrowserInstance | null): Promise<void> {
                     try {
-                        await browserInst?.close?.();
+                        await browserInst?.close();
                     } catch {
                         /* ignore */
                     }
@@ -106,12 +159,12 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                 let probeItemUuid: string | null = null;
                 let probeItemName: string | null = null;
                 try {
-                    const packs: any[] = Array.from(g.game?.packs ?? []).filter((p: any) => p?.metadata?.system === 'wh40k-rpg' && p?.documentName === 'Item');
+                    const packs = Array.from(g.game?.packs ?? []).filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
                     for (const pack of packs) {
                         try {
                             const index = await pack.getIndex({ fields: ['name'] });
-                            const first = Array.from(index)[0] as any;
-                            if (first?._id != null && first?.name != null) {
+                            const [first] = Array.from(index);
+                            if (first._id != null && first.name != null) {
                                 probePackId = pack.metadata.id;
                                 probeItemUuid = `Compendium.${pack.metadata.id}.Item.${first._id}`;
                                 probeItemName = first.name;
@@ -126,7 +179,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                 }
 
                 // ── 2. browser-renders ────────────────────────────────
-                let inst: any = null;
+                let inst: BrowserInstance | null = null;
                 if (typeof RTCompendiumBrowser === 'function') {
                     try {
                         inst = new RTCompendiumBrowser({});
@@ -137,7 +190,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                         const ok = inst.element instanceof HTMLElement;
                         record('browser-renders', ok, ok ? null : 'element is not an HTMLElement after render');
                     } catch (err) {
-                        record('browser-renders', false, `render threw: ${String((err as Error)?.message ?? err)}`);
+                        record('browser-renders', false, `render threw: ${errMsg(err)}`);
                     }
                 }
 
@@ -151,11 +204,11 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                         // Pack the entry's pack id into the source filter via
                         // a direct call to the _passesFilters branch by
                         // capturing pack-restricted results.
-                        const filtered = allResults.filter((r: any) => r.packId === probePackId);
+                        const filtered = allResults.filter((r) => r.packId === probePackId);
                         const ok = filtered.length > 0 && filtered.length <= allResults.length;
                         record('browser-filter-by-pack', ok, ok ? null : `pack filter produced ${filtered.length} / ${allResults.length} results`);
                     } catch (err) {
-                        record('browser-filter-by-pack', false, `pack filter threw: ${String((err as Error)?.message ?? err)}`);
+                        record('browser-filter-by-pack', false, `pack filter threw: ${errMsg(err)}`);
                     }
                 } else if (inst == null) {
                     record('browser-filter-by-pack', false, 'browser not instantiated');
@@ -173,8 +226,8 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                         const allResults = await inst._getFilteredResults();
                         const prefixes = new Set<string>();
                         for (const r of allResults) {
-                            const local = (r.packId as string).split('.')[1] ?? '';
-                            const pfx = local.split('-')[0];
+                            const local = r.packId.split('.')[1] ?? '';
+                            const pfx = local.split('-')[0] ?? '';
                             if (pfx !== '') prefixes.add(pfx);
                         }
                         // Prefer dh2 if present (canonical default); otherwise pick any.
@@ -182,15 +235,15 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                         if (targetPrefix === '') {
                             record('browser-filter-by-system', false, 'no pack prefixes discovered');
                         } else {
-                            const filtered = allResults.filter((r: any) => {
-                                const local = (r.packId as string).split('.')[1] ?? '';
+                            const filtered = allResults.filter((r) => {
+                                const local = r.packId.split('.')[1] ?? '';
                                 return local.split('-')[0] === targetPrefix;
                             });
                             const ok = filtered.length > 0 && filtered.length < allResults.length + 1;
                             record('browser-filter-by-system', ok, ok ? null : `system-prefix filter produced ${filtered.length} results for ${targetPrefix}`);
                         }
                     } catch (err) {
-                        record('browser-filter-by-system', false, `system filter threw: ${String((err as Error)?.message ?? err)}`);
+                        record('browser-filter-by-system', false, `system filter threw: ${errMsg(err)}`);
                     }
                 } else {
                     record('browser-filter-by-system', false, 'browser not instantiated');
@@ -203,6 +256,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                     try {
                         const term = probeItemName.slice(0, Math.min(4, probeItemName.length)).toLowerCase();
                         // call _onSearch with a synthetic InputEvent
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic InputEvent stub for a Foundry handler; only the read `target.value` member is present
                         const evt = { target: { value: term } } as unknown as InputEvent;
                         inst._onSearch(evt);
                         // wait for the re-render the handler schedules
@@ -210,12 +264,12 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                             setTimeout(r, 60);
                         });
                         const searchResults = await inst._getFilteredResults();
-                        const ok = searchResults.length > 0 && searchResults.every((r: any) => (r.name as string).toLowerCase().includes(term));
-                        record('browser-search-by-name', ok, ok === true ? null : `search '${term}' matched ${searchResults.length} (mismatch in name filter)`);
+                        const ok = searchResults.length > 0 && searchResults.every((r) => r.name.toLowerCase().includes(term));
+                        record('browser-search-by-name', ok, ok ? null : `search '${term}' matched ${searchResults.length} (mismatch in name filter)`);
                         // reset for downstream flows
                         inst._filters.search = '';
                     } catch (err) {
-                        record('browser-search-by-name', false, `search threw: ${String((err as Error)?.message ?? err)}`);
+                        record('browser-search-by-name', false, `search threw: ${errMsg(err)}`);
                     }
                 } else {
                     record('browser-search-by-name', false, inst == null ? 'browser not instantiated' : 'no probe item');
@@ -235,6 +289,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                                 /* no-op */
                             },
                             currentTarget: fakeTarget,
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic PointerEvent stub passed to a Foundry handler; only the two used members are present
                         } as unknown as PointerEvent;
                         await inst._onItemClick(fakeEvent);
                         await new Promise((r) => {
@@ -243,23 +298,22 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                         // Either the sheet rendered (best case) or fromUuid
                         // returned without throwing — both indicate the
                         // _onItemClick path executed end-to-end.
-                        const ok = true;
-                        record('browser-select-result', ok, null);
+                        record('browser-select-result', true, null);
                         // Best-effort: close any opened sheets so they don't
                         // pile up across the test.
-                        const wins: Array<{ id?: string; close?: () => Promise<unknown> }> = Object.values(g.ui?.windows ?? {});
+                        const wins = Object.values(g.ui?.windows ?? {});
                         for (const w of wins) {
-                            const id: string = w?.id ?? '';
+                            const id: string = w.id ?? '';
                             if (id.includes('Item') || id.includes('item-sheet') || id.startsWith('app-')) {
                                 try {
-                                    await w?.close?.();
+                                    await w.close?.();
                                 } catch {
                                     /* ignore */
                                 }
                             }
                         }
                     } catch (err) {
-                        record('browser-select-result', false, `_onItemClick threw: ${String((err as Error)?.message ?? err)}`);
+                        record('browser-select-result', false, `_onItemClick threw: ${errMsg(err)}`);
                     }
                 } else {
                     record('browser-select-result', false, inst == null ? 'browser not instantiated' : 'no probe item uuid');
@@ -287,14 +341,14 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                             await uuidNameCache.build();
                             resolved = uuidNameCache.getName(probeItemUuid);
                         }
-                        const ok = typeof resolved === 'string' && resolved === probeItemName;
+                        const ok = resolved === probeItemName;
                         record(
                             'uuid-cache-resolves-name',
                             ok,
                             ok ? null : `getName returned ${JSON.stringify(resolved)} (expected ${JSON.stringify(probeItemName)})`,
                         );
                     } catch (err) {
-                        record('uuid-cache-resolves-name', false, `getName threw: ${String((err as Error)?.message ?? err)}`);
+                        record('uuid-cache-resolves-name', false, `getName threw: ${errMsg(err)}`);
                     }
                 } else {
                     record('uuid-cache-resolves-name', false, uuidNameCache == null ? 'cache not loaded' : 'no probe uuid');
@@ -305,7 +359,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                     try {
                         const input = `prereq: {{${probeItemUuid}}} required`;
                         const expanded: string = uuidNameCache.expandTemplates(input);
-                        const ok = typeof expanded === 'string' && expanded.includes(probeItemName) && !expanded.includes('{{Compendium.');
+                        const ok = expanded.includes(probeItemName) && !expanded.includes('{{Compendium.');
                         // Also drive the early-return branch (no token in text).
                         const passthrough: string = uuidNameCache.expandTemplates('plain text with no tokens');
                         const passthroughOk = passthrough === 'plain text with no tokens';
@@ -315,7 +369,7 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                             ok && passthroughOk ? null : `expand=${JSON.stringify(expanded)} passthroughOk=${passthroughOk}`,
                         );
                     } catch (err) {
-                        record('uuid-cache-expand-templates', false, `expandTemplates threw: ${String((err as Error)?.message ?? err)}`);
+                        record('uuid-cache-expand-templates', false, `expandTemplates threw: ${errMsg(err)}`);
                     }
                 } else {
                     record('uuid-cache-expand-templates', false, uuidNameCache == null ? 'cache not loaded' : 'no probe uuid');
@@ -339,14 +393,13 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                         const ok = ready && bogusOk && hot;
                         record('uuid-cache-warm', ok, ok ? null : `ready=${ready} bogusOk=${bogusOk} hot=${hot}`);
                     } catch (err) {
-                        record('uuid-cache-warm', false, `build threw: ${String((err as Error)?.message ?? err)}`);
+                        record('uuid-cache-warm', false, `build threw: ${errMsg(err)}`);
                     }
                 } else {
                     record('uuid-cache-warm', false, 'cache not loaded');
                 }
 
                 return out;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             {
                 browserUrl: BROWSER_MODULE_URL,
@@ -381,8 +434,8 @@ test.describe.serial('compendium browser + uuid name cache (Tier B)', () => {
         // attaching to a property the evaluate body reads.
         await page.evaluate(
             ({ flowsBrowser, flowsCache }) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- attach test constants to globalThis for the evaluate body
-                const g = globalThis as any;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: attaching test-constant arrays to the in-browser globalThis for the evaluate body to read
+                const g = globalThis as unknown as { FLOWS_BROWSER?: string[]; FLOWS_CACHE?: string[] };
                 g.FLOWS_BROWSER = flowsBrowser;
                 g.FLOWS_CACHE = flowsCache;
             },

@@ -100,18 +100,18 @@
     "prettier/prettier",
     "require-atomic-updates"
   ],
-  "total": 3986,
+  "total": 2690,
   "byRule": {
     "@typescript-eslint/no-implied-eval": 7,
     "@typescript-eslint/no-non-null-assertion": 14,
-    "@typescript-eslint/no-unnecessary-condition": 47,
+    "@typescript-eslint/no-unnecessary-condition": 23,
     "@typescript-eslint/no-unnecessary-type-assertion": 13,
-    "@typescript-eslint/no-unsafe-argument": 124,
-    "@typescript-eslint/no-unsafe-assignment": 745,
-    "@typescript-eslint/no-unsafe-call": 560,
-    "@typescript-eslint/no-unsafe-member-access": 1475,
-    "@typescript-eslint/no-unsafe-return": 6,
-    "@typescript-eslint/strict-boolean-expressions": 2,
+    "@typescript-eslint/no-unsafe-argument": 46,
+    "@typescript-eslint/no-unsafe-assignment": 469,
+    "@typescript-eslint/no-unsafe-call": 342,
+    "@typescript-eslint/no-unsafe-member-access": 861,
+    "@typescript-eslint/no-unsafe-return": 3,
+    "@typescript-eslint/strict-boolean-expressions": 1,
     "@typescript-eslint/unbound-method": 21,
     "@vitest/no-conditional-in-test": 24,
     "@vitest/no-conditional-tests": 3,
@@ -119,6 +119,6 @@
     "max-depth": 16,
     "no-await-in-loop": 97,
     "no-new-func": 7,
-    "no-restricted-syntax": 778
+    "no-restricted-syntax": 696
   }
 }

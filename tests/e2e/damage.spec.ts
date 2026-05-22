@@ -44,7 +44,7 @@ const DAMAGE_FLOWS = [
 type FlowName = (typeof DAMAGE_FLOWS)[number];
 
 interface ProbeResult {
-    flowsFired: Record<FlowName, boolean>;
+    flowsFired: Partial<Record<FlowName, boolean>>;
     flowNotes: Partial<Record<FlowName, string>>;
     pcActorId: string | null;
     npcActorId: string | null;
@@ -58,15 +58,38 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
     };
     page.on('pageerror', listener);
     try {
-        const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+        const result = await page.evaluate(async (flows: readonly string[]): Promise<ProbeResult> => {
+            interface DamageOptions {
+                ignoreArmour?: boolean;
+                ignoreToughness?: boolean;
+            }
+            interface ActorSystem {
+                wounds?: { max?: number; value?: number; critical?: number };
+                fatigue?: { max?: number; value?: number };
+                fate?: { max?: number; value?: number; threshold?: number };
+            }
+            interface ActorLike {
+                id?: string;
+                system?: ActorSystem;
+                update?: (data: object) => Promise<void>;
+                delete?: () => Promise<void>;
+                applyDamage?: (amount: number, location: string, options?: DamageOptions) => Promise<void>;
+                applyFatigue?: (amount: number) => Promise<void>;
+                spendFate?: () => Promise<void>;
+                healWounds?: (amount: number) => Promise<void>;
+            }
+            interface FoundryGlobal {
+                Actor?: { create?: (data: object) => Promise<ActorLike | null> };
+                game?: { actors?: { get?: (id: string) => ActorLike | undefined } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game/Actor surface
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorCls = g.Actor;
             const gameGlobal = g.game;
 
-            const fired: Record<string, boolean> = {};
-            const notes: Record<string, string> = {};
-            for (const f of flows) fired[f] = false;
+            const fired: Partial<Record<FlowName, boolean>> = {};
+            const notes: Partial<Record<FlowName, string>> = {};
+            for (const f of flows) fired[f as FlowName] = false;
 
             if (ActorCls?.create == null) {
                 return {
@@ -80,7 +103,8 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
 
             // Wrap any awaitable with a 5s timeout so a hung update can't
             // take downstream specs with it (matches combat.spec.ts pattern).
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
+            const withTimeout = async <T>(p: Promise<T> | undefined, ms: number, label: string): Promise<T> => {
+                if (p === undefined) throw new Error(`${label} unavailable (method missing on actor)`);
                 let timer: ReturnType<typeof setTimeout> | null = null;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
@@ -94,7 +118,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             };
 
             // ---- create PC (bc-character → acolyte document) ----
-            let pcActor: any = null;
+            let pcActor: ActorLike | null = null;
             try {
                 pcActor = await withTimeout(
                     ActorCls.create({
@@ -115,7 +139,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             }
 
             // ---- create NPC (bc-npc) for applyDamage / healWounds API ----
-            let npcActor: any = null;
+            let npcActor: ActorLike | null = null;
             try {
                 npcActor = await withTimeout(
                     ActorCls.create({
@@ -146,8 +170,8 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             // Foundry returns the create() promise's resolved doc but the
             // canonical reference for subsequent reads is the world cache —
             // grab fresh handles after each update.
-            const getPc = (): any => (pcActor?.id != null ? gameGlobal?.actors?.get?.(pcActor.id) : null);
-            const getNpc = (): any => (npcActor?.id != null ? gameGlobal?.actors?.get?.(npcActor.id) : null);
+            const getPc = (): ActorLike | null => (pcActor?.id != null ? gameGlobal?.actors?.get?.(pcActor.id) ?? null : null);
+            const getNpc = (): ActorLike | null => (npcActor?.id != null ? gameGlobal?.actors?.get?.(npcActor.id) ?? null : null);
 
             // ---- 1. deal-damage-reduces-wounds (NPC.applyDamage path) ----
             try {
@@ -181,7 +205,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     notes['wounds-zero-marks-critical'] = 'npc.applyDamage missing';
                 } else {
                     // First reduce wounds to 0 (we're already at 7).
-                    await withTimeout(npc.update({ 'system.wounds.value': 0, 'system.wounds.critical': 0 }), 5_000, 'npc.update wounds=0');
+                    await withTimeout(npc.update?.({ 'system.wounds.value': 0, 'system.wounds.critical': 0 }), 5_000, 'npc.update wounds=0');
                     // Now hit for 5 more; critical should rise.
                     await withTimeout(npc.applyDamage(5, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, 'npc.applyDamage critical');
                     const post = getNpc();
@@ -254,7 +278,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                 } else {
                     const beforeMax = pc.system?.fate?.max ?? 0;
                     await withTimeout(
-                        pc.update({
+                        pc.update?.({
                             'system.fate.max': beforeMax - 1,
                             'system.fate.value': Math.max(0, (pc.system?.fate?.value ?? 0) - 1),
                         }),
@@ -303,7 +327,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     // Reset NPC to full wounds, then apply 3 sequential strikes
                     // while the PC accumulates 2 fatigue ticks. End-state asserts
                     // both tracks moved as expected.
-                    await withTimeout(npc.update({ 'system.wounds.value': 10, 'system.wounds.critical': 0 }), 5_000, 'reset npc wounds');
+                    await withTimeout(npc.update?.({ 'system.wounds.value': 10, 'system.wounds.critical': 0 }), 5_000, 'reset npc wounds');
                     const pcFatigueStart = getPc()?.system?.fatigue?.value ?? 0;
                     for (let i = 0; i < 3; i++) {
                         await withTimeout(getNpc()?.applyDamage?.(2, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, `seq applyDamage ${i}`);
@@ -341,7 +365,6 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                 npcActorId: npcActor?.id ?? null,
                 setupError: null as string | null,
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, DAMAGE_FLOWS);
 
         return {
@@ -369,7 +392,7 @@ test.describe.serial('damage / health / fatigue / fate pipeline (Tier B)', () =>
         const failures: string[] = [];
 
         for (const flow of DAMAGE_FLOWS) {
-            if (probe.flowsFired[flow]) {
+            if (probe.flowsFired[flow] === true) {
                 recordCoverage('damage.flow', flow);
             } else {
                 const note = probe.flowNotes[flow] ?? 'flow did not fire and no diagnostic note recorded';
