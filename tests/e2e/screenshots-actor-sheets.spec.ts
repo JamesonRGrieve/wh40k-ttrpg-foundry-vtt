@@ -475,86 +475,109 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
 
     for (const key of SCREENSHOT_ACTOR_FLOWS) keysFired[key] = false;
 
+    // Capture the view-mode screenshot for a pair. Returns the probe handle so
+    // the caller can chain edit-mode capture, or null when view mode failed
+    // (the probe is already cleaned up in that case).
+    async function captureViewMode(
+        actorType: string,
+        systemId: GameSystemId,
+        viewKey: ScreenshotFlow,
+        editKey: ScreenshotFlow,
+    ): Promise<Awaited<ReturnType<typeof probeActorSheetScreenshot>> | null> {
+        let probe: Awaited<ReturnType<typeof probeActorSheetScreenshot>>;
+        try {
+            probe = await probeActorSheetScreenshot(page, actorType, systemId);
+        } catch (err) {
+            keyNotes[viewKey] = `probe threw: ${String(err instanceof Error ? err.message : String(err))}`;
+            keyNotes[editKey] = `view-mode probe threw, skipping edit-mode`;
+            return null;
+        }
+
+        if (probe.error !== null || !probe.viewRendered) {
+            keyNotes[viewKey] = probe.error ?? 'view-mode render did not complete';
+            keyNotes[editKey] = 'view-mode render failed, skipping edit-mode';
+            await probe.cleanup();
+            return null;
+        }
+
+        try {
+            const clip = probe.boundingBox ?? undefined;
+            const screenshotPath = `${SCREENSHOT_DIR}/${actorType}__${systemId}__view.png`;
+            if (clip) {
+                await page.screenshot({ path: screenshotPath, clip, fullPage: false });
+            } else {
+                await page.screenshot({ path: screenshotPath, fullPage: true });
+            }
+            boundingBoxes[viewKey] = probe.boundingBox;
+            keysFired[viewKey] = true;
+            keyNotes[viewKey] = clip
+                ? `view captured at clip ${clip.width}x${clip.height} @ (${clip.x},${clip.y})`
+                : 'view captured as full page (no bounding box)';
+        } catch (err) {
+            keyNotes[viewKey] = `view screenshot threw: ${String(err instanceof Error ? err.message : String(err))}`;
+        }
+        return probe;
+    }
+
+    // Toggle the live sheet into edit mode and capture its screenshot.
+    async function captureEditMode(actorType: string, systemId: GameSystemId, editKey: ScreenshotFlow, recentActorId: string): Promise<void> {
+        const toggled = await toggleEditModeAndMeasure(page, recentActorId);
+        if (toggled.error !== null || !toggled.editToggled) {
+            keyNotes[editKey] = toggled.error ?? 'toggleEditMode did not fire';
+            return;
+        }
+        const clip = toggled.boundingBox ?? undefined;
+        const editScreenshotPath = `${SCREENSHOT_DIR}/${actorType}__${systemId}__edit.png`;
+        if (clip) {
+            await page.screenshot({ path: editScreenshotPath, clip, fullPage: false });
+        } else {
+            await page.screenshot({ path: editScreenshotPath, fullPage: true });
+        }
+        boundingBoxes[editKey] = toggled.boundingBox;
+        keysFired[editKey] = true;
+        keyNotes[editKey] = clip
+            ? `edit captured at clip ${clip.width}x${clip.height} @ (${clip.x},${clip.y})`
+            : 'edit captured as full page (no bounding box)';
+    }
+
+    // Drive ONE (actorType × systemId) pair through view + edit capture.
+    async function capturePair(actorType: string, systemId: GameSystemId): Promise<void> {
+        const viewKey = `${actorType}::${systemId}::view` as ScreenshotFlow;
+        const editKey = `${actorType}::${systemId}::edit` as ScreenshotFlow;
+
+        const probe = await captureViewMode(actorType, systemId, viewKey, editKey);
+        if (probe === null) return;
+
+        // Toggle edit mode and re-screenshot. Need the actor id to locate the
+        // live sheet; pull it back from the probe by checking the most-recent
+        // stash entry.
+        const recentActorId = await page.evaluate(() => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `globalThis` is untyped in the page context
+            const g = globalThis as unknown as FoundryGlobal;
+            const ids = g.__screenshotActorIds;
+            return ids != null && ids.length > 0 ? ids[ids.length - 1] : null;
+        });
+
+        if (recentActorId === null) {
+            keyNotes[editKey] = 'actor id missing after view render — cannot toggle';
+            await probe.cleanup();
+            return;
+        }
+
+        try {
+            await captureEditMode(actorType, systemId, editKey, recentActorId);
+        } catch (err) {
+            keyNotes[editKey] = `edit screenshot threw: ${String(err instanceof Error ? err.message : String(err))}`;
+        } finally {
+            await probe.cleanup();
+        }
+    }
+
     try {
         for (const systemId of GAME_SYSTEM_IDS) {
             const types = actorTypesForSystem(systemId);
             for (const actorType of types) {
-                const viewKey = `${actorType}::${systemId}::view` as ScreenshotFlow;
-                const editKey = `${actorType}::${systemId}::edit` as ScreenshotFlow;
-
-                // Render the sheet in view mode and measure the box.
-                let probe: Awaited<ReturnType<typeof probeActorSheetScreenshot>>;
-                try {
-                    probe = await probeActorSheetScreenshot(page, actorType, systemId);
-                } catch (err) {
-                    keyNotes[viewKey] = `probe threw: ${String(err instanceof Error ? err.message : String(err))}`;
-                    keyNotes[editKey] = `view-mode probe threw, skipping edit-mode`;
-                    continue;
-                }
-
-                if (probe.error !== null || !probe.viewRendered) {
-                    keyNotes[viewKey] = probe.error ?? 'view-mode render did not complete';
-                    keyNotes[editKey] = 'view-mode render failed, skipping edit-mode';
-                    await probe.cleanup();
-                    continue;
-                }
-
-                try {
-                    const clip = probe.boundingBox ?? undefined;
-                    const screenshotPath = `${SCREENSHOT_DIR}/${actorType}__${systemId}__view.png`;
-                    if (clip) {
-                        await page.screenshot({ path: screenshotPath, clip, fullPage: false });
-                    } else {
-                        await page.screenshot({ path: screenshotPath, fullPage: true });
-                    }
-                    boundingBoxes[viewKey] = probe.boundingBox;
-                    keysFired[viewKey] = true;
-                    keyNotes[viewKey] = clip
-                        ? `view captured at clip ${clip.width}x${clip.height} @ (${clip.x},${clip.y})`
-                        : 'view captured as full page (no bounding box)';
-                } catch (err) {
-                    keyNotes[viewKey] = `view screenshot threw: ${String(err instanceof Error ? err.message : String(err))}`;
-                }
-
-                // Toggle edit mode and re-screenshot. Need the actor id to
-                // locate the live sheet; pull it back from the probe by
-                // checking the most-recent stash entry.
-                const recentActorId = await page.evaluate(() => {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `globalThis` is untyped in the page context
-                    const g = globalThis as unknown as FoundryGlobal;
-                    const ids = g.__screenshotActorIds;
-                    return ids != null && ids.length > 0 ? ids[ids.length - 1] : null;
-                });
-
-                if (recentActorId === null) {
-                    keyNotes[editKey] = 'actor id missing after view render — cannot toggle';
-                    await probe.cleanup();
-                    continue;
-                }
-
-                try {
-                    const toggled = await toggleEditModeAndMeasure(page, recentActorId);
-                    if (toggled.error !== null || !toggled.editToggled) {
-                        keyNotes[editKey] = toggled.error ?? 'toggleEditMode did not fire';
-                    } else {
-                        const clip = toggled.boundingBox ?? undefined;
-                        const editScreenshotPath = `${SCREENSHOT_DIR}/${actorType}__${systemId}__edit.png`;
-                        if (clip) {
-                            await page.screenshot({ path: editScreenshotPath, clip, fullPage: false });
-                        } else {
-                            await page.screenshot({ path: editScreenshotPath, fullPage: true });
-                        }
-                        boundingBoxes[editKey] = toggled.boundingBox;
-                        keysFired[editKey] = true;
-                        keyNotes[editKey] = clip
-                            ? `edit captured at clip ${clip.width}x${clip.height} @ (${clip.x},${clip.y})`
-                            : 'edit captured as full page (no bounding box)';
-                    }
-                } catch (err) {
-                    keyNotes[editKey] = `edit screenshot threw: ${String(err instanceof Error ? err.message : String(err))}`;
-                } finally {
-                    await probe.cleanup();
-                }
+                await capturePair(actorType, systemId);
             }
         }
     } finally {

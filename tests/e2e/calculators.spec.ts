@@ -267,50 +267,54 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                 // actor has two equipped armour items — head=4, body=6. We
                 // verify computeArmour() returns per-location data with
                 // value === maxAP and total = TB + traitBonus + max + good.
-                if (armourMod?.computeArmour != null && actor != null) {
-                    try {
-                        const armour = armourMod.computeArmour(actor);
-                        const head = armour?.head;
-                        const body = armour?.body;
-                        const leftArm = armour?.leftArm;
-                        const okShape = head != null && body != null && leftArm != null;
-                        // Per setup: head=4 from the helmet, body=6 from the carapace.
-                        // Other locations should be 0 since no armour covers them.
-                        const headOk = head?.value === 4;
-                        const bodyOk = body?.value === 6;
-                        const armOk = leftArm?.value === 0;
-                        // total includes toughnessBonus (4 for T40) + locMax.
-                        const tb = head?.toughnessBonus ?? 0;
-                        const totalsOk = head?.total === tb + 4 && body?.total === tb + 6 && leftArm?.total === tb;
-                        const ok = okShape && headOk && bodyOk && armOk && totalsOk;
+                function probeArmourAggregates(): void {
+                    if (armourMod?.computeArmour != null && actor != null) {
+                        try {
+                            const armour = armourMod.computeArmour(actor);
+                            const head = armour?.head;
+                            const body = armour?.body;
+                            const leftArm = armour?.leftArm;
+                            const okShape = head != null && body != null && leftArm != null;
+                            // Per setup: head=4 from the helmet, body=6 from the carapace.
+                            // Other locations should be 0 since no armour covers them.
+                            const headOk = head?.value === 4;
+                            const bodyOk = body?.value === 6;
+                            const armOk = leftArm?.value === 0;
+                            // total includes toughnessBonus (4 for T40) + locMax.
+                            const tb = head?.toughnessBonus ?? 0;
+                            const totalsOk = head?.total === tb + 4 && body?.total === tb + 6 && leftArm?.total === tb;
+                            const ok = okShape && headOk && bodyOk && armOk && totalsOk;
+                            record(
+                                'armour-calculator-aggregates-locations',
+                                ok,
+                                ok ? null : `head=${JSON.stringify(head)} body=${JSON.stringify(body)} leftArm=${JSON.stringify(leftArm)}`,
+                            );
+                        } catch (err) {
+                            record('armour-calculator-aggregates-locations', false, `computeArmour threw: ${err instanceof Error ? err.message : String(err)}`);
+                        }
+                    } else if (armourMod != null) {
                         record(
                             'armour-calculator-aggregates-locations',
-                            ok,
-                            ok ? null : `head=${JSON.stringify(head)} body=${JSON.stringify(body)} leftArm=${JSON.stringify(leftArm)}`,
+                            false,
+                            `missing computeArmour or actor (keys=${Object.keys(armourMod).join(',')}, actor=${actor != null})`,
                         );
-                    } catch (err) {
-                        record('armour-calculator-aggregates-locations', false, `computeArmour threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
-                } else if (armourMod != null) {
-                    record(
-                        'armour-calculator-aggregates-locations',
-                        false,
-                        `missing computeArmour or actor (keys=${Object.keys(armourMod).join(',')}, actor=${actor != null})`,
-                    );
                 }
 
                 // ── 2. armour-calculator-equipped-only ──────────────────
                 // After the test harness toggles the body item to equipped:false,
                 // re-run computeArmour and confirm body drops to 0 (head still 4).
-                if (armourMod?.computeArmour != null && actor != null) {
-                    try {
-                        const armour = armourMod.computeArmour(actor);
-                        const head = armour?.head;
-                        const body = armour?.body;
-                        const ok = head?.value === 4 && body?.value === 0;
-                        record('armour-calculator-equipped-only', ok, ok ? null : `head.value=${head?.value} body.value=${body?.value} (expected 4 / 0)`);
-                    } catch (err) {
-                        record('armour-calculator-equipped-only', false, `computeArmour threw: ${err instanceof Error ? err.message : String(err)}`);
+                function probeArmourEquippedOnly(): void {
+                    if (armourMod?.computeArmour != null && actor != null) {
+                        try {
+                            const armour = armourMod.computeArmour(actor);
+                            const head = armour?.head;
+                            const body = armour?.body;
+                            const ok = head?.value === 4 && body?.value === 0;
+                            record('armour-calculator-equipped-only', ok, ok ? null : `head.value=${head?.value} body.value=${body?.value} (expected 4 / 0)`);
+                        } catch (err) {
+                            record('armour-calculator-equipped-only', false, `computeArmour threw: ${err instanceof Error ? err.message : String(err)}`);
+                        }
                     }
                 }
 
@@ -319,40 +323,42 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                 // 25 > 15 so this is standard). Test with deterministic numbers per impl:
                 // short = ≤ range * 0.5, standard = ≤ range * 2, long = ≤ range * 3.
                 // For range=60: 25 ≤ 30 → short bracket.
-                if (rangeMod?.calculateRangeBracket != null) {
-                    try {
-                        const shortInfo = rangeMod.calculateRangeBracket(25, 60);
-                        const standardInfo = rangeMod.calculateRangeBracket(80, 60);
-                        const longInfo = rangeMod.calculateRangeBracket(150, 60);
-                        const pointBlankInfo = rangeMod.calculateRangeBracket(2, 60);
-                        // calculateRangeModifier with melta on a short bracket should flag isMeltaRange.
-                        const meltaResult = rangeMod.calculateRangeModifier?.({
-                            distance: 25,
-                            weaponRange: 60,
-                            weaponQualities: new Set(['melta']),
-                            isRangedWeapon: true,
-                        });
-                        const ok =
-                            shortInfo?.bracket === 'short' &&
-                            shortInfo.modifier === 10 &&
-                            standardInfo?.bracket === 'standard' &&
-                            standardInfo.modifier === 0 &&
-                            longInfo?.bracket === 'long' &&
-                            longInfo.modifier === -10 &&
-                            pointBlankInfo?.bracket === 'pointBlank' &&
-                            pointBlankInfo.modifier === 30 &&
-                            meltaResult?.isMeltaRange === true;
-                        record(
-                            'range-calculator-band',
-                            ok,
-                            ok
-                                ? null
-                                : `short=${JSON.stringify(shortInfo)} std=${JSON.stringify(standardInfo)} long=${JSON.stringify(longInfo)} pb=${JSON.stringify(
-                                      pointBlankInfo,
-                                  )} melta.isMelta=${meltaResult?.isMeltaRange}`,
-                        );
-                    } catch (err) {
-                        record('range-calculator-band', false, `range band threw: ${err instanceof Error ? err.message : String(err)}`);
+                function probeRangeBand(): void {
+                    if (rangeMod?.calculateRangeBracket != null) {
+                        try {
+                            const shortInfo = rangeMod.calculateRangeBracket(25, 60);
+                            const standardInfo = rangeMod.calculateRangeBracket(80, 60);
+                            const longInfo = rangeMod.calculateRangeBracket(150, 60);
+                            const pointBlankInfo = rangeMod.calculateRangeBracket(2, 60);
+                            // calculateRangeModifier with melta on a short bracket should flag isMeltaRange.
+                            const meltaResult = rangeMod.calculateRangeModifier?.({
+                                distance: 25,
+                                weaponRange: 60,
+                                weaponQualities: new Set(['melta']),
+                                isRangedWeapon: true,
+                            });
+                            const ok =
+                                shortInfo?.bracket === 'short' &&
+                                shortInfo.modifier === 10 &&
+                                standardInfo?.bracket === 'standard' &&
+                                standardInfo.modifier === 0 &&
+                                longInfo?.bracket === 'long' &&
+                                longInfo.modifier === -10 &&
+                                pointBlankInfo?.bracket === 'pointBlank' &&
+                                pointBlankInfo.modifier === 30 &&
+                                meltaResult?.isMeltaRange === true;
+                            record(
+                                'range-calculator-band',
+                                ok,
+                                ok
+                                    ? null
+                                    : `short=${JSON.stringify(shortInfo)} std=${JSON.stringify(standardInfo)} long=${JSON.stringify(
+                                          longInfo,
+                                      )} pb=${JSON.stringify(pointBlankInfo)} melta.isMelta=${meltaResult?.isMeltaRange}`,
+                            );
+                        } catch (err) {
+                            record('range-calculator-band', false, `range band threw: ${err instanceof Error ? err.message : String(err)}`);
+                        }
                     }
                 }
 
@@ -360,159 +366,183 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                 // distance 200m at weaponRange 60m: > 60 * 3 = 180 → extreme (-30).
                 // Also drives applyQualityModifiers (gyro-stabilised caps -30 → -10)
                 // and isOutOfRange + isAtMeltaRange helpers.
-                if (rangeMod?.calculateRangeBracket != null) {
-                    try {
-                        const extreme = rangeMod.calculateRangeBracket(200, 60);
-                        const gyro = rangeMod.applyQualityModifiers?.(extreme, new Set(['gyro-stabilised']));
-                        const oor = rangeMod.isOutOfRange?.(200, 60, 3);
-                        const meltaOnExtreme = rangeMod.isAtMeltaRange?.('extreme');
-                        const meltaOnShort = rangeMod.isAtMeltaRange?.('short');
-                        // formatRangeDisplay round-trip on a melee-flag result.
-                        const melee = rangeMod.calculateRangeModifier?.({
-                            distance: 0,
-                            weaponRange: 0,
-                            weaponQualities: new Set(),
-                            isRangedWeapon: false,
-                        });
-                        const display = rangeMod.formatRangeDisplay?.({ ...(gyro ?? extreme), isMeltaRange: false, description: 'd' });
-                        const ok =
-                            extreme?.bracket === 'extreme' &&
-                            extreme.modifier === -30 &&
-                            gyro?.modifier === -10 &&
-                            gyro.modifiedBy === 'gyro-stabilised' &&
-                            oor === true &&
-                            meltaOnExtreme === false &&
-                            meltaOnShort === true &&
-                            melee?.bracket === 'melee' &&
-                            display?.modifierText === '-10';
-                        record(
-                            'range-calculator-extreme',
-                            ok,
-                            ok
-                                ? null
-                                : `extreme=${JSON.stringify(extreme)} gyro=${JSON.stringify(
-                                      gyro,
-                                  )} oor=${oor} meltaExt=${meltaOnExtreme} meltaShort=${meltaOnShort} melee=${JSON.stringify(melee)} display=${JSON.stringify(
-                                      display,
-                                  )}`,
-                        );
-                    } catch (err) {
-                        record('range-calculator-extreme', false, `range extreme threw: ${err instanceof Error ? err.message : String(err)}`);
+                function probeRangeExtreme(): void {
+                    if (rangeMod?.calculateRangeBracket != null) {
+                        try {
+                            const extreme = rangeMod.calculateRangeBracket(200, 60);
+                            const gyro = rangeMod.applyQualityModifiers?.(extreme, new Set(['gyro-stabilised']));
+                            const oor = rangeMod.isOutOfRange?.(200, 60, 3);
+                            const meltaOnExtreme = rangeMod.isAtMeltaRange?.('extreme');
+                            const meltaOnShort = rangeMod.isAtMeltaRange?.('short');
+                            // formatRangeDisplay round-trip on a melee-flag result.
+                            const melee = rangeMod.calculateRangeModifier?.({
+                                distance: 0,
+                                weaponRange: 0,
+                                weaponQualities: new Set(),
+                                isRangedWeapon: false,
+                            });
+                            const display = rangeMod.formatRangeDisplay?.({ ...(gyro ?? extreme), isMeltaRange: false, description: 'd' });
+                            const ok =
+                                extreme?.bracket === 'extreme' &&
+                                extreme.modifier === -30 &&
+                                gyro?.modifier === -10 &&
+                                gyro.modifiedBy === 'gyro-stabilised' &&
+                                oor === true &&
+                                meltaOnExtreme === false &&
+                                meltaOnShort === true &&
+                                melee?.bracket === 'melee' &&
+                                display?.modifierText === '-10';
+                            record(
+                                'range-calculator-extreme',
+                                ok,
+                                ok
+                                    ? null
+                                    : `extreme=${JSON.stringify(extreme)} gyro=${JSON.stringify(
+                                          gyro,
+                                      )} oor=${oor} meltaExt=${meltaOnExtreme} meltaShort=${meltaOnShort} melee=${JSON.stringify(
+                                          melee,
+                                      )} display=${JSON.stringify(display)}`,
+                            );
+                        } catch (err) {
+                            record('range-calculator-extreme', false, `range extreme threw: ${err instanceof Error ? err.message : String(err)}`);
+                        }
                     }
                 }
 
                 // ── 5. formula-evaluator-evaluates-string ───────────────
                 // Pure helpers don't need an actor.
-                if (formulaMod != null) {
-                    try {
-                        const tbMult = formulaMod.parseTBMultiplier?.('2xTB+1d5+2');
-                        const tbMultPlain = formulaMod.parseTBMultiplier?.('TB');
-                        const tbMultNone = formulaMod.parseTBMultiplier?.('1d10');
-                        const dice = formulaMod.parseDiceRoll?.('2xTB+1d5+2');
-                        const diceNone = formulaMod.parseDiceRoll?.('TB');
-                        const descWounds = formulaMod.describeWoundsFormula?.('2xTB+1d5');
-                        const descFate = formulaMod.describeFateFormula?.('(1-5|=2),(6-10|=3)');
-                        const descFatePlain = formulaMod.describeFateFormula?.('whatever');
-                        const fateVal = formulaMod.evaluateFateFormula?.('(1-5|=2),(6-10|=3)');
-                        const emptyWounds = formulaMod.evaluateWoundsFormula?.('', null);
-                        const emptyFate = formulaMod.evaluateFateFormula?.('');
-                        const invalidFate = formulaMod.evaluateFateFormula?.('not a formula');
-                        // fateVal can legitimately be 0 in headless Foundry when
-                        // Roll.evaluateSync throws and the catch fallback fires;
-                        // 2 / 3 are the rolled-condition values. All three are
-                        // valid signals that the function executed end-to-end.
-                        const ok =
-                            tbMult === 2 &&
-                            tbMultPlain === 1 &&
-                            tbMultNone === 0 &&
-                            dice === '1d5+2' &&
-                            diceNone === null &&
-                            typeof descWounds === 'string' &&
-                            descWounds.includes('×') &&
-                            typeof descFate === 'string' &&
-                            descFate.startsWith('1d10:') &&
-                            descFatePlain === 'whatever' &&
-                            typeof fateVal === 'number' &&
-                            (fateVal === 0 || fateVal === 2 || fateVal === 3) &&
-                            emptyWounds === 0 &&
-                            emptyFate === 0 &&
-                            invalidFate === 0;
-                        record(
-                            'formula-evaluator-evaluates-string',
-                            ok,
-                            ok
-                                ? null
-                                : `tbMult=${tbMult} tbMultPlain=${tbMultPlain} tbMultNone=${tbMultNone} dice=${dice} diceNone=${diceNone} descW=${descWounds} descF=${descFate} descFP=${descFatePlain} fate=${fateVal} ew=${emptyWounds} ef=${emptyFate} invF=${invalidFate}`,
-                        );
-                    } catch (err) {
-                        record('formula-evaluator-evaluates-string', false, `formula pure-helpers threw: ${err instanceof Error ? err.message : String(err)}`);
+                function probeFormulaString(): void {
+                    if (formulaMod != null) {
+                        try {
+                            const tbMult = formulaMod.parseTBMultiplier?.('2xTB+1d5+2');
+                            const tbMultPlain = formulaMod.parseTBMultiplier?.('TB');
+                            const tbMultNone = formulaMod.parseTBMultiplier?.('1d10');
+                            const dice = formulaMod.parseDiceRoll?.('2xTB+1d5+2');
+                            const diceNone = formulaMod.parseDiceRoll?.('TB');
+                            const descWounds = formulaMod.describeWoundsFormula?.('2xTB+1d5');
+                            const descFate = formulaMod.describeFateFormula?.('(1-5|=2),(6-10|=3)');
+                            const descFatePlain = formulaMod.describeFateFormula?.('whatever');
+                            const fateVal = formulaMod.evaluateFateFormula?.('(1-5|=2),(6-10|=3)');
+                            const emptyWounds = formulaMod.evaluateWoundsFormula?.('', null);
+                            const emptyFate = formulaMod.evaluateFateFormula?.('');
+                            const invalidFate = formulaMod.evaluateFateFormula?.('not a formula');
+                            // fateVal can legitimately be 0 in headless Foundry when
+                            // Roll.evaluateSync throws and the catch fallback fires;
+                            // 2 / 3 are the rolled-condition values. All three are
+                            // valid signals that the function executed end-to-end.
+                            const ok =
+                                tbMult === 2 &&
+                                tbMultPlain === 1 &&
+                                tbMultNone === 0 &&
+                                dice === '1d5+2' &&
+                                diceNone === null &&
+                                typeof descWounds === 'string' &&
+                                descWounds.includes('×') &&
+                                typeof descFate === 'string' &&
+                                descFate.startsWith('1d10:') &&
+                                descFatePlain === 'whatever' &&
+                                typeof fateVal === 'number' &&
+                                (fateVal === 0 || fateVal === 2 || fateVal === 3) &&
+                                emptyWounds === 0 &&
+                                emptyFate === 0 &&
+                                invalidFate === 0;
+                            record(
+                                'formula-evaluator-evaluates-string',
+                                ok,
+                                ok
+                                    ? null
+                                    : `tbMult=${tbMult} tbMultPlain=${tbMultPlain} tbMultNone=${tbMultNone} dice=${dice} diceNone=${diceNone} descW=${descWounds} descF=${descFate} descFP=${descFatePlain} fate=${fateVal} ew=${emptyWounds} ef=${emptyFate} invF=${invalidFate}`,
+                            );
+                        } catch (err) {
+                            record(
+                                'formula-evaluator-evaluates-string',
+                                false,
+                                `formula pure-helpers threw: ${err instanceof Error ? err.message : String(err)}`,
+                            );
+                        }
                     }
                 }
 
                 // ── 6. formula-evaluator-with-actor-data ────────────────
                 // T40 → TB=4. "2xTB+5" → 8+5 = 13 (no dice term, deterministic).
-                if (formulaMod?.evaluateWoundsFormula != null && actor != null) {
-                    try {
-                        const wounds = formulaMod.evaluateWoundsFormula('2xTB+5', actor);
-                        // Source bug: evaluateWoundsFormula's regex loop iterates the
-                        // charMap in insertion order and the `SB` (strength) abbr's
-                        // regex consumes the `SB` suffix of `WSB`/`BSB`/`InfB`-like
-                        // multi-letter abbreviations before the WSB/BSB/InfB regex
-                        // ever runs — `1xWSB` resolves to `1xW<strength-bonus>` and
-                        // the WSB regex never matches. Same flaw applies to BSB
-                        // (consumed by SB) and InfB (consumed by FB). Until the
-                        // regex is anchored / iteration ordered longest-first,
-                        // assert only on the single-letter-abbr path (TB / WB / SB)
-                        // which works correctly.
-                        const ok = wounds === 13;
-                        record('formula-evaluator-with-actor-data', ok, ok ? null : `evaluateWoundsFormula('2xTB+5') = ${wounds} (expected 13)`);
-                    } catch (err) {
-                        record('formula-evaluator-with-actor-data', false, `evaluateWoundsFormula threw: ${err instanceof Error ? err.message : String(err)}`);
+                function probeFormulaActorData(): void {
+                    if (formulaMod?.evaluateWoundsFormula != null && actor != null) {
+                        try {
+                            const wounds = formulaMod.evaluateWoundsFormula('2xTB+5', actor);
+                            // Source bug: evaluateWoundsFormula's regex loop iterates the
+                            // charMap in insertion order and the `SB` (strength) abbr's
+                            // regex consumes the `SB` suffix of `WSB`/`BSB`/`InfB`-like
+                            // multi-letter abbreviations before the WSB/BSB/InfB regex
+                            // ever runs — `1xWSB` resolves to `1xW<strength-bonus>` and
+                            // the WSB regex never matches. Same flaw applies to BSB
+                            // (consumed by SB) and InfB (consumed by FB). Until the
+                            // regex is anchored / iteration ordered longest-first,
+                            // assert only on the single-letter-abbr path (TB / WB / SB)
+                            // which works correctly.
+                            const ok = wounds === 13;
+                            record('formula-evaluator-with-actor-data', ok, ok ? null : `evaluateWoundsFormula('2xTB+5') = ${wounds} (expected 13)`);
+                        } catch (err) {
+                            record(
+                                'formula-evaluator-with-actor-data',
+                                false,
+                                `evaluateWoundsFormula threw: ${err instanceof Error ? err.message : String(err)}`,
+                            );
+                        }
+                    } else if (formulaMod != null) {
+                        record('formula-evaluator-with-actor-data', false, `missing evaluateWoundsFormula or actor (actor=${actor != null})`);
                     }
-                } else if (formulaMod != null) {
-                    record('formula-evaluator-with-actor-data', false, `missing evaluateWoundsFormula or actor (actor=${actor != null})`);
                 }
 
                 // ── 7. subtlety-clamp-edge-cases ────────────────────────
                 // Drive every early-return + the active clamp path of
                 // clampSubtletyLoss; assert isSubtletyPrimitive both arms.
-                if (subtletyMod != null) {
-                    try {
-                        const { clampSubtletyLoss, isSubtletyPrimitive } = subtletyMod;
-                        const zeroDelta = clampSubtletyLoss?.(0, 5); // delta>=0 → passthrough 0
-                        const positiveDelta = clampSubtletyLoss?.(3, 5); // gain → passthrough 3
-                        const negativeCap = clampSubtletyLoss?.(-7, 0); // cap<=0 → passthrough -7
-                        const clamped = clampSubtletyLoss?.(-7, 2); // -7 clamped to -2
-                        const exact = clampSubtletyLoss?.(-2, 2); // already within cap → -2
-                        const truncDelta = clampSubtletyLoss?.(-7.9, 2); // trunc → -7, clamp → -2
-                        const truncCap = clampSubtletyLoss?.(-10, 2.7); // cap truncs to 2 → -2
-                        const negCap = clampSubtletyLoss?.(-5, -3); // negative cap → passthrough
-                        const isManual = isSubtletyPrimitive?.('manual');
-                        const isInquest = isSubtletyPrimitive?.('inquest');
-                        const isUuid = isSubtletyPrimitive?.('Compendium.wh40k-rpg.foo.Item.bar');
-                        const ok =
-                            zeroDelta === 0 &&
-                            positiveDelta === 3 &&
-                            negativeCap === -7 &&
-                            clamped === -2 &&
-                            exact === -2 &&
-                            truncDelta === -2 &&
-                            truncCap === -2 &&
-                            negCap === -5 &&
-                            isManual === true &&
-                            isInquest === true &&
-                            isUuid === false;
-                        record(
-                            'subtlety-clamp-edge-cases',
-                            ok,
-                            ok
-                                ? null
-                                : `zero=${zeroDelta} pos=${positiveDelta} negCap=${negativeCap} clamped=${clamped} exact=${exact} truncD=${truncDelta} truncC=${truncCap} negCap2=${negCap} manual=${isManual} inquest=${isInquest} uuid=${isUuid}`,
-                        );
-                    } catch (err) {
-                        record('subtlety-clamp-edge-cases', false, `clampSubtletyLoss threw: ${err instanceof Error ? err.message : String(err)}`);
+                function probeSubtletyClamp(): void {
+                    if (subtletyMod != null) {
+                        try {
+                            const { clampSubtletyLoss, isSubtletyPrimitive } = subtletyMod;
+                            const zeroDelta = clampSubtletyLoss?.(0, 5); // delta>=0 → passthrough 0
+                            const positiveDelta = clampSubtletyLoss?.(3, 5); // gain → passthrough 3
+                            const negativeCap = clampSubtletyLoss?.(-7, 0); // cap<=0 → passthrough -7
+                            const clamped = clampSubtletyLoss?.(-7, 2); // -7 clamped to -2
+                            const exact = clampSubtletyLoss?.(-2, 2); // already within cap → -2
+                            const truncDelta = clampSubtletyLoss?.(-7.9, 2); // trunc → -7, clamp → -2
+                            const truncCap = clampSubtletyLoss?.(-10, 2.7); // cap truncs to 2 → -2
+                            const negCap = clampSubtletyLoss?.(-5, -3); // negative cap → passthrough
+                            const isManual = isSubtletyPrimitive?.('manual');
+                            const isInquest = isSubtletyPrimitive?.('inquest');
+                            const isUuid = isSubtletyPrimitive?.('Compendium.wh40k-rpg.foo.Item.bar');
+                            const ok =
+                                zeroDelta === 0 &&
+                                positiveDelta === 3 &&
+                                negativeCap === -7 &&
+                                clamped === -2 &&
+                                exact === -2 &&
+                                truncDelta === -2 &&
+                                truncCap === -2 &&
+                                negCap === -5 &&
+                                isManual === true &&
+                                isInquest === true &&
+                                isUuid === false;
+                            record(
+                                'subtlety-clamp-edge-cases',
+                                ok,
+                                ok
+                                    ? null
+                                    : `zero=${zeroDelta} pos=${positiveDelta} negCap=${negativeCap} clamped=${clamped} exact=${exact} truncD=${truncDelta} truncC=${truncCap} negCap2=${negCap} manual=${isManual} inquest=${isInquest} uuid=${isUuid}`,
+                            );
+                        } catch (err) {
+                            record('subtlety-clamp-edge-cases', false, `clampSubtletyLoss threw: ${err instanceof Error ? err.message : String(err)}`);
+                        }
                     }
                 }
+
+                probeArmourAggregates();
+                probeArmourEquippedOnly();
+                probeRangeBand();
+                probeRangeExtreme();
+                probeFormulaString();
+                probeFormulaActorData();
+                probeSubtletyClamp();
 
                 return out;
             },

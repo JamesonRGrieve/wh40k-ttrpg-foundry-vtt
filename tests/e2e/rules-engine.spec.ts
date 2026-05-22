@@ -150,152 +150,161 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 }
             }
 
-            // ---------- weapon-jam ----------
-            const weaponJam = await loadModule<WeaponJamModule>('weapon-jam');
-            if (weaponJam.__importError != null) {
-                for (const k of ['weapon-jam-floor', 'weapon-jam-shouldRoll'] as const) record(k, false, weaponJam.__importError);
-            } else {
-                try {
-                    // Drive every action variant the source switches on so the
-                    // branch coverage on `getJamFloor` lights up.
-                    const actions = ['single', 'semi', 'full', 'spray', 'aim', 'standard'];
-                    const floors = actions.map((a) => weaponJam.getJamFloor(a));
-                    record('weapon-jam-floor', floors.length === actions.length && floors.every((f) => Number.isFinite(f)), null);
-                } catch (err) {
-                    record('weapon-jam-floor', false, err instanceof Error ? err.message : String(err));
+            // ---------- weapon-jam + weapon-quality + critical-damage ----------
+            async function probeWeaponRules(): Promise<void> {
+                // ---------- weapon-jam ----------
+                const weaponJam = await loadModule<WeaponJamModule>('weapon-jam');
+                if (weaponJam.__importError != null) {
+                    for (const k of ['weapon-jam-floor', 'weapon-jam-shouldRoll'] as const) record(k, false, weaponJam.__importError);
+                } else {
+                    try {
+                        // Drive every action variant the source switches on so the
+                        // branch coverage on `getJamFloor` lights up.
+                        const actions = ['single', 'semi', 'full', 'spray', 'aim', 'standard'];
+                        const floors = actions.map((a) => weaponJam.getJamFloor(a));
+                        record('weapon-jam-floor', floors.length === actions.length && floors.every((f) => Number.isFinite(f)), null);
+                    } catch (err) {
+                        record('weapon-jam-floor', false, err instanceof Error ? err.message : String(err));
+                    }
+                    try {
+                        const jamResults = [
+                            weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 96, success: false, hasReliable: false, hasUnreliable: true }),
+                            weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 50, success: true, hasReliable: true, hasUnreliable: false }),
+                            weaponJam.shouldJamRoll({ action: 'full', rollTotal: 100, success: false, hasReliable: false, hasUnreliable: false }),
+                        ];
+                        record('weapon-jam-shouldRoll', jamResults.length === 3, null);
+                    } catch (err) {
+                        record('weapon-jam-shouldRoll', false, err instanceof Error ? err.message : String(err));
+                    }
                 }
-                try {
-                    const jamResults = [
-                        weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 96, success: false, hasReliable: false, hasUnreliable: true }),
-                        weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 50, success: true, hasReliable: true, hasUnreliable: false }),
-                        weaponJam.shouldJamRoll({ action: 'full', rollTotal: 100, success: false, hasReliable: false, hasUnreliable: false }),
-                    ];
-                    record('weapon-jam-shouldRoll', jamResults.length === 3, null);
-                } catch (err) {
-                    record('weapon-jam-shouldRoll', false, err instanceof Error ? err.message : String(err));
+
+                // ---------- weapon-quality-effects ----------
+                const wq = await loadModule<WeaponQualityModule>('weapon-quality-effects');
+                if (wq.__importError != null) {
+                    for (const k of ['quality-weaponHasQuality', 'quality-rollDataHasQuality', 'quality-getWeaponParryModifier'] as const)
+                        record(k, false, wq.__importError);
+                } else {
+                    // weaponHasQuality reads `weapon.system.effectiveSpecial`
+                    // (a Set of lowercase quality names). Build a fake with the
+                    // expected shape so the true/false branches both fire.
+                    const fakeWeapon = { system: { effectiveSpecial: new Set(['reliable', 'accurate']) } };
+                    // rollDataHasQuality reads `rollData.attackSpecials` (array
+                    // of `{ name }` entries).
+                    const fakeRollData = { attackSpecials: [{ name: 'Tearing' }, { name: 'Reliable' }] };
+                    try {
+                        const yes = wq.weaponHasQuality(fakeWeapon, 'Reliable');
+                        const no = wq.weaponHasQuality(fakeWeapon, 'NotPresent');
+                        const nullProbe = wq.weaponHasQuality(null, 'Reliable');
+                        record('quality-weaponHasQuality', yes && !no && !nullProbe, `yes=${String(yes)} no=${String(no)} nullProbe=${String(nullProbe)}`);
+                    } catch (err) {
+                        record('quality-weaponHasQuality', false, err instanceof Error ? err.message : String(err));
+                    }
+                    try {
+                        const yes = wq.rollDataHasQuality(fakeRollData, 'Tearing');
+                        const no = wq.rollDataHasQuality(fakeRollData, 'Felling');
+                        record('quality-rollDataHasQuality', yes && !no, null);
+                    } catch (err) {
+                        record('quality-rollDataHasQuality', false, err instanceof Error ? err.message : String(err));
+                    }
+                    try {
+                        // getWeaponParryModifier walks the same effectiveSpecial Set;
+                        // 'balanced' yields a non-zero parry modifier, null yields 0.
+                        const parry = wq.getWeaponParryModifier({ system: { effectiveSpecial: new Set(['balanced']) } });
+                        const noParry = wq.getWeaponParryModifier(null);
+                        record('quality-getWeaponParryModifier', Number.isFinite(parry) && Number.isFinite(noParry), null);
+                    } catch (err) {
+                        record('quality-getWeaponParryModifier', false, err instanceof Error ? err.message : String(err));
+                    }
+                }
+
+                // ---------- critical-damage ----------
+                const cd = await loadModule<CriticalDamageModule>('critical-damage');
+                if (cd.__importError != null) {
+                    for (const k of ['critical-damage-getFuzzy', 'critical-damage-loadTable', 'critical-damage-invalidateCache'] as const)
+                        record(k, false, cd.__importError);
+                } else {
+                    try {
+                        const obj = { Head: 'head-result', Body: 'body-result' };
+                        const head = cd.getFuzzy(obj, 'head');
+                        const body = cd.getFuzzy(obj, 'BODY');
+                        const missing = cd.getFuzzy(obj, 'leg');
+                        record('critical-damage-getFuzzy', head === 'head-result' && body === 'body-result' && missing === undefined, null);
+                    } catch (err) {
+                        record('critical-damage-getFuzzy', false, err instanceof Error ? err.message : String(err));
+                    }
+                    try {
+                        // loadCriticalDamageTable resolves a roll-table compendium; in
+                        // the test world the table may be absent, in which case the
+                        // function returns an empty / partial object. The important
+                        // surface for coverage is the load attempt itself, not the
+                        // payload content — so accept any non-throwing resolution.
+                        const tbl: object = await cd.loadCriticalDamageTable();
+                        record('critical-damage-loadTable', Object.keys(tbl).length >= 0, null);
+                    } catch (err) {
+                        record('critical-damage-loadTable', false, err instanceof Error ? err.message : String(err));
+                    }
+                    try {
+                        cd.invalidateCriticalDamageCache();
+                        record('critical-damage-invalidateCache', true, null);
+                    } catch (err) {
+                        record('critical-damage-invalidateCache', false, err instanceof Error ? err.message : String(err));
+                    }
                 }
             }
 
-            // ---------- weapon-quality-effects ----------
-            const wq = await loadModule<WeaponQualityModule>('weapon-quality-effects');
-            if (wq.__importError != null) {
-                for (const k of ['quality-weaponHasQuality', 'quality-rollDataHasQuality', 'quality-getWeaponParryModifier'] as const)
-                    record(k, false, wq.__importError);
-            } else {
-                // weaponHasQuality reads `weapon.system.effectiveSpecial`
-                // (a Set of lowercase quality names). Build a fake with the
-                // expected shape so the true/false branches both fire.
-                const fakeWeapon = { system: { effectiveSpecial: new Set(['reliable', 'accurate']) } };
-                // rollDataHasQuality reads `rollData.attackSpecials` (array
-                // of `{ name }` entries).
-                const fakeRollData = { attackSpecials: [{ name: 'Tearing' }, { name: 'Reliable' }] };
-                try {
-                    const yes = wq.weaponHasQuality(fakeWeapon, 'Reliable');
-                    const no = wq.weaponHasQuality(fakeWeapon, 'NotPresent');
-                    const nullProbe = wq.weaponHasQuality(null, 'Reliable');
-                    record('quality-weaponHasQuality', yes && !no && !nullProbe, `yes=${String(yes)} no=${String(no)} nullProbe=${String(nullProbe)}`);
-                } catch (err) {
-                    record('quality-weaponHasQuality', false, err instanceof Error ? err.message : String(err));
+            // ---------- config + ammo ----------
+            async function probeConfigAndAmmo(): Promise<void> {
+                // ---------- config ----------
+                const cfg = await loadModule<ConfigModule>('config');
+                if (cfg.__importError != null) {
+                    for (const k of ['config-fieldMatch', 'config-toggleUIExpanded'] as const) record(k, false, cfg.__importError);
+                } else {
+                    try {
+                        const match = cfg.fieldMatch('HEAD', 'head');
+                        const noMatch = cfg.fieldMatch('head', 'body');
+                        record('config-fieldMatch', match && !noMatch, null);
+                    } catch (err) {
+                        record('config-fieldMatch', false, err instanceof Error ? err.message : String(err));
+                    }
+                    try {
+                        cfg.toggleUIExpanded('probe-section');
+                        record('config-toggleUIExpanded', true, null);
+                    } catch (err) {
+                        record('config-toggleUIExpanded', false, err instanceof Error ? err.message : String(err));
+                    }
                 }
-                try {
-                    const yes = wq.rollDataHasQuality(fakeRollData, 'Tearing');
-                    const no = wq.rollDataHasQuality(fakeRollData, 'Felling');
-                    record('quality-rollDataHasQuality', yes && !no, null);
-                } catch (err) {
-                    record('quality-rollDataHasQuality', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    // getWeaponParryModifier walks the same effectiveSpecial Set;
-                    // 'balanced' yields a non-zero parry modifier, null yields 0.
-                    const parry = wq.getWeaponParryModifier({ system: { effectiveSpecial: new Set(['balanced']) } });
-                    const noParry = wq.getWeaponParryModifier(null);
-                    record('quality-getWeaponParryModifier', Number.isFinite(parry) && Number.isFinite(noParry), null);
-                } catch (err) {
-                    record('quality-getWeaponParryModifier', false, err instanceof Error ? err.message : String(err));
+
+                // ---------- ammo ----------
+                const ammo = await loadModule<AmmoModule>('ammo');
+                if (ammo.__importError != null) {
+                    record('ammo-ammoText', false, ammo.__importError);
+                } else {
+                    try {
+                        // ammoText expects an AmmoItem with `usesAmmo` + clip
+                        // metadata. Drive both branches: usesAmmo=true returns a
+                        // formatted string; usesAmmo=false returns undefined.
+                        const usesAmmo = ammo.ammoText({
+                            usesAmmo: true,
+                            system: {
+                                loadedAmmo: { name: 'Probe Ammo' },
+                                clip: { value: 5 },
+                                effectiveClipMax: 10,
+                            },
+                        });
+                        const noAmmo = ammo.ammoText({ usesAmmo: false, system: {} });
+                        record(
+                            'ammo-ammoText',
+                            typeof usesAmmo === 'string' && usesAmmo.length > 0 && noAmmo === undefined,
+                            `usesAmmo=${String(usesAmmo)} noAmmo=${String(noAmmo)}`,
+                        );
+                    } catch (err) {
+                        record('ammo-ammoText', false, err instanceof Error ? err.message : String(err));
+                    }
                 }
             }
 
-            // ---------- critical-damage ----------
-            const cd = await loadModule<CriticalDamageModule>('critical-damage');
-            if (cd.__importError != null) {
-                for (const k of ['critical-damage-getFuzzy', 'critical-damage-loadTable', 'critical-damage-invalidateCache'] as const)
-                    record(k, false, cd.__importError);
-            } else {
-                try {
-                    const obj = { Head: 'head-result', Body: 'body-result' };
-                    const head = cd.getFuzzy(obj, 'head');
-                    const body = cd.getFuzzy(obj, 'BODY');
-                    const missing = cd.getFuzzy(obj, 'leg');
-                    record('critical-damage-getFuzzy', head === 'head-result' && body === 'body-result' && missing === undefined, null);
-                } catch (err) {
-                    record('critical-damage-getFuzzy', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    // loadCriticalDamageTable resolves a roll-table compendium; in
-                    // the test world the table may be absent, in which case the
-                    // function returns an empty / partial object. The important
-                    // surface for coverage is the load attempt itself, not the
-                    // payload content — so accept any non-throwing resolution.
-                    const tbl: object = await cd.loadCriticalDamageTable();
-                    record('critical-damage-loadTable', Object.keys(tbl).length >= 0, null);
-                } catch (err) {
-                    record('critical-damage-loadTable', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    cd.invalidateCriticalDamageCache();
-                    record('critical-damage-invalidateCache', true, null);
-                } catch (err) {
-                    record('critical-damage-invalidateCache', false, err instanceof Error ? err.message : String(err));
-                }
-            }
-
-            // ---------- config ----------
-            const cfg = await loadModule<ConfigModule>('config');
-            if (cfg.__importError != null) {
-                for (const k of ['config-fieldMatch', 'config-toggleUIExpanded'] as const) record(k, false, cfg.__importError);
-            } else {
-                try {
-                    const match = cfg.fieldMatch('HEAD', 'head');
-                    const noMatch = cfg.fieldMatch('head', 'body');
-                    record('config-fieldMatch', match && !noMatch, null);
-                } catch (err) {
-                    record('config-fieldMatch', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    cfg.toggleUIExpanded('probe-section');
-                    record('config-toggleUIExpanded', true, null);
-                } catch (err) {
-                    record('config-toggleUIExpanded', false, err instanceof Error ? err.message : String(err));
-                }
-            }
-
-            // ---------- ammo ----------
-            const ammo = await loadModule<AmmoModule>('ammo');
-            if (ammo.__importError != null) {
-                record('ammo-ammoText', false, ammo.__importError);
-            } else {
-                try {
-                    // ammoText expects an AmmoItem with `usesAmmo` + clip
-                    // metadata. Drive both branches: usesAmmo=true returns a
-                    // formatted string; usesAmmo=false returns undefined.
-                    const usesAmmo = ammo.ammoText({
-                        usesAmmo: true,
-                        system: {
-                            loadedAmmo: { name: 'Probe Ammo' },
-                            clip: { value: 5 },
-                            effectiveClipMax: 10,
-                        },
-                    });
-                    const noAmmo = ammo.ammoText({ usesAmmo: false, system: {} });
-                    record(
-                        'ammo-ammoText',
-                        typeof usesAmmo === 'string' && usesAmmo.length > 0 && noAmmo === undefined,
-                        `usesAmmo=${String(usesAmmo)} noAmmo=${String(noAmmo)}`,
-                    );
-                } catch (err) {
-                    record('ammo-ammoText', false, err instanceof Error ? err.message : String(err));
-                }
-            }
+            await probeWeaponRules();
+            await probeConfigAndAmmo();
 
             return out;
         });

@@ -237,15 +237,21 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                 // create gets registered for end-of-probe deletion.
                 const cleanups: Array<() => Promise<void>> = [];
 
-                try {
-                    /* ============================================================
-                     * Flow 1: event-tracker-register-settings
-                     * EventTracker.registerSettings() registers the world
-                     * setting under the system namespace. Foundry throws if a
-                     * setting is registered twice, so the system's own init may
-                     * already have registered it — treat "already registered"
-                     * as success too. Assert the setting becomes gettable.
-                     * ============================================================ */
+                // Shared docs threaded across the item-drop / inventory flows.
+                // Populated by probeSharedActors() and the loot-pile flow.
+                let pc: XActor | null = null;
+                const getPc = (): XActor | null => (pc?.id != null ? gameGbl?.actors?.get?.(pc.id) ?? null : null);
+                let lootActor: LootActor | null = null;
+
+                /* ============================================================
+                 * Flow 1: event-tracker-register-settings
+                 * EventTracker.registerSettings() registers the world
+                 * setting under the system namespace. Foundry throws if a
+                 * setting is registered twice, so the system's own init may
+                 * already have registered it — treat "already registered"
+                 * as success too. Assert the setting becomes gettable.
+                 * ============================================================ */
+                async function probeRegisterSettings(): Promise<void> {
                     try {
                         const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
@@ -280,14 +286,16 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['event-tracker-register-settings'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 2: event-tracker-set-and-get-resolved
-                     * setResolved(id, true) persists into the world setting and
-                     * getResolved() reads it back; setResolved(id, false)
-                     * removes it. Exercises the world-setting round-trip and
-                     * the delete branch.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 2: event-tracker-set-and-get-resolved
+                 * setResolved(id, true) persists into the world setting and
+                 * getResolved() reads it back; setResolved(id, false)
+                 * removes it. Exercises the world-setting round-trip and
+                 * the delete branch.
+                 * ============================================================ */
+                async function probeSetGetResolved(): Promise<void> {
                     try {
                         const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
@@ -312,14 +320,16 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['event-tracker-set-and-get-resolved'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 3: event-tracker-is-available
-                     * Seed the static `_graph` with a small dependency chain,
-                     * resolve the prerequisites in the world setting, and
-                     * assert isAvailable() flips from false → true. Covers the
-                     * unknown-event, requires, and requires_any branches.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 3: event-tracker-is-available
+                 * Seed the static `_graph` with a small dependency chain,
+                 * resolve the prerequisites in the world setting, and
+                 * assert isAvailable() flips from false → true. Covers the
+                 * unknown-event, requires, and requires_any branches.
+                 * ============================================================ */
+                async function probeIsAvailable(): Promise<void> {
                     try {
                         const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
@@ -368,14 +378,16 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['event-tracker-is-available'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 4: event-tracker-blocking-reasons
-                     * With a graph whose `evt-gate` requires an unmet `evt-root`
-                     * and one-of [evt-side-a, evt-side-b], getBlockingReasons
-                     * returns a "Requires: <name> (<location>)" line and a
-                     * "Requires one of: ... OR ..." line.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 4: event-tracker-blocking-reasons
+                 * With a graph whose `evt-gate` requires an unmet `evt-root`
+                 * and one-of [evt-side-a, evt-side-b], getBlockingReasons
+                 * returns a "Requires: <name> (<location>)" line and a
+                 * "Requires one of: ... OR ..." line.
+                 * ============================================================ */
+                async function probeBlockingReasons(): Promise<void> {
                     try {
                         const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
@@ -414,15 +426,17 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['event-tracker-blocking-reasons'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 5: event-tracker-compute-character-states
-                     * Seed `_characters` with a disposition that triggers on a
-                     * resolved event plus a relationship whose influences[]
-                     * walk to a new state. Resolve the trigger events and
-                     * assert computeCharacterStates() reflects the triggered
-                     * disposition + walked relationship state.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 5: event-tracker-compute-character-states
+                 * Seed `_characters` with a disposition that triggers on a
+                 * resolved event plus a relationship whose influences[]
+                 * walk to a new state. Resolve the trigger events and
+                 * assert computeCharacterStates() reflects the triggered
+                 * disposition + walked relationship state.
+                 * ============================================================ */
+                async function probeComputeStates(): Promise<void> {
                     try {
                         const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
@@ -483,15 +497,17 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['event-tracker-compute-character-states'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 6: event-tracker-build-content-html
-                     * _buildContent() composes _buildEventsPane() +
-                     * _buildNPCStatePane() and embeds the Events/NPC tab markup
-                     * + _stateColor() badge colours. With a graph + characters
-                     * seeded, the HTML must contain the event name, the NPC
-                     * State tab, and a coloured badge.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 6: event-tracker-build-content-html
+                 * _buildContent() composes _buildEventsPane() +
+                 * _buildNPCStatePane() and embeds the Events/NPC tab markup
+                 * + _stateColor() badge colours. With a graph + characters
+                 * seeded, the HTML must contain the event name, the NPC
+                 * State tab, and a coloured badge.
+                 * ============================================================ */
+                async function probeBuildContentHtml(): Promise<void> {
                     try {
                         const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
@@ -549,15 +565,17 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['event-tracker-build-content-html'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 7: event-tracker-open-dialog
-                     * open() is GM-only and short-circuits if `_graph` is null.
-                     * With a seeded graph and the GM user joined, it constructs
-                     * + renders a Dialog. Success: a window with the tracker
-                     * title appears (or the dialog instance reports a rendered
-                     * element). Close it after to keep the spec unblocked.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 7: event-tracker-open-dialog
+                 * open() is GM-only and short-circuits if `_graph` is null.
+                 * With a seeded graph and the GM user joined, it constructs
+                 * + renders a Dialog. Success: a window with the tracker
+                 * title appears (or the dialog instance reports a rendered
+                 * element). Close it after to keep the spec unblocked.
+                 * ============================================================ */
+                async function probeOpenDialog(): Promise<void> {
                     try {
                         const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                         const ET = mod.EventTracker ?? mod.default;
@@ -600,9 +618,10 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['event-tracker-open-dialog'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    // ---- shared actors for the item-drop / inventory flows ----
-                    let pc: XActor | null = null;
+                // ---- shared actors for the item-drop / inventory flows ----
+                async function probeSharedActors(): Promise<void> {
                     try {
                         pc = ActorGbl?.create
                             ? await withTimeout(
@@ -635,14 +654,15 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 250);
                     });
-                    const getPc = (): XActor | null => (pc?.id != null ? gameGbl?.actors?.get?.(pc.id) ?? null : null);
+                }
 
-                    /* ============================================================
-                     * Flow 8: item-drop-non-droppable-returns-null
-                     * dropItemFromActor with an ownership-fact item (talent)
-                     * must short-circuit via isDroppable() and return null
-                     * without creating a loot pile.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 8: item-drop-non-droppable-returns-null
+                 * dropItemFromActor with an ownership-fact item (talent)
+                 * must short-circuit via isDroppable() and return null
+                 * without creating a loot pile.
+                 * ============================================================ */
+                async function probeDropNonDroppable(): Promise<void> {
                     try {
                         const live = getPc();
                         if (live == null) {
@@ -682,14 +702,16 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['item-drop-non-droppable-returns-null'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 9: item-drop-no-token-returns-null
-                     * dropItemFromActor with a droppable item but no active
-                     * token for the actor must return null via the
-                     * "no token on scene" branch (the actor has no placed token
-                     * since we never created a scene token for it).
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 9: item-drop-no-token-returns-null
+                 * dropItemFromActor with a droppable item but no active
+                 * token for the actor must return null via the
+                 * "no token on scene" branch (the actor has no placed token
+                 * since we never created a scene token for it).
+                 * ============================================================ */
+                async function probeDropNoToken(): Promise<void> {
                     try {
                         const live = getPc();
                         if (live == null) {
@@ -730,16 +752,17 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['item-drop-no-token-returns-null'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 10: item-drop-creates-loot-pile
-                     * Create a transient Scene, place a token for the PC, view
-                     * the scene so `canvas.scene` resolves, then drop a gear
-                     * item. dropItemFromActor must create a `loot` Actor +
-                     * token, transfer the item, and remove it from the PC.
-                     * The created loot actor is reused by Flow 11 (pickup).
-                     * ============================================================ */
-                    let lootActor: LootActor | null = null;
+                /* ============================================================
+                 * Flow 10: item-drop-creates-loot-pile
+                 * Create a transient Scene, place a token for the PC, view
+                 * the scene so `canvas.scene` resolves, then drop a gear
+                 * item. dropItemFromActor must create a `loot` Actor +
+                 * token, transfer the item, and remove it from the PC.
+                 * The created loot actor is reused by Flow 11 (pickup).
+                 * ============================================================ */
+                async function probeCreatesLootPile(): Promise<void> {
                     let dropScene: SceneLike | null = null;
                     try {
                         const live = getPc();
@@ -827,15 +850,17 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['item-drop-creates-loot-pile'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 11: item-drop-pickup-loot
-                     * pickupLoot moves the pile's items onto a receiver
-                     * (stack-merging), then deletes the now-empty pile. If the
-                     * drop flow produced a loot actor we reuse it; otherwise we
-                     * synthesise a loot actor with an item so the manager path
-                     * still runs end-to-end.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 11: item-drop-pickup-loot
+                 * pickupLoot moves the pile's items onto a receiver
+                 * (stack-merging), then deletes the now-empty pile. If the
+                 * drop flow produced a loot actor we reuse it; otherwise we
+                 * synthesise a loot actor with an item so the manager path
+                 * still runs end-to-end.
+                 * ============================================================ */
+                async function probePickupLoot(): Promise<void> {
                     try {
                         const live = getPc();
                         if (live == null) {
@@ -889,17 +914,19 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['item-drop-pickup-loot'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 12: inventory-generator-collect-candidates
-                     * collectCandidates(gameSystem) scans the system Item
-                     * compendium packs scoped to the system pack prefix and
-                     * projects droppable entries to InventoryCandidate shapes.
-                     * Assert it returns an array of well-formed candidates
-                     * (uuid/name/type/profiles) and excludes non-droppable
-                     * types. Per-system: also call with 'im' so the
-                     * homologated scoping path is exercised, not just dh2e.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 12: inventory-generator-collect-candidates
+                 * collectCandidates(gameSystem) scans the system Item
+                 * compendium packs scoped to the system pack prefix and
+                 * projects droppable entries to InventoryCandidate shapes.
+                 * Assert it returns an array of well-formed candidates
+                 * (uuid/name/type/profiles) and excludes non-droppable
+                 * types. Per-system: also call with 'im' so the
+                 * homologated scoping path is exercised, not just dh2e.
+                 * ============================================================ */
+                async function probeCollectCandidates(): Promise<void> {
                     try {
                         const mod = (await import(inventoryGeneratorUrl)) as {
                             InventoryGeneratorManager?: InventoryGeneratorManagerLike;
@@ -941,18 +968,20 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['inventory-generator-collect-candidates'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 13: inventory-generator-apply-to-actor
-                     * applyToActor(actor, [uuid]) resolves the compendium docs,
-                     * runs ItemDropManager.planStackMerge against the actor's
-                     * inventory, and creates / stack-bumps the items. We pick
-                     * the first dh2e candidate and apply it twice — the first
-                     * call creates, the second stack-merges (when the item is
-                     * stackable) or creates a second copy. Assert the actor
-                     * gained the item and applyToActor returned a positive
-                     * count.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 13: inventory-generator-apply-to-actor
+                 * applyToActor(actor, [uuid]) resolves the compendium docs,
+                 * runs ItemDropManager.planStackMerge against the actor's
+                 * inventory, and creates / stack-bumps the items. We pick
+                 * the first dh2e candidate and apply it twice — the first
+                 * call creates, the second stack-merges (when the item is
+                 * stackable) or creates a second copy. Assert the actor
+                 * gained the item and applyToActor returned a positive
+                 * count.
+                 * ============================================================ */
+                async function probeApplyToActor(): Promise<void> {
                     try {
                         const live = getPc();
                         const igMod = (await import(inventoryGeneratorUrl)) as {
@@ -1002,16 +1031,18 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['inventory-generator-apply-to-actor'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 14: inventory-generator-permission-denied
-                     * applyToActor must warn and return null when the target
-                     * actor is not owned by the current user. We synthesise a
-                     * plain stub with `isOwner=false` (applyToActor reads only
-                     * `isOwner` before bailing); the manager's permission gate
-                     * is content-agnostic plumbing, so a stub is sufficient and
-                     * needs no real document.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 14: inventory-generator-permission-denied
+                 * applyToActor must warn and return null when the target
+                 * actor is not owned by the current user. We synthesise a
+                 * plain stub with `isOwner=false` (applyToActor reads only
+                 * `isOwner` before bailing); the manager's permission gate
+                 * is content-agnostic plumbing, so a stub is sufficient and
+                 * needs no real document.
+                 * ============================================================ */
+                async function probePermissionDenied(): Promise<void> {
                     try {
                         const mod = (await import(inventoryGeneratorUrl)) as {
                             InventoryGeneratorManager?: InventoryGeneratorManagerLike;
@@ -1037,6 +1068,24 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['inventory-generator-permission-denied'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
+                }
+
+                try {
+                    await probeRegisterSettings();
+                    await probeSetGetResolved();
+                    await probeIsAvailable();
+                    await probeBlockingReasons();
+                    await probeComputeStates();
+                    await probeBuildContentHtml();
+                    await probeOpenDialog();
+                    await probeSharedActors();
+                    await probeDropNonDroppable();
+                    await probeDropNoToken();
+                    await probeCreatesLootPile();
+                    await probePickupLoot();
+                    await probeCollectCandidates();
+                    await probeApplyToActor();
+                    await probePermissionDenied();
                 } finally {
                     // Best-effort cleanup of everything we created.
                     for (const fn of cleanups) {

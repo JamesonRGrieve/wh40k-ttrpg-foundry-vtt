@@ -229,124 +229,160 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 notes['addCombatants'] = `createEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
+            // The combat is live and `combat.id` is non-null past this point.
+            // Each subsequent flow step is an independent probe; extracted into
+            // a named inner async helper so the callback's cyclomatic complexity
+            // stays low. Helpers close over `combat`, `fired`, `notes`,
+            // `combatantIds`, and `withTimeout` from this callback scope.
+            const liveCombat = combat;
+
             // ---- roll initiative for all ----
-            try {
-                if (typeof combat.rollAll === 'function') {
-                    await withTimeout(combat.rollAll(), 5_000, 'combat.rollAll');
-                    fired['rollAll'] = true;
-                } else {
-                    notes['rollAll'] = 'combat.rollAll is not a function';
+            const probeRollAll = async (): Promise<void> => {
+                try {
+                    if (typeof liveCombat.rollAll === 'function') {
+                        await withTimeout(liveCombat.rollAll(), 5_000, 'combat.rollAll');
+                        fired['rollAll'] = true;
+                    } else {
+                        notes['rollAll'] = 'combat.rollAll is not a function';
+                    }
+                } catch (err) {
+                    notes['rollAll'] = `rollAll threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
-            } catch (err) {
-                notes['rollAll'] = `rollAll threw: ${String(err instanceof Error ? err.message : err)}`;
-            }
+            };
 
             // ---- activate combat (scene-less combat is activatable in V14) ----
-            try {
-                if (typeof combat.activate === 'function') {
-                    await withTimeout(combat.activate(), 5_000, 'combat.activate');
-                    fired['activate'] = true;
-                } else {
-                    notes['activate'] = 'combat.activate is not a function';
+            const probeActivate = async (): Promise<void> => {
+                try {
+                    if (typeof liveCombat.activate === 'function') {
+                        await withTimeout(liveCombat.activate(), 5_000, 'combat.activate');
+                        fired['activate'] = true;
+                    } else {
+                        notes['activate'] = 'combat.activate is not a function';
+                    }
+                } catch (err) {
+                    notes['activate'] = `activate threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
-            } catch (err) {
-                notes['activate'] = `activate threw: ${String(err instanceof Error ? err.message : err)}`;
-            }
+            };
 
             // ---- startCombat ----
-            try {
-                if (typeof combat.startCombat === 'function') {
-                    await withTimeout(combat.startCombat(), 5_000, 'combat.startCombat');
-                    fired['startCombat'] = true;
-                } else {
-                    notes['startCombat'] = 'combat.startCombat is not a function';
+            const probeStartCombat = async (): Promise<void> => {
+                try {
+                    if (typeof liveCombat.startCombat === 'function') {
+                        await withTimeout(liveCombat.startCombat(), 5_000, 'combat.startCombat');
+                        fired['startCombat'] = true;
+                    } else {
+                        notes['startCombat'] = 'combat.startCombat is not a function';
+                    }
+                } catch (err) {
+                    notes['startCombat'] = `startCombat threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
-            } catch (err) {
-                notes['startCombat'] = `startCombat threw: ${String(err instanceof Error ? err.message : err)}`;
-            }
+            };
 
             // ---- nextTurn x3 ----
-            try {
-                let turnOk = true;
-                for (let i = 0; i < 3; i++) {
-                    if (typeof combat.nextTurn === 'function') {
-                        await withTimeout(combat.nextTurn(), 5_000, 'combat.nextTurn');
-                    } else {
-                        turnOk = false;
-                        notes['nextTurn'] = 'combat.nextTurn is not a function';
-                        break;
+            const probeNextTurn = async (): Promise<void> => {
+                try {
+                    let turnOk = true;
+                    for (let i = 0; i < 3; i++) {
+                        if (typeof liveCombat.nextTurn === 'function') {
+                            await withTimeout(liveCombat.nextTurn(), 5_000, 'combat.nextTurn');
+                        } else {
+                            turnOk = false;
+                            notes['nextTurn'] = 'combat.nextTurn is not a function';
+                            break;
+                        }
                     }
+                    if (turnOk) fired['nextTurn'] = true;
+                } catch (err) {
+                    notes['nextTurn'] = `nextTurn threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
-                if (turnOk) fired['nextTurn'] = true;
-            } catch (err) {
-                notes['nextTurn'] = `nextTurn threw: ${String(err instanceof Error ? err.message : err)}`;
-            }
+            };
 
             // ---- nextRound x2 ----
-            try {
-                let roundOk = true;
-                for (let i = 0; i < 2; i++) {
-                    if (typeof combat.nextRound === 'function') {
-                        await withTimeout(combat.nextRound(), 5_000, 'combat.nextRound');
-                    } else {
-                        roundOk = false;
-                        notes['nextRound'] = 'combat.nextRound is not a function';
-                        break;
+            const probeNextRound = async (): Promise<void> => {
+                try {
+                    let roundOk = true;
+                    for (let i = 0; i < 2; i++) {
+                        if (typeof liveCombat.nextRound === 'function') {
+                            await withTimeout(liveCombat.nextRound(), 5_000, 'combat.nextRound');
+                        } else {
+                            roundOk = false;
+                            notes['nextRound'] = 'combat.nextRound is not a function';
+                            break;
+                        }
                     }
+                    if (roundOk) fired['nextRound'] = true;
+                } catch (err) {
+                    notes['nextRound'] = `nextRound threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
-                if (roundOk) fired['nextRound'] = true;
-            } catch (err) {
-                notes['nextRound'] = `nextRound threw: ${String(err instanceof Error ? err.message : err)}`;
-            }
+            };
 
             // ---- setInitiative on a combatant ----
-            try {
-                if (combatantIds.length > 0 && typeof combat.setInitiative === 'function') {
-                    await withTimeout(combat.setInitiative(combatantIds[0], 99), 5_000, 'combat.setInitiative');
-                    fired['setInitiative'] = true;
-                } else {
-                    notes['setInitiative'] = combatantIds.length === 0 ? 'no combatants available' : 'combat.setInitiative is not a function';
+            const probeSetInitiative = async (): Promise<void> => {
+                try {
+                    if (combatantIds.length > 0 && typeof liveCombat.setInitiative === 'function') {
+                        await withTimeout(liveCombat.setInitiative(combatantIds[0], 99), 5_000, 'combat.setInitiative');
+                        fired['setInitiative'] = true;
+                    } else {
+                        notes['setInitiative'] = combatantIds.length === 0 ? 'no combatants available' : 'combat.setInitiative is not a function';
+                    }
+                } catch (err) {
+                    notes['setInitiative'] = `setInitiative threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
-            } catch (err) {
-                notes['setInitiative'] = `setInitiative threw: ${String(err instanceof Error ? err.message : err)}`;
-            }
+            };
 
             // ---- delete a combatant ----
-            try {
-                if (combatantIds.length > 1) {
-                    const removed = await withTimeout(combat.deleteEmbeddedDocuments?.('Combatant', [combatantIds[1]]), 5_000, 'deleteEmbeddedDocuments');
-                    if (removed.length > 0) {
-                        fired['deleteCombatant'] = true;
+            const probeDeleteCombatant = async (): Promise<void> => {
+                try {
+                    if (combatantIds.length > 1) {
+                        const removed = await withTimeout(
+                            liveCombat.deleteEmbeddedDocuments?.('Combatant', [combatantIds[1]]),
+                            5_000,
+                            'deleteEmbeddedDocuments',
+                        );
+                        if (removed.length > 0) {
+                            fired['deleteCombatant'] = true;
+                        } else {
+                            notes['deleteCombatant'] = 'deleteEmbeddedDocuments removed nothing';
+                        }
                     } else {
-                        notes['deleteCombatant'] = 'deleteEmbeddedDocuments removed nothing';
+                        notes['deleteCombatant'] = 'insufficient combatants to delete one safely';
                     }
-                } else {
-                    notes['deleteCombatant'] = 'insufficient combatants to delete one safely';
+                } catch (err) {
+                    notes['deleteCombatant'] = `deleteEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
-            } catch (err) {
-                notes['deleteCombatant'] = `deleteEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`;
-            }
+            };
 
             // ---- endCombat (falls back to combat.delete) ----
-            try {
-                if (typeof combat.endCombat === 'function') {
-                    await withTimeout(combat.endCombat(), 5_000, 'combat.endCombat');
-                    fired['endCombat'] = true;
-                } else if (typeof combat.delete === 'function') {
-                    await withTimeout(combat.delete(), 5_000, 'combat.delete');
-                    fired['endCombat'] = true;
-                } else {
-                    notes['endCombat'] = 'neither endCombat nor delete available';
-                }
-            } catch {
-                // endCombat may prompt; fall back to delete.
+            const probeEndCombat = async (): Promise<void> => {
                 try {
-                    await withTimeout(combat.delete?.(), 5_000, 'combat.delete fallback');
-                    fired['endCombat'] = true;
-                } catch (err2) {
-                    notes['endCombat'] = `endCombat/delete threw: ${String(err2 instanceof Error ? err2.message : err2)}`;
+                    if (typeof liveCombat.endCombat === 'function') {
+                        await withTimeout(liveCombat.endCombat(), 5_000, 'combat.endCombat');
+                        fired['endCombat'] = true;
+                    } else if (typeof liveCombat.delete === 'function') {
+                        await withTimeout(liveCombat.delete(), 5_000, 'combat.delete');
+                        fired['endCombat'] = true;
+                    } else {
+                        notes['endCombat'] = 'neither endCombat nor delete available';
+                    }
+                } catch {
+                    // endCombat may prompt; fall back to delete.
+                    try {
+                        await withTimeout(liveCombat.delete?.(), 5_000, 'combat.delete fallback');
+                        fired['endCombat'] = true;
+                    } catch (err2) {
+                        notes['endCombat'] = `endCombat/delete threw: ${String(err2 instanceof Error ? err2.message : err2)}`;
+                    }
                 }
-            }
+            };
+
+            await probeRollAll();
+            await probeActivate();
+            await probeStartCombat();
+            await probeNextTurn();
+            await probeNextRound();
+            await probeSetInitiative();
+            await probeDeleteCombatant();
+            await probeEndCombat();
 
             // ---- cleanup actors ----
             for (const id of npcIds) {
@@ -484,87 +520,105 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
             }
             const npc = npcId !== null ? g.game?.actors?.get?.(npcId) : null;
 
-            for (const name of classNames) {
+            // Independent sub-flows extracted into named inner helpers to keep
+            // the per-class loop's cyclomatic complexity low. They close over
+            // `g`, `notes`, and `npc` from this callback scope.
+
+            // CombatPresetDialog reads `game.settings.get('wh40k-rpg',
+            // 'combatPresets')` but the registered key is 'combat-presets' (the
+            // static SETTING_KEY hardcodes the camelCase form — a real bug, but
+            // out of scope for this spec). Register the camelCase alias as a
+            // transient world setting so the dialog can render. Spec-only
+            // workaround; remove once the source aligns.
+            const ensureCombatPresetSetting = (): void => {
+                try {
+                    const settings = g.game?.settings;
+                    const registered = settings?.settings?.get?.('wh40k-rpg.combatPresets');
+                    if (registered == null && typeof settings?.register === 'function') {
+                        settings.register('wh40k-rpg', 'combatPresets', {
+                            scope: 'world',
+                            config: false,
+                            default: [],
+                            type: Array,
+                        });
+                    }
+                } catch {
+                    /* best-effort registration */
+                }
+            };
+
+            // Construct the AppInstance for one probed class. Returns null (and
+            // records a note) when the class can't be instantiated in this
+            // environment; the caller skips render for a null instance.
+            const constructInstance = (name: string, Cls: AppClass): AppInstance | null => {
+                if (name === 'CombatQuickPanel') {
+                    // CombatQuickPanel extends ApplicationV2 directly without
+                    // the HandlebarsApplicationMixin, so its render() throws
+                    // "not renderable". Re-wrap with the mixin at runtime so we
+                    // can exercise its constructor + _prepareContext under
+                    // coverage. Real fix is to apply the mixin in source; this
+                    // is a spec-only workaround.
+                    const mixin = g.foundry?.applications?.api?.HandlebarsApplicationMixin;
+                    const Wrapped = typeof mixin === 'function' ? mixin(Cls) : Cls;
+                    return new Wrapped();
+                }
+                if (name === 'EncounterBuilder') {
+                    // Singleton pattern — prefer .instance/.show, fall through to ctor.
+                    return typeof Cls.instance !== 'undefined' ? Cls.instance : new Cls();
+                }
+                if (name === 'CombatPresetDialog') {
+                    ensureCombatPresetSetting();
+                    return new Cls(null, 'library');
+                }
+                if (name === 'DifficultyCalculatorDialog' || name === 'NPCThreatScalerDialog') {
+                    if (npc == null) {
+                        notes[name] = 'NPC not available for dialog ctor';
+                        return null;
+                    }
+                    return new Cls(npc);
+                }
+                notes[name] = 'unknown class in probe table';
+                return null;
+            };
+
+            // Render one constructed instance, flush microtasks, mark rendered,
+            // then close it. Records a note when the instance is not renderable.
+            const renderInstance = async (name: string, instance: AppInstance): Promise<void> => {
+                if (typeof instance.render !== 'function') {
+                    notes[name] = 'instance has no render method';
+                    return;
+                }
+                await instance.render(true);
+                // Allow render microtasks to flush.
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+                rendered[name] = true;
+                try {
+                    await instance.close?.();
+                } catch {
+                    /* ignore */
+                }
+            };
+
+            // Run the full resolve → construct → render probe for one class.
+            const probeUiClass = async (name: string): Promise<void> => {
                 const Cls = await loadClass(name);
                 if (typeof Cls !== 'function') {
                     if (!(name in notes)) notes[name] = 'class not resolvable';
-                    continue;
+                    return;
                 }
                 try {
-                    // CombatPresetDialog reads `game.settings.get('wh40k-rpg',
-                    // 'combatPresets')` but the registered key is
-                    // 'combat-presets' (the static SETTING_KEY hardcodes the
-                    // camelCase form — a real bug, but out of scope for this
-                    // spec). Register the camelCase alias as a transient
-                    // world setting so the dialog can render. This is a
-                    // spec-only workaround; remove once the source aligns.
-                    if (name === 'CombatPresetDialog') {
-                        try {
-                            const settings = g.game?.settings;
-                            const registered = settings?.settings?.get?.('wh40k-rpg.combatPresets');
-                            if (registered == null && typeof settings?.register === 'function') {
-                                settings.register('wh40k-rpg', 'combatPresets', {
-                                    scope: 'world',
-                                    config: false,
-                                    default: [],
-                                    type: Array,
-                                });
-                            }
-                        } catch {
-                            /* best-effort registration */
-                        }
-                    }
-                    let instance: AppInstance;
-                    if (name === 'CombatQuickPanel') {
-                        // CombatQuickPanel extends ApplicationV2 directly without
-                        // the HandlebarsApplicationMixin, so its render() throws
-                        // "not renderable". Re-wrap with the mixin at runtime so we
-                        // can exercise its constructor + _prepareContext under
-                        // coverage. Real fix is to apply the mixin in source; this
-                        // is a spec-only workaround.
-                        const mixin = g.foundry?.applications?.api?.HandlebarsApplicationMixin;
-                        const Wrapped = typeof mixin === 'function' ? mixin(Cls) : Cls;
-                        instance = new Wrapped();
-                    } else if (name === 'EncounterBuilder') {
-                        // Singleton pattern — prefer .instance/.show, fall through to ctor.
-                        instance = typeof Cls.instance !== 'undefined' ? Cls.instance : new Cls();
-                    } else if (name === 'CombatPresetDialog') {
-                        instance = new Cls(null, 'library');
-                    } else if (name === 'DifficultyCalculatorDialog') {
-                        if (npc == null) {
-                            notes[name] = 'NPC not available for dialog ctor';
-                            continue;
-                        }
-                        instance = new Cls(npc);
-                    } else if (name === 'NPCThreatScalerDialog') {
-                        if (npc == null) {
-                            notes[name] = 'NPC not available for dialog ctor';
-                            continue;
-                        }
-                        instance = new Cls(npc);
-                    } else {
-                        notes[name] = 'unknown class in probe table';
-                        continue;
-                    }
-
-                    if (typeof instance.render === 'function') {
-                        await instance.render(true);
-                        // Allow render microtasks to flush.
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 50);
-                        });
-                        rendered[name] = true;
-                        try {
-                            await instance.close?.();
-                        } catch {
-                            /* ignore */
-                        }
-                    } else {
-                        notes[name] = 'instance has no render method';
-                    }
+                    const instance = constructInstance(name, Cls);
+                    if (instance === null) return;
+                    await renderInstance(name, instance);
                 } catch (err) {
                     notes[name] = `construction/render threw: ${String(err instanceof Error ? err.message : err)}`;
                 }
+            };
+
+            for (const name of classNames) {
+                await probeUiClass(name);
             }
 
             if (npcId !== null) {

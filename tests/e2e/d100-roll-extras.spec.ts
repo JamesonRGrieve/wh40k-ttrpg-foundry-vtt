@@ -81,6 +81,48 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
                 return out;
             }
 
+            // ---- _prepareTemplateData (base config) ----
+            async function probeTemplateDataBase(rollInstance: RollInstance): Promise<void> {
+                if (typeof D100Roll !== 'function') return;
+                try {
+                    const data = await D100Roll._prepareTemplateData(rollInstance, { target: 50, flavor: 'spec-base' });
+                    const okShape = data !== null && typeof data === 'object' && data.rollData !== undefined;
+                    record('prepareTemplateData-base', okShape, `keys=${Object.keys(data ?? {}).join(',')}`);
+                } catch (err) {
+                    record('prepareTemplateData-base', false, err instanceof Error ? err.message : String(err));
+                }
+            }
+
+            // ---- _prepareTemplateData with modifiers (drives the activeModifiers branch) ----
+            async function probeTemplateDataWithModifiers(rollInstance: RollInstance): Promise<void> {
+                if (typeof D100Roll !== 'function') return;
+                try {
+                    const data = await D100Roll._prepareTemplateData(rollInstance, {
+                        target: 60,
+                        flavor: 'spec-mods',
+                        modifiers: { aiming: 10, range: -10, cover: 0 },
+                    });
+                    const am = data?.rollData?.activeModifiers ?? {};
+                    // cover should be filtered out (value === 0).
+                    const ok = 'AIMING' in am && 'RANGE' in am && !('COVER' in am);
+                    record('prepareTemplateData-with-modifiers', ok, `activeModifiers=${JSON.stringify(am)}`);
+                } catch (err) {
+                    record('prepareTemplateData-with-modifiers', false, err instanceof Error ? err.message : String(err));
+                }
+            }
+
+            // ---- _prepareChatData ----
+            async function probeChatDataBase(rollInstance: RollInstance): Promise<void> {
+                if (typeof D100Roll !== 'function') return;
+                try {
+                    const chat = await D100Roll._prepareChatData(rollInstance, { target: 50, flavor: 'spec-chat' });
+                    const ok = chat !== null && typeof chat === 'object';
+                    record('prepareChatData-base', ok, `keys=${Object.keys(chat ?? {}).join(',')}`);
+                } catch (err) {
+                    record('prepareChatData-base', false, err instanceof Error ? err.message : String(err));
+                }
+            }
+
             // Build & evaluate a roll so the prepare-* helpers have a real
             // Roll to read from. D100Roll inherits Roll's evaluate() so the
             // standard `await roll.evaluate()` lifecycle applies.
@@ -103,38 +145,9 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
                 return out;
             }
 
-            // ---- _prepareTemplateData (base config) ----
-            try {
-                const data = await D100Roll._prepareTemplateData(roll, { target: 50, flavor: 'spec-base' });
-                const okShape = data !== null && typeof data === 'object' && data.rollData !== undefined;
-                record('prepareTemplateData-base', okShape, `keys=${Object.keys(data ?? {}).join(',')}`);
-            } catch (err) {
-                record('prepareTemplateData-base', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- _prepareTemplateData with modifiers (drives the activeModifiers branch) ----
-            try {
-                const data = await D100Roll._prepareTemplateData(roll, {
-                    target: 60,
-                    flavor: 'spec-mods',
-                    modifiers: { aiming: 10, range: -10, cover: 0 },
-                });
-                const am = data?.rollData?.activeModifiers ?? {};
-                // cover should be filtered out (value === 0).
-                const ok = 'AIMING' in am && 'RANGE' in am && !('COVER' in am);
-                record('prepareTemplateData-with-modifiers', ok, `activeModifiers=${JSON.stringify(am)}`);
-            } catch (err) {
-                record('prepareTemplateData-with-modifiers', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- _prepareChatData ----
-            try {
-                const chat = await D100Roll._prepareChatData(roll, { target: 50, flavor: 'spec-chat' });
-                const ok = chat !== null && typeof chat === 'object';
-                record('prepareChatData-base', ok, `keys=${Object.keys(chat ?? {}).join(',')}`);
-            } catch (err) {
-                record('prepareChatData-base', false, err instanceof Error ? err.message : String(err));
-            }
+            await probeTemplateDataBase(roll);
+            await probeTemplateDataWithModifiers(roll);
+            await probeChatDataBase(roll);
 
             return out;
         });
