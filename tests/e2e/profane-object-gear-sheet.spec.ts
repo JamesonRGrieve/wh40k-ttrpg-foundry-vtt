@@ -25,8 +25,29 @@ interface ProfaneProbeResult {
 
 async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> {
     return page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+        interface GearCreateData {
+            name: string;
+            type: string;
+            system: Record<string, string>;
+        }
+        interface ItemSheet {
+            // Render result is never read — we only await for completion.
+            render?: (force?: boolean) => Promise<void>;
+            element?: { querySelector?: (sel: string) => Element | null } | null;
+        }
+        interface ItemDoc {
+            id?: string;
+            sheet?: ItemSheet | null;
+        }
+        interface ItemClassShape {
+            create: (data: GearCreateData) => Promise<ItemDoc | null>;
+        }
+        interface FoundryGlobal {
+            Item?: ItemClassShape;
+            __profaneObjectProbeId?: string;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Item) have no shipped types in this browser-side probe
+        const g = globalThis as unknown as FoundryGlobal;
         const ItemCls = g.Item;
         if (ItemCls?.create == null) {
             return {
@@ -38,7 +59,7 @@ async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> 
                 createError: 'Item.create unavailable',
             };
         }
-        let item;
+        let item: ItemDoc | null;
         try {
             item = await ItemCls.create({
                 name: 'profane-object-probe-eye',
@@ -106,14 +127,24 @@ async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> 
             hookPresent: hook !== null,
             createError: null,
         };
-        /* eslint-enable @typescript-eslint/no-explicit-any */
     });
 }
 
 async function cleanupProfaneObjectProbe(page: Page): Promise<void> {
     await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-        const g = globalThis as any;
+        interface CleanupItemDoc {
+            sheet?: { close?: () => Promise<void> } | null;
+            delete?: () => Promise<void>;
+        }
+        interface ItemCollection {
+            get?: (id: string) => CleanupItemDoc | null | undefined;
+        }
+        interface FoundryGlobal {
+            game?: { items?: ItemCollection };
+            __profaneObjectProbeId?: string;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game) have no shipped types in this browser-side cleanup
+        const g = globalThis as unknown as FoundryGlobal;
         const id = g.__profaneObjectProbeId;
         if (id == null) return;
         const item = g.game?.items?.get?.(id);
@@ -128,7 +159,6 @@ async function cleanupProfaneObjectProbe(page: Page): Promise<void> {
             /* ignore */
         }
         delete g.__profaneObjectProbeId;
-        /* eslint-enable @typescript-eslint/no-explicit-any */
     });
 }
 

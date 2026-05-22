@@ -17,12 +17,29 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
     const result = await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+        interface ActorSheet {
+            render: (force: boolean) => Promise<void> | void;
+            changeTab?: (tab: string, group: string) => void;
+            element?: { querySelector?: (sel: string) => HTMLElement | null };
+        }
+        interface ProbeActor {
+            system?: { fatigue?: { value?: number } };
+            sheet: ActorSheet;
+            effects?: Iterable<{ flags?: { wh40k?: { source?: string } } }>;
+        }
+        interface ActorClass {
+            create?: (data: object) => Promise<ProbeActor | null>;
+        }
+        interface FoundryGlobals {
+            Actor?: ActorClass;
+        }
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (Actor namespace, no shipped browser-side types)
+        const g = globalThis as unknown as FoundryGlobals;
         const ActorCls = g.Actor;
         if (ActorCls?.create == null) return { setupOk: false, error: 'Actor.create unavailable' };
 
-        let actor;
+        let actor: ProbeActor | null;
         try {
             actor = await ActorCls.create({
                 name: 'mortification-probe',
@@ -37,7 +54,7 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
                 ],
             });
         } catch (err) {
-            return { setupOk: false, error: String((err as Error).message) };
+            return { setupOk: false, error: err instanceof Error ? err.message : String(err) };
         }
         if (actor == null) return { setupOk: false, error: 'Actor.create returned null' };
 
@@ -50,7 +67,7 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
 
         // Navigate to the Status tab if the sheet's tab API is reachable.
         try {
-            actor.sheet?.changeTab?.('status', 'primary');
+            actor.sheet.changeTab?.('status', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });
@@ -58,7 +75,7 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
             /* sheets without changeTab fall back to whatever tab is open */
         }
 
-        const btn = actor.sheet?.element?.querySelector?.('[data-action="applyMortification"]') as HTMLElement | null;
+        const btn = actor.sheet.element?.querySelector?.('[data-action="applyMortification"]') ?? null;
         const buttonFound = btn !== null;
         if (btn) {
             btn.click();
@@ -92,8 +109,11 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
 
     // Cleanup
     await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const g = globalThis as any;
+        interface FoundryGameGlobals {
+            game?: { actors?: { getName?: (name: string) => { delete?: () => Promise<void> } | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace, no shipped browser-side types)
+        const g = globalThis as unknown as FoundryGameGlobals;
         const a = g.game?.actors?.getName?.('mortification-probe');
         try {
             await a?.delete?.();

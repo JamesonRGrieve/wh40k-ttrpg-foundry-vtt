@@ -38,6 +38,84 @@ interface BannerProbeResult {
     error: string | null;
 }
 
+/**
+ * Minimal shape of a committed origin-path selection as the builder's
+ * `selections` Map holds it (matches `mkPicked` below). Only the fields the
+ * builder reads while computing the preview matter; the rest are stub values.
+ */
+interface PickedSelection {
+    id: string;
+    uuid: string | null;
+    name: string;
+    img: string;
+    step: string;
+    stepIndex: number;
+    identifier: string;
+    positions: number[];
+    primaryPosition: number;
+    description: string;
+    shortDescription: string;
+    requirements: { text: string; previousSteps: string[]; excludedSteps: string[] };
+    grants: {
+        skills: string[];
+        talents: string[];
+        traits: string[];
+        equipment: string[];
+        aptitudes: string[];
+        specialAbilities: string[];
+        choices: string[];
+        woundsFormula: string | null;
+        fateFormula: string | null;
+    };
+    modifiers: { characteristics: Record<string, number> };
+    isAdvanced: boolean;
+    xpCost: number;
+    hasChoices: boolean;
+    gameSystem: string;
+    system: { grants: { aptitudes: string[] }; selectedChoices: Record<string, never>; modifiers: { characteristics: Record<string, number> } };
+    _sourceUuid: string | null;
+    _actorItemId: string | null;
+}
+
+/**
+ * The OriginPathBuilder instance surface this probe drives. The builder is a
+ * Foundry ApplicationV2 subclass; only the members exercised here are typed.
+ */
+interface OriginPathBuilderInstance {
+    selections: Map<string, PickedSelection>;
+    aptitudeOverrides: Map<string, string>;
+    render: (options: { force: boolean }) => Promise<void>;
+    element: HTMLElement | null;
+    close?: () => Promise<void>;
+}
+
+type OriginPathBuilderCtor = new (actor: ProbeActor) => OriginPathBuilderInstance;
+
+/**
+ * Subset of the Foundry `Actor` surface used here. Members are optional
+ * because the probe defends against a mid-init world at runtime.
+ */
+interface ProbeActor {
+    id?: string;
+    delete?: () => Promise<void>;
+}
+
+interface ProbeActorClass {
+    create?: (data: object) => Promise<ProbeActor | null>;
+}
+
+/**
+ * Foundry hangs `Actor` off the page globalThis; the probe also stashes the
+ * open builder + actor on it so the out-of-evaluate `snap()` can capture live
+ * DOM and the teardown evaluate can close them. These are framework / probe
+ * runtime globals, so the cast to this shape is a named-boundary cast.
+ */
+interface Issue216Globals {
+    Actor?: ProbeActorClass;
+    __c216builder?: OriginPathBuilderInstance | undefined;
+    __c216actor?: ProbeActor | null | undefined;
+}
+
 test.describe.serial('Issue #216 — resolved duplicate aptitude no longer renders as requirement (Tier B)', () => {
     test('warning banner is absent post-select; resolved-banner is present and snaps', async ({ page }) => {
         const joined = await joinAsGM(page);
@@ -52,8 +130,8 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
         try {
             const result = await page.evaluate(
                 async ({ moduleUrl }): Promise<BannerProbeResult> => {
-                    /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals + builder private state are runtime-only */
-                    const g = globalThis as any;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `Actor` and the probe stashes builder/actor handles onto the page globalThis
+                    const g = globalThis as unknown as Issue216Globals;
                     const ActorCls = g.Actor;
                     let created = false;
                     let rendered = false;
@@ -75,14 +153,14 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                         };
                     }
 
-                    let actor: any;
+                    let actor: ProbeActor | null = null;
                     try {
                         actor = await ActorCls.create({
                             name: 'issue-216-probe',
                             type: 'dh2-character',
                             system: { gameSystem: 'dh2e' },
                         });
-                        created = actor !== null && actor !== undefined;
+                        created = actor !== null;
                     } catch (err) {
                         return {
                             created,
@@ -94,7 +172,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                             error: `Actor.create: ${err instanceof Error ? err.message : String(err)}`,
                         };
                     }
-                    if (!created) {
+                    if (actor === null) {
                         return {
                             created,
                             rendered,
@@ -106,9 +184,10 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                         };
                     }
 
-                    let mod: any;
+                    let mod: { default?: OriginPathBuilderCtor };
                     try {
-                        mod = await import(moduleUrl);
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
+                        mod = (await import(moduleUrl)) as { default?: OriginPathBuilderCtor };
                     } catch (err) {
                         error = `import builder: ${err instanceof Error ? err.message : String(err)}`;
                         return {
@@ -122,7 +201,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                         };
                     }
 
-                    const OriginPathBuilder = mod.default;
+                    const OriginPathBuilder: OriginPathBuilderCtor | undefined = mod.default;
                     if (typeof OriginPathBuilder !== 'function') {
                         return {
                             created,
@@ -135,7 +214,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                         };
                     }
 
-                    let builder: any;
+                    let builder: OriginPathBuilderInstance;
                     try {
                         builder = new OriginPathBuilder(actor);
                     } catch (err) {
@@ -157,7 +236,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                     // (unresolvedAptitudeCollisions) must be empty and the
                     // resolved-banner data source must hold the entry.
                     try {
-                        const mkPicked = (apts: string[]): object => ({
+                        const mkPicked = (apts: string[]): PickedSelection => ({
                             id: `picked-${apts.join('-').toLowerCase()}`,
                             uuid: null,
                             name: `Stub ${apts.join('+')}`,
@@ -191,7 +270,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                             _actorItemId: null,
                         });
 
-                        builder.selections = new Map<string, any>([
+                        builder.selections = new Map<string, PickedSelection>([
                             ['homeWorld', mkPicked(['Willpower'])],
                             ['background', mkPicked(['Willpower'])],
                         ]);
@@ -220,7 +299,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
 
                     rendered = builder.element instanceof HTMLElement;
                     if (rendered && builder.element != null) {
-                        const el = builder.element as HTMLElement;
+                        const el = builder.element;
                         hasWarningBanner = el.querySelector('[data-testid="aptitude-collision-banner"]') !== null;
                         hasResolvedBanner = el.querySelector('[data-testid="aptitude-collision-resolved-banner"]') !== null;
                         unresolvedRowCount = el.querySelectorAll('[data-testid="aptitude-collision-unresolved"]').length;
@@ -254,8 +333,8 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
             // Clean up: close the application and delete the seeded actor so
             // the next serial test doesn't trip over leftover DOM.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side teardown */
-                const g = globalThis as any;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: the probe stashed builder/actor handles onto the page globalThis
+                const g = globalThis as unknown as Issue216Globals;
                 const b = g.__c216builder;
                 const a = g.__c216actor;
                 try {
@@ -270,7 +349,6 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                 }
                 g.__c216builder = undefined;
                 g.__c216actor = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             // If the builder couldn't render at all (init pipeline regressions,

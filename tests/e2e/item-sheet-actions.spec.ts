@@ -62,53 +62,93 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
             const base = `${'/systems/wh40k-rpg'}/module/applications/item`;
 
-            interface HostCapture {
-                updates: Array<Record<string, unknown>>;
-                chatCalls: number[];
-                rollCalls: Array<{ name: string | null; options: unknown }>;
+            // Shapes mirroring the slice of sheet/item state the action
+            // handlers read and write. The handlers are invoked via
+            // `.call(host, …)`, so `host` stands in for the sheet `this`.
+            interface SpecialUse {
+                name: string;
+                description: string;
+                modifier: number;
+                difficulty: string;
             }
+            interface ItemSystem {
+                severity?: number;
+                specialUses?: SpecialUse[];
+                toChatSpecialUse: (index: number) => Promise<void>;
+            }
+            // Mirror of SkillRollOptions in skill-sheet.ts (the third arg to rollSkill).
+            interface SkillRollOptions {
+                modifier: number;
+                difficulty: string;
+                specialUseName: string;
+            }
+            interface RollCall {
+                name: string | null;
+                options: SkillRollOptions | undefined;
+            }
+            interface UpdateChanges {
+                'system.severity'?: number;
+                'system.specialUses'?: SpecialUse[];
+            }
+            interface HostActor {
+                rollSkill: (name: string, spec: string | number | undefined, options: SkillRollOptions | undefined) => Promise<void>;
+            }
+            interface HostItem {
+                name: string;
+                system: ItemSystem;
+                actor: HostActor | null;
+                update: (changes: UpdateChanges) => Promise<void>;
+            }
+            interface Host {
+                item: HostItem;
+            }
+            interface HostCapture {
+                updates: UpdateChanges[];
+                chatCalls: number[];
+                rollCalls: RollCall[];
+            }
+            /** Signature of a sheet action handler (bound to `host` via call). */
+            type ActionFn = (this: Host, event: MouseEvent, target: HTMLElement) => Promise<void>;
+
             const buildHost = (
-                system: Record<string, unknown>,
+                system: { severity?: number; specialUses?: SpecialUse[] },
                 opts: { withActor?: boolean; itemName?: string | null } = {},
-            ): { host: any; cap: HostCapture } => {
+            ): { host: Host; cap: HostCapture } => {
                 const cap: HostCapture = { updates: [], chatCalls: [], rollCalls: [] };
                 const hasActor = opts.withActor === true;
-                const actor = hasActor
+                const actor: HostActor | null = hasActor
                     ? {
-                          rollSkill: async (name: string, _spec: unknown, options: unknown): Promise<void> => {
+                          rollSkill: async (name: string, _spec: string | number | undefined, options: SkillRollOptions | undefined): Promise<void> => {
                               await Promise.resolve();
                               cap.rollCalls.push({ name, options });
                           },
                       }
                     : null;
-                const itemSystem: Record<string, unknown> = {
+                const itemSystem: ItemSystem = {
                     ...system,
                     toChatSpecialUse: async (index: number): Promise<void> => {
                         await Promise.resolve();
                         cap.chatCalls.push(index);
                     },
                 };
-                const host: any = {
+                const host: Host = {
                     item: {
                         name: opts.itemName ?? 'Probe Skill',
                         system: itemSystem,
                         actor,
-                        update: async (changes: Record<string, unknown>): Promise<void> => {
+                        update: async (changes: UpdateChanges): Promise<void> => {
                             await Promise.resolve();
                             cap.updates.push(changes);
                             // Mirror writes into the in-memory system so subsequent
                             // calls in the same scenario see them.
-                            for (const [k, v] of Object.entries(changes)) {
-                                if (k === 'system.severity') itemSystem['severity'] = v;
-                                if (k === 'system.specialUses') itemSystem['specialUses'] = v;
-                            }
+                            if (changes['system.severity'] !== undefined) itemSystem.severity = changes['system.severity'];
+                            if (changes['system.specialUses'] !== undefined) itemSystem.specialUses = changes['system.specialUses'];
                         },
                     },
                 };
@@ -123,12 +163,22 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
             };
             const evt = new MouseEvent('click', { bubbles: false });
 
+            // The factory-emitted sheet exposes its action handlers on a
+            // static map; we only need the call signature, not the full sheet.
+            interface SheetActionModule {
+                default?: { DEFAULT_OPTIONS?: { actions?: Record<string, ActionFn | undefined> } };
+            }
+            const loadActions = async (file: string): Promise<Record<string, ActionFn | undefined>> => {
+                const path = `${base}/${file}`;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import() of a runtime Foundry system module path has no static module type
+                const mod = (await import(path)) as SheetActionModule;
+                return mod.default?.DEFAULT_OPTIONS?.actions ?? {};
+            };
+
             // ---------- critical-injury-sheet.ts ----------
             try {
-                const mod = await import(`${base}/critical-injury-sheet.js`);
-                const Sheet = mod.default;
-                const actions = Sheet?.DEFAULT_OPTIONS?.actions ?? {};
-                const changeSeverity = actions.changeSeverity;
+                const actions = await loadActions('critical-injury-sheet.js');
+                const changeSeverity = actions['changeSeverity'];
                 if (typeof changeSeverity !== 'function') {
                     record('critical-injury-changeSeverity', false, 'changeSeverity action missing');
                     record('critical-injury-changeSeverity-noop', false, 'changeSeverity action missing');
@@ -137,10 +187,10 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                     try {
                         const { host, cap } = buildHost({ severity: 3 });
                         await changeSeverity.call(host, evt, makeTarget({}, '7'));
-                        const ok = cap.updates.length === 1 && (cap.updates[0] as any)['system.severity'] === 7;
+                        const ok = cap.updates.length === 1 && cap.updates[0]?.['system.severity'] === 7;
                         record('critical-injury-changeSeverity', ok, `updates=${JSON.stringify(cap.updates)}`);
                     } catch (err) {
-                        record('critical-injury-changeSeverity', false, String((err as Error).message));
+                        record('critical-injury-changeSeverity', false, err instanceof Error ? err.message : String(err));
                     }
                     // Case 2: severity unchanged — no update.
                     try {
@@ -148,21 +198,19 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await changeSeverity.call(host, evt, makeTarget({}, '5'));
                         record('critical-injury-changeSeverity-noop', cap.updates.length === 0, `updates=${JSON.stringify(cap.updates)}`);
                     } catch (err) {
-                        record('critical-injury-changeSeverity-noop', false, String((err as Error).message));
+                        record('critical-injury-changeSeverity-noop', false, err instanceof Error ? err.message : String(err));
                     }
                 }
             } catch (err) {
                 for (const k of ['critical-injury-changeSeverity', 'critical-injury-changeSeverity-noop'] as const) {
-                    record(k, false, `import: ${String((err as Error).message)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
             // ---------- skill-sheet.ts ----------
             try {
-                const mod = await import(`${base}/skill-sheet.js`);
-                const Sheet = mod.default;
-                const actions = Sheet?.DEFAULT_OPTIONS?.actions ?? {};
-                const { specialUseAdd, specialUseDelete, specialUseChat, specialUseRoll } = actions as Record<string, any>;
+                const actions = await loadActions('skill-sheet.js');
+                const { specialUseAdd, specialUseDelete, specialUseChat, specialUseRoll } = actions;
 
                 const skillKeys: FlowName[] = [
                     'skill-specialUseAdd',
@@ -189,20 +237,20 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                     try {
                         const { host, cap } = buildHost({ specialUses: [{ name: 'Existing', description: '', modifier: 0, difficulty: '' }] });
                         await specialUseAdd.call(host, evt, makeTarget({}));
-                        const next = (cap.updates[0] as any)?.['system.specialUses'] as unknown[];
-                        record('skill-specialUseAdd', Array.isArray(next) && next.length === 2, `next.length=${next.length}`);
+                        const next = cap.updates[0]?.['system.specialUses'];
+                        record('skill-specialUseAdd', Array.isArray(next) && next.length === 2, `next.length=${next?.length ?? 'undefined'}`);
                     } catch (err) {
-                        record('skill-specialUseAdd', false, String((err as Error).message));
+                        record('skill-specialUseAdd', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseAdd — works when specialUses is missing / non-array.
                     try {
                         const { host, cap } = buildHost({});
                         await specialUseAdd.call(host, evt, makeTarget({}));
-                        const next = (cap.updates[0] as any)?.['system.specialUses'] as unknown[];
+                        const next = cap.updates[0]?.['system.specialUses'];
                         record('skill-specialUseAdd-fromEmpty', Array.isArray(next) && next.length === 1, `next=${JSON.stringify(next)}`);
                     } catch (err) {
-                        record('skill-specialUseAdd-fromEmpty', false, String((err as Error).message));
+                        record('skill-specialUseAdd-fromEmpty', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseDelete — removes entry at data-index.
@@ -215,11 +263,11 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                             ],
                         });
                         await specialUseDelete.call(host, evt, makeTarget({ index: '1' }));
-                        const next = (cap.updates[0] as any)?.['system.specialUses'] as Array<{ name: string }>;
+                        const next = cap.updates[0]?.['system.specialUses'];
                         const ok = Array.isArray(next) && next.length === 2 && next[0]?.name === 'A' && next[1]?.name === 'C';
                         record('skill-specialUseDelete', ok, `next=${JSON.stringify(next)}`);
                     } catch (err) {
-                        record('skill-specialUseDelete', false, String((err as Error).message));
+                        record('skill-specialUseDelete', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseDelete — no data-index attribute → no-op.
@@ -228,7 +276,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await specialUseDelete.call(host, evt, makeTarget({}));
                         record('skill-specialUseDelete-noIndex', cap.updates.length === 0, `updates=${JSON.stringify(cap.updates)}`);
                     } catch (err) {
-                        record('skill-specialUseDelete-noIndex', false, String((err as Error).message));
+                        record('skill-specialUseDelete-noIndex', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseDelete — out-of-range index → no-op.
@@ -237,7 +285,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await specialUseDelete.call(host, evt, makeTarget({ index: '99' }));
                         record('skill-specialUseDelete-outOfRange', cap.updates.length === 0, `updates=${JSON.stringify(cap.updates)}`);
                     } catch (err) {
-                        record('skill-specialUseDelete-outOfRange', false, String((err as Error).message));
+                        record('skill-specialUseDelete-outOfRange', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseChat — posts entry to chat.
@@ -251,7 +299,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await specialUseChat.call(host, evt, makeTarget({ index: '1' }));
                         record('skill-specialUseChat', cap.chatCalls.length === 1 && cap.chatCalls[0] === 1, `chatCalls=${JSON.stringify(cap.chatCalls)}`);
                     } catch (err) {
-                        record('skill-specialUseChat', false, String((err as Error).message));
+                        record('skill-specialUseChat', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseChat — no index → no-op.
@@ -260,7 +308,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         await specialUseChat.call(host, evt, makeTarget({}));
                         record('skill-specialUseChat-noIndex', cap.chatCalls.length === 0, `chatCalls=${JSON.stringify(cap.chatCalls)}`);
                     } catch (err) {
-                        record('skill-specialUseChat-noIndex', false, String((err as Error).message));
+                        record('skill-specialUseChat-noIndex', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseRoll — actor-owned: posts to chat AND calls rollSkill.
@@ -273,7 +321,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const ok = cap.chatCalls.length === 1 && cap.rollCalls.length === 1 && cap.rollCalls[0]?.name === 'Tech-Use';
                         record('skill-specialUseRoll-withActor', ok, `chat=${cap.chatCalls.length} rolls=${cap.rollCalls.length}`);
                     } catch (err) {
-                        record('skill-specialUseRoll-withActor', false, String((err as Error).message));
+                        record('skill-specialUseRoll-withActor', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseRoll — no actor: posts to chat only.
@@ -286,7 +334,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const ok = cap.chatCalls.length === 1 && cap.rollCalls.length === 0;
                         record('skill-specialUseRoll-noActor', ok, `chat=${cap.chatCalls.length} rolls=${cap.rollCalls.length}`);
                     } catch (err) {
-                        record('skill-specialUseRoll-noActor', false, String((err as Error).message));
+                        record('skill-specialUseRoll-noActor', false, err instanceof Error ? err.message : String(err));
                     }
 
                     // specialUseRoll — no data-index → no-op.
@@ -296,7 +344,7 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                         const ok = cap.chatCalls.length === 0 && cap.rollCalls.length === 0;
                         record('skill-specialUseRoll-noIndex', ok, `chat=${cap.chatCalls.length} rolls=${cap.rollCalls.length}`);
                     } catch (err) {
-                        record('skill-specialUseRoll-noIndex', false, String((err as Error).message));
+                        record('skill-specialUseRoll-noIndex', false, err instanceof Error ? err.message : String(err));
                     }
                 }
             } catch (err) {
@@ -312,12 +360,11 @@ async function probeItemSheetActions(page: Page): Promise<{ results: FlowResult[
                     'skill-specialUseRoll-noActor',
                     'skill-specialUseRoll-noIndex',
                 ] as const) {
-                    record(k, false, `import: ${String((err as Error).message)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {
