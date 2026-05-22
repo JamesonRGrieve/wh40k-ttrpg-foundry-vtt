@@ -27,10 +27,17 @@ interface ActorRef {
 }
 
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async () => {
-        const { Actor: ActorCls } = globalThis as unknown as {
-            Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        };
+    const result = await page.evaluate(async (): Promise<{ id: string | null; error: string | null }> => {
+        interface ActorCreateData {
+            name: string;
+            type: string;
+            system: { gameSystem: string; chaseState: { pursuerDistance: number; dangerZone: boolean; turnCount: number } };
+        }
+        interface FoundryGlobal {
+            Actor?: { create?: (data: ActorCreateData) => Promise<{ id?: string } | null> };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor) have no shipped types in this browser-side probe
+        const { Actor: ActorCls } = globalThis as unknown as FoundryGlobal;
         if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
@@ -48,7 +55,7 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
         } catch (createErr) {
-            return { id: null, error: String((createErr as Error).message) };
+            return { id: null, error: createErr instanceof Error ? createErr.message : String(createErr) };
         }
     });
     if (result.id == null) return { error: result.error ?? 'unknown create error' };
@@ -56,10 +63,12 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
 }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
-    await page.evaluate(async (id: string) => {
-        const { game: gameRef } = globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        };
+    await page.evaluate(async (id: string): Promise<void> => {
+        interface FoundryGlobal {
+            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game) have no shipped types in this browser-side probe
+        const { game: gameRef } = globalThis as unknown as FoundryGlobal;
         const actor = gameRef?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -84,90 +93,120 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async (id: string) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
-                const actor = g.game?.actors?.get?.(id);
-                if (actor == null) return { error: 'actor lookup failed' };
+            const result = await page.evaluate(
+                async (
+                    id: string,
+                ): Promise<{
+                    error: string | null;
+                    rendered?: boolean;
+                    hasPanel?: boolean;
+                    hasEvasiveRow?: boolean;
+                    hasFloorItRow?: boolean;
+                    hasHitAndRunRow?: boolean;
+                    hasJinkRow?: boolean;
+                    hasTacticalRow?: boolean;
+                    hasIssueButton?: boolean;
+                    hasChaseReadout?: boolean;
+                    issueDispatched?: boolean;
+                }> => {
+                    interface SheetShape {
+                        render: (options: { force: boolean }) => Promise<void>;
+                        element: HTMLElement | null;
+                        close?: () => Promise<void>;
+                    }
+                    interface ActorDoc {
+                        sheet: SheetShape | null;
+                    }
+                    interface FoundryGlobal {
+                        game?: { actors?: { get?: (id: string) => ActorDoc | undefined } };
+                        __c156sheet?: SheetShape | null;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game, custom probe handle) have no shipped types in this browser-side probe
+                    const g = globalThis as unknown as FoundryGlobal;
+                    const actor = g.game?.actors?.get?.(id);
+                    if (actor == null) return { error: 'actor lookup failed' };
 
-                let rendered = false;
-                let hasPanel = false;
-                let hasEvasiveRow = false;
-                let hasFloorItRow = false;
-                let hasHitAndRunRow = false;
-                let hasJinkRow = false;
-                let hasTacticalRow = false;
-                let hasIssueButton = false;
-                let hasChaseReadout = false;
-                let issueDispatched = false;
-                let probeError: string | null = null;
+                    let rendered = false;
+                    let hasPanel = false;
+                    let hasEvasiveRow = false;
+                    let hasFloorItRow = false;
+                    let hasHitAndRunRow = false;
+                    let hasJinkRow = false;
+                    let hasTacticalRow = false;
+                    let hasIssueButton = false;
+                    let hasChaseReadout = false;
+                    let issueDispatched = false;
+                    let probeError: string | null = null;
 
-                try {
-                    const sheet = actor.sheet;
-                    if (sheet == null) return { error: 'actor.sheet is null' };
-                    await sheet.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 120);
-                    });
-                    rendered = sheet.element instanceof HTMLElement;
+                    try {
+                        const sheet = actor.sheet;
+                        if (sheet == null) return { error: 'actor.sheet is null' };
+                        await sheet.render({ force: true });
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 120);
+                        });
+                        rendered = sheet.element instanceof HTMLElement;
 
-                    if (rendered && sheet.element != null) {
-                        const el: HTMLElement = sheet.element;
-                        const panel = el.querySelector('.wh40k-ow-vehicle-movement-panel');
-                        hasPanel = panel !== null;
-                        hasEvasiveRow = el.querySelector('[data-action-id="evasive-manoeuvring"]') !== null;
-                        hasFloorItRow = el.querySelector('[data-action-id="floor-it"]') !== null;
-                        hasHitAndRunRow = el.querySelector('[data-action-id="hit-and-run"]') !== null;
-                        hasJinkRow = el.querySelector('[data-action-id="jink"]') !== null;
-                        hasTacticalRow = el.querySelector('[data-action-id="tactical-manoeuvring"]') !== null;
-                        hasChaseReadout = el.querySelector('.wh40k-ow-vehicle-movement-chase-readout') !== null;
-                        const issueBtn = el.querySelector<HTMLButtonElement>('button[data-action="owVehicleAction"][data-action-id="evasive-manoeuvring"]');
-                        hasIssueButton = issueBtn !== null;
+                        if (rendered && sheet.element != null) {
+                            const el: HTMLElement = sheet.element;
+                            const panel = el.querySelector('.wh40k-ow-vehicle-movement-panel');
+                            hasPanel = panel !== null;
+                            hasEvasiveRow = el.querySelector('[data-action-id="evasive-manoeuvring"]') !== null;
+                            hasFloorItRow = el.querySelector('[data-action-id="floor-it"]') !== null;
+                            hasHitAndRunRow = el.querySelector('[data-action-id="hit-and-run"]') !== null;
+                            hasJinkRow = el.querySelector('[data-action-id="jink"]') !== null;
+                            hasTacticalRow = el.querySelector('[data-action-id="tactical-manoeuvring"]') !== null;
+                            hasChaseReadout = el.querySelector('.wh40k-ow-vehicle-movement-chase-readout') !== null;
+                            const issueBtn = el.querySelector<HTMLButtonElement>('button[data-action="owVehicleAction"][data-action-id="evasive-manoeuvring"]');
+                            hasIssueButton = issueBtn !== null;
 
-                        if (issueBtn !== null && !issueBtn.disabled) {
-                            issueBtn.click();
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 200);
-                            });
-                            issueDispatched = true;
+                            if (issueBtn !== null && !issueBtn.disabled) {
+                                issueBtn.click();
+                                await new Promise<void>((r) => {
+                                    setTimeout(r, 200);
+                                });
+                                issueDispatched = true;
+                            }
                         }
+
+                        // Keep the sheet open so snap() (outside this evaluate)
+                        // captures the live DOM.
+                        g.__c156sheet = sheet;
+                    } catch (probeErr) {
+                        probeError = probeErr instanceof Error ? probeErr.message : String(probeErr);
                     }
 
-                    // Keep the sheet open so snap() (outside this evaluate)
-                    // captures the live DOM.
-                    g.__c156sheet = sheet;
-                } catch (probeErr) {
-                    probeError = String((probeErr as Error).message);
-                }
-
-                return {
-                    rendered,
-                    hasPanel,
-                    hasEvasiveRow,
-                    hasFloorItRow,
-                    hasHitAndRunRow,
-                    hasJinkRow,
-                    hasTacticalRow,
-                    hasIssueButton,
-                    hasChaseReadout,
-                    issueDispatched,
-                    error: probeError,
-                };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
-            }, actorId);
+                    return {
+                        rendered,
+                        hasPanel,
+                        hasEvasiveRow,
+                        hasFloorItRow,
+                        hasHitAndRunRow,
+                        hasJinkRow,
+                        hasTacticalRow,
+                        hasIssueButton,
+                        hasChaseReadout,
+                        issueDispatched,
+                        error: probeError,
+                    };
+                },
+                actorId,
+            );
 
             await snap(page, 'ow-vehicle-movement-panel');
 
-            await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const g = globalThis as any;
+            await page.evaluate(async (): Promise<void> => {
+                interface FoundryGlobal {
+                    __c156sheet?: { close?: () => Promise<void> } | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: custom probe handle on globalThis has no shipped types in this browser-side cleanup
+                const g = globalThis as unknown as FoundryGlobal;
                 try {
                     await g.__c156sheet?.close?.();
                 } catch {
                     /* ignore */
                 }
                 g.__c156sheet = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

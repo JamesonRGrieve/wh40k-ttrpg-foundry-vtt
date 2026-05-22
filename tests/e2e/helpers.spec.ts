@@ -46,24 +46,38 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
         try {
             const probes = await page.evaluate(
                 async ({ talentUuid, talentNameLower }) => {
-                    const g = globalThis as unknown as {
+                    interface FoundryGlobal {
                         Handlebars?: {
                             compile: (src: string) => (ctx: object, opts?: object) => string;
-                            partials?: Record<string, unknown>;
                         };
                         foundry?: {
                             applications?: { ux?: { TextEditor?: { implementation?: { enrichHTML?: (text: string, opts?: object) => Promise<string> } } } };
                         };
                         TextEditor?: { enrichHTML?: (text: string, opts?: object) => Promise<string> };
                         game?: { i18n?: { localize?: (key: string) => string } };
-                    };
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: reading Foundry's host globals (Handlebars/foundry/TextEditor/game) inside the page, no schema applies
+                    const g = globalThis as unknown as FoundryGlobal;
+
+                    interface ProbeOutcome {
+                        ok: boolean;
+                        detail: string;
+                    }
                     const results: { name: string; ok: boolean; detail: string }[] = [];
-                    const record = (name: string, ok: boolean, detail: string): void => {
-                        results.push({ name, ok, detail });
+                    // Run one probe, recording its outcome and turning any throw into a
+                    // failed result so a single broken helper cannot mask the rest. The
+                    // shared try/catch keeps each probe body branch-free.
+                    const runProbe = async (name: string, fn: () => ProbeOutcome | Promise<ProbeOutcome>): Promise<void> => {
+                        try {
+                            const outcome = await fn();
+                            results.push({ name, ok: outcome.ok, detail: outcome.detail });
+                        } catch (err) {
+                            results.push({ name, ok: false, detail: `threw: ${err instanceof Error ? err.message : String(err)}` });
+                        }
                     };
 
                     if (g.Handlebars === undefined) {
-                        record('all', false, 'Handlebars global unavailable');
+                        results.push({ name: 'all', ok: false, detail: 'Handlebars global unavailable' });
                         return results;
                     }
                     const HB = g.Handlebars;
@@ -71,76 +85,64 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                     // 1. themeClassFor — explicit systemId override path AND
                     //    @root._gameSystemId path. The helper prefers explicit
                     //    arg over @root, so test both branches.
-                    try {
+                    await runProbe('handlebars-themeClassFor-helper', () => {
                         const tpl = HB.compile(`{{themeClassFor 'border'}}|{{themeClassFor 'border' 'dh2e'}}|{{themeClassFor 'primary' 'rt'}}`);
                         const out = tpl({}, { data: { root: { _gameSystemId: 'dh2e' } } });
                         // Expected: [tw-border-<dh2e-border>, tw-border-<dh2e-border>, tw-bg-<rt-primary>]
                         const parts = out.split('|');
-                        const allPrefixed = parts[0]?.startsWith('tw-border-') && parts[1]?.startsWith('tw-border-') && parts[2]?.startsWith('tw-bg-');
+                        const allPrefixed = Boolean(parts[0]?.startsWith('tw-border-') && parts[1]?.startsWith('tw-border-') && parts[2]?.startsWith('tw-bg-'));
                         const dh2Match = parts[0] === parts[1];
-                        record('handlebars-themeClassFor-helper', allPrefixed && dh2Match, `out=${out}`);
-                    } catch (err) {
-                        record('handlebars-themeClassFor-helper', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        return { ok: allPrefixed && dh2Match, detail: `out=${out}` };
+                    });
 
                     // 2. {{#select 'b'}} block helper — should mark <option value="b"> as selected.
-                    try {
+                    await runProbe('handlebars-select-block-helper', () => {
                         const tpl = HB.compile(`{{#select 'b'}}<option value="a">A</option><option value="b">B</option>{{/select}}`);
                         const out = tpl({});
                         const aSelected = /value="a"[^>]*\sselected/.test(out);
                         const bSelected = /value="b"[^>]*\sselected/.test(out);
-                        record('handlebars-select-block-helper', !aSelected && bSelected, `out=${out}`);
-                    } catch (err) {
-                        record('handlebars-select-block-helper', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        return { ok: !aSelected && bSelected, detail: `out=${out}` };
+                    });
 
                     // 3. concat — string concatenation with options-arg trim.
-                    try {
+                    await runProbe('handlebars-concat-helper', () => {
                         const tpl = HB.compile(`{{concat 'a' 'b' 'c'}}`);
                         const out = tpl({});
-                        record('handlebars-concat-helper', out === 'abc', `out=${out}`);
-                    } catch (err) {
-                        record('handlebars-concat-helper', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        return { ok: out === 'abc', detail: `out=${out}` };
+                    });
 
                     // 4. dhlog — must not throw; renders nothing visible.
-                    try {
+                    await runProbe('handlebars-dhlog-helper', () => {
                         const tpl = HB.compile(`pre{{dhlog this}}post`);
                         const out = tpl({ marker: 'probe' });
                         // game.wh40k.log may or may not be defined in this build — what we
                         // care about is that the helper does not crash the render.
-                        record('handlebars-dhlog-helper', out === 'prepost' || out.startsWith('pre'), `out=${out}`);
-                    } catch (err) {
-                        record('handlebars-dhlog-helper', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        return { ok: out === 'prepost' || out.startsWith('pre'), detail: `out=${out}` };
+                    });
 
                     // 5. isPsychicAttack — a power without subtype 'Attack' returns false.
-                    try {
+                    await runProbe('handlebars-isPsychicAttack', () => {
                         const tpl = HB.compile(`{{isPsychicAttack power}}|{{isPsychicAttack attackPower}}`);
                         const out = tpl({
                             power: { system: { subtype: ['Concentration'] } },
                             attackPower: { system: { subtype: ['Attack'] } },
                         });
-                        record('handlebars-isPsychicAttack', out === 'false|true', `out=${out}`);
-                    } catch (err) {
-                        record('handlebars-isPsychicAttack', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        return { ok: out === 'false|true', detail: `out=${out}` };
+                    });
 
                     // 6. uuid-name — resolves a real DH2 talent UUID to its display name.
-                    try {
+                    await runProbe('handlebars-uuid-name', () => {
                         const tpl = HB.compile(`{{uuid-name uuid}}`);
                         const out = tpl({ uuid: talentUuid }).trim();
                         // Cache may not yet hold the entry if the ready-hook walk hasn't
                         // completed for this pack — accept either the resolved name or
                         // an empty string (helper's documented fallback for misses).
                         const looksLikeName = out.length > 0 && !out.includes('Compendium.');
-                        record('handlebars-uuid-name', looksLikeName || out === '', `out="${out}" expected~${talentNameLower}`);
-                    } catch (err) {
-                        record('handlebars-uuid-name', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        return { ok: looksLikeName || out === '', detail: `out="${out}" expected~${talentNameLower}` };
+                    });
 
                     // 7. uuid-expand — replaces {{Compendium.…}} tokens in freeform text.
-                    try {
+                    await runProbe('handlebars-uuid-expand', () => {
                         const tpl = HB.compile(`{{uuid-expand text}}`);
                         const text = `prefix {{${talentUuid}}} suffix`;
                         const out = tpl({ text });
@@ -148,76 +150,74 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         // miss); both are valid helper behaviour per uuidNameCache docs.
                         // What matters is the surrounding text survived.
                         const surroundOk = out.startsWith('prefix ') && out.endsWith(' suffix');
-                        record('handlebars-uuid-expand', surroundOk, `out=${out}`);
-                    } catch (err) {
-                        record('handlebars-uuid-expand', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        return { ok: surroundOk, detail: `out=${out}` };
+                    });
 
                     // 8. t(...) i18n wrapper — must return a string and resolve a known
                     //    key. The wrapper is shipped via dist as a module; pull it in.
-                    try {
-                        // Dynamic ESM import by URL — TS cannot resolve `/systems/...` at
-                        // type-check time, so route through a Function-based importer that
-                        // returns `unknown` and narrow on the result.
-                        const importByUrl = new Function('u', 'return import(u)') as (u: string) => Promise<unknown>;
-                        const modUnknown = await importByUrl('/systems/wh40k-rpg/module/i18n/t.js');
-                        const mod = modUnknown as { t?: (k: string, p?: object) => string };
+                    await runProbe('i18n-t-wrapper', async () => {
+                        interface I18nModule {
+                            t?: (k: string, p?: object) => string;
+                        }
+                        // URL via a string variable so tsc does not statically resolve the runtime-only Foundry-served path (TS2307).
+                        const tModuleUrl: string = '/systems/wh40k-rpg/module/i18n/t.js';
+                        const mod = (await import(/* @vite-ignore */ tModuleUrl)) as I18nModule;
                         const tFn = mod.t;
                         if (typeof tFn !== 'function') {
-                            record('i18n-t-wrapper', false, 'module did not export t');
-                        } else {
-                            const localized = tFn('WH40K.Confirm');
-                            // game.i18n.localize returns the key itself if unresolved —
-                            // accept either the localized text or the key as proof the
-                            // wrapper round-trips through Foundry's i18n. Must be a string.
-                            const ok = typeof localized === 'string' && localized.length > 0;
-                            record('i18n-t-wrapper', ok, `localized="${localized}"`);
+                            return { ok: false, detail: 'module did not export t' };
                         }
-                    } catch (err) {
-                        record('i18n-t-wrapper', false, `import/call threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        const localized = tFn('WH40K.Confirm');
+                        // game.i18n.localize returns the key itself if unresolved —
+                        // accept either the localized text or the key as proof the
+                        // wrapper round-trips through Foundry's i18n. Must be a string.
+                        return { ok: typeof localized === 'string' && localized.length > 0, detail: `localized="${localized}"` };
+                    });
 
                     // 9. @UUID enricher — Foundry's native enricher resolves a Compendium
                     //    UUID to a <a class="content-link">…</a>. The CONFIG.TextEditor
                     //    .enrichers array is populated by registerCustomEnrichers() but
                     //    this probe targets Foundry's built-in @UUID path, which the
                     //    pipeline registers alongside.
-                    try {
+                    await runProbe('enricher-@UUID-resolves', async () => {
                         const enrichHTML = g.foundry?.applications?.ux?.TextEditor?.implementation?.enrichHTML ?? g.TextEditor?.enrichHTML;
                         if (typeof enrichHTML !== 'function') {
-                            record('enricher-@UUID-resolves', false, 'TextEditor.enrichHTML unavailable');
-                        } else {
-                            const input = `@UUID[${talentUuid}]`;
-                            const out = await enrichHTML(input, { async: true });
-                            const hasContentLink = /class="[^"]*content-link/.test(out);
-                            record('enricher-@UUID-resolves', hasContentLink, `out=${out.slice(0, 200)}`);
+                            return { ok: false, detail: 'TextEditor.enrichHTML unavailable' };
                         }
-                    } catch (err) {
-                        record('enricher-@UUID-resolves', false, `threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        const input = `@UUID[${talentUuid}]`;
+                        const out = await enrichHTML(input, { async: true });
+                        const hasContentLink = /class="[^"]*content-link/.test(out);
+                        return { ok: hasContentLink, detail: `out=${out.slice(0, 200)}` };
+                    });
 
                     // 10. skill-uuid-helper — drives `parseSkillName` and
                     //     `findSkillUuid` against the registered skill packs.
                     //     parseSkillName has no side effects (just regex
                     //     parsing); findSkillUuid walks the per-system skill
                     //     compendium index to resolve a known skill name.
-                    try {
-                        const mod = await import(`${'/systems/wh40k-rpg'}/module/helpers/skill-uuid-helper.js`);
-                        const parsed = mod.parseSkillName?.('Acrobatics (Tumbling)') as { name: string; specialization: string | null } | undefined;
-                        const parseOk = parsed?.name === 'Acrobatics' && parsed?.specialization === 'Tumbling';
-                        const parsedBare = mod.parseSkillName?.('Awareness') as { name: string; specialization: string | null } | undefined;
-                        const parseBareOk = parsedBare?.name === 'Awareness' && parsedBare?.specialization === null;
-                        record(
-                            'skill-uuid-helper-parseSkillName',
-                            Boolean(parseOk && parseBareOk),
-                            `parse('Acrobatics (Tumbling)')=${JSON.stringify(parsed)} parse('Awareness')=${JSON.stringify(parsedBare)}`,
-                        );
-                    } catch (err) {
-                        record('skill-uuid-helper-parseSkillName', false, `parseSkillName threw: ${err instanceof Error ? err.message : String(err)}`);
+                    interface ParsedSkill {
+                        name: string;
+                        specialization: string | null;
                     }
+                    interface SkillUuidModule {
+                        parseSkillName?: (raw: string) => ParsedSkill | undefined;
+                        findSkillUuid?: (name: string) => string | null | undefined;
+                        clearSkillUuidCache?: () => void;
+                    }
+                    const skillModUrl = '/systems/wh40k-rpg/module/helpers/skill-uuid-helper.js';
+                    await runProbe('skill-uuid-helper-parseSkillName', async () => {
+                        const mod = (await import(/* @vite-ignore */ skillModUrl)) as SkillUuidModule;
+                        const parsed = mod.parseSkillName?.('Acrobatics (Tumbling)');
+                        const parseOk = parsed?.name === 'Acrobatics' && parsed.specialization === 'Tumbling';
+                        const parsedBare = mod.parseSkillName?.('Awareness');
+                        const parseBareOk = parsedBare?.name === 'Awareness' && parsedBare.specialization === null;
+                        return {
+                            ok: Boolean(parseOk && parseBareOk),
+                            detail: `parse('Acrobatics (Tumbling)')=${JSON.stringify(parsed)} parse('Awareness')=${JSON.stringify(parsedBare)}`,
+                        };
+                    });
 
-                    try {
-                        const mod = await import(`${'/systems/wh40k-rpg'}/module/helpers/skill-uuid-helper.js`);
+                    await runProbe('skill-uuid-helper-findSkillUuid', async () => {
+                        const mod = (await import(/* @vite-ignore */ skillModUrl)) as SkillUuidModule;
                         // findSkillUuid returns `undefined` if the index isn't
                         // built yet (it lazily builds via the cache). Calling it
                         // once exercises both the build path and the lookup
@@ -225,27 +225,35 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         // a valid return shape).
                         mod.clearSkillUuidCache?.();
                         const result = mod.findSkillUuid?.('Awareness');
-                        record(
-                            'skill-uuid-helper-findSkillUuid',
-                            result === null || typeof result === 'string' || result === undefined,
-                            `findSkillUuid('Awareness')=${String(result)}`,
-                        );
-                    } catch (err) {
-                        record('skill-uuid-helper-findSkillUuid', false, `findSkillUuid threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        // Any of `string` (hit), `null` (explicit miss), or `undefined`
+                        // (index not built yet) is a valid return shape — exercising the
+                        // build + lookup path without throwing is the assertion. The
+                        // typed union already guarantees the shape, so `ok` is constant;
+                        // the detail captures the concrete value for diagnostics.
+                        return { ok: true, detail: `findSkillUuid('Awareness')=${String(result)}` };
+                    });
 
                     // 11. helpers/effects — `summarizeChange` formats a raw
                     //     ActiveEffect change entry into a display struct.
                     //     `getChangeLabel` is exercised via summarizeChange.
-                    try {
-                        const mod = await import(`${'/systems/wh40k-rpg'}/module/helpers/effects.js`);
-                        const change = { key: 'system.characteristics.strength.modifier', mode: 2, value: 10, priority: 20 };
-                        const summary = mod.summarizeChange?.(change) as { label: string; value: string } | undefined;
+                    await runProbe('helpers-effects-summarizeChange', async () => {
+                        interface EffectChange {
+                            key: string;
+                            mode: number;
+                            value: number;
+                            priority: number;
+                        }
+                        interface EffectsModule {
+                            summarizeChange?: (change: EffectChange) => { label: string; value: string } | undefined;
+                        }
+                        // URL via a string variable so tsc does not statically resolve the runtime-only Foundry-served path (TS2307).
+                        const effectsModuleUrl: string = '/systems/wh40k-rpg/module/helpers/effects.js';
+                        const mod = (await import(/* @vite-ignore */ effectsModuleUrl)) as EffectsModule;
+                        const change: EffectChange = { key: 'system.characteristics.strength.modifier', mode: 2, value: 10, priority: 20 };
+                        const summary = mod.summarizeChange?.(change);
                         const ok = typeof summary?.label === 'string' && summary.label.length > 0 && typeof summary.value === 'string';
-                        record('helpers-effects-summarizeChange', Boolean(ok), `summary=${JSON.stringify(summary)}`);
-                    } catch (err) {
-                        record('helpers-effects-summarizeChange', false, `summarizeChange threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
+                        return { ok: Boolean(ok), detail: `summary=${JSON.stringify(summary)}` };
+                    });
 
                     return results;
                 },

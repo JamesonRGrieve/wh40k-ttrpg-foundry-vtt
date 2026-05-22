@@ -19,11 +19,45 @@ interface ActorRef {
     id: string;
 }
 
+/**
+ * Minimal browser-side shapes for the untyped Foundry V14 globals used in
+ * this probe. Foundry ships no types into the Playwright `page.evaluate`
+ * surface, so these stand in for that framework boundary.
+ */
+interface FoundryProbeSheet {
+    render: (options: { force: boolean }) => Promise<void>;
+    element: HTMLElement | null;
+    close?: () => Promise<void>;
+}
+interface FoundryProbeActor {
+    id?: string;
+    system?: { comradeRecoveryDays?: number | null };
+    sheet: FoundryProbeSheet | null;
+    delete?: () => Promise<void>;
+}
+interface FoundryGlobal {
+    Actor?: { create?: (data: object) => Promise<FoundryProbeActor | null> };
+    game?: { actors?: { get?: (id: string) => FoundryProbeActor | undefined } };
+    __c157sheet?: FoundryProbeSheet | undefined;
+}
+
+interface HealingProbeResult {
+    rendered?: boolean;
+    hasPanel?: boolean;
+    hasTickBtn?: boolean;
+    hasMedicaeBtn?: boolean;
+    hasReplaceBtn?: boolean;
+    hasStatusBadge?: boolean;
+    recoveryBefore?: number | null;
+    recoveryAfter?: number | null;
+    tickDispatched?: boolean;
+    error?: string | null;
+}
+
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async () => {
-        const { Actor: ActorCtor } = globalThis as unknown as {
-            Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        };
+    const result = await page.evaluate(async (): Promise<{ id: string | null; error: string | null }> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.Actor surface
+        const { Actor: ActorCtor } = globalThis as unknown as FoundryGlobal;
         if (!ActorCtor?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCtor.create({
@@ -47,10 +81,9 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
 }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
-    await page.evaluate(async (id: string) => {
-        const { game: foundryGame } = globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        };
+    await page.evaluate(async (id: string): Promise<void> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game surface
+        const { game: foundryGame } = globalThis as unknown as FoundryGlobal;
         const actor = foundryGame?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -75,11 +108,23 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async (id: string) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+            const result = await page.evaluate(async (id: string): Promise<HealingProbeResult> => {
+                const base: HealingProbeResult = {
+                    rendered: false,
+                    hasPanel: false,
+                    hasTickBtn: false,
+                    hasMedicaeBtn: false,
+                    hasReplaceBtn: false,
+                    hasStatusBadge: false,
+                    recoveryBefore: null,
+                    recoveryAfter: null,
+                    tickDispatched: false,
+                    error: null,
+                };
+                // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game surface
+                const g = globalThis as unknown as FoundryGlobal;
                 const actor = g.game?.actors?.get?.(id);
-                if (actor == null) return { error: 'actor lookup failed' };
+                if (actor == null) return { ...base, error: 'actor lookup failed' };
                 let rendered = false;
                 let hasPanel = false;
                 let hasTickBtn = false;
@@ -138,22 +183,20 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                     tickDispatched,
                     error: probeError,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, actorId);
 
             await snap(page, 'ow-comrade-healing-panel');
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
-            await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const g = globalThis as any;
+            await page.evaluate(async (): Promise<void> => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis surface
+                const g = globalThis as unknown as FoundryGlobal;
                 try {
                     await g.__c157sheet?.close?.();
                 } catch {
                     /* ignore */
                 }
                 g.__c157sheet = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

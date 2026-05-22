@@ -56,11 +56,44 @@ interface AccessorProbe {
     error: string | null;
 }
 
+/**
+ * Browser-context Foundry settings surfaces accessed from `page.evaluate`.
+ * `globalThis.game.settings` is a Foundry global, not part of this repo's type
+ * graph — each access crosses a framework boundary at the single
+ * `as unknown as SettingsWindow` cast, flagged with an inline boundary disable.
+ */
+type SettingValue = string | number | boolean | SettingValueArray | SettingValueObject | null;
+type SettingValueArray = SettingValue[];
+interface SettingValueObject {
+    [key: string]: SettingValue;
+}
+interface SettingDef {
+    type?: BooleanConstructor | NumberConstructor | ArrayConstructor | StringConstructor | ObjectConstructor;
+    choices?: Record<string, string>;
+    requiresReload?: boolean;
+    default?: SettingValue;
+}
+interface FoundrySettings {
+    settings?: Map<string, SettingDef> & { keys: () => IterableIterator<string> };
+    get: (ns: string, k: string) => SettingValue;
+    set: (ns: string, k: string, v: SettingValue) => Promise<void>;
+}
+interface SettingsWindow {
+    game?: { settings?: FoundrySettings };
+}
+/** A WH40KSettings static method surface — accessor names mapped to callables. */
+type AccessorResult = string | number | boolean | undefined;
+type AccessorOwner = Record<string, () => AccessorResult>;
+/** Browser-context surfaces that may expose the WH40KSettings static class. */
+interface AccessorWindow {
+    CONFIG?: { WH40K?: { Settings?: AccessorOwner } };
+    game?: { wh40k?: { settings?: AccessorOwner }; system?: { api?: { settings?: AccessorOwner } } };
+}
+
 async function listSettingKeys(page: Page): Promise<string[]> {
     return page.evaluate((systemId: string) => {
-        const browserCtx = globalThis as unknown as {
-            game?: { settings?: { settings?: Map<string, unknown> } };
-        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game.settings (Foundry global, no repo type)
+        const browserCtx = globalThis as unknown as SettingsWindow;
         const settings = browserCtx.game?.settings?.settings;
         if (!settings || typeof settings.keys !== 'function') return [];
         return Array.from(settings.keys()).filter((k): k is string => typeof k === 'string' && k.startsWith(`${systemId}.`));
@@ -70,23 +103,9 @@ async function listSettingKeys(page: Page): Promise<string[]> {
 async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> {
     const result = await page.evaluate(
         async ({ fullKey: settingKey, systemId }) => {
-            const gameSettings = globalThis as unknown as {
-                game?: {
-                    settings?: {
-                        settings?: Map<
-                            string,
-                            {
-                                type?: unknown;
-                                choices?: Record<string, string>;
-                                requiresReload?: boolean;
-                                default?: unknown;
-                            }
-                        >;
-                        get: (ns: string, k: string) => unknown;
-                        set: (ns: string, k: string, v: unknown) => Promise<unknown>;
-                    };
-                };
-            };
+            const fmt = (v: SettingValue): string => (typeof v === 'object' && v !== null ? JSON.stringify(v) : String(v));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game.settings (Foundry global, no repo type)
+            const gameSettings = globalThis as unknown as SettingsWindow;
             const settings = gameSettings.game?.settings;
             if (!settings) return { kind: 'read' as const, ok: false, error: 'game.settings unavailable' };
 
@@ -94,14 +113,14 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
             const def = settings.settings?.get(settingKey);
             if (!def) return { kind: 'read' as const, ok: false, error: `definition missing for ${settingKey}` };
 
-            let current: unknown;
+            let current: SettingValue;
             try {
                 current = settings.get(systemId, namespacedKey);
             } catch (err) {
                 return {
                     kind: 'read' as const,
                     ok: false,
-                    error: `get threw: ${String((err as Error).message)}`,
+                    error: `get threw: ${err instanceof Error ? err.message : String(err)}`,
                 };
             }
 
@@ -114,14 +133,9 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                 try {
                     await settings.set(systemId, namespacedKey, current);
                     return { kind: 'toggle' as const, ok: true, error: null };
-                } catch (err) {
-                    return {
-                        kind: 'read' as const,
-                        ok: true,
-                        error: null,
-                        // Eat any reload-related error; we still got a clean read.
-                        _writeNote: `requiresReload write failed (eaten): ${String((err as Error).message)}`,
-                    } as unknown as { kind: 'read'; ok: true; error: null };
+                } catch {
+                    // Eat any reload-related error; we still got a clean read.
+                    return { kind: 'read' as const, ok: true, error: null };
                 }
             }
 
@@ -138,7 +152,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'toggle' as const,
                         ok: false,
-                        error: `set(${String(next)}) threw: ${String((err as Error).message)}`,
+                        error: `set(${String(next)}) threw: ${err instanceof Error ? err.message : String(err)}`,
                     };
                 }
                 const observed = settings.get(systemId, namespacedKey);
@@ -152,7 +166,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'toggle' as const,
                         ok: false,
-                        error: `set(${String(next)}) did not stick — observed ${String(observed)}`,
+                        error: `set(${String(next)}) did not stick — observed ${fmt(observed)}`,
                     };
                 }
                 try {
@@ -161,7 +175,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'toggle' as const,
                         ok: false,
-                        error: `restore set(${String(current)}) threw: ${String((err as Error).message)}`,
+                        error: `restore set(${fmt(current)}) threw: ${err instanceof Error ? err.message : String(err)}`,
                     };
                 }
                 return { kind: 'toggle' as const, ok: true, error: null };
@@ -180,7 +194,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'choice' as const,
                         ok: false,
-                        error: `set('${next}') threw: ${String((err as Error).message)}`,
+                        error: `set('${next}') threw: ${err instanceof Error ? err.message : String(err)}`,
                     };
                 }
                 const observed = settings.get(systemId, namespacedKey);
@@ -193,7 +207,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'choice' as const,
                         ok: false,
-                        error: `set('${next}') did not stick — observed ${String(observed)}`,
+                        error: `set('${next}') did not stick — observed ${fmt(observed)}`,
                     };
                 }
                 try {
@@ -202,25 +216,25 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     return {
                         kind: 'choice' as const,
                         ok: false,
-                        error: `restore set('${String(current)}') threw: ${String((err as Error).message)}`,
+                        error: `restore set('${fmt(current)}') threw: ${err instanceof Error ? err.message : String(err)}`,
                     };
                 }
                 return { kind: 'choice' as const, ok: true, error: null };
             }
 
             if (isNumber) {
-                const next = (current as number) + 1;
+                const next = (typeof current === 'number' ? current : 0) + 1;
                 try {
                     await settings.set(systemId, namespacedKey, next);
                     const observed = settings.get(systemId, namespacedKey);
                     if (observed !== next) {
                         await settings.set(systemId, namespacedKey, current).catch(() => undefined);
-                        return { kind: 'toggle' as const, ok: false, error: `set(${next}) did not stick — observed ${String(observed)}` };
+                        return { kind: 'toggle' as const, ok: false, error: `set(${next}) did not stick — observed ${fmt(observed)}` };
                     }
                     await settings.set(systemId, namespacedKey, current);
                     return { kind: 'toggle' as const, ok: true, error: null };
                 } catch (err) {
-                    return { kind: 'toggle' as const, ok: false, error: `number flip threw: ${String((err as Error).message)}` };
+                    return { kind: 'toggle' as const, ok: false, error: `number flip threw: ${err instanceof Error ? err.message : String(err)}` };
                 }
             }
 
@@ -232,7 +246,7 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     await settings.set(systemId, namespacedKey, current);
                     return { kind: 'toggle' as const, ok: true, error: null };
                 } catch (err) {
-                    return { kind: 'toggle' as const, ok: false, error: `array re-set threw: ${String((err as Error).message)}` };
+                    return { kind: 'toggle' as const, ok: false, error: `array re-set threw: ${err instanceof Error ? err.message : String(err)}` };
                 }
             }
 
@@ -257,23 +271,22 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
 
 async function probeAccessor(page: Page, name: (typeof SETTING_ACCESSORS)[number]): Promise<AccessorProbe> {
     const result = await page.evaluate(async (accessor: string) => {
+        const hasAccessor = (c: AccessorOwner | undefined): c is AccessorOwner => c !== undefined && typeof c[accessor] === 'function';
         // The WH40KSettings class is not attached to any runtime global; the
         // canonical surface is the ES module shipped at
         // /systems/wh40k-rpg/module/wh40k-rpg-settings.js. Dynamic-import it
         // and call the static accessor directly. This mirrors how the system
         // code itself reaches the class (via `import { WH40KSettings }`),
         // which is the only path the source-coverage instrumentation sees.
-        const foundryBrowserCtx = globalThis as unknown as {
-            CONFIG?: { WH40K?: { Settings?: Record<string, unknown> } };
-            game?: { wh40k?: { settings?: Record<string, unknown> }; system?: { api?: { settings?: Record<string, unknown> } } };
-        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis (Foundry CONFIG/game globals, no repo type)
+        const foundryBrowserCtx = globalThis as unknown as AccessorWindow;
         // Fallback chain in case a future build re-exposes the class globally.
-        const globalCandidates: Array<Record<string, unknown> | undefined> = [
+        const globalCandidates: Array<AccessorOwner | undefined> = [
             foundryBrowserCtx.CONFIG?.WH40K?.Settings,
             foundryBrowserCtx.game?.wh40k?.settings,
             foundryBrowserCtx.game?.system?.api?.settings,
         ];
-        let owner: Record<string, unknown> | undefined = globalCandidates.find((c) => c !== undefined && typeof c[accessor] === 'function');
+        let owner: AccessorOwner | undefined = globalCandidates.find(hasAccessor);
         if (!owner) {
             try {
                 // Indirect dynamic-import URL so TS doesn't try to resolve the
@@ -281,22 +294,24 @@ async function probeAccessor(page: Page, name: (typeof SETTING_ACCESSORS)[number
                 // typecheck time. The browser resolves it against Foundry's
                 // /systems/<id>/ static mount at runtime.
                 const url = '/systems/wh40k-rpg/module/wh40k-rpg-settings.js';
-                const importer = async (specifier: string): Promise<unknown> => import(/* @vite-ignore */ specifier);
-                const mod = (await importer(url)) as { WH40KSettings?: Record<string, unknown> };
-                if (mod.WH40KSettings && typeof mod.WH40KSettings[accessor] === 'function') {
+                const importer = async (specifier: string): Promise<{ WH40KSettings?: AccessorOwner }> =>
+                    import(/* @vite-ignore */ specifier) as Promise<{ WH40KSettings?: AccessorOwner }>;
+                const mod = await importer(url);
+                if (hasAccessor(mod.WH40KSettings)) {
                     owner = mod.WH40KSettings;
                 }
             } catch (err) {
-                return { ok: false, error: `dynamic import failed: ${String((err as Error).message)}` };
+                return { ok: false, error: `dynamic import failed: ${err instanceof Error ? err.message : String(err)}` };
             }
         }
         if (!owner) return { ok: false, error: `accessor ${accessor} not found on WH40KSettings surface` };
         try {
-            const fn = owner[accessor] as () => unknown;
+            const fn = owner[accessor];
+            if (typeof fn !== 'function') return { ok: false, error: `accessor ${accessor} is not callable` };
             const value = fn.call(owner);
             return { ok: value !== undefined, error: value === undefined ? 'accessor returned undefined' : null };
         } catch (err) {
-            return { ok: false, error: `accessor threw: ${String((err as Error).message)}` };
+            return { ok: false, error: `accessor threw: ${err instanceof Error ? err.message : String(err)}` };
         }
     }, name);
     return { name, ok: result.ok, error: result.error };
@@ -312,12 +327,12 @@ test.describe.serial('settings toggles (Tier B)', () => {
 
         const failures: string[] = [];
         for (const fullKey of keys) {
-            const probe = await probeSetting(page, fullKey).catch((err) => ({
-                key: fullKey,
-                kind: 'read' as const,
-                ok: false,
-                error: String((err as Error).message),
-            }));
+            let probe: SettingProbe;
+            try {
+                probe = await probeSetting(page, fullKey);
+            } catch (err) {
+                probe = { key: fullKey, kind: 'read', ok: false, error: err instanceof Error ? err.message : String(err) };
+            }
             const shortKey = fullKey.startsWith(`${SYSTEM_ID}.`) ? fullKey.slice(SYSTEM_ID.length + 1) : fullKey;
             if (probe.ok) {
                 // Every successful probe reads the setting; record `setting.read`
@@ -337,11 +352,12 @@ test.describe.serial('settings toggles (Tier B)', () => {
         // src/module/wh40k-rpg-settings.ts covers both the register-site
         // and the read-site lines.
         for (const accessor of SETTING_ACCESSORS) {
-            const probe = await probeAccessor(page, accessor).catch((err) => ({
-                name: accessor,
-                ok: false,
-                error: String((err as Error).message),
-            }));
+            let probe: AccessorProbe;
+            try {
+                probe = await probeAccessor(page, accessor);
+            } catch (err) {
+                probe = { name: accessor, ok: false, error: err instanceof Error ? err.message : String(err) };
+            }
             if (probe.ok) {
                 recordCoverage('setting.accessor', probe.name);
                 continue;

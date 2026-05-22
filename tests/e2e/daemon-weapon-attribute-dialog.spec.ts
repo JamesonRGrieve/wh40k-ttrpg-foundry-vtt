@@ -14,22 +14,33 @@ test.describe('DaemonWeaponAttributeDialog (#142)', () => {
         test.skip(!joined, 'no Gamemaster option appeared in the join select within 30s');
 
         const probe = await page.evaluate(async (): Promise<{ rendered: boolean; hasSelects: boolean; hasResult: boolean; error: string | null }> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side dynamic import probe */
+            interface DialogInstance {
+                render: (opts: { force: boolean }) => Promise<void>;
+                element?: HTMLElement;
+                close: () => Promise<void>;
+            }
+            type RollAction = (this: DialogInstance, event: Event, target: HTMLElement) => Promise<void>;
+            interface DialogCtor {
+                new (data: { alignment: string; bindingStrength: string }): DialogInstance;
+                DEFAULT_OPTIONS: { actions: { roll: RollAction } };
+            }
+            interface DialogModule {
+                default: DialogCtor;
+            }
             try {
                 const modUrl = '/systems/wh40k-rpg/module/applications/prompts/daemon-weapon-attribute-dialog.js';
-                const mod = await import(/* @vite-ignore */ modUrl);
+                const mod = (await import(/* @vite-ignore */ modUrl)) as DialogModule;
                 const DialogCtor = mod.default;
                 const dialog = new DialogCtor({ alignment: 'khorne', bindingStrength: 'normal' });
                 await dialog.render({ force: true });
-                const el = dialog.element as HTMLElement | undefined;
+                const el = dialog.element;
                 const rendered = el instanceof HTMLElement;
                 const hasSelects = !!(el?.querySelector('select[name="alignment"]') && el.querySelector('select[name="bindingStrength"]'));
                 // Force a deterministic roll path
-                const roller = mod.default;
-                const actions = roller.DEFAULT_OPTIONS.actions;
+                const actions = DialogCtor.DEFAULT_OPTIONS.actions;
                 await actions.roll.call(dialog, new Event('click'), document.createElement('button'));
-                const afterEl = dialog.element as HTMLElement | undefined;
-                const hasResult = !!(afterEl && /Attribute\s*1/i.test(afterEl.textContent ?? ''));
+                const afterEl = dialog.element;
+                const hasResult = !!(afterEl && /Attribute\s*1/i.test(afterEl.textContent));
                 await dialog.close();
                 return { rendered, hasSelects, hasResult, error: null };
             } catch (error) {
@@ -40,7 +51,6 @@ test.describe('DaemonWeaponAttributeDialog (#142)', () => {
                     error: error instanceof Error ? error.message : String(error),
                 };
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
 
         expect(probe.error, probe.error ?? '').toBeNull();
