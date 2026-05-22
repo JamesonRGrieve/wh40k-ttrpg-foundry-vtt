@@ -59,25 +59,40 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            // Browser-side probe: each rules module is dynamic-imported at runtime
+            // and exposes a flat namespace of pure-logic functions / constants. We
+            // model the loaded module as a possibly-failed import and narrow each
+            // member to the callable / value shape it is asserted against at the
+            // call site (the spec owns the contract for every module it probes).
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a runtime-imported ESM module exposes members of statically-unknown shape
+            type LoadedModule = Readonly<Record<string, unknown>> & { readonly __importError?: string };
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/rules`;
-            const loadModule = async (name: string): Promise<any> => {
+            const loadModule = async (name: string): Promise<LoadedModule> => {
                 try {
-                    return await import(`${base}/${name}.js`);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM dynamic import of a rules module has no static type
+                    return (await import(`${base}/${name}.js`)) as LoadedModule;
                 } catch (err) {
-                    return { __importError: String((err as Error).message) };
+                    return { __importError: err instanceof Error ? err.message : String(err) };
                 }
             };
-            const guarded = (name: FlowName, fn: () => boolean): void => {
+            // Narrow a module member to a callable with a caller-asserted signature.
+            // Each rules module is pure-logic; the caller knows the contract it is
+            // asserting against, so the return type is supplied at the call site.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: variadic narrowing of a runtime-imported function whose param shape is statically unknown
+            const fn = <R, A extends readonly unknown[] = readonly unknown[]>(mod: LoadedModule, key: string): ((...args: A) => R) =>
+                mod[key] as (...args: A) => R;
+            // Narrow a module member to a plain value (constant export).
+            const val = <V>(mod: LoadedModule, key: string): V => mod[key] as V;
+            const guarded = (name: FlowName, check: () => boolean): void => {
                 try {
-                    record(name, fn(), null);
+                    record(name, check(), null);
                 } catch (err) {
-                    record(name, false, String((err as Error).message));
+                    record(name, false, err instanceof Error ? err.message : String(err));
                 }
             };
             const fail = (keys: readonly FlowName[], detail: string): void => {
@@ -86,98 +101,100 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- daemonic-mastery ----------
             const dm = await loadModule('daemonic-mastery');
-            if (dm?.__importError != null) {
+            if (dm.__importError != null) {
                 fail(['daemonic-mastery-buildTest'], dm.__importError);
             } else {
                 guarded('daemonic-mastery-buildTest', () => {
-                    const factors = dm.DAEMONIC_MASTERY_FACTORS;
-                    const baseOnly = dm.buildDaemonicMasteryTest({ willpowerTotal: 40, factors: [factors.BASE_DIFFICULTY] });
-                    const trueName = dm.buildDaemonicMasteryTest({ willpowerTotal: 40, factors: [factors.BASE_DIFFICULTY, factors.TRUE_NAME] });
+                    const factors = val<Readonly<Record<string, object>>>(dm, 'DAEMONIC_MASTERY_FACTORS');
+                    const build = fn<{ target: number; breakdown: readonly object[] }>(dm, 'buildDaemonicMasteryTest');
+                    const baseOnly = build({ willpowerTotal: 40, factors: [factors.BASE_DIFFICULTY] });
+                    const trueName = build({ willpowerTotal: 40, factors: [factors.BASE_DIFFICULTY, factors.TRUE_NAME] });
                     return baseOnly.target === 10 && trueName.target === 40 && Array.isArray(trueName.breakdown);
                 });
             }
 
             // ---------- dark-pact ----------
             const darkPact = await loadModule('dark-pact');
-            if (darkPact?.__importError != null) {
+            if (darkPact.__importError != null) {
                 fail(['dark-pact-adjustDisposition', 'dark-pact-discoverySubtletyHit'], darkPact.__importError);
             } else {
-                guarded(
-                    'dark-pact-adjustDisposition',
-                    () =>
-                        darkPact.adjustPactDisposition(0, 5) === 3 &&
-                        darkPact.adjustPactDisposition(0, -5) === -3 &&
-                        darkPact.adjustPactDisposition(2, -1) === 1,
-                );
+                guarded('dark-pact-adjustDisposition', () => {
+                    const adjust = fn<number>(darkPact, 'adjustPactDisposition');
+                    return adjust(0, 5) === 3 && adjust(0, -5) === -3 && adjust(2, -1) === 1;
+                });
                 guarded('dark-pact-discoverySubtletyHit', () => {
+                    const hit = fn<number>(darkPact, 'getDiscoverySubtletyHit');
                     const pact = { id: 'p', boon: 'b', bane: 'x', initialDisposition: 0, discoverySubtletyPenalty: 5 };
                     const negative = { id: 'p', boon: 'b', bane: 'x', initialDisposition: 0, discoverySubtletyPenalty: -3 };
-                    return darkPact.getDiscoverySubtletyHit(pact) === 5 && darkPact.getDiscoverySubtletyHit(negative) === 0;
+                    return hit(pact) === 5 && hit(negative) === 0;
                 });
             }
 
             // ---------- exorcism ----------
             const exorcism = await loadModule('exorcism');
-            if (exorcism?.__importError != null) {
+            if (exorcism.__importError != null) {
                 fail(['exorcism-threshold', 'exorcism-prepareAttempt', 'exorcism-hostSurvival'], exorcism.__importError);
             } else {
-                guarded('exorcism-threshold', () => exorcism.getExorcismThreshold(5) === 10 && exorcism.getExorcismThreshold(0) === 1);
+                guarded('exorcism-threshold', () => {
+                    const threshold = fn<number>(exorcism, 'getExorcismThreshold');
+                    return threshold(5) === 10 && threshold(0) === 1;
+                });
                 guarded('exorcism-prepareAttempt', () => {
-                    const r = exorcism.prepareExorcismAttempt({ exorcistWillpower: 40, factors: [] });
+                    const r = fn<{ target: number; breakdown: readonly object[] }>(exorcism, 'prepareExorcismAttempt')({ exorcistWillpower: 40, factors: [] });
                     return typeof r.target === 'number' && Array.isArray(r.breakdown) && r.breakdown.length > 0;
                 });
-                guarded('exorcism-hostSurvival', () => exorcism.getHostSurvivalTarget(40) === 30 && exorcism.getHostSurvivalTarget(5) === 0);
+                guarded('exorcism-hostSurvival', () => {
+                    const survival = fn<number>(exorcism, 'getHostSurvivalTarget');
+                    return survival(40) === 30 && survival(5) === 0;
+                });
             }
 
             // ---------- malefic-corruption ----------
             const malefic = await loadModule('malefic-corruption');
-            if (malefic?.__importError != null) {
+            if (malefic.__importError != null) {
                 fail(['malefic-corruption-cost'], malefic.__importError);
             } else {
-                guarded(
-                    'malefic-corruption-cost',
-                    () =>
-                        malefic.getMaleficCorruptionCost('malefic', 4, true) === 4 &&
-                        malefic.getMaleficCorruptionCost('malefic', 4, false) === 0 &&
-                        malefic.getMaleficCorruptionCost('biomancy', 5, true) === 0,
-                );
+                guarded('malefic-corruption-cost', () => {
+                    const cost = fn<number>(malefic, 'getMaleficCorruptionCost');
+                    return cost('malefic', 4, true) === 4 && cost('malefic', 4, false) === 0 && cost('biomancy', 5, true) === 0;
+                });
             }
 
             // ---------- possession ----------
             const possession = await loadModule('possession');
-            if (possession?.__importError != null) {
+            if (possession.__importError != null) {
                 fail(['possession-canUnleash', 'possession-spendUnleash', 'possession-resistTarget'], possession.__importError);
             } else {
                 guarded('possession-canUnleash', () => {
+                    const canUnleash = fn<boolean>(possession, 'canUnleashDaemon');
                     return (
-                        possession.canUnleashDaemon({ state: 'none', unleashUsed: 0, unleashMax: 3 }) === false &&
-                        possession.canUnleashDaemon({ state: 'latent', unleashUsed: 0, unleashMax: 2 }) === true &&
-                        possession.canUnleashDaemon({ state: 'latent', unleashUsed: 2, unleashMax: 2 }) === false
+                        !canUnleash({ state: 'none', unleashUsed: 0, unleashMax: 3 }) &&
+                        canUnleash({ state: 'latent', unleashUsed: 0, unleashMax: 2 }) &&
+                        !canUnleash({ state: 'latent', unleashUsed: 2, unleashMax: 2 })
                     );
                 });
                 guarded('possession-spendUnleash', () => {
-                    const next = possession.spendUnleashDaemon({ state: 'latent', unleashUsed: 0, unleashMax: 2 });
-                    const noop = possession.spendUnleashDaemon({ state: 'none', unleashUsed: 0, unleashMax: 3 });
+                    const spend = fn<{ unleashUsed: number }>(possession, 'spendUnleashDaemon');
+                    const next = spend({ state: 'latent', unleashUsed: 0, unleashMax: 2 });
+                    const noop = spend({ state: 'none', unleashUsed: 0, unleashMax: 3 });
                     return next.unleashUsed === 1 && noop.unleashUsed === 0 && typeof possession.resetSessionUnleash === 'function';
                 });
-                guarded(
-                    'possession-resistTarget',
-                    () =>
-                        possession.getResistDaemonTarget(40, 0) === 40 &&
-                        possession.getResistDaemonTarget(40, 95) === 10 &&
-                        possession.getResistDaemonTarget(5, 95) === 0,
-                );
+                guarded('possession-resistTarget', () => {
+                    const resist = fn<number>(possession, 'getResistDaemonTarget');
+                    return resist(40, 0) === 40 && resist(40, 95) === 10 && resist(5, 95) === 0;
+                });
             }
 
             // ---------- psychic-push ----------
             const psyPush = await loadModule('psychic-push');
-            if (psyPush?.__importError != null) {
+            if (psyPush.__importError != null) {
                 fail(['psychic-push-resolveMode'], psyPush.__importError);
             } else {
                 guarded('psychic-push-resolveMode', () => {
-                    const fettered = psyPush.resolvePsyMode({ mode: 'fettered', basePR: 4 });
-                    const unfettered = psyPush.resolvePsyMode({ mode: 'unfettered', basePR: 4 });
-                    const pushed = psyPush.resolvePsyMode({ mode: 'push', basePR: 4, pushLevel: 1 });
+                    const resolve = fn<{ effectivePR: number; focusModifier: number }>(psyPush, 'resolvePsyMode');
+                    const fettered = resolve({ mode: 'fettered', basePR: 4 });
+                    const unfettered = resolve({ mode: 'unfettered', basePR: 4 });
+                    const pushed = resolve({ mode: 'push', basePR: 4, pushLevel: 1 });
                     return (
                         fettered.effectivePR === 2 &&
                         fettered.focusModifier === 10 &&
@@ -190,102 +207,87 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
             // ---------- summoning-ritual ----------
             const summoning = await loadModule('summoning-ritual');
-            if (summoning?.__importError != null) {
+            if (summoning.__importError != null) {
                 fail(['summoning-prepareRitual', 'summoning-bindingDuration'], summoning.__importError);
             } else {
                 const baseRitual = { forbiddenLoreTotal: 80, willpowerTotal: 40, hasTrueName: false, hasComponents: true, extraFactors: [] };
                 guarded('summoning-prepareRitual', () => {
-                    const r = summoning.prepareSummoningRitual(baseRitual);
-                    const floored = summoning.prepareSummoningRitual({ ...baseRitual, forbiddenLoreTotal: 50 });
+                    const prepare = fn<{ forbiddenLoreTarget: number; masteryBreakdown: readonly object[] }>(summoning, 'prepareSummoningRitual');
+                    const r = prepare(baseRitual);
+                    const floored = prepare({ ...baseRitual, forbiddenLoreTotal: 50 });
                     return (
                         r.forbiddenLoreTarget === 20 && floored.forbiddenLoreTarget === 0 && Array.isArray(r.masteryBreakdown) && r.masteryBreakdown.length > 0
                     );
                 });
-                guarded('summoning-bindingDuration', () => summoning.bindingDurationHours(3) === 3 && summoning.bindingDurationHours(-2) === 0);
+                guarded('summoning-bindingDuration', () => {
+                    const duration = fn<number>(summoning, 'bindingDurationHours');
+                    return duration(3) === 3 && duration(-2) === 0;
+                });
             }
 
             // ---------- xenos-equipment ----------
             const xenos = await loadModule('xenos-equipment');
-            if (xenos?.__importError != null) {
+            if (xenos.__importError != null) {
                 fail(['xenos-equipment-condition', 'xenos-equipment-tickDegradation'], xenos.__importError);
             } else {
-                guarded(
-                    'xenos-equipment-condition',
-                    () =>
-                        xenos.getXenosCondition(8) === 'pristine' &&
-                        xenos.getXenosCondition(4) === 'worn' &&
-                        xenos.getXenosCondition(1) === 'degraded' &&
-                        xenos.getXenosCondition(0) === 'ruined',
-                );
+                guarded('xenos-equipment-condition', () => {
+                    const condition = fn<string>(xenos, 'getXenosCondition');
+                    return condition(8) === 'pristine' && condition(4) === 'worn' && condition(1) === 'degraded' && condition(0) === 'ruined';
+                });
                 guarded('xenos-equipment-tickDegradation', () => {
-                    const ticked = xenos.tickXenosDegradation(8, 1);
+                    const ticked = fn<{ newCharges: number; newCondition: string }>(xenos, 'tickXenosDegradation')(8, 1);
                     return (
                         typeof ticked.newCharges === 'number' &&
                         typeof ticked.newCondition === 'string' &&
-                        typeof xenos.nextConditionUp('degraded') === 'string'
+                        typeof fn<string>(xenos, 'nextConditionUp')('degraded') === 'string'
                     );
                 });
             }
 
             // ---------- inquest ----------
             const inquest = await loadModule('inquest');
-            if (inquest?.__importError != null) {
+            if (inquest.__importError != null) {
                 fail(['inquest-revelationsCrossed', 'inquest-currentTier'], inquest.__importError);
             } else {
-                guarded(
-                    'inquest-revelationsCrossed',
-                    () =>
-                        inquest.inquestRevelationsCrossed(300, 300) === 0 &&
-                        inquest.inquestRevelationsCrossed(150, 250) === 1 &&
-                        inquest.inquestRevelationsCrossed(0, 1200) === 5,
-                );
-                guarded(
-                    'inquest-currentTier',
-                    () =>
-                        inquest.getCurrentRevelationTier(0) === 0 &&
-                        inquest.getCurrentRevelationTier(199) === 0 &&
-                        Array.isArray([...inquest.INQUEST_THRESHOLDS]),
-                );
+                guarded('inquest-revelationsCrossed', () => {
+                    const crossed = fn<number>(inquest, 'inquestRevelationsCrossed');
+                    return crossed(300, 300) === 0 && crossed(150, 250) === 1 && crossed(0, 1200) === 5;
+                });
+                guarded('inquest-currentTier', () => {
+                    const tier = fn<number>(inquest, 'getCurrentRevelationTier');
+                    const thresholds = val<readonly object[]>(inquest, 'INQUEST_THRESHOLDS');
+                    return tier(0) === 0 && tier(199) === 0 && Array.isArray([...thresholds]);
+                });
             }
 
             // ---------- malignancy-test ----------
             const malignancy = await loadModule('malignancy-test');
-            if (malignancy?.__importError != null) {
+            if (malignancy.__importError != null) {
                 fail(['malignancy-thresholdsCrossed', 'malignancy-testTarget'], malignancy.__importError);
             } else {
-                guarded(
-                    'malignancy-thresholdsCrossed',
-                    () =>
-                        malignancy.malignancyThresholdsCrossed(15, 15) === 0 &&
-                        malignancy.malignancyThresholdsCrossed(8, 12) === 1 &&
-                        malignancy.malignancyThresholdsCrossed(5, 35) === 3,
-                );
-                guarded(
-                    'malignancy-testTarget',
-                    () =>
-                        malignancy.getMalignancyTestTarget(40, 0) === 40 &&
-                        malignancy.getMalignancyTestTarget(40, 25) === 20 &&
-                        malignancy.getMalignancyTestTarget(5, 95) === 0,
-                );
+                guarded('malignancy-thresholdsCrossed', () => {
+                    const crossed = fn<number>(malignancy, 'malignancyThresholdsCrossed');
+                    return crossed(15, 15) === 0 && crossed(8, 12) === 1 && crossed(5, 35) === 3;
+                });
+                guarded('malignancy-testTarget', () => {
+                    const target = fn<number>(malignancy, 'getMalignancyTestTarget');
+                    return target(40, 0) === 40 && target(40, 25) === 20 && target(5, 95) === 0;
+                });
             }
 
             // ---------- chaos-backgrounds ----------
             const chaosBg = await loadModule('chaos-backgrounds');
-            if (chaosBg?.__importError != null) {
+            if (chaosBg.__importError != null) {
                 fail(['chaos-backgrounds-predicates'], chaosBg.__importError);
             } else {
                 guarded('chaos-backgrounds-predicates', () => {
-                    return (
-                        chaosBg.canConvertMalignancyToMutation(true) === true &&
-                        chaosBg.canConvertMalignancyToMutation(false) === false &&
-                        chaosBg.canApplyIncorruptibleDevotion(true) === true &&
-                        chaosBg.MUTANT_STARTING_CORRUPTION === 10
-                    );
+                    const canConvert = fn<boolean>(chaosBg, 'canConvertMalignancyToMutation');
+                    const canDevotion = fn<boolean>(chaosBg, 'canApplyIncorruptibleDevotion');
+                    return canConvert(true) && !canConvert(false) && canDevotion(true) && val<number>(chaosBg, 'MUTANT_STARTING_CORRUPTION') === 10;
                 });
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

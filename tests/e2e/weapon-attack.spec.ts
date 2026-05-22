@@ -63,6 +63,12 @@ interface ProbeResult {
     pageErrors: string[];
 }
 
+/** Shape returned by the in-page `page.evaluate` probe callback (no page-error list — that is collected on the Node side). */
+interface ProbeEvaluateResult {
+    flowsFired: Record<string, boolean>;
+    flowNotes: Record<string, string>;
+}
+
 async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
     const listener = (err: Error): void => {
@@ -70,9 +76,59 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
     };
     page.on('pageerror', listener);
     try {
-        const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+        const result = await page.evaluate(async (flows: readonly string[]): Promise<ProbeEvaluateResult> => {
+            // ── in-page Foundry boundary shapes. Foundry's globalThis.Actor /
+            // game / ui are runtime-only (no shipped browser-context types), so
+            // this probe models exactly the surface it drives. ──
+            interface WeaponSystem {
+                clip?: { value?: number; max?: number; type?: string };
+                usesAmmo?: boolean;
+                isEmpty?: boolean;
+                isRangedWeapon?: boolean;
+                attack?: { rateOfFire?: { single?: boolean; semi?: number; full?: number } };
+            }
+            // Foundry document mutator methods return the updated document; this
+            // probe never reads that value, so the returns are modelled as
+            // Promise<void>. Roll-dispatch methods likewise have their result
+            // discarded (success is observed via thrown/not-thrown + ui.windows).
+            // A live Foundry Document reliably exposes these instance methods;
+            // they are modelled as required so the probe's call sites don't have
+            // to optional-chain every framework call (the previous `any` typing
+            // hid that the calls were always present).
+            interface ItemDoc {
+                id: string;
+                system?: WeaponSystem;
+                delete: () => Promise<void>;
+                update: (data: object) => Promise<void>;
+            }
+            interface ActorDoc {
+                id: string;
+                system?: { wounds?: { value?: number } };
+                items: { get: (id: string) => ItemDoc | undefined };
+                createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id: string }> | undefined>;
+                delete: () => Promise<void>;
+                rollWeaponAction?: (weapon: ItemDoc) => Promise<void> | void;
+                rollPsychicPower?: (power: ItemDoc) => Promise<void> | void;
+                applyDamage?: (amount: number, location: string, options: { ignoreToughness?: boolean }) => Promise<void>;
+            }
+            interface DialogInstance {
+                render: (options: { force: boolean }) => Promise<void>;
+                close: () => Promise<void>;
+                element?: object | null;
+            }
+            type DialogCtor = new (options: object) => DialogInstance;
+            interface FoundryWindow {
+                id?: string;
+                close?: () => Promise<void>;
+            }
+            interface FoundryGlobal {
+                Actor?: { create?: (data: object) => Promise<ActorDoc | null> };
+                game?: { actors?: { get?: (id: string) => ActorDoc | undefined } };
+                ui?: { windows?: Record<string, FoundryWindow> };
+            }
+
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's globalThis.{Actor,game,ui} are runtime-only, narrowed to the surface this probe drives
+            const g = globalThis as unknown as FoundryGlobal;
             const browserActor = g.Actor;
             const browserGame = g.game;
             const browserUi = g.ui;
@@ -110,7 +166,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
              * roll-methods.spec.ts.
              */
             async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(browserUi?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                const windows = Object.values(browserUi?.windows ?? {});
                 for (const w of windows) {
                     const id = w.id ?? '';
                     if (
@@ -136,9 +192,9 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             const cleanups: Array<() => Promise<void>> = [];
 
             // ---- shared PC actor (dh2-character — has characteristics) ----
-            let pc: any = null;
+            let pc: ActorDoc | null = null;
             try {
-                pc = (await withTimeout(
+                pc = await withTimeout(
                     browserActor.create({
                         name: 'weapon-attack-spec-pc',
                         type: 'dh2-character',
@@ -146,11 +202,12 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     }),
                     5_000,
                     'PC Actor.create',
-                )) as any;
+                );
                 if (pc?.id != null) {
+                    const pcId = pc.id;
                     cleanups.push(async () => {
                         try {
-                            await browserGame?.actors?.get?.(pc.id)?.delete?.();
+                            await browserGame?.actors?.get?.(pcId)?.delete();
                         } catch {
                             /* ignore */
                         }
@@ -174,7 +231,11 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 setTimeout(r, 250);
             });
 
-            const getPc = () => browserGame?.actors?.get?.(pc.id);
+            const getPc = (): ActorDoc => {
+                const live = browserGame?.actors?.get?.(pc.id);
+                if (live == null) throw new Error(`probe PC actor ${pc.id} no longer resolvable`);
+                return live;
+            };
 
             try {
                 /* ============================================================
@@ -190,7 +251,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 try {
                     const live = getPc();
                     const meleeCreated = await withTimeout(
-                        live.createEmbeddedDocuments?.('Item', [
+                        live.createEmbeddedDocuments('Item', [
                             {
                                 name: 'probe-melee-weapon',
                                 type: 'weapon',
@@ -212,7 +273,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         cleanups.push(async () => {
                             try {
-                                await weapon.delete?.();
+                                await weapon.delete();
                             } catch {
                                 /* ignore */
                             }
@@ -251,7 +312,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 try {
                     const live = getPc();
                     const rangedCreated = await withTimeout(
-                        live.createEmbeddedDocuments?.('Item', [
+                        live.createEmbeddedDocuments('Item', [
                             {
                                 name: 'probe-ranged-weapon-ammo',
                                 type: 'weapon',
@@ -276,18 +337,18 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         cleanups.push(async () => {
                             try {
-                                await weapon.delete?.();
+                                await weapon.delete();
                             } catch {
                                 /* ignore */
                             }
                         });
                         const before = weapon.system?.clip?.value ?? -1;
                         const usesAmmoBefore = weapon.system?.usesAmmo ?? false;
-                        await withTimeout(weapon.update?.({ 'system.clip.value': before - 1 }), 5_000, 'decrement clip');
+                        await withTimeout(weapon.update({ 'system.clip.value': before - 1 }), 5_000, 'decrement clip');
                         const freshWeapon = live.items.get(weapon.id);
                         const after = freshWeapon?.system?.clip?.value ?? -1;
                         const usesAmmoAfter = freshWeapon?.system?.usesAmmo ?? false;
-                        if (after === before - 1 && usesAmmoBefore === true && usesAmmoAfter === true) {
+                        if (after === before - 1 && usesAmmoBefore && usesAmmoAfter) {
                             fired['weapon-attack-consumes-ammo'] = true;
                             notes['weapon-attack-consumes-ammo'] = `clip ${before} → ${after}; usesAmmo getter true through update`;
                         } else {
@@ -309,7 +370,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 try {
                     const live = getPc();
                     const emptyCreated = await withTimeout(
-                        live.createEmbeddedDocuments?.('Item', [
+                        live.createEmbeddedDocuments('Item', [
                             {
                                 name: 'probe-empty-weapon',
                                 type: 'weapon',
@@ -334,7 +395,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         cleanups.push(async () => {
                             try {
-                                await weapon.delete?.();
+                                await weapon.delete();
                             } catch {
                                 /* ignore */
                             }
@@ -342,7 +403,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         const usesAmmo = weapon.system?.usesAmmo ?? false;
                         const isEmpty = weapon.system?.isEmpty ?? false;
                         const clipValue = weapon.system?.clip?.value ?? -1;
-                        if (usesAmmo === true && isEmpty === true && clipValue === 0) {
+                        if (usesAmmo && isEmpty && clipValue === 0) {
                             fired['weapon-attack-out-of-ammo'] = true;
                             notes['weapon-attack-out-of-ammo'] = `usesAmmo=true isEmpty=true clip.value=0 — empty-clip getter branch exercised`;
                         } else {
@@ -371,8 +432,12 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     // at runtime. Built specifier so TS doesn't try to resolve
                     // the Foundry-served URL at compile time.
                     const url = '/systems/wh40k-rpg/module/applications/prompts/righteous-fury-dialog.js';
-                    const mod = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(url);
-                    const RighteousFuryDialog = (mod as any).default ?? (mod as any).RighteousFuryDialog;
+                    const importModule = new Function('u', 'return import(u)') as (u: string) => Promise<{
+                        default?: DialogCtor;
+                        RighteousFuryDialog?: DialogCtor;
+                    }>;
+                    const mod = await importModule(url);
+                    const RighteousFuryDialog = mod.default ?? mod.RighteousFuryDialog;
                     if (typeof RighteousFuryDialog !== 'function') {
                         notes['damage-roll-with-fury'] = 'RighteousFuryDialog default export missing';
                     } else {
@@ -386,7 +451,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         });
                         let renderThrew: string | null = null;
                         try {
-                            await withTimeout(dialog.render?.({ force: true }), 5_000, 'RighteousFuryDialog.render');
+                            await withTimeout(dialog.render({ force: true }), 5_000, 'RighteousFuryDialog.render');
                         } catch (err) {
                             renderThrew = String((err as Error).message);
                         }
@@ -398,7 +463,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                             notes['damage-roll-with-fury'] = `render: threw=${renderThrew ?? 'no'} elementPresent=${String(elementPresent)}`;
                         }
                         try {
-                            await dialog.close?.();
+                            await dialog.close();
                         } catch {
                             /* ignore */
                         }
@@ -416,7 +481,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                  * reduction branch + the dh2-npc data model armour schema.
                  * ============================================================ */
                 try {
-                    const npc = (await withTimeout(
+                    const npc = await withTimeout(
                         browserActor.create({
                             name: 'weapon-attack-spec-npc',
                             type: 'dh2-npc',
@@ -428,13 +493,13 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         }),
                         5_000,
                         'NPC Actor.create',
-                    )) as any;
+                    );
                     if (npc?.id == null) {
                         notes['damage-roll-applies-armour'] = 'NPC create returned null';
                     } else {
                         cleanups.push(async () => {
                             try {
-                                await browserGame?.actors?.get?.(npc.id)?.delete?.();
+                                await browserGame?.actors?.get?.(npc.id)?.delete();
                             } catch {
                                 /* ignore */
                             }
@@ -473,7 +538,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 try {
                     const live = getPc();
                     const powerCreated = await withTimeout(
-                        live.createEmbeddedDocuments?.('Item', [
+                        live.createEmbeddedDocuments('Item', [
                             {
                                 name: 'probe-psychic-power',
                                 type: 'psychicPower',
@@ -493,7 +558,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         cleanups.push(async () => {
                             try {
-                                await power.delete?.();
+                                await power.delete();
                             } catch {
                                 /* ignore */
                             }
@@ -528,7 +593,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 try {
                     const live = getPc();
                     const modeCreated = await withTimeout(
-                        live.createEmbeddedDocuments?.('Item', [
+                        live.createEmbeddedDocuments('Item', [
                             {
                                 name: 'probe-fire-mode-weapon',
                                 type: 'weapon',
@@ -555,7 +620,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         cleanups.push(async () => {
                             try {
-                                await weapon.delete?.();
+                                await weapon.delete();
                             } catch {
                                 /* ignore */
                             }
@@ -566,10 +631,10 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         // schema field (semi 3 → 4). The write proves the
                         // attack.rateOfFire path round-trips through
                         // prepareDerivedData.
-                        await withTimeout(weapon.update?.({ 'system.attack.rateOfFire.semi': 4 }), 5_000, 'update fire-mode semi');
+                        await withTimeout(weapon.update({ 'system.attack.rateOfFire.semi': 4 }), 5_000, 'update fire-mode semi');
                         const fresh = live.items.get(weapon.id);
                         const semiAfter = fresh?.system?.attack?.rateOfFire?.semi ?? -1;
-                        if (rof?.single === true && rof?.semi === 3 && rof?.full === 10 && isRanged === true && semiAfter === 4) {
+                        if (rof.single === true && rof.semi === 3 && rof.full === 10 && isRanged && semiAfter === 4) {
                             fired['weapon-modes'] = true;
                             notes['weapon-modes'] = `rateOfFire round-trips: single=true semi=3→4 full=10; isRangedWeapon=true`;
                         } else {
@@ -598,7 +663,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             }
 
             return { flowsFired: fired, flowNotes: notes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, WEAPON_ATTACK_FLOWS);
 
         return {

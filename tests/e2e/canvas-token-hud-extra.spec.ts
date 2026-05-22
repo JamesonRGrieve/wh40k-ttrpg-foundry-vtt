@@ -79,6 +79,11 @@ interface ProbeResult {
     pageErrors: string[];
 }
 
+interface ProbeResultInner {
+    flowsFired: Record<string, boolean>;
+    flowNotes: Record<string, string>;
+}
+
 async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
     const listener = (pageErr: Error): void => {
@@ -86,13 +91,71 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
     };
     page.on('pageerror', listener);
     try {
-        const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only and the canvas/PIXI surface has no shipped typing */
-            const g = globalThis as any;
-            const ActorCls = g.Actor;
-            const HooksMgr = g.Hooks;
-            const ConfigObj = g.CONFIG;
-            const gameMgr = g.game;
+        const result = await page.evaluate(async (flows: readonly string[]): Promise<ProbeResultInner> => {
+            interface ActorLike {
+                id?: string;
+                movement?: Record<string, number> | undefined;
+            }
+            interface ActorApi {
+                create?: (data: object) => Promise<ActorLike | null>;
+            }
+            interface HooksApi {
+                callAll?: (name: string, ...args: object[]) => boolean;
+            }
+            interface MovementActionEntry {
+                teleport?: boolean;
+                measure?: boolean;
+                walls?: string;
+                visualize?: boolean;
+            }
+            interface ConfigApi {
+                Token?: {
+                    rulerClass?: RulerCtor | null;
+                    movement?: { actions?: Record<string, MovementActionEntry> };
+                };
+                wh40k?: {
+                    tokenRulerColors?: { normal: number; double: number; triple: number };
+                    movementTypes?: Record<string, object>;
+                };
+            }
+            interface ActorsCollection {
+                get?: (id: string) => (ActorLike & { delete?: () => Promise<void> }) | undefined;
+            }
+            interface GameApi {
+                actors?: ActorsCollection;
+                i18n?: { localize?: (key: string) => string };
+            }
+            interface PixiApi {
+                UPDATE_PRIORITY?: Record<string, number>;
+            }
+            interface StyleResult {
+                color?: number;
+            }
+            type Waypoint = { action: string; measurement: { cost: number } };
+            interface RulerLike {
+                token: object;
+                _getWaypointStyle: (wp: Waypoint) => StyleResult | undefined;
+                _getSegmentStyle: (wp: Waypoint) => StyleResult | undefined;
+                _getGridHighlightStyle: (wp: Waypoint, offset: { i: number; j: number; k: number }) => StyleResult | undefined;
+            }
+            type RulerCtor = new (token: object) => RulerLike;
+            interface TokenDocApi {
+                registerMovementActions?: () => void;
+            }
+
+            interface FoundryGlobals {
+                Actor?: ActorApi;
+                Hooks: HooksApi;
+                CONFIG?: ConfigApi;
+                game?: GameApi;
+                PIXI?: PixiApi;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor/Hooks/CONFIG/game/PIXI) have no shipped browser-side typing inside page.evaluate
+            const gbl = globalThis as unknown as FoundryGlobals;
+            const ActorCls = gbl.Actor;
+            const HooksMgr = gbl.Hooks;
+            const ConfigObj = gbl.CONFIG;
+            const gameMgr = gbl.game;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
@@ -110,8 +173,8 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             // throw on the top-level UPDATE_PRIORITY lookups in headless
             // mode. Mirrors the stub installed by canvas-ruler.spec.ts and
             // token.spec.ts.
-            g.PIXI = g.PIXI ?? {};
-            g.PIXI.UPDATE_PRIORITY = g.PIXI.UPDATE_PRIORITY ?? {
+            gbl.PIXI = gbl.PIXI ?? {};
+            gbl.PIXI.UPDATE_PRIORITY = gbl.PIXI.UPDATE_PRIORITY ?? {
                 INTERACTION: 50,
                 HIGH: 25,
                 NORMAL: 0,
@@ -142,9 +205,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             // bc-character is the most stable headless actor type per
             // token.spec.ts's notes; gameSystem=bc keeps it on the BC
             // homologation path.
-            let actor: any = null;
+            let actor: ActorLike | null = null;
             try {
-                actor = (await withTimeout(
+                actor = await withTimeout(
                     ActorCls.create({
                         name: 'canvas-token-hud-extra-actor',
                         type: 'bc-character',
@@ -152,11 +215,12 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     }),
                     5_000,
                     'ActorCls.create',
-                )) as any;
+                );
                 if (actor?.id != null) {
+                    const actorId = actor.id;
                     cleanups.push(async () => {
                         try {
-                            await gameMgr?.actors?.get?.(actor.id)?.delete?.();
+                            await gameMgr?.actors?.get?.(actorId)?.delete?.();
                         } catch {
                             /* ignore */
                         }
@@ -174,9 +238,9 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             // `token-hud-no-movement-skips-injection` flow. We don't want
             // to mutate the primary actor's movement halfway through the
             // run because the ruler probes downstream still need it.
-            let actorNoMovement: any = null;
+            let actorNoMovement: ActorLike | null = null;
             try {
-                actorNoMovement = (await withTimeout(
+                actorNoMovement = await withTimeout(
                     ActorCls.create({
                         name: 'canvas-token-hud-extra-actor-no-movement',
                         type: 'bc-npc',
@@ -184,11 +248,12 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     }),
                     5_000,
                     'ActorCls.create (no movement)',
-                )) as any;
+                );
                 if (actorNoMovement?.id != null) {
+                    const actorNoMovementId = actorNoMovement.id;
                     cleanups.push(async () => {
                         try {
-                            await gameMgr?.actors?.get?.(actorNoMovement.id)?.delete?.();
+                            await gameMgr?.actors?.get?.(actorNoMovementId)?.delete?.();
                         } catch {
                             /* ignore */
                         }
@@ -204,11 +269,13 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                  * the URL through a `new Function('u', 'return import(u)')`
                  * trampoline keeps TS off the Foundry-served URL.
                  * ============================================================ */
-                let TokenRulerWH40K: any = null;
+                let TokenRulerWH40K: RulerCtor | null = null;
                 try {
                     const url = '/systems/wh40k-rpg/module/canvas/ruler.js';
-                    const mod: any = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(url);
-                    TokenRulerWH40K = mod?.default ?? mod?.TokenRulerWH40K ?? null;
+                    type RulerModule = { default?: RulerCtor; TokenRulerWH40K?: RulerCtor };
+                    const importMod = new Function('u', 'return import(u)') as (u: string) => Promise<RulerModule>;
+                    const mod = await importMod(url);
+                    TokenRulerWH40K = mod.default ?? mod.TokenRulerWH40K ?? null;
                 } catch (err) {
                     notes['ruler-instantiates-with-token'] = `ruler module import threw: ${String((err as Error).message)}`;
                 }
@@ -234,7 +301,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                  * instance whose prototype chain reaches the imported
                  * class.
                  * ============================================================ */
-                let ruler: any = null;
+                let ruler: RulerLike | null = null;
                 try {
                     const RulerClassFromConfig = ConfigObj?.Token?.rulerClass ?? null;
                     const RulerClass = TokenRulerWH40K ?? RulerClassFromConfig;
@@ -251,14 +318,12 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             // hierarchy with a hand-mounted instance whose
                             // prototype points at TokenRulerWH40K so all
                             // three method overrides resolve normally.
-                            const fallback = Object.create(RulerClass.prototype) as { token: typeof fakeToken };
+                            const fallback = Object.create(RulerClass.prototype as object) as RulerLike;
                             fallback.token = fakeToken;
                             ruler = fallback;
                             notes['ruler-instantiates-with-token'] = `direct ctor threw (${String((err as Error).message)}); using prototype-mounted fallback`;
                         }
-                        if (ruler !== null) {
-                            fired['ruler-instantiates-with-token'] = true;
-                        }
+                        fired['ruler-instantiates-with-token'] = true;
                     }
                 } catch (err) {
                     notes['ruler-instantiates-with-token'] = `ruler instantiation outer threw: ${String((err as Error).message)}`;
@@ -268,24 +333,30 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                 // helper reads. The base-class super calls return a style
                 // object we stub via Object.setPrototypeOf so we don't
                 // depend on Foundry's TokenRuler defaults.
-                const makeWaypoint = (action: string, cost: number): any => ({
+                const makeWaypoint = (action: string, cost: number): Waypoint => ({
                     action,
                     measurement: { cost },
                 });
                 const baseColor = 0x808080;
-                const stubSuperReturns = (instance: any): void => {
+                interface SuperProto {
+                    _getWaypointStyle?: () => StyleResult;
+                    _getSegmentStyle?: () => StyleResult;
+                    _getGridHighlightStyle?: () => StyleResult;
+                }
+                const stubSuperReturns = (instance: object): void => {
                     // Replace each `super.*` call with a stub that returns a
                     // fresh style object carrying baseColor — the helper
                     // reads `style.color` only, so a plain object is
                     // sufficient. We patch the prototype chain's parent
                     // (the Foundry TokenRuler base) so the spread `super.*`
                     // calls in the WH40K subclass resolve to our stub.
-                    const proto = Object.getPrototypeOf(instance);
-                    const parentProto = proto !== null ? Object.getPrototypeOf(proto) : null;
+                    const proto: object | null = Object.getPrototypeOf(instance) as object | null;
+                    const parentProto: object | null = proto !== null ? (Object.getPrototypeOf(proto) as object | null) : null;
                     if (parentProto !== null && typeof parentProto === 'object') {
-                        parentProto._getWaypointStyle = (): any => ({ color: baseColor });
-                        parentProto._getSegmentStyle = (): any => ({ color: baseColor });
-                        parentProto._getGridHighlightStyle = (): any => ({ color: baseColor });
+                        const parent: SuperProto = parentProto;
+                        parent._getWaypointStyle = (): StyleResult => ({ color: baseColor });
+                        parent._getSegmentStyle = (): StyleResult => ({ color: baseColor });
+                        parent._getGridHighlightStyle = (): StyleResult => ({ color: baseColor });
                     }
                 };
 
@@ -433,7 +504,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                 if (ruler !== null && TokenRulerWH40K !== null) {
                     try {
                         const fakeTokenNoMove = { _plannedMovement: { distance: 1 }, actor: { movement: undefined } };
-                        const noMoveRuler: any = Object.create(TokenRulerWH40K.prototype);
+                        const noMoveRuler = Object.create(TokenRulerWH40K.prototype as object) as RulerLike;
                         noMoveRuler.token = fakeTokenNoMove;
                         stubSuperReturns(noMoveRuler);
                         const style = noMoveRuler._getWaypointStyle(makeWaypoint('full', 4));
@@ -467,7 +538,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         id: 'fake-token-active',
                         actor: liveActor2,
                         getFlag: (scope: string, key: string) => (scope === 'wh40k-rpg' && key === 'movementAction' ? 'full' : null),
-                        update: (_data: unknown) => undefined,
+                        update: (_data: object) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
@@ -508,7 +579,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             id: 'fake-token-no-move',
                             actor: liveActorNoMove,
                             getFlag: (_scope: string, _key: string) => null,
-                            update: (_data: unknown) => undefined,
+                            update: (_data: object) => undefined,
                         };
                         const fakeHud = { object: { document: fakeTokenDoc } };
                         HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
@@ -546,7 +617,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         id: 'fake-token-localize',
                         actor: liveActor3,
                         getFlag: (_scope: string, _key: string) => null,
-                        update: (_data: unknown) => undefined,
+                        update: (_data: object) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
@@ -589,12 +660,12 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     statusEffects.className = 'status-effects';
                     htmlRoot.appendChild(statusEffects);
                     const liveActor4 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                    const recordedUpdates: any[] = [];
+                    const recordedUpdates: object[] = [];
                     const fakeTokenDoc = {
                         id: 'fake-token-update',
                         actor: liveActor4,
                         getFlag: (_scope: string, _key: string) => null,
-                        update: (data: unknown) => {
+                        update: (data: object) => {
                             recordedUpdates.push(data);
                         },
                     };
@@ -609,7 +680,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         await new Promise<void>((r) => {
                             setTimeout(r, 50);
                         });
-                        const lastUpdate = recordedUpdates[recordedUpdates.length - 1];
+                        const lastUpdate = recordedUpdates[recordedUpdates.length - 1] as { flags?: { 'wh40k-rpg'?: { movementAction?: string } } } | undefined;
                         const flagsPayload = lastUpdate?.flags?.['wh40k-rpg'];
                         if (flagsPayload?.movementAction === 'charge') {
                             fired['token-hud-set-movement-action-flag-update'] = true;
@@ -644,7 +715,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         id: 'fake-token-hover',
                         actor: liveActor5,
                         getFlag: (_scope: string, _key: string) => null,
-                        update: (_data: unknown) => undefined,
+                        update: (_data: object) => undefined,
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
@@ -690,29 +761,30 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                  * ============================================================ */
                 try {
                     const url = '/systems/wh40k-rpg/module/documents/token.js';
-                    const tokenMod: any = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(url);
-                    const TokenDocumentWH40K = tokenMod?.TokenDocumentWH40K ?? tokenMod?.default ?? null;
+                    type TokenModule = { TokenDocumentWH40K?: TokenDocApi; default?: TokenDocApi };
+                    const importTokenMod = new Function('u', 'return import(u)') as (u: string) => Promise<TokenModule>;
+                    const tokenMod = await importTokenMod(url);
+                    const TokenDocumentWH40K = tokenMod.TokenDocumentWH40K ?? tokenMod.default ?? null;
                     if (typeof TokenDocumentWH40K?.registerMovementActions !== 'function') {
-                        notes['register-movement-actions-config-population'] = `registerMovementActions missing — keys: ${Object.keys(tokenMod ?? {}).join(
-                            ',',
-                        )}`;
+                        notes['register-movement-actions-config-population'] = `registerMovementActions missing — keys: ${Object.keys(tokenMod).join(',')}`;
                     } else {
                         TokenDocumentWH40K.registerMovementActions();
-                        const wh40kTypes = Object.keys((ConfigObj?.wh40k?.movementTypes ?? {}) as Record<string, unknown>);
-                        const registered = (ConfigObj?.Token?.movement?.actions ?? {}) as Record<string, any>;
-                        const missing = wh40kTypes.filter((k) => registered[k] === undefined);
+                        const wh40kTypes = Object.keys(ConfigObj?.wh40k?.movementTypes ?? {});
+                        const registered: Record<string, MovementActionEntry> = ConfigObj?.Token?.movement?.actions ?? {};
+                        const missing = wh40kTypes.filter((k) => !Object.prototype.hasOwnProperty.call(registered, k));
+                        const firstType = wh40kTypes[0];
                         if (wh40kTypes.length > 0 && missing.length === 0) {
                             // Sample one entry to confirm the populated
                             // shape matches the static config in the
                             // source (measure / walls / visualize).
-                            const sample = registered[wh40kTypes[0]];
-                            if (sample?.measure === true && sample?.walls === 'move' && sample?.visualize === true) {
+                            const sample = registered[firstType];
+                            if (sample.measure === true && sample.walls === 'move' && sample.visualize === true) {
                                 fired['register-movement-actions-config-population'] = true;
                             } else {
                                 notes['register-movement-actions-config-population'] = `sample entry shape wrong: ${JSON.stringify({
-                                    measure: sample?.measure,
-                                    walls: sample?.walls,
-                                    visualize: sample?.visualize,
+                                    measure: sample.measure,
+                                    walls: sample.walls,
+                                    visualize: sample.visualize,
                                 })}`;
                             }
                         } else {
@@ -734,7 +806,6 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             }
 
             return { flowsFired: fired, flowNotes: notes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, CANVAS_EXTRA_FLOWS);
 
         return {

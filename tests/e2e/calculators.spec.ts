@@ -51,6 +51,23 @@ interface FlowResult {
     detail: string | null;
 }
 
+// ── Foundry framework boundary shapes reached from the helper `page.evaluate`
+// callbacks below. Foundry's `globalThis.Actor` / `globalThis.game` are
+// runtime-only (no shipped browser-context types), so each helper narrows the
+// global to exactly the surface it touches. ──
+interface ProbeActorDoc {
+    id?: string;
+    type?: string;
+    items?: { filter?: (fn: (i: { type?: string; id?: string }) => boolean) => Array<{ id?: string }> };
+    deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
+    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<void>;
+    delete?: () => Promise<void>;
+}
+interface ProbeFoundryGlobal {
+    Actor?: { create?: (data: object) => Promise<ProbeActorDoc | null> };
+    game?: { actors?: { get?: (id: string) => ProbeActorDoc | undefined } };
+}
+
 /**
  * Create a throwaway bc-character with a known toughness bonus + equipped
  * armour item layout so `computeArmour` has a deterministic input. Returned
@@ -59,11 +76,8 @@ interface FlowResult {
  */
 async function createProbeActor(page: Page): Promise<{ id: string | null; error: string | null }> {
     return page.evaluate(async () => {
-        const ActorCls = (
-            globalThis as unknown as {
-                Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-            }
-        ).Actor;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's globalThis.Actor is runtime-only, narrowed to the create() surface this probe uses
+        const ActorCls = (globalThis as unknown as ProbeFoundryGlobal).Actor;
         if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
@@ -94,11 +108,8 @@ async function createProbeActor(page: Page): Promise<{ id: string | null; error:
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const gameObj = (
-            globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-            }
-        ).game;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's globalThis.game is runtime-only, narrowed to actors.get().delete()
+        const gameObj = (globalThis as unknown as ProbeFoundryGlobal).game;
         await gameObj?.actors?.get?.(id)?.delete?.();
     }, actorId);
 }
@@ -116,21 +127,8 @@ async function setArmourItems(
 ): Promise<{ ok: boolean; error: string | null }> {
     return page.evaluate(
         async ({ actorId: aid, items: armourItems }) => {
-            const gameObj = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      items?: { filter?: (fn: (i: { type?: string; id?: string }) => boolean) => Array<{ id?: string }> };
-                                      deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<unknown>;
-                                  }
-                                | undefined;
-                        };
-                    };
-                }
-            ).game;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's globalThis.game is runtime-only, narrowed to actors.get() + embedded-document ops
+            const gameObj = (globalThis as unknown as ProbeFoundryGlobal).game;
             const actor = gameObj?.actors?.get?.(aid);
             if (!actor) return { ok: false, error: 'actor missing' };
             try {
@@ -168,39 +166,96 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(
-            async ({ urls, actorId: aid }) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- in-page probe: dist modules and Foundry globals are untyped at the evaluate boundary */
-                const g = globalThis as any;
-                const out: Array<{ name: string; passed: boolean; detail: string | null }> = [];
+            async ({ urls, actorId: aid }): Promise<FlowResult[]> => {
+                // ── in-page shapes: dist modules + the Foundry globals this probe reaches ──
+                interface ActorLike {
+                    id?: string;
+                }
+                interface FoundryGlobal {
+                    game?: { actors?: { get?: (id: string) => ActorLike | undefined } };
+                }
+                // computeArmour returns a per-location map; only the fields this
+                // probe asserts on are modelled.
+                interface ArmourLocation {
+                    value?: number;
+                    total?: number;
+                    toughnessBonus?: number;
+                }
+                type ArmourResult = Record<string, ArmourLocation | undefined>;
+                interface ArmourModule {
+                    computeArmour?: (actor: ActorLike) => ArmourResult | undefined;
+                }
+                interface RangeInfo {
+                    bracket?: string;
+                    modifier?: number;
+                    modifiedBy?: string;
+                    isMeltaRange?: boolean;
+                    modifierText?: string;
+                    description?: string;
+                }
+                interface RangeModifierInput {
+                    distance: number;
+                    weaponRange: number;
+                    weaponQualities: Set<string>;
+                    isRangedWeapon: boolean;
+                }
+                // Calculator entry points are probed against the deployed dist
+                // bundle; their concrete return contract is not verified at this
+                // boundary, so returns are modelled as possibly-undefined and the
+                // probe optional-chains defensively.
+                interface RangeModule {
+                    calculateRangeBracket?: (distance: number, weaponRange: number) => RangeInfo | undefined;
+                    calculateRangeModifier?: (input: RangeModifierInput) => RangeInfo | undefined;
+                    applyQualityModifiers?: (info: RangeInfo | undefined, qualities: Set<string>) => RangeInfo | undefined;
+                    isOutOfRange?: (distance: number, weaponRange: number, maxBrackets: number) => boolean | undefined;
+                    isAtMeltaRange?: (bracket: string) => boolean | undefined;
+                    formatRangeDisplay?: (info: RangeInfo) => RangeInfo | undefined;
+                }
+                interface FormulaModule {
+                    parseTBMultiplier?: (formula: string) => number | undefined;
+                    parseDiceRoll?: (formula: string) => string | null | undefined;
+                    describeWoundsFormula?: (formula: string) => string | undefined;
+                    describeFateFormula?: (formula: string) => string | undefined;
+                    evaluateFateFormula?: (formula: string) => number | undefined;
+                    evaluateWoundsFormula?: (formula: string, actor: ActorLike | null) => number | undefined;
+                }
+                interface SubtletyModule {
+                    clampSubtletyLoss?: (delta: number, cap: number) => number;
+                    isSubtletyPrimitive?: (value: string) => boolean;
+                }
+
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's globalThis.game is runtime-only, narrowed to actors.get() for the probe actor lookup
+                const g = globalThis as unknown as FoundryGlobal;
+                const out: FlowResult[] = [];
                 function record(name: string, passed: boolean, detail: string | null = null): void {
                     out.push({ name, passed, detail });
                 }
 
                 // ── module loads (each guarded so one bad import doesn't sink the rest) ──
-                let armourMod: any = null;
-                let rangeMod: any = null;
-                let formulaMod: any = null;
-                let subtletyMod: any = null;
+                let armourMod: ArmourModule | null = null;
+                let rangeMod: RangeModule | null = null;
+                let formulaMod: FormulaModule | null = null;
+                let subtletyMod: SubtletyModule | null = null;
                 try {
-                    armourMod = await import(urls.armour);
+                    armourMod = (await import(urls.armour)) as ArmourModule;
                 } catch (err) {
                     record('armour-calculator-aggregates-locations', false, `armour import failed: ${err instanceof Error ? err.message : String(err)}`);
                     record('armour-calculator-equipped-only', false, `armour import failed: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 try {
-                    rangeMod = await import(urls.range);
+                    rangeMod = (await import(urls.range)) as RangeModule;
                 } catch (err) {
                     record('range-calculator-band', false, `range import failed: ${err instanceof Error ? err.message : String(err)}`);
                     record('range-calculator-extreme', false, `range import failed: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 try {
-                    formulaMod = await import(urls.formula);
+                    formulaMod = (await import(urls.formula)) as FormulaModule;
                 } catch (err) {
                     record('formula-evaluator-evaluates-string', false, `formula import failed: ${err instanceof Error ? err.message : String(err)}`);
                     record('formula-evaluator-with-actor-data', false, `formula import failed: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 try {
-                    subtletyMod = await import(urls.subtlety);
+                    subtletyMod = (await import(urls.subtlety)) as SubtletyModule;
                 } catch (err) {
                     record('subtlety-clamp-edge-cases', false, `subtlety import failed: ${err instanceof Error ? err.message : String(err)}`);
                 }
@@ -240,7 +295,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                     record(
                         'armour-calculator-aggregates-locations',
                         false,
-                        `missing computeArmour or actor (keys=${Object.keys(armourMod ?? {}).join(',')}, actor=${actor != null})`,
+                        `missing computeArmour or actor (keys=${Object.keys(armourMod).join(',')}, actor=${actor != null})`,
                     );
                 }
 
@@ -279,13 +334,13 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                         });
                         const ok =
                             shortInfo?.bracket === 'short' &&
-                            shortInfo?.modifier === 10 &&
+                            shortInfo.modifier === 10 &&
                             standardInfo?.bracket === 'standard' &&
-                            standardInfo?.modifier === 0 &&
+                            standardInfo.modifier === 0 &&
                             longInfo?.bracket === 'long' &&
-                            longInfo?.modifier === -10 &&
+                            longInfo.modifier === -10 &&
                             pointBlankInfo?.bracket === 'pointBlank' &&
-                            pointBlankInfo?.modifier === 30 &&
+                            pointBlankInfo.modifier === 30 &&
                             meltaResult?.isMeltaRange === true;
                         record(
                             'range-calculator-band',
@@ -322,9 +377,9 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                         const display = rangeMod.formatRangeDisplay?.({ ...(gyro ?? extreme), isMeltaRange: false, description: 'd' });
                         const ok =
                             extreme?.bracket === 'extreme' &&
-                            extreme?.modifier === -30 &&
+                            extreme.modifier === -30 &&
                             gyro?.modifier === -10 &&
-                            gyro?.modifiedBy === 'gyro-stabilised' &&
+                            gyro.modifiedBy === 'gyro-stabilised' &&
                             oor === true &&
                             meltaOnExtreme === false &&
                             meltaOnShort === true &&
@@ -359,7 +414,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                         const descFate = formulaMod.describeFateFormula?.('(1-5|=2),(6-10|=3)');
                         const descFatePlain = formulaMod.describeFateFormula?.('whatever');
                         const fateVal = formulaMod.evaluateFateFormula?.('(1-5|=2),(6-10|=3)');
-                        const emptyWounds = formulaMod.evaluateWoundsFormula?.('', null as any);
+                        const emptyWounds = formulaMod.evaluateWoundsFormula?.('', null);
                         const emptyFate = formulaMod.evaluateFateFormula?.('');
                         const invalidFate = formulaMod.evaluateFateFormula?.('not a formula');
                         // fateVal can legitimately be 0 in headless Foundry when
@@ -460,7 +515,6 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                 }
 
                 return out;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             {
                 urls: { armour: ARMOUR_URL, range: RANGE_URL, formula: FORMULA_URL, subtlety: SUBTLETY_URL },

@@ -92,6 +92,11 @@ interface ProbeResult {
     pageErrors: string[];
 }
 
+interface ProbeResultInner {
+    flowsFired: Record<string, boolean>;
+    flowNotes: Record<string, string>;
+}
+
 async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
     const listener = (err: Error): void => {
@@ -99,9 +104,74 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
     };
     page.on('pageerror', listener);
     try {
-        const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+        const result = await page.evaluate(async (flows: readonly string[]): Promise<ProbeResultInner> => {
+            // Shape of the item `system` data the action handlers read back.
+            // Every field is optional — different item types populate
+            // different subsets and headless mode may leave some unset.
+            interface ItemSystem {
+                clip?: { value?: number };
+                coverage?: Iterable<string>;
+                properties?: Iterable<string>;
+                modifications?: Iterable<object>;
+                restrictions?: { armourTypes?: Iterable<string> };
+                addedProperties?: Iterable<string>;
+                addedQualities?: Iterable<string>;
+                removedQualities?: Iterable<string>;
+                rank?: number;
+                objectives?: object[];
+                trainedSkills?: object[];
+                traits?: object[];
+            }
+            interface ItemLike {
+                id: string;
+                system?: ItemSystem;
+                sheet?: SheetLike;
+                items?: { size?: number; get?: (id: string) => ItemLike | undefined };
+                delete?: () => Promise<void>;
+            }
+            interface SheetActionMap {
+                [name: string]: ((event: Event, target: HTMLElement) => void | Promise<void>) | undefined;
+            }
+            interface SheetCtorLike {
+                name?: string;
+                DEFAULT_OPTIONS?: { actions?: SheetActionMap };
+            }
+            interface SheetLike {
+                constructor: SheetCtorLike;
+                element?: HTMLElement | null;
+                item?: ItemLike;
+                tabGroups?: Record<string, string>;
+                render?: (options: { force: boolean }) => Promise<void>;
+                close?: () => Promise<void>;
+            }
+            interface ActorLike {
+                id?: string;
+                createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+                items: { get: (id: string) => ItemLike | undefined };
+                delete?: () => Promise<void>;
+            }
+            interface ActorApi {
+                create?: (data: object) => Promise<ActorLike | null>;
+            }
+            interface WindowLike {
+                id?: string;
+                close?: () => Promise<void>;
+            }
+            interface GameApi {
+                actors?: { get?: (id: string) => ActorLike | undefined };
+                messages?: { size?: number };
+            }
+            interface UiApi {
+                windows?: Record<string, WindowLike>;
+            }
+            interface FoundryGlobals {
+                Actor?: ActorApi;
+                game?: GameApi;
+                ui?: UiApi;
+            }
+
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor/game/ui) have no shipped browser-side typing inside page.evaluate
+            const g = globalThis as unknown as FoundryGlobals;
             const ActorCls = g.Actor;
             const gameObj = g.game;
             const uiObj = g.ui;
@@ -120,20 +190,20 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
             // Wrap any awaitable with a 5s timeout so a blocking dialog or
             // socket-wait can't hang the spec (mirrors weapon-attack.spec.ts).
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                let timer: ReturnType<typeof setTimeout> | undefined;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer !== null) clearTimeout(timer);
+                    clearTimeout(timer);
                 }
             };
 
             /** Drain any open dialog / confirmation / sheet popouts spawned by an action. */
             async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(uiObj?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                const windows = Object.values(uiObj?.windows ?? {});
                 for (const w of windows) {
                     const id = w.id ?? '';
                     if (id.includes('dialog') || id.includes('prompt') || id.includes('confirm') || id.includes('editor')) {
@@ -166,9 +236,9 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
             };
 
             // ---- shared PC actor (dh2-character) ----
-            let pc: any = null;
+            let pc: ActorLike | null = null;
             try {
-                pc = (await withTimeout(
+                pc = await withTimeout(
                     ActorCls.create({
                         name: 'sheet-action-item-spec-pc',
                         type: 'dh2-character',
@@ -176,11 +246,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     }),
                     5_000,
                     'PC Actor.create',
-                )) as any;
-                if (pc?.id != null) {
+                );
+                const createdId = pc?.id;
+                if (createdId != null) {
                     cleanups.push(async () => {
                         try {
-                            await gameObj?.actors?.get?.(pc.id)?.delete?.();
+                            await gameObj?.actors?.get?.(createdId)?.delete?.();
                         } catch {
                             /* ignore */
                         }
@@ -190,7 +261,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                 for (const f of flows) notes[f] = `PC create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (pc?.id == null) {
+            const pcId = pc?.id;
+            if (pcId == null) {
                 return { flowsFired: fired, flowNotes: notes };
             }
 
@@ -200,23 +272,28 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                 setTimeout(r, 250);
             });
 
-            const getPc = (): any => gameObj?.actors?.get?.(pc.id);
+            const getPc = (): ActorLike | undefined => gameObj?.actors?.get?.(pcId);
 
             /**
              * Spin up an item of the given type, render its sheet, return
              * a handle (`{ item, sheet }`) and register cleanup for both.
              * Returns `null` if the embedded create / sheet render fails.
              */
-            async function makeItemSheet(type: string, systemData: Record<string, unknown>, name = `probe-${type}`): Promise<{ item: any; sheet: any } | null> {
+            async function makeItemSheet(
+                type: string,
+                systemData: object,
+                name = `probe-${type}`,
+            ): Promise<{ item: ItemLike; sheet: SheetLike | null } | null> {
                 const live = getPc();
-                let createdRaw: unknown;
+                if (live?.createEmbeddedDocuments == null) return null;
+                let created: Array<{ id?: string }> = [];
                 try {
-                    createdRaw = await withTimeout(live.createEmbeddedDocuments?.('Item', [{ name, type, system: systemData }]), 5_000, `create ${type}`);
+                    created = await withTimeout(live.createEmbeddedDocuments('Item', [{ name, type, system: systemData }]), 5_000, `create ${type}`);
                 } catch {
                     return null;
                 }
-                const created = Array.isArray(createdRaw) ? (createdRaw as any[]) : [];
-                const item = created[0] != null ? live.items.get(created[0].id) : null;
+                const createdId = created[0]?.id;
+                const item = createdId != null ? live.items.get(createdId) : null;
                 if (item == null) return null;
                 cleanups.push(async () => {
                     try {
@@ -225,7 +302,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         /* ignore */
                     }
                 });
-                const sheet = item.sheet;
+                const sheet = item.sheet ?? null;
                 if (sheet?.render == null) return { item, sheet: null };
                 try {
                     await withTimeout(sheet.render({ force: true }), 5_000, `render ${type} sheet`);
@@ -249,12 +326,15 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
              * `{ ok, detail }` so the call site can convert it into a flow
              * fired/note record.
              */
-            async function runHandler(sheet: any, actionName: string, target: HTMLElement): Promise<{ called: boolean; error: string | null }> {
-                const SheetCls = sheet?.constructor;
-                const actions = SheetCls?.DEFAULT_OPTIONS?.actions ?? {};
-                const handler = actions[actionName] as ((event: Event, target: HTMLElement) => unknown) | undefined;
+            async function runHandler(sheet: SheetLike | null, actionName: string, target: HTMLElement): Promise<{ called: boolean; error: string | null }> {
+                if (sheet == null) {
+                    return { called: false, error: `${actionName} dispatch skipped: sheet unavailable` };
+                }
+                const SheetCls = sheet.constructor;
+                const actions: SheetActionMap = SheetCls.DEFAULT_OPTIONS?.actions ?? {};
+                const handler = actions[actionName];
                 if (typeof handler !== 'function') {
-                    return { called: false, error: `${actionName} action missing on ${SheetCls?.name ?? 'unknown sheet'}` };
+                    return { called: false, error: `${actionName} action missing on ${SheetCls.name ?? 'unknown sheet'}` };
                 }
                 try {
                     await withTimeout(Promise.resolve(handler.call(sheet, evt, target)), 5_000, `${actionName} dispatch`);
@@ -331,7 +411,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             const live = sheet.item ?? item;
                             const before = live.system?.clip?.value ?? -1;
                             const res = await runHandler(sheet, 'expendAmmo', makeTarget({}));
-                            const after = getPc()?.items?.get?.(item.id)?.system?.clip?.value ?? -1;
+                            const after = getPc()?.items.get(item.id)?.system?.clip?.value ?? -1;
                             if (res.called && after === before - 1) {
                                 fired['weapon-sheet::expendAmmo'] = true;
                                 notes['weapon-sheet::expendAmmo'] = `clip ${before} → ${after}`;
@@ -423,8 +503,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // toggleCoverage — flips a location in the coverage Set, persists as array.
                         try {
                             const res = await runHandler(sheet, 'toggleCoverage', makeTarget({ location: 'head' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const coverage: string[] = Array.from((fresh?.system?.coverage ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const coverage: string[] = Array.from(fresh?.system?.coverage ?? []);
                             if (res.called && coverage.includes('head')) {
                                 fired['armour-sheet::toggleCoverage'] = true;
                                 notes['armour-sheet::toggleCoverage'] = `coverage now ${JSON.stringify(coverage)}`;
@@ -447,8 +527,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             if (root != null) root.appendChild(injected);
 
                             const res = await runHandler(sheet, 'addProperty', makeTarget({}));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const props = Array.from((fresh?.system?.properties ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const props = Array.from(fresh?.system?.properties ?? []);
                             if (res.called && props.includes('blessed')) {
                                 fired['armour-sheet::addProperty'] = true;
                                 notes['armour-sheet::addProperty'] = `properties now ${JSON.stringify(props)}`;
@@ -463,8 +543,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // removeProperty — drops the given property identifier from the Set.
                         try {
                             const res = await runHandler(sheet, 'removeProperty', makeTarget({ property: 'sealed' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const props = Array.from((fresh?.system?.properties ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const props = Array.from(fresh?.system?.properties ?? []);
                             if (res.called && !props.includes('sealed')) {
                                 fired['armour-sheet::removeProperty'] = true;
                                 notes['armour-sheet::removeProperty'] = `properties now ${JSON.stringify(props)}`;
@@ -491,8 +571,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // removeMod — drops the modifications[modIndex] entry.
                         try {
                             const res = await runHandler(sheet, 'removeMod', makeTarget({ modIndex: '0' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const mods = Array.from((fresh?.system?.modifications ?? []) as Iterable<unknown>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const mods = Array.from(fresh?.system?.modifications ?? []);
                             if (res.called && mods.length === 0) {
                                 fired['armour-sheet::removeMod'] = true;
                                 notes['armour-sheet::removeMod'] = `modifications now length ${mods.length}`;
@@ -535,8 +615,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // toggleArmourType — flips a key in restrictions.armourTypes.
                         try {
                             const res = await runHandler(sheet, 'toggleArmourType', makeTarget({ type: 'medium' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const types = Array.from((fresh?.system?.restrictions?.armourTypes ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const types = Array.from(fresh?.system?.restrictions?.armourTypes ?? []);
                             if (res.called && types.includes('medium')) {
                                 fired['armour-mod-sheet::toggleArmourType'] = true;
                                 notes['armour-mod-sheet::toggleArmourType'] = `types now ${JSON.stringify(types)}`;
@@ -563,8 +643,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // addProperty — adds to addedProperties.
                         try {
                             const res = await runHandler(sheet, 'addProperty', makeTarget({ property: 'blessed', list: 'added' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const added = Array.from((fresh?.system?.addedProperties ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const added = Array.from(fresh?.system?.addedProperties ?? []);
                             if (res.called && added.includes('blessed')) {
                                 fired['armour-mod-sheet::addProperty'] = true;
                                 notes['armour-mod-sheet::addProperty'] = `added now ${JSON.stringify(added)}`;
@@ -578,8 +658,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // removeProperty — removes from addedProperties.
                         try {
                             const res = await runHandler(sheet, 'removeProperty', makeTarget({ property: 'blessed', list: 'added' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const added = Array.from((fresh?.system?.addedProperties ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const added = Array.from(fresh?.system?.addedProperties ?? []);
                             if (res.called && !added.includes('blessed')) {
                                 fired['armour-mod-sheet::removeProperty'] = true;
                                 notes['armour-mod-sheet::removeProperty'] = `added now ${JSON.stringify(added)}`;
@@ -621,8 +701,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             if (root != null) root.appendChild(injected);
 
                             const res = await runHandler(sheet, 'addQuality', makeTarget({ type: 'added' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const added = Array.from((fresh?.system?.addedQualities ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const added = Array.from(fresh?.system?.addedQualities ?? []);
                             if (res.called && added.includes('powerful')) {
                                 fired['ammo-sheet::addQuality'] = true;
                                 notes['ammo-sheet::addQuality'] = `added now ${JSON.stringify(added)}`;
@@ -637,8 +717,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // removeAddedQuality — drops the given quality from addedQualities.
                         try {
                             const res = await runHandler(sheet, 'removeAddedQuality', makeTarget({ quality: 'accurate' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const added = Array.from((fresh?.system?.addedQualities ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const added = Array.from(fresh?.system?.addedQualities ?? []);
                             if (res.called && !added.includes('accurate')) {
                                 fired['ammo-sheet::removeAddedQuality'] = true;
                                 notes['ammo-sheet::removeAddedQuality'] = `added now ${JSON.stringify(added)}`;
@@ -652,8 +732,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // removeRemovedQuality — drops the given quality from removedQualities.
                         try {
                             const res = await runHandler(sheet, 'removeRemovedQuality', makeTarget({ quality: 'unreliable' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const removed = Array.from((fresh?.system?.removedQualities ?? []) as Iterable<string>);
+                            const fresh = getPc()?.items.get(item.id);
+                            const removed = Array.from(fresh?.system?.removedQualities ?? []);
                             if (res.called && !removed.includes('unreliable')) {
                                 fired['ammo-sheet::removeRemovedQuality'] = true;
                                 notes['ammo-sheet::removeRemovedQuality'] = `removed now ${JSON.stringify(removed)}`;
@@ -721,8 +801,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // adjustRank — writes system.rank with the delta. Talent must be stackable (it is — set above).
                         try {
                             const res = await runHandler(sheet, 'adjustRank', makeTarget({ delta: '1' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const rank = (fresh?.system?.rank ?? -1) as number;
+                            const fresh = getPc()?.items.get(item.id);
+                            const rank = fresh?.system?.rank ?? -1;
                             if (res.called && rank === 2) {
                                 fired['talent-sheet::adjustRank'] = true;
                                 notes['talent-sheet::adjustRank'] = `rank now ${rank}`;
@@ -825,7 +905,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                             const res = await runHandler(sheet, 'nestedItemCreate', makeTarget({ type: 'gear' }));
                             if (res.called) {
                                 fired['container-item-sheet::nestedItemCreate'] = true;
-                                const nested = item?.items?.size ?? 0;
+                                const nested = item.items?.size ?? 0;
                                 notes['container-item-sheet::nestedItemCreate'] = `nested-create dispatch ok; .items.size=${nested}`;
                             } else {
                                 notes['container-item-sheet::nestedItemCreate'] = res.error ?? 'no error';
@@ -874,8 +954,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // addObjective — appends a blank entry.
                         try {
                             const res = await runHandler(sheet, 'addObjective', makeTarget({}));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const objectives = (fresh?.system?.objectives ?? []) as unknown[];
+                            const fresh = getPc()?.items.get(item.id);
+                            const objectives = fresh?.system?.objectives ?? [];
                             if (res.called && objectives.length === 2) {
                                 fired['endeavour-sheet::addObjective'] = true;
                                 notes['endeavour-sheet::addObjective'] = `objectives now length ${objectives.length}`;
@@ -889,8 +969,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // removeObjective — removes index 0 (the original entry); resulting length should be 1.
                         try {
                             const res = await runHandler(sheet, 'removeObjective', makeTarget({ index: '0' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const objectives = (fresh?.system?.objectives ?? []) as unknown[];
+                            const fresh = getPc()?.items.get(item.id);
+                            const objectives = fresh?.system?.objectives ?? [];
                             if (res.called && objectives.length === 1) {
                                 fired['endeavour-sheet::removeObjective'] = true;
                                 notes['endeavour-sheet::removeObjective'] = `objectives now length ${objectives.length}`;
@@ -950,8 +1030,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // addSkill — appends a default Awareness skill.
                         try {
                             const res = await runHandler(sheet, 'addSkill', makeTarget({}));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const skills = (fresh?.system?.trainedSkills ?? []) as unknown[];
+                            const fresh = getPc()?.items.get(item.id);
+                            const skills = fresh?.system?.trainedSkills ?? [];
                             if (res.called && skills.length === 1) {
                                 fired['npc-template-sheet::addSkill'] = true;
                                 notes['npc-template-sheet::addSkill'] = `trainedSkills now length ${skills.length}`;
@@ -965,8 +1045,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // removeSkill — pops the entry at the given index.
                         try {
                             const res = await runHandler(sheet, 'removeSkill', makeTarget({ index: '0' }));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const skills = (fresh?.system?.trainedSkills ?? []) as unknown[];
+                            const fresh = getPc()?.items.get(item.id);
+                            const skills = fresh?.system?.trainedSkills ?? [];
                             if (res.called && skills.length === 0) {
                                 fired['npc-template-sheet::removeSkill'] = true;
                                 notes['npc-template-sheet::removeSkill'] = `trainedSkills now length ${skills.length}`;
@@ -980,8 +1060,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         // addTrait — appends a default new-trait stub.
                         try {
                             const res = await runHandler(sheet, 'addTrait', makeTarget({}));
-                            const fresh = getPc()?.items?.get?.(item.id);
-                            const traits = (fresh?.system?.traits ?? []) as unknown[];
+                            const fresh = getPc()?.items.get(item.id);
+                            const traits = fresh?.system?.traits ?? [];
                             if (res.called && traits.length === 1) {
                                 fired['npc-template-sheet::addTrait'] = true;
                                 notes['npc-template-sheet::addTrait'] = `traits now length ${traits.length}`;
@@ -1023,7 +1103,6 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
             }
 
             return { flowsFired: fired, flowNotes: notes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, SHEET_ACTION_ITEM_FLOWS);
 
         return {
