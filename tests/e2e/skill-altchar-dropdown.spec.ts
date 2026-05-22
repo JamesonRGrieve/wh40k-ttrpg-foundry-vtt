@@ -2,6 +2,31 @@ import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
+interface SkillDropdownState {
+    label: string;
+    rendered: boolean;
+    optionCount: number;
+    currentValue: string | null;
+    target: string | null;
+    halvedVisible: boolean;
+    blockedVisible: boolean;
+}
+
+interface SkillDropdownProbeResult {
+    error: string | null;
+    snaps: { initial: SkillDropdownState; afterSwap: SkillDropdownState } | null;
+}
+
+interface UnifiedRollDialogInstance {
+    render: (force: boolean) => Promise<void>;
+    element?: HTMLElement;
+    close?: () => Promise<void>;
+}
+
+interface UnifiedRollDialogModule {
+    default: new (actionData: object) => UnifiedRollDialogInstance;
+}
+
 /**
  * e2e coverage for #61 — Alt-characteristic dropdown + untrained-skill halving
  * indicator on the UnifiedRollDialog.
@@ -20,10 +45,9 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
         const joined = await joinAsGM(page);
         test.skip(!joined, 'GM join failed');
 
-        const result = await page.evaluate(async () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- e2e probe runs in browser realm against untyped Foundry globals.
+        const result = await page.evaluate(async (): Promise<SkillDropdownProbeResult> => {
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
-            const mod = await import(/* @vite-ignore */ modUrl);
+            const mod = (await import(/* @vite-ignore */ modUrl)) as UnifiedRollDialogModule;
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing', snaps: null };
@@ -82,27 +106,28 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                 calculateSuccessOrFailure: async (): Promise<void> => {},
             };
 
-            let dialog: { render: (force: boolean) => Promise<unknown>; element?: HTMLElement; close?: () => Promise<unknown> };
+            let dialog: UnifiedRollDialogInstance;
             try {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
             } catch (err) {
-                return { error: `dialog render threw: ${String(err instanceof Error ? err.message : err)}`, snaps: null };
+                return { error: `dialog render threw: ${err instanceof Error ? err.message : String(err)}`, snaps: null };
             }
 
             await new Promise<void>((resolve) => {
                 setTimeout(resolve, 100);
             });
-            const root = dialog.element;
-            if (!(root instanceof HTMLElement)) {
+            const rawRoot = dialog.element;
+            if (!(rawRoot instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
             }
+            const root: HTMLElement = rawRoot;
 
-            function readState(label: string): Record<string, unknown> {
-                const charSelect = root!.querySelector<HTMLSelectElement>('.wh40k-skill-char-override__select');
-                const target = root!.querySelector<HTMLElement>('.urd-target__number');
-                const halved = root!.querySelector<HTMLElement>('[data-testid="skill-untrained-halved"]');
-                const blocked = root!.querySelector<HTMLElement>('[data-testid="skill-untrained-advanced"]');
+            function readState(label: string): SkillDropdownState {
+                const charSelect = root.querySelector<HTMLSelectElement>('.wh40k-skill-char-override__select');
+                const target = root.querySelector<HTMLElement>('.urd-target__number');
+                const halved = root.querySelector<HTMLElement>('[data-testid="skill-untrained-halved"]');
+                const blocked = root.querySelector<HTMLElement>('[data-testid="skill-untrained-advanced"]');
                 return {
                     label,
                     rendered: charSelect !== null,

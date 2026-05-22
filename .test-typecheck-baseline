@@ -23,14 +23,15 @@
     "TS2749",
     "TS2769",
     "TS4113",
-    "TS7016"
+    "TS7016",
+    "TS7053"
   ],
   "config": "tsconfig.test.json",
   "totals": {
     "totalErrors": 6
   },
   "byCode": {
-    "TS2722": 5,
-    "TS7053": 1
+    "TS2589": 1,
+    "TS2722": 5
   }
 }

@@ -3,6 +3,18 @@ import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
+interface DaemonPrinceProbeResult {
+    notAscendedRendered: boolean;
+    ascendedRendered: boolean;
+    hasAscendButton: boolean;
+    ascendButtonDisabled: boolean;
+    hasThresholdReadout: boolean;
+    hasBoostBlock: boolean;
+    boostListItems: number;
+    ascendButtonClicked: boolean;
+    error: string | null;
+}
+
 /**
  * Tier B coverage of the BC Daemon Prince panel (#182).
  *
@@ -26,8 +38,36 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+            const result = await page.evaluate(async (): Promise<DaemonPrinceProbeResult> => {
+                interface DaemonPrincePanelBoost {
+                    strengthBonusMultiplier: number;
+                    toughnessBonusMultiplier: number;
+                    bonusWounds: number;
+                    fearRating: number;
+                    daemonicTrait: boolean;
+                    immuneToConditions: string[];
+                }
+                interface DaemonPrincePanelContext {
+                    daemonPrincePanel: {
+                        ascended: boolean;
+                        ascendedAt: number | null;
+                        alignmentAtAscension: string;
+                        infamy: number;
+                        corruption: number;
+                        infamyThreshold: number;
+                        corruptionThreshold: number;
+                        canAscend: boolean;
+                        boost: DaemonPrincePanelBoost | null;
+                    };
+                }
+                interface FoundryProbeGlobal {
+                    fetch: (u: string) => Promise<Response>;
+                    Handlebars: { compile: (s: string) => (ctx: DaemonPrincePanelContext) => string };
+                    __bcDaemonPrincePanelHost?: HTMLElement;
+                    __bcDaemonPrincePanelHostAscended?: HTMLElement;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals are runtime-only, no shipped types
+                const g = globalThis as unknown as FoundryProbeGlobal;
                 const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/bc-daemon-prince-panel.hbs';
                 let error: string | null = null;
                 let notAscendedRendered = false;
@@ -40,9 +80,8 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                 let ascendButtonClicked = false;
 
                 try {
-                    const fetchAny = (globalThis as any).fetch as (u: string) => Promise<Response>;
-                    const src = await (await fetchAny(templateUrl)).text();
-                    const HandlebarsLib = (globalThis as any).Handlebars as { compile: (s: string) => (ctx: unknown) => string };
+                    const src = await (await g.fetch(templateUrl)).text();
+                    const HandlebarsLib = g.Handlebars;
                     if (typeof HandlebarsLib.compile !== 'function') {
                         return {
                             notAscendedRendered,
@@ -99,7 +138,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                         ascendButtonClicked = true;
                     }
 
-                    (globalThis as any).__bcDaemonPrincePanelHost = host;
+                    g.__bcDaemonPrincePanelHost = host;
 
                     // ---- Ascended view (rendered into the same host) ----
                     const ascendedHtml = tpl({
@@ -137,9 +176,9 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                     hasBoostBlock = ascendedHost.querySelector('.wh40k-bc-dp-boost') !== null;
                     boostListItems = ascendedHost.querySelectorAll('.wh40k-bc-dp-boost li').length;
 
-                    (globalThis as any).__bcDaemonPrincePanelHostAscended = ascendedHost;
+                    g.__bcDaemonPrincePanelHostAscended = ascendedHost;
                 } catch (err) {
-                    error = String(err instanceof Error ? err.message : err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
@@ -153,7 +192,6 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                     ascendButtonClicked,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'bc-daemon-prince-panel');
@@ -161,9 +199,14 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
             // Panels captured; tear them down so they don't leak into the
             // next serial test's DOM.
             await page.evaluate(() => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const a = (globalThis as any).__bcDaemonPrincePanelHost as HTMLElement | undefined;
-                const b = (globalThis as any).__bcDaemonPrincePanelHostAscended as HTMLElement | undefined;
+                interface PanelHostGlobal {
+                    __bcDaemonPrincePanelHost?: HTMLElement;
+                    __bcDaemonPrincePanelHostAscended?: HTMLElement;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals are runtime-only, no shipped types
+                const g = globalThis as unknown as PanelHostGlobal;
+                const a = g.__bcDaemonPrincePanelHost;
+                const b = g.__bcDaemonPrincePanelHostAscended;
                 try {
                     a?.remove();
                 } catch {
@@ -174,9 +217,8 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__bcDaemonPrincePanelHost = undefined;
-                (globalThis as any).__bcDaemonPrincePanelHostAscended = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__bcDaemonPrincePanelHost = undefined;
+                g.__bcDaemonPrincePanelHostAscended = undefined;
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

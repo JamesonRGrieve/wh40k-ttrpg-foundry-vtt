@@ -26,7 +26,17 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+                interface DialogInstance {
+                    render: (opts?: { force: boolean }) => Promise<void>;
+                    element: HTMLElement | null;
+                    close: () => Promise<void>;
+                }
+                interface DialogCtor {
+                    new (opts?: object): DialogInstance;
+                }
+                interface DialogModule {
+                    default: DialogCtor;
+                }
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/logistics-test-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -42,10 +52,9 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
                 let troopCountButtons = 0;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts?: unknown): { render: (opts?: unknown) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
+                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return {
                             rendered,
@@ -85,9 +94,10 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
                         hasCancelButton = el.querySelector('button[data-action="owCancelLogistics"]') !== null;
                         troopCountButtons = el.querySelectorAll('[data-axis="troopCount"] button[data-action="owSetAxis"]').length;
                     }
-                    (globalThis as any).__owLogisticsDialog = inst;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing instance on globalThis for cross-evaluate access
+                    (globalThis as unknown as { __owLogisticsDialog?: DialogInstance }).__owLogisticsDialog = inst;
                 } catch (err) {
-                    error = String((err as Error)?.message ?? err);
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
@@ -104,22 +114,23 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
                     troopCountButtons,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'ow-logistics-dialog');
 
             // Tear down so the dialog doesn't leak into the next serial test.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const d = (globalThis as any).__owLogisticsDialog;
+                interface DialogHandle {
+                    close?: () => Promise<void>;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: reading instance stashed on globalThis across evaluate calls
+                const g = globalThis as unknown as { __owLogisticsDialog?: DialogHandle };
                 try {
-                    await d?.close?.();
+                    await g.__owLogisticsDialog?.close?.();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__owLogisticsDialog = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__owLogisticsDialog = undefined;
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
