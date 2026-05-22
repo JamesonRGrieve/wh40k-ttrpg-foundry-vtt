@@ -55,6 +55,21 @@ interface ProbeResult {
     setupError: string | null;
 }
 
+/**
+ * Shape returned by the in-browser `page.evaluate` callback. It uses
+ * loose `Record<string, …>` keying because the callback builds its maps
+ * from the runtime `flows` string array rather than the `FlowName`
+ * literal union; the outer scope reads it back through the typed
+ * `ProbeResult` view.
+ */
+interface RawProbeResult {
+    flowsFired: Record<string, boolean>;
+    flowNotes: Record<string, string>;
+    vehicleId: string | null;
+    starshipId: string | null;
+    setupError: string | null;
+}
+
 async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pageErrors: string[] }> {
     const pageErrors: string[] = [];
     const listener = (err: Error): void => {
@@ -62,9 +77,46 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
     };
     page.on('pageerror', listener);
     try {
-        const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+        const result = await page.evaluate(async (flows: readonly string[]): Promise<RawProbeResult> => {
+            // Foundry globals are runtime-only; describe just the surface this probe touches.
+            type DataValue = string | number | boolean | null | DataLeaf | DataLeaf[];
+            interface DataLeaf {
+                [key: string]: DataValue;
+            }
+            type DocData = Record<string, DataValue>;
+            interface CreatedItem {
+                id?: string;
+                type?: string;
+            }
+            interface ActorLike {
+                id?: string;
+                system?: {
+                    integrity?: { value?: number };
+                    crew?: { required?: number; morale?: { max?: number; value?: number } };
+                    passengers?: number;
+                    altitude?: string;
+                    isDamaged?: boolean;
+                    hullIntegrity?: { max?: number; value?: number };
+                    voidShields?: number;
+                    hullPercentage?: number;
+                    isCrippled?: boolean;
+                    moralePercentage?: number;
+                };
+                items?: { size?: number };
+                update: (data: DocData) => Promise<void>;
+                createEmbeddedDocuments?: (type: string, data: DocData[]) => Promise<CreatedItem[]>;
+                sheet?: { render?: (force: boolean) => Promise<void>; close?: () => Promise<void> };
+                delete?: () => Promise<void>;
+            }
+            interface ActorStatic {
+                create?: (data: DocData) => Promise<ActorLike | null>;
+            }
+            interface FoundryGlobal {
+                Actor?: ActorStatic;
+                game?: { actors?: { get?: (id: string) => ActorLike | null | undefined } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- named Foundry framework boundary: browser-side globalThis (Actor, game)
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorCls = g.Actor;
             const gme = g.game;
 
@@ -76,26 +128,26 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                 return {
                     flowsFired: fired,
                     flowNotes: { 'vehicle-hull-damage': 'Actor.create unavailable' },
-                    vehicleId: null as string | null,
-                    starshipId: null as string | null,
+                    vehicleId: null,
+                    starshipId: null,
                     setupError: 'Actor.create unavailable',
                 };
             }
 
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                const timers: ReturnType<typeof setTimeout>[] = [];
                 const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+                    timers.push(setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms));
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer !== null) clearTimeout(timer);
+                    for (const timer of timers) clearTimeout(timer);
                 }
             };
 
             // ---- create dh2-vehicle ----
-            let vehicleActor: any = null;
+            let vehicleActor: ActorLike | null = null;
             try {
                 vehicleActor = await withTimeout(
                     ActorCls.create({
@@ -125,7 +177,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
             }
 
             // ---- create rt-starship ----
-            let starshipActor: any = null;
+            let starshipActor: ActorLike | null = null;
             try {
                 starshipActor = await withTimeout(
                     ActorCls.create({
@@ -167,8 +219,8 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                 };
             }
 
-            const getVehicle = (): any => (vehicleActor?.id != null ? gme?.actors?.get?.(vehicleActor.id) : null);
-            const getStarship = (): any => (starshipActor?.id != null ? gme?.actors?.get?.(starshipActor.id) : null);
+            const getVehicle = (): ActorLike | null | undefined => (vehicleActor?.id != null ? gme?.actors?.get?.(vehicleActor.id) : null);
+            const getStarship = (): ActorLike | null | undefined => (starshipActor?.id != null ? gme?.actors?.get?.(starshipActor.id) : null);
 
             // ---- 1. vehicle-hull-damage (integrity.value reduces, isDamaged getter flips) ----
             try {
@@ -180,7 +232,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     await withTimeout(v.update({ 'system.integrity.value': Math.max(0, before - 4) }), 5_000, 'vehicle integrity update');
                     const after = getVehicle()?.system?.integrity?.value ?? -1;
                     const isDamaged = getVehicle()?.system?.isDamaged ?? false;
-                    if (after === before - 4 && isDamaged === true) {
+                    if (after === before - 4 && isDamaged) {
                         fired['vehicle-hull-damage'] = true;
                     } else {
                         notes['vehicle-hull-damage'] = `expected integrity ${before - 4} + isDamaged=true, got ${after} / isDamaged=${isDamaged}`;
@@ -231,9 +283,11 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                 } else {
                     await withTimeout(v.update({ 'system.altitude': 'low' }), 5_000, 'altitude low');
                     const atLow = getVehicle()?.system?.altitude;
-                    await withTimeout(getVehicle()?.update?.({ 'system.altitude': 'high' }), 5_000, 'altitude high');
+                    const vHigh = getVehicle();
+                    if (vHigh != null) await withTimeout(vHigh.update({ 'system.altitude': 'high' }), 5_000, 'altitude high');
                     const atHigh = getVehicle()?.system?.altitude;
-                    await withTimeout(getVehicle()?.update?.({ 'system.altitude': 'orbital' }), 5_000, 'altitude orbital');
+                    const vOrbital = getVehicle();
+                    if (vOrbital != null) await withTimeout(vOrbital.update({ 'system.altitude': 'orbital' }), 5_000, 'altitude orbital');
                     const atOrbital = getVehicle()?.system?.altitude;
                     if (atLow === 'low' && atHigh === 'high' && atOrbital === 'orbital') {
                         fired['vehicle-altitude-profile'] = true;
@@ -271,7 +325,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                         'starship component embed',
                     );
                     const after = getStarship()?.items?.size ?? 0;
-                    const createdArr = (Array.isArray(created) ? created : []) as Array<{ type?: string }>;
+                    const createdArr = Array.isArray(created) ? created : [];
                     const componentExists = createdArr.length === 1 && createdArr[0]?.type === 'shipComponent';
                     if (after === before + 1 && componentExists) {
                         fired['starship-component-install'] = true;
@@ -327,7 +381,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                     const shields = post?.system?.voidShields ?? -1;
                     const hullPct = post?.system?.hullPercentage ?? -1;
                     const isCrippled = post?.system?.isCrippled ?? false;
-                    if (hullVal === damaged && shields === 0 && hullPct === 40 && isCrippled === true) {
+                    if (hullVal === damaged && shields === 0 && hullPct === 40 && isCrippled) {
                         fired['starship-hull-and-shields'] = true;
                     } else {
                         notes[
@@ -364,13 +418,14 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                         'vehicle weapon embed',
                     );
                     const afterSize = getVehicle()?.items?.size ?? 0;
-                    const createdArr = (Array.isArray(created) ? created : []) as Array<{ type?: string }>;
+                    const createdArr = Array.isArray(created) ? created : [];
                     const ok = createdArr.length === 1 && createdArr[0]?.type === 'shipWeapon';
                     if (afterSize === beforeSize + 1 && ok) {
                         // Force a sheet render so the vehicle-sheet's item-bucket
                         // switch executes against the new weapon.
                         try {
-                            await withTimeout(getVehicle()?.sheet?.render?.(true), 5_000, 'vehicle sheet render');
+                            const renderPromise = getVehicle()?.sheet?.render?.(true);
+                            if (renderPromise != null) await withTimeout(renderPromise, 5_000, 'vehicle sheet render');
                             await getVehicle()?.sheet?.close?.();
                         } catch {
                             /* sheet render is best-effort here — the embed itself is the metric */
@@ -403,9 +458,8 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                 flowNotes: notes,
                 vehicleId: vehicleActor?.id ?? null,
                 starshipId: starshipActor?.id ?? null,
-                setupError: null as string | null,
+                setupError: null,
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, VEHICLE_STARSHIP_FLOWS);
 
         return {

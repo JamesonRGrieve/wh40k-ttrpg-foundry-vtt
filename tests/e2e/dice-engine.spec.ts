@@ -93,7 +93,40 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (flows: readonly string[]): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported Foundry modules are runtime-only */
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a Foundry Roll's configuration bag is open-ended runtime data with no shipped schema in this repo
+            type RollConfig = Record<string, unknown>;
+            interface RollInstance {
+                total: number;
+                formula: string;
+                _total: number;
+                configuration?: RollConfig;
+                evaluate?: () => Promise<void>;
+                toJSON: () => { configuration?: RollConfig };
+                getTooltip: () => Promise<string>;
+                target: number;
+                isSuccess: boolean;
+                isFailure: boolean;
+                degreesOfSuccess: number;
+                degreesOfFailure: number;
+                degrees: number;
+                absoluteDegrees: number;
+                isCriticalSuccess: boolean;
+                isCriticalFailure: boolean;
+                isDoubles: boolean;
+                triggersRighteousFury: boolean;
+            }
+            interface RollCtor {
+                new (formula: string): RollInstance;
+                constructFormula: (config: RollConfig) => string;
+                evaluate: (config: RollConfig) => Promise<RollInstance | null>;
+                fromData: (data: { configuration?: RollConfig }) => RollInstance | null;
+            }
+            interface BarrelModule {
+                default?: RollCtor;
+                BasicRollWH40K?: RollCtor;
+                D100Roll?: RollCtor;
+                RollConfigurationDialog?: object;
+            }
             const out: FlowResult[] = [];
             const record = (name: string, ok: boolean, detail: string | null = null): void => {
                 out.push({ name: name as FlowName, ok, detail });
@@ -102,13 +135,13 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
             const base = '/systems/wh40k-rpg';
 
             // ---- dynamic imports of the dice engine ----
-            let basicMod: any;
-            let d100Mod: any;
-            let barrelMod: any;
+            let basicMod: BarrelModule;
+            let d100Mod: BarrelModule;
+            let barrelMod: BarrelModule;
             try {
-                basicMod = await import(`${base}/module/dice/basic-roll.js`);
-                d100Mod = await import(`${base}/module/dice/d100-roll.js`);
-                barrelMod = await import(`${base}/module/dice/_module.js`);
+                basicMod = (await import(`${base}/module/dice/basic-roll.js`)) as BarrelModule;
+                d100Mod = (await import(`${base}/module/dice/d100-roll.js`)) as BarrelModule;
+                barrelMod = (await import(`${base}/module/dice/_module.js`)) as BarrelModule;
             } catch (err) {
                 for (const f of flows) record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 return out;
@@ -129,7 +162,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
              * doubles getters are stable. The getters still run against the
              * real source — only the RNG input is fixed.
              */
-            const makeD100 = async (total: number, config: Record<string, unknown>): Promise<any> => {
+            const makeD100 = async (total: number, config: RollConfig): Promise<RollInstance> => {
                 const roll = new D100Roll('1d100');
                 if (typeof roll.evaluate === 'function') {
                     await roll.evaluate();
@@ -205,8 +238,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const restored = BasicRollWH40K.fromData(json);
                 const restoredConfig = restored?.configuration ?? {};
                 const ok =
-                    serializedConfig !== undefined &&
-                    serializedConfig.target === 42 &&
+                    serializedConfig?.target === 42 &&
                     restored instanceof BasicRollWH40K &&
                     restoredConfig.target === 42 &&
                     restoredConfig.flavor === 'roundtrip-probe';
@@ -240,7 +272,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
             // target 60, roll 28 → success; DoS = floor((60-28)/10)+1 = 4.
             try {
                 const roll = await makeD100(28, { target: 60 });
-                const ok = roll.isSuccess === true && roll.isFailure === false && roll.degreesOfSuccess === 4 && roll.degreesOfFailure === 0;
+                const ok = roll.isSuccess && !roll.isFailure && roll.degreesOfSuccess === 4 && roll.degreesOfFailure === 0;
                 record('d100-success-degrees-of-success', ok, `isSuccess=${roll.isSuccess} dos=${roll.degreesOfSuccess} dof=${roll.degreesOfFailure}`);
             } catch (err) {
                 record('d100-success-degrees-of-success', false, err instanceof Error ? err.message : String(err));
@@ -250,7 +282,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
             // target 35, roll 67 → failure; DoF = floor((67-35)/10)+1 = 4.
             try {
                 const roll = await makeD100(67, { target: 35 });
-                const ok = roll.isSuccess === false && roll.isFailure === true && roll.degreesOfFailure === 4 && roll.degreesOfSuccess === 0;
+                const ok = !roll.isSuccess && roll.isFailure && roll.degreesOfFailure === 4 && roll.degreesOfSuccess === 0;
                 record('d100-failure-degrees-of-failure', ok, `isFailure=${roll.isFailure} dof=${roll.degreesOfFailure} dos=${roll.degreesOfSuccess}`);
             } catch (err) {
                 record('d100-failure-degrees-of-failure', false, err instanceof Error ? err.message : String(err));
@@ -278,7 +310,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const natural = await makeD100(3, { target: 40 }); // <= 5
                 const byDos = await makeD100(20, { target: 60 }); // DoS = floor(40/10)+1 = 5 >= 3
                 const notCrit = await makeD100(58, { target: 60 }); // DoS = 1, not crit
-                const ok = natural.isCriticalSuccess === true && byDos.isCriticalSuccess === true && notCrit.isCriticalSuccess === false;
+                const ok = natural.isCriticalSuccess && byDos.isCriticalSuccess && !notCrit.isCriticalSuccess;
                 record(
                     'd100-critical-success',
                     ok,
@@ -294,7 +326,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const natural = await makeD100(98, { target: 40 }); // >= 96
                 const byDof = await makeD100(70, { target: 40 }); // DoF = floor(30/10)+1 = 4 >= 3
                 const notFumble = await makeD100(45, { target: 40 }); // DoF = 1, not fumble
-                const ok = natural.isCriticalFailure === true && byDof.isCriticalFailure === true && notFumble.isCriticalFailure === false;
+                const ok = natural.isCriticalFailure && byDof.isCriticalFailure && !notFumble.isCriticalFailure;
                 record(
                     'd100-critical-failure',
                     ok,
@@ -311,11 +343,11 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 const doublesFailure = await makeD100(77, { target: 50 }); // doubles + failure
                 const notDoubles = await makeD100(34, { target: 50 });
                 const ok =
-                    doublesSuccess.isDoubles === true &&
-                    doublesSuccess.triggersRighteousFury === true &&
-                    doublesFailure.isDoubles === true &&
-                    doublesFailure.triggersRighteousFury === false &&
-                    notDoubles.isDoubles === false;
+                    doublesSuccess.isDoubles &&
+                    doublesSuccess.triggersRighteousFury &&
+                    doublesFailure.isDoubles &&
+                    !doublesFailure.triggersRighteousFury &&
+                    !notDoubles.isDoubles;
                 record(
                     'd100-doubles-righteous-fury',
                     ok,
@@ -359,7 +391,6 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, DICE_ENGINE_FLOWS);
         return { results, pageErrors };
     } finally {

@@ -43,13 +43,35 @@ interface FlowResult {
     error: string | null;
 }
 
+/**
+ * Minimal browser-side shapes for the untyped Foundry V14 globals
+ * (`globalThis.game`, `globalThis.foundry`, `globalThis.Actor`,
+ * `globalThis.Combat`). Foundry ships no types into the Playwright
+ * `page.evaluate` surface, so these stand in for that framework boundary.
+ * Probe callbacks cast `globalThis` to (subsets of) these via a single
+ * boundary disable rather than re-declaring the shape inline each time.
+ */
+interface FoundryEmbeddedActor {
+    createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+    deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<void>;
+    reset?: () => void;
+    prepareData?: () => void;
+    delete?: () => Promise<void>;
+}
+interface FoundryUtils {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty is untyped (any object in, any value out)
+    getProperty: (obj: unknown, path: string) => unknown;
+}
+interface FoundryGlobal {
+    game?: { actors?: { get?: (id: string) => FoundryEmbeddedActor | undefined } };
+    foundry?: { utils?: FoundryUtils };
+    Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
+}
+
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async () => {
-        const ActorCls = (
-            globalThis as unknown as {
-                Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-            }
-        ).Actor;
+    const result = await page.evaluate(async (): Promise<{ id: string | null; error: string | null }> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.Actor surface
+        const ActorCls = (globalThis as unknown as FoundryGlobal).Actor;
         if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
@@ -68,12 +90,9 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
 }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
-    await page.evaluate(async (id: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-            }
-        ).game;
+    await page.evaluate(async (id: string): Promise<void> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game surface
+        const gameGlobal = (globalThis as unknown as FoundryGlobal).game;
         const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -91,33 +110,14 @@ async function probeMode(
     args: { mode: number; value: number; expected: number; key: string; nameSuffix: string },
 ): Promise<FlowResult> {
     return page.evaluate(
-        async ({ actorId: aid, mode, value, expected, key, nameSuffix }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                                      deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                                      reset?: () => void;
-                                      prepareData?: () => void;
-                                  }
-                                | undefined;
-                        };
-                    };
-                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-                }
-            ).game;
-            const foundryGlobal = (
-                globalThis as unknown as {
-                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-                }
-            ).foundry;
-            const getPropertyFn = foundryGlobal?.utils?.getProperty;
+        async ({ actorId: aid, mode, value, expected, key, nameSuffix }): Promise<FlowResult> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game/foundry surface
+            const root = globalThis as unknown as FoundryGlobal;
+            const gameGlobal = root.game;
+            const getPropertyFn = root.foundry?.utils?.getProperty;
             if (!getPropertyFn) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
             const actor = gameGlobal?.actors?.get?.(aid);
-            if (!actor?.createEmbeddedDocuments || !actor.deleteEmbeddedDocuments) {
+            if (actor == null) {
                 return { ok: false, error: 'actor missing embedded-document API' };
             }
             try {
@@ -156,9 +156,25 @@ async function probeMode(
  * effect appears in actor.effects (transfer pipeline), then clean up.
  */
 async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
-    /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry V14 effect collections (.allApplicableEffects() iterator, .items.get(...).effects) have no shipped types here. */
-    return page.evaluate(async (aid) => {
-        const gameGlobal2 = (globalThis as any).game;
+    return page.evaluate(async (aid): Promise<FlowResult> => {
+        interface EffectLike {
+            origin?: string;
+            name?: string;
+            transfer?: boolean;
+            parent?: { id?: string };
+        }
+        interface ActorLike {
+            createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+            deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
+            effects?: { find?: (predicate: (e: EffectLike) => boolean) => EffectLike | undefined };
+            allApplicableEffects?: () => Iterable<EffectLike>;
+            items?: { get?: (id: string) => { effects?: { find?: (predicate: (e: EffectLike) => boolean) => EffectLike | undefined } } | undefined };
+        }
+        interface GameLike {
+            actors?: { get?: (id: string) => ActorLike | undefined };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game surface
+        const gameGlobal2 = (globalThis as unknown as { game?: GameLike }).game;
         const actor = gameGlobal2?.actors?.get?.(aid);
         if (actor?.createEmbeddedDocuments == null) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
         try {
@@ -192,14 +208,14 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
                 // a generator. Walk all three surfaces so the probe works
                 // under either pre-V13 (copied into actor.effects) or post-V13
                 // (item-resident with applicable-iterator) semantics.
-                const matchesOrigin = (e: any): boolean => typeof e?.origin === 'string' && e.origin.includes(itemId);
-                let transferred: unknown = null;
+                const matchesOrigin = (e: EffectLike): boolean => typeof e.origin === 'string' && e.origin.includes(itemId);
+                let transferred: EffectLike | null = null;
                 // 1) actor.effects (legacy / some V14 paths)
                 transferred = live?.effects?.find?.(matchesOrigin) ?? null;
                 // 2) actor.allApplicableEffects() generator
                 if (transferred == null && typeof live?.allApplicableEffects === 'function') {
                     for (const e of live.allApplicableEffects()) {
-                        if (matchesOrigin(e) || e?.parent?.id === itemId) {
+                        if (matchesOrigin(e) || e.parent?.id === itemId) {
                             transferred = e;
                             break;
                         }
@@ -208,7 +224,7 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
                 // 3) item.effects.contents — the effect is at least on the item
                 if (transferred == null) {
                     const item = live?.items?.get?.(itemId);
-                    const found = item?.effects?.find?.((e: any) => e?.name === 'probe-transfer-effect') ?? null;
+                    const found = item?.effects?.find?.((e: EffectLike) => e.name === 'probe-transfer-effect') ?? null;
                     if (found?.transfer === true) transferred = found;
                 }
                 if (transferred == null) {
@@ -226,7 +242,6 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
             return { ok: false, error: `transfer probe threw: ${err instanceof Error ? err.message : String(err)}` };
         }
     }, actorId);
-    /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
 /**
@@ -235,13 +250,41 @@ async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
  * decremented. Returns failure rather than throwing on any sub-step.
  */
 async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> {
-    /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry V14 Combat / ActiveEffect collections aren't typed in this surface. */
-    return page.evaluate(async (aid) => {
-        const root = globalThis as any;
+    return page.evaluate(async (aid): Promise<FlowResult> => {
+        interface DurationLike {
+            value?: number;
+            units?: string;
+            remaining?: number;
+        }
+        interface EffectLike {
+            isTemporary?: boolean;
+            duration?: DurationLike;
+            remainingDuration?: number;
+        }
+        interface CombatLike {
+            id?: string;
+            round?: number;
+            turn?: number;
+            createEmbeddedDocuments?: (type: string, data: object[]) => Promise<void>;
+            startCombat?: () => Promise<void>;
+            nextRound?: () => Promise<void>;
+            delete?: () => Promise<void>;
+        }
+        interface ActorLike {
+            createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+            deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
+            effects?: { get?: (id: string) => EffectLike | undefined };
+        }
+        interface RootLike {
+            game?: { actors?: { get?: (id: string) => ActorLike | undefined } };
+            Combat?: { create?: (data: object) => Promise<CombatLike | null> };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game/Combat surface
+        const root = globalThis as unknown as RootLike;
         const actor = root.game?.actors?.get?.(aid);
         if (actor?.createEmbeddedDocuments == null) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
         let effectId: string | null = null;
-        let combat: any = null;
+        let combat: CombatLike | null = null;
         try {
             // V14: ActiveEffect.isTemporary returns true only when the effect
             // has `seconds`, `startTime`, or a `combat`-anchored round/turn.
@@ -289,11 +332,7 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
             //   - duration.remaining > 0 (V14 normalized form)
             //   - duration.value > 0 with rounds/turns units
             // as evidence the temporary-duration path is exercised.
-            const dur = (effect.duration ?? {}) as {
-                value?: number;
-                units?: string;
-                remaining?: number;
-            };
+            const dur: DurationLike = effect.duration ?? {};
             const looksTemporary =
                 effect.isTemporary === true ||
                 (typeof dur.remaining === 'number' && dur.remaining > 0) ||
@@ -349,7 +388,6 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
             }
         }
     }, actorId);
-    /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
 /**
@@ -357,30 +395,14 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
  */
 async function probeDisabled(page: Page, actorId: string, key: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ actorId: aid, key: fieldKey }) => {
-            const gameGlobal3 = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                                      deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                                  }
-                                | undefined;
-                        };
-                    };
-                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-                }
-            ).game;
-            const getPropertyFn3 = (
-                globalThis as unknown as {
-                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-                }
-            ).foundry?.utils?.getProperty;
+        async ({ actorId: aid, key: fieldKey }): Promise<FlowResult> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game/foundry surface
+            const root3 = globalThis as unknown as FoundryGlobal;
+            const gameGlobal3 = root3.game;
+            const getPropertyFn3 = root3.foundry?.utils?.getProperty;
             if (!getPropertyFn3) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
             const actor = gameGlobal3?.actors?.get?.(aid);
-            if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
+            if (actor == null) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
             const baseline = Number(getPropertyFn3(actor, fieldKey) ?? 0);
             let effectId: string | null = null;
             try {
@@ -403,7 +425,7 @@ async function probeDisabled(page: Page, actorId: string, key: string): Promise<
                 return { ok: false, error: `disabled probe threw: ${err instanceof Error ? err.message : String(err)}` };
             } finally {
                 try {
-                    if (effectId !== null) await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
+                    if (effectId !== null) await actor.deleteEmbeddedDocuments('ActiveEffect', [effectId]);
                 } catch {
                     /* best-effort */
                 }
@@ -419,29 +441,14 @@ async function probeDisabled(page: Page, actorId: string, key: string): Promise<
  */
 async function probeDeleteRollback(page: Page, actorId: string, key: string): Promise<FlowResult> {
     return page.evaluate(
-        async ({ actorId: aid, key: fieldKey }) => {
-            const gameGlobal4 = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                                      deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                                  }
-                                | undefined;
-                        };
-                    };
-                }
-            ).game;
-            const getPropertyFn4 = (
-                globalThis as unknown as {
-                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-                }
-            ).foundry?.utils?.getProperty;
+        async ({ actorId: aid, key: fieldKey }): Promise<FlowResult> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game/foundry surface
+            const root4 = globalThis as unknown as FoundryGlobal;
+            const gameGlobal4 = root4.game;
+            const getPropertyFn4 = root4.foundry?.utils?.getProperty;
             if (!getPropertyFn4) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
             const actor = gameGlobal4?.actors?.get?.(aid);
-            if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
+            if (actor == null) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
             const baseline = Number(getPropertyFn4(actor, fieldKey) ?? 0);
             try {
                 const created = await actor.createEmbeddedDocuments('ActiveEffect', [
@@ -458,13 +465,13 @@ async function probeDeleteRollback(page: Page, actorId: string, key: string): Pr
                 if (during === baseline) {
                     // Cleanup, then bail — the effect never applied so rollback is meaningless.
                     try {
-                        await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
+                        await actor.deleteEmbeddedDocuments('ActiveEffect', [effectId]);
                     } catch {
                         /* ignore */
                     }
                     return { ok: false, error: `effect did not modify field before delete: baseline=${baseline}, during=${during}` };
                 }
-                await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
+                await actor.deleteEmbeddedDocuments('ActiveEffect', [effectId]);
                 const liveAfter = gameGlobal4?.actors?.get?.(aid);
                 const after = Number(getPropertyFn4(liveAfter, fieldKey) ?? 0);
                 if (after !== baseline) {

@@ -66,6 +66,54 @@ interface FlowResult {
 }
 
 /**
+ * Browser-side type surface shared by the `page.evaluate` probes below.
+ * These describe only the slices of the runtime Foundry / NPC-tool APIs
+ * that the probes actually touch — they are erased at compile time and
+ * exist purely to type the in-page callbacks (which run in the browser,
+ * where these declarations are not present).
+ */
+type DataValue = string | number | boolean | null | DataLeaf | DataLeaf[];
+interface DataLeaf {
+    [key: string]: DataValue;
+}
+type DocData = Record<string, DataValue>;
+
+/** Minimal parsed-NPC payload the parser/exporter probes inspect. */
+interface ParsedNPC {
+    name?: string;
+    system?: {
+        threatLevel?: number;
+        characteristics?: Record<string, { base?: number } | undefined>;
+    };
+}
+
+interface ParseOutcome {
+    data: ParsedNPC | null;
+    errors: string[];
+    warnings: string[];
+}
+
+interface ActorLike {
+    id: string;
+    uuid: string;
+    system?: {
+        threatLevel?: number;
+        characteristics?: Record<string, { base?: number } | undefined>;
+    };
+    update: (data: DocData) => Promise<void>;
+    delete?: () => Promise<void>;
+}
+
+interface ActorStatic {
+    create?: (data: DocData) => Promise<ActorLike | null>;
+}
+
+interface ActorRegistryGlobal {
+    Actor?: ActorStatic;
+    game?: { actors?: { get?: (id: string) => ActorLike | null | undefined } };
+}
+
+/**
  * Sample DH2-style stat block text. Loose-format and minimal — the
  * parser is designed to tolerate sparse input. The validator will
  * surface warnings but produce a non-null `data` payload.
@@ -98,14 +146,22 @@ const SAMPLE_STAT_BLOCK_TEXT = [
 async function ensurePresetSetting(page: Page): Promise<void> {
     await page
         .evaluate(() => {
-            const g = globalThis as unknown as {
+            interface SettingRegistration {
+                scope: string;
+                config: boolean;
+                default: DataValue;
+                type: ArrayConstructor;
+            }
+            interface SettingsGlobal {
                 game?: {
                     settings?: {
-                        settings?: { get?: (k: string) => unknown };
-                        register?: (ns: string, key: string, opts: Record<string, unknown>) => void;
+                        settings?: { get?: (k: string) => object | undefined };
+                        register?: (ns: string, key: string, opts: SettingRegistration) => void;
                     };
                 };
-            };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- named Foundry framework boundary: browser-side globalThis (game.settings)
+            const g = globalThis as unknown as SettingsGlobal;
             const s = g.game?.settings;
             const registered = s?.settings?.get?.('wh40k-rpg.combatPresets');
             if (registered === undefined && typeof s?.register === 'function') {
@@ -137,9 +193,9 @@ async function probeParser(page: Page): Promise<FlowResult> {
             try {
                 const mod = (await import(moduleUrl)) as {
                     default?: {
-                        parse: (input: string) => { data: unknown; errors: string[]; warnings: string[] };
-                        quickParse: (input: string) => { data: unknown; errors: string[]; warnings: string[] };
-                        parseJSON: (input: string) => { data: unknown; errors: string[] };
+                        parse: (input: string) => ParseOutcome;
+                        quickParse: (input: string) => ParseOutcome;
+                        parseJSON: (input: string) => ParseOutcome;
                     };
                 };
                 const Parser = mod.default;
@@ -149,13 +205,12 @@ async function probeParser(page: Page): Promise<FlowResult> {
 
                 // Text path — should produce a non-null data payload.
                 const textResult = Parser.parse(text);
-                if (textResult.data === null || textResult.data === undefined) {
+                if (textResult.data === null) {
                     return { ok: false, error: `parse(text) returned null data; errors=${textResult.errors.join('; ')}` };
                 }
 
-                const parsed = textResult.data as { system?: { characteristics?: Record<string, unknown> } };
-                const chars = parsed.system?.characteristics;
-                if (chars === undefined || typeof chars !== 'object') {
+                const chars = textResult.data.system?.characteristics;
+                if (chars === undefined) {
                     return { ok: false, error: 'parsed data missing system.characteristics' };
                 }
                 const charKeys = Object.keys(chars);
@@ -194,12 +249,12 @@ async function probeParser(page: Page): Promise<FlowResult> {
 async function probeExporter(page: Page): Promise<FlowResult> {
     return page.evaluate(
         async ({ exporterUrl, parserUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- named Foundry framework boundary: browser-side globalThis (Actor)
+            const g = globalThis as unknown as ActorRegistryGlobal;
             const ActorClass = g.Actor;
             if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
-            let npc: any;
+            let npc: ActorLike | null;
             try {
                 npc = await ActorClass.create({
                     name: 'probe-exporter-npc',
@@ -217,10 +272,15 @@ async function probeExporter(page: Page): Promise<FlowResult> {
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String(err instanceof Error ? err.message : String(err))}` };
             }
-            if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
+            if (npc === null) return { ok: false, error: 'npc create returned null' };
 
             try {
-                const expMod = (await import(exporterUrl)) as { default?: { toJSON: (a: unknown, opts?: unknown) => string; toText: (a: unknown) => string } };
+                const expMod = (await import(exporterUrl)) as {
+                    default?: {
+                        toJSON: (a: ActorLike, opts?: { includeItems?: boolean; prettyPrint?: boolean }) => string;
+                        toText: (a: ActorLike) => string;
+                    };
+                };
                 const Exp = expMod.default;
                 if (typeof Exp?.toJSON !== 'function' || typeof Exp.toText !== 'function') {
                     return { ok: false, error: 'exporter static methods unavailable' };
@@ -230,10 +290,7 @@ async function probeExporter(page: Page): Promise<FlowResult> {
                 if (typeof jsonOut !== 'string' || jsonOut === '') {
                     return { ok: false, error: 'toJSON produced empty output' };
                 }
-                const parsedExport = JSON.parse(jsonOut) as {
-                    name?: string;
-                    system?: { threatLevel?: number; characteristics?: Record<string, { base?: number }> };
-                };
+                const parsedExport = JSON.parse(jsonOut) as ParsedNPC;
                 if (parsedExport.name !== 'probe-exporter-npc') {
                     return { ok: false, error: `exported name mismatch: ${parsedExport.name}` };
                 }
@@ -247,7 +304,7 @@ async function probeExporter(page: Page): Promise<FlowResult> {
                 }
 
                 // Round-trip the JSON back through the parser.
-                const parserMod = (await import(parserUrl)) as { default?: { parseJSON: (s: string) => { data: unknown; errors: string[] } } };
+                const parserMod = (await import(parserUrl)) as { default?: { parseJSON: (s: string) => ParseOutcome } };
                 const Parser = parserMod.default;
                 if (typeof Parser?.parseJSON !== 'function') {
                     return { ok: false, error: 'StatBlockParser.parseJSON unavailable' };
@@ -256,8 +313,7 @@ async function probeExporter(page: Page): Promise<FlowResult> {
                 if (reparsed.data === null) {
                     return { ok: false, error: `parseJSON round-trip failed: ${reparsed.errors.join('; ')}` };
                 }
-                const reparsedData = reparsed.data as { system?: { characteristics?: Record<string, { base?: number }> } };
-                const wsBase = reparsedData.system?.characteristics?.['weaponSkill']?.base;
+                const wsBase = reparsed.data.system?.characteristics?.['weaponSkill']?.base;
                 if (wsBase !== 42) {
                     return { ok: false, error: `WS base did not survive round-trip: got ${wsBase}` };
                 }
@@ -272,7 +328,6 @@ async function probeExporter(page: Page): Promise<FlowResult> {
                     /* best-effort */
                 }
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { exporterUrl: EXPORTER_URL, parserUrl: PARSER_URL },
     );
@@ -291,12 +346,24 @@ async function probeExporter(page: Page): Promise<FlowResult> {
 async function probeScaler(page: Page): Promise<FlowResult> {
     return page.evaluate(
         async ({ scalerUrl, threatCalcUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            interface ScaleOptions {
+                scaleCharacteristics: boolean;
+                scaleWounds: boolean;
+                scaleSkills: boolean;
+                scaleWeapons: boolean;
+                scaleArmour: boolean;
+            }
+            interface DialogInstance {
+                render: (f: boolean) => Promise<void>;
+                close: () => Promise<void>;
+                element?: HTMLElement;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- named Foundry framework boundary: browser-side globalThis (Actor, game)
+            const g = globalThis as unknown as ActorRegistryGlobal;
             const ActorClass = g.Actor;
             if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
-            let npc: any;
+            let npc: ActorLike | null;
             try {
                 npc = await ActorClass.create({
                     name: 'probe-scaler-npc',
@@ -318,11 +385,12 @@ async function probeScaler(page: Page): Promise<FlowResult> {
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String(err instanceof Error ? err.message : String(err))}` };
             }
-            if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
+            if (npc === null) return { ok: false, error: 'npc create returned null' };
+            const actor = npc;
 
             try {
                 const dialogMod = (await import(scalerUrl)) as {
-                    default?: new (a: unknown) => { render: (f: boolean) => Promise<void>; close: () => Promise<void>; element?: HTMLElement };
+                    default?: new (a: ActorLike) => DialogInstance;
                 };
                 const ScalerDialog = dialogMod.default;
                 if (typeof ScalerDialog !== 'function') {
@@ -330,7 +398,7 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                 }
 
                 const calcMod = (await import(threatCalcUrl)) as {
-                    default?: { scaleToThreat: (sys: unknown, cur: number, next: number, opts?: unknown) => Record<string, unknown> };
+                    default?: { scaleToThreat: (sys: ActorLike['system'], cur: number, next: number, opts?: ScaleOptions) => DocData };
                 };
                 const Calc = calcMod.default;
                 if (typeof Calc?.scaleToThreat !== 'function') {
@@ -339,9 +407,9 @@ async function probeScaler(page: Page): Promise<FlowResult> {
 
                 // Construct the dialog — drives constructor + #originalThreat
                 // capture from actor.system.threatLevel.
-                let dialog: { render: (f: boolean) => Promise<void>; close: () => Promise<void>; element?: HTMLElement } | null = null;
+                let dialog: DialogInstance | null = null;
                 try {
-                    dialog = new ScalerDialog(npc);
+                    dialog = new ScalerDialog(actor);
                     await dialog.render(true).catch(() => undefined);
                     await new Promise<void>((r) => {
                         setTimeout(r, 30);
@@ -350,31 +418,33 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                     /* render is best-effort; the static-API drive below is what gates the probe */
                 }
 
+                const fetchActor = (): ActorLike | null | undefined => g.game?.actors?.get?.(actor.id);
+
                 // Scale up: 5 → 6.
-                const wsBefore = Number(g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base ?? 0);
-                const upUpdates = Calc.scaleToThreat(npc.system, 5, 6, {
+                const wsBefore = Number(fetchActor()?.system?.characteristics?.['weaponSkill']?.base ?? 0);
+                const upUpdates = Calc.scaleToThreat(actor.system, 5, 6, {
                     scaleCharacteristics: true,
                     scaleWounds: true,
                     scaleSkills: true,
                     scaleWeapons: true,
                     scaleArmour: true,
                 });
-                const upPayload: Record<string, unknown> = {};
+                const upPayload: DocData = {};
                 for (const [k, v] of Object.entries(upUpdates)) {
                     upPayload[`system.${k}`] = v;
                 }
-                await npc.update(upPayload);
-                const wsAfterUp = Number(g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base ?? 0);
+                await actor.update(upPayload);
+                const wsAfterUp = Number(fetchActor()?.system?.characteristics?.['weaponSkill']?.base ?? 0);
                 if (wsAfterUp <= wsBefore) {
                     return { ok: false, error: `scale-up did not raise WS base: before=${wsBefore}, after=${wsAfterUp}` };
                 }
-                const threatAfterUp = Number(g.game.actors.get(npc.id)?.system?.threatLevel ?? 0);
+                const threatAfterUp = Number(fetchActor()?.system?.threatLevel ?? 0);
                 if (threatAfterUp !== 6) {
                     return { ok: false, error: `scale-up threatLevel mismatch: ${threatAfterUp}` };
                 }
 
                 // Scale down: 6 → 5.
-                const refreshedSystem = g.game.actors.get(npc.id)?.system;
+                const refreshedSystem = fetchActor()?.system;
                 const downUpdates = Calc.scaleToThreat(refreshedSystem, 6, 5, {
                     scaleCharacteristics: true,
                     scaleWounds: true,
@@ -382,12 +452,12 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                     scaleWeapons: true,
                     scaleArmour: true,
                 });
-                const downPayload: Record<string, unknown> = {};
+                const downPayload: DocData = {};
                 for (const [k, v] of Object.entries(downUpdates)) {
                     downPayload[`system.${k}`] = v;
                 }
-                await npc.update(downPayload);
-                const wsAfterDown = Number(g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base ?? 0);
+                await actor.update(downPayload);
+                const wsAfterDown = Number(fetchActor()?.system?.characteristics?.['weaponSkill']?.base ?? 0);
                 if (wsAfterDown >= wsAfterUp) {
                     return { ok: false, error: `scale-down did not lower WS base: after-up=${wsAfterUp}, after-down=${wsAfterDown}` };
                 }
@@ -405,12 +475,11 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                 return { ok: false, error: `scaler probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             } finally {
                 try {
-                    await npc.delete?.();
+                    await actor.delete?.();
                 } catch {
                     /* best-effort */
                 }
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { scalerUrl: SCALER_URL, threatCalcUrl: THREAT_CALC_URL },
     );
@@ -424,12 +493,12 @@ async function probeScaler(page: Page): Promise<FlowResult> {
 async function probeDifficulty(page: Page): Promise<FlowResult> {
     return page.evaluate(
         async ({ difficultyUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- named Foundry framework boundary: browser-side globalThis (Actor)
+            const g = globalThis as unknown as ActorRegistryGlobal;
             const ActorClass = g.Actor;
             if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
-            let npc: any;
+            let npc: ActorLike | null;
             try {
                 npc = await ActorClass.create({
                     name: 'probe-difficulty-npc',
@@ -439,11 +508,12 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String(err instanceof Error ? err.message : String(err))}` };
             }
-            if (npc === null || npc === undefined) return { ok: false, error: 'npc create returned null' };
+            if (npc === null) return { ok: false, error: 'npc create returned null' };
+            const actor = npc;
 
             try {
                 const mod = (await import(difficultyUrl)) as {
-                    default?: new (npc: unknown) => {
+                    default?: new (npc: ActorLike) => {
                         render: (f: boolean) => Promise<void>;
                         close: () => Promise<void>;
                         _getDifficultyRating: (ratio: number) => { key: string; label: string; color: string };
@@ -454,7 +524,7 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
                     return { ok: false, error: 'DifficultyCalculatorDialog default export not a constructor' };
                 }
 
-                const dialog = new DifficultyDialog(npc);
+                const dialog = new DifficultyDialog(actor);
 
                 // Drive every bucket in _getDifficultyRating. Each call
                 // covers one branch arm.
@@ -494,12 +564,11 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
                 return { ok: false, error: `difficulty probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             } finally {
                 try {
-                    await npc.delete?.();
+                    await actor.delete?.();
                 } catch {
                     /* best-effort */
                 }
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { difficultyUrl: DIFFICULTY_URL },
     );
@@ -514,8 +583,8 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
 async function probeBuilder(page: Page): Promise<FlowResult> {
     return page.evaluate(
         async ({ builderUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            // eslint-disable-next-line no-restricted-syntax -- named Foundry framework boundary: browser-side globalThis (Actor, game)
+            const g = globalThis as unknown as ActorRegistryGlobal;
             const ActorClass = g.Actor;
             if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
@@ -528,7 +597,7 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
                         type: 'bc-npc',
                         system: { gameSystem: 'bc', threatLevel: 3 + i },
                     });
-                    if (a === null || a === undefined) continue;
+                    if (a === null) continue;
                     createdIds.push(a.id);
                     npcUuids.push(a.uuid);
                 } catch {
@@ -543,7 +612,7 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
                 const mod = (await import(builderUrl)) as {
                     default?: {
                         show: () => {
-                            addNPC: (u: unknown, c?: number) => Promise<void>;
+                            addNPC: (u: string, c?: number) => Promise<void>;
                             getData: () => { npcs: { count: number }[] };
                             clear: () => void;
                             close: () => Promise<void>;
@@ -608,7 +677,6 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
                     }
                 }
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { builderUrl: BUILDER_URL },
     );
@@ -625,13 +693,14 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
 async function probePreset(page: Page): Promise<FlowResult> {
     return page.evaluate(
         async ({ presetUrl }): Promise<FlowResult> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe */
-            const g = globalThis as any;
+            type PresetData = Record<string, DataValue>;
+            // eslint-disable-next-line no-restricted-syntax -- named Foundry framework boundary: browser-side globalThis (Actor, game)
+            const g = globalThis as unknown as ActorRegistryGlobal;
             const ActorClass = g.Actor;
             if (typeof ActorClass?.create !== 'function') return { ok: false, error: 'Actor.create unavailable' };
 
-            let sourceNPC: any;
-            let targetNPC: any;
+            let sourceNPC: ActorLike | null;
+            let targetNPC: ActorLike | null;
             try {
                 sourceNPC = await ActorClass.create({
                     name: 'probe-preset-source',
@@ -676,19 +745,20 @@ async function probePreset(page: Page): Promise<FlowResult> {
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String(err instanceof Error ? err.message : String(err))}` };
             }
-            if (sourceNPC === null || sourceNPC === undefined || targetNPC === null || targetNPC === undefined)
-                return { ok: false, error: 'npc create returned null' };
+            if (sourceNPC === null || targetNPC === null) return { ok: false, error: 'npc create returned null' };
+            const source = sourceNPC;
+            const target = targetNPC;
 
             let createdPresetId: string | null = null;
             try {
                 const mod = (await import(presetUrl)) as {
                     default?: {
                         showLibrary: () => { close: () => Promise<void> };
-                        createPresetFromNPC: (npc: unknown, name: string, description?: string) => Record<string, unknown>;
-                        addPreset: (p: Record<string, unknown>) => Promise<void>;
+                        createPresetFromNPC: (npc: ActorLike, name: string, description?: string) => PresetData;
+                        addPreset: (p: PresetData) => Promise<void>;
                         getPresets: () => Array<{ id: string; name: string }>;
-                        getPreset: (id: string) => Record<string, unknown> | null;
-                        applyPresetToNPC: (npc: unknown, preset: unknown) => Promise<void>;
+                        getPreset: (id: string) => PresetData | null;
+                        applyPresetToNPC: (npc: ActorLike, preset: PresetData) => Promise<void>;
                         deletePresetById: (id: string) => Promise<void>;
                     };
                 };
@@ -710,7 +780,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
                 }
 
                 const beforeCount = PresetDialog.getPresets().length;
-                const preset = PresetDialog.createPresetFromNPC(sourceNPC, 'probe-preset-name', 'probe-preset-description');
+                const preset = PresetDialog.createPresetFromNPC(source, 'probe-preset-name', 'probe-preset-description');
                 await PresetDialog.addPreset(preset);
 
                 const afterPresets = PresetDialog.getPresets();
@@ -730,8 +800,8 @@ async function probePreset(page: Page): Promise<FlowResult> {
 
                 // Apply to target NPC — should mutate target.system.threatLevel
                 // from 1 → 9 (source's value).
-                await PresetDialog.applyPresetToNPC(targetNPC, fetched);
-                const targetThreat = Number(g.game.actors.get(targetNPC.id)?.system?.threatLevel ?? 0);
+                await PresetDialog.applyPresetToNPC(target, fetched);
+                const targetThreat = Number(g.game?.actors?.get?.(target.id)?.system?.threatLevel ?? 0);
                 if (targetThreat !== 9) {
                     return { ok: false, error: `applyPresetToNPC did not transfer threatLevel: ${targetThreat}` };
                 }
@@ -757,17 +827,16 @@ async function probePreset(page: Page): Promise<FlowResult> {
                     }
                 }
                 try {
-                    await sourceNPC.delete?.();
+                    await source.delete?.();
                 } catch {
                     /* best-effort */
                 }
                 try {
-                    await targetNPC.delete?.();
+                    await target.delete?.();
                 } catch {
                     /* best-effort */
                 }
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         },
         { presetUrl: PRESET_URL },
     );

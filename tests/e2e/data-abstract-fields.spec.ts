@@ -84,18 +84,97 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            // Probe-side shapes. Metadata/_defaults property types are
+            // intentionally a touch wider than the runtime literal (e.g.
+            // `systemFlagsModel: null` rather than `null` literal) so the
+            // runtime equality guards below still carry meaning under
+            // type-checked ESLint instead of collapsing to no-overlap.
+            type FrozenObject = Readonly<Record<string, never>>;
+            interface SystemMetadata {
+                systemFlagsModel: object | null;
+            }
+            interface ItemMetadata {
+                enchantable: boolean;
+                hasEffects: boolean;
+                singleton: boolean;
+                systemFlagsModel: object | null;
+            }
+            interface ActorMetadata {
+                supportsAdvancement: boolean;
+                systemFlagsModel: object | null;
+            }
+            type ClassCtor = new (...args: never[]) => object;
+            interface MixinResult {
+                syntheticMarker?: string;
+                _schemaTemplates?: ClassCtor[];
+            }
+            interface SchemaDict {
+                [key: string]: number;
+            }
+            // `_initializationOrder` yields `[fieldName, field]` schema entries
+            // in dependency order. We only drain it (never inspect entries), so
+            // the element shape just needs to be iterable.
+            interface IterableResult {
+                [Symbol.iterator]: () => Iterator<readonly [string, object]>;
+            }
+            interface SystemDataModelCtor extends ClassCtor {
+                metadata: SystemMetadata & FrozenObject;
+                mergeSchema: (a: SchemaDict, b: SchemaDict) => SchemaDict;
+                _migrateData: (source: Record<string, never>) => void;
+                _cleanData: (source: Record<string, never> | undefined) => void;
+                mixin: (template: ClassCtor) => MixinResult;
+                _initializationOrder: () => IterableResult;
+                _schemaTemplates: ClassCtor[];
+                defineSchema: () => SchemaDict;
+            }
+            // `_migrateData` rewrites the string forms of `description` /
+            // `source` into their object forms in place, and `coverage` /
+            // `properties` arrays into Sets, so each field is the union of
+            // its pre- and post-migration shapes.
+            interface ItemMigrateSource {
+                description?: string | { value?: string; chat?: string; summary?: string };
+                source?: string | { book?: string; page?: string; custom?: string };
+                coverage?: string[] | Set<string>;
+                properties?: string[] | Set<string>;
+                img?: string;
+                type?: string;
+            }
+            interface ItemDataModelCtor {
+                metadata: ItemMetadata & FrozenObject;
+                _migrateData: (source: ItemMigrateSource) => void;
+            }
+            interface ActorDataModelCtor {
+                metadata: ActorMetadata & FrozenObject;
+                _migrateData: (source: { name?: string; type?: string }) => void;
+            }
+            interface FieldInstance {
+                _validateType: (value: string) => void;
+            }
+            interface FormulaFieldCtor {
+                _defaults: { deterministic: boolean };
+                new (options: { deterministic: boolean }): FieldInstance;
+            }
+            interface IdentifierFieldCtor {
+                _defaults: { nullable: boolean; blank: boolean; textSearch: boolean };
+                fromName: (name: string) => string;
+                new (options: Record<string, never>): FieldInstance;
+            }
+            interface LoadedModule<T> {
+                default: T;
+                __importError?: string;
+            }
+
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/data`;
-            const loadModule = async (path: string): Promise<any> => {
+            const loadModule = async <T>(path: string): Promise<LoadedModule<T>> => {
                 try {
-                    return await import(`${base}/${path}.js`);
+                    return (await import(`${base}/${path}.js`)) as LoadedModule<T>;
                 } catch (err) {
-                    return { __importError: String(err instanceof Error ? err.message : err) };
+                    return { __importError: String(err instanceof Error ? err.message : err) } as LoadedModule<T>;
                 }
             };
             const guarded = (name: FlowName, fn: () => boolean | string): void => {
@@ -109,7 +188,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
             };
 
             // ---------- abstract/system-data-model ----------
-            const sdmMod = await loadModule('abstract/system-data-model');
+            const sdmMod = await loadModule<SystemDataModelCtor>('abstract/system-data-model');
             const systemFlowKeys = [
                 'system-data-model-metadata-default',
                 'system-data-model-mergeSchema',
@@ -118,24 +197,24 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                 'system-data-model-mixin-both-branches',
                 'system-data-model-initializationOrder-generator',
             ] as const;
-            if (sdmMod?.__importError !== undefined) {
+            if (sdmMod.__importError !== undefined) {
                 for (const k of systemFlowKeys) record(k, false, sdmMod.__importError);
             } else {
                 const SystemDataModel = sdmMod.default;
                 guarded('system-data-model-metadata-default', () => {
                     const meta = SystemDataModel.metadata;
-                    return meta !== null && typeof meta === 'object' && meta.systemFlagsModel === null && Object.isFrozen(meta);
+                    return meta.systemFlagsModel === null && Object.isFrozen(meta);
                 });
                 guarded('system-data-model-mergeSchema', () => {
-                    const a: Record<string, unknown> = { foo: 1 };
-                    const b: Record<string, unknown> = { bar: 2, foo: 3 };
+                    const a: SchemaDict = { foo: 1 };
+                    const b: SchemaDict = { bar: 2, foo: 3 };
                     const merged = SystemDataModel.mergeSchema(a, b);
-                    return merged === a && merged.foo === 3 && merged.bar === 2;
+                    return merged === a && merged['foo'] === 3 && merged['bar'] === 2;
                 });
                 guarded('system-data-model-migrateData-empty', () => {
-                    const source: Record<string, unknown> = {};
+                    const source: Record<string, never> = {};
                     SystemDataModel._migrateData(source);
-                    return typeof source === 'object';
+                    return Object.keys(source).length === 0;
                 });
                 guarded('system-data-model-cleanData-empty', () => {
                     // _cleanData accepts undefined / empty source without iterating
@@ -150,24 +229,20 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     class NotASDM {}
                     let rejected = false;
                     try {
-                        SystemDataModel.mixin(NotASDM as any);
+                        SystemDataModel.mixin(NotASDM);
                     } catch (err) {
                         rejected = String(err instanceof Error ? err.message : err).includes('not a subclass of SystemDataModel');
                     }
                     // Branch 2: synthetic SystemDataModel subclass is accepted and produces a new Base class.
                     class SyntheticTemplate extends SystemDataModel {
-                        static override defineSchema(): Record<string, unknown> {
+                        static override defineSchema(): SchemaDict {
                             return {};
                         }
                         static syntheticMarker = 'mixed-in';
                     }
-                    const Mixed = SystemDataModel.mixin(SyntheticTemplate as any);
-                    const happyOk =
-                        typeof Mixed === 'function' &&
-                        Mixed !== SystemDataModel &&
-                        Mixed.syntheticMarker === 'mixed-in' &&
-                        Array.isArray(Mixed._schemaTemplates) &&
-                        Mixed._schemaTemplates.includes(SyntheticTemplate);
+                    const Mixed = SystemDataModel.mixin(SyntheticTemplate);
+                    const templates = Mixed._schemaTemplates;
+                    const happyOk = Mixed.syntheticMarker === 'mixed-in' && Array.isArray(templates) && templates.includes(SyntheticTemplate);
                     return rejected && happyOk;
                 });
                 guarded('system-data-model-initializationOrder-generator', () => {
@@ -176,12 +251,17 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     // the iteration body of the inner loop is skipped, and we
                     // simply verify a generator is returned and is iterable.
                     const gen = SystemDataModel._initializationOrder();
-                    return gen !== null && typeof gen === 'object' && typeof gen[Symbol.iterator] === 'function';
+                    // Drain the iterator: on the bare class with no templates it
+                    // yields nothing, but it must be iterable without throwing,
+                    // which exercises the generator's setup path. Reaching the
+                    // return at all means iteration completed successfully.
+                    void [...gen];
+                    return true;
                 });
             }
 
             // ---------- abstract/item-data-model ----------
-            const idmMod = await loadModule('abstract/item-data-model');
+            const idmMod = await loadModule<ItemDataModelCtor>('abstract/item-data-model');
             const itemFlowKeys = [
                 'item-data-model-metadata-merged',
                 'item-data-model-migrate-description-promotion',
@@ -189,102 +269,76 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                 'item-data-model-migrate-coverage-array-to-set',
                 'item-data-model-migrate-img-default-icon',
             ] as const;
-            if (idmMod?.__importError !== undefined) {
+            if (idmMod.__importError !== undefined) {
                 for (const k of itemFlowKeys) record(k, false, idmMod.__importError);
             } else {
                 const ItemDataModel = idmMod.default;
                 guarded('item-data-model-metadata-merged', () => {
                     const meta = ItemDataModel.metadata;
-                    return (
-                        meta !== null &&
-                        typeof meta === 'object' &&
-                        meta.enchantable === false &&
-                        meta.hasEffects === false &&
-                        meta.singleton === false &&
-                        meta.systemFlagsModel === null &&
-                        Object.isFrozen(meta)
-                    );
+                    return !meta.enchantable && !meta.hasEffects && !meta.singleton && meta.systemFlagsModel === null && Object.isFrozen(meta);
                 });
                 guarded('item-data-model-migrate-description-promotion', () => {
-                    const source: Record<string, unknown> = { description: 'A plain string description.' };
+                    const source: ItemMigrateSource = { description: 'A plain string description.' };
                     ItemDataModel._migrateData(source);
-                    const desc = source['description'] as { value?: unknown; chat?: unknown; summary?: unknown } | undefined;
-                    return (
-                        desc !== undefined &&
-                        typeof desc === 'object' &&
-                        desc.value === 'A plain string description.' &&
-                        desc.chat === '' &&
-                        desc.summary === ''
-                    );
+                    const desc = source.description;
+                    return typeof desc === 'object' && desc.value === 'A plain string description.' && desc.chat === '' && desc.summary === '';
                 });
                 guarded('item-data-model-migrate-source-promotion', () => {
-                    const source: Record<string, unknown> = { source: 'Dark Heresy 2e, p.123' };
+                    const source: ItemMigrateSource = { source: 'Dark Heresy 2e, p.123' };
                     ItemDataModel._migrateData(source);
-                    const src = source['source'] as { book?: unknown; page?: unknown; custom?: unknown } | undefined;
-                    return src !== undefined && typeof src === 'object' && src.custom === 'Dark Heresy 2e, p.123' && src.book === '' && src.page === '';
+                    const src = source.source;
+                    return typeof src === 'object' && src.custom === 'Dark Heresy 2e, p.123' && src.book === '' && src.page === '';
                 });
                 guarded('item-data-model-migrate-coverage-array-to-set', () => {
-                    const source: Record<string, unknown> = { coverage: ['head', 'body'], properties: ['reliable', 'tearing'] };
+                    const source: ItemMigrateSource = { coverage: ['head', 'body'], properties: ['reliable', 'tearing'] };
                     ItemDataModel._migrateData(source);
-                    const coverage = source['coverage'];
-                    const properties = source['properties'];
-                    return (
-                        coverage instanceof Set &&
-                        properties instanceof Set &&
-                        (coverage as Set<string>).has('head') &&
-                        (coverage as Set<string>).has('body') &&
-                        (properties as Set<string>).has('reliable')
-                    );
+                    const coverage = source.coverage;
+                    const properties = source.properties;
+                    return coverage instanceof Set && properties instanceof Set && coverage.has('head') && coverage.has('body') && properties.has('reliable');
                 });
                 guarded('item-data-model-migrate-img-default-icon', () => {
-                    const invalid: Record<string, unknown> = { img: 'some-image.tiff', type: 'weapon' };
+                    const invalid: ItemMigrateSource = { img: 'some-image.tiff', type: 'weapon' };
                     ItemDataModel._migrateData(invalid);
-                    const valid: Record<string, unknown> = { img: 'systems/wh40k-rpg/assets/weapon.webp', type: 'weapon' };
+                    const valid: ItemMigrateSource = { img: 'systems/wh40k-rpg/assets/weapon.webp', type: 'weapon' };
                     ItemDataModel._migrateData(valid);
-                    const unknownType: Record<string, unknown> = { img: 'nope.tiff', type: 'this-type-has-no-default' };
+                    const unknownType: ItemMigrateSource = { img: 'nope.tiff', type: 'this-type-has-no-default' };
                     ItemDataModel._migrateData(unknownType);
                     return (
-                        invalid['img'] === 'icons/svg/sword.svg' &&
-                        valid['img'] === 'systems/wh40k-rpg/assets/weapon.webp' &&
-                        unknownType['img'] === 'icons/svg/mystery-man.svg'
+                        invalid.img === 'icons/svg/sword.svg' &&
+                        valid.img === 'systems/wh40k-rpg/assets/weapon.webp' &&
+                        unknownType.img === 'icons/svg/mystery-man.svg'
                     );
                 });
             }
 
             // ---------- abstract/actor-data-model ----------
-            const admMod = await loadModule('abstract/actor-data-model');
+            const admMod = await loadModule<ActorDataModelCtor>('abstract/actor-data-model');
             const actorFlowKeys = ['actor-data-model-metadata-supportsAdvancement', 'actor-data-model-migrate-noop'] as const;
-            if (admMod?.__importError !== undefined) {
+            if (admMod.__importError !== undefined) {
                 for (const k of actorFlowKeys) record(k, false, admMod.__importError);
             } else {
                 const ActorDataModel = admMod.default;
                 guarded('actor-data-model-metadata-supportsAdvancement', () => {
                     const meta = ActorDataModel.metadata;
-                    return (
-                        meta !== null &&
-                        typeof meta === 'object' &&
-                        meta.supportsAdvancement === false &&
-                        meta.systemFlagsModel === null &&
-                        Object.isFrozen(meta)
-                    );
+                    return !meta.supportsAdvancement && meta.systemFlagsModel === null && Object.isFrozen(meta);
                 });
                 guarded('actor-data-model-migrate-noop', () => {
-                    const source: Record<string, unknown> = { name: 'Inquisitor Tharn', type: 'npc' };
+                    const source: { name?: string; type?: string } = { name: 'Inquisitor Tharn', type: 'npc' };
                     ActorDataModel._migrateData(source);
-                    return source['name'] === 'Inquisitor Tharn' && source['type'] === 'npc';
+                    return source.name === 'Inquisitor Tharn' && source.type === 'npc';
                 });
             }
 
             // ---------- fields/formula-field ----------
-            const ffMod = await loadModule('fields/formula-field');
+            const ffMod = await loadModule<FormulaFieldCtor>('fields/formula-field');
             const formulaFlowKeys = ['formula-field-defaults-deterministic', 'formula-field-validateType-branches'] as const;
-            if (ffMod?.__importError !== undefined) {
+            if (ffMod.__importError !== undefined) {
                 for (const k of formulaFlowKeys) record(k, false, ffMod.__importError);
             } else {
                 const FormulaField = ffMod.default;
                 guarded('formula-field-defaults-deterministic', () => {
                     const defaults = FormulaField._defaults;
-                    return defaults !== null && typeof defaults === 'object' && defaults.deterministic === false;
+                    return !defaults.deterministic;
                 });
                 guarded('formula-field-validateType-branches', () => {
                     // Branch 1: empty string short-circuits (no Roll constructed).
@@ -320,25 +374,19 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
             }
 
             // ---------- fields/identifier-field ----------
-            const ifMod = await loadModule('fields/identifier-field');
+            const ifMod = await loadModule<IdentifierFieldCtor>('fields/identifier-field');
             const identifierFlowKeys = [
                 'identifier-field-defaults-blank',
                 'identifier-field-validateType-branches',
                 'identifier-field-fromName-kebab',
             ] as const;
-            if (ifMod?.__importError !== undefined) {
+            if (ifMod.__importError !== undefined) {
                 for (const k of identifierFlowKeys) record(k, false, ifMod.__importError);
             } else {
                 const IdentifierField = ifMod.default;
                 guarded('identifier-field-defaults-blank', () => {
                     const defaults = IdentifierField._defaults;
-                    return (
-                        defaults !== null &&
-                        typeof defaults === 'object' &&
-                        defaults.nullable === false &&
-                        defaults.blank === true &&
-                        defaults.textSearch === true
-                    );
+                    return !defaults.nullable && defaults.blank && defaults.textSearch;
                 });
                 guarded('identifier-field-validateType-branches', () => {
                     const field = new IdentifierField({});
@@ -376,7 +424,6 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {
