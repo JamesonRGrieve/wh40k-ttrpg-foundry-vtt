@@ -1,14 +1,79 @@
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>)['game'];
-const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>)['foundry'];
-const ORIGINAL_UI = (globalThis as Record<string, unknown>)['ui'];
-const ORIGINAL_ROLL = (globalThis as Record<string, unknown>)['Roll'];
+/**
+ * Structural shape of every `globalThis` member this suite stubs. The runtime
+ * globals (`game`, `foundry`, `ui`, `Roll`) are strongly typed by fvtt-types,
+ * so the suite reaches them through a single typed view rather than scattering
+ * `globalThis as Record<string, unknown>` casts — the stub interfaces below ARE
+ * the validated boundary shape, exactly what the production globals expose to
+ * the methods under test.
+ */
+interface I18nStub {
+    localize: (key: string) => string;
+    format: (key: string, data?: Record<string, string>) => string;
+}
+/** A populated/empty RollTable as `rollDivination` reads it. */
+interface RollTableStub {
+    results: { size: number } | Array<{ text?: string }>;
+    draw?: () => Promise<{ results: Array<{ text?: string }> }>;
+}
+interface CompendiumPackStub {
+    metadata: { id: string; name: string };
+    documentName: string;
+}
+type PacksStub = Map<string, CompendiumPackStub> & { find?: (predicate: (pack: CompendiumPackStub) => boolean) => CompendiumPackStub | undefined };
+interface GameStub {
+    i18n: I18nStub;
+    user: { isGM: boolean };
+    packs: PacksStub;
+    // `| undefined` is explicit (not just optional) so the `g.tables = undefined`
+    // reset assigns cleanly under exactOptionalPropertyTypes.
+    tables: { getName: (name: string) => RollTableStub | undefined } | undefined;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: TS2545 requires a mixin base constructor to have a single `any[]` rest param; `unknown[]`/`never[]` are rejected by the mixin-class spec
+type MixinBase = abstract new (...args: any[]) => object;
+/** The reset-choices payload `#commit` resolves from the confirm dialog. */
+interface CommitResetChoices {
+    resetInventory: boolean;
+    resetExperience: boolean;
+    resetInjuries: boolean;
+    resetCurrency: boolean;
+}
+interface FoundryStub {
+    applications: {
+        api: {
+            ApplicationV2: typeof FakeApplicationV2;
+            HandlebarsApplicationMixin: <T extends MixinBase>(Base: T) => T;
+            DialogV2?: { prompt: (...args: never[]) => Promise<CommitResetChoices | null> };
+        };
+    };
+    abstract: { DataModel: new () => object };
+    utils: { deepClone: <T>(value: T) => T };
+}
+interface UiStub {
+    notifications: { warn: ReturnType<typeof vi.fn>; info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
+}
+interface GlobalStubs {
+    game: GameStub;
+    foundry: FoundryStub;
+    ui: UiStub;
+    Roll: typeof FakeRoll;
+}
+
+/**
+ * Typed view over `globalThis` for the four stubbed members. fvtt-types declares
+ * these as non-optional globals, so a `Partial` view lets the suite read/restore
+ * them (they are `undefined` outside Foundry) without a `Record` cast.
+ */
+const stubHost = globalThis as typeof globalThis & Partial<GlobalStubs>;
+
+const ORIGINAL_GAME = stubHost.game;
+const ORIGINAL_FOUNDRY = stubHost.foundry;
+const ORIGINAL_UI = stubHost.ui;
+const ORIGINAL_ROLL = stubHost.Roll;
 
 class FakeApplicationV2 {}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: TS mixin class spec requires `any[]` rest, not `unknown[]`
-type Constructor = abstract new (...args: any[]) => object;
-const fakeHandlebarsApplicationMixin = <T extends Constructor>(Base: T): T => {
+const fakeHandlebarsApplicationMixin = <T extends MixinBase>(Base: T): T => {
     abstract class Mixed extends Base {}
     return Mixed;
 };
@@ -89,38 +154,6 @@ vi.mock('./origin-roll-dialog.ts', () => ({
     default: class OriginRollDialog {},
 }));
 
-(globalThis as Record<string, unknown>)['game'] = {
-    i18n: {
-        localize: (key: string) => key,
-        format: (key: string) => key,
-    },
-    user: { isGM: true },
-    packs: new Map(),
-};
-
-(globalThis as Record<string, unknown>)['foundry'] = {
-    applications: {
-        api: {
-            ApplicationV2: FakeApplicationV2,
-            HandlebarsApplicationMixin: fakeHandlebarsApplicationMixin,
-        },
-    },
-    abstract: {
-        DataModel: class {},
-    },
-    utils: {
-        deepClone: <T>(value: T): T => structuredClone(value),
-    },
-};
-
-(globalThis as Record<string, unknown>)['ui'] = {
-    notifications: {
-        warn: vi.fn(),
-        info: vi.fn(),
-        error: vi.fn(),
-    },
-};
-
 class FakeRoll {
     total: number;
     constructor(public formula: string) {
@@ -130,18 +163,129 @@ class FakeRoll {
         return Promise.resolve(this);
     }
 }
-(globalThis as Record<string, unknown>)['Roll'] = FakeRoll;
+
+/**
+ * The installed stubs, kept as `GlobalStubs`-typed handles. fvtt-types declares
+ * the four globals as intersection types (`typeof ApplicationV2 & ...`) that no
+ * hand-built fake satisfies by direct assignment — the genuine framework
+ * boundary. Tests read these typed handles instead of `globalThis.foundry` etc.
+ * (which resolve to the intersected real-global types), so the stubbed surface
+ * stays validated against `GlobalStubs` rather than fought through casts.
+ */
+const STUBS: GlobalStubs = {
+    game: {
+        i18n: {
+            localize: (key: string) => key,
+            format: (key: string) => key,
+        },
+        user: { isGM: true },
+        packs: new Map<string, CompendiumPackStub>(),
+        tables: undefined,
+    },
+    foundry: {
+        applications: {
+            api: {
+                ApplicationV2: FakeApplicationV2,
+                HandlebarsApplicationMixin: fakeHandlebarsApplicationMixin,
+            },
+        },
+        abstract: {
+            DataModel: class {},
+        },
+        utils: {
+            deepClone: <T>(value: T): T => structuredClone(value),
+        },
+    },
+    ui: {
+        notifications: {
+            warn: vi.fn(),
+            info: vi.fn(),
+            error: vi.fn(),
+        },
+    },
+    Roll: FakeRoll,
+};
+// `Object.assign` widens the assignment target so the stub shapes can be
+// installed onto the strongly-typed globals without per-member casts.
+Object.assign(globalThis, STUBS);
 
 afterAll(() => {
-    (globalThis as Record<string, unknown>)['game'] = ORIGINAL_GAME;
-    (globalThis as Record<string, unknown>)['foundry'] = ORIGINAL_FOUNDRY;
-    (globalThis as Record<string, unknown>)['ui'] = ORIGINAL_UI;
-    (globalThis as Record<string, unknown>)['Roll'] = ORIGINAL_ROLL;
+    Object.assign(globalThis, {
+        game: ORIGINAL_GAME,
+        foundry: ORIGINAL_FOUNDRY,
+        ui: ORIGINAL_UI,
+        Roll: ORIGINAL_ROLL,
+    });
 });
 
 const { default: OriginPathBuilder } = await import('./origin-path-builder.ts');
 
-interface TestOrigin {
+const proto = OriginPathBuilder.prototype;
+
+type ItemToSelectionArg = Parameters<typeof proto._itemToSelectionData>[0];
+type ItemToSelectionRet = ReturnType<typeof proto._itemToSelectionData>;
+
+/**
+ * Invoke a sheet action handler against a duck-typed host. Action handlers are
+ * stored as plain function-typed properties bound to `this: OriginPathBuilder`
+ * (strict, contravariant `this`), so a structural test host cannot be supplied
+ * via `.call` without a cast. `Reflect.apply` accepts any `thisArgument` by
+ * design — the supported primitive for invoking a fixed-`this` function with a
+ * duck-typed receiver — and the generic return `R` keeps the result typed.
+ */
+function invokeAction<R>(action: (...args: never[]) => R, host: object, event: Event, target: HTMLElement): R {
+    return Reflect.apply(action, host, [event, target]) as R;
+}
+
+/**
+ * Concrete shapes for the aptitude-grants the collision/count/pool/preview
+ * methods read off a selection's `system`. Declared as `type`s (assignable to
+ * `Record<string, unknown>`) so a selection literal satisfies the loose
+ * `NormalizedOrigin.system` the methods nominally accept, without any field
+ * widening to `unknown`.
+ */
+type TestAptitudeChoiceOption = { value?: string; name?: string };
+type TestAptitudeChoice = { type?: string; label?: string; name?: string; options?: TestAptitudeChoiceOption[] };
+type TestAptitudeGrants = { aptitudes?: string[]; choices?: TestAptitudeChoice[] };
+type TestAptitudeSystem = { grants?: TestAptitudeGrants; selectedChoices?: Record<string, string[]> };
+/** A builder selection: its system plus the committed-source marker (#215). */
+type TestAptitudeSelection = { system: TestAptitudeSystem; _actorItemId?: string | null };
+/**
+ * Shared input shape for the aptitude-collision host builders
+ * (`makeCollisionHost` / `previewCollisions`): the seeded selections plus the
+ * optional pre-existing actor aptitudes and override map.
+ */
+type AptitudeCollisionOpts = {
+    selections: Array<[string, TestAptitudeSelection]>;
+    actorAptitudes?: string[];
+    overrides?: Map<string, string>;
+};
+
+/**
+ * The aptitude collaborators reuse the prototype signatures verbatim. Their
+ * `selection`/`origin` parameter is the production `NormalizedOrigin`; the test
+ * delegates pass the structurally-compatible `TestAptitudeSelection` through
+ * (the methods only read `.system.grants` / `.selectedChoices`, which the test
+ * shape provides).
+ */
+type SelectionGrantedAptitudes = typeof proto._selectionGrantedAptitudes;
+type CollectAptitudeChoices = typeof proto._collectAptitudeChoices;
+
+/**
+ * Roll/choice snapshot the normalized-origin path reads off `system`. Declared
+ * as a `type` (not `interface`) so it is structurally assignable to
+ * `NormalizedOrigin.system` (`Record<string, unknown>`) without an index-
+ * signature widening to `unknown`.
+ */
+type TestOriginSystem = {
+    step?: string;
+    stepIndex?: number;
+    identifier?: string;
+    selectedChoices?: Record<string, string[]>;
+    rollResults?: Record<string, { rolled?: number; breakdown?: string }>;
+};
+
+type TestOrigin = {
     id: string;
     uuid: string | null;
     name: string;
@@ -170,10 +314,19 @@ interface TestOrigin {
     xpCost: number;
     hasChoices: boolean;
     gameSystem: string;
-    system: Record<string, unknown>;
+    system: TestOriginSystem;
     _sourceUuid?: string | null;
     _actorItemId?: string | null;
-}
+    /**
+     * A normalized POJO has no `toObject`; a real Item document has a callable
+     * one. The non-callable-string variant covers the issue-#198 guard test
+     * (a malformed `toObject` must be treated as plain data, not invoked).
+     */
+    toObject?: string | (() => Partial<TestOrigin>);
+    /** Document-only metadata read by the `hasToObject` (item) branch. */
+    flags?: { core?: { sourceId?: string } };
+    parent?: { id: string };
+};
 
 function makeOrigin(overrides: Partial<TestOrigin> = {}): TestOrigin {
     return {
@@ -218,25 +371,38 @@ function makeOrigin(overrides: Partial<TestOrigin> = {}): TestOrigin {
     };
 }
 
-function makeBuilderHost(): {
+/**
+ * Minimal `this` for the preview-action dispatch (`#previewOriginCard`):
+ * it reads the origin pools, resolves a confirmed selection, normalizes the
+ * card via `_itemToSelectionData`, and re-renders. Each field mirrors exactly
+ * what that method touches on a real builder.
+ */
+interface BuilderHost {
     actor: { id: string };
     allOrigins: TestOrigin[];
     lineageOrigins: TestOrigin[];
     previewedOrigin: TestOrigin | null;
     render: ReturnType<typeof vi.fn>;
     _findConfirmedSelectionMatching: ReturnType<typeof vi.fn>;
-    _itemToSelectionData: typeof OriginPathBuilder.prototype._itemToSelectionData;
-} {
-    return {
+    _itemToSelectionData: (item: ItemToSelectionArg) => ItemToSelectionRet;
+}
+
+function makeBuilderHost(): BuilderHost {
+    const host: BuilderHost = {
         actor: { id: 'actor-1' },
-        allOrigins: [] as TestOrigin[],
-        lineageOrigins: [] as TestOrigin[],
-        previewedOrigin: null as TestOrigin | null,
+        allOrigins: [],
+        lineageOrigins: [],
+        previewedOrigin: null,
         render: vi.fn().mockResolvedValue(undefined),
         _findConfirmedSelectionMatching: vi.fn().mockReturnValue(null),
-        _itemToSelectionData: OriginPathBuilder.prototype._itemToSelectionData,
+        _itemToSelectionData: (item) => proto._itemToSelectionData.call(host, item),
     };
+    return host;
 }
+
+/** Invoke the `selectOriginCard` preview action against a duck-typed host. */
+const selectOriginCard = (host: BuilderHost, event: Event, target: HTMLElement): void =>
+    invokeAction(OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard, host, event, target);
 
 function makeTarget(origin: TestOrigin, disabled = false): HTMLElement {
     const target = document.createElement('button');
@@ -246,15 +412,27 @@ function makeTarget(origin: TestOrigin, disabled = false): HTMLElement {
     return target;
 }
 
+/** Minimal `this` for `_itemToSelectionData`: it only reads `this.actor`. */
+interface ItemToSelectionHost {
+    actor: { id: string };
+}
+/**
+ * Invoke `_itemToSelectionData` against a duck-typed host. The `item` is a
+ * `TestOrigin` POJO (the normalized-card shape, which is structurally a
+ * `NormalizedOrigin`); a callable `toObject` on it routes through the real
+ * Item-document branch, mirroring how the production method dispatches.
+ */
+const itemToSelectionData = (host: ItemToSelectionHost, item: TestOrigin): ItemToSelectionRet => proto._itemToSelectionData.call(host, item);
+
 describe('OriginPathBuilder._itemToSelectionData', () => {
     it('accepts normalized origin data without a toObject method', () => {
-        const builder = { actor: { id: 'actor-1' } };
+        const builder: ItemToSelectionHost = { actor: { id: 'actor-1' } };
         const origin = makeOrigin({
             _sourceUuid: 'Compendium.wh40k-rpg.origin-paths.hive-world-source',
             _actorItemId: 'embedded-origin-1',
         });
 
-        const normalized = OriginPathBuilder.prototype._itemToSelectionData.call(builder, origin);
+        const normalized = itemToSelectionData(builder, origin);
 
         expect(normalized.name).toBe('Hive World');
         expect(normalized.system['selectedChoices']).toEqual({
@@ -268,18 +446,18 @@ describe('OriginPathBuilder._itemToSelectionData', () => {
     });
 
     it('does not throw on a compendium index entry without toObject (issue #198)', () => {
-        const builder = { actor: { id: 'actor-1' } };
+        const builder: ItemToSelectionHost = { actor: { id: 'actor-1' } };
         const indexEntry = makeOrigin();
 
-        expect(() => OriginPathBuilder.prototype._itemToSelectionData.call(builder, indexEntry)).not.toThrow();
+        expect(() => itemToSelectionData(builder, indexEntry)).not.toThrow();
     });
 
     it('treats a non-callable toObject as plain data instead of invoking it (issue #198)', () => {
-        const builder = { actor: { id: 'actor-1' } };
-        const origin = makeOrigin();
-        (origin as unknown as Record<string, unknown>)['toObject'] = 'not-a-function';
+        const builder: ItemToSelectionHost = { actor: { id: 'actor-1' } };
+        // A non-function `toObject` must be ignored by the `hasToObject` guard.
+        const origin = makeOrigin({ toObject: 'not-a-function' });
 
-        const normalized = OriginPathBuilder.prototype._itemToSelectionData.call(builder, origin);
+        const normalized = itemToSelectionData(builder, origin);
 
         expect(normalized.name).toBe('Hive World');
     });
@@ -291,14 +469,10 @@ describe('OriginPathBuilder preview action', () => {
         const host = makeBuilderHost();
         host.allOrigins = [origin];
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Event('click'),
-            makeTarget(origin),
-        );
+        selectOriginCard(host, new Event('click'), makeTarget(origin));
 
         expect(host.previewedOrigin?.name).toBe('Hive World');
-        expect(host.previewedOrigin?.system['selectedChoices']).toEqual({
+        expect(host.previewedOrigin?.system.selectedChoices).toEqual({
             'Starting Talent': ['Resistance'],
         });
         expect(host.render).toHaveBeenCalledTimes(1);
@@ -321,16 +495,13 @@ describe('OriginPathBuilder preview action', () => {
         const host = makeBuilderHost();
         host.allOrigins = [origin];
         host._findConfirmedSelectionMatching = vi.fn().mockReturnValue(confirmed);
-        host._itemToSelectionData = vi.fn();
+        const itemToSelectionSpy = vi.fn<(item: ItemToSelectionArg) => ItemToSelectionRet>();
+        host._itemToSelectionData = itemToSelectionSpy;
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Event('click'),
-            makeTarget(origin),
-        );
+        selectOriginCard(host, new Event('click'), makeTarget(origin));
 
         expect(host.previewedOrigin).toBe(confirmed);
-        expect(host._itemToSelectionData).not.toHaveBeenCalled();
+        expect(itemToSelectionSpy).not.toHaveBeenCalled();
         expect(host.render).toHaveBeenCalledTimes(1);
     });
 
@@ -339,15 +510,11 @@ describe('OriginPathBuilder preview action', () => {
         const host = makeBuilderHost();
         host.allOrigins = [origin];
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Event('click'),
-            makeTarget(origin, true),
-        );
+        selectOriginCard(host, new Event('click'), makeTarget(origin, true));
 
         expect(host.previewedOrigin).toBeNull();
         expect(host.render).not.toHaveBeenCalled();
-        expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.OriginNotAvailable');
+        expect(stubHost.ui?.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.OriginNotAvailable');
     });
 });
 
@@ -381,6 +548,12 @@ describe('OriginPathBuilder selection dispatch is total across all four steps (i
         { label: 'Elite Advance', step: 'elite', stepIndex: 4, identifier: 'psyker', lineage: true },
     ];
 
+    /** Place the card in the pool the step routes through (lineage vs core). */
+    function seedPool(host: BuilderHost, sc: StepCase, origin: TestOrigin): void {
+        const pool = sc.lineage ? host.lineageOrigins : host.allOrigins;
+        pool.push(origin);
+    }
+
     for (const sc of STEP_CASES) {
         it(`previews a ${sc.label} card (normalized POJO, no toObject) without throwing`, () => {
             const origin = makeOrigin({
@@ -399,27 +572,17 @@ describe('OriginPathBuilder selection dispatch is total across all four steps (i
                 },
             });
             const host = makeBuilderHost();
-            if (sc.lineage) {
-                host.lineageOrigins = [origin];
-            } else {
-                host.allOrigins = [origin];
-            }
+            seedPool(host, sc, origin);
 
-            expect(() =>
-                OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(
-                    host as unknown as InstanceType<typeof OriginPathBuilder>,
-                    new Event('click'),
-                    makeTarget(origin),
-                ),
-            ).not.toThrow();
+            expect(() => selectOriginCard(host, new Event('click'), makeTarget(origin))).not.toThrow();
 
             expect(host.previewedOrigin?.name).toBe(sc.label);
-            expect(host.previewedOrigin?.system['step']).toBe(sc.step);
+            expect(host.previewedOrigin?.system.step).toBe(sc.step);
             expect(host.render).toHaveBeenCalledTimes(1);
         });
 
         it(`_itemToSelectionData converts a ${sc.label} POJO without invoking toObject`, () => {
-            const builder = { actor: { id: 'actor-1' } };
+            const builder: ItemToSelectionHost = { actor: { id: 'actor-1' } };
             const origin = makeOrigin({
                 id: `origin-${sc.identifier}`,
                 uuid: `Compendium.wh40k-rpg.origin-paths.origin-${sc.identifier}`,
@@ -430,9 +593,9 @@ describe('OriginPathBuilder selection dispatch is total across all four steps (i
                 system: { step: sc.step, stepIndex: sc.stepIndex, identifier: sc.identifier },
             });
 
-            let normalized: ReturnType<typeof OriginPathBuilder.prototype._itemToSelectionData> | undefined;
+            let normalized: ItemToSelectionRet | undefined;
             expect(() => {
-                normalized = OriginPathBuilder.prototype._itemToSelectionData.call(builder, origin);
+                normalized = itemToSelectionData(builder, origin);
             }).not.toThrow();
 
             expect(normalized?.name).toBe(sc.label);
@@ -443,24 +606,25 @@ describe('OriginPathBuilder selection dispatch is total across all four steps (i
     }
 
     it('still routes a real Item document through the toObject() branch', () => {
-        const builder = { actor: { id: 'actor-doc' } };
-        const toObject = vi.fn(() => ({
-            name: 'Forge World',
-            img: 'icons/svg/d20.svg',
-            system: { step: 'homeWorld', stepIndex: 1, identifier: 'forge-world' },
-        }));
-        const fakeItemDocument = {
+        const builder: ItemToSelectionHost = { actor: { id: 'actor-doc' } };
+        const toObject = vi.fn(
+            (): Partial<TestOrigin> => ({
+                name: 'Forge World',
+                img: 'icons/svg/d20.svg',
+                system: { step: 'homeWorld', stepIndex: 1, identifier: 'forge-world' },
+            }),
+        );
+        // A real Item document: a callable `toObject` plus the doc-only metadata
+        // the `hasToObject` branch reads (flags.core.sourceId, parent, id, uuid).
+        const fakeItemDocument = makeOrigin({
+            id: 'embedded-1',
+            uuid: 'Actor.x.Item.embedded-1',
             toObject,
             flags: { core: { sourceId: 'Compendium.wh40k-rpg.origin-paths.forge-world' } },
             parent: { id: 'other-actor' },
-            id: 'embedded-1',
-            uuid: 'Actor.x.Item.embedded-1',
-        };
+        });
 
-        const normalized = OriginPathBuilder.prototype._itemToSelectionData.call(
-            builder as unknown as InstanceType<typeof OriginPathBuilder>,
-            fakeItemDocument as never,
-        );
+        const normalized = itemToSelectionData(builder, fakeItemDocument);
 
         expect(toObject).toHaveBeenCalledTimes(1);
         expect(normalized.name).toBe('Forge World');
@@ -470,8 +634,28 @@ describe('OriginPathBuilder selection dispatch is total across all four steps (i
     });
 });
 
+/** The installed `game` stub. */
+function mutableGame(): GameStub {
+    return STUBS.game;
+}
+
+/** The installed `ui` stub. */
+function mutableUi(): UiStub {
+    return STUBS.ui;
+}
+
+/** Build a `game.packs` stub whose `find` never resolves a pack. */
+function emptyPacks(): PacksStub {
+    return Object.assign(new Map<string, CompendiumPackStub>(), { find: () => undefined });
+}
+
 describe('OriginPathBuilder rollDivination (issue #199)', () => {
-    function makeDivinationHost(): { _divination: string; _saveScrollPosition: ReturnType<typeof vi.fn>; render: ReturnType<typeof vi.fn> } {
+    interface DivinationHost {
+        _divination: string;
+        _saveScrollPosition: ReturnType<typeof vi.fn>;
+        render: ReturnType<typeof vi.fn>;
+    }
+    function makeDivinationHost(): DivinationHost {
         return {
             _divination: '',
             _saveScrollPosition: vi.fn(),
@@ -479,17 +663,18 @@ describe('OriginPathBuilder rollDivination (issue #199)', () => {
         };
     }
 
+    /** Invoke the `rollDivination` action against a duck-typed host. */
+    const rollDivination = async (host: DivinationHost, event: Event, target: HTMLElement): Promise<void> => {
+        await invokeAction(OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination, host, event, target);
+    };
+
     it('falls back to a 1d100 roll when the Divination table is absent', async () => {
-        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
-        g['tables'] = undefined;
-        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+        const g = mutableGame();
+        g.tables = undefined;
+        g.packs = emptyPacks();
 
         const host = makeDivinationHost();
-        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Event('click'),
-            document.createElement('button'),
-        );
+        await rollDivination(host, new Event('click'), document.createElement('button'));
 
         expect(host._divination).toBe('WH40K.OriginPath.DivinationTableUnavailable');
         expect(host.render).toHaveBeenCalledTimes(1);
@@ -498,16 +683,12 @@ describe('OriginPathBuilder rollDivination (issue #199)', () => {
 
     it('treats an empty world RollTable as unavailable and never calls draw()', async () => {
         const draw = vi.fn();
-        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
-        g['tables'] = { getName: () => ({ results: { size: 0 }, draw }) };
-        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+        const g = mutableGame();
+        g.tables = { getName: () => ({ results: { size: 0 }, draw }) };
+        g.packs = emptyPacks();
 
         const host = makeDivinationHost();
-        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Event('click'),
-            document.createElement('button'),
-        );
+        await rollDivination(host, new Event('click'), document.createElement('button'));
 
         expect(draw).not.toHaveBeenCalled();
         expect(host._divination).toBe('WH40K.OriginPath.DivinationTableUnavailable');
@@ -515,16 +696,12 @@ describe('OriginPathBuilder rollDivination (issue #199)', () => {
 
     it('uses the drawn result text when a populated table exists', async () => {
         const draw = vi.fn().mockResolvedValue({ results: [{ text: 'Trust in your fear.' }] });
-        const g = (globalThis as Record<string, unknown>)['game'] as Record<string, unknown>;
-        g['tables'] = { getName: () => ({ results: { size: 100 }, draw }) };
-        g['packs'] = Object.assign(new Map(), { find: () => undefined });
+        const g = mutableGame();
+        g.tables = { getName: () => ({ results: { size: 100 }, draw }) };
+        g.packs = emptyPacks();
 
         const host = makeDivinationHost();
-        await OriginPathBuilder.DEFAULT_OPTIONS.actions.rollDivination.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Event('click'),
-            document.createElement('button'),
-        );
+        await rollDivination(host, new Event('click'), document.createElement('button'));
 
         expect(draw).toHaveBeenCalledTimes(1);
         expect(host._divination).toBe('Trust in your fear.');
@@ -532,14 +709,49 @@ describe('OriginPathBuilder rollDivination (issue #199)', () => {
 });
 
 describe('OriginPathBuilder commit (issue #206)', () => {
-    it('blocks commit and routes to the Characteristics step when characteristics are unassigned', async () => {
-        const dialogPrompt = vi.fn();
-        const f = (globalThis as Record<string, unknown>)['foundry'] as {
-            applications: { api: Record<string, unknown> };
-        };
-        f.applications.api['DialogV2'] = { prompt: dialogPrompt };
+    interface CommitStatus {
+        canCommit: boolean;
+        stepsComplete: boolean;
+        choicesComplete: boolean;
+        equipmentComplete: boolean;
+    }
+    interface EquipmentStep {
+        key: string;
+        step: string;
+        icon: string;
+        descKey: string;
+        stepIndex: number;
+    }
+    interface CommitHost {
+        _calculateStatus: () => CommitStatus;
+        _hasAssignedCharacteristics: ReturnType<typeof vi.fn>;
+        _clearPreviewedOrigin: ReturnType<typeof vi.fn>;
+        render: ReturnType<typeof vi.fn>;
+        showLineage: boolean;
+        showCharacteristics: boolean;
+        showEquipment: boolean;
+        guidedMode?: boolean;
+        systemConfig: { equipmentStep: EquipmentStep | null };
+        equipmentSelections: Map<string, string>;
+        gameSystem: string;
+    }
 
-        const host = {
+    /** Invoke the `commit` action against a duck-typed host. */
+    const commit = async (host: CommitHost, event: Event, target: HTMLElement): Promise<void> => {
+        await invokeAction(OriginPathBuilder.DEFAULT_OPTIONS.actions.commit, host, event, target);
+    };
+
+    /** Install a DialogV2 prompt spy on the foundry stub and return it. */
+    function installDialogPrompt(): ReturnType<typeof vi.fn<(...args: never[]) => Promise<CommitResetChoices | null>>> {
+        const dialogPrompt = vi.fn<(...args: never[]) => Promise<CommitResetChoices | null>>();
+        STUBS.foundry.applications.api.DialogV2 = { prompt: dialogPrompt };
+        return dialogPrompt;
+    }
+
+    it('blocks commit and routes to the Characteristics step when characteristics are unassigned', async () => {
+        const dialogPrompt = installDialogPrompt();
+
+        const host: CommitHost = {
             _calculateStatus: () => ({ canCommit: true, stepsComplete: true, choicesComplete: true, equipmentComplete: true }),
             _hasAssignedCharacteristics: vi.fn().mockReturnValue(false),
             _clearPreviewedOrigin: vi.fn(),
@@ -548,17 +760,13 @@ describe('OriginPathBuilder commit (issue #206)', () => {
             showCharacteristics: false,
             showEquipment: true,
             systemConfig: { equipmentStep: null },
-            equipmentSelections: new Map<string>(),
+            equipmentSelections: new Map<string, string>(),
             gameSystem: 'dh2e',
         };
 
-        await OriginPathBuilder.DEFAULT_OPTIONS.actions.commit.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Event('click'),
-            document.createElement('button'),
-        );
+        await commit(host, new Event('click'), document.createElement('button'));
 
-        expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit');
+        expect(mutableUi().notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit');
         expect(host.showCharacteristics).toBe(true);
         expect(host.showEquipment).toBe(false);
         expect(host.showLineage).toBe(false);
@@ -566,13 +774,9 @@ describe('OriginPathBuilder commit (issue #206)', () => {
     });
 
     it('blocks commit and routes to the Equipment step when equipment is empty under DH2e RAW', async () => {
-        const dialogPrompt = vi.fn();
-        const f = (globalThis as Record<string, unknown>)['foundry'] as {
-            applications: { api: Record<string, unknown> };
-        };
-        f.applications.api['DialogV2'] = { prompt: dialogPrompt };
+        const dialogPrompt = installDialogPrompt();
 
-        const host = {
+        const host: CommitHost = {
             _calculateStatus: () => ({ canCommit: false, stepsComplete: true, choicesComplete: true, equipmentComplete: false }),
             _hasAssignedCharacteristics: vi.fn().mockReturnValue(true),
             _clearPreviewedOrigin: vi.fn(),
@@ -584,17 +788,13 @@ describe('OriginPathBuilder commit (issue #206)', () => {
             systemConfig: {
                 equipmentStep: { key: 'equipment', step: 'equipment', icon: 'fa-box', descKey: 'EquipmentDesc', stepIndex: 6 },
             },
-            equipmentSelections: new Map<string>(),
+            equipmentSelections: new Map<string, string>(),
             gameSystem: 'dh2e',
         };
 
-        await OriginPathBuilder.DEFAULT_OPTIONS.actions.commit.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-            new Event('click'),
-            document.createElement('button'),
-        );
+        await commit(host, new Event('click'), document.createElement('button'));
 
-        expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.StepInProgressEquipment');
+        expect(mutableUi().notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.StepInProgressEquipment');
         expect(host.showEquipment).toBe(true);
         expect(host.showCharacteristics).toBe(false);
         expect(host.showLineage).toBe(false);
@@ -603,23 +803,26 @@ describe('OriginPathBuilder commit (issue #206)', () => {
 });
 
 describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
-    interface AptSelection {
-        system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> };
+    interface CountHost {
+        selections: Map<string, TestAptitudeSelection>;
+        _getSelectionSystem: (selection: TestAptitudeSelection) => TestAptitudeSystem;
+        _collectAptitudeChoices: CollectAptitudeChoices;
+        _selectionGrantedAptitudes: SelectionGrantedAptitudes;
     }
 
-    function makeCountHost(selections: Array<[string, AptSelection]>): {
-        selections: Map<string, AptSelection>;
-        _getSelectionSystem: (s: AptSelection) => AptSelection['system'];
-        _collectAptitudeChoices: typeof OriginPathBuilder.prototype._collectAptitudeChoices;
-        _selectionGrantedAptitudes: typeof OriginPathBuilder.prototype._selectionGrantedAptitudes;
-    } {
-        return {
+    function makeCountHost(selections: Array<[string, TestAptitudeSelection]>): CountHost {
+        const host: CountHost = {
             selections: new Map(selections),
-            _getSelectionSystem: (s: AptSelection) => s.system,
-            _collectAptitudeChoices: OriginPathBuilder.prototype._collectAptitudeChoices,
-            _selectionGrantedAptitudes: OriginPathBuilder.prototype._selectionGrantedAptitudes,
+            _getSelectionSystem: (s) => s.system,
+            // Delegate to the real prototype methods (bound to this host) so the
+            // genuine grant-collection logic is exercised, not a re-implementation.
+            _collectAptitudeChoices: (choice, selectedValues, aptitudeSet) => proto._collectAptitudeChoices.call(host, choice, selectedValues, aptitudeSet),
+            _selectionGrantedAptitudes: (sel) => proto._selectionGrantedAptitudes.call(host, sel),
         };
+        return host;
     }
+
+    const countGrants = (host: CountHost): Map<string, number> => proto._collectAptitudeGrantCounts.call(host);
 
     it('counts a fixed aptitude granted by two origins as a duplicate', () => {
         const host = makeCountHost([
@@ -627,7 +830,7 @@ describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
             ['background', { system: { grants: { aptitudes: ['Willpower'] }, selectedChoices: {} } }],
         ]);
 
-        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
+        const counts = countGrants(host);
 
         expect(counts.get('Willpower')).toBe(2);
         expect(counts.get('Offence')).toBe(1);
@@ -649,7 +852,7 @@ describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
             ],
         ]);
 
-        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
+        const counts = countGrants(host);
 
         expect(counts.get('Tech')).toBe(2);
     });
@@ -657,7 +860,7 @@ describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
     it('does not double-count an aptitude granted twice by a single origin', () => {
         const host = makeCountHost([['homeWorld', { system: { grants: { aptitudes: ['Willpower', 'Willpower'] }, selectedChoices: {} } }]]);
 
-        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
+        const counts = countGrants(host);
 
         expect(counts.get('Willpower')).toBe(1);
     });
@@ -683,49 +886,50 @@ describe('OriginPathBuilder._getAptitudeCollisions (issues #205 & #215)', () => 
     // `system.aptitudes` comes from those committed items, so a committed-step
     // selection's grants must be subtracted from "existing" (#215) while a
     // freshly-picked step (no `_actorItemId`) must NOT be (#205).
-    type AptSel = {
-        system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> };
-        _actorItemId?: string | null;
-    };
+    type AptCollision = { original: string; replacement: string | null };
 
-    function makeCollisionHost(opts: { selections: Array<[string, AptSel]>; actorAptitudes?: string[]; overrides?: Map<string, string> }): {
-        selections: Map<string, AptSel>;
+    interface CollisionHost {
+        selections: Map<string, TestAptitudeSelection>;
         actor: { system: { aptitudes: string[] } };
         aptitudeOverrides: Map<string, string>;
-        _getSelectionSystem: (s: AptSel) => AptSel['system'];
-        _collectAptitudeChoices: typeof OriginPathBuilder.prototype._collectAptitudeChoices;
-        _selectionGrantedAptitudes: typeof OriginPathBuilder.prototype._selectionGrantedAptitudes;
-        _collectAptitudeGrantCounts: typeof OriginPathBuilder.prototype._collectAptitudeGrantCounts;
-        _collectExistingAptitudes: typeof OriginPathBuilder.prototype._collectExistingAptitudes;
-        _lookupAptitudeOverride: typeof OriginPathBuilder.prototype._lookupAptitudeOverride;
-        _aptitudeKey: typeof OriginPathBuilder.prototype._aptitudeKey;
-    } {
-        const proto = OriginPathBuilder.prototype;
-        return {
+        _getSelectionSystem: (selection: TestAptitudeSelection) => TestAptitudeSystem;
+        _collectAptitudeChoices: CollectAptitudeChoices;
+        _selectionGrantedAptitudes: SelectionGrantedAptitudes;
+        _collectAptitudeGrantCounts: () => Map<string, number>;
+        _collectExistingAptitudes: () => Set<string>;
+        _lookupAptitudeOverride: (original: string) => string | undefined;
+        _aptitudeKey: (name: string) => string;
+    }
+
+    function makeCollisionHost(opts: AptitudeCollisionOpts): CollisionHost {
+        const host: CollisionHost = {
             selections: new Map(opts.selections),
             actor: { system: { aptitudes: opts.actorAptitudes ?? [] } },
             aptitudeOverrides: opts.overrides ?? new Map<string, string>(),
-            _getSelectionSystem: (s: AptSel) => s.system,
-            _collectAptitudeChoices: proto._collectAptitudeChoices,
-            _selectionGrantedAptitudes: proto._selectionGrantedAptitudes,
-            _collectAptitudeGrantCounts: proto._collectAptitudeGrantCounts,
-            _collectExistingAptitudes: proto._collectExistingAptitudes,
-            _lookupAptitudeOverride: proto._lookupAptitudeOverride,
-            _aptitudeKey: proto._aptitudeKey,
+            _getSelectionSystem: (s) => s.system,
+            // Each collaborator delegates to the real prototype method bound to
+            // this host, so the genuine normalisation/subtraction logic runs.
+            _collectAptitudeChoices: (choice, selectedValues, aptitudeSet) => proto._collectAptitudeChoices.call(host, choice, selectedValues, aptitudeSet),
+            _selectionGrantedAptitudes: (sel) => proto._selectionGrantedAptitudes.call(host, sel),
+            _collectAptitudeGrantCounts: () => proto._collectAptitudeGrantCounts.call(host),
+            _collectExistingAptitudes: () => proto._collectExistingAptitudes.call(host),
+            _lookupAptitudeOverride: (original) => proto._lookupAptitudeOverride.call(host, original),
+            _aptitudeKey: (name) => proto._aptitudeKey.call(host, name),
         };
+        return host;
     }
 
     /** A selection seeded from a committed actor origin item. */
-    function committed(grants: Record<string, unknown>, selectedChoices: Record<string, string[]> = {}, id = 'actor-item'): AptSel {
+    function committed(grants: TestAptitudeGrants, selectedChoices: Record<string, string[]> = {}, id = 'actor-item'): TestAptitudeSelection {
         return { system: { grants, selectedChoices }, _actorItemId: id };
     }
     /** A selection the player just picked this session (not yet committed). */
-    function picked(grants: Record<string, unknown>, selectedChoices: Record<string, string[]> = {}): AptSel {
+    function picked(grants: TestAptitudeGrants, selectedChoices: Record<string, string[]> = {}): TestAptitudeSelection {
         return { system: { grants, selectedChoices }, _actorItemId: null };
     }
 
-    function collisions(host: ReturnType<typeof makeCollisionHost>): { original: string; replacement: string | null }[] {
-        return OriginPathBuilder.prototype._getAptitudeCollisions.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
+    function collisions(host: CollisionHost): AptCollision[] {
+        return proto._getAptitudeCollisions.call(host);
     }
 
     // ---- #215 — no phantom collision on a pre-existing character ----
@@ -885,7 +1089,8 @@ describe('OriginPathBuilder._getAptitudeCollisions (issues #205 & #215)', () => 
 
 describe('OriginPathBuilder._normalizeAptitudeIdentity (#205)', () => {
     it('canonicalises case and collapses whitespace', () => {
-        const n = OriginPathBuilder._normalizeAptitudeIdentity;
+        // Static normaliser; wrapped so the reference is bound (not an unbound method).
+        const n = (name: string): string => OriginPathBuilder._normalizeAptitudeIdentity(name);
         expect(n('Willpower')).toBe(n('  willpower '));
         expect(n('Weapon  Skill')).toBe(n('weapon skill'));
         expect(n('Weapon Skill')).not.toBe(n('Ballistic Skill'));
@@ -893,16 +1098,29 @@ describe('OriginPathBuilder._normalizeAptitudeIdentity (#205)', () => {
 });
 
 describe('OriginPathBuilder._collectAvailableAptitudePool (#205, #216)', () => {
-    it('excludes taken aptitudes by canonical identity and restricts to characteristic aptitudes (#216)', () => {
-        const proto = OriginPathBuilder.prototype;
-        const mkOrigin = (apts: string[]): { system: { grants: { aptitudes: string[] } } } => ({ system: { grants: { aptitudes: apts } } });
-        const host = {
-            allOrigins: [mkOrigin(['Willpower', 'willpower ', 'Tech', 'Offence', 'Strength', 'Fellowship'])],
+    /** An origin as the pool reader sees it: only `system.grants.aptitudes`. */
+    type PoolOrigin = { system: { grants: { aptitudes: string[] } } };
+    interface PoolHost {
+        allOrigins: PoolOrigin[];
+        lineageOrigins: PoolOrigin[];
+        _getSelectionSystem: (origin: PoolOrigin) => PoolOrigin['system'];
+        _aptitudeKey: (name: string) => string;
+    }
+    function makePoolHost(allOrigins: PoolOrigin[]): PoolHost {
+        const host: PoolHost = {
+            allOrigins,
             lineageOrigins: [],
-            _getSelectionSystem: (o: { system: unknown }) => o.system,
-            _aptitudeKey: proto._aptitudeKey,
+            _getSelectionSystem: (o) => o.system,
+            _aptitudeKey: (name) => proto._aptitudeKey.call(host, name),
         };
-        const pool = proto._collectAvailableAptitudePool.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Set<string>(['  WILLPOWER']));
+        return host;
+    }
+    const collectPool = (host: PoolHost, taken: ReadonlySet<string>): string[] => proto._collectAvailableAptitudePool.call(host, taken);
+
+    it('excludes taken aptitudes by canonical identity and restricts to characteristic aptitudes (#216)', () => {
+        const mkOrigin = (apts: string[]): PoolOrigin => ({ system: { grants: { aptitudes: apts } } });
+        const host = makePoolHost([mkOrigin(['Willpower', 'willpower ', 'Tech', 'Offence', 'Strength', 'Fellowship'])]);
+        const pool = collectPool(host, new Set<string>(['  WILLPOWER']));
         // 'Willpower' excluded by the taken set; 'Tech' / 'Offence' filtered
         // out because they are NOT characteristic aptitudes; 'Strength' and
         // 'Fellowship' kept. The fallback top-up adds the other six
@@ -928,28 +1146,16 @@ describe('OriginPathBuilder._collectAvailableAptitudePool (#205, #216)', () => {
     });
 
     it('(#216) falls back to the full characteristic registry when origins reference no characteristic aptitudes', () => {
-        const proto = OriginPathBuilder.prototype;
-        const host = {
-            // Only non-characteristic aptitudes referenced by origins.
-            allOrigins: [{ system: { grants: { aptitudes: ['Tech', 'Offence', 'Knowledge'] } } }],
-            lineageOrigins: [],
-            _getSelectionSystem: (o: { system: unknown }) => o.system,
-            _aptitudeKey: proto._aptitudeKey,
-        };
-        const pool = proto._collectAvailableAptitudePool.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Set<string>());
+        // Only non-characteristic aptitudes referenced by origins.
+        const host = makePoolHost([{ system: { grants: { aptitudes: ['Tech', 'Offence', 'Knowledge'] } } }]);
+        const pool = collectPool(host, new Set<string>());
         // Pool should still contain every characteristic aptitude, sorted.
         expect(pool).toEqual(['Agility', 'Ballistic Skill', 'Fellowship', 'Intelligence', 'Perception', 'Strength', 'Toughness', 'Weapon Skill', 'Willpower']);
     });
 
     it('(#216) excludes Influence (resource char, not a generation char)', () => {
-        const proto = OriginPathBuilder.prototype;
-        const host = {
-            allOrigins: [{ system: { grants: { aptitudes: ['Influence', 'Strength'] } } }],
-            lineageOrigins: [],
-            _getSelectionSystem: (o: { system: unknown }) => o.system,
-            _aptitudeKey: proto._aptitudeKey,
-        };
-        const pool = proto._collectAvailableAptitudePool.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Set<string>());
+        const host = makePoolHost([{ system: { grants: { aptitudes: ['Influence', 'Strength'] } } }]);
+        const pool = collectPool(host, new Set<string>());
         expect(pool).not.toContain('Influence');
         expect(pool).toContain('Strength');
     });
@@ -977,18 +1183,43 @@ describe('OriginPathBuilder._calculatePreview aptitude collision split (issue #2
      * Drive _calculatePreview through the same minimal host pattern the rest
      * of the file uses, returning just the four collision-related fields.
      */
-    async function previewCollisions(opts: {
-        selections: Array<[string, { system: { grants?: Record<string, unknown>; selectedChoices?: Record<string, string[]> }; _actorItemId?: string | null }]>;
-        actorAptitudes?: string[];
-        overrides?: Map<string, string>;
-    }): Promise<{
-        aptitudeCollisions: { original: string; replacement: string | null }[];
-        unresolvedAptitudeCollisions: { original: string; replacement: string | null }[];
-        resolvedAptitudeCollisions: { original: string; replacement: string | null }[];
+    type AptCollision = { original: string; replacement: string | null };
+    interface PreviewCollisionFields {
+        aptitudeCollisions: AptCollision[];
+        unresolvedAptitudeCollisions: AptCollision[];
+        resolvedAptitudeCollisions: AptCollision[];
         hasUnresolvedAptitudeCollision: boolean;
-    }> {
-        const proto = OriginPathBuilder.prototype;
-        const host = {
+    }
+
+    /**
+     * The `this` `_calculatePreview` walks. The aptitude-collision methods are
+     * the real prototype methods (delegated, bound to the host); the heavier
+     * grant/talent/tooltip pipeline is stubbed to no-ops because the fixtures
+     * grant only aptitudes, so those branches never execute.
+     */
+    interface PreviewHost {
+        selections: Map<string, TestAptitudeSelection>;
+        actor: { system: { aptitudes: string[] } };
+        aptitudeOverrides: Map<string, string>;
+        systemConfig: { getOriginStepConfig: () => { coreSteps: never[]; optionalStep: null; equipmentStep: null } };
+        allOrigins: never[];
+        lineageOrigins: never[];
+        _getSelectionSystem: (selection: TestAptitudeSelection) => TestAptitudeSystem;
+        _collectAptitudeChoices: CollectAptitudeChoices;
+        _selectionGrantedAptitudes: SelectionGrantedAptitudes;
+        _collectAptitudeGrantCounts: () => Map<string, number>;
+        _collectExistingAptitudes: () => Set<string>;
+        _lookupAptitudeOverride: (original: string) => string | undefined;
+        _aptitudeKey: (name: string) => string;
+        _getAptitudeCollisions: () => AptCollision[];
+        _applyChoiceGrantsToPreview: () => Promise<void>;
+        _addTalentModifiers: () => Promise<void>;
+        _findSkillUuid: () => string | null;
+        _prepareGrantTooltipData: () => Promise<string>;
+    }
+
+    async function previewCollisions(opts: AptitudeCollisionOpts): Promise<PreviewCollisionFields> {
+        const host: PreviewHost = {
             selections: new Map(opts.selections),
             actor: { system: { aptitudes: opts.actorAptitudes ?? [] } },
             aptitudeOverrides: opts.overrides ?? new Map<string, string>(),
@@ -996,25 +1227,23 @@ describe('OriginPathBuilder._calculatePreview aptitude collision split (issue #2
             systemConfig: { getOriginStepConfig: () => ({ coreSteps: [], optionalStep: null, equipmentStep: null }) },
             allOrigins: [],
             lineageOrigins: [],
-            // The methods _calculatePreview reaches transitively.
-            _getSelectionSystem: (s: { system: unknown }) => s.system,
-            _collectAptitudeChoices: proto._collectAptitudeChoices,
-            _selectionGrantedAptitudes: proto._selectionGrantedAptitudes,
-            _collectAptitudeGrantCounts: proto._collectAptitudeGrantCounts,
-            _collectExistingAptitudes: proto._collectExistingAptitudes,
-            _lookupAptitudeOverride: proto._lookupAptitudeOverride,
-            _aptitudeKey: proto._aptitudeKey,
-            _getAptitudeCollisions: proto._getAptitudeCollisions,
-            _applyChoiceGrantsToPreview: async () => {
-                /* no choice grants in this test fixture */
-            },
-            _addTalentModifiers: async () => {
-                /* no talent modifier resolution needed */
-            },
+            // The aptitude methods _calculatePreview reaches transitively run for real.
+            _getSelectionSystem: (s) => s.system,
+            _collectAptitudeChoices: (choice, selectedValues, aptitudeSet) => proto._collectAptitudeChoices.call(host, choice, selectedValues, aptitudeSet),
+            _selectionGrantedAptitudes: (sel) => proto._selectionGrantedAptitudes.call(host, sel),
+            _collectAptitudeGrantCounts: () => proto._collectAptitudeGrantCounts.call(host),
+            _collectExistingAptitudes: () => proto._collectExistingAptitudes.call(host),
+            _lookupAptitudeOverride: (original) => proto._lookupAptitudeOverride.call(host, original),
+            _aptitudeKey: (name) => proto._aptitudeKey.call(host, name),
+            _getAptitudeCollisions: () => proto._getAptitudeCollisions.call(host),
+            // No choice grants / talents / skills in this fixture → no-op stubs.
+            // (Non-async to avoid require-await; they resolve immediately.)
+            _applyChoiceGrantsToPreview: async (): Promise<void> => {},
+            _addTalentModifiers: async (): Promise<void> => {},
             _findSkillUuid: () => null,
-            _prepareGrantTooltipData: async () => Promise.resolve(null),
+            _prepareGrantTooltipData: async (): Promise<string> => Promise.resolve(''),
         };
-        const preview = await proto._calculatePreview.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
+        const preview = await proto._calculatePreview.call(host);
         return {
             aptitudeCollisions: preview.aptitudeCollisions,
             unresolvedAptitudeCollisions: preview.unresolvedAptitudeCollisions,
@@ -1023,10 +1252,7 @@ describe('OriginPathBuilder._calculatePreview aptitude collision split (issue #2
         };
     }
 
-    const picked = (
-        grants: Record<string, unknown>,
-        selectedChoices: Record<string, string[]> = {},
-    ): { system: { grants: Record<string, unknown>; selectedChoices: Record<string, string[]> }; _actorItemId: null } => ({
+    const picked = (grants: TestAptitudeGrants, selectedChoices: Record<string, string[]> = {}): TestAptitudeSelection => ({
         system: { grants, selectedChoices },
         _actorItemId: null,
     });
@@ -1117,14 +1343,51 @@ describe('OriginPathBuilder._calculatePreview aptitude collision split (issue #2
  * directly with a fake actor whose `update()` mutates a backing system object.
  */
 describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () => {
-    interface FakeExperience {
-        total: number;
-        used: number;
-    }
-    interface FakeSystem {
+    type FakeExperience = { total: number; used: number };
+    /** A specialist-skill entry; arbitrary extra fields are preserved verbatim. */
+    type FakeSkillEntry = { advance?: number; cost?: number; name?: string; trained?: boolean; current?: number };
+    type FakeSkill = { advance: number; cost: number; entries?: FakeSkillEntry[] };
+    // Declared as `type`s (assignable to `Record<string, unknown>`) so the
+    // path-keyed `actor.update(...)` simulation can walk the tree without an
+    // `as unknown as Record` cast.
+    type FakeSystem = {
         experience: FakeExperience;
         characteristics: Record<string, { advance: number; cost: number }>;
-        skills: Record<string, { advance: number; cost: number; entries?: Array<Record<string, unknown>> }>;
+        skills: Record<string, FakeSkill>;
+    };
+
+    /**
+     * `this` for `_resetExperienceAndAdvancements`: it reads `registryConfig`,
+     * `_actorSys()`, and drives `actor.update(...)` / `actor.system`.
+     */
+    interface ResetHost {
+        actor: { system: FakeSystem; update: ReturnType<typeof vi.fn> };
+        registryConfig: { startingXP: number };
+        _actorSys: () => FakeSystem;
+    }
+
+    /** The leaf values the reset writes through `actor.update(...)`. */
+    type FakeUpdateValue = number | string | boolean | null | FakeSkillEntry[];
+    /** A nested mutable tree, the shape `actor.update(...)` writes path-keys into. */
+    type MutableTree = { [key: string]: MutableTree | FakeUpdateValue | undefined };
+
+    /**
+     * Apply one `actor.update(...)` path-keyed payload to the backing system.
+     * The payload is the genuine Foundry update boundary — a flattened map of
+     * dotted paths to mixed values; `payload` accepts that documented shape.
+     */
+    function applyUpdatePayload(system: FakeSystem, payload: Record<string, FakeUpdateValue>): void {
+        const root: MutableTree = system;
+        for (const [path, value] of Object.entries(payload)) {
+            const parts = path.split('.').slice(1); // drop leading "system"
+            let cursor = root;
+            for (let i = 0; i < parts.length - 1; i++) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: the `!` is required under tsconfig.json (flag ON); ESLint runs under tsconfig.test.json (flag OFF) where it reads as unnecessary/forbidden
+                cursor = cursor[parts[i]!] as MutableTree;
+            }
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: the `!` is required under tsconfig.json (flag ON); ESLint runs under tsconfig.test.json (flag OFF) where it reads as unnecessary/forbidden
+            cursor[parts[parts.length - 1]!] = value;
+        }
     }
 
     /**
@@ -1132,45 +1395,44 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
      *        rejecting any update payload that contains a `system.skills.*.entries`
      *        array (the pre-fix non-atomic-write failure mode).
      */
-    function makeResetHost(
-        system: FakeSystem,
-        opts: { rejectEntryWrites?: boolean; dropFirstUsedWrite?: boolean } = {},
-    ): InstanceType<typeof OriginPathBuilder> {
+    function makeResetHost(system: FakeSystem, opts: { rejectEntryWrites?: boolean; dropFirstUsedWrite?: boolean } = {}): ResetHost {
         let call = 0;
-        const actor = {
-            system,
-            update: vi.fn(async (payload: Record<string, unknown>) => {
-                call += 1;
-                const hasEntryWrite = Object.keys(payload).some((k) => /^system\.skills\..+\.entries$/.test(k));
-                if (opts.rejectEntryWrites === true && hasEntryWrite) {
-                    // Foundry rejects the ENTIRE atomic update — nothing applies.
-                    throw new Error('V14 strict validation: invalid skill entries array');
-                }
-                // Simulate the experience-reset write only partially landing
-                // (the `used` path silently dropped) so a stale `used` survives
-                // above the post-reset `total` — exercises the clamp guard.
-                if (opts.dropFirstUsedWrite === true && call === 1) {
-                    delete payload['system.experience.used'];
-                }
-                for (const [path, value] of Object.entries(payload)) {
-                    const parts = path.split('.').slice(1); // drop leading "system"
-                    let cursor: Record<string, unknown> = system as unknown as Record<string, unknown>;
-                    for (let i = 0; i < parts.length - 1; i++) {
-                        cursor = cursor[parts[i]!] as Record<string, unknown>;
-                    }
-                    cursor[parts[parts.length - 1]!] = value;
-                }
-                await Promise.resolve();
-                return actor;
-            }),
-        };
+        // Built incrementally so the `update` spy below can resolve to the same
+        // `actor` reference it is attached to (the production method awaits the
+        // resolved actor). Declaring `actor` first keeps lexical order clean.
+        const actor = { system } as ResetHost['actor'];
+        // `actor.update()` is a genuine Foundry boundary: a flattened, path-keyed
+        // payload of mixed leaf values (the documented update shape).
+        actor.update = vi.fn(async (payload: Record<string, FakeUpdateValue>): Promise<ResetHost['actor']> => {
+            call += 1;
+            const hasEntryWrite = Object.keys(payload).some((k) => /^system\.skills\..+\.entries$/.test(k));
+            if (opts.rejectEntryWrites === true && hasEntryWrite) {
+                // Foundry rejects the ENTIRE atomic update — nothing applies.
+                // (Throwing from this async mock surfaces as a rejected update,
+                // exactly as V14 strict validation does at runtime.)
+                throw new Error('V14 strict validation: invalid skill entries array');
+            }
+            // Simulate the experience-reset write only partially landing
+            // (the `used` path silently dropped) so a stale `used` survives
+            // above the post-reset `total` — exercises the clamp guard.
+            if (opts.dropFirstUsedWrite === true && call === 1) {
+                delete payload['system.experience.used'];
+            }
+            applyUpdatePayload(system, payload);
+            await Promise.resolve();
+            return actor;
+        });
         return {
             actor,
             registryConfig: { startingXP: 1000 },
             _actorSys: () => system,
-            _resetExperienceAndAdvancements: OriginPathBuilder.prototype._resetExperienceAndAdvancements,
-        } as unknown as InstanceType<typeof OriginPathBuilder>;
+        };
     }
+
+    /** Invoke `_resetExperienceAndAdvancements` against a duck-typed host. */
+    const resetExperienceAndAdvancements = async (host: ResetHost): Promise<void> => {
+        await proto._resetExperienceAndAdvancements.call(host);
+    };
 
     function generatedCharacter(): FakeSystem {
         // Built via the Advancement Dialog: 1500 XP spent across WS + skills,
@@ -1204,7 +1466,7 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         const system = generatedCharacter();
         const host = makeResetHost(system);
 
-        await host._resetExperienceAndAdvancements();
+        await resetExperienceAndAdvancements(host);
 
         // Experience is fully reset to a clean slate.
         expect(system.experience.total).toBe(1000);
@@ -1220,8 +1482,8 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
             expect(s.advance).toBe(0);
             expect(s.cost).toBe(0);
             for (const e of s.entries ?? []) {
-                expect(e['advance']).toBe(0);
-                expect(e['cost']).toBe(0);
+                expect(e.advance).toBe(0);
+                expect(e.cost).toBe(0);
             }
         }
     });
@@ -1230,7 +1492,7 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         const system = generatedCharacter();
         const host = makeResetHost(system);
 
-        await host._resetExperienceAndAdvancements();
+        await resetExperienceAndAdvancements(host);
 
         const available = system.experience.total - system.experience.used;
         expect(available).toBe(1000);
@@ -1244,7 +1506,7 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         // against a `total` meant to drop to startingXP → negative XP.
         const host = makeResetHost(system, { rejectEntryWrites: true });
 
-        await expect(host._resetExperienceAndAdvancements()).rejects.toThrow();
+        await expect(resetExperienceAndAdvancements(host)).rejects.toThrow();
 
         // The experience reset is now its own update committed FIRST, so it
         // landed before the entries write threw: available is never negative.
@@ -1257,9 +1519,9 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         const system = generatedCharacter();
         const host = makeResetHost(system);
 
-        await host._resetExperienceAndAdvancements();
+        await resetExperienceAndAdvancements(host);
         const firstPass = structuredClone(system);
-        await host._resetExperienceAndAdvancements();
+        await resetExperienceAndAdvancements(host);
 
         expect(system).toEqual(firstPass);
         expect(system.experience).toEqual({ total: 1000, used: 0 });
@@ -1271,7 +1533,7 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         // leaving the stale 1500 against the reset total of 1000.
         const host = makeResetHost(system, { dropFirstUsedWrite: true });
 
-        await host._resetExperienceAndAdvancements();
+        await resetExperienceAndAdvancements(host);
 
         expect(system.experience.total).toBe(1000);
         // Clamp step pulled used back down to total — available is exactly 0,

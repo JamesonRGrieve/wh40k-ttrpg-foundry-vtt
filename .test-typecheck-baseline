@@ -6,6 +6,7 @@
     "TS2307",
     "TS2322",
     "TS2339",
+    "TS2344",
     "TS2345",
     "TS2352",
     "TS2353",
@@ -18,6 +19,7 @@
     "TS2545",
     "TS2552",
     "TS2571",
+    "TS2740",
     "TS2749",
     "TS2769",
     "TS4113",
@@ -25,12 +27,10 @@
   ],
   "config": "tsconfig.test.json",
   "totals": {
-    "totalErrors": 8
+    "totalErrors": 6
   },
   "byCode": {
-    "TS2344": 1,
     "TS2722": 5,
-    "TS2740": 1,
     "TS7053": 1
   }
 }

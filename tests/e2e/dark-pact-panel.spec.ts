@@ -18,13 +18,46 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
     const joined = await joinAsGM(page);
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
-    const result = await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+    const result = await page.evaluate(async (): Promise<{ setupOk: boolean; rowCount: number; error: string | null }> => {
+        interface SheetShape {
+            render: (force?: boolean) => Promise<void>;
+            changeTab?: (tab: string, group: string) => void;
+            element?: { querySelectorAll?: (selector: string) => { length: number } | null } | null;
+        }
+        interface ActorDoc {
+            sheet: SheetShape;
+            delete?: () => Promise<void>;
+        }
+        interface PactEntry {
+            pactUuid: string;
+            discovered: boolean;
+            disposition: number;
+            paymentCurrent: boolean;
+        }
+        interface ActorCreateData {
+            name: string;
+            type: string;
+            system: { gameSystem: string; pacts: PactEntry[] };
+        }
+        interface ActorClassShape {
+            create?: (data: ActorCreateData) => Promise<ActorDoc | null>;
+        }
+        interface ActorCollection {
+            getName?: (name: string) => ActorDoc | undefined;
+        }
+        interface GameObject {
+            actors?: ActorCollection;
+        }
+        interface FoundryGlobal {
+            Actor: ActorClassShape;
+            game: GameObject;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor, game) have no shipped types in this browser-side probe
+        const g = globalThis as unknown as FoundryGlobal;
         const ActorCls = g.Actor;
-        if (ActorCls?.create == null) return { setupOk: false, rowCount: 0, error: 'Actor.create unavailable' };
+        if (ActorCls.create == null) return { setupOk: false, rowCount: 0, error: 'Actor.create unavailable' };
 
-        let actor;
+        let actor: ActorDoc | null;
         try {
             actor = await ActorCls.create({
                 name: 'dark-pact-panel-probe',
@@ -48,18 +81,19 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
                 },
             });
         } catch (err) {
-            return { setupOk: false, rowCount: 0, error: String((err as Error).message) };
+            return { setupOk: false, rowCount: 0, error: err instanceof Error ? err.message : String(err) };
         }
         if (actor == null) return { setupOk: false, rowCount: 0, error: 'Actor.create returned null' };
 
-        await actor.sheet.render(true);
+        const createdActor = actor;
+        await createdActor.sheet.render(true);
         await new Promise<void>((r) => {
             setTimeout(r, 250);
         });
 
         // Navigate to the Status tab if the sheet's tab API is reachable.
         try {
-            actor.sheet?.changeTab?.('status', 'primary');
+            createdActor.sheet.changeTab?.('status', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });
@@ -67,7 +101,7 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
             /* sheets without changeTab fall back to whatever tab is open */
         }
 
-        const rows = actor.sheet?.element?.querySelectorAll?.('.wh40k-dark-pact-row');
+        const rows = createdActor.sheet.element?.querySelectorAll?.('.wh40k-dark-pact-row');
         const rowCount = rows?.length ?? 0;
         return { setupOk: true, rowCount, error: null };
     });
@@ -79,9 +113,15 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
     expect(result.rowCount, `expected at least one .wh40k-dark-pact-row; got ${result.rowCount}`).toBeGreaterThanOrEqual(2);
 
     // Cleanup
-    await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const g = globalThis as any;
+    await page.evaluate(async (): Promise<void> => {
+        interface CleanupActor {
+            delete?: () => Promise<void>;
+        }
+        interface FoundryGlobal {
+            game?: { actors?: { getName?: (name: string) => CleanupActor | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game) have no shipped types in this browser-side probe
+        const g = globalThis as unknown as FoundryGlobal;
         const a = g.game?.actors?.getName?.('dark-pact-panel-probe');
         try {
             await a?.delete?.();
