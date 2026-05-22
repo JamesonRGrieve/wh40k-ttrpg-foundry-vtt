@@ -59,20 +59,61 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
-            async ({ moduleUrl }) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only and the builder's private state is reached structurally */
-                const g = globalThis as any;
-                const ActorCls = g.Actor;
+            async ({ moduleUrl }): Promise<{ created: boolean; createError: string | null; flows: FlowResult[] }> => {
+                interface ActorDoc {
+                    delete?: () => Promise<void>;
+                }
+                interface ActorCtorShape {
+                    create?: (data: object) => Promise<ActorDoc | null>;
+                }
+                interface CoreStep {
+                    key: string;
+                }
+                interface SystemConfigShape {
+                    coreSteps?: CoreStep[];
+                }
+                interface OriginEntry {
+                    id?: string;
+                    uuid?: string;
+                    system?: { step?: string };
+                }
+                type ActionHandler = (event: MouseEvent, target: HTMLElement) => void | Promise<void>;
+                interface BuilderShape {
+                    allOrigins?: OriginEntry[];
+                    systemConfig?: SystemConfigShape;
+                    selections: Map<string, OriginEntry>;
+                    previewedOrigin: OriginEntry | null;
+                    currentStepIndex: number;
+                    guidedMode: boolean;
+                    showLineage: boolean;
+                    showCharacteristics: boolean;
+                    element: HTMLElement | null;
+                    options?: { actions?: Record<string, ActionHandler | undefined> };
+                    render: (force?: boolean) => Promise<void>;
+                    close?: () => Promise<void>;
+                    _loadOrigins?: () => Promise<void>;
+                }
+                interface BuilderCtor {
+                    new (actor: ActorDoc, options: object): BuilderShape;
+                }
+                interface BuilderModule {
+                    default?: BuilderCtor;
+                }
+                interface FoundryGlobal {
+                    Actor?: ActorCtorShape;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no type surface available in browser context
+                const { Actor: ActorCls } = globalThis as unknown as FoundryGlobal;
                 if (ActorCls?.create == null) {
                     return {
                         created: false,
                         createError: 'Actor.create unavailable',
-                        flows: [] as Array<{ flow: string; ok: boolean; error: string | null }>,
+                        flows: [],
                     };
                 }
 
                 // ── Seed actor ──────────────────────────────────────────
-                let actor: any;
+                let actor: ActorDoc | null;
                 try {
                     actor = await ActorCls.create({
                         name: 'origin-builder-probe',
@@ -82,29 +123,30 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                 } catch (err) {
                     return {
                         created: false,
-                        createError: String((err as Error).message),
+                        createError: String(err instanceof Error ? err.message : err),
                         flows: [],
                     };
                 }
                 if (actor == null) {
                     return { created: false, createError: 'Actor.create returned null', flows: [] };
                 }
+                const seededActor = actor;
 
-                let mod: any;
+                let mod: BuilderModule;
                 try {
-                    mod = await import(moduleUrl);
+                    mod = (await import(moduleUrl)) as BuilderModule;
                 } catch (err) {
                     try {
-                        await actor.delete?.();
+                        await seededActor.delete?.();
                     } catch {
                         /* ignore */
                     }
-                    return { created: false, createError: `import builder: ${String((err as Error).message)}`, flows: [] };
+                    return { created: false, createError: `import builder: ${String(err instanceof Error ? err.message : err)}`, flows: [] };
                 }
-                const OriginPathBuilder = mod?.default;
+                const OriginPathBuilder = mod.default;
                 if (typeof OriginPathBuilder !== 'function') {
                     try {
-                        await actor.delete?.();
+                        await seededActor.delete?.();
                     } catch {
                         /* ignore */
                     }
@@ -112,9 +154,9 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                 }
 
                 // ── Construct + render the builder ──────────────────────
-                let builder: any;
+                let builder: BuilderShape;
                 try {
-                    builder = new OriginPathBuilder(actor, {});
+                    builder = new OriginPathBuilder(seededActor, {});
                     await builder.render(true);
                     // _prepareContext → _loadOrigins is async; give it a beat.
                     await new Promise<void>((r) => {
@@ -130,11 +172,11 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     }
                 } catch (err) {
                     try {
-                        await actor.delete?.();
+                        await seededActor.delete?.();
                     } catch {
                         /* ignore */
                     }
-                    return { created: false, createError: `builder.render: ${String((err as Error).message)}`, flows: [] };
+                    return { created: false, createError: `builder.render: ${String(err instanceof Error ? err.message : err)}`, flows: [] };
                 }
 
                 /**
@@ -143,8 +185,9 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                  * on failure. The handler is bound via `.call(builder, …)` to
                  * match how ApplicationV2 dispatches at click time.
                  */
+                const activeBuilder: BuilderShape = builder;
                 async function callAction(name: string, dataset: Record<string, string>): Promise<string | null> {
-                    const handler = builder.options?.actions?.[name];
+                    const handler = activeBuilder.options?.actions?.[name];
                     if (typeof handler !== 'function') return `action '${name}' not registered`;
                     const target = document.createElement('div');
                     for (const [k, v] of Object.entries(dataset)) {
@@ -152,25 +195,27 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     }
                     const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                     try {
-                        const rv = handler.call(builder, event, target);
-                        if (rv != null && typeof rv.then === 'function') await rv;
+                        const rv = handler.call(activeBuilder, event, target);
+                        if (rv instanceof Promise) await rv;
                         // Allow the post-action re-render to settle.
                         await new Promise<void>((r) => {
                             setTimeout(r, 30);
                         });
                         return null;
                     } catch (err) {
-                        return String((err as Error).message);
+                        return String(err instanceof Error ? err.message : err);
                     }
                 }
 
                 /** Find the first origin in `allOrigins` matching the given step key. */
-                function pickOriginForStep(stepKey: string): any {
-                    const pool = (builder.allOrigins ?? []) as any[];
-                    return pool.find((o) => o?.system?.step === stepKey) ?? pool[0] ?? null;
+                function pickOriginForStep(stepKey: string): OriginEntry | null {
+                    const pool = activeBuilder.allOrigins ?? [];
+                    const match = pool.find((o) => o.system?.step === stepKey);
+                    if (match !== undefined) return match;
+                    return pool.length > 0 ? pool[0] : null;
                 }
 
-                const flows: Array<{ flow: string; ok: boolean; error: string | null }> = [];
+                const flows: FlowResult[] = [];
                 const record = (flow: string, ok: boolean, error: string | null): void => {
                     flows.push({ flow, ok, error });
                 };
@@ -190,7 +235,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         );
                     }
                 } catch (err) {
-                    record('builder-renders-step-list', false, String((err as Error).message));
+                    record('builder-renders-step-list', false, String(err instanceof Error ? err.message : err));
                 }
 
                 // ── 2. builder-advance-to-next-step ─────────────────────
@@ -200,9 +245,9 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                 try {
                     builder.guidedMode = false;
                     builder.currentStepIndex = 0;
-                    const steps: any[] = builder.systemConfig?.coreSteps ?? [];
-                    const targetStep = steps[1] ?? steps[0];
-                    if (targetStep == null) {
+                    const steps: CoreStep[] = builder.systemConfig?.coreSteps ?? [];
+                    const targetStep = steps.length > 1 ? steps[1] : steps[0];
+                    if (steps.length === 0) {
                         record('builder-advance-to-next-step', false, 'no second coreStep in systemConfig');
                     } else {
                         const err = await callAction('goToStep', {
@@ -218,7 +263,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         }
                     }
                 } catch (err) {
-                    record('builder-advance-to-next-step', false, String((err as Error).message));
+                    record('builder-advance-to-next-step', false, String(err instanceof Error ? err.message : err));
                 }
 
                 // ── 3. builder-back-to-previous-step ────────────────────
@@ -237,7 +282,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         record('builder-back-to-previous-step', false, `currentStepIndex=${builder.currentStepIndex}, expected 0`);
                     }
                 } catch (err) {
-                    record('builder-back-to-previous-step', false, String((err as Error).message));
+                    record('builder-back-to-previous-step', false, String(err instanceof Error ? err.message : err));
                 }
 
                 // ── 4. builder-select-origin-card ───────────────────────
@@ -262,14 +307,18 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         });
                         if (err !== null) {
                             record('builder-select-origin-card', false, err);
-                        } else if (builder.previewedOrigin != null && builder.previewedOrigin.id === origin.id) {
+                        } else if (activeBuilder.previewedOrigin != null && activeBuilder.previewedOrigin.id === origin.id) {
                             record('builder-select-origin-card', true, null);
                         } else {
-                            record('builder-select-origin-card', false, `previewedOrigin.id=${builder.previewedOrigin?.id ?? 'null'}, expected ${origin.id}`);
+                            record(
+                                'builder-select-origin-card',
+                                false,
+                                `previewedOrigin.id=${activeBuilder.previewedOrigin?.id ?? 'null'}, expected ${origin.id}`,
+                            );
                         }
                     }
                 } catch (err) {
-                    record('builder-select-origin-card', false, String((err as Error).message));
+                    record('builder-select-origin-card', false, String(err instanceof Error ? err.message : err));
                 }
 
                 // ── 5. builder-confirm-origin-embeds-on-actor ───────────
@@ -297,7 +346,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                             const confirmErr = await callAction('confirmSelection', {});
                             if (confirmErr !== null) {
                                 record('builder-confirm-origin-embeds-on-actor', false, `confirm: ${confirmErr}`);
-                            } else if (builder.selections.has(firstStepKey) === true) {
+                            } else if (builder.selections.has(firstStepKey)) {
                                 record('builder-confirm-origin-embeds-on-actor', true, null);
                             } else {
                                 record(
@@ -309,7 +358,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         }
                     }
                 } catch (err) {
-                    record('builder-confirm-origin-embeds-on-actor', false, String((err as Error).message));
+                    record('builder-confirm-origin-embeds-on-actor', false, String(err instanceof Error ? err.message : err));
                 }
 
                 // ── 6. builder-cancel-or-reset ──────────────────────────
@@ -328,7 +377,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 30);
                     });
-                    if (builder.selections.size === 0 && builder.currentStepIndex === 0 && builder.previewedOrigin === null) {
+                    if (builder.selections.size === 0 && builder.currentStepIndex === 0 && activeBuilder.previewedOrigin === null) {
                         record('builder-cancel-or-reset', true, null);
                     } else {
                         record(
@@ -338,7 +387,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         );
                     }
                 } catch (err) {
-                    record('builder-cancel-or-reset', false, String((err as Error).message));
+                    record('builder-cancel-or-reset', false, String(err instanceof Error ? err.message : err));
                 }
 
                 // ── 7. builder-completes-full-path ──────────────────────
@@ -355,7 +404,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     builder.showLineage = false;
                     builder.showCharacteristics = false;
 
-                    const coreSteps: any[] = builder.systemConfig?.coreSteps ?? [];
+                    const coreSteps: CoreStep[] = builder.systemConfig?.coreSteps ?? [];
                     let walkErr: string | null = null;
                     for (let i = 0; i < coreSteps.length; i++) {
                         const step = coreSteps[i];
@@ -390,7 +439,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                             const skipErr = await callAction('skipLineage', {});
                             if (skipErr !== null) {
                                 record('builder-completes-full-path', false, `skipLineage: ${skipErr}`);
-                            } else if (builder.selections.size === coreSteps.length && builder.showCharacteristics === true) {
+                            } else if (builder.selections.size === coreSteps.length && activeBuilder.showCharacteristics) {
                                 record('builder-completes-full-path', true, null);
                             } else {
                                 record(
@@ -402,7 +451,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                         }
                     }
                 } catch (err) {
-                    record('builder-completes-full-path', false, String((err as Error).message));
+                    record('builder-completes-full-path', false, String(err instanceof Error ? err.message : err));
                 }
 
                 // ── Teardown ────────────────────────────────────────────
@@ -412,13 +461,12 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     /* ignore */
                 }
                 try {
-                    await actor.delete?.();
+                    await seededActor.delete?.();
                 } catch {
                     /* ignore */
                 }
 
                 return { created: true, createError: null, flows };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             { moduleUrl: ORIGIN_BUILDER_MODULE_URL },
         );
