@@ -292,7 +292,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     get prerequisitesLabel(): string {
         if (this.prerequisites.text) return this.prerequisites.text;
 
-        const parts = [];
+        const parts: string[] = [];
 
         // Characteristics
         for (const [char, value] of Object.entries(this.prerequisites.characteristics)) {
@@ -331,7 +331,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get grantsSummary(): string[] {
         const grants = this.grants;
-        const summary = [];
+        const summary: string[] = [];
 
         if (grants.skills.length) {
             summary.push(`Skills: ${grants.skills.map((s) => s.name + (s.specialization ? ` (${s.specialization})` : '')).join(', ')}`);

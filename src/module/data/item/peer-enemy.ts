@@ -22,7 +22,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         if (this.group) {
             props.push(this.group);
         }

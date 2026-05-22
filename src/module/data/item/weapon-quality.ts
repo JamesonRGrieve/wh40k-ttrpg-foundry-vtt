@@ -59,7 +59,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         if (this.hasLevel && this.level !== null) {
             props.push(`Level: ${this.level}`);
         }

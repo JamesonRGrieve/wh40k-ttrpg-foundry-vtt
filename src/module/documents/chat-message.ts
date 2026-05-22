@@ -1,19 +1,30 @@
-/* eslint-disable no-restricted-syntax -- boundary: chat actions invoke per-system actor/item methods uniformly */
+/**
+ * Minimal shape of a per-system item document as probed by chat-card actions.
+ * The result of each roll/use dispatch is discarded by the handler, so each
+ * method is typed `Promise<void>`; the concrete documents return richer values
+ * (ChatMessage / roll results) that are intentionally ignored here.
+ */
 interface RollableItem {
     type?: string;
     actor?: ActorWithCombatActions | null;
-    rollDamage?: () => Promise<unknown>;
-    use?: () => Promise<unknown>;
-    roll?: () => Promise<unknown>;
+    rollDamage?: () => Promise<void>;
+    use?: () => Promise<void>;
+    roll?: () => Promise<void>;
 }
 
+/**
+ * Minimal shape of a per-system actor document as probed by chat-card combat
+ * actions. `update` and `applyDamage`'s options bag are Foundry update-payload
+ * boundaries (ad-hoc consumer fields), so they keep `Record<string, unknown>`.
+ */
 interface ActorWithCombatActions {
-    rollWeaponDamage?: (item: unknown) => Promise<unknown>;
-    applyDamage?: (damage: number, options: Record<string, unknown>) => Promise<unknown>;
-    update: (data: Record<string, unknown>) => Promise<unknown>;
+    rollWeaponDamage?: (item: RollableItem) => Promise<void>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: applyDamage options bag is an ad-hoc consumer field set, not a DataModel-backed shape
+    applyDamage?: (damage: number, options: Record<string, unknown>) => Promise<void>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts a free-form update payload
+    update: (data: Record<string, unknown>) => Promise<void>;
     system: { wounds?: { value?: number } };
 }
-/* eslint-enable no-restricted-syntax */
 
 /**
  * Extended ChatMessage class for WH40K RPG VTT

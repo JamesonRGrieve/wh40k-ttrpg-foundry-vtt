@@ -102,7 +102,8 @@ describe('actor-system-converter', () => {
             delete: vi.fn(),
         };
 
-        const converted = buildConvertedCharacterSource(actor, 'rt');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: structural fake stands in for a Foundry Actor Document at the ActorDirectoryLike parameter boundary
+        const converted = buildConvertedCharacterSource(actor as unknown as Parameters<typeof buildConvertedCharacterSource>[0], 'rt');
 
         expect(converted._id).toBeUndefined();
         expect(converted.type).toBe('rt-character');
@@ -141,7 +142,8 @@ describe('actor-system-converter', () => {
             delete: vi.fn(),
         };
 
-        const converted = buildConvertedActorSource(actor, 'dh2');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: structural fake stands in for a Foundry Actor Document at the ActorDirectoryLike parameter boundary
+        const converted = buildConvertedActorSource(actor as unknown as Parameters<typeof buildConvertedActorSource>[0], 'dh2');
 
         expect(converted.type).toBe('dh2-npc');
         expect(converted.system).toEqual({
@@ -182,7 +184,8 @@ describe('actor-system-converter', () => {
             delete: vi.fn(),
         };
 
-        const converted = buildConvertedActorSource(actor, 'dh2');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: structural fake stands in for a Foundry Actor Document at the ActorDirectoryLike parameter boundary
+        const converted = buildConvertedActorSource(actor as unknown as Parameters<typeof buildConvertedActorSource>[0], 'dh2');
 
         expect(converted.type).toBe('dh2-character');
         expect(converted.system).toEqual(
