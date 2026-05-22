@@ -86,8 +86,83 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            // ---- browser-side structural types (runtime-only Foundry internals) ----
+            // Every item DataModel under test exposes a different `system` shape;
+            // this union of optional members covers exactly the derived getters /
+            // methods the flows read. Values are scalar/label outputs of the
+            // DataModel — no Foundry types are shipped, so the surface is declared
+            // structurally here and each access is a plain property read.
+            interface ItemSystem {
+                averageAP?: number;
+                maxAP?: number;
+                maxBaseAP?: number;
+                protectionLevel?: string;
+                locationCount?: number;
+                getAPForLocation?: (loc: string) => number;
+                getEffectiveAPForLocation?: (loc: string) => number;
+                effectiveWeight?: number;
+                hasCraftsmanshipEffects?: boolean;
+                coversAll?: boolean;
+                coverageLabel?: string;
+                imposesStealthPenalty?: boolean;
+                stealthPenalty?: number;
+                totalWeight?: number;
+                effectiveTotalWeight?: number;
+                hasLimitedUses?: boolean;
+                usesExhausted?: boolean;
+                usesDisplay?: string;
+                hasPrerequisites?: boolean;
+                prerequisitesLabel?: string;
+                hasGrants?: boolean;
+                grantsSummary?: string[];
+                hasSpecialization?: boolean;
+                fullName?: string;
+                isRollable?: boolean;
+                hasModifiers?: boolean;
+                weaponTypesLabel?: string;
+                chatProperties?: string[];
+                effectiveOverloadRange?: { min?: number; max?: number };
+                checksOverload?: (roll: number) => boolean;
+                overloadRangeLabel?: string;
+                isProtecting?: boolean;
+                hasLevel?: boolean;
+                isVariable?: boolean;
+                categoryLabel?: string;
+                characteristicAbbr?: string;
+                skillTypeLabel?: string;
+                hasSpecializations?: boolean;
+                isTemporary?: boolean;
+                durationDisplay?: string;
+                natureClass?: string;
+                restrictionsLabel?: string;
+                categoryIcon?: string;
+            }
+            interface ItemDoc {
+                id?: string;
+                system?: ItemSystem;
+                delete?: () => Promise<void>;
+            }
+            interface ActorDoc {
+                id?: string;
+                items: { get: (id: string) => ItemDoc | null | undefined };
+                createEmbeddedDocuments: (type: string, data: SchemaMap[]) => Promise<ItemDoc[]>;
+                delete?: () => Promise<void>;
+            }
+            interface ActorClass {
+                create?: (data: SchemaMap) => Promise<ActorDoc | null>;
+            }
+            interface GameGlobal {
+                actors?: { get?: (id: string) => ActorDoc | null | undefined };
+            }
+            // A loosely-keyed construction-data map across the Foundry DataModel
+            // boundary; values are read structurally by the licensed app.
+            interface SchemaMap {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document construction data has no shipped value types
+                [key: string]: unknown;
+            }
+
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `Actor` / `game` globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as { Actor?: ActorClass; game?: GameGlobal };
             const ActorCls = g.Actor;
             const gameG = g.game;
 
@@ -122,9 +197,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             const cleanups: Array<() => Promise<void>> = [];
 
             // ---- shared PC actor (dh2-character — has characteristics) ----
-            let pc: any = null;
+            let pc: ActorDoc | null = null;
             try {
-                pc = (await withTimeout(
+                pc = await withTimeout(
                     ActorCls.create({
                         name: 'data-item-model-spec-pc',
                         type: 'dh2-character',
@@ -140,11 +215,12 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     }),
                     5_000,
                     'PC Actor.create',
-                )) as any;
-                if (pc?.id != null) {
+                );
+                const pcId = pc?.id;
+                if (pcId != null) {
                     cleanups.push(async () => {
                         try {
-                            await gameG?.actors?.get?.(pc.id)?.delete?.();
+                            await gameG?.actors?.get?.(pcId)?.delete?.();
                         } catch {
                             /* ignore */
                         }
@@ -154,7 +230,8 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 for (const f of flows) notes[f] = `PC create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            if (pc?.id == null) {
+            const livePcId = pc?.id;
+            if (livePcId == null) {
                 return { flowsFired: fired, flowNotes: notes };
             }
 
@@ -165,17 +242,18 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 setTimeout(r, 250);
             });
 
-            const getPc = (): any => gameG?.actors?.get?.(pc.id);
+            const getPc = (): ActorDoc | null | undefined => gameG?.actors?.get?.(livePcId);
 
             /**
              * Create one embedded item, register it for cleanup, return the
              * live document (re-fetched off the actor so derived data is fresh).
              */
-            const embed = async (flow: string, data: Record<string, unknown>): Promise<any> => {
+            const embed = async (flow: string, data: SchemaMap): Promise<ItemDoc | null> => {
                 const live = getPc();
-                const created = await withTimeout(live.createEmbeddedDocuments?.('Item', [data]), 5_000, `create ${String(data['type'])} for ${flow}`);
-                const itemId = created?.[0]?.id;
-                if (itemId === undefined || itemId === null) return null;
+                if (live == null) return null;
+                const created = await withTimeout(live.createEmbeddedDocuments('Item', [data]), 5_000, `create ${String(data['type'])} for ${flow}`);
+                const itemId = created[0]?.id;
+                if (itemId === undefined) return null;
                 const item = live.items.get(itemId);
                 if (item != null) {
                     cleanups.push(async () => {
@@ -495,8 +573,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         notes['talent-grants-summary'] = 'failed to create talent';
                     } else {
                         const has = talent.system?.hasGrants;
-                        const summary = talent.system?.grantsSummary;
-                        const arr = Array.isArray(summary) ? (summary as string[]) : [];
+                        const arr = talent.system?.grantsSummary ?? [];
                         const hasSkills = arr.some((s) => s.startsWith('Skills:') && s.includes('Awareness'));
                         const hasTalents = arr.some((s) => s.startsWith('Talents:') && s.includes('Quick Draw'));
                         const hasTraits = arr.some((s) => s.startsWith('Traits:') && s.includes('Unnatural Strength'));
@@ -579,8 +656,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         const hasMods = ammo.system?.hasModifiers;
                         const typesLabel = ammo.system?.weaponTypesLabel;
-                        const chatProps = ammo.system?.chatProperties;
-                        const arr = Array.isArray(chatProps) ? (chatProps as string[]) : [];
+                        const arr = ammo.system?.chatProperties ?? [];
                         const hasDmg = arr.some((p) => p === 'Damage: +2');
                         const hasPen = arr.some((p) => p === 'Pen: +3');
                         if (hasMods === true && typeof typesLabel === 'string' && typesLabel.length > 0 && hasDmg && hasPen) {
@@ -626,7 +702,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         const checks16 = ff.system?.checksOverload?.(16);
                         const label = ff.system?.overloadRangeLabel;
                         const protecting = ff.system?.isProtecting;
-                        if (range?.min === 1 && range?.max === 15 && checks10 === true && checks16 === false && label === '01-15' && protecting === true) {
+                        if (range?.min === 1 && range.max === 15 && checks10 === true && checks16 === false && label === '01-15' && protecting === true) {
                             fired['force-field-overload'] = true;
                             notes[
                                 'force-field-overload'
@@ -672,7 +748,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         const checks1 = ff.system?.checksOverload?.(1);
                         const checks2 = ff.system?.checksOverload?.(2);
                         const protecting = ff.system?.isProtecting;
-                        if (range?.min === 1 && range?.max === 1 && label === '01' && checks1 === true && checks2 === false && protecting === false) {
+                        if (range?.min === 1 && range.max === 1 && label === '01' && checks1 === true && checks2 === false && protecting === false) {
                             fired['force-field-craftsmanship'] = true;
                             notes[
                                 'force-field-craftsmanship'
@@ -885,7 +961,6 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             }
 
             return { flowsFired: fired, flowNotes: notes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, DATA_ITEM_MODEL_FLOWS);
 
         return {

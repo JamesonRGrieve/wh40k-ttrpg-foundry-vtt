@@ -75,7 +75,64 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            // Browser-side probe shapes. The dynamic-imported dist modules are
+            // runtime-only; describe only the exported surface each flow drives.
+            interface PackPrefixModule {
+                gameSystemPackPrefix?: (id: string | undefined) => string;
+            }
+            interface EncumbranceModule {
+                getCarryCapacity?: (sb: number) => number;
+                ENCUMBRANCE_TABLE?: number[];
+            }
+            interface OriginUiModule {
+                getCharacteristicDisplayInfo?: (key: string) => { label?: string; short?: string };
+                getTrainingLabel?: (key: string) => string;
+            }
+            interface TextPatternExtractorStatic {
+                splitList: (input: string) => string[];
+                toKey: (input: string, capitalize?: boolean) => string;
+                parseRange: (input: string) => { value?: number; type?: string } | null;
+                parseValueWithModifier: (input: string) => { value?: string; bonus?: number; hasBonus?: boolean };
+                cleanEntry: (input: string) => string;
+            }
+            interface TextPatternModule {
+                default?: TextPatternExtractorStatic;
+                TextPatternExtractor?: TextPatternExtractorStatic;
+            }
+            interface ItemVariantModule {
+                normalizeGameLineKey?: (key: string) => string | null;
+                isLineVariantContainer?: (value: object) => boolean;
+                resolveLineVariant?: (value: string | Record<string, string>, line: string) => string;
+            }
+            interface XpTransactionModule {
+                calculateTotalCost?: (entries: Array<{ cost: number }>) => number;
+            }
+            interface ActorConverterModule {
+                isConvertibleActorType?: (type: string) => boolean;
+            }
+            interface StatBlockValidatorStatic {
+                validate?: (input: object | null) => { valid?: boolean; errors?: string[]; warnings?: string[] } | null;
+            }
+            interface StatBlockModule {
+                default?: StatBlockValidatorStatic;
+                StatBlockValidator?: StatBlockValidatorStatic;
+            }
+            interface OriginChartCard {
+                stepKey?: string;
+                cards?: object[];
+            }
+            interface OriginChart {
+                steps?: OriginChartCard[];
+                maxColumns?: number;
+            }
+            interface OriginChartLayoutStatic {
+                computeFullChart?: (origins: object[], pinned: Map<string, object>, forward: boolean, direction: string, steps: string[]) => OriginChart;
+            }
+            interface OriginChartModule {
+                OriginChartLayout?: OriginChartLayoutStatic;
+                DIRECTION?: { FORWARD?: string };
+            }
+
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -85,7 +142,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- game-system-pack-prefix ----------
             try {
-                const mod = await import(`${base}/game-system-pack-prefix.js`);
+                const mod = (await import(`${base}/game-system-pack-prefix.js`)) as PackPrefixModule;
                 try {
                     const a = mod.gameSystemPackPrefix?.('dh1e');
                     const b = mod.gameSystemPackPrefix?.('dh2e');
@@ -108,7 +165,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- encumbrance-calculator ----------
             try {
-                const mod = await import(`${base}/encumbrance-calculator.js`);
+                const mod = (await import(`${base}/encumbrance-calculator.js`)) as EncumbranceModule;
                 try {
                     const zero = mod.getCarryCapacity?.(0);
                     const high = mod.getCarryCapacity?.(5);
@@ -139,7 +196,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- origin-ui-labels ----------
             try {
-                const mod = await import(`${base}/origin-ui-labels.js`);
+                const mod = (await import(`${base}/origin-ui-labels.js`)) as OriginUiModule;
                 try {
                     const known = mod.getCharacteristicDisplayInfo?.('weaponSkill');
                     const fallback = mod.getCharacteristicDisplayInfo?.('madeUpKey');
@@ -166,7 +223,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- text-pattern-extractor ----------
             try {
-                const mod = await import(`${base}/text-pattern-extractor.js`);
+                const mod = (await import(`${base}/text-pattern-extractor.js`)) as TextPatternModule;
                 const TPE = mod.default ?? mod.TextPatternExtractor;
                 if (typeof TPE?.splitList !== 'function') {
                     for (const k of [
@@ -213,10 +270,10 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                         const noBonus = TPE.parseValueWithModifier('Dodge');
                         record(
                             'text-pattern-parse-value-with-modifier',
-                            withBonus?.value === 'Awareness' &&
+                            withBonus.value === 'Awareness' &&
                                 withBonus.bonus === 10 &&
                                 withBonus.hasBonus === true &&
-                                noBonus?.value === 'Dodge' &&
+                                noBonus.value === 'Dodge' &&
                                 noBonus.hasBonus === false,
                             `withBonus=${JSON.stringify(withBonus)} noBonus=${JSON.stringify(noBonus)}`,
                         );
@@ -244,7 +301,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- item-variant-utils ----------
             try {
-                const mod = await import(`${base}/item-variant-utils.js`);
+                const mod = (await import(`${base}/item-variant-utils.js`)) as ItemVariantModule;
                 try {
                     const dh = mod.normalizeGameLineKey?.('dh2e');
                     const rt = mod.normalizeGameLineKey?.('rt');
@@ -287,7 +344,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- xp-transaction ----------
             try {
-                const mod = await import(`${base}/xp-transaction.js`);
+                const mod = (await import(`${base}/xp-transaction.js`)) as XpTransactionModule;
                 try {
                     const empty = mod.calculateTotalCost?.([]);
                     const summed = mod.calculateTotalCost?.([{ cost: 100 }, { cost: 250 }, { cost: 50 }]);
@@ -301,7 +358,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- actor-system-converter ----------
             try {
-                const mod = await import(`${base}/actor-system-converter.js`);
+                const mod = (await import(`${base}/actor-system-converter.js`)) as ActorConverterModule;
                 try {
                     const charType = mod.isConvertibleActorType?.('dh2-character');
                     const npcType = mod.isConvertibleActorType?.('rt-npc');
@@ -320,7 +377,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- stat-block-validator ----------
             try {
-                const mod = await import(`${base}/stat-block-validator.js`);
+                const mod = (await import(`${base}/stat-block-validator.js`)) as StatBlockModule;
                 const SBV = mod.default ?? mod.StatBlockValidator;
                 try {
                     const nullResult = SBV?.validate?.(null);
@@ -350,7 +407,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
             // ---------- origin-chart-layout ----------
             try {
-                const mod = await import(`${base}/origin-chart-layout.js`);
+                const mod = (await import(`${base}/origin-chart-layout.js`)) as OriginChartModule;
                 const OCL = mod.OriginChartLayout;
                 try {
                     const origins = [
@@ -384,7 +441,6 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {
