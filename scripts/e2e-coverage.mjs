@@ -348,7 +348,15 @@ const TOKEN_FLOWS = [
 // `applySubtlety` / `applySubtletyFromSource` / `collectSubtletyAdjusters`
 // on base-actor.ts. Keys MUST match the recordCoverage('subtlety.flow', ...)
 // calls in the spec.
-const SUBTLETY_FLOWS = ['subtlety-baseline', 'subtlety-manual-adjustment', 'subtlety-inquest-adjustment', 'talent-subtlety-delta-applies', 'talent-subtlety-requiresEquipped', 'subtlety-minAbsoluteDelta-floors', 'subtlety-clears-when-removed'];
+const SUBTLETY_FLOWS = [
+    'subtlety-baseline',
+    'subtlety-manual-adjustment',
+    'subtlety-inquest-adjustment',
+    'talent-subtlety-delta-applies',
+    'talent-subtlety-requiresEquipped',
+    'subtlety-minAbsoluteDelta-floors',
+    'subtlety-clears-when-removed',
+];
 
 // Damage / health / fatigue / fate pipeline flows exercised by
 // tests/e2e/damage.spec.ts. Drives source-code coverage on
@@ -683,7 +691,15 @@ recordDimension('per-system.flow', covered['per-system.flow'], PER_SYSTEM_FLOWS)
 // and src/module/applications/dialogs/acquisition-dialog.ts (constructor +
 // availability/craftsmanship modifier tables + flag-backed history log).
 // Keys MUST match the recordCoverage('wealth.flow', ...) calls in the spec.
-const WEALTH_FLOWS = ['dh2-influence-track', 'dh1-influence-track', 'dw-requisition-track', 'ow-requisition-track', 'bc-gelt-track', 'rt-profit-factor-spending', 'acquisition-dialog-flow'];
+const WEALTH_FLOWS = [
+    'dh2-influence-track',
+    'dh1-influence-track',
+    'dw-requisition-track',
+    'ow-requisition-track',
+    'bc-gelt-track',
+    'rt-profit-factor-spending',
+    'acquisition-dialog-flow',
+];
 recordDimension('wealth.flow', covered['wealth.flow'], WEALTH_FLOWS);
 
 // CompendiumBrowser + uuid-name-cache flows exercised by
@@ -816,7 +832,14 @@ recordDimension('action-manager.flow', covered['action-manager.flow'], ACTION_MA
 // loop + #setMovementAction click handler). `token-hud-renders` is
 // canvas-gated and may not exercise without an activated scene. Keys
 // MUST match the recordCoverage('scene-hud.flow', ...) calls in the spec.
-const SCENE_HUD_FLOWS = ['scene-controls-button-registered', 'scene-controls-button-onclick', 'token-hud-renders', 'token-hud-system-buttons', 'token-effects-via-hud', 'scene-controls-per-category'];
+const SCENE_HUD_FLOWS = [
+    'scene-controls-button-registered',
+    'scene-controls-button-onclick',
+    'token-hud-renders',
+    'token-hud-system-buttons',
+    'token-effects-via-hud',
+    'scene-controls-per-category',
+];
 recordDimension('scene-hud.flow', covered['scene-hud.flow'], SCENE_HUD_FLOWS);
 
 // NPC tooling pipeline flows exercised by tests/e2e/npc-tools.spec.ts.
@@ -835,7 +858,14 @@ recordDimension('scene-hud.flow', covered['scene-hud.flow'], SCENE_HUD_FLOWS);
 // createPresetFromNPC + addPreset + getPresets + getPreset + applyPresetToNPC
 // + deletePresetById round-trip via the static API surface). Keys MUST match
 // the recordCoverage('npc-tool.flow', ...) calls in the spec.
-const NPC_TOOL_FLOWS = ['stat-block-parser-imports-npc', 'stat-block-exporter-roundtrip', 'threat-scaler-up-and-down', 'difficulty-calculator-computes', 'encounter-builder-add-remove-NPCs', 'combat-preset-save-and-load-library'];
+const NPC_TOOL_FLOWS = [
+    'stat-block-parser-imports-npc',
+    'stat-block-exporter-roundtrip',
+    'threat-scaler-up-and-down',
+    'difficulty-calculator-computes',
+    'encounter-builder-add-remove-NPCs',
+    'combat-preset-save-and-load-library',
+];
 recordDimension('npc-tool.flow', covered['npc-tool.flow'], NPC_TOOL_FLOWS);
 
 // Weapon-attack pipeline flows exercised by tests/e2e/weapon-attack.spec.ts.
@@ -870,7 +900,14 @@ recordDimension('weapon-attack.flow', covered['weapon-attack.flow'], WEAPON_ATTA
 // `rollCharacteristicMacro`) wired into `game.wh40k.*` by
 // `src/module/hooks-manager.ts`. Keys MUST match the
 // recordCoverage('macro.flow', ...) calls in the spec.
-const MACRO_FLOWS = ['create-item-macro', 'create-skill-macro', 'create-characteristic-macro', 'roll-item-macro', 'roll-skill-macro', 'roll-characteristic-macro'];
+const MACRO_FLOWS = [
+    'create-item-macro',
+    'create-skill-macro',
+    'create-characteristic-macro',
+    'roll-item-macro',
+    'roll-skill-macro',
+    'roll-characteristic-macro',
+];
 recordDimension('macro.flow', covered['macro.flow'], MACRO_FLOWS);
 
 // Rules-engine pure-logic flows exercised by tests/e2e/rules-engine.spec.ts.
@@ -1215,6 +1252,11 @@ const DATA_ITEM_MODEL_FLOWS = [
     'skill-derived-labels',
     'condition-duration',
     'weapon-modification-restrictions',
+    'psychic-power-pr-cost',
+    'ritual-activation-label',
+    'special-ability-modifiers',
+    'order-test-label',
+    'mutation-shape',
 ];
 recordDimension('data-item-model.flow', covered['data-item-model.flow'], DATA_ITEM_MODEL_FLOWS);
 
@@ -1287,9 +1329,20 @@ const GAME_SYSTEM_CONFIG_SINGLE_FLOWS = [
     'starting-xp-divergence',
     'step-short-labels',
 ];
-const GAME_SYSTEM_CONFIG_FAMILIES = ['themeClassFor', 'config-identity', 'skill-rank-shape', 'characteristic-tier-shape', 'origin-step-config', 'fate-point-uses', 'visible-skills'];
+const GAME_SYSTEM_CONFIG_FAMILIES = [
+    'themeClassFor',
+    'config-identity',
+    'skill-rank-shape',
+    'characteristic-tier-shape',
+    'origin-step-config',
+    'fate-point-uses',
+    'visible-skills',
+];
 const GAME_SYSTEM_CONFIG_IDS = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'];
-const GAME_SYSTEM_CONFIG_FLOWS = [...GAME_SYSTEM_CONFIG_SINGLE_FLOWS, ...GAME_SYSTEM_CONFIG_FAMILIES.flatMap((fam) => GAME_SYSTEM_CONFIG_IDS.map((id) => `${fam}::${id}`))];
+const GAME_SYSTEM_CONFIG_FLOWS = [
+    ...GAME_SYSTEM_CONFIG_SINGLE_FLOWS,
+    ...GAME_SYSTEM_CONFIG_FAMILIES.flatMap((fam) => GAME_SYSTEM_CONFIG_IDS.map((id) => `${fam}::${id}`)),
+];
 recordDimension('game-system-config.flow', covered['game-system-config.flow'], GAME_SYSTEM_CONFIG_FLOWS);
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -1526,88 +1579,208 @@ recordDimension('app-api-depth.flow', covered['app-api-depth.flow'], APP_API_DEP
 
 // tests/e2e/screenshots-actor-sheets.spec.ts — every (actorType × systemId × {view,edit}).
 const SCREENSHOT_ACTOR_FLOWS = [
-    'bc-character::bc::view', 'bc-character::bc::edit', 'bc-npc::bc::view', 'bc-npc::bc::edit',
-    'bc-vehicle::bc::view', 'bc-vehicle::bc::edit', 'loot::bc::view', 'loot::bc::edit',
-    'dh1-character::dh1e::view', 'dh1-character::dh1e::edit', 'dh1-npc::dh1e::view', 'dh1-npc::dh1e::edit',
-    'dh1-vehicle::dh1e::view', 'dh1-vehicle::dh1e::edit', 'loot::dh1e::view', 'loot::dh1e::edit',
-    'dh2-character::dh2e::view', 'dh2-character::dh2e::edit', 'dh2-npc::dh2e::view', 'dh2-npc::dh2e::edit',
-    'dh2-vehicle::dh2e::view', 'dh2-vehicle::dh2e::edit', 'loot::dh2e::view', 'loot::dh2e::edit',
-    'dw-character::dw::view', 'dw-character::dw::edit', 'dw-npc::dw::view', 'dw-npc::dw::edit',
-    'dw-vehicle::dw::view', 'dw-vehicle::dw::edit', 'loot::dw::view', 'loot::dw::edit',
-    'ow-character::ow::view', 'ow-character::ow::edit', 'ow-npc::ow::view', 'ow-npc::ow::edit',
-    'ow-vehicle::ow::view', 'ow-vehicle::ow::edit', 'loot::ow::view', 'loot::ow::edit',
-    'rt-character::rt::view', 'rt-character::rt::edit', 'rt-npc::rt::view', 'rt-npc::rt::edit',
-    'rt-vehicle::rt::view', 'rt-vehicle::rt::edit', 'rt-starship::rt::view', 'rt-starship::rt::edit',
-    'loot::rt::view', 'loot::rt::edit',
-    'im-character::im::view', 'im-character::im::edit', 'im-npc::im::view', 'im-npc::im::edit',
-    'im-vehicle::im::view', 'im-vehicle::im::edit', 'loot::im::view', 'loot::im::edit',
+    'bc-character::bc::view',
+    'bc-character::bc::edit',
+    'bc-npc::bc::view',
+    'bc-npc::bc::edit',
+    'bc-vehicle::bc::view',
+    'bc-vehicle::bc::edit',
+    'loot::bc::view',
+    'loot::bc::edit',
+    'dh1-character::dh1e::view',
+    'dh1-character::dh1e::edit',
+    'dh1-npc::dh1e::view',
+    'dh1-npc::dh1e::edit',
+    'dh1-vehicle::dh1e::view',
+    'dh1-vehicle::dh1e::edit',
+    'loot::dh1e::view',
+    'loot::dh1e::edit',
+    'dh2-character::dh2e::view',
+    'dh2-character::dh2e::edit',
+    'dh2-npc::dh2e::view',
+    'dh2-npc::dh2e::edit',
+    'dh2-vehicle::dh2e::view',
+    'dh2-vehicle::dh2e::edit',
+    'loot::dh2e::view',
+    'loot::dh2e::edit',
+    'dw-character::dw::view',
+    'dw-character::dw::edit',
+    'dw-npc::dw::view',
+    'dw-npc::dw::edit',
+    'dw-vehicle::dw::view',
+    'dw-vehicle::dw::edit',
+    'loot::dw::view',
+    'loot::dw::edit',
+    'ow-character::ow::view',
+    'ow-character::ow::edit',
+    'ow-npc::ow::view',
+    'ow-npc::ow::edit',
+    'ow-vehicle::ow::view',
+    'ow-vehicle::ow::edit',
+    'loot::ow::view',
+    'loot::ow::edit',
+    'rt-character::rt::view',
+    'rt-character::rt::edit',
+    'rt-npc::rt::view',
+    'rt-npc::rt::edit',
+    'rt-vehicle::rt::view',
+    'rt-vehicle::rt::edit',
+    'rt-starship::rt::view',
+    'rt-starship::rt::edit',
+    'loot::rt::view',
+    'loot::rt::edit',
+    'im-character::im::view',
+    'im-character::im::edit',
+    'im-npc::im::view',
+    'im-npc::im::edit',
+    'im-vehicle::im::view',
+    'im-vehicle::im::edit',
+    'loot::im::view',
+    'loot::im::edit',
 ];
 recordDimension('screenshot.actor.flow', covered['screenshot.actor.flow'], SCREENSHOT_ACTOR_FLOWS);
 
 // tests/e2e/screenshots-item-sheets.spec.ts — every itemType × {view,edit}; weapon/armour add ::im::view.
 const SCREENSHOT_ITEM_FLOWS = [
-    'weapon::view', 'weapon::edit', 'weapon::im::view',
-    'armour::view', 'armour::edit', 'armour::im::view',
-    'ammunition::view', 'ammunition::edit',
-    'gear::view', 'gear::edit',
-    'cybernetic::view', 'cybernetic::edit',
-    'forceField::view', 'forceField::edit',
-    'backpack::view', 'backpack::edit',
-    'storageLocation::view', 'storageLocation::edit',
-    'talent::view', 'talent::edit',
-    'trait::view', 'trait::edit',
-    'skill::view', 'skill::edit',
-    'originPath::view', 'originPath::edit',
-    'aptitude::view', 'aptitude::edit',
-    'peer::view', 'peer::edit',
-    'enemy::view', 'enemy::edit',
-    'condition::view', 'condition::edit',
-    'psychicPower::view', 'psychicPower::edit',
-    'navigatorPower::view', 'navigatorPower::edit',
-    'ritual::view', 'ritual::edit',
-    'shipComponent::view', 'shipComponent::edit',
-    'shipWeapon::view', 'shipWeapon::edit',
-    'shipUpgrade::view', 'shipUpgrade::edit',
-    'shipRole::view', 'shipRole::edit',
-    'order::view', 'order::edit',
-    'vehicleTrait::view', 'vehicleTrait::edit',
-    'vehicleUpgrade::view', 'vehicleUpgrade::edit',
-    'weaponModification::view', 'weaponModification::edit',
-    'armourModification::view', 'armourModification::edit',
-    'weaponQuality::view', 'weaponQuality::edit',
-    'attackSpecial::view', 'attackSpecial::edit',
-    'specialAbility::view', 'specialAbility::edit',
-    'criticalInjury::view', 'criticalInjury::edit',
-    'mutation::view', 'mutation::edit',
-    'malignancy::view', 'malignancy::edit',
-    'mentalDisorder::view', 'mentalDisorder::edit',
-    'journalEntry::view', 'journalEntry::edit',
-    'endeavour::view', 'endeavour::edit',
-    'lead::view', 'lead::edit',
-    'npcTemplate::view', 'npcTemplate::edit',
+    'weapon::view',
+    'weapon::edit',
+    'weapon::im::view',
+    'armour::view',
+    'armour::edit',
+    'armour::im::view',
+    'ammunition::view',
+    'ammunition::edit',
+    'gear::view',
+    'gear::edit',
+    'cybernetic::view',
+    'cybernetic::edit',
+    'forceField::view',
+    'forceField::edit',
+    'backpack::view',
+    'backpack::edit',
+    'storageLocation::view',
+    'storageLocation::edit',
+    'talent::view',
+    'talent::edit',
+    'trait::view',
+    'trait::edit',
+    'skill::view',
+    'skill::edit',
+    'originPath::view',
+    'originPath::edit',
+    'aptitude::view',
+    'aptitude::edit',
+    'peer::view',
+    'peer::edit',
+    'enemy::view',
+    'enemy::edit',
+    'condition::view',
+    'condition::edit',
+    'psychicPower::view',
+    'psychicPower::edit',
+    'navigatorPower::view',
+    'navigatorPower::edit',
+    'ritual::view',
+    'ritual::edit',
+    'shipComponent::view',
+    'shipComponent::edit',
+    'shipWeapon::view',
+    'shipWeapon::edit',
+    'shipUpgrade::view',
+    'shipUpgrade::edit',
+    'shipRole::view',
+    'shipRole::edit',
+    'order::view',
+    'order::edit',
+    'vehicleTrait::view',
+    'vehicleTrait::edit',
+    'vehicleUpgrade::view',
+    'vehicleUpgrade::edit',
+    'weaponModification::view',
+    'weaponModification::edit',
+    'armourModification::view',
+    'armourModification::edit',
+    'weaponQuality::view',
+    'weaponQuality::edit',
+    'attackSpecial::view',
+    'attackSpecial::edit',
+    'specialAbility::view',
+    'specialAbility::edit',
+    'criticalInjury::view',
+    'criticalInjury::edit',
+    'mutation::view',
+    'mutation::edit',
+    'malignancy::view',
+    'malignancy::edit',
+    'mentalDisorder::view',
+    'mentalDisorder::edit',
+    'journalEntry::view',
+    'journalEntry::edit',
+    'endeavour::view',
+    'endeavour::edit',
+    'lead::view',
+    'lead::edit',
+    'npcTemplate::view',
+    'npcTemplate::edit',
 ];
 recordDimension('screenshot.item.flow', covered['screenshot.item.flow'], SCREENSHOT_ITEM_FLOWS);
 
 // tests/e2e/screenshots-dialogs-chat.spec.ts — union of dialog classes + chat templates.
 const SCREENSHOT_DIALOG_CLASSES = [
-    'AcquisitionDialog', 'AdvancementDialog', 'AmmoPickerDialog', 'CharacteristicSetupDialog', 'ConfirmationDialog',
-    'ConvertActorSystemDialog', 'WH40KCreateActorDialog', 'FateUsesDialog', 'RollConfigurationDialog', 'TransactionRequestDialog',
-    'AddXPDialog', 'AssignDamageDialog', 'BaseRollDialog', 'DamageRollDialog', 'EffectCreationDialog',
-    'EnhancedSkillDialog', 'ForceFieldDialog', 'PsychicPowerDialog', 'RighteousFuryDialog', 'SimpleRollDialog',
-    'SpecialistSkillDialog', 'UnifiedRollDialog', 'WeaponAttackDialog',
+    'AcquisitionDialog',
+    'AdvancementDialog',
+    'AmmoPickerDialog',
+    'CharacteristicSetupDialog',
+    'ConfirmationDialog',
+    'ConvertActorSystemDialog',
+    'WH40KCreateActorDialog',
+    'FateUsesDialog',
+    'RollConfigurationDialog',
+    'TransactionRequestDialog',
+    'AddXPDialog',
+    'AssignDamageDialog',
+    'BaseRollDialog',
+    'DamageRollDialog',
+    'EffectCreationDialog',
+    'EnhancedSkillDialog',
+    'ForceFieldDialog',
+    'PsychicPowerDialog',
+    'RighteousFuryDialog',
+    'SimpleRollDialog',
+    'SpecialistSkillDialog',
+    'UnifiedRollDialog',
+    'WeaponAttackDialog',
 ];
 const SCREENSHOT_CHAT_TEMPLATES = [
-    'acquisition-test', 'action-roll-chat', 'armour-card-chat', 'assign-damage-chat', 'bleeding-chat',
-    'burning-chat', 'combat-action-card', 'condition-card', 'critical-injury-card', 'damage-roll-chat',
-    'force-field-roll-chat', 'item-card-chat', 'item-vocalize-chat', 'movement-card', 'navigator-power-chat',
-    'order-roll-chat', 'origin-roll-card', 'psychic-action-chat', 'reload-action-chat', 'ritual-roll-chat',
-    'ship-weapon-chat', 'simple-roll-chat', 'skill-card', 'talent-card', 'talent-roll-chat',
-    'trait-card', 'weapon-card-chat',
+    'acquisition-test',
+    'action-roll-chat',
+    'armour-card-chat',
+    'assign-damage-chat',
+    'bleeding-chat',
+    'burning-chat',
+    'combat-action-card',
+    'condition-card',
+    'critical-injury-card',
+    'damage-roll-chat',
+    'force-field-roll-chat',
+    'item-card-chat',
+    'item-vocalize-chat',
+    'movement-card',
+    'navigator-power-chat',
+    'order-roll-chat',
+    'origin-roll-card',
+    'psychic-action-chat',
+    'reload-action-chat',
+    'ritual-roll-chat',
+    'ship-weapon-chat',
+    'simple-roll-chat',
+    'skill-card',
+    'talent-card',
+    'talent-roll-chat',
+    'trait-card',
+    'weapon-card-chat',
 ];
-const SCREENSHOT_DIALOG_CHAT_FLOWS = [
-    ...SCREENSHOT_DIALOG_CLASSES.map((c) => `dialog::${c}`),
-    ...SCREENSHOT_CHAT_TEMPLATES.map((t) => `chat::${t}`),
-];
+const SCREENSHOT_DIALOG_CHAT_FLOWS = [...SCREENSHOT_DIALOG_CLASSES.map((c) => `dialog::${c}`), ...SCREENSHOT_CHAT_TEMPLATES.map((t) => `chat::${t}`)];
 recordDimension('screenshot.dialog-chat.flow', covered['screenshot.dialog-chat.flow'], SCREENSHOT_DIALOG_CHAT_FLOWS);
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -1788,7 +1961,6 @@ const HOOK_HANDLER_EFFECT_FLOWS = [
     'hook-effect::registration::all-hooks-installed',
 ];
 recordDimension('hook-handler-effect.flow', covered['hook-handler-effect.flow'], HOOK_HANDLER_EFFECT_FLOWS);
-
 
 // Roll-data plumbing flows exercised by tests/e2e/rolls-data.spec.ts. Drives
 // source-code coverage on `src/module/rolls/assign-damage-data.ts` (the

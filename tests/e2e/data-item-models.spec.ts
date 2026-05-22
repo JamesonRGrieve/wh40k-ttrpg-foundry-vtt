@@ -68,6 +68,11 @@ const DATA_ITEM_MODEL_FLOWS = [
     'skill-derived-labels',
     'condition-duration',
     'weapon-modification-restrictions',
+    'psychic-power-pr-cost',
+    'ritual-activation-label',
+    'special-ability-modifiers',
+    'order-test-label',
+    'mutation-shape',
 ] as const;
 
 type FlowName = (typeof DATA_ITEM_MODEL_FLOWS)[number];
@@ -136,6 +141,20 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 natureClass?: string;
                 restrictionsLabel?: string;
                 categoryIcon?: string;
+                // psychicPower / ritual / order shared
+                prCost?: number;
+                discipline?: string;
+                activationLabel?: string;
+                testLabel?: string;
+                actionTypeLabel?: string;
+                shipActionEffect?: string;
+                type?: string;
+                // special-ability / mutation / order
+                category?: string;
+                benefit?: string;
+                effect?: string;
+                visible?: boolean;
+                getCharacteristicModifier?: (char: string) => number;
             }
             interface ItemDoc {
                 id?: string;
@@ -969,11 +988,240 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 }
             }
 
+            /* ============================================================
+             * Group: psychicPower / ritual / specialAbility / order /
+             * mutation flows (17-21). These five item DataModels cannot be
+             * unit-tested under happy-dom (their derived getters call
+             * game.i18n.localize on the live registry), so they are
+             * exercised here against real Foundry.
+             * ============================================================ */
+            async function probePsionicFlows(): Promise<void> {
+                /* ============================================================
+                 * Flow 17: psychic-power-pr-cost
+                 * prCost / discipline schema fields round-trip; the
+                 * ActivationTemplate-mixed activationLabel derives a non-empty
+                 * string and PsychicPowerData.isRollable is always true.
+                 * ============================================================ */
+                try {
+                    const power = await embed('psychic-power-pr-cost', {
+                        name: 'probe-psychic-smite',
+                        type: 'psychicPower',
+                        system: {
+                            identifier: 'probe-power',
+                            discipline: 'pyromancy',
+                            prCost: 3,
+                            isAttack: true,
+                            activation: { type: 'half-action', cost: 1, condition: '' },
+                        },
+                    });
+                    if (power == null) {
+                        notes['psychic-power-pr-cost'] = 'failed to create psychic power';
+                    } else {
+                        const prCost = power.system?.prCost;
+                        const discipline = power.system?.discipline;
+                        const rollable = power.system?.isRollable;
+                        const actionLabel = power.system?.activationLabel;
+                        if (prCost === 3 && discipline === 'pyromancy' && rollable === true && typeof actionLabel === 'string' && actionLabel.length > 0) {
+                            fired['psychic-power-pr-cost'] = true;
+                            notes['psychic-power-pr-cost'] = `prCost=3 discipline=pyromancy isRollable=true activationLabel="${actionLabel}"`;
+                        } else {
+                            notes[
+                                'psychic-power-pr-cost'
+                            ] = `expected prCost=3 discipline=pyromancy rollable=true label!="", got prCost=${prCost} discipline=${JSON.stringify(
+                                discipline,
+                            )} rollable=${String(rollable)} label=${JSON.stringify(actionLabel)}`;
+                        }
+                    }
+                } catch (err) {
+                    notes['psychic-power-pr-cost'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+
+                /* ============================================================
+                 * Flow 18: ritual-activation-label
+                 * type schema field round-trips; testLabel composes the test
+                 * skill plus a signed modifier ("Ceremony +20"); the
+                 * ActivationTemplate activationLabel derives non-empty.
+                 * ============================================================ */
+                try {
+                    const ritual = await embed('ritual-activation-label', {
+                        name: 'probe-ritual-blessing',
+                        type: 'ritual',
+                        system: {
+                            identifier: 'probe-ritual',
+                            type: 'ceremony',
+                            test: { characteristic: 'willpower', skill: 'Ceremony', modifier: 20, threshold: null },
+                            activation: { type: 'extended-action', cost: 1, condition: '' },
+                        },
+                    });
+                    if (ritual == null) {
+                        notes['ritual-activation-label'] = 'failed to create ritual';
+                    } else {
+                        const ritualType = ritual.system?.type;
+                        const testLabel = ritual.system?.testLabel;
+                        const actionLabel = ritual.system?.activationLabel;
+                        const rollable = ritual.system?.isRollable;
+                        if (
+                            ritualType === 'ceremony' &&
+                            testLabel === 'Ceremony +20' &&
+                            typeof actionLabel === 'string' &&
+                            actionLabel.length > 0 &&
+                            rollable === true
+                        ) {
+                            fired['ritual-activation-label'] = true;
+                            notes['ritual-activation-label'] = `type=ceremony testLabel="Ceremony +20" activationLabel="${actionLabel}" isRollable=true`;
+                        } else {
+                            notes[
+                                'ritual-activation-label'
+                            ] = `expected type=ceremony testLabel="Ceremony +20" label!="" rollable=true, got type=${JSON.stringify(
+                                ritualType,
+                            )} testLabel=${JSON.stringify(testLabel)} label=${JSON.stringify(actionLabel)} rollable=${String(rollable)}`;
+                        }
+                    }
+                } catch (err) {
+                    notes['ritual-activation-label'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+
+                /* ============================================================
+                 * Flow 19: special-ability-modifiers
+                 * benefit HTML field round-trips; the ModifiersTemplate-mixed
+                 * hasModifiers getter reports true once a characteristic
+                 * modifier is set, and getCharacteristicModifier returns it.
+                 * ============================================================ */
+                try {
+                    const ability = await embed('special-ability-modifiers', {
+                        name: 'probe-special-ferocity',
+                        type: 'specialAbility',
+                        system: {
+                            identifier: 'probe-ability',
+                            benefit: '<p>Gains +10 Strength when charging.</p>',
+                            modifiers: { characteristics: { strength: 10 } },
+                        },
+                    });
+                    if (ability == null) {
+                        notes['special-ability-modifiers'] = 'failed to create special ability';
+                    } else {
+                        const benefit = ability.system?.benefit;
+                        const hasMods = ability.system?.hasModifiers;
+                        const strMod = ability.system?.getCharacteristicModifier?.('strength');
+                        if (typeof benefit === 'string' && benefit.includes('Strength') && hasMods === true && strMod === 10) {
+                            fired['special-ability-modifiers'] = true;
+                            notes['special-ability-modifiers'] = `benefit round-tripped hasModifiers=true getCharacteristicModifier('strength')=10`;
+                        } else {
+                            notes['special-ability-modifiers'] = `expected benefit⊇Strength hasMods=true strMod=10, got benefit=${JSON.stringify(
+                                benefit,
+                            )} hasMods=${String(hasMods)} strMod=${strMod}`;
+                        }
+                    }
+                } catch (err) {
+                    notes['special-ability-modifiers'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+            }
+
+            async function probeOrderMutationFlows(): Promise<void> {
+                /* ============================================================
+                 * Flow 20: order-test-label
+                 * category + shipActionEffect schema fields round-trip;
+                 * testLabel composes the command skill with a signed modifier
+                 * ("command +10"); categoryLabel / actionTypeLabel derive
+                 * non-empty; isRollable is always true.
+                 * ============================================================ */
+                try {
+                    const order = await embed('order-test-label', {
+                        name: 'probe-order-hold-fast',
+                        type: 'order',
+                        system: {
+                            identifier: 'probe-order',
+                            category: 'command',
+                            actionType: 'extended-action',
+                            test: { skill: 'command', characteristic: '', modifier: 10 },
+                            shipActionEffect: 'replenishMorale',
+                        },
+                    });
+                    if (order == null) {
+                        notes['order-test-label'] = 'failed to create order';
+                    } else {
+                        const category = order.system?.category;
+                        const shipEffect = order.system?.shipActionEffect;
+                        const testLabel = order.system?.testLabel;
+                        const catLabel = order.system?.categoryLabel;
+                        const actionLabel = order.system?.actionTypeLabel;
+                        const rollable = order.system?.isRollable;
+                        if (
+                            category === 'command' &&
+                            shipEffect === 'replenishMorale' &&
+                            testLabel === 'command +10' &&
+                            typeof catLabel === 'string' &&
+                            catLabel.length > 0 &&
+                            typeof actionLabel === 'string' &&
+                            actionLabel.length > 0 &&
+                            rollable === true
+                        ) {
+                            fired['order-test-label'] = true;
+                            notes[
+                                'order-test-label'
+                            ] = `category=command shipActionEffect=replenishMorale testLabel="command +10" categoryLabel="${catLabel}" actionTypeLabel="${actionLabel}" isRollable=true`;
+                        } else {
+                            notes[
+                                'order-test-label'
+                            ] = `expected category=command shipEffect=replenishMorale testLabel="command +10" labels!="" rollable=true, got category=${JSON.stringify(
+                                category,
+                            )} shipEffect=${JSON.stringify(shipEffect)} testLabel=${JSON.stringify(testLabel)} catLabel=${JSON.stringify(
+                                catLabel,
+                            )} actionLabel=${JSON.stringify(actionLabel)} rollable=${String(rollable)}`;
+                        }
+                    }
+                } catch (err) {
+                    notes['order-test-label'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+
+                /* ============================================================
+                 * Flow 21: mutation-shape
+                 * category + visible schema fields round-trip; categoryLabel
+                 * derives non-empty; chatProperties surfaces the localized
+                 * "Visible" entry when visible === true.
+                 * ============================================================ */
+                try {
+                    const mutation = await embed('mutation-shape', {
+                        name: 'probe-mutation-extra-eye',
+                        type: 'mutation',
+                        system: {
+                            identifier: 'probe-mutation',
+                            category: 'major',
+                            effect: '<p>An additional eye grants +10 to Awareness.</p>',
+                            visible: true,
+                        },
+                    });
+                    if (mutation == null) {
+                        notes['mutation-shape'] = 'failed to create mutation';
+                    } else {
+                        const category = mutation.system?.category;
+                        const visible = mutation.system?.visible;
+                        const catLabel = mutation.system?.categoryLabel;
+                        const props = mutation.system?.chatProperties ?? [];
+                        const hasVisibleProp = props.length >= 2 && props[0] === catLabel;
+                        if (category === 'major' && visible === true && typeof catLabel === 'string' && catLabel.length > 0 && hasVisibleProp) {
+                            fired['mutation-shape'] = true;
+                            notes['mutation-shape'] = `category=major visible=true categoryLabel="${catLabel}" chatProperties=${JSON.stringify(props)}`;
+                        } else {
+                            notes[
+                                'mutation-shape'
+                            ] = `expected category=major visible=true label!="" chatProps with visible entry, got category=${JSON.stringify(
+                                category,
+                            )} visible=${String(visible)} catLabel=${JSON.stringify(catLabel)} props=${JSON.stringify(props)}`;
+                        }
+                    }
+                } catch (err) {
+                    notes['mutation-shape'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+            }
+
             try {
                 await probeArmourFlows();
                 await probeGearTalentFlows();
                 await probeAmmoForceFieldFlows();
                 await probeTraitSkillConditionFlows();
+                await probePsionicFlows();
+                await probeOrderMutationFlows();
             } finally {
                 // Best-effort cleanup of everything we created.
                 for (const fn of cleanups) {
