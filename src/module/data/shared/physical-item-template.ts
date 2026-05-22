@@ -313,7 +313,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @type {string[]}
      */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         if (this.weight) props.push(`${this.weight} kg`);
         if (this.availability) props.push(this.availabilityLabel);
         if (this.craftsmanship && this.craftsmanship !== 'common') {

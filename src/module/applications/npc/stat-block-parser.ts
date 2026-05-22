@@ -969,7 +969,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         let pen = 0;
         let clip = 0;
         let reload = '-';
-        const qualities = [];
+        const qualities: string[] = [];
 
         for (const segment of segments) {
             const rangeMatch = segment.match(/(\d+)\s*m/i);
@@ -1079,8 +1079,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         const match = entry.match(/^(.+?)(?:\s*\(([^)]+)\))?$/);
         const name = match?.[1] ? match[1].trim() : entry.trim();
         const value = match?.[2] ? match[2].trim() : null;
-        let numericValue = null;
-        let level = null;
+        let numericValue: number | null = null;
+        let level: number | null = null;
         let notes = '';
         let displayName = name;
 

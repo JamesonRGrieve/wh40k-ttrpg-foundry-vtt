@@ -186,7 +186,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * @type {string[]}
      */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         props.push(this.activationLabel);
         if (this.target.type !== 'self') props.push(this.targetLabel);
         if (this.duration.units !== 'instant') props.push(this.durationLabel);

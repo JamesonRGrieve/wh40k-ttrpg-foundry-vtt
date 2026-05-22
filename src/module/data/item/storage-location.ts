@@ -22,7 +22,7 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         if (this.location) {
             props.push(this.location);
         }

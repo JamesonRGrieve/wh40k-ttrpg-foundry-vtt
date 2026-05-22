@@ -49,7 +49,7 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         if (this.time) {
             props.push(this.time);
         }

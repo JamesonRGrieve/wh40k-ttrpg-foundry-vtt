@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax -- boundary: schema-derived dynamic shapes (choice options, modifier maps, restore payloads); per-field interfaces would not capture the per-system variability */
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -6,6 +5,30 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
+
+/**
+ * Grants an individual choice option can confer when selected. Mirrors the
+ * `grants.*` array shapes the player picks resolve into.
+ */
+interface OriginChoiceOptionGrants {
+    characteristics?: Record<string, number>;
+    skills?: Array<{ name: string }>;
+    talents?: Array<{ name: string; uuid?: string }>;
+    traits?: Array<{ name: string; level?: number; uuid?: string }>;
+    equipment?: Array<{ name: string; quantity?: number; uuid?: string }>;
+}
+
+/**
+ * A single selectable option inside a `grants.choices[].options` array. Stored
+ * as a free-form `ObjectField` in the schema; this is the structured shape the
+ * runtime reads. RT packs key on `value`, DH2e/BC/OW on `name`.
+ */
+interface OriginChoiceOption {
+    value?: string;
+    name?: string;
+    uuid?: string;
+    grants?: OriginChoiceOptionGrants;
+}
 
 /**
  * Data model for Origin Path items (homeworld, birthright, career, etc).
@@ -40,11 +63,11 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         aptitudes: string[];
         equipment: Array<{ name: string; quantity: number; uuid: string }>;
         specialAbilities: Array<{ name: string; description: string }>;
-        choices: Array<{ type: string; label: string; name?: string; options: Record<string, unknown>[]; count: number; xpCost: number }>;
+        choices: Array<{ type: string; label: string; name?: string; options: OriginChoiceOption[]; count: number; xpCost: number }>;
     };
     declare effectText: string;
     declare notes: string;
-    declare selectedChoices: Record<string, unknown[]>;
+    declare selectedChoices: Record<string, string[]>;
     declare activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null; specialization?: string }>;
     declare homebrew: { throneGelt: string; thrones: string };
     declare rollResults: {
@@ -55,8 +78,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     // Properties from ModifiersTemplate
     declare modifiers: {
-        characteristics: Record<string, unknown>;
-        skills: Record<string, unknown>;
+        characteristics: Record<string, number>;
+        skills: Record<string, number>;
         combat: { attack: number; damage: number; penetration: number; defense: number; initiative: number; speed: number };
         resources: { wounds: number; fate: number; insanity: number; corruption: number };
         other: Array<{ key: string; label: string; value: number; mode: string }>;
@@ -73,6 +96,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Origin path step
@@ -356,7 +380,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      */
     get pendingChoices(): typeof this.grants.choices {
         return this.grants.choices.filter((choice) => {
-            const selected = this.selectedChoices[choice.label] as unknown[] | undefined;
+            const selected = this.selectedChoices[choice.label];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: indexed access is `string[] | undefined` under main tsconfig, `string[]` under tsconfig.test.json (flag off); the guard satisfies both
             return (selected?.length ?? 0) < choice.count;
         });
     }
@@ -387,9 +412,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
         // Characteristics from modifiers
         const charMods = this.modifiers.characteristics;
-        for (const [char, value] of Object.entries(charMods)) {
-            if (value !== 0) {
-                const numVal = value as number;
+        for (const [char, numVal] of Object.entries(charMods)) {
+            if (numVal !== 0) {
                 summary.push(`${char}: ${numVal >= 0 ? '+' : ''}${numVal}`);
             }
         }
@@ -430,20 +454,6 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      */
     // eslint-disable-next-line complexity -- choice resolution spans fixed grants, generic choice synthesis, and specialization splitting; refactoring it is larger than this lint-focused change
     _calculateActiveModifiers(): void {
-        interface OptionGrants {
-            characteristics?: Record<string, unknown>;
-            skills?: Array<{ name: string }>;
-            talents?: Array<{ name: string; uuid?: string }>;
-            traits?: Array<{ name: string; level?: number; uuid?: string }>;
-            equipment?: Array<{ name: string; quantity?: number; uuid?: string }>;
-        }
-        interface ChoiceOption {
-            value?: string;
-            name?: string;
-            uuid?: string;
-            grants?: OptionGrants;
-        }
-
         const activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null; specialization?: string }> =
             [];
 
@@ -480,7 +490,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
             for (const selectedValue of selected) {
                 const selectedStr = String(selectedValue);
-                const option = (choice.options as ChoiceOption[]).find((opt) => (opt.value ?? opt.name) === selectedStr);
+                const option = choice.options.find((opt) => (opt.value ?? opt.name) === selectedStr);
                 // When the option carries no explicit grants, synthesize an
                 // activeModifier from the choice's declared type so picks like
                 // "Sleight of Hand" on a generic skill choice or
@@ -507,7 +517,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                                 source: choiceKey,
                                 type: 'characteristic',
                                 key: char,
-                                value: value as number,
+                                value,
                                 itemUuid: null,
                             });
                         }
@@ -587,6 +597,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
     }
@@ -601,6 +612,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData receives untyped legacy source
     static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
     }
@@ -619,6 +631,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             step: this.stepLabel,

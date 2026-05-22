@@ -62,7 +62,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
      * @type {object[]}
      */
     get modifiersList(): Array<{ key: string; label: string; value: number; formatted: string }> {
-        const list = [];
+        const list: Array<{ key: string; label: string; value: number; formatted: string }> = [];
         for (const [key, value] of Object.entries(this.modifiers)) {
             if (value !== 0) {
                 const label = game.i18n.localize(`WH40K.VehicleStat.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
@@ -96,7 +96,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         if (this.hasLevel && this.level !== null) {
             props.push(`Level: ${this.level}`);
         }

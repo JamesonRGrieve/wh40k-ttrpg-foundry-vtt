@@ -24,7 +24,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         if (this.hasLevel && this.level > 0) {
             props.push(`Level ${this.level}`);
         }

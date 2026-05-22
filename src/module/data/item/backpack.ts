@@ -27,7 +27,7 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         props.push(`Capacity: ${this.capacity} kg`);
         if (this.isCombatVest) {
             props.push('Combat Vest');

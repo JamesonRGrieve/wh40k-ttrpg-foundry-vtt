@@ -97,7 +97,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
 
         if (this.hasLevel) {
             props.push(`Level: ${this.level}`);
