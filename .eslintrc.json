@@ -143,7 +143,7 @@
         "@typescript-eslint/no-unsafe-call": "warn",
         "@typescript-eslint/no-unsafe-return": "warn",
         "@typescript-eslint/no-unsafe-argument": "warn",
-        "@typescript-eslint/explicit-function-return-type": ["warn", { "allowExpressions": true, "allowTypedFunctionExpressions": true, "allowHigherOrderFunctions": true }],
+        "@typescript-eslint/explicit-function-return-type": ["error", { "allowExpressions": true, "allowTypedFunctionExpressions": true, "allowHigherOrderFunctions": true }],
         "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports" }],
         "@typescript-eslint/consistent-type-exports": ["error", { "fixMixedExportsWithInlineTypeSpecifier": true }],
         "@typescript-eslint/no-import-type-side-effects": "error",

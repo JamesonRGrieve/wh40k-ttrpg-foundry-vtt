@@ -24,12 +24,12 @@
   ],
   "config": "tsconfig.test.json",
   "totals": {
-    "totalErrors": 13
+    "totalErrors": 8
   },
   "byCode": {
     "TS2344": 1,
-    "TS2722": 7,
+    "TS2722": 5,
     "TS4113": 1,
-    "TS7053": 4
+    "TS7053": 1
   }
 }

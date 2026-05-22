@@ -57,8 +57,51 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
     try {
         const result = await page.evaluate(
             async (flowNames: readonly string[]) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                // Browser-side probe: the Foundry runtime surface (globals, Document
+                // instances, action-manager modules) has no static type in this spec.
+                // We model only the members we touch as a structural interface and
+                // narrow the runtime-imported module shapes at each call site.
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document create payloads are free-form data passed to the runtime
+                type DocData = Readonly<Record<string, unknown>>;
+                interface FoundryDoc {
+                    readonly id?: string;
+                    readonly items?: { readonly get: (id: string) => FoundryDoc | null | undefined };
+                    readonly create?: (data: DocData) => Promise<FoundryDoc | null>;
+                    readonly delete?: () => Promise<void>;
+                    readonly createEmbeddedDocuments?: (type: string, data: readonly DocData[]) => Promise<readonly FoundryDoc[] | undefined>;
+                    readonly startCombat?: () => Promise<void>;
+                    readonly nextTurn?: () => Promise<void>;
+                    readonly nextRound?: () => Promise<void>;
+                }
+                interface FoundryCollection {
+                    readonly get?: (id: string) => FoundryDoc | null | undefined;
+                }
+                interface FoundryGame {
+                    readonly actors?: FoundryCollection;
+                    readonly messages?: FoundryCollection;
+                    readonly combats?: FoundryCollection;
+                }
+                interface FoundryHooks {
+                    readonly on: (hook: string, fn: () => void) => number;
+                    readonly off?: (hook: string, id: number) => void;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Hooks.callAll forwards arbitrary runtime hook arguments
+                    readonly callAll?: (hook: string, ...args: readonly unknown[]) => void;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications.warn forwards arbitrary runtime formatting arguments
+                type WarnFn = (msg: string, ...rest: readonly unknown[]) => unknown;
+                interface FoundryUi {
+                    readonly notifications?: { warn?: WarnFn };
+                }
+                interface FoundryGlobal {
+                    readonly Actor?: FoundryDoc;
+                    readonly Combat?: FoundryDoc;
+                    readonly ChatMessage?: FoundryDoc;
+                    readonly Hooks?: FoundryHooks;
+                    readonly game?: FoundryGame;
+                    readonly ui?: FoundryUi;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: the page-side globalThis carries the untyped Foundry runtime
+                const g = globalThis as unknown as FoundryGlobal;
                 const ActorCls = g.Actor;
                 const CombatCls = g.Combat;
                 const ChatMessageCls = g.ChatMessage;
@@ -68,6 +111,16 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                 const flows: Array<{ flow: string; success: boolean; note: string }> = [];
                 const record = (flow: string, success: boolean, note: string): void => {
                     flows.push({ flow, success, note });
+                };
+
+                // Narrow a runtime-imported ESM module's named export to a
+                // caller-asserted shape. The spec owns the contract for each
+                // export it touches; the action-manager modules are served by
+                // Foundry at runtime and have no static type here.
+                const loadExport = async <T>(url: string, exportName: string): Promise<T | undefined> => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM import of a Foundry-served action-manager module has no static type
+                    const mod = (await import(/* @vite-ignore */ url)) as Record<string, unknown>;
+                    return mod[exportName] as T | undefined;
                 };
 
                 // Per-flow defaults (we'll overwrite with success: true as we go).
@@ -86,17 +139,19 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                 const cleanups: Array<() => Promise<void>> = [];
 
                 // -------- shared probe actor --------
-                let probeActor: any = null;
+                let probeActor: FoundryDoc | null = null;
                 try {
-                    probeActor = await ActorCls.create({
-                        name: 'action-managers-probe-actor',
-                        type: 'dh2-character',
-                        system: { gameSystem: 'dh2e' },
-                    });
-                    if (probeActor != null) {
+                    probeActor =
+                        (await ActorCls.create({
+                            name: 'action-managers-probe-actor',
+                            type: 'dh2-character',
+                            system: { gameSystem: 'dh2e' },
+                        })) ?? null;
+                    const createdActorId = probeActor?.id;
+                    if (createdActorId != null) {
                         cleanups.push(async () => {
                             try {
-                                await gameObj?.actors?.get?.(probeActor.id)?.delete?.();
+                                await gameObj?.actors?.get?.(createdActorId)?.delete?.();
                             } catch {
                                 /* ignore */
                             }
@@ -124,12 +179,13 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         <div id="probe-toggle-target" style="display:none">hidden body</div>
                     </div>`;
                         const msg = await ChatMessageCls.create({ content });
-                        if (msg?.id == null) {
+                        const msgId = msg?.id;
+                        if (msgId == null) {
                             setResult('basic-action-dispatch', false, 'ChatMessage.create returned no id');
                         } else {
                             cleanups.push(async () => {
                                 try {
-                                    await gameObj?.messages?.get?.(msg.id)?.delete?.();
+                                    await gameObj?.messages?.get?.(msgId)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -138,7 +194,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             await new Promise<void>((r) => {
                                 setTimeout(r, 100);
                             });
-                            const el = document.querySelector(`[data-message-id="${msg.id}"]`);
+                            const el = document.querySelector(`[data-message-id="${msgId}"]`);
                             if (el === null) {
                                 // Foundry chat sidebar may not be mounted in the
                                 // headless world. Fall back to firing the hook
@@ -209,17 +265,19 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             roundFired = true;
                         });
 
-                        let probeActor2: any = null;
+                        let probeActor2: FoundryDoc | null = null;
                         try {
-                            probeActor2 = await ActorCls.create({
-                                name: 'action-managers-probe-combatant-2',
-                                type: 'dh2-character',
-                                system: { gameSystem: 'dh2e' },
-                            });
-                            if (probeActor2 != null) {
+                            probeActor2 =
+                                (await ActorCls.create({
+                                    name: 'action-managers-probe-combatant-2',
+                                    type: 'dh2-character',
+                                    system: { gameSystem: 'dh2e' },
+                                })) ?? null;
+                            const created2Id = probeActor2?.id;
+                            if (created2Id != null) {
                                 cleanups.push(async () => {
                                     try {
-                                        await gameObj?.actors?.get?.(probeActor2.id)?.delete?.();
+                                        await gameObj?.actors?.get?.(created2Id)?.delete?.();
                                     } catch {
                                         /* ignore */
                                     }
@@ -229,11 +287,12 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             /* secondary actor best-effort */
                         }
 
-                        const combat = await CombatCls?.create?.({});
-                        if (combat?.id != null) {
+                        const combat = (await CombatCls?.create?.({})) ?? null;
+                        const combatId = combat?.id;
+                        if (combatId != null) {
                             cleanups.push(async () => {
                                 try {
-                                    await gameObj?.combats?.get?.(combat.id)?.delete?.();
+                                    await gameObj?.combats?.get?.(combatId)?.delete?.();
                                 } catch {
                                     /* ignore */
                                 }
@@ -243,7 +302,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             if (probeActor2?.id != null) ids.push(probeActor2.id);
                             if (ids.length > 0) {
                                 try {
-                                    await combat.createEmbeddedDocuments?.(
+                                    await combat?.createEmbeddedDocuments?.(
                                         'Combatant',
                                         ids.map((id, idx) => ({ actorId: id, initiative: 10 - idx })),
                                     );
@@ -252,17 +311,17 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 }
                             }
                             try {
-                                await combat.startCombat?.();
+                                await combat?.startCombat?.();
                             } catch {
                                 /* best-effort — startCombat may no-op without active scene */
                             }
                             try {
-                                await combat.nextTurn?.();
+                                await combat?.nextTurn?.();
                             } catch {
                                 /* best-effort */
                             }
                             try {
-                                await combat.nextRound?.();
+                                await combat?.nextRound?.();
                             } catch {
                                 /* best-effort */
                             }
@@ -311,15 +370,23 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                      * cannot suppress headlessly.
                      * ============================================================ */
                     try {
-                        // Dynamic import via a runtime-built specifier so TS doesn't
-                        // try to resolve the Foundry-served URL at compile time.
+                        interface ReloadResult {
+                            success?: boolean;
+                            message?: string;
+                        }
+                        interface ReloadActionManagerCls {
+                            readonly reloadWeapon: (weapon: FoundryDoc, opts: { skipValidation: boolean }) => Promise<ReloadResult>;
+                            readonly findSpareAmmunition?: (actor: FoundryDoc, weapon: FoundryDoc) => readonly FoundryDoc[];
+                            readonly hasSpareAmmunition?: (actor: FoundryDoc, weapon: FoundryDoc) => boolean;
+                            readonly getEffectiveReloadTime?: (weapon: FoundryDoc) => string;
+                            readonly hasCustomisedQuality?: (weapon: FoundryDoc) => boolean;
+                        }
                         const reloadUrl = '/systems/wh40k-rpg/module/actions/reload-action-manager.js';
-                        const mod = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(reloadUrl);
-                        const ReloadActionManager = (mod as any).ReloadActionManager;
+                        const ReloadActionManager = await loadExport<ReloadActionManagerCls>(reloadUrl, 'ReloadActionManager');
                         if (typeof ReloadActionManager?.reloadWeapon !== 'function') {
                             setResult('reload-action-dispatch', false, 'ReloadActionManager.reloadWeapon not a function');
                         } else {
-                            const live = gameObj?.actors?.get?.(probeActor.id);
+                            const live = gameObj?.actors?.get?.(probeActor?.id ?? '');
                             if (live == null) {
                                 setResult('reload-action-dispatch', false, 'probe actor not in collection');
                             } else {
@@ -347,8 +414,10 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                         },
                                     },
                                 ]);
-                                const weapon = weaponCreated?.[0] != null ? live.items.get(weaponCreated[0].id) : null;
-                                const ammo = ammoCreated?.[0] != null ? live.items.get(ammoCreated[0].id) : null;
+                                const weaponId = weaponCreated?.[0]?.id;
+                                const ammoId = ammoCreated?.[0]?.id;
+                                const weapon = weaponId != null ? live.items?.get(weaponId) ?? null : null;
+                                const ammo = ammoId != null ? live.items?.get(ammoId) ?? null : null;
                                 if (weapon == null || ammo == null) {
                                     setResult('reload-action-dispatch', false, 'failed to embed weapon/ammo on probe actor');
                                 } else {
@@ -364,12 +433,12 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                     // may auto-resolve or block — wrap in a
                                     // timeout race so a blocking dialog doesn't
                                     // hang the spec.
-                                    let reloadResult: any = null;
+                                    let reloadResult: ReloadResult | null = null;
                                     let reloadError: string | null = null;
                                     try {
-                                        reloadResult = await Promise.race([
+                                        reloadResult = await Promise.race<ReloadResult>([
                                             ReloadActionManager.reloadWeapon(weapon, { skipValidation: true }),
-                                            new Promise((resolve) => {
+                                            new Promise<ReloadResult>((resolve) => {
                                                 setTimeout(() => {
                                                     resolve({ success: false, message: 'timeout' });
                                                 }, 800);
@@ -383,13 +452,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                     // of the reload-action-manager surface ran
                                     // even if the full reload path was blocked
                                     // by a dialog we can't dismiss.
-                                    if (
-                                        Array.isArray(spare) &&
-                                        spare.length > 0 &&
-                                        hasSpare === true &&
-                                        typeof effective === 'string' &&
-                                        typeof hasCustom === 'boolean'
-                                    ) {
+                                    if (spare.length > 0 && hasSpare) {
                                         const reloadNote =
                                             reloadError !== null
                                                 ? `reload threw: ${reloadError}`
@@ -407,9 +470,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                         setResult(
                                             'reload-action-dispatch',
                                             false,
-                                            `helper output unexpected: spare=${Array.isArray(spare) ? spare.length : 'not-array'} hasSpare=${String(
-                                                hasSpare,
-                                            )} effective=${String(effective)}`,
+                                            `helper output unexpected: spare=${spare.length} hasSpare=${String(hasSpare)} effective=${effective}`,
                                         );
                                     }
                                 }
@@ -430,17 +491,23 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                      * throw; the no-scene path is what we expect headlessly.
                      * ============================================================ */
                     try {
+                        interface TargetedManager {
+                            readonly getSourceToken: (arg: null) => object | undefined;
+                            readonly getTargetToken: (arg: null) => object | undefined;
+                            readonly createSourceAndTargetData: (a: null, b: null) => object | undefined;
+                            readonly performWeaponAttack: (a: null, b: null, c: null) => void;
+                        }
+                        type TargetedManagerCtor = new () => TargetedManager;
                         const targetedUrl = '/systems/wh40k-rpg/module/actions/targeted-action-manager.js';
-                        const mod = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(targetedUrl);
-                        const DHTargetedActionManager = (mod as any).DHTargetedActionManager;
-                        const TargetedActionManager = (mod as any).TargetedActionManager;
+                        const DHTargetedActionManager = await loadExport<TargetedManager>(targetedUrl, 'DHTargetedActionManager');
+                        const TargetedActionManager = await loadExport<TargetedManagerCtor>(targetedUrl, 'TargetedActionManager');
                         if (DHTargetedActionManager == null || typeof DHTargetedActionManager.getSourceToken !== 'function') {
                             setResult('targeted-action-with-target', false, 'DHTargetedActionManager.getSourceToken not exported');
                         } else {
                             // Construct a fresh manager to exercise the
                             // constructor + getSourceToken/getTargetToken paths
                             // without touching the singleton's hook state.
-                            const fresh = TargetedActionManager != null ? new TargetedActionManager() : DHTargetedActionManager;
+                            const fresh: TargetedManager = TargetedActionManager != null ? new TargetedActionManager() : DHTargetedActionManager;
 
                             // getSourceToken() with no controlled token returns
                             // undefined and emits a notification — that branch
@@ -471,7 +538,9 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 setResult(
                                     'targeted-action-with-target',
                                     false,
-                                    `unexpected: src=${String(src)} tgt=${String(tgt)} srcAndTgt=${String(srcAndTgt)} attackThrew=${attackThrew ?? 'no'}`,
+                                    `unexpected: srcDefined=${String(src !== undefined)} tgtDefined=${String(tgt !== undefined)} srcAndTgtDefined=${String(
+                                        srcAndTgt !== undefined,
+                                    )} attackThrew=${attackThrew ?? 'no'}`,
                                 );
                             }
                         }
@@ -488,10 +557,14 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                      * ============================================================ */
                     try {
                         // Synthetic controls map shaped like V14's payload.
-                        const controls: Record<string, any> = {
+                        interface SceneControl {
+                            name: string;
+                            tools: Record<string, object>;
+                        }
+                        const controls: { tokens: SceneControl } = {
                             tokens: {
                                 name: 'tokens',
-                                tools: {} as Record<string, any>,
+                                tools: {},
                             },
                         };
                         HooksObj.callAll?.('getSceneControlButtons', controls);
@@ -533,14 +606,15 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                      * to assert the handler ran end-to-end.
                      * ============================================================ */
                     try {
-                        const uiObj = g.ui;
+                        const notifications = g.ui?.notifications;
                         const capture: { warnedMessage: string | null } = { warnedMessage: null };
-                        const origWarn = uiObj?.notifications?.warn;
-                        if (typeof origWarn === 'function') {
-                            uiObj.notifications.warn = function (msg: string, ...rest: unknown[]) {
+                        const origWarn = notifications?.warn;
+                        if (notifications != null && origWarn != null) {
+                            const tap: WarnFn = (msg, ...rest) => {
                                 capture.warnedMessage = String(msg);
-                                return origWarn.call(this, msg, ...rest);
+                                return origWarn(msg, ...rest);
                             };
+                            notifications.warn = tap;
                         }
 
                         const detached = document.createElement('div');
@@ -581,8 +655,8 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         }
 
                         // Restore the original warn so other tests aren't affected.
-                        if (typeof origWarn === 'function' && uiObj?.notifications != null) {
-                            uiObj.notifications.warn = origWarn;
+                        if (notifications != null && origWarn != null) {
+                            notifications.warn = origWarn;
                         }
                     } catch (err) {
                         setResult('chat-card-button-click', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
@@ -598,7 +672,6 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                 }
 
                 return { flows };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             [...ACTION_MANAGER_FLOWS],
         );
