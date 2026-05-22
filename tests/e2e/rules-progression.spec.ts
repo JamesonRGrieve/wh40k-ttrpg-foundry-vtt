@@ -77,23 +77,97 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            type ImportError = { __importError?: string };
+            interface TalentConstant {
+                radiusMetres?: number;
+                wpBonus?: number;
+                testBonusPerCp?: number;
+            }
+            interface ChaosTalentsModule extends ImportError {
+                AEGIS_OF_CONTEMPT?: TalentConstant;
+                FLAGELLANT?: TalentConstant;
+                TAINTED_PSYKER?: TalentConstant;
+            }
+            interface EliteAdvanceEntry {
+                id?: string;
+                xpCost?: number;
+                prerequisites?: Array<{ type?: string; minimum?: number }>;
+            }
+            interface EliteAdvancesModule extends ImportError {
+                ELITE_ADVANCES?: Record<string, EliteAdvanceEntry>;
+            }
+            interface RadicalServiceEntry {
+                id?: string;
+                threatLevel?: number;
+                subtletyOnHire?: number;
+                availability?: string;
+            }
+            interface RadicalServicesModule extends ImportError {
+                RADICAL_SERVICES?: Record<string, RadicalServiceEntry>;
+            }
+            interface XenosFeaturesModule extends ImportError {
+                RIGHT_STUFF?: { applicableSkills?: readonly string[] };
+                PUSH_THE_LIMIT?: { operateBonus?: number; failureThresholdForCritical?: number };
+                SURVIVORS_PARANOIA?: { negatedSurpriseBonus?: number };
+            }
+            type ProfaneObjectsModule = ImportError;
+            interface TrainingCheckResult {
+                trained?: boolean;
+                talent?: { name: string } | null;
+            }
+            interface SyntheticActor {
+                items: Array<{ type: string; name: string }>;
+            }
+            interface SyntheticWeapon {
+                system: { requiredTraining: string; special: string };
+            }
+            interface WeaponTrainingModule extends ImportError {
+                checkWeaponTraining?: (actor: SyntheticActor, weapon: SyntheticWeapon) => TrainingCheckResult;
+                getWeaponTrainingModifier?: (actor: SyntheticActor, weapon: SyntheticWeapon) => number;
+                getWeaponTrainingDescription?: (actor: SyntheticActor, weapon: SyntheticWeapon) => string;
+            }
+            interface WeaponModifierRollData {
+                weapon: { items: never[]; isRanged?: boolean; isMelee?: boolean; system?: Record<string, never> } | undefined;
+                weaponModifications?: never[];
+                weaponModifiers?: Record<string, number>;
+                modifiers: Record<string, number>;
+                attackSpecials?: Array<{ name: string }>;
+                action?: string;
+            }
+            interface WeaponModifiersModule extends ImportError {
+                updateWeaponModifiers?: (rollData: WeaponModifierRollData) => void;
+                calculateWeaponModifiersAttackBonuses?: (rollData: WeaponModifierRollData) => void;
+                calculateWeaponModifiersAttackSpecials?: (rollData: WeaponModifierRollData) => void;
+            }
+            interface RangeRollData {
+                weapon: { isMelee?: boolean; system?: Record<string, never> } | undefined;
+                distance: number;
+                modifiers: Record<string, number>;
+                hasWeaponModification: () => boolean;
+                hasAttackSpecial: () => boolean;
+                rangeName?: string;
+                maxRange?: number;
+            }
+            interface RangeModule extends ImportError {
+                calculateWeaponRange?: (rollData: RangeRollData) => void;
+            }
+
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/rules`;
-            const loadModule = async (name: string): Promise<any> => {
+            const loadModule = async <T extends ImportError>(name: string): Promise<T> => {
                 try {
-                    return await import(`${base}/${name}.js`);
+                    return (await import(`${base}/${name}.js`)) as T;
                 } catch (err) {
-                    return { __importError: String((err as Error).message) };
+                    return { __importError: String((err as Error).message) } as T;
                 }
             };
 
             // ---------- chaos-talents ----------
-            const chaosTalents = await loadModule('chaos-talents');
+            const chaosTalents = await loadModule<ChaosTalentsModule>('chaos-talents');
             if (chaosTalents.__importError !== undefined) {
                 record('chaos-talents-constants', false, String(chaosTalents.__importError));
             } else {
@@ -112,12 +186,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             // ---------- elite-advances ----------
-            const elite = await loadModule('elite-advances');
+            const elite = await loadModule<EliteAdvancesModule>('elite-advances');
             if (elite.__importError !== undefined) {
                 for (const k of ['elite-advances-registry', 'elite-advances-prerequisites'] as const) record(k, false, String(elite.__importError));
             } else {
                 try {
-                    const reg = elite.ELITE_ADVANCES as Record<string, { id?: unknown; xpCost?: unknown }>;
+                    const reg = elite.ELITE_ADVANCES ?? {};
                     const ids = Object.keys(reg);
                     const allShaped = ids.every((id) => typeof reg[id].id === 'string' && typeof reg[id].xpCost === 'number');
                     record('elite-advances-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
@@ -125,8 +199,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     record('elite-advances-registry', false, String((err as Error).message));
                 }
                 try {
-                    const astropath = (elite.ELITE_ADVANCES as Record<string, { prerequisites?: Array<{ type?: unknown; minimum?: unknown }> }>).astropath;
-                    const prereqs = astropath.prerequisites ?? [];
+                    const astropath = elite.ELITE_ADVANCES?.astropath;
+                    const prereqs = astropath?.prerequisites ?? [];
                     const allValid = prereqs.length > 0 && prereqs.every((p) => typeof p.type === 'string' && typeof p.minimum === 'number');
                     record('elite-advances-prerequisites', allValid, null);
                 } catch (err) {
@@ -135,12 +209,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             // ---------- radical-services ----------
-            const radical = await loadModule('radical-services');
+            const radical = await loadModule<RadicalServicesModule>('radical-services');
             if (radical.__importError !== undefined) {
                 for (const k of ['radical-services-registry', 'radical-services-availability'] as const) record(k, false, String(radical.__importError));
             } else {
                 try {
-                    const reg = radical.RADICAL_SERVICES as Record<string, { id?: unknown; threatLevel?: unknown; subtletyOnHire?: unknown }>;
+                    const reg = radical.RADICAL_SERVICES ?? {};
                     const ids = Object.keys(reg);
                     const allShaped = ids.every(
                         (id) => typeof reg[id].id === 'string' && typeof reg[id].threatLevel === 'number' && typeof reg[id].subtletyOnHire === 'number',
@@ -150,7 +224,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     record('radical-services-registry', false, String((err as Error).message));
                 }
                 try {
-                    const reg = radical.RADICAL_SERVICES as Record<string, { availability?: unknown }>;
+                    const reg = radical.RADICAL_SERVICES ?? {};
                     const availabilities = Object.values(reg).map((s) => s.availability);
                     const allStrings = availabilities.length > 0 && availabilities.every((a) => typeof a === 'string' && a.length > 0);
                     record('radical-services-availability', allStrings, null);
@@ -160,14 +234,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             // ---------- xenos-features ----------
-            const xenos = await loadModule('xenos-features');
+            const xenos = await loadModule<XenosFeaturesModule>('xenos-features');
             if (xenos.__importError !== undefined) {
                 record('xenos-features-constants', false, String(xenos.__importError));
             } else {
                 try {
-                    const rightStuff = xenos.RIGHT_STUFF as { applicableSkills?: readonly string[] };
-                    const pushLimit = xenos.PUSH_THE_LIMIT as { operateBonus?: unknown; failureThresholdForCritical?: unknown };
-                    const survivors = xenos.SURVIVORS_PARANOIA as { negatedSurpriseBonus?: unknown };
+                    const rightStuff = xenos.RIGHT_STUFF ?? {};
+                    const pushLimit = xenos.PUSH_THE_LIMIT ?? {};
+                    const survivors = xenos.SURVIVORS_PARANOIA ?? {};
                     record(
                         'xenos-features-constants',
                         Array.isArray(rightStuff.applicableSkills) &&
@@ -185,19 +259,19 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             // ---------- profane-objects ----------
             // Type-only module: importing it confirms the build emits a
             // resolvable chunk and that the shape surface stays stable.
-            const profane = await loadModule('profane-objects');
+            const profane = await loadModule<ProfaneObjectsModule>('profane-objects');
             if (profane.__importError !== undefined) {
                 record('profane-objects-module-shape', false, String(profane.__importError));
             } else {
                 try {
-                    record('profane-objects-module-shape', profane !== null && typeof profane === 'object', null);
+                    record('profane-objects-module-shape', typeof profane === 'object', null);
                 } catch (err) {
                     record('profane-objects-module-shape', false, String((err as Error).message));
                 }
             }
 
             // ---------- weapon-training ----------
-            const wt = await loadModule('weapon-training');
+            const wt = await loadModule<WeaponTrainingModule>('weapon-training');
             if (wt.__importError !== undefined) {
                 for (const k of [
                     'weapon-training-check-noTraining',
@@ -211,30 +285,33 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 // objects. No talent matches "Las", so the untrained
                 // branch fires; a weapon with no requiredTraining hits
                 // the early "trained: true" branch.
-                const actor = { items: [{ type: 'talent', name: 'Quick Draw' }] };
-                const untrainedWeapon = { system: { requiredTraining: 'Las', special: '' } };
-                const freeWeapon = { system: { requiredTraining: '-', special: '' } };
+                const actor: SyntheticActor = { items: [{ type: 'talent', name: 'Quick Draw' }] };
+                const untrainedWeapon: SyntheticWeapon = { system: { requiredTraining: 'Las', special: '' } };
+                const freeWeapon: SyntheticWeapon = { system: { requiredTraining: '-', special: '' } };
+                const checkWeaponTraining = wt.checkWeaponTraining;
+                const getWeaponTrainingModifier = wt.getWeaponTrainingModifier;
+                const getWeaponTrainingDescription = wt.getWeaponTrainingDescription;
                 try {
-                    const r = wt.checkWeaponTraining(actor, freeWeapon);
-                    record('weapon-training-check-noTraining', r?.trained === true && r?.talent === null, null);
+                    const r = checkWeaponTraining?.(actor, freeWeapon);
+                    record('weapon-training-check-noTraining', r?.trained === true && r.talent === null, null);
                 } catch (err) {
                     record('weapon-training-check-noTraining', false, String((err as Error).message));
                 }
                 try {
-                    const r = wt.checkWeaponTraining(actor, untrainedWeapon);
-                    record('weapon-training-check-untrained', r?.trained === false && r?.talent === null, null);
+                    const r = checkWeaponTraining?.(actor, untrainedWeapon);
+                    record('weapon-training-check-untrained', r?.trained === false && r.talent === null, null);
                 } catch (err) {
                     record('weapon-training-check-untrained', false, String((err as Error).message));
                 }
                 try {
-                    const free = wt.getWeaponTrainingModifier(actor, freeWeapon);
-                    const untrained = wt.getWeaponTrainingModifier(actor, untrainedWeapon);
+                    const free = getWeaponTrainingModifier?.(actor, freeWeapon);
+                    const untrained = getWeaponTrainingModifier?.(actor, untrainedWeapon);
                     record('weapon-training-modifier', free === 0 && untrained === -20, `free=${String(free)} untrained=${String(untrained)}`);
                 } catch (err) {
                     record('weapon-training-modifier', false, String((err as Error).message));
                 }
                 try {
-                    const desc = wt.getWeaponTrainingDescription(actor, untrainedWeapon);
+                    const desc = getWeaponTrainingDescription?.(actor, untrainedWeapon);
                     record('weapon-training-description', typeof desc === 'string' && desc.length > 0, null);
                 } catch (err) {
                     record('weapon-training-description', false, String((err as Error).message));
@@ -242,7 +319,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             // ---------- weapon-modifiers ----------
-            const wm = await loadModule('weapon-modifiers');
+            const wm = await loadModule<WeaponModifiersModule>('weapon-modifiers');
             if (wm.__importError !== undefined) {
                 for (const k of ['weapon-modifiers-update', 'weapon-modifiers-attackBonuses', 'weapon-modifiers-attackSpecials'] as const)
                     record(k, false, String(wm.__importError));
@@ -251,30 +328,45 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                 // empty item collection: the loop bodies short-circuit and
                 // each mutator completes without throwing — the covered
                 // outcome for an actor-bound mutator in headless mode.
-                const actionItem = { items: [] as unknown[], isRanged: false };
+                const actionItem = { items: [] as never[], isRanged: false };
+                const updateWeaponModifiers = wm.updateWeaponModifiers;
+                const calculateWeaponModifiersAttackBonuses = wm.calculateWeaponModifiersAttackBonuses;
+                const calculateWeaponModifiersAttackSpecials = wm.calculateWeaponModifiersAttackSpecials;
                 try {
-                    const rollData: any = { weapon: actionItem, weaponModifications: [], modifiers: {}, attackSpecials: [], action: 'Standard Attack' };
-                    wm.updateWeaponModifiers(rollData);
-                    record('weapon-modifiers-update', Array.isArray(rollData.weaponModifications) && rollData.weaponModifications.length === 0, null);
+                    const rollData: WeaponModifierRollData = {
+                        weapon: actionItem,
+                        weaponModifications: [],
+                        modifiers: {},
+                        attackSpecials: [],
+                        action: 'Standard Attack',
+                    };
+                    updateWeaponModifiers?.(rollData);
+                    record('weapon-modifiers-update', (rollData.weaponModifications ?? []).length === 0, null);
                 } catch (err) {
                     record('weapon-modifiers-update', false, String((err as Error).message));
                 }
                 try {
-                    const rollData: any = { weapon: actionItem, weaponModifiers: { stale: 1 }, modifiers: {}, attackSpecials: [], action: 'Standard Attack' };
-                    wm.calculateWeaponModifiersAttackBonuses(rollData);
+                    const rollData: WeaponModifierRollData = {
+                        weapon: actionItem,
+                        weaponModifiers: { stale: 1 },
+                        modifiers: {},
+                        attackSpecials: [],
+                        action: 'Standard Attack',
+                    };
+                    calculateWeaponModifiersAttackBonuses?.(rollData);
                     // The function resets weaponModifiers to {} before the loop.
-                    record('weapon-modifiers-attackBonuses', Object.keys(rollData.weaponModifiers).length === 0, null);
+                    record('weapon-modifiers-attackBonuses', Object.keys(rollData.weaponModifiers ?? {}).length === 0, null);
                 } catch (err) {
                     record('weapon-modifiers-attackBonuses', false, String((err as Error).message));
                 }
                 try {
-                    const rollData: any = {
+                    const rollData: WeaponModifierRollData = {
                         weapon: actionItem,
                         modifiers: {},
                         attackSpecials: [{ name: 'Primitive' }],
                         action: 'Standard Attack',
                     };
-                    wm.calculateWeaponModifiersAttackSpecials(rollData);
+                    calculateWeaponModifiersAttackSpecials?.(rollData);
                     record('weapon-modifiers-attackSpecials', Array.isArray(rollData.attackSpecials), null);
                 } catch (err) {
                     record('weapon-modifiers-attackSpecials', false, String((err as Error).message));
@@ -282,23 +374,24 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             // ---------- range ----------
-            const range = await loadModule('range');
+            const range = await loadModule<RangeModule>('range');
             if (range.__importError !== undefined) {
                 for (const k of ['range-calculateWeaponRange-melee', 'range-calculateWeaponRange-noWeapon'] as const)
                     record(k, false, String(range.__importError));
             } else {
+                const calculateWeaponRange = range.calculateWeaponRange;
                 try {
                     // Melee branch: maxRange forced to 1, range bracket = melee,
                     // no Roll formula path. hasWeaponModification short-circuits
                     // because rangeBonus is not negative here.
-                    const rollData: any = {
+                    const rollData: RangeRollData = {
                         weapon: { isMelee: true, system: {} },
                         distance: 2,
                         modifiers: { aim: 0 },
                         hasWeaponModification: () => false,
                         hasAttackSpecial: () => false,
                     };
-                    range.calculateWeaponRange(rollData);
+                    calculateWeaponRange?.(rollData);
                     record('range-calculateWeaponRange-melee', rollData.rangeName === 'Melee' && rollData.maxRange === 1, null);
                 } catch (err) {
                     record('range-calculateWeaponRange-melee', false, String((err as Error).message));
@@ -307,14 +400,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     // No-weapon guard: maxRange resolves to 0, the ranged
                     // calculator still runs with an empty quality set. The
                     // mutator must complete and assign a string rangeName.
-                    const rollData: any = {
+                    const rollData: RangeRollData = {
                         weapon: undefined,
                         distance: 5,
                         modifiers: { aim: 0 },
                         hasWeaponModification: () => false,
                         hasAttackSpecial: () => false,
                     };
-                    range.calculateWeaponRange(rollData);
+                    calculateWeaponRange?.(rollData);
                     record('range-calculateWeaponRange-noWeapon', rollData.maxRange === 0 && typeof rollData.rangeName === 'string', null);
                 } catch (err) {
                     record('range-calculateWeaponRange-noWeapon', false, String((err as Error).message));
@@ -322,7 +415,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

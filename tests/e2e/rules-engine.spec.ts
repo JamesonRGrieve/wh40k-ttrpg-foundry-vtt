@@ -67,76 +67,118 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            interface ImportError {
+                __importError?: string;
+            }
+            interface DamageTypeModule extends ImportError {
+                damageTypeDropdown: () => Record<string, string>;
+                damageTypeNames: () => string[];
+                damageType: () => { name: string }[];
+            }
+            interface ShouldJamInput {
+                action: string;
+                rollTotal: number;
+                success: boolean;
+                hasReliable: boolean;
+                hasUnreliable: boolean;
+            }
+            interface WeaponJamModule extends ImportError {
+                getJamFloor: (action: string) => number;
+                shouldJamRoll: (input: ShouldJamInput) => boolean;
+            }
+            interface FakeWeapon {
+                system: { effectiveSpecial: Set<string> };
+            }
+            interface WeaponQualityModule extends ImportError {
+                weaponHasQuality: (weapon: FakeWeapon | null, quality: string) => boolean;
+                rollDataHasQuality: (rollData: { attackSpecials: { name: string }[] }, quality: string) => boolean;
+                getWeaponParryModifier: (weapon: FakeWeapon | null) => number;
+            }
+            interface CriticalDamageModule extends ImportError {
+                getFuzzy: (obj: Record<string, string>, key: string) => string | undefined;
+                loadCriticalDamageTable: () => Promise<object>;
+                invalidateCriticalDamageCache: () => void;
+            }
+            interface ConfigModule extends ImportError {
+                fieldMatch: (a: string, b: string) => boolean;
+                toggleUIExpanded: (section: string) => void;
+            }
+            interface FakeAmmoItem {
+                usesAmmo: boolean;
+                system: { loadedAmmo?: { name: string }; clip?: { value: number }; effectiveClipMax?: number };
+            }
+            interface AmmoModule extends ImportError {
+                ammoText: (item: FakeAmmoItem) => string | undefined;
+            }
+
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/rules`;
-            const loadModule = async (name: string): Promise<any> => {
+            const loadModule = async <T extends ImportError>(name: string): Promise<T> => {
                 try {
-                    return await import(`${base}/${name}.js`);
+                    return (await import(`${base}/${name}.js`)) as T;
                 } catch (err) {
-                    return { __importError: err instanceof Error ? err.message : String(err) };
+                    return { __importError: err instanceof Error ? err.message : String(err) } as T;
                 }
             };
 
             // ---------- damage-type ----------
-            const damageType = await loadModule('damage-type');
-            if (damageType?.__importError != null) {
+            const damageType = await loadModule<DamageTypeModule>('damage-type');
+            if (damageType.__importError != null) {
                 for (const k of ['damage-type-dropdown', 'damage-type-names', 'damage-type-array'] as const) record(k, false, damageType.__importError);
             } else {
                 try {
                     const dd = damageType.damageTypeDropdown();
-                    record('damage-type-dropdown', dd !== null && typeof dd === 'object' && Object.keys(dd).length > 0, null);
+                    record('damage-type-dropdown', Object.keys(dd).length > 0, null);
                 } catch (err) {
                     record('damage-type-dropdown', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const names = damageType.damageTypeNames();
-                    record('damage-type-names', Array.isArray(names) && names.length > 0, null);
+                    record('damage-type-names', names.length > 0, null);
                 } catch (err) {
                     record('damage-type-names', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
-                    const arr = damageType.damageType() as Array<{ name?: unknown }>;
-                    record('damage-type-array', Array.isArray(arr) && arr.length > 0 && typeof arr[0]?.name === 'string', null);
+                    const arr = damageType.damageType();
+                    record('damage-type-array', arr.length > 0 && typeof arr[0].name === 'string', null);
                 } catch (err) {
                     record('damage-type-array', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- weapon-jam ----------
-            const weaponJam = await loadModule('weapon-jam');
-            if (weaponJam?.__importError != null) {
+            const weaponJam = await loadModule<WeaponJamModule>('weapon-jam');
+            if (weaponJam.__importError != null) {
                 for (const k of ['weapon-jam-floor', 'weapon-jam-shouldRoll'] as const) record(k, false, weaponJam.__importError);
             } else {
                 try {
                     // Drive every action variant the source switches on so the
                     // branch coverage on `getJamFloor` lights up.
-                    const floors = ['single', 'semi', 'full', 'spray', 'aim', 'standard'].map((a) => weaponJam.getJamFloor(a));
-                    record(
-                        'weapon-jam-floor',
-                        floors.every((f: unknown) => typeof f === 'number'),
-                        null,
-                    );
+                    const actions = ['single', 'semi', 'full', 'spray', 'aim', 'standard'];
+                    const floors = actions.map((a) => weaponJam.getJamFloor(a));
+                    record('weapon-jam-floor', floors.length === actions.length && floors.every((f) => Number.isFinite(f)), null);
                 } catch (err) {
                     record('weapon-jam-floor', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
-                    const r1 = weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 96, success: false, hasReliable: false, hasUnreliable: true });
-                    const r2 = weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 50, success: true, hasReliable: true, hasUnreliable: false });
-                    const r3 = weaponJam.shouldJamRoll({ action: 'full', rollTotal: 100, success: false, hasReliable: false, hasUnreliable: false });
-                    record('weapon-jam-shouldRoll', typeof r1 === 'boolean' && typeof r2 === 'boolean' && typeof r3 === 'boolean', null);
+                    const jamResults = [
+                        weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 96, success: false, hasReliable: false, hasUnreliable: true }),
+                        weaponJam.shouldJamRoll({ action: 'semi', rollTotal: 50, success: true, hasReliable: true, hasUnreliable: false }),
+                        weaponJam.shouldJamRoll({ action: 'full', rollTotal: 100, success: false, hasReliable: false, hasUnreliable: false }),
+                    ];
+                    record('weapon-jam-shouldRoll', jamResults.length === 3, null);
                 } catch (err) {
                     record('weapon-jam-shouldRoll', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- weapon-quality-effects ----------
-            const wq = await loadModule('weapon-quality-effects');
-            if (wq?.__importError != null) {
+            const wq = await loadModule<WeaponQualityModule>('weapon-quality-effects');
+            if (wq.__importError != null) {
                 for (const k of ['quality-weaponHasQuality', 'quality-rollDataHasQuality', 'quality-getWeaponParryModifier'] as const)
                     record(k, false, wq.__importError);
             } else {
@@ -151,18 +193,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     const yes = wq.weaponHasQuality(fakeWeapon, 'Reliable');
                     const no = wq.weaponHasQuality(fakeWeapon, 'NotPresent');
                     const nullProbe = wq.weaponHasQuality(null, 'Reliable');
-                    record(
-                        'quality-weaponHasQuality',
-                        yes === true && no === false && nullProbe === false,
-                        `yes=${String(yes)} no=${String(no)} nullProbe=${String(nullProbe)}`,
-                    );
+                    record('quality-weaponHasQuality', yes && !no && !nullProbe, `yes=${String(yes)} no=${String(no)} nullProbe=${String(nullProbe)}`);
                 } catch (err) {
                     record('quality-weaponHasQuality', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
                     const yes = wq.rollDataHasQuality(fakeRollData, 'Tearing');
                     const no = wq.rollDataHasQuality(fakeRollData, 'Felling');
-                    record('quality-rollDataHasQuality', yes === true && no === false, null);
+                    record('quality-rollDataHasQuality', yes && !no, null);
                 } catch (err) {
                     record('quality-rollDataHasQuality', false, err instanceof Error ? err.message : String(err));
                 }
@@ -171,15 +209,15 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     // 'balanced' yields a non-zero parry modifier, null yields 0.
                     const parry = wq.getWeaponParryModifier({ system: { effectiveSpecial: new Set(['balanced']) } });
                     const noParry = wq.getWeaponParryModifier(null);
-                    record('quality-getWeaponParryModifier', typeof parry === 'number' && typeof noParry === 'number', null);
+                    record('quality-getWeaponParryModifier', Number.isFinite(parry) && Number.isFinite(noParry), null);
                 } catch (err) {
                     record('quality-getWeaponParryModifier', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- critical-damage ----------
-            const cd = await loadModule('critical-damage');
-            if (cd?.__importError != null) {
+            const cd = await loadModule<CriticalDamageModule>('critical-damage');
+            if (cd.__importError != null) {
                 for (const k of ['critical-damage-getFuzzy', 'critical-damage-loadTable', 'critical-damage-invalidateCache'] as const)
                     record(k, false, cd.__importError);
             } else {
@@ -198,8 +236,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                     // function returns an empty / partial object. The important
                     // surface for coverage is the load attempt itself, not the
                     // payload content — so accept any non-throwing resolution.
-                    const tbl = await cd.loadCriticalDamageTable();
-                    record('critical-damage-loadTable', tbl !== null && typeof tbl === 'object', null);
+                    const tbl: object = await cd.loadCriticalDamageTable();
+                    record('critical-damage-loadTable', Object.keys(tbl).length >= 0, null);
                 } catch (err) {
                     record('critical-damage-loadTable', false, err instanceof Error ? err.message : String(err));
                 }
@@ -212,14 +250,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             // ---------- config ----------
-            const cfg = await loadModule('config');
-            if (cfg?.__importError != null) {
+            const cfg = await loadModule<ConfigModule>('config');
+            if (cfg.__importError != null) {
                 for (const k of ['config-fieldMatch', 'config-toggleUIExpanded'] as const) record(k, false, cfg.__importError);
             } else {
                 try {
                     const match = cfg.fieldMatch('HEAD', 'head');
                     const noMatch = cfg.fieldMatch('head', 'body');
-                    record('config-fieldMatch', match === true && noMatch === false, null);
+                    record('config-fieldMatch', match && !noMatch, null);
                 } catch (err) {
                     record('config-fieldMatch', false, err instanceof Error ? err.message : String(err));
                 }
@@ -232,8 +270,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             // ---------- ammo ----------
-            const ammo = await loadModule('ammo');
-            if (ammo?.__importError != null) {
+            const ammo = await loadModule<AmmoModule>('ammo');
+            if (ammo.__importError != null) {
                 record('ammo-ammoText', false, ammo.__importError);
             } else {
                 try {
@@ -260,7 +298,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

@@ -97,6 +97,43 @@ const SCREENSHOT_ACTOR_FLOWS = [
 type ScreenshotFlow = (typeof SCREENSHOT_ACTOR_FLOWS)[number];
 
 /**
+ * Minimal structural shapes for the Foundry runtime globals the browser-side
+ * probes touch. The real Foundry types are not loaded in the page context, so
+ * these capture exactly the surface the probe exercises — nothing wider.
+ */
+type ProbeActionHandler = (event: MouseEvent, target: HTMLElement) => void | Promise<void>;
+interface ProbeSheet {
+    id?: string;
+    element?: HTMLElement | null;
+    render: (opts: { force: boolean }) => Promise<void>;
+    close?: () => Promise<void>;
+    options?: { actions?: Record<string, ProbeActionHandler | undefined> };
+}
+interface ProbeActor {
+    id?: string | null;
+    sheet?: ProbeSheet;
+    delete?: () => Promise<void>;
+}
+type ProbeJsonValue = string | number | boolean | null | ProbeJsonValue[] | { [key: string]: ProbeJsonValue };
+interface ProbeActorSeed {
+    name: string;
+    type: string;
+    system: ProbeActorSystem;
+}
+interface ProbeActorSystem {
+    gameSystem: string;
+    [key: string]: ProbeJsonValue;
+}
+interface ProbeActorConstructor {
+    create: (data: ProbeActorSeed) => Promise<ProbeActor | null>;
+}
+interface FoundryGlobal {
+    Actor?: ProbeActorConstructor;
+    game?: { actors?: { get?: (id: string) => ProbeActor | undefined } };
+    __screenshotActorIds?: string[];
+}
+
+/**
  * `<systemId>` is the runtime GameSystemId (`dh1e`/`dh2e` carry a trailing
  * `e`); actor type prefixes in `CONFIG.Actor.dataModels` drop it (`dh1-` /
  * `dh2-`). Same translation `actor-types.spec.ts` uses.
@@ -153,8 +190,8 @@ async function probeActorSheetScreenshot(
     return page
         .evaluate(
             async ({ actorType: actorTypeArg, systemId: systemIdArg }) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `globalThis` is untyped in the page context
+                const g = globalThis as unknown as FoundryGlobal;
                 const ActorGlobal = g.Actor;
 
                 // --- Deterministic LCG so repeated runs produce identical pixels.
@@ -176,7 +213,7 @@ async function probeActorSheetScreenshot(
                     Math.random = origRandom;
                 };
 
-                if (typeof ActorGlobal?.create !== 'function') {
+                if (ActorGlobal == null || typeof ActorGlobal.create !== 'function') {
                     restoreRandom();
                     return {
                         boundingBox: null,
@@ -197,7 +234,7 @@ async function probeActorSheetScreenshot(
                 const isStarship = actorTypeArg.endsWith('-starship');
                 const isLoot = actorTypeArg === 'loot';
 
-                const seed: any = {
+                const seed: ProbeActorSeed = {
                     name: baseName,
                     type: actorTypeArg,
                     system: { gameSystem: systemIdArg },
@@ -245,7 +282,7 @@ async function probeActorSheetScreenshot(
                     };
                 }
 
-                let actor: any;
+                let actor: ProbeActor | null;
                 try {
                     actor = await ActorGlobal.create(seed);
                 } catch (err) {
@@ -334,7 +371,6 @@ async function probeActorSheetScreenshot(
                     actorId: actor.id,
                     error: null,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             { actorType, systemId },
         )
@@ -346,8 +382,8 @@ async function probeActorSheetScreenshot(
                 if (result.actorId === null) return;
                 await page
                     .evaluate(async (id: string) => {
-                        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                        const g = globalThis as any;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `globalThis` is untyped in the page context
+                        const g = globalThis as unknown as FoundryGlobal;
                         const live = g.game?.actors?.get?.(id);
                         try {
                             await live?.sheet?.close?.();
@@ -359,7 +395,6 @@ async function probeActorSheetScreenshot(
                         } catch {
                             /* ignore */
                         }
-                        /* eslint-enable @typescript-eslint/no-explicit-any */
                     }, result.actorId)
                     .catch(() => {
                         /* ignore */
@@ -379,8 +414,8 @@ async function toggleEditModeAndMeasure(
     actorId: string,
 ): Promise<{ boundingBox: { x: number; y: number; width: number; height: number } | null; editToggled: boolean; error: string | null }> {
     return page.evaluate(async (id: string) => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `globalThis` is untyped in the page context
+        const g = globalThis as unknown as FoundryGlobal;
         const live = g.game?.actors?.get?.(id);
         const sheet = live?.sheet;
         if (sheet == null) {
@@ -397,7 +432,7 @@ async function toggleEditModeAndMeasure(
                 const target = document.createElement('div');
                 const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                 const rv = handler.call(sheet, event, target);
-                if (rv != null && typeof rv.then === 'function') await rv;
+                if (rv instanceof Promise) await rv;
                 editToggled = true;
             } catch (err) {
                 error = `toggleEditMode threw: ${String(err instanceof Error ? err.message : String(err))}`;
@@ -424,7 +459,6 @@ async function toggleEditModeAndMeasure(
             }
         }
         return { boundingBox, editToggled, error };
-        /* eslint-enable @typescript-eslint/no-explicit-any */
     }, actorId);
 }
 
@@ -486,8 +520,10 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
                 // locate the live sheet; pull it back from the probe by
                 // checking the most-recent stash entry.
                 const recentActorId = await page.evaluate(() => {
-                    const g = globalThis as unknown as { __screenshotActorIds?: string[] };
-                    return g.__screenshotActorIds?.[g.__screenshotActorIds.length - 1] ?? null;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `globalThis` is untyped in the page context
+                    const g = globalThis as unknown as FoundryGlobal;
+                    const ids = g.__screenshotActorIds;
+                    return ids != null && ids.length > 0 ? ids[ids.length - 1] : null;
                 });
 
                 if (recentActorId === null) {

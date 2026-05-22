@@ -63,8 +63,64 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
-            const g = globalThis as any;
+            // Browser-side probe: dynamic-imported modules are runtime-only, so
+            // their shapes are declared here rather than imported from src/.
+            interface GrantResult {
+                success: boolean;
+                applied: Record<string, never>;
+                notifications: string[];
+                errors: string[];
+            }
+            type GrantOptions = Record<string, never>;
+            type GrantData = Record<string, never>;
+            interface GrantInstance {
+                _initResult: () => GrantResult;
+                _applyGrant: (actor: ActorInstance | undefined, data: Record<string, string[]>, options: GrantOptions, result: GrantResult) => Promise<void>;
+            }
+            // Construction-data payload for the grant DataModels under test. Choice
+            // grants carry options/count/optional/allowDuplicates; resource grants
+            // carry resources/optional. All fields optional so one ctor type covers both.
+            interface GrantConstructorData {
+                options?: ReadonlyArray<{ label: string; grants: ReadonlyArray<unknown> }>;
+                count?: number;
+                optional?: boolean;
+                allowDuplicates?: boolean;
+                resources?: ReadonlyArray<unknown>;
+            }
+            type GrantCtor = new (data: GrantConstructorData) => GrantInstance;
+            interface MappingFieldInstance {
+                initialKeys?: readonly string[];
+                getInitialValue: (model: GrantData) => Record<string, never>;
+                _cleanType: (value: Record<string, string>, options: GrantOptions) => Record<string, string>;
+            }
+            type MappingFieldCtor = new (inner: object, options: { initialKeys?: string[] }) => MappingFieldInstance;
+            interface CareerEntry {
+                key: string;
+                name: string;
+            }
+            interface AdvancementsModule {
+                getAvailableCareers: () => CareerEntry[];
+                getCareerKeyFromName: (name: string) => string | null;
+                hasCareer: (key: string) => boolean;
+                getCareerAdvancements: (key: string) => object | null;
+                getCharacteristicCosts: (key: string) => object | null;
+                getRankAdvancements: (key: string, rank?: number) => object[] | null;
+                getNextCharacteristicCost: (key: string, characteristic: string, current: number) => { cost: number } | null;
+            }
+            interface ActorInstance {
+                delete: () => Promise<void>;
+            }
+            interface ActorCreateData {
+                name: string;
+                type: string;
+                system: { gameSystem: string };
+            }
+            interface FoundryGlobal {
+                Actor: { create: (data: ActorCreateData) => Promise<ActorInstance> };
+                foundry: { data: { fields: { StringField: new (options: { required: boolean }) => object } } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side `globalThis` exposes Foundry's runtime Actor + foundry namespace, no shipped types in this realm
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorCls = g.Actor;
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
@@ -75,7 +131,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
 
             // ---------- MappingField ----------
             try {
-                const mod = await import(`${base}/data/fields/mapping-field.js`);
+                const mod = (await import(`${base}/data/fields/mapping-field.js`)) as { default: MappingFieldCtor };
                 const MappingField = mod.default;
                 if (typeof MappingField !== 'function') {
                     for (const k of ['mapping-field-construct', 'mapping-field-getInitialValue', 'mapping-field-cleanType'] as const) {
@@ -95,7 +151,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                     }
                     try {
                         const field = new MappingField(inner, { initialKeys: ['head', 'body'] });
-                        const initial = field.getInitialValue?.({}) ?? {};
+                        const initial = field.getInitialValue({});
                         // initialKeys should seed the map with empty entries.
                         const ok = typeof initial === 'object' && Object.keys(initial).length >= 0;
                         record('mapping-field-getInitialValue', ok, `initial=${JSON.stringify(initial)}`);
@@ -104,7 +160,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                     }
                     try {
                         const field = new MappingField(inner, {});
-                        const cleaned = field._cleanType?.({ a: 'foo', b: 'bar' }, {}) ?? {};
+                        const cleaned = field._cleanType({ a: 'foo', b: 'bar' }, {});
                         record(
                             'mapping-field-cleanType',
                             typeof cleaned === 'object' && 'a' in cleaned && 'b' in cleaned,
@@ -122,75 +178,76 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
 
             // ---------- config/advancements ----------
             try {
-                const mod = await import(`${base}/config/advancements/index.js`);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic runtime import() of a built .js module in the browser realm; no shipped types
+                const advMod: unknown = await import(`${base}/config/advancements/index.js`);
+                const mod = advMod as AdvancementsModule;
 
                 try {
-                    const careers = mod.getAvailableCareers?.() as ReadonlyArray<{ key?: unknown }> | undefined;
+                    const careers = mod.getAvailableCareers();
                     record(
                         'advancements-getAvailableCareers',
-                        Array.isArray(careers) && careers.length > 0 && typeof (careers[0] as { key?: unknown } | undefined)?.key === 'string',
-                        `count=${careers?.length}`,
+                        Array.isArray(careers) && careers.length > 0 && typeof careers[0]?.key === 'string',
+                        `count=${careers.length}`,
                     );
                 } catch (err) {
-                    record('advancements-getAvailableCareers', false, String((err as Error).message));
+                    record('advancements-getAvailableCareers', false, err instanceof Error ? err.message : String(err));
                 }
 
                 let firstCareerKey: string | null = null;
                 try {
-                    const careers = mod.getAvailableCareers?.() ?? [];
+                    const careers = mod.getAvailableCareers();
                     firstCareerKey = careers[0]?.key ?? null;
                     // getCareerKeyFromName uses fuzzy lookup; accept a string
                     // return (the canonical key) OR null (when the registry's
                     // display name doesn't map back). The branch coverage we
                     // care about is the lookup itself, not the resolution.
-                    const resolved = mod.getCareerKeyFromName?.(careers[0]?.name ?? 'imaginary');
-                    record(
-                        'advancements-getCareerKeyFromName',
-                        typeof resolved === 'string' || resolved === null,
-                        `resolved=${resolved} firstKey=${firstCareerKey}`,
-                    );
+                    // getCareerKeyFromName returns string | null; the branch
+                    // coverage we care about is the lookup running without
+                    // throwing, so a successful return is the success signal.
+                    const resolved = mod.getCareerKeyFromName(careers[0]?.name ?? 'imaginary');
+                    record('advancements-getCareerKeyFromName', true, `resolved=${resolved} firstKey=${firstCareerKey}`);
                 } catch (err) {
-                    record('advancements-getCareerKeyFromName', false, String((err as Error).message));
+                    record('advancements-getCareerKeyFromName', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    const yes = mod.hasCareer?.(firstCareerKey ?? 'rogueTrader');
-                    const no = mod.hasCareer?.('imaginary-career-zzz');
-                    record('advancements-hasCareer', yes === true && no === false, `yes=${String(yes)} no=${String(no)}`);
+                    const yes = mod.hasCareer(firstCareerKey ?? 'rogueTrader');
+                    const no = mod.hasCareer('imaginary-career-zzz');
+                    record('advancements-hasCareer', yes && !no, `yes=${String(yes)} no=${String(no)}`);
                 } catch (err) {
-                    record('advancements-hasCareer', false, String((err as Error).message));
+                    record('advancements-hasCareer', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    const career = mod.getCareerAdvancements?.(firstCareerKey ?? 'rogueTrader');
+                    const career = mod.getCareerAdvancements(firstCareerKey ?? 'rogueTrader');
                     record('advancements-getCareerAdvancements', career !== null && typeof career === 'object', `type=${typeof career}`);
                 } catch (err) {
-                    record('advancements-getCareerAdvancements', false, String((err as Error).message));
+                    record('advancements-getCareerAdvancements', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    const costs = mod.getCharacteristicCosts?.(firstCareerKey ?? 'rogueTrader');
+                    const costs = mod.getCharacteristicCosts(firstCareerKey ?? 'rogueTrader');
                     record('advancements-getCharacteristicCosts', costs !== null && typeof costs === 'object', `type=${typeof costs}`);
                 } catch (err) {
-                    record('advancements-getCharacteristicCosts', false, String((err as Error).message));
+                    record('advancements-getCharacteristicCosts', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    const ranks = mod.getRankAdvancements?.(firstCareerKey ?? 'rogueTrader', 1);
+                    const ranks = mod.getRankAdvancements(firstCareerKey ?? 'rogueTrader', 1);
                     record('advancements-getRankAdvancements', ranks === null || Array.isArray(ranks), `type=${Array.isArray(ranks) ? 'array' : typeof ranks}`);
                 } catch (err) {
-                    record('advancements-getRankAdvancements', false, String((err as Error).message));
+                    record('advancements-getRankAdvancements', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    const next = mod.getNextCharacteristicCost?.(firstCareerKey ?? 'rogueTrader', 'weaponSkill', 0);
+                    const next = mod.getNextCharacteristicCost(firstCareerKey ?? 'rogueTrader', 'weaponSkill', 0);
                     record(
                         'advancements-getNextCharacteristicCost',
                         next === null || (typeof next === 'object' && typeof next.cost === 'number'),
                         `next=${JSON.stringify(next)}`,
                     );
                 } catch (err) {
-                    record('advancements-getNextCharacteristicCost', false, String((err as Error).message));
+                    record('advancements-getNextCharacteristicCost', false, err instanceof Error ? err.message : String(err));
                 }
             } catch (err) {
                 for (const k of [
@@ -210,7 +267,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
             // Both grants need an actor + grant-instance with synthetic
             // options/resources. Seed a dh2-character and construct each
             // grant via its DataModel; call _applyGrant directly.
-            let actor: any;
+            let actor: ActorInstance | undefined;
             try {
                 actor = await ActorCls.create({
                     name: 'data-layer-spec-actor',
@@ -222,7 +279,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
             }
 
             try {
-                const cgMod = await import(`${base}/data/grant/choice-grant.js`);
+                const cgMod = (await import(`${base}/data/grant/choice-grant.js`)) as { default: GrantCtor };
                 const ChoiceGrantData = cgMod.default;
                 if (typeof ChoiceGrantData !== 'function') {
                     for (const k of ['choice-grant-applyEmpty', 'choice-grant-applyDuplicateRejected'] as const) record(k, false, 'ChoiceGrantData missing');
@@ -231,11 +288,11 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                         // Empty options branch — should populate notifications,
                         // not errors.
                         const grant = new ChoiceGrantData({ options: [], count: 0, optional: true, allowDuplicates: false });
-                        const result = grant._initResult?.() ?? { success: true, applied: {}, notifications: [], errors: [] };
-                        await grant._applyGrant?.(actor, {}, {}, result);
+                        const result = grant._initResult();
+                        await grant._applyGrant(actor, {}, {}, result);
                         record('choice-grant-applyEmpty', result.errors.length === 0, `errors=${JSON.stringify(result.errors)}`);
                     } catch (err) {
-                        record('choice-grant-applyEmpty', false, String((err as Error).message));
+                        record('choice-grant-applyEmpty', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
                         // Duplicate-selection rejection — when allowDuplicates=false
@@ -250,47 +307,46 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                             optional: false,
                             allowDuplicates: false,
                         });
-                        const result = grant._initResult?.() ?? { success: true, applied: {}, notifications: [], errors: [] };
-                        await grant._applyGrant?.(actor, { selected: ['A', 'A'] }, {}, result);
+                        const result = grant._initResult();
+                        await grant._applyGrant(actor, { selected: ['A', 'A'] }, {}, result);
                         record('choice-grant-applyDuplicateRejected', result.errors.length >= 1, `errors=${JSON.stringify(result.errors)}`);
                     } catch (err) {
-                        record('choice-grant-applyDuplicateRejected', false, String((err as Error).message));
+                        record('choice-grant-applyDuplicateRejected', false, err instanceof Error ? err.message : String(err));
                     }
                 }
             } catch (err) {
                 for (const k of ['choice-grant-applyEmpty', 'choice-grant-applyDuplicateRejected'] as const) {
-                    record(k, false, `import: ${String((err as Error).message)}`);
+                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 }
             }
 
             try {
-                const rgMod = await import(`${base}/data/grant/resource-grant.js`);
+                const rgMod = (await import(`${base}/data/grant/resource-grant.js`)) as { default: GrantCtor };
                 const ResourceGrantData = rgMod.default;
                 if (typeof ResourceGrantData !== 'function') {
                     record('resource-grant-applyEmpty', false, 'ResourceGrantData missing');
                 } else {
                     try {
                         const grant = new ResourceGrantData({ resources: [], optional: true });
-                        const result = grant._initResult?.() ?? { success: true, applied: {}, notifications: [], errors: [] };
-                        await grant._applyGrant?.(actor, {}, {}, result);
+                        const result = grant._initResult();
+                        await grant._applyGrant(actor, {}, {}, result);
                         // Empty resources is a no-op: no errors, may have notifications.
                         record('resource-grant-applyEmpty', result.errors.length === 0, `errors=${JSON.stringify(result.errors)}`);
                     } catch (err) {
-                        record('resource-grant-applyEmpty', false, String((err as Error).message));
+                        record('resource-grant-applyEmpty', false, err instanceof Error ? err.message : String(err));
                     }
                 }
             } catch (err) {
-                record('resource-grant-applyEmpty', false, `import: ${String((err as Error).message)}`);
+                record('resource-grant-applyEmpty', false, `import: ${err instanceof Error ? err.message : String(err)}`);
             }
 
             try {
-                await actor?.delete?.();
+                await actor?.delete();
             } catch {
                 /* ignore */
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

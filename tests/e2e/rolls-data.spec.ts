@@ -55,7 +55,69 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            // Browser-side probe: the modules under test are dynamic-imported at
+            // runtime from the deployed system, so their shapes are declared here
+            // rather than imported from src/ (which would pull build-time types
+            // into a page.evaluate bundle that has no module resolution).
+            interface FakeActorSystem {
+                armour?: Record<string, { value: number; toughnessBonus: number }>;
+                wounds?: { value: number; critical: number };
+                fatigue?: { value: number };
+            }
+            interface FakeActor {
+                system: FakeActorSystem;
+                hasTalent?: () => boolean;
+                update: () => Promise<void>;
+                createEmbeddedDocuments?: () => Promise<never[]>;
+            }
+            interface AssignDamageInstance {
+                armour: number;
+                tb: number;
+                hasDamage: boolean;
+                damageTaken: number;
+                hasCriticalDamage: boolean;
+                criticalDamageTaken: number;
+                hasFatigueDamage: boolean;
+                fatigueTaken: number;
+                update: () => void;
+                finalize: () => Promise<void>;
+            }
+            interface AssignDamageOptions {
+                location: string;
+                damageType: string;
+                totalDamage: number;
+                totalPenetration: number;
+                totalFatigue: number;
+            }
+            interface AssignDamageCtor {
+                new (actor: FakeActor, options: AssignDamageOptions): AssignDamageInstance;
+            }
+            interface ForceFieldInstance {
+                protectionRating: number;
+                overloadRating: number;
+                success: boolean;
+                roll: { total: number } | null;
+                craftsmanshipToOverload: (craftsmanship: string) => number;
+                finalize: () => Promise<void>;
+            }
+            interface FakeForceFieldSystem {
+                protectionRating: number;
+                craftsmanship: string;
+            }
+            interface FakeForceField {
+                system: FakeForceFieldSystem;
+                update: (data: Partial<{ system: Partial<FakeForceFieldSystem> }>) => Promise<FakeForceField>;
+            }
+            interface ForceFieldCtor {
+                new (actor: FakeActor, item: FakeForceField): ForceFieldInstance;
+            }
+            interface D100RollResult {
+                total?: number;
+            }
+            interface D100RollClass {
+                test: (options: { target: number; flavor: string; fastForward: boolean }) => Promise<D100RollResult | null>;
+            }
+
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -64,9 +126,9 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             const base = `${'/systems/wh40k-rpg'}/module`;
 
             // ---------- assign-damage-data ----------
-            let assignMod: any;
+            let assignMod: { AssignDamageData: AssignDamageCtor } | null = null;
             try {
-                assignMod = await import(`${base}/rolls/assign-damage-data.js`);
+                assignMod = (await import(`${base}/rolls/assign-damage-data.js`)) as { AssignDamageData: AssignDamageCtor };
             } catch (err) {
                 for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('assign-damage-')))
                     record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
@@ -74,7 +136,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             }
             if (assignMod != null) {
                 const { AssignDamageData } = assignMod;
-                const buildActor = (woundsValue: number): any => ({
+                const buildActor = (woundsValue: number): FakeActor => ({
                     system: {
                         armour: {
                             BODY: { value: 5, toughnessBonus: 3 },
@@ -136,7 +198,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                     // 12 damage - (5 armour + 3 tb) = 4 damage; actor has 10 wounds → all 4 to wounds.
                     record(
                         'assign-damage-finalize-reduces-wounds',
-                        ad.hasDamage === true && ad.damageTaken === 4,
+                        ad.hasDamage && ad.damageTaken === 4,
                         `damageTaken=${ad.damageTaken} hasDamage=${ad.hasDamage}`,
                     );
                 } catch (err) {
@@ -157,7 +219,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                     await ad.finalize();
                     record(
                         'assign-damage-finalize-empty-wounds-criticals',
-                        ad.hasCriticalDamage === true && ad.criticalDamageTaken === 4,
+                        ad.hasCriticalDamage && ad.criticalDamageTaken === 4,
                         `hasCrit=${ad.hasCriticalDamage} crit=${ad.criticalDamageTaken}`,
                     );
                 } catch (err) {
@@ -177,7 +239,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                     await ad.finalize();
                     record(
                         'assign-damage-finalize-fatigue',
-                        ad.hasFatigueDamage === true && ad.fatigueTaken === 3,
+                        ad.hasFatigueDamage && ad.fatigueTaken === 3,
                         `hasFatigue=${ad.hasFatigueDamage} fatigueTaken=${ad.fatigueTaken}`,
                     );
                 } catch (err) {
@@ -186,9 +248,9 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             }
 
             // ---------- force-field-data ----------
-            let ffMod: any;
+            let ffMod: { ForceFieldData: ForceFieldCtor } | null = null;
             try {
-                ffMod = await import(`${base}/rolls/force-field-data.js`);
+                ffMod = (await import(`${base}/rolls/force-field-data.js`)) as { ForceFieldData: ForceFieldCtor };
             } catch (err) {
                 for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('force-field-')))
                     record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
@@ -197,7 +259,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             if (ffMod != null) {
                 const { ForceFieldData } = ffMod;
 
-                const fakeActor: any = {
+                const fakeActor: FakeActor = {
                     system: {},
                     update: async () => {
                         await Promise.resolve();
@@ -206,12 +268,12 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                 // fakeFFShared must be declared before buildFF so the closure captures the reference
                 // rather than the undefined value — reassigned below after buildFF is defined.
                 // eslint-disable-next-line prefer-const -- closure forward-reference requires let
-                let fakeFFShared: any;
-                const buildFF = (craftsmanship: string, rating: number): any => ({
+                let fakeFFShared: FakeForceField;
+                const buildFF = (craftsmanship: string, rating: number): FakeForceField => ({
                     system: { protectionRating: rating, craftsmanship },
-                    update: async (data: any) => {
+                    update: async (data: Partial<{ system: Partial<FakeForceFieldSystem> }>) => {
                         await Promise.resolve();
-                        return Object.assign({}, fakeFFShared, { system: { ...fakeFFShared.system, ...data } });
+                        return Object.assign({}, fakeFFShared, { system: { ...fakeFFShared.system, ...data.system } });
                     },
                 });
                 fakeFFShared = buildFF('Common', 40);
@@ -244,16 +306,16 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                     const ff = new ForceFieldData(fakeActor, buildFF('Common', 100));
                     await ff.finalize();
                     // With protectionRating=100, success should be true (roll ≤ 100).
-                    record('force-field-finalize', ff.success === true && ff.roll !== null, `success=${ff.success} roll=${ff.roll?.total}`);
+                    record('force-field-finalize', ff.success && ff.roll !== null, `success=${ff.success} roll=${ff.roll?.total}`);
                 } catch (err) {
                     record('force-field-finalize', false, err instanceof Error ? err.message : String(err));
                 }
             }
 
             // ---------- d100-roll ----------
-            let d100Mod: any;
+            let d100Mod: { default?: D100RollClass; D100Roll?: D100RollClass } | null = null;
             try {
-                d100Mod = await import(`${base}/dice/d100-roll.js`);
+                d100Mod = (await import(`${base}/dice/d100-roll.js`)) as { default?: D100RollClass; D100Roll?: D100RollClass };
             } catch (err) {
                 record('d100-roll-test', false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 d100Mod = null;
@@ -278,7 +340,6 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

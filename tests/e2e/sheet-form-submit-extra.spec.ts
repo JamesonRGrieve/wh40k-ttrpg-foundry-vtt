@@ -307,8 +307,44 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
         const groupedFlows = groupFlowsBySheet(SHEET_FORM_SUBMIT_EXTRA_FLOWS);
         const result = await page.evaluate(
             async ({ flows, specs, grouped }) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                // Browser-side probe: Foundry globals are runtime-only, so the
+                // doc / sheet / game shapes used here are declared locally.
+                interface FoundrySheet {
+                    submit: (options: { updateData: Record<string, unknown>; preventClose: boolean }) => Promise<void>;
+                    render: (force: boolean) => Promise<void>;
+                    close: () => Promise<void>;
+                }
+                interface FoundryItem {
+                    id: string;
+                    // sheet may be absent before first render; the guard below relies on it.
+                    sheet?: FoundrySheet;
+                    delete: () => Promise<void>;
+                }
+                interface FoundryItemCollection {
+                    get: (id: string) => FoundryItem | undefined;
+                }
+                interface FoundryDoc {
+                    id: string;
+                    sheet?: FoundrySheet;
+                    items: FoundryItemCollection;
+                    createEmbeddedDocuments: (type: string, data: Record<string, unknown>[]) => Promise<FoundryItem[]>;
+                    delete: () => Promise<void>;
+                }
+                interface FoundryActorCollection {
+                    get: (id: string) => FoundryDoc | undefined;
+                }
+                interface FoundryActorClass {
+                    // Runtime can reject/return null on a failed create; keep the union
+                    // so the defensive null checks below stay type-meaningful.
+                    create: (data: { name: string; type: string; system: Record<string, unknown> }) => Promise<FoundryDoc | null>;
+                }
+                interface FoundryGlobal {
+                    // Both may be absent if the world hasn't booted; the guards below rely on it.
+                    Actor?: FoundryActorClass;
+                    game?: { actors: FoundryActorCollection };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side `globalThis` exposes Foundry's runtime Actor + game, no shipped types in this realm
+                const g = globalThis as unknown as FoundryGlobal;
                 const FoundryActor = g.Actor;
                 const foundryGame = g.game;
 
@@ -316,10 +352,12 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                 const notes: Record<string, string> = {};
                 for (const f of flows) fired[f] = false;
 
-                if (FoundryActor?.create == null) {
+                if (FoundryActor?.create == null || foundryGame == null) {
                     for (const f of flows) notes[f] = 'Actor.create unavailable';
                     return { flowsFired: fired, flowNotes: notes };
                 }
+                const ActorCls = FoundryActor;
+                const gameRef = foundryGame;
 
                 // Bounded await with timeout so a single hung render/submit
                 // doesn't tar-pit the whole spec.
@@ -365,17 +403,17 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                  * declared against it. Returns nothing — observed state is
                  * written into `fired` / `notes` by full flow key.
                  */
-                async function probeSheet(slug: string, spec: any, paths: string[]): Promise<void> {
+                async function probeSheet(slug: string, spec: (typeof specs)[string], paths: string[]): Promise<void> {
                     // Build the document (actor or actor-embedded item).
-                    let actor: any = null;
-                    let item: any = null;
-                    let doc: any = null;
-                    let sheet: any = null;
+                    let actor: FoundryDoc | null = null;
+                    let item: FoundryItem | null = null;
+                    let doc: FoundryDoc | FoundryItem | null = null;
+                    let sheet: FoundrySheet | null | undefined = null;
 
                     try {
                         if (spec.kind === 'actor') {
                             actor = await withTimeout(
-                                FoundryActor.create({
+                                ActorCls.create({
                                     name: `${slug}-probe`,
                                     type: spec.type,
                                     system: spec.initialSystem,
@@ -387,21 +425,22 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 for (const p of paths) notes[`${slug}::${p}`] = 'Actor.create returned null';
                                 return;
                             }
+                            const actorId = actor.id;
                             cleanups.push(async () => {
                                 try {
-                                    await foundryGame?.actors?.get?.(actor.id)?.delete?.();
+                                    await gameRef.actors.get(actorId)?.delete();
                                 } catch {
                                     /* ignore */
                                 }
                             });
-                            doc = foundryGame?.actors?.get?.(actor.id) ?? actor;
+                            doc = gameRef.actors.get(actorId) ?? actor;
                             sheet = doc.sheet;
                         } else {
                             // Item path: spin up a temporary host actor (dh2-character)
                             // and embed the item on it so the BaseItemSheet
                             // submits through an actor-owned document.
                             actor = await withTimeout(
-                                FoundryActor.create({
+                                ActorCls.create({
                                     name: `${slug}-host`,
                                     type: 'dh2-character',
                                     system: { gameSystem: spec.embedHostGameSystem },
@@ -413,9 +452,10 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 for (const p of paths) notes[`${slug}::${p}`] = 'host Actor.create returned null';
                                 return;
                             }
+                            const hostId = actor.id;
                             cleanups.push(async () => {
                                 try {
-                                    await foundryGame?.actors?.get?.(actor.id)?.delete?.();
+                                    await gameRef.actors.get(hostId)?.delete();
                                 } catch {
                                     /* ignore */
                                 }
@@ -427,9 +467,9 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 setTimeout(r, 250);
                             });
 
-                            const live = foundryGame?.actors?.get?.(actor.id) ?? actor;
-                            const created = (await withTimeout(
-                                live.createEmbeddedDocuments?.('Item', [
+                            const live = gameRef.actors.get(hostId) ?? actor;
+                            const created = await withTimeout(
+                                live.createEmbeddedDocuments('Item', [
                                     {
                                         name: `${slug}-probe`,
                                         type: spec.type,
@@ -438,16 +478,18 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 ]),
                                 5_000,
                                 `${slug} createEmbeddedDocuments`,
-                            )) as any[];
-                            const createdId = created?.[0]?.id;
-                            item = createdId != null ? live.items.get(createdId) : null;
+                            );
+                            const createdId = created[0]?.id;
+                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: tsconfig.json types created[0]?.id as string|undefined; tsconfig.test (the ESLint program) has the flag off and reports the != null guard as unnecessary
+                            item = createdId != null ? live.items.get(createdId) ?? null : null;
                             if (item == null) {
                                 for (const p of paths) notes[`${slug}::${p}`] = 'createEmbeddedDocuments returned no item';
                                 return;
                             }
+                            const createdItem = item;
                             cleanups.push(async () => {
                                 try {
-                                    await item.delete?.();
+                                    await createdItem.delete();
                                 } catch {
                                     /* ignore */
                                 }
@@ -461,10 +503,12 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                             return;
                         }
 
+                        const liveSheet = sheet;
                         try {
-                            await withTimeout(sheet.render?.(true), 5_000, `${slug} sheet.render`);
+                            await withTimeout(liveSheet.render(true), 5_000, `${slug} sheet.render`);
                         } catch (renderErr) {
-                            for (const p of paths) notes[`${slug}::${p}`] = `sheet.render threw: ${String((renderErr as Error).message)}`;
+                            const renderMsg = renderErr instanceof Error ? renderErr.message : String(renderErr);
+                            for (const p of paths) notes[`${slug}::${p}`] = `sheet.render threw: ${renderMsg}`;
                             return;
                         }
                         // Let PARTS settle into the DOM before we probe.
@@ -481,14 +525,14 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 const updateData: Record<string, unknown> = {};
                                 updateData[path] = next;
 
-                                if (typeof sheet.submit !== 'function') {
+                                if (typeof liveSheet.submit !== 'function') {
                                     notes[key] = 'sheet.submit not a function';
                                     continue;
                                 }
                                 try {
-                                    await withTimeout(sheet.submit({ updateData, preventClose: true }), 5_000, `${slug} sheet.submit ${path}`);
+                                    await withTimeout(liveSheet.submit({ updateData, preventClose: true }), 5_000, `${slug} sheet.submit ${path}`);
                                 } catch (submitErr) {
-                                    notes[key] = `submit threw: ${String((submitErr as Error).message)}`;
+                                    notes[key] = `submit threw: ${submitErr instanceof Error ? submitErr.message : String(submitErr)}`;
                                     continue;
                                 }
                                 // Foundry's submit chain resolves before
@@ -498,10 +542,15 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                     setTimeout(r, 150);
                                 });
 
-                                const refreshed =
-                                    spec.kind === 'actor'
-                                        ? foundryGame?.actors?.get?.(actor.id) ?? doc
-                                        : foundryGame?.actors?.get?.(actor.id)?.items?.get?.(item.id) ?? doc;
+                                // `actor` is guaranteed non-null here (the create
+                                // blocks return early otherwise).
+                                let refreshed: FoundryDoc | FoundryItem | null = doc;
+                                const liveActor = gameRef.actors.get(actor.id);
+                                if (spec.kind === 'actor') {
+                                    refreshed = liveActor ?? doc;
+                                } else if (item !== null) {
+                                    refreshed = liveActor?.items.get(item.id) ?? doc;
+                                }
                                 const after = getPath(refreshed, path);
 
                                 // Boolean: equality. Number: equality after Number() coerce
@@ -523,17 +572,17 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                     notes[key] = `expected ${String(next)} got ${String(after)} (was ${String(before)})`;
                                 }
                             } catch (flowErr) {
-                                notes[key] = `flow threw: ${String((flowErr as Error).message)}`;
+                                notes[key] = `flow threw: ${flowErr instanceof Error ? flowErr.message : String(flowErr)}`;
                             }
                         }
 
                         try {
-                            await sheet.close?.();
+                            await liveSheet.close();
                         } catch {
                             /* ignore */
                         }
                     } catch (outerErr) {
-                        const msg = String((outerErr as Error).message);
+                        const msg = outerErr instanceof Error ? outerErr.message : String(outerErr);
                         for (const p of paths) {
                             const key = `${slug}::${p}`;
                             if (!notes[key]) notes[key] = `sheet probe threw: ${msg}`;
@@ -564,7 +613,6 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                 }
 
                 return { flowsFired: fired, flowNotes: notes };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             { flows: [...SHEET_FORM_SUBMIT_EXTRA_FLOWS], specs: SHEET_SPECS, grouped: groupedFlows },
         );
