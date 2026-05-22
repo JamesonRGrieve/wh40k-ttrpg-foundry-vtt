@@ -194,210 +194,244 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[]; pageErrors
                     }
                 }
 
+                // Each remaining flow is an independent probe. They are
+                // extracted into named inner async helpers (invoked in sequence
+                // below) so this callback's cyclomatic complexity stays low.
+                // Helpers close over `inst`, `uuidNameCache`, the probe vars,
+                // `record`, `errMsg`, and `g` from this callback scope.
+
                 // ── 3. browser-filter-by-pack ─────────────────────────
                 // _getFilteredResults reads system+pack metadata for every
                 // wh40k-rpg pack; restricting via _filters.source exercises
                 // the source-equality branch in _passesFilters.
-                if (inst != null && probePackId != null) {
-                    try {
-                        const allResults = await inst._getFilteredResults();
-                        // Pack the entry's pack id into the source filter via
-                        // a direct call to the _passesFilters branch by
-                        // capturing pack-restricted results.
-                        const filtered = allResults.filter((r) => r.packId === probePackId);
-                        const ok = filtered.length > 0 && filtered.length <= allResults.length;
-                        record('browser-filter-by-pack', ok, ok ? null : `pack filter produced ${filtered.length} / ${allResults.length} results`);
-                    } catch (err) {
-                        record('browser-filter-by-pack', false, `pack filter threw: ${errMsg(err)}`);
+                const flowFilterByPack = async (): Promise<void> => {
+                    if (inst != null && probePackId != null) {
+                        try {
+                            const allResults = await inst._getFilteredResults();
+                            // Pack the entry's pack id into the source filter via
+                            // a direct call to the _passesFilters branch by
+                            // capturing pack-restricted results.
+                            const filtered = allResults.filter((r) => r.packId === probePackId);
+                            const ok = filtered.length > 0 && filtered.length <= allResults.length;
+                            record('browser-filter-by-pack', ok, ok ? null : `pack filter produced ${filtered.length} / ${allResults.length} results`);
+                        } catch (err) {
+                            record('browser-filter-by-pack', false, `pack filter threw: ${errMsg(err)}`);
+                        }
+                    } else if (inst == null) {
+                        record('browser-filter-by-pack', false, 'browser not instantiated');
+                    } else {
+                        record('browser-filter-by-pack', false, 'no probe pack found');
                     }
-                } else if (inst == null) {
-                    record('browser-filter-by-pack', false, 'browser not instantiated');
-                } else {
-                    record('browser-filter-by-pack', false, 'no probe pack found');
-                }
+                };
 
                 // ── 4. browser-filter-by-system ───────────────────────
                 // pack ids on this system are `wh40k-rpg.<prefix>-<rest>`.
                 // Picking a known prefix and restricting the result set
                 // exercises the pack.documentName / pack.metadata.system
                 // filter in _getFilteredResults.
-                if (inst != null) {
-                    try {
-                        const allResults = await inst._getFilteredResults();
-                        const prefixes = new Set<string>();
-                        for (const r of allResults) {
-                            const local = r.packId.split('.')[1] ?? '';
-                            const pfx = local.split('-')[0] ?? '';
-                            if (pfx !== '') prefixes.add(pfx);
-                        }
-                        // Prefer dh2 if present (canonical default); otherwise pick any.
-                        const targetPrefix = prefixes.has('dh2') ? 'dh2' : Array.from(prefixes)[0] ?? '';
-                        if (targetPrefix === '') {
-                            record('browser-filter-by-system', false, 'no pack prefixes discovered');
-                        } else {
-                            const filtered = allResults.filter((r) => {
+                const flowFilterBySystem = async (): Promise<void> => {
+                    if (inst != null) {
+                        try {
+                            const allResults = await inst._getFilteredResults();
+                            const prefixes = new Set<string>();
+                            for (const r of allResults) {
                                 const local = r.packId.split('.')[1] ?? '';
-                                return local.split('-')[0] === targetPrefix;
-                            });
-                            const ok = filtered.length > 0 && filtered.length < allResults.length + 1;
-                            record('browser-filter-by-system', ok, ok ? null : `system-prefix filter produced ${filtered.length} results for ${targetPrefix}`);
+                                const pfx = local.split('-')[0] ?? '';
+                                if (pfx !== '') prefixes.add(pfx);
+                            }
+                            // Prefer dh2 if present (canonical default); otherwise pick any.
+                            const targetPrefix = prefixes.has('dh2') ? 'dh2' : Array.from(prefixes)[0] ?? '';
+                            if (targetPrefix === '') {
+                                record('browser-filter-by-system', false, 'no pack prefixes discovered');
+                            } else {
+                                const filtered = allResults.filter((r) => {
+                                    const local = r.packId.split('.')[1] ?? '';
+                                    return local.split('-')[0] === targetPrefix;
+                                });
+                                const ok = filtered.length > 0 && filtered.length < allResults.length + 1;
+                                record(
+                                    'browser-filter-by-system',
+                                    ok,
+                                    ok ? null : `system-prefix filter produced ${filtered.length} results for ${targetPrefix}`,
+                                );
+                            }
+                        } catch (err) {
+                            record('browser-filter-by-system', false, `system filter threw: ${errMsg(err)}`);
                         }
-                    } catch (err) {
-                        record('browser-filter-by-system', false, `system filter threw: ${errMsg(err)}`);
+                    } else {
+                        record('browser-filter-by-system', false, 'browser not instantiated');
                     }
-                } else {
-                    record('browser-filter-by-system', false, 'browser not instantiated');
-                }
+                };
 
                 // ── 5. browser-search-by-name ─────────────────────────
                 // Drive _onSearch then _getFilteredResults so the
                 // _passesFilters search branch is executed.
-                if (inst != null && probeItemName != null) {
-                    try {
-                        const term = probeItemName.slice(0, Math.min(4, probeItemName.length)).toLowerCase();
-                        // call _onSearch with a synthetic InputEvent
-                        // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic InputEvent stub for a Foundry handler; only the read `target.value` member is present
-                        const evt = { target: { value: term } } as unknown as InputEvent;
-                        inst._onSearch(evt);
-                        // wait for the re-render the handler schedules
-                        await new Promise((r) => {
-                            setTimeout(r, 60);
-                        });
-                        const searchResults = await inst._getFilteredResults();
-                        const ok = searchResults.length > 0 && searchResults.every((r) => r.name.toLowerCase().includes(term));
-                        record('browser-search-by-name', ok, ok ? null : `search '${term}' matched ${searchResults.length} (mismatch in name filter)`);
-                        // reset for downstream flows
-                        inst._filters.search = '';
-                    } catch (err) {
-                        record('browser-search-by-name', false, `search threw: ${errMsg(err)}`);
+                const flowSearchByName = async (): Promise<void> => {
+                    if (inst != null && probeItemName != null) {
+                        // Capture into a const so the post-await reset below isn't a
+                        // race-prone write to a `let` referenced across an await.
+                        const liveInst = inst;
+                        try {
+                            const term = probeItemName.slice(0, Math.min(4, probeItemName.length)).toLowerCase();
+                            // call _onSearch with a synthetic InputEvent
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic InputEvent stub for a Foundry handler; only the read `target.value` member is present
+                            const evt = { target: { value: term } } as unknown as InputEvent;
+                            liveInst._onSearch(evt);
+                            // wait for the re-render the handler schedules
+                            await new Promise((r) => {
+                                setTimeout(r, 60);
+                            });
+                            const searchResults = await liveInst._getFilteredResults();
+                            const ok = searchResults.length > 0 && searchResults.every((r) => r.name.toLowerCase().includes(term));
+                            record('browser-search-by-name', ok, ok ? null : `search '${term}' matched ${searchResults.length} (mismatch in name filter)`);
+                            // reset for downstream flows
+                            liveInst._filters.search = '';
+                        } catch (err) {
+                            record('browser-search-by-name', false, `search threw: ${errMsg(err)}`);
+                        }
+                    } else {
+                        record('browser-search-by-name', false, inst == null ? 'browser not instantiated' : 'no probe item');
                     }
-                } else {
-                    record('browser-search-by-name', false, inst == null ? 'browser not instantiated' : 'no probe item');
-                }
+                };
 
                 // ── 6. browser-select-result ──────────────────────────
                 // Invoke _onItemClick with a fake event whose currentTarget
                 // carries the uuid dataset; _onItemClick then resolves the
                 // doc and renders its sheet. Source-coverage goal: the
                 // uuid-dispatch branch + the fromUuid await.
-                if (inst != null && probeItemUuid != null) {
-                    try {
-                        const fakeTarget = document.createElement('div');
-                        fakeTarget.dataset['uuid'] = probeItemUuid;
-                        const fakeEvent = {
-                            preventDefault: (): void => {
-                                /* no-op */
-                            },
-                            currentTarget: fakeTarget,
-                            // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic PointerEvent stub passed to a Foundry handler; only the two used members are present
-                        } as unknown as PointerEvent;
-                        await inst._onItemClick(fakeEvent);
-                        await new Promise((r) => {
-                            setTimeout(r, 60);
-                        });
-                        // Either the sheet rendered (best case) or fromUuid
-                        // returned without throwing — both indicate the
-                        // _onItemClick path executed end-to-end.
-                        record('browser-select-result', true, null);
-                        // Best-effort: close any opened sheets so they don't
-                        // pile up across the test.
-                        const wins = Object.values(g.ui?.windows ?? {});
-                        for (const w of wins) {
-                            const id: string = w.id ?? '';
-                            if (id.includes('Item') || id.includes('item-sheet') || id.startsWith('app-')) {
-                                try {
-                                    await w.close?.();
-                                } catch {
-                                    /* ignore */
+                const flowSelectResult = async (): Promise<void> => {
+                    if (inst != null && probeItemUuid != null) {
+                        try {
+                            const fakeTarget = document.createElement('div');
+                            fakeTarget.dataset['uuid'] = probeItemUuid;
+                            const fakeEvent = {
+                                preventDefault: (): void => {
+                                    /* no-op */
+                                },
+                                currentTarget: fakeTarget,
+                                // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic PointerEvent stub passed to a Foundry handler; only the two used members are present
+                            } as unknown as PointerEvent;
+                            await inst._onItemClick(fakeEvent);
+                            await new Promise((r) => {
+                                setTimeout(r, 60);
+                            });
+                            // Either the sheet rendered (best case) or fromUuid
+                            // returned without throwing — both indicate the
+                            // _onItemClick path executed end-to-end.
+                            record('browser-select-result', true, null);
+                            // Best-effort: close any opened sheets so they don't
+                            // pile up across the test.
+                            const wins = Object.values(g.ui?.windows ?? {});
+                            for (const w of wins) {
+                                const id: string = w.id ?? '';
+                                if (id.includes('Item') || id.includes('item-sheet') || id.startsWith('app-')) {
+                                    try {
+                                        await w.close?.();
+                                    } catch {
+                                        /* ignore */
+                                    }
                                 }
                             }
+                        } catch (err) {
+                            record('browser-select-result', false, `_onItemClick threw: ${errMsg(err)}`);
                         }
-                    } catch (err) {
-                        record('browser-select-result', false, `_onItemClick threw: ${errMsg(err)}`);
+                    } else {
+                        record('browser-select-result', false, inst == null ? 'browser not instantiated' : 'no probe item uuid');
                     }
-                } else {
-                    record('browser-select-result', false, inst == null ? 'browser not instantiated' : 'no probe item uuid');
-                }
-
-                await closeBrowserWindow(inst);
+                };
 
                 // ── 7. uuid-cache-resolves-name ───────────────────────
-                if (uuidNameCache != null && probeItemUuid != null && probeItemName != null) {
-                    try {
-                        // Seed the cache if it's not yet warm.
-                        if (uuidNameCache.isReady?.() !== true) {
-                            await uuidNameCache.build();
+                const flowCacheResolvesName = async (): Promise<void> => {
+                    if (uuidNameCache != null && probeItemUuid != null && probeItemName != null) {
+                        try {
+                            // Seed the cache if it's not yet warm.
+                            if (uuidNameCache.isReady?.() !== true) {
+                                await uuidNameCache.build();
+                            }
+                            let resolved = uuidNameCache.getName(probeItemUuid);
+                            // The pack uuid layout encodes the document-type
+                            // segment between pack.metadata.id and the doc id;
+                            // accept either the exact stored form or one with
+                            // the Item segment if the cache's stored uuid form
+                            // differs from the locally constructed one.
+                            if (resolved === '[broken link]') {
+                                // Try forcing a rebuild then re-query, since the
+                                // initial `ready` build may have raced with the
+                                // pack we just queried for the probe uuid.
+                                await uuidNameCache.build();
+                                resolved = uuidNameCache.getName(probeItemUuid);
+                            }
+                            const ok = resolved === probeItemName;
+                            record(
+                                'uuid-cache-resolves-name',
+                                ok,
+                                ok ? null : `getName returned ${JSON.stringify(resolved)} (expected ${JSON.stringify(probeItemName)})`,
+                            );
+                        } catch (err) {
+                            record('uuid-cache-resolves-name', false, `getName threw: ${errMsg(err)}`);
                         }
-                        let resolved = uuidNameCache.getName(probeItemUuid);
-                        // The pack uuid layout encodes the document-type
-                        // segment between pack.metadata.id and the doc id;
-                        // accept either the exact stored form or one with
-                        // the Item segment if the cache's stored uuid form
-                        // differs from the locally constructed one.
-                        if (resolved === '[broken link]') {
-                            // Try forcing a rebuild then re-query, since the
-                            // initial `ready` build may have raced with the
-                            // pack we just queried for the probe uuid.
-                            await uuidNameCache.build();
-                            resolved = uuidNameCache.getName(probeItemUuid);
-                        }
-                        const ok = resolved === probeItemName;
-                        record(
-                            'uuid-cache-resolves-name',
-                            ok,
-                            ok ? null : `getName returned ${JSON.stringify(resolved)} (expected ${JSON.stringify(probeItemName)})`,
-                        );
-                    } catch (err) {
-                        record('uuid-cache-resolves-name', false, `getName threw: ${errMsg(err)}`);
+                    } else {
+                        record('uuid-cache-resolves-name', false, uuidNameCache == null ? 'cache not loaded' : 'no probe uuid');
                     }
-                } else {
-                    record('uuid-cache-resolves-name', false, uuidNameCache == null ? 'cache not loaded' : 'no probe uuid');
-                }
+                };
 
                 // ── 8. uuid-cache-expand-templates ────────────────────
-                if (uuidNameCache != null && probeItemUuid != null && probeItemName != null) {
-                    try {
-                        const input = `prereq: {{${probeItemUuid}}} required`;
-                        const expanded: string = uuidNameCache.expandTemplates(input);
-                        const ok = expanded.includes(probeItemName) && !expanded.includes('{{Compendium.');
-                        // Also drive the early-return branch (no token in text).
-                        const passthrough: string = uuidNameCache.expandTemplates('plain text with no tokens');
-                        const passthroughOk = passthrough === 'plain text with no tokens';
-                        record(
-                            'uuid-cache-expand-templates',
-                            ok && passthroughOk,
-                            ok && passthroughOk ? null : `expand=${JSON.stringify(expanded)} passthroughOk=${passthroughOk}`,
-                        );
-                    } catch (err) {
-                        record('uuid-cache-expand-templates', false, `expandTemplates threw: ${errMsg(err)}`);
+                const flowCacheExpandTemplates = (): void => {
+                    if (uuidNameCache != null && probeItemUuid != null && probeItemName != null) {
+                        try {
+                            const input = `prereq: {{${probeItemUuid}}} required`;
+                            const expanded: string = uuidNameCache.expandTemplates(input);
+                            const ok = expanded.includes(probeItemName) && !expanded.includes('{{Compendium.');
+                            // Also drive the early-return branch (no token in text).
+                            const passthrough: string = uuidNameCache.expandTemplates('plain text with no tokens');
+                            const passthroughOk = passthrough === 'plain text with no tokens';
+                            record(
+                                'uuid-cache-expand-templates',
+                                ok && passthroughOk,
+                                ok && passthroughOk ? null : `expand=${JSON.stringify(expanded)} passthroughOk=${passthroughOk}`,
+                            );
+                        } catch (err) {
+                            record('uuid-cache-expand-templates', false, `expandTemplates threw: ${errMsg(err)}`);
+                        }
+                    } else {
+                        record('uuid-cache-expand-templates', false, uuidNameCache == null ? 'cache not loaded' : 'no probe uuid');
                     }
-                } else {
-                    record('uuid-cache-expand-templates', false, uuidNameCache == null ? 'cache not loaded' : 'no probe uuid');
-                }
+                };
 
                 // ── 9. uuid-cache-warm ────────────────────────────────
                 // Rebuild the cache, then time a second lookup vs a known-
                 // missing uuid. The assertion is: after build() the cache
                 // reports ready, the probe uuid resolves to its name, and a
                 // bogus uuid returns the BROKEN sentinel.
-                if (uuidNameCache != null) {
-                    try {
-                        await uuidNameCache.build();
-                        const ready = uuidNameCache.isReady?.() === true;
-                        const bogus = uuidNameCache.getName('Compendium.wh40k-rpg.does-not-exist.Item.deadbeefdeadbeef');
-                        const bogusOk = bogus === '[broken link]';
-                        let hot = true;
-                        if (probeItemUuid != null && probeItemName != null) {
-                            hot = uuidNameCache.getName(probeItemUuid) === probeItemName;
+                const flowCacheWarm = async (): Promise<void> => {
+                    if (uuidNameCache != null) {
+                        try {
+                            await uuidNameCache.build();
+                            const ready = uuidNameCache.isReady?.() === true;
+                            const bogus = uuidNameCache.getName('Compendium.wh40k-rpg.does-not-exist.Item.deadbeefdeadbeef');
+                            const bogusOk = bogus === '[broken link]';
+                            let hot = true;
+                            if (probeItemUuid != null && probeItemName != null) {
+                                hot = uuidNameCache.getName(probeItemUuid) === probeItemName;
+                            }
+                            const ok = ready && bogusOk && hot;
+                            record('uuid-cache-warm', ok, ok ? null : `ready=${ready} bogusOk=${bogusOk} hot=${hot}`);
+                        } catch (err) {
+                            record('uuid-cache-warm', false, `build threw: ${errMsg(err)}`);
                         }
-                        const ok = ready && bogusOk && hot;
-                        record('uuid-cache-warm', ok, ok ? null : `ready=${ready} bogusOk=${bogusOk} hot=${hot}`);
-                    } catch (err) {
-                        record('uuid-cache-warm', false, `build threw: ${errMsg(err)}`);
+                    } else {
+                        record('uuid-cache-warm', false, 'cache not loaded');
                     }
-                } else {
-                    record('uuid-cache-warm', false, 'cache not loaded');
-                }
+                };
+
+                await flowFilterByPack();
+                await flowFilterBySystem();
+                await flowSearchByName();
+                await flowSelectResult();
+                await closeBrowserWindow(inst);
+                await flowCacheResolvesName();
+                flowCacheExpandTemplates();
+                await flowCacheWarm();
 
                 return out;
             },

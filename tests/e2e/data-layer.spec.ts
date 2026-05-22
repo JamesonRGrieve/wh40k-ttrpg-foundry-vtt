@@ -132,136 +132,144 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
             const base = `${'/systems/wh40k-rpg'}/module`;
 
             // ---------- MappingField ----------
-            try {
-                const mod = (await import(`${base}/data/fields/mapping-field.js`)) as { default: MappingFieldCtor };
-                const MappingField = mod.default;
-                if (typeof MappingField !== 'function') {
+            async function probeMappingField(): Promise<void> {
+                try {
+                    const mod = (await import(`${base}/data/fields/mapping-field.js`)) as { default: MappingFieldCtor };
+                    const MappingField = mod.default;
+                    if (typeof MappingField !== 'function') {
+                        for (const k of ['mapping-field-construct', 'mapping-field-getInitialValue', 'mapping-field-cleanType'] as const) {
+                            record(k, false, 'MappingField default export missing');
+                        }
+                    } else {
+                        const inner = new g.foundry.data.fields.StringField({ required: true });
+                        try {
+                            const field = new MappingField(inner, { initialKeys: ['weaponSkill', 'ballisticSkill'] });
+                            record(
+                                'mapping-field-construct',
+                                field instanceof MappingField && field.initialKeys?.length === 2,
+                                `keys=${JSON.stringify(field.initialKeys)}`,
+                            );
+                        } catch (err) {
+                            record('mapping-field-construct', false, String((err as Error).message));
+                        }
+                        try {
+                            const field = new MappingField(inner, { initialKeys: ['head', 'body'] });
+                            const initial = field.getInitialValue({});
+                            // initialKeys should seed the map with empty entries.
+                            const ok = typeof initial === 'object' && Object.keys(initial).length >= 0;
+                            record('mapping-field-getInitialValue', ok, `initial=${JSON.stringify(initial)}`);
+                        } catch (err) {
+                            record('mapping-field-getInitialValue', false, String((err as Error).message));
+                        }
+                        try {
+                            const field = new MappingField(inner, {});
+                            const cleaned = field._cleanType({ a: 'foo', b: 'bar' }, {});
+                            record(
+                                'mapping-field-cleanType',
+                                typeof cleaned === 'object' && 'a' in cleaned && 'b' in cleaned,
+                                `cleaned=${JSON.stringify(cleaned)}`,
+                            );
+                        } catch (err) {
+                            record('mapping-field-cleanType', false, String((err as Error).message));
+                        }
+                    }
+                } catch (err) {
                     for (const k of ['mapping-field-construct', 'mapping-field-getInitialValue', 'mapping-field-cleanType'] as const) {
-                        record(k, false, 'MappingField default export missing');
+                        record(k, false, `import: ${String((err as Error).message)}`);
                     }
-                } else {
-                    const inner = new g.foundry.data.fields.StringField({ required: true });
-                    try {
-                        const field = new MappingField(inner, { initialKeys: ['weaponSkill', 'ballisticSkill'] });
-                        record(
-                            'mapping-field-construct',
-                            field instanceof MappingField && field.initialKeys?.length === 2,
-                            `keys=${JSON.stringify(field.initialKeys)}`,
-                        );
-                    } catch (err) {
-                        record('mapping-field-construct', false, String((err as Error).message));
-                    }
-                    try {
-                        const field = new MappingField(inner, { initialKeys: ['head', 'body'] });
-                        const initial = field.getInitialValue({});
-                        // initialKeys should seed the map with empty entries.
-                        const ok = typeof initial === 'object' && Object.keys(initial).length >= 0;
-                        record('mapping-field-getInitialValue', ok, `initial=${JSON.stringify(initial)}`);
-                    } catch (err) {
-                        record('mapping-field-getInitialValue', false, String((err as Error).message));
-                    }
-                    try {
-                        const field = new MappingField(inner, {});
-                        const cleaned = field._cleanType({ a: 'foo', b: 'bar' }, {});
-                        record(
-                            'mapping-field-cleanType',
-                            typeof cleaned === 'object' && 'a' in cleaned && 'b' in cleaned,
-                            `cleaned=${JSON.stringify(cleaned)}`,
-                        );
-                    } catch (err) {
-                        record('mapping-field-cleanType', false, String((err as Error).message));
-                    }
-                }
-            } catch (err) {
-                for (const k of ['mapping-field-construct', 'mapping-field-getInitialValue', 'mapping-field-cleanType'] as const) {
-                    record(k, false, `import: ${String((err as Error).message)}`);
                 }
             }
 
             // ---------- config/advancements ----------
-            try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic runtime import() of a built .js module in the browser realm; no shipped types
-                const advMod: unknown = await import(`${base}/config/advancements/index.js`);
-                const mod = advMod as AdvancementsModule;
-
+            async function probeAdvancements(): Promise<void> {
                 try {
-                    const careers = mod.getAvailableCareers();
-                    record(
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic runtime import() of a built .js module in the browser realm; no shipped types
+                    const advMod: unknown = await import(`${base}/config/advancements/index.js`);
+                    const mod = advMod as AdvancementsModule;
+
+                    try {
+                        const careers = mod.getAvailableCareers();
+                        record(
+                            'advancements-getAvailableCareers',
+                            Array.isArray(careers) && careers.length > 0 && typeof careers[0]?.key === 'string',
+                            `count=${careers.length}`,
+                        );
+                    } catch (err) {
+                        record('advancements-getAvailableCareers', false, err instanceof Error ? err.message : String(err));
+                    }
+
+                    let firstCareerKey: string | null = null;
+                    try {
+                        const careers = mod.getAvailableCareers();
+                        firstCareerKey = careers[0]?.key ?? null;
+                        // getCareerKeyFromName uses fuzzy lookup; accept a string
+                        // return (the canonical key) OR null (when the registry's
+                        // display name doesn't map back). The branch coverage we
+                        // care about is the lookup itself, not the resolution.
+                        // getCareerKeyFromName returns string | null; the branch
+                        // coverage we care about is the lookup running without
+                        // throwing, so a successful return is the success signal.
+                        const resolved = mod.getCareerKeyFromName(careers[0]?.name ?? 'imaginary');
+                        record('advancements-getCareerKeyFromName', true, `resolved=${resolved} firstKey=${firstCareerKey}`);
+                    } catch (err) {
+                        record('advancements-getCareerKeyFromName', false, err instanceof Error ? err.message : String(err));
+                    }
+
+                    try {
+                        const yes = mod.hasCareer(firstCareerKey ?? 'rogueTrader');
+                        const no = mod.hasCareer('imaginary-career-zzz');
+                        record('advancements-hasCareer', yes && !no, `yes=${String(yes)} no=${String(no)}`);
+                    } catch (err) {
+                        record('advancements-hasCareer', false, err instanceof Error ? err.message : String(err));
+                    }
+
+                    try {
+                        const career = mod.getCareerAdvancements(firstCareerKey ?? 'rogueTrader');
+                        record('advancements-getCareerAdvancements', career !== null && typeof career === 'object', `type=${typeof career}`);
+                    } catch (err) {
+                        record('advancements-getCareerAdvancements', false, err instanceof Error ? err.message : String(err));
+                    }
+
+                    try {
+                        const costs = mod.getCharacteristicCosts(firstCareerKey ?? 'rogueTrader');
+                        record('advancements-getCharacteristicCosts', costs !== null && typeof costs === 'object', `type=${typeof costs}`);
+                    } catch (err) {
+                        record('advancements-getCharacteristicCosts', false, err instanceof Error ? err.message : String(err));
+                    }
+
+                    try {
+                        const ranks = mod.getRankAdvancements(firstCareerKey ?? 'rogueTrader', 1);
+                        record(
+                            'advancements-getRankAdvancements',
+                            ranks === null || Array.isArray(ranks),
+                            `type=${Array.isArray(ranks) ? 'array' : typeof ranks}`,
+                        );
+                    } catch (err) {
+                        record('advancements-getRankAdvancements', false, err instanceof Error ? err.message : String(err));
+                    }
+
+                    try {
+                        const next = mod.getNextCharacteristicCost(firstCareerKey ?? 'rogueTrader', 'weaponSkill', 0);
+                        record(
+                            'advancements-getNextCharacteristicCost',
+                            next === null || (typeof next === 'object' && typeof next.cost === 'number'),
+                            `next=${JSON.stringify(next)}`,
+                        );
+                    } catch (err) {
+                        record('advancements-getNextCharacteristicCost', false, err instanceof Error ? err.message : String(err));
+                    }
+                } catch (err) {
+                    for (const k of [
                         'advancements-getAvailableCareers',
-                        Array.isArray(careers) && careers.length > 0 && typeof careers[0]?.key === 'string',
-                        `count=${careers.length}`,
-                    );
-                } catch (err) {
-                    record('advancements-getAvailableCareers', false, err instanceof Error ? err.message : String(err));
-                }
-
-                let firstCareerKey: string | null = null;
-                try {
-                    const careers = mod.getAvailableCareers();
-                    firstCareerKey = careers[0]?.key ?? null;
-                    // getCareerKeyFromName uses fuzzy lookup; accept a string
-                    // return (the canonical key) OR null (when the registry's
-                    // display name doesn't map back). The branch coverage we
-                    // care about is the lookup itself, not the resolution.
-                    // getCareerKeyFromName returns string | null; the branch
-                    // coverage we care about is the lookup running without
-                    // throwing, so a successful return is the success signal.
-                    const resolved = mod.getCareerKeyFromName(careers[0]?.name ?? 'imaginary');
-                    record('advancements-getCareerKeyFromName', true, `resolved=${resolved} firstKey=${firstCareerKey}`);
-                } catch (err) {
-                    record('advancements-getCareerKeyFromName', false, err instanceof Error ? err.message : String(err));
-                }
-
-                try {
-                    const yes = mod.hasCareer(firstCareerKey ?? 'rogueTrader');
-                    const no = mod.hasCareer('imaginary-career-zzz');
-                    record('advancements-hasCareer', yes && !no, `yes=${String(yes)} no=${String(no)}`);
-                } catch (err) {
-                    record('advancements-hasCareer', false, err instanceof Error ? err.message : String(err));
-                }
-
-                try {
-                    const career = mod.getCareerAdvancements(firstCareerKey ?? 'rogueTrader');
-                    record('advancements-getCareerAdvancements', career !== null && typeof career === 'object', `type=${typeof career}`);
-                } catch (err) {
-                    record('advancements-getCareerAdvancements', false, err instanceof Error ? err.message : String(err));
-                }
-
-                try {
-                    const costs = mod.getCharacteristicCosts(firstCareerKey ?? 'rogueTrader');
-                    record('advancements-getCharacteristicCosts', costs !== null && typeof costs === 'object', `type=${typeof costs}`);
-                } catch (err) {
-                    record('advancements-getCharacteristicCosts', false, err instanceof Error ? err.message : String(err));
-                }
-
-                try {
-                    const ranks = mod.getRankAdvancements(firstCareerKey ?? 'rogueTrader', 1);
-                    record('advancements-getRankAdvancements', ranks === null || Array.isArray(ranks), `type=${Array.isArray(ranks) ? 'array' : typeof ranks}`);
-                } catch (err) {
-                    record('advancements-getRankAdvancements', false, err instanceof Error ? err.message : String(err));
-                }
-
-                try {
-                    const next = mod.getNextCharacteristicCost(firstCareerKey ?? 'rogueTrader', 'weaponSkill', 0);
-                    record(
+                        'advancements-getCareerKeyFromName',
+                        'advancements-hasCareer',
+                        'advancements-getCareerAdvancements',
+                        'advancements-getCharacteristicCosts',
+                        'advancements-getRankAdvancements',
                         'advancements-getNextCharacteristicCost',
-                        next === null || (typeof next === 'object' && typeof next.cost === 'number'),
-                        `next=${JSON.stringify(next)}`,
-                    );
-                } catch (err) {
-                    record('advancements-getNextCharacteristicCost', false, err instanceof Error ? err.message : String(err));
-                }
-            } catch (err) {
-                for (const k of [
-                    'advancements-getAvailableCareers',
-                    'advancements-getCareerKeyFromName',
-                    'advancements-hasCareer',
-                    'advancements-getCareerAdvancements',
-                    'advancements-getCharacteristicCosts',
-                    'advancements-getRankAdvancements',
-                    'advancements-getNextCharacteristicCost',
-                ] as const) {
-                    record(k, false, `import: ${String((err as Error).message)}`);
+                    ] as const) {
+                        record(k, false, `import: ${String((err as Error).message)}`);
+                    }
                 }
             }
 
@@ -269,84 +277,91 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
             // Both grants need an actor + grant-instance with synthetic
             // options/resources. Seed a dh2-character and construct each
             // grant via its DataModel; call _applyGrant directly.
-            let actor: ActorInstance | undefined;
-            try {
-                actor = await ActorCls.create({
-                    name: 'data-layer-spec-actor',
-                    type: 'dh2-character',
-                    system: { gameSystem: 'dh2e' },
-                });
-            } catch {
-                /* per-flow failures below */
-            }
-
-            try {
-                const cgMod = (await import(`${base}/data/grant/choice-grant.js`)) as { default: GrantCtor };
-                const ChoiceGrantData = cgMod.default;
-                if (typeof ChoiceGrantData !== 'function') {
-                    for (const k of ['choice-grant-applyEmpty', 'choice-grant-applyDuplicateRejected'] as const) record(k, false, 'ChoiceGrantData missing');
-                } else {
-                    try {
-                        // Empty options branch — should populate notifications,
-                        // not errors.
-                        const grant = new ChoiceGrantData({ options: [], count: 0, optional: true, allowDuplicates: false });
-                        const result = grant._initResult();
-                        await grant._applyGrant(actor, {}, {}, result);
-                        record('choice-grant-applyEmpty', result.errors.length === 0, `errors=${JSON.stringify(result.errors)}`);
-                    } catch (err) {
-                        record('choice-grant-applyEmpty', false, err instanceof Error ? err.message : String(err));
-                    }
-                    try {
-                        // Duplicate-selection rejection — when allowDuplicates=false
-                        // and the same option is selected twice, errors should
-                        // include the rejection.
-                        const grant = new ChoiceGrantData({
-                            options: [
-                                { label: 'A', grants: [] },
-                                { label: 'B', grants: [] },
-                            ],
-                            count: 2,
-                            optional: false,
-                            allowDuplicates: false,
-                        });
-                        const result = grant._initResult();
-                        await grant._applyGrant(actor, { selected: ['A', 'A'] }, {}, result);
-                        record('choice-grant-applyDuplicateRejected', result.errors.length >= 1, `errors=${JSON.stringify(result.errors)}`);
-                    } catch (err) {
-                        record('choice-grant-applyDuplicateRejected', false, err instanceof Error ? err.message : String(err));
-                    }
+            async function probeGrants(): Promise<void> {
+                let actor: ActorInstance | undefined;
+                try {
+                    actor = await ActorCls.create({
+                        name: 'data-layer-spec-actor',
+                        type: 'dh2-character',
+                        system: { gameSystem: 'dh2e' },
+                    });
+                } catch {
+                    /* per-flow failures below */
                 }
-            } catch (err) {
-                for (const k of ['choice-grant-applyEmpty', 'choice-grant-applyDuplicateRejected'] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
-                }
-            }
 
-            try {
-                const rgMod = (await import(`${base}/data/grant/resource-grant.js`)) as { default: GrantCtor };
-                const ResourceGrantData = rgMod.default;
-                if (typeof ResourceGrantData !== 'function') {
-                    record('resource-grant-applyEmpty', false, 'ResourceGrantData missing');
-                } else {
-                    try {
-                        const grant = new ResourceGrantData({ resources: [], optional: true });
-                        const result = grant._initResult();
-                        await grant._applyGrant(actor, {}, {}, result);
-                        // Empty resources is a no-op: no errors, may have notifications.
-                        record('resource-grant-applyEmpty', result.errors.length === 0, `errors=${JSON.stringify(result.errors)}`);
-                    } catch (err) {
-                        record('resource-grant-applyEmpty', false, err instanceof Error ? err.message : String(err));
+                try {
+                    const cgMod = (await import(`${base}/data/grant/choice-grant.js`)) as { default: GrantCtor };
+                    const ChoiceGrantData = cgMod.default;
+                    if (typeof ChoiceGrantData !== 'function') {
+                        for (const k of ['choice-grant-applyEmpty', 'choice-grant-applyDuplicateRejected'] as const)
+                            record(k, false, 'ChoiceGrantData missing');
+                    } else {
+                        try {
+                            // Empty options branch — should populate notifications,
+                            // not errors.
+                            const grant = new ChoiceGrantData({ options: [], count: 0, optional: true, allowDuplicates: false });
+                            const result = grant._initResult();
+                            await grant._applyGrant(actor, {}, {}, result);
+                            record('choice-grant-applyEmpty', result.errors.length === 0, `errors=${JSON.stringify(result.errors)}`);
+                        } catch (err) {
+                            record('choice-grant-applyEmpty', false, err instanceof Error ? err.message : String(err));
+                        }
+                        try {
+                            // Duplicate-selection rejection — when allowDuplicates=false
+                            // and the same option is selected twice, errors should
+                            // include the rejection.
+                            const grant = new ChoiceGrantData({
+                                options: [
+                                    { label: 'A', grants: [] },
+                                    { label: 'B', grants: [] },
+                                ],
+                                count: 2,
+                                optional: false,
+                                allowDuplicates: false,
+                            });
+                            const result = grant._initResult();
+                            await grant._applyGrant(actor, { selected: ['A', 'A'] }, {}, result);
+                            record('choice-grant-applyDuplicateRejected', result.errors.length >= 1, `errors=${JSON.stringify(result.errors)}`);
+                        } catch (err) {
+                            record('choice-grant-applyDuplicateRejected', false, err instanceof Error ? err.message : String(err));
+                        }
+                    }
+                } catch (err) {
+                    for (const k of ['choice-grant-applyEmpty', 'choice-grant-applyDuplicateRejected'] as const) {
+                        record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                     }
                 }
-            } catch (err) {
-                record('resource-grant-applyEmpty', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+
+                try {
+                    const rgMod = (await import(`${base}/data/grant/resource-grant.js`)) as { default: GrantCtor };
+                    const ResourceGrantData = rgMod.default;
+                    if (typeof ResourceGrantData !== 'function') {
+                        record('resource-grant-applyEmpty', false, 'ResourceGrantData missing');
+                    } else {
+                        try {
+                            const grant = new ResourceGrantData({ resources: [], optional: true });
+                            const result = grant._initResult();
+                            await grant._applyGrant(actor, {}, {}, result);
+                            // Empty resources is a no-op: no errors, may have notifications.
+                            record('resource-grant-applyEmpty', result.errors.length === 0, `errors=${JSON.stringify(result.errors)}`);
+                        } catch (err) {
+                            record('resource-grant-applyEmpty', false, err instanceof Error ? err.message : String(err));
+                        }
+                    }
+                } catch (err) {
+                    record('resource-grant-applyEmpty', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                }
+
+                try {
+                    await actor?.delete();
+                } catch {
+                    /* ignore */
+                }
             }
 
-            try {
-                await actor?.delete();
-            } catch {
-                /* ignore */
-            }
+            await probeMappingField();
+            await probeAdvancements();
+            await probeGrants();
 
             return out;
         });

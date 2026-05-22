@@ -229,374 +229,389 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         record('registry-getOrNull-and-has', false, `threw: ${String((err as Error).message)}`);
                     }
 
-                    // ── themeClassFor::<id> (7 keys) ───────────────────────
-                    // For each system, all three roles emit the role-prefixed
-                    // utility class and the suffix matches the config.theme
-                    // token (named palette ref, never raw hex).
-                    for (const id of ids) {
-                        try {
-                            const cfg = Registry.get(id);
-                            const theme = cfg?.theme;
-                            const checks: boolean[] = [];
-                            const detailParts: string[] = [];
-                            for (const role of ['primary', 'accent', 'border'] as const) {
-                                const cls = themeClassFor(id, role);
-                                const expectedPrefix = rolePrefix[role];
-                                const token = theme?.[role] ?? '';
-                                const okPrefix = typeof cls === 'string' && cls.startsWith(expectedPrefix);
-                                const okSuffix = token !== '' && cls === `${expectedPrefix}${token}`;
-                                // Tokens are palette names, not hex — reject a leading '#'.
-                                const noHex = typeof token === 'string' && !token.startsWith('#');
-                                checks.push(okPrefix && okSuffix && noHex);
-                                detailParts.push(`${role}=${cls}(token=${token})`);
-                            }
-                            record(`themeClassFor::${id}`, checks.every(Boolean), detailParts.join(' '));
-                        } catch (err) {
-                            record(`themeClassFor::${id}`, false, `threw: ${String((err as Error).message)}`);
-                        }
-                    }
-
-                    // ── config-identity::<id> (7 keys) ─────────────────────
-                    // Each config exposes a non-empty WH40K.* label, a
-                    // non-empty cssClass, and the usesAptitudes /
-                    // usesCareerTables flags are mutually exclusive and match
-                    // the family the system belongs to.
-                    for (const id of ids) {
-                        try {
-                            const cfg = Registry.get(id);
-                            const labelOk = typeof cfg?.label === 'string' && cfg.label.startsWith('WH40K.');
-                            const cssOk = typeof cfg?.cssClass === 'string' && cfg.cssClass.length > 0;
-                            const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
-                            const isCareer = (careerSystems as readonly string[]).includes(id);
-                            const flagsExclusive = cfg?.usesAptitudes !== cfg?.usesCareerTables;
-                            const familyOk = isAptitude
-                                ? cfg?.usesAptitudes === true && !cfg.usesCareerTables
-                                : isCareer
-                                ? cfg?.usesCareerTables === true && !cfg.usesAptitudes
-                                : false;
-                            record(
-                                `config-identity::${id}`,
-                                Boolean(labelOk) && Boolean(cssOk) && flagsExclusive && Boolean(familyOk),
-                                `label=${cfg?.label} css=${cfg?.cssClass} apt=${cfg?.usesAptitudes} career=${cfg?.usesCareerTables}`,
-                            );
-                        } catch (err) {
-                            record(`config-identity::${id}`, false, `threw: ${String((err as Error).message)}`);
-                        }
-                    }
-
-                    // ── skill-rank-shape::<id> (7 keys) ────────────────────
-                    // Aptitude systems → 4 skill ranks with bonuses
-                    // [0,10,20,30]; career systems → 3 ranks with [0,10,20].
-                    // skillRankCount mirrors getSkillRanks().length.
-                    for (const id of ids) {
-                        try {
-                            const cfg = Registry.get(id);
-                            const ranks = cfg?.getSkillRanks() ?? [];
-                            const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
-                            const expectedCount = isAptitude ? 4 : 3;
-                            const expectedBonuses = isAptitude ? [0, 10, 20, 30] : [0, 10, 20];
-                            const countOk = Array.isArray(ranks) && ranks.length === expectedCount;
-                            const bonusesOk = countOk && ranks.every((r, i) => r.bonus === expectedBonuses[i]);
-                            const levelsOk = countOk && ranks.every((r, i) => r.level === i + 1);
-                            const countMirrors = cfg?.skillRankCount === expectedCount;
-                            record(
-                                `skill-rank-shape::${id}`,
-                                Boolean(countOk && bonusesOk && levelsOk && countMirrors),
-                                `count=${ranks.length} bonuses=${JSON.stringify(ranks.map((r) => r.bonus))} skillRankCount=${cfg?.skillRankCount}`,
-                            );
-                        } catch (err) {
-                            record(`skill-rank-shape::${id}`, false, `threw: ${String((err as Error).message)}`);
-                        }
-                    }
-
-                    // ── characteristic-tier-shape::<id> (7 keys) ───────────
-                    // Aptitude systems → 5 tiers; career systems → 4 tiers.
-                    // characteristicTierOrder mirrors the keys of
-                    // getCharacteristicTiers() and labels are WH40K.* keys.
-                    for (const id of ids) {
-                        try {
-                            const cfg = Registry.get(id);
-                            const tiers = cfg?.getCharacteristicTiers() ?? [];
-                            const order = cfg?.characteristicTierOrder ?? [];
-                            const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
-                            const expectedCount = isAptitude ? 5 : 4;
-                            const countOk = Array.isArray(tiers) && tiers.length === expectedCount;
-                            const orderOk = Array.isArray(order) && order.length === expectedCount && order.every((k, i) => k === tiers[i]?.key);
-                            const labelsOk = countOk && tiers.every((t) => typeof t.label === 'string' && t.label.startsWith('WH40K.'));
-                            const firstSimple = tiers[0]?.key === 'simple';
-                            record(
-                                `characteristic-tier-shape::${id}`,
-                                Boolean(countOk && orderOk && labelsOk && firstSimple),
-                                `count=${tiers.length} order=${JSON.stringify(order)}`,
-                            );
-                        } catch (err) {
-                            record(`characteristic-tier-shape::${id}`, false, `threw: ${String((err as Error).message)}`);
-                        }
-                    }
-
-                    // ── origin-step-config::<id> (7 keys) ──────────────────
-                    // getOriginStepConfig() returns a well-formed shape:
-                    // coreSteps array (each step has key/step/icon/stepIndex),
-                    // optionalStep is an object or null, packs is an array.
-                    for (const id of ids) {
-                        try {
-                            const cfg = Registry.get(id);
-                            const osc: OriginStepConfig = cfg?.getOriginStepConfig() ?? {};
-                            const coreOk =
-                                Array.isArray(osc.coreSteps) &&
-                                osc.coreSteps.every(
-                                    (s) => typeof s.key === 'string' && s.step === s.key && typeof s.icon === 'string' && typeof s.stepIndex === 'number',
-                                );
-                            const optOk = osc.optionalStep == null || typeof osc.optionalStep === 'object';
-                            const packsOk = Array.isArray(osc.packs);
-                            record(
-                                `origin-step-config::${id}`,
-                                coreOk && optOk && packsOk,
-                                `coreSteps=${String(osc.coreSteps?.length)} optionalStep=${osc.optionalStep == null ? 'null' : 'obj'} packs=${String(
-                                    osc.packs?.length ?? 0,
-                                )}`,
-                            );
-                        } catch (err) {
-                            record(`origin-step-config::${id}`, false, `threw: ${String((err as Error).message)}`);
-                        }
-                    }
-
-                    // ── fate-point-uses::<id> (7 keys) ─────────────────────
-                    // getFatePointUses() returns the canonical spend list:
-                    // every entry has a stable key + WH40K.* label/description,
-                    // and the burn-flagged 'survive' use is present.
-                    for (const id of ids) {
-                        try {
-                            const cfg = Registry.get(id);
-                            const uses = cfg?.getFatePointUses() ?? [];
-                            const shapeOk =
-                                Array.isArray(uses) &&
-                                uses.length > 0 &&
-                                uses.every(
-                                    (u) =>
-                                        typeof u.key === 'string' &&
-                                        u.key.length > 0 &&
-                                        typeof u.label === 'string' &&
-                                        u.label.startsWith('WH40K.') &&
-                                        typeof u.description === 'string' &&
-                                        u.description.startsWith('WH40K.'),
-                                );
-                            const survive = uses.find((u) => u.key === 'survive');
-                            const burnOk = survive?.burn === true;
-                            record(`fate-point-uses::${id}`, Boolean(shapeOk && burnOk), `count=${uses.length} surviveBurn=${survive?.burn}`);
-                        } catch (err) {
-                            record(`fate-point-uses::${id}`, false, `threw: ${String((err as Error).message)}`);
-                        }
-                    }
-
-                    // ── visible-skills::<id> (7 keys) ──────────────────────
-                    // getVisibleSkills() returns a non-empty Set; the
-                    // aptitude-family and career-family skill lists diverge —
-                    // 'parry' is aptitude-only, 'barter' is career-only.
-                    for (const id of ids) {
-                        try {
-                            const cfg = Registry.get(id);
-                            const skills = cfg?.getVisibleSkills() ?? new Set<string>();
-                            const isSet = skills instanceof Set && skills.size > 0;
-                            const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
-                            const dodgeShared = skills.has('dodge');
-                            const familyOk = isAptitude ? skills.has('parry') && !skills.has('barter') : skills.has('barter') && !skills.has('parry');
-                            record(
-                                `visible-skills::${id}`,
-                                Boolean(isSet && dodgeShared && familyOk),
-                                `size=${skills.size} hasParry=${skills.has('parry')} hasBarter=${skills.has('barter')}`,
-                            );
-                        } catch (err) {
-                            record(`visible-skills::${id}`, false, `threw: ${String((err as Error).message)}`);
-                        }
-                    }
-
-                    // ── aptitude-cost-tables-dh2e ──────────────────────────
-                    // The DH2e config's three default cost tables pin the
-                    // canonical core-rulebook values (Tables 2-2 / 2-4 / 2-6)
-                    // and countMatchingAptitudes is case-insensitive.
-                    try {
-                        const cfg = Registry.get('dh2e');
-                        const skillCost = cfg?.getSkillCostTable?.() ?? {};
-                        const charCost = cfg?.getCharacteristicCostTable?.() ?? {};
-                        const talentCost = cfg?.getTalentCostTable?.() ?? {};
-                        const eq = (a: number[] | Record<number, number> | undefined, b: number[] | Record<number, number>): boolean =>
-                            JSON.stringify(a) === JSON.stringify(b);
-                        const skillOk =
-                            eq(skillCost[2], [100, 200, 300, 400]) && eq(skillCost[1], [200, 400, 600, 800]) && eq(skillCost[0], [300, 600, 900, 1200]);
-                        const charOk =
-                            eq(charCost[2], [100, 250, 500, 750, 1250]) &&
-                            eq(charCost[1], [250, 500, 750, 1000, 1500]) &&
-                            eq(charCost[0], [500, 750, 1000, 1500, 2500]);
-                        const talentOk = eq(talentCost[1], { 2: 200, 1: 300, 0: 600 }) && eq(talentCost[3], { 2: 400, 1: 600, 0: 1200 });
-                        const matchCI = cfg?.countMatchingAptitudes?.(['weapon skill', 'OFFENCE'], ['Weapon Skill', 'Offence']) === 2;
-                        const matchZero = cfg?.countMatchingAptitudes?.(['Fellowship'], ['Weapon Skill', 'Offence']) === 0;
-                        record(
-                            'aptitude-cost-tables-dh2e',
-                            Boolean(skillOk && charOk && talentOk && matchCI && matchZero),
-                            `skillOk=${skillOk} charOk=${charOk} talentOk=${talentOk} matchCI=${matchCI}`,
-                        );
-                    } catch (err) {
-                        record('aptitude-cost-tables-dh2e', false, `threw: ${String((err as Error).message)}`);
-                    }
-
-                    // ── aptitude-resolution-fallback ───────────────────────
-                    // getSkillAptitudes returns the table pair for a known
-                    // skill and falls back to ['General','General'] for an
-                    // unknown one (across all 4 aptitude systems). Also pins
-                    // the #150 errata: commonLore → ['Intelligence','General'].
-                    try {
-                        const checks: boolean[] = [];
-                        const detail: string[] = [];
-                        for (const id of aptitudeSystems) {
-                            const cfg = Registry.get(id);
-                            const known = cfg?.getSkillAptitudes?.('commonLore') ?? ['', ''];
-                            const unknown = cfg?.getSkillAptitudes?.('definitely-not-a-skill') ?? ['', ''];
-                            const charPair = cfg?.getCharacteristicAptitudes?.('weaponSkill') ?? ['', ''];
-                            const charFallback = cfg?.getCharacteristicAptitudes?.('nope') ?? ['', ''];
-                            const knownOk = JSON.stringify(known) === JSON.stringify(['Intelligence', 'General']);
-                            const unknownOk = JSON.stringify(unknown) === JSON.stringify(['General', 'General']);
-                            const charOk = JSON.stringify(charPair) === JSON.stringify(['Weapon Skill', 'Offence']);
-                            const charFallbackOk = JSON.stringify(charFallback) === JSON.stringify(['General', 'General']);
-                            checks.push(knownOk && unknownOk && charOk && charFallbackOk);
-                            detail.push(`${id}:cl=${JSON.stringify(known)}`);
-                        }
-                        record('aptitude-resolution-fallback', checks.every(Boolean), detail.join(' '));
-                    } catch (err) {
-                        record('aptitude-resolution-fallback', false, `threw: ${String((err as Error).message)}`);
-                    }
-
-                    // ── advance-match-info ─────────────────────────────────
-                    // getAdvanceMatchInfo splits an advance's aptitudes into
-                    // matched / unmatched against the actor's set. Driven
-                    // against a synthetic actor-like (no Foundry document
-                    // needed — the method only reads `system.aptitudes`).
-                    try {
-                        const cfg = Registry.get('dh2e');
-                        const actorLike: ActorLike = { system: { aptitudes: ['Weapon Skill', 'Offence', 'Defence'] } };
-                        const info: AdvanceMatchInfo = cfg?.getAdvanceMatchInfo?.(actorLike, ['Weapon Skill', 'Knowledge']) ?? {
-                            matches: 0,
-                            matched: [],
-                            unmatched: [],
-                            all: [],
-                        };
-                        const matchesOk = info.matches === 1;
-                        const matchedOk = JSON.stringify(info.matched) === JSON.stringify(['Weapon Skill']);
-                        const unmatchedOk = JSON.stringify(info.unmatched) === JSON.stringify(['Knowledge']);
-                        const allOk = JSON.stringify(info.all) === JSON.stringify(['Weapon Skill', 'Knowledge']);
-                        record('advance-match-info', Boolean(matchesOk && matchedOk && unmatchedOk && allOk), `info=${JSON.stringify(info)}`);
-                    } catch (err) {
-                        record('advance-match-info', false, `threw: ${String((err as Error).message)}`);
-                    }
-
-                    // ── career-cost-null-contract ──────────────────────────
-                    // CareerBasedSystemConfig.getSkillAdvanceCost and
-                    // getTalentAdvanceCost always return null (cost is carried
-                    // on the AdvanceOption from the career table), for all 3
-                    // career systems.
-                    try {
-                        const checks: boolean[] = [];
-                        const detail: string[] = [];
-                        const actorLike: ActorLike = { system: {} };
-                        for (const id of careerSystems) {
-                            const cfg = Registry.get(id);
-                            const skillResult = cfg?.getSkillAdvanceCost?.(actorLike, 'dodge', 0);
-                            const talentResult = cfg?.getTalentAdvanceCost?.(actorLike, {});
-                            const skillNull = skillResult === null;
-                            const talentNull = talentResult === null;
-                            checks.push(skillNull && talentNull);
-                            detail.push(`${id}:skill=${JSON.stringify(skillResult)} talent=${JSON.stringify(talentResult)}`);
-                        }
-                        record('career-cost-null-contract', checks.every(Boolean), detail.join(' '));
-                    } catch (err) {
-                        record('career-cost-null-contract', false, `threw: ${String((err as Error).message)}`);
-                    }
-
-                    // ── bc-patron-status-matrix ────────────────────────────
-                    // BC's Allies/Opponents matrix (Table 2-4, core.md :2594)
-                    // routes through the new True/Allied/Opposed × tier cost
-                    // engine introduced in #173. Verify the four canonical
-                    // patron-status outcomes round-trip through the public
-                    // characteristic-cost dispatch: True (matching), Allied
-                    // (Khorne/Nurgle pair), Opposed (Khorne↔Slaanesh), and
-                    // unaligned-character treated as Allied for every god.
-                    try {
-                        const cfg = Registry.get('bc');
-                        const khorneActor: ActorLike = { system: { chaosAlignment: 'khorne', chaosAdvancements: [] } };
-                        const nurgleActor: ActorLike = { system: { chaosAlignment: 'nurgle', chaosAdvancements: [] } };
-                        const unalignedActor: ActorLike = { system: { chaosAlignment: 'unaligned', chaosAdvancements: [] } };
-                        const matchedCost = cfg?.getCharacteristicAdvanceCost?.(khorneActor, 'strength', 0)?.cost ?? null;
-                        const alliedCost = cfg?.getCharacteristicAdvanceCost?.(nurgleActor, 'strength', 0)?.cost ?? null;
-                        const opposedCost = cfg?.getCharacteristicAdvanceCost?.(khorneActor, 'fellowship', 0)?.cost ?? null;
-                        const unalignedCost = cfg?.getCharacteristicAdvanceCost?.(unalignedActor, 'strength', 0)?.cost ?? null;
-                        const ok = matchedCost === 100 && alliedCost === 250 && opposedCost === 500 && unalignedCost === 250;
-                        record(
-                            'bc-patron-status-matrix',
-                            ok,
-                            `true=${matchedCost} allied=${alliedCost} opposed=${opposedCost} unalignedActor=${unalignedCost}`,
-                        );
-                    } catch (err) {
-                        record('bc-patron-status-matrix', false, `threw: ${String((err as Error).message)}`);
-                    }
-
-                    // ── skill-level-to-rank ────────────────────────────────
-                    // The static BaseSystemConfig.skillLevelToRank maps both
-                    // RT terminology ('plus10') and DH2e terminology
-                    // ('experienced') to the shared numeric rank, and unknown
-                    // strings fall back to 0.
-                    try {
-                        const base = mod.BaseSystemConfig;
-                        const fn = base?.skillLevelToRank;
-                        const ok =
-                            typeof fn === 'function' &&
-                            fn('trained') === 1 &&
-                            fn('known') === 1 &&
-                            fn('plus10') === 2 &&
-                            fn('experienced') === 3 &&
-                            fn('plus20') === 3 &&
-                            fn('veteran') === 4 &&
-                            fn('plus30') === 4 &&
-                            fn('garbage') === 0;
-                        record('skill-level-to-rank', Boolean(ok), `fn=${typeof fn}`);
-                    } catch (err) {
-                        record('skill-level-to-rank', false, `threw: ${String((err as Error).message)}`);
-                    }
-
-                    // ── starting-xp-divergence ─────────────────────────────
-                    // startingXP defaults to 0 on the base but DH2e and DH1e
-                    // override to the canonical 1000 (regression guard for
-                    // #14: DH1 must not be left at zero XP post origin-path).
-                    try {
-                        const dh2 = Registry.get('dh2e')?.startingXP;
-                        const dh1 = Registry.get('dh1e')?.startingXP;
-                        const rt = Registry.get('rt')?.startingXP;
-                        const ok = dh2 === 1000 && dh1 === 1000 && typeof rt === 'number';
-                        record('starting-xp-divergence', Boolean(ok), `dh2e=${dh2} dh1e=${dh1} rt=${rt}`);
-                    } catch (err) {
-                        record('starting-xp-divergence', false, `threw: ${String((err as Error).message)}`);
-                    }
-
-                    // ── step-short-labels ──────────────────────────────────
-                    // getStepShortLabels() resolves a label entry for every
-                    // core step key of every system (i18n round-trip path; a
-                    // missing key falls back to the step key itself, so the
-                    // map is always populated for systems that have steps).
-                    try {
-                        const checks: boolean[] = [];
-                        const detail: string[] = [];
+                    // ── Per-system shape probes (theme / identity / ranks / tiers / origin / fate / skills) ──
+                    function probePerSystemShapes(): void {
+                        // Re-narrow the closed-over consts: the outer guard's
+                        // narrowing does not propagate into this nested function.
+                        if (Registry === undefined || themeClassFor === undefined) return;
+                        // ── themeClassFor::<id> (7 keys) ───────────────────────
+                        // For each system, all three roles emit the role-prefixed
+                        // utility class and the suffix matches the config.theme
+                        // token (named palette ref, never raw hex).
                         for (const id of ids) {
-                            const cfg = Registry.get(id);
-                            const labels = cfg?.getStepShortLabels() ?? {};
-                            const osc: OriginStepConfig = cfg?.getOriginStepConfig() ?? {};
-                            const coreKeys = (osc.coreSteps ?? []).map((s) => s.key);
-                            const everyKeyLabelled = coreKeys.every((k) => typeof labels[k] === 'string' && labels[k].length > 0);
-                            checks.push(everyKeyLabelled);
-                            detail.push(`${id}:${coreKeys.length}keys`);
+                            try {
+                                const cfg = Registry.get(id);
+                                const theme = cfg?.theme;
+                                const checks: boolean[] = [];
+                                const detailParts: string[] = [];
+                                for (const role of ['primary', 'accent', 'border'] as const) {
+                                    const cls = themeClassFor(id, role);
+                                    const expectedPrefix = rolePrefix[role];
+                                    const token = theme?.[role] ?? '';
+                                    const okPrefix = typeof cls === 'string' && cls.startsWith(expectedPrefix);
+                                    const okSuffix = token !== '' && cls === `${expectedPrefix}${token}`;
+                                    // Tokens are palette names, not hex — reject a leading '#'.
+                                    const noHex = typeof token === 'string' && !token.startsWith('#');
+                                    checks.push(okPrefix && okSuffix && noHex);
+                                    detailParts.push(`${role}=${cls}(token=${token})`);
+                                }
+                                record(`themeClassFor::${id}`, checks.every(Boolean), detailParts.join(' '));
+                            } catch (err) {
+                                record(`themeClassFor::${id}`, false, `threw: ${String((err as Error).message)}`);
+                            }
                         }
-                        record('step-short-labels', checks.every(Boolean), detail.join(' '));
-                    } catch (err) {
-                        record('step-short-labels', false, `threw: ${String((err as Error).message)}`);
+
+                        // ── config-identity::<id> (7 keys) ─────────────────────
+                        // Each config exposes a non-empty WH40K.* label, a
+                        // non-empty cssClass, and the usesAptitudes /
+                        // usesCareerTables flags are mutually exclusive and match
+                        // the family the system belongs to.
+                        for (const id of ids) {
+                            try {
+                                const cfg = Registry.get(id);
+                                const labelOk = typeof cfg?.label === 'string' && cfg.label.startsWith('WH40K.');
+                                const cssOk = typeof cfg?.cssClass === 'string' && cfg.cssClass.length > 0;
+                                const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
+                                const isCareer = (careerSystems as readonly string[]).includes(id);
+                                const flagsExclusive = cfg?.usesAptitudes !== cfg?.usesCareerTables;
+                                const familyOk = isAptitude
+                                    ? cfg?.usesAptitudes === true && !cfg.usesCareerTables
+                                    : isCareer
+                                    ? cfg?.usesCareerTables === true && !cfg.usesAptitudes
+                                    : false;
+                                record(
+                                    `config-identity::${id}`,
+                                    Boolean(labelOk) && Boolean(cssOk) && flagsExclusive && Boolean(familyOk),
+                                    `label=${cfg?.label} css=${cfg?.cssClass} apt=${cfg?.usesAptitudes} career=${cfg?.usesCareerTables}`,
+                                );
+                            } catch (err) {
+                                record(`config-identity::${id}`, false, `threw: ${String((err as Error).message)}`);
+                            }
+                        }
+
+                        // ── skill-rank-shape::<id> (7 keys) ────────────────────
+                        // Aptitude systems → 4 skill ranks with bonuses
+                        // [0,10,20,30]; career systems → 3 ranks with [0,10,20].
+                        // skillRankCount mirrors getSkillRanks().length.
+                        for (const id of ids) {
+                            try {
+                                const cfg = Registry.get(id);
+                                const ranks = cfg?.getSkillRanks() ?? [];
+                                const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
+                                const expectedCount = isAptitude ? 4 : 3;
+                                const expectedBonuses = isAptitude ? [0, 10, 20, 30] : [0, 10, 20];
+                                const countOk = Array.isArray(ranks) && ranks.length === expectedCount;
+                                const bonusesOk = countOk && ranks.every((r, i) => r.bonus === expectedBonuses[i]);
+                                const levelsOk = countOk && ranks.every((r, i) => r.level === i + 1);
+                                const countMirrors = cfg?.skillRankCount === expectedCount;
+                                record(
+                                    `skill-rank-shape::${id}`,
+                                    Boolean(countOk && bonusesOk && levelsOk && countMirrors),
+                                    `count=${ranks.length} bonuses=${JSON.stringify(ranks.map((r) => r.bonus))} skillRankCount=${cfg?.skillRankCount}`,
+                                );
+                            } catch (err) {
+                                record(`skill-rank-shape::${id}`, false, `threw: ${String((err as Error).message)}`);
+                            }
+                        }
+
+                        // ── characteristic-tier-shape::<id> (7 keys) ───────────
+                        // Aptitude systems → 5 tiers; career systems → 4 tiers.
+                        // characteristicTierOrder mirrors the keys of
+                        // getCharacteristicTiers() and labels are WH40K.* keys.
+                        for (const id of ids) {
+                            try {
+                                const cfg = Registry.get(id);
+                                const tiers = cfg?.getCharacteristicTiers() ?? [];
+                                const order = cfg?.characteristicTierOrder ?? [];
+                                const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
+                                const expectedCount = isAptitude ? 5 : 4;
+                                const countOk = Array.isArray(tiers) && tiers.length === expectedCount;
+                                const orderOk = Array.isArray(order) && order.length === expectedCount && order.every((k, i) => k === tiers[i]?.key);
+                                const labelsOk = countOk && tiers.every((t) => typeof t.label === 'string' && t.label.startsWith('WH40K.'));
+                                const firstSimple = tiers[0]?.key === 'simple';
+                                record(
+                                    `characteristic-tier-shape::${id}`,
+                                    Boolean(countOk && orderOk && labelsOk && firstSimple),
+                                    `count=${tiers.length} order=${JSON.stringify(order)}`,
+                                );
+                            } catch (err) {
+                                record(`characteristic-tier-shape::${id}`, false, `threw: ${String((err as Error).message)}`);
+                            }
+                        }
+
+                        // ── origin-step-config::<id> (7 keys) ──────────────────
+                        // getOriginStepConfig() returns a well-formed shape:
+                        // coreSteps array (each step has key/step/icon/stepIndex),
+                        // optionalStep is an object or null, packs is an array.
+                        for (const id of ids) {
+                            try {
+                                const cfg = Registry.get(id);
+                                const osc: OriginStepConfig = cfg?.getOriginStepConfig() ?? {};
+                                const coreOk =
+                                    Array.isArray(osc.coreSteps) &&
+                                    osc.coreSteps.every(
+                                        (s) => typeof s.key === 'string' && s.step === s.key && typeof s.icon === 'string' && typeof s.stepIndex === 'number',
+                                    );
+                                const optOk = osc.optionalStep == null || typeof osc.optionalStep === 'object';
+                                const packsOk = Array.isArray(osc.packs);
+                                record(
+                                    `origin-step-config::${id}`,
+                                    coreOk && optOk && packsOk,
+                                    `coreSteps=${String(osc.coreSteps?.length)} optionalStep=${osc.optionalStep == null ? 'null' : 'obj'} packs=${String(
+                                        osc.packs?.length ?? 0,
+                                    )}`,
+                                );
+                            } catch (err) {
+                                record(`origin-step-config::${id}`, false, `threw: ${String((err as Error).message)}`);
+                            }
+                        }
+
+                        // ── fate-point-uses::<id> (7 keys) ─────────────────────
+                        // getFatePointUses() returns the canonical spend list:
+                        // every entry has a stable key + WH40K.* label/description,
+                        // and the burn-flagged 'survive' use is present.
+                        for (const id of ids) {
+                            try {
+                                const cfg = Registry.get(id);
+                                const uses = cfg?.getFatePointUses() ?? [];
+                                const shapeOk =
+                                    Array.isArray(uses) &&
+                                    uses.length > 0 &&
+                                    uses.every(
+                                        (u) =>
+                                            typeof u.key === 'string' &&
+                                            u.key.length > 0 &&
+                                            typeof u.label === 'string' &&
+                                            u.label.startsWith('WH40K.') &&
+                                            typeof u.description === 'string' &&
+                                            u.description.startsWith('WH40K.'),
+                                    );
+                                const survive = uses.find((u) => u.key === 'survive');
+                                const burnOk = survive?.burn === true;
+                                record(`fate-point-uses::${id}`, Boolean(shapeOk && burnOk), `count=${uses.length} surviveBurn=${survive?.burn}`);
+                            } catch (err) {
+                                record(`fate-point-uses::${id}`, false, `threw: ${String((err as Error).message)}`);
+                            }
+                        }
+
+                        // ── visible-skills::<id> (7 keys) ──────────────────────
+                        // getVisibleSkills() returns a non-empty Set; the
+                        // aptitude-family and career-family skill lists diverge —
+                        // 'parry' is aptitude-only, 'barter' is career-only.
+                        for (const id of ids) {
+                            try {
+                                const cfg = Registry.get(id);
+                                const skills = cfg?.getVisibleSkills() ?? new Set<string>();
+                                const isSet = skills instanceof Set && skills.size > 0;
+                                const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
+                                const dodgeShared = skills.has('dodge');
+                                const familyOk = isAptitude ? skills.has('parry') && !skills.has('barter') : skills.has('barter') && !skills.has('parry');
+                                record(
+                                    `visible-skills::${id}`,
+                                    Boolean(isSet && dodgeShared && familyOk),
+                                    `size=${skills.size} hasParry=${skills.has('parry')} hasBarter=${skills.has('barter')}`,
+                                );
+                            } catch (err) {
+                                record(`visible-skills::${id}`, false, `threw: ${String((err as Error).message)}`);
+                            }
+                        }
                     }
+
+                    // ── Aptitude / career cost + resolution + misc probes ──
+                    function probeCostAndResolution(): void {
+                        // Re-narrow the closed-over bindings: the outer guard's
+                        // narrowing does not propagate into this nested function.
+                        if (Registry === undefined || mod === null) return;
+                        // ── aptitude-cost-tables-dh2e ──────────────────────────
+                        // The DH2e config's three default cost tables pin the
+                        // canonical core-rulebook values (Tables 2-2 / 2-4 / 2-6)
+                        // and countMatchingAptitudes is case-insensitive.
+                        try {
+                            const cfg = Registry.get('dh2e');
+                            const skillCost = cfg?.getSkillCostTable?.() ?? {};
+                            const charCost = cfg?.getCharacteristicCostTable?.() ?? {};
+                            const talentCost = cfg?.getTalentCostTable?.() ?? {};
+                            const eq = (a: number[] | Record<number, number> | undefined, b: number[] | Record<number, number>): boolean =>
+                                JSON.stringify(a) === JSON.stringify(b);
+                            const skillOk =
+                                eq(skillCost[2], [100, 200, 300, 400]) && eq(skillCost[1], [200, 400, 600, 800]) && eq(skillCost[0], [300, 600, 900, 1200]);
+                            const charOk =
+                                eq(charCost[2], [100, 250, 500, 750, 1250]) &&
+                                eq(charCost[1], [250, 500, 750, 1000, 1500]) &&
+                                eq(charCost[0], [500, 750, 1000, 1500, 2500]);
+                            const talentOk = eq(talentCost[1], { 2: 200, 1: 300, 0: 600 }) && eq(talentCost[3], { 2: 400, 1: 600, 0: 1200 });
+                            const matchCI = cfg?.countMatchingAptitudes?.(['weapon skill', 'OFFENCE'], ['Weapon Skill', 'Offence']) === 2;
+                            const matchZero = cfg?.countMatchingAptitudes?.(['Fellowship'], ['Weapon Skill', 'Offence']) === 0;
+                            record(
+                                'aptitude-cost-tables-dh2e',
+                                Boolean(skillOk && charOk && talentOk && matchCI && matchZero),
+                                `skillOk=${skillOk} charOk=${charOk} talentOk=${talentOk} matchCI=${matchCI}`,
+                            );
+                        } catch (err) {
+                            record('aptitude-cost-tables-dh2e', false, `threw: ${String((err as Error).message)}`);
+                        }
+
+                        // ── aptitude-resolution-fallback ───────────────────────
+                        // getSkillAptitudes returns the table pair for a known
+                        // skill and falls back to ['General','General'] for an
+                        // unknown one (across all 4 aptitude systems). Also pins
+                        // the #150 errata: commonLore → ['Intelligence','General'].
+                        try {
+                            const checks: boolean[] = [];
+                            const detail: string[] = [];
+                            for (const id of aptitudeSystems) {
+                                const cfg = Registry.get(id);
+                                const known = cfg?.getSkillAptitudes?.('commonLore') ?? ['', ''];
+                                const unknown = cfg?.getSkillAptitudes?.('definitely-not-a-skill') ?? ['', ''];
+                                const charPair = cfg?.getCharacteristicAptitudes?.('weaponSkill') ?? ['', ''];
+                                const charFallback = cfg?.getCharacteristicAptitudes?.('nope') ?? ['', ''];
+                                const knownOk = JSON.stringify(known) === JSON.stringify(['Intelligence', 'General']);
+                                const unknownOk = JSON.stringify(unknown) === JSON.stringify(['General', 'General']);
+                                const charOk = JSON.stringify(charPair) === JSON.stringify(['Weapon Skill', 'Offence']);
+                                const charFallbackOk = JSON.stringify(charFallback) === JSON.stringify(['General', 'General']);
+                                checks.push(knownOk && unknownOk && charOk && charFallbackOk);
+                                detail.push(`${id}:cl=${JSON.stringify(known)}`);
+                            }
+                            record('aptitude-resolution-fallback', checks.every(Boolean), detail.join(' '));
+                        } catch (err) {
+                            record('aptitude-resolution-fallback', false, `threw: ${String((err as Error).message)}`);
+                        }
+
+                        // ── advance-match-info ─────────────────────────────────
+                        // getAdvanceMatchInfo splits an advance's aptitudes into
+                        // matched / unmatched against the actor's set. Driven
+                        // against a synthetic actor-like (no Foundry document
+                        // needed — the method only reads `system.aptitudes`).
+                        try {
+                            const cfg = Registry.get('dh2e');
+                            const actorLike: ActorLike = { system: { aptitudes: ['Weapon Skill', 'Offence', 'Defence'] } };
+                            const info: AdvanceMatchInfo = cfg?.getAdvanceMatchInfo?.(actorLike, ['Weapon Skill', 'Knowledge']) ?? {
+                                matches: 0,
+                                matched: [],
+                                unmatched: [],
+                                all: [],
+                            };
+                            const matchesOk = info.matches === 1;
+                            const matchedOk = JSON.stringify(info.matched) === JSON.stringify(['Weapon Skill']);
+                            const unmatchedOk = JSON.stringify(info.unmatched) === JSON.stringify(['Knowledge']);
+                            const allOk = JSON.stringify(info.all) === JSON.stringify(['Weapon Skill', 'Knowledge']);
+                            record('advance-match-info', Boolean(matchesOk && matchedOk && unmatchedOk && allOk), `info=${JSON.stringify(info)}`);
+                        } catch (err) {
+                            record('advance-match-info', false, `threw: ${String((err as Error).message)}`);
+                        }
+
+                        // ── career-cost-null-contract ──────────────────────────
+                        // CareerBasedSystemConfig.getSkillAdvanceCost and
+                        // getTalentAdvanceCost always return null (cost is carried
+                        // on the AdvanceOption from the career table), for all 3
+                        // career systems.
+                        try {
+                            const checks: boolean[] = [];
+                            const detail: string[] = [];
+                            const actorLike: ActorLike = { system: {} };
+                            for (const id of careerSystems) {
+                                const cfg = Registry.get(id);
+                                const skillResult = cfg?.getSkillAdvanceCost?.(actorLike, 'dodge', 0);
+                                const talentResult = cfg?.getTalentAdvanceCost?.(actorLike, {});
+                                const skillNull = skillResult === null;
+                                const talentNull = talentResult === null;
+                                checks.push(skillNull && talentNull);
+                                detail.push(`${id}:skill=${JSON.stringify(skillResult)} talent=${JSON.stringify(talentResult)}`);
+                            }
+                            record('career-cost-null-contract', checks.every(Boolean), detail.join(' '));
+                        } catch (err) {
+                            record('career-cost-null-contract', false, `threw: ${String((err as Error).message)}`);
+                        }
+
+                        // ── bc-patron-status-matrix ────────────────────────────
+                        // BC's Allies/Opponents matrix (Table 2-4, core.md :2594)
+                        // routes through the new True/Allied/Opposed × tier cost
+                        // engine introduced in #173. Verify the four canonical
+                        // patron-status outcomes round-trip through the public
+                        // characteristic-cost dispatch: True (matching), Allied
+                        // (Khorne/Nurgle pair), Opposed (Khorne↔Slaanesh), and
+                        // unaligned-character treated as Allied for every god.
+                        try {
+                            const cfg = Registry.get('bc');
+                            const khorneActor: ActorLike = { system: { chaosAlignment: 'khorne', chaosAdvancements: [] } };
+                            const nurgleActor: ActorLike = { system: { chaosAlignment: 'nurgle', chaosAdvancements: [] } };
+                            const unalignedActor: ActorLike = { system: { chaosAlignment: 'unaligned', chaosAdvancements: [] } };
+                            const matchedCost = cfg?.getCharacteristicAdvanceCost?.(khorneActor, 'strength', 0)?.cost ?? null;
+                            const alliedCost = cfg?.getCharacteristicAdvanceCost?.(nurgleActor, 'strength', 0)?.cost ?? null;
+                            const opposedCost = cfg?.getCharacteristicAdvanceCost?.(khorneActor, 'fellowship', 0)?.cost ?? null;
+                            const unalignedCost = cfg?.getCharacteristicAdvanceCost?.(unalignedActor, 'strength', 0)?.cost ?? null;
+                            const ok = matchedCost === 100 && alliedCost === 250 && opposedCost === 500 && unalignedCost === 250;
+                            record(
+                                'bc-patron-status-matrix',
+                                ok,
+                                `true=${matchedCost} allied=${alliedCost} opposed=${opposedCost} unalignedActor=${unalignedCost}`,
+                            );
+                        } catch (err) {
+                            record('bc-patron-status-matrix', false, `threw: ${String((err as Error).message)}`);
+                        }
+
+                        // ── skill-level-to-rank ────────────────────────────────
+                        // The static BaseSystemConfig.skillLevelToRank maps both
+                        // RT terminology ('plus10') and DH2e terminology
+                        // ('experienced') to the shared numeric rank, and unknown
+                        // strings fall back to 0.
+                        try {
+                            const base = mod.BaseSystemConfig;
+                            const fn = base?.skillLevelToRank;
+                            const ok =
+                                typeof fn === 'function' &&
+                                fn('trained') === 1 &&
+                                fn('known') === 1 &&
+                                fn('plus10') === 2 &&
+                                fn('experienced') === 3 &&
+                                fn('plus20') === 3 &&
+                                fn('veteran') === 4 &&
+                                fn('plus30') === 4 &&
+                                fn('garbage') === 0;
+                            record('skill-level-to-rank', Boolean(ok), `fn=${typeof fn}`);
+                        } catch (err) {
+                            record('skill-level-to-rank', false, `threw: ${String((err as Error).message)}`);
+                        }
+
+                        // ── starting-xp-divergence ─────────────────────────────
+                        // startingXP defaults to 0 on the base but DH2e and DH1e
+                        // override to the canonical 1000 (regression guard for
+                        // #14: DH1 must not be left at zero XP post origin-path).
+                        try {
+                            const dh2 = Registry.get('dh2e')?.startingXP;
+                            const dh1 = Registry.get('dh1e')?.startingXP;
+                            const rt = Registry.get('rt')?.startingXP;
+                            const ok = dh2 === 1000 && dh1 === 1000 && typeof rt === 'number';
+                            record('starting-xp-divergence', Boolean(ok), `dh2e=${dh2} dh1e=${dh1} rt=${rt}`);
+                        } catch (err) {
+                            record('starting-xp-divergence', false, `threw: ${String((err as Error).message)}`);
+                        }
+
+                        // ── step-short-labels ──────────────────────────────────
+                        // getStepShortLabels() resolves a label entry for every
+                        // core step key of every system (i18n round-trip path; a
+                        // missing key falls back to the step key itself, so the
+                        // map is always populated for systems that have steps).
+                        try {
+                            const checks: boolean[] = [];
+                            const detail: string[] = [];
+                            for (const id of ids) {
+                                const cfg = Registry.get(id);
+                                const labels = cfg?.getStepShortLabels() ?? {};
+                                const osc: OriginStepConfig = cfg?.getOriginStepConfig() ?? {};
+                                const coreKeys = (osc.coreSteps ?? []).map((s) => s.key);
+                                const everyKeyLabelled = coreKeys.every((k) => typeof labels[k] === 'string' && labels[k].length > 0);
+                                checks.push(everyKeyLabelled);
+                                detail.push(`${id}:${coreKeys.length}keys`);
+                            }
+                            record('step-short-labels', checks.every(Boolean), detail.join(' '));
+                        } catch (err) {
+                            record('step-short-labels', false, `threw: ${String((err as Error).message)}`);
+                        }
+                    }
+
+                    probePerSystemShapes();
+                    probeCostAndResolution();
 
                     return results;
                 },
