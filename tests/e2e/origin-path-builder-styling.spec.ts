@@ -35,30 +35,72 @@ import { expect, test } from './lib/test';
  * caught by the DOM-shape assertions below, which fail loudly if the
  * `tw-*` utilities are stripped or the `.wh40k-rpg` ancestor is lost.
  */
+interface StylingProbeResult {
+    setupOk: boolean;
+    error: string | null;
+    hasWh40kRpgClass: boolean;
+    hasHeader: boolean;
+    hasJourneyRail: boolean;
+    hasMainContent: boolean;
+    hasFooter: boolean;
+    hasPreviewSection: boolean;
+    csdHookCount: number;
+    twUtilityCount: number;
+    workspaceHasTwGrid: boolean;
+    charSetupReachable: boolean;
+    pageErrors: string[];
+}
+
 test('origin-path-builder renders fully-styled dialog with workspace, journey rail, and preview panel (#198)', async ({ page }) => {
     const joined = await joinAsGM(page);
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
-    const result = await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
+    const result = await page.evaluate(async (): Promise<StylingProbeResult> => {
+        interface ActorDoc {
+            delete?: () => Promise<void>;
+        }
+        interface ActorCtorShape {
+            create?: (data: object) => Promise<ActorDoc | null>;
+        }
+        interface FoundryGlobal {
+            Actor?: ActorCtorShape;
+        }
+        interface StepConfig {
+            key?: string;
+        }
+        interface BuilderInstance {
+            element?: HTMLElement | null;
+            render: (force?: boolean) => Promise<void>;
+            guidedMode: boolean;
+            currentStepIndex: number;
+            showCharacteristics: boolean;
+            systemConfig?: { coreSteps?: StepConfig[] };
+        }
+        type BuilderCtor = new (actor: ActorDoc, options: object) => BuilderInstance;
+        interface BuilderModule {
+            default?: BuilderCtor;
+        }
+        const failure = (error: string, errs: string[]): StylingProbeResult => ({
+            setupOk: false,
+            error,
+            hasWh40kRpgClass: false,
+            hasHeader: false,
+            hasJourneyRail: false,
+            hasMainContent: false,
+            hasFooter: false,
+            hasPreviewSection: false,
+            csdHookCount: 0,
+            twUtilityCount: 0,
+            workspaceHasTwGrid: false,
+            charSetupReachable: false,
+            pageErrors: errs,
+        });
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (Actor), no type surface in browser context
+        const g = globalThis as unknown as FoundryGlobal;
         const ActorCls = g.Actor;
         if (ActorCls?.create == null) {
-            return {
-                setupOk: false,
-                error: 'Actor.create unavailable',
-                hasWh40kRpgClass: false,
-                hasHeader: false,
-                hasJourneyRail: false,
-                hasMainContent: false,
-                hasFooter: false,
-                hasPreviewSection: false,
-                csdHookCount: 0,
-                twUtilityCount: 0,
-                workspaceHasTwGrid: false,
-                charSetupReachable: false,
-                pageErrors: [] as string[],
-            };
+            return failure('Actor.create unavailable', []);
         }
 
         const pageErrors: string[] = [];
@@ -68,7 +110,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
         };
         window.addEventListener('error', errorListener);
 
-        let actor: any;
+        let actor: ActorDoc | null;
         try {
             actor = await ActorCls.create({
                 name: 'origin-builder-styling-probe',
@@ -77,46 +119,18 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
             });
         } catch (err) {
             window.removeEventListener('error', errorListener);
-            return {
-                setupOk: false,
-                error: `Actor.create: ${err instanceof Error ? err.message : String(err)}`,
-                hasWh40kRpgClass: false,
-                hasHeader: false,
-                hasJourneyRail: false,
-                hasMainContent: false,
-                hasFooter: false,
-                hasPreviewSection: false,
-                csdHookCount: 0,
-                twUtilityCount: 0,
-                workspaceHasTwGrid: false,
-                charSetupReachable: false,
-                pageErrors,
-            };
+            return failure(`Actor.create: ${err instanceof Error ? err.message : String(err)}`, pageErrors);
         }
         if (actor == null) {
             window.removeEventListener('error', errorListener);
-            return {
-                setupOk: false,
-                error: 'Actor.create returned null',
-                hasWh40kRpgClass: false,
-                hasHeader: false,
-                hasJourneyRail: false,
-                hasMainContent: false,
-                hasFooter: false,
-                hasPreviewSection: false,
-                csdHookCount: 0,
-                twUtilityCount: 0,
-                workspaceHasTwGrid: false,
-                charSetupReachable: false,
-                pageErrors,
-            };
+            return failure('Actor.create returned null', pageErrors);
         }
 
-        let builder: any;
+        let builder: BuilderInstance;
         try {
             const modUrl = '/systems/wh40k-rpg/module/applications/character-creation/origin-path-builder.js';
-            const mod: any = await import(/* @vite-ignore */ modUrl);
-            const OriginPathBuilder = mod?.default;
+            const mod = (await import(/* @vite-ignore */ modUrl)) as BuilderModule;
+            const OriginPathBuilder = mod.default;
             if (typeof OriginPathBuilder !== 'function') {
                 throw new Error('OriginPathBuilder default export not a constructor');
             }
@@ -133,24 +147,10 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
                 /* ignore */
             }
             window.removeEventListener('error', errorListener);
-            return {
-                setupOk: false,
-                error: `builder.render: ${err instanceof Error ? err.message : String(err)}`,
-                hasWh40kRpgClass: false,
-                hasHeader: false,
-                hasJourneyRail: false,
-                hasMainContent: false,
-                hasFooter: false,
-                hasPreviewSection: false,
-                csdHookCount: 0,
-                twUtilityCount: 0,
-                workspaceHasTwGrid: false,
-                charSetupReachable: false,
-                pageErrors,
-            };
+            return failure(`builder.render: ${err instanceof Error ? err.message : String(err)}`, pageErrors);
         }
 
-        const root: HTMLElement | null = builder?.element ?? null;
+        const root: HTMLElement | null = builder.element ?? null;
         const hasWh40kRpgClass = root?.classList.contains('wh40k-rpg') === true;
         const hasHeader = root?.querySelector('header') != null;
         const hasJourneyRail = root?.querySelector('nav') != null;
@@ -161,10 +161,10 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
         // .csd-* hooks must remain in the DOM (JS selectors target them) AND
         // every element bearing a .csd-* class should also carry at least one
         // tw-* utility class — that is the post-port invariant.
-        const csdElements = root?.querySelectorAll('[class*="csd-"]') ?? ([] as never);
-        const csdHookCount = csdElements.length;
+        const csdElements = root?.querySelectorAll('[class*="csd-"]') ?? null;
+        const csdHookCount = csdElements?.length ?? 0;
         let twUtilityCount = 0;
-        csdElements.forEach((el: Element) => {
+        csdElements?.forEach((el: Element) => {
             const cls = el.getAttribute('class') ?? '';
             if (/\btw-[a-z0-9-]/i.test(cls)) twUtilityCount += 1;
         });
@@ -177,8 +177,8 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
         let workspaceHasTwGrid = false;
         try {
             builder.guidedMode = false;
-            const coreSteps: any[] = builder.systemConfig?.coreSteps ?? [];
-            const charStepIdx = coreSteps.findIndex((s: any) => s?.key === 'characteristics');
+            const coreSteps: StepConfig[] = builder.systemConfig?.coreSteps ?? [];
+            const charStepIdx = coreSteps.findIndex((s) => s.key === 'characteristics');
             if (charStepIdx >= 0) {
                 builder.currentStepIndex = charStepIdx;
                 builder.showCharacteristics = true;
@@ -186,12 +186,12 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
                 await new Promise<void>((r) => {
                     setTimeout(r, 120);
                 });
-                const workspace = root?.querySelector('.csd-workspace');
+                const workspace = root?.querySelector('.csd-workspace') ?? null;
                 if (workspace) {
                     const cls = workspace.getAttribute('class') ?? '';
                     workspaceHasTwGrid = /\btw-grid\b/.test(cls);
                 }
-                charSetupReachable = workspace !== null && workspace !== undefined;
+                charSetupReachable = workspace !== null;
             } else {
                 // No characteristics step on this system; not a styling
                 // regression — leave both flags false.
@@ -208,7 +208,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
             setupOk: true,
             error: null,
             hasWh40kRpgClass,
-            hasHeader: Boolean(hasHeader),
+            hasHeader,
             hasJourneyRail,
             hasMainContent,
             hasFooter,
@@ -264,8 +264,14 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
 
     // Cleanup
     await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const g = globalThis as any;
+        interface CleanupActor {
+            delete?: () => Promise<void>;
+        }
+        interface FoundryGlobal {
+            game?: { actors?: { getName?: (name: string) => CleanupActor | null } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (game), no type surface in browser context
+        const g = globalThis as unknown as FoundryGlobal;
         const a = g.game?.actors?.getName?.('origin-builder-styling-probe');
         try {
             await a?.delete?.();

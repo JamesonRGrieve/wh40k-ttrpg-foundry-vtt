@@ -38,7 +38,7 @@ const EXERCISED_HOOKS = [
 type HookName = (typeof EXERCISED_HOOKS)[number];
 
 interface HookProbeResult {
-    fired: Record<HookName, boolean>;
+    fired: Partial<Record<HookName, boolean>>;
     notes: Partial<Record<HookName, string>>;
     pageErrors: string[];
 }
@@ -50,58 +50,77 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
     };
     page.on('pageerror', listener);
     try {
-        const result = await page.evaluate(async (hookNames: readonly string[]) => {
+        const result = await page.evaluate(async (hookNames: readonly string[]): Promise<{ fired: Record<string, boolean>; notes: Record<string, string> }> => {
             interface FiredMap {
                 [k: string]: boolean;
             }
             interface NoteMap {
                 [k: string]: string;
             }
+            type HookCallback = () => void;
             interface HooksApi {
-                on?: (name: string, cb: (...args: unknown[]) => unknown) => number;
+                on?: (name: string, cb: HookCallback) => number;
                 off?: (name: string, id: number) => void;
+                callAll?: (name: string, ...args: object[]) => boolean;
             }
             interface ActorApi {
                 create?: (data: object) => Promise<{ id?: string } | null>;
             }
+            interface CombatDoc {
+                id?: string;
+                delete?: () => Promise<void>;
+                nextRound?: () => Promise<void>;
+                nextTurn?: () => Promise<void>;
+                startCombat?: () => Promise<void>;
+                createEmbeddedDocuments?: (type: string, data: object[]) => Promise<void>;
+            }
             interface CombatApi {
-                create?: (data: object) => Promise<{
-                    id?: string;
-                    delete?: () => Promise<unknown>;
-                    nextRound?: () => Promise<unknown>;
-                    nextTurn?: () => Promise<unknown>;
-                    startCombat?: () => Promise<unknown>;
-                    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<unknown>;
-                } | null>;
+                create?: (data: object) => Promise<CombatDoc | null>;
+            }
+            interface ItemDoc {
+                id?: string;
+                update?: (data: object) => Promise<void>;
+            }
+            interface ActorDoc {
+                id?: string;
+                update?: (data: object) => Promise<void>;
+                delete?: () => Promise<void>;
+                createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+                items?: { get?: (id: string) => ItemDoc | undefined };
             }
             interface GameApi {
                 ready?: boolean;
                 actors?: {
-                    get?: (id: string) =>
-                        | {
-                              id?: string;
-                              update?: (data: object) => Promise<unknown>;
-                              delete?: () => Promise<unknown>;
-                              createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                              items?: { get?: (id: string) => { id?: string; update?: (data: object) => Promise<unknown> } | undefined };
-                          }
-                        | undefined;
+                    get?: (id: string) => ActorDoc | undefined;
                 };
             }
             interface UiApi {
-                controls?: { render?: (force?: boolean) => unknown };
+                controls?: { render?: (force?: boolean) => Promise<void> | void };
+            }
+            interface ChatMessageApi {
+                create?: (d: object) => Promise<{ id?: string } | null>;
+            }
+            interface FoundryGlobal {
+                Hooks?: HooksApi;
+                ChatMessage?: ChatMessageApi;
+                Actor?: ActorApi;
+                Combat?: CombatApi;
+                game?: GameApi;
+                ui?: UiApi;
             }
 
             const fired: FiredMap = {};
             const notes: NoteMap = {};
             for (const name of hookNames) fired[name] = false;
 
-            const HooksGbl = (globalThis as unknown as { Hooks?: HooksApi }).Hooks;
-            const ChatMessageGbl = (globalThis as unknown as { ChatMessage?: { create?: (d: object) => Promise<{ id?: string } | null> } }).ChatMessage;
-            const ActorGbl = (globalThis as unknown as { Actor?: ActorApi }).Actor;
-            const CombatGbl = (globalThis as unknown as { Combat?: CombatApi }).Combat;
-            const gameGbl = (globalThis as unknown as { game?: GameApi }).game;
-            const uiGbl = (globalThis as unknown as { ui?: UiApi }).ui;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Hooks/ChatMessage/Actor/Combat/game/ui), no type surface in browser context
+            const g = globalThis as unknown as FoundryGlobal;
+            const HooksGbl = g.Hooks;
+            const ChatMessageGbl = g.ChatMessage;
+            const ActorGbl = g.Actor;
+            const CombatGbl = g.Combat;
+            const gameGbl = g.game;
+            const uiGbl = g.ui;
 
             if (!HooksGbl?.on || !HooksGbl.off) {
                 notes.__global__ = 'Hooks API unavailable';
@@ -268,7 +287,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 // coverage is recorded.
                 try {
                     const renderResult = uiGbl?.controls?.render?.(true);
-                    if (renderResult != null && typeof (renderResult as { then?: unknown }).then === 'function') {
+                    if (renderResult != null) {
                         await Promise.resolve(renderResult);
                     }
                     // Render is async; allow the hook callback to flush.
@@ -276,11 +295,10 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                         setTimeout(r, 100);
                     });
                     if (!fired.getSceneControlButtons) {
-                        const HooksCallAll = (globalThis as unknown as { Hooks?: { callAll?: (name: string, ...args: unknown[]) => boolean } }).Hooks;
                         // Fallback: call the hook with an empty controls map +
                         // tools array so the system's handler shape (which
                         // typically appends to that array) doesn't throw.
-                        HooksCallAll?.callAll?.('getSceneControlButtons', { controls: {} });
+                        HooksGbl.callAll?.('getSceneControlButtons', { controls: {} });
                         await new Promise<void>((r) => {
                             setTimeout(r, 30);
                         });
@@ -291,7 +309,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             } finally {
                 for (const { name, id } of taps) {
                     try {
-                        HooksGbl.off?.(name, id);
+                        HooksGbl.off(name, id);
                     } catch {
                         /* ignore */
                     }
@@ -304,9 +322,18 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             return { fired, notes };
         }, hooks);
 
+        const firedByName: Partial<Record<HookName, boolean>> = {};
+        const notesByName: Partial<Record<HookName, string>> = {};
+        const hookNameSet = new Set<string>(hooks);
+        for (const name of hooks) {
+            firedByName[name] = result.fired[name] ?? false;
+        }
+        for (const [name, note] of Object.entries(result.notes)) {
+            if (hookNameSet.has(name)) notesByName[name as HookName] = note;
+        }
         return {
-            fired: result.fired as Record<HookName, boolean>,
-            notes: result.notes,
+            fired: firedByName,
+            notes: notesByName,
             pageErrors,
         };
     } finally {
@@ -323,7 +350,7 @@ test.describe.serial('hook-fired coverage (Tier B)', () => {
 
         const failures: string[] = [];
         for (const name of EXERCISED_HOOKS) {
-            if (probe.fired[name]) {
+            if (probe.fired[name] === true) {
                 recordCoverage('hook.fired', name);
             } else {
                 const note = probe.notes[name] ?? 'hook did not fire and no diagnostic note recorded';

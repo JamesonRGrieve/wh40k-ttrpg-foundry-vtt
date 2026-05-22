@@ -20,9 +20,11 @@ interface ActorRef {
 
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor: ActorCls } = globalThis as unknown as {
+        interface ActorCreateGlobals {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (Actor namespace, no shipped browser-side types)
+        const { Actor: ActorCls } = globalThis as unknown as ActorCreateGlobals;
         if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
@@ -46,9 +48,11 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game: gme } = globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        };
+        interface DeleteGlobals {
+            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace, no shipped browser-side types)
+        const { game: gme } = globalThis as unknown as DeleteGlobals;
         const actor = gme?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -74,8 +78,21 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
 
         try {
             const result = await page.evaluate(async (id: string) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                interface ProbeSheet {
+                    render: (options: { force: boolean }) => Promise<void>;
+                    element?: HTMLElement | null;
+                    close?: () => Promise<void>;
+                }
+                interface ProbeActor {
+                    system?: { supportCooldown?: number; regimentalAwards?: string[] };
+                    sheet?: ProbeSheet | null;
+                }
+                interface ProbeGlobals {
+                    game?: { actors?: { get?: (id: string) => ProbeActor | undefined } };
+                    __c161sheet?: ProbeSheet | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace + cross-callback sheet handle, no shipped browser-side types)
+                const g = globalThis as unknown as ProbeGlobals;
                 const actor = g.game?.actors?.get?.(id);
                 if (actor == null) return { error: 'actor lookup failed' };
                 let rendered = false;
@@ -126,22 +143,23 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                     hasAwardListOrEmpty,
                     error: probeError,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, actorId);
 
             await snap(page, 'ow-battlefield-panel');
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const g = globalThis as any;
+                interface CleanupGlobals {
+                    __c161sheet?: { close?: () => Promise<void> } | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: cross-callback sheet handle stashed on globalThis (no shipped browser-side type)
+                const g = globalThis as unknown as CleanupGlobals;
                 try {
                     await g.__c161sheet?.close?.();
                 } catch {
                     /* ignore */
                 }
                 g.__c161sheet = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();

@@ -30,6 +30,16 @@ const FLOW_DRUG = 'drug-temporary-effect';
 const FLOW_PEER = 'peer-grants-influence-test-bonus';
 const FLOW_CYBERNETIC = 'cybernetic-grants-stat-modifier';
 
+/**
+ * Narrow a caught/rejected value to its message string. The parameter is
+ * genuinely `unknown` (TS types every catch binding and rejected-promise value
+ * as `unknown`); this helper is the sole narrowing point fed into the guard.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: caught value is genuinely unknown, narrowed here via instanceof guard
+function toErrorMessage(err: unknown): string {
+    return err instanceof Error ? err.message : String(err);
+}
+
 interface ActorRef {
     id: string;
 }
@@ -39,9 +49,33 @@ interface FlowResult {
     error: string | null;
 }
 
+/**
+ * Browser-context shapes for the Foundry globals these probes read. Property
+ * values use concrete return types so the inline structural casts below don't
+ * leak `unknown` past the cast boundary. `getProperty` is the one genuine
+ * `unknown` surface (a dotted-path read with no compile-time key), so it is
+ * captured into a dedicated alias that the read helpers narrow at runtime.
+ */
+type PropertyValue = string | number | boolean | object | null | undefined;
+
+interface FoundryActorDoc {
+    id?: string;
+    delete?: () => Promise<void>;
+    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+    deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
+    items?: { get?: (id: string) => object | undefined };
+}
+
+interface FoundryGlobals {
+    Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
+    game?: { actors?: { get?: (id: string) => FoundryActorDoc | undefined } };
+    foundry?: { utils?: { getProperty?: (obj: object, path: string) => PropertyValue } };
+}
+
 async function createDH2Parent(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const ActorCls = (globalThis as unknown as { Actor?: { create?: (data: object) => Promise<{ id?: string } | null> } }).Actor;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (Actor namespace, no shipped browser-side types)
+        const ActorCls = (globalThis as unknown as FoundryGlobals).Actor;
         if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
@@ -71,11 +105,8 @@ async function createDH2Parent(page: Page): Promise<ActorRef | { error: string }
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const gameObj = (
-            globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-            }
-        ).game;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace, no shipped browser-side types)
+        const gameObj = (globalThis as unknown as FoundryGlobals).game;
         await gameObj?.actors?.get?.(id)?.delete?.();
     }, actorId);
 }
@@ -83,15 +114,8 @@ async function deleteActor(page: Page, actorId: string): Promise<void> {
 async function createItems(page: Page, actorId: string, items: object[]): Promise<string[]> {
     return page.evaluate(
         async ({ actorId: evalActorId, items: evalItems }) => {
-            const gameObj = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) => { createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>> } | undefined;
-                        };
-                    };
-                }
-            ).game;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace, no shipped browser-side types)
+            const gameObj = (globalThis as unknown as FoundryGlobals).game;
             const actor = gameObj?.actors?.get?.(evalActorId);
             if (!actor?.createEmbeddedDocuments) return [];
             try {
@@ -109,15 +133,8 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
     if (itemIds.length === 0) return;
     await page.evaluate(
         async ({ actorId: evalActorId, itemIds: evalItemIds }) => {
-            const gameObj = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) => { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> } | undefined;
-                        };
-                    };
-                }
-            ).game;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace, no shipped browser-side types)
+            const gameObj = (globalThis as unknown as FoundryGlobals).game;
             try {
                 await gameObj?.actors?.get?.(evalActorId)?.deleteEmbeddedDocuments?.('Item', evalItemIds);
             } catch {
@@ -131,18 +148,13 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
 /**
  * Read a dotted path off an item embedded on the actor.
  */
-async function readItemPath(page: Page, actorId: string, itemId: string, path: string): Promise<unknown> {
+async function readItemPath(page: Page, actorId: string, itemId: string, path: string): Promise<PropertyValue> {
     return page.evaluate(
-        ({ actorId: evalActorId, itemId: evalItemId, path: evalPath }) => {
-            const gameObj = (
-                globalThis as unknown as {
-                    game?: { actors?: { get?: (id: string) => { items?: { get?: (id: string) => unknown } } | undefined } };
-                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-                }
-            ).game;
-            const foundryObj = (globalThis as unknown as { foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } } }).foundry;
-            const item = gameObj?.actors?.get?.(evalActorId)?.items?.get?.(evalItemId);
-            const getProp = foundryObj?.utils?.getProperty;
+        ({ actorId: evalActorId, itemId: evalItemId, path: evalPath }): PropertyValue => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game + foundry namespaces, no shipped browser-side types)
+            const root = globalThis as unknown as FoundryGlobals;
+            const item = root.game?.actors?.get?.(evalActorId)?.items?.get?.(evalItemId);
+            const getProp = root.foundry?.utils?.getProperty;
             if (item == null || getProp == null) return null;
             return getProp(item, evalPath);
         },
@@ -152,11 +164,11 @@ async function readItemPath(page: Page, actorId: string, itemId: string, path: s
 
 async function readActorPath(page: Page, actorId: string, path: string): Promise<number | null> {
     return page.evaluate(
-        ({ actorId: evalActorId, path: evalPath }) => {
-            const gameObj = (globalThis as unknown as { game?: { actors?: { get?: (id: string) => unknown } } }).game;
-            const foundryObj = (globalThis as unknown as { foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } } }).foundry;
-            const actor = gameObj?.actors?.get?.(evalActorId);
-            const getProp = foundryObj?.utils?.getProperty;
+        ({ actorId: evalActorId, path: evalPath }): number | null => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game + foundry namespaces, no shipped browser-side types)
+            const root = globalThis as unknown as FoundryGlobals;
+            const actor = root.game?.actors?.get?.(evalActorId);
+            const getProp = root.foundry?.utils?.getProperty;
             if (actor == null || getProp == null) return null;
             const v = getProp(actor, evalPath);
             const num = Number(v);
@@ -465,7 +477,10 @@ test.describe.serial('dh special items (Tier B)', () => {
                 { flow: FLOW_CYBERNETIC, run: async () => probeCybernetic(page, actorId) },
             ];
             for (const probe of probes) {
-                const result = await probe.run().catch((err: unknown) => ({ ok: false, error: err instanceof Error ? err.message : String(err) }));
+                const result = await probe.run().catch(
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: rejected-promise value is genuinely unknown, fed directly into toErrorMessage guard
+                    (err: unknown): FlowResult => ({ ok: false, error: toErrorMessage(err) }),
+                );
                 if (result.ok) {
                     recordCoverage('dh-special-item.flow', probe.flow);
                 } else {

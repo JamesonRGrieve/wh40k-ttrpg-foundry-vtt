@@ -33,6 +33,34 @@ interface FlowResult {
     detail: string | null;
 }
 
+/**
+ * Shared surface of the three NPC-creation ApplicationV2 dialogs this probe
+ * drives. Only the members exercised here are typed; the dialogs are real
+ * Foundry applications with much wider APIs.
+ */
+interface DialogInstance {
+    render: (options: { force: boolean }) => Promise<void>;
+    element: HTMLElement | null;
+    close?: () => Promise<void>;
+}
+
+/** Constructor shapes for the dynamically-imported dialog modules. */
+type TwoArgDialogCtor = new (config: object, options: object) => DialogInstance;
+type OneArgDialogCtor = new (options: object) => DialogInstance;
+
+/** Exports of the quick/batch dialog modules (config + options ctor). */
+interface TwoArgDialogModule {
+    default?: TwoArgDialogCtor;
+    NPCQuickCreateDialog?: TwoArgDialogCtor;
+    BatchCreateDialog?: TwoArgDialogCtor;
+}
+
+/** Exports of the template-selector module (single options ctor). */
+interface OneArgDialogModule {
+    default?: OneArgDialogCtor;
+    TemplateSelector?: OneArgDialogCtor;
+}
+
 async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
     const pageErrors: string[] = [];
     const listener = (err: Error): void => {
@@ -41,18 +69,18 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
             };
 
             const base = `${'/systems/wh40k-rpg'}/module/applications/npc`;
-            const opened: any[] = [];
+            const opened: DialogInstance[] = [];
 
             // ---------- quick-create-dialog ----------
             try {
-                const mod = await import(`${base}/quick-create-dialog.js`);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
+                const mod = (await import(`${base}/quick-create-dialog.js`)) as TwoArgDialogModule;
                 const NPCQuickCreateDialog = mod.default ?? mod.NPCQuickCreateDialog;
                 if (typeof NPCQuickCreateDialog !== 'function') {
                     record('quick-create-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
@@ -71,7 +99,8 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
 
             // ---------- batch-create-dialog ----------
             try {
-                const mod = await import(`${base}/batch-create-dialog.js`);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
+                const mod = (await import(`${base}/batch-create-dialog.js`)) as TwoArgDialogModule;
                 const BatchCreateDialog = mod.default ?? mod.BatchCreateDialog;
                 if (typeof BatchCreateDialog !== 'function') {
                     record('batch-create-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
@@ -90,7 +119,8 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
 
             // ---------- template-selector ----------
             try {
-                const mod = await import(`${base}/template-selector.js`);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
+                const mod = (await import(`${base}/template-selector.js`)) as OneArgDialogModule;
                 const TemplateSelector = mod.default ?? mod.TemplateSelector;
                 if (typeof TemplateSelector !== 'function') {
                     record('template-selector-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
@@ -110,14 +140,13 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
             // ---------- cleanup ----------
             for (const w of opened) {
                 try {
-                    await w?.close?.();
+                    await w.close?.();
                 } catch {
                     /* ignore */
                 }
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {

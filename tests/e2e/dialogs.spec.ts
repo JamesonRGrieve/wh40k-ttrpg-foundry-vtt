@@ -154,10 +154,58 @@ async function probeDialogs(page: Page): Promise<{
     try {
         const result = await page.evaluate(
             async ({ probes }) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                interface ItemDoc {
+                    type?: string;
+                }
+                interface ItemCreateData {
+                    name: string;
+                    type: string;
+                    system: Record<string, number | string | boolean | { value: number; max: number }>;
+                }
+                interface ActorCreateData {
+                    name: string;
+                    type: string;
+                    system: { gameSystem: string };
+                }
+                interface ActorDoc {
+                    createEmbeddedDocuments?: (type: string, data: readonly ItemCreateData[]) => Promise<ItemDoc[]>;
+                    items?: { contents?: ItemDoc[] };
+                    delete?: () => Promise<void>;
+                }
+                interface ActorClassShape {
+                    create: (data: ActorCreateData) => Promise<ActorDoc | null>;
+                }
+                interface UiWindow {
+                    id?: string;
+                    close?: () => Promise<void>;
+                }
+                interface FoundryGlobal {
+                    Actor?: ActorClassShape;
+                    ui?: { windows?: Record<string, UiWindow> };
+                }
+                // Dialog instances expose only the surface we drive in the probe.
+                interface DialogInstance {
+                    element?: HTMLElement | null;
+                    render: (force?: boolean) => Promise<DialogInstance>;
+                    close?: () => Promise<void>;
+                    constructor: { PARTS?: Record<string, { template: string; scrollable?: string[] }> };
+                }
+                // Constructor args are probe-built positional payloads (actor refs,
+                // roll-data shapes, config objects) destined for Foundry dialog
+                // constructors, which have no shipped types in this browser-side
+                // probe — so each arg is a loose record keyed to whatever the
+                // target dialog's _prepareContext reads.
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry dialog constructor (new Cls(...)) payloads have no shipped types here
+                type DialogProbeArg = ActorDoc | Record<string, unknown>;
+                type DialogCtor = (new (...args: readonly DialogProbeArg[]) => DialogInstance) & {
+                    open?: (...args: readonly DialogProbeArg[]) => void;
+                };
+                type DialogModule = Record<string, DialogCtor | undefined>;
+
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor, ui) have no shipped types in this browser-side probe
+                const g = globalThis as unknown as FoundryGlobal;
                 const ActorCls = g.Actor;
-                if (typeof ActorCls?.create !== 'function') {
+                if (ActorCls === undefined || typeof ActorCls.create !== 'function') {
                     return {
                         created: false,
                         createError: 'Actor.create unavailable',
@@ -166,7 +214,7 @@ async function probeDialogs(page: Page): Promise<{
                 }
 
                 // ── Seed fixture actor + items ──────────────────────────
-                let actor: any;
+                let actor: ActorDoc | null;
                 try {
                     actor = await ActorCls.create({
                         name: 'dialog-probe-actor',
@@ -180,13 +228,14 @@ async function probeDialogs(page: Page): Promise<{
                         results: [],
                     };
                 }
-                if (actor === null || actor === undefined) {
+                if (actor === null) {
                     return { created: false, createError: 'Actor.create returned null', results: [] };
                 }
+                const actorDoc: ActorDoc = actor;
 
-                let weapon: any = null;
+                let weapon: ItemDoc | null = null;
                 try {
-                    const created = await actor.createEmbeddedDocuments?.('Item', [
+                    const created = await actorDoc.createEmbeddedDocuments?.('Item', [
                         {
                             name: 'probe-weapon',
                             type: 'weapon',
@@ -205,11 +254,11 @@ async function probeDialogs(page: Page): Promise<{
                             system: { quantity: 30 },
                         },
                     ]);
-                    weapon = (created ?? []).find((i: any) => i.type === 'weapon') ?? null;
+                    weapon = (created ?? []).find((i) => i.type === 'weapon') ?? null;
                 } catch {
                     /* embed failure surfaces in dependent probes */
                 }
-                const ammoItems = (actor.items?.contents ?? []).filter((i: any) => i.type === 'ammunition' || i.type === 'weapon');
+                const ammoItems = (actorDoc.items?.contents ?? []).filter((i) => i.type === 'ammunition' || i.type === 'weapon');
 
                 /**
                  * Close any dialog/prompt window opened during a probe so
@@ -217,8 +266,8 @@ async function probeDialogs(page: Page): Promise<{
                  */
                 async function closeOpenDialogs(): Promise<void> {
                     const windows = Object.values(g.ui?.windows ?? {});
-                    for (const w of windows as any[]) {
-                        const id = String(w?.id ?? '');
+                    for (const w of windows) {
+                        const id = String(w.id ?? '');
                         if (
                             id.includes('dialog') ||
                             id.includes('prompt') ||
@@ -241,7 +290,7 @@ async function probeDialogs(page: Page): Promise<{
                             id.includes('specialist')
                         ) {
                             try {
-                                await w?.close?.();
+                                await w.close?.();
                             } catch {
                                 /* ignore */
                             }
@@ -263,6 +312,7 @@ async function probeDialogs(page: Page): Promise<{
                 // satisfy the field accesses (`{{this.actor.name}}`,
                 // `{{selectOptions difficulties …}}` etc.) or rendering
                 // throws and source-coverage doesn't reach the render path.
+                const emptyModifiers: Record<string, number> = {};
                 const sampleHit = { location: 'body', damageType: 'i', totalDamage: 5, totalPenetration: 2, totalFatigue: 0 };
                 const sampleLocations = { head: 'Head', body: 'Body', rightArm: 'Right Arm', leftArm: 'Left Arm', rightLeg: 'Right Leg', leftLeg: 'Left Leg' };
                 const sampleDamageType = { e: 'Energy', i: 'Impact', r: 'Rending', x: 'Explosive' };
@@ -277,13 +327,13 @@ async function probeDialogs(page: Page): Promise<{
                     rollData: {
                         name: 'probe',
                         baseTarget: 30,
-                        modifiers: {} as Record<string, number>,
+                        modifiers: emptyModifiers,
                         difficulties: sampleDifficulties,
                         calculateTotalModifiers: async (): Promise<void> => {
                             /* no-op */
                         },
                     },
-                    actor,
+                    actor: actorDoc,
                     calculateSuccessOrFailure: async (): Promise<void> => {
                         /* no-op */
                     },
@@ -293,121 +343,130 @@ async function probeDialogs(page: Page): Promise<{
                  * Build constructor args for a probe entry. Returns the
                  * primary positional args; the spec wraps with `new Cls(...)`.
                  */
-                function buildArgs(kind: string): unknown[] | null {
-                    switch (kind) {
-                        case 'actorCtor':
-                            return [actor];
-                        case 'configCtor':
-                            return [{}];
-                        case 'optionsCtor':
-                            return [{}];
-                        case 'rollDataCtor':
-                            return [{}];
-                        case 'rollDataActionCtor':
-                            return [{ rollData: {} }];
-                        case 'baseRoll':
-                            // BaseRollDialog has no template of its own; pass
-                            // enough rollData so super._prepareContext succeeds.
-                            // The probe code overrides PARTS for this kind to
-                            // borrow simple-roll-prompt.hbs.
-                            return [
-                                {
-                                    name: 'probe',
-                                    baseTarget: 30,
-                                    modifiers: {} as Record<string, number>,
-                                    difficulties: sampleDifficulties,
+                const argBuilders = new Map<string, () => DialogProbeArg[]>([
+                    ['actorCtor', () => [actorDoc]],
+                    ['configCtor', () => [{}]],
+                    ['optionsCtor', () => [{}]],
+                    ['rollDataCtor', () => [{}]],
+                    ['rollDataActionCtor', () => [{ rollData: {} }]],
+                    // BaseRollDialog has no template of its own; pass enough
+                    // rollData so super._prepareContext succeeds. The probe code
+                    // overrides PARTS for this kind to borrow simple-roll-prompt.hbs.
+                    [
+                        'baseRoll',
+                        () => [
+                            {
+                                name: 'probe',
+                                baseTarget: 30,
+                                modifiers: emptyModifiers,
+                                difficulties: sampleDifficulties,
+                            },
+                        ],
+                    ],
+                    [
+                        'assignDamage',
+                        () => [
+                            {
+                                actor: actorDoc,
+                                hit: sampleHit,
+                                armour: 4,
+                                tb: 3,
+                                locations: sampleLocations,
+                                damageType: sampleDamageType,
+                                finalize: async (): Promise<void> => {
+                                    /* no-op */
                                 },
-                            ];
-                        case 'assignDamage':
-                            return [
-                                {
-                                    actor,
-                                    hit: sampleHit,
-                                    armour: 4,
-                                    tb: 3,
-                                    locations: sampleLocations,
-                                    damageType: sampleDamageType,
-                                    finalize: async (): Promise<void> => {
-                                        /* no-op */
-                                    },
-                                    performActionAndSendToChat: async (): Promise<void> => {
-                                        /* no-op */
-                                    },
+                                performActionAndSendToChat: async (): Promise<void> => {
+                                    /* no-op */
                                 },
-                            ];
-                        case 'forceField':
-                            return [
-                                {
-                                    actor,
-                                    forceField: sampleForceField,
-                                    protectionRating: 50,
-                                    overloadRating: 1,
+                            },
+                        ],
+                    ],
+                    [
+                        'forceField',
+                        () => [
+                            {
+                                actor: actorDoc,
+                                forceField: sampleForceField,
+                                protectionRating: 50,
+                                overloadRating: 1,
+                            },
+                        ],
+                    ],
+                    // powerSelect=true branch renders the simple list view.
+                    [
+                        'psychicPower',
+                        () => [
+                            {
+                                rollData: {
+                                    powerSelect: true,
+                                    psychicPowers: [],
+                                    actor: actorDoc,
+                                    sourceActor: actorDoc,
                                 },
-                            ];
-                        case 'psychicPower':
-                            // powerSelect=true branch renders the simple list view.
-                            return [
-                                {
-                                    rollData: {
-                                        powerSelect: true,
-                                        psychicPowers: [],
-                                        actor,
-                                        sourceActor: actor,
-                                    },
-                                    performActionAndSendToChat: async (): Promise<void> => {
-                                        /* no-op */
-                                    },
+                                performActionAndSendToChat: async (): Promise<void> => {
+                                    /* no-op */
                                 },
-                            ];
-                        case 'weaponAttack':
-                            // weaponSelect=true branch renders the simple list view.
-                            return [
-                                {
-                                    rollData: {
-                                        weaponSelect: true,
-                                        weapons: [],
-                                        actor,
-                                        sourceActor: actor,
-                                    },
-                                    performActionAndSendToChat: async (): Promise<void> => {
-                                        /* no-op */
-                                    },
+                            },
+                        ],
+                    ],
+                    // weaponSelect=true branch renders the simple list view.
+                    [
+                        'weaponAttack',
+                        () => [
+                            {
+                                rollData: {
+                                    weaponSelect: true,
+                                    weapons: [],
+                                    actor: actorDoc,
+                                    sourceActor: actorDoc,
                                 },
-                            ];
-                        case 'ammoPicker':
-                            return [
-                                {
-                                    ammoItems,
-                                    currentAmmoUuid: '',
-                                    weaponName: 'probe-weapon',
-                                    clipMax: 6,
+                                performActionAndSendToChat: async (): Promise<void> => {
+                                    /* no-op */
                                 },
-                            ];
-                        case 'simpleRoll': {
-                            // SimpleRollDialog / UnifiedRollDialog need an
-                            // ActionData-shaped first arg with rollData.modifiers.
-                            return [sampleActionData];
-                        }
-                        case 'enhancedSkill':
-                            return [
-                                {
-                                    name: 'probe',
-                                    rollData: sampleActionData.rollData,
-                                    actor,
+                            },
+                        ],
+                    ],
+                    [
+                        'ammoPicker',
+                        () => [
+                            {
+                                ammoItems,
+                                currentAmmoUuid: '',
+                                weaponName: 'probe-weapon',
+                                clipMax: 6,
+                            },
+                        ],
+                    ],
+                    // SimpleRollDialog / UnifiedRollDialog need an ActionData-shaped
+                    // first arg with rollData.modifiers.
+                    ['simpleRoll', () => [sampleActionData]],
+                    [
+                        'enhancedSkill',
+                        () => [
+                            {
+                                name: 'probe',
+                                rollData: sampleActionData.rollData,
+                                actor: actorDoc,
+                            },
+                        ],
+                    ],
+                    [
+                        'effectCreation',
+                        () => [
+                            {
+                                actor: actorDoc,
+                                resolve: (): void => {
+                                    /* fire-and-forget */
                                 },
-                            ];
-                        case 'effectCreation':
-                            return [
-                                {
-                                    actor,
-                                    resolve: (): void => {
-                                        /* fire-and-forget */
-                                    },
-                                },
-                            ];
-                        default:
-                            return null;
-                    }
+                            },
+                        ],
+                    ],
+                ]);
+
+                function buildArgs(kind: string): DialogProbeArg[] | null {
+                    const builder = argBuilders.get(kind);
+                    return builder === undefined ? null : builder();
                 }
 
                 /**
@@ -423,7 +482,7 @@ async function probeDialogs(page: Page): Promise<{
                     let rendered = false;
                     let error: string | null = null;
                     try {
-                        const mod = await import(probe.moduleUrl);
+                        const mod = (await import(probe.moduleUrl)) as DialogModule;
                         const Cls = mod[probe.ctor];
                         if (typeof Cls !== 'function') {
                             return { className: probe.className, rendered: false, error: `export "${probe.ctor}" not a constructor` };
@@ -432,7 +491,7 @@ async function probeDialogs(page: Page): Promise<{
                         if (probe.kind === 'staticOpenActor') {
                             // ConvertActorSystemDialog.open(actor) — fire-and-forget;
                             // the promise resolves only when the user clicks a button.
-                            void Cls.open(actor);
+                            Cls.open?.(actorDoc);
                             await new Promise<void>((resolve) => {
                                 setTimeout(resolve, 60);
                             });
@@ -445,7 +504,7 @@ async function probeDialogs(page: Page): Promise<{
                                 rendered = true;
                             }
                         } else if (probe.kind === 'staticOpenNone') {
-                            void Cls.open();
+                            Cls.open?.();
                             await new Promise<void>((resolve) => {
                                 setTimeout(resolve, 60);
                             });
@@ -461,7 +520,7 @@ async function probeDialogs(page: Page): Promise<{
                             // simple-roll-prompt.hbs at instance level so we can
                             // exercise its constructor + _prepareContext path.
                             if (probe.kind === 'baseRoll') {
-                                (inst.constructor as { PARTS?: Record<string, unknown> }).PARTS = {
+                                inst.constructor.PARTS = {
                                     form: {
                                         template: 'systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs',
                                         scrollable: [''],
@@ -518,14 +577,13 @@ async function probeDialogs(page: Page): Promise<{
 
                 // Cleanup so subsequent specs don't see this actor.
                 try {
-                    await actor.delete?.();
+                    await actorDoc.delete?.();
                 } catch {
                     /* ignore */
                 }
                 void weapon;
 
                 return { created: true, createError: null, results };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             },
             { probes: DIALOG_PROBES.map((p) => ({ className: p.className, moduleUrl: p.moduleUrl, kind: p.kind, ctor: p.ctor })) },
         );

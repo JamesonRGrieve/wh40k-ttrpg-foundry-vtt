@@ -48,20 +48,49 @@ interface FlowResult {
 }
 
 /**
+ * Subset of the Foundry `Actor` surface this probe exercises. All members are
+ * declared optional because the probe defends against missing API at runtime
+ * (the world may be mid-init), but every member that IS present has its real
+ * signature so call sites stay typed.
+ */
+/**
+ * The flag getter and the `subtletyAdjusterEffect` template getter return
+ * framework-opaque values; the probe only ever reads them through `typeof` /
+ * `== null` guards, so a primitive-or-object union is the precise shape.
+ */
+type FoundryOpaque = string | number | boolean | object | null | undefined;
+
+interface ProbeActor {
+    id?: string;
+    system?: { subtlety?: { value?: number }; subtletyAdjusterEffect?: FoundryOpaque };
+    update?: (data: object) => Promise<void>;
+    unsetFlag?: (scope: string, key: string) => Promise<void>;
+    delete?: () => Promise<void>;
+    getFlag?: (scope: string, key: string) => string | undefined;
+    applySubtlety?: (amount: number, source?: string) => Promise<void>;
+    subtletySourceLabel?: (ref: string) => string;
+    collectSubtletyAdjusters?: () => Array<{ label: string; kind: string; delta: number; minAbsoluteDelta?: number }>;
+    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+    deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
+    items?: { get?: (id: string) => { system?: { subtletyAdjusterEffect?: FoundryOpaque } } | undefined };
+}
+
+interface ProbeGame {
+    actors?: { get?: (id: string) => ProbeActor | undefined };
+}
+
+interface ProbeActorClass {
+    create?: (data: object) => Promise<{ id?: string } | null>;
+}
+
+/**
  * Read the actor's current `system.subtlety.value` after re-fetching from the
  * world collection so post-update derived data is observed.
  */
 async function readSubtlety(page: Page, actorId: string): Promise<number | null> {
-    return page.evaluate((id: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) => { system?: { subtlety?: { value?: number } } } | undefined;
-                    };
-                };
-            }
-        ).game;
+    return page.evaluate((id: string): number | null => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+        const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
         const v = gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value;
         return typeof v === 'number' ? v : null;
     }, actorId);
@@ -74,20 +103,8 @@ async function readSubtlety(page: Page, actorId: string): Promise<number | null>
 async function resetSubtlety(page: Page, actorId: string, value: number): Promise<void> {
     await page.evaluate(
         async ({ id, v }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      update?: (data: object) => Promise<unknown>;
-                                      unsetFlag?: (scope: string, key: string) => Promise<unknown>;
-                                  }
-                                | undefined;
-                        };
-                    };
-                }
-            ).game;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+            const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
             const actor = gameGlobal?.actors?.get?.(id);
             await actor?.update?.({ 'system.subtlety.value': v });
             try {
@@ -101,13 +118,10 @@ async function resetSubtlety(page: Page, actorId: string, value: number): Promis
 }
 
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async () => {
-        const ActorCls = (
-            globalThis as unknown as {
-                Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-            }
-        ).Actor;
-        if (!ActorCls?.create) return { id: null as string | null, error: 'Actor.create unavailable' };
+    const result = await page.evaluate(async (): Promise<{ id: string | null; error: string | null }> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `Actor` onto the page globalThis
+        const ActorCls = (globalThis as unknown as { Actor?: ProbeActorClass }).Actor;
+        if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
                 name: 'probe-subtlety-parent',
@@ -115,9 +129,9 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
                 system: { gameSystem: 'bc' },
             });
             if (!actor) return { id: null, error: 'Actor.create returned null' };
-            return { id: actor.id ?? null, error: null as string | null };
+            return { id: actor.id ?? null, error: null };
         } catch (err) {
-            return { id: null, error: String(err instanceof Error ? err.message : err) };
+            return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
     });
     if (result.id === null) return { error: result.error ?? 'unknown create error' };
@@ -126,11 +140,8 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-            }
-        ).game;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+        const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
         const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -160,22 +171,11 @@ async function embedSubtletyTalent(
     },
 ): Promise<{ id: string | null; error: string | null }> {
     return page.evaluate(
-        async ({ actorId: aId, args: embedArgs }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                                  }
-                                | undefined;
-                        };
-                    };
-                }
-            ).game;
+        async ({ actorId: aId, args: embedArgs }): Promise<{ id: string | null; error: string | null }> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+            const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
             const actor = gameGlobal?.actors?.get?.(aId);
-            if (!actor?.createEmbeddedDocuments) return { id: null as string | null, error: 'actor missing createEmbeddedDocuments' };
+            if (!actor?.createEmbeddedDocuments) return { id: null, error: 'actor missing createEmbeddedDocuments' };
             try {
                 const created = await actor.createEmbeddedDocuments('Item', [
                     {
@@ -195,7 +195,7 @@ async function embedSubtletyTalent(
                 const id = created[0]?.id ?? null;
                 return { id, error: id !== null ? null : 'createEmbeddedDocuments returned no id' };
             } catch (err) {
-                return { id: null as string | null, error: `embed item threw: ${String(err instanceof Error ? err.message : err)}` };
+                return { id: null, error: `embed item threw: ${err instanceof Error ? err.message : String(err)}` };
             }
         },
         { actorId, args },
@@ -205,19 +205,8 @@ async function embedSubtletyTalent(
 async function deleteItem(page: Page, actorId: string, itemId: string): Promise<void> {
     await page.evaluate(
         async ({ actorId: aId, itemId: iId }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                                  }
-                                | undefined;
-                        };
-                    };
-                }
-            ).game;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+            const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
             try {
                 await gameGlobal?.actors?.get?.(aId)?.deleteEmbeddedDocuments?.('Item', [iId]);
             } catch {
@@ -247,23 +236,9 @@ async function probeBaseline(page: Page, actorId: string): Promise<FlowResult> {
  * primitive branch of `isSubtletyPrimitive`.
  */
 async function probeManualAdjustment(page: Page, actorId: string): Promise<FlowResult> {
-    return page.evaluate(async (id: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) =>
-                            | {
-                                  applySubtlety?: (amount: number, source?: string) => Promise<unknown>;
-                                  subtletySourceLabel?: (ref: string) => string;
-                                  getFlag?: (scope: string, key: string) => unknown;
-                                  system?: { subtlety?: { value?: number } };
-                              }
-                            | undefined;
-                    };
-                };
-            }
-        ).game;
+    return page.evaluate(async (id: string): Promise<FlowResult> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+        const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
         const actor = gameGlobal?.actors?.get?.(id);
         if (!actor?.applySubtlety) return { ok: false, error: 'actor.applySubtlety unavailable' };
         const before = actor.system?.subtlety?.value ?? null;
@@ -271,7 +246,7 @@ async function probeManualAdjustment(page: Page, actorId: string): Promise<FlowR
         try {
             await actor.applySubtlety(-7, 'manual');
         } catch (err) {
-            return { ok: false, error: `applySubtlety(-7, manual) threw: ${String(err instanceof Error ? err.message : err)}` };
+            return { ok: false, error: `applySubtlety(-7, manual) threw: ${err instanceof Error ? err.message : String(err)}` };
         }
         const live = gameGlobal?.actors?.get?.(id);
         const after = live?.system?.subtlety?.value ?? null;
@@ -291,22 +266,9 @@ async function probeManualAdjustment(page: Page, actorId: string): Promise<FlowR
  * arms and the inquest leg of `subtletySourceLabel`.
  */
 async function probeInquestAdjustment(page: Page, actorId: string): Promise<FlowResult> {
-    return page.evaluate(async (id: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) =>
-                            | {
-                                  applySubtlety?: (amount: number, source?: string) => Promise<unknown>;
-                                  subtletySourceLabel?: (ref: string) => string;
-                                  system?: { subtlety?: { value?: number } };
-                              }
-                            | undefined;
-                    };
-                };
-            }
-        ).game;
+    return page.evaluate(async (id: string): Promise<FlowResult> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+        const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
         const actor = gameGlobal?.actors?.get?.(id);
         if (!actor?.applySubtlety) return { ok: false, error: 'actor.applySubtlety unavailable' };
         const before = actor.system?.subtlety?.value ?? null;
@@ -314,7 +276,7 @@ async function probeInquestAdjustment(page: Page, actorId: string): Promise<Flow
         try {
             await actor.applySubtlety(-3, 'inquest');
         } catch (err) {
-            return { ok: false, error: `applySubtlety(-3, inquest) threw: ${String(err instanceof Error ? err.message : err)}` };
+            return { ok: false, error: `applySubtlety(-3, inquest) threw: ${err instanceof Error ? err.message : String(err)}` };
         }
         const live = gameGlobal?.actors?.get?.(id);
         const after = live?.system?.subtlety?.value ?? null;
@@ -347,28 +309,9 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
     if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
     try {
         const result = await page.evaluate(
-            async ({ actorId: aId, itemId: iId }) => {
-                const gameGlobal = (
-                    globalThis as unknown as {
-                        game?: {
-                            actors?: {
-                                get?: (id: string) =>
-                                    | {
-                                          collectSubtletyAdjusters?: () => Array<{
-                                              label: string;
-                                              kind: string;
-                                              delta: number;
-                                              minAbsoluteDelta: number;
-                                          }>;
-                                          applySubtlety?: (amount: number, source?: string) => Promise<unknown>;
-                                          items?: { get?: (id: string) => { system?: { subtletyAdjusterEffect?: unknown } } | undefined };
-                                          system?: { subtlety?: { value?: number } };
-                                      }
-                                    | undefined;
-                            };
-                        };
-                    }
-                ).game;
+            async ({ actorId: aId, itemId: iId }): Promise<FlowResult> => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+                const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
                 const actor = gameGlobal?.actors?.get?.(aId);
                 if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
                 const collected = actor.collectSubtletyAdjusters();
@@ -383,7 +326,7 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
                 try {
                     await actor.applySubtlety(found.delta);
                 } catch (err) {
-                    return { ok: false, error: `applySubtlety threw: ${String(err instanceof Error ? err.message : err)}` };
+                    return { ok: false, error: `applySubtlety threw: ${err instanceof Error ? err.message : String(err)}` };
                 }
                 const live = gameGlobal?.actors?.get?.(aId);
                 const after = live?.system?.subtlety?.value ?? null;
@@ -430,20 +373,9 @@ async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowR
     });
     if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
     try {
-        return await page.evaluate((id: string) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      collectSubtletyAdjusters?: () => Array<{ label: string; kind: string; delta: number }>;
-                                  }
-                                | undefined;
-                        };
-                    };
-                }
-            ).game;
+        return await page.evaluate((id: string): FlowResult => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+            const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
             const actor = gameGlobal?.actors?.get?.(id);
             if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
             const present = actor.collectSubtletyAdjusters().find((a) => a.label === 'probe-subtlety-passive-gated');
@@ -477,21 +409,9 @@ async function probeMinAbsoluteDeltaFloors(page: Page, actorId: string): Promise
     });
     if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
     try {
-        return await page.evaluate(async (id: string) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      applySubtlety?: (amount: number) => Promise<unknown>;
-                                      system?: { subtlety?: { value?: number } };
-                                  }
-                                | undefined;
-                        };
-                    };
-                }
-            ).game;
+        return await page.evaluate(async (id: string): Promise<FlowResult> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+            const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
             const actor = gameGlobal?.actors?.get?.(id);
             if (!actor?.applySubtlety) return { ok: false, error: 'applySubtlety unavailable' };
             const before = actor.system?.subtlety?.value ?? null;
@@ -500,7 +420,7 @@ async function probeMinAbsoluteDeltaFloors(page: Page, actorId: string): Promise
                 await actor.applySubtlety(-5);
                 await gameGlobal?.actors?.get?.(id)?.applySubtlety?.(-5);
             } catch (err) {
-                return { ok: false, error: `clamped applySubtlety threw: ${String(err instanceof Error ? err.message : err)}` };
+                return { ok: false, error: `clamped applySubtlety threw: ${err instanceof Error ? err.message : String(err)}` };
             }
             const after = gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value ?? null;
             if (after === null) return { ok: false, error: 'subtlety missing after clamp test' };
@@ -528,20 +448,9 @@ async function probeClearsWhenRemoved(page: Page, actorId: string): Promise<Flow
         requiresEquipped: false,
     });
     if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
-    const presentBefore = await page.evaluate((id: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) =>
-                            | {
-                                  collectSubtletyAdjusters?: () => Array<{ label: string }>;
-                              }
-                            | undefined;
-                    };
-                };
-            }
-        ).game;
+    const presentBefore = await page.evaluate((id: string): boolean => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+        const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
         return (
             gameGlobal?.actors
                 ?.get?.(id)
@@ -554,20 +463,9 @@ async function probeClearsWhenRemoved(page: Page, actorId: string): Promise<Flow
         return { ok: false, error: 'passive adjuster did not surface before removal' };
     }
     await deleteItem(page, actorId, created.id);
-    const presentAfter = await page.evaluate((id: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) =>
-                            | {
-                                  collectSubtletyAdjusters?: () => Array<{ label: string }>;
-                              }
-                            | undefined;
-                    };
-                };
-            }
-        ).game;
+    const presentAfter = await page.evaluate((id: string): boolean => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+        const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
         return (
             gameGlobal?.actors
                 ?.get?.(id)

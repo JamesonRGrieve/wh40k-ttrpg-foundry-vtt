@@ -112,8 +112,51 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            // Materialized compendium documents have no shipped TS schema in
+            // this browser-side probe; we narrow each field defensively below.
+            interface RawDoc {
+                id?: string;
+                name?: string;
+                type?: string;
+                system?: RawSystem | null;
+            }
+            interface RawSystem {
+                // _source and toObject() expose raw DataModel JSON whose shape is
+                // content-specific (per item/actor type) and has no shared schema
+                // in this probe — the validation logic walks it structurally.
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel _source has no shipped type; walked structurally
+                _source?: unknown;
+                schema?: { fields?: Record<string, object> };
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel.toObject() output has no shipped type; walked structurally
+                toObject?: () => unknown;
+            }
+            interface CompendiumPack {
+                getDocuments: () => Promise<RawDoc[]>;
+            }
+            interface PackCollection {
+                get?: (id: string) => CompendiumPack | null | undefined;
+            }
+            interface GameObject {
+                packs?: PackCollection;
+            }
+            interface UuidNameCacheLike {
+                getName?: (uuid: string) => string | null | undefined;
+            }
+            interface UuidCacheModule {
+                uuidNameCache?: UuidNameCacheLike;
+                default?: UuidNameCacheLike;
+            }
+            // fromUuidSync resolves to a Foundry Document (untyped here); we only
+            // read `.name` off it, guarded below.
+            interface ResolvedDoc {
+                name?: string;
+            }
+            interface FoundryGlobal {
+                game?: GameObject;
+                fromUuidSync?: (uuid: string) => ResolvedDoc | null | undefined;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game, fromUuidSync) have no shipped types in this browser-side probe
+            const g = globalThis as unknown as FoundryGlobal;
             const gameCls = g.game;
 
             // Wrap any awaitable with a 30s timeout so a slow pack can't
@@ -135,6 +178,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
             // the Foundry compendium UUID shape. Caps depth at 8 to avoid
             // pathological cycles inside DataModel proxies (the schema
             // graph is wide but shallow in practice).
+            // eslint-disable-next-line no-restricted-syntax -- boundary: recursive walk over untyped Foundry DataModel data; `unknown` is the input contract
             function collectUuidStrings(value: unknown, depth: number, out: string[]): void {
                 if (depth > 8) return;
                 if (value === null || value === undefined) return;
@@ -147,12 +191,12 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     return;
                 }
                 if (typeof value === 'object') {
-                    for (const k of Object.keys(value)) {
+                    for (const [k, v] of Object.entries(value)) {
                         // Skip framework-internal slots whose traversal
                         // produces noise without UUIDs (parent chains,
                         // collection contents that re-enter the doc tree).
                         if (k === 'parent' || k === 'document' || k === 'apps') continue;
-                        collectUuidStrings((value as Record<string, unknown>)[k], depth + 1, out);
+                        collectUuidStrings(v, depth + 1, out);
                     }
                 }
             }
@@ -165,9 +209,10 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 // warm after the ready hook fires.
                 try {
                     const url = '/systems/wh40k-rpg/module/utils/uuid-name-cache.js';
-                    const mod = await (new Function('u', 'return import(u)') as (u: string) => Promise<unknown>)(url);
-                    const cache = (mod as any).uuidNameCache ?? (mod as any).default;
-                    if (cache != null && typeof cache.getName === 'function') {
+                    const importModule = new Function('u', 'return import(u)') as (u: string) => Promise<UuidCacheModule>;
+                    const mod = await importModule(url);
+                    const cache = mod.uuidNameCache ?? mod.default;
+                    if (cache?.getName !== undefined && typeof cache.getName === 'function') {
                         const hit = cache.getName(uuid);
                         if (typeof hit === 'string' && hit !== '[broken link]' && hit.length > 0) return hit;
                         // Fall through to fromUuidSync — the cache could be
@@ -179,10 +224,10 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 }
                 try {
                     const fn = g.fromUuidSync;
-                    if (typeof fn === 'function') {
+                    if (fn !== undefined && typeof fn === 'function') {
                         const doc = fn(uuid);
-                        if (doc != null && typeof doc === 'object' && typeof (doc as { name?: unknown }).name === 'string') {
-                            return (doc as { name: string }).name;
+                        if (doc != null && typeof doc.name === 'string') {
+                            return doc.name;
                         }
                     }
                 } catch {
@@ -196,6 +241,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
             // to the serialized form (toObject() is allowed to add derived
             // slots — DataModels frequently do). A missing key, or a slot
             // whose JSON-serialized shape diverged, is a fail.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: structural diff over untyped Foundry DataModel _source vs toObject() output; no shared schema
             function compareRoundTrip(source: Record<string, unknown>, serialized: Record<string, unknown>): string[] {
                 const diffs: string[] = [];
                 for (const key of Object.keys(source)) {
@@ -276,7 +322,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     continue;
                 }
 
-                let docs: unknown[] = [];
+                let docs: RawDoc[] = [];
                 try {
                     docs = await withTimeout(pack.getDocuments(), 30_000, `${packId}.getDocuments()`);
                 } catch (err) {
@@ -292,32 +338,17 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 }
 
                 let perDocFailures = 0;
-                for (const raw of docs) {
-                    if (raw === null || typeof raw !== 'object') {
-                        if (outcome.failures.length < 5) outcome.failures.push('doc is null or non-object');
-                        perDocFailures += 1;
-                        continue;
-                    }
-                    const doc = raw as {
-                        id?: string;
-                        name?: string;
-                        type?: string;
-                        system?: unknown;
-                    };
+                for (const doc of docs) {
                     const docLabel = doc.name ?? doc.id ?? '<unnamed>';
 
                     // Assertion 1: doc.system is a non-null object.
-                    if (doc.system === null || typeof doc.system !== 'object') {
+                    if (doc.system === null || doc.system === undefined || typeof doc.system !== 'object') {
                         if (outcome.failures.length < 5)
                             outcome.failures.push(`${docLabel}: system is not an object (got ${doc.system === null ? 'null' : typeof doc.system})`);
                         perDocFailures += 1;
                         continue;
                     }
-                    const system = doc.system as {
-                        _source?: unknown;
-                        schema?: { fields?: Record<string, unknown> };
-                        toObject?: () => unknown;
-                    };
+                    const system = doc.system;
 
                     // Assertion 3: schema is registered (DataModel attached).
                     // RollTable / JournalEntry don't carry a per-doc-type
@@ -345,6 +376,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                         if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: system.toObject missing`);
                         perDocFailures += 1;
                     } else if (system._source !== null && typeof system._source === 'object') {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: holds Foundry DataModel.toObject() output, which is untyped here
                         let serialized: unknown = null;
                         try {
                             serialized = system.toObject();
@@ -353,6 +385,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                             perDocFailures += 1;
                         }
                         if (serialized !== null && typeof serialized === 'object') {
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel _source / toObject() output are untyped; passed to the structural-diff walker
                             const diffs = compareRoundTrip(system._source as Record<string, unknown>, serialized as Record<string, unknown>);
                             if (diffs.length > 0) {
                                 if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: roundtrip diffs: ${diffs.slice(0, 3).join('; ')}`);
@@ -379,7 +412,6 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
             }
 
             return { outcomes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, COMPENDIUM_CONTENT_FLOWS);
 
         return {

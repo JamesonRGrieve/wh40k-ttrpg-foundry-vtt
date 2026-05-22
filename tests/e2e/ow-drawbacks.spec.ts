@@ -21,11 +21,26 @@ interface ActorRef {
     id: string;
 }
 
+interface DrawbackProbeResult {
+    rendered: boolean;
+    hasPanel: boolean;
+    hasRefundBadge: boolean;
+    hasBudgetRow: boolean;
+    hasRoster: boolean;
+    rosterCountBefore: number | null;
+    drawbacksBefore: number | null;
+    drawbacksAfter: number | null;
+    toggleDispatched: boolean;
+    error: string | null;
+}
+
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor: ActorGlobal } = globalThis as unknown as {
+        interface FoundryGlobal {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (Actor), no type surface in browser context
+        const { Actor: ActorGlobal } = globalThis as unknown as FoundryGlobal;
         if (!ActorGlobal?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorGlobal.create({
@@ -53,9 +68,11 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game: gameGlobal } = globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        };
+        interface FoundryGlobal {
+            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (game), no type surface in browser context
+        const { game: gameGlobal } = globalThis as unknown as FoundryGlobal;
         const actor = gameGlobal?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -80,11 +97,40 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async (id: string) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+            const result = await page.evaluate(async (id: string): Promise<DrawbackProbeResult> => {
+                interface ActorSheet {
+                    render: (options: { force?: boolean }) => Promise<void>;
+                    element?: HTMLElement | null;
+                    close?: () => Promise<void>;
+                }
+                interface ActorDoc {
+                    system?: {
+                        regimentDrawbacks?: string[];
+                        multiComradeRoster?: { additionalIds?: string[] };
+                    };
+                    sheet?: ActorSheet | null;
+                }
+                interface FoundryGlobal {
+                    game?: { actors?: { get?: (id: string) => ActorDoc | undefined } };
+                    __c160sheet?: ActorSheet;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (game), no type surface in browser context
+                const g = globalThis as unknown as FoundryGlobal;
                 const actor = g.game?.actors?.get?.(id);
-                if (actor == null) return { error: 'actor lookup failed' };
+                if (actor == null) {
+                    return {
+                        rendered: false,
+                        hasPanel: false,
+                        hasRefundBadge: false,
+                        hasBudgetRow: false,
+                        hasRoster: false,
+                        rosterCountBefore: null,
+                        drawbacksBefore: null,
+                        drawbacksAfter: null,
+                        toggleDispatched: false,
+                        error: 'actor lookup failed',
+                    };
+                }
                 let rendered = false;
                 let hasPanel = false;
                 let hasRefundBadge = false;
@@ -143,22 +189,23 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
                     toggleDispatched,
                     error: probeError,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, actorId);
 
             await snap(page, 'ow-drawback-panel');
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const g = globalThis as any;
+                interface FoundryGlobal {
+                    __c160sheet?: { close?: () => Promise<void> };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: parked sheet on Foundry runtime global, no type surface in browser context
+                const g = globalThis as unknown as FoundryGlobal;
                 try {
                     await g.__c160sheet?.close?.();
                 } catch {
                     /* ignore */
                 }
                 g.__c160sheet = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
@@ -172,7 +219,7 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             expect(result.hasRoster, 'multi-comrade roster section should render').toBe(true);
             expect(result.drawbacksBefore, 'initial drawback count should be 2').toBe(2);
             expect(result.rosterCountBefore, 'initial additional-comrade count should be 2').toBe(2);
-            if (result.toggleDispatched === true) {
+            if (result.toggleDispatched) {
                 expect(result.drawbacksAfter, 'one click should remove one drawback id').toBe(1);
             }
             expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
