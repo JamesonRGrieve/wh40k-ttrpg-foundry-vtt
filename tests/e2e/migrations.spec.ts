@@ -32,42 +32,80 @@ const FLOW_COMPENDIUM_RESYNC = 'compendium-resync-runs';
 const FLOW_ICON_TO_IMG = 'icon-deprecation-migrates-to-img';
 const FLOW_NO_BREAK = 'migration-doesnt-break-existing-records';
 
+/**
+ * The migrated talent `system` shape this probe asserts against (post
+ * `TalentData._migrateData`). Only the fields read here are modelled.
+ */
+interface MigratedTalentSystem {
+    prerequisites?: { text?: string; characteristics?: Record<string, number>; skills?: string[]; talents?: string[] };
+    aptitudes?: string[] | string;
+    hasSpecialization?: boolean;
+    specialization?: string;
+}
+
+/** A created/embedded document carrying `createEmbeddedDocuments`. */
+interface EmbeddingDoc {
+    id?: string;
+    createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id?: string }>>;
+}
+
+/** A live ActiveEffect as seen through the actor's `effects.contents`. */
+interface LiveEffect {
+    name?: string | null;
+    img?: string | null;
+    icon?: string | null;
+    label?: string | null;
+}
+
+/** An actor refetched from the world collection, with its effects collection. */
+interface LiveActor {
+    delete?: () => Promise<void>;
+    createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id?: string }>>;
+    effects?: { contents?: LiveEffect[] };
+}
+
+interface CompendiumPack {
+    metadata?: { id?: string; type?: string; packageName?: string; name?: string };
+    getIndex?: (opts?: { fields?: string[] }) => Promise<Iterable<{ _id?: string; type?: string; name?: string }>>;
+    getDocument?: (id: string) => Promise<{ id?: string; type?: string; name?: string; system?: object } | null>;
+}
+
+/**
+ * Subset of the Foundry runtime surface this probe touches. Foundry injects
+ * `game`, `Actor`, and `Item` onto the page globalThis; the cast to this
+ * shape is a named-boundary cast. Settings values are typed as the concrete
+ * primitive unions the probes read (`world-version` → number, `resync-on-ready`
+ * → boolean) rather than `unknown`.
+ */
 interface PageWindow {
     Actor?: {
-        create?: (data: object) => Promise<{
-            id?: string;
-            createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id?: string }>>;
-        } | null>;
+        create?: (data: object) => Promise<EmbeddingDoc | null>;
     };
     Item?: {
         create?: (data: object) => Promise<{
             id?: string;
-            system?: Record<string, unknown>;
-            delete?: () => Promise<unknown>;
+            system?: MigratedTalentSystem;
+            delete?: () => Promise<void>;
         } | null>;
     };
     game?: {
         system?: { version?: string; id?: string };
-        settings?: { get?: (namespace: string, key: string) => unknown };
+        settings?: { get?: (namespace: string, key: string) => string | number | boolean | undefined };
         packs?: {
-            contents?: Array<{
-                metadata?: { id?: string; type?: string; packageName?: string; name?: string };
-                getIndex?: (opts?: { fields?: string[] }) => Promise<Iterable<{ _id?: string; type?: string; name?: string }>>;
-                getDocument?: (id: string) => Promise<{ id?: string; type?: string; name?: string; system?: Record<string, unknown> } | null>;
-            }>;
-            get?: (id: string) => unknown;
+            contents?: CompendiumPack[];
         };
         actors?: {
-            get?: (id: string) => { delete?: () => Promise<unknown> } | undefined;
+            get?: (id: string) => LiveActor | undefined;
         };
         items?: {
-            get?: (id: string) => { delete?: () => Promise<unknown> } | undefined;
+            get?: (id: string) => { delete?: () => Promise<void> } | undefined;
         };
     };
 }
 
 async function deleteWorldItem(page: Page, id: string): Promise<void> {
     await page.evaluate(async (itemId: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
         const { game: foundryGame } = globalThis as unknown as PageWindow;
         try {
             await foundryGame?.items?.get?.(itemId)?.delete?.();
@@ -79,6 +117,7 @@ async function deleteWorldItem(page: Page, id: string): Promise<void> {
 
 async function deleteWorldActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
         const { game: foundryGame } = globalThis as unknown as PageWindow;
         try {
             await foundryGame?.actors?.get?.(actorId)?.delete?.();
@@ -99,6 +138,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `Item` onto the page globalThis
             const { Item: ItemCtor } = globalThis as unknown as PageWindow;
             if (!ItemCtor?.create) return { error: 'Item.create unavailable' };
             try {
@@ -115,14 +155,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                     },
                 });
                 if (!item) return { error: 'Item.create returned null' };
-                const sys = item.system as
-                    | {
-                          prerequisites?: { text?: string; characteristics?: Record<string, unknown>; skills?: unknown[]; talents?: unknown[] };
-                          aptitudes?: unknown;
-                          hasSpecialization?: boolean;
-                          specialization?: string;
-                      }
-                    | undefined;
+                const sys = item.system;
                 return {
                     id: item.id ?? null,
                     prereqText: sys?.prerequisites?.text ?? null,
@@ -162,8 +195,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
-            const { Actor: ActorCtor } = globalThis as unknown as PageWindow;
-            const { game: foundryGame } = globalThis as unknown as PageWindow;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `Actor` and `game` onto the page globalThis
+            const { Actor: ActorCtor, game: foundryGame } = globalThis as unknown as PageWindow;
             if (!ActorCtor?.create) return { error: 'Actor.create unavailable' };
             try {
                 const created = await ActorCtor.create({
@@ -173,12 +206,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 });
                 if (!created) return { error: 'Actor.create returned null' };
                 const actorId = created.id ?? null;
-                const live =
-                    actorId !== null
-                        ? (foundryGame?.actors?.get?.(actorId) as
-                              | { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> }
-                              | undefined)
-                        : undefined;
+                const live = actorId !== null ? foundryGame?.actors?.get?.(actorId) : undefined;
                 // V14 dropped the auto-remap of legacy `label` → `name` on
                 // ActiveEffect documents. The migration that USED to happen at
                 // document init is now a `name`-required schema field; an AE
@@ -199,12 +227,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                     },
                 ]);
                 const fresh = actorId !== null ? foundryGame?.actors?.get?.(actorId) : undefined;
-                const effects =
-                    (
-                        fresh as
-                            | { effects?: { contents?: Array<{ name?: string | null; img?: string | null; icon?: string | null; label?: string | null }> } }
-                            | undefined
-                    )?.effects?.contents ?? [];
+                const effects = fresh?.effects?.contents ?? [];
                 const found = effects.find((e) => e.name === 'Legacy-Label-Field') ?? effects[0];
                 return {
                     actorId,
@@ -237,10 +260,11 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(() => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
             const { game: foundryGame } = globalThis as unknown as PageWindow;
             const systemId = foundryGame?.system?.id ?? null;
             const systemVersion = foundryGame?.system?.version ?? null;
-            let worldVersion: unknown = null;
+            let worldVersion: string | number | boolean | null = null;
             try {
                 worldVersion = foundryGame?.settings?.get?.('wh40k-rpg', 'world-version') ?? null;
             } catch (err) {
@@ -273,12 +297,13 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
             const { game: foundryGame } = globalThis as unknown as PageWindow;
             // The setting is registered by WH40KSettings.registerSettings; if the
             // hooks-manager ready chain ran, world-version is set AND the resync
             // function will have iterated game.actors (a no-op when there are no
             // actors, but the function is still reached).
-            let resyncEnabled: unknown = null;
+            let resyncEnabled: string | number | boolean | null = null;
             try {
                 resyncEnabled = foundryGame?.settings?.get?.('wh40k-rpg', 'resync-on-ready') ?? null;
             } catch (err) {
@@ -333,8 +358,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
-            const { Actor: ActorCtor } = globalThis as unknown as PageWindow;
-            const { game: foundryGame } = globalThis as unknown as PageWindow;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `Actor` and `game` onto the page globalThis
+            const { Actor: ActorCtor, game: foundryGame } = globalThis as unknown as PageWindow;
             if (!ActorCtor?.create) return { error: 'Actor.create unavailable' };
             try {
                 const created = await ActorCtor.create({
@@ -347,12 +372,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 // Refetch the actor from the live collection so
                 // createEmbeddedDocuments resolves to a bound method on the
                 // canonical Document instance.
-                const live =
-                    actorId !== null
-                        ? (foundryGame?.actors?.get?.(actorId) as
-                              | { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> }
-                              | undefined)
-                        : undefined;
+                const live = actorId !== null ? foundryGame?.actors?.get?.(actorId) : undefined;
                 await live?.createEmbeddedDocuments?.('ActiveEffect', [
                     {
                         name: 'icon-probe',
@@ -361,8 +381,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                     },
                 ]);
                 const fresh = actorId !== null ? foundryGame?.actors?.get?.(actorId) : undefined;
-                const effects =
-                    (fresh as { effects?: { contents?: Array<{ name?: string | null; img?: string | null }> } } | undefined)?.effects?.contents ?? [];
+                const effects = fresh?.effects?.contents ?? [];
                 const found = effects.find((e) => e.name === 'icon-probe') ?? effects[0];
                 return {
                     actorId,
@@ -392,6 +411,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
             const { game: foundryGame } = globalThis as unknown as PageWindow;
             const packs = foundryGame?.packs?.contents ?? [];
             // Pick a deterministic DH2 talents pack if present, else any system Item pack.

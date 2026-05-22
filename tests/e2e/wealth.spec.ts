@@ -33,13 +33,27 @@ import { expect, test } from './lib/test';
  * failures so all sub-assertions surface in a single assertion message.
  */
 
+/** Narrow view of a Foundry Actor document used by these probes. */
 interface ActorHandle {
     id?: string;
-    system?: Record<string, unknown>;
-    update?: (data: object) => Promise<unknown>;
-    delete?: () => Promise<unknown>;
-    setFlag?: (scope: string, key: string, value: unknown) => Promise<unknown>;
+    system?: ActorSystemView;
+    update?: (data: object) => Promise<void>;
+    delete?: () => Promise<void>;
+    setFlag?: (scope: string, key: string, value: ActorFlagValue) => Promise<void>;
+    // boundary: Foundry's getFlag API returns untyped flag data; callers guard before use.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor#getFlag is untyped
     getFlag?: (scope: string, key: string) => unknown;
+}
+
+/** Foundry flag values are arbitrary JSON-serialisable data. */
+type ActorFlagValue = string | number | boolean | null | ActorFlagValue[] | { [key: string]: ActorFlagValue };
+
+/** The fields of `actor.system` these probes read. */
+interface ActorSystemView {
+    influence?: number;
+    requisition?: number;
+    throneGelt?: number;
+    rogueTrader?: { profitFactor?: { current?: number } };
 }
 
 interface PageWindow {
@@ -53,16 +67,30 @@ interface PageWindow {
     };
 }
 
+interface AcquisitionProbeResult {
+    error: string | null;
+    elementOk?: boolean;
+    itemContext?: string | null;
+    availabilityModifier?: number | null;
+    craftsmanshipModifier?: number | null;
+    commonTotal?: number | null;
+    historyLen?: number;
+    pfBefore?: number;
+    pfAfter?: number | null;
+    logErr?: string | null;
+}
+
 async function createActor(page: Page, label: string, actorType: string, gameSystem: string): Promise<{ id: string | null; createError: string | null }> {
     return page.evaluate(
         async ({ name, type, sys }: { name: string; type: string; sys: string }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser global has no static type in this Playwright context
             const { Actor: ActorCtor } = globalThis as unknown as PageWindow;
             if (!ActorCtor?.create) return { id: null, createError: 'Actor.create unavailable' };
             try {
                 const actor = await ActorCtor.create({ name, type, system: { gameSystem: sys } });
                 return { id: actor?.id ?? null, createError: actor ? null : 'Actor.create returned null' };
             } catch (err) {
-                return { id: null, createError: String((err as Error).message) };
+                return { id: null, createError: err instanceof Error ? err.message : String(err) };
             }
         },
         { name: label, type: actorType, sys: gameSystem },
@@ -71,6 +99,7 @@ async function createActor(page: Page, label: string, actorType: string, gameSys
 
 async function deleteActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser global has no static type in this Playwright context
         const { game: foundryGame } = globalThis as unknown as PageWindow;
         try {
             await foundryGame?.actors?.get?.(actorId)?.delete?.();
@@ -92,20 +121,22 @@ async function probeScalarField(
 ): Promise<{ before: number | null; after: number | null; error: string | null }> {
     return page.evaluate(
         async ({ id, path, val }: { id: string; path: string; val: number }) => {
-            const { game: foundryGame } = globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { system?: Record<string, unknown>; update?: (data: object) => Promise<unknown> } | undefined } };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser global has no static type in this Playwright context
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
             const actor = foundryGame?.actors?.get?.(id);
             if (!actor) return { before: null, after: null, error: 'actor not found' };
 
-            // Read nested field via dot path.
-            function readPath(root: Record<string, unknown> | undefined, p: string): number | null {
+            // Read nested field via dot path. Walks an arbitrary object tree
+            // by string key; returns the leaf only when it is a number.
+            function readPath(root: ActorSystemView | undefined, p: string): number | null {
                 if (root === undefined) return null;
                 const segs = p.split('.');
+                // boundary: dot-path walk yields values whose type is not statically known per segment
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic key walk over actor.system tree
                 let cur: unknown = root;
                 for (const seg of segs) {
-                    if (cur === null || cur === undefined || typeof cur !== 'object') return null;
-                    cur = (cur as Record<string, unknown>)[seg];
+                    if (cur === null || typeof cur !== 'object') return null;
+                    cur = Reflect.get(cur, seg);
                 }
                 return typeof cur === 'number' ? cur : null;
             }
@@ -305,9 +336,40 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         const setup = await probeScalarField(page, created.id, 'rogueTrader.profitFactor.current', 40);
         if (setup.error !== null) failures.push(`PF setup: ${setup.error}`);
 
-        const result = await page.evaluate(async (actorId: string) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+        const result = await page.evaluate(async (actorId: string): Promise<AcquisitionProbeResult> => {
+            interface ProbeItem {
+                name: string;
+                img: string;
+                type: string;
+                system: { availability: string; craftsmanship: string; cost: number };
+            }
+            interface DialogInstance {
+                selectedModifiers: Set<string>;
+                element?: HTMLElement;
+                render: (force?: boolean) => Promise<void>;
+                close?: (options?: { _skipResolve?: boolean }) => Promise<void>;
+                _prepareContext: (options: { force?: boolean }) => Promise<{
+                    item?: { name?: string };
+                    availabilityModifier?: number;
+                    craftsmanshipModifier?: number;
+                    commonTotal?: number;
+                }>;
+                _logAcquisition: (entry: { item: ProbeItem; roll: number; target: number; success: boolean; dos: number; timestamp: number }) => Promise<void>;
+            }
+            interface DialogCtor {
+                new (actor: ProbeActor, options: { item: ProbeItem }): DialogInstance;
+            }
+            interface ProbeActor {
+                system?: { rogueTrader?: { profitFactor?: { current?: number } } };
+                update?: (data: object) => Promise<void>;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor#getFlag is untyped
+                getFlag?: (scope: string, key: string) => unknown;
+            }
+            interface ProbeWindow {
+                game?: { actors?: { get?: (id: string) => ProbeActor | undefined } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser global has no static type in this Playwright context
+            const g = globalThis as unknown as ProbeWindow;
             const actor = g.game?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
 
@@ -321,7 +383,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             // a real embedded item passed in would always hit the `?? 0`
             // fallback. The dialog reads `this.item.{name,img,type,system}`
             // so a plain object is sufficient — no live Document needed.
-            const item: any = {
+            const item: ProbeItem = {
                 name: 'probe-acquisition-gear',
                 img: 'icons/svg/item-bag.svg',
                 type: 'gear',
@@ -332,20 +394,22 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
                 },
             };
 
-            let DialogCls: any;
+            let DialogCls: DialogCtor;
             try {
-                const mod = await import(`${'/systems/wh40k-rpg'}/module/applications/dialogs/acquisition-dialog.js`);
+                const path = `${'/systems/wh40k-rpg'}/module/applications/dialogs/acquisition-dialog.js`;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import() of a runtime Foundry system module path has no static module type
+                const mod = (await import(path)) as { default?: DialogCtor };
+                if (typeof mod.default !== 'function') return { error: 'AcquisitionDialog default export not a constructor' };
                 DialogCls = mod.default;
             } catch (err) {
-                return { error: `import dialog: ${String((err as Error).message)}` };
+                return { error: `import dialog: ${err instanceof Error ? err.message : String(err)}` };
             }
-            if (typeof DialogCls !== 'function') return { error: 'AcquisitionDialog default export not a constructor' };
 
-            let dialog: any;
+            let dialog: DialogInstance;
             try {
                 dialog = new DialogCls(actor, { item });
             } catch (err) {
-                return { error: `construct dialog: ${String((err as Error).message)}` };
+                return { error: `construct dialog: ${err instanceof Error ? err.message : String(err)}` };
             }
 
             // Toggle a couple of common modifiers to drive the
@@ -353,7 +417,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             dialog.selectedModifiers.add('haggling');
             dialog.selectedModifiers.add('rare');
 
-            let context: any = null;
+            let context: Awaited<ReturnType<DialogInstance['_prepareContext']>> | null = null;
             try {
                 await dialog.render(true);
                 await new Promise((r) => {
@@ -366,7 +430,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
                 } catch {
                     /* ignore */
                 }
-                return { error: `render/prepare: ${String((err as Error).message)}` };
+                return { error: `render/prepare: ${err instanceof Error ? err.message : String(err)}` };
             }
 
             const elementOk = dialog.element instanceof HTMLElement;
@@ -386,22 +450,24 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
                     timestamp: Date.now(),
                 });
             } catch (err) {
-                logErr = String((err as Error).message);
+                logErr = err instanceof Error ? err.message : String(err);
             }
-            const history = (actor.getFlag?.('wh40k-rpg', 'acquisitionHistory') as unknown[] | undefined) ?? [];
+            const historyFlag = actor.getFlag?.('wh40k-rpg', 'acquisitionHistory');
+            const historyLen = Array.isArray(historyFlag) ? historyFlag.length : 0;
 
             // Simulate the success branch: add the item to the actor's
             // inventory (already there; assert there's at least one), then
             // simulate the critical-failure branch by writing the
             // decremented PF directly.
-            const pfBefore = (actor.system?.rogueTrader?.profitFactor?.current ?? 0) as number;
+            const pfBefore = actor.system?.rogueTrader?.profitFactor?.current ?? 0;
             try {
                 await actor.update?.({ 'system.rogueTrader.profitFactor.current': Math.max(0, pfBefore - 1) });
             } catch (err) {
-                logErr ??= `pf decrement: ${String((err as Error).message)}`;
+                const decrementErr = `pf decrement: ${err instanceof Error ? err.message : String(err)}`;
+                logErr = logErr ?? decrementErr;
             }
             const refreshed = g.game?.actors?.get?.(actorId);
-            const pfAfter = (refreshed?.system?.rogueTrader?.profitFactor?.current ?? null) as number | null;
+            const pfAfter = refreshed?.system?.rogueTrader?.profitFactor?.current ?? null;
 
             try {
                 await dialog.close?.({ _skipResolve: true });
@@ -412,16 +478,15 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             return {
                 error: null,
                 elementOk,
-                itemContext: context?.item?.name ?? null,
-                availabilityModifier: context?.availabilityModifier ?? null,
-                craftsmanshipModifier: context?.craftsmanshipModifier ?? null,
-                commonTotal: context?.commonTotal ?? null,
-                historyLen: history.length,
+                itemContext: context.item?.name ?? null,
+                availabilityModifier: context.availabilityModifier ?? null,
+                craftsmanshipModifier: context.craftsmanshipModifier ?? null,
+                commonTotal: context.commonTotal ?? null,
+                historyLen,
                 pfBefore,
                 pfAfter,
                 logErr,
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, created.id);
 
         if (result.error !== null) failures.push(result.error);
@@ -429,14 +494,14 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             // RT Table 9-35: Scarce → +0, Good craftsmanship → -10.
             // (DH2's Scarce=-10 value lives in requisition-test.ts; RT
             // diverges and the dialog uses the rt rules module.)
-            if (!result.elementOk) failures.push('dialog.element was not an HTMLElement after render');
+            if (result.elementOk !== true) failures.push('dialog.element was not an HTMLElement after render');
             if (result.itemContext !== 'probe-acquisition-gear')
                 failures.push(`context.item.name was ${result.itemContext}, expected 'probe-acquisition-gear'`);
             if (result.availabilityModifier !== 0) failures.push(`availabilityModifier was ${result.availabilityModifier}, expected 0`);
             if (result.craftsmanshipModifier !== -10) failures.push(`craftsmanshipModifier was ${result.craftsmanshipModifier}, expected -10`);
             // haggling (+10) + rare (-10) = 0
             if (result.commonTotal !== 0) failures.push(`commonTotal was ${result.commonTotal}, expected 0`);
-            if (result.historyLen < 1) failures.push(`acquisitionHistory length was ${result.historyLen}, expected >= 1`);
+            if ((result.historyLen ?? 0) < 1) failures.push(`acquisitionHistory length was ${result.historyLen}, expected >= 1`);
             if (result.pfAfter !== 39) failures.push(`PF after critical-failure decrement was ${result.pfAfter}, expected 39`);
             if (result.logErr !== null) failures.push(`log path error: ${result.logErr}`);
         }

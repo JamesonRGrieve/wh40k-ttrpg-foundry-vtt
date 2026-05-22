@@ -25,9 +25,11 @@ interface ActorRef {
 
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const { Actor: ActorCls } = globalThis as unknown as {
+        interface ActorCreateGlobals {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (Actor namespace, no shipped browser-side types)
+        const { Actor: ActorCls } = globalThis as unknown as ActorCreateGlobals;
         if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
@@ -50,9 +52,11 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const { game: gameObj } = globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        };
+        interface DeleteGlobals {
+            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace, no shipped browser-side types)
+        const { game: gameObj } = globalThis as unknown as DeleteGlobals;
         const actor = gameObj?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -78,8 +82,21 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
 
         try {
             const result = await page.evaluate(async (id: string) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const g = globalThis as any;
+                interface ProbeSheet {
+                    render: (options: { force: boolean }) => Promise<void>;
+                    element?: HTMLElement | null;
+                    close?: () => Promise<void>;
+                }
+                interface ProbeActor {
+                    system?: { activeOrders?: Array<{ orderId?: string }> };
+                    sheet?: ProbeSheet | null;
+                }
+                interface ProbeGlobals {
+                    game?: { actors?: { get?: (id: string) => ProbeActor | undefined } };
+                    __c153sheet?: ProbeSheet | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace + cross-callback sheet handle, no shipped browser-side types)
+                const g = globalThis as unknown as ProbeGlobals;
                 const actor = g.game?.actors?.get?.(id);
                 if (actor == null) return { error: 'actor lookup failed' };
 
@@ -125,7 +142,7 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
 
                         const after = actor.system?.activeOrders;
                         ordersAfter = Array.isArray(after) ? after.length : 0;
-                        firstOrderId = Array.isArray(after) && after.length > 0 ? (after[0] as { orderId?: string } | undefined)?.orderId ?? null : null;
+                        firstOrderId = Array.isArray(after) && after.length > 0 ? after[0]?.orderId ?? null : null;
                     }
 
                     // Keep the sheet open so snap() (outside this evaluate)
@@ -148,21 +165,22 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
                     issueDispatched,
                     error: probeError,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, actorId);
 
             await snap(page, 'ow-orders-panel');
 
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const g = globalThis as any;
+                interface CleanupGlobals {
+                    __c153sheet?: { close?: () => Promise<void> } | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: cross-callback sheet handle stashed on globalThis (no shipped browser-side type)
+                const g = globalThis as unknown as CleanupGlobals;
                 try {
                     await g.__c153sheet?.close?.();
                 } catch {
                     /* ignore */
                 }
                 g.__c153sheet = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
