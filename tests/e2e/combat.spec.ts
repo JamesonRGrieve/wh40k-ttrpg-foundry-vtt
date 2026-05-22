@@ -75,8 +75,42 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (flows: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            // Browser-side probe shapes for the Foundry runtime globals. Only
+            // the members this spec drives are declared; everything is optional
+            // so the runtime-availability guards below stay meaningful.
+            interface FoundryDoc {
+                id?: string;
+                delete?: () => Promise<void>;
+            }
+            interface CombatInstance {
+                id?: string;
+                createEmbeddedDocuments?: (type: string, data: Array<{ actorId: string }>) => Promise<FoundryDoc[]>;
+                deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<FoundryDoc[]>;
+                rollAll?: () => Promise<void>;
+                activate?: () => Promise<void>;
+                startCombat?: () => Promise<void>;
+                nextTurn?: () => Promise<void>;
+                nextRound?: () => Promise<void>;
+                setInitiative?: (combatantId: string, value: number) => Promise<void>;
+                endCombat?: () => Promise<void>;
+                delete?: () => Promise<void>;
+            }
+            interface ActorStatic {
+                create?: (data: { name: string; type: string; system: { gameSystem: string } }) => Promise<FoundryDoc | null>;
+            }
+            interface CombatStatic {
+                create?: (data: Record<string, never>) => Promise<CombatInstance | null>;
+            }
+            interface GameGlobal {
+                actors?: { get?: (id: string) => FoundryDoc | undefined };
+            }
+            interface FoundryGlobal {
+                Actor?: ActorStatic;
+                Combat?: CombatStatic;
+                game?: GameGlobal;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis is the Foundry V14 runtime global; no schema exists in this repo
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorGbl = g.Actor;
             const CombatGbl = g.Combat;
             const gameGbl = g.game;
@@ -131,7 +165,8 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // never arrive. Wrap each call with a 5s timeout so one hanging
             // operation can't kill the Foundry server and take downstream
             // specs (dialogs, settings, sheet-interactions) with it.
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
+            const withTimeout = async <T>(p: Promise<T> | undefined, ms: number, label: string): Promise<T> => {
+                if (p === undefined) throw new Error(`${label} is not available`);
                 const handle = { timer: undefined as ReturnType<typeof setTimeout> | undefined };
                 const timeout = new Promise<T>((_, reject) => {
                     handle.timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
@@ -143,7 +178,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 }
             };
 
-            let combat: any = null;
+            let combat: CombatInstance | null = null;
             try {
                 combat = await withTimeout(CombatGbl.create({}), 5_000, 'Combat.create');
                 if (combat?.id != null) {
@@ -184,8 +219,8 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     5_000,
                     'createEmbeddedDocuments',
                 );
-                if (Array.isArray(created) && created.length > 0) {
-                    combatantIds = created.map((c: any) => c?.id).filter((id: unknown): id is string => typeof id === 'string');
+                if (created.length > 0) {
+                    combatantIds = created.map((c) => c.id).filter((id): id is string => typeof id === 'string');
                     fired['addCombatants'] = true;
                 } else {
                     notes['addCombatants'] = 'createEmbeddedDocuments returned empty';
@@ -280,10 +315,10 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             try {
                 if (combatantIds.length > 1) {
                     const removed = await withTimeout(combat.deleteEmbeddedDocuments?.('Combatant', [combatantIds[1]]), 5_000, 'deleteEmbeddedDocuments');
-                    if (Array.isArray(removed)) {
+                    if (removed.length > 0) {
                         fired['deleteCombatant'] = true;
                     } else {
-                        notes['deleteCombatant'] = 'deleteEmbeddedDocuments returned non-array';
+                        notes['deleteCombatant'] = 'deleteEmbeddedDocuments removed nothing';
                     }
                 } else {
                     notes['deleteCombatant'] = 'insufficient combatants to delete one safely';
@@ -326,10 +361,9 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 flowsFired: fired,
                 flowNotes: notes,
                 npcActorIds: npcIds,
-                combatId: combat.id ?? null,
+                combatId: combat.id,
                 setupError: null as string | null,
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, COMBAT_FLOWS);
 
         return {
@@ -353,8 +387,51 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (classNames: readonly string[]) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            // Browser-side probe shapes for the Foundry runtime globals and the
+            // system's ApplicationV2 surfaces. App classes take varying ctor
+            // signatures across the five probed dialogs, so the constructor is
+            // modelled as variadic.
+            interface UiActor {
+                id?: string;
+                delete?: () => Promise<void>;
+            }
+            // Probed dialog ctors take null, the 'library' mode string, or an
+            // NPC actor across the five surfaces.
+            type AppCtorArg = UiActor | string | null;
+            interface AppInstance {
+                render?: (force?: boolean) => Promise<void>;
+                close?: () => Promise<void>;
+            }
+            interface AppClass {
+                new (...args: AppCtorArg[]): AppInstance;
+                instance?: AppInstance;
+            }
+            // The system surfaces its app classes on these namespaces keyed by
+            // class name; a missing slot or non-class value is filtered at the
+            // call site via a `typeof === 'function'` guard.
+            type Surface = Record<string, AppClass | undefined> | undefined;
+            interface SettingRegistration {
+                scope: string;
+                config: boolean;
+                default: never[];
+                type: ArrayConstructor;
+            }
+            interface SettingsApi {
+                settings?: { get?: (key: string) => object | null | undefined };
+                register?: (namespace: string, key: string, data: SettingRegistration) => void;
+            }
+            interface FoundryUiGlobal {
+                Actor?: { create?: (data: { name: string; type: string; system: { gameSystem: string } }) => Promise<UiActor | null> };
+                game?: {
+                    wh40k?: { applications?: Surface; [key: string]: AppClass | Surface | undefined };
+                    actors?: { get?: (id: string) => UiActor | undefined };
+                    settings?: SettingsApi;
+                };
+                wh40k?: Surface;
+                foundry?: { applications?: { api?: { HandlebarsApplicationMixin?: (cls: AppClass) => AppClass } } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis is the Foundry V14 runtime global; no schema exists in this repo
+            const g = globalThis as unknown as FoundryUiGlobal;
             const rendered: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
             for (const n of classNames) rendered[n] = false;
@@ -364,9 +441,12 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
             // The system exposes its app classes on globals for testing
             // (game.wh40k.applications / game.wh40k.combat etc). Where that
             // is unavailable, fall back to dynamic ESM import.
-            async function loadClass(name: string): Promise<any> {
-                // First, walk known surfaces.
-                const candidates: Array<any> = [g.game?.wh40k?.applications?.[name], g.game?.wh40k?.[name], g.wh40k?.[name], g[name]];
+            const loadClass = async (name: string): Promise<AppClass | null> => {
+                // First, walk known surfaces. (A bare `globalThis[name]`
+                // fallback was dropped: the system only ever surfaces these
+                // classes under the wh40k namespaces, and an `unknown`-typed
+                // global indexer is not worth the boundary it would open.)
+                const candidates: Array<AppClass | Surface> = [g.game?.wh40k?.applications?.[name], g.game?.wh40k?.[name], g.wh40k?.[name]];
                 for (const c of candidates) {
                     if (typeof c === 'function') return c;
                 }
@@ -382,13 +462,13 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                 const path = PATHS[name];
                 if (!path) return null;
                 try {
-                    const mod = await import(/* @vite-ignore */ path);
-                    return mod?.default ?? mod?.[name] ?? null;
+                    const mod = (await import(/* @vite-ignore */ path)) as { default?: AppClass } & Record<string, AppClass | undefined>;
+                    return mod.default ?? mod[name] ?? null;
                 } catch (err) {
                     notes[name] = `dynamic import failed: ${String(err instanceof Error ? err.message : err)}`;
                     return null;
                 }
-            }
+            };
 
             // For NPC-bound dialogs, create one transient NPC.
             let npcId: string | null = null;
@@ -434,7 +514,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                             /* best-effort registration */
                         }
                     }
-                    let instance: any;
+                    let instance: AppInstance;
                     switch (name) {
                         case 'CombatQuickPanel': {
                             // CombatQuickPanel extends ApplicationV2 directly
@@ -475,7 +555,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                             continue;
                     }
 
-                    if (instance != null && typeof instance.render === 'function') {
+                    if (typeof instance.render === 'function') {
                         await instance.render(true);
                         // Allow render microtasks to flush.
                         await new Promise<void>((r) => {
@@ -504,7 +584,6 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
             }
 
             return { rendered, notes };
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, COMBAT_UI_CLASSES);
 
         return {

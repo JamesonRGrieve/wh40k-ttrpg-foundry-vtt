@@ -64,8 +64,61 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (flows: readonly string[]): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            interface ProbeItem {
+                id?: string;
+                type?: string;
+            }
+            interface ProbeItemCollection {
+                contents?: ProbeItem[];
+            }
+            // The vehicle Document getters return content-shaped values; the
+            // probe only compares them against literals, so model each as the
+            // narrowest type the assertions need (string | number | object).
+            interface ProbeVehicle {
+                id?: string;
+                faction?: string;
+                subfaction?: string;
+                subtype?: string;
+                threatLevel?: number;
+                armour?: {
+                    front?: { value?: number };
+                    side?: { value?: number };
+                    rear?: { value?: number };
+                };
+                front?: number;
+                side?: number;
+                rear?: number;
+                availability?: string;
+                manoeuverability?: number;
+                carryingCapacity?: number;
+                integrity?: { max?: number; value?: number };
+                speed?: number | { cruising?: number; tactical?: number; notes?: string };
+                crew?: { required?: number };
+                vehicleClass?: string;
+                size?: number;
+                items?: ProbeItemCollection;
+                rollItem: (itemId: string) => Promise<void>;
+                createEmbeddedDocuments: (type: string, data: object[]) => Promise<object[]>;
+                delete?: () => Promise<void>;
+            }
+            interface ProbeActor {
+                id?: string;
+                delete?: () => Promise<void>;
+            }
+            interface ProbeUser {
+                character?: { id?: string } | null;
+                update: (data: object) => Promise<void>;
+            }
+            interface ProbeGame {
+                actors?: { get?: (id: string) => ProbeVehicle | undefined };
+                user?: ProbeUser;
+            }
+            interface ProbeGlobals {
+                Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
+                game?: ProbeGame;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const g = globalThis as unknown as ProbeGlobals;
             const ActorCls = g.Actor;
             const gme = g.game;
             const out: FlowResult[] = [];
@@ -79,19 +132,21 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             }
 
             const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
+                // TypeScript's control flow doesn't track Promise-executor assignments,
+                // so use an object wrapper that the analyzer sees as always-initialized.
+                const timerRef = { id: null as ReturnType<typeof setTimeout> | null };
                 const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+                    timerRef.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
                 });
                 try {
                     return await Promise.race([p, timeout]);
                 } finally {
-                    if (timer) clearTimeout(timer);
+                    if (timerRef.id !== null) clearTimeout(timerRef.id);
                 }
             };
 
             // ---- create a bc-vehicle with rich system data so every getter has a meaningful read ----
-            let vehicleActor: any = null;
+            let vehicleActor: ProbeActor | null = null;
             try {
                 vehicleActor = await withTimeout(
                     ActorCls.create({
@@ -132,7 +187,8 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 return out;
             }
 
-            const live = (): any => gme?.actors?.get?.(vehicleActor.id);
+            const vehicleId = vehicleActor.id;
+            const live = (): ProbeVehicle | undefined => gme?.actors?.get?.(vehicleId);
 
             // ---- pure getter probes ----
             // Each reads the document getter directly — v8 attributes the
@@ -166,7 +222,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 const a = v?.armour;
                 record(
                     'getter-armour',
-                    a?.front?.value === 32 && a?.side?.value === 24 && a?.rear?.value === 16,
+                    a?.front?.value === 32 && a.side?.value === 24 && a.rear?.value === 16,
                     `got ${JSON.stringify({ f: a?.front?.value, s: a?.side?.value, r: a?.rear?.value })}`,
                 );
             } catch (err) {
@@ -211,7 +267,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             try {
                 const v = live();
                 const i = v?.integrity;
-                record('getter-integrity', i?.max === 40 && i?.value === 35, `got ${JSON.stringify({ max: i?.max, value: i?.value })}`);
+                record('getter-integrity', i?.max === 40 && i.value === 35, `got ${JSON.stringify({ max: i?.max, value: i?.value })}`);
             } catch (err) {
                 record('getter-integrity', false, err instanceof Error ? err.message : String(err));
             }
@@ -221,7 +277,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                 // The Document's speed getter returns the schema object (cruising/tactical/notes)
                 // but TS signature says `number`; we accept either shape so v8 attribution holds
                 // regardless of legacy migration state.
-                const ok = sp?.cruising === 60 || sp === 60 || typeof sp === 'number' || typeof sp === 'object';
+                const ok = (typeof sp === 'object' && sp.cruising === 60) || sp === 60 || typeof sp === 'number' || typeof sp === 'object';
                 record('getter-speed', Boolean(ok), `got ${JSON.stringify(sp)}`);
             } catch (err) {
                 record('getter-speed', false, err instanceof Error ? err.message : String(err));
@@ -256,6 +312,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             // Branch 1: itemId not found → warn + early return
             try {
                 const v = live();
+                if (v == null) throw new Error('vehicle not live');
                 await withTimeout(v.rollItem('this-item-does-not-exist'), 5_000, 'rollItem missing');
                 record('rollItem-missing-item', true, null);
             } catch (err) {
@@ -279,6 +336,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             let armourItemId: string | null = null;
             try {
                 const v = live();
+                if (v == null) throw new Error('vehicle not live');
                 const created = await withTimeout(
                     v.createEmbeddedDocuments('Item', [
                         {
@@ -298,7 +356,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             try {
                 const v = live();
                 const itemId = armourItemId ?? v?.items?.contents?.[0]?.id;
-                if (itemId == null) {
+                if (itemId == null || v == null) {
                     record('rollItem-no-character', false, 'no item available to roll');
                 } else {
                     await withTimeout(v.rollItem(itemId), 5_000, 'rollItem no-character');
@@ -311,7 +369,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             // Branch 3 & 4: assign user.character to a real PC, then roll a
             // non-weapon item (hits "NoActionForItemType" warn) and a weapon
             // (hits the DHTargetedActionManager.performWeaponAttack delegation).
-            let characterActor: any = null;
+            let characterActor: ProbeActor | null = null;
             try {
                 characterActor = await withTimeout(
                     ActorCls.create({
@@ -366,8 +424,8 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             // Branch 3: non-weapon item (armour) with character now set
             try {
                 const v = live();
-                const itemId = armourItemId ?? v?.items?.contents?.find?.((it: any) => it?.type !== 'weapon')?.id;
-                if (itemId == null) {
+                const itemId = armourItemId ?? v?.items?.contents?.find((it: ProbeItem) => it.type !== 'weapon')?.id;
+                if (itemId == null || v == null) {
                     record('rollItem-non-weapon', false, 'no non-weapon item available');
                 } else {
                     await withTimeout(v.rollItem(itemId), 5_000, 'rollItem non-weapon');
@@ -381,6 +439,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             let weaponItemId: string | null = null;
             try {
                 const v = live();
+                if (v == null) throw new Error('vehicle not live');
                 const created = await withTimeout(
                     v.createEmbeddedDocuments('Item', [
                         {
@@ -406,7 +465,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             }
             try {
                 const v = live();
-                if (weaponItemId === null) {
+                if (weaponItemId === null || v == null) {
                     record('rollItem-weapon-delegation', false, 'no weapon item created');
                 } else {
                     await withTimeout(v.rollItem(weaponItemId), 8_000, 'rollItem weapon');
@@ -439,7 +498,6 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, VEHICLE_METHODS_FLOWS);
         return { results, pageErrors };
     } finally {
