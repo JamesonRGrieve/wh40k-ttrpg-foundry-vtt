@@ -212,7 +212,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             }
 
             const actorId = actor.id;
-            const live = (): StarshipRef | undefined => (actorId != null ? foundryGame?.actors?.get?.(actorId) : undefined);
+            const live = (): StarshipRef | undefined => foundryGame?.actors?.get?.(actorId);
 
             // -------- getters that read directly off system fields --------
             try {
@@ -227,7 +227,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             }
             try {
                 const hi = live()?.hullIntegrity;
-                record('get-hullIntegrity', hi?.value === 40 && hi?.max === 40, JSON.stringify(hi));
+                record('get-hullIntegrity', hi?.value === 40 && hi.max === 40, JSON.stringify(hi));
             } catch (err) {
                 record('get-hullIntegrity', false, err instanceof Error ? err.message : String(err));
             }
@@ -270,7 +270,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             }
             try {
                 const c = live()?.crew;
-                record('get-crew', c?.crewRating === 30 && c?.population === 25_000, JSON.stringify(c));
+                record('get-crew', c?.crewRating === 30 && c.population === 25_000, JSON.stringify(c));
             } catch (err) {
                 record('get-crew', false, err instanceof Error ? err.message : String(err));
             }
@@ -280,19 +280,19 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                 // getter coverage signal is the property-read itself returning
                 // a numeric pair, not the specific seeded value.
                 const p = live()?.power;
-                record('get-power', typeof p?.total === 'number' && typeof p?.used === 'number', JSON.stringify(p));
+                record('get-power', typeof p?.total === 'number' && typeof p.used === 'number', JSON.stringify(p));
             } catch (err) {
                 record('get-power', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const s = live()?.space;
-                record('get-space', typeof s?.total === 'number' && typeof s?.used === 'number', JSON.stringify(s));
+                record('get-space', typeof s?.total === 'number' && typeof s.used === 'number', JSON.stringify(s));
             } catch (err) {
                 record('get-space', false, err instanceof Error ? err.message : String(err));
             }
             try {
                 const wc = live()?.weaponCapacity;
-                const ok = wc?.prow === 1 && wc?.dorsal === 2 && wc?.port === 1 && wc?.starboard === 1 && wc?.keel === 0;
+                const ok = wc?.prow === 1 && wc.dorsal === 2 && wc.port === 1 && wc.starboard === 1 && wc.keel === 0;
                 record('get-weaponCapacity', ok, JSON.stringify(wc));
             } catch (err) {
                 record('get-weaponCapacity', false, err instanceof Error ? err.message : String(err));

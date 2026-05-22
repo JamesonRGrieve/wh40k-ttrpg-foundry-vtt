@@ -37,91 +37,59 @@ export default class QuickActionsBar {
         const itemId: string = item.id ?? '';
 
         // Type-specific actions
-        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default: branch handles all unhandled item types
-        switch (type) {
-            case 'weapon':
-                actions.push(
-                    this.#createAction('attack', 'fa-solid fa-crosshairs', 'Attack', 'itemRoll', { itemId }),
-                    this.#createAction('damage', 'fa-solid fa-burst', 'Damage', 'rollDamage', { itemId }),
-                    this.#createAction('reload', 'fa-solid fa-rotate-right', 'Reload', 'reloadWeapon', { itemId }),
-                );
-                break;
-
-            case 'armour': {
-                const isEquipped = system.equipped === true;
-                actions.push(
-                    this.#createAction(
-                        'equip',
-                        isEquipped ? 'fa-solid fa-user-check' : 'fa-solid fa-user-plus',
-                        isEquipped ? 'Unequip' : 'Equip',
-                        'toggleEquip',
-                        { itemId },
-                    ),
-                );
-                break;
+        if (type === 'weapon') {
+            actions.push(
+                this.#createAction('attack', 'fa-solid fa-crosshairs', 'Attack', 'itemRoll', { itemId }),
+                this.#createAction('damage', 'fa-solid fa-burst', 'Damage', 'rollDamage', { itemId }),
+                this.#createAction('reload', 'fa-solid fa-rotate-right', 'Reload', 'reloadWeapon', { itemId }),
+            );
+        } else if (type === 'armour') {
+            const isEquipped = system.equipped === true;
+            actions.push(
+                this.#createAction('equip', isEquipped ? 'fa-solid fa-user-check' : 'fa-solid fa-user-plus', isEquipped ? 'Unequip' : 'Equip', 'toggleEquip', {
+                    itemId,
+                }),
+            );
+        } else if (type === 'talent') {
+            if (system.isRollable === true) {
+                actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId }));
             }
-
-            case 'talent':
-                if (system.isRollable === true) {
-                    actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId }));
-                }
-                actions.push(this.#createAction('favorite', 'fa-solid fa-star', 'Favorite', 'toggleFavorite', { itemId }));
-                break;
-
-            case 'trait':
-                if (system.rollable === true) {
-                    actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId }));
-                }
-                break;
-
-            case 'gear':
-                if (system.consumable === true) {
-                    actions.push(
-                        this.#createAction('use', 'fa-solid fa-flask', 'Use', 'useItem', { itemId }),
-                        this.#createAction('adjust', 'fa-solid fa-sliders', 'Adjust', 'adjustQuantity', { itemId }),
-                    );
-                }
-                break;
-
-            case 'consumable':
-            case 'drug':
+            actions.push(this.#createAction('favorite', 'fa-solid fa-star', 'Favorite', 'toggleFavorite', { itemId }));
+        } else if (type === 'trait') {
+            if (system.rollable === true) {
+                actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId }));
+            }
+        } else if (type === 'gear') {
+            if (system.consumable === true) {
                 actions.push(
-                    this.#createAction('use', 'fa-solid fa-capsules', 'Use', 'useItem', { itemId }),
+                    this.#createAction('use', 'fa-solid fa-flask', 'Use', 'useItem', { itemId }),
                     this.#createAction('adjust', 'fa-solid fa-sliders', 'Adjust', 'adjustQuantity', { itemId }),
                 );
-                break;
-
-            case 'condition':
-                // Conditions are GM-imposed game state. Only the GM may stack/reduce/remove them
-                // from the actor; players see conditions as read-only display.
-                if (isGM) {
-                    actions.push(
-                        this.#createAction('stack', 'fa-solid fa-plus', 'Stack', 'stackCondition', { itemId }),
-                        this.#createAction('reduce', 'fa-solid fa-minus', 'Reduce', 'reduceCondition', { itemId }),
-                        this.#createAction('remove', 'fa-solid fa-xmark', 'Remove', 'removeCondition', { itemId }),
-                    );
-                }
-                break;
-
-            case 'criticalInjury':
+            }
+        } else if (type === 'consumable' || type === 'drug') {
+            actions.push(
+                this.#createAction('use', 'fa-solid fa-capsules', 'Use', 'useItem', { itemId }),
+                this.#createAction('adjust', 'fa-solid fa-sliders', 'Adjust', 'adjustQuantity', { itemId }),
+            );
+        } else if (type === 'condition') {
+            // Conditions are GM-imposed game state. Only the GM may stack/reduce/remove them
+            // from the actor; players see conditions as read-only display.
+            if (isGM) {
                 actions.push(
-                    this.#createAction('rollSeverity', 'fa-solid fa-dice', 'Roll Severity', 'rollSeverity', { itemId }),
-                    this.#createAction('treat', 'fa-solid fa-kit-medical', 'Treat', 'treatInjury', { itemId }),
+                    this.#createAction('stack', 'fa-solid fa-plus', 'Stack', 'stackCondition', { itemId }),
+                    this.#createAction('reduce', 'fa-solid fa-minus', 'Reduce', 'reduceCondition', { itemId }),
+                    this.#createAction('remove', 'fa-solid fa-xmark', 'Remove', 'removeCondition', { itemId }),
                 );
-                break;
-
-            case 'psychicPower':
-            case 'navigatorPower':
-                actions.push(this.#createAction('manifest', 'fa-solid fa-brain', 'Manifest', 'manifestPower', { itemId }));
-                break;
-
-            case 'ammunition':
-                actions.push(this.#createAction('load', 'fa-solid fa-arrow-up-from-bracket', 'Load', 'loadAmmo', { itemId }));
-                break;
-
-            default:
-                // No type-specific actions for this item type
-                break;
+            }
+        } else if (type === 'criticalInjury') {
+            actions.push(
+                this.#createAction('rollSeverity', 'fa-solid fa-dice', 'Roll Severity', 'rollSeverity', { itemId }),
+                this.#createAction('treat', 'fa-solid fa-kit-medical', 'Treat', 'treatInjury', { itemId }),
+            );
+        } else if (type === 'psychicPower' || type === 'navigatorPower') {
+            actions.push(this.#createAction('manifest', 'fa-solid fa-brain', 'Manifest', 'manifestPower', { itemId }));
+        } else if (type === 'ammunition') {
+            actions.push(this.#createAction('load', 'fa-solid fa-arrow-up-from-bracket', 'Load', 'loadAmmo', { itemId }));
         }
 
         // Universal actions (available on most items)

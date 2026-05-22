@@ -33,8 +33,7 @@ interface Args {
 
 const meta = {
     title: 'Actor/Partials/PipTrackerRow',
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Storybook args passed to renderSheet which accepts Record<string, unknown>
-    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         count: 5,
         current: 0,

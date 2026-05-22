@@ -24,8 +24,7 @@ interface Args {
 const renderWithBody = (args: Args): HTMLElement => {
     const body = args.body ?? '<div class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">Body content goes here.</div>';
     const wrapped = templateSrc.replace('{{> @partial-block}}', body);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Storybook typed args passed to renderSheet generic Record parameter
-    return renderSheet(wrapped, args as unknown as Record<string, unknown>);
+    return renderSheet(wrapped, args);
 };
 
 const meta = {

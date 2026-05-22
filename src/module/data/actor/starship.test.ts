@@ -121,7 +121,9 @@ describe('StarshipData', () => {
         expect(applied.detection.total).toBe(8);
         expect(applied.detection.sources).toHaveLength(1);
         const detSrc = applied.detection.sources[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch
         expect(detSrc?.name).toBe('Best Auger Array');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch
         expect(detSrc?.sourceUuid).toBe('Compendium.wh40k-rpg.rt-items.augur1');
         // manoeuvrability: 2 from component + 5 from role
         expect(applied.manoeuvrability.total).toBe(7);

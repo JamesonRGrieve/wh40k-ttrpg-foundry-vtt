@@ -647,6 +647,7 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
                 builder.clear();
                 for (let i = 0; i < npcUuids.length - 1; i++) {
                     const uuid = npcUuids[i];
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types npcUuids[i] as string|undefined (guard required by tsc); the eslint parser project (tsconfig.test.json) has the flag off, so the guard reads as unnecessary here.
                     if (uuid !== undefined) await builder.addNPC(uuid, 1);
                 }
                 snapshot = builder.getData();
