@@ -186,127 +186,149 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             const findCreatedMacro = (name: string): MacroDoc | null => gameObj.macros?.find?.((m) => m?.name === name) ?? null;
 
             // ---------- flow: create-item-macro ----------
-            try {
-                if (item?.id == null) {
-                    record('create-item-macro', false, 'no embedded item to drive item macro creation');
-                } else {
-                    const data = {
-                        actorId: actorDoc.id,
-                        actorName: actorDoc.name,
-                        data: { _id: item.id, name: item.name, img: item.img ?? 'icons/svg/d20.svg' },
-                    };
-                    await macroManager.createItemMacro?.(data, SLOT);
-                    const expectedName = `${actorDoc.name}: ${item.name}`;
-                    const created = findCreatedMacro(expectedName);
-                    if (created != null) {
-                        cleanupMacros.push(created.id);
-                        record('create-item-macro', true, null);
+            async function probeCreateItemMacro(): Promise<void> {
+                try {
+                    if (item?.id == null) {
+                        record('create-item-macro', false, 'no embedded item to drive item macro creation');
                     } else {
-                        record('create-item-macro', false, `expected macro '${expectedName}' not found in game.macros`);
+                        const data = {
+                            actorId: actorDoc.id,
+                            actorName: actorDoc.name,
+                            data: { _id: item.id, name: item.name, img: item.img ?? 'icons/svg/d20.svg' },
+                        };
+                        await macroManager.createItemMacro?.(data, SLOT);
+                        const expectedName = `${actorDoc.name}: ${item.name}`;
+                        const created = findCreatedMacro(expectedName);
+                        if (created != null) {
+                            cleanupMacros.push(created.id);
+                            record('create-item-macro', true, null);
+                        } else {
+                            record('create-item-macro', false, `expected macro '${expectedName}' not found in game.macros`);
+                        }
                     }
+                } catch (err) {
+                    record('create-item-macro', false, `threw: ${String((err as Error).message)}`);
                 }
-            } catch (err) {
-                record('create-item-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: create-skill-macro ----------
-            try {
-                const data = {
-                    actorId: actorDoc.id,
-                    actorName: actorDoc.name,
-                    data: { skill: 'weaponSkill', name: 'Weapon Skill' },
-                };
-                await macroManager.createSkillMacro?.(data, SLOT);
-                const expectedName = `${actorDoc.name}: Weapon Skill`;
-                const created = findCreatedMacro(expectedName);
-                if (created != null) {
-                    cleanupMacros.push(created.id);
-                    record('create-skill-macro', true, null);
-                } else {
-                    record('create-skill-macro', false, `expected macro '${expectedName}' not found in game.macros`);
+            async function probeCreateSkillMacro(): Promise<void> {
+                try {
+                    const data = {
+                        actorId: actorDoc.id,
+                        actorName: actorDoc.name,
+                        data: { skill: 'weaponSkill', name: 'Weapon Skill' },
+                    };
+                    await macroManager.createSkillMacro?.(data, SLOT);
+                    const expectedName = `${actorDoc.name}: Weapon Skill`;
+                    const created = findCreatedMacro(expectedName);
+                    if (created != null) {
+                        cleanupMacros.push(created.id);
+                        record('create-skill-macro', true, null);
+                    } else {
+                        record('create-skill-macro', false, `expected macro '${expectedName}' not found in game.macros`);
+                    }
+                } catch (err) {
+                    record('create-skill-macro', false, `threw: ${String((err as Error).message)}`);
                 }
-            } catch (err) {
-                record('create-skill-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: create-characteristic-macro ----------
-            try {
-                const data = {
-                    actorId: actorDoc.id,
-                    actorName: actorDoc.name,
-                    data: { characteristic: 'weaponSkill', name: 'WS Check' },
-                };
-                await macroManager.createCharacteristicMacro?.(data, SLOT);
-                const expectedName = `${actorDoc.name}: WS Check`;
-                const created = findCreatedMacro(expectedName);
-                if (created != null) {
-                    cleanupMacros.push(created.id);
-                    record('create-characteristic-macro', true, null);
-                } else {
-                    record('create-characteristic-macro', false, `expected macro '${expectedName}' not found in game.macros`);
+            async function probeCreateCharacteristicMacro(): Promise<void> {
+                try {
+                    const data = {
+                        actorId: actorDoc.id,
+                        actorName: actorDoc.name,
+                        data: { characteristic: 'weaponSkill', name: 'WS Check' },
+                    };
+                    await macroManager.createCharacteristicMacro?.(data, SLOT);
+                    const expectedName = `${actorDoc.name}: WS Check`;
+                    const created = findCreatedMacro(expectedName);
+                    if (created != null) {
+                        cleanupMacros.push(created.id);
+                        record('create-characteristic-macro', true, null);
+                    } else {
+                        record('create-characteristic-macro', false, `expected macro '${expectedName}' not found in game.macros`);
+                    }
+                } catch (err) {
+                    record('create-characteristic-macro', false, `threw: ${String((err as Error).message)}`);
                 }
-            } catch (err) {
-                record('create-characteristic-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: roll-item-macro ----------
-            try {
-                if (item?.id == null) {
-                    record('roll-item-macro', false, 'no embedded item to dispatch roll against');
-                } else {
-                    const result = macroManager.rollItemMacro?.(actorDoc.id, item.id);
-                    if (isThenable(result)) {
-                        await result.catch(() => undefined);
+            async function probeRollItemMacro(): Promise<void> {
+                try {
+                    if (item?.id == null) {
+                        record('roll-item-macro', false, 'no embedded item to dispatch roll against');
+                    } else {
+                        const result = macroManager.rollItemMacro?.(actorDoc.id, item.id);
+                        if (isThenable(result)) {
+                            await result.catch(() => undefined);
+                        }
+                        record('roll-item-macro', true, null);
                     }
-                    record('roll-item-macro', true, null);
+                } catch (err) {
+                    record('roll-item-macro', false, `threw: ${String((err as Error).message)}`);
                 }
-            } catch (err) {
-                record('roll-item-macro', false, `threw: ${String((err as Error).message)}`);
             }
 
             // ---------- flow: roll-skill-macro ----------
-            try {
-                const result = macroManager.rollSkillMacro?.(actorDoc.id, 'weaponSkill');
-                if (isThenable(result)) await result.catch(() => undefined);
-                record('roll-skill-macro', true, null);
-            } catch (err) {
-                record('roll-skill-macro', false, `threw: ${String((err as Error).message)}`);
+            async function probeRollSkillMacro(): Promise<void> {
+                try {
+                    const result = macroManager.rollSkillMacro?.(actorDoc.id, 'weaponSkill');
+                    if (isThenable(result)) await result.catch(() => undefined);
+                    record('roll-skill-macro', true, null);
+                } catch (err) {
+                    record('roll-skill-macro', false, `threw: ${String((err as Error).message)}`);
+                }
             }
 
             // ---------- flow: roll-characteristic-macro ----------
-            try {
-                const result = macroManager.rollCharacteristicMacro?.(actorDoc.id, 'weaponSkill');
-                if (isThenable(result)) await result.catch(() => undefined);
-                record('roll-characteristic-macro', true, null);
-            } catch (err) {
-                record('roll-characteristic-macro', false, `threw: ${String((err as Error).message)}`);
+            async function probeRollCharacteristicMacro(): Promise<void> {
+                try {
+                    const result = macroManager.rollCharacteristicMacro?.(actorDoc.id, 'weaponSkill');
+                    if (isThenable(result)) await result.catch(() => undefined);
+                    record('roll-characteristic-macro', true, null);
+                } catch (err) {
+                    record('roll-characteristic-macro', false, `threw: ${String((err as Error).message)}`);
+                }
             }
 
             // ---------- cleanup ----------
-            try {
-                for (const id of cleanupMacros) {
-                    try {
-                        await gameObj.macros?.get?.(id)?.delete?.();
-                    } catch {
-                        /* ignore */
-                    }
-                }
-                // Close any chat-card or roll prompt the dispatch flows opened.
-                const wins = Object.values(g.ui?.windows ?? {});
-                for (const w of wins) {
-                    const id: string = w.id ?? '';
-                    if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {
+            async function cleanup(): Promise<void> {
+                try {
+                    for (const id of cleanupMacros) {
                         try {
-                            await w.close?.();
+                            await gameObj.macros?.get?.(id)?.delete?.();
                         } catch {
                             /* ignore */
                         }
                     }
+                    // Close any chat-card or roll prompt the dispatch flows opened.
+                    const wins = Object.values(g.ui?.windows ?? {});
+                    for (const w of wins) {
+                        const id: string = w.id ?? '';
+                        if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {
+                            try {
+                                await w.close?.();
+                            } catch {
+                                /* ignore */
+                            }
+                        }
+                    }
+                    await actorDoc.delete?.();
+                } catch {
+                    /* best-effort */
                 }
-                await actorDoc.delete?.();
-            } catch {
-                /* best-effort */
             }
+
+            await probeCreateItemMacro();
+            await probeCreateSkillMacro();
+            await probeCreateCharacteristicMacro();
+            await probeRollItemMacro();
+            await probeRollSkillMacro();
+            await probeRollCharacteristicMacro();
+            await cleanup();
 
             return out;
         });

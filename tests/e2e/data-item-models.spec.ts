@@ -267,7 +267,10 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 return item ?? null;
             };
 
-            try {
+            /* ============================================================
+             * Group: armour flows (1-4)
+             * ============================================================ */
+            async function probeArmourFlows(): Promise<void> {
                 /* ============================================================
                  * Flow 1: armour-ap-aggregation
                  * Per-location armourPoints → averageAP / maxAP / maxBaseAP /
@@ -431,7 +434,12 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['armour-stealth-penalty'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
+            }
 
+            /* ============================================================
+             * Group: gear + talent flows (5-9)
+             * ============================================================ */
+            async function probeGearTalentFlows(): Promise<void> {
                 /* ============================================================
                  * Flow 5: gear-weight-math
                  * Non-drug gear, craftsmanship 'good' (-10% weight). weight 10
@@ -633,7 +641,12 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['talent-specialization-fullname'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
+            }
 
+            /* ============================================================
+             * Group: ammunition + force-field flows (10-12)
+             * ============================================================ */
+            async function probeAmmoForceFieldFlows(): Promise<void> {
                 /* ============================================================
                  * Flow 10: ammunition-modifiers
                  * Ammo with damage +2 / penetration +3 → hasModifiers true;
@@ -762,7 +775,12 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['force-field-craftsmanship'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
+            }
 
+            /* ============================================================
+             * Group: trait / skill / condition / weapon-mod flows (13-16)
+             * ============================================================ */
+            async function probeTraitSkillConditionFlows(): Promise<void> {
                 /* ============================================================
                  * Flow 13: trait-level-variable
                  * Name "probe-trait (X)" with level 4 → hasLevel true,
@@ -949,6 +967,13 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['weapon-modification-restrictions'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
+            }
+
+            try {
+                await probeArmourFlows();
+                await probeGearTalentFlows();
+                await probeAmmoForceFieldFlows();
+                await probeTraitSkillConditionFlows();
             } finally {
                 // Best-effort cleanup of everything we created.
                 for (const fn of cleanups) {

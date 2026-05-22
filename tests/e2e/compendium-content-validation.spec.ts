@@ -209,7 +209,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 // warm after the ready hook fires.
                 try {
                     const url = '/systems/wh40k-rpg/module/utils/uuid-name-cache.js';
-                    const importModule = new Function('u', 'return import(u)') as (u: string) => Promise<UuidCacheModule>;
+                    const importModule = async (u: string): Promise<UuidCacheModule> => (await import(/* @vite-ignore */ u)) as UuidCacheModule;
                     const mod = await importModule(url);
                     const cache = mod.uuidNameCache ?? mod.default;
                     if (cache?.getName !== undefined && typeof cache.getName === 'function') {
@@ -303,6 +303,139 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
 
             const outcomes: Record<string, PackProbeOutcome> = {};
 
+            // Per-doc validation contributions, returned (not mutated onto a
+            // shared object) so the caller can aggregate without passing the
+            // pack-level outcome across an await — that pattern trips
+            // require-atomic-updates and is a genuine interleaving hazard.
+            interface DocValidation {
+                failures: string[];
+                brokenRefs: number;
+                uuidRefsSeen: number;
+                perDocFailures: number;
+            }
+
+            // Validate a single materialized doc against its DataModel and
+            // return its contributions. Closes over the helpers above
+            // (compareRoundTrip / collectUuidStrings / resolveUuidName) —
+            // defined inside the callback so it serializes into the browser
+            // realm intact.
+            async function validateDoc(doc: RawDoc): Promise<DocValidation> {
+                const failures: string[] = [];
+                let perDocFailures = 0;
+                const docLabel = doc.name ?? doc.id ?? '<unnamed>';
+
+                // Assertion 1: doc.system is a non-null object.
+                if (doc.system === null || doc.system === undefined || typeof doc.system !== 'object') {
+                    failures.push(`${docLabel}: system is not an object (got ${doc.system === null ? 'null' : typeof doc.system})`);
+                    return { failures, brokenRefs: 0, uuidRefsSeen: 0, perDocFailures: 1 };
+                }
+                const system = doc.system;
+
+                // Assertion 3: schema is registered (DataModel attached).
+                // RollTable / JournalEntry don't carry a per-doc-type
+                // schema in the same way Items/Actors do — they always
+                // resolve to the framework's base schema. We accept
+                // either a non-empty `schema.fields` or — for those two
+                // document kinds — just a non-null system object.
+                const fieldsObj = system.schema?.fields;
+                const hasFields = fieldsObj != null && typeof fieldsObj === 'object' && Object.keys(fieldsObj).length > 0;
+                if (!hasFields) {
+                    // Best-effort: tolerate framework-doc kinds whose
+                    // DataModel is implicit. Only flag when the doc
+                    // type is one we register an explicit DataModel for.
+                    const docType = typeof doc.type === 'string' ? doc.type : '';
+                    const isFrameworkDoc = docType === '' || docType === 'base';
+                    if (!isFrameworkDoc) {
+                        failures.push(`${docLabel}: schema.fields empty (type=${docType})`);
+                        perDocFailures += 1;
+                        // Continue — still try roundtrip + UUID checks.
+                    }
+                }
+
+                // Assertion 2: _source round-trips through toObject().
+                if (typeof system.toObject !== 'function') {
+                    failures.push(`${docLabel}: system.toObject missing`);
+                    perDocFailures += 1;
+                } else if (system._source !== null && typeof system._source === 'object') {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: holds Foundry DataModel.toObject() output, which is untyped here
+                    let serialized: unknown = null;
+                    try {
+                        serialized = system.toObject();
+                    } catch (err) {
+                        failures.push(`${docLabel}: toObject threw: ${String((err as Error).message)}`);
+                        perDocFailures += 1;
+                    }
+                    if (serialized !== null && typeof serialized === 'object') {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel _source / toObject() output are untyped; passed to the structural-diff walker
+                        const diffs = compareRoundTrip(system._source as Record<string, unknown>, serialized as Record<string, unknown>);
+                        if (diffs.length > 0) {
+                            failures.push(`${docLabel}: roundtrip diffs: ${diffs.slice(0, 3).join('; ')}`);
+                            perDocFailures += 1;
+                        }
+                    }
+                }
+
+                // Assertion 4: UUID references resolve.
+                let brokenRefs = 0;
+                const uuidStrings: string[] = [];
+                try {
+                    collectUuidStrings(system, 0, uuidStrings);
+                } catch {
+                    /* collection failures are not a hard fail — record but continue */
+                }
+                for (const uuid of uuidStrings) {
+                    const resolved = await resolveUuidName(uuid);
+                    if (resolved === null) brokenRefs += 1;
+                }
+
+                return { failures, brokenRefs, uuidRefsSeen: uuidStrings.length, perDocFailures };
+            }
+
+            // Materialize one pack and validate every doc in it, aggregating the
+            // per-doc contributions into locals and writing them onto `outcome`
+            // only after the loop — so `outcome` never crosses an await.
+            async function validatePack(packId: string, outcome: PackProbeOutcome): Promise<void> {
+                const pack = gameCls?.packs?.get?.(packId);
+                if (pack == null) {
+                    outcome.packError = `pack '${packId}' not registered`;
+                    return;
+                }
+
+                let docs: RawDoc[] = [];
+                try {
+                    docs = await withTimeout(pack.getDocuments(), 30_000, `${packId}.getDocuments()`);
+                } catch (err) {
+                    outcome.packError = `getDocuments threw: ${String((err as Error).message)}`;
+                    return;
+                }
+
+                outcome.docCount = docs.length;
+                if (docs.length === 0) {
+                    // Empty pack is valid — there's nothing to fail on.
+                    outcome.valid = true;
+                    return;
+                }
+
+                const collectedFailures: string[] = [];
+                let perDocFailures = 0;
+                let brokenRefs = 0;
+                let uuidRefsSeen = 0;
+                for (const doc of docs) {
+                    const docResult = await validateDoc(doc);
+                    perDocFailures += docResult.perDocFailures;
+                    brokenRefs += docResult.brokenRefs;
+                    uuidRefsSeen += docResult.uuidRefsSeen;
+                    for (const failure of docResult.failures) {
+                        if (collectedFailures.length < 5) collectedFailures.push(failure);
+                    }
+                }
+
+                for (const failure of collectedFailures) outcome.failures.push(failure);
+                outcome.brokenRefs += brokenRefs;
+                outcome.uuidRefsSeen += uuidRefsSeen;
+                outcome.valid = perDocFailures === 0;
+            }
+
             for (const flow of flows) {
                 const short = flow.replace(/::validated$/u, '');
                 const packId = `wh40k-rpg.${short}`;
@@ -315,100 +448,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                     packError: null,
                 };
                 outcomes[flow] = outcome;
-
-                const pack = gameCls?.packs?.get?.(packId);
-                if (pack == null) {
-                    outcome.packError = `pack '${packId}' not registered`;
-                    continue;
-                }
-
-                let docs: RawDoc[] = [];
-                try {
-                    docs = await withTimeout(pack.getDocuments(), 30_000, `${packId}.getDocuments()`);
-                } catch (err) {
-                    outcome.packError = `getDocuments threw: ${String((err as Error).message)}`;
-                    continue;
-                }
-
-                outcome.docCount = docs.length;
-                if (docs.length === 0) {
-                    // Empty pack is valid — there's nothing to fail on.
-                    outcome.valid = true;
-                    continue;
-                }
-
-                let perDocFailures = 0;
-                for (const doc of docs) {
-                    const docLabel = doc.name ?? doc.id ?? '<unnamed>';
-
-                    // Assertion 1: doc.system is a non-null object.
-                    if (doc.system === null || doc.system === undefined || typeof doc.system !== 'object') {
-                        if (outcome.failures.length < 5)
-                            outcome.failures.push(`${docLabel}: system is not an object (got ${doc.system === null ? 'null' : typeof doc.system})`);
-                        perDocFailures += 1;
-                        continue;
-                    }
-                    const system = doc.system;
-
-                    // Assertion 3: schema is registered (DataModel attached).
-                    // RollTable / JournalEntry don't carry a per-doc-type
-                    // schema in the same way Items/Actors do — they always
-                    // resolve to the framework's base schema. We accept
-                    // either a non-empty `schema.fields` or — for those two
-                    // document kinds — just a non-null system object.
-                    const fieldsObj = system.schema?.fields;
-                    const hasFields = fieldsObj != null && typeof fieldsObj === 'object' && Object.keys(fieldsObj).length > 0;
-                    if (!hasFields) {
-                        // Best-effort: tolerate framework-doc kinds whose
-                        // DataModel is implicit. Only flag when the doc
-                        // type is one we register an explicit DataModel for.
-                        const docType = typeof doc.type === 'string' ? doc.type : '';
-                        const isFrameworkDoc = docType === '' || docType === 'base';
-                        if (!isFrameworkDoc) {
-                            if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: schema.fields empty (type=${docType})`);
-                            perDocFailures += 1;
-                            // Continue — still try roundtrip + UUID checks.
-                        }
-                    }
-
-                    // Assertion 2: _source round-trips through toObject().
-                    if (typeof system.toObject !== 'function') {
-                        if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: system.toObject missing`);
-                        perDocFailures += 1;
-                    } else if (system._source !== null && typeof system._source === 'object') {
-                        // eslint-disable-next-line no-restricted-syntax -- boundary: holds Foundry DataModel.toObject() output, which is untyped here
-                        let serialized: unknown = null;
-                        try {
-                            serialized = system.toObject();
-                        } catch (err) {
-                            if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: toObject threw: ${String((err as Error).message)}`);
-                            perDocFailures += 1;
-                        }
-                        if (serialized !== null && typeof serialized === 'object') {
-                            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel _source / toObject() output are untyped; passed to the structural-diff walker
-                            const diffs = compareRoundTrip(system._source as Record<string, unknown>, serialized as Record<string, unknown>);
-                            if (diffs.length > 0) {
-                                if (outcome.failures.length < 5) outcome.failures.push(`${docLabel}: roundtrip diffs: ${diffs.slice(0, 3).join('; ')}`);
-                                perDocFailures += 1;
-                            }
-                        }
-                    }
-
-                    // Assertion 4: UUID references resolve.
-                    const uuidStrings: string[] = [];
-                    try {
-                        collectUuidStrings(system, 0, uuidStrings);
-                    } catch {
-                        /* collection failures are not a hard fail — record but continue */
-                    }
-                    outcome.uuidRefsSeen += uuidStrings.length;
-                    for (const uuid of uuidStrings) {
-                        const resolved = await resolveUuidName(uuid);
-                        if (resolved === null) outcome.brokenRefs += 1;
-                    }
-                }
-
-                outcome.valid = perDocFailures === 0;
+                await validatePack(packId, outcome);
             }
 
             return { outcomes };

@@ -239,13 +239,19 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 // registered for end-of-probe deletion.
                 const cleanups: Array<() => Promise<void>> = [];
 
-                try {
-                    /* ============================================================
-                     * Flow 1: drag-drop-api-allowed-behaviors
-                     * `_allowedDropBehaviors` returns {copy,link} when the drag
-                     * payload has no uuid (compendium-fresh drop), {copy,move,
-                     * link} otherwise. Exercises both branches of the helper.
-                     * ============================================================ */
+                // Shared PC actor for the flows that need a real WH40K actor to
+                // walk drag-drop / favorites / what-if branches. Populated by
+                // probeSharedPc() before the flows that depend on it run.
+                let pc: ProbeActor | null = null;
+                const getPc = (): ProbeActor | null | undefined => (pc?.id != null ? foundryGame.actors?.get?.(pc.id) : null);
+
+                /* ============================================================
+                 * Flow 1: drag-drop-api-allowed-behaviors
+                 * `_allowedDropBehaviors` returns {copy,link} when the drag
+                 * payload has no uuid (compendium-fresh drop), {copy,move,
+                 * link} otherwise. Exercises both branches of the helper.
+                 * ============================================================ */
+                async function probeAllowedBehaviors(): Promise<void> {
                     try {
                         interface DragDropInst {
                             _allowedDropBehaviors: (evt: Event, data: { uuid?: string }) => Set<string>;
@@ -279,15 +285,17 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['drag-drop-api-allowed-behaviors'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 2: drag-drop-api-default-behavior
-                     * `_defaultDropBehavior` returns 'copy' for a missing/non-
-                     * string uuid, 'move' when source + target resolve to the
-                     * same primary/embedded id+type+collection, 'copy' otherwise.
-                     * Exercises the foundry.utils.parseUuid + collection compare
-                     * branches.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 2: drag-drop-api-default-behavior
+                 * `_defaultDropBehavior` returns 'copy' for a missing/non-
+                 * string uuid, 'move' when source + target resolve to the
+                 * same primary/embedded id+type+collection, 'copy' otherwise.
+                 * Exercises the foundry.utils.parseUuid + collection compare
+                 * branches.
+                 * ============================================================ */
+                async function probeDefaultBehavior(): Promise<void> {
                     try {
                         interface DragDropInst {
                             _defaultDropBehavior: (evt: Event, data: { uuid?: string }) => string;
@@ -321,14 +329,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['drag-drop-api-default-behavior'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 3: drag-drop-api-modifier-keys
-                     * `_dropBehavior` honours shift→copy, alt→link; falls back to
-                     * `_defaultDropBehavior` otherwise. Stub TextEditor.getDragEventData
-                     * via the imported module's foundry binding by passing a
-                     * DragEvent whose dataTransfer mocks `getData('text/plain')`.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 3: drag-drop-api-modifier-keys
+                 * `_dropBehavior` honours shift→copy, alt→link; falls back to
+                 * `_defaultDropBehavior` otherwise. Stub TextEditor.getDragEventData
+                 * via the imported module's foundry binding by passing a
+                 * DragEvent whose dataTransfer mocks `getData('text/plain')`.
+                 * ============================================================ */
+                async function probeModifierKeys(): Promise<void> {
                     try {
                         interface DragDropInst {
                             _dropBehavior: (evt: Event) => string;
@@ -371,12 +381,13 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['drag-drop-api-modifier-keys'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Shared PC actor for the flows that need a real WH40K actor
-                     * to walk drag-drop / favorites / what-if branches.
-                     * ============================================================ */
-                    let pc: ProbeActor | null = null;
+                /* ============================================================
+                 * Shared PC actor for the flows that need a real WH40K actor
+                 * to walk drag-drop / favorites / what-if branches.
+                 * ============================================================ */
+                async function probeSharedPc(): Promise<void> {
                     try {
                         pc = await withTimeout(
                             ActorCls.create({ name: 'app-api-depth-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
@@ -399,15 +410,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((resolve) => {
                         setTimeout(resolve, 250);
                     });
-                    const getPc = (): ProbeActor | null | undefined => (pc?.id != null ? foundryGame.actors?.get?.(pc.id) : null);
+                }
 
-                    /* ============================================================
-                     * Flow 4: drag-drop-visual-ghost-and-split
-                     * `_createDragGhost` builds the wh40k-drag-ghost element with
-                     * embedded name + quantity; `_canSplitItem` gates on
-                     * quantity>1 and type ∈ {gear, weapon}. Exercise both with a
-                     * real embedded gear item.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 4: drag-drop-visual-ghost-and-split
+                 * `_createDragGhost` builds the wh40k-drag-ghost element with
+                 * embedded name + quantity; `_canSplitItem` gates on
+                 * quantity>1 and type ∈ {gear, weapon}. Exercise both with a
+                 * real embedded gear item.
+                 * ============================================================ */
+                async function probeGhostAndSplit(): Promise<void> {
                     try {
                         const live = getPc();
                         if (live == null) {
@@ -479,13 +491,15 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['drag-drop-visual-ghost-and-split'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 5: drag-drop-visual-validate-slot
-                     * `_validateEquipmentSlot` matches weapon→{primary-weapon,
-                     * secondary-weapon}, armour→{*armor*}, gear→default true.
-                     * Exercise all three branches plus the mismatch path.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 5: drag-drop-visual-validate-slot
+                 * `_validateEquipmentSlot` matches weapon→{primary-weapon,
+                 * secondary-weapon}, armour→{*armor*}, gear→default true.
+                 * Exercise all three branches plus the mismatch path.
+                 * ============================================================ */
+                async function probeValidateSlot(): Promise<void> {
                     try {
                         interface ValidateSlotInst {
                             _validateEquipmentSlot: (item: { type: string }, slot: string) => boolean;
@@ -520,15 +534,17 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['drag-drop-visual-validate-slot'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 6: drag-drop-visual-favorites-api
-                     * Drive the public favorites API end-to-end against the live
-                     * PC actor: setFlag-backed list. `_addToFavorites` is exercised
-                     * via the mixin's drop handler indirectly, but the public
-                     * getFavoriteItems / removeFromFavorites / clearFavorites
-                     * write the flag scope `wh40k-rpg.favorites`.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 6: drag-drop-visual-favorites-api
+                 * Drive the public favorites API end-to-end against the live
+                 * PC actor: setFlag-backed list. `_addToFavorites` is exercised
+                 * via the mixin's drop handler indirectly, but the public
+                 * getFavoriteItems / removeFromFavorites / clearFavorites
+                 * write the flag scope `wh40k-rpg.favorites`.
+                 * ============================================================ */
+                async function probeFavoritesApi(): Promise<void> {
                     try {
                         const live = getPc();
                         if (live == null) {
@@ -608,15 +624,17 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['drag-drop-visual-favorites-api'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 7: expandable-tooltip-toggle-action
-                     * Mix ExpandableTooltipMixin onto a base whose `element` holds
-                     * the [data-expandable-id]/.wh40k-expandable/.wh40k-expansion-panel
-                     * markup the action expects. Dispatch the registered
-                     * `toggleExpandable` action; expect the panel opens, the
-                     * trigger gains --expanded, and isPanelOpen reports true.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 7: expandable-tooltip-toggle-action
+                 * Mix ExpandableTooltipMixin onto a base whose `element` holds
+                 * the [data-expandable-id]/.wh40k-expandable/.wh40k-expansion-panel
+                 * markup the action expects. Dispatch the registered
+                 * `toggleExpandable` action; expect the panel opens, the
+                 * trigger gains --expanded, and isPanelOpen reports true.
+                 * ============================================================ */
+                async function probeExpandableToggle(): Promise<void> {
                     try {
                         interface ExpandableInst {
                             isPanelOpen: (id: string) => boolean;
@@ -670,14 +688,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['expandable-tooltip-toggle-action'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 8: expandable-tooltip-programmatic-api
-                     * `openExpandable(id)` + `closeExpandable(id)` should write
-                     * the same #openPanels state visible via `getOpenPanels()` /
-                     * `isPanelOpen()`. Exercise both helpers without going
-                     * through the action map.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 8: expandable-tooltip-programmatic-api
+                 * `openExpandable(id)` + `closeExpandable(id)` should write
+                 * the same #openPanels state visible via `getOpenPanels()` /
+                 * `isPanelOpen()`. Exercise both helpers without going
+                 * through the action map.
+                 * ============================================================ */
+                async function probeExpandableProgrammatic(): Promise<void> {
                     try {
                         interface ExpandableInst {
                             isPanelOpen: (id: string) => boolean;
@@ -729,14 +749,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['expandable-tooltip-programmatic-api'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 9: visual-feedback-find-and-classify
-                     * `_findFieldElement` walks selector fallbacks: name attr →
-                     * data-field → data-stat → pattern-class. `_getAnimationClass`
-                     * routes wounds.value → heal/damage, experience.total →
-                     * advance, generic numeric up/down → increase/decrease.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 9: visual-feedback-find-and-classify
+                 * `_findFieldElement` walks selector fallbacks: name attr →
+                 * data-field → data-stat → pattern-class. `_getAnimationClass`
+                 * routes wounds.value → heal/damage, experience.total →
+                 * advance, generic numeric up/down → increase/decrease.
+                 * ============================================================ */
+                async function probeFindAndClassify(): Promise<void> {
                     try {
                         interface FindClassifyInst {
                             _findFieldElement: (key: string) => HTMLElement | null;
@@ -799,14 +821,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['visual-feedback-find-and-classify'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 10: visual-feedback-animate-counter
-                     * `_animateCounter` runs an easing rAF loop and lands on the
-                     * exact `toValue`. `_showBriefNotification` injects a tooltip
-                     * into document.body. Both observe DOM side-effects we can
-                     * settle in <300ms.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 10: visual-feedback-animate-counter
+                 * `_animateCounter` runs an easing rAF loop and lands on the
+                 * exact `toValue`. `_showBriefNotification` injects a tooltip
+                 * into document.body. Both observe DOM side-effects we can
+                 * settle in <300ms.
+                 * ============================================================ */
+                async function probeAnimateCounter(): Promise<void> {
                     try {
                         interface CounterInst {
                             _animateCounter: (el: HTMLElement, from: number, to: number, duration: number) => void;
@@ -852,16 +876,18 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['visual-feedback-animate-counter'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 11: visual-feedback-visualize-changes
-                     * Seed `_previousValues` via `_captureCurrentValues` against a
-                     * stub document, then call `visualizeChanges({system:{...}})`.
-                     * Each numeric diff routes through `_flashStatChange` →
-                     * `_applyAnimation` which adds + removes the animation class.
-                     * Assert that the call returns without throwing and the
-                     * Map was repopulated after the visualize call.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 11: visual-feedback-visualize-changes
+                 * Seed `_previousValues` via `_captureCurrentValues` against a
+                 * stub document, then call `visualizeChanges({system:{...}})`.
+                 * Each numeric diff routes through `_flashStatChange` →
+                 * `_applyAnimation` which adds + removes the animation class.
+                 * Assert that the call returns without throwing and the
+                 * Map was repopulated after the visualize call.
+                 * ============================================================ */
+                async function probeVisualizeChanges(): Promise<void> {
                     try {
                         interface VisualizeInst {
                             _captureCurrentValues: () => void;
@@ -912,13 +938,15 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['visual-feedback-visualize-changes'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 12: wh40k-tooltip-builders
-                     * Instantiate TooltipsWH40K and exercise each `_build*Tooltip`
-                     * directly. Builders are pure functions over the payload
-                     * shape — verify the HTML output contains key markers.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 12: wh40k-tooltip-builders
+                 * Instantiate TooltipsWH40K and exercise each `_build*Tooltip`
+                 * directly. Builders are pure functions over the payload
+                 * shape — verify the HTML output contains key markers.
+                 * ============================================================ */
+                async function probeTooltipBuilders(): Promise<void> {
                     try {
                         interface NamedValue {
                             name: string;
@@ -1050,14 +1078,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['wh40k-tooltip-builders'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 13: wh40k-tooltip-static-data-helpers
-                     * Call the exported `prepare*TooltipData` helpers and verify
-                     * each returns parseable JSON whose key fields round-trip the
-                     * input. Also exercise `getSkillDescription` normalization
-                     * (case + whitespace + hyphen stripping).
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 13: wh40k-tooltip-static-data-helpers
+                 * Call the exported `prepare*TooltipData` helpers and verify
+                 * each returns parseable JSON whose key fields round-trip the
+                 * input. Also exercise `getSkillDescription` normalization
+                 * (case + whitespace + hyphen stripping).
+                 * ============================================================ */
+                async function probeTooltipStaticHelpers(): Promise<void> {
                     try {
                         interface SkillDescription {
                             name: string;
@@ -1154,13 +1184,15 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['wh40k-tooltip-static-data-helpers'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 14: icons-helper-resolution
-                     * `icon(key, opts)` returns inline SVG with classes/labels/
-                     * size styling. `hasIcon` is a type guard. `listIcons` returns
-                     * a sorted array. Exercise each branch with bundled seeds.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 14: icons-helper-resolution
+                 * `icon(key, opts)` returns inline SVG with classes/labels/
+                 * size styling. `hasIcon` is a type guard. `listIcons` returns
+                 * a sorted array. Exercise each branch with bundled seeds.
+                 * ============================================================ */
+                async function probeIconsResolution(): Promise<void> {
                     try {
                         type IconOpts = { label?: string; class?: string; size?: number | string };
                         type IconFn = (key: string, opts?: IconOpts) => { toString: () => string };
@@ -1201,14 +1233,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['icons-helper-resolution'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 15: icons-handlebars-registration
-                     * `registerIconHelper()` registers `{{iconSvg}}` on the global
-                     * Handlebars instance. Invoking it returns a SafeString whose
-                     * value matches `icon(key, opts)`; unknown keys warn and
-                     * return an empty SafeString.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 15: icons-handlebars-registration
+                 * `registerIconHelper()` registers `{{iconSvg}}` on the global
+                 * Handlebars instance. Invoking it returns a SafeString whose
+                 * value matches `icon(key, opts)`; unknown keys warn and
+                 * return an empty SafeString.
+                 * ============================================================ */
+                async function probeIconsHandlebars(): Promise<void> {
                     try {
                         type IconOpts = { label?: string; class?: string; size?: number | string };
                         type IconFn = (key: string, opts?: IconOpts) => { toString: () => string };
@@ -1246,16 +1280,18 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['icons-handlebars-registration'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 16: appv2-mixin-subtitle-and-disable
-                     * Mix ApplicationV2Mixin onto a synthetic base; assert the
-                     * `subtitle` getter localizes options.window.subtitle (the
-                     * `' '` localize fallback returns '' for empty keys), the
-                     * `_renderContainers` helper threads data-container-id
-                     * grouping, and `_disableFields` makes window-content inputs
-                     * readonly/disabled while sparing `.always-interactive`.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 16: appv2-mixin-subtitle-and-disable
+                 * Mix ApplicationV2Mixin onto a synthetic base; assert the
+                 * `subtitle` getter localizes options.window.subtitle (the
+                 * `' '` localize fallback returns '' for empty keys), the
+                 * `_renderContainers` helper threads data-container-id
+                 * grouping, and `_disableFields` makes window-content inputs
+                 * readonly/disabled while sparing `.always-interactive`.
+                 * ============================================================ */
+                async function probeAppV2SubtitleDisable(): Promise<void> {
                     try {
                         interface AppV2Inst {
                             subtitle: string;
@@ -1317,14 +1353,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['appv2-mixin-subtitle-and-disable'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 17: dialog-wait-and-resolve
-                     * DialogWH40K.wait() returns a Promise resolved via the
-                     * instance's `resolve(value)` helper which flips `_submitted`
-                     * to true. Fire wait + resolve in sequence; assert the
-                     * Promise settles with the passed value and `_submitted` is true.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 17: dialog-wait-and-resolve
+                 * DialogWH40K.wait() returns a Promise resolved via the
+                 * instance's `resolve(value)` helper which flips `_submitted`
+                 * to true. Fire wait + resolve in sequence; assert the
+                 * Promise settles with the passed value and `_submitted` is true.
+                 * ============================================================ */
+                async function probeDialogWaitResolve(): Promise<void> {
                     try {
                         interface DialogInst {
                             wait: () => Promise<string>;
@@ -1371,16 +1409,18 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['dialog-wait-and-resolve'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 18: whatif-mixin-exit-and-direct-apply
-                     * Two complementary branches of WhatIfMixin:
-                     *  1. When `_whatIfActive` is false, `previewChange` forwards
-                     *     straight to `_applyChange` → `document.update` (no
-                     *     buffering, no toolbar).
-                     *  2. `exitWhatIfMode` after entering resets all flags and
-                     *     removes the toolbar DOM.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 18: whatif-mixin-exit-and-direct-apply
+                 * Two complementary branches of WhatIfMixin:
+                 *  1. When `_whatIfActive` is false, `previewChange` forwards
+                 *     straight to `_applyChange` → `document.update` (no
+                 *     buffering, no toolbar).
+                 *  2. `exitWhatIfMode` after entering resets all flags and
+                 *     removes the toolbar DOM.
+                 * ============================================================ */
+                async function probeWhatIfExitDirect(): Promise<void> {
                     try {
                         const live = getPc();
                         if (live == null) {
@@ -1450,16 +1490,18 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['whatif-mixin-exit-and-direct-apply'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 19: statbreakdown-mixin-variant-rows
-                     * Drive `showStatBreakdown` against a document whose
-                     * getStatBreakdown returns multiple modifiers — one with a
-                     * source uuid (clickable variant) and one without — plus a
-                     * negative-value mod to exercise the negative-value class
-                     * branch. Assert the popover contains the markers for each
-                     * row variant, then close it via the registered close button.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 19: statbreakdown-mixin-variant-rows
+                 * Drive `showStatBreakdown` against a document whose
+                 * getStatBreakdown returns multiple modifiers — one with a
+                 * source uuid (clickable variant) and one without — plus a
+                 * negative-value mod to exercise the negative-value class
+                 * branch. Assert the popover contains the markers for each
+                 * row variant, then close it via the registered close button.
+                 * ============================================================ */
+                async function probeStatBreakdownRows(): Promise<void> {
                     try {
                         const mod = await loadModule<ProbeModule<MixinFactory<object>> & { StatBreakdownMixin?: MixinFactory<object> }>(
                             `${base}/applications/api/stat-breakdown-mixin.js`,
@@ -1533,15 +1575,17 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['statbreakdown-mixin-variant-rows'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 20: collapsible-panel-roundtrip
-                     * After togglePanel(forceState=true) the panel must NOT be
-                     * collapsed and `expandedSections.get(id)` must be true.
-                     * After togglePanel(forceState=false) it must be collapsed
-                     * and the Map value must be false. The full round-trip
-                     * exercises the `_animatePanelToggle` 300ms branch.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 20: collapsible-panel-roundtrip
+                 * After togglePanel(forceState=true) the panel must NOT be
+                 * collapsed and `expandedSections.get(id)` must be true.
+                 * After togglePanel(forceState=false) it must be collapsed
+                 * and the Map value must be false. The full round-trip
+                 * exercises the `_animatePanelToggle` 300ms branch.
+                 * ============================================================ */
+                async function probeCollapsibleRoundtrip(): Promise<void> {
                     try {
                         interface CollapsibleInst {
                             togglePanel: (id: string, forceState: boolean) => Promise<void>;
@@ -1585,14 +1629,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['collapsible-panel-roundtrip'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 21: collapsible-panel-apply-preset
-                     * `applyPanelPreset('combat')` walks the preset map and sets
-                     * each panel's collapsed class + `expandedSections` value to
-                     * the preset's truth-table. `applyPanelPreset('all')` and
-                     * `('none')` delegate to expandAll/collapseAll branches.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 21: collapsible-panel-apply-preset
+                 * `applyPanelPreset('combat')` walks the preset map and sets
+                 * each panel's collapsed class + `expandedSections` value to
+                 * the preset's truth-table. `applyPanelPreset('all')` and
+                 * `('none')` delegate to expandAll/collapseAll branches.
+                 * ============================================================ */
+                async function probeCollapsiblePreset(): Promise<void> {
                     try {
                         interface CollapsibleInst {
                             expandedSections: Map<string, boolean>;
@@ -1649,15 +1695,17 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['collapsible-panel-apply-preset'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 22: enhanced-animations-skip-and-flash
-                     * `animateCounter` early-returns when from===to (no rAF
-                     * scheduled). `_shouldSkipAnimation` is callable and returns
-                     * a boolean. `_flashElement` adds + removes the animation
-                     * class after the duration. Detection of the early-return is
-                     * via the absence of any `.value-counter` class on the el.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 22: enhanced-animations-skip-and-flash
+                 * `animateCounter` early-returns when from===to (no rAF
+                 * scheduled). `_shouldSkipAnimation` is callable and returns
+                 * a boolean. `_flashElement` adds + removes the animation
+                 * class after the duration. Detection of the early-return is
+                 * via the absence of any `.value-counter` class on the el.
+                 * ============================================================ */
+                async function probeEnhancedAnimations(): Promise<void> {
                     try {
                         interface AnimInst {
                             animateCounter: (el: HTMLElement, from: number, to: number, opts: { duration: number }) => void;
@@ -1708,6 +1756,32 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         notes['enhanced-animations-skip-and-flash'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
                     }
+                }
+
+                try {
+                    await probeAllowedBehaviors();
+                    await probeDefaultBehavior();
+                    await probeModifierKeys();
+                    await probeSharedPc();
+                    await probeGhostAndSplit();
+                    await probeValidateSlot();
+                    await probeFavoritesApi();
+                    await probeExpandableToggle();
+                    await probeExpandableProgrammatic();
+                    await probeFindAndClassify();
+                    await probeAnimateCounter();
+                    await probeVisualizeChanges();
+                    await probeTooltipBuilders();
+                    await probeTooltipStaticHelpers();
+                    await probeIconsResolution();
+                    await probeIconsHandlebars();
+                    await probeAppV2SubtitleDisable();
+                    await probeDialogWaitResolve();
+                    await probeWhatIfExitDirect();
+                    await probeStatBreakdownRows();
+                    await probeCollapsibleRoundtrip();
+                    await probeCollapsiblePreset();
+                    await probeEnhancedAnimations();
                 } finally {
                     for (const fn of cleanups) {
                         try {

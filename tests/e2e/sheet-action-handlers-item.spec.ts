@@ -344,10 +344,10 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                 }
             }
 
-            try {
-                /* ============================================================
-                 * Group A: weapon-sheet
-                 * ============================================================ */
+            /* ============================================================
+             * Group A: weapon-sheet
+             * ============================================================ */
+            async function probeWeaponSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'weapon',
@@ -462,10 +462,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
 
-                /* ============================================================
-                 * Group B: armour-sheet
-                 * ============================================================ */
+            /* ============================================================
+             * Group B: armour-sheet
+             * ============================================================ */
+            async function probeArmourSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'armour',
@@ -584,10 +586,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
 
-                /* ============================================================
-                 * Group C: armour-mod-sheet
-                 * ============================================================ */
+            /* ============================================================
+             * Group C: armour-mod-sheet
+             * ============================================================ */
+            async function probeArmourModSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'armourModification',
@@ -671,10 +675,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
 
-                /* ============================================================
-                 * Group D: ammo-sheet
-                 * ============================================================ */
+            /* ============================================================
+             * Group D: ammo-sheet
+             * ============================================================ */
+            async function probeAmmoSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'ammunition',
@@ -745,10 +751,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
 
-                /* ============================================================
-                 * Group E: talent-sheet
-                 * ============================================================ */
+            /* ============================================================
+             * Group E: talent-sheet
+             * ============================================================ */
+            async function probeTalentSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'talent',
@@ -827,10 +835,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
 
-                /* ============================================================
-                 * Group F: gear-sheet
-                 * ============================================================ */
+            /* ============================================================
+             * Group F: gear-sheet
+             * ============================================================ */
+            async function probeGearSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'gear',
@@ -874,12 +884,14 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
 
-                /* ============================================================
-                 * Group G: container-item-sheet (driven via a weapon sheet)
-                 * Weapon extends ContainerItemSheet so its actions map
-                 * inherits nestedItemCreate / nestedItemRoll.
-                 * ============================================================ */
+            /* ============================================================
+             * Group G: container-item-sheet (driven via a weapon sheet)
+             * Weapon extends ContainerItemSheet so its actions map
+             * inherits nestedItemCreate / nestedItemRoll.
+             * ============================================================ */
+            async function probeContainerSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'weapon',
@@ -928,10 +940,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
 
-                /* ============================================================
-                 * Group H: endeavour-sheet
-                 * ============================================================ */
+            /* ============================================================
+             * Group H: endeavour-sheet
+             * ============================================================ */
+            async function probeEndeavourSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'endeavour',
@@ -982,10 +996,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
 
-                /* ============================================================
-                 * Group I: npc-template-sheet
-                 * ============================================================ */
+            /* ============================================================
+             * Group I: npc-template-sheet
+             * ============================================================ */
+            async function probeNpcTemplateSheet(): Promise<void> {
                 {
                     const made = await makeItemSheet(
                         'npcTemplate',
@@ -1086,6 +1102,18 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         }
                     }
                 }
+            }
+
+            try {
+                await probeWeaponSheet();
+                await probeArmourSheet();
+                await probeArmourModSheet();
+                await probeAmmoSheet();
+                await probeTalentSheet();
+                await probeGearSheet();
+                await probeContainerSheet();
+                await probeEndeavourSheet();
+                await probeNpcTemplateSheet();
             } finally {
                 // Best-effort cleanup of everything we created.
                 for (const fn of cleanups) {

@@ -148,7 +148,9 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
 
             const cleanups: Array<() => Promise<void>> = [];
 
-            try {
+            // renderChatMessageHTML + updateActor + updateItem. Returns the
+            // created probe-actor id (or null) for the combat lifecycle below.
+            async function probeChatAndDocumentUpdates(): Promise<string | null> {
                 // renderChatMessageHTML
                 try {
                     await ChatMessageGbl?.create?.({ content: 'hook-probe-chat' });
@@ -200,12 +202,15 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                     notes.updateActor = `probe actor create threw: ${String((err as Error).message)}`;
                     notes.updateItem = `probe actor create threw: ${String((err as Error).message)}`;
                 }
+                return probeActorId;
+            }
 
-                // combat lifecycle: create, add combatant, start, nextTurn, nextRound, delete
-                // combatTurn only fires when advancing to a different combatant
-                // within the same round — a single-combatant combat would wrap
-                // to nextRound without firing combatTurn. Create a SECOND
-                // probe actor so the turn order has two slots.
+            // combat lifecycle: create, add combatant, start, nextTurn, nextRound, delete
+            // combatTurn only fires when advancing to a different combatant
+            // within the same round — a single-combatant combat would wrap
+            // to nextRound without firing combatTurn. Create a SECOND
+            // probe actor so the turn order has two slots.
+            async function probeCombatLifecycle(probeActorId: string | null): Promise<void> {
                 let probeActor2Id: string | null = null;
                 try {
                     const actor2 = await ActorGbl?.create?.({
@@ -277,14 +282,19 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                     notes.combatRound = msg;
                     notes.deleteCombat = msg;
                 }
+            }
 
-                // getSceneControlButtons: forced re-render of scene controls.
-                // V14 SceneControls.render(true) fires the hook during
-                // _prepareContext. If render doesn't trigger it (e.g. when
-                // no canvas/scene is active in the headless world the
-                // pipeline may early-out), fall back to calling the hook
-                // directly so the system's handler still runs and source
-                // coverage is recorded.
+            // getSceneControlButtons: forced re-render of scene controls.
+            // V14 SceneControls.render(true) fires the hook during
+            // _prepareContext. If render doesn't trigger it (e.g. when
+            // no canvas/scene is active in the headless world the
+            // pipeline may early-out), fall back to calling the hook
+            // directly so the system's handler still runs and source
+            // coverage is recorded.
+            async function probeSceneControlButtons(): Promise<void> {
+                // Re-narrow `HooksGbl`: the outer guard's narrowing does not
+                // propagate into this nested function.
+                if (HooksGbl === undefined) return;
                 try {
                     const renderResult = uiGbl?.controls?.render?.(true);
                     if (renderResult != null) {
@@ -306,6 +316,12 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 } catch (err) {
                     notes.getSceneControlButtons = `ui.controls.render threw: ${String((err as Error).message)}`;
                 }
+            }
+
+            try {
+                const probeActorId = await probeChatAndDocumentUpdates();
+                await probeCombatLifecycle(probeActorId);
+                await probeSceneControlButtons();
             } finally {
                 for (const { name, id } of taps) {
                     try {

@@ -215,14 +215,20 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     notes[flow] = msg;
                 };
 
-                try {
-                    /* ============================================================
-                     * Characteristic total + bonus (dh2e and im homologation).
-                     * total = base + advance*5 + modifier - damage
-                     * bonus = floor(total / 10)
-                     * weaponSkill: base 30, advance 2, modifier 5  → total 45,
-                     *   bonus 4. agility: base 38 → total 38, bonus 3.
-                     * ============================================================ */
+                // Each derived-data assertion is an independent probe. They are
+                // extracted into named inner async helpers (called in sequence
+                // below) so this callback's cyclomatic complexity stays low.
+                // Every helper closes over `createPc`, `fired`, `note`, and
+                // `withTimeout` from this callback scope.
+
+                /* ============================================================
+                 * Characteristic total + bonus (dh2e and im homologation).
+                 * total = base + advance*5 + modifier - damage
+                 * bonus = floor(total / 10)
+                 * weaponSkill: base 30, advance 2, modifier 5  → total 45,
+                 *   bonus 4. agility: base 38 → total 38, bonus 3.
+                 * ============================================================ */
+                const probeCharacteristicTotalAndBonus = async (): Promise<void> => {
                     for (const sys of [
                         { system: 'dh2e', type: 'dh2-character', flow: 'characteristic-total-and-bonus::dh2e' },
                         { system: 'im', type: 'im-character', flow: 'characteristic-total-and-bonus::im' },
@@ -253,11 +259,13 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                             note(sys.flow, `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                         }
                     }
+                };
 
-                    /* ============================================================
-                     * Unnatural multiplies the bonus. strength base 50 → total
-                     * 50, baseModifier 5. unnatural 2 → bonus = 5 * 2 = 10.
-                     * ============================================================ */
+                /* ============================================================
+                 * Unnatural multiplies the bonus. strength base 50 → total
+                 * 50, baseModifier 5. unnatural 2 → bonus = 5 * 2 = 10.
+                 * ============================================================ */
+                const probeUnnaturalMultipliesBonus = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             characteristics: { strength: { base: 50, unnatural: 2 } },
@@ -277,11 +285,13 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('characteristic-unnatural-multiplies-bonus::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Recoverable characteristic damage subtracts from total.
-                     * toughness base 40, damage 7 → total 33, bonus floor(33/10)=3.
-                     * ============================================================ */
+                /* ============================================================
+                 * Recoverable characteristic damage subtracts from total.
+                 * toughness base 40, damage 7 → total 33, bonus floor(33/10)=3.
+                 * ============================================================ */
+                const probeDamageSubtracts = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             characteristics: { toughness: { base: 40, damage: 7 } },
@@ -301,13 +311,15 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('characteristic-damage-subtracts::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Skill rank → boolean flags. With no origin-path items,
-                     * originRank = 0, so effectiveRank = min(advance, 4).
-                     * dodge.advance = 3 → rank 3 → trained & plus10 & plus20 true,
-                     * plus30 false.
-                     * ============================================================ */
+                /* ============================================================
+                 * Skill rank → boolean flags. With no origin-path items,
+                 * originRank = 0, so effectiveRank = min(advance, 4).
+                 * dodge.advance = 3 → rank 3 → trained & plus10 & plus20 true,
+                 * plus30 false.
+                 * ============================================================ */
+                const probeSkillRankFlags = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             skills: { dodge: { advance: 3 } },
@@ -332,21 +344,23 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('skill-rank-flags::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Untrained skill baseValue divergence by system.
-                     *   Aptitude systems (bc, dh2e, ow, im): untrained skill
-                     *     current = charTotal - 20.
-                     *   Career systems (dh1e, dw, rt): untrained skill current
-                     *     = floor(charTotal / 2).
-                     * dodge is an Ag-keyed skill in every system. Set agility
-                     * base = 40 (total 40, no advance on the skill so it is
-                     * untrained: rank 0). Aptitude → current 20; career → 20 as
-                     * well at total 40, so use agility base = 45 to disambiguate:
-                     *   aptitude: 45 - 20 = 25
-                     *   career:   floor(45 / 2) = 22
-                     * trainingBonus = 0 (rank 0) and skill.bonus = 0.
-                     * ============================================================ */
+                /* ============================================================
+                 * Untrained skill baseValue divergence by system.
+                 *   Aptitude systems (bc, dh2e, ow, im): untrained skill
+                 *     current = charTotal - 20.
+                 *   Career systems (dh1e, dw, rt): untrained skill current
+                 *     = floor(charTotal / 2).
+                 * dodge is an Ag-keyed skill in every system. Set agility
+                 * base = 40 (total 40, no advance on the skill so it is
+                 * untrained: rank 0). Aptitude → current 20; career → 20 as
+                 * well at total 40, so use agility base = 45 to disambiguate:
+                 *   aptitude: 45 - 20 = 25
+                 *   career:   floor(45 / 2) = 22
+                 * trainingBonus = 0 (rank 0) and skill.bonus = 0.
+                 * ============================================================ */
+                const probeAptitudeUntrained = async (): Promise<void> => {
                     const aptitudeSystems = [
                         { system: 'dh2e', type: 'dh2-character', flow: 'skill-current-aptitude-untrained::dh2e' },
                         { system: 'bc', type: 'bc-character', flow: 'skill-current-aptitude-untrained::bc' },
@@ -374,7 +388,9 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                             note(sys.flow, `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                         }
                     }
+                };
 
+                const probeCareerUntrained = async (): Promise<void> => {
                     const careerSystems = [
                         { system: 'rt', type: 'rt-character', flow: 'skill-current-career-untrained::rt' },
                         { system: 'dh1e', type: 'dh1-character', flow: 'skill-current-career-untrained::dh1e' },
@@ -402,14 +418,16 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                             note(sys.flow, `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                         }
                     }
+                };
 
-                    /* ============================================================
-                     * A trained skill uses the full characteristic total (not the
-                     * untrained reduction), plus the per-rank training bonus.
-                     * dodge.advance = 2 → rank 2, agility base 40 → total 40.
-                     * baseValue = charTotal = 40 (rank > 0), trainingBonus = 10
-                     * (rank 2) → current = 50.
-                     * ============================================================ */
+                /* ============================================================
+                 * A trained skill uses the full characteristic total (not the
+                 * untrained reduction), plus the per-rank training bonus.
+                 * dodge.advance = 2 → rank 2, agility base 40 → total 40.
+                 * baseValue = charTotal = 40 (rank > 0), trainingBonus = 10
+                 * (rank 2) → current = 50.
+                 * ============================================================ */
+                const probeTrainedUsesFullCharacteristic = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             characteristics: { agility: { base: 40 } },
@@ -433,12 +451,14 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('skill-trained-uses-full-characteristic::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Movement derives from Agility Bonus + size.
-                     * agility base 40 → AB 4. size 4 → baseMove = 4 + 4 - 4 = 4.
-                     * half 4, full 8, charge 12, run 24.
-                     * ============================================================ */
+                /* ============================================================
+                 * Movement derives from Agility Bonus + size.
+                 * agility base 40 → AB 4. size 4 → baseMove = 4 + 4 - 4 = 4.
+                 * half 4, full 8, charge 12, run 24.
+                 * ============================================================ */
+                const probeMovement = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             characteristics: { agility: { base: 40 } },
@@ -461,13 +481,15 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('movement-derives-from-ab-and-size::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Leap / jump / lifting derive from Strength Bonus.
-                     * strength base 40 → SB 4. leapHorizontal = SB = 4;
-                     * jump = SB*20 = 80; lifting.lift = SB*9 = 36;
-                     * lifting.push = SB*18 = 72.
-                     * ============================================================ */
+                /* ============================================================
+                 * Leap / jump / lifting derive from Strength Bonus.
+                 * strength base 40 → SB 4. leapHorizontal = SB = 4;
+                 * jump = SB*20 = 80; lifting.lift = SB*9 = 36;
+                 * lifting.push = SB*18 = 72.
+                 * ============================================================ */
+                const probeLiftingAndLeap = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             characteristics: { strength: { base: 40 } },
@@ -490,12 +512,14 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('lifting-and-leap-from-strength-bonus::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Fatigue max derives from Toughness Bonus when stored max
-                     * is 0 (the schema default). toughness base 45 → TB 4 →
-                     * fatigue.max = 4.
-                     * ============================================================ */
+                /* ============================================================
+                 * Fatigue max derives from Toughness Bonus when stored max
+                 * is 0 (the schema default). toughness base 45 → TB 4 →
+                 * fatigue.max = 4.
+                 * ============================================================ */
+                const probeFatigue = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             characteristics: { toughness: { base: 45 } },
@@ -513,11 +537,13 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('fatigue-max-from-toughness-bonus::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Psy current rating + isPsyker. rating 4, sustained 1 →
-                     * currentRating = 3; isPsyker true (rating > 0).
-                     * ============================================================ */
+                /* ============================================================
+                 * Psy current rating + isPsyker. rating 4, sustained 1 →
+                 * currentRating = 3; isPsyker true (rating > 0).
+                 * ============================================================ */
+                const probePsy = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             psy: { rating: 4, sustained: 1 },
@@ -539,11 +565,13 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('psy-current-rating-and-isPsyker::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Experience available = total - used.
-                     * total 1000, used 350 → available 650.
-                     * ============================================================ */
+                /* ============================================================
+                 * Experience available = total - used.
+                 * total 1000, used 350 → available 650.
+                 * ============================================================ */
+                const probeExperience = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             experience: { total: 1000, used: 350 },
@@ -561,12 +589,14 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('experience-available-derived::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Wounds / fate / fate.threshold round-trip through the
-                     * woundsField / fate SchemaField. With no origin-path wound
-                     * formula, _computeWoundsMax leaves the stored max intact.
-                     * ============================================================ */
+                /* ============================================================
+                 * Wounds / fate / fate.threshold round-trip through the
+                 * woundsField / fate SchemaField. With no origin-path wound
+                 * formula, _computeWoundsMax leaves the stored max intact.
+                 * ============================================================ */
+                const probeWoundsFate = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             wounds: { max: 14, value: 9, critical: 2 },
@@ -590,14 +620,16 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('wounds-fate-resources-roundtrip::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * corruptionLevel + insanityDegrees getters (CharacterData).
-                     * Driven on a DH1 character (the canonical corruption/insanity
-                     * system, complementing per-system-flows.spec.ts which only
-                     * asserts the raw scalar persists). corruption 65 → 'corrupted'
-                     * (>=60, <90); insanity 34 → insanityDegrees floor(34/10)=3.
-                     * ============================================================ */
+                /* ============================================================
+                 * corruptionLevel + insanityDegrees getters (CharacterData).
+                 * Driven on a DH1 character (the canonical corruption/insanity
+                 * system, complementing per-system-flows.spec.ts which only
+                 * asserts the raw scalar persists). corruption 65 → 'corrupted'
+                 * (>=60, <90); insanity 34 → insanityDegrees floor(34/10)=3.
+                 * ============================================================ */
+                const probeCorruptionAndInsanity = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh1-character', 'dh1e', {
                             corruption: 65,
@@ -620,12 +652,14 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('corruption-level-and-insanity-degrees::dh1e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Subtlety + influence SchemaField round-trip.
-                     * subtlety { value 40, max 80 }, influence 55 all persist
-                     * (none clamped — within range).
-                     * ============================================================ */
+                /* ============================================================
+                 * Subtlety + influence SchemaField round-trip.
+                 * subtlety { value 40, max 80 }, influence 55 all persist
+                 * (none clamped — within range).
+                 * ============================================================ */
+                const probeSubtletyAndInfluence = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             subtlety: { value: 40, max: 80 },
@@ -648,11 +682,13 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('subtlety-and-influence-roundtrip::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * Influence clamps to the 0..100 percentile ceiling
-                     * (NumberField max: 100). Writing 150 must come back as 100.
-                     * ============================================================ */
+                /* ============================================================
+                 * Influence clamps to the 0..100 percentile ceiling
+                 * (NumberField max: 100). Writing 150 must come back as 100.
+                 * ============================================================ */
+                const probeInfluenceClamp = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             influence: 150,
@@ -670,14 +706,16 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('influence-clamps-to-percentile-ceiling::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
 
-                    /* ============================================================
-                     * getRollData exposes characteristic short keys, the
-                     * <short>B bonus key, and `pr` (psy rating).
-                     * weaponSkill base 40 → WS total 40, bonus 4. psy.rating 5.
-                     * data.WS = 40, data.WSB = 4, data.weaponSkill = 40,
-                     * data.pr = 5.
-                     * ============================================================ */
+                /* ============================================================
+                 * getRollData exposes characteristic short keys, the
+                 * <short>B bonus key, and `pr` (psy rating).
+                 * weaponSkill base 40 → WS total 40, bonus 4. psy.rating 5.
+                 * data.WS = 40, data.WSB = 4, data.weaponSkill = 40,
+                 * data.pr = 5.
+                 * ============================================================ */
+                const probeRollData = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2e', {
                             characteristics: { weaponSkill: { base: 40 } },
@@ -708,6 +746,26 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         note('roll-data-exposes-characteristic-keys::dh2e', `flow threw: ${err instanceof Error ? err.message : String(err)}`);
                     }
+                };
+
+                try {
+                    await probeCharacteristicTotalAndBonus();
+                    await probeUnnaturalMultipliesBonus();
+                    await probeDamageSubtracts();
+                    await probeSkillRankFlags();
+                    await probeAptitudeUntrained();
+                    await probeCareerUntrained();
+                    await probeTrainedUsesFullCharacteristic();
+                    await probeMovement();
+                    await probeLiftingAndLeap();
+                    await probeFatigue();
+                    await probePsy();
+                    await probeExperience();
+                    await probeWoundsFate();
+                    await probeCorruptionAndInsanity();
+                    await probeSubtletyAndInfluence();
+                    await probeInfluenceClamp();
+                    await probeRollData();
                 } finally {
                     for (const fn of cleanups) {
                         try {

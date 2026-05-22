@@ -130,9 +130,10 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
      * @type {string}
      */
     get testLabel(): string {
-        let label = this.test.skill;
-        if (this.test.modifier !== 0) {
-            label += ` ${this.test.modifier >= 0 ? '+' : ''}${this.test.modifier}`;
+        const { skill, modifier } = this.test;
+        let label = skill;
+        if (modifier !== 0) {
+            label += ` ${modifier >= 0 ? '+' : ''}${modifier}`;
         }
         return label;
     }

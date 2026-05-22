@@ -164,137 +164,153 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             const liveActor = (): ProbeActor | undefined => fg.game?.actors?.get?.(actorId);
             const effectCountBefore = (): number => liveActor()?.effects?.size ?? 0;
 
-            // ---- createEffect ----
-            try {
-                const before = effectCountBefore();
-                await ae.createEffect?.(liveActor(), {
-                    name: 'probe-raw-effect',
-                    changes: [{ key: 'system.combat.attack', mode: 2, value: 5 }],
-                });
-                await sleep(20);
-                record('createEffect', effectCountBefore() === before + 1, null);
-            } catch (err) {
-                record('createEffect', false, err instanceof Error ? err.message : String(err));
-            }
+            const aeModule = ae;
+            const seededActor = actor;
 
-            // ---- createCharacteristicEffect ----
-            try {
-                const before = effectCountBefore();
-                await ae.createCharacteristicEffect?.(liveActor(), 'strength', 10);
-                await sleep(20);
-                record('createCharacteristicEffect', effectCountBefore() === before + 1, null);
-            } catch (err) {
-                record('createCharacteristicEffect', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- createSkillEffect ----
-            try {
-                const before = effectCountBefore();
-                await ae.createSkillEffect?.(liveActor(), 'dodge', 10);
-                await sleep(20);
-                record('createSkillEffect', effectCountBefore() === before + 1, null);
-            } catch (err) {
-                record('createSkillEffect', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- createCombatEffect ----
-            try {
-                const before = effectCountBefore();
-                await ae.createCombatEffect?.(liveActor(), 'attack', 10);
-                await sleep(20);
-                record('createCombatEffect', effectCountBefore() === before + 1, null);
-            } catch (err) {
-                record('createCombatEffect', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- createConditionEffect ----
-            try {
-                const before = effectCountBefore();
-                await ae.createConditionEffect?.(liveActor(), 'stunned');
-                await sleep(20);
-                record('createConditionEffect', effectCountBefore() === before + 1, null);
-            } catch (err) {
-                record('createConditionEffect', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- createTemporaryEffect ----
-            try {
-                const before = effectCountBefore();
-                await ae.createTemporaryEffect?.(liveActor(), 'probe-temp-effect', [{ key: 'system.combat.defense', mode: 2, value: 5 }], 3);
-                await sleep(20);
-                record('createTemporaryEffect', effectCountBefore() === before + 1, null);
-            } catch (err) {
-                record('createTemporaryEffect', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- removeEffectByName ----
-            try {
-                const before = effectCountBefore();
-                await ae.removeEffectByName?.(liveActor(), 'probe-raw-effect');
-                await sleep(20);
-                record('removeEffectByName', effectCountBefore() === before - 1, null);
-            } catch (err) {
-                record('removeEffectByName', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- toggleEffect ----
-            try {
-                const a = liveActor();
-                const effects = a?.effects;
-                const effectsArr: ActiveEffectDoc[] = effects !== undefined ? Array.from(effects as Iterable<ActiveEffectDoc>) : [];
-                const target = effectsArr.find((e) => e.name?.startsWith('probe-temp-effect') === true);
-                if (target?.id === undefined) {
-                    record('toggleEffect', false, 'no temp-effect target found');
-                } else {
-                    const wasDisabled = target.disabled === true;
-                    await ae.toggleEffect?.(liveActor(), target.id);
-                    await sleep(20);
-                    const after = liveActor()?.effects?.get?.(target.id) ?? target;
-                    record('toggleEffect', after.disabled !== wasDisabled, `before=${String(wasDisabled)} after=${String(after.disabled)}`);
-                }
-            } catch (err) {
-                record('toggleEffect', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- removeEffects (filter) ----
-            try {
-                const before = effectCountBefore();
-                await ae.removeEffects?.(liveActor(), () => true);
-                await sleep(40);
-                record('removeEffects', effectCountBefore() < before, `before=${before} after=${effectCountBefore()}`);
-            } catch (err) {
-                record('removeEffects', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- sendActiveEffectMessage ---- (pure chat-card emit; just confirm no throw)
-            try {
-                await ae.sendActiveEffectMessage?.({
-                    template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
-                    actor: liveActor(),
-                    damage: 1,
-                });
-                record('sendActiveEffectMessage', true, null);
-            } catch (err) {
-                record('sendActiveEffectMessage', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- handleBleeding / handleBloodLoss / handleOnFire ----
-            // These dispatch a roll + chat message + wound reduction; they
-            // tolerate missing combat state and just need to run without
-            // throwing. We accept any successful resolution as coverage.
-            for (const fn of ['handleBleeding', 'handleBloodLoss', 'handleOnFire'] as const) {
+            // ---- create-* flows (each asserts the effect count incremented) ----
+            async function probeCreateFlows(): Promise<void> {
+                // ---- createEffect ----
                 try {
-                    // eslint-disable-next-line no-await-in-loop -- handlers must execute in series to attribute coverage cleanly
-                    await ae[fn]?.(liveActor());
-                    record(fn, true, null);
+                    const before = effectCountBefore();
+                    await aeModule.createEffect?.(liveActor(), {
+                        name: 'probe-raw-effect',
+                        changes: [{ key: 'system.combat.attack', mode: 2, value: 5 }],
+                    });
+                    await sleep(20);
+                    record('createEffect', effectCountBefore() === before + 1, null);
                 } catch (err) {
-                    record(fn, false, err instanceof Error ? err.message : String(err));
+                    record('createEffect', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- createCharacteristicEffect ----
+                try {
+                    const before = effectCountBefore();
+                    await aeModule.createCharacteristicEffect?.(liveActor(), 'strength', 10);
+                    await sleep(20);
+                    record('createCharacteristicEffect', effectCountBefore() === before + 1, null);
+                } catch (err) {
+                    record('createCharacteristicEffect', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- createSkillEffect ----
+                try {
+                    const before = effectCountBefore();
+                    await aeModule.createSkillEffect?.(liveActor(), 'dodge', 10);
+                    await sleep(20);
+                    record('createSkillEffect', effectCountBefore() === before + 1, null);
+                } catch (err) {
+                    record('createSkillEffect', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- createCombatEffect ----
+                try {
+                    const before = effectCountBefore();
+                    await aeModule.createCombatEffect?.(liveActor(), 'attack', 10);
+                    await sleep(20);
+                    record('createCombatEffect', effectCountBefore() === before + 1, null);
+                } catch (err) {
+                    record('createCombatEffect', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- createConditionEffect ----
+                try {
+                    const before = effectCountBefore();
+                    await aeModule.createConditionEffect?.(liveActor(), 'stunned');
+                    await sleep(20);
+                    record('createConditionEffect', effectCountBefore() === before + 1, null);
+                } catch (err) {
+                    record('createConditionEffect', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- createTemporaryEffect ----
+                try {
+                    const before = effectCountBefore();
+                    await aeModule.createTemporaryEffect?.(liveActor(), 'probe-temp-effect', [{ key: 'system.combat.defense', mode: 2, value: 5 }], 3);
+                    await sleep(20);
+                    record('createTemporaryEffect', effectCountBefore() === before + 1, null);
+                } catch (err) {
+                    record('createTemporaryEffect', false, err instanceof Error ? err.message : String(err));
                 }
             }
+
+            // ---- remove / toggle lifecycle flows ----
+            async function probeLifecycleFlows(): Promise<void> {
+                // ---- removeEffectByName ----
+                try {
+                    const before = effectCountBefore();
+                    await aeModule.removeEffectByName?.(liveActor(), 'probe-raw-effect');
+                    await sleep(20);
+                    record('removeEffectByName', effectCountBefore() === before - 1, null);
+                } catch (err) {
+                    record('removeEffectByName', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- toggleEffect ----
+                try {
+                    const a = liveActor();
+                    const effects = a?.effects;
+                    const effectsArr: ActiveEffectDoc[] = effects !== undefined ? Array.from(effects as Iterable<ActiveEffectDoc>) : [];
+                    const target = effectsArr.find((e) => e.name?.startsWith('probe-temp-effect') === true);
+                    if (target?.id === undefined) {
+                        record('toggleEffect', false, 'no temp-effect target found');
+                    } else {
+                        const wasDisabled = target.disabled === true;
+                        await aeModule.toggleEffect?.(liveActor(), target.id);
+                        await sleep(20);
+                        const after = liveActor()?.effects?.get?.(target.id) ?? target;
+                        record('toggleEffect', after.disabled !== wasDisabled, `before=${String(wasDisabled)} after=${String(after.disabled)}`);
+                    }
+                } catch (err) {
+                    record('toggleEffect', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- removeEffects (filter) ----
+                try {
+                    const before = effectCountBefore();
+                    await aeModule.removeEffects?.(liveActor(), () => true);
+                    await sleep(40);
+                    record('removeEffects', effectCountBefore() < before, `before=${before} after=${effectCountBefore()}`);
+                } catch (err) {
+                    record('removeEffects', false, err instanceof Error ? err.message : String(err));
+                }
+            }
+
+            // ---- chat-emit + combat-status handler flows ----
+            async function probeMessageAndHandlerFlows(): Promise<void> {
+                // ---- sendActiveEffectMessage ---- (pure chat-card emit; just confirm no throw)
+                try {
+                    await aeModule.sendActiveEffectMessage?.({
+                        template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
+                        actor: liveActor(),
+                        damage: 1,
+                    });
+                    record('sendActiveEffectMessage', true, null);
+                } catch (err) {
+                    record('sendActiveEffectMessage', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- handleBleeding / handleBloodLoss / handleOnFire ----
+                // These dispatch a roll + chat message + wound reduction; they
+                // tolerate missing combat state and just need to run without
+                // throwing. We accept any successful resolution as coverage.
+                for (const fn of ['handleBleeding', 'handleBloodLoss', 'handleOnFire'] as const) {
+                    try {
+                        // eslint-disable-next-line no-await-in-loop -- handlers must execute in series to attribute coverage cleanly
+                        await aeModule[fn]?.(liveActor());
+                        record(fn, true, null);
+                    } catch (err) {
+                        record(fn, false, err instanceof Error ? err.message : String(err));
+                    }
+                }
+            }
+
+            await probeCreateFlows();
+            await probeLifecycleFlows();
+            await probeMessageAndHandlerFlows();
 
             // Cleanup
             try {
-                await actor.delete?.();
+                await seededActor.delete?.();
             } catch {
                 /* ignore */
             }

@@ -144,7 +144,13 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
             const isNumber = def.type === Number || typeof current === 'number';
             const isArray = def.type === Array || Array.isArray(current);
 
-            if (isBoolean) {
+            type ProbeOutcome = { kind: 'toggle' | 'choice' | 'read'; ok: boolean; error: string | null };
+
+            // Flip a boolean setting, assert it stuck, then restore the original.
+            async function probeBoolean(): Promise<ProbeOutcome> {
+                // Re-narrow `settings`: the outer guard's narrowing does not
+                // propagate into this nested function.
+                if (!settings) return { kind: 'read', ok: false, error: 'game.settings unavailable' };
                 const next = current !== true;
                 try {
                     await settings.set(systemId, namespacedKey, next);
@@ -181,8 +187,13 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                 return { kind: 'toggle' as const, ok: true, error: null };
             }
 
-            if (hasChoices) {
-                const keys = Object.keys(def.choices ?? {});
+            // Pick a different choice for a choices-backed setting, assert it
+            // stuck, then restore the original.
+            async function probeChoice(): Promise<ProbeOutcome> {
+                // Re-narrow `settings`: the outer guard's narrowing does not
+                // propagate into this nested function.
+                if (!settings) return { kind: 'read', ok: false, error: 'game.settings unavailable' };
+                const keys = Object.keys(def?.choices ?? {});
                 const next = keys.find((k) => k !== current);
                 if (next === undefined) {
                     // Only one choice (or empty) — nothing meaningful to flip.
@@ -220,6 +231,14 @@ async function probeSetting(page: Page, fullKey: string): Promise<SettingProbe> 
                     };
                 }
                 return { kind: 'choice' as const, ok: true, error: null };
+            }
+
+            if (isBoolean) {
+                return probeBoolean();
+            }
+
+            if (hasChoices) {
+                return probeChoice();
             }
 
             if (isNumber) {

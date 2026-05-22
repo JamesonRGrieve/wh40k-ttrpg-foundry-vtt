@@ -37,7 +37,8 @@ export default class IdentifierField extends (foundry.data as any).fields.String
 
         // Permissive validation - allows letters (any case), numbers, underscores, and hyphens
         // This matches DND5E pattern and accepts legacy camelCase identifiers
-        if (!/^[a-z0-9_-]+$/i.test(value)) {
+        const isValid = /^[a-z0-9_-]+$/i.test(value);
+        if (!isValid) {
             throw new Error(`Identifier "${value}" must contain only letters, numbers, underscores, and hyphens`);
         }
     }

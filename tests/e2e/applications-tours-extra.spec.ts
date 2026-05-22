@@ -202,15 +202,57 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             // registered for end-of-probe deletion.
             const cleanups: Array<() => Promise<void>> = [];
 
-            try {
-                /* ============================================================
-                 * Flow 1: tour-wh40k-base-class
-                 * Import the WH40KTour base class, assert it extends
-                 * foundry.nue.Tour, and that `waitForElement` resolves
-                 * immediately for an element already present in the DOM
-                 * (document.body is always present) — exercising the
-                 * fast-path branch of wh40k-rpg-tour.ts.
-                 * ============================================================ */
+            // Shared PC actor (dh2-character — has characteristics). Populated by
+            // probeSharedPc() before the flows that depend on it run.
+            let pc: ProbeActor | null = null;
+            const getPc = (): ProbeActor | null => (pc?.id != null ? foundryGame?.actors?.get?.(pc.id) ?? null : null);
+
+            // Generic mixin-factory shape shared by several mixin probes.
+            type MixinFactory<T> = (base: new (...args: never[]) => object) => new (...args: never[]) => T;
+
+            // Action-bearing mixed-class shapes shared by the stat-breakdown +
+            // item-preview action flows.
+            type ActionHandler = (this: object, event: Event, target: HTMLElement) => void;
+            interface MixedWithActions {
+                new (): object;
+                DEFAULT_OPTIONS?: { actions?: Record<string, ActionHandler | undefined> };
+            }
+            type ActionMixinFactory = (base: new (...args: never[]) => object) => MixedWithActions;
+
+            // DialogWH40K shapes shared by the static-helper + instance-render flows.
+            interface DialogInstance {
+                render: (options: object) => Promise<DialogInstance>;
+                _prepareContext: (options: object) => Promise<{ content?: string; buttons?: Array<{ cssClass?: string }> }>;
+                element?: HTMLElement | null;
+                close?: () => Promise<void>;
+            }
+            interface DialogCtor {
+                new (options: object): DialogInstance;
+                confirm?: (options: object) => Promise<void>;
+                prompt?: (options: object) => Promise<void>;
+            }
+            interface DialogModule {
+                default?: DialogCtor;
+                DialogWH40K?: DialogCtor;
+            }
+
+            // mainTour is built by probeMainConstruct() and read by
+            // probeMainStepsShape() — shared across the two tour flows.
+            interface MainTourInstance {
+                config?: { title?: string; description?: string; canBeResumed?: boolean; display?: boolean; steps?: TourStep[] };
+                steps?: TourStep[];
+            }
+            let mainTour: MainTourInstance | null = null;
+
+            /* ============================================================
+             * Flow 1: tour-wh40k-base-class
+             * Import the WH40KTour base class, assert it extends
+             * foundry.nue.Tour, and that `waitForElement` resolves
+             * immediately for an element already present in the DOM
+             * (document.body is always present) — exercising the
+             * fast-path branch of wh40k-rpg-tour.ts.
+             * ============================================================ */
+            async function probeTourBase(): Promise<void> {
                 interface WH40KTourInstance {
                     waitForElement: (selector: string) => Promise<Element | null>;
                     reset?: () => void;
@@ -259,22 +301,19 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['tour-wh40k-base-class'] = `import threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 2: tour-main-construct
-                 * Construct DHTourMain and assert its top-level config
-                 * (title / description / canBeResumed / display) — exercises
-                 * the main-tour.ts constructor + WH40KTour super-call.
-                 * ============================================================ */
-                interface MainTourInstance {
-                    config?: { title?: string; description?: string; canBeResumed?: boolean; display?: boolean; steps?: TourStep[] };
-                    steps?: TourStep[];
-                }
+            /* ============================================================
+             * Flow 2: tour-main-construct
+             * Construct DHTourMain and assert its top-level config
+             * (title / description / canBeResumed / display) — exercises
+             * the main-tour.ts constructor + WH40KTour super-call.
+             * ============================================================ */
+            async function probeMainConstruct(): Promise<void> {
                 interface MainTourModule {
                     DHTourMain?: new () => MainTourInstance;
                     default?: new () => MainTourInstance;
                 }
-                let mainTour: MainTourInstance | null = null;
                 try {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
                     const mod = (await import(`${base}/tours/main-tour.js`)) as unknown as MainTourModule;
@@ -300,14 +339,16 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['tour-main-construct'] = `construct threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 3: tour-main-steps-shape
-                 * Assert DHTourMain ships exactly the 6 documented steps,
-                 * each carrying id / selector / title / content, and the
-                 * first step dispatches a `click` action — the step-extras
-                 * contract WH40KTour._postStep consumes.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 3: tour-main-steps-shape
+             * Assert DHTourMain ships exactly the 6 documented steps,
+             * each carrying id / selector / title / content, and the
+             * first step dispatches a `click` action — the step-extras
+             * contract WH40KTour._postStep consumes.
+             * ============================================================ */
+            function probeMainStepsShape(): void {
                 try {
                     if (mainTour === null) {
                         notes['tour-main-steps-shape'] = 'mainTour not constructed (flow 2 failed)';
@@ -331,14 +372,16 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['tour-main-steps-shape'] = `shape check threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 4: tour-registered-in-game
-                 * The system registers the tour under `wh40k-rpg.main-tour`
-                 * in hooks-manager.ts. Assert game.tours resolves it and the
-                 * resolved instance carries the same 6-step config — proving
-                 * the registration path executed end-to-end.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 4: tour-registered-in-game
+             * The system registers the tour under `wh40k-rpg.main-tour`
+             * in hooks-manager.ts. Assert game.tours resolves it and the
+             * resolved instance carries the same 6-step config — proving
+             * the registration path executed end-to-end.
+             * ============================================================ */
+            function probeTourRegistered(): void {
                 try {
                     const tours = foundryGame?.tours;
                     const registered = tours?.get?.('wh40k-rpg.main-tour') ?? tours?.get?.('main-tour');
@@ -357,20 +400,21 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['tour-registered-in-game'] = `lookup threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 5: tooltip-mixin-prepare
-                 * Mix TooltipMixin onto a minimal headless base (it only
-                 * reads `this.document?.uuid`) and assert the prepare*Tooltip
-                 * helpers delegate to the wh40k-tooltip data builders and
-                 * return parseable JSON payloads.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 5: tooltip-mixin-prepare
+             * Mix TooltipMixin onto a minimal headless base (it only
+             * reads `this.document?.uuid`) and assert the prepare*Tooltip
+             * helpers delegate to the wh40k-tooltip data builders and
+             * return parseable JSON payloads.
+             * ============================================================ */
+            async function probeTooltipMixin(): Promise<void> {
                 interface TooltipInstance {
                     prepareCharacteristicTooltip: (key: string, data: object) => string;
                     prepareWeaponTooltip: (weapon: object) => string;
                     prepareSkillTooltip: (key: string, skill: object, chars: object) => string;
                 }
-                type MixinFactory<T> = (base: new (...args: never[]) => object) => new (...args: never[]) => T;
                 interface TooltipModule {
                     default?: MixinFactory<TooltipInstance>;
                     TooltipMixin?: MixinFactory<TooltipInstance>;
@@ -423,30 +467,17 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['tooltip-mixin-prepare'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 6: dialog-wh40k-static-helpers
-                 * DialogWH40K.confirm / .prompt delegate to DialogV2. Fire
-                 * each fire-and-forget (the promise resolves only on user
-                 * action) and assert a DialogV2 popup attached to the DOM —
-                 * exercising the static helper source path. Tear the popup
-                 * down after observing it.
-                 * ============================================================ */
-                interface DialogInstance {
-                    render: (options: object) => Promise<DialogInstance>;
-                    _prepareContext: (options: object) => Promise<{ content?: string; buttons?: Array<{ cssClass?: string }> }>;
-                    element?: HTMLElement | null;
-                    close?: () => Promise<void>;
-                }
-                interface DialogCtor {
-                    new (options: object): DialogInstance;
-                    confirm?: (options: object) => Promise<void>;
-                    prompt?: (options: object) => Promise<void>;
-                }
-                interface DialogModule {
-                    default?: DialogCtor;
-                    DialogWH40K?: DialogCtor;
-                }
+            /* ============================================================
+             * Flow 6: dialog-wh40k-static-helpers
+             * DialogWH40K.confirm / .prompt delegate to DialogV2. Fire
+             * each fire-and-forget (the promise resolves only on user
+             * action) and assert a DialogV2 popup attached to the DOM —
+             * exercising the static helper source path. Tear the popup
+             * down after observing it.
+             * ============================================================ */
+            async function probeDialogStatic(): Promise<void> {
                 try {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
                     const mod = (await import(`${base}/applications/api/dialog.js`)) as unknown as DialogModule;
@@ -470,14 +501,16 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['dialog-wh40k-static-helpers'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 7: dialog-wh40k-instance-render
-                 * Construct DialogWH40K with content + buttons options,
-                 * render it, and assert _prepareContext mapped the buttons
-                 * (button.class → cssClass) and content onto the context.
-                 * Close immediately to keep the stack clean.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 7: dialog-wh40k-instance-render
+             * Construct DialogWH40K with content + buttons options,
+             * render it, and assert _prepareContext mapped the buttons
+             * (button.class → cssClass) and content onto the context.
+             * Close immediately to keep the stack clean.
+             * ============================================================ */
+            async function probeDialogInstance(): Promise<void> {
                 try {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
                     const mod = (await import(`${base}/applications/api/dialog.js`)) as unknown as DialogModule;
@@ -519,13 +552,14 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['dialog-wh40k-instance-render'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Shared PC actor (dh2-character — has characteristics).
-                 * Used by what-if / effect-actions / active-modifiers /
-                 * item-preview / talent-editor flows.
-                 * ============================================================ */
-                let pc: ProbeActor | null = null;
+            /* ============================================================
+             * Shared PC actor (dh2-character — has characteristics).
+             * Used by what-if / effect-actions / active-modifiers /
+             * item-preview / talent-editor flows.
+             * ============================================================ */
+            async function probeSharedPc(): Promise<void> {
                 try {
                     const createPc = ActorCls?.create;
                     if (createPc != null) {
@@ -552,16 +586,17 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 await new Promise<void>((r) => {
                     setTimeout(r, 250);
                 });
-                const getPc = (): ProbeActor | null => (pc?.id != null ? foundryGame?.actors?.get?.(pc.id) ?? null : null);
+            }
 
-                /* ============================================================
-                 * Flow 8: whatif-mixin-state
-                 * Mix WhatIfMixin onto a base whose `document` is the real PC
-                 * actor (its _updatePreview constructs a real Actor and
-                 * prepareData()s it). Drive getWhatIfState → enterWhatIfMode
-                 * → previewChange → state, asserting changeCount tracks and
-                 * the preview actor materialises.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 8: whatif-mixin-state
+             * Mix WhatIfMixin onto a base whose `document` is the real PC
+             * actor (its _updatePreview constructs a real Actor and
+             * prepareData()s it). Drive getWhatIfState → enterWhatIfMode
+             * → previewChange → state, asserting changeCount tracks and
+             * the preview actor materialises.
+             * ============================================================ */
+            async function probeWhatIfState(): Promise<void> {
                 interface WhatIfInstance {
                     getWhatIfState: () => { changeCount: number };
                     isWhatIfActive: () => boolean;
@@ -629,21 +664,17 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['whatif-mixin-state'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 9: statbreakdown-mixin-action
-                 * Mix StatBreakdownMixin onto a base whose `document`
-                 * implements getStatBreakdown. Dispatch the registered
-                 * `showStatBreakdown` action against a target carrying
-                 * data-stat-key; assert a `.wh40k-stat-breakdown-popover`
-                 * was appended to the body, then close it.
-                 * ============================================================ */
-                type ActionHandler = (this: object, event: Event, target: HTMLElement) => void;
-                interface MixedWithActions {
-                    new (): object;
-                    DEFAULT_OPTIONS?: { actions?: Record<string, ActionHandler | undefined> };
-                }
-                type ActionMixinFactory = (base: new (...args: never[]) => object) => MixedWithActions;
+            /* ============================================================
+             * Flow 9: statbreakdown-mixin-action
+             * Mix StatBreakdownMixin onto a base whose `document`
+             * implements getStatBreakdown. Dispatch the registered
+             * `showStatBreakdown` action against a target carrying
+             * data-stat-key; assert a `.wh40k-stat-breakdown-popover`
+             * was appended to the body, then close it.
+             * ============================================================ */
+            async function probeStatBreakdownAction(): Promise<void> {
                 interface StatBreakdownModule {
                     default?: ActionMixinFactory;
                     StatBreakdownMixin?: ActionMixinFactory;
@@ -693,16 +724,18 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['statbreakdown-mixin-action'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 10: collapsible-panel-mixin-toggle
-                 * Mix CollapsiblePanelMixin onto a base supplying `element`
-                 * (with two [data-panel-id] panels) + `expandedSections`
-                 * Map. Assert the static PANEL_PRESETS/PANEL_FLAG_SCOPE
-                 * config and that togglePanel + collapseAllPanels write the
-                 * expandedSections state (game.user flag persistence is real
-                 * as GM).
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 10: collapsible-panel-mixin-toggle
+             * Mix CollapsiblePanelMixin onto a base supplying `element`
+             * (with two [data-panel-id] panels) + `expandedSections`
+             * Map. Assert the static PANEL_PRESETS/PANEL_FLAG_SCOPE
+             * config and that togglePanel + collapseAllPanels write the
+             * expandedSections state (game.user flag persistence is real
+             * as GM).
+             * ============================================================ */
+            async function probeCollapsibleToggle(): Promise<void> {
                 interface CollapsibleInstance {
                     togglePanel: (id: string, expanded: boolean) => Promise<void>;
                     collapseAllPanels: () => Promise<void>;
@@ -751,15 +784,17 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['collapsible-panel-mixin-toggle'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 11: enhanced-animations-counter
-                 * Mix EnhancedAnimationsMixin onto a trivial base and run
-                 * animateCounter on a detached element. The rAF loop's
-                 * terminal branch sets textContent to the formatted target
-                 * and clears the running-animation entry; assert the final
-                 * state after the duration elapses.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 11: enhanced-animations-counter
+             * Mix EnhancedAnimationsMixin onto a trivial base and run
+             * animateCounter on a detached element. The rAF loop's
+             * terminal branch sets textContent to the formatted target
+             * and clears the running-animation entry; assert the final
+             * state after the duration elapses.
+             * ============================================================ */
+            async function probeEnhancedAnimationsCounter(): Promise<void> {
                 interface AnimationsInstance {
                     animateCounter: (el: HTMLElement, from: number, to: number, opts: { duration: number }) => void;
                     _runningAnimations: { size: number };
@@ -799,13 +834,15 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['enhanced-animations-counter'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 12: appv2-mixin-number-autoselect
-                 * setupNumberInputAutoSelect wires a focus → select() listener
-                 * onto every number input under the supplied root. Dispatch a
-                 * focus event and assert the input's text was selected.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 12: appv2-mixin-number-autoselect
+             * setupNumberInputAutoSelect wires a focus → select() listener
+             * onto every number input under the supplied root. Dispatch a
+             * focus event and assert the input's text was selected.
+             * ============================================================ */
+            async function probeNumberAutoselect(): Promise<void> {
                 interface AppV2Module {
                     setupNumberInputAutoSelect?: (root: HTMLElement) => void;
                 }
@@ -839,14 +876,16 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['appv2-mixin-number-autoselect'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 13: contextmenu-trigger-event
-                 * WH40KContextMenu.triggerEvent re-dispatches a `contextmenu`
-                 * PointerEvent onto the closest [data-item-id] ancestor.
-                 * Build a row, listen for contextmenu, click a child, assert
-                 * the synthetic contextmenu fired on the row.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 13: contextmenu-trigger-event
+             * WH40KContextMenu.triggerEvent re-dispatches a `contextmenu`
+             * PointerEvent onto the closest [data-item-id] ancestor.
+             * Build a row, listen for contextmenu, click a child, assert
+             * the synthetic contextmenu fired on the row.
+             * ============================================================ */
+            async function probeContextMenuTrigger(): Promise<void> {
                 interface ContextMenuModule {
                     WH40KContextMenu?: { triggerEvent?: (event: Event) => void };
                 }
@@ -885,15 +924,17 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['contextmenu-trigger-event'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 14: effect-actions-crud
-                 * Drive the effect-actions free functions against the real
-                 * PC actor: createEffect → resolveEffect (via a target
-                 * carrying data-effect-id) → effectToggle (disabled flip) →
-                 * effectDelete. Assert each step round-trips through the
-                 * Foundry ActiveEffect collection.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 14: effect-actions-crud
+             * Drive the effect-actions free functions against the real
+             * PC actor: createEffect → resolveEffect (via a target
+             * carrying data-effect-id) → effectToggle (disabled flip) →
+             * effectDelete. Assert each step round-trips through the
+             * Foundry ActiveEffect collection.
+             * ============================================================ */
+            async function probeEffectActions(): Promise<void> {
                 interface ProbeEffect {
                     id?: string;
                     name?: string;
@@ -942,13 +983,15 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['effect-actions-crud'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 15: item-target-resolve
-                 * itemIdFromTarget resolves the closest [data-item-id]
-                 * ancestor, falls back to the element's own dataset, and
-                 * returns undefined for absent / empty ids.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 15: item-target-resolve
+             * itemIdFromTarget resolves the closest [data-item-id]
+             * ancestor, falls back to the element's own dataset, and
+             * returns undefined for absent / empty ids.
+             * ============================================================ */
+            async function probeItemTargetResolve(): Promise<void> {
                 interface ItemTargetModule {
                     itemIdFromTarget?: (target: HTMLElement) => string | undefined;
                 }
@@ -979,14 +1022,16 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['item-target-resolve'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 16: active-modifiers-panel-prepare
-                 * Embed a condition + a modifier-bearing talent on the PC,
-                 * mix ActiveModifiersMixin onto a base whose `actor` is the
-                 * live PC, and assert prepareActiveModifiers buckets the
-                 * items into the conditions/talents/effects category lists.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 16: active-modifiers-panel-prepare
+             * Embed a condition + a modifier-bearing talent on the PC,
+             * mix ActiveModifiersMixin onto a base whose `actor` is the
+             * live PC, and assert prepareActiveModifiers buckets the
+             * items into the conditions/talents/effects category lists.
+             * ============================================================ */
+            async function probeActiveModifiers(): Promise<void> {
                 interface ActiveModifiersInstance {
                     prepareActiveModifiers: () => {
                         conditions: object[];
@@ -1057,14 +1102,16 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['active-modifiers-panel-prepare'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 17: item-preview-card-toggle
-                 * Mix ItemPreviewMixin onto a base whose `actor` is the live
-                 * PC and whose `element` holds an item row. Dispatch the
-                 * registered `toggleItemPreview` action twice: first inserts
-                 * a .wh40k-item-preview sibling, second removes it.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 17: item-preview-card-toggle
+             * Mix ItemPreviewMixin onto a base whose `actor` is the live
+             * PC and whose `element` holds an item row. Dispatch the
+             * registered `toggleItemPreview` action twice: first inserts
+             * a .wh40k-item-preview sibling, second removes it.
+             * ============================================================ */
+            async function probeItemPreviewToggle(): Promise<void> {
                 interface ItemPreviewModule {
                     ItemPreviewMixin?: ActionMixinFactory;
                     default?: ActionMixinFactory;
@@ -1137,14 +1184,16 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['item-preview-card-toggle'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
 
-                /* ============================================================
-                 * Flow 18: talent-editor-dialog-render
-                 * Embed a talent item, construct TalentEditorDialog({ item }),
-                 * render it, and assert _prepareContext returns the editor
-                 * sections + the title getter reflects the item name. Close
-                 * to keep the window stack clean.
-                 * ============================================================ */
+            /* ============================================================
+             * Flow 18: talent-editor-dialog-render
+             * Embed a talent item, construct TalentEditorDialog({ item }),
+             * render it, and assert _prepareContext returns the editor
+             * sections + the title getter reflects the item name. Close
+             * to keep the window stack clean.
+             * ============================================================ */
+            async function probeTalentEditorRender(): Promise<void> {
                 interface TalentEditorInstance {
                     render: (options: object) => Promise<TalentEditorInstance>;
                     _prepareContext: (options: object) => Promise<{ activeSection?: string; sections?: Record<string, boolean> }>;
@@ -1216,6 +1265,28 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['talent-editor-dialog-render'] = `flow threw: ${String((err as Error).message)}`;
                 }
+            }
+
+            try {
+                await probeTourBase();
+                await probeMainConstruct();
+                probeMainStepsShape();
+                probeTourRegistered();
+                await probeTooltipMixin();
+                await probeDialogStatic();
+                await probeDialogInstance();
+                await probeSharedPc();
+                await probeWhatIfState();
+                await probeStatBreakdownAction();
+                await probeCollapsibleToggle();
+                await probeEnhancedAnimationsCounter();
+                await probeNumberAutoselect();
+                await probeContextMenuTrigger();
+                await probeEffectActions();
+                await probeItemTargetResolve();
+                await probeActiveModifiers();
+                await probeItemPreviewToggle();
+                await probeTalentEditorRender();
             } finally {
                 for (const fn of cleanups) {
                     try {

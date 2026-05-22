@@ -101,6 +101,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                 out.push({ name, ok, detail });
             };
             const trash: ActorRef[] = [];
+            let mgr: ManagerModule | undefined;
 
             // 1 — actor type registered
             try {
@@ -134,84 +135,96 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
             }
 
             // 4 — pure manager helpers (module loaded under coverage)
-            let mgr: ManagerModule | undefined;
-            try {
-                // Non-static specifier so knip doesn't try to resolve a
-                // browser runtime URL (mirrors canvas-ruler.spec.ts).
-                const base = `${'/systems/wh40k-rpg'}/module/managers`;
-                mgr = (await import(`${base}/item-drop-manager.js`)) as ManagerModule;
-                const M = mgr.ItemDropManager;
-                const snap = M.snapToGrid({ x: 137, y: 268 }, 100);
-                const plan = M.planStackMerge(
-                    [{ _id: 'a', name: 'Charge Pack', type: 'ammunition', system: { quantity: 2 } }],
-                    [{ name: 'Charge Pack', type: 'ammunition', system: { quantity: 3 } }],
-                );
-                const ok =
-                    M.isDroppable('weapon') &&
-                    !M.isDroppable('talent') &&
-                    snap.x === 100 &&
-                    snap.y === 200 &&
-                    plan.updates.length === 1 &&
-                    plan.updates[0]?.quantity === 5;
-                record('manager-pure-helpers', ok, ok ? null : `snap=${JSON.stringify(snap)} plan=${JSON.stringify(plan)}`);
-            } catch (err) {
-                record('manager-pure-helpers', false, String((err as Error).message));
+            async function probeManagerHelpers(): Promise<void> {
+                try {
+                    // Non-static specifier so knip doesn't try to resolve a
+                    // browser runtime URL (mirrors canvas-ruler.spec.ts).
+                    const base = `${'/systems/wh40k-rpg'}/module/managers`;
+                    mgr = (await import(`${base}/item-drop-manager.js`)) as ManagerModule;
+                    const M = mgr.ItemDropManager;
+                    const snap = M.snapToGrid({ x: 137, y: 268 }, 100);
+                    const plan = M.planStackMerge(
+                        [{ _id: 'a', name: 'Charge Pack', type: 'ammunition', system: { quantity: 2 } }],
+                        [{ name: 'Charge Pack', type: 'ammunition', system: { quantity: 3 } }],
+                    );
+                    const ok =
+                        M.isDroppable('weapon') &&
+                        !M.isDroppable('talent') &&
+                        snap.x === 100 &&
+                        snap.y === 200 &&
+                        plan.updates.length === 1 &&
+                        plan.updates[0]?.quantity === 5;
+                    record('manager-pure-helpers', ok, ok ? null : `snap=${JSON.stringify(snap)} plan=${JSON.stringify(plan)}`);
+                } catch (err) {
+                    record('manager-pure-helpers', false, String((err as Error).message));
+                }
             }
 
             // 5 — loot sheet renders
-            try {
-                if (loot?.sheet?.render != null) {
-                    await loot.sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 250);
-                    });
-                    const el = loot.sheet.element;
-                    const ok = Boolean(el) && (el instanceof HTMLElement || Boolean((el as { 0?: HTMLElement } | null)?.[0]));
-                    record('loot-sheet-renders', ok, ok ? null : 'sheet element absent after render');
-                    await loot.sheet.close?.();
-                } else {
-                    record('loot-sheet-renders', false, 'loot.sheet.render unavailable');
+            async function probeSheetRender(): Promise<void> {
+                try {
+                    if (loot?.sheet?.render != null) {
+                        await loot.sheet.render(true);
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 250);
+                        });
+                        const el = loot.sheet.element;
+                        const ok = Boolean(el) && (el instanceof HTMLElement || Boolean((el as { 0?: HTMLElement } | null)?.[0]));
+                        record('loot-sheet-renders', ok, ok ? null : 'sheet element absent after render');
+                        await loot.sheet.close?.();
+                    } else {
+                        record('loot-sheet-renders', false, 'loot.sheet.render unavailable');
+                    }
+                } catch (err) {
+                    record('loot-sheet-renders', false, String((err as Error).message));
                 }
-            } catch (err) {
-                record('loot-sheet-renders', false, String((err as Error).message));
             }
 
             // 6 — pickup transfers items between two real actors and deletes the pile
-            try {
-                if (mgr == null) throw new Error('manager not loaded');
-                const M = mgr.ItemDropManager;
-                const receiver = await g.Actor.create({ type: 'dh2-character', name: 'E2E Receiver' });
-                trash.push(receiver);
-                const pile = await g.Actor.create({ type: 'loot', name: 'Dropped: Bolt Pistol' });
-                const pileId = pile.id;
-                await pile.createEmbeddedDocuments?.('Item', [{ name: 'Bolt Pistol', type: 'weapon', system: { weight: 5, quantity: 1 } }]);
-                const before = receiver.items?.size ?? 0;
-                const ok = await M.pickupLoot(receiver, pile);
-                const transferred = (receiver.items?.size ?? 0) === before + 1;
-                const pileGone = pileId == null || g.game.actors.get(pileId) == null;
-                record(
-                    'pickup-transfers-items',
-                    ok && transferred && pileGone,
-                    `ok=${String(ok)} transferred=${String(transferred)} pileGone=${String(pileGone)}`,
-                );
-            } catch (err) {
-                record('pickup-transfers-items', false, String((err as Error).message));
+            async function probePickup(): Promise<void> {
+                try {
+                    if (mgr == null) throw new Error('manager not loaded');
+                    const M = mgr.ItemDropManager;
+                    const receiver = await g.Actor.create({ type: 'dh2-character', name: 'E2E Receiver' });
+                    trash.push(receiver);
+                    const pile = await g.Actor.create({ type: 'loot', name: 'Dropped: Bolt Pistol' });
+                    const pileId = pile.id;
+                    await pile.createEmbeddedDocuments?.('Item', [{ name: 'Bolt Pistol', type: 'weapon', system: { weight: 5, quantity: 1 } }]);
+                    const before = receiver.items?.size ?? 0;
+                    const ok = await M.pickupLoot(receiver, pile);
+                    const transferred = (receiver.items?.size ?? 0) === before + 1;
+                    const pileGone = pileId == null || g.game.actors.get(pileId) == null;
+                    record(
+                        'pickup-transfers-items',
+                        ok && transferred && pileGone,
+                        `ok=${String(ok)} transferred=${String(transferred)} pileGone=${String(pileGone)}`,
+                    );
+                } catch (err) {
+                    record('pickup-transfers-items', false, String((err as Error).message));
+                }
             }
 
             // 7 — non-droppable items are rejected (no token / canvas needed)
-            try {
-                if (mgr == null) throw new Error('manager not loaded');
-                const M = mgr.ItemDropManager;
-                const owner = await g.Actor.create({ type: 'dh2-character', name: 'E2E Dropper' });
-                trash.push(owner);
-                const created = (await owner.createEmbeddedDocuments?.('Item', [{ name: 'Quick Draw', type: 'talent' }])) ?? [];
-                if (created.length === 0) throw new Error('talent creation returned empty');
-                const talent = created[0];
-                const result = await M.dropItemFromActor(owner, talent);
-                record('drop-non-droppable-rejected', result === null, `result=${result == null ? 'null' : 'object'}`);
-            } catch (err) {
-                record('drop-non-droppable-rejected', false, String((err as Error).message));
+            async function probeNonDroppable(): Promise<void> {
+                try {
+                    if (mgr == null) throw new Error('manager not loaded');
+                    const M = mgr.ItemDropManager;
+                    const owner = await g.Actor.create({ type: 'dh2-character', name: 'E2E Dropper' });
+                    trash.push(owner);
+                    const created = (await owner.createEmbeddedDocuments?.('Item', [{ name: 'Quick Draw', type: 'talent' }])) ?? [];
+                    if (created.length === 0) throw new Error('talent creation returned empty');
+                    const talent = created[0];
+                    const result = await M.dropItemFromActor(owner, talent);
+                    record('drop-non-droppable-rejected', result === null, `result=${result == null ? 'null' : 'object'}`);
+                } catch (err) {
+                    record('drop-non-droppable-rejected', false, String((err as Error).message));
+                }
             }
+
+            await probeManagerHelpers();
+            await probeSheetRender();
+            await probePickup();
+            await probeNonDroppable();
 
             // Cleanup world documents created by the probe.
             for (const doc of trash) {

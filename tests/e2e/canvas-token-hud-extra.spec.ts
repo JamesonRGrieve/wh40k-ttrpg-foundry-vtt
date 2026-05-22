@@ -273,7 +273,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                 try {
                     const url = '/systems/wh40k-rpg/module/canvas/ruler.js';
                     type RulerModule = { default?: RulerCtor; TokenRulerWH40K?: RulerCtor };
-                    const importMod = new Function('u', 'return import(u)') as (u: string) => Promise<RulerModule>;
+                    const importMod = async (u: string): Promise<RulerModule> => (await import(/* @vite-ignore */ u)) as RulerModule;
                     const mod = await importMod(url);
                     TokenRulerWH40K = mod.default ?? mod.TokenRulerWH40K ?? null;
                 } catch (err) {
@@ -380,204 +380,279 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                 }
                 const colors = ConfigObj?.wh40k?.tokenRulerColors ?? { normal: 0x33bc4e, double: 0xf1d836, triple: 0xe72124 };
 
-                /* ============================================================
-                 * Flow 2: ruler-waypoint-style-budget-green
-                 * cost / speed <= 1 — `#getSpeedBasedStyle` should assign
-                 * the normal (green) color. speed=6 (full action), cost=2
-                 * → ratio (2 - 0.1) / 6 = 0.31 → normal.
-                 * ============================================================ */
-                if (ruler !== null) {
-                    try {
-                        const style = ruler._getWaypointStyle(makeWaypoint('full', 2));
-                        if (style?.color === colors.normal) {
-                            fired['ruler-waypoint-style-budget-green'] = true;
-                        } else {
-                            notes['ruler-waypoint-style-budget-green'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
+                // Each remaining flow is an independent probe block extracted
+                // into its own named inner function to keep this callback's
+                // cyclomatic complexity bounded. They are declared here —
+                // after the shared ruler / colors / stub setup above — so
+                // they close over that context, and run in sequence below.
+                const probeWaypointStyleBudgetGreen = (): void => {
+                    /* ============================================================
+                     * Flow 2: ruler-waypoint-style-budget-green
+                     * cost / speed <= 1 — `#getSpeedBasedStyle` should assign
+                     * the normal (green) color. speed=6 (full action), cost=2
+                     * → ratio (2 - 0.1) / 6 = 0.31 → normal.
+                     * ============================================================ */
+                    if (ruler !== null) {
+                        try {
+                            const style = ruler._getWaypointStyle(makeWaypoint('full', 2));
+                            if (style?.color === colors.normal) {
+                                fired['ruler-waypoint-style-budget-green'] = true;
+                            } else {
+                                notes['ruler-waypoint-style-budget-green'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
+                            }
+                        } catch (err) {
+                            notes['ruler-waypoint-style-budget-green'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                         }
-                    } catch (err) {
-                        notes['ruler-waypoint-style-budget-green'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                     }
-                }
+                };
 
-                /* ============================================================
-                 * Flow 3: ruler-waypoint-style-double-yellow
-                 * 1 < cost/speed <= 2 — yellow. speed=6, cost=8 →
-                 * (8 - 0.1)/6 = 1.32 → double.
-                 * ============================================================ */
-                if (ruler !== null) {
-                    try {
-                        const style = ruler._getWaypointStyle(makeWaypoint('full', 8));
-                        if (style?.color === colors.double) {
-                            fired['ruler-waypoint-style-double-yellow'] = true;
-                        } else {
-                            notes['ruler-waypoint-style-double-yellow'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
+                const probeWaypointStyleDoubleYellow = (): void => {
+                    /* ============================================================
+                     * Flow 3: ruler-waypoint-style-double-yellow
+                     * 1 < cost/speed <= 2 — yellow. speed=6, cost=8 →
+                     * (8 - 0.1)/6 = 1.32 → double.
+                     * ============================================================ */
+                    if (ruler !== null) {
+                        try {
+                            const style = ruler._getWaypointStyle(makeWaypoint('full', 8));
+                            if (style?.color === colors.double) {
+                                fired['ruler-waypoint-style-double-yellow'] = true;
+                            } else {
+                                notes['ruler-waypoint-style-double-yellow'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
+                            }
+                        } catch (err) {
+                            notes['ruler-waypoint-style-double-yellow'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                         }
-                    } catch (err) {
-                        notes['ruler-waypoint-style-double-yellow'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                     }
-                }
+                };
 
-                /* ============================================================
-                 * Flow 4: ruler-waypoint-style-triple-red
-                 * cost/speed > 2 — red. speed=6, cost=20 →
-                 * (20 - 0.1)/6 = 3.32 → triple.
-                 * ============================================================ */
-                if (ruler !== null) {
-                    try {
-                        const style = ruler._getWaypointStyle(makeWaypoint('full', 20));
-                        if (style?.color === colors.triple) {
-                            fired['ruler-waypoint-style-triple-red'] = true;
-                        } else {
-                            notes['ruler-waypoint-style-triple-red'] = `expected triple=${String(colors.triple)}, got ${String(style?.color)}`;
+                const probeWaypointStyleTripleRed = (): void => {
+                    /* ============================================================
+                     * Flow 4: ruler-waypoint-style-triple-red
+                     * cost/speed > 2 — red. speed=6, cost=20 →
+                     * (20 - 0.1)/6 = 3.32 → triple.
+                     * ============================================================ */
+                    if (ruler !== null) {
+                        try {
+                            const style = ruler._getWaypointStyle(makeWaypoint('full', 20));
+                            if (style?.color === colors.triple) {
+                                fired['ruler-waypoint-style-triple-red'] = true;
+                            } else {
+                                notes['ruler-waypoint-style-triple-red'] = `expected triple=${String(colors.triple)}, got ${String(style?.color)}`;
+                            }
+                        } catch (err) {
+                            notes['ruler-waypoint-style-triple-red'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                         }
-                    } catch (err) {
-                        notes['ruler-waypoint-style-triple-red'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
                     }
-                }
+                };
 
-                /* ============================================================
-                 * Flow 5: ruler-segment-style-respects-speed
-                 * Same helper, different override entry-point. cost=10,
-                 * speed=6 → ratio (10 - 0.1)/6 = 1.65 → double color.
-                 * ============================================================ */
-                if (ruler !== null) {
-                    try {
-                        const style = ruler._getSegmentStyle(makeWaypoint('full', 10));
-                        if (style?.color === colors.double) {
-                            fired['ruler-segment-style-respects-speed'] = true;
-                        } else {
-                            notes['ruler-segment-style-respects-speed'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
+                const probeSegmentStyleRespectsSpeed = (): void => {
+                    /* ============================================================
+                     * Flow 5: ruler-segment-style-respects-speed
+                     * Same helper, different override entry-point. cost=10,
+                     * speed=6 → ratio (10 - 0.1)/6 = 1.65 → double color.
+                     * ============================================================ */
+                    if (ruler !== null) {
+                        try {
+                            const style = ruler._getSegmentStyle(makeWaypoint('full', 10));
+                            if (style?.color === colors.double) {
+                                fired['ruler-segment-style-respects-speed'] = true;
+                            } else {
+                                notes['ruler-segment-style-respects-speed'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
+                            }
+                        } catch (err) {
+                            notes['ruler-segment-style-respects-speed'] = `_getSegmentStyle threw: ${String((err as Error).message)}`;
                         }
-                    } catch (err) {
-                        notes['ruler-segment-style-respects-speed'] = `_getSegmentStyle threw: ${String((err as Error).message)}`;
                     }
-                }
+                };
 
-                /* ============================================================
-                 * Flow 6: ruler-grid-highlight-style
-                 * Third entry-point. Same ratio bucketing; cost=5
-                 * speed=6 → 0.81 → normal.
-                 * ============================================================ */
-                if (ruler !== null) {
-                    try {
-                        const style = ruler._getGridHighlightStyle(makeWaypoint('full', 5), { i: 0, j: 0, k: 0 });
-                        if (style?.color === colors.normal) {
-                            fired['ruler-grid-highlight-style'] = true;
-                        } else {
-                            notes['ruler-grid-highlight-style'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
+                const probeGridHighlightStyle = (): void => {
+                    /* ============================================================
+                     * Flow 6: ruler-grid-highlight-style
+                     * Third entry-point. Same ratio bucketing; cost=5
+                     * speed=6 → 0.81 → normal.
+                     * ============================================================ */
+                    if (ruler !== null) {
+                        try {
+                            const style = ruler._getGridHighlightStyle(makeWaypoint('full', 5), { i: 0, j: 0, k: 0 });
+                            if (style?.color === colors.normal) {
+                                fired['ruler-grid-highlight-style'] = true;
+                            } else {
+                                notes['ruler-grid-highlight-style'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
+                            }
+                        } catch (err) {
+                            notes['ruler-grid-highlight-style'] = `_getGridHighlightStyle threw: ${String((err as Error).message)}`;
                         }
-                    } catch (err) {
-                        notes['ruler-grid-highlight-style'] = `_getGridHighlightStyle threw: ${String((err as Error).message)}`;
                     }
-                }
+                };
 
-                /* ============================================================
-                 * Flow 7: ruler-teleport-action-skips-color
-                 * Waypoint whose action is registered as `teleport: true`
-                 * short-circuits the speed-based helper and returns the
-                 * base style untouched. Inject a synthetic teleport action
-                 * into ConfigObj.Token.movement.actions for the assertion.
-                 * ============================================================ */
-                if (ruler !== null) {
-                    try {
-                        if (ConfigObj?.Token?.movement?.actions !== undefined) {
-                            ConfigObj.Token.movement.actions['teleport-probe'] = ConfigObj.Token.movement.actions['teleport-probe'] ?? { teleport: true };
+                const probeTeleportActionSkipsColor = (): void => {
+                    /* ============================================================
+                     * Flow 7: ruler-teleport-action-skips-color
+                     * Waypoint whose action is registered as `teleport: true`
+                     * short-circuits the speed-based helper and returns the
+                     * base style untouched. Inject a synthetic teleport action
+                     * into ConfigObj.Token.movement.actions for the assertion.
+                     * ============================================================ */
+                    if (ruler !== null) {
+                        try {
+                            if (ConfigObj?.Token?.movement?.actions !== undefined) {
+                                ConfigObj.Token.movement.actions['teleport-probe'] = ConfigObj.Token.movement.actions['teleport-probe'] ?? { teleport: true };
+                            }
+                            const style = ruler._getWaypointStyle(makeWaypoint('teleport-probe', 100));
+                            if (style?.color === baseColor) {
+                                fired['ruler-teleport-action-skips-color'] = true;
+                            } else {
+                                notes['ruler-teleport-action-skips-color'] = `expected base color preserved (${String(baseColor)}), got ${String(
+                                    style?.color,
+                                )}`;
+                            }
+                        } catch (err) {
+                            notes['ruler-teleport-action-skips-color'] = `teleport probe threw: ${String((err as Error).message)}`;
                         }
-                        const style = ruler._getWaypointStyle(makeWaypoint('teleport-probe', 100));
-                        if (style?.color === baseColor) {
-                            fired['ruler-teleport-action-skips-color'] = true;
-                        } else {
-                            notes['ruler-teleport-action-skips-color'] = `expected base color preserved (${String(baseColor)}), got ${String(style?.color)}`;
-                        }
-                    } catch (err) {
-                        notes['ruler-teleport-action-skips-color'] = `teleport probe threw: ${String((err as Error).message)}`;
                     }
-                }
+                };
 
-                /* ============================================================
-                 * Flow 8: ruler-no-movement-returns-default
-                 * When the actor has no `movement` map, the helper bails
-                 * before touching style.color. Build a fresh ruler whose
-                 * token.actor.movement is undefined and assert the base
-                 * style passes through.
-                 * ============================================================ */
-                if (ruler !== null && TokenRulerWH40K !== null) {
-                    try {
-                        const fakeTokenNoMove = { _plannedMovement: { distance: 1 }, actor: { movement: undefined } };
-                        const noMoveRuler = Object.create(TokenRulerWH40K.prototype as object) as RulerLike;
-                        noMoveRuler.token = fakeTokenNoMove;
-                        stubSuperReturns(noMoveRuler);
-                        const style = noMoveRuler._getWaypointStyle(makeWaypoint('full', 4));
-                        if (style?.color === baseColor) {
-                            fired['ruler-no-movement-returns-default'] = true;
-                        } else {
-                            notes['ruler-no-movement-returns-default'] = `expected base color preserved (${String(baseColor)}), got ${String(style?.color)}`;
+                const probeNoMovementReturnsDefault = (): void => {
+                    /* ============================================================
+                     * Flow 8: ruler-no-movement-returns-default
+                     * When the actor has no `movement` map, the helper bails
+                     * before touching style.color. Build a fresh ruler whose
+                     * token.actor.movement is undefined and assert the base
+                     * style passes through.
+                     * ============================================================ */
+                    if (ruler !== null && TokenRulerWH40K !== null) {
+                        try {
+                            const fakeTokenNoMove = { _plannedMovement: { distance: 1 }, actor: { movement: undefined } };
+                            const noMoveRuler = Object.create(TokenRulerWH40K.prototype as object) as RulerLike;
+                            noMoveRuler.token = fakeTokenNoMove;
+                            stubSuperReturns(noMoveRuler);
+                            const style = noMoveRuler._getWaypointStyle(makeWaypoint('full', 4));
+                            if (style?.color === baseColor) {
+                                fired['ruler-no-movement-returns-default'] = true;
+                            } else {
+                                notes['ruler-no-movement-returns-default'] = `expected base color preserved (${String(baseColor)}), got ${String(
+                                    style?.color,
+                                )}`;
+                            }
+                        } catch (err) {
+                            notes['ruler-no-movement-returns-default'] = `no-movement probe threw: ${String((err as Error).message)}`;
                         }
-                    } catch (err) {
-                        notes['ruler-no-movement-returns-default'] = `no-movement probe threw: ${String((err as Error).message)}`;
                     }
-                }
+                };
 
-                /* ============================================================
-                 * Flow 9: token-hud-active-button-class
-                 * Fire `renderTokenHUD` with a token whose
-                 * `getFlag('wh40k-rpg', 'movementAction')` returns 'full',
-                 * and assert exactly one injected button carries the
-                 * `active` class — exercising the active-state branch in
-                 * `onTokenHUDRender` that the scene-controls spec doesn't
-                 * cover.
-                 * ============================================================ */
-                try {
-                    const htmlRoot = document.createElement('div');
-                    const statusEffects = document.createElement('div');
-                    statusEffects.className = 'status-effects';
-                    htmlRoot.appendChild(statusEffects);
-
-                    const liveActor2 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                    const fakeTokenDoc = {
-                        id: 'fake-token-active',
-                        actor: liveActor2,
-                        getFlag: (scope: string, key: string) => (scope === 'wh40k-rpg' && key === 'movementAction' ? 'full' : null),
-                        update: (_data: object) => undefined,
-                    };
-                    const fakeHud = { object: { document: fakeTokenDoc } };
-                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
-                    const activeBtns = htmlRoot.querySelectorAll('.wh40k-token-movement__btn.active');
-                    if (activeBtns.length === 1) {
-                        const activeBtn = activeBtns[0] as HTMLElement;
-                        if (activeBtn.dataset['movementType'] === 'full') {
-                            fired['token-hud-active-button-class'] = true;
-                        } else {
-                            notes['token-hud-active-button-class'] = `active button data-movement-type=${String(
-                                activeBtn.dataset['movementType'],
-                            )} (expected 'full')`;
-                        }
-                    } else {
-                        notes['token-hud-active-button-class'] = `expected exactly 1 active button, got ${activeBtns.length}`;
-                    }
-                } catch (err) {
-                    notes['token-hud-active-button-class'] = `active-button probe threw: ${String((err as Error).message)}`;
-                }
-
-                /* ============================================================
-                 * Flow 10: token-hud-no-movement-skips-injection
-                 * Actor without `system.movement` — `onTokenHUDRender`
-                 * returns early. Assert the container element was NOT
-                 * appended to the synthesized html root.
-                 * ============================================================ */
-                if (actorNoMovement?.id !== undefined) {
+                const probeHudActiveButtonClass = async (): Promise<void> => {
+                    // Re-narrow the closed-over actor / Hooks refs: the outer
+                    // guards' narrowing does not propagate into this nested arrow.
+                    if (actor.id == null || HooksMgr.callAll == null) return;
+                    /* ============================================================
+                     * Flow 9: token-hud-active-button-class
+                     * Fire `renderTokenHUD` with a token whose
+                     * `getFlag('wh40k-rpg', 'movementAction')` returns 'full',
+                     * and assert exactly one injected button carries the
+                     * `active` class — exercising the active-state branch in
+                     * `onTokenHUDRender` that the scene-controls spec doesn't
+                     * cover.
+                     * ============================================================ */
                     try {
                         const htmlRoot = document.createElement('div');
                         const statusEffects = document.createElement('div');
                         statusEffects.className = 'status-effects';
                         htmlRoot.appendChild(statusEffects);
-                        const liveActorNoMove = gameMgr?.actors?.get?.(actorNoMovement.id) ?? actorNoMovement;
+
+                        const liveActor2 = gameMgr?.actors?.get?.(actor.id) ?? actor;
                         const fakeTokenDoc = {
-                            id: 'fake-token-no-move',
-                            actor: liveActorNoMove,
+                            id: 'fake-token-active',
+                            actor: liveActor2,
+                            getFlag: (scope: string, key: string) => (scope === 'wh40k-rpg' && key === 'movementAction' ? 'full' : null),
+                            update: (_data: object) => undefined,
+                        };
+                        const fakeHud = { object: { document: fakeTokenDoc } };
+                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 30);
+                        });
+                        const activeBtns = htmlRoot.querySelectorAll('.wh40k-token-movement__btn.active');
+                        if (activeBtns.length === 1) {
+                            const activeBtn = activeBtns[0] as HTMLElement;
+                            if (activeBtn.dataset['movementType'] === 'full') {
+                                fired['token-hud-active-button-class'] = true;
+                            } else {
+                                notes['token-hud-active-button-class'] = `active button data-movement-type=${String(
+                                    activeBtn.dataset['movementType'],
+                                )} (expected 'full')`;
+                            }
+                        } else {
+                            notes['token-hud-active-button-class'] = `expected exactly 1 active button, got ${activeBtns.length}`;
+                        }
+                    } catch (err) {
+                        notes['token-hud-active-button-class'] = `active-button probe threw: ${String((err as Error).message)}`;
+                    }
+                };
+
+                const probeHudNoMovementSkipsInjection = async (): Promise<void> => {
+                    // Re-narrow the closed-over Hooks ref: the outer guard's
+                    // narrowing does not propagate into this nested arrow.
+                    if (HooksMgr.callAll == null) return;
+                    /* ============================================================
+                     * Flow 10: token-hud-no-movement-skips-injection
+                     * Actor without `system.movement` — `onTokenHUDRender`
+                     * returns early. Assert the container element was NOT
+                     * appended to the synthesized html root.
+                     * ============================================================ */
+                    if (actorNoMovement?.id !== undefined) {
+                        try {
+                            const htmlRoot = document.createElement('div');
+                            const statusEffects = document.createElement('div');
+                            statusEffects.className = 'status-effects';
+                            htmlRoot.appendChild(statusEffects);
+                            const liveActorNoMove = gameMgr?.actors?.get?.(actorNoMovement.id) ?? actorNoMovement;
+                            const fakeTokenDoc = {
+                                id: 'fake-token-no-move',
+                                actor: liveActorNoMove,
+                                getFlag: (_scope: string, _key: string) => null,
+                                update: (_data: object) => undefined,
+                            };
+                            const fakeHud = { object: { document: fakeTokenDoc } };
+                            HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 30);
+                            });
+                            const container = htmlRoot.querySelector('.wh40k-token-movement');
+                            if (container === null) {
+                                fired['token-hud-no-movement-skips-injection'] = true;
+                            } else {
+                                notes['token-hud-no-movement-skips-injection'] = `expected no container, found one with ${container.children.length} children`;
+                            }
+                        } catch (err) {
+                            notes['token-hud-no-movement-skips-injection'] = `no-movement probe threw: ${String((err as Error).message)}`;
+                        }
+                    } else {
+                        notes['token-hud-no-movement-skips-injection'] = 'movement-less actor not created; cannot probe';
+                    }
+                };
+
+                const probeHudButtonLocalizesLabel = async (): Promise<void> => {
+                    // Re-narrow the closed-over actor / Hooks refs: the outer
+                    // guards' narrowing does not propagate into this nested arrow.
+                    if (actor.id == null || HooksMgr.callAll == null) return;
+                    /* ============================================================
+                     * Flow 11: token-hud-button-localizes-label
+                     * Every injected button's `title` attribute is built via
+                     * `gameMgr.i18n.localize(config.label) + ': <speed>m'`. With
+                     * the registered movement type config, the title should
+                     * contain ':' and a numeric speed value matching the
+                     * actor's movement map.
+                     * ============================================================ */
+                    try {
+                        const htmlRoot = document.createElement('div');
+                        const statusEffects = document.createElement('div');
+                        statusEffects.className = 'status-effects';
+                        htmlRoot.appendChild(statusEffects);
+                        const liveActor3 = gameMgr?.actors?.get?.(actor.id) ?? actor;
+                        const fakeTokenDoc = {
+                            id: 'fake-token-localize',
+                            actor: liveActor3,
                             getFlag: (_scope: string, _key: string) => null,
                             update: (_data: object) => undefined,
                         };
@@ -586,214 +661,205 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         await new Promise<void>((r) => {
                             setTimeout(r, 30);
                         });
-                        const container = htmlRoot.querySelector('.wh40k-token-movement');
-                        if (container === null) {
-                            fired['token-hud-no-movement-skips-injection'] = true;
-                        } else {
-                            notes['token-hud-no-movement-skips-injection'] = `expected no container, found one with ${container.children.length} children`;
-                        }
-                    } catch (err) {
-                        notes['token-hud-no-movement-skips-injection'] = `no-movement probe threw: ${String((err as Error).message)}`;
-                    }
-                } else {
-                    notes['token-hud-no-movement-skips-injection'] = 'movement-less actor not created; cannot probe';
-                }
-
-                /* ============================================================
-                 * Flow 11: token-hud-button-localizes-label
-                 * Every injected button's `title` attribute is built via
-                 * `gameMgr.i18n.localize(config.label) + ': <speed>m'`. With
-                 * the registered movement type config, the title should
-                 * contain ':' and a numeric speed value matching the
-                 * actor's movement map.
-                 * ============================================================ */
-                try {
-                    const htmlRoot = document.createElement('div');
-                    const statusEffects = document.createElement('div');
-                    statusEffects.className = 'status-effects';
-                    htmlRoot.appendChild(statusEffects);
-                    const liveActor3 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                    const fakeTokenDoc = {
-                        id: 'fake-token-localize',
-                        actor: liveActor3,
-                        getFlag: (_scope: string, _key: string) => null,
-                        update: (_data: object) => undefined,
-                    };
-                    const fakeHud = { object: { document: fakeTokenDoc } };
-                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
-                    const halfBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="half"]');
-                    if (halfBtn !== null) {
-                        const title = halfBtn.title;
-                        // Title format: "<localized label>: <speed>m" — the
-                        // localized half label may be the raw key in
-                        // headless mode (no langpack), but the ": 3m"
-                        // suffix proves the speed pull from the actor's
-                        // movement map ran.
-                        if (title.includes(':') && title.includes('3m')) {
-                            fired['token-hud-button-localizes-label'] = true;
-                        } else {
-                            notes['token-hud-button-localizes-label'] = `unexpected title: "${title}"`;
-                        }
-                    } else {
-                        notes['token-hud-button-localizes-label'] = `half button not found among ${
-                            htmlRoot.querySelectorAll('.wh40k-token-movement__btn').length
-                        } buttons`;
-                    }
-                } catch (err) {
-                    notes['token-hud-button-localizes-label'] = `localize probe threw: ${String((err as Error).message)}`;
-                }
-
-                /* ============================================================
-                 * Flow 12: token-hud-set-movement-action-flag-update
-                 * Click an injected button and observe the resulting
-                 * `token.update({flags: {'wh40k-rpg': {movementAction:
-                 * type}}})` call. We intercept `update` on the fake token
-                 * doc and assert the flag payload shape matches what
-                 * `#setMovementAction` constructs.
-                 * ============================================================ */
-                try {
-                    const htmlRoot = document.createElement('div');
-                    const statusEffects = document.createElement('div');
-                    statusEffects.className = 'status-effects';
-                    htmlRoot.appendChild(statusEffects);
-                    const liveActor4 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                    const recordedUpdates: object[] = [];
-                    const fakeTokenDoc = {
-                        id: 'fake-token-update',
-                        actor: liveActor4,
-                        getFlag: (_scope: string, _key: string) => null,
-                        update: (data: object) => {
-                            recordedUpdates.push(data);
-                        },
-                    };
-                    const fakeHud = { object: { document: fakeTokenDoc } };
-                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
-                    const chargeBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="charge"]');
-                    if (chargeBtn !== null) {
-                        chargeBtn.click();
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 50);
-                        });
-                        const lastUpdate = recordedUpdates[recordedUpdates.length - 1] as { flags?: { 'wh40k-rpg'?: { movementAction?: string } } } | undefined;
-                        const flagsPayload = lastUpdate?.flags?.['wh40k-rpg'];
-                        if (flagsPayload?.movementAction === 'charge') {
-                            fired['token-hud-set-movement-action-flag-update'] = true;
-                        } else {
-                            notes['token-hud-set-movement-action-flag-update'] = `update payload: ${JSON.stringify(
-                                lastUpdate,
-                            )} (expected flags['wh40k-rpg'].movementAction='charge')`;
-                        }
-                    } else {
-                        notes['token-hud-set-movement-action-flag-update'] = 'charge button not present in injected HUD';
-                    }
-                } catch (err) {
-                    notes['token-hud-set-movement-action-flag-update'] = `flag-update probe threw: ${String((err as Error).message)}`;
-                }
-
-                /* ============================================================
-                 * Flow 13: token-hud-button-mouseenter-mouseleave-styles
-                 * Dispatch synthetic mouseenter / mouseleave events at a
-                 * non-active button and assert the inline styles swap as
-                 * the handlers prescribe (hover background lighter, leave
-                 * restores baseline). Drives the addEventListener branches
-                 * in `onTokenHUDRender` that the scene-controls spec
-                 * doesn't reach.
-                 * ============================================================ */
-                try {
-                    const htmlRoot = document.createElement('div');
-                    const statusEffects = document.createElement('div');
-                    statusEffects.className = 'status-effects';
-                    htmlRoot.appendChild(statusEffects);
-                    const liveActor5 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                    const fakeTokenDoc = {
-                        id: 'fake-token-hover',
-                        actor: liveActor5,
-                        getFlag: (_scope: string, _key: string) => null,
-                        update: (_data: object) => undefined,
-                    };
-                    const fakeHud = { object: { document: fakeTokenDoc } };
-                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
-                    const runBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="run"]');
-                    if (runBtn !== null) {
-                        const baseBg = runBtn.style.background;
-                        runBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 10);
-                        });
-                        const hoverBg = runBtn.style.background;
-                        runBtn.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 10);
-                        });
-                        const leaveBg = runBtn.style.background;
-                        if (hoverBg !== baseBg && leaveBg === baseBg) {
-                            fired['token-hud-button-mouseenter-mouseleave-styles'] = true;
-                        } else {
-                            notes[
-                                'token-hud-button-mouseenter-mouseleave-styles'
-                            ] = `base=${baseBg} hover=${hoverBg} leave=${leaveBg} (expected hover!==base and leave===base)`;
-                        }
-                    } else {
-                        notes['token-hud-button-mouseenter-mouseleave-styles'] = 'run button not present in injected HUD';
-                    }
-                } catch (err) {
-                    notes['token-hud-button-mouseenter-mouseleave-styles'] = `hover probe threw: ${String((err as Error).message)}`;
-                }
-
-                /* ============================================================
-                 * Flow 14: register-movement-actions-config-population
-                 * Dynamic-import the token document module and call
-                 * `TokenDocumentWH40K.registerMovementActions()`. Assert
-                 * every movement type key from ConfigObj.wh40k.movementTypes
-                 * landed in ConfigObj.Token.movement.actions with the
-                 * expected static shape (`measure: true`, `walls: 'move'`).
-                 * The function is idempotent — it uses `??=` — so calling
-                 * it twice is fine.
-                 * ============================================================ */
-                try {
-                    const url = '/systems/wh40k-rpg/module/documents/token.js';
-                    type TokenModule = { TokenDocumentWH40K?: TokenDocApi; default?: TokenDocApi };
-                    const importTokenMod = new Function('u', 'return import(u)') as (u: string) => Promise<TokenModule>;
-                    const tokenMod = await importTokenMod(url);
-                    const TokenDocumentWH40K = tokenMod.TokenDocumentWH40K ?? tokenMod.default ?? null;
-                    if (typeof TokenDocumentWH40K?.registerMovementActions !== 'function') {
-                        notes['register-movement-actions-config-population'] = `registerMovementActions missing — keys: ${Object.keys(tokenMod).join(',')}`;
-                    } else {
-                        TokenDocumentWH40K.registerMovementActions();
-                        const wh40kTypes = Object.keys(ConfigObj?.wh40k?.movementTypes ?? {});
-                        const registered: Record<string, MovementActionEntry> = ConfigObj?.Token?.movement?.actions ?? {};
-                        const missing = wh40kTypes.filter((k) => !Object.prototype.hasOwnProperty.call(registered, k));
-                        const firstType = wh40kTypes[0];
-                        if (wh40kTypes.length > 0 && missing.length === 0) {
-                            // Sample one entry to confirm the populated
-                            // shape matches the static config in the
-                            // source (measure / walls / visualize).
-                            const sample = registered[firstType];
-                            if (sample.measure === true && sample.walls === 'move' && sample.visualize === true) {
-                                fired['register-movement-actions-config-population'] = true;
+                        const halfBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="half"]');
+                        if (halfBtn !== null) {
+                            const title = halfBtn.title;
+                            // Title format: "<localized label>: <speed>m" — the
+                            // localized half label may be the raw key in
+                            // headless mode (no langpack), but the ": 3m"
+                            // suffix proves the speed pull from the actor's
+                            // movement map ran.
+                            if (title.includes(':') && title.includes('3m')) {
+                                fired['token-hud-button-localizes-label'] = true;
                             } else {
-                                notes['register-movement-actions-config-population'] = `sample entry shape wrong: ${JSON.stringify({
-                                    measure: sample.measure,
-                                    walls: sample.walls,
-                                    visualize: sample.visualize,
-                                })}`;
+                                notes['token-hud-button-localizes-label'] = `unexpected title: "${title}"`;
                             }
                         } else {
-                            notes['register-movement-actions-config-population'] = `registered types=${wh40kTypes.length}, missing=${missing.join(',')}`;
+                            notes['token-hud-button-localizes-label'] = `half button not found among ${
+                                htmlRoot.querySelectorAll('.wh40k-token-movement__btn').length
+                            } buttons`;
                         }
+                    } catch (err) {
+                        notes['token-hud-button-localizes-label'] = `localize probe threw: ${String((err as Error).message)}`;
                     }
-                } catch (err) {
-                    notes['register-movement-actions-config-population'] = `register probe threw: ${String((err as Error).message)}`;
-                }
+                };
+
+                const probeHudSetMovementActionFlagUpdate = async (): Promise<void> => {
+                    // Re-narrow the closed-over actor / Hooks refs: the outer
+                    // guards' narrowing does not propagate into this nested arrow.
+                    if (actor.id == null || HooksMgr.callAll == null) return;
+                    /* ============================================================
+                     * Flow 12: token-hud-set-movement-action-flag-update
+                     * Click an injected button and observe the resulting
+                     * `token.update({flags: {'wh40k-rpg': {movementAction:
+                     * type}}})` call. We intercept `update` on the fake token
+                     * doc and assert the flag payload shape matches what
+                     * `#setMovementAction` constructs.
+                     * ============================================================ */
+                    try {
+                        const htmlRoot = document.createElement('div');
+                        const statusEffects = document.createElement('div');
+                        statusEffects.className = 'status-effects';
+                        htmlRoot.appendChild(statusEffects);
+                        const liveActor4 = gameMgr?.actors?.get?.(actor.id) ?? actor;
+                        const recordedUpdates: object[] = [];
+                        const fakeTokenDoc = {
+                            id: 'fake-token-update',
+                            actor: liveActor4,
+                            getFlag: (_scope: string, _key: string) => null,
+                            update: (data: object) => {
+                                recordedUpdates.push(data);
+                            },
+                        };
+                        const fakeHud = { object: { document: fakeTokenDoc } };
+                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 30);
+                        });
+                        const chargeBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="charge"]');
+                        if (chargeBtn !== null) {
+                            chargeBtn.click();
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 50);
+                            });
+                            const lastUpdate = recordedUpdates[recordedUpdates.length - 1] as
+                                | { flags?: { 'wh40k-rpg'?: { movementAction?: string } } }
+                                | undefined;
+                            const flagsPayload = lastUpdate?.flags?.['wh40k-rpg'];
+                            if (flagsPayload?.movementAction === 'charge') {
+                                fired['token-hud-set-movement-action-flag-update'] = true;
+                            } else {
+                                notes['token-hud-set-movement-action-flag-update'] = `update payload: ${JSON.stringify(
+                                    lastUpdate,
+                                )} (expected flags['wh40k-rpg'].movementAction='charge')`;
+                            }
+                        } else {
+                            notes['token-hud-set-movement-action-flag-update'] = 'charge button not present in injected HUD';
+                        }
+                    } catch (err) {
+                        notes['token-hud-set-movement-action-flag-update'] = `flag-update probe threw: ${String((err as Error).message)}`;
+                    }
+                };
+
+                const probeHudButtonHoverStyles = async (): Promise<void> => {
+                    // Re-narrow the closed-over actor / Hooks refs: the outer
+                    // guards' narrowing does not propagate into this nested arrow.
+                    if (actor.id == null || HooksMgr.callAll == null) return;
+                    /* ============================================================
+                     * Flow 13: token-hud-button-mouseenter-mouseleave-styles
+                     * Dispatch synthetic mouseenter / mouseleave events at a
+                     * non-active button and assert the inline styles swap as
+                     * the handlers prescribe (hover background lighter, leave
+                     * restores baseline). Drives the addEventListener branches
+                     * in `onTokenHUDRender` that the scene-controls spec
+                     * doesn't reach.
+                     * ============================================================ */
+                    try {
+                        const htmlRoot = document.createElement('div');
+                        const statusEffects = document.createElement('div');
+                        statusEffects.className = 'status-effects';
+                        htmlRoot.appendChild(statusEffects);
+                        const liveActor5 = gameMgr?.actors?.get?.(actor.id) ?? actor;
+                        const fakeTokenDoc = {
+                            id: 'fake-token-hover',
+                            actor: liveActor5,
+                            getFlag: (_scope: string, _key: string) => null,
+                            update: (_data: object) => undefined,
+                        };
+                        const fakeHud = { object: { document: fakeTokenDoc } };
+                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 30);
+                        });
+                        const runBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="run"]');
+                        if (runBtn !== null) {
+                            const baseBg = runBtn.style.background;
+                            runBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 10);
+                            });
+                            const hoverBg = runBtn.style.background;
+                            runBtn.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 10);
+                            });
+                            const leaveBg = runBtn.style.background;
+                            if (hoverBg !== baseBg && leaveBg === baseBg) {
+                                fired['token-hud-button-mouseenter-mouseleave-styles'] = true;
+                            } else {
+                                notes[
+                                    'token-hud-button-mouseenter-mouseleave-styles'
+                                ] = `base=${baseBg} hover=${hoverBg} leave=${leaveBg} (expected hover!==base and leave===base)`;
+                            }
+                        } else {
+                            notes['token-hud-button-mouseenter-mouseleave-styles'] = 'run button not present in injected HUD';
+                        }
+                    } catch (err) {
+                        notes['token-hud-button-mouseenter-mouseleave-styles'] = `hover probe threw: ${String((err as Error).message)}`;
+                    }
+                };
+
+                const probeRegisterMovementActions = async (): Promise<void> => {
+                    /* ============================================================
+                     * Flow 14: register-movement-actions-config-population
+                     * Dynamic-import the token document module and call
+                     * `TokenDocumentWH40K.registerMovementActions()`. Assert
+                     * every movement type key from ConfigObj.wh40k.movementTypes
+                     * landed in ConfigObj.Token.movement.actions with the
+                     * expected static shape (`measure: true`, `walls: 'move'`).
+                     * The function is idempotent — it uses `??=` — so calling
+                     * it twice is fine.
+                     * ============================================================ */
+                    try {
+                        const url = '/systems/wh40k-rpg/module/documents/token.js';
+                        type TokenModule = { TokenDocumentWH40K?: TokenDocApi; default?: TokenDocApi };
+                        const importTokenMod = async (u: string): Promise<TokenModule> => (await import(/* @vite-ignore */ u)) as TokenModule;
+                        const tokenMod = await importTokenMod(url);
+                        const TokenDocumentWH40K = tokenMod.TokenDocumentWH40K ?? tokenMod.default ?? null;
+                        if (typeof TokenDocumentWH40K?.registerMovementActions !== 'function') {
+                            notes['register-movement-actions-config-population'] = `registerMovementActions missing — keys: ${Object.keys(tokenMod).join(',')}`;
+                        } else {
+                            TokenDocumentWH40K.registerMovementActions();
+                            const wh40kTypes = Object.keys(ConfigObj?.wh40k?.movementTypes ?? {});
+                            const registered: Record<string, MovementActionEntry> = ConfigObj?.Token?.movement?.actions ?? {};
+                            const missing = wh40kTypes.filter((k) => !Object.prototype.hasOwnProperty.call(registered, k));
+                            const firstType = wh40kTypes[0];
+                            if (wh40kTypes.length > 0 && missing.length === 0) {
+                                // Sample one entry to confirm the populated
+                                // shape matches the static config in the
+                                // source (measure / walls / visualize).
+                                const sample = registered[firstType];
+                                if (sample.measure === true && sample.walls === 'move' && sample.visualize === true) {
+                                    fired['register-movement-actions-config-population'] = true;
+                                } else {
+                                    notes['register-movement-actions-config-population'] = `sample entry shape wrong: ${JSON.stringify({
+                                        measure: sample.measure,
+                                        walls: sample.walls,
+                                        visualize: sample.visualize,
+                                    })}`;
+                                }
+                            } else {
+                                notes['register-movement-actions-config-population'] = `registered types=${wh40kTypes.length}, missing=${missing.join(',')}`;
+                            }
+                        }
+                    } catch (err) {
+                        notes['register-movement-actions-config-population'] = `register probe threw: ${String((err as Error).message)}`;
+                    }
+                };
+
+                probeWaypointStyleBudgetGreen();
+                probeWaypointStyleDoubleYellow();
+                probeWaypointStyleTripleRed();
+                probeSegmentStyleRespectsSpeed();
+                probeGridHighlightStyle();
+                probeTeleportActionSkipsColor();
+                probeNoMovementReturnsDefault();
+                await probeHudActiveButtonClass();
+                await probeHudNoMovementSkipsInjection();
+                await probeHudButtonLocalizesLabel();
+                await probeHudSetMovementActionFlagUpdate();
+                await probeHudButtonHoverStyles();
+                await probeRegisterMovementActions();
             } finally {
                 // Best-effort cleanup of everything we created.
                 for (const fn of cleanups) {

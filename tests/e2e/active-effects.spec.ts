@@ -283,47 +283,66 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
         const root = globalThis as unknown as RootLike;
         const actor = root.game?.actors?.get?.(aid);
         if (actor?.createEmbeddedDocuments == null) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
-        let effectId: string | null = null;
-        let combat: CombatLike | null = null;
-        try {
+        const activeActor = actor;
+        // Mutated inside the nested setup/tick helpers; held on a const object so
+        // the finally-block cleanup sees the live values. TS flow-narrows the
+        // equivalent `let` bindings to their initial `null` inside the finally
+        // (it can't see the closure writes), which makes the guards there look
+        // dead; object-property reads are not flow-narrowed that way.
+        const ref: { effectId: string | null; combat: CombatLike | null } = { effectId: null, combat: null };
+
+        // Create + start a combat so a newly-created AE can adopt the combat id
+        // at creation time. Returns the started combat or a failure outcome.
+        async function setupCombat(): Promise<{ combat: CombatLike } | { error: string }> {
             // V14: ActiveEffect.isTemporary returns true only when the effect
             // has `seconds`, `startTime`, or a `combat`-anchored round/turn.
             // A bare `duration.rounds = 3` without an active Combat or
             // `seconds` is NOT temporary. Create + start the combat FIRST so
             // the new AE can adopt that combat id at creation time, then
             // verify both isTemporary and the round-tick decrement.
-            combat = (await root.Combat?.create?.({})) ?? null;
-            if (combat?.id == null) return { ok: false, error: 'Combat.create returned null' };
+            const c = (await root.Combat?.create?.({})) ?? null;
+            if (c?.id == null) return { error: 'Combat.create returned null' };
+            ref.combat = c;
             try {
-                await combat.createEmbeddedDocuments?.('Combatant', [{ actorId: aid, initiative: 10 }]);
+                await c.createEmbeddedDocuments?.('Combatant', [{ actorId: aid, initiative: 10 }]);
             } catch {
                 /* combatant best-effort */
             }
             try {
-                await combat.startCombat?.();
+                await c.startCombat?.();
             } catch (err) {
-                return { ok: false, error: `combat.startCombat threw: ${err instanceof Error ? err.message : String(err)}` };
+                return { error: `combat.startCombat threw: ${err instanceof Error ? err.message : String(err)}` };
             }
+            return { combat: c };
+        }
+
+        // Create the temporary AE, verify it is classified temporary, advance a
+        // combat round, and confirm the temporary-duration path was exercised.
+        async function createAndTickEffect(activeCombat: CombatLike): Promise<FlowResult> {
+            // Re-narrow: the outer guard's narrowing of activeActor's optional
+            // createEmbeddedDocuments does not propagate into this nested function.
+            if (activeActor.createEmbeddedDocuments == null) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
             // Anchor the duration to this combat + use seconds-equivalent so
             // isTemporary returns true regardless of combat-tick processing.
-            const created = await actor.createEmbeddedDocuments('ActiveEffect', [
+            const created = await activeActor.createEmbeddedDocuments('ActiveEffect', [
                 {
                     name: 'probe-ae-temporary',
                     duration: {
                         rounds: 3,
                         seconds: 18, // 3 rounds × 6s — guarantees isTemporary=true
-                        combat: combat.id,
-                        startRound: combat.round ?? 1,
-                        startTurn: combat.turn ?? 0,
+                        combat: activeCombat.id,
+                        startRound: activeCombat.round ?? 1,
+                        startTurn: activeCombat.turn ?? 0,
                     },
                     changes: [],
                     disabled: false,
                 },
             ]);
-            effectId = created[0]?.id ?? null;
-            if (effectId === null) return { ok: false, error: 'temporary AE create returned no id' };
+            const createdId = created[0]?.id ?? null;
+            ref.effectId = createdId;
+            if (createdId === null) return { ok: false, error: 'temporary AE create returned no id' };
             const liveActor = root.game?.actors?.get?.(aid);
-            const effect = liveActor?.effects?.get?.(effectId);
+            const effect = liveActor?.effects?.get?.(createdId);
             if (effect == null) return { ok: false, error: 'created effect not retrievable' };
             // V14 stores duration as `{value, units, remaining, expiry, ...}`;
             // the legacy `seconds`/`rounds`/`turns` slots may be null even
@@ -345,14 +364,14 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
                     )})`,
                 };
             }
-            const beforeRoundEffect = root.game?.actors?.get?.(aid)?.effects?.get?.(effectId);
+            const beforeRoundEffect = root.game?.actors?.get?.(aid)?.effects?.get?.(createdId);
             const beforeRemaining = beforeRoundEffect?.remainingDuration ?? beforeRoundEffect?.duration?.remaining ?? null;
             try {
-                await combat.nextRound?.();
+                await activeCombat.nextRound?.();
             } catch (err) {
                 return { ok: false, error: `combat.nextRound threw: ${err instanceof Error ? err.message : String(err)}` };
             }
-            const afterRoundEffect = root.game?.actors?.get?.(aid)?.effects?.get?.(effectId);
+            const afterRoundEffect = root.game?.actors?.get?.(aid)?.effects?.get?.(createdId);
             const afterRemaining = afterRoundEffect?.remainingDuration ?? afterRoundEffect?.duration?.remaining ?? null;
             if (beforeRemaining == null || afterRemaining == null) {
                 // Some V14 builds do not expose remainingDuration off-canvas.
@@ -373,16 +392,22 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
                 // bona-fide temporary duration and the combat round advanced.
             }
             return { ok: true, error: null };
+        }
+
+        try {
+            const setup = await setupCombat();
+            if ('error' in setup) return { ok: false, error: setup.error };
+            return await createAndTickEffect(setup.combat);
         } catch (err) {
             return { ok: false, error: `temporary probe threw: ${err instanceof Error ? err.message : String(err)}` };
         } finally {
             try {
-                if (combat?.delete != null) await combat.delete();
+                if (ref.combat?.delete != null) await ref.combat.delete();
             } catch {
                 /* best-effort */
             }
             try {
-                if (effectId !== null) await actor.deleteEmbeddedDocuments?.('ActiveEffect', [effectId]);
+                if (ref.effectId !== null) await activeActor.deleteEmbeddedDocuments?.('ActiveEffect', [ref.effectId]);
             } catch {
                 /* best-effort */
             }

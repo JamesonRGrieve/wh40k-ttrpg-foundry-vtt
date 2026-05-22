@@ -174,221 +174,240 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[]; pag
                 return roll;
             };
 
-            // ---- Flow: dice-module-barrel-exports ----
-            try {
-                const hasBasic = (barrelMod.BasicRollWH40K ?? barrelMod.default) !== undefined;
-                const hasD100 = barrelMod.D100Roll !== undefined;
-                const hasDialog = barrelMod.RollConfigurationDialog !== undefined;
-                const ok = hasBasic && hasD100 && hasDialog;
-                record('dice-module-barrel-exports', ok, `BasicRollWH40K=${hasBasic} D100Roll=${hasD100} RollConfigurationDialog=${hasDialog}`);
-            } catch (err) {
-                record('dice-module-barrel-exports', false, err instanceof Error ? err.message : String(err));
+            // ---- Basic-roll + barrel-export flows ----
+            async function probeBasicRollFlows(): Promise<void> {
+                // Re-narrow the closed-over class refs: the outer guard's
+                // narrowing does not propagate into this nested function.
+                if (typeof BasicRollWH40K !== 'function' || typeof D100Roll !== 'function') return;
+                // ---- Flow: dice-module-barrel-exports ----
+                try {
+                    const hasBasic = (barrelMod.BasicRollWH40K ?? barrelMod.default) !== undefined;
+                    const hasD100 = barrelMod.D100Roll !== undefined;
+                    const hasDialog = barrelMod.RollConfigurationDialog !== undefined;
+                    const ok = hasBasic && hasD100 && hasDialog;
+                    record('dice-module-barrel-exports', ok, `BasicRollWH40K=${hasBasic} D100Roll=${hasD100} RollConfigurationDialog=${hasDialog}`);
+                } catch (err) {
+                    record('dice-module-barrel-exports', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: basic-roll-construct-formula-base ----
+                try {
+                    const f = BasicRollWH40K.constructFormula({});
+                    record('basic-roll-construct-formula-base', f === '1d100', `formula=${String(f)}`);
+                } catch (err) {
+                    record('basic-roll-construct-formula-base', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: basic-roll-construct-formula-positive-mod ----
+                try {
+                    const f = BasicRollWH40K.constructFormula({ modifier: 5 });
+                    record('basic-roll-construct-formula-positive-mod', typeof f === 'string' && f.includes('+ 5'), `formula=${String(f)}`);
+                } catch (err) {
+                    record('basic-roll-construct-formula-positive-mod', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: basic-roll-construct-formula-negative-mod ----
+                try {
+                    const f = BasicRollWH40K.constructFormula({ base: '2d10', modifier: -3 });
+                    const ok = typeof f === 'string' && f.startsWith('2d10') && f.includes('- 3');
+                    record('basic-roll-construct-formula-negative-mod', ok, `formula=${String(f)}`);
+                } catch (err) {
+                    record('basic-roll-construct-formula-negative-mod', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: basic-roll-evaluate-static-no-chat ----
+                // BasicRollWH40K.evaluate(config) runs buildConfigure +
+                // buildEvaluate (no chat post) and returns an evaluated instance.
+                try {
+                    const evaluated = await BasicRollWH40K.evaluate({ configure: false, dialog: false, base: '1d100' });
+                    const ok =
+                        evaluated !== null &&
+                        typeof evaluated === 'object' &&
+                        typeof evaluated.total === 'number' &&
+                        evaluated.configuration !== undefined &&
+                        evaluated instanceof BasicRollWH40K;
+                    record('basic-roll-evaluate-static-no-chat', ok, `total=${evaluated?.total} hasConfig=${evaluated?.configuration !== undefined}`);
+                } catch (err) {
+                    record('basic-roll-evaluate-static-no-chat', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: basic-roll-tojson-fromdata-roundtrip ----
+                // toJSON() augments the serialized bag with `configuration`;
+                // fromData() restores it onto the rebuilt roll.
+                try {
+                    const roll = new BasicRollWH40K('1d100');
+                    if (typeof roll.evaluate === 'function') await roll.evaluate();
+                    roll.configuration = { target: 42, flavor: 'roundtrip-probe' };
+                    const json = roll.toJSON();
+                    const serializedConfig = json.configuration;
+                    const restored = BasicRollWH40K.fromData(json);
+                    const restoredConfig = restored?.configuration ?? {};
+                    const ok =
+                        serializedConfig?.target === 42 &&
+                        restored instanceof BasicRollWH40K &&
+                        restoredConfig.target === 42 &&
+                        restoredConfig.flavor === 'roundtrip-probe';
+                    record(
+                        'basic-roll-tojson-fromdata-roundtrip',
+                        ok,
+                        `serialized=${JSON.stringify(serializedConfig)} restored=${JSON.stringify(restoredConfig)}`,
+                    );
+                } catch (err) {
+                    record('basic-roll-tojson-fromdata-roundtrip', false, err instanceof Error ? err.message : String(err));
+                }
             }
 
-            // ---- Flow: basic-roll-construct-formula-base ----
-            try {
-                const f = BasicRollWH40K.constructFormula({});
-                record('basic-roll-construct-formula-base', f === '1d100', `formula=${String(f)}`);
-            } catch (err) {
-                record('basic-roll-construct-formula-base', false, err instanceof Error ? err.message : String(err));
+            // ---- D100Roll degree / critical / doubles / tooltip flows ----
+            async function probeD100RollFlows(): Promise<void> {
+                // Re-narrow the closed-over class refs: the outer guard's
+                // narrowing does not propagate into this nested function.
+                if (typeof BasicRollWH40K !== 'function' || typeof D100Roll !== 'function') return;
+                // ---- Flow: d100-construct-formula-ignores-modifier ----
+                // The D100Roll override always returns '1d100' — modifiers move
+                // the target, never the roll formula.
+                try {
+                    const f = D100Roll.constructFormula({ modifier: 30, base: '3d6' });
+                    record('d100-construct-formula-ignores-modifier', f === '1d100', `formula=${String(f)}`);
+                } catch (err) {
+                    record('d100-construct-formula-ignores-modifier', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-target-getter ----
+                try {
+                    const roll = await makeD100(50, { target: 65 });
+                    const withTarget = roll.target === 65;
+                    const noConfigRoll = await makeD100(50, {});
+                    const defaultsToZero = noConfigRoll.target === 0;
+                    record('d100-target-getter', withTarget && defaultsToZero, `target=${roll.target} default=${noConfigRoll.target}`);
+                } catch (err) {
+                    record('d100-target-getter', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-success-degrees-of-success ----
+                // target 60, roll 28 → success; DoS = floor((60-28)/10)+1 = 4.
+                try {
+                    const roll = await makeD100(28, { target: 60 });
+                    const ok = roll.isSuccess && !roll.isFailure && roll.degreesOfSuccess === 4 && roll.degreesOfFailure === 0;
+                    record('d100-success-degrees-of-success', ok, `isSuccess=${roll.isSuccess} dos=${roll.degreesOfSuccess} dof=${roll.degreesOfFailure}`);
+                } catch (err) {
+                    record('d100-success-degrees-of-success', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-failure-degrees-of-failure ----
+                // target 35, roll 67 → failure; DoF = floor((67-35)/10)+1 = 4.
+                try {
+                    const roll = await makeD100(67, { target: 35 });
+                    const ok = !roll.isSuccess && roll.isFailure && roll.degreesOfFailure === 4 && roll.degreesOfSuccess === 0;
+                    record('d100-failure-degrees-of-failure', ok, `isFailure=${roll.isFailure} dof=${roll.degreesOfFailure} dos=${roll.degreesOfSuccess}`);
+                } catch (err) {
+                    record('d100-failure-degrees-of-failure', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-degrees-signed-and-absolute ----
+                // success → degrees positive == DoS; failure → degrees negative;
+                // absoluteDegrees is |degrees|.
+                try {
+                    const success = await makeD100(28, { target: 60 }); // DoS 4
+                    const failure = await makeD100(67, { target: 35 }); // DoF 4
+                    const ok = success.degrees === 4 && success.absoluteDegrees === 4 && failure.degrees === -4 && failure.absoluteDegrees === 4;
+                    record(
+                        'd100-degrees-signed-and-absolute',
+                        ok,
+                        `success.degrees=${success.degrees} failure.degrees=${failure.degrees} abs=${failure.absoluteDegrees}`,
+                    );
+                } catch (err) {
+                    record('d100-degrees-signed-and-absolute', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-critical-success ----
+                // Two branches: natural 01-05, and 3+ DoS on a higher roll.
+                try {
+                    const natural = await makeD100(3, { target: 40 }); // <= 5
+                    const byDos = await makeD100(20, { target: 60 }); // DoS = floor(40/10)+1 = 5 >= 3
+                    const notCrit = await makeD100(58, { target: 60 }); // DoS = 1, not crit
+                    const ok = natural.isCriticalSuccess && byDos.isCriticalSuccess && !notCrit.isCriticalSuccess;
+                    record(
+                        'd100-critical-success',
+                        ok,
+                        `natural=${natural.isCriticalSuccess} byDos=${byDos.isCriticalSuccess} notCrit=${notCrit.isCriticalSuccess}`,
+                    );
+                } catch (err) {
+                    record('d100-critical-success', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-critical-failure ----
+                // Two branches: natural 96-00, and 3+ DoF on a lower roll.
+                try {
+                    const natural = await makeD100(98, { target: 40 }); // >= 96
+                    const byDof = await makeD100(70, { target: 40 }); // DoF = floor(30/10)+1 = 4 >= 3
+                    const notFumble = await makeD100(45, { target: 40 }); // DoF = 1, not fumble
+                    const ok = natural.isCriticalFailure && byDof.isCriticalFailure && !notFumble.isCriticalFailure;
+                    record(
+                        'd100-critical-failure',
+                        ok,
+                        `natural=${natural.isCriticalFailure} byDof=${byDof.isCriticalFailure} notFumble=${notFumble.isCriticalFailure}`,
+                    );
+                } catch (err) {
+                    record('d100-critical-failure', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-doubles-righteous-fury ----
+                // 33 is doubles (tens === ones); on a success it triggers RF.
+                try {
+                    const doublesSuccess = await makeD100(33, { target: 50 }); // doubles + success
+                    const doublesFailure = await makeD100(77, { target: 50 }); // doubles + failure
+                    const notDoubles = await makeD100(34, { target: 50 });
+                    const ok =
+                        doublesSuccess.isDoubles &&
+                        doublesSuccess.triggersRighteousFury &&
+                        doublesFailure.isDoubles &&
+                        !doublesFailure.triggersRighteousFury &&
+                        !notDoubles.isDoubles;
+                    record(
+                        'd100-doubles-righteous-fury',
+                        ok,
+                        `dblSucc=${doublesSuccess.isDoubles}/${doublesSuccess.triggersRighteousFury} dblFail.rf=${doublesFailure.triggersRighteousFury} notDbl=${notDoubles.isDoubles}`,
+                    );
+                } catch (err) {
+                    record('d100-doubles-righteous-fury', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-evaluate-static-no-dialog ----
+                // D100Roll inherits BasicRollWH40K.evaluate; with configure:false
+                // it skips the dialog and returns an evaluated D100Roll whose
+                // constructFormula override forced the '1d100' formula.
+                try {
+                    const evaluated = await D100Roll.evaluate({ configure: false, dialog: false, target: 55 });
+                    const ok =
+                        evaluated !== null &&
+                        typeof evaluated === 'object' &&
+                        evaluated instanceof D100Roll &&
+                        typeof evaluated.total === 'number' &&
+                        evaluated.formula === '1d100';
+                    record('d100-evaluate-static-no-dialog', ok, `total=${evaluated?.total} formula=${evaluated?.formula}`);
+                } catch (err) {
+                    record('d100-evaluate-static-no-dialog', false, err instanceof Error ? err.message : String(err));
+                }
+
+                // ---- Flow: d100-get-tooltip-enhances ----
+                // getTooltip() appends a wh40k-dice-summary block with the
+                // target + result + (when applicable) critical / doubles lines.
+                try {
+                    const roll = await makeD100(3, { target: 50 }); // crit success + below-target
+                    const html = await roll.getTooltip();
+                    const ok = typeof html === 'string' && html.includes('wh40k-dice-summary') && html.includes('Target: 50') && html.includes('Success');
+                    record(
+                        'd100-get-tooltip-enhances',
+                        ok,
+                        `len=${typeof html === 'string' ? html.length : 'n/a'} hasSummary=${typeof html === 'string' && html.includes('wh40k-dice-summary')}`,
+                    );
+                } catch (err) {
+                    record('d100-get-tooltip-enhances', false, err instanceof Error ? err.message : String(err));
+                }
             }
 
-            // ---- Flow: basic-roll-construct-formula-positive-mod ----
-            try {
-                const f = BasicRollWH40K.constructFormula({ modifier: 5 });
-                record('basic-roll-construct-formula-positive-mod', typeof f === 'string' && f.includes('+ 5'), `formula=${String(f)}`);
-            } catch (err) {
-                record('basic-roll-construct-formula-positive-mod', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: basic-roll-construct-formula-negative-mod ----
-            try {
-                const f = BasicRollWH40K.constructFormula({ base: '2d10', modifier: -3 });
-                const ok = typeof f === 'string' && f.startsWith('2d10') && f.includes('- 3');
-                record('basic-roll-construct-formula-negative-mod', ok, `formula=${String(f)}`);
-            } catch (err) {
-                record('basic-roll-construct-formula-negative-mod', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: basic-roll-evaluate-static-no-chat ----
-            // BasicRollWH40K.evaluate(config) runs buildConfigure +
-            // buildEvaluate (no chat post) and returns an evaluated instance.
-            try {
-                const evaluated = await BasicRollWH40K.evaluate({ configure: false, dialog: false, base: '1d100' });
-                const ok =
-                    evaluated !== null &&
-                    typeof evaluated === 'object' &&
-                    typeof evaluated.total === 'number' &&
-                    evaluated.configuration !== undefined &&
-                    evaluated instanceof BasicRollWH40K;
-                record('basic-roll-evaluate-static-no-chat', ok, `total=${evaluated?.total} hasConfig=${evaluated?.configuration !== undefined}`);
-            } catch (err) {
-                record('basic-roll-evaluate-static-no-chat', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: basic-roll-tojson-fromdata-roundtrip ----
-            // toJSON() augments the serialized bag with `configuration`;
-            // fromData() restores it onto the rebuilt roll.
-            try {
-                const roll = new BasicRollWH40K('1d100');
-                if (typeof roll.evaluate === 'function') await roll.evaluate();
-                roll.configuration = { target: 42, flavor: 'roundtrip-probe' };
-                const json = roll.toJSON();
-                const serializedConfig = json.configuration;
-                const restored = BasicRollWH40K.fromData(json);
-                const restoredConfig = restored?.configuration ?? {};
-                const ok =
-                    serializedConfig?.target === 42 &&
-                    restored instanceof BasicRollWH40K &&
-                    restoredConfig.target === 42 &&
-                    restoredConfig.flavor === 'roundtrip-probe';
-                record('basic-roll-tojson-fromdata-roundtrip', ok, `serialized=${JSON.stringify(serializedConfig)} restored=${JSON.stringify(restoredConfig)}`);
-            } catch (err) {
-                record('basic-roll-tojson-fromdata-roundtrip', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-construct-formula-ignores-modifier ----
-            // The D100Roll override always returns '1d100' — modifiers move
-            // the target, never the roll formula.
-            try {
-                const f = D100Roll.constructFormula({ modifier: 30, base: '3d6' });
-                record('d100-construct-formula-ignores-modifier', f === '1d100', `formula=${String(f)}`);
-            } catch (err) {
-                record('d100-construct-formula-ignores-modifier', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-target-getter ----
-            try {
-                const roll = await makeD100(50, { target: 65 });
-                const withTarget = roll.target === 65;
-                const noConfigRoll = await makeD100(50, {});
-                const defaultsToZero = noConfigRoll.target === 0;
-                record('d100-target-getter', withTarget && defaultsToZero, `target=${roll.target} default=${noConfigRoll.target}`);
-            } catch (err) {
-                record('d100-target-getter', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-success-degrees-of-success ----
-            // target 60, roll 28 → success; DoS = floor((60-28)/10)+1 = 4.
-            try {
-                const roll = await makeD100(28, { target: 60 });
-                const ok = roll.isSuccess && !roll.isFailure && roll.degreesOfSuccess === 4 && roll.degreesOfFailure === 0;
-                record('d100-success-degrees-of-success', ok, `isSuccess=${roll.isSuccess} dos=${roll.degreesOfSuccess} dof=${roll.degreesOfFailure}`);
-            } catch (err) {
-                record('d100-success-degrees-of-success', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-failure-degrees-of-failure ----
-            // target 35, roll 67 → failure; DoF = floor((67-35)/10)+1 = 4.
-            try {
-                const roll = await makeD100(67, { target: 35 });
-                const ok = !roll.isSuccess && roll.isFailure && roll.degreesOfFailure === 4 && roll.degreesOfSuccess === 0;
-                record('d100-failure-degrees-of-failure', ok, `isFailure=${roll.isFailure} dof=${roll.degreesOfFailure} dos=${roll.degreesOfSuccess}`);
-            } catch (err) {
-                record('d100-failure-degrees-of-failure', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-degrees-signed-and-absolute ----
-            // success → degrees positive == DoS; failure → degrees negative;
-            // absoluteDegrees is |degrees|.
-            try {
-                const success = await makeD100(28, { target: 60 }); // DoS 4
-                const failure = await makeD100(67, { target: 35 }); // DoF 4
-                const ok = success.degrees === 4 && success.absoluteDegrees === 4 && failure.degrees === -4 && failure.absoluteDegrees === 4;
-                record(
-                    'd100-degrees-signed-and-absolute',
-                    ok,
-                    `success.degrees=${success.degrees} failure.degrees=${failure.degrees} abs=${failure.absoluteDegrees}`,
-                );
-            } catch (err) {
-                record('d100-degrees-signed-and-absolute', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-critical-success ----
-            // Two branches: natural 01-05, and 3+ DoS on a higher roll.
-            try {
-                const natural = await makeD100(3, { target: 40 }); // <= 5
-                const byDos = await makeD100(20, { target: 60 }); // DoS = floor(40/10)+1 = 5 >= 3
-                const notCrit = await makeD100(58, { target: 60 }); // DoS = 1, not crit
-                const ok = natural.isCriticalSuccess && byDos.isCriticalSuccess && !notCrit.isCriticalSuccess;
-                record(
-                    'd100-critical-success',
-                    ok,
-                    `natural=${natural.isCriticalSuccess} byDos=${byDos.isCriticalSuccess} notCrit=${notCrit.isCriticalSuccess}`,
-                );
-            } catch (err) {
-                record('d100-critical-success', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-critical-failure ----
-            // Two branches: natural 96-00, and 3+ DoF on a lower roll.
-            try {
-                const natural = await makeD100(98, { target: 40 }); // >= 96
-                const byDof = await makeD100(70, { target: 40 }); // DoF = floor(30/10)+1 = 4 >= 3
-                const notFumble = await makeD100(45, { target: 40 }); // DoF = 1, not fumble
-                const ok = natural.isCriticalFailure && byDof.isCriticalFailure && !notFumble.isCriticalFailure;
-                record(
-                    'd100-critical-failure',
-                    ok,
-                    `natural=${natural.isCriticalFailure} byDof=${byDof.isCriticalFailure} notFumble=${notFumble.isCriticalFailure}`,
-                );
-            } catch (err) {
-                record('d100-critical-failure', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-doubles-righteous-fury ----
-            // 33 is doubles (tens === ones); on a success it triggers RF.
-            try {
-                const doublesSuccess = await makeD100(33, { target: 50 }); // doubles + success
-                const doublesFailure = await makeD100(77, { target: 50 }); // doubles + failure
-                const notDoubles = await makeD100(34, { target: 50 });
-                const ok =
-                    doublesSuccess.isDoubles &&
-                    doublesSuccess.triggersRighteousFury &&
-                    doublesFailure.isDoubles &&
-                    !doublesFailure.triggersRighteousFury &&
-                    !notDoubles.isDoubles;
-                record(
-                    'd100-doubles-righteous-fury',
-                    ok,
-                    `dblSucc=${doublesSuccess.isDoubles}/${doublesSuccess.triggersRighteousFury} dblFail.rf=${doublesFailure.triggersRighteousFury} notDbl=${notDoubles.isDoubles}`,
-                );
-            } catch (err) {
-                record('d100-doubles-righteous-fury', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-evaluate-static-no-dialog ----
-            // D100Roll inherits BasicRollWH40K.evaluate; with configure:false
-            // it skips the dialog and returns an evaluated D100Roll whose
-            // constructFormula override forced the '1d100' formula.
-            try {
-                const evaluated = await D100Roll.evaluate({ configure: false, dialog: false, target: 55 });
-                const ok =
-                    evaluated !== null &&
-                    typeof evaluated === 'object' &&
-                    evaluated instanceof D100Roll &&
-                    typeof evaluated.total === 'number' &&
-                    evaluated.formula === '1d100';
-                record('d100-evaluate-static-no-dialog', ok, `total=${evaluated?.total} formula=${evaluated?.formula}`);
-            } catch (err) {
-                record('d100-evaluate-static-no-dialog', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- Flow: d100-get-tooltip-enhances ----
-            // getTooltip() appends a wh40k-dice-summary block with the
-            // target + result + (when applicable) critical / doubles lines.
-            try {
-                const roll = await makeD100(3, { target: 50 }); // crit success + below-target
-                const html = await roll.getTooltip();
-                const ok = typeof html === 'string' && html.includes('wh40k-dice-summary') && html.includes('Target: 50') && html.includes('Success');
-                record(
-                    'd100-get-tooltip-enhances',
-                    ok,
-                    `len=${typeof html === 'string' ? html.length : 'n/a'} hasSummary=${typeof html === 'string' && html.includes('wh40k-dice-summary')}`,
-                );
-            } catch (err) {
-                record('d100-get-tooltip-enhances', false, err instanceof Error ? err.message : String(err));
-            }
+            await probeBasicRollFlows();
+            await probeD100RollFlows();
 
             return out;
         }, DICE_ENGINE_FLOWS);

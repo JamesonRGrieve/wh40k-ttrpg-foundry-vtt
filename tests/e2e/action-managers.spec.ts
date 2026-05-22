@@ -162,15 +162,42 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     return { flows };
                 }
 
-                try {
-                    /* ============================================================
-                     * Flow 1: basic-action-dispatch
-                     * Render a chat message via ChatMessage.create whose content
-                     * carries a `.roll-control__hide-control` button — the
-                     * BasicActionManager.renderChatMessageHTML hook should wire
-                     * a click handler on it. We then synthesise the click and
-                     * assert the toggle side-effect (a child span style toggles).
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 1: basic-action-dispatch
+                 * Render a chat message via ChatMessage.create whose content
+                 * carries a `.roll-control__hide-control` button — the
+                 * BasicActionManager.renderChatMessageHTML hook should wire
+                 * a click handler on it. We then synthesise the click and
+                 * assert the toggle side-effect (a child span style toggles).
+                 * ============================================================ */
+                // Click the hide-control button inside `root` and record the
+                // basic-action-dispatch result from the toggled display style.
+                // Extracted from the two structurally-identical mounted/detached
+                // branches to keep both DRY and the nesting depth shallow.
+                async function assertToggleSideEffect(root: ParentNode, missingNote: string): Promise<void> {
+                    const btn = root.querySelector<HTMLElement>('.roll-control__hide-control');
+                    const target = root.querySelector<HTMLElement>('#probe-toggle-target');
+                    if (btn === null || target === null) {
+                        setResult('basic-action-dispatch', false, missingNote);
+                        return;
+                    }
+                    const before = target.style.display;
+                    btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
+                    const after = target.style.display;
+                    if (before !== after) {
+                        setResult('basic-action-dispatch', true, `toggle side-effect observed (display ${before}→${after})`);
+                    } else {
+                        setResult('basic-action-dispatch', false, `toggle handler did not change display (still ${after})`);
+                    }
+                }
+
+                async function probeBasicActionDispatch(): Promise<void> {
+                    // Re-narrow the closed-over consts: the outer guard's
+                    // narrowing does not propagate into this nested function.
+                    if (ChatMessageCls?.create == null || HooksObj === undefined) return;
                     try {
                         const content = `<div class="wh40k-rpg">
                         <button class="roll-control__hide-control" data-toggle="probe-toggle-target">
@@ -182,79 +209,52 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         const msgId = msg?.id;
                         if (msgId == null) {
                             setResult('basic-action-dispatch', false, 'ChatMessage.create returned no id');
-                        } else {
-                            cleanups.push(async () => {
-                                try {
-                                    await gameObj?.messages?.get?.(msgId)?.delete?.();
-                                } catch {
-                                    /* ignore */
-                                }
-                            });
-                            // Give the chat log a tick to render the message DOM.
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 100);
-                            });
-                            const el = document.querySelector(`[data-message-id="${msgId}"]`);
-                            if (el === null) {
-                                // Foundry chat sidebar may not be mounted in the
-                                // headless world. Fall back to firing the hook
-                                // directly against a detached HTMLElement that
-                                // carries the same structure — the manager's
-                                // handler walks `html.querySelectorAll(...)`, so
-                                // a detached node is enough to wire and click.
-                                const detached = document.createElement('div');
-                                detached.innerHTML = content;
-                                HooksObj.callAll?.('renderChatMessageHTML', msg, detached, {});
-                                const btn = detached.querySelector<HTMLElement>('.roll-control__hide-control');
-                                const target = detached.querySelector<HTMLElement>('#probe-toggle-target');
-                                if (btn === null || target === null) {
-                                    setResult('basic-action-dispatch', false, 'detached fallback: button or target missing');
-                                } else {
-                                    const before = target.style.display;
-                                    btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                                    await new Promise<void>((r) => {
-                                        setTimeout(r, 30);
-                                    });
-                                    const after = target.style.display;
-                                    if (before !== after) {
-                                        setResult('basic-action-dispatch', true, `toggle side-effect observed (display ${before}→${after})`);
-                                    } else {
-                                        setResult('basic-action-dispatch', false, `toggle handler did not change display (still ${after})`);
-                                    }
-                                }
-                            } else {
-                                const btn = el.querySelector<HTMLElement>('.roll-control__hide-control');
-                                const target = el.querySelector<HTMLElement>('#probe-toggle-target');
-                                if (btn === null || target === null) {
-                                    setResult('basic-action-dispatch', false, 'mounted message missing expected nodes');
-                                } else {
-                                    const before = target.style.display;
-                                    btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                                    await new Promise<void>((r) => {
-                                        setTimeout(r, 30);
-                                    });
-                                    const after = target.style.display;
-                                    if (before !== after) {
-                                        setResult('basic-action-dispatch', true, `toggle side-effect observed (display ${before}→${after})`);
-                                    } else {
-                                        setResult('basic-action-dispatch', false, `toggle handler did not change display (still ${after})`);
-                                    }
-                                }
+                            return;
+                        }
+                        cleanups.push(async () => {
+                            try {
+                                await gameObj?.messages?.get?.(msgId)?.delete?.();
+                            } catch {
+                                /* ignore */
                             }
+                        });
+                        // Give the chat log a tick to render the message DOM.
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 100);
+                        });
+                        const el = document.querySelector(`[data-message-id="${msgId}"]`);
+                        if (el === null) {
+                            // Foundry chat sidebar may not be mounted in the
+                            // headless world. Fall back to firing the hook
+                            // directly against a detached HTMLElement that
+                            // carries the same structure — the manager's
+                            // handler walks `html.querySelectorAll(...)`, so
+                            // a detached node is enough to wire and click.
+                            const detached = document.createElement('div');
+                            detached.innerHTML = content;
+                            HooksObj.callAll?.('renderChatMessageHTML', msg, detached, {});
+                            await assertToggleSideEffect(detached, 'detached fallback: button or target missing');
+                        } else {
+                            await assertToggleSideEffect(el, 'mounted message missing expected nodes');
                         }
                     } catch (err) {
                         setResult('basic-action-dispatch', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 2: combat-action-on-turn
-                     * Create a Combat with two combatants, start it, advance one
-                     * turn. The CombatActionManager.combatTurnHook handler
-                     * (updateCombat → processCombatActiveEffects + first-attack
-                     * flag reset on round change) MUST run. We assert by tapping
-                     * the same hook in parallel — if the system handler is
-                     * registered, our tap fires in lockstep.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 2: combat-action-on-turn
+                 * Create a Combat with two combatants, start it, advance one
+                 * turn. The CombatActionManager.combatTurnHook handler
+                 * (updateCombat → processCombatActiveEffects + first-attack
+                 * flag reset on round change) MUST run. We assert by tapping
+                 * the same hook in parallel — if the system handler is
+                 * registered, our tap fires in lockstep.
+                 * ============================================================ */
+                async function probeCombatActionOnTurn(): Promise<void> {
+                    // Re-narrow the closed-over consts: the outer guard's
+                    // narrowing does not propagate into this nested function.
+                    if (ActorCls?.create == null || HooksObj === undefined) return;
                     try {
                         let turnFired = false;
                         let roundFired = false;
@@ -358,17 +358,19 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         setResult('combat-action-on-turn', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 3: reload-action-dispatch
-                     * Dynamically import ReloadActionManager and call its static
-                     * `reloadWeapon` against an actor-embedded weapon with no
-                     * ammo loaded plus a stack of compatible ammunition. Assert
-                     * the weapon's `system.clip.value` increases.
-                     * Falls back to asserting on `findSpareAmmunition` if the
-                     * full reload path requires a dialog (AmmoPickerDialog) we
-                     * cannot suppress headlessly.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 3: reload-action-dispatch
+                 * Dynamically import ReloadActionManager and call its static
+                 * `reloadWeapon` against an actor-embedded weapon with no
+                 * ammo loaded plus a stack of compatible ammunition. Assert
+                 * the weapon's `system.clip.value` increases.
+                 * Falls back to asserting on `findSpareAmmunition` if the
+                 * full reload path requires a dialog (AmmoPickerDialog) we
+                 * cannot suppress headlessly.
+                 * ============================================================ */
+                async function probeReloadActionDispatch(): Promise<void> {
                     try {
                         interface ReloadResult {
                             success?: boolean;
@@ -385,111 +387,109 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         const ReloadActionManager = await loadExport<ReloadActionManagerCls>(reloadUrl, 'ReloadActionManager');
                         if (typeof ReloadActionManager?.reloadWeapon !== 'function') {
                             setResult('reload-action-dispatch', false, 'ReloadActionManager.reloadWeapon not a function');
+                            return;
+                        }
+                        const live = gameObj?.actors?.get?.(probeActor?.id ?? '');
+                        if (live == null) {
+                            setResult('reload-action-dispatch', false, 'probe actor not in collection');
+                            return;
+                        }
+                        // Create an ammo item first so the weapon's
+                        // findSpareAmmunition path has something to find.
+                        const ammoCreated = await live.createEmbeddedDocuments?.('Item', [
+                            {
+                                name: 'probe-ammo',
+                                type: 'ammunition',
+                                system: {
+                                    quantity: 30,
+                                    weaponTypes: [],
+                                    clipModifier: 0,
+                                },
+                            },
+                        ]);
+                        const weaponCreated = await live.createEmbeddedDocuments?.('Item', [
+                            {
+                                name: 'probe-weapon',
+                                type: 'weapon',
+                                system: {
+                                    usesAmmo: true,
+                                    reload: 'full',
+                                    clip: { value: 0, max: 10 },
+                                },
+                            },
+                        ]);
+                        const weaponId = weaponCreated?.[0]?.id;
+                        const ammoId = ammoCreated?.[0]?.id;
+                        const weapon = weaponId != null ? live.items?.get(weaponId) ?? null : null;
+                        const ammo = ammoId != null ? live.items?.get(ammoId) ?? null : null;
+                        if (weapon == null || ammo == null) {
+                            setResult('reload-action-dispatch', false, 'failed to embed weapon/ammo on probe actor');
+                            return;
+                        }
+                        // Exercise the static helpers first — these
+                        // are pure read paths that hit a lot of the
+                        // reload-action-manager source surface.
+                        const spare = ReloadActionManager.findSpareAmmunition?.(live, weapon) ?? [];
+                        const hasSpare = ReloadActionManager.hasSpareAmmunition?.(live, weapon) ?? false;
+                        const effective = ReloadActionManager.getEffectiveReloadTime?.(weapon) ?? '';
+                        const hasCustom = ReloadActionManager.hasCustomisedQuality?.(weapon) ?? false;
+
+                        // Attempt the full reload. AmmoPickerDialog
+                        // may auto-resolve or block — wrap in a
+                        // timeout race so a blocking dialog doesn't
+                        // hang the spec.
+                        let reloadResult: ReloadResult | null = null;
+                        let reloadError: string | null = null;
+                        try {
+                            reloadResult = await Promise.race<ReloadResult>([
+                                ReloadActionManager.reloadWeapon(weapon, { skipValidation: true }),
+                                new Promise<ReloadResult>((resolve) => {
+                                    setTimeout(() => {
+                                        resolve({ success: false, message: 'timeout' });
+                                    }, 800);
+                                }),
+                            ]);
+                        } catch (err) {
+                            reloadError = String(err instanceof Error ? err.message : err);
+                        }
+
+                        // Static helpers prove a substantial portion
+                        // of the reload-action-manager surface ran
+                        // even if the full reload path was blocked
+                        // by a dialog we can't dismiss.
+                        if (spare.length > 0 && hasSpare) {
+                            const reloadNote =
+                                reloadError !== null
+                                    ? `reload threw: ${reloadError}`
+                                    : `reload result success=${String(reloadResult?.success ?? false)} message=${String(reloadResult?.message ?? '')}`;
+                            setResult(
+                                'reload-action-dispatch',
+                                true,
+                                `spare=${spare.length} hasSpare=${String(hasSpare)} effective=${effective} hasCustom=${String(hasCustom)} — ${reloadNote}`,
+                            );
                         } else {
-                            const live = gameObj?.actors?.get?.(probeActor?.id ?? '');
-                            if (live == null) {
-                                setResult('reload-action-dispatch', false, 'probe actor not in collection');
-                            } else {
-                                // Create an ammo item first so the weapon's
-                                // findSpareAmmunition path has something to find.
-                                const ammoCreated = await live.createEmbeddedDocuments?.('Item', [
-                                    {
-                                        name: 'probe-ammo',
-                                        type: 'ammunition',
-                                        system: {
-                                            quantity: 30,
-                                            weaponTypes: [],
-                                            clipModifier: 0,
-                                        },
-                                    },
-                                ]);
-                                const weaponCreated = await live.createEmbeddedDocuments?.('Item', [
-                                    {
-                                        name: 'probe-weapon',
-                                        type: 'weapon',
-                                        system: {
-                                            usesAmmo: true,
-                                            reload: 'full',
-                                            clip: { value: 0, max: 10 },
-                                        },
-                                    },
-                                ]);
-                                const weaponId = weaponCreated?.[0]?.id;
-                                const ammoId = ammoCreated?.[0]?.id;
-                                const weapon = weaponId != null ? live.items?.get(weaponId) ?? null : null;
-                                const ammo = ammoId != null ? live.items?.get(ammoId) ?? null : null;
-                                if (weapon == null || ammo == null) {
-                                    setResult('reload-action-dispatch', false, 'failed to embed weapon/ammo on probe actor');
-                                } else {
-                                    // Exercise the static helpers first — these
-                                    // are pure read paths that hit a lot of the
-                                    // reload-action-manager source surface.
-                                    const spare = ReloadActionManager.findSpareAmmunition?.(live, weapon) ?? [];
-                                    const hasSpare = ReloadActionManager.hasSpareAmmunition?.(live, weapon) ?? false;
-                                    const effective = ReloadActionManager.getEffectiveReloadTime?.(weapon) ?? '';
-                                    const hasCustom = ReloadActionManager.hasCustomisedQuality?.(weapon) ?? false;
-
-                                    // Attempt the full reload. AmmoPickerDialog
-                                    // may auto-resolve or block — wrap in a
-                                    // timeout race so a blocking dialog doesn't
-                                    // hang the spec.
-                                    let reloadResult: ReloadResult | null = null;
-                                    let reloadError: string | null = null;
-                                    try {
-                                        reloadResult = await Promise.race<ReloadResult>([
-                                            ReloadActionManager.reloadWeapon(weapon, { skipValidation: true }),
-                                            new Promise<ReloadResult>((resolve) => {
-                                                setTimeout(() => {
-                                                    resolve({ success: false, message: 'timeout' });
-                                                }, 800);
-                                            }),
-                                        ]);
-                                    } catch (err) {
-                                        reloadError = String(err instanceof Error ? err.message : err);
-                                    }
-
-                                    // Static helpers prove a substantial portion
-                                    // of the reload-action-manager surface ran
-                                    // even if the full reload path was blocked
-                                    // by a dialog we can't dismiss.
-                                    if (spare.length > 0 && hasSpare) {
-                                        const reloadNote =
-                                            reloadError !== null
-                                                ? `reload threw: ${reloadError}`
-                                                : `reload result success=${String(reloadResult?.success ?? false)} message=${String(
-                                                      reloadResult?.message ?? '',
-                                                  )}`;
-                                        setResult(
-                                            'reload-action-dispatch',
-                                            true,
-                                            `spare=${spare.length} hasSpare=${String(hasSpare)} effective=${effective} hasCustom=${String(
-                                                hasCustom,
-                                            )} — ${reloadNote}`,
-                                        );
-                                    } else {
-                                        setResult(
-                                            'reload-action-dispatch',
-                                            false,
-                                            `helper output unexpected: spare=${spare.length} hasSpare=${String(hasSpare)} effective=${effective}`,
-                                        );
-                                    }
-                                }
-                            }
+                            setResult(
+                                'reload-action-dispatch',
+                                false,
+                                `helper output unexpected: spare=${spare.length} hasSpare=${String(hasSpare)} effective=${effective}`,
+                            );
                         }
                     } catch (err) {
                         setResult('reload-action-dispatch', false, `dynamic import threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 4: targeted-action-with-target
-                     * Dynamically import TargetedActionManager and invoke its
-                     * getSourceToken / getTargetToken / tokenDistance helpers
-                     * directly. With no controlled token on the canvas these
-                     * return undefined, which is the documented "no scene" path
-                     * — still exercises the early-return branches in source.
-                     * We assert the manager is callable and the helpers don't
-                     * throw; the no-scene path is what we expect headlessly.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 4: targeted-action-with-target
+                 * Dynamically import TargetedActionManager and invoke its
+                 * getSourceToken / getTargetToken / tokenDistance helpers
+                 * directly. With no controlled token on the canvas these
+                 * return undefined, which is the documented "no scene" path
+                 * — still exercises the early-return branches in source.
+                 * We assert the manager is callable and the helpers don't
+                 * throw; the no-scene path is what we expect headlessly.
+                 * ============================================================ */
+                async function probeTargetedActionWithTarget(): Promise<void> {
                     try {
                         interface TargetedManager {
                             readonly getSourceToken: (arg: null) => object | undefined;
@@ -547,14 +547,19 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         setResult('targeted-action-with-target', false, `dynamic import threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 5: scene-control-buttons-registered
-                     * Fire the getSceneControlButtons hook with a synthetic
-                     * controls map and assert that the manager handlers
-                     * (BasicActionManager + TargetedActionManager) injected
-                     * their tools onto the 'tokens' control group.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 5: scene-control-buttons-registered
+                 * Fire the getSceneControlButtons hook with a synthetic
+                 * controls map and assert that the manager handlers
+                 * (BasicActionManager + TargetedActionManager) injected
+                 * their tools onto the 'tokens' control group.
+                 * ============================================================ */
+                async function probeSceneControlButtons(): Promise<void> {
+                    // Re-narrow the closed-over Hooks const: the outer guard's
+                    // narrowing does not propagate into this nested function.
+                    if (HooksObj === undefined) return;
                     try {
                         // Synthetic controls map shaped like V14's payload.
                         interface SceneControl {
@@ -594,17 +599,22 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         setResult('scene-control-buttons-registered', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
+                }
 
-                    /* ============================================================
-                     * Flow 6: chat-card-button-click
-                     * Full E2E: render a chat card containing a
-                     * `.roll-control__refund` button (or similar data-action),
-                     * insert it into the document via a detached element + the
-                     * renderChatMessageHTML hook, then click. The handler walks
-                     * `getActionData(rollId)` and (because the id is bogus)
-                     * surfaces a ui.notifications.warn — we tap notifications
-                     * to assert the handler ran end-to-end.
-                     * ============================================================ */
+                /* ============================================================
+                 * Flow 6: chat-card-button-click
+                 * Full E2E: render a chat card containing a
+                 * `.roll-control__refund` button (or similar data-action),
+                 * insert it into the document via a detached element + the
+                 * renderChatMessageHTML hook, then click. The handler walks
+                 * `getActionData(rollId)` and (because the id is bogus)
+                 * surfaces a ui.notifications.warn — we tap notifications
+                 * to assert the handler ran end-to-end.
+                 * ============================================================ */
+                async function probeChatCardButtonClick(): Promise<void> {
+                    // Re-narrow the closed-over Hooks const: the outer guard's
+                    // narrowing does not propagate into this nested function.
+                    if (HooksObj === undefined) return;
                     try {
                         const notifications = g.ui?.notifications;
                         const capture: { warnedMessage: string | null } = { warnedMessage: null };
@@ -661,6 +671,15 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                     } catch (err) {
                         setResult('chat-card-button-click', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
                     }
+                }
+
+                try {
+                    await probeBasicActionDispatch();
+                    await probeCombatActionOnTurn();
+                    await probeReloadActionDispatch();
+                    await probeTargetedActionWithTarget();
+                    await probeSceneControlButtons();
+                    await probeChatCardButtonClick();
                 } finally {
                     for (const fn of cleanups) {
                         try {
