@@ -352,19 +352,14 @@ export class ActionData {
 
     createEffectData(): void {
         for (const effect of this.effects) {
-            switch (effect) {
-                case 'auto-failure':
-                    this.addEffect('Auto Failure', `The roll resulted in an automatic failure!`);
-                    break;
-                case 'blademaster':
-                    this.addEffect('Blademaster', `Original roll of ${this.rollData.previousRolls[0]?.total ?? 0} rerolled.`);
-                    break;
-                case 'overheat':
-                    this.addEffect('Overheats', `The weapon overheats forcing it to be dropped on the ground!`);
-                    break;
-                case 'jam':
-                    this.addEffect('Jam', `The weapon jams!`);
-                    break;
+            if (effect === 'auto-failure') {
+                this.addEffect('Auto Failure', `The roll resulted in an automatic failure!`);
+            } else if (effect === 'blademaster') {
+                this.addEffect('Blademaster', `Original roll of ${this.rollData.previousRolls[0]?.total ?? 0} rerolled.`);
+            } else if (effect === 'overheat') {
+                this.addEffect('Overheats', `The weapon overheats forcing it to be dropped on the ground!`);
+            } else if (effect === 'jam') {
+                this.addEffect('Jam', `The weapon jams!`);
             }
         }
     }

@@ -81,10 +81,12 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
             // grants carry options/count/optional/allowDuplicates; resource grants
             // carry resources/optional. All fields optional so one ctor type covers both.
             interface GrantConstructorData {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: grant payload entries are opaque DataModel-schema shapes with no type shipped to this browser-probe realm; only ever passed as empty arrays here
                 options?: ReadonlyArray<{ label: string; grants: ReadonlyArray<unknown> }>;
                 count?: number;
                 optional?: boolean;
                 allowDuplicates?: boolean;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: resource-grant entries are opaque DataModel-schema shapes with no type shipped to this browser-probe realm; only ever passed as an empty array here
                 resources?: ReadonlyArray<unknown>;
             }
             type GrantCtor = new (data: GrantConstructorData) => GrantInstance;

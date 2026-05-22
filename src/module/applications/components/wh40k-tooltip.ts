@@ -325,23 +325,13 @@ export class TooltipsWH40K {
     }
 
     async _buildTooltipContent(data: TooltipPayload, type: string): Promise<string> {
-        switch (type) {
-            case 'characteristic':
-                return this._buildCharacteristicTooltip(data as CharacteristicTooltipPayload);
-            case 'skill':
-                return this._buildSkillTooltip(data as SkillTooltipPayload);
-            case 'armor':
-            case 'armour':
-                return this._buildArmorTooltip(data as ArmorTooltipPayload);
-            case 'weapon':
-                return this._buildWeaponTooltip(data as WeaponTooltipPayload);
-            case 'modifier':
-                return this._buildModifierTooltip(data as ModifierTooltipPayload);
-            case 'quality':
-                return this._buildQualityTooltip(data as QualityTooltipPayload);
-            default:
-                return this._buildGenericTooltip(data as GenericTooltipPayload);
-        }
+        if (type === 'characteristic') return this._buildCharacteristicTooltip(data as CharacteristicTooltipPayload);
+        if (type === 'skill') return this._buildSkillTooltip(data as SkillTooltipPayload);
+        if (type === 'armor' || type === 'armour') return this._buildArmorTooltip(data as ArmorTooltipPayload);
+        if (type === 'weapon') return this._buildWeaponTooltip(data as WeaponTooltipPayload);
+        if (type === 'modifier') return this._buildModifierTooltip(data as ModifierTooltipPayload);
+        if (type === 'quality') return this._buildQualityTooltip(data as QualityTooltipPayload);
+        return this._buildGenericTooltip(data as GenericTooltipPayload);
     }
 
     _buildCharacteristicTooltip(data: CharacteristicTooltipPayload): string {

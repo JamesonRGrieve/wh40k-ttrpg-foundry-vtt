@@ -162,30 +162,17 @@ export default class ArmourModSheet extends ContainerItemSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose ArmourModSystem-shaped properties to TS
         const system = this.item.system as unknown as ArmourModSystem;
 
-        switch (partId) {
-            case 'header':
-                partContext['icon'] = system.icon;
-                partContext['restrictionsSummary'] = system.restrictionsLabelEnhanced;
-                partContext['modifiersSummary'] = system.modifierSummary;
-                break;
-
-            case 'restrictions':
-                // Already prepared in _prepareContext
-                break;
-
-            case 'modifiers':
-                partContext['modifiers'] = system.modifiers;
-                break;
-
-            case 'properties':
-                // Already prepared in _prepareContext
-                break;
-
-            case 'effect':
-                partContext['effect'] = system.effect;
-                partContext['notes'] = system.notes;
-                break;
+        if (partId === 'header') {
+            partContext['icon'] = system.icon;
+            partContext['restrictionsSummary'] = system.restrictionsLabelEnhanced;
+            partContext['modifiersSummary'] = system.modifierSummary;
+        } else if (partId === 'modifiers') {
+            partContext['modifiers'] = system.modifiers;
+        } else if (partId === 'effect') {
+            partContext['effect'] = system.effect;
+            partContext['notes'] = system.notes;
         }
+        // 'restrictions' and 'properties' are already prepared in _prepareContext
 
         return partContext;
     }

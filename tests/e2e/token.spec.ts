@@ -363,6 +363,10 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                 } catch (err) {
                     updateErr = err instanceof Error ? err.message : String(err);
                 }
+                // Error surfaced to the diagnostic note: starts as the setFlag failure
+                // and is replaced with the updateSource fallback failure only when the
+                // setFlag attempt itself recorded no error.
+                let recordedErr: string | null = updateErr;
                 let live: ProbeToken = liveScene.tokens?.get?.(tokenId) ?? liveToken0;
                 let flag = live.getFlag?.('wh40k-rpg', 'probe') ?? live._source?.flags?.['wh40k-rpg']?.probe;
                 if (flag !== 'spec' && (updateErr === null || updateErr.includes('OBJECTS') || updateErr.includes('validation errors'))) {
@@ -372,21 +376,24 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     // (DataModel in-memory mutation) — that still routes
                     // through the document subclass' validation + per-field
                     // setters and writes into the document's _source.
+                    let fallbackErr: string | null = null;
                     try {
                         if (typeof liveToken0.updateSource === 'function') {
                             liveToken0.updateSource({ flags: { 'wh40k-rpg': { probe: 'spec' } } });
                         }
                     } catch (innerErr) {
-                        const innerMsg = innerErr instanceof Error ? innerErr.message : String(innerErr);
-                        updateErr ??= innerMsg;
+                        fallbackErr = innerErr instanceof Error ? innerErr.message : String(innerErr);
                     }
+                    // Keep the first recorded error (the setFlag failure) when present,
+                    // else surface the updateSource fallback failure.
+                    recordedErr = updateErr ?? fallbackErr;
                     live = liveScene.tokens?.get?.(tokenId) ?? liveToken0;
                     flag = live.getFlag?.('wh40k-rpg', 'probe') ?? live._source?.flags?.['wh40k-rpg']?.probe;
                 }
                 if (flag === 'spec') {
                     fired['token-update-position'] = true;
-                } else if (updateErr !== null) {
-                    notes['token-update-position'] = `token.setFlag threw: ${updateErr} (updateSource fallback also did not take)`;
+                } else if (recordedErr !== null) {
+                    notes['token-update-position'] = `token.setFlag threw: ${recordedErr} (updateSource fallback also did not take)`;
                 } else {
                     notes['token-update-position'] = `update did not persist — flag=${String(flag)}`;
                 }
@@ -492,8 +499,8 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     liveToken._source?.delta?.name === 'override-name';
                 if (overrideApplied) {
                     fired['token-overrides-actor-data'] = true;
-                } else {
-                    notes['token-overrides-actor-data'] ??= `delta override took no effect — token.actor.name=${String(
+                } else if (!('token-overrides-actor-data' in notes)) {
+                    notes['token-overrides-actor-data'] = `delta override took no effect — token.actor.name=${String(
                         liveToken.actor?.name,
                     )} delta.name=${String(liveToken.delta?.name)} _source.delta.name=${String(liveToken._source?.delta?.name)}`;
                 }

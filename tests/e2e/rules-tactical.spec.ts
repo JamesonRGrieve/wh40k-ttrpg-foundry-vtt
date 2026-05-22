@@ -57,8 +57,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             // narrowly typed without importing build-time types into the bundle.
             type ImportFailure = { __importError: string };
             type Loaded<T> = T | ImportFailure;
-            const hasImportError = <T extends object>(mod: Loaded<T>): mod is ImportFailure =>
-                '__importError' in mod && typeof (mod as ImportFailure).__importError === 'string';
+            const hasImportError = <T extends object>(mod: Loaded<T>): mod is ImportFailure => '__importError' in mod && typeof mod.__importError === 'string';
 
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {

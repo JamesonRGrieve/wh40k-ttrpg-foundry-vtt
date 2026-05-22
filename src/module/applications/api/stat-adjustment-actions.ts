@@ -229,40 +229,31 @@ async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Pr
         return;
     }
 
-    let message = '';
-    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default: branch handles undefined and all unlisted actions
-    switch (action) {
-        case 'reroll':
-            message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>re-roll</strong> a test!`;
-            break;
-        case 'bonus':
-            message = `<strong>${this.actor.name}</strong> spends a Fate Point to gain <strong>+10 bonus</strong> to a test!`;
-            break;
-        case 'dos':
-            message = `<strong>${this.actor.name}</strong> spends a Fate Point to add <strong>+1 Degree of Success</strong>!`;
-            break;
-        case 'heal':
-            message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>heal damage</strong>!`;
-            break;
-        case 'avoid':
-            message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>avoid death</strong>!`;
-            break;
-        case 'burn': {
-            const confirmBurn = await ConfirmationDialog.confirm({
-                title: 'Burn Fate Point?',
-                content: 'Are you sure you want to <strong>permanently burn</strong> a Fate Point?',
-                confirmLabel: 'Burn',
-                cancelLabel: 'Cancel',
-            });
-            if (!confirmBurn) return;
-            message = `<strong>${this.actor.name}</strong> <strong style="color: #b63a2b;">BURNS</strong> a Fate Point!`;
-            await this.actor.update({
-                'system.fate.max': Math.max(0, (this.actor.system.fate?.max ?? 0) - 1),
-            });
-            break;
-        }
-        default:
-            return;
+    const messages: Record<string, string> = {
+        reroll: `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>re-roll</strong> a test!`,
+        bonus: `<strong>${this.actor.name}</strong> spends a Fate Point to gain <strong>+10 bonus</strong> to a test!`,
+        dos: `<strong>${this.actor.name}</strong> spends a Fate Point to add <strong>+1 Degree of Success</strong>!`,
+        heal: `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>heal damage</strong>!`,
+        avoid: `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>avoid death</strong>!`,
+    };
+
+    let message: string;
+    if (action === 'burn') {
+        const confirmBurn = await ConfirmationDialog.confirm({
+            title: 'Burn Fate Point?',
+            content: 'Are you sure you want to <strong>permanently burn</strong> a Fate Point?',
+            confirmLabel: 'Burn',
+            cancelLabel: 'Cancel',
+        });
+        if (!confirmBurn) return;
+        message = `<strong>${this.actor.name}</strong> <strong style="color: #b63a2b;">BURNS</strong> a Fate Point!`;
+        await this.actor.update({
+            'system.fate.max': Math.max(0, (this.actor.system.fate?.max ?? 0) - 1),
+        });
+    } else {
+        const mapped = action === undefined ? undefined : messages[action];
+        if (mapped === undefined) return;
+        message = mapped;
     }
 
     await this._updateSystemField('system.fate.value', currentFate - 1);

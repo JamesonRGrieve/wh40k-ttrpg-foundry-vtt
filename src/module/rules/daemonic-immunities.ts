@@ -35,6 +35,7 @@ export interface DaemonicActorLike {
     // fixtures remain assignable too.
     system?: {
         traits?: ReadonlyArray<{ name?: string }>;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: open index signature mirrors the DataModel `system`'s `[key: string]: unknown` so a real actor stays structurally assignable to this duck-typed surface; the value type is genuinely unconstrained here
     } & { [key: string]: unknown };
     items?: Iterable<{ type?: string; name?: string }>;
 }

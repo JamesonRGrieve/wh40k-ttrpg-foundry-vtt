@@ -487,7 +487,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
             for (const name of classNames) {
                 const Cls = await loadClass(name);
                 if (typeof Cls !== 'function') {
-                    notes[name] ??= 'class not resolvable';
+                    if (!(name in notes)) notes[name] = 'class not resolvable';
                     continue;
                 }
                 try {
@@ -515,44 +515,36 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                         }
                     }
                     let instance: AppInstance;
-                    switch (name) {
-                        case 'CombatQuickPanel': {
-                            // CombatQuickPanel extends ApplicationV2 directly
-                            // without the HandlebarsApplicationMixin, so its
-                            // render() throws "not renderable". Re-wrap with
-                            // the mixin at runtime so we can exercise its
-                            // constructor + _prepareContext under coverage.
-                            // Real fix is to apply the mixin in source; this
-                            // is a spec-only workaround.
-                            const mixin = g.foundry?.applications?.api?.HandlebarsApplicationMixin;
-                            const Wrapped = typeof mixin === 'function' ? mixin(Cls) : Cls;
-                            instance = new Wrapped();
-                            break;
-                        }
-                        case 'EncounterBuilder':
-                            // Singleton pattern — prefer .instance/.show, fall through to ctor.
-                            instance = typeof Cls.instance !== 'undefined' ? Cls.instance : new Cls();
-                            break;
-                        case 'CombatPresetDialog':
-                            instance = new Cls(null, 'library');
-                            break;
-                        case 'DifficultyCalculatorDialog':
-                            if (npc == null) {
-                                notes[name] = 'NPC not available for dialog ctor';
-                                continue;
-                            }
-                            instance = new Cls(npc);
-                            break;
-                        case 'NPCThreatScalerDialog':
-                            if (npc == null) {
-                                notes[name] = 'NPC not available for dialog ctor';
-                                continue;
-                            }
-                            instance = new Cls(npc);
-                            break;
-                        default:
-                            notes[name] = 'unknown class in probe table';
+                    if (name === 'CombatQuickPanel') {
+                        // CombatQuickPanel extends ApplicationV2 directly without
+                        // the HandlebarsApplicationMixin, so its render() throws
+                        // "not renderable". Re-wrap with the mixin at runtime so we
+                        // can exercise its constructor + _prepareContext under
+                        // coverage. Real fix is to apply the mixin in source; this
+                        // is a spec-only workaround.
+                        const mixin = g.foundry?.applications?.api?.HandlebarsApplicationMixin;
+                        const Wrapped = typeof mixin === 'function' ? mixin(Cls) : Cls;
+                        instance = new Wrapped();
+                    } else if (name === 'EncounterBuilder') {
+                        // Singleton pattern — prefer .instance/.show, fall through to ctor.
+                        instance = typeof Cls.instance !== 'undefined' ? Cls.instance : new Cls();
+                    } else if (name === 'CombatPresetDialog') {
+                        instance = new Cls(null, 'library');
+                    } else if (name === 'DifficultyCalculatorDialog') {
+                        if (npc == null) {
+                            notes[name] = 'NPC not available for dialog ctor';
                             continue;
+                        }
+                        instance = new Cls(npc);
+                    } else if (name === 'NPCThreatScalerDialog') {
+                        if (npc == null) {
+                            notes[name] = 'NPC not available for dialog ctor';
+                            continue;
+                        }
+                        instance = new Cls(npc);
+                    } else {
+                        notes[name] = 'unknown class in probe table';
+                        continue;
                     }
 
                     if (typeof instance.render === 'function') {

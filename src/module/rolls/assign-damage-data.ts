@@ -309,18 +309,13 @@ export class AssignDamageData {
             const i18n = (globalThis as { game?: { i18n?: { localize?: (k: string) => string } } }).game?.i18n;
             return i18n?.localize?.(key) ?? key;
         };
-        switch (breakCheck.outcome) {
-            case 'auto-break':
-                return localize('WH40K.DW.Horde.Break.AutoBreak');
-            case 'test-penalised':
-                return localize('WH40K.DW.Horde.Break.TestPenalised');
-            case 'test-normal':
-                return localize('WH40K.DW.Horde.Break.TestNormal');
-            case 'no-test':
-                return localize('WH40K.DW.Horde.Break.NoTest');
-            default:
-                return localize('WH40K.DW.Horde.Break.NoTest');
-        }
+        const outcomeKeys: Record<string, string> = {
+            'auto-break': 'WH40K.DW.Horde.Break.AutoBreak',
+            'test-penalised': 'WH40K.DW.Horde.Break.TestPenalised',
+            'test-normal': 'WH40K.DW.Horde.Break.TestNormal',
+            'no-test': 'WH40K.DW.Horde.Break.NoTest',
+        };
+        return localize(outcomeKeys[breakCheck.outcome] ?? 'WH40K.DW.Horde.Break.NoTest');
     }
 
     /**

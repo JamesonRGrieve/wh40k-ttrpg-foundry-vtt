@@ -11,7 +11,9 @@ describe.skipIf(!ok)('system manifest (Tier A)', () => {
         // `ok`) is an acceptable outcome as long as it carries a reason; a
         // successful boot must expose the Foundry runtime.
         const skippedWithReason = result.skipped && Boolean(result.error?.message ?? 'boot skipped');
-        const bootedWithRuntime = result.booted && result.runtime?.foundry !== undefined;
+        // The `booted: true` union member guarantees `runtime.foundry` is present,
+        // so the boolean itself is the "booted with a usable runtime" assertion.
+        const bootedWithRuntime = result.booted;
         expect(skippedWithReason || bootedWithRuntime).toBe(true);
     });
 

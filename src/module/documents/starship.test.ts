@@ -76,30 +76,34 @@ describe('WH40KStarship', () => {
  * hulls must not have crew/morale touched.
  */
 describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
+    type PriorTurnDamage = { hullLoss: number; crewLoss: number; moraleLoss: number; turn: number };
+    type HullDamageDelta = { hullLoss: number; crewLoss: number; moraleLoss: number };
+    type RestoredDelta = { hullRestored: number; crewRestored: number; moraleRestored: number };
+    type UpdatePayload = Record<string, number | PriorTurnDamage>;
+
     interface FakeStarship {
         system: {
             gameSystem: string;
             hullIntegrity: { value: number; max: number };
             crew: { population: number; crewRating: number; morale: { value: number; max: number } };
-            priorTurnDamage?: { hullLoss: number; crewLoss: number; moraleLoss: number; turn: number };
+            priorTurnDamage?: PriorTurnDamage;
         };
         hullIntegrity: { value: number; max: number };
         crew: { population: number; crewRating: number; morale: { value: number; max: number } };
-        update: (data: Record<string, unknown>) => Promise<void>;
-        _lastUpdate?: Record<string, unknown>;
+        update: (data: UpdatePayload) => Promise<void>;
+        _lastUpdate?: UpdatePayload;
     }
 
-    async function makeFakeStarship(
-        opts: { gameSystem?: string; priorTurnDamage?: { hullLoss: number; crewLoss: number; moraleLoss: number; turn: number } } = {},
-    ): Promise<
+    interface StarshipMethods {
+        applyHullDamage: (this: FakeStarship, n: number) => Promise<HullDamageDelta>;
+        cancelPriorTurnDamage: (this: FakeStarship) => Promise<RestoredDelta>;
+        replenishBetweenCombat: (this: FakeStarship) => Promise<void>;
+    }
+
+    async function makeFakeStarship(opts: { gameSystem?: string; priorTurnDamage?: PriorTurnDamage } = {}): Promise<
         | {
               fake: FakeStarship;
-              methods: {
-                  applyHullDamage: (this: FakeStarship, n: number) => Promise<unknown>;
-                  cancelPriorTurnDamage: (this: FakeStarship) => Promise<unknown>;
-                  replenishBetweenCombat: (this: FakeStarship) => Promise<unknown>;
-                  usesRTCrewEconomy: PropertyDescriptor;
-              };
+              methods: StarshipMethods & { usesRTCrewEconomy: PropertyDescriptor };
           }
         | undefined
     > {
@@ -109,12 +113,10 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         });
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when runtime unavailable
         if (mod === undefined) return undefined;
-        const proto = mod.WH40KStarship.prototype as unknown as {
-            applyHullDamage: (this: FakeStarship, n: number) => Promise<unknown>;
-            cancelPriorTurnDamage: (this: FakeStarship) => Promise<unknown>;
-            replenishBetweenCombat: (this: FakeStarship) => Promise<unknown>;
-        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: reading the document's prototype methods through a structural test interface (the class type and StarshipMethods do not overlap)
+        const proto = mod.WH40KStarship.prototype as unknown as StarshipMethods;
         const desc = Object.getOwnPropertyDescriptor(mod.WH40KStarship.prototype, 'usesRTCrewEconomy');
+        if (desc === undefined) throw new Error('usesRTCrewEconomy descriptor missing on WH40KStarship prototype');
 
         const fake: FakeStarship = {
             system: {
@@ -146,12 +148,11 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         };
         return {
             fake,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- defined on prototype by design
             methods: {
                 applyHullDamage: proto.applyHullDamage,
                 cancelPriorTurnDamage: proto.cancelPriorTurnDamage,
                 replenishBetweenCombat: proto.replenishBetweenCombat,
-                usesRTCrewEconomy: desc!,
+                usesRTCrewEconomy: desc,
             },
         };
     }
@@ -162,7 +163,7 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         if (setup === undefined) return;
         const { fake, methods } = setup;
         Object.defineProperty(fake, 'usesRTCrewEconomy', methods.usesRTCrewEconomy);
-        const delta = (await methods.applyHullDamage.call(fake, 5)) as { hullLoss: number; crewLoss: number; moraleLoss: number };
+        const delta = await methods.applyHullDamage.call(fake, 5);
         expect(delta).toEqual({ hullLoss: 5, crewLoss: 5, moraleLoss: 5 });
         expect(fake.system.hullIntegrity.value).toBe(30);
         expect(fake.system.crew.population).toBe(95);
@@ -220,11 +221,7 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis.game shim for unit test
         (globalThis as { game?: unknown }).game = stubGame;
         try {
-            const restored = (await methods.cancelPriorTurnDamage.call(fake)) as {
-                hullRestored: number;
-                crewRestored: number;
-                moraleRestored: number;
-            };
+            const restored = await methods.cancelPriorTurnDamage.call(fake);
             expect(restored).toEqual({ hullRestored: 5, crewRestored: 5, moraleRestored: 5 });
             expect(fake.system.hullIntegrity.value).toBe(35);
             expect(fake.system.crew.population).toBe(100);
@@ -245,7 +242,7 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         if (setup === undefined) return;
         const { fake, methods } = setup;
         Object.defineProperty(fake, 'usesRTCrewEconomy', methods.usesRTCrewEconomy);
-        const restored = (await methods.cancelPriorTurnDamage.call(fake)) as { hullRestored: number };
+        const restored = await methods.cancelPriorTurnDamage.call(fake);
         expect(restored.hullRestored).toBe(0);
         expect(fake._lastUpdate).toBeUndefined();
     });

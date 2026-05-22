@@ -928,9 +928,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             .join('');
 
         // Build row based on category and type
-        switch (`${category}.${type}`) {
-            case 'prerequisites.characteristics':
-                return `
+        const rowBuilders: Record<string, string> = {
+            'prerequisites.characteristics': `
                     <div class="ted-list-row">
                         <select name="prerequisites.characteristics.${index}.key">
                             <option value="">-- Select --</option>
@@ -938,24 +937,21 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </select>
                         <input type="number" name="prerequisites.characteristics.${index}.value" value="0" min="0" placeholder="Min value" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'prerequisites.skills':
-                return `
+            'prerequisites.skills': `
                     <div class="ted-list-row">
                         <input type="text" name="prerequisites.skills.${index}.name" value="" placeholder="Skill name (e.g., Dodge, Parry)" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'prerequisites.talents':
-                return `
+            'prerequisites.talents': `
                     <div class="ted-list-row">
                         <input type="text" name="prerequisites.talents.${index}.name" value="" placeholder="Talent name" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'modifiers.characteristics':
-                return `
+            'modifiers.characteristics': `
                     <div class="ted-list-row">
                         <select name="modifiers.characteristics.${index}.key">
                             <option value="">-- Select --</option>
@@ -963,10 +959,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </select>
                         <input type="number" name="modifiers.characteristics.${index}.value" value="0" placeholder="+/-" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'modifiers.skills':
-                return `
+            'modifiers.skills': `
                     <div class="ted-list-row">
                         <select name="modifiers.skills.${index}.key">
                             <option value="">-- Select --</option>
@@ -974,10 +969,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </select>
                         <input type="number" name="modifiers.skills.${index}.value" value="0" placeholder="+/-" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'modifiers.combat':
-                return `
+            'modifiers.combat': `
                     <div class="ted-list-row">
                         <select name="modifiers.combat.${index}.key">
                             <option value="">-- Select --</option>
@@ -985,10 +979,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </select>
                         <input type="number" name="modifiers.combat.${index}.value" value="0" placeholder="+/-" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'modifiers.resources':
-                return `
+            'modifiers.resources': `
                     <div class="ted-list-row">
                         <select name="modifiers.resources.${index}.key">
                             <option value="">-- Select --</option>
@@ -996,10 +989,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                         </select>
                         <input type="number" name="modifiers.resources.${index}.value" value="0" placeholder="+/-" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'modifiers.other':
-                return `
+            'modifiers.other': `
                     <div class="ted-list-row ted-list-row--wide">
                         <input type="text" name="modifiers.other.${index}.key" value="" placeholder="Key (e.g., movement)" />
                         <input type="text" name="modifiers.other.${index}.label" value="" placeholder="Label" />
@@ -1010,10 +1002,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                             <option value="override">Override</option>
                         </select>
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'situational.characteristics':
-                return `
+            'situational.characteristics': `
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
                             <select name="situational.characteristics.${index}.key">
@@ -1024,10 +1015,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                             <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                         </div>
                         <textarea name="situational.characteristics.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When fighting in melee combat')"></textarea>
-                    </div>`;
+                    </div>`,
 
-            case 'situational.skills':
-                return `
+            'situational.skills': `
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
                             <select name="situational.skills.${index}.key">
@@ -1038,10 +1028,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                             <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                         </div>
                         <textarea name="situational.skills.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When performing acrobatic maneuvers')"></textarea>
-                    </div>`;
+                    </div>`,
 
-            case 'situational.combat':
-                return `
+            'situational.combat': `
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
                             <select name="situational.combat.${index}.key">
@@ -1052,10 +1041,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                             <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                         </div>
                         <textarea name="situational.combat.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When attacking from surprise')"></textarea>
-                    </div>`;
+                    </div>`,
 
-            case 'grants.skills':
-                return `
+            'grants.skills': `
                     <div class="ted-list-row ted-list-row--wide">
                         <input type="text" name="grants.skills.${index}.name" value="" placeholder="Skill name" />
                         <input type="text" name="grants.skills.${index}.specialization" value="" placeholder="Specialization (optional)" />
@@ -1063,37 +1051,33 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                             ${trainingOptions}
                         </select>
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'grants.talents':
-                return `
+            'grants.talents': `
                     <div class="ted-list-row ted-list-row--wide">
                         <input type="text" name="grants.talents.${index}.name" value="" placeholder="Talent name" />
                         <input type="text" name="grants.talents.${index}.specialization" value="" placeholder="Specialization (optional)" />
                         <input type="text" name="grants.talents.${index}.uuid" value="" placeholder="UUID (optional)" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'grants.traits':
-                return `
+            'grants.traits': `
                     <div class="ted-list-row ted-list-row--wide">
                         <input type="text" name="grants.traits.${index}.name" value="" placeholder="Trait name" />
                         <input type="number" name="grants.traits.${index}.level" value="" placeholder="Level (optional)" />
                         <input type="text" name="grants.traits.${index}.uuid" value="" placeholder="UUID (optional)" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
 
-            case 'grants.specialAbilities':
-                return `
+            'grants.specialAbilities': `
                     <div class="ted-list-row ted-list-row--column">
                         <input type="text" name="grants.specialAbilities.${index}.name" value="" placeholder="Ability name" />
                         <textarea name="grants.specialAbilities.${index}.description" rows="2" placeholder="Description"></textarea>
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                    </div>`,
+        };
 
-            default:
-                return null;
-        }
+        return rowBuilders[`${category}.${type}`] ?? null;
     }
 
     /**

@@ -542,84 +542,44 @@ export class Hit {
         }
 
         for (const special of attackData.rollData.attackSpecials) {
-            switch (special.name.toLowerCase()) {
-                case 'blast':
-                    this.addEffect(special.name, `Everyone within ${special.level ?? 0}m of the location is hit!`);
-                    break;
-                case 'concussive':
-                    this.addEffect(
-                        special.name,
-                        `Target must pass Toughness test with ${
-                            (special.level ?? 0) * -10
-                        } or be Stunned for 1 round per DoF. If the attack did more damage than the targets Strength Bonus, it is knocked Prone!`,
-                    );
-                    break;
-                case 'corrosive':
-                    this.addEffect(
-                        special.name,
-                        `The targets armor melts with [[1d10]] of armour being destroyed! Additional damage is dealt as wounds and not reduced by toughness.`,
-                    );
-                    break;
-                case 'crippling':
-                    this.addEffect(
-                        special.name,
-                        `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${
-                            special.level ?? 0
-                        } damage not reduced by Armour or Toughness!`,
-                    );
-                    break;
-                case 'felling':
-                    this.addEffect(special.name, `The targets unnatural toughness is reduced by ${special.level ?? 0} while calculating wounds!`);
-                    break;
-                case 'flame':
-                    this.addEffect(special.name, `The target must make an Agility test or be set on fire!`);
-                    break;
-                case 'graviton':
-                    this.addEffect(special.name, `This attack deals additional damage equal to the targets Armour points on the struck location!`);
-                    break;
-                case 'hallucinogenic':
-                    this.addEffect(
-                        special.name,
-                        `A creature stuck by this much make a toughness test with ${(special.level ?? 0) * -10} or suffer a delusion!`,
-                    );
-                    break;
-                case 'haywire':
-                    this.addEffect(special.name, `Everything within ${(special.level ?? 0) * -10}m suffers the Haywire Field at strength [[1d10]]!`);
-                    break;
-                case 'indirect': {
+            const level = special.level ?? 0;
+            const effectBuilders: Record<string, () => string> = {
+                blast: () => `Everyone within ${level}m of the location is hit!`,
+                concussive: () =>
+                    `Target must pass Toughness test with ${
+                        level * -10
+                    } or be Stunned for 1 round per DoF. If the attack did more damage than the targets Strength Bonus, it is knocked Prone!`,
+                corrosive: () =>
+                    `The targets armor melts with [[1d10]] of armour being destroyed! Additional damage is dealt as wounds and not reduced by toughness.`,
+                crippling: () =>
+                    `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${level} damage not reduced by Armour or Toughness!`,
+                felling: () => `The targets unnatural toughness is reduced by ${level} while calculating wounds!`,
+                flame: () => `The target must make an Agility test or be set on fire!`,
+                graviton: () => `This attack deals additional damage equal to the targets Armour points on the struck location!`,
+                hallucinogenic: () => `A creature stuck by this much make a toughness test with ${level * -10} or suffer a delusion!`,
+                haywire: () => `Everything within ${level * -10}m suffers the Haywire Field at strength [[1d10]]!`,
+                indirect: () => {
                     const bs = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
-                    this.addEffect(special.name, `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!`);
-                    break;
-                }
-                case 'shocking':
-                    this.addEffect(
-                        special.name,
-                        `Target must pass a Challenging (+0) Toughness test. If he fails, he suffers 1 level of Fatigue and is Stunned for a number of rounds equal to half of his degrees of failure (rounding up).`,
-                    );
-                    break;
-                case 'snare':
-                    this.addEffect(
-                        special.name,
-                        `Target must pass Agility test with ${
-                            (special.level ?? 0) * -10
-                        } or become immobilised. An immobilised target can attempt no actions other than trying to escape. As a Full Action, they can make a Strength or Agility test with ${
-                            (special.level ?? 0) * -10
-                        } to burst free or wriggle out.`,
-                    );
-                    break;
-                case 'toxic': {
+                    return `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!`;
+                },
+                shocking: () =>
+                    `Target must pass a Challenging (+0) Toughness test. If he fails, he suffers 1 level of Fatigue and is Stunned for a number of rounds equal to half of his degrees of failure (rounding up).`,
+                snare: () =>
+                    `Target must pass Agility test with ${
+                        level * -10
+                    } or become immobilised. An immobilised target can attempt no actions other than trying to escape. As a Full Action, they can make a Strength or Agility test with ${
+                        level * -10
+                    } to burst free or wriggle out.`,
+                toxic: () => {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: system.damageType may be undefined on legacy/minimal items; fallback required
                     const toxicDamageType = actionItem.system.damageType ?? 'Impact';
-                    this.addEffect(
-                        special.name,
-                        `Target must pass Toughness test with ${(special.level ?? 0) * -10} or suffer [[1d10]] ${toxicDamageType} damage.`,
-                    );
-                    break;
-                }
-                case 'warp':
-                    this.addEffect(special.name, `Ignores mundane armor and cover! Holy armor negates this.`);
-                    break;
-            }
+                    return `Target must pass Toughness test with ${level * -10} or suffer [[1d10]] ${toxicDamageType} damage.`;
+                },
+                warp: () => `Ignores mundane armor and cover! Holy armor negates this.`,
+            };
+            const builder = effectBuilders[special.name.toLowerCase()];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json (strict) types this access as `(() => string) | undefined` and requires the guard; ESLint reads tsconfig.test.json where the flag is off
+            if (builder !== undefined) this.addEffect(special.name, builder());
         }
     }
 

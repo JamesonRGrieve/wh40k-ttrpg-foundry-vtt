@@ -142,11 +142,23 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
             let dialogResults: DialogProbeResult[] = [];
             try {
                 dialogResults = await page.evaluate(
-                    async ({ probes }) => {
-                        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side: Foundry globals are runtime-only */
+                    async ({ probes }): Promise<DialogProbeResult[]> => {
+                        // Runtime-only Foundry ApplicationV2 dialog shapes. The dynamic import
+                        // resolves to a module whose default/named export is a constructor; the
+                        // instance exposes render() and an element. Typed minimally so the probe
+                        // loop stays free of `any` while remaining tolerant of missing members.
+                        interface DialogInstance {
+                            render?: (opts: { force: boolean }) => Promise<void>;
+                            element?: HTMLElement;
+                        }
+                        type DialogConstructor = (new (arg?: object) => DialogInstance) & { open?: () => Promise<void> };
+                        interface DialogModule {
+                            default?: DialogConstructor;
+                            [name: string]: DialogConstructor | undefined;
+                        }
                         // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func -- browser-side: Playwright evaluate context requires Function constructor to perform dynamic import; static import() is hoisted and cannot be used here
-                        const importer = new Function('u', 'return import(u)') as (u: string) => Promise<any>;
-                        const out: Array<{ name: string; ok: boolean; elementSelector: string | null; error: string | null }> = [];
+                        const importer = new Function('u', 'return import(u)') as (u: string) => Promise<DialogModule>;
+                        const out: DialogProbeResult[] = [];
                         for (const probe of probes) {
                             let ok = false;
                             let elementSelector: string | null = null;
@@ -177,7 +189,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                                         ok = error === null;
                                     }
                                 } else {
-                                    let inst: any;
+                                    let inst: DialogInstance | undefined;
                                     try {
                                         inst = new Cls({});
                                     } catch {
@@ -210,7 +222,6 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                             out.push({ name: probe.name, ok, elementSelector, error });
                         }
                         return out;
-                        /* eslint-enable @typescript-eslint/no-explicit-any */
                     },
                     { probes: probeManifest },
                 );
@@ -235,7 +246,8 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                         }
                         el.remove();
                     });
-                    const g = globalThis as unknown as { ui?: { windows?: Record<string, { close?: () => Promise<unknown> }> } };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side Foundry `globalThis.ui` is runtime-only with no shipped type in this jsdom-free Playwright context
+                    const g = globalThis as unknown as { ui?: { windows?: Record<string, { close?: () => Promise<void> }> } };
                     Object.values(g.ui?.windows ?? {}).forEach((w) => {
                         try {
                             void w.close?.();
@@ -254,7 +266,8 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                 let postError: string | null = null;
                 let createdId: string | null = null;
                 try {
-                    createdId = await page.evaluate(async (template: string) => {
+                    createdId = await page.evaluate(async (template: string): Promise<string | null> => {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side Foundry `globalThis.foundry`/`globalThis.ChatMessage` are runtime-only with no shipped type in this Playwright context
                         const g = globalThis as unknown as {
                             foundry?: { applications?: { handlebars?: { renderTemplate?: (p: string, ctx: object) => Promise<string> } } };
                             ChatMessage?: { create?: (data: object) => Promise<{ id?: string } | null> };
@@ -283,9 +296,10 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                 recordCoverage('screenshot.dialog-chat.flow', `chat::${tpl}`);
                 // Tear the message down so the chat log doesn't grow unbounded.
                 if (createdId !== null) {
-                    await page.evaluate(async (id: string) => {
+                    await page.evaluate(async (id: string): Promise<void> => {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side Foundry `globalThis.game` is runtime-only with no shipped type in this Playwright context
                         const g = globalThis as unknown as {
-                            game?: { messages?: { get?: (i: string) => { delete?: () => Promise<unknown> } | undefined } };
+                            game?: { messages?: { get?: (i: string) => { delete?: () => Promise<void> } | undefined } };
                         };
                         try {
                             await g.game?.messages?.get?.(id)?.delete?.();

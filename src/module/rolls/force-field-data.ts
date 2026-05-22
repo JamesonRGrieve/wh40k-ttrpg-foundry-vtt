@@ -27,16 +27,12 @@ export class ForceFieldData {
     }
 
     craftsmanshipToOverload(craftsmanship: string): number {
-        switch (craftsmanship) {
-            case 'Poor':
-                return 15;
-            case 'Common':
-                return 10;
-            case 'Good':
-                return 5;
-            default:
-                return 1;
-        }
+        const overloadByCraftsmanship: Record<string, number> = {
+            Poor: 15,
+            Common: 10,
+            Good: 5,
+        };
+        return overloadByCraftsmanship[craftsmanship] ?? 1;
     }
 
     async finalize(): Promise<void> {
