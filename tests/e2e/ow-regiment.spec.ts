@@ -3,6 +3,39 @@ import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
+interface OwRegimentProbeResult {
+    error: string | null;
+    rendered: boolean;
+    hasBudget: boolean;
+    hasKit: boolean;
+    hasEditBtn: boolean;
+    categoryCount: number;
+}
+
+interface OwActorSheet {
+    render?: (force?: boolean) => Promise<void>;
+    element?: HTMLElement | null;
+    close?: () => Promise<void>;
+}
+
+interface OwActorDocument {
+    id?: string;
+    sheet?: OwActorSheet;
+    delete?: () => Promise<void>;
+}
+
+interface OwActorClass {
+    create?: (data: object) => Promise<OwActorDocument | null>;
+}
+
+interface OwActorGlobal {
+    Actor?: OwActorClass;
+}
+
+interface OwRegimentActorGlobal {
+    __owRegimentActor?: OwActorDocument;
+}
+
 /**
  * Tier B coverage of the OW Regiment Creation panel (#151).
  *
@@ -23,19 +56,9 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const ActorCls = (
-                    globalThis as unknown as {
-                        Actor?: {
-                            create?: (data: object) => Promise<{
-                                id?: string;
-                                sheet?: { render?: (force?: boolean) => Promise<unknown>; element?: HTMLElement | null };
-                                delete?: () => Promise<unknown>;
-                            } | null>;
-                        };
-                    }
-                ).Actor;
+            const result = await page.evaluate(async (): Promise<OwRegimentProbeResult> => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Actor global is runtime-only, no shipped types
+                const ActorCls = (globalThis as unknown as OwActorGlobal).Actor;
                 if (!ActorCls?.create) {
                     return { error: 'Actor.create not available', rendered: false, hasBudget: false, hasKit: false, hasEditBtn: false, categoryCount: 0 };
                 }
@@ -75,27 +98,27 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
                             categoryCount = panel.querySelectorAll('.wh40k-ow-regiment-category').length;
                         }
                     }
-                    (globalThis as any).__owRegimentActor = actor;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globalThis handle is runtime-only, no shipped types
+                    (globalThis as unknown as OwRegimentActorGlobal).__owRegimentActor = actor;
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
                 return { error, rendered, hasBudget, hasKit, hasEditBtn, categoryCount };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'ow-regiment-panel');
 
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const a = (globalThis as any).__owRegimentActor;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globalThis handle is runtime-only, no shipped types
+                const g = globalThis as unknown as OwRegimentActorGlobal;
+                const a = g.__owRegimentActor;
                 try {
                     await a?.sheet?.close?.();
                     await a?.delete?.();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__owRegimentActor = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__owRegimentActor = undefined;
             });
 
             // The panel only renders once the orchestrator merges the manifest;

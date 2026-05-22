@@ -20,6 +20,35 @@ interface ActorTypeProbe {
     pageErrors: string[];
 }
 
+interface ProbeActorResult {
+    docId: string | null;
+    sheetRendered: boolean;
+    createError: string | null;
+}
+
+interface BrowserActorSheet {
+    render?: (force?: boolean) => Promise<void>;
+    close?: () => Promise<void>;
+}
+
+interface BrowserActorDocument {
+    id?: string;
+    sheet?: BrowserActorSheet;
+    delete?: () => Promise<void>;
+}
+
+interface BrowserActorClass {
+    create?: (data: object) => Promise<BrowserActorDocument | null>;
+}
+
+interface ActorProbeGlobal {
+    Actor?: BrowserActorClass;
+}
+
+interface ActorConfigGlobal {
+    CONFIG?: { Actor?: { dataModels?: Record<string, object> } };
+}
+
 async function probeActorType(page: Page, type: string, gameSystem: string): Promise<ActorTypeProbe> {
     const errors: string[] = [];
     const listener = (err: Error): void => {
@@ -28,19 +57,12 @@ async function probeActorType(page: Page, type: string, gameSystem: string): Pro
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(
-            async ({ actorType, actorGameSystem }) => {
-                const browserCtx = globalThis as unknown as {
-                    Actor?: {
-                        create?: (data: object) => Promise<{
-                            id?: string;
-                            sheet?: { render?: (force?: boolean) => Promise<unknown>; close?: () => Promise<unknown> };
-                            delete?: () => Promise<unknown>;
-                        } | null>;
-                    };
-                };
+            async ({ actorType, actorGameSystem }): Promise<ProbeActorResult> => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Actor global is runtime-only, no shipped types
+                const browserCtx = globalThis as unknown as ActorProbeGlobal;
                 const ActorClass = browserCtx.Actor;
                 if (!ActorClass?.create) return { docId: null, sheetRendered: false, createError: 'Actor.create unavailable' };
-                let actor;
+                let actor: BrowserActorDocument | null;
                 try {
                     actor = await ActorClass.create({
                         name: `probe-${actorType}-${actorGameSystem}`,
@@ -48,7 +70,7 @@ async function probeActorType(page: Page, type: string, gameSystem: string): Pro
                         system: { gameSystem: actorGameSystem },
                     });
                 } catch (err) {
-                    return { docId: null, sheetRendered: false, createError: String(err instanceof Error ? err.message : String(err)) };
+                    return { docId: null, sheetRendered: false, createError: err instanceof Error ? err.message : String(err) };
                 }
                 if (!actor) return { docId: null, sheetRendered: false, createError: 'Actor.create returned null (silent failure)' };
                 let sheetRendered = false;
@@ -71,7 +93,8 @@ async function probeActorType(page: Page, type: string, gameSystem: string): Pro
 
 async function listActorTypes(page: Page): Promise<string[]> {
     return page.evaluate(() => {
-        const cfg = (globalThis as unknown as { CONFIG?: { Actor?: { dataModels?: Record<string, unknown> } } }).CONFIG;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side CONFIG global is runtime-only, no shipped types
+        const cfg = (globalThis as unknown as ActorConfigGlobal).CONFIG;
         return Object.keys(cfg?.Actor?.dataModels ?? {}).filter((t) => t !== 'base');
     });
 }
@@ -120,12 +143,15 @@ test.describe.serial('actor types × systems (Tier B)', () => {
             test.skip(actorTypes.length === 0, `no <${SYSTEM_PREFIX[gameSystem]}-*> actor types declared`);
             const failures: string[] = [];
             for (const type of actorTypes) {
-                const probe = await probeActorType(page, type, gameSystem).catch((err: unknown) => ({
-                    type,
-                    docId: null,
-                    sheetRendered: false,
-                    pageErrors: [String(err instanceof Error ? err.message : String(err))],
-                }));
+                const probe = await probeActorType(page, type, gameSystem).catch(
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: promise rejection value is typed unknown, narrowed by the instanceof guard below
+                    (err: unknown): ActorTypeProbe => ({
+                        type,
+                        docId: null,
+                        sheetRendered: false,
+                        pageErrors: [err instanceof Error ? err.message : String(err)],
+                    }),
+                );
                 if (probe.docId === null) {
                     const reason = probe.pageErrors[0] ?? 'Actor.create returned null';
                     failures.push(`${type}: ${reason}`);

@@ -3,6 +3,24 @@ import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
+interface MutationDialogProbeResult {
+    rendered: boolean;
+    hasMinorBtn: boolean;
+    hasMajorBtn: boolean;
+    hasRollBtn: boolean;
+    error: string | null;
+}
+
+interface MutationDialogInstance {
+    render: (force?: boolean) => Promise<void>;
+    element: HTMLElement | null;
+    close: () => Promise<void>;
+}
+
+interface MutationDialogModule {
+    default: new (opts?: { track?: string }) => MutationDialogInstance;
+}
+
 /**
  * Tier B coverage of the Mutation Roll Dialog (GitHub #117).
  *
@@ -23,8 +41,10 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+            const result = await page.evaluate(async (): Promise<MutationDialogProbeResult> => {
+                interface C9DialogGlobal {
+                    __c9dialog?: MutationDialogInstance;
+                }
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/mutation-roll-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -33,10 +53,8 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
                 let hasRollBtn = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts?: unknown): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    const mod = (await import(moduleUrl)) as MutationDialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return { rendered, hasMinorBtn, hasMajorBtn, hasRollBtn, error: 'default export not a constructor' };
                     }
@@ -47,7 +65,7 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
                             setTimeout(r, 60);
                         });
                     } catch (err) {
-                        error = (err as Error).message;
+                        error = err instanceof Error ? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -58,13 +76,13 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
                     // Keep the dialog open and on a handle so snap() (called
                     // outside this evaluate) captures the live DOM. Closing
                     // here would leave the screenshot empty.
-                    (globalThis as any).__c9dialog = inst;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globalThis handle is runtime-only, no shipped types
+                    (globalThis as unknown as C9DialogGlobal).__c9dialog = inst;
                 } catch (err) {
-                    error = (err as Error).message;
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return { rendered, hasMinorBtn, hasMajorBtn, hasRollBtn, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'mutation-roll-dialog');
@@ -72,15 +90,18 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
             // Dialog captured; tear it down so it doesn't leak into the
             // next serial test's DOM.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const d = (globalThis as any).__c9dialog;
+                interface C9DialogGlobal {
+                    __c9dialog?: MutationDialogInstance;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globalThis handle is runtime-only, no shipped types
+                const g = globalThis as unknown as C9DialogGlobal;
+                const d = g.__c9dialog;
                 try {
-                    await d?.close?.();
+                    await d?.close();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__c9dialog = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__c9dialog = undefined;
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();

@@ -3,6 +3,23 @@ import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
+interface MedicaeDialogProbeResult {
+    rendered: boolean;
+    hasStaunchButton: boolean;
+    hasCancelButton: boolean;
+    error: string | null;
+}
+
+interface MedicaeDialogInstance {
+    render: (opts?: { force?: boolean }) => Promise<void>;
+    element: HTMLElement | null;
+    close: () => Promise<void>;
+}
+
+interface MedicaeDialogModule {
+    default: new (opts?: object) => MedicaeDialogInstance;
+}
+
 /**
  * Tier B coverage of the Medicae Mechadendrite Half-Action dialog
  * (GitHub #104, errata p. 183).
@@ -24,8 +41,10 @@ test.describe.serial('MedicaeMechadendriteDialog (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+            const result = await page.evaluate(async (): Promise<MedicaeDialogProbeResult> => {
+                interface C9DialogGlobal {
+                    __c9dialog?: MedicaeDialogInstance;
+                }
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/medicae-mechadendrite-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -33,10 +52,8 @@ test.describe.serial('MedicaeMechadendriteDialog (Tier B)', () => {
                 let hasCancelButton = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts?: unknown): { render: (opts?: unknown) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    const mod = (await import(moduleUrl)) as MedicaeDialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return {
                             rendered,
@@ -52,7 +69,7 @@ test.describe.serial('MedicaeMechadendriteDialog (Tier B)', () => {
                             setTimeout(r, 80);
                         });
                     } catch (err) {
-                        error = String(err instanceof Error ? err.message : String(err));
+                        error = err instanceof Error ? err.message : String(err);
                     }
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element) {
@@ -63,9 +80,10 @@ test.describe.serial('MedicaeMechadendriteDialog (Tier B)', () => {
                     // Keep the dialog open and on a handle so snap() (called
                     // outside this evaluate) captures the live DOM. Closing
                     // here would leave the screenshot empty.
-                    (globalThis as any).__c9dialog = inst;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globalThis handle is runtime-only, no shipped types
+                    (globalThis as unknown as C9DialogGlobal).__c9dialog = inst;
                 } catch (err) {
-                    error = String(err instanceof Error ? err.message : String(err));
+                    error = err instanceof Error ? err.message : String(err);
                 }
 
                 return {
@@ -74,7 +92,6 @@ test.describe.serial('MedicaeMechadendriteDialog (Tier B)', () => {
                     hasCancelButton,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             await snap(page, 'medicae-mechadendrite-dialog');
@@ -82,15 +99,18 @@ test.describe.serial('MedicaeMechadendriteDialog (Tier B)', () => {
             // Dialog captured; tear it down so it doesn't leak into the
             // next serial test's DOM.
             await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const d = (globalThis as any).__c9dialog;
+                interface C9DialogGlobal {
+                    __c9dialog?: MedicaeDialogInstance;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globalThis handle is runtime-only, no shipped types
+                const g = globalThis as unknown as C9DialogGlobal;
+                const d = g.__c9dialog;
                 try {
-                    await d?.close?.();
+                    await d?.close();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__c9dialog = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__c9dialog = undefined;
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();

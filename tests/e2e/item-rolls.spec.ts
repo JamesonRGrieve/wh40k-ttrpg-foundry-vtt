@@ -17,10 +17,20 @@ import { expect, test } from './lib/test';
  * Failures accumulate so one broken method doesn't mask another.
  */
 
+/**
+ * Minimum embedded-item `system` payload to push a roll method onto its
+ * happy branch. Only `rollTalent` needs a populated shape; the other three
+ * accept an empty object. Typed as a partial of the only field we set so the
+ * construction data isn't an opaque `Record`.
+ */
+interface ItemRollSystem {
+    rollConfig?: { characteristic: string; modifier: number; description: string };
+}
+
 interface ItemRollSpec {
     method: 'rollTalent' | 'rollNavigatorPower' | 'rollOrder' | 'rollRitual';
     itemType: string;
-    itemSystem: Record<string, unknown>;
+    itemSystem: ItemRollSystem;
 }
 
 const ITEM_ROLL_SPECS: ReadonlyArray<ItemRollSpec> = [
@@ -65,27 +75,35 @@ async function probeItemRoll(page: Page, outerActorId: string, spec: ItemRollSpe
     try {
         const result = await page.evaluate(
             async ({ actorId, itemType, itemSystem, method }) => {
-                const g = globalThis as unknown as {
+                // Roll methods resolve to a ChatMessage (or null on a bailout
+                // branch); the probe only checks truthiness, so model the
+                // result as an opaque object the caller null-checks.
+                type RollMethod = () => Promise<object | null>;
+                interface EmbeddedItem {
+                    delete?: () => Promise<void>;
+                    rollTalent?: RollMethod;
+                    rollNavigatorPower?: RollMethod;
+                    rollOrder?: RollMethod;
+                    rollRitual?: RollMethod;
+                }
+                interface ParentActor {
+                    createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<EmbeddedItem | undefined>>;
+                }
+                interface ProbeGlobal {
                     game?: {
-                        actors?: { get?: (id: string) => unknown };
+                        actors?: { get?: (id: string) => ParentActor | undefined };
                         messages?: { size?: number };
                     };
-                };
-                const actor = g.game?.actors?.get?.(actorId) as
-                    | {
-                          createEmbeddedDocuments?: (
-                              kind: string,
-                              data: object[],
-                          ) => Promise<Array<{ id?: string; delete?: () => Promise<unknown> } | undefined>>;
-                          items?: { get?: (id: string) => unknown };
-                      }
-                    | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const g = globalThis as unknown as ProbeGlobal;
+                const actor = g.game?.actors?.get?.(actorId);
                 if (!actor?.createEmbeddedDocuments) {
                     return { chatDelta: 0, returned: 'falsy' as const, error: 'actor or createEmbeddedDocuments unavailable' };
                 }
                 const created = await actor.createEmbeddedDocuments('Item', [{ name: `probe-${itemType}`, type: itemType, system: itemSystem }]);
-                const item = created?.[0];
-                if (!item) {
+                const item = created[0];
+                if (item === undefined) {
                     return { chatDelta: 0, returned: 'falsy' as const, error: 'createEmbeddedDocuments returned no item' };
                 }
                 const before = g.game?.messages?.size ?? 0;
@@ -101,7 +119,7 @@ async function probeItemRoll(page: Page, outerActorId: string, spec: ItemRollSpe
                     returnedKind = ret != null ? 'truthy' : 'falsy';
                 } catch (rollErr) {
                     returnedKind = 'threw';
-                    error = String((rollErr as Error).message);
+                    error = rollErr instanceof Error ? rollErr.message : String(rollErr);
                 }
                 const after = g.game?.messages?.size ?? 0;
                 await item.delete?.();
@@ -128,9 +146,11 @@ test.describe.serial('item roll methods (Tier B)', () => {
 
         // Create parent actor (dh2-character has characteristics).
         const actorId = await page.evaluate(async () => {
-            const { Actor: ActorCtor } = globalThis as unknown as {
+            interface ActorGlobal {
                 Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-            };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+            const { Actor: ActorCtor } = globalThis as unknown as ActorGlobal;
             if (!ActorCtor?.create) return null;
             const actor = await ActorCtor.create({
                 name: 'e2e-item-rolls-parent',
@@ -145,13 +165,17 @@ test.describe.serial('item roll methods (Tier B)', () => {
         const failures: string[] = [];
         try {
             for (const spec of ITEM_ROLL_SPECS) {
-                const probe = await probeItemRoll(page, actorId, spec).catch((caughtErr: unknown) => ({
-                    method: spec.method,
-                    chatDelta: 0,
-                    returned: 'threw' as const,
-                    pageErrors: [String((caughtErr as Error).message)],
-                    error: String((caughtErr as Error).message),
-                }));
+                // eslint-disable-next-line no-restricted-syntax -- boundary: rejection reason is unknown and narrowed via instanceof on the next line
+                const probe = await probeItemRoll(page, actorId, spec).catch((caughtErr: unknown) => {
+                    const message = caughtErr instanceof Error ? caughtErr.message : String(caughtErr);
+                    return {
+                        method: spec.method,
+                        chatDelta: 0,
+                        returned: 'threw' as const,
+                        pageErrors: [message],
+                        error: message,
+                    };
+                });
 
                 if (probe.returned === 'threw') {
                     failures.push(`${spec.method}: threw — ${probe.error ?? 'unknown'}`);
@@ -174,11 +198,13 @@ test.describe.serial('item roll methods (Tier B)', () => {
         } finally {
             // Clean up parent actor + any leftover chat messages from probes.
             await page.evaluate(async (cleanupActorId: string) => {
-                const g = globalThis as unknown as {
+                interface CleanupGlobal {
                     game?: {
-                        actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined };
+                        actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined };
                     };
-                };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const g = globalThis as unknown as CleanupGlobal;
                 const a = g.game?.actors?.get?.(cleanupActorId);
                 await a?.delete?.();
             }, actorId);
