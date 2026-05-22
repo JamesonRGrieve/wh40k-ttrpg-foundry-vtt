@@ -19,6 +19,8 @@
     "TS2545",
     "TS2552",
     "TS2571",
+    "TS2589",
+    "TS2722",
     "TS2740",
     "TS2749",
     "TS2769",
@@ -28,10 +30,7 @@
   ],
   "config": "tsconfig.test.json",
   "totals": {
-    "totalErrors": 6
+    "totalErrors": 0
   },
-  "byCode": {
-    "TS2589": 1,
-    "TS2722": 5
-  }
+  "byCode": {}
 }
