@@ -6,10 +6,42 @@ const TEMPLATE_PREFIX = 'systems/wh40k-rpg/templates/';
 const SOURCE_ROOT = '../src/templates/';
 const INIT_KEY = '__wh40kStoryHandlebarsInitialized';
 
-type LocalizationDict = Record<string, unknown>;
+/**
+ * An arbitrary value handed to a Handlebars helper by template authors. This is
+ * the genuine boundary type for this bridge: helpers receive whatever the
+ * template passes, with no schema. It is `unknown` on purpose — every consumer
+ * narrows it via the type-guards below before use.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars helpers receive arbitrary template-author values with no schema; this alias is the single boundary point and every consumer narrows it via the type-guards below.
+type HbsValue = unknown;
+
+/** A string-keyed object, the narrowed shape of an `HbsValue` that passes `asRecord`. */
+type HbsRecord = { [key: string]: HbsValue };
+
+/** Narrow an arbitrary Handlebars value to a string-keyed object, or null. */
+function asRecord(value: HbsValue): HbsRecord | null {
+    return value !== null && typeof value === 'object' ? (value as HbsRecord) : null;
+}
+
+/** Read a string-keyed property off an arbitrary Handlebars value, or undefined. */
+function getProp(value: HbsValue, key: string): HbsValue {
+    const record = asRecord(value);
+    return record === null ? undefined : record[key];
+}
+
+type LocalizationDict = HbsRecord;
+
+/**
+ * Vite's `import.meta.glob` surface. Vite injects this at build time; fvtt-types
+ * does not model it, so this is the narrow boundary shape for the eager raw glob
+ * used to register partials (returns a path → source-string map).
+ */
+interface ViteImportMeta {
+    glob: (pattern: string, opts: { query: '?raw'; import: 'default'; eager: true }) => Record<string, string>;
+}
 
 /** Safely convert an unknown value to string, returning '' for objects/functions. */
-function unknownToStr(value: unknown): string {
+function unknownToStr(value: HbsValue): string {
     if (value === null || value === undefined) return '';
     if (typeof value === 'boolean') return String(value);
     if (typeof value === 'number') return String(value);
@@ -20,10 +52,11 @@ function unknownToStr(value: unknown): string {
 
 function lookupLocalization(key: string, dict: LocalizationDict): string | null {
     const segments = key.split('.');
-    let cursor: unknown = dict;
+    let cursor: HbsValue = dict;
     for (const segment of segments) {
-        if (cursor !== null && cursor !== undefined && typeof cursor === 'object' && segment in cursor) {
-            cursor = (cursor as Record<string, unknown>)[segment];
+        const record = asRecord(cursor);
+        if (record !== null && segment in record) {
+            cursor = record[segment];
         } else {
             return null;
         }
@@ -31,44 +64,46 @@ function lookupLocalization(key: string, dict: LocalizationDict): string | null 
     return typeof cursor === 'string' ? cursor : null;
 }
 
-function applySubstitutions(value: string, data: Record<string, unknown>): string {
-    return value.replace(/\{(\w+)\}/g, (_, name) => {
-        const replacement = data[name];
-        return unknownToStr(replacement);
+function applySubstitutions(value: string, data: HbsRecord): string {
+    return value.replace(/\{(\w+)\}/g, (_match: string, name: string) => {
+        return unknownToStr(data[name]);
     });
 }
 
-function asArray(value: unknown): unknown[] {
+function asArray(value: HbsValue): HbsValue[] {
     if (Array.isArray(value)) return value;
-    if (value instanceof Set) return Array.from(value);
-    if (value !== null && value !== undefined && typeof value === 'object' && Array.isArray((value as { values?: unknown[] }).values)) {
-        return (value as { values: unknown[] }).values;
+    if (value instanceof Set) return Array.from(value) as HbsValue[];
+    const record = asRecord(value);
+    if (record !== null && Array.isArray(record['values'])) {
+        return record['values'];
     }
     return [];
 }
 
-function normalizeSelectOptions(options: unknown): Array<{ value: string; label: string }> {
+function normalizeSelectOptions(options: HbsValue): Array<{ value: string; label: string }> {
     if (Array.isArray(options)) {
-        return options.map((entry) => {
+        return options.map((entry: HbsValue) => {
             if (typeof entry === 'string' || typeof entry === 'number') {
                 return { value: String(entry), label: String(entry) };
             }
-            const record = entry as Record<string, unknown>;
+            const record = asRecord(entry);
+            if (record === null) return { value: '', label: '' };
             return {
-                value: unknownToStr(record.value ?? record.id ?? record.key ?? ''),
-                label: unknownToStr(record.label ?? record.name ?? record.value ?? record.id ?? ''),
+                value: unknownToStr(record['value'] ?? record['id'] ?? record['key'] ?? ''),
+                label: unknownToStr(record['label'] ?? record['name'] ?? record['value'] ?? record['id'] ?? ''),
             };
         });
     }
 
-    if (options === null || options === undefined || typeof options !== 'object') return [];
+    const optionsRecord = asRecord(options);
+    if (optionsRecord === null) return [];
 
-    return Object.entries(options as Record<string, unknown>).map(([key, value]) => {
-        if (value !== null && value !== undefined && typeof value === 'object') {
-            const record = value as Record<string, unknown>;
+    return Object.entries(optionsRecord).map(([key, value]) => {
+        const record = asRecord(value);
+        if (record !== null) {
             return {
                 value: key,
-                label: unknownToStr(record.label ?? record.name ?? key),
+                label: unknownToStr(record['label'] ?? record['name'] ?? key),
             };
         }
 
@@ -76,7 +111,7 @@ function normalizeSelectOptions(options: unknown): Array<{ value: string; label:
     });
 }
 
-function buildOptionTag(option: { value: string; label: string }, selected: unknown, extraAttributes: Record<string, unknown>): string {
+function buildOptionTag(option: { value: string; label: string }, selected: HbsValue, extraAttributes: HbsRecord): string {
     const attrs = Object.entries(extraAttributes)
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
         .map(([key, value]) => ` ${key}="${HandlebarsLib.escapeExpression(String(value))}"`)
@@ -90,9 +125,9 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
     const globalState = globalThis as typeof globalThis & { [INIT_KEY]?: boolean };
     if (globalState[INIT_KEY] === true) return HandlebarsLib;
 
-    HandlebarsLib.registerHelper('join', (arr: unknown, sep: string) => asArray(arr).join(typeof sep === 'string' ? sep : ', '));
-    HandlebarsLib.registerHelper('eq', (a: unknown, b: unknown) => a === b);
-    HandlebarsLib.registerHelper('ne', (a: unknown, b: unknown) => a !== b);
+    HandlebarsLib.registerHelper('join', (arr: HbsValue, sep: string) => asArray(arr).join(typeof sep === 'string' ? sep : ', '));
+    HandlebarsLib.registerHelper('eq', (a: HbsValue, b: HbsValue) => a === b);
+    HandlebarsLib.registerHelper('ne', (a: HbsValue, b: HbsValue) => a !== b);
     HandlebarsLib.registerHelper('gt', (a: number, b: number) => Number(a) > Number(b));
     HandlebarsLib.registerHelper('lt', (a: number, b: number) => Number(a) < Number(b));
     HandlebarsLib.registerHelper('gte', (a: number, b: number) => Number(a) >= Number(b));
@@ -101,57 +136,57 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         const denom = Number(b);
         return denom === 0 ? 0 : Number(a) / denom;
     });
-    HandlebarsLib.registerHelper('concat', (...args: unknown[]) => {
+    HandlebarsLib.registerHelper('concat', (...args: HbsValue[]) => {
         args.pop();
         return args.join('');
     });
     HandlebarsLib.registerHelper('isExpanded', () => false);
-    HandlebarsLib.registerHelper('hideIfNot', (check: unknown) => {
+    HandlebarsLib.registerHelper('hideIfNot', (check: HbsValue) => {
         const b = Boolean(check);
         return b ? '' : new HandlebarsLib.SafeString('style="display:none;"');
     });
-    HandlebarsLib.registerHelper('defaultVal', (value: unknown, fallback: unknown) => (value != null && value !== false && value !== '' ? value : fallback));
-    HandlebarsLib.registerHelper('and', (...args: unknown[]) => {
+    HandlebarsLib.registerHelper('defaultVal', (value: HbsValue, fallback: HbsValue) => (value != null && value !== false && value !== '' ? value : fallback));
+    HandlebarsLib.registerHelper('and', (...args: HbsValue[]) => {
         args.pop();
         return args.every(Boolean);
     });
-    HandlebarsLib.registerHelper('or', (...args: unknown[]) => {
+    HandlebarsLib.registerHelper('or', (...args: HbsValue[]) => {
         args.pop();
         return args.find(Boolean) ?? args[args.length - 1] ?? '';
     });
-    HandlebarsLib.registerHelper('add', (...args: unknown[]) => {
+    HandlebarsLib.registerHelper('add', (...args: HbsValue[]) => {
         args.pop();
         return args.reduce<number>((sum, value) => sum + Number(value ?? 0), 0);
     });
-    HandlebarsLib.registerHelper('multiply', (a: unknown, b: unknown) => Number(a ?? 0) * Number(b ?? 0));
-    HandlebarsLib.registerHelper('inc', (value: unknown) => Number(value) + 1);
-    HandlebarsLib.registerHelper('iff', (cond: unknown, ifTrue: unknown, ifFalse: unknown) => {
+    HandlebarsLib.registerHelper('multiply', (a: HbsValue, b: HbsValue) => Number(a ?? 0) * Number(b ?? 0));
+    HandlebarsLib.registerHelper('inc', (value: HbsValue) => Number(value) + 1);
+    HandlebarsLib.registerHelper('iff', (cond: HbsValue, ifTrue: HbsValue, ifFalse: HbsValue) => {
         const b = Boolean(cond);
         return b ? ifTrue : ifFalse ?? '';
     });
-    HandlebarsLib.registerHelper('object', (options: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('object', (options: { hash?: HbsRecord }) => {
         return options.hash ?? {};
     });
-    HandlebarsLib.registerHelper('array', (...args: unknown[]) => args.slice(0, -1));
-    HandlebarsLib.registerHelper('checked', (value: unknown) => {
+    HandlebarsLib.registerHelper('array', (...args: HbsValue[]) => args.slice(0, -1));
+    HandlebarsLib.registerHelper('checked', (value: HbsValue) => {
         const b = Boolean(value);
         return b ? 'checked' : '';
     });
-    HandlebarsLib.registerHelper('signedNumber', (value: unknown) => {
+    HandlebarsLib.registerHelper('signedNumber', (value: HbsValue) => {
         const num = Number(value ?? 0);
         if (num > 0) return `+${num}`;
         if (num === 0) return '0';
         return String(num);
     });
-    HandlebarsLib.registerHelper('truncate', (value: unknown, length: unknown) => {
+    HandlebarsLib.registerHelper('truncate', (value: HbsValue, length: HbsValue) => {
         const text = unknownToStr(value ?? '');
         const limit = Number(length ?? 0);
         if (!Number.isFinite(limit) || limit <= 0 || text.length <= limit) return text;
         return `${text.slice(0, limit).trimEnd()}...`;
     });
-    HandlebarsLib.registerHelper('setToArray', (value: unknown) => asArray(value));
-    HandlebarsLib.registerHelper('specialQualities', (value: unknown) => asArray(value));
-    HandlebarsLib.registerHelper('arrayToObject', (array: unknown): Record<string, string> => {
+    HandlebarsLib.registerHelper('setToArray', (value: HbsValue) => asArray(value));
+    HandlebarsLib.registerHelper('specialQualities', (value: HbsValue) => asArray(value));
+    HandlebarsLib.registerHelper('arrayToObject', (array: HbsValue): Record<string, string> => {
         const obj: Record<string, string> = {};
         if (array === null || array === undefined) return obj;
         if (Array.isArray(array)) {
@@ -167,30 +202,30 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         }
         return obj;
     });
-    HandlebarsLib.registerHelper('capitalize', (text: unknown): string => {
+    HandlebarsLib.registerHelper('capitalize', (text: HbsValue): string => {
         const s = unknownToStr(text ?? '');
         return s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : '';
     });
-    HandlebarsLib.registerHelper('toLowerCase', (str: unknown): string => unknownToStr(str ?? '').toLowerCase());
-    HandlebarsLib.registerHelper('removeMarkup', (text: unknown): string => unknownToStr(text ?? '').replace(/<[^>]*>/g, ''));
-    HandlebarsLib.registerHelper('cleanFieldName', (text: unknown): string => unknownToStr(text ?? '').replace(/[^a-zA-Z0-9]/g, ''));
-    HandlebarsLib.registerHelper('hideIf', (check: unknown) => {
+    HandlebarsLib.registerHelper('toLowerCase', (str: HbsValue): string => unknownToStr(str ?? '').toLowerCase());
+    HandlebarsLib.registerHelper('removeMarkup', (text: HbsValue): string => unknownToStr(text ?? '').replace(/<[^>]*>/g, ''));
+    HandlebarsLib.registerHelper('cleanFieldName', (text: HbsValue): string => unknownToStr(text ?? '').replace(/[^a-zA-Z0-9]/g, ''));
+    HandlebarsLib.registerHelper('hideIf', (check: HbsValue) => {
         const b = Boolean(check);
         return b ? new HandlebarsLib.SafeString('style="display:none;"') : '';
     });
-    HandlebarsLib.registerHelper('arrayIncludes', (field: unknown, list: unknown): boolean => Array.isArray(list) && list.includes(field));
-    HandlebarsLib.registerHelper('includes', (list: unknown, value: unknown): boolean => Array.isArray(list) && list.includes(value));
-    HandlebarsLib.registerHelper('option', (option: unknown, current: unknown, name: unknown): string => {
+    HandlebarsLib.registerHelper('arrayIncludes', (field: HbsValue, list: HbsValue): boolean => Array.isArray(list) && list.includes(field));
+    HandlebarsLib.registerHelper('includes', (list: HbsValue, value: HbsValue): boolean => Array.isArray(list) && list.includes(value));
+    HandlebarsLib.registerHelper('option', (option: HbsValue, current: HbsValue, name: HbsValue): string => {
         const v = unknownToStr(option ?? '');
         const label = name !== undefined ? unknownToStr(name) : v;
         const selected = current === option ? ' selected' : '';
         return `<option value="${HandlebarsLib.escapeExpression(v)}"${selected}>${HandlebarsLib.escapeExpression(label)}</option>`;
     });
-    HandlebarsLib.registerHelper('slice', (arr: unknown, start: unknown, end: unknown) => {
+    HandlebarsLib.registerHelper('slice', (arr: HbsValue, start: HbsValue, end: HbsValue) => {
         if (!Array.isArray(arr)) return [];
         return arr.slice(Number(start ?? 0), end === undefined ? undefined : Number(end));
     });
-    HandlebarsLib.registerHelper('range', (start: unknown, end: unknown) => {
+    HandlebarsLib.registerHelper('range', (start: HbsValue, end: HbsValue) => {
         const s = Number(start ?? 0);
         const e = Number(end ?? 0);
         const result: number[] = [];
@@ -198,7 +233,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         for (let i = s; i <= e; i++) result.push(i);
         return result;
     });
-    HandlebarsLib.registerHelper('times', function timesHelper(this: unknown, count: unknown, options: { fn: (ctx: number) => string }): string {
+    HandlebarsLib.registerHelper('times', function timesHelper(this: HbsValue, count: HbsValue, options: { fn: (ctx: number) => string }): string {
         const n = Number(count ?? 0);
         let out = '';
         for (let i = 0; i < n; i++) out += options.fn(i);
@@ -208,22 +243,22 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
     // `{{percent}}` as a plain context variable (e.g. vital-progress-bar.hbs)
     // and a same-named helper shadows the lookup, returning 0. Use a distinct
     // identifier for the helper version if/when needed.
-    HandlebarsLib.registerHelper('inversePercent', (value: unknown, max: unknown): number => {
+    HandlebarsLib.registerHelper('inversePercent', (value: HbsValue, max: HbsValue): number => {
         const v = Number(value ?? 0);
         const m = Number(max ?? 0);
         return m > 0 ? Math.max(0, 100 - Math.round((v / m) * 100)) : 0;
     });
-    HandlebarsLib.registerHelper('colorCode', (positive: unknown, negative: unknown): string => {
+    HandlebarsLib.registerHelper('colorCode', (positive: HbsValue, negative: HbsValue): string => {
         const isPositive = Boolean(positive);
         const isNegative = Boolean(negative);
         return isPositive ? 'positive' : isNegative ? 'negative' : 'neutral';
     });
-    HandlebarsLib.registerHelper('isError', (value: unknown): boolean => value === 'error' || value === false);
-    HandlebarsLib.registerHelper('isSuccess', (value: unknown): boolean => value === 'success' || value === true);
-    HandlebarsLib.registerHelper('themeClassFor', (role: unknown): string => {
+    HandlebarsLib.registerHelper('isError', (value: HbsValue): boolean => value === 'error' || value === false);
+    HandlebarsLib.registerHelper('isSuccess', (value: HbsValue): boolean => value === 'success' || value === true);
+    HandlebarsLib.registerHelper('themeClassFor', (role: HbsValue): string => {
         return typeof role === 'string' ? `wh40k-theme-${role}` : '';
     });
-    HandlebarsLib.registerHelper('select', function selectHelper(this: unknown, selected: unknown, options: { fn: (ctx: unknown) => string }): string {
+    HandlebarsLib.registerHelper('select', function selectHelper(this: HbsValue, selected: HbsValue, options: { fn: (ctx: HbsValue) => string }): string {
         const html = options.fn(this);
         const target = typeof selected === 'string' || typeof selected === 'number' || typeof selected === 'boolean' ? String(selected) : '';
         return html.replace(/<option([^>]*?)value=(["'])(.*?)\2([^>]*)>/g, (_match, before: string, q: string, value: string, after: string) => {
@@ -233,27 +268,27 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
             return `<option${before}value=${q}${value}${q}${after}${tail}>`;
         });
     });
-    HandlebarsLib.registerHelper('any', (list: unknown, prop: unknown) => {
+    HandlebarsLib.registerHelper('any', (list: HbsValue, prop: HbsValue) => {
         if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return false;
-        return list.some((item) => item !== null && typeof item === 'object' && Boolean((item as Record<string, unknown>)[prop]));
+        return list.some((item: HbsValue) => Boolean(getProp(item, prop)));
     });
-    HandlebarsLib.registerHelper('countType', (list: unknown, prop: unknown) => {
+    HandlebarsLib.registerHelper('countType', (list: HbsValue, prop: HbsValue) => {
         if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return 0;
-        return list.filter((item) => item !== null && typeof item === 'object' && Boolean((item as Record<string, unknown>)[prop])).length;
+        return list.filter((item: HbsValue) => Boolean(getProp(item, prop))).length;
     });
-    HandlebarsLib.registerHelper('hash', function hashHelper(this: unknown, options?: { hash?: Record<string, unknown> }) {
+    HandlebarsLib.registerHelper('hash', function hashHelper(this: HbsValue, options?: { hash?: HbsRecord }) {
         return options?.hash ?? {};
     });
-    HandlebarsLib.registerHelper('specialDisplay', (special: unknown): string => {
+    HandlebarsLib.registerHelper('specialDisplay', (special: HbsValue): string => {
         if (special === null || special === undefined || special === '') return '';
         if (Array.isArray(special)) {
             return special
-                .map((q) => {
+                .map((q: HbsValue) => {
                     if (typeof q === 'string') return q;
-                    if (q !== null && typeof q === 'object') {
-                        const obj = q as Record<string, unknown>;
-                        const name = unknownToStr(obj.name ?? obj.label ?? '');
-                        const value = obj.value;
+                    const obj = asRecord(q);
+                    if (obj !== null) {
+                        const name = unknownToStr(obj['name'] ?? obj['label'] ?? '');
+                        const value = obj['value'];
                         return value !== undefined && value !== null && value !== '' ? `${name} (${unknownToStr(value)})` : name;
                     }
                     return unknownToStr(q);
@@ -263,38 +298,37 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         }
         return unknownToStr(special);
     });
-    HandlebarsLib.registerHelper('armourDisplay', (armour: unknown): string => {
-        if (armour === null || armour === undefined || typeof armour !== 'object') return '0';
-        const a = armour as Record<string, unknown>;
-        const num = (v: unknown): number => Number(v ?? 0);
+    HandlebarsLib.registerHelper('armourDisplay', (armour: HbsValue): string => {
+        const a = asRecord(armour);
+        if (a === null) return '0';
+        const num = (v: HbsValue): number => Number(v ?? 0);
         const body = num(a['body']);
         const locations = ['body', 'head', 'rightArm', 'leftArm', 'rightLeg', 'leftLeg'] as const;
         const same = locations.every((loc) => num(a[loc]) === body);
         return same ? String(body) : locations.map((loc) => num(a[loc])).join('/');
     });
-    HandlebarsLib.registerHelper('armourLocation', (armour: unknown, location: unknown): number => {
-        if (armour === null || armour === undefined || typeof armour !== 'object' || typeof location !== 'string') return 0;
-        return Number((armour as Record<string, unknown>)[location] ?? 0);
+    HandlebarsLib.registerHelper('armourLocation', (armour: HbsValue, location: HbsValue): number => {
+        if (typeof location !== 'string') return 0;
+        return Number(getProp(armour, location) ?? 0);
     });
-    HandlebarsLib.registerHelper('displayStrength', (strength: unknown): string => {
+    HandlebarsLib.registerHelper('displayStrength', (strength: HbsValue): string => {
         const n = Number(strength ?? 0);
         return n > 0 ? String(n) : '-';
     });
-    HandlebarsLib.registerHelper('displayCrit', (crit: unknown): string => {
+    HandlebarsLib.registerHelper('displayCrit', (crit: HbsValue): string => {
         const n = Number(crit ?? 0);
         return n > 0 ? `${n}+` : '-';
     });
-    HandlebarsLib.registerHelper('selectOptions', (options: unknown, helperOptions?: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('selectOptions', (options: HbsValue, helperOptions?: { hash?: HbsRecord }) => {
         const hash = helperOptions?.hash ?? {};
         const selected = hash.selected;
         const labelAttr = typeof hash.labelAttr === 'string' ? hash.labelAttr : null;
         const normalized = normalizeSelectOptions(options).map((option) => {
             if (labelAttr === null) return option;
-            const sourceValue = Array.isArray(options)
-                ? options.find((entry) => String((entry as Record<string, unknown>).value ?? entry) === option.value)
-                : null;
-            if (sourceValue !== null && sourceValue !== undefined && typeof sourceValue === 'object') {
-                const label = (sourceValue as Record<string, unknown>)[labelAttr];
+            const sourceValue = Array.isArray(options) ? options.find((entry: HbsValue) => String(getProp(entry, 'value') ?? entry) === option.value) : null;
+            const sourceRecord = asRecord(sourceValue);
+            if (sourceRecord !== null) {
+                const label = sourceRecord[labelAttr];
                 if (label !== undefined) return { ...option, label: unknownToStr(label) };
             }
             return option;
@@ -311,7 +345,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
 
         return new HandlebarsLib.SafeString(html);
     });
-    HandlebarsLib.registerHelper('editor', (value: unknown, options?: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('editor', (value: HbsValue, options?: { hash?: HbsRecord }) => {
         const target = options?.hash?.target;
         const classes = ['wh40k-story-editor'];
         const hasButton = Boolean(options?.hash?.button);
@@ -322,7 +356,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
             )}</div>`,
         );
     });
-    HandlebarsLib.registerHelper('localize', (key: string, options?: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('localize', (key: string, options?: { hash?: HbsRecord }) => {
         const resolved = lookupLocalization(key, enLang);
         if (resolved === null) return key;
         if (options?.hash && Object.keys(options.hash).length > 0) {
@@ -330,20 +364,18 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         }
         return resolved;
     });
-    HandlebarsLib.registerHelper('format', (key: string, options?: { hash?: Record<string, unknown> }) => {
+    HandlebarsLib.registerHelper('format', (key: string, options?: { hash?: HbsRecord }) => {
         const resolved = lookupLocalization(key, enLang);
         const template = resolved ?? key;
         return applySubstitutions(template, options?.hash ?? {});
     });
 
-    const partials = (import.meta as unknown as { glob: (pattern: string, opts: Record<string, unknown>) => Record<string, string> }).glob(
-        '../src/templates/**/*.hbs',
-        {
-            query: '?raw',
-            import: 'default',
-            eager: true,
-        },
-    );
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Vite augments import.meta with glob() at build time; fvtt-types' ImportMeta doesn't model it
+    const partials = (import.meta as unknown as ViteImportMeta).glob('../src/templates/**/*.hbs', {
+        query: '?raw',
+        import: 'default',
+        eager: true,
+    });
 
     for (const [path, source] of Object.entries(partials)) {
         const idx = path.indexOf(SOURCE_ROOT);
@@ -362,7 +394,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
     // Register the {{icon}} helper using the same registry the runtime uses.
     // We don't import src/module/icons/helper.ts directly because it touches
     // the global Handlebars (Foundry-style) and not the bundled storybook copy.
-    HandlebarsLib.registerHelper('iconSvg', function iconStoryHelper(key: unknown, options: { hash?: Record<string, unknown> }) {
+    HandlebarsLib.registerHelper('iconSvg', function iconStoryHelper(key: HbsValue, options: { hash?: HbsRecord }) {
         if (typeof key !== 'string' || !Object.hasOwn(ICON_REGISTRY, key)) {
             return new HandlebarsLib.SafeString('');
         }

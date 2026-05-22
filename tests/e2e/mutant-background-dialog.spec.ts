@@ -3,6 +3,30 @@ import { joinAsGM } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
+interface MutantDialogProbeResult {
+    rendered: boolean;
+    hasCorruptionCallout: boolean;
+    hasTwistedFleshRow: boolean;
+    hasApplyButton: boolean;
+    hasCancelButton: boolean;
+    actorAttached: boolean;
+    error: string | null;
+}
+
+interface MutantDialogInstance {
+    render: (force?: boolean) => Promise<void>;
+    element: HTMLElement | null;
+    close: () => Promise<void>;
+}
+
+interface MutantDialogModule {
+    default: new (actor: object | null) => MutantDialogInstance;
+}
+
+interface MutantActorGlobal {
+    Actor?: { create?: (data: object, options?: object) => Promise<object | null> };
+}
+
 /**
  * Tier B coverage of the Mutant Background Dialog (GitHub #91).
  *
@@ -36,8 +60,7 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+            const result = await page.evaluate(async (): Promise<MutantDialogProbeResult> => {
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/mutant-background-dialog.js';
                 let error: string | null = null;
                 let rendered = false;
@@ -48,10 +71,8 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
                 let actorAttached = false;
 
                 try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (actor: unknown): { render: (force?: boolean) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
+                    const mod = (await import(moduleUrl)) as MutantDialogModule;
+                    const Cls = mod.default;
                     if (typeof Cls !== 'function') {
                         return {
                             rendered,
@@ -67,9 +88,10 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
                     // Best-effort fresh dh2 actor creation. If `Actor.create` is
                     // unavailable in the test world we fall back to null so the
                     // surface still renders for the structural assertions.
-                    let actor: any = null;
+                    let actor: object | null = null;
                     try {
-                        const g = globalThis as any;
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Actor global is runtime-only, no shipped types
+                        const g = globalThis as unknown as MutantActorGlobal;
                         if (typeof g.Actor?.create === 'function') {
                             actor = await g.Actor.create(
                                 {
@@ -78,7 +100,7 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
                                 },
                                 { temporary: true },
                             );
-                            actorAttached = actor !== null && actor !== undefined;
+                            actorAttached = actor !== null;
                         }
                     } catch {
                         /* fall through with null actor */
@@ -113,7 +135,6 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
                     actorAttached,
                     error,
                 };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
@@ -130,7 +151,6 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
 
             // Best-effort cleanup so the dialog doesn't leak into later specs.
             await page.evaluate(() => {
-                /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- browser-side cleanup */
                 const root = document.querySelector<HTMLDialogElement>('.mutant-background-dialog');
                 if (root?.close) {
                     try {

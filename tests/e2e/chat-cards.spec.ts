@@ -93,9 +93,23 @@ test.describe.serial('chat-card templates (Tier B)', () => {
             // (img/name/uuid), so we don't need per-template setup — just
             // a realistic-enough seed actor.
             setup = await page.evaluate(async () => {
-                const g = globalThis as unknown as {
-                    Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-                };
+                interface CreatedItem {
+                    id?: string;
+                    uuid?: string;
+                    img?: string;
+                    name?: string;
+                }
+                interface SeedActor {
+                    id: string;
+                    uuid?: string;
+                    img?: string;
+                    createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<CreatedItem | undefined>>;
+                }
+                interface SetupGlobal {
+                    Actor?: { create?: (data: object) => Promise<SeedActor | null> };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                const g = globalThis as unknown as SetupGlobal;
                 if (!g.Actor?.create) return null;
                 const actor = await g.Actor.create({
                     name: 'e2e-chat-cards-actor',
@@ -103,15 +117,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                     system: { gameSystem: 'dh2e' },
                 });
                 if (actor?.id == null) return null;
-                const a = actor as unknown as {
-                    id: string;
-                    uuid?: string;
-                    img?: string;
-                    createEmbeddedDocuments?: (
-                        kind: string,
-                        data: object[],
-                    ) => Promise<Array<{ id?: string; uuid?: string; img?: string; name?: string } | undefined>>;
-                };
+                const a = actor;
                 const created = await a.createEmbeddedDocuments?.('Item', [
                     {
                         name: 'e2e-weapon',
@@ -155,15 +161,28 @@ test.describe.serial('chat-card templates (Tier B)', () => {
 
             const probes = await page.evaluate(
                 async ({ templates, setup: evalSetup }) => {
-                    const g = globalThis as unknown as {
+                    interface ProbeActor {
+                        name?: string;
+                        img?: string;
+                        uuid?: string;
+                        system?: object;
+                        getRollData?: () => object;
+                    }
+                    interface ChatMsg {
+                        id?: string;
+                        delete?: () => Promise<void>;
+                    }
+                    interface ProbeGlobal {
                         foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
                         ChatMessage?: { create?: (data: object) => Promise<{ id?: string } | null> };
                         Roll?: new (formula: string) => { evaluate: () => Promise<{ total: number; formula: string; result?: string }> };
                         game?: {
-                            actors?: { get?: (id: string) => unknown };
-                            messages?: { get?: (id: string) => unknown; size?: number };
+                            actors?: { get?: (id: string) => ProbeActor | undefined };
+                            messages?: { get?: (id: string) => ChatMsg | undefined; size?: number };
                         };
-                    };
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                    const g = globalThis as unknown as ProbeGlobal;
                     const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
                     if (!renderTemplateFn || !g.ChatMessage?.create || !g.Roll) {
                         return templates.map((t: string) => ({
@@ -176,16 +195,14 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         }));
                     }
 
-                    const actor = g.game?.actors?.get?.(evalSetup.actorId) as
-                        | { name?: string; img?: string; uuid?: string; system?: unknown; getRollData?: () => object }
-                        | undefined;
+                    const actor = g.game?.actors?.get?.(evalSetup.actorId);
                     const baseRoll = await new g.Roll('1d100').evaluate();
                     const rollData = actor?.getRollData?.() ?? {};
 
                     // Rich union-context: every field any template might
                     // reference. Missing fields fall through to Handlebars's
                     // empty-render path — that's intended.
-                    const ctx: Record<string, unknown> = {
+                    const ctx = {
                         // Identity
                         gameSystem: 'dh2e',
                         actor: {
@@ -365,7 +382,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         try {
                             html = await renderTemplateFn(`systems/wh40k-rpg/templates/chat/${tpl}.hbs`, ctx);
                         } catch (err) {
-                            renderError = String((err as Error).message);
+                            renderError = err instanceof Error ? err.message : String(err);
                         }
                         if (renderError !== null || html.trim().length === 0) {
                             out.push({
@@ -388,7 +405,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                             });
                             createdId = msg?.id ?? null;
                         } catch (err) {
-                            createError = String((err as Error).message);
+                            createError = err instanceof Error ? err.message : String(err);
                         }
                         const after = g.game?.messages?.size ?? 0;
                         const delta = after - before;
@@ -408,7 +425,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         // Clean up so the next probe starts from the same
                         // chat-log baseline.
                         if (createdId !== null) {
-                            const msg = g.game?.messages?.get?.(createdId) as { delete?: () => Promise<unknown> } | undefined;
+                            const msg = g.game?.messages?.get?.(createdId);
                             await msg?.delete?.();
                         }
 
@@ -487,9 +504,11 @@ test.describe.serial('chat-card templates (Tier B)', () => {
             // Tear down the parent actor (cascades to embedded items).
             if (setup !== null) {
                 await page.evaluate(async (actorId: string) => {
-                    const g = globalThis as unknown as {
-                        game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-                    };
+                    interface CleanupGlobal {
+                        game?: { actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } };
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+                    const g = globalThis as unknown as CleanupGlobal;
                     await g.game?.actors?.get?.(actorId)?.delete?.();
                 }, setup.actorId);
             }

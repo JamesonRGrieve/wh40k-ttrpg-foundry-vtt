@@ -129,16 +129,24 @@ interface ProbeResult {
  * should be embedded under. The probe walks one of these per sheet slug
  * and runs every matching flow key against it before cleaning up.
  */
+/**
+ * Recursive JSON-object shape for a document's seed `system` payload. The
+ * specs below seed ten different DataModels with deeply-nested literals; a
+ * shared structural type models that without an opaque `Record` per field.
+ */
+type SeedValue = string | number | boolean | null | SeedValue[] | { [key: string]: SeedValue };
+type SeedSystem = { [key: string]: SeedValue };
+
 interface ActorSpec {
     kind: 'actor';
     type: string;
     gameSystem: string;
-    initialSystem: Record<string, unknown>;
+    initialSystem: SeedSystem;
 }
 interface ItemSpec {
     kind: 'item';
     type: string;
-    initialSystem: Record<string, unknown>;
+    initialSystem: SeedSystem;
     // The actor scope under which to embed the item; one of the actor specs above.
     // We embed items on a dh2-character host so the BaseItemSheet branches
     // through the actor-owned path (the most common production case).
@@ -281,20 +289,16 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
  * per spec but exercises every field path declared against it.
  */
 function groupFlowsBySheet(flows: readonly string[]): Record<string, string[]> {
-    const grouped: Partial<Record<string, string[]>> = {};
+    const grouped: Record<string, string[]> = {};
     for (const flow of flows) {
         const idx = flow.indexOf('::');
         if (idx < 0) continue;
         const slug = flow.slice(0, idx);
         const path = flow.slice(idx + 2);
-        const existing = grouped[slug];
-        if (existing !== undefined) {
-            existing.push(path);
-        } else {
-            grouped[slug] = [path];
-        }
+        if (!Object.hasOwn(grouped, slug)) grouped[slug] = [];
+        grouped[slug].push(path);
     }
-    return grouped as Record<string, string[]>;
+    return grouped;
 }
 
 async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
@@ -310,6 +314,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                 // Browser-side probe: Foundry globals are runtime-only, so the
                 // doc / sheet / game shapes used here are declared locally.
                 interface FoundrySheet {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 sheet.submit updateData is a flattened path→value payload, untyped at the framework boundary
                     submit: (options: { updateData: Record<string, unknown>; preventClose: boolean }) => Promise<void>;
                     render: (force: boolean) => Promise<void>;
                     close: () => Promise<void>;
@@ -327,7 +332,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                     id: string;
                     sheet?: FoundrySheet;
                     items: FoundryItemCollection;
-                    createEmbeddedDocuments: (type: string, data: Record<string, unknown>[]) => Promise<FoundryItem[]>;
+                    createEmbeddedDocuments: (type: string, data: Array<{ name: string; type: string; system: SeedSystem }>) => Promise<FoundryItem[]>;
                     delete: () => Promise<void>;
                 }
                 interface FoundryActorCollection {
@@ -336,7 +341,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                 interface FoundryActorClass {
                     // Runtime can reject/return null on a failed create; keep the union
                     // so the defensive null checks below stay type-meaningful.
-                    create: (data: { name: string; type: string; system: Record<string, unknown> }) => Promise<FoundryDoc | null>;
+                    create: (data: { name: string; type: string; system: SeedSystem }) => Promise<FoundryDoc | null>;
                 }
                 interface FoundryGlobal {
                     // Both may be absent if the world hasn't booted; the guards below rely on it.
@@ -373,19 +378,33 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                     }
                 };
 
+                // A traversable document field: an indexable object node or a
+                // scalar leaf. Models the live document tree the probe walks
+                // without falling back to `unknown` / a `Record` cast.
+                interface FieldNode {
+                    [key: string]: FieldValue;
+                }
+                type FieldValue = string | number | boolean | null | undefined | FieldNode;
+
+                const isFieldNode = (value: object | FieldValue): value is FieldNode => typeof value === 'object' && value !== null;
+
+                // Render a traversed field value for a diagnostic note. Object
+                // leaves (which the probe never targets) get a JSON form rather
+                // than the default '[object Object]'.
+                const fmt = (value: FieldValue): string => (isFieldNode(value) ? JSON.stringify(value) : String(value));
+
                 // Path traversal for both reads + write payload construction.
-                const getPath = (obj: unknown, path: string): unknown =>
-                    path.split('.').reduce<unknown>((acc, key) => {
-                        if (acc === null || acc === undefined || typeof acc !== 'object') return undefined;
-                        return (acc as Record<string, unknown>)[key];
-                    }, obj);
+                // Accepts a live document (a non-indexable structural type) as
+                // the root and narrows each step through the FieldNode guard.
+                const getPath = (obj: object | null | undefined, path: string): FieldValue =>
+                    path.split('.').reduce<object | FieldValue>((acc, key) => (isFieldNode(acc) ? acc[key] : undefined), obj ?? undefined) as FieldValue;
 
                 // Deterministic "next" value chooser per field type. Booleans
                 // toggle; numbers add a small constant; strings get a stable
                 // probe suffix. The value MUST round-trip exactly through
                 // the schema (integer fields don't accept decimals; min:0
                 // fields reject negatives).
-                const pickNextValue = (current: unknown): unknown => {
+                const pickNextValue = (current: FieldValue): string | number | boolean => {
                     if (typeof current === 'boolean') return !current;
                     if (typeof current === 'number') return current + 1;
                     if (typeof current === 'string') return current === 'probe-value' ? 'probe-value-2' : 'probe-value';
@@ -522,7 +541,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                             try {
                                 const before = getPath(doc, path);
                                 const next = pickNextValue(before);
-                                const updateData: Record<string, unknown> = {};
+                                const updateData: Record<string, string | number | boolean> = {};
                                 updateData[path] = next;
 
                                 if (typeof liveSheet.submit !== 'function') {
@@ -562,14 +581,14 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                                 } else if (typeof next === 'number') {
                                     matched = Number(after) === next;
                                 } else if (typeof next === 'string') {
-                                    matched = String(after) === next;
+                                    matched = fmt(after) === next;
                                 }
 
                                 if (matched) {
                                     fired[key] = true;
-                                    notes[key] = `${String(before)} → ${String(next)} (round-trip ok)`;
+                                    notes[key] = `${fmt(before)} → ${String(next)} (round-trip ok)`;
                                 } else {
-                                    notes[key] = `expected ${String(next)} got ${String(after)} (was ${String(before)})`;
+                                    notes[key] = `expected ${String(next)} got ${fmt(after)} (was ${fmt(before)})`;
                                 }
                             } catch (flowErr) {
                                 notes[key] = `flow threw: ${flowErr instanceof Error ? flowErr.message : String(flowErr)}`;
