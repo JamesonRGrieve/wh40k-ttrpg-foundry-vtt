@@ -1938,16 +1938,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             rollCharacteristic: (key: string | undefined, override?: string) => void;
             rollSkill: (key: string | undefined, specialty: string | undefined) => void;
         };
-        switch (rollType) {
-            case 'characteristic':
-                actor.rollCharacteristic(rollTarget);
-                break;
-            case 'skill':
-                actor.rollSkill(rollTarget, specialty);
-                break;
-            case undefined:
-            default:
-                break;
+        if (rollType === 'characteristic') {
+            actor.rollCharacteristic(rollTarget);
+        } else if (rollType === 'skill') {
+            actor.rollSkill(rollTarget, specialty);
         }
     }
 

@@ -8,9 +8,7 @@
  * @see https://github.com/foundryvtt/dnd5e/blob/master/module/data/abstract/system-data-model.mjs
  */
 
-type SystemDataModelMetadata = {
-    systemFlagsModel: null | object;
-};
+import type { SystemDataModelMetadata } from './_types.ts';
 
 /* eslint-disable @typescript-eslint/no-explicit-any -- TypeDataModel parent-doc generic has no exported constraint; any is required for the mixin pattern */
 // biome-ignore lint/suspicious/noExplicitAny: TypeDataModel parent-doc generic has no exported constraint — any is required

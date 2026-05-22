@@ -48,6 +48,7 @@ const { ApplicationV2 } = foundry.applications.api;
  */
 type CoverageMap = { readonly [k: string]: boolean | number | string | null | undefined };
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: raw is a Foundry compendium-index payload (Set | array | legacy map) narrowed by the instanceof / Array.isArray / typeof guards directly below
 function normalizeCoverage(raw: unknown): string[] {
     if (raw instanceof Set) return [...raw] as string[];
     if (Array.isArray(raw)) return raw as string[];
@@ -596,16 +597,11 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     }
 
     _getGroupLabel(entry: BrowserResult): string {
-        switch (this._filters.groupBy) {
-            case 'pack':
-                return entry.pack !== '' ? entry.pack : 'Unknown Pack';
-            case 'type':
-                return entry.type !== undefined && entry.type !== '' ? entry.type : 'Unknown Type';
-            case 'category':
-                return entry.categoryLabel !== '' ? entry.categoryLabel : 'Uncategorized';
-            default:
-                return entry.sourceLabel !== '' ? entry.sourceLabel : 'Unknown Source';
-        }
+        const groupBy = this._filters.groupBy;
+        if (groupBy === 'pack') return entry.pack !== '' ? entry.pack : 'Unknown Pack';
+        if (groupBy === 'type') return entry.type !== undefined && entry.type !== '' ? entry.type : 'Unknown Type';
+        if (groupBy === 'category') return entry.categoryLabel !== '' ? entry.categoryLabel : 'Uncategorized';
+        return entry.sourceLabel !== '' ? entry.sourceLabel : 'Unknown Source';
     }
 
     /* eslint-disable no-restricted-syntax -- boundary: entry.system and entry.flags are Foundry compendium index payloads with no typed schema */

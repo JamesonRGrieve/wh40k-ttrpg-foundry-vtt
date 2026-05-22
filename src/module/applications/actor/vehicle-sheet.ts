@@ -374,25 +374,15 @@ export default class VehicleSheet extends BaseActorSheet {
         const components: WH40KItem[] = [];
         const other: WH40KItem[] = [];
 
+        const buckets: Record<string, WH40KItem[]> = {
+            weapon: weapons,
+            shipWeapon: weapons,
+            vehicleTrait: vehicleTraits,
+            vehicleUpgrade: vehicleUpgrades,
+            shipComponent: components,
+        };
         for (const item of context.items ?? []) {
-            const itemType: string = item.type;
-            switch (itemType) {
-                case 'weapon':
-                case 'shipWeapon':
-                    weapons.push(item);
-                    break;
-                case 'vehicleTrait':
-                    vehicleTraits.push(item);
-                    break;
-                case 'vehicleUpgrade':
-                    vehicleUpgrades.push(item);
-                    break;
-                case 'shipComponent':
-                    components.push(item);
-                    break;
-                default:
-                    other.push(item);
-            }
+            (buckets[item.type] ?? other).push(item);
         }
 
         context.weapons = weapons;

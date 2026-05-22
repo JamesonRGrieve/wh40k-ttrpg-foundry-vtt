@@ -215,6 +215,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
 
             // Built specifier so TS doesn't try to resolve the Foundry-served
             // URL at compile time (mirrors weapon-attack.spec.ts).
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import() of a Foundry-served URL yields a module whose shape has no compile-time type in this realm; each call site casts to the concrete module interface on the next line
             const dynImport = new Function('u', 'return import(u)') as (u: string) => Promise<unknown>;
             const base = '/systems/wh40k-rpg/module';
 
