@@ -58,12 +58,50 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
     };
     page.on('pageerror', listener);
     try {
-        const flows = await page.evaluate(async (talentPackId: string) => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
-            const ActorCls = g.Actor;
-            const ItemCls = g.Item;
-            const gameMgr = g.game;
+        const flows = await page.evaluate(async (talentPackId: string): Promise<Array<{ flow: string; ok: boolean; detail: string | null }>> => {
+            type ActionHandler = (event: MouseEvent, target: HTMLElement) => void | Promise<void>;
+            interface SheetShape {
+                inEditMode: boolean;
+                isOwnedByActor: boolean;
+                isCompendiumItem: boolean;
+                canEdit: boolean;
+                tabGroups?: { primary?: string };
+                options?: { actions?: Record<string, ActionHandler | undefined> };
+                element?: { querySelector?: (selector: string) => Element | null } | null;
+                render: (force?: boolean) => Promise<void>;
+                close?: () => Promise<void>;
+                changeTab?: (tab: string, group: string) => void;
+                _onDropItem?: (event: Event, item: ItemDoc) => Promise<ItemDoc[] | boolean | undefined>;
+            }
+            interface ItemDoc {
+                sheet?: SheetShape | null;
+                delete?: () => Promise<void>;
+            }
+            interface ActorDoc {
+                sheet?: SheetShape | null;
+                items?: { contents?: ItemDoc[] };
+                createEmbeddedDocuments?: (embeddedName: string, data: object[]) => Promise<ItemDoc[]>;
+                delete?: () => Promise<void>;
+            }
+            interface ActorCtorShape {
+                create?: (data: object) => Promise<ActorDoc | null>;
+            }
+            interface ItemCtorShape {
+                create?: (data: object) => Promise<ItemDoc | null>;
+            }
+            interface CompendiumPack {
+                getDocuments: () => Promise<ItemDoc[]>;
+            }
+            interface GameManager {
+                packs?: { get?: (id: string) => CompendiumPack | undefined };
+            }
+            interface FoundryGlobal {
+                Actor?: ActorCtorShape;
+                Item?: ItemCtorShape;
+                game?: GameManager;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals, no type surface available in browser context
+            const { Actor: ActorCls, Item: ItemCls, game: gameMgr } = globalThis as unknown as FoundryGlobal;
             const results: Array<{ flow: string; ok: boolean; detail: string | null }> = [];
 
             const record = (flow: string, ok: boolean, detail: string | null): void => {
@@ -71,8 +109,12 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             };
 
             /* ---------- shared setup: build an actor + an owned item ---------- */
-            let actor: any = null;
-            let ownedItem: any = null;
+            let actor: ActorDoc | null = null;
+            let ownedItem: ItemDoc | null = null;
+            if (ActorCls?.create == null) {
+                record('edit-mode-toggle-actor', false, 'Actor.create unavailable');
+                return results;
+            }
             try {
                 actor = await ActorCls.create({
                     name: 'sheet-mixin-probe-actor',
@@ -80,17 +122,18 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     system: { gameSystem: 'dh2e' },
                 });
             } catch (err) {
-                record('edit-mode-toggle-actor', false, `actor.create threw: ${String((err as Error).message)}`);
+                record('edit-mode-toggle-actor', false, `actor.create threw: ${String(err instanceof Error ? err.message : err)}`);
                 return results;
             }
             if (actor == null) {
                 record('edit-mode-toggle-actor', false, 'ActorCls.create returned null');
                 return results;
             }
+            const probeActor = actor;
 
             /* ---------- flow 1: edit-mode-toggle-actor ---------- */
             try {
-                const sheet = actor.sheet;
+                const sheet = probeActor.sheet;
                 if (sheet == null) {
                     record('edit-mode-toggle-actor', false, 'actor.sheet undefined');
                 } else {
@@ -98,7 +141,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     await new Promise<void>((r) => {
                         setTimeout(r, 80);
                     });
-                    const before = sheet.inEditMode === true;
+                    const before = sheet.inEditMode;
                     // Character/NPC sheets register `toggleEditMode` as an action.
                     const handler = sheet.options?.actions?.toggleEditMode;
                     if (typeof handler !== 'function') {
@@ -107,18 +150,18 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                         const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                         const target = document.createElement('div');
                         const rv = handler.call(sheet, event, target);
-                        if (rv != null && typeof rv.then === 'function') await rv;
+                        if (rv instanceof Promise) await rv;
                         await new Promise<void>((r) => {
                             setTimeout(r, 60);
                         });
-                        const afterFirst = sheet.inEditMode === true;
+                        const afterFirst = sheet.inEditMode;
                         // Toggle back so we exercise both edges.
                         const rv2 = handler.call(sheet, event, target);
-                        if (rv2 != null && typeof rv2.then === 'function') await rv2;
+                        if (rv2 instanceof Promise) await rv2;
                         await new Promise<void>((r) => {
                             setTimeout(r, 60);
                         });
-                        const afterSecond = sheet.inEditMode === true;
+                        const afterSecond = sheet.inEditMode;
                         if (!before && afterFirst && !afterSecond) {
                             record('edit-mode-toggle-actor', true, null);
                         } else {
@@ -132,12 +175,12 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     }
                 }
             } catch (err) {
-                record('edit-mode-toggle-actor', false, String((err as Error).message));
+                record('edit-mode-toggle-actor', false, String(err instanceof Error ? err.message : err));
             }
 
             /* ---------- flow 5: tab-switch-routes-via-mixin ---------- */
             try {
-                const sheet = actor.sheet;
+                const sheet = probeActor.sheet;
                 if (sheet == null) {
                     record('tab-switch-routes-via-mixin', false, 'actor.sheet undefined');
                 } else {
@@ -168,12 +211,12 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     }
                 }
             } catch (err) {
-                record('tab-switch-routes-via-mixin', false, String((err as Error).message));
+                record('tab-switch-routes-via-mixin', false, String(err instanceof Error ? err.message : err));
             }
 
             /* ---------- create an owned item on the actor for flows 2/3/6 ---------- */
             try {
-                const docs = await actor.createEmbeddedDocuments?.('Item', [
+                const docs = await probeActor.createEmbeddedDocuments?.('Item', [
                     {
                         name: 'sheet-mixin-probe-talent',
                         type: 'talent',
@@ -184,7 +227,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             } catch (err) {
                 // capture below per flow
                 ownedItem = null;
-                record('owned-item-sheet-canEdit', false, `createEmbeddedDocuments threw: ${String((err as Error).message)}`);
+                record('owned-item-sheet-canEdit', false, `createEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`);
             }
 
             /* ---------- flow 3: owned-item-sheet-canEdit ---------- */
@@ -198,9 +241,9 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                         await new Promise<void>((r) => {
                             setTimeout(r, 80);
                         });
-                        const ownedFlag = sheet.isOwnedByActor === true;
-                        const compendiumFlag = sheet.isCompendiumItem === false;
-                        const canEdit = sheet.canEdit === true; // owner GM on a world actor
+                        const ownedFlag = sheet.isOwnedByActor;
+                        const compendiumFlag = !sheet.isCompendiumItem;
+                        const canEdit = sheet.canEdit; // owner GM on a world actor
                         if (ownedFlag && compendiumFlag && canEdit) {
                             record('owned-item-sheet-canEdit', true, null);
                         } else {
@@ -219,7 +262,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    record('owned-item-sheet-canEdit', false, String((err as Error).message));
+                    record('owned-item-sheet-canEdit', false, String(err instanceof Error ? err.message : err));
                 }
             } else if (!results.some((r) => r.flow === 'owned-item-sheet-canEdit')) {
                 record('owned-item-sheet-canEdit', false, 'owned item not created');
@@ -237,7 +280,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                             setTimeout(r, 80);
                         });
                         // Actor-owned items use the toggle to switch view ↔ edit
-                        const before = sheet.inEditMode === true;
+                        const before = sheet.inEditMode;
                         const handler = sheet.options?.actions?.toggleEditMode;
                         if (typeof handler !== 'function') {
                             record('edit-mode-toggle-item', false, 'toggleEditMode action not registered on item sheet');
@@ -245,17 +288,17 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                             const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                             const target = document.createElement('div');
                             const rv = handler.call(sheet, event, target);
-                            if (rv != null && typeof rv.then === 'function') await rv;
+                            if (rv instanceof Promise) await rv;
                             await new Promise<void>((r) => {
                                 setTimeout(r, 80);
                             });
-                            const afterFirst = sheet.inEditMode === true;
+                            const afterFirst = sheet.inEditMode;
                             const rv2 = handler.call(sheet, event, target);
-                            if (rv2 != null && typeof rv2.then === 'function') await rv2;
+                            if (rv2 instanceof Promise) await rv2;
                             await new Promise<void>((r) => {
                                 setTimeout(r, 80);
                             });
-                            const afterSecond = sheet.inEditMode === true;
+                            const afterSecond = sheet.inEditMode;
                             if (!before && afterFirst && !afterSecond) {
                                 record('edit-mode-toggle-item', true, null);
                             } else {
@@ -269,7 +312,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                         }
                     }
                 } catch (err) {
-                    record('edit-mode-toggle-item', false, String((err as Error).message));
+                    record('edit-mode-toggle-item', false, String(err instanceof Error ? err.message : err));
                 }
             } else {
                 record('edit-mode-toggle-item', false, 'owned item not created');
@@ -277,7 +320,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
 
             /* ---------- flow 6: drop-event-on-sheet ---------- */
             try {
-                const sheet = actor.sheet;
+                const sheet = probeActor.sheet;
                 if (sheet == null) {
                     record('drop-event-on-sheet', false, 'actor.sheet undefined');
                 } else {
@@ -299,7 +342,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     // intended behaviour, not what the sheet-mixin drop flow
                     // wants to exercise — we want the BaseActorSheet pass-through
                     // path that creates the embedded item.
-                    const transient = await ItemCls.create({
+                    const transient = await ItemCls?.create?.({
                         name: 'sheet-mixin-drop-source',
                         type: 'gear',
                         system: { gameSystem: 'dh2e' },
@@ -307,7 +350,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     if (transient == null) {
                         record('drop-event-on-sheet', false, 'ItemCls.create for drop-source returned null');
                     } else {
-                        const beforeCount = actor.items?.contents?.length ?? 0;
+                        const beforeCount = probeActor.items?.contents?.length ?? 0;
                         const dragEvent = new Event('drop', { bubbles: false, cancelable: true });
                         let dropOk = false;
                         let dropDetail: string | null = null;
@@ -316,14 +359,15 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                             // _onDropItem returns the created Document[] on a fresh
                             // drop, the sort result on an existing item, or false /
                             // undefined on a reject path.
-                            const afterCount = actor.items?.contents?.length ?? 0;
+                            const afterCount = probeActor.items?.contents?.length ?? 0;
                             if (afterCount > beforeCount || (Array.isArray(result) && result.length > 0)) {
                                 dropOk = true;
                             } else {
-                                dropDetail = `items before=${beforeCount} after=${afterCount} result=${String(result)}`;
+                                const resultDesc = Array.isArray(result) ? `array(${result.length})` : String(result);
+                                dropDetail = `items before=${beforeCount} after=${afterCount} result=${resultDesc}`;
                             }
                         } catch (err) {
-                            dropDetail = `_onDropItem threw: ${String((err as Error).message)}`;
+                            dropDetail = `_onDropItem threw: ${String(err instanceof Error ? err.message : err)}`;
                         }
                         record('drop-event-on-sheet', dropOk, dropDetail);
                         try {
@@ -339,25 +383,25 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     }
                 }
             } catch (err) {
-                record('drop-event-on-sheet', false, String((err as Error).message));
+                record('drop-event-on-sheet', false, String(err instanceof Error ? err.message : err));
             }
 
             /* ---------- flow 4: compendium-item-sheet-readonly ---------- */
             /* ---------- flow 7: prosemirror-gated-in-readonly --------- */
-            let compendiumSheet: any = null;
+            let compendiumSheet: SheetShape | null = null;
             try {
                 const pack = gameMgr?.packs?.get?.(talentPackId);
                 if (pack == null) {
                     record('compendium-item-sheet-readonly', false, `pack ${talentPackId} not found`);
                     record('prosemirror-gated-in-readonly', false, `pack ${talentPackId} not found`);
                 } else {
-                    const docs = (await pack.getDocuments()) as any[];
-                    const sample: any = Array.isArray(docs) ? docs[0] : null;
+                    const docs = await pack.getDocuments();
+                    const sample: ItemDoc | null = Array.isArray(docs) ? docs[0] ?? null : null;
                     if (sample == null) {
                         record('compendium-item-sheet-readonly', false, `pack ${talentPackId} empty`);
                         record('prosemirror-gated-in-readonly', false, `pack ${talentPackId} empty`);
                     } else {
-                        compendiumSheet = sample.sheet;
+                        compendiumSheet = sample.sheet ?? null;
                         if (compendiumSheet == null) {
                             record('compendium-item-sheet-readonly', false, 'compendium item sheet undefined');
                             record('prosemirror-gated-in-readonly', false, 'compendium item sheet undefined');
@@ -368,8 +412,8 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                             });
 
                             // flow 4: assert read-only flags
-                            const isCompendium = compendiumSheet.isCompendiumItem === true;
-                            const editGatedOff = compendiumSheet.canEdit === false;
+                            const isCompendium = compendiumSheet.isCompendiumItem;
+                            const editGatedOff = !compendiumSheet.canEdit;
                             if (isCompendium && editGatedOff) {
                                 record('compendium-item-sheet-readonly', true, null);
                             } else {
@@ -387,7 +431,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                             // is wired into the rendered DOM, since the editor
                             // would have to short-circuit on the gate to keep the
                             // sheet from crashing in compendium read-only context.
-                            const inEdit = compendiumSheet.inEditMode === true;
+                            const inEdit = compendiumSheet.inEditMode;
                             const proseEl = compendiumSheet.element?.querySelector?.('prose-mirror');
                             if (!inEdit && proseEl === null) {
                                 record('prosemirror-gated-in-readonly', true, null);
@@ -408,7 +452,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     }
                 }
             } catch (err) {
-                const msg = String((err as Error).message);
+                const msg = String(err instanceof Error ? err.message : err);
                 if (!results.some((r) => r.flow === 'compendium-item-sheet-readonly')) {
                     record('compendium-item-sheet-readonly', false, msg);
                 }
@@ -419,13 +463,12 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
 
             /* ---------- cleanup ---------- */
             try {
-                await actor.delete?.();
+                await probeActor.delete?.();
             } catch {
                 /* ignore */
             }
 
             return results;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         }, TALENT_PACK);
 
         return { flows: flows as FlowResult[], pageErrors };

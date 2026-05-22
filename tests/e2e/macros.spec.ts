@@ -54,8 +54,74 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-            const g = globalThis as any;
+            // Synthetic payloads/documents are plain JSON the probe builds itself,
+            // not arbitrary external input — concrete fields throughout.
+            interface ActorCreateData {
+                name: string;
+                type: string;
+                system: { gameSystem: string; characteristics?: Record<string, { base: number; advance: number; modifier: number }> };
+            }
+            interface ItemCreateData {
+                name: string;
+                type: string;
+                system: { gameSystem: string };
+            }
+            interface HotbarDropData {
+                actorId: string;
+                actorName: string;
+                data: { _id?: string; name?: string; img?: string; skill?: string; characteristic?: string };
+            }
+            interface MacroDoc {
+                id: string;
+                name: string;
+                get?: (id: string) => MacroDoc | undefined;
+                delete?: () => Promise<void>;
+            }
+            interface ItemDoc {
+                id: string;
+                name: string;
+                img?: string;
+            }
+            interface ActorDoc {
+                id: string;
+                name: string;
+                createEmbeddedDocuments: (type: string, data: readonly ItemCreateData[]) => Promise<ItemDoc[]>;
+                delete?: () => Promise<void>;
+            }
+            interface ActorClassShape {
+                create: (data: ActorCreateData) => Promise<ActorDoc | null>;
+            }
+            interface MacroCollection {
+                find?: (predicate: (m: MacroDoc | undefined) => boolean) => MacroDoc | undefined;
+                get?: (id: string) => MacroDoc | undefined;
+            }
+            interface GameObject {
+                macros?: MacroCollection;
+            }
+            interface UiWindow {
+                id?: string;
+                close?: () => Promise<void>;
+            }
+            interface FoundryGlobal {
+                Actor: ActorClassShape;
+                game: GameObject;
+                ui?: { windows?: Record<string, UiWindow> };
+            }
+            // The roll-* dispatchers return void synchronously or a Promise that
+            // resolves to void; we only ever await for completion, never the value.
+            type MaybePromise = Promise<void> | void;
+            interface MacroManagerModule {
+                createItemMacro?: (data: HotbarDropData, slot: number) => Promise<void>;
+                createSkillMacro?: (data: HotbarDropData, slot: number) => Promise<void>;
+                createCharacteristicMacro?: (data: HotbarDropData, slot: number) => Promise<void>;
+                rollItemMacro?: (actorId: string, itemId: string) => MaybePromise;
+                rollSkillMacro?: (actorId: string, skill: string) => MaybePromise;
+                rollCharacteristicMacro?: (actorId: string, characteristic: string) => MaybePromise;
+            }
+            const isThenable = (value: MaybePromise): value is Promise<void> => value != null && typeof (value as { then?: () => void }).then === 'function';
+
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor, game, ui) have no shipped types in this browser-side probe
+            const g = globalThis as unknown as FoundryGlobal;
             const ActorClass = g.Actor;
             const gameObj = g.game;
             const out: FlowResult[] = [];
@@ -70,9 +136,9 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             // (create-*, rollCharacteristicMacro) aren't exposed on
             // `game.wh40k`; the dynamic import is the canonical handle.
             const macroModulePath = `${'/systems/wh40k-rpg'}/module/macros/macro-manager.js`;
-            let macroManager: any;
+            let macroManager: MacroManagerModule;
             try {
-                macroManager = await import(macroModulePath);
+                macroManager = (await import(macroModulePath)) as MacroManagerModule;
             } catch (err) {
                 for (const f of MACRO_FLOWS) record(f, false, `macro-manager import failed: ${String((err as Error).message)}`);
                 return out;
@@ -83,7 +149,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             const SLOT = 49;
 
             // --- shared setup: create a DH2 character with a known item ---
-            let actor: any;
+            let actor: ActorDoc | null;
             try {
                 actor = await ActorClass.create({
                     name: 'macros-spec-actor',
@@ -105,16 +171,19 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             }
 
             // Add one embedded item so rollItemMacro has something to find.
-            let item: any;
+            const actorDoc = actor;
+            let item: ItemDoc | null = null;
             try {
-                const created = await actor.createEmbeddedDocuments('Item', [{ name: 'macros-probe-talent', type: 'talent', system: { gameSystem: 'dh2e' } }]);
-                item = Array.isArray(created) ? created[0] : null;
+                const created = await actorDoc.createEmbeddedDocuments('Item', [
+                    { name: 'macros-probe-talent', type: 'talent', system: { gameSystem: 'dh2e' } },
+                ]);
+                item = Array.isArray(created) ? created[0] ?? null : null;
             } catch {
                 /* recoverable; per-flow check below */
             }
 
             const cleanupMacros: string[] = [];
-            const findCreatedMacro = (name: string): any => gameObj?.macros?.find?.((m: any) => m?.name === name) ?? null;
+            const findCreatedMacro = (name: string): MacroDoc | null => gameObj.macros?.find?.((m) => m?.name === name) ?? null;
 
             // ---------- flow: create-item-macro ----------
             try {
@@ -122,12 +191,12 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     record('create-item-macro', false, 'no embedded item to drive item macro creation');
                 } else {
                     const data = {
-                        actorId: actor.id,
-                        actorName: actor.name,
+                        actorId: actorDoc.id,
+                        actorName: actorDoc.name,
                         data: { _id: item.id, name: item.name, img: item.img ?? 'icons/svg/d20.svg' },
                     };
                     await macroManager.createItemMacro?.(data, SLOT);
-                    const expectedName = `${actor.name}: ${item.name}`;
+                    const expectedName = `${actorDoc.name}: ${item.name}`;
                     const created = findCreatedMacro(expectedName);
                     if (created != null) {
                         cleanupMacros.push(created.id);
@@ -143,12 +212,12 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             // ---------- flow: create-skill-macro ----------
             try {
                 const data = {
-                    actorId: actor.id,
-                    actorName: actor.name,
+                    actorId: actorDoc.id,
+                    actorName: actorDoc.name,
                     data: { skill: 'weaponSkill', name: 'Weapon Skill' },
                 };
                 await macroManager.createSkillMacro?.(data, SLOT);
-                const expectedName = `${actor.name}: Weapon Skill`;
+                const expectedName = `${actorDoc.name}: Weapon Skill`;
                 const created = findCreatedMacro(expectedName);
                 if (created != null) {
                     cleanupMacros.push(created.id);
@@ -163,12 +232,12 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             // ---------- flow: create-characteristic-macro ----------
             try {
                 const data = {
-                    actorId: actor.id,
-                    actorName: actor.name,
+                    actorId: actorDoc.id,
+                    actorName: actorDoc.name,
                     data: { characteristic: 'weaponSkill', name: 'WS Check' },
                 };
                 await macroManager.createCharacteristicMacro?.(data, SLOT);
-                const expectedName = `${actor.name}: WS Check`;
+                const expectedName = `${actorDoc.name}: WS Check`;
                 const created = findCreatedMacro(expectedName);
                 if (created != null) {
                     cleanupMacros.push(created.id);
@@ -185,8 +254,8 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                 if (item?.id == null) {
                     record('roll-item-macro', false, 'no embedded item to dispatch roll against');
                 } else {
-                    const result = macroManager.rollItemMacro?.(actor.id, item.id);
-                    if (result != null && typeof result.then === 'function') {
+                    const result = macroManager.rollItemMacro?.(actorDoc.id, item.id);
+                    if (isThenable(result)) {
                         await result.catch(() => undefined);
                     }
                     record('roll-item-macro', true, null);
@@ -197,8 +266,8 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
 
             // ---------- flow: roll-skill-macro ----------
             try {
-                const result = macroManager.rollSkillMacro?.(actor.id, 'weaponSkill');
-                if (result != null && typeof result.then === 'function') await result.catch(() => undefined);
+                const result = macroManager.rollSkillMacro?.(actorDoc.id, 'weaponSkill');
+                if (isThenable(result)) await result.catch(() => undefined);
                 record('roll-skill-macro', true, null);
             } catch (err) {
                 record('roll-skill-macro', false, `threw: ${String((err as Error).message)}`);
@@ -206,8 +275,8 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
 
             // ---------- flow: roll-characteristic-macro ----------
             try {
-                const result = macroManager.rollCharacteristicMacro?.(actor.id, 'weaponSkill');
-                if (result != null && typeof result.then === 'function') await result.catch(() => undefined);
+                const result = macroManager.rollCharacteristicMacro?.(actorDoc.id, 'weaponSkill');
+                if (isThenable(result)) await result.catch(() => undefined);
                 record('roll-characteristic-macro', true, null);
             } catch (err) {
                 record('roll-characteristic-macro', false, `threw: ${String((err as Error).message)}`);
@@ -217,13 +286,13 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             try {
                 for (const id of cleanupMacros) {
                     try {
-                        await gameObj?.macros?.get?.(id)?.delete?.();
+                        await gameObj.macros?.get?.(id)?.delete?.();
                     } catch {
                         /* ignore */
                     }
                 }
                 // Close any chat-card or roll prompt the dispatch flows opened.
-                const wins = Object.values(g.ui?.windows ?? {}) as Array<{ id?: string; close?: () => Promise<unknown> }>;
+                const wins = Object.values(g.ui?.windows ?? {});
                 for (const w of wins) {
                     const id: string = w.id ?? '';
                     if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {
@@ -234,13 +303,12 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                         }
                     }
                 }
-                await actor.delete?.();
+                await actorDoc.delete?.();
             } catch {
                 /* best-effort */
             }
 
             return out;
-            /* eslint-enable @typescript-eslint/no-explicit-any */
         });
         return { results, pageErrors };
     } finally {
