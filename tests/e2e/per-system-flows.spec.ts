@@ -38,11 +38,30 @@ import { expect, test } from './lib/test';
  * failures so all sub-assertions surface in a single assertion message.
  */
 
+/**
+ * Browser-context Foundry surfaces accessed from `page.evaluate`
+ * (`globalThis.Actor`, `globalThis.game`). Foundry globals, not in this repo's
+ * type graph — accessed at the single `as unknown as PageWindow` cast in each
+ * callback, flagged with an inline boundary disable.
+ *
+ * `ActorSystem` carries the union of per-system fields these flows touch; only
+ * the branch relevant to the test under construction is populated at runtime.
+ */
+interface ActorSystem {
+    chaosAlignment?: string;
+    corruption?: number;
+    insanity?: number;
+    originPath?: { chapter?: string; chapterUuid?: string; regiment?: string; speciality?: string };
+    rogueTrader?: {
+        profitFactor?: { current?: number; starting?: number; modifier?: number };
+        endeavour?: { name?: string; achievementCurrent?: number; achievementRequired?: number; reward?: number };
+    };
+}
 interface ActorHandle {
     id?: string;
-    system?: Record<string, unknown>;
-    update?: (data: object) => Promise<unknown>;
-    delete?: () => Promise<unknown>;
+    system?: ActorSystem;
+    update?: (data: object) => Promise<void>;
+    delete?: () => Promise<void>;
 }
 
 interface PageWindow {
@@ -59,13 +78,14 @@ interface PageWindow {
 async function createActor(page: Page, label: string, actorType: string, gameSystem: string): Promise<{ id: string | null; createError: string | null }> {
     return page.evaluate(
         async ({ name, type, sys }: { name: string; type: string; sys: string }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.Actor (Foundry global, no repo type)
             const { Actor: ActorCtor } = globalThis as unknown as PageWindow;
             if (!ActorCtor?.create) return { id: null, createError: 'Actor.create unavailable' };
             try {
                 const actor = await ActorCtor.create({ name, type, system: { gameSystem: sys } });
                 return { id: actor?.id ?? null, createError: actor ? null : 'Actor.create returned null' };
             } catch (err) {
-                return { id: null, createError: String(err instanceof Error ? err.message : String(err)) };
+                return { id: null, createError: err instanceof Error ? err.message : String(err) };
             }
         },
         { name: label, type: actorType, sys: gameSystem },
@@ -74,6 +94,7 @@ async function createActor(page: Page, label: string, actorType: string, gameSys
 
 async function deleteActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
         const { game: foundryGame } = globalThis as unknown as PageWindow;
         try {
             await foundryGame?.actors?.get?.(actorId)?.delete?.();
@@ -100,26 +121,21 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: foundryGame } = globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) => { system?: { chaosAlignment?: string }; update?: (data: object) => Promise<unknown> } | undefined;
-                    };
-                };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
             const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.chaosAlignment ?? null;
             try {
                 await actor.update?.({ 'system.chaosAlignment': 'khorne' });
             } catch (err) {
-                return { error: `set chaosAlignment=khorne: ${String(err instanceof Error ? err.message : String(err))}` };
+                return { error: `set chaosAlignment=khorne: ${err instanceof Error ? err.message : String(err)}` };
             }
             const afterKhorne = foundryGame?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
             try {
                 await actor.update?.({ 'system.chaosAlignment': 'tzeentch' });
             } catch (err) {
-                return { error: `set chaosAlignment=tzeentch: ${String(err instanceof Error ? err.message : String(err))}` };
+                return { error: `set chaosAlignment=tzeentch: ${err instanceof Error ? err.message : String(err)}` };
             }
             const afterTzeentch = foundryGame?.actors?.get?.(actorId)?.system?.chaosAlignment ?? null;
             return { initial, afterKhorne, afterTzeentch, error: null };
@@ -150,19 +166,14 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: foundryGame } = globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) => { system?: { corruption?: number; insanity?: number }; update?: (data: object) => Promise<unknown> } | undefined;
-                    };
-                };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
             const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.update?.({ 'system.corruption': 8, 'system.insanity': 15 });
             } catch (err) {
-                return { error: `set corruption+insanity: ${String(err instanceof Error ? err.message : String(err))}` };
+                return { error: `set corruption+insanity: ${err instanceof Error ? err.message : String(err)}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system;
             return { afterCorruption: after?.corruption ?? null, afterInsanity: after?.insanity ?? null, error: null };
@@ -195,15 +206,8 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: foundryGame } = globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (
-                            id: string,
-                        ) => { system?: { originPath?: { chapter?: string; chapterUuid?: string } }; update?: (data: object) => Promise<unknown> } | undefined;
-                    };
-                };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
             const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
@@ -212,7 +216,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
                     'system.originPath.chapterUuid': 'Compendium.wh40k-rpg.dw-core-chapters.Item.placeholder',
                 });
             } catch (err) {
-                return { error: `set chapter: ${String(err instanceof Error ? err.message : String(err))}` };
+                return { error: `set chapter: ${err instanceof Error ? err.message : String(err)}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system?.originPath;
             return { afterChapter: after?.chapter ?? null, afterChapterUuid: after?.chapterUuid ?? null, error: null };
@@ -247,21 +251,14 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: foundryGame } = globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (
-                            id: string,
-                        ) => { system?: { originPath?: { regiment?: string; speciality?: string } }; update?: (data: object) => Promise<unknown> } | undefined;
-                    };
-                };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
             const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
                 await actor.update?.({ 'system.originPath.regiment': 'Cadian Shock Troopers', 'system.originPath.speciality': 'Heavy Gunner' });
             } catch (err) {
-                return { error: `set regiment+speciality: ${String(err instanceof Error ? err.message : String(err))}` };
+                return { error: `set regiment+speciality: ${err instanceof Error ? err.message : String(err)}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system?.originPath;
             return { afterRegiment: after?.regiment ?? null, afterSpeciality: after?.speciality ?? null, error: null };
@@ -296,23 +293,8 @@ test.describe.serial('per-system flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: foundryGame } = globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) =>
-                            | {
-                                  system?: {
-                                      rogueTrader?: {
-                                          profitFactor?: { current?: number; starting?: number; modifier?: number };
-                                          endeavour?: { name?: string; achievementCurrent?: number; achievementRequired?: number; reward?: number };
-                                      };
-                                  };
-                                  update?: (data: object) => Promise<unknown>;
-                              }
-                            | undefined;
-                    };
-                };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: foundryGame } = globalThis as unknown as PageWindow;
             const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
@@ -326,7 +308,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
                     'system.rogueTrader.endeavour.reward': 5,
                 });
             } catch (err) {
-                return { error: `set rogueTrader fields: ${String(err instanceof Error ? err.message : String(err))}` };
+                return { error: `set rogueTrader fields: ${err instanceof Error ? err.message : String(err)}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system?.rogueTrader;
             return {

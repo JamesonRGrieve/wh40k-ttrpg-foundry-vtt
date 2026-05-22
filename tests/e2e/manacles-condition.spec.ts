@@ -3,6 +3,33 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
+ * Minimal browser-side shapes for the untyped Foundry V14 globals used in
+ * this probe. Foundry ships no types into the Playwright `page.evaluate`
+ * surface, so these stand in for that framework boundary.
+ */
+interface FoundrySheet {
+    render: (force: boolean) => Promise<void>;
+    changeTab?: (tab: string, group: string) => void;
+    element?: { querySelectorAll?: (selector: string) => ArrayLike<Element> };
+}
+interface FoundryProbeActor {
+    createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+    sheet: FoundrySheet;
+    delete?: () => Promise<void>;
+}
+interface FoundryGlobal {
+    Actor: { create?: (data: object) => Promise<FoundryProbeActor | null> };
+    game?: { actors?: { getName?: (name: string) => FoundryProbeActor | undefined } };
+}
+
+interface ManaclesResult {
+    setupOk: boolean;
+    aeFound: boolean;
+    effectCount: number;
+    error: string | null;
+}
+
+/**
  * Manacles tracked condition visual regression (#105 — errata p. 176).
  *
  * Creates a `dh2-character`, applies the Manacled ActiveEffect (the
@@ -20,13 +47,12 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
     const joined = await joinAsGM(page);
     test.skip(!joined, 'no Gamemaster user available in this test world');
 
-    const result = await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-        const g = globalThis as any;
-        const ActorCls = g.Actor;
-        if (ActorCls?.create == null) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create unavailable' };
+    const result = await page.evaluate(async (): Promise<ManaclesResult> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.Actor surface
+        const ActorCls = (globalThis as unknown as FoundryGlobal).Actor;
+        if (ActorCls.create == null) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create unavailable' };
 
-        let actor;
+        let actor: FoundryProbeActor | null;
         try {
             actor = await ActorCls.create({
                 name: 'manacles-probe',
@@ -34,7 +60,7 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
                 system: { gameSystem: 'dh2e' },
             });
         } catch (err) {
-            return { setupOk: false, aeFound: false, effectCount: 0, error: String((err as Error).message) };
+            return { setupOk: false, aeFound: false, effectCount: 0, error: err instanceof Error ? err.message : String(err) };
         }
         if (actor == null) return { setupOk: false, aeFound: false, effectCount: 0, error: 'Actor.create returned null' };
 
@@ -55,7 +81,7 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
                 },
             ]);
         } catch (err) {
-            return { setupOk: false, aeFound: false, effectCount: 0, error: `AE create failed: ${(err as Error).message}` };
+            return { setupOk: false, aeFound: false, effectCount: 0, error: `AE create failed: ${err instanceof Error ? err.message : String(err)}` };
         }
 
         await actor.sheet.render(true);
@@ -64,7 +90,7 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
         });
 
         try {
-            actor.sheet?.changeTab?.('status', 'primary');
+            actor.sheet.changeTab?.('status', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });
@@ -72,12 +98,11 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
             /* fall back to whatever tab is open */
         }
 
-        const root = actor.sheet?.element;
-        const effectRows = root?.querySelectorAll?.('[data-effect-id]') ?? [];
+        const root = actor.sheet.element;
+        const effectRows: ArrayLike<Element> = root?.querySelectorAll?.('[data-effect-id]') ?? [];
         let aeFound = false;
-        for (const row of Array.from(effectRows as Iterable<Element>)) {
-            const text = row.textContent ?? '';
-            if (text.includes('Manacled')) {
+        for (const row of Array.from(effectRows)) {
+            if (row.textContent.includes('Manacled')) {
                 aeFound = true;
                 break;
             }
@@ -102,10 +127,10 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
     expect(result.aeFound, 'expected a Manacled effect row in the sheet DOM').toBe(true);
 
     // Cleanup
-    await page.evaluate(async () => {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        const g = globalThis as any;
-        const a = g.game?.actors?.getName?.('manacles-probe');
+    await page.evaluate(async (): Promise<void> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game surface
+        const gameGlobal = (globalThis as unknown as FoundryGlobal).game;
+        const a = gameGlobal?.actors?.getName?.('manacles-probe');
         try {
             await a?.delete?.();
         } catch {

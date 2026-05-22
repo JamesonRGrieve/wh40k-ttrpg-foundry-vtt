@@ -36,14 +36,30 @@ interface FlowResult {
     error: string | null;
 }
 
+/**
+ * Shapes of the Foundry globals accessed from inside `page.evaluate`. These are
+ * the browser-context surfaces (`globalThis.Actor`, `globalThis.game`,
+ * `globalThis.foundry`) — not part of this repo's type graph, so they cross a
+ * framework boundary at the single `as unknown as FoundryWindow` cast below.
+ */
+interface FoundryActorHandle {
+    id?: string;
+    delete?: () => Promise<void>;
+    createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+    deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
+    items?: { get?: (id: string) => { update?: (data: object) => Promise<void> } | undefined };
+}
+interface FoundryWindow {
+    Actor: { create?: (data: object) => Promise<FoundryActorHandle | null> };
+    game: { actors?: { get?: (id: string) => FoundryActorHandle | undefined } };
+    foundry: { utils?: { getProperty?: (obj: object, path: string) => number | string | boolean | null | undefined } };
+}
+
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const ActorCls = (
-            globalThis as unknown as {
-                Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-            }
-        ).Actor;
-        if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.Actor (Foundry global, no repo type)
+        const ActorCls = (globalThis as unknown as FoundryWindow).Actor;
+        if (!ActorCls.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await ActorCls.create({
                 name: 'probe-modifiers-parent',
@@ -71,12 +87,9 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-            }
-        ).game;
-        const actor = gameGlobal?.actors?.get?.(id);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+        const gameGlobal = (globalThis as unknown as FoundryWindow).game;
+        const actor = gameGlobal.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
 }
@@ -87,18 +100,10 @@ async function deleteActor(page: Page, actorId: string): Promise<void> {
 async function readActorPath(page: Page, actorId: string, path: string): Promise<number | null> {
     return page.evaluate(
         ({ actorId: actorIdArg, path: pathArg }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: { actors?: { get?: (id: string) => unknown } };
-                }
-            ).game;
-            const foundryGlobal = (
-                globalThis as unknown as {
-                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-                }
-            ).foundry;
-            const actor = gameGlobal?.actors?.get?.(actorIdArg);
-            const getPropertyUtil = foundryGlobal?.utils?.getProperty;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis (Foundry game/foundry globals, no repo type)
+            const win = globalThis as unknown as FoundryWindow;
+            const actor = win.game.actors?.get?.(actorIdArg);
+            const getPropertyUtil = win.foundry.utils?.getProperty;
             if (actor === undefined || getPropertyUtil === undefined) return null;
             const v = getPropertyUtil(actor, pathArg);
             const num = Number(v);
@@ -114,20 +119,9 @@ async function readActorPath(page: Page, actorId: string, path: string): Promise
 async function createItems(page: Page, actorId: string, items: object[]): Promise<string[]> {
     return page.evaluate(
         async ({ actorId: actorIdArg, items: itemsArg }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                                  }
-                                | undefined;
-                        };
-                    };
-                }
-            ).game;
-            const actor = gameGlobal?.actors?.get?.(actorIdArg);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const gameGlobal = (globalThis as unknown as FoundryWindow).game;
+            const actor = gameGlobal.actors?.get?.(actorIdArg);
             if (!actor?.createEmbeddedDocuments) return [];
             try {
                 const created = await actor.createEmbeddedDocuments('Item', itemsArg);
@@ -144,16 +138,9 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
     if (itemIds.length === 0) return;
     await page.evaluate(
         async ({ actorId: actorIdArg, itemIds: itemIdsArg }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) => { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> } | undefined;
-                        };
-                    };
-                }
-            ).game;
-            const actor = gameGlobal?.actors?.get?.(actorIdArg);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const gameGlobal = (globalThis as unknown as FoundryWindow).game;
+            const actor = gameGlobal.actors?.get?.(actorIdArg);
             try {
                 await actor?.deleteEmbeddedDocuments?.('Item', itemIdsArg);
             } catch {
@@ -167,16 +154,9 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
 async function updateItem(page: Page, actorId: string, itemId: string, patch: object): Promise<boolean> {
     return page.evaluate(
         async ({ actorId: actorIdArg, itemId: itemIdArg, patch: patchArg }) => {
-            const gameGlobal = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) => { items?: { get?: (id: string) => { update?: (data: object) => Promise<unknown> } | undefined } } | undefined;
-                        };
-                    };
-                }
-            ).game;
-            const actor = gameGlobal?.actors?.get?.(actorIdArg);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const gameGlobal = (globalThis as unknown as FoundryWindow).game;
+            const actor = gameGlobal.actors?.get?.(actorIdArg);
             const item = actor?.items?.get?.(itemIdArg);
             try {
                 await item?.update?.(patchArg);
@@ -377,21 +357,9 @@ async function probeSkillModifier(page: Page, actorId: string): Promise<FlowResu
 async function probeConditionMagnitude(page: Page, actorId: string): Promise<FlowResult> {
     const baseline = (await readActorPath(page, actorId, 'system.characteristics.weaponSkill.total')) ?? 0;
     const result = await page.evaluate(async (actorIdArg: string) => {
-        const gameGlobal = (
-            globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) =>
-                            | {
-                                  createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                                  deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                              }
-                            | undefined;
-                    };
-                };
-            }
-        ).game;
-        const actor = gameGlobal?.actors?.get?.(actorIdArg);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+        const gameGlobal = (globalThis as unknown as FoundryWindow).game;
+        const actor = gameGlobal.actors?.get?.(actorIdArg);
         if (!actor?.createEmbeddedDocuments) return { effectId: null, error: 'actor missing createEmbeddedDocuments' };
         try {
             const created = await actor.createEmbeddedDocuments('ActiveEffect', [
@@ -417,16 +385,9 @@ async function probeConditionMagnitude(page: Page, actorId: string): Promise<Flo
         await page
             .evaluate(
                 async ({ actorId: actorIdCleanup, effectId: effectIdCleanup }) => {
-                    const gameGlobal = (
-                        globalThis as unknown as {
-                            game?: {
-                                actors?: {
-                                    get?: (id: string) => { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> } | undefined;
-                                };
-                            };
-                        }
-                    ).game;
-                    const actor = gameGlobal?.actors?.get?.(actorIdCleanup);
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+                    const gameGlobal = (globalThis as unknown as FoundryWindow).game;
+                    const actor = gameGlobal.actors?.get?.(actorIdCleanup);
                     try {
                         await actor?.deleteEmbeddedDocuments?.('ActiveEffect', [effectIdCleanup]);
                     } catch {

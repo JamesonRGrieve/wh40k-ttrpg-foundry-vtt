@@ -22,16 +22,16 @@ interface ActorRef {
 }
 
 interface DrawbackProbeResult {
-    rendered: boolean;
-    hasPanel: boolean;
-    hasRefundBadge: boolean;
-    hasBudgetRow: boolean;
-    hasRoster: boolean;
-    rosterCountBefore: number | null;
-    drawbacksBefore: number | null;
-    drawbacksAfter: number | null;
-    toggleDispatched: boolean;
-    error: string | null;
+    rendered?: boolean;
+    hasPanel?: boolean;
+    hasRefundBadge?: boolean;
+    hasBudgetRow?: boolean;
+    hasRoster?: boolean;
+    rosterCountBefore?: number | null;
+    drawbacksBefore?: number | null;
+    drawbacksAfter?: number | null;
+    toggleDispatched?: boolean;
+    error?: string | null;
 }
 
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
@@ -219,7 +219,7 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             expect(result.hasRoster, 'multi-comrade roster section should render').toBe(true);
             expect(result.drawbacksBefore, 'initial drawback count should be 2').toBe(2);
             expect(result.rosterCountBefore, 'initial additional-comrade count should be 2').toBe(2);
-            if (result.toggleDispatched) {
+            if (result.toggleDispatched === true) {
                 expect(result.drawbacksAfter, 'one click should remove one drawback id').toBe(1);
             }
             expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);

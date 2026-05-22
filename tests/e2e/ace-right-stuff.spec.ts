@@ -34,81 +34,102 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/right-stuff-dialog.js';
-                let error: string | null = null;
-                let rendered = false;
-                let hasSpendButton = false;
-                let hasCancelButton = false;
-                let skillButtons = 0;
-                let hasOperate = false;
-                let hasSurvival = false;
-
-                try {
-                    const mod = await import(moduleUrl);
-                    const Cls = mod.default as {
-                        new (opts?: unknown): { render: (opts?: unknown) => Promise<unknown>; element: HTMLElement | null; close: () => Promise<unknown> };
-                    };
-                    if (typeof Cls !== 'function') {
-                        return {
-                            rendered,
-                            hasSpendButton,
-                            hasCancelButton,
-                            skillButtons,
-                            hasOperate,
-                            hasSurvival,
-                            error: 'default export not a constructor',
-                        };
+            const result = await page.evaluate(
+                async (): Promise<{
+                    rendered: boolean;
+                    hasSpendButton: boolean;
+                    hasCancelButton: boolean;
+                    skillButtons: number;
+                    hasOperate: boolean;
+                    hasSurvival: boolean;
+                    error: string | null;
+                }> => {
+                    interface DialogInstance {
+                        render: (opts?: { force: boolean }) => Promise<void>;
+                        element: HTMLElement | null;
+                        close: () => Promise<void>;
                     }
-                    const inst = new Cls({});
+                    interface DialogModule {
+                        default: { new (opts?: object): DialogInstance };
+                    }
+                    interface FoundryGlobal {
+                        __c9dialog?: DialogInstance | undefined;
+                    }
+                    const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/right-stuff-dialog.js';
+                    let error: string | null = null;
+                    let rendered = false;
+                    let hasSpendButton = false;
+                    let hasCancelButton = false;
+                    let skillButtons = 0;
+                    let hasOperate = false;
+                    let hasSurvival = false;
+
                     try {
-                        await inst.render({ force: true });
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 80);
-                        });
+                        const mod = (await import(moduleUrl)) as DialogModule;
+                        const Cls = mod.default;
+                        if (typeof Cls !== 'function') {
+                            return {
+                                rendered,
+                                hasSpendButton,
+                                hasCancelButton,
+                                skillButtons,
+                                hasOperate,
+                                hasSurvival,
+                                error: 'default export not a constructor',
+                            };
+                        }
+                        const inst = new Cls({});
+                        try {
+                            await inst.render({ force: true });
+                            await new Promise<void>((r) => {
+                                setTimeout(r, 80);
+                            });
+                        } catch (err) {
+                            error = err instanceof Error ? err.message : String(err);
+                        }
+                        rendered = inst.element instanceof HTMLElement;
+                        if (rendered && inst.element) {
+                            const el = inst.element;
+                            hasSpendButton = el.querySelector('button[data-action="spendRightStuff"]') !== null;
+                            hasCancelButton = el.querySelector('button[data-action="cancel"]') !== null;
+                            skillButtons = el.querySelectorAll('button[data-action="selectSkill"]').length;
+                            hasOperate = el.querySelector('button[data-skill="operate"]') !== null;
+                            hasSurvival = el.querySelector('button[data-skill="survival"]') !== null;
+                        }
+                        // Keep the dialog open through snap(); cleanup runs afterward.
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: custom probe handle on globalThis has no shipped types in this browser-side probe
+                        (globalThis as unknown as FoundryGlobal).__c9dialog = inst;
                     } catch (err) {
-                        error = String((err as Error).message);
+                        error = err instanceof Error ? err.message : String(err);
                     }
-                    rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
-                        const el = inst.element;
-                        hasSpendButton = el.querySelector('button[data-action="spendRightStuff"]') !== null;
-                        hasCancelButton = el.querySelector('button[data-action="cancel"]') !== null;
-                        skillButtons = el.querySelectorAll('button[data-action="selectSkill"]').length;
-                        hasOperate = el.querySelector('button[data-skill="operate"]') !== null;
-                        hasSurvival = el.querySelector('button[data-skill="survival"]') !== null;
-                    }
-                    // Keep the dialog open through snap(); cleanup runs afterward.
-                    (globalThis as any).__c9dialog = inst;
-                } catch (err) {
-                    error = String((err as Error).message);
-                }
 
-                return {
-                    rendered,
-                    hasSpendButton,
-                    hasCancelButton,
-                    skillButtons,
-                    hasOperate,
-                    hasSurvival,
-                    error,
-                };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
-            });
+                    return {
+                        rendered,
+                        hasSpendButton,
+                        hasCancelButton,
+                        skillButtons,
+                        hasOperate,
+                        hasSurvival,
+                        error,
+                    };
+                },
+            );
 
             await snap(page, 'right-stuff-dialog');
 
-            await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
-                const d = (globalThis as any).__c9dialog;
+            await page.evaluate(async (): Promise<void> => {
+                interface FoundryGlobal {
+                    __c9dialog?: { close?: () => Promise<void> } | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: custom probe handle on globalThis has no shipped types in this browser-side cleanup
+                const g = globalThis as unknown as FoundryGlobal;
+                const d = g.__c9dialog;
                 try {
                     await d?.close?.();
                 } catch {
                     /* ignore */
                 }
-                (globalThis as any).__c9dialog = undefined;
-                /* eslint-enable @typescript-eslint/no-explicit-any */
+                g.__c9dialog = undefined;
             });
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
@@ -143,65 +164,91 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
         page.on('pageerror', listener);
 
         try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                let error: string | null = null;
-                let rendered = false;
-                let hasCardRoot = false;
-                let hasSystemAnchor = false;
-                let hasAutoSuccessBanner = false;
-                let messageId: string | null = null;
+            const result = await page.evaluate(
+                async (): Promise<{
+                    rendered: boolean;
+                    hasCardRoot: boolean;
+                    hasSystemAnchor: boolean;
+                    hasAutoSuccessBanner: boolean;
+                    messageId: string | null;
+                    error: string | null;
+                }> => {
+                    interface ChatContext {
+                        gameSystem: string;
+                        actorName: string;
+                        skillKey: string;
+                        skillRaw: string;
+                        degrees: number;
+                        agilityBonus: number;
+                        hasDegrees: boolean;
+                    }
+                    interface FoundryGlobal {
+                        foundry?: { applications?: { handlebars?: { renderTemplate?: (p: string, c: ChatContext) => Promise<string> } } };
+                        ChatMessage?: { create: (data: { user: string | undefined; content: string }) => Promise<{ id: string } | null> };
+                        game?: { user?: { id?: string } };
+                    }
+                    let error: string | null = null;
+                    let rendered = false;
+                    let hasCardRoot = false;
+                    let hasSystemAnchor = false;
+                    let hasAutoSuccessBanner = false;
+                    let messageId: string | null = null;
 
-                try {
-                    const renderTemplateFn = (globalThis as any).foundry?.applications?.handlebars?.renderTemplate as
-                        | ((p: string, c: object) => Promise<string>)
-                        | undefined;
-                    if (!renderTemplateFn) {
-                        return { rendered, hasCardRoot, hasSystemAnchor, hasAutoSuccessBanner, messageId, error: 'renderTemplate unavailable' };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (foundry, ChatMessage, game) have no shipped types in this browser-side probe
+                    const g = globalThis as unknown as FoundryGlobal;
+                    try {
+                        const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
+                        if (!renderTemplateFn) {
+                            return { rendered, hasCardRoot, hasSystemAnchor, hasAutoSuccessBanner, messageId, error: 'renderTemplate unavailable' };
+                        }
+
+                        const template = 'systems/wh40k-rpg/templates/chat/right-stuff-chat.hbs';
+                        const context: ChatContext = {
+                            gameSystem: 'dh2e',
+                            actorName: 'Vex Tannor',
+                            skillKey: 'WH40K.RightStuff.Skill.operate',
+                            skillRaw: 'operate',
+                            degrees: 4,
+                            agilityBonus: 4,
+                            hasDegrees: true,
+                        };
+
+                        const html = await renderTemplateFn(template, context);
+                        rendered = typeof html === 'string' && html.length > 0;
+                        hasCardRoot = html.includes('wh40k-right-stuff-card');
+                        hasSystemAnchor = html.includes('data-wh40k-system="dh2e"');
+                        hasAutoSuccessBanner =
+                            html.includes('WH40K.RightStuff.AutoSuccessLabel') ||
+                            html.includes('WH40K.RightStuff.AutoSuccessWithDoS') ||
+                            html.includes('fa-star');
+
+                        const ChatMessageCls = g.ChatMessage;
+                        const msg = await ChatMessageCls?.create({ user: g.game?.user?.id, content: html });
+                        messageId = msg?.id ?? null;
+                    } catch (err) {
+                        error = err instanceof Error ? err.message : String(err);
                     }
 
-                    const template = 'systems/wh40k-rpg/templates/chat/right-stuff-chat.hbs';
-                    const context = {
-                        gameSystem: 'dh2e',
-                        actorName: 'Vex Tannor',
-                        skillKey: 'WH40K.RightStuff.Skill.operate',
-                        skillRaw: 'operate',
-                        degrees: 4,
-                        agilityBonus: 4,
-                        hasDegrees: true,
-                    };
-
-                    const html = await renderTemplateFn(template, context);
-                    rendered = typeof html === 'string' && html.length > 0;
-                    hasCardRoot = html.includes('wh40k-right-stuff-card');
-                    hasSystemAnchor = html.includes('data-wh40k-system="dh2e"');
-                    hasAutoSuccessBanner =
-                        html.includes('WH40K.RightStuff.AutoSuccessLabel') || html.includes('WH40K.RightStuff.AutoSuccessWithDoS') || html.includes('fa-star');
-
-                    const ChatMessageCls = (globalThis as any).ChatMessage as { create: (data: object) => Promise<{ id: string } | null> } | undefined;
-                    const msg = await ChatMessageCls?.create({ user: (globalThis as any).game?.user?.id, content: html });
-                    messageId = msg?.id ?? null;
-                } catch (err) {
-                    error = String((err as Error).message);
-                }
-
-                return { rendered, hasCardRoot, hasSystemAnchor, hasAutoSuccessBanner, messageId, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
-            });
+                    return { rendered, hasCardRoot, hasSystemAnchor, hasAutoSuccessBanner, messageId, error };
+                },
+            );
 
             await snap(page, 'right-stuff-chat');
 
             // Card captured; remove it so it doesn't leak into the next
             // serial test's chat log.
-            await page.evaluate(async (id: string | null) => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side cleanup */
+            await page.evaluate(async (id: string | null): Promise<void> => {
+                interface FoundryGlobal {
+                    game?: { messages?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } };
+                }
                 if (id === null) return;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game) have no shipped types in this browser-side cleanup
+                const g = globalThis as unknown as FoundryGlobal;
                 try {
-                    await (globalThis as any).game?.messages?.get?.(id)?.delete?.();
+                    await g.game?.messages?.get?.(id)?.delete?.();
                 } catch {
                     /* ignore */
                 }
-                /* eslint-enable @typescript-eslint/no-explicit-any */
             }, result.messageId);
 
             expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();

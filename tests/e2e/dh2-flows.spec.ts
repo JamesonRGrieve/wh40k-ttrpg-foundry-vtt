@@ -17,26 +17,54 @@ import { expect, test } from './lib/test';
  * failures so all sub-assertions surface in a single assertion message.
  */
 
-interface PageWindow {
-    Actor?: {
-        create?: (data: object) => Promise<{
-            id?: string;
-            system?: Record<string, unknown>;
-            update?: (data: object) => Promise<unknown>;
-            createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id: string }>>;
-            items?: {
-                contents: Array<{ id: string; type: string; system?: Record<string, unknown> }>;
-                get?: (id: string) => { id: string; type: string; system?: Record<string, unknown> } | undefined;
-            };
-            delete?: () => Promise<unknown>;
-        } | null>;
+/**
+ * Browser-context Foundry surfaces accessed from `page.evaluate`. These globals
+ * (`globalThis.Actor`, `globalThis.game`) are not part of this repo's type
+ * graph; each access crosses a framework boundary at the single
+ * `as unknown as PageWindow` cast, flagged with an inline boundary disable.
+ */
+interface DH2ActorSystem {
+    fate?: { value: number; max: number };
+    corruption?: number;
+    insanity?: number;
+}
+interface OriginPathSystem {
+    step?: string;
+    stepIndex?: number;
+    gameSystem?: string;
+    positions?: number[];
+}
+interface FoundryItemHandle {
+    id: string;
+    type: string;
+    system?: OriginPathSystem;
+}
+interface FoundryActorHandle {
+    id?: string;
+    system?: DH2ActorSystem;
+    update?: (data: object) => Promise<void>;
+    createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id: string }>>;
+    items?: {
+        contents: FoundryItemHandle[];
+        get?: (id: string) => FoundryItemHandle | undefined;
     };
+    delete?: () => Promise<void>;
+}
+interface FoundryPackDoc {
+    id?: string;
+    name?: string;
+    type?: string;
+    system?: OriginPathSystem;
+}
+interface PageWindow {
+    Actor?: { create?: (data: object) => Promise<FoundryActorHandle | null> };
     game?: {
+        actors?: { get?: (id: string) => FoundryActorHandle | undefined };
         packs?: {
             get?: (id: string) =>
                 | {
                       metadata?: { type?: string };
-                      getDocuments?: () => Promise<Array<{ id?: string; name?: string; type?: string; system?: Record<string, unknown> }>>;
+                      getDocuments?: () => Promise<FoundryPackDoc[]>;
                   }
                 | undefined;
         };
@@ -45,6 +73,7 @@ interface PageWindow {
 
 async function createDH2Character(page: Page, label: string): Promise<{ id: string | null; createError: string | null }> {
     return page.evaluate(async (name: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.Actor (Foundry global, no repo type)
         const { Actor: ActorCls } = globalThis as unknown as PageWindow;
         if (!ActorCls?.create) return { id: null, createError: 'Actor.create unavailable' };
         try {
@@ -62,7 +91,8 @@ async function createDH2Character(page: Page, label: string): Promise<{ id: stri
 
 async function deleteActor(page: Page, id: string): Promise<void> {
     await page.evaluate(async (actorId: string) => {
-        const { game: gameObj } = globalThis as unknown as { game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } } };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+        const { game: gameObj } = globalThis as unknown as PageWindow;
         try {
             await gameObj?.actors?.get?.(actorId)?.delete?.();
         } catch {
@@ -85,13 +115,8 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: gameObj } = globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) => { system?: { fate?: { value: number; max: number } }; update?: (data: object) => Promise<unknown> } | undefined;
-                    };
-                };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.fate?.value ?? null;
@@ -100,13 +125,13 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set fate=3: ${err instanceof Error ? err.message : String(err)}` };
             }
-            const after3 = (gameObj?.actors?.get?.(actorId) as { system?: { fate?: { value: number } } } | undefined)?.system?.fate?.value ?? null;
+            const after3 = gameObj?.actors?.get?.(actorId)?.system?.fate?.value ?? null;
             try {
                 await actor.update?.({ 'system.fate.value': 2 });
             } catch (err) {
                 return { error: `spend fate: ${err instanceof Error ? err.message : String(err)}` };
             }
-            const afterSpend = (gameObj?.actors?.get?.(actorId) as { system?: { fate?: { value: number } } } | undefined)?.system?.fate?.value ?? null;
+            const afterSpend = gameObj?.actors?.get?.(actorId)?.system?.fate?.value ?? null;
             return { initial, after3, afterSpend, error: null };
         }, created.id);
 
@@ -134,9 +159,8 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: gameObj } = globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { system?: { corruption?: number }; update?: (data: object) => Promise<unknown> } | undefined } };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.corruption ?? null;
@@ -172,9 +196,8 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: gameObj } = globalThis as unknown as {
-                game?: { actors?: { get?: (id: string) => { system?: { insanity?: number }; update?: (data: object) => Promise<unknown> } | undefined } };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             const initial = actor.system?.insanity ?? null;
@@ -210,18 +233,8 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         }
 
         const result = await page.evaluate(async (actorId: string) => {
-            const { game: gameObj } = globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) =>
-                            | {
-                                  createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id: string }>>;
-                                  items?: { contents: Array<{ id: string; type: string; system?: Record<string, unknown> }> };
-                              }
-                            | undefined;
-                    };
-                };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const { game: gameObj } = globalThis as unknown as PageWindow;
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
@@ -243,7 +256,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             const items = actor.items?.contents ?? [];
             const origin = items.find((i) => i.type === 'originPath');
             if (!origin) return { error: 'origin item not found after create' };
-            const sys = origin.system as { step?: string; stepIndex?: number; gameSystem?: string; positions?: number[] } | undefined;
+            const sys = origin.system;
             return {
                 step: sys?.step ?? null,
                 stepIndex: sys?.stepIndex ?? null,
@@ -272,19 +285,20 @@ test.describe.serial('dh2 flows (Tier B)', () => {
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
             const { game: gameObj } = globalThis as unknown as PageWindow;
             const pack = gameObj?.packs?.get?.('wh40k-rpg.dh2-core-stats-elite-advances');
             if (!pack) return { error: 'pack not found' };
             const packType = pack.metadata?.type ?? null;
-            let docs: Array<{ id?: string; name?: string; type?: string; system?: Record<string, unknown> }> = [];
+            let docs: FoundryPackDoc[] = [];
             try {
                 docs = (await pack.getDocuments?.()) ?? [];
             } catch (err) {
                 return { error: `getDocuments: ${err instanceof Error ? err.message : String(err)}` };
             }
             const sample = docs[0];
-            const sampleStep = sample.system?.['step'] ?? null;
-            const sampleGameSystem = sample.system?.['gameSystem'] ?? null;
+            const sampleStep = sample.system?.step ?? null;
+            const sampleGameSystem = sample.system?.gameSystem ?? null;
             return {
                 packType,
                 docCount: docs.length,
