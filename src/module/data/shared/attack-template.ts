@@ -147,7 +147,7 @@ export default class AttackTemplate extends SystemDataModel {
      */
     get rateOfFireLabel(): string {
         const rof = this.attack.rateOfFire;
-        const parts = [];
+        const parts: string[] = [];
         parts.push(rof.single ? 'S' : '-');
         parts.push(rof.semi > 0 ? rof.semi.toString() : '-');
         parts.push(rof.full > 0 ? rof.full.toString() : '-');
@@ -174,7 +174,7 @@ export default class AttackTemplate extends SystemDataModel {
      * @type {string[]}
      */
     get chatProperties(): string[] {
-        const props = [];
+        const props: string[] = [];
         if (this.isRanged) {
             props.push(`Range: ${this.rangeLabel}`);
             props.push(`RoF: ${this.rateOfFireLabel}`);

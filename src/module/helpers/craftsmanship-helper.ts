@@ -258,7 +258,7 @@ export default class CraftsmanshipHelper {
     // eslint-disable-next-line complexity -- effect summary covers all item types; refactoring deferred
     static getEffectSummary(item: CraftsmanshipItem): string[] {
         const modifiers = this.getModifiers(item);
-        const effects = [];
+        const effects: string[] = [];
         const itemType = item.parent?.type;
 
         // Weapon

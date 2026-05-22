@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax -- file is a Foundry V14 framework-boundary type surface; see header */
 /**
  * Global type declarations for the WH40K RPG Foundry VTT System.
  * Augments Foundry VTT types with system-specific extensions.
@@ -151,6 +150,7 @@ export interface WH40KItemModifiers {
     characteristics?: Record<string, number>;
     skills?: Record<string, number>;
     combat?: Record<string, number>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.modifiers.resources` open map (per-system resource keys vary)
     resources?: { wounds?: number; fate?: number; [key: string]: unknown };
     other?: Array<{ key: string; value: number; label?: string }>;
     wounds?: number;
@@ -174,6 +174,7 @@ export interface WH40KActorBio {
     weight?: string;
     homeworld?: string;
     notes?: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.bio` open map (per-system bio fields vary)
     [key: string]: unknown;
 }
 
@@ -206,12 +207,15 @@ export interface WH40KPsy {
     rating: number;
     discipline: string;
     powers: string[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.psy` open map (per-system psy fields vary)
     [key: string]: unknown;
 }
 
 export interface WH40KBackpack {
     weightCapacity?: number;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry embedded Item documents (heterogeneous owned-item list)
     contents?: unknown[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.backpack` open map (per-system backpack fields vary)
     [key: string]: unknown;
 }
 
@@ -239,27 +243,38 @@ export type WH40KActorSystemData = ActorDataModel & {
         traitBonus?: number;
     };
     encumbrance?: WH40KEncumbrance;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.backgroundEffects` (heterogeneous origin-path effect list)
     backgroundEffects?: unknown[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.originPath` open sub-object
     originPath?: Record<string, unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.rogueTrader` open sub-object (RT-only)
     rogueTrader?: Record<string, unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.modifierSources` open map (modifier-tracking projection)
     modifierSources?: Record<string, unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.combatActions` (heterogeneous combat-action list)
     combatActions?: unknown[];
     totalFateModifier?: number;
     threatLevel?: number;
     threatTier?: string;
     tags?: string[];
     horde?: { enabled: boolean; magnitude: { max: number; current: number } };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.crew` open sub-object (RT starship)
     crew?: Record<string, unknown>;
     integrity?: { value: number; max: number };
     morale?: { value: number; max: number };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.propulsion` open sub-object (RT starship)
     propulsion?: Record<string, unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.detection` open sub-object (RT starship)
     detection?: Record<string, unknown>;
     detectionBonus?: number;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `schema` runtime descriptor (untyped V14 SchemaField)
     schema?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `_source` raw persisted payload
     _source?: Record<string, unknown>;
     prepareEmbeddedData?: () => void;
     _initializeModifierTracking?: () => void;
     prepareDerivedData?: () => void;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel method `addTrainedSkill` open options bag (passes through to document.update)
     addTrainedSkill?: (key: string, options?: Record<string, unknown>) => Promise<void>;
     removeSkill?: (key: string) => Promise<void>;
     pinAbility?: (id: string) => Promise<void>;
@@ -272,6 +287,7 @@ export type WH40KActorSystemData = ActorDataModel & {
     // it did not — 55 downstream errors surface without it. Proper fix is to
     // narrow per-call-site or add specific fields to the typed DataModels,
     // not to keep this signature long-term.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor DataModel `system` index-signature stop-gap (see comment above; 55 downstream errors without it)
     [key: string]: unknown;
 };
 
@@ -304,11 +320,13 @@ export type WH40KItemSystemData = ItemDataModel & {
     tier?: number | string;
     rarity?: string;
     hasGrants?: boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry item DataModel `system.grants` (heterogeneous grant-entry list)
     grants?: unknown[];
     isMeleeWeapon?: boolean;
     isRangedWeapon?: boolean;
     melee?: boolean;
     // See WH40KActorSystemData above — same stop-gap, same follow-up.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry item DataModel `system` index-signature stop-gap (see WH40KActorSystemData)
     [key: string]: unknown;
 };
 
@@ -326,36 +344,60 @@ interface TooltipsWH40K {
 
 export interface WH40KGameSystem {
     debug: boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: console-style varargs payload for `game.wh40k.log`
     log: (s: string, o?: unknown) => void;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: console-style varargs payload for `game.wh40k.warn`
     warn: (s: string, o?: unknown) => void;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: console-style varargs payload for `game.wh40k.error`
     error: (s: string, o?: unknown) => void;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry hotbar Macro `data` payload + heterogeneous roll result
     rollItemMacro: (data: Record<string, unknown>, slot: number) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry hotbar Macro `data` payload + heterogeneous roll result
     rollSkillMacro: (data: Record<string, unknown>, slot: number) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry hotbar Macro `data` payload + heterogeneous roll result
     rollCharacteristicMacro: (data: Record<string, unknown>, slot: number) => Promise<unknown>;
     rollTable: typeof RollTableUtils;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry roll-pipeline modifier input + heterogeneous roll result (`game.wh40k.rollPsychicPhenomena`)
     rollPsychicPhenomena: (actor: WH40KBaseActor, mod?: unknown) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry roll result (`game.wh40k.rollPerilsOfTheWarp`)
     rollPerilsOfTheWarp: (actor: WH40KBaseActor) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry roll-table inputs + heterogeneous result (`game.wh40k.rollFearEffects`)
     rollFearEffects: (fear: unknown, dof: unknown) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry roll-table result (`game.wh40k.rollMutation`)
     rollMutation: () => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry roll-table result (`game.wh40k.rollMalignancy`)
     rollMalignancy: () => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.showRollTableDialog`)
     showRollTableDialog: () => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render-options bag (`game.wh40k.openCompendiumBrowser`)
     openCompendiumBrowser: (options?: Record<string, unknown>) => Promise<RTCompendiumBrowser>;
     OriginPathBuilder: typeof characterCreation.OriginPathBuilder;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render-options bag + heterogeneous result (`game.wh40k.openOriginPathBuilder`)
     openOriginPathBuilder: (actor: WH40KBaseActor, options?: Record<string, unknown>) => Promise<unknown>;
     npc: typeof npcApplications;
     applications: typeof npcApplications;
     ThreatCalculator: typeof npcApplications.ThreatCalculator;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: open NPC-generator config + heterogeneous Foundry Actor result (`game.wh40k.quickCreateNPC`)
     quickCreateNPC: (config?: unknown) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: open NPC-generator config + heterogeneous Foundry Actor result (`game.wh40k.batchCreateNPCs`)
     batchCreateNPCs: (config?: unknown) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.openEncounterBuilder`)
     openEncounterBuilder: () => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: open stat-block export format + heterogeneous result (`game.wh40k.exportStatBlock`)
     exportStatBlock: (actor: WH40KBaseActor, format?: unknown) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: open stat-block import payload + heterogeneous Foundry Actor result (`game.wh40k.importStatBlock`)
     importStatBlock: (input?: unknown) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render-options bag + heterogeneous result (`game.wh40k.openTemplateSelector`)
     openTemplateSelector: (options?: Record<string, unknown>) => Promise<unknown>;
     DifficultyCalculatorDialog: typeof npcApplications.DifficultyCalculatorDialog;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.calculateDifficulty`)
     calculateDifficulty: (actor: WH40KBaseActor) => Promise<unknown>;
     CombatPresetDialog: typeof npcApplications.CombatPresetDialog;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.savePreset`)
     savePreset: (actor: WH40KBaseActor) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.loadPreset`)
     loadPreset: (actor: WH40KBaseActor) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.openPresetLibrary`)
     openPresetLibrary: () => Promise<unknown>;
     transaction: TransactionManager;
     dice: typeof dice;
@@ -378,8 +420,11 @@ declare global {
     }
 
     interface WH40KNotifications {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ui.notifications.info` open options bag
         info: (message: string, options?: Record<string, unknown>) => void;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ui.notifications.warn` open options bag
         warn: (message: string, options?: Record<string, unknown>) => void;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ui.notifications.error` open options bag
         error: (message: string, options?: Record<string, unknown>) => void;
     }
 
@@ -411,22 +456,29 @@ declare global {
         scope?: 'world' | 'client' | 'user';
         config?: boolean;
         requiresReload?: boolean;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ClientSettings.register` data.type constructor (Number/String/Boolean/DataModel)
         type?: unknown;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ClientSettings.register` data.default value (typed by data.type)
         default?: unknown;
         choices?: Record<string, string>;
         range?: { min: number; max: number; step?: number };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ClientSettings.register` onChange value (typed by data.type)
         onChange?: (value: unknown) => void;
         filePicker?: boolean | string;
     }
 
     interface ClientSettings {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `game.settings.get` returns the registered setting's value (typed at the call site by its registration)
         get: (module: string, key: string) => unknown;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `game.settings.set` value + result (typed at the call site by its registration)
         set: (module: string, key: string, value: unknown) => Promise<unknown>;
         register: (module: string, key: string, data: ClientSettingRegistration) => void;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `game.settings.settings` heterogeneous registration map
         settings: Map<string, unknown>;
     }
 
     interface FoundrySidebar {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ui.sidebar.tabs` heterogeneous tab-app map
         tabs: Record<string, unknown>;
         activateTab: (name: string) => void;
     }
@@ -440,6 +492,7 @@ declare global {
     interface UI {
         notifications: WH40KNotifications;
         sidebar: FoundrySidebar;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ui.chat` scrollBottom options + postOne varargs
         chat: { scrollBottom: (options?: Record<string, unknown>) => void; postOne?: (...args: unknown[]) => void };
         combat: { render: (force?: boolean) => void };
         compendium: { render: (force?: boolean) => void };
@@ -449,10 +502,13 @@ declare global {
         tables: { render: (force?: boolean) => void };
         tours: { render: (force?: boolean) => void };
         nav: { render: (force?: boolean) => void };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `canvas.hud.bubbles.say` Token arg + open options bag
         bubbles: { say: (token: unknown, message: string, options?: Record<string, unknown>) => void };
         broadcaster: { render: (force?: boolean) => void };
         menu: { render: (force?: boolean) => void };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ui.activeWindow` heterogeneous ApplicationV2 reference
         activeWindow: unknown;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `ui.windows` heterogeneous app-by-id map
         windows: Record<number, unknown>;
     }
 
@@ -462,16 +518,20 @@ declare global {
         type?: string;
         img?: string;
         uuid?: string;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `CompendiumCollection` index entry open map (indexed fields vary per pack)
         [key: string]: unknown;
     }
 
     interface CompendiumPack {
         documentName: string;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `CompendiumCollection.metadata` open map (extra package metadata varies)
         metadata: { id: string; label: string; package: string; type: string; system?: string; [key: string]: unknown };
         index: foundry.utils.Collection<CompendiumIndexEntry>;
         getIndex: (options?: { fields?: string[] }) => Promise<foundry.utils.Collection<CompendiumIndexEntry>>;
         getDocument: (id: string) => Promise<foundry.abstract.Document.Any | undefined>;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `CompendiumCollection.getDocuments` open query payload
         getDocuments: (query?: Record<string, unknown>) => Promise<foundry.abstract.Document.Any[]>;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `CompendiumCollection.importDocument` open options bag
         importDocument: (document: foundry.abstract.Document.Any, options?: Record<string, unknown>) => Promise<foundry.abstract.Document.Any>;
     }
 
@@ -494,6 +554,8 @@ export type WH40KBaseActorDocument = WH40KBaseActor;
 export type WH40KItemDocument = WH40KItem;
 
 /** Extended render context for WH40K application sheets */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render context (open template-data map passed to Handlebars)
 export interface WH40KRenderContext extends Record<string, unknown> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 `tabs` render-context map (heterogeneous tab descriptors)
     tabs?: Record<string, unknown>;
 }
