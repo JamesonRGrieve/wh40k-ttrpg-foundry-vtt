@@ -14,6 +14,8 @@ set -euo pipefail
 BUILD_SYSTEM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${BUILD_SYSTEM_DIR}"
 PNPM_VERSION="$(node -p "require('${REPO_ROOT}/package.json').packageManager.split('@')[1]" 2>/dev/null || echo "")"
+COMPENDIUM_STAGE_ROOT="${REPO_ROOT}/src/packs/.build"
+COMPENDIUM_STAGE_PACKS_DIR="${COMPENDIUM_STAGE_ROOT}/packs"
 
 require_node() {
     if ! command -v node >/dev/null 2>&1; then
@@ -62,6 +64,16 @@ build_compendiums() {
     fi
 
     bash "$script" build
+
+    if [ ! -d "${COMPENDIUM_STAGE_PACKS_DIR}" ]; then
+        echo "=== No staged compendiums were produced; leaving dist/packs absent ==="
+        return 0
+    fi
+
+    echo "=== Moving staged compendiums into dist/packs ==="
+    rm -rf "${REPO_ROOT}/dist/packs"
+    mkdir -p "${REPO_ROOT}/dist"
+    mv "${COMPENDIUM_STAGE_PACKS_DIR}" "${REPO_ROOT}/dist/packs"
 }
 
 build_archive() {

@@ -34,6 +34,7 @@ const STATIC_FILES = [
 ];
 const PACK_SRC = "src/packs";
 const BUILD_DIR = "dist";
+const PACK_BUILD_DIR = process.env.WH40K_PACKS_BUILD_DIR || path.join(BUILD_DIR, "packs");
 
 function readJsonFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -107,7 +108,7 @@ async function compilePacks() {
     }
   }
 
-  const packsDir = path.resolve(__dirname, BUILD_DIR, "packs");
+  const packsDir = path.resolve(__dirname, PACK_BUILD_DIR);
 
   // Ensure packs directory exists
   if (!fs.existsSync(packsDir)) {
