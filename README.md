@@ -48,7 +48,7 @@ The sheet architecture uses explicit per-system actor types such as `dh2-charact
 ## Setup
 
 ```bash
-./build.sh deps
+./build-system.sh deps
 ```
 
 That script will:
@@ -68,13 +68,17 @@ pnpm install --frozen-lockfile
 ### Build
 
 ```bash
+./build-system.sh
+./src/packs/build-compendium.sh
 pnpm build
 pnpm watch
 pnpm packs
 pnpm css
 ```
 
-`pnpm build` uses the Gulp pipeline and writes the compiled system to `dist/`.
+`./build-system.sh` is the canonical shell entrypoint. It builds the system, then calls `./src/packs/build-compendium.sh`; when the `src/packs` submodule is absent or uninitialized, the compendium step is skipped and the system build still succeeds.
+
+`pnpm build` uses the Gulp pipeline and writes the compiled system plus packs to `dist/`.
 
 ### Quality Gates
 
@@ -148,7 +152,7 @@ cartography/     Campaign map, token, overlay, and presentation pipeline
 
 ## Release Notes
 
-`./build.sh release` stages a release bundle under `archive/release/`:
+`./build-system.sh release` stages a release bundle under `archive/release/`:
 
 - `system.json`
 - `wh40k-rpg.zip`

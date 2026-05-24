@@ -358,10 +358,17 @@ function createArchive() {
 /*  Export Tasks
 /* ----------------------------------------- */
 
+const buildSystem = gulp.series(cleanBuild, generateIcons, compileCss, compileTypeScript, copyFiles);
+const build = gulp.series(buildSystem, compilePacks, createArchive);
+const archive = gulp.series(createArchive);
+const defaultTask = gulp.series(buildSystem, compilePacks, watchUpdates);
+
 exports.clean = gulp.series(cleanBuild);
 exports.css = gulp.series(compileCss);
 exports.packs = gulp.series(compilePacks);
 exports.copy = gulp.series(copyFiles, watchCopy);
 exports.icons = gulp.series(generateIcons);
-exports.build = gulp.series(cleanBuild, generateIcons, compileCss, compileTypeScript, copyFiles, compilePacks, createArchive);
-exports.default = gulp.series(cleanBuild, generateIcons, compileCss, compileTypeScript, copyFiles, compilePacks, watchUpdates);
+exports.buildSystem = buildSystem;
+exports.archive = archive;
+exports.build = build;
+exports.default = defaultTask;
