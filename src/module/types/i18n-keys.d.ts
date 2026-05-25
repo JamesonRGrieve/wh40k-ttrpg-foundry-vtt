@@ -3220,6 +3220,7 @@ export type I18nKey =
     | 'WH40K.Utility.SetupOriginPath'
     | 'WH40K.Vehicle.Armour'
     | 'WH40K.Vehicle.Class'
+    | 'WH40K.Vehicle.Components'
     | 'WH40K.Vehicle.Crew'
     | 'WH40K.Vehicle.Errors.ItemNotFound'
     | 'WH40K.Vehicle.Errors.NoActionForItemType'
