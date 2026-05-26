@@ -160,7 +160,12 @@
             "CriticalSuccess": "Critical Success!",
             "CriticalFailure": "Critical Failure!",
             "DegreesOfSuccess": "Degrees of Success",
-            "DegreesOfFailure": "Degrees of Failure"
+            "DegreesOfFailure": "Degrees of Failure",
+            "Audit": {
+                "RollVsTarget": "Roll vs Target",
+                "RollResult": "Roll Result",
+                "AgainstTarget": "vs {target}"
+            }
         },
         "Assistance": {
             "Label": "Assistants",
@@ -570,6 +575,10 @@
             "MultipleFateBurnPerRoll": {
                 "Name": "Multiple Fate Burn Per Roll (Homebrew)",
                 "Hint": "Allow spending more than one Fate Point on the same roll (e.g., re-roll AND add a Degree of Success). RAW (Dark Heresy 2e) permits only one Fate spend per Test."
+            },
+            "AutoRollDamage": {
+                "Name": "Auto-roll Damage on Hit",
+                "Hint": "When a weapon or psychic attack succeeds, automatically roll its damage and post the damage card. Disable to require clicking the chat \"Roll Damage\" button manually."
             }
         },
         "ActiveEffect": {
