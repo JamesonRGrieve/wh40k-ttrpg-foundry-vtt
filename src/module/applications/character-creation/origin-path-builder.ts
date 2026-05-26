@@ -309,6 +309,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare _charCustomBases: Record<string, number>;
     declare _charAdvancedMode: boolean;
     declare _charGenMode: 'point-buy' | 'roll' | 'roll-pool-hb';
+    /**
+     * Point-buy mode: points spent above base per characteristic. Kept separate
+     * from `_charRolls` (dice) and `_charCustomBases` (race baseline) so the
+     * three generation modes never clobber each other's state.
+     */
+    declare _charPointBuy: Record<string, number>;
     declare _charDragData: { type: string; index: number; characteristic: string | null } | null;
     declare _divination: string;
     declare _thronesRolled: number;
@@ -359,6 +365,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             skipLineage: OriginPathBuilder.#skipLineage,
             goToCharacteristics: OriginPathBuilder.#goToCharacteristics,
             rollCharacteristicsBank: OriginPathBuilder.#rollCharacteristicsBank,
+            rollCharacteristics: OriginPathBuilder.#rollCharacteristics,
+            adjustPointBuy: OriginPathBuilder.#adjustPointBuy,
             charReset: OriginPathBuilder.#charReset,
             charToggleAdvanced: OriginPathBuilder.#charToggleAdvanced,
             setCharGenMode: OriginPathBuilder.#setCharGenMode,
@@ -422,6 +430,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charRolls = Array<number>(9).fill(0);
         this._charAssignments = {};
         this._charCustomBases = {};
+        this._charPointBuy = {};
         this._charAdvancedMode = false;
         this._charGenMode = 'roll-pool-hb';
         this._charDragData = null;
@@ -453,6 +462,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     ];
 
     /**
+     * Dice expression rolled for the bonus added on top of the characteristic
+     * base in BOTH dice-driven modes (`roll-pool-hb` shared bank and per-slot
+     * `roll`). The full characteristic is `base (settings) + this roll +
+     * origin bonus`; this constant is the roll part only. Shared here so the
+     * two modes stay in lock-step rather than each carrying its own literal
+     * (DRY — was previously inlined in `#rollCharacteristicsBank`). The base
+     * value itself is sourced from `WH40KSettings.getCharacteristicBase()`.
+     */
+    static CHARACTERISTIC_ROLL_FORMULA = '2d10';
+
+    /**
      * Narrow `this.actor.system` to the union view this builder reads.
      * Lives on the class so each call site reads as `this._actorSys()` instead
      * of repeating the cross-system cast inline.
@@ -471,9 +491,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charRolls = Array.isArray(genData.rolls) && genData.rolls.length === 9 ? [...genData.rolls] : Array<number>(9).fill(0);
         this._charAssignments = {};
         this._charCustomBases = {};
+        this._charPointBuy = {};
 
         const assignments = genData.assignments ?? {};
         const customBases = genData.customBases ?? {};
+        const pointBuy = genData.pointBuy ?? {};
         const defaultBase = WH40KSettings.getCharacteristicBase();
 
         for (const key of CHARS) {
@@ -482,6 +504,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // the pre-fix input handler is rescued on next open — a stored 0
             // is invalid for character generation, fall back to defaultBase.
             this._charCustomBases[key] = customBases[key] || defaultBase;
+            // Point-buy spends are valid at 0 (nothing allocated), so `??` here
+            // — unlike customBases above, a stored 0 is the legitimate default.
+            this._charPointBuy[key] = Math.max(0, pointBuy[key] ?? 0);
         }
         this._charAdvancedMode = customBases.enabled === true;
 
@@ -616,6 +641,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (state.charAssignments !== undefined && state.charAssignments !== null) this._charAssignments = { ...state.charAssignments };
         if (state.charAdvancedMode !== undefined && state.charAdvancedMode !== null) this._charAdvancedMode = state.charAdvancedMode;
         if (state.charCustomBases !== undefined && state.charCustomBases !== null) this._charCustomBases = { ...state.charCustomBases };
+        if (state.charPointBuy !== undefined && state.charPointBuy !== null) this._charPointBuy = { ...state.charPointBuy };
         if (state.charGenMode === 'point-buy' || state.charGenMode === 'roll' || state.charGenMode === 'roll-pool-hb') {
             this._charGenMode = state.charGenMode;
         }
@@ -639,6 +665,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             charAssignments: this._charAssignments,
             charAdvancedMode: this._charAdvancedMode,
             charCustomBases: this._charCustomBases,
+            charPointBuy: this._charPointBuy,
             charGenMode: this._charGenMode,
             divination: this._divination,
             influenceRolled: this._influenceRolled,
@@ -1046,6 +1073,46 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const anyRolls = this._charRolls.some((r) => r > 0);
 
         const isModeRollPoolHB = this._charGenMode === 'roll-pool-hb';
+        const isModeRoll = this._charGenMode === 'roll';
+        const isModePointBuy = this._charGenMode === 'point-buy';
+
+        // Point-buy view: base (settings/race) + points spent + origin bonus.
+        // Computed independently of the dice state above so switching modes
+        // never bleeds rolled values into the point-buy totals.
+        const pointBuyPool = WH40KSettings.getCharacteristicPointBuyPool();
+        const pointBuySpent = this._pointBuySpent();
+        const pointBuyRemaining = pointBuyPool - pointBuySpent;
+        const pointBuyCharacteristics = CHARS.map((key) => {
+            const charData = (this._actorSys().characteristics?.[key] ?? {}) as Partial<WH40KCharacteristic>;
+            const base = this._charAdvancedMode ? this._charCustomBases[key] || DEFAULT_BASE : DEFAULT_BASE;
+            const originBonus = originBonuses.totals[key] ?? 0;
+            const points = Math.max(0, this._charPointBuy[key] ?? 0);
+            return {
+                key,
+                label: charData.label !== undefined && charData.label !== '' ? charData.label : key,
+                short: charData.short !== undefined && charData.short !== '' ? charData.short : key.substring(0, 2).toUpperCase(),
+                base,
+                points,
+                originBonus,
+                hasOriginBonus: originBonus !== 0,
+                hasOriginBonusTooltip: (originBonuses.breakdowns[key] ?? []).length > 0,
+                originBonusTooltip: this._formatOriginBonusTooltip(originBonuses.breakdowns[key] ?? []),
+                originBonusTooltipData: this._formatOriginBonusTooltipData(originBonuses.breakdowns[key] ?? []),
+                total: base + points + originBonus,
+                // A +1 can only be added while the pool has headroom.
+                canIncrease: pointBuyRemaining > 0,
+                canDecrease: points > 0,
+            };
+        });
+        const pointBuyRows = [];
+        for (let i = 0; i < pointBuyCharacteristics.length; i += 3) {
+            pointBuyRows.push(pointBuyCharacteristics.slice(i, i + 3));
+        }
+
+        // Roll mode shares the dice-driven characteristics + preview but uses a
+        // fixed in-order assignment (no draggable bank), so the bank chrome is
+        // hidden and the per-slot roll value is read straight off _charRolls.
+        const canApply = (isModeRollPoolHB && allAssigned && anyRolls) || (isModeRoll && allAssigned && anyRolls) || (isModePointBuy && pointBuyRemaining >= 0);
 
         return {
             rollsBank,
@@ -1055,12 +1122,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             advancedMode: this._charAdvancedMode,
             allAssigned,
             anyRolls,
-            canApply: isModeRollPoolHB && allAssigned && anyRolls,
+            canApply,
             divination: this._divination,
             mode: this._charGenMode,
-            isModePointBuy: this._charGenMode === 'point-buy',
-            isModeRoll: this._charGenMode === 'roll',
+            isModePointBuy,
+            isModeRoll,
             isModeRollPoolHB,
+            // Point-buy specifics
+            pointBuyCharacteristics,
+            pointBuyRows,
+            pointBuyPool,
+            pointBuySpent,
+            pointBuyRemaining,
+            pointBuyOverspent: pointBuyRemaining < 0,
         };
     }
 
@@ -1340,18 +1414,137 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Whether the characteristic step is in a committable state. Only the
-     * `roll-pool-hb` mode is implemented today — point-buy and roll are
-     * stubs and never report ready, blocking commit until they ship.
+     * Whether the characteristic step is in a committable state. The criterion
+     * is mode-specific:
+     *  - `roll-pool-hb` and `roll` both back onto `_charRolls`/`_charAssignments`
+     *    (the bank-and-assign UX shares state with the fixed in-order roll UX),
+     *    so both require every characteristic to have a positive rolled value
+     *    assigned to it.
+     *  - `point-buy` is committable whenever the spend is valid (never over the
+     *    pool); spending nothing is a legitimate "all at base" build, so the
+     *    only gate is that the player has not over-allocated.
      * @private
      */
     _hasAssignedCharacteristics(): boolean {
-        if (this._charGenMode !== 'roll-pool-hb') return false;
+        if (this._charGenMode === 'point-buy') {
+            return this._pointBuyRemaining() >= 0;
+        }
         return OriginPathBuilder.GENERATION_CHARACTERISTICS.every((key) => {
             const assignedIdx = this._charAssignments[key];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: _charAssignments values may be null (unassigned) or undefined (key absent)
             return assignedIdx !== null && assignedIdx !== undefined && (this._charRolls[assignedIdx] ?? 0) > 0;
         });
+    }
+
+    /* -------------------------------------------- */
+    /*  Point-buy pure logic                        */
+    /* -------------------------------------------- */
+
+    /**
+     * Total points currently spent across all characteristics in point-buy
+     * mode. Cost is a flat 1 point per +1 above base (content-agnostic linear
+     * primitive — no per-characteristic cost table). Negative stored spends
+     * (impossible via the UI, but defensive against bad flag data) are clamped
+     * to 0 so the total never under-counts.
+     * @private
+     */
+    _pointBuySpent(): number {
+        let spent = 0;
+        for (const key of OriginPathBuilder.GENERATION_CHARACTERISTICS) {
+            spent += Math.max(0, this._charPointBuy[key] ?? 0);
+        }
+        return spent;
+    }
+
+    /**
+     * Points still available to spend in point-buy mode: pool − spent. May be
+     * read negative by callers only after a forced overspend; the spend handler
+     * clamps so this never goes below 0 in normal flow.
+     * @private
+     */
+    _pointBuyRemaining(): number {
+        return WH40KSettings.getCharacteristicPointBuyPool() - this._pointBuySpent();
+    }
+
+    /**
+     * Apply a delta to the points allocated to one characteristic, validating
+     * against the pool. Returns the clamped value actually stored. A positive
+     * delta is capped at whatever the remaining pool allows; the spend can
+     * never push the total over the pool, and an individual allocation can
+     * never go negative. Pure logic — the action handler is a thin wrapper.
+     *
+     * @param key - characteristic key (must be a generation characteristic)
+     * @param delta - signed change in allocated points
+     * @returns the new allocation stored for `key` (always ≥ 0)
+     * @private
+     */
+    _adjustPointBuy(key: string, delta: number): number {
+        if (!OriginPathBuilder.GENERATION_CHARACTERISTICS.includes(key)) {
+            return this._charPointBuy[key] ?? 0;
+        }
+        const current = Math.max(0, this._charPointBuy[key] ?? 0);
+        if (delta > 0) {
+            // Cannot spend more than what remains in the pool.
+            const allowed = Math.min(delta, Math.max(0, this._pointBuyRemaining()));
+            this._charPointBuy[key] = current + allowed;
+        } else {
+            this._charPointBuy[key] = Math.max(0, current + delta);
+        }
+        return this._charPointBuy[key];
+    }
+
+    /**
+     * Set the points allocated to one characteristic to an absolute value,
+     * validating against the pool. Used by the numeric input. The requested
+     * value is floored at 0 and then capped so the running total never exceeds
+     * the pool (excess is dropped, not borrowed from other characteristics).
+     * Returns the clamped value actually stored.
+     * @private
+     */
+    _setPointBuy(key: string, value: number): number {
+        if (!OriginPathBuilder.GENERATION_CHARACTERISTICS.includes(key)) {
+            return this._charPointBuy[key] ?? 0;
+        }
+        const desired = Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : 0;
+        const current = Math.max(0, this._charPointBuy[key] ?? 0);
+        // Headroom = remaining pool with THIS characteristic's current spend
+        // refunded, so re-setting the same field doesn't fight its own spend.
+        const headroom = WH40KSettings.getCharacteristicPointBuyPool() - (this._pointBuySpent() - current);
+        this._charPointBuy[key] = Math.max(0, Math.min(desired, headroom));
+        return this._charPointBuy[key];
+    }
+
+    /* -------------------------------------------- */
+    /*  Roll-mode pure logic                        */
+    /* -------------------------------------------- */
+
+    /**
+     * Roll one bonus value per characteristic for `roll` mode using the shared
+     * {@link CHARACTERISTIC_ROLL_FORMULA}, writing each result into `_charRolls`
+     * at its in-order index and assigning that index to the matching
+     * characteristic. Unlike `roll-pool-hb` (a free bank the player drags), the
+     * `roll` mode locks each rolled value to its characteristic in order.
+     *
+     * Pure-ish: the dice come from an injected `rollValues` array when provided
+     * (deterministic tests), otherwise from live `Roll` evaluation. Returns the
+     * generated bonus values in characteristic order.
+     * @private
+     */
+    async _generateRollModeValues(rollValues?: number[]): Promise<number[]> {
+        const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
+        let values: number[];
+        if (rollValues !== undefined) {
+            values = CHARS.map((_key, i) => Math.max(0, Math.trunc(rollValues[i] ?? 0)));
+        } else {
+            const rollInstances = CHARS.map(() => new Roll(OriginPathBuilder.CHARACTERISTIC_ROLL_FORMULA));
+            await Promise.all(rollInstances.map(async (roll) => roll.evaluate()));
+            values = rollInstances.map((roll) => roll.total ?? 0);
+        }
+        this._charRolls = [...values];
+        CHARS.forEach((key, i) => {
+            this._charAssignments[key] = i;
+        });
+        return values;
     }
 
     /**
@@ -1513,6 +1706,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 // value (8/13/15…) — the "stats all <20" regression.
                 if (Number.isNaN(value) || value <= 0) value = WH40KSettings.getCharacteristicBase();
                 this._charCustomBases[key] = value;
+                void this.render();
+            });
+        });
+
+        // Point-buy numeric inputs: type an absolute allocation per
+        // characteristic. Validation (floor 0, cap at the remaining pool) lives
+        // in the pure `_setPointBuy`; we re-render so the clamp is reflected.
+        html.querySelectorAll('.csd-pointbuy-input').forEach((input) => {
+            input.addEventListener('change', (e) => {
+                const el = e.currentTarget as HTMLInputElement;
+                const key = el.dataset['characteristic'];
+                if (key === undefined || key === '') return;
+                this._setPointBuy(key, parseInt(el.value, 10));
+                this._saveScrollPosition();
                 void this.render();
             });
         });
@@ -3870,10 +4077,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Roll the full characteristic bank using 2d10 per slot.
+     * Roll the full characteristic bank (one {@link CHARACTERISTIC_ROLL_FORMULA}
+     * roll per slot) for the homebrew shared-pool mode. The player then drags
+     * each result onto a characteristic.
      */
     static async #rollCharacteristicsBank(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        const rollInstances = Array.from({ length: OriginPathBuilder.GENERATION_CHARACTERISTICS.length }, () => new Roll('2d10'));
+        const rollInstances = Array.from(
+            { length: OriginPathBuilder.GENERATION_CHARACTERISTICS.length },
+            () => new Roll(OriginPathBuilder.CHARACTERISTIC_ROLL_FORMULA),
+        );
         await Promise.all(rollInstances.map(async (roll) => roll.evaluate()));
         const rolls: number[] = rollInstances.map((roll) => roll.total ?? 0);
 
@@ -3882,12 +4094,42 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Reset all characteristic assignments.
+     * `roll` mode: roll one value per characteristic and lock it in order
+     * (no bank, no drag). Delegates to the pure `_generateRollModeValues`.
+     */
+    static async #rollCharacteristics(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
+        await this._generateRollModeValues();
+        void this.render();
+    }
+
+    /**
+     * `point-buy` mode: adjust the points allocated to one characteristic by a
+     * signed delta read from `data-delta`. Validation lives in the pure
+     * `_adjustPointBuy` (caps at the remaining pool, floors at 0).
+     */
+    static #adjustPointBuy(this: OriginPathBuilder, _event: Event, target: HTMLElement): void {
+        const key = target.dataset['characteristic'];
+        const delta = parseInt(target.dataset['delta'] ?? '', 10);
+        if (key === undefined || key === '' || Number.isNaN(delta)) return;
+        this._adjustPointBuy(key, delta);
+        void this.render();
+    }
+
+    /**
+     * Reset characteristic state for the active mode: clears dice assignments
+     * for the roll modes, or zeroes every point-buy allocation in point-buy
+     * mode (refunding the whole pool).
      */
     static #charReset(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
-        for (const key of CHARS) {
-            this._charAssignments[key] = null;
+        if (this._charGenMode === 'point-buy') {
+            for (const key of CHARS) {
+                this._charPointBuy[key] = 0;
+            }
+        } else {
+            for (const key of CHARS) {
+                this._charAssignments[key] = null;
+            }
         }
         void this.render();
     }
@@ -3901,8 +4143,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Switch the character-generation mode. Only `roll-pool-hb` has a working
-     * implementation today; `point-buy` and `roll` are stub placeholders.
+     * Switch the character-generation mode (`point-buy`, `roll`, or the
+     * homebrew shared-pool `roll-pool-hb`). Each mode keeps its own state, so
+     * switching is non-destructive — flipping back restores the prior inputs.
      */
     static #setCharGenMode(this: OriginPathBuilder, _event: Event, target: HTMLElement): void {
         const mode = target.dataset['mode'];
@@ -4390,7 +4633,33 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // loop below then wrote `.base = baseDefault + 0 + originBonus` for
             // every char, leaving stats <20 wherever the homeworld penalty bit.
             const hasCharRolls = charRolls.some((r) => r > 0) && CHARS.some((k) => charAssignments[k] != null);
-            if (hasCharRolls) {
+            if (this._charGenMode === 'point-buy') {
+                // Point-buy commit: base = (baseline|race base) + points spent +
+                // origin bonus. Mirrors the dice path's absolute-write semantics
+                // so a re-commit re-derives every characteristic rather than
+                // stacking. Always runs (even with 0 points spent) so an origin
+                // bonus still lands on a characteristic the player left at base.
+                const originModSums = this._collectOriginCharacteristicBonuses();
+                const settingDefaultBase = WH40KSettings.getCharacteristicBase();
+                // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
+                const charUpdate: Record<string, unknown> = {
+                    'system.characterGeneration.customBases.enabled': this._charAdvancedMode,
+                    'system.characterGeneration.mode': this._charGenMode,
+                };
+                for (const key of CHARS) {
+                    charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
+                    charUpdate[`system.characterGeneration.pointBuy.${key}`] = Math.max(0, this._charPointBuy[key] ?? 0);
+                    const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] || settingDefaultBase : settingDefaultBase;
+                    const points = Math.max(0, this._charPointBuy[key] ?? 0);
+                    const originBonus = originModSums[key] ?? 0;
+                    // Skip characteristics with nothing to write so we don't wipe
+                    // a manually-set base back down to baseDefault (same guard as
+                    // the dice path's "<20 everywhere" fix).
+                    if (points <= 0 && originBonus === 0) continue;
+                    charUpdate[`system.characteristics.${key}.base`] = baseDefault + points + originBonus;
+                }
+                await this.actor.update(charUpdate);
+            } else if (hasCharRolls) {
                 // Sum origin-path characteristic bonuses across every committed selection, so
                 // baked-in bonuses like Imperial World's +5 Fellowship land directly in the
                 // base characteristic instead of being re-computed at runtime every render.
