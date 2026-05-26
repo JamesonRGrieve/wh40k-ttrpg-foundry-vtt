@@ -3762,6 +3762,8 @@
         "Combat.Action": {
             "StandardAttack": "Standard Attack",
             "StandardAttackDesc": "Make one melee or ranged attack.",
+            "Throw": "Throw",
+            "ThrowDesc": "Half Action. Throw a grenade or thrown weapon (Ballistic Skill test). Range comes from the weapon; a miss scatters in a random direction.",
             "CalledShot": "Called Shot",
             "CalledShotDesc": "Attack a specific location on your target with a \u201320 to WS or BS.",
             "AllOutAttack": "All Out Attack",
