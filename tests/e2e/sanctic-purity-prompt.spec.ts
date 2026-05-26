@@ -59,7 +59,7 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
                         name: 'sanctic-purity-probe',
                         type: 'dh2-character',
                         system: {
-                            gameSystem: 'dh2e',
+                            gameSystem: 'dh2',
                             fate: { value: 3, max: 5 },
                         },
                     });

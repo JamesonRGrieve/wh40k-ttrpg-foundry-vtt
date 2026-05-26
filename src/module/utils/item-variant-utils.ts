@@ -4,9 +4,7 @@ type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow';
 
 const LINE_KEY_MAP: Record<string, SupportedLineKey> = {
     dh1: 'dh1',
-    dh1e: 'dh1',
     dh2: 'dh2',
-    dh2e: 'dh2',
     rt: 'rt',
     dw: 'dw',
     bc: 'bc',

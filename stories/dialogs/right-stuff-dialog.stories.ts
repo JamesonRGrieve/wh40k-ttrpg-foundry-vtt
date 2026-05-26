@@ -63,7 +63,7 @@ const meta = {
         agilityBonus: 4,
         fateValue: 3,
         selectedSkill: 'operate',
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
     },
 } satisfies Meta<Args>;
 export default meta;

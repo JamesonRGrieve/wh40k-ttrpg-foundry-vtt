@@ -390,7 +390,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 async function probeSharedPc(): Promise<void> {
                     try {
                         pc = await withTimeout(
-                            ActorCls.create({ name: 'app-api-depth-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
+                            ActorCls.create({ name: 'app-api-depth-pc', type: 'dh2-character', system: { gameSystem: 'dh2' } }),
                             5_000,
                             'PC Actor.create',
                         );
@@ -427,9 +427,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const created = await withTimeout(
                                 live.createEmbeddedDocuments('Item', [
-                                    { name: 'probe-stack', type: 'gear', system: { gameSystem: 'dh2e', quantity: 5 } },
-                                    { name: 'probe-single', type: 'gear', system: { gameSystem: 'dh2e', quantity: 1 } },
-                                    { name: 'probe-notsplittable', type: 'talent', system: { gameSystem: 'dh2e' } },
+                                    { name: 'probe-stack', type: 'gear', system: { gameSystem: 'dh2', quantity: 5 } },
+                                    { name: 'probe-single', type: 'gear', system: { gameSystem: 'dh2', quantity: 1 } },
+                                    { name: 'probe-notsplittable', type: 'talent', system: { gameSystem: 'dh2' } },
                                 ]),
                                 5_000,
                                 'embed gear stack',
@@ -552,8 +552,8 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const createdItems = await withTimeout(
                                 live.createEmbeddedDocuments('Item', [
-                                    { name: 'probe-fav-1', type: 'gear', system: { gameSystem: 'dh2e' } },
-                                    { name: 'probe-fav-2', type: 'gear', system: { gameSystem: 'dh2e' } },
+                                    { name: 'probe-fav-1', type: 'gear', system: { gameSystem: 'dh2' } },
+                                    { name: 'probe-fav-2', type: 'gear', system: { gameSystem: 'dh2' } },
                                 ]),
                                 5_000,
                                 'embed favorite gear',

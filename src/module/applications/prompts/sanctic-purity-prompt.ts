@@ -58,7 +58,7 @@ interface SancticPurityContext extends Record<string, unknown> {
 
 /**
  * Dialog: confirm spending one Fate to negate a Psychic Phenomena
- * roll. The chat card is system-themed via `data-wh40k-system="dh2e"`.
+ * roll. The chat card is system-themed via `data-wh40k-system="dh2"`.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
 export default class SancticPurityPrompt extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
@@ -177,7 +177,7 @@ export default class SancticPurityPrompt extends ApplicationV2Mixin(ApplicationV
             fateCost: SANCTIC_PURITY_FATE_COST,
             fateBefore,
             fateAfter: Math.max(0, fateBefore - SANCTIC_PURITY_FATE_COST),
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/sanctic-purity-negated-chat.hbs', templateData);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types

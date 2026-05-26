@@ -65,7 +65,7 @@ describe('resolveBloodLossStaunch', () => {
 
 describe('isMedicaeMechadendriteSystem', () => {
     it('enables the errata path for the six FFG-family systems', () => {
-        for (const sys of ['dh1e', 'dh2e', 'bc', 'dw', 'ow', 'rt']) {
+        for (const sys of ['dh1', 'dh2', 'bc', 'dw', 'ow', 'rt']) {
             expect(isMedicaeMechadendriteSystem(sys)).toBe(true);
         }
     });
@@ -123,7 +123,7 @@ interface FakeMedicaeActor {
 function makeActor(opts: { gameSystem?: string; items?: FakeItem[]; medicae?: number }): FakeMedicaeActor {
     return {
         name: 'Brother Medicae',
-        system: { gameSystem: opts.gameSystem ?? 'dh2e' },
+        system: { gameSystem: opts.gameSystem ?? 'dh2' },
         skills: { medicae: { current: opts.medicae ?? 0 } },
         items: opts.items ?? [],
         effects: [],
@@ -139,13 +139,13 @@ function asActor(a: FakeMedicaeActor): WH40KBaseActorDocument {
 
 describe('findMedicaeMechadendrite / actorHasMedicaeMechadendrite', () => {
     it('finds the cybernetic on a DH2 actor that owns one', () => {
-        const actor = makeActor({ gameSystem: 'dh2e', items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
+        const actor = makeActor({ gameSystem: 'dh2', items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
         expect(findMedicaeMechadendrite(asActor(actor))).not.toBeNull();
         expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(true);
     });
 
     it('returns null when the actor owns no matching cybernetic', () => {
-        const actor = makeActor({ gameSystem: 'dh2e', items: [{ name: 'Bionic Arm', isCybernetic: true }] });
+        const actor = makeActor({ gameSystem: 'dh2', items: [{ name: 'Bionic Arm', isCybernetic: true }] });
         expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(false);
     });
 
@@ -155,7 +155,7 @@ describe('findMedicaeMechadendrite / actorHasMedicaeMechadendrite', () => {
     });
 
     it('remains eligible across the other five FFG systems', () => {
-        for (const sys of ['dh1e', 'bc', 'dw', 'ow', 'rt']) {
+        for (const sys of ['dh1', 'bc', 'dw', 'ow', 'rt']) {
             const actor = makeActor({ gameSystem: sys, items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
             expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(true);
         }
@@ -205,7 +205,7 @@ describe('staunchBloodLoss (runtime, #104)', () => {
 
     it('on success removes the Blood Loss Active Effect and emits a success card', async () => {
         const bloodLossEffect: FakeEffect = { id: 'ae-1', flags: { 'wh40k-rpg': { bloodloss: true } } };
-        const actor = makeActor({ gameSystem: 'dh2e', medicae: 40 });
+        const actor = makeActor({ gameSystem: 'dh2', medicae: 40 });
         actor.effects = [bloodLossEffect];
 
         // Roll 30 vs target 40+10=50 → success.
@@ -220,7 +220,7 @@ describe('staunchBloodLoss (runtime, #104)', () => {
 
     it('on failure leaves the Blood Loss effect intact and emits a failure card', async () => {
         const bloodLossEffect: FakeEffect = { id: 'ae-1', flags: { 'wh40k-rpg': { bloodloss: true } } };
-        const actor = makeActor({ gameSystem: 'dh2e', medicae: 20 });
+        const actor = makeActor({ gameSystem: 'dh2', medicae: 20 });
         actor.effects = [bloodLossEffect];
 
         // Roll 90 vs target 20+10=30 → failure.
@@ -235,7 +235,7 @@ describe('staunchBloodLoss (runtime, #104)', () => {
     it('only removes effects flagged as blood loss, not other harmful AEs', async () => {
         const bloodLoss: FakeEffect = { id: 'ae-blood', flags: { 'wh40k-rpg': { bloodloss: true } } };
         const stunned: FakeEffect = { id: 'ae-stun', flags: { 'wh40k-rpg': { nature: 'harmful' } } };
-        const actor = makeActor({ gameSystem: 'dh2e', medicae: 60 });
+        const actor = makeActor({ gameSystem: 'dh2', medicae: 60 });
         actor.effects = [bloodLoss, stunned];
 
         await staunchBloodLoss(asActor(actor), () => 10);

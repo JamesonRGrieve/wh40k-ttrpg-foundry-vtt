@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 /**
  * Tests for DH2CharacterData.
- * DH2CharacterData is a thin wrapper (adds only gameSystem = 'dh2e') around
+ * DH2CharacterData is a thin wrapper (adds only gameSystem = 'dh2') around
  * CharacterBaseData. Tests verify the identity and gameSystem tag.
  */
 describe('DH2CharacterData', () => {
@@ -17,12 +17,12 @@ describe('DH2CharacterData', () => {
         expect(mod.default).toBeTruthy();
     });
 
-    it('static gameSystem is dh2e', async () => {
+    it('static gameSystem is dh2', async () => {
         const mod = await import('./dh2-character').catch(() => undefined);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
         if (mod === undefined) return;
         const DH2CharacterData = mod.default;
-        expect((DH2CharacterData as { gameSystem?: string }).gameSystem).toBe('dh2e');
+        expect((DH2CharacterData as { gameSystem?: string }).gameSystem).toBe('dh2');
     });
 
     it('inherits CharacterBaseData as its parent class', async () => {

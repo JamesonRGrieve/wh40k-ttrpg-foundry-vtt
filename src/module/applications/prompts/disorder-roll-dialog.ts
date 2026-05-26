@@ -111,7 +111,7 @@ export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2
             disorderName: disorder.name,
             disorderKey: disorder.key,
             effect: disorder.effect,
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/disorder-roll-chat.hbs', templateData);

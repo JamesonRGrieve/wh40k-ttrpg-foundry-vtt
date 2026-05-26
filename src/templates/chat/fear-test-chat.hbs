@@ -1,10 +1,10 @@
 {{!-- Fear (X) test chat card (#65). --}}
 {{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
-<div class="wh40k-rpg wh40k-fear-card tw-p-4 tw-rounded-md tw-border tw-bg-[rgba(15,12,8,0.85)] {{#if (gt fearRating 2)}}tw-border-red-700{{else}}tw-border-[rgba(201,162,39,0.35)] dh2e:tw-border-bronze{{/if}}"
+<div class="wh40k-rpg wh40k-fear-card tw-p-4 tw-rounded-md tw-border tw-bg-[rgba(15,12,8,0.85)] {{#if (gt fearRating 2)}}tw-border-red-700{{else}}tw-border-[rgba(201,162,39,0.35)] dh2:tw-border-bronze{{/if}}"
      data-wh40k-system="{{gameSystem}}">
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
-        <i class="fas fa-skull tw-text-[1.1rem] {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-[#c4871d] dh2e:tw-text-bronze{{/if}}"></i>
-        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-gold dh2e:tw-text-bronze{{/if}}">
+        <i class="fas fa-skull tw-text-[1.1rem] {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-[#c4871d] dh2:tw-text-bronze{{/if}}"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-gold dh2:tw-text-bronze{{/if}}">
             {{localize "WH40K.Fear.ChatTitle"}}
         </div>
     </div>
@@ -24,7 +24,7 @@
         </li>
         <li class="tw-flex tw-justify-between tw-gap-3">
             <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Fear.Target"}}</span>
-            <span class="tw-font-bold tw-tabular-nums {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-gold dh2e:tw-text-bronze{{/if}}">{{target}}</span>
+            <span class="tw-font-bold tw-tabular-nums {{#if (gt fearRating 2)}}tw-text-red-600{{else}}tw-text-gold dh2:tw-text-bronze{{/if}}">{{target}}</span>
         </li>
         <li class="tw-flex tw-justify-between tw-gap-3">
             <span class="tw-text-[#9a9a8a]">d100</span>

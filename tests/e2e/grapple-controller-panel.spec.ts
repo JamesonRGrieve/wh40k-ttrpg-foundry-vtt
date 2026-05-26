@@ -46,7 +46,7 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
             actor = await ActorCls.create({
                 name: 'grapple-panel-probe',
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e' },
+                system: { gameSystem: 'dh2' },
                 flags: { wh40k: { grapple: { state: 'grappling' } } },
             });
         } catch (createErr) {

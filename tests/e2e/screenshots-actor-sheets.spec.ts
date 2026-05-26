@@ -42,22 +42,22 @@ const SCREENSHOT_ACTOR_FLOWS = [
     'bc-vehicle::bc::edit',
     'loot::bc::view',
     'loot::bc::edit',
-    'dh1-character::dh1e::view',
-    'dh1-character::dh1e::edit',
-    'dh1-npc::dh1e::view',
-    'dh1-npc::dh1e::edit',
-    'dh1-vehicle::dh1e::view',
-    'dh1-vehicle::dh1e::edit',
-    'loot::dh1e::view',
-    'loot::dh1e::edit',
-    'dh2-character::dh2e::view',
-    'dh2-character::dh2e::edit',
-    'dh2-npc::dh2e::view',
-    'dh2-npc::dh2e::edit',
-    'dh2-vehicle::dh2e::view',
-    'dh2-vehicle::dh2e::edit',
-    'loot::dh2e::view',
-    'loot::dh2e::edit',
+    'dh1-character::dh1::view',
+    'dh1-character::dh1::edit',
+    'dh1-npc::dh1::view',
+    'dh1-npc::dh1::edit',
+    'dh1-vehicle::dh1::view',
+    'dh1-vehicle::dh1::edit',
+    'loot::dh1::view',
+    'loot::dh1::edit',
+    'dh2-character::dh2::view',
+    'dh2-character::dh2::edit',
+    'dh2-npc::dh2::view',
+    'dh2-npc::dh2::edit',
+    'dh2-vehicle::dh2::view',
+    'dh2-vehicle::dh2::edit',
+    'loot::dh2::view',
+    'loot::dh2::edit',
     'dw-character::dw::view',
     'dw-character::dw::edit',
     'dw-npc::dw::view',
@@ -134,14 +134,14 @@ interface FoundryGlobal {
 }
 
 /**
- * `<systemId>` is the runtime GameSystemId (`dh1e`/`dh2e` carry a trailing
+ * `<systemId>` is the runtime GameSystemId (`dh1`/`dh2` carry a trailing
  * `e`); actor type prefixes in `CONFIG.Actor.dataModels` drop it (`dh1-` /
  * `dh2-`). Same translation `actor-types.spec.ts` uses.
  */
 const SYSTEM_PREFIX: Record<GameSystemId, string> = {
     bc: 'bc',
-    dh1e: 'dh1',
-    dh2e: 'dh2',
+    dh1: 'dh1',
+    dh2: 'dh2',
     dw: 'dw',
     ow: 'ow',
     rt: 'rt',

@@ -38,7 +38,7 @@ const LEGACY_DH2_HEADER_FIELDS: SidebarHeaderField[] = [
     { label: 'Rank', name: 'system.rank', type: 'number', value: 3, placeholder: 'Rank', inputClass: 'wh40k-rank-input' },
 ];
 
-function playerContext(systemId: 'dh2e' | 'im' | 'rt'): ReturnType<typeof mockPlayerSheetContext> {
+function playerContext(systemId: 'dh2' | 'im' | 'rt'): ReturnType<typeof mockPlayerSheetContext> {
     return mockPlayerSheetContext({
         systemId,
         actorOverrides: {
@@ -57,7 +57,7 @@ function playerContext(systemId: 'dh2e' | 'im' | 'rt'): ReturnType<typeof mockPl
             },
             items: [],
         },
-        contextOverrides: systemId === 'dh2e' ? { headerFields: LEGACY_DH2_HEADER_FIELDS } : {},
+        contextOverrides: systemId === 'dh2' ? { headerFields: LEGACY_DH2_HEADER_FIELDS } : {},
     });
 }
 
@@ -67,7 +67,7 @@ function npcContext(): ReturnType<typeof mockNpcSheetContext> {
 
 describe('character sheet template composition', () => {
     it('renders the DH2 sidebar header and biography tab together', () => {
-        const context = playerContext('dh2e');
+        const context = playerContext('dh2');
         const element = wrap(`
             <aside>${headerTemplate(context)}${tabsTemplate(context)}</aside>
             <main>${biographyTemplate(context)}</main>
@@ -112,7 +112,7 @@ describe('character sheet template composition', () => {
 
     it('renders a direct characteristic roll overlay on the statistics page', () => {
         const context = {
-            ...playerContext('dh2e'),
+            ...playerContext('dh2'),
             tab: { id: 'skills', group: 'primary', cssClass: 'tab-skills', active: true },
         };
         const element = wrap(skillsTemplate(context));

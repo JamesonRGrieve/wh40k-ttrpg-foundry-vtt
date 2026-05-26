@@ -11,10 +11,10 @@ const sampleSrc = `
 <div class="wh40k-rpg" data-wh40k-system="{{system}}" style="padding:1rem; background:#1a1a1a; color:#d8c690; font-family:sans-serif;">
     <h3 style="margin:0 0 0.5rem 0;">{{system}} — icon helper</h3>
     <div style="display:flex; gap:1rem; align-items:center; font-size:24px;">
-        <span class="dh2e:tw-text-bronze rt:tw-text-amber-500 im:tw-text-emerald-400">
+        <span class="dh2:tw-text-bronze rt:tw-text-amber-500 im:tw-text-emerald-400">
             {{iconSvg "fa:dice-d20" class="tw-w-8 tw-h-8" label="Roll d20"}}
         </span>
-        <span class="dh2e:tw-text-gold rt:tw-text-amber-200 im:tw-text-emerald-200">
+        <span class="dh2:tw-text-gold rt:tw-text-amber-200 im:tw-text-emerald-200">
             {{iconSvg "fa:cog" class="tw-w-6 tw-h-6"}}
         </span>
         <span style="color:#9ad;">
@@ -38,11 +38,11 @@ const meta: Meta<{ system: string }> = {
     argTypes: {
         system: {
             control: { type: 'select' },
-            options: ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'],
+            options: ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'],
         },
     },
     args: {
-        system: 'dh2e',
+        system: 'dh2',
     },
 };
 
@@ -58,7 +58,7 @@ export const Default: Story = {
 export const PerSystemMatrix: Story = {
     name: 'Per-system matrix',
     render: () => {
-        const systems = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'];
+        const systems = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'];
         return systems.map((s) => sampleTemplate({ system: s })).join('');
     },
 };
@@ -78,6 +78,6 @@ export const Catalogue: Story = {
             `,
             )
             .join('');
-        return `<div class="wh40k-rpg" data-wh40k-system="dh2e" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:0.5rem; padding:1rem; background:#111;">${tiles}</div>`;
+        return `<div class="wh40k-rpg" data-wh40k-system="dh2" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:0.5rem; padding:1rem; background:#111;">${tiles}</div>`;
     },
 };

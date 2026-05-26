@@ -38,7 +38,7 @@ function cardContext(
     extras: { actorName: string; success: boolean; degrees: number },
 ): PushTheLimitCardContext {
     return {
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         actorName: extras.actorName,
         invoked: result.invoked,
         modifier: result.modifier,
@@ -79,7 +79,7 @@ export const SuccessWithBonus: Story = {
         ),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('.wh40k-push-the-limit-card')).toBeTruthy();
-        await expect(canvasElement.querySelector('[data-wh40k-system="dh2e"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh2"]')).toBeTruthy();
     },
 };
 

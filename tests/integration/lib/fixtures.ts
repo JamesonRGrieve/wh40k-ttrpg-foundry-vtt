@@ -48,5 +48,5 @@ export async function createItem(runtime: FoundryRuntime, data: CreateData): Pro
     return klass.create({ name: data.name ?? 'Test Item', ...data });
 }
 
-export const GAME_SYSTEM_IDS = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'] as const;
+export const GAME_SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'] as const;
 export type GameSystemId = (typeof GAME_SYSTEM_IDS)[number];

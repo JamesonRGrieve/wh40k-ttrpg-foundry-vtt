@@ -119,7 +119,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                 actor = await ActorCls.create({
                     name: 'sheet-mixin-probe-actor',
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e' },
+                    system: { gameSystem: 'dh2' },
                 });
             } catch (err) {
                 record('edit-mode-toggle-actor', false, `actor.create threw: ${String(err instanceof Error ? err.message : err)}`);
@@ -220,7 +220,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     {
                         name: 'sheet-mixin-probe-talent',
                         type: 'talent',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     },
                 ]);
                 ownedItem = Array.isArray(docs) ? docs[0] : null;
@@ -345,7 +345,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     const transient = await ItemCls?.create?.({
                         name: 'sheet-mixin-drop-source',
                         type: 'gear',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     });
                     if (transient == null) {
                         record('drop-event-on-sheet', false, 'ItemCls.create for drop-source returned null');

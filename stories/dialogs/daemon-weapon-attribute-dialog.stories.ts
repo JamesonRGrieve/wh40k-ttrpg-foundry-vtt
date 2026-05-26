@@ -77,7 +77,7 @@ function buildChatContext(args: Args): DaemonWeaponChatContext {
         bindingLabel: BINDING_STRENGTH_PROFILES[args.bindingStrength].label,
         accentClass: ALIGNMENT_ACCENT_CLASS[args.alignment],
         result,
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
     };
 }
 

@@ -83,7 +83,7 @@ export default class FateUsesDialog extends HandlebarsApplicationMixin(Applicati
         const systemId = this.#config.gameSystem;
         // Fall back to the DH2e canon if the active actor's game system is unknown.
         const config = systemId ? SystemConfigRegistry.getOrNull(systemId) : null;
-        const fallback = SystemConfigRegistry.get('dh2e');
+        const fallback = SystemConfigRegistry.get('dh2');
         const uses = (config ?? fallback).getFatePointUses();
         return {
             ...context,

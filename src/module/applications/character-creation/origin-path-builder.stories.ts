@@ -574,7 +574,7 @@ export const RogueTraderDirection: Story = {
  * normalized-origin selection — the card is `isSelected`, the selectedOrigin
  * block carries the granted skills/characteristics/talents pulled from the
  * normalized shape, and the per-system data attribute is wired so the
- * Tailwind `dh2e:` variants resolve. The Playwright spec at
+ * Tailwind `dh2:` variants resolve. The Playwright spec at
  * tests/storybook/issue-198-origin-path-preview.spec.ts snapshots this story.
  */
 /**

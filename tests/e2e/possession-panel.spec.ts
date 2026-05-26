@@ -42,7 +42,7 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
                 name: 'possession-panel-probe',
                 type: 'dh2-character',
                 system: {
-                    gameSystem: 'dh2e',
+                    gameSystem: 'dh2',
                     possession: { state: 'latent', unleashUsed: 0, unleashMax: 3 },
                 },
             });

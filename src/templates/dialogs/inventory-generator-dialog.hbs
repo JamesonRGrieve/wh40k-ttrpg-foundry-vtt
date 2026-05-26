@@ -1,7 +1,7 @@
 <div class="tw-flex tw-flex-col tw-h-full tw-text-[color:var(--color-text-light-primary,#f0f0f0)]" data-wh40k-system="{{gameSystem}}">
 
     <header class="tw-px-4 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border-b-2 tw-border-[var(--color-border-dark,#444)]">
-        <h1 class="tw-m-0 tw-text-xl tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+        <h1 class="tw-m-0 tw-text-xl tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
             <i class="fa-solid fa-boxes-stacked tw-mr-2"></i>{{localize "WH40K.InventoryGenerator.Heading" actor=actorName}}
         </h1>
         <p class="tw-m-0 tw-mt-1 tw-text-xs tw-text-[color:var(--color-text-light-secondary,#999)]">{{localize "WH40K.InventoryGenerator.Hint"}}</p>
@@ -15,11 +15,11 @@
 
     <nav class="wh40k-tabs tw-flex tw-gap-1 tw-px-3 tw-pt-2 tw-bg-[rgba(0,0,0,0.2)] tw-border-b tw-border-[var(--color-border-dark,#444)]" data-group="primary">
         <button type="button" data-action="switchTab" data-tab="generate"
-            class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-solid tw-text-sm tw-font-medium tw-cursor-pointer tw-transition-colors {{#if onGenerateTab}}tw-text-gold tw-border-gold dh2e:tw-text-gold-raw dh2e:tw-border-gold-raw rt:tw-text-gold rt:tw-border-gold im:tw-text-failure im:tw-border-failure{{else}}tw-text-[color:var(--color-text-light-secondary,#999)] tw-border-transparent{{/if}}">
+            class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-solid tw-text-sm tw-font-medium tw-cursor-pointer tw-transition-colors {{#if onGenerateTab}}tw-text-gold tw-border-gold dh2:tw-text-gold-raw dh2:tw-border-gold-raw rt:tw-text-gold rt:tw-border-gold im:tw-text-failure im:tw-border-failure{{else}}tw-text-[color:var(--color-text-light-secondary,#999)] tw-border-transparent{{/if}}">
             <i class="fa-solid fa-dice"></i>{{localize "WH40K.InventoryGenerator.TabGenerate"}}
         </button>
         <button type="button" data-action="switchTab" data-tab="browse"
-            class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-solid tw-text-sm tw-font-medium tw-cursor-pointer tw-transition-colors {{#if onBrowseTab}}tw-text-gold tw-border-gold dh2e:tw-text-gold-raw dh2e:tw-border-gold-raw rt:tw-text-gold rt:tw-border-gold im:tw-text-failure im:tw-border-failure{{else}}tw-text-[color:var(--color-text-light-secondary,#999)] tw-border-transparent{{/if}}">
+            class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-solid tw-text-sm tw-font-medium tw-cursor-pointer tw-transition-colors {{#if onBrowseTab}}tw-text-gold tw-border-gold dh2:tw-text-gold-raw dh2:tw-border-gold-raw rt:tw-text-gold rt:tw-border-gold im:tw-text-failure im:tw-border-failure{{else}}tw-text-[color:var(--color-text-light-secondary,#999)] tw-border-transparent{{/if}}">
             <i class="fa-solid fa-magnifying-glass"></i>{{localize "WH40K.InventoryGenerator.TabBrowse"}}
         </button>
     </nav>

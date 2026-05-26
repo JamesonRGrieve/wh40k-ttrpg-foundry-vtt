@@ -12,7 +12,7 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from '
 const COVERAGE = '.theme-coverage.json';
 const BASELINE = '.theme-baseline';
 
-const SYSTEM_IDS = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'];
+const SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'];
 const variantPattern = new RegExp(`\\b(${SYSTEM_IDS.join('|')}):tw-`);
 
 function* walk(dir) {

@@ -158,7 +158,7 @@ export const ComposedSheetAndDialogDH2: Story = {
             ],
             {},
         );
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
 };

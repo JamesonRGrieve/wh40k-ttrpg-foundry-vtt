@@ -304,7 +304,7 @@ export const ThemeDH2: Story = {
                 levels: {
                     novice: { effect: 'Three "secrets" from the near future; spend for +10 each on later tests (risk -10 on 7-10 for 2nd / 3rd).' },
                 },
-                gameSystem: 'dh2e',
+                gameSystem: 'dh2',
             }),
         }),
 };

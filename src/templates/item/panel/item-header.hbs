@@ -50,7 +50,7 @@
        (`{{> … }}`) supply no block, `@partial-block` is absent, and the
        slot emits zero DOM — output is byte-identical for them.
 --}}
-<header class="tw-grid {{#if (eq variant "physical")}}tw-grid-cols-[80px_minmax(0,1fr)_auto]{{else}}tw-grid-cols-[80px_minmax(0,1fr)]{{/if}} tw-gap-4 tw-border-b-2 tw-border-gold-dark bc:tw-border-crimson-dark/60 dh1e:tw-border-gold-raw/60 dh2e:tw-border-gold-dark/80 dw:tw-border-accent-combat/60 ow:tw-border-brass-l20/60 rt:tw-border-amber-900/60 im:tw-border-failure/60 tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
+<header class="tw-grid {{#if (eq variant "physical")}}tw-grid-cols-[80px_minmax(0,1fr)_auto]{{else}}tw-grid-cols-[80px_minmax(0,1fr)]{{/if}} tw-gap-4 tw-border-b-2 tw-border-gold-dark bc:tw-border-crimson-dark/60 dh1:tw-border-gold-raw/60 dh2:tw-border-gold-dark/80 dw:tw-border-accent-combat/60 ow:tw-border-brass-l20/60 rt:tw-border-amber-900/60 im:tw-border-failure/60 tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
     {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name extraClass="wh40k-item-header__image"}}
 
     <div class="tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">

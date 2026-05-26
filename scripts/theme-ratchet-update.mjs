@@ -5,7 +5,7 @@
 
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 
-const SYSTEM_IDS = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'];
+const SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'];
 const variantPattern = new RegExp(`\\b(${SYSTEM_IDS.join('|')}):tw-`);
 
 function* walk(dir) {

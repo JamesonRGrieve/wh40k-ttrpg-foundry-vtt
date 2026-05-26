@@ -91,7 +91,7 @@ export const ScaleToThreatClick: Story = {
 export const DarkHeresy2NPC: Story = {
     name: 'Per-system — Dark Heresy 2e NPC',
     args: mockNpcSheetContext({
-        systemId: 'dh2e',
+        systemId: 'dh2',
         actorOverrides: { name: 'Chaos Cultist' },
     }),
     render: (args) => renderNPCSheet(args),
@@ -120,7 +120,7 @@ export const BlackCrusadeNPC: Story = {
 
 export const DarkHeresy1eNPC: Story = {
     name: 'Per-system — Dark Heresy 1e NPC',
-    args: mockNpcSheetContext({ systemId: 'dh1e', actorOverrides: { name: 'Heretek' } }),
+    args: mockNpcSheetContext({ systemId: 'dh1', actorOverrides: { name: 'Heretek' } }),
     render: (args) => renderNPCSheet(args),
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);

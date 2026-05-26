@@ -39,7 +39,7 @@ const meta = {
     title: 'Dialogs/FateUsesDialog',
     render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         uses: USES,
         bonusAttributes: [{ name: 'Recovery', summary: 'Regain spent Fate at the start of each session.' }],
     },

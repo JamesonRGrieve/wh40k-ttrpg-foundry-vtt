@@ -226,7 +226,7 @@ export class TransactionManager {
         }
 
         const resources = readBuyerResources(buyer);
-        const isDh2 = resources.gameSystem === 'dh2e';
+        const isDh2 = resources.gameSystem === 'dh2';
         const homebrew = WH40KSettings.isHomebrew();
         const hasInfluencePool = typeof resources.influence === 'number';
 

@@ -437,7 +437,7 @@ const VEHICLE_STARSHIP_FLOWS = [
 
 if (inventory) {
     // validActorTypeSystemPairs is the per-system-prefixed enumeration —
-    // `dh2-character::dh2e` counts, `dh2-character::bc` does not (would never
+    // `dh2-character::dh2` counts, `dh2-character::bc` does not (would never
     // be createable). Falls back to the cross-product for older inventory
     // files that predate the prefix-aware build.
     const pairs = Array.isArray(inventory.validActorTypeSystemPairs)
@@ -1263,29 +1263,29 @@ recordDimension('data-item-model.flow', covered['data-item-model.flow'], DATA_IT
 // tests/e2e/data-actor-models.spec.ts — src/module/data/actor/templates +
 // concrete derived math (creature/character) across all 7 systems.
 const DATA_ACTOR_MODEL_FLOWS = [
-    'characteristic-total-and-bonus::dh2e',
+    'characteristic-total-and-bonus::dh2',
     'characteristic-total-and-bonus::im',
-    'characteristic-unnatural-multiplies-bonus::dh2e',
-    'characteristic-damage-subtracts::dh2e',
-    'skill-rank-flags::dh2e',
-    'skill-current-aptitude-untrained::dh2e',
+    'characteristic-unnatural-multiplies-bonus::dh2',
+    'characteristic-damage-subtracts::dh2',
+    'skill-rank-flags::dh2',
+    'skill-current-aptitude-untrained::dh2',
     'skill-current-aptitude-untrained::bc',
     'skill-current-aptitude-untrained::ow',
     'skill-current-aptitude-untrained::im',
     'skill-current-career-untrained::rt',
-    'skill-current-career-untrained::dh1e',
+    'skill-current-career-untrained::dh1',
     'skill-current-career-untrained::dw',
-    'skill-trained-uses-full-characteristic::dh2e',
-    'movement-derives-from-ab-and-size::dh2e',
-    'lifting-and-leap-from-strength-bonus::dh2e',
-    'fatigue-max-from-toughness-bonus::dh2e',
-    'psy-current-rating-and-isPsyker::dh2e',
-    'experience-available-derived::dh2e',
-    'wounds-fate-resources-roundtrip::dh2e',
-    'corruption-level-and-insanity-degrees::dh1e',
-    'subtlety-and-influence-roundtrip::dh2e',
-    'influence-clamps-to-percentile-ceiling::dh2e',
-    'roll-data-exposes-characteristic-keys::dh2e',
+    'skill-trained-uses-full-characteristic::dh2',
+    'movement-derives-from-ab-and-size::dh2',
+    'lifting-and-leap-from-strength-bonus::dh2',
+    'fatigue-max-from-toughness-bonus::dh2',
+    'psy-current-rating-and-isPsyker::dh2',
+    'experience-available-derived::dh2',
+    'wounds-fate-resources-roundtrip::dh2',
+    'corruption-level-and-insanity-degrees::dh1',
+    'subtlety-and-influence-roundtrip::dh2',
+    'influence-clamps-to-percentile-ceiling::dh2',
+    'roll-data-exposes-characteristic-keys::dh2',
 ];
 recordDimension('data-actor-model.flow', covered['data-actor-model.flow'], DATA_ACTOR_MODEL_FLOWS);
 
@@ -1316,11 +1316,11 @@ recordDimension('app-tours-extra.flow', covered['app-tours-extra.flow'], APP_TOU
 
 // tests/e2e/game-system-configs.spec.ts — src/module/config/game-systems/*.
 // 10 single-flow registry/base-helper keys + 7 per-system families × the 7
-// canonical GameSystemIds (bc,dh1e,dh2e,dw,ow,rt,im), `<family>::<id>` shape.
+// canonical GameSystemIds (bc,dh1,dh2,dw,ow,rt,im), `<family>::<id>` shape.
 const GAME_SYSTEM_CONFIG_SINGLE_FLOWS = [
     'registry-get-all-systems',
     'registry-getOrNull-and-has',
-    'aptitude-cost-tables-dh2e',
+    'aptitude-cost-tables-dh2',
     'aptitude-resolution-fallback',
     'advance-match-info',
     'career-cost-null-contract',
@@ -1338,7 +1338,7 @@ const GAME_SYSTEM_CONFIG_FAMILIES = [
     'fate-point-uses',
     'visible-skills',
 ];
-const GAME_SYSTEM_CONFIG_IDS = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'];
+const GAME_SYSTEM_CONFIG_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'];
 const GAME_SYSTEM_CONFIG_FLOWS = [
     ...GAME_SYSTEM_CONFIG_SINGLE_FLOWS,
     ...GAME_SYSTEM_CONFIG_FAMILIES.flatMap((fam) => GAME_SYSTEM_CONFIG_IDS.map((id) => `${fam}::${id}`)),
@@ -1444,9 +1444,9 @@ recordDimension('data-shared.flow', covered['data-shared.flow'], DATA_SHARED_FLO
 // tests/e2e/character-creation-wizard.spec.ts
 const CHARGEN_WIZARD_FLOWS = [
     'system-builders-actor-type-dispatch',
-    'system-builders-dh2e-stamps-game-system',
+    'system-builders-dh2-stamps-game-system',
     'system-builders-rt-six-core-steps',
-    'system-builders-im-falls-back-to-dh2e',
+    'system-builders-im-falls-back-to-dh2',
     'normalize-origin-from-raw-compendium-doc',
     'normalize-choice-handles-string-options',
     'builder-randomize-fills-selections',
@@ -1587,22 +1587,22 @@ const SCREENSHOT_ACTOR_FLOWS = [
     'bc-vehicle::bc::edit',
     'loot::bc::view',
     'loot::bc::edit',
-    'dh1-character::dh1e::view',
-    'dh1-character::dh1e::edit',
-    'dh1-npc::dh1e::view',
-    'dh1-npc::dh1e::edit',
-    'dh1-vehicle::dh1e::view',
-    'dh1-vehicle::dh1e::edit',
-    'loot::dh1e::view',
-    'loot::dh1e::edit',
-    'dh2-character::dh2e::view',
-    'dh2-character::dh2e::edit',
-    'dh2-npc::dh2e::view',
-    'dh2-npc::dh2e::edit',
-    'dh2-vehicle::dh2e::view',
-    'dh2-vehicle::dh2e::edit',
-    'loot::dh2e::view',
-    'loot::dh2e::edit',
+    'dh1-character::dh1::view',
+    'dh1-character::dh1::edit',
+    'dh1-npc::dh1::view',
+    'dh1-npc::dh1::edit',
+    'dh1-vehicle::dh1::view',
+    'dh1-vehicle::dh1::edit',
+    'loot::dh1::view',
+    'loot::dh1::edit',
+    'dh2-character::dh2::view',
+    'dh2-character::dh2::edit',
+    'dh2-npc::dh2::view',
+    'dh2-npc::dh2::edit',
+    'dh2-vehicle::dh2::view',
+    'dh2-vehicle::dh2::edit',
+    'loot::dh2::view',
+    'loot::dh2::edit',
     'dw-character::dw::view',
     'dw-character::dw::edit',
     'dw-npc::dw::view',

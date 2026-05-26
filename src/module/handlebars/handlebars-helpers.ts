@@ -110,7 +110,7 @@ export function registerHandlebarsHelpers(): void {
      * Falls back to the explicitly passed `systemId` arg, then 'rt'.
      *
      * @example  {{themeClassFor 'border'}}            // uses @root system
-     * @example  {{themeClassFor 'accent' 'dh2e'}}     // explicit override
+     * @example  {{themeClassFor 'accent' 'dh2'}}     // explicit override
      */
     Handlebars.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: TplValue[]): string {
         // Last arg is Handlebars options object; preceding args are user-supplied.

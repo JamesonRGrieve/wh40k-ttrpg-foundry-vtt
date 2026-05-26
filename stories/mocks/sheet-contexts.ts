@@ -104,11 +104,11 @@ export interface SheetContextLike {
     [key: string]: unknown;
 }
 
-/** Per-system `withSystem` accepts `'dh2'`/`'dh1'` etc., the registry uses `'dh2e'`/`'dh1e'`. */
+/** Per-system `withSystem` accepts `'dh2'`/`'dh1'` etc., the registry uses `'dh2'`/`'dh1'`. */
 const SYSTEM_ID_TO_WITH_SYSTEM: Record<GameSystemId, SystemId> = {
     rt: 'rt',
-    dh1e: 'dh1',
-    dh2e: 'dh2',
+    dh1: 'dh1',
+    dh2: 'dh2',
     bc: 'bc',
     ow: 'ow',
     dw: 'dw',
@@ -242,7 +242,7 @@ function defaultSystemActorOverrides(systemId: GameSystemId): MockActorInput {
 // ── Player factory ──────────────────────────────────────────────────────────
 
 export interface PlayerSheetContextOptions {
-    /** Which game system to render for; default 'dh2e'. */
+    /** Which game system to render for; default 'dh2'. */
     systemId?: GameSystemId;
     /** Deep-merged on top of the system-aware default actor. */
     actorOverrides?: MockActorInput;
@@ -259,7 +259,7 @@ export interface PlayerSheetContextOptions {
  */
 export function mockPlayerSheetContext(opts: PlayerSheetContextOptions = {}): SheetContextLike {
     ensureGameI18nStub();
-    const systemId: GameSystemId = opts.systemId ?? 'dh2e';
+    const systemId: GameSystemId = opts.systemId ?? 'dh2';
     const activeTab = opts.activeTab ?? 'biography';
 
     const baseOverrides = defaultSystemActorOverrides(systemId);
@@ -409,7 +409,7 @@ export interface VehicleSheetContextOptions {
  */
 export function mockVehicleSheetContext(opts: VehicleSheetContextOptions = {}): SheetContextLike {
     ensureGameI18nStub();
-    const systemId: GameSystemId = opts.systemId ?? 'dh2e';
+    const systemId: GameSystemId = opts.systemId ?? 'dh2';
 
     const baseActor = mockActor({
         _id: `vehicle-${systemId}`,

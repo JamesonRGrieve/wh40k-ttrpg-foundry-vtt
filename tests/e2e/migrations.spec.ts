@@ -148,7 +148,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                     name: 'probe-talent-legacy-prereqs',
                     type: 'talent',
                     system: {
-                        gameSystem: 'dh2e',
+                        gameSystem: 'dh2',
                         prerequisites: 'WS 30, Toughness 30',
                         aptitudes: 'Weapon Skill, Toughness',
                         specialization: 'Las',
@@ -202,7 +202,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 const created = await ActorCtor.create({
                     name: 'migration-ae-label-probe',
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e' },
+                    system: { gameSystem: 'dh2' },
                 });
                 if (!created) return { error: 'Actor.create returned null' };
                 const actorId = created.id ?? null;
@@ -365,7 +365,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 const created = await ActorCtor.create({
                     name: 'migration-ae-icon-probe',
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e' },
+                    system: { gameSystem: 'dh2' },
                 });
                 if (!created) return { error: 'Actor.create returned null' };
                 const actorId = created.id ?? null;

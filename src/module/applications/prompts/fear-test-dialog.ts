@@ -207,7 +207,7 @@ export default class FearTestDialog extends ApplicationV2Mixin(ApplicationV2 as 
             degreesOfFailure,
             shockModifier,
             shockModifierLabel: shockModifier > 0 ? `+${shockModifier}` : String(shockModifier),
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/fear-test-chat.hbs', templateData);

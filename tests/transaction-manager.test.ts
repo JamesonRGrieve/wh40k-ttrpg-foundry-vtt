@@ -152,7 +152,7 @@ afterEach(() => {
 describe('prepareQuote — currency resolution', () => {
     it('homebrew DH2e barter spends Throne Gelt and allows influence burn', () => {
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', influence: 5, throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', influence: 5, throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 2,
         });
@@ -169,7 +169,7 @@ describe('prepareQuote — currency resolution', () => {
     it('RAW DH2e barter spends Influence and forbids influence burn', () => {
         rulesetSetting = 'raw';
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', influence: 50, throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', influence: 50, throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             influenceBurn: 3,
         });
@@ -197,7 +197,7 @@ describe('prepareQuote — currency resolution', () => {
 describe('prepareQuote — influence burn discount', () => {
     it('applies a percentage discount and clamps to available / max influence', () => {
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', influence: 5, throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', influence: 5, throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 2,
             influenceBurn: 2,
@@ -211,7 +211,7 @@ describe('prepareQuote — influence burn discount', () => {
 
     it('caps the burn at the profile maximum', () => {
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', influence: 99, throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', influence: 99, throneGelt: 1000 }),
             source: makeSource({ mode: 'barter', barter: { maxInfluenceBurn: 1, influenceDiscountPercent: 10 } }),
             quantity: 1,
             influenceBurn: 9,
@@ -226,7 +226,7 @@ describe('prepareQuote — disposition (campaign relationship tracker)', () => {
             Quartermaster: { dispositions: { party: { target: 'party', attitude: 'friendly' } }, relationships: [] },
         });
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 2,
         });
@@ -246,7 +246,7 @@ describe('prepareQuote — disposition (campaign relationship tracker)', () => {
             },
         });
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 2,
         });
@@ -256,7 +256,7 @@ describe('prepareQuote — disposition (campaign relationship tracker)', () => {
 
     it('no tracker data leaves price untouched', () => {
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 2,
         });
@@ -268,7 +268,7 @@ describe('prepareQuote — disposition (campaign relationship tracker)', () => {
 describe('prepareQuote — GM modifier', () => {
     it('raises the price for a positive GM modifier', () => {
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 2,
             gmModifierPercent: 25,
@@ -280,7 +280,7 @@ describe('prepareQuote — GM modifier', () => {
 
     it('lowers the price for a negative GM modifier (good haggle roll)', () => {
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 2,
             gmModifierPercent: -50,
@@ -293,7 +293,7 @@ describe('prepareQuote — GM modifier', () => {
 describe('prepareQuote — affordability', () => {
     it('flags an unaffordable transaction', () => {
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', throneGelt: 50 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', throneGelt: 50 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 2,
         });
@@ -302,7 +302,7 @@ describe('prepareQuote — affordability', () => {
     });
 
     it('throws when the source is not a configured trade source', () => {
-        const buyer = makeBuyer({ gameSystem: 'dh2e', throneGelt: 1000 });
+        const buyer = makeBuyer({ gameSystem: 'dh2', throneGelt: 1000 });
         const source = makeSource({ mode: 'none' });
         installGlobals([buyer, source]);
         expect(() => TransactionManager.prepareQuote({ buyerActorId: buyer.id, sourceActorId: source.id, itemId: 'i-las' })).toThrow();
@@ -312,7 +312,7 @@ describe('prepareQuote — affordability', () => {
 describe('toQuoteView', () => {
     it('projects a live quote into a serializable view', () => {
         const q = quote({
-            buyer: makeBuyer({ gameSystem: 'dh2e', throneGelt: 1000 }),
+            buyer: makeBuyer({ gameSystem: 'dh2', throneGelt: 1000 }),
             source: makeSource({ mode: 'barter' }),
             quantity: 3,
         });

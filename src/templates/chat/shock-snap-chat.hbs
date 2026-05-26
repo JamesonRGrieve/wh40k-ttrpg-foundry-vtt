@@ -6,7 +6,7 @@
     (Challenging +0). On success the action decrements `system.shock.value`
     by 1; the card narrates the outcome either way.
 
-    Root carries `data-wh40k-system="dh2e"` so the bronze theme variant
+    Root carries `data-wh40k-system="dh2"` so the bronze theme variant
     fires when the card renders into the chat log (chat messages are
     rendered outside the sheet root — see CLAUDE.md: chat templates
     need a `.wh40k-rpg` ancestor, which basic-action-manager's
@@ -14,10 +14,10 @@
 
     Hash params: actorName, willpower, roll, success, shockBefore, shockAfter.
 --}}
-<div data-wh40k-system="dh2e"
-     class="wh40k-shock-snap-chat tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded-md tw-border tw-border-solid {{#if success}}tw-border-emerald-900/70 tw-bg-emerald-900/[10%]{{else}}tw-border-red-900/70 tw-bg-red-900/[10%]{{/if}} dh2e:tw-border-bronze">
-    <header class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2e:tw-border-bronze">
-        <i class="fa-solid fa-brain {{#if success}}tw-text-emerald-400{{else}}tw-text-red-400{{/if}} dh2e:tw-text-bronze" aria-hidden="true"></i>
+<div data-wh40k-system="dh2"
+     class="wh40k-shock-snap-chat tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded-md tw-border tw-border-solid {{#if success}}tw-border-emerald-900/70 tw-bg-emerald-900/[10%]{{else}}tw-border-red-900/70 tw-bg-red-900/[10%]{{/if}} dh2:tw-border-bronze">
+    <header class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze">
+        <i class="fa-solid fa-brain {{#if success}}tw-text-emerald-400{{else}}tw-text-red-400{{/if}} dh2:tw-text-bronze" aria-hidden="true"></i>
         <h3 class="tw-m-0 tw-font-display tw-uppercase tw-tracking-[0.1em] tw-text-[1rem] tw-text-white">
             {{localize "WH40K.Shock.ChatTitle"}}
         </h3>

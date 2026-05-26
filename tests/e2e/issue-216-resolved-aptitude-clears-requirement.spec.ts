@@ -158,7 +158,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                         actor = await ActorCls.create({
                             name: 'issue-216-probe',
                             type: 'dh2-character',
-                            system: { gameSystem: 'dh2e' },
+                            system: { gameSystem: 'dh2' },
                         });
                         created = actor !== null;
                     } catch (err) {
@@ -264,7 +264,7 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
                             isAdvanced: false,
                             xpCost: 0,
                             hasChoices: false,
-                            gameSystem: 'dh2e',
+                            gameSystem: 'dh2',
                             system: { grants: { aptitudes: apts }, selectedChoices: {}, modifiers: { characteristics: {} } },
                             _sourceUuid: null,
                             _actorItemId: null,

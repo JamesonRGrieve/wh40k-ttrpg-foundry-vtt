@@ -1,6 +1,6 @@
 # Per-system theme adoption — grinder recipe
 
-**Task:** Add per-system Tailwind variants (`bc:tw-*`, `dh1e:tw-*`, `dh2e:tw-*`, `dw:tw-*`, `ow:tw-*`, `rt:tw-*`, `im:tw-*`) to one Handlebars template so its visual treatment differs per game system. The `pnpm theme:coverage` adopted-template count must rise by exactly 1 (when adopting a previously-unadopted template).
+**Task:** Add per-system Tailwind variants (`bc:tw-*`, `dh1:tw-*`, `dh2:tw-*`, `dw:tw-*`, `ow:tw-*`, `rt:tw-*`, `im:tw-*`) to one Handlebars template so its visual treatment differs per game system. The `pnpm theme:coverage` adopted-template count must rise by exactly 1 (when adopting a previously-unadopted template).
 
 **Worked example:** PR for `src/templates/dialogs/advancement-dialog.hbs` added a `data-wh40k-system` attribute on the dialog root (sourced from `_gameSystemId` in context) and per-system text-color variants on the XP-available element. Read that diff before starting.
 
@@ -21,7 +21,7 @@ You may land your edit ONLY if **all** of the following hold:
 
 After landing, run `pnpm theme:ratchet:update`. Commit the baseline change in the same commit.
 
-**Detection rule:** the coverage script (`scripts/theme-coverage.mjs`) considers a template adopted when its file content matches `\b(bc|dh1e|dh2e|dw|ow|rt|im):tw-`. Calls to `{{themeClassFor 'role'}}` do NOT qualify the template for adoption — the helper emits a bare `tw-*` class at render time, which the static scan can't see. Use the helper for repeated surfaces, but always include at least one inline `<id>:tw-*` chain so the file registers.
+**Detection rule:** the coverage script (`scripts/theme-coverage.mjs`) considers a template adopted when its file content matches `\b(bc|dh1|dh2|dw|ow|rt|im):tw-`. Calls to `{{themeClassFor 'role'}}` do NOT qualify the template for adoption — the helper emits a bare `tw-*` class at render time, which the static scan can't see. Use the helper for repeated surfaces, but always include at least one inline `<id>:tw-*` chain so the file registers.
 
 ---
 
@@ -65,8 +65,8 @@ Per-system accent/primary/border colors as of wave 1:
 | System | primary           | accent             | border            |
 | ------ | ----------------- | ------------------ | ----------------- |
 | bc     | crimson           | crimson-light      | crimson-dark      |
-| dh1e   | gold-raw          | gold-raw-l5        | gold-raw-d15      |
-| dh2e   | bronze            | gold-raw           | gold-raw-d10      |
+| dh1   | gold-raw          | gold-raw-l5        | gold-raw-d15      |
+| dh2   | bronze            | gold-raw           | gold-raw-d10      |
 | dw     | bronze            | accent-combat      | accent-combat-d10 |
 | im     | crimson-light     | failure            | failure-l10       |
 | ow     | brass             | brass-l20          | brass-d15         |
@@ -83,8 +83,8 @@ Write the chain literally on the element. Order is alphabetical for grep-ability
 ```hbs
 <span class="wh40k-adv__xp-available
              bc:tw-text-crimson-light
-             dh1e:tw-text-gold-raw-l5
-             dh2e:tw-text-gold-raw
+             dh1:tw-text-gold-raw-l5
+             dh2:tw-text-gold-raw
              dw:tw-text-accent-combat
              im:tw-text-failure
              ow:tw-text-brass-l20

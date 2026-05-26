@@ -56,7 +56,7 @@ const meta: Meta<CriticalDamageCardArgs> = {
         severity: 5,
         effect: 'Energy courses through the arm. He is Stunned for 1 round, and the arm is Useless until the target receives medical treatment.',
         riderLabels: ['WH40K.CriticalDamage.Rider.Stunned', 'WH40K.CriticalDamage.Rider.LostLimb'],
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
     },
 };
 export default meta;
@@ -118,7 +118,7 @@ export const RenderSmoke: Story = {
         // Card root carries the per-system anchor and wh40k-rpg scope.
         const card = canvasElement.querySelector('.wh40k-critdmg-card');
         void expect(card).toBeTruthy();
-        void expect(card?.getAttribute('data-wh40k-system')).toBe('dh2e');
+        void expect(card?.getAttribute('data-wh40k-system')).toBe('dh2');
         void expect(card?.classList.contains('wh40k-rpg')).toBe(true);
         // Effect text surfaces.
         void expect(storyCanvas.getByText(/Stunned for 1 round/i)).toBeTruthy();

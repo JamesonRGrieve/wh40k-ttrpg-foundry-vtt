@@ -20,7 +20,7 @@
         rowClass    — extra utility classes appended to the row container
                       (e.g. "wh40k-vital-critical-row").
 --}}
-<div class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1{{#if rowClass}} {{rowClass}}{{/if}}">
+<div class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw-l5 dh2:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1{{#if rowClass}} {{rowClass}}{{/if}}">
     <span class="tw-text-[0.75rem] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))]"><i class="fas {{icon}}"></i></span>
     <span class="tw-flex tw-items-center tw-gap-1.5 tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))] tw-whitespace-nowrap">{{label}}</span>
     {{> @partial-block}}

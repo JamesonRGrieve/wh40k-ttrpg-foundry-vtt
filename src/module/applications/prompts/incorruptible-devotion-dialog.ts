@@ -113,7 +113,7 @@ export default class IncorruptibleDevotionDialog extends ApplicationV2Mixin(Appl
             corruptionAmount: this.corruptionAmount,
             insanityAmount: this.corruptionAmount,
             traded,
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/incorruptible-devotion-chat.hbs', templateData);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types

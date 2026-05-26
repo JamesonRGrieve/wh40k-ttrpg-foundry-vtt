@@ -167,9 +167,9 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
     'character-dh2-sheet': {
         kind: 'actor',
         type: 'dh2-character',
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         initialSystem: {
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
             wounds: { max: 10, value: 10, critical: 0 },
             insanity: 0,
             corruption: 0,
@@ -206,9 +206,9 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
     'npc-dh2-sheet': {
         kind: 'actor',
         type: 'dh2-npc',
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         initialSystem: {
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
             wounds: { max: 10, value: 10, critical: 0 },
             armour: { mode: 'simple', total: 0, locations: { body: 0, head: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0 } },
             faction: 'imperium',
@@ -218,9 +218,9 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
     'vehicle-dh2-sheet': {
         kind: 'actor',
         type: 'dh2-vehicle',
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         initialSystem: {
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
             integrity: { max: 20, value: 20, critical: 0 },
             armour: { front: { value: 0, descriptor: '' }, side: { value: 0, descriptor: '' }, rear: { value: 0, descriptor: '' } },
             speed: { cruising: 0, tactical: 0, notes: '' },
@@ -243,7 +243,7 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
     'weapon-sheet': {
         kind: 'item',
         type: 'weapon',
-        embedHostGameSystem: 'dh2e',
+        embedHostGameSystem: 'dh2',
         initialSystem: {
             class: 'basic',
             melee: false,
@@ -261,7 +261,7 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
     'armour-sheet': {
         kind: 'item',
         type: 'armour',
-        embedHostGameSystem: 'dh2e',
+        embedHostGameSystem: 'dh2',
         initialSystem: {
             type: 'flak',
             armourPoints: { head: 0, body: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0 },
@@ -271,7 +271,7 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
     'talent-sheet': {
         kind: 'item',
         type: 'talent',
-        embedHostGameSystem: 'dh2e',
+        embedHostGameSystem: 'dh2',
         initialSystem: {
             tier: 1,
             cost: 200,
@@ -282,7 +282,7 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
     'gear-sheet': {
         kind: 'item',
         type: 'gear',
-        embedHostGameSystem: 'dh2e',
+        embedHostGameSystem: 'dh2',
         initialSystem: {
             quantity: 1,
             uses: { value: 0, max: 0 },

@@ -161,7 +161,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
                         name: 'utils-validators-spec-actor',
                         type: 'dh2-character',
                         system: {
-                            gameSystem: 'dh2e',
+                            gameSystem: 'dh2',
                             characteristics: {
                                 weaponSkill: { base: 30, advance: 0, modifier: 0 },
                                 fellowship: { base: 25, advance: 0, modifier: 0 },

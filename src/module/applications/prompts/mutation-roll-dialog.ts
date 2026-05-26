@@ -111,7 +111,7 @@ export default class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2
             mutationVisible: mutation?.visible ?? false,
             mutationKnown: mutation !== null,
             visibleLabel,
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mutation-roll-chat.hbs', templateData);
