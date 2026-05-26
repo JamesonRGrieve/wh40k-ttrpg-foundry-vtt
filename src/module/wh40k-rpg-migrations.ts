@@ -1,17 +1,71 @@
 import { SYSTEM_ID } from './constants.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
-// Baseline release. Version 0.0.1 ships with migration worldVersion = 1.
-// No migrations run against a fresh 0.0.1 world — every prior migration below
-// was inherited from the upstream fork and has been retained, commented out,
-// purely as reference for future schema changes. When you add the first real
-// migration past v1, bump WORLD_VERSION and branch on `currentVersion < N`.
-const WORLD_VERSION = 1;
+// Baseline release. Version 0.0.1 shipped with migration worldVersion = 1.
+// Historical (pre-0.0.1) migration steps were inherited from the upstream fork
+// and ran on worldVersion gates up to `< 188`; they are retained, commented
+// out, at the bottom of this file purely as reference. The first real migration
+// past that lineage is the v189 actor gameSystem normalization below.
+//
+// Versioning scheme: each new migration step bumps WORLD_VERSION and gates its
+// work on `if (currentVersion < N)` where N is the new WORLD_VERSION. A world
+// last migrated at version V runs every step whose gate `currentVersion < N`
+// holds (i.e. all steps with N > V), then the new WORLD_VERSION is persisted —
+// so each step runs exactly once for an existing world and never re-runs.
+const WORLD_VERSION = 189;
+
+/**
+ * Minimal shape of a world Actor for migration purposes. Mirrors the
+ * `ActorLike` pattern in compendium-resync.ts: only the surface the migration
+ * touches is modelled, so structural typing covers real Foundry Actors without
+ * dragging in the full Document type.
+ */
+interface MigratableActor {
+    type: string;
+    system?: { gameSystem?: string };
+    update: (data: Record<string, unknown>) => Promise<unknown>;
+}
 
 export async function checkAndMigrateWorld(): Promise<void> {
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion) as number;
     if (WORLD_VERSION !== currentVersion && game.user.isGM) {
+        // Update Actors
+        for (const actor of game.actors.contents as unknown as MigratableActor[]) {
+            try {
+                // eslint-disable-next-line no-await-in-loop -- sequential is intentional: each actor.update persists independently and ordering avoids overlapping writes
+                await migrateActorData(actor, currentVersion);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
         await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
+    }
+}
+
+/**
+ * Per-actor migration steps. Each step is gated on the world's last-migrated
+ * `version` so it runs exactly once. Mirrors the historical `migrateActorData`
+ * gating convention preserved in the reference block below.
+ *
+ * @param actor   The world actor to migrate.
+ * @param version The world's last-migrated version (`currentVersion`).
+ */
+async function migrateActorData(actor: MigratableActor, version: number): Promise<void> {
+    // Normalize actor gameSystem so DH1/DH2 actors resolve to their system
+    // config instead of falling through to the Rogue-Trader default (v189).
+    //
+    // The canonical gameSystem key for an actor is derived from its type
+    // prefix: `dh2-*` → 'dh2e', `dh1-*` → 'dh1e' (matching every concrete
+    // DataModel's `static gameSystem` and the `GameSystemId` union). Writing
+    // the canonical value both fixes actors that were saved as 'rt' / a stale
+    // value AND no-ops actors already on the correct key. Non-dh1/dh2 actor
+    // types are left untouched (homologation-safe).
+    if (version < 189) {
+        const canonical = actor.type.startsWith('dh2-') ? 'dh2e' : actor.type.startsWith('dh1-') ? 'dh1e' : null;
+        if (canonical !== null && actor.system?.gameSystem !== canonical) {
+            await actor.update({ 'system.gameSystem': canonical });
+        }
     }
 }
 
