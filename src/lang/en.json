@@ -557,6 +557,15 @@
             }
         },
         "SETTINGS": {
+            "DegreesMode": {
+                "Name": "Degrees of Success Calculation",
+                "Hint": "How degrees of success/failure are counted. RAW resolves per game system. Gen 1 (DH1, Deathwatch, Rogue Trader): one extra degree per full 10 points of margin — floor(|target − roll| / 10). Gen 2 (Black Crusade, Only War, Dark Heresy 2e): 1 + the difference of the tens digits.",
+                "Choices": {
+                    "Raw": "RAW (per game system)",
+                    "Gen1": "Gen 1 — every full 10 (margin / 10)",
+                    "Gen2": "Gen 2 — tens-digit difference, +1"
+                }
+            },
             "MovementAutomation": {
                 "Name": "Movement Automation",
                 "Hint": "Controls whether token movement enforces character movement speeds via the ruler.",
