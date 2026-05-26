@@ -28,6 +28,55 @@ export function getDegree(a: number, b: number): number {
     return Math.floor(a / 10) - Math.floor(b / 10);
 }
 
+/**
+ * Resolve an instance's prototype getters into a plain object of own
+ * properties for Handlebars.
+ *
+ * Handlebars runs with `allowProtoPropertiesByDefault = false`, so it will
+ * NOT read accessor properties defined on a class prototype. RollData exposes
+ * `name`, `effectString`, `modifiedTarget`, `activeModifiers`, … as getters on
+ * its prototype; passing a live RollData instance straight to `renderTemplate`
+ * therefore renders those fields BLANK (the "target is always blank on the
+ * chat card" regression). Flattening copies own enumerable props plus every
+ * inherited getter's resolved value down to own properties so the template
+ * sees them. Walks the whole prototype chain so subclass getters
+ * (WeaponRollData / PsychicRollData) are covered too.
+ */
+/** Copy one property (own field or inherited getter) from an untyped runtime
+ * instance into the flattened template record. The single boundary disable
+ * contains the unavoidable `any` of JS reflection in one place. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: `out` is the plain template-context record assembled from an untyped runtime instance
+function copyInstanceProp(out: Record<string, unknown>, instance: object, key: string): void {
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unsafe-assignment -- boundary: untyped RollData/ActionData runtime instance property → plain template record value
+    out[key] = (instance as Record<string, unknown>)[key];
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: produces an untyped plain record for the Handlebars template context
+export function resolveGettersForTemplate(instance: object): Record<string, unknown> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: flattened own + inherited-getter values for the Handlebars template
+    const out: Record<string, unknown> = {};
+    // Own enumerable properties first (baseTarget, roll, success, dos, …).
+    for (const key of Object.keys(instance)) {
+        copyInstanceProp(out, instance, key);
+    }
+    // Then inherited getters down the prototype chain (modifiedTarget, name,
+    // effectString, activeModifiers, …) — own props win, so we never clobber.
+    let proto: object | null = Object.getPrototypeOf(instance) as object | null;
+    while (proto !== null && proto !== Object.prototype) {
+        for (const [key, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(proto))) {
+            if (typeof descriptor.get === 'function' && !(key in out)) {
+                try {
+                    copyInstanceProp(out, instance, key);
+                } catch {
+                    /* a getter that throws (e.g. depends on unset state) is skipped */
+                }
+            }
+        }
+        proto = Object.getPrototypeOf(proto) as object | null;
+    }
+    return out;
+}
+
 export function getOpposedDegrees(dos: number, dof: number, opposedDos: number, opposedDof: number): number {
     if (dos > 0) {
         if (opposedDos > 0) {
@@ -87,8 +136,12 @@ export async function postChatCard(
 }
 
 export async function sendActionDataToChat(actionData: ActionData): Promise<void> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate expects a plain record; ActionData is duck-typed to satisfy the shape
-    const html = await foundry.applications.handlebars.renderTemplate(actionData.template, actionData as unknown as Record<string, unknown>);
+    // Flatten the ActionData + its RollData so Handlebars can read the
+    // prototype getters (modifiedTarget / name / activeModifiers / …); passing
+    // the live instances renders those fields blank (proto-property guard).
+    const context = resolveGettersForTemplate(actionData);
+    context['rollData'] = resolveGettersForTemplate(actionData.rollData);
+    const html = await foundry.applications.handlebars.renderTemplate(actionData.template, context);
     const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
     const roll = rollData.roll;
     const rolls = roll != null && rollData.isManualRoll !== true ? [roll] : undefined;

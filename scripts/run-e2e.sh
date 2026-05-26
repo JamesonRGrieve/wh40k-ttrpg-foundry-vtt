@@ -35,4 +35,14 @@ else
 fi
 export FOUNDRY_NODE
 
+# Build the system into dist/ before the e2e world boots, so Tier B always
+# tests the current working tree rather than a stale build. setup-foundry-test-
+# world.sh only *symlinks* dist/ (and errors if it's missing) — it never builds.
+# Skip with E2E_SKIP_BUILD=1 when iterating on spec files alone against an
+# already-current dist/.
+if [[ "${E2E_SKIP_BUILD:-}" != "1" ]]; then
+    echo "[integration] Building system → dist/ before e2e (set E2E_SKIP_BUILD=1 to skip)…"
+    (cd "${SCRIPT_DIR}" && pnpm build)
+fi
+
 exec playwright test -c "${SCRIPT_DIR}/playwright.foundry.config.ts" "$@"

@@ -65,7 +65,14 @@ import {
 import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
-import { ASTARTES_IMPLANTS, astartesStrengthBonus, astartesToughnessBonus, hasBlackCarapace, type AstartesImplantId } from '../../rules/dw-astartes.ts';
+import {
+    ASTARTES_IMPLANTS,
+    astartesStrengthBonus,
+    astartesToughnessBonus,
+    hasBlackCarapace,
+    IMPLANT_EFFECTS,
+    type AstartesImplantId,
+} from '../../rules/dw-astartes.ts';
 import { isOathActive } from '../../rules/dw-oath.ts';
 import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS, type RenownRank } from '../../rules/dw-renown.ts';
 import { DW_SPECIAL_AMMO_EFFECTS, type AmmoEffect } from '../../rules/dw-special-ammo.ts';
@@ -1611,12 +1618,22 @@ export default class CharacterSheet extends BaseActorSheet {
         const implantSet = new Set<AstartesImplantId>(implants);
         const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
         return {
-            implants: ASTARTES_IMPLANTS.map((id) => ({
-                id,
-                nameKey: `WH40K.DW.Astartes.Implant.${titleCase(id)}`,
-                categoryKey: `WH40K.DW.Astartes.Category.Baseline`,
-                has: implantSet.has(id),
-            })),
+            implants: ASTARTES_IMPLANTS.map((id) => {
+                // The implant's `mechanic` (kebab-case) maps directly onto the
+                // `WH40K.DW.Astartes.Category.*` langpack keys (PascalCase).
+                // Implants with no discrete mechanic (Ossmodula, Biscopea,
+                // Haemastamen) feed the Unnatural Str/Tgh baselines → Baseline.
+                const mechanic = IMPLANT_EFFECTS[id].mechanic;
+                return {
+                    id,
+                    // The langpack name lives at `…Implant.<Id>.Name` — the
+                    // trailing `.Name` segment is required or `localize` falls
+                    // back to the raw key (the overflowing-text regression).
+                    nameKey: `WH40K.DW.Astartes.Implant.${titleCase(id)}.Name`,
+                    categoryKey: mechanic === undefined ? `WH40K.DW.Astartes.Category.Baseline` : `WH40K.DW.Astartes.Category.${titleCase(mechanic)}`,
+                    has: implantSet.has(id),
+                };
+            }),
             strengthBonus: astartesStrengthBonus(sb),
             toughnessBonus: astartesToughnessBonus(tb),
             hasBlackCarapace: hasBlackCarapace(implants),
