@@ -14,6 +14,7 @@ export class WH40KSettings {
         dh2Ruleset: 'dh2-ruleset',
         characteristicOffset: 'characteristic-offset',
         resyncOnReady: 'resync-on-ready',
+        reconcileOriginGrantsOnReady: 'reconcile-origin-grants-on-ready',
         multipleFateBurnPerRoll: 'multiple-fate-burn-per-roll',
         autoPsychicPhenomena: 'auto-psychic-phenomena',
     };
@@ -153,6 +154,14 @@ export class WH40KSettings {
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady, {
             name: 'Resync Embedded Items From Compendiums on World Boot',
             hint: 'On every world load (GM only), reconcile every embedded item that originated from a compendium with its current source. Definition fields (description, mechanics, classification) are overwritten; per-actor state (skill advances, ammo counts, equipped flags, modifications, quantities) is preserved. Set flags.wh40k-rpg.frozenFromCompendium = true on a specific item to opt that one out.',
+            scope: 'world',
+            config: true,
+            default: true,
+            type: Boolean,
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.reconcileOriginGrantsOnReady, {
+            name: 'Reconcile Origin-Path Grants on World Boot',
+            hint: "On every world load (GM only), re-apply each actor's embedded origin paths idempotently so missing trained-skill grants self-heal without re-running character creation. Characteristic/wounds/fate contributions are reconciled against a recorded per-origin delta (no double-counting); skills, talents, and the origin item itself are skip-if-exists. Safe to run every boot.",
             scope: 'world',
             config: true,
             default: true,

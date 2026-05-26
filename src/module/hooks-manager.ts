@@ -92,6 +92,7 @@ import {
     rollSkillMacro,
 } from './macros/macro-manager.ts';
 import { ItemDropManager } from './managers/item-drop-manager.ts';
+import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { WH40K } from './rules/config.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import { registerTradeProximityHud } from './transactions/trade-proximity.ts';
@@ -859,6 +860,7 @@ export class HooksManager {
         await resyncWorldFromCompendiums();
         await uuidNameCache.build();
         await backfillOriginPathUuids();
+        await reconcileWorldOriginGrants();
 
         // Initialize rich tooltip system
         game.wh40k.tooltips = new TooltipsWH40K();

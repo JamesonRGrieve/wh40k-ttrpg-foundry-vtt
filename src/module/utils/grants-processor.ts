@@ -117,6 +117,41 @@ export interface ProcessingOptions {
 
 export interface ApplyOptions {
     showNotification?: boolean;
+    /**
+     * Stable identity key for the source origin/grant. When provided,
+     * characteristic / wounds / fate / threshold / corruption / insanity
+     * bonuses are reconciled idempotently: the delta this key previously
+     * committed (recorded at `actor.flags.wh40k-rpg.originGrantDeltas[key]`) is
+     * reversed before re-adding the current bonuses, so applying the same
+     * result twice converges to the same actor state instead of double-counting.
+     * Without a key the legacy additive behaviour is preserved.
+     */
+    originKey?: string;
+}
+
+/** Per-origin resource delta recorded on the actor for idempotent re-application. */
+interface OriginResourceDelta {
+    characteristics?: Record<string, number>;
+    wounds?: number;
+    fate?: number;
+    fateThreshold?: number;
+    corruption?: number;
+    insanity?: number;
+}
+
+/**
+ * Read the per-origin delta record stored on an actor at
+ * `flags.wh40k-rpg.originGrantDeltas[<key>]`. Returns an empty delta when none
+ * has been committed yet (so the first apply is purely additive).
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: `flags` is the Foundry Document flags bag, untyped at the framework boundary
+function readOriginResourceDelta(flags: unknown, key: string): OriginResourceDelta {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actor flags is an open Record at the Foundry document boundary
+    const bag = (flags as Record<string, Record<string, unknown> | undefined> | undefined)?.['wh40k-rpg']?.['originGrantDeltas'];
+    if (bag === undefined || bag === null || typeof bag !== 'object') return {};
+    // eslint-disable-next-line no-restricted-syntax -- boundary: per-origin delta entries are user-data-derived; narrowed to the numeric fields we read
+    const entry = (bag as Record<string, OriginResourceDelta | undefined>)[key];
+    return entry ?? {};
 }
 
 /**
@@ -245,53 +280,81 @@ export class GrantsProcessor {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update payload
         const updates: Record<string, unknown> = {};
 
-        // Apply characteristic advances
-        if (Object.keys(result.characteristics).length > 0) {
-            for (const [char, value] of Object.entries(result.characteristics)) {
-                if (value !== 0) {
-                    const actorSystem = actor.system as { characteristics: Record<string, { advance: number } | undefined> };
-                    const currentAdvance = actorSystem.characteristics[char]?.advance ?? 0;
-                    updates[`system.characteristics.${char}.advance`] = currentAdvance + Number(value);
-                }
+        // Idempotency: when an originKey is supplied, reverse the delta this key
+        // previously committed before re-adding the current bonuses, and record
+        // the new delta. Without a key, `prior` stays empty → additive behaviour.
+        const originKey = options.originKey;
+        const prior: OriginResourceDelta = originKey !== undefined ? readOriginResourceDelta(actor.flags, originKey) : {};
+        const priorChars = prior.characteristics ?? {};
+        const newDelta: OriginResourceDelta = {};
+
+        // Apply characteristic advances (reverse prior key delta, add current).
+        const charKeys = new Set<string>([...Object.keys(result.characteristics), ...Object.keys(priorChars)]);
+        if (charKeys.size > 0) {
+            const newChars: Record<string, number> = {};
+            for (const char of charKeys) {
+                const value = Number(result.characteristics[char] ?? 0);
+                const priorValue = Number(priorChars[char] ?? 0);
+                if (value !== 0) newChars[char] = value;
+                if (value === priorValue) continue;
+                const actorSystem = actor.system as { characteristics: Record<string, { advance: number } | undefined> };
+                const currentAdvance = actorSystem.characteristics[char]?.advance ?? 0;
+                updates[`system.characteristics.${char}.advance`] = currentAdvance - priorValue + value;
             }
+            if (Object.keys(newChars).length > 0) newDelta.characteristics = newChars;
         }
 
-        // Apply wounds bonus
-        if (result.woundsBonus !== 0) {
+        // Apply wounds bonus (reverse prior, add current).
+        const priorWounds = Number(prior.wounds ?? 0);
+        newDelta.wounds = result.woundsBonus;
+        if (result.woundsBonus !== priorWounds) {
             const actorSystem = actor.system as { wounds?: { value: number; max: number } };
             const current = actorSystem.wounds?.value ?? 0;
             const max = actorSystem.wounds?.max ?? 0;
-            updates['system.wounds.value'] = current + result.woundsBonus;
-            updates['system.wounds.max'] = max + result.woundsBonus;
+            updates['system.wounds.value'] = current - priorWounds + result.woundsBonus;
+            updates['system.wounds.max'] = max - priorWounds + result.woundsBonus;
         }
 
-        // Apply fate bonus
-        if (result.fateBonus !== 0) {
+        // Apply fate bonus (reverse prior, add current).
+        const priorFate = Number(prior.fate ?? 0);
+        newDelta.fate = result.fateBonus;
+        if (result.fateBonus !== priorFate) {
             const actorSystem = actor.system as { fate?: { value: number; max: number } };
             const current = actorSystem.fate?.value ?? 0;
             const max = actorSystem.fate?.max ?? 0;
-            updates['system.fate.value'] = current + result.fateBonus;
-            updates['system.fate.max'] = max + result.fateBonus;
+            updates['system.fate.value'] = current - priorFate + result.fateBonus;
+            updates['system.fate.max'] = max - priorFate + result.fateBonus;
         }
 
         // Apply fate threshold bonus (origin-path `fateThreshold` grant — used
         // by the burn-fate / cheat-death flow; see creature.ts:fate.threshold).
-        if (result.fateThresholdBonus !== 0) {
+        const priorThreshold = Number(prior.fateThreshold ?? 0);
+        newDelta.fateThreshold = result.fateThresholdBonus;
+        if (result.fateThresholdBonus !== priorThreshold) {
             const actorSystem = actor.system as { fate?: { threshold?: number } };
             const current = actorSystem.fate?.threshold ?? 0;
-            updates['system.fate.threshold'] = current + result.fateThresholdBonus;
+            updates['system.fate.threshold'] = current - priorThreshold + result.fateThresholdBonus;
         }
 
-        // Apply corruption/insanity
-        if (result.corruptionBonus !== 0) {
+        // Apply corruption/insanity (reverse prior, add current).
+        const priorCorruption = Number(prior.corruption ?? 0);
+        newDelta.corruption = result.corruptionBonus;
+        if (result.corruptionBonus !== priorCorruption) {
             const actorSystem = actor.system as { corruption?: { value: number } };
             const current = actorSystem.corruption?.value ?? 0;
-            updates['system.corruption.value'] = current + result.corruptionBonus;
+            updates['system.corruption.value'] = current - priorCorruption + result.corruptionBonus;
         }
-        if (result.insanityBonus !== 0) {
+        const priorInsanity = Number(prior.insanity ?? 0);
+        newDelta.insanity = result.insanityBonus;
+        if (result.insanityBonus !== priorInsanity) {
             const actorSystem = actor.system as { insanity?: { value: number } };
             const current = actorSystem.insanity?.value ?? 0;
-            updates['system.insanity.value'] = current + result.insanityBonus;
+            updates['system.insanity.value'] = current - priorInsanity + result.insanityBonus;
+        }
+
+        // Record the committed delta so the next apply with the same key reverses it.
+        if (originKey !== undefined) {
+            updates[`flags.wh40k-rpg.originGrantDeltas.${originKey}`] = newDelta;
         }
 
         // Apply actor updates
