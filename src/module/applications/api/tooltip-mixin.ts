@@ -26,7 +26,7 @@ import type { ApplicationV2Ctor } from './application-types.ts';
  */
 export default function TooltipMixin<T extends ApplicationV2Ctor>(Base: T): T {
     return class TooltipSheet extends Base {
-        declare document: { uuid?: string } | null;
+        declare document: { uuid?: string; system?: { gameSystem?: string } } | null;
 
         /* -------------------------------------------- */
         /*  Tooltip Data Preparation Helpers            */
@@ -54,7 +54,8 @@ export default function TooltipMixin<T extends ApplicationV2Ctor>(Base: T): T {
          */
         prepareSkillTooltip(key: string, skill: WH40KSkill, characteristics: Record<string, WH40KCharacteristic>): string {
             const actorUuid = this.document?.uuid ?? undefined;
-            return prepareSkillTooltipData(key, skill, characteristics, actorUuid);
+            const gameSystem = this.document?.system?.gameSystem;
+            return prepareSkillTooltipData(key, skill, characteristics, actorUuid, gameSystem);
         }
 
         /* -------------------------------------------- */
