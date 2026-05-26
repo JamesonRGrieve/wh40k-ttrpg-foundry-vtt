@@ -583,6 +583,25 @@ export default class CharacterData extends CreatureTemplate {
                         GENERATION_CHARACTERISTICS.map((key) => [key, new fields.NumberField({ required: true, initial: 25, integer: true, min: 0 })]),
                     ),
                 }),
+                // Which generation mode the builder last used for this actor.
+                // 'roll-pool-hb' = homebrew shared dice pool; 'roll' = roll a
+                // value per characteristic in order; 'point-buy' = spend a
+                // fixed point pool above base. Persisted so re-opening the
+                // builder restores the player's chosen mode.
+                mode: new fields.StringField({
+                    required: false,
+                    blank: false,
+                    initial: 'roll-pool-hb',
+                    choices: ['point-buy', 'roll', 'roll-pool-hb'],
+                }),
+                // Per-characteristic points spent above base in point-buy mode.
+                // Kept separate from customBases (race baseline) and rolls
+                // (dice) so the three modes never clobber each other's state.
+                pointBuy: new fields.SchemaField(
+                    Object.fromEntries(
+                        GENERATION_CHARACTERISTICS.map((key) => [key, new fields.NumberField({ required: true, initial: 0, integer: true, min: 0 })]),
+                    ),
+                ),
             }),
         };
     }

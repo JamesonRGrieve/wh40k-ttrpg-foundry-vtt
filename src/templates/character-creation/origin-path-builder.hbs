@@ -221,16 +221,29 @@
  </div>
 
  {{#if charGen.isModePointBuy}}
- <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-py-12 tw-px-6 tw-text-center tw-text-white/70 tw-border tw-border-dashed tw-border-white/20 tw-rounded-md">
- <i class="fa-solid fa-screwdriver-wrench tw-text-4xl tw-text-white/40"></i>
- <h3 class="tw-text-lg tw-font-semibold tw-text-white/85 tw-m-0">{{localize "WH40K.CharacteristicSetup.Mode.PointBuy"}}</h3>
- <p class="tw-m-0">{{localize "WH40K.CharacteristicSetup.Mode.NotImplemented"}}</p>
- </div>
+ {{> "systems/wh40k-rpg/templates/character-creation/partials/char-gen-pointbuy.hbs"}}
  {{else if charGen.isModeRoll}}
- <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-py-12 tw-px-6 tw-text-center tw-text-white/70 tw-border tw-border-dashed tw-border-white/20 tw-rounded-md">
- <i class="fa-solid fa-screwdriver-wrench tw-text-4xl tw-text-white/40"></i>
- <h3 class="tw-text-lg tw-font-semibold tw-text-white/85 tw-m-0">{{localize "WH40K.CharacteristicSetup.Mode.Roll"}}</h3>
- <p class="tw-m-0">{{localize "WH40K.CharacteristicSetup.Mode.NotImplemented"}}</p>
+ {{!-- Roll mode: one value rolled per characteristic, locked in order (no draggable bank). --}}
+ <div class="csd-roll-mode tw-flex tw-flex-col tw-gap-4">
+ <section class="csd-section tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+ <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
+ <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
+ <i class="fa-solid fa-user-gear"></i>
+ {{localize "WH40K.CharacteristicSetup.Characteristics"}}
+ </h3>
+ <div class="csd-header-actions tw-flex tw-items-center tw-gap-2">
+ <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
+ <i class="fa-solid {{#if charGen.advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
+ </button>
+ <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-px-3 tw-items-center tw-justify-center tw-gap-2 tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="rollCharacteristics" data-tooltip="{{localize 'WH40K.CharGen.RollAllHint'}}">
+ <i class="fa-solid fa-dice"></i>
+ <span class="tw-text-sm tw-font-semibold">{{localize "WH40K.CharGen.RollAll"}}</span>
+ </button>
+ </div>
+ </div>
+ {{> "systems/wh40k-rpg/templates/character-creation/partials/char-gen-characteristic-grid.hbs" rows=charGen.characteristicRows}}
+ </section>
+ {{> "systems/wh40k-rpg/templates/character-creation/partials/char-gen-divination.hbs"}}
  </div>
  {{else}}
  <div class="csd-workspace tw-grid tw-grid-cols-[280px_minmax(0,1fr)] tw-gap-4 tw-items-start max-[900px]:tw-grid-cols-1">
@@ -274,73 +287,10 @@
  </button>
  </div>
  </div>
- <div class="csd-char-grid tw-flex tw-flex-col tw-gap-3">
- {{#each charGen.characteristicRows}}
- <div class="csd-char-row tw-flex tw-gap-3 tw-justify-center">
- {{#each this}}
- <div class="csd-char-slot tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 tw-transition-all hover:tw-border-[rgba(36,107,131,0.6)] {{#if hasRoll}}has-roll tw-border-[rgba(76,175,80,0.5)] tw-bg-[linear-gradient(135deg,rgba(76,175,80,0.1),rgba(36,107,131,0.05))]{{else}}empty{{/if}}"
- data-characteristic="{{key}}">
- <div class="csd-char-header tw-flex tw-items-baseline tw-gap-2 tw-mb-2 tw-pb-[0.35rem] tw-border-b tw-border-[rgba(36,107,131,0.2)]">
- <span class="csd-char-short tw-text-[1.1rem] tw-font-bold tw-text-[color:rgba(36,107,131,1)]">{{short}}</span>
- <span class="csd-char-name tw-text-[0.7rem] tw-uppercase tw-tracking-[0.03em] tw-text-[color:rgba(232,220,196,0.7)]">{{label}}</span>
- </div>
- <div class="csd-char-body tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-[0.4rem]">
- <div class="csd-char-base tw-flex tw-flex-col tw-items-center">
- {{#if @root.charGen.advancedMode}}
- <input type="number" class="csd-base-input tw-w-[40px] tw-h-[26px] tw-text-center tw-text-[1rem] tw-font-semibold tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(176,141,87,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--csd-bone,#e8dcc4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)] focus:tw-shadow-[0_0_6px_rgba(176,141,87,0.4)]"
- value="{{base}}"
- data-characteristic="{{key}}"
- min="0" max="99">
- {{else}}
- <span class="csd-base-value tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--csd-bone,#e8dcc4)]">{{base}}</span>
- {{/if}}
- <span class="csd-base-label tw-text-[0.55rem] tw-uppercase tw-text-[color:rgba(232,220,196,0.5)]">{{localize "WH40K.CharacteristicSetup.Base"}}</span>
- </div>
- <span class="csd-char-plus tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">+</span>
- <div class="csd-char-roll-slot tw-flex tw-h-[40px] tw-w-[45px] tw-items-center tw-justify-center">
- {{#if hasRoll}}
- <div class="csd-assigned-roll tw-flex tw-h-[36px] tw-w-[40px] tw-items-center tw-justify-center tw-bg-gradient-to-br tw-from-[rgba(76,175,80,0.3)] tw-to-[rgba(76,175,80,0.15)] tw-border-2 tw-border-[rgba(76,175,80,0.6)] tw-rounded-[6px] tw-text-[1.2rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] tw-cursor-grab tw-transition-all hover:tw-scale-110 hover:tw-shadow-[0_2px_8px_rgba(0,0,0,0.3)] hover:tw-border-[var(--csd-gold,#b08d57)]"
- draggable="true"
- data-roll-index="{{assignedIndex}}"
- data-characteristic="{{key}}">
- {{rollValue}}
- </div>
- {{else}}
- <div class="csd-drop-zone tw-flex tw-h-full tw-w-full tw-items-center tw-justify-center tw-rounded-[6px] tw-border-2 tw-border-dashed tw-border-[rgba(36,107,131,0.4)] tw-bg-[rgba(0,0,0,0.2)]">
- <i class="fa-solid fa-arrow-down tw-animate-csd-bounce"></i>
- </div>
- {{/if}}
- </div>
- <span class="csd-char-plus tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">+</span>
- <div class="csd-char-origin tw-flex tw-min-h-[40px] tw-min-w-[52px] tw-flex-col tw-items-center tw-justify-center tw-rounded-[6px] tw-border-2 tw-border-[rgba(36,107,131,0.25)] tw-bg-[rgba(36,107,131,0.14)] tw-px-[0.35rem] tw-py-[0.2rem] {{#if hasOriginBonus}}has-origin tw-border-[rgba(176,141,87,0.45)] tw-bg-[rgba(176,141,87,0.12)]{{/if}}"
- {{#if hasOriginBonusTooltip}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{originBonusTooltipData}}" data-tooltip="{{originBonusTooltip}}"{{/if}}>
- <span class="csd-char-origin-value tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)]">{{#if hasOriginBonus}}{{#if (gt originBonus 0)}}+{{/if}}{{originBonus}}{{else}}0{{/if}}</span>
- <span class="csd-char-origin-label tw-text-[0.5rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:rgba(232,220,196,0.55)]">Origin</span>
- </div>
- <span class="csd-char-equals tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">=</span>
- <div class="csd-char-total tw-flex tw-h-[36px] tw-min-w-[40px] tw-items-center tw-justify-center tw-rounded-[6px] tw-border-2 tw-border-[rgba(36,107,131,0.4)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[1.3rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all {{#if hasRoll}}has-value tw-animate-csd-value-pop tw-border-[rgba(176,141,87,0.5)] tw-bg-[rgba(176,141,87,0.15)] tw-text-[color:var(--csd-gold,#b08d57)]{{else}}tw-text-[color:rgba(232,220,196,0.3)]{{/if}}">
- {{#if hasRoll}}{{total}}{{else}}??{{/if}}
- </div>
- </div>
- </div>
- {{/each}}
- </div>
- {{/each}}
- </div>
+ {{> "systems/wh40k-rpg/templates/character-creation/partials/char-gen-characteristic-grid.hbs" rows=charGen.characteristicRows}}
  </section>
 
- <section class="csd-section csd-divination tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
- <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
- <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
- <i class="fa-solid fa-eye"></i>
- Divination
- </h3>
- <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="rollDivination" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
- <i class="fa-solid fa-dice"></i>
- </button>
- </div>
- <input type="text" class="csd-divination-input tw-w-full tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[rgba(36,107,131,0.35)] tw-bg-[rgba(0,0,0,0.35)] tw-px-3 tw-py-2 tw-text-[0.9rem] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-placeholder:text-[color:rgba(232,220,196,0.4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)] focus:tw-shadow-[0_0_8px_rgba(176,141,87,0.25)]" value="{{charGen.divination}}" placeholder="Enter divination" />
- </section>
+ {{> "systems/wh40k-rpg/templates/character-creation/partials/char-gen-divination.hbs"}}
  </div>
  </div>
  {{/if}}

@@ -1,0 +1,16 @@
+{{!--
+  Divination section, shared by every characteristic-generation mode.
+  Reads charGen.divination from the root context.
+--}}
+<section class="csd-section csd-divination tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+ <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
+ <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
+ <i class="fa-solid fa-eye"></i>
+ {{localize "WH40K.CharGen.Divination"}}
+ </h3>
+ <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="rollDivination" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
+ <i class="fa-solid fa-dice"></i>
+ </button>
+ </div>
+ <input type="text" class="csd-divination-input tw-w-full tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[rgba(36,107,131,0.35)] tw-bg-[rgba(0,0,0,0.35)] tw-px-3 tw-py-2 tw-text-[0.9rem] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-placeholder:text-[color:rgba(232,220,196,0.4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)] focus:tw-shadow-[0_0_8px_rgba(176,141,87,0.25)]" value="{{charGen.divination}}" placeholder="{{localize 'WH40K.CharGen.DivinationPlaceholder'}}" />
+</section>
