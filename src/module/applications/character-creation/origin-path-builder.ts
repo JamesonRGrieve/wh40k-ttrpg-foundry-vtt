@@ -1112,10 +1112,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Roll mode shares the dice-driven characteristics + preview but uses a
         // fixed in-order assignment (no draggable bank), so the bank chrome is
         // hidden and the per-slot roll value is read straight off _charRolls.
-        const canApply =
-            (isModeRollPoolHB && allAssigned && anyRolls) ||
-            (isModeRoll && allAssigned && anyRolls) ||
-            (isModePointBuy && pointBuyRemaining >= 0);
+        const canApply = (isModeRollPoolHB && allAssigned && anyRolls) || (isModeRoll && allAssigned && anyRolls) || (isModePointBuy && pointBuyRemaining >= 0);
 
         return {
             rollsBank,
@@ -1544,11 +1541,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             values = rollInstances.map((roll) => roll.total ?? 0);
         }
         this._charRolls = [...values];
-        for (let i = 0; i < CHARS.length; i++) {
-            const key = CHARS[i];
-            if (key === undefined) continue;
+        CHARS.forEach((key, i) => {
             this._charAssignments[key] = i;
-        }
+        });
         return values;
     }
 
@@ -4087,7 +4082,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * each result onto a characteristic.
      */
     static async #rollCharacteristicsBank(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        const rollInstances = Array.from({ length: OriginPathBuilder.GENERATION_CHARACTERISTICS.length }, () => new Roll(OriginPathBuilder.CHARACTERISTIC_ROLL_FORMULA));
+        const rollInstances = Array.from(
+            { length: OriginPathBuilder.GENERATION_CHARACTERISTICS.length },
+            () => new Roll(OriginPathBuilder.CHARACTERISTIC_ROLL_FORMULA),
+        );
         await Promise.all(rollInstances.map(async (roll) => roll.evaluate()));
         const rolls: number[] = rollInstances.map((roll) => roll.total ?? 0);
 
