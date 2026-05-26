@@ -38,6 +38,18 @@
 
                 {{#unless ignoreModifiers}}
                     {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifiedTarget=modifiedTarget}}
+
+                    {{!-- Audit: tie the d100 result to the final target so the table can
+                          see exactly how success/failure was reached. Skipped for
+                          target-only posts (no roll entered yet) and ignore-degrees rolls. --}}
+                    {{#unless isTargetOnly}}
+                        {{#if roll}}
+                            <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
+                                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Roll.Audit.RollVsTarget"}}</span>
+                                <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{roll.total}} {{localize "WH40K.Roll.Audit.AgainstTarget" target=modifiedTarget}}</span>
+                            </div>
+                        {{/if}}
+                    {{/unless}}
                 {{/unless}}
 
                 {{#if usesAmmo}}
