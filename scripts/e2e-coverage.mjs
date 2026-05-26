@@ -533,6 +533,13 @@ recordDimension('active-effect.flow', covered['active-effect.flow'], ACTIVE_EFFE
 recordDimension('combat.flow', covered['combat.flow'], COMBAT_FLOWS);
 recordDimension('combat.ui', covered['combat.ui'], COMBAT_UI_CLASSES);
 
+// Combat attack→damage→audit flow exercised by tests/e2e/combat-attack-flow.spec.ts.
+// Drives source coverage on the combat-fix merge: base-actor `rollWeaponAttack`,
+// the `auto-roll-damage` setting, `action-data.ts` maybeAutoRollDamage gating,
+// and the action-card audit row. Keep in sync with COMBAT_ATTACK_FLOWS in the spec.
+const COMBAT_ATTACK_FLOWS = ['roll-weapon-attack-defined', 'auto-roll-damage-setting', 'auto-damage-gating', 'audit-row-renders'];
+recordDimension('combat.attack-flow', covered['combat.attack-flow'], COMBAT_ATTACK_FLOWS);
+
 // Token + scene-embedded token document dimension exercised by
 // tests/e2e/token.spec.ts. Drives source-code coverage on
 // `src/module/documents/token.ts` (TokenDocumentWH40K, the registered
