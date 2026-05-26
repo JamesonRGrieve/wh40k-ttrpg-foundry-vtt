@@ -131,6 +131,11 @@ vi.mock('../../wh40k-rpg-settings.ts', () => ({
     WH40KSettings: {
         isHomebrew: () => false,
         getRuleset: () => 'raw',
+        // Deterministic generation primitives for the point-buy / roll suites.
+        // Base = 20 (offset 0); pool = 100. These mirror the production
+        // defaults so the pure-logic assertions read in real units.
+        getCharacteristicBase: () => 20,
+        getCharacteristicPointBuyPool: () => 100,
     },
 }));
 
@@ -1540,5 +1545,197 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         // never negative ("nothing can be bought" no longer occurs).
         expect(system.experience.used).toBeLessThanOrEqual(system.experience.total);
         expect(system.experience.total - system.experience.used).toBeGreaterThanOrEqual(0);
+    });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Point-buy generation mode                                                 */
+/* -------------------------------------------------------------------------- */
+
+const GEN_CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
+
+/**
+ * Minimal host exposing the point-buy state the pure methods read, plus the
+ * sibling-method delegates the composed methods (`_setPointBuy`,
+ * `_adjustPointBuy`, `_hasAssignedCharacteristics`) call on `this`. Delegating
+ * to the real prototype methods keeps the logic-under-test genuine.
+ */
+interface PointBuyHost {
+    _charGenMode: 'point-buy' | 'roll' | 'roll-pool-hb';
+    _charPointBuy: Record<string, number>;
+    _charRolls: number[];
+    _charAssignments: Record<string, number | null>;
+    _pointBuySpent: () => number;
+    _pointBuyRemaining: () => number;
+}
+
+function makePointBuyHost(overrides: Partial<PointBuyHost> = {}): PointBuyHost {
+    const host: PointBuyHost = {
+        _charGenMode: 'point-buy',
+        _charPointBuy: Object.fromEntries(GEN_CHARS.map((k) => [k, 0])),
+        _charRolls: Array<number>(9).fill(0),
+        _charAssignments: Object.fromEntries(GEN_CHARS.map((k) => [k, null])),
+        _pointBuySpent: (): number => proto._pointBuySpent.call(host),
+        _pointBuyRemaining: (): number => proto._pointBuyRemaining.call(host),
+        ...overrides,
+    };
+    return host;
+}
+
+const pbSpent = (host: PointBuyHost): number => proto._pointBuySpent.call(host);
+const pbRemaining = (host: PointBuyHost): number => proto._pointBuyRemaining.call(host);
+const pbAdjust = (host: PointBuyHost, key: string, delta: number): number => proto._adjustPointBuy.call(host, key, delta);
+const pbSet = (host: PointBuyHost, key: string, value: number): number => proto._setPointBuy.call(host, key, value);
+const hasAssigned = (host: PointBuyHost): boolean => proto._hasAssignedCharacteristics.call(host);
+
+describe('OriginPathBuilder point-buy pure logic', () => {
+    it('sums allocations across characteristics, clamping negatives to 0', () => {
+        const host = makePointBuyHost();
+        host._charPointBuy['weaponSkill'] = 10;
+        host._charPointBuy['strength'] = 5;
+        // Defensive: bad flag data with a negative spend must not under-count.
+        host._charPointBuy['agility'] = -3;
+        expect(pbSpent(host)).toBe(15);
+        expect(pbRemaining(host)).toBe(85);
+    });
+
+    it('adjusts up only as far as the pool allows', () => {
+        const host = makePointBuyHost();
+        // Pre-spend 95 so only 5 remain.
+        host._charPointBuy['weaponSkill'] = 95;
+        // Asking for +10 with 5 left clamps the actual add to 5.
+        const stored = pbAdjust(host, 'ballisticSkill', 10);
+        expect(stored).toBe(5);
+        expect(pbSpent(host)).toBe(100);
+        expect(pbRemaining(host)).toBe(0);
+        // A further +1 is rejected (no headroom) — stays at 5.
+        expect(pbAdjust(host, 'ballisticSkill', 1)).toBe(5);
+        expect(pbSpent(host)).toBe(100);
+    });
+
+    it('never lets an individual allocation go below 0 on a decrease', () => {
+        const host = makePointBuyHost();
+        host._charPointBuy['toughness'] = 2;
+        expect(pbAdjust(host, 'toughness', -5)).toBe(0);
+        expect(pbSpent(host)).toBe(0);
+    });
+
+    it('ignores adjustments for keys that are not generation characteristics', () => {
+        const host = makePointBuyHost();
+        const before = pbSpent(host);
+        expect(pbAdjust(host, 'notACharacteristic', 5)).toBe(0);
+        expect(pbSpent(host)).toBe(before);
+    });
+
+    it('sets an absolute value, refunding the field before applying headroom', () => {
+        const host = makePointBuyHost();
+        host._charPointBuy['intelligence'] = 30;
+        // 70 left; re-setting the same field to 50 must succeed (its own 30 is
+        // refunded into headroom first), not fight its own current spend.
+        expect(pbSet(host, 'intelligence', 50)).toBe(50);
+        expect(pbSpent(host)).toBe(50);
+    });
+
+    it('caps an absolute set at the remaining pool, dropping the excess', () => {
+        const host = makePointBuyHost();
+        host._charPointBuy['perception'] = 60; // 40 remain elsewhere
+        host._charPointBuy['willpower'] = 0;
+        // Setting willpower to 80 can only take the 40 of headroom left.
+        expect(pbSet(host, 'willpower', 80)).toBe(40);
+        expect(pbSpent(host)).toBe(100);
+    });
+
+    it('floors non-finite / negative absolute sets at 0', () => {
+        const host = makePointBuyHost();
+        expect(pbSet(host, 'fellowship', Number.NaN)).toBe(0);
+        expect(pbSet(host, 'fellowship', -7)).toBe(0);
+    });
+
+    it('reports committable while the pool is not overspent (point-buy)', () => {
+        const host = makePointBuyHost();
+        host._charPointBuy['weaponSkill'] = 50;
+        expect(hasAssigned(host)).toBe(true);
+        // Spending nothing is a legitimate all-at-base build.
+        const empty = makePointBuyHost();
+        expect(hasAssigned(empty)).toBe(true);
+    });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Roll generation mode                                                      */
+/* -------------------------------------------------------------------------- */
+
+interface RollHost {
+    _charGenMode: 'point-buy' | 'roll' | 'roll-pool-hb';
+    _charRolls: number[];
+    _charAssignments: Record<string, number | null>;
+}
+
+function makeRollHost(): RollHost {
+    return {
+        _charGenMode: 'roll',
+        _charRolls: Array<number>(9).fill(0),
+        _charAssignments: Object.fromEntries(GEN_CHARS.map((k) => [k, null])),
+    };
+}
+
+const generate = async (host: RollHost, injected?: number[]): Promise<number[]> => proto._generateRollModeValues.call(host, injected);
+const hasAssignedRoll = (host: RollHost): boolean => proto._hasAssignedCharacteristics.call(host);
+
+describe('OriginPathBuilder roll-mode pure logic', () => {
+    it('writes injected values in order and locks each to its characteristic', async () => {
+        const host = makeRollHost();
+        const injected = [12, 8, 19, 4, 15, 11, 7, 18, 9];
+        const result = await generate(host, injected);
+        expect(result).toEqual(injected);
+        expect(host._charRolls).toEqual(injected);
+        // Each characteristic is assigned its own index, in order.
+        GEN_CHARS.forEach((key, i) => {
+            expect(host._charAssignments[key]).toBe(i);
+        });
+        // With every slot positive and assigned, the step is committable.
+        expect(hasAssignedRoll(host)).toBe(true);
+    });
+
+    it('truncates and floors injected values defensively', async () => {
+        const host = makeRollHost();
+        const result = await generate(host, [5.9, -2, 10, 10, 10, 10, 10, 10, 10]);
+        expect(result[0]).toBe(5); // truncated
+        expect(result[1]).toBe(0); // floored from negative
+    });
+
+    it('pads missing injected entries with 0', async () => {
+        const host = makeRollHost();
+        const result = await generate(host, [10, 10]);
+        expect(result).toHaveLength(GEN_CHARS.length);
+        expect(result[2]).toBe(0);
+        // A 0-valued slot is still assigned but not yet committable.
+        expect(hasAssignedRoll(host)).toBe(false);
+    });
+
+    it('falls back to live Roll evaluation when no values are injected', async () => {
+        const host = makeRollHost();
+        // FakeRoll resolves total = 42 for every slot.
+        const result = await generate(host);
+        expect(result).toEqual(Array<number>(GEN_CHARS.length).fill(42));
+        expect(host._charRolls.every((v) => v === 42)).toBe(true);
+        expect(hasAssignedRoll(host)).toBe(true);
+    });
+});
+
+describe('OriginPathBuilder._hasAssignedCharacteristics across modes', () => {
+    it('roll/roll-pool-hb require every characteristic to carry a positive assigned roll', () => {
+        const host: RollHost = {
+            _charGenMode: 'roll-pool-hb',
+            _charRolls: Array<number>(9).fill(0),
+            _charAssignments: Object.fromEntries(GEN_CHARS.map((k) => [k, null])),
+        };
+        expect(proto._hasAssignedCharacteristics.call(host)).toBe(false);
+        // Assign a full bank in order with positive values.
+        host._charRolls = GEN_CHARS.map((_k, i) => i + 5);
+        GEN_CHARS.forEach((key, i) => {
+            host._charAssignments[key] = i;
+        });
+        expect(proto._hasAssignedCharacteristics.call(host)).toBe(true);
     });
 });

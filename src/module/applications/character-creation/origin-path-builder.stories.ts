@@ -72,6 +72,61 @@ interface SelectedOriginState {
     resources: { showInfluence: boolean; influenceRolled: number | null; influenceMod: number };
 }
 
+/** A single characteristic view as the dice-driven grid partials read it. */
+interface CharGenCharRowEntry {
+    key: string;
+    short: string;
+    label: string;
+    base: number;
+    rollValue: number | null;
+    originBonus: number;
+    hasOriginBonus: boolean;
+    hasOriginBonusTooltip: boolean;
+    originBonusTooltip: string;
+    originBonusTooltipData: string;
+    assignedIndex: number | null;
+    total: number | null;
+    hasRoll: boolean;
+}
+
+/** A single characteristic view as the point-buy partial reads it. */
+interface CharGenPointBuyEntry {
+    key: string;
+    short: string;
+    label: string;
+    base: number;
+    points: number;
+    originBonus: number;
+    hasOriginBonus: boolean;
+    hasOriginBonusTooltip: boolean;
+    originBonusTooltip: string;
+    originBonusTooltipData: string;
+    total: number;
+    canIncrease: boolean;
+    canDecrease: boolean;
+}
+
+/**
+ * Shape of the `charGen` slice the characteristic step renders. Mirrors the
+ * object `OriginPathBuilder._prepareCharGenContext` returns, narrowed to the
+ * fields the template + its partials read.
+ */
+interface BuilderCharGenArg {
+    rollsBank: Array<{ index: number; displayIndex: number; value: number; isEmpty: boolean; isAssigned: boolean }>;
+    characteristicRows: CharGenCharRowEntry[][];
+    advancedMode: boolean;
+    divination: string;
+    mode: 'point-buy' | 'roll' | 'roll-pool-hb';
+    isModePointBuy: boolean;
+    isModeRoll: boolean;
+    isModeRollPoolHB: boolean;
+    pointBuyRows: CharGenPointBuyEntry[][];
+    pointBuyPool: number;
+    pointBuySpent: number;
+    pointBuyRemaining: number;
+    pointBuyOverspent: boolean;
+}
+
 interface BuilderStoryArgs {
     guidedMode: boolean;
     isForward: boolean;
@@ -112,7 +167,7 @@ interface BuilderStoryArgs {
         isLineage: boolean;
         isCharacteristics: boolean;
     };
-    charGen: null;
+    charGen: BuilderCharGenArg | null;
     equipment: null;
     selectedOrigin: SelectedOriginState | null;
     showSelectionPanel: boolean;
@@ -955,5 +1010,247 @@ export const Issue216UnresolvedAptitudeIsARequirement: Story = {
         await expect(resolvedBanner).toBeNull();
         const unresolvedRow = canvasElement.querySelector('[data-testid="aptitude-collision-unresolved"][data-aptitude="Willpower"]');
         await expect(unresolvedRow).toBeTruthy();
+    },
+};
+
+/* -------------------------------------------------------------------------- */
+/*  Characteristic-generation mode stories (point-buy + roll)                 */
+/* -------------------------------------------------------------------------- */
+
+const CHAR_GEN_KEYS = [
+    { key: 'weaponSkill', short: 'WS', label: 'Weapon Skill' },
+    { key: 'ballisticSkill', short: 'BS', label: 'Ballistic Skill' },
+    { key: 'strength', short: 'S', label: 'Strength' },
+    { key: 'toughness', short: 'T', label: 'Toughness' },
+    { key: 'agility', short: 'Ag', label: 'Agility' },
+    { key: 'intelligence', short: 'Int', label: 'Intelligence' },
+    { key: 'perception', short: 'Per', label: 'Perception' },
+    { key: 'willpower', short: 'WP', label: 'Willpower' },
+    { key: 'fellowship', short: 'Fel', label: 'Fellowship' },
+] as const;
+
+function rowsOf<T>(items: T[]): T[][] {
+    const rows: T[][] = [];
+    for (let i = 0; i < items.length; i += 3) rows.push(items.slice(i, i + 3));
+    return rows;
+}
+
+interface CharGenOverrides {
+    mode: 'point-buy' | 'roll' | 'roll-pool-hb';
+    pointBuyPool?: number;
+    /** Points allocated per characteristic (point-buy mode). */
+    points?: number[];
+    /** Bonus rolled per characteristic (roll / roll-pool-hb modes). */
+    rolls?: number[];
+}
+
+function makeCharGen(overrides: CharGenOverrides): BuilderCharGenArg {
+    const base = 25;
+    const isPointBuy = overrides.mode === 'point-buy';
+    const isRoll = overrides.mode === 'roll';
+    const isRollPool = overrides.mode === 'roll-pool-hb';
+    const points = overrides.points ?? CHAR_GEN_KEYS.map(() => 0);
+    const rolls = overrides.rolls ?? CHAR_GEN_KEYS.map(() => 0);
+    const pool = overrides.pointBuyPool ?? 100;
+    const spent = points.reduce((sum, p) => sum + Math.max(0, p), 0);
+    const remaining = pool - spent;
+
+    const charRows: CharGenCharRowEntry[] = CHAR_GEN_KEYS.map((c, i) => {
+        const rollValue = rolls[i] ?? 0;
+        const hasRoll = rollValue > 0;
+        return {
+            key: c.key,
+            short: c.short,
+            label: c.label,
+            base,
+            rollValue: hasRoll ? rollValue : null,
+            originBonus: 0,
+            hasOriginBonus: false,
+            hasOriginBonusTooltip: false,
+            originBonusTooltip: '',
+            originBonusTooltipData: '',
+            assignedIndex: hasRoll ? i : null,
+            total: hasRoll ? base + rollValue : null,
+            hasRoll,
+        };
+    });
+
+    const pbRows: CharGenPointBuyEntry[] = CHAR_GEN_KEYS.map((c, i) => {
+        const pts = Math.max(0, points[i] ?? 0);
+        return {
+            key: c.key,
+            short: c.short,
+            label: c.label,
+            base,
+            points: pts,
+            originBonus: 0,
+            hasOriginBonus: false,
+            hasOriginBonusTooltip: false,
+            originBonusTooltip: '',
+            originBonusTooltipData: '',
+            total: base + pts,
+            canIncrease: remaining > 0,
+            canDecrease: pts > 0,
+        };
+    });
+
+    return {
+        rollsBank: rolls.map((v, index) => ({ index, displayIndex: index + 1, value: v, isEmpty: v === 0, isAssigned: v > 0 })),
+        characteristicRows: rowsOf(charRows),
+        advancedMode: false,
+        divination: '',
+        mode: overrides.mode,
+        isModePointBuy: isPointBuy,
+        isModeRoll: isRoll,
+        isModeRollPoolHB: isRollPool,
+        pointBuyRows: rowsOf(pbRows),
+        pointBuyPool: pool,
+        pointBuySpent: spent,
+        pointBuyRemaining: remaining,
+        pointBuyOverspent: remaining < 0,
+    };
+}
+
+/** Args that put the builder on the Characteristics step in a given charGen mode. */
+function makeCharStepArgs(charGen: BuilderCharGenArg, extra: Partial<BuilderStoryArgs> = {}): BuilderStoryArgs {
+    return makeArgs({
+        showCharacteristics: true,
+        showSelectionPanel: false,
+        charGen,
+        currentStep: {
+            index: 4,
+            key: 'characteristics',
+            label: 'Characteristics',
+            icon: 'fa-dice-d20',
+            description: 'Generate your characteristics',
+            origins: [],
+            isLineage: false,
+            isCharacteristics: true,
+        },
+        ...extra,
+    });
+}
+
+/** Point-buy mode: pool budget visible, +/- controls and numeric inputs present. */
+export const PointBuyMode: Story = {
+    args: makeCharStepArgs(makeCharGen({ mode: 'point-buy', points: [10, 8, 0, 0, 5, 0, 0, 0, 0] })),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        // The three mode tabs all render; point-buy is the selected one.
+        const pointBuyTab = canvasElement.querySelector('[data-action="setCharGenMode"][data-mode="point-buy"]');
+        await expect(pointBuyTab).toBeTruthy();
+        await expect(pointBuyTab?.getAttribute('aria-selected')).toBe('true');
+        // Mode switch: the roll + roll-pool tabs exist to switch to.
+        await expect(canvasElement.querySelector('[data-action="setCharGenMode"][data-mode="roll"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-action="setCharGenMode"][data-mode="roll-pool-hb"]')).toBeTruthy();
+        clickAction(canvasElement, 'setCharGenMode');
+        // Remaining-points budget is surfaced (100 pool − 23 spent = 77).
+        await expect(view.getByText(/77 \/ 100/)).toBeTruthy();
+        // Characteristic edit controls: one numeric input + inc/dec per characteristic.
+        const inputs = canvasElement.querySelectorAll('.csd-pointbuy-input');
+        await expect(inputs.length).toBe(9);
+        const incButtons = canvasElement.querySelectorAll('[data-action="adjustPointBuy"][data-delta="1"]');
+        await expect(incButtons.length).toBe(9);
+        // Edit a characteristic: clicking the WS increment fires adjustPointBuy.
+        clickAction(canvasElement, 'adjustPointBuy');
+        // A first allocated characteristic total reflects base + points (25 + 10 = 35).
+        await expect(view.getAllByText('35').length).toBeGreaterThan(0);
+    },
+};
+
+/** Point-buy mode overspent: the warning banner and inc-disabled state surface. */
+export const PointBuyModeOverspent: Story = {
+    args: makeCharStepArgs(makeCharGen({ mode: 'point-buy', pointBuyPool: 10, points: [9, 9, 0, 0, 0, 0, 0, 0, 0] })),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        // 10 pool − 18 spent = −8 → overspent banner.
+        await expect(view.getByRole('alert')).toBeTruthy();
+        // Every increment is disabled because no headroom remains.
+        const enabledInc = Array.from(canvasElement.querySelectorAll('[data-action="adjustPointBuy"][data-delta="1"]')).filter(
+            (b) => !(b as HTMLButtonElement).disabled,
+        );
+        await expect(enabledInc.length).toBe(0);
+    },
+};
+
+/** Roll mode: a single Roll-All control + an in-order, non-draggable grid. */
+export const RollMode: Story = {
+    args: makeCharStepArgs(makeCharGen({ mode: 'roll', rolls: [12, 8, 19, 4, 15, 11, 7, 18, 9] })),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        const rollTab = canvasElement.querySelector('[data-action="setCharGenMode"][data-mode="roll"]');
+        await expect(rollTab?.getAttribute('aria-selected')).toBe('true');
+        // Roll mode exposes the Roll-All action (not the draggable bank).
+        await expect(canvasElement.querySelector('[data-action="rollCharacteristics"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('.csd-rolls-bank')).toBeNull();
+        // The assigned rolls are NOT draggable in roll mode (locked in order).
+        const draggables = canvasElement.querySelectorAll('.csd-assigned-roll[draggable="true"]');
+        await expect(draggables.length).toBe(0);
+        // Mode switch + characteristic edit: switch tab and roll.
+        clickAction(canvasElement, 'setCharGenMode');
+        clickAction(canvasElement, 'rollCharacteristics');
+        // WS total = base 25 + rolled 12 = 37.
+        await expect(view.getAllByText('37').length).toBeGreaterThan(0);
+    },
+};
+
+/**
+ * Homologation: the roll-mode characteristic step must render identically
+ * across all seven game systems. Re-renders the same charGen under each
+ * system id and asserts the Roll-All control and grid survive — DH2-only
+ * theming assumptions would surface here.
+ */
+export const RollModeAllSystems: Story = {
+    args: makeCharStepArgs(makeCharGen({ mode: 'roll', rolls: [10, 10, 10, 10, 10, 10, 10, 10, 10] })),
+    render: (args) => {
+        const wrapper = document.createElement('div');
+        for (const system of ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'] as const) {
+            const root = renderTpl(compiled, args);
+            root.setAttribute('data-wh40k-system', system);
+            root.dataset['storySystem'] = system;
+            wrapper.appendChild(root);
+        }
+        return wrapper;
+    },
+    play: async ({ canvasElement }) => {
+        await Promise.all(
+            (['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'] as const).map(async (system) => {
+                const root = canvasElement.querySelector<HTMLElement>(`[data-story-system="${system}"]`);
+                await expect(root).toBeTruthy();
+                await expect(root?.querySelector('[data-action="rollCharacteristics"]')).toBeTruthy();
+                // Nine in-order slots, every total = 25 base + 10 rolled = 35.
+                const totals = within(root as HTMLElement).getAllByText('35');
+                await expect(totals.length).toBeGreaterThan(0);
+            }),
+        );
+    },
+};
+
+/**
+ * Homologation: point-buy across all seven systems. The pool budget and the
+ * +/- controls render under every system id.
+ */
+export const PointBuyModeAllSystems: Story = {
+    args: makeCharStepArgs(makeCharGen({ mode: 'point-buy', points: [20, 0, 0, 0, 0, 0, 0, 0, 0] })),
+    render: (args) => {
+        const wrapper = document.createElement('div');
+        for (const system of ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'] as const) {
+            const root = renderTpl(compiled, args);
+            root.setAttribute('data-wh40k-system', system);
+            root.dataset['storySystem'] = system;
+            wrapper.appendChild(root);
+        }
+        return wrapper;
+    },
+    play: async ({ canvasElement }) => {
+        await Promise.all(
+            (['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'] as const).map(async (system) => {
+                const root = canvasElement.querySelector<HTMLElement>(`[data-story-system="${system}"]`);
+                await expect(root).toBeTruthy();
+                await expect(root?.querySelectorAll('.csd-pointbuy-input').length).toBe(9);
+                // 100 pool − 20 spent = 80 remaining.
+                await expect(within(root as HTMLElement).getByText(/80 \/ 100/)).toBeTruthy();
+            }),
+        );
     },
 };
