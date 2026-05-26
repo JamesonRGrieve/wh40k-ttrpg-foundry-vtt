@@ -52,6 +52,7 @@ export interface BuilderFlagState {
     charAssignments?: Record<string, number | null> | null;
     charAdvancedMode?: boolean | null;
     charCustomBases?: Record<string, number> | null;
+    charPointBuy?: Record<string, number> | null;
     charGenMode?: 'point-buy' | 'roll' | 'roll-pool-hb' | null;
     divination?: string | null;
     influenceRolled?: number | null;
@@ -66,6 +67,7 @@ export interface CharacterGenerationSlice {
     rolls?: number[];
     assignments?: Record<string, number | null>;
     customBases?: Record<string, number> & { enabled?: boolean };
+    pointBuy?: Record<string, number>;
     mode?: 'point-buy' | 'roll' | 'roll-pool-hb';
 }
 

@@ -290,9 +290,22 @@
             "Mode": {
                 "PointBuy": "Point Buy",
                 "Roll": "Roll",
-                "RollPoolHB": "Roll Pool (HB)",
-                "NotImplemented": "Not yet implemented. Choose Roll Pool (HB) to continue."
+                "RollPoolHB": "Roll Pool (HB)"
             }
+        },
+        "CharGen": {
+            "Divination": "Divination",
+            "DivinationPlaceholder": "Enter divination",
+            "OriginShort": "Origin",
+            "RollAll": "Roll All",
+            "RollAllHint": "Roll a value for every characteristic",
+            "PointBuyPoints": "Point Buy",
+            "PointsRemaining": "Points Remaining",
+            "PointsShort": "Pts",
+            "IncreasePoints": "Increase",
+            "DecreasePoints": "Decrease",
+            "PointBuyOverspent": "You have spent more points than the pool allows. Reduce a characteristic before continuing.",
+            "PointBuyResetHint": "Refund all spent points"
         },
         "Utility": {
             "MenuTooltip": "Utility Actions",
@@ -549,6 +562,10 @@
             "CharacteristicOffset": {
                 "Name": "Characteristic Offset",
                 "Hint": "Integer added to the 20-point baseline used during character generation. Effective base = 20 + offset. May be negative."
+            },
+            "PointBuyPool": {
+                "Name": "Point-Buy Pool",
+                "Hint": "Total points a player may spend in point-buy character generation. Each +1 above a characteristic's base costs 1 point. Defaults to 100."
             },
             "MultipleFateBurnPerRoll": {
                 "Name": "Multiple Fate Burn Per Roll (Homebrew)",
