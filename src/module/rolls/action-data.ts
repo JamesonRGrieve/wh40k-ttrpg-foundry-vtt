@@ -444,8 +444,10 @@ export class ActionData {
         // there is no resolved success/DoS to roll damage from.
         if ((this.rollData as { isTargetOnly?: boolean }).isTargetOnly === true) return;
 
-        const weaponRollData = this.rollData as WeaponRollData;
-        const isHit = this.rollData.success || (weaponRollData.isThrown ?? false);
+        // `isThrown` is optional on the base RollData (only WeaponRollData sets
+        // it); a thrown weapon always rolls damage (scatter on a miss) so it
+        // counts as a "hit" for auto-damage purposes.
+        const isHit = this.rollData.success || this.rollData.isThrown === true;
         if (!isHit) return;
 
         if (!WH40KSettings.isAutoRollDamageEnabled()) return;
