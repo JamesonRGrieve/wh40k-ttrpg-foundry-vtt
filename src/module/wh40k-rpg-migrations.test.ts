@@ -14,7 +14,7 @@
  * the surface modelled here, so no full Foundry runtime is needed.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
 
 interface ActorStub {
@@ -24,7 +24,7 @@ interface ActorStub {
 }
 
 interface SettingsStub {
-    get: (system: string, key: string) => unknown;
+    get: (system: string, key: string) => number;
     set: ReturnType<typeof vi.fn>;
 }
 
@@ -41,13 +41,13 @@ const G = globalThis as GlobalShim;
 
 function makeActor(type: string, gameSystem?: string): ActorStub {
     const system = gameSystem === undefined ? {} : { gameSystem };
-    return { type, system, update: vi.fn(() => Promise.resolve()) };
+    return { type, system, update: vi.fn().mockResolvedValue(undefined) };
 }
 
 function installGame(opts: { isGM: boolean; storedVersion: number; actors: ActorStub[] }): {
     set: ReturnType<typeof vi.fn>;
 } {
-    const set = vi.fn(() => Promise.resolve());
+    const set = vi.fn().mockResolvedValue(undefined);
     G.game = {
         user: { isGM: opts.isGM },
         settings: {
@@ -124,8 +124,7 @@ describe('checkAndMigrateWorld — v189 gameSystem normalization', () => {
 
         // Final argument is the bumped WORLD_VERSION (189)
         expect(set).toHaveBeenCalledTimes(1);
-        const lastArg = set.mock.calls[0]?.[2];
-        expect(lastArg).toBe(189);
+        expect(set.mock.calls[0]?.[2]).toBe(189);
     });
 
     it('does not run when already at the current world version', async () => {
