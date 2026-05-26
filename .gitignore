@@ -77,3 +77,4 @@ stories/**/*.js.map
 .aider.chat.history.md
 .aider.input.history
 .aider*
+coverage/
