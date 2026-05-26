@@ -73,6 +73,8 @@ interface CharacteristicTooltipPayload {
 interface SkillTooltipPayload {
     name?: string | undefined;
     label?: string | undefined;
+    /** Owning actor's game-system id, used to pick the untrained-base rule (aptitude −20 vs RT ÷2). */
+    gameSystem?: string | undefined;
     baseValue?: number | undefined;
     basic?: boolean | undefined;
     trainingBonus?: number | undefined;
@@ -450,8 +452,15 @@ export class TooltipsWH40K {
         }
 
         const actorGameSystem = (actor?.system as { gameSystem?: string } | undefined)?.gameSystem;
-        const gameSystem = actorGameSystem ?? null;
+        const gameSystem = actorGameSystem ?? data.gameSystem ?? null;
         const systemConfig = gameSystem !== null ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        // Aptitude/career systems (DH2 + DH1e/BC/DW/OW/IM) apply a flat −20
+        // untrained penalty; FFG Rogue Trader halves the characteristic. Mirror
+        // creature.ts:prepareDerivedData (`usesAptitudes === true ? char − 20 : ⌊char/2⌋`).
+        // When the system config can't be resolved, fall back to the DH2 family
+        // default (the canonical FFG default) — everything except RT halves, so
+        // anything not explicitly RT is treated as aptitude (−20).
+        const usesAptitudes = systemConfig !== null ? systemConfig.usesAptitudes : gameSystem !== 'rt';
         // When the actor's game system can't be resolved the prior fallback
         // showed a truncated, hardcoded-English "Trained(0) → +10 → +20"
         // ladder (issue #26). Fall back to the localized DH2-family 4-tier
@@ -479,7 +488,7 @@ export class TooltipsWH40K {
             trainingBonus = dataTB ?? rank.bonus;
         }
 
-        const calculatedBase = baseValue ?? (level > 0 ? charValue : Math.floor(charValue / 2));
+        const calculatedBase = baseValue ?? (level > 0 ? charValue : usesAptitudes ? charValue - 20 : Math.floor(charValue / 2));
         const bonus = dataBonus ?? 0;
         const tooltipSystem = getSkillDescriptionLookup();
         const skillInfo = tooltipSystem?.getSkillDescription?.(name) ?? null;
@@ -518,9 +527,10 @@ export class TooltipsWH40K {
                 </div>
         `;
 
-        // The half-characteristic untrained base is RT-specific (FFG Rogue Trader rule);
-        // DH2e and other aptitude/career systems apply a flat -20 penalty rather than halving.
-        if (level === 0 && gameSystem === 'rt') {
+        // Untrained base diverges by system: aptitude/career systems (DH2 +
+        // DH1e/BC/DW/OW/IM) apply a flat −20 penalty; FFG Rogue Trader halves
+        // the characteristic. Either way, surface the resulting roll target.
+        if (level === 0) {
             const untrainedTargetRow = game.i18n.format('WH40K.Tooltip.Skill.UntrainedTargetLabel', {
                 value: String(calculatedBase),
             });
@@ -564,10 +574,9 @@ export class TooltipsWH40K {
         };
         const renderRank = (rankLabel: string, rankBonus: number): string =>
             game.i18n.format('WH40K.Tooltip.Skill.RankWithBonus', { rank: localizeRankLabel(rankLabel), bonus: formatBonus(rankBonus) });
-        const untrainedLabel =
-            gameSystem === 'rt'
-                ? localize('WH40K.Tooltip.Skill.UntrainedHalfBase')
-                : game.i18n.format('WH40K.Tooltip.Skill.UntrainedWithPenalty', { penalty: '-20' });
+        const untrainedLabel = usesAptitudes
+            ? game.i18n.format('WH40K.Tooltip.Skill.UntrainedWithPenalty', { penalty: '-20' })
+            : localize('WH40K.Tooltip.Skill.UntrainedHalfBase');
 
         html += `
             </div>
@@ -874,7 +883,13 @@ interface LegacySkillFields {
     name?: string;
 }
 
-export function prepareSkillTooltipData(key: string, skill: WH40KSkill, characteristics: Record<string, WH40KCharacteristic> = {}, actorUuid?: string): string {
+export function prepareSkillTooltipData(
+    key: string,
+    skill: WH40KSkill,
+    characteristics: Record<string, WH40KCharacteristic> = {},
+    actorUuid?: string,
+    gameSystem?: string,
+): string {
     // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KSkill may carry the legacy `char`/`name` fields from pre-DH2e data; surface them without widening the canonical type.
     const legacy = skill as unknown as LegacySkillFields;
     const charKey = skill.characteristic !== '' ? skill.characteristic : legacy.char ?? 'strength';
@@ -889,12 +904,18 @@ export function prepareSkillTooltipData(key: string, skill: WH40KSkill, characte
     const plus30 = skill.plus30 ?? false;
     const basic = skill.basic ?? false;
     const level = plus30 ? 4 : plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
-    const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
+    // Aptitude/career systems (DH2 + DH1e/BC/DW/OW/IM) apply a flat −20 untrained
+    // penalty; FFG Rogue Trader halves the characteristic. Mirror creature.ts.
+    // Unresolved config falls back to the DH2 family default (−20, i.e. not RT).
+    const skillSystemConfig = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+    const usesAptitudes = skillSystemConfig !== null ? skillSystemConfig.usesAptitudes : gameSystem !== 'rt';
+    const baseValue = level > 0 ? charTotal : usesAptitudes ? charTotal - 20 : Math.floor(charTotal / 2);
     const trainingBonus = level >= 4 ? 30 : level >= 3 ? 20 : level >= 2 ? 10 : 0;
     const bonus = skill.bonus;
     const data: SkillTooltipPayload = {
         name: key,
         label: skill.label ?? legacy.name ?? key,
+        ...(gameSystem !== undefined ? { gameSystem } : {}),
         characteristic: charLabel,
         charValue: charTotal,
         baseValue,

@@ -89,7 +89,7 @@ describe('skill tooltip regressions', () => {
     it('renders the DH2e-family veteran rank in the tooltip progression', async () => {
         const actor = {
             system: {
-                gameSystem: 'dh2e',
+                gameSystem: 'dh2',
                 characteristics: {
                     perception: {
                         label: 'Perception',
@@ -136,7 +136,7 @@ describe('skill tooltip regressions', () => {
     it('renders the current rank label even when the rank has no bonus', async () => {
         const actor = {
             system: {
-                gameSystem: 'dh2e',
+                gameSystem: 'dh2',
                 characteristics: {
                     perception: {
                         label: 'Perception',
@@ -179,10 +179,12 @@ describe('skill tooltip regressions', () => {
         expect(html).toContain('<span class="active">');
     });
 
-    it('hides the half-characteristic untrained base line for non-RT systems', async () => {
+    it('shows the flat −20 untrained base target for aptitude systems (DH2)', async () => {
+        // DH2 (and the aptitude/career family DH1e/BC/DW/OW/IM) applies a flat
+        // −20 untrained penalty, NOT the RT ÷2 halving. Char 37 → target 17.
         const actor = {
             system: {
-                gameSystem: 'dh2e',
+                gameSystem: 'dh2',
                 characteristics: {
                     perception: { label: 'Perception', total: 37 },
                 },
@@ -209,7 +211,44 @@ describe('skill tooltip regressions', () => {
             label: 'Awareness',
         });
 
-        expect(html).not.toContain('Untrained Test Base');
+        // The untrained-target row now renders for aptitude systems too, with
+        // the −20 value (char 37 − 20 = 17), and the progression rung uses the
+        // flat-penalty label rather than the ÷2 half-base label.
+        expect(html).toContain('WH40K.Tooltip.Skill.UntrainedTargetLabel');
+        expect(html).toContain('17');
+        expect(html).toContain('WH40K.Tooltip.Skill.UntrainedWithPenalty');
+        expect(html).not.toContain('WH40K.Tooltip.Skill.UntrainedHalfBase');
+    });
+
+    it('computes the −20 untrained base in prepared payload for aptitude systems', () => {
+        const skill = {
+            label: 'Awareness',
+            characteristic: 'perception',
+            trained: false,
+            plus10: false,
+            plus20: false,
+            plus30: false,
+            current: 17,
+            bonus: 0,
+        } as WH40KSkill;
+        const characteristics: Record<string, WH40KCharacteristic> = {
+            perception: makeCharacteristic('Perception', 37),
+        };
+
+        // DH2 → −20 (char 37 → 17); RT → ÷2 (char 37 → 18); unknown system
+        // falls back to the DH2 family default (−20).
+        const dh2 = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.mock', 'dh2')) as {
+            baseValue?: number;
+            gameSystem?: string;
+        };
+        expect(dh2.baseValue).toBe(17);
+        expect(dh2.gameSystem).toBe('dh2');
+
+        const rt = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.mock', 'rt')) as { baseValue?: number };
+        expect(rt.baseValue).toBe(18);
+
+        const unknown = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.mock', 'made-up')) as { baseValue?: number };
+        expect(unknown.baseValue).toBe(17);
     });
 
     it('uses per-system rank labels when the favourite-skill payload carries actorUuid (issue #36)', async () => {
@@ -238,7 +277,7 @@ describe('skill tooltip regressions', () => {
 
         const actor = {
             system: {
-                gameSystem: 'dh2e',
+                gameSystem: 'dh2',
                 characteristics: { perception: { label: 'Perception', total: 37 } },
                 skills: {
                     awareness: { ...skill },
