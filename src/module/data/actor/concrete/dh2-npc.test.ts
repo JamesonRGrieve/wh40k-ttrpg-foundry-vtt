@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-/** DH2NPCData is a thin wrapper with only gameSystem = 'dh2e' added. */
+/** DH2NPCData is a thin wrapper with only gameSystem = 'dh2' added. */
 describe('DH2NPCData', () => {
     it('exports a default class symbol', async () => {
         const mod = await import('./dh2-npc').catch((err) => {
@@ -13,11 +13,11 @@ describe('DH2NPCData', () => {
         expect(mod.default).toBeTruthy();
     });
 
-    it('static gameSystem is dh2e', async () => {
+    it('static gameSystem is dh2', async () => {
         const mod = await import('./dh2-npc').catch(() => undefined);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
         if (mod === undefined) return;
-        expect((mod.default as { gameSystem?: string }).gameSystem).toBe('dh2e');
+        expect((mod.default as { gameSystem?: string }).gameSystem).toBe('dh2');
     });
 
     it('inherits NPCBaseData', async () => {

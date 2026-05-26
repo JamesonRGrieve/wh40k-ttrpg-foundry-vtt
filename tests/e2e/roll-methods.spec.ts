@@ -32,11 +32,11 @@ import { expect, test } from './lib/test';
  * spec); it's skipped here for the same reason.
  */
 
-/** Per-system actor type prefix — `dh2e` runtime id maps to `dh2-character` actor type. */
+/** Per-system actor type prefix — `dh2` runtime id maps to `dh2-character` actor type. */
 const SYSTEM_PREFIX: Record<string, string> = {
     bc: 'bc',
-    dh1e: 'dh1',
-    dh2e: 'dh2',
+    dh1: 'dh1',
+    dh2: 'dh2',
     dw: 'dw',
     ow: 'ow',
     rt: 'rt',

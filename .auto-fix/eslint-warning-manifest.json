@@ -1008,7 +1008,7 @@
         "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014"
       },
       {
-        "file": "src/module/config/game-systems/dh1e-config.ts",
+        "file": "src/module/config/game-systems/dh1-config.ts",
         "lines": 53,
         "items": {
           "no-restricted-syntax": 1

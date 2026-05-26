@@ -1,6 +1,6 @@
 {{!-- Without — new home-world traits info dialog (GitHub #102) --}}
 {{!-- GM-only reference: Death World, Garden World, Research Station as cards. --}}
-<div class="without-homeworld-info-dialog__scroll tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9] tw-max-h-[70vh] tw-overflow-y-auto" data-wh40k-system="dh2e">
+<div class="without-homeworld-info-dialog__scroll tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9] tw-max-h-[70vh] tw-overflow-y-auto" data-wh40k-system="dh2">
 
     <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
         {{localize "WH40K.WithoutHomeworld.DialogDescription"}}
@@ -14,16 +14,16 @@
 
             <div class="without-homeworld-card without-homeworld-card--{{accent}}
                         tw-flex tw-flex-col tw-gap-3 tw-p-4 tw-rounded-md tw-border-2 tw-bg-[rgba(0,0,0,0.35)]
-                        {{#if (eq accent "crimson")}}tw-border-[rgba(204,41,54,0.55)] dh2e:tw-border-crimson{{/if}}
-                        {{#if (eq accent "grey")}}tw-border-[rgba(180,180,180,0.35)] dh2e:tw-border-slate-400{{/if}}
-                        {{#if (eq accent "green")}}tw-border-[rgba(80,170,90,0.5)] dh2e:tw-border-emerald-500{{/if}}"
+                        {{#if (eq accent "crimson")}}tw-border-[rgba(204,41,54,0.55)] dh2:tw-border-crimson{{/if}}
+                        {{#if (eq accent "grey")}}tw-border-[rgba(180,180,180,0.35)] dh2:tw-border-slate-400{{/if}}
+                        {{#if (eq accent "green")}}tw-border-[rgba(80,170,90,0.5)] dh2:tw-border-emerald-500{{/if}}"
                  data-homeworld-id="{{id}}">
 
                 <header class="tw-flex tw-items-baseline tw-justify-between tw-gap-2 tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-pb-2">
                     <h3 class="tw-text-[1.05rem] tw-font-semibold tw-uppercase tw-tracking-[0.06em]
-                               {{#if (eq accent "crimson")}}tw-text-[#e6606e] dh2e:tw-text-crimson{{/if}}
-                               {{#if (eq accent "grey")}}tw-text-[#d6d6d6] dh2e:tw-text-slate-300{{/if}}
-                               {{#if (eq accent "green")}}tw-text-[#7fd590] dh2e:tw-text-emerald-400{{/if}}">
+                               {{#if (eq accent "crimson")}}tw-text-[#e6606e] dh2:tw-text-crimson{{/if}}
+                               {{#if (eq accent "grey")}}tw-text-[#d6d6d6] dh2:tw-text-slate-300{{/if}}
+                               {{#if (eq accent "green")}}tw-text-[#7fd590] dh2:tw-text-emerald-400{{/if}}">
                         {{localize label}}
                     </h3>
                 </header>

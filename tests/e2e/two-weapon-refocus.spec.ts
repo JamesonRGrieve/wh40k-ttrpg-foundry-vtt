@@ -95,7 +95,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                     }
 
                     const html = await renderTpl('systems/wh40k-rpg/templates/chat/two-weapon-refocus-chat.hbs', {
-                        gameSystem: 'dh2e',
+                        gameSystem: 'dh2',
                         granted: plan.granted,
                         attacks: plan.attacks,
                     });
@@ -116,7 +116,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                     const card = host.querySelector('.wh40k-twr-card');
                     rendered = card instanceof HTMLElement;
                     if (rendered && card) {
-                        hasSystemAttr = card.getAttribute('data-wh40k-system') === 'dh2e';
+                        hasSystemAttr = card.getAttribute('data-wh40k-system') === 'dh2';
                         // The card root sits under the `.wh40k-rpg` host so
                         // the important-scoped Tailwind utilities cascade.
                         hasWh40kClass = card.closest('.wh40k-rpg') !== null;

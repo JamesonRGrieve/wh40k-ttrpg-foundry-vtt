@@ -57,7 +57,7 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
             actor = await ActorCls.create({
                 name: 'manacles-probe',
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e' },
+                system: { gameSystem: 'dh2' },
             });
         } catch (err) {
             return { setupOk: false, aeFound: false, effectCount: 0, error: err instanceof Error ? err.message : String(err) };

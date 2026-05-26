@@ -284,7 +284,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     #getGameSystemId(): string {
         const id = this.#getActorSystem().gameSystem;
-        return id !== undefined && id.length > 0 ? id : 'dh2e';
+        return id !== undefined && id.length > 0 ? id : 'dh2';
     }
 
     /* -------------------------------------------- */
@@ -665,7 +665,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         // Whitelist talent packs by game system
         const prefixMap: Record<string, string[]> = {
-            dh2e: [
+            dh2: [
                 'dh2-core-stats-talents',
                 'dh2-core-stats-talents-specializations',
                 'dh2-beyond-stats-talents',
@@ -674,7 +674,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             ],
             bc: ['bc-core-items-talents'],
             ow: ['ow-core-stats-talents'],
-            dh1e: [],
+            dh1: [],
             rt: [],
             dw: [],
         };
@@ -939,7 +939,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         // Whitelist psychic power packs
         const packMap: Record<string, string[]> = {
-            dh2e: ['dh2-core-stats-psychic-powers', 'dh2-beyond-stats-psychic-powers', 'dh2-within-stats-psychic-powers', 'dh2-without-stats-psychic-powers'],
+            dh2: ['dh2-core-stats-psychic-powers', 'dh2-beyond-stats-psychic-powers', 'dh2-within-stats-psychic-powers', 'dh2-without-stats-psychic-powers'],
             bc: ['bc-core-stats-psychic-powers'],
             ow: ['ow-core-stats-psychic-powers'],
         };
@@ -1122,7 +1122,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const available = getAvailableXP(this.actor);
         const gameSystem = this.#getGameSystemId();
         const elitePacks: Record<string, string[]> = {
-            dh2e: ['dh2-core-stats-elite-advances'],
+            dh2: ['dh2-core-stats-elite-advances'],
         };
         const wanted = elitePacks[gameSystem] ?? [];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- p.metadata.id may be absent on some pack formats; optional chain is defensive

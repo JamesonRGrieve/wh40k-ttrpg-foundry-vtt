@@ -396,7 +396,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
                             name: 'vehicle-methods-pc',
                             type: 'dh2-character',
                             system: {
-                                gameSystem: 'dh2e',
+                                gameSystem: 'dh2',
                                 characteristics: {
                                     strength: { base: 30, advance: 0, modifier: 0 },
                                     toughness: { base: 30, advance: 0, modifier: 0 },

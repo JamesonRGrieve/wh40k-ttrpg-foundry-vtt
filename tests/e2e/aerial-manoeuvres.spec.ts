@@ -57,7 +57,7 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
 
                     const template = 'systems/wh40k-rpg/templates/chat/aerial-manoeuvre-chat.hbs';
                     const context = {
-                        gameSystem: 'dh2e',
+                        gameSystem: 'dh2',
                         manoeuvreNameKey: 'WH40K.AerialManoeuvre.LockOn.Name',
                         success: true,
                         pilotBsBonus: 20,
@@ -70,7 +70,7 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
                     const html = await renderTemplateFn(template, context);
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-aerial-card');
-                    hasSystemAnchor = html.includes('data-wh40k-system="dh2e"');
+                    hasSystemAnchor = html.includes('data-wh40k-system="dh2"');
                     hasFreeAttackBanner = html.includes('WH40K.AerialManoeuvre.FreeAttack') || html.includes('fa-crosshairs');
 
                     const ChatMessageCls = fg.ChatMessage;

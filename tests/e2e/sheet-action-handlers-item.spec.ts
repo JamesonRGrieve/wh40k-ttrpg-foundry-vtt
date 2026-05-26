@@ -242,7 +242,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     ActorCls.create({
                         name: 'sheet-action-item-spec-pc',
                         type: 'dh2-character',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     }),
                     5_000,
                     'PC Actor.create',

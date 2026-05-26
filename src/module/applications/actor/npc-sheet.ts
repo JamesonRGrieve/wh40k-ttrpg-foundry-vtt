@@ -899,7 +899,7 @@ export default class NPCSheet extends CharacterSheet {
                 // and live on a different sheet class.
                 const systemId = this._resolveGameSystemId();
                 const isAptitudeSystem =
-                    systemId === 'dh2e' || systemId === 'dh1e' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
+                    systemId === 'dh2' || systemId === 'dh1' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
                 target = isAptitudeSystem ? target - 20 : Math.floor(target / 2);
             }
 
@@ -1979,7 +1979,7 @@ export default class NPCSheet extends CharacterSheet {
             // Aptitude/career family (DH2 + DH1e/BC/DW/OW/IM) → flat -20.
             const systemId = this._resolveGameSystemId();
             const isAptitudeSystem =
-                systemId === 'dh2e' || systemId === 'dh1e' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
+                systemId === 'dh2' || systemId === 'dh1' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
             const untrainedAdjust = isAptitudeSystem ? charTotal - 20 : Math.floor(charTotal / 2);
             skill.current = level > 0 ? charTotal + trainingBonus + (skill.bonus ?? 0) : untrainedAdjust + (skill.bonus ?? 0);
             // Defer to the parent helper for trainingIndicators, breakdown, tooltipData, isGranted, etc.

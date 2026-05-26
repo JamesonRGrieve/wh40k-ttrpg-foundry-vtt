@@ -154,7 +154,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                         name: 'vehicle-spec-dh2',
                         type: 'dh2-vehicle',
                         system: {
-                            gameSystem: 'dh2e',
+                            gameSystem: 'dh2',
                             type: 'flyer',
                             vehicleClass: 'air',
                             integrity: { max: 10, value: 10, critical: 0 },

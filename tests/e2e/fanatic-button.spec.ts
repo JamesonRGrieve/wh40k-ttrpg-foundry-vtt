@@ -54,7 +54,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
             actor = await ActorCls.create({
                 name: 'fanatic-probe',
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e', fate: { max: 3, value: 3 } },
+                system: { gameSystem: 'dh2', fate: { max: 3, value: 3 } },
                 items: [
                     {
                         name: 'Fanatic',

@@ -155,7 +155,7 @@ test.describe.serial('item roll methods (Tier B)', () => {
             const actor = await ActorCtor.create({
                 name: 'e2e-item-rolls-parent',
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e' },
+                system: { gameSystem: 'dh2' },
             });
             return actor?.id ?? null;
         });

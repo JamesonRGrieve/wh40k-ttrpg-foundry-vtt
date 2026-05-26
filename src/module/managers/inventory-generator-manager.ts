@@ -49,7 +49,7 @@ export class InventoryGeneratorManager {
      * Read every droppable physical item from the compendium packs scoped to
      * `gameSystem` (plus shared `homebrew` packs) and project them to plain
      * {@link InventoryCandidate}s. Scoping reuses the single shared
-     * system→pack-prefix mapping so a `dh2e` actor only ever sees `dh2-*`
+     * system→pack-prefix mapping so a `dh2` actor only ever sees `dh2-*`
      * content (`Dodge` exists six times across systems with different UUIDs).
      */
     static async collectCandidates(gameSystem: string | undefined): Promise<InventoryCandidate[]> {

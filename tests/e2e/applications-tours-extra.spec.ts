@@ -564,7 +564,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     const createPc = ActorCls?.create;
                     if (createPc != null) {
                         pc = await withTimeout(
-                            createPc({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2e' } }),
+                            createPc({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2' } }),
                             5_000,
                             'PC Actor.create',
                         );
@@ -1052,11 +1052,11 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         const embeds = await withTimeout(
                             live.createEmbeddedDocuments('Item', [
-                                { name: 'probe-condition', type: 'condition', system: { gameSystem: 'dh2e', description: 'probe', duration: 'Permanent' } },
+                                { name: 'probe-condition', type: 'condition', system: { gameSystem: 'dh2', description: 'probe', duration: 'Permanent' } },
                                 {
                                     name: 'probe-mod-talent',
                                     type: 'talent',
-                                    system: { gameSystem: 'dh2e', active: true, isPassive: false, modifiers: { characteristics: { weaponSkill: 5 } } },
+                                    system: { gameSystem: 'dh2', active: true, isPassive: false, modifiers: { characteristics: { weaponSkill: 5 } } },
                                 },
                             ]),
                             5_000,
@@ -1123,7 +1123,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         const created = await withTimeout(
                             live.createEmbeddedDocuments('Item', [
-                                { name: 'probe-preview-gear', type: 'gear', system: { gameSystem: 'dh2e', quantity: 2, description: 'probe gear' } },
+                                { name: 'probe-preview-gear', type: 'gear', system: { gameSystem: 'dh2', quantity: 2, description: 'probe gear' } },
                             ]),
                             5_000,
                             'embed preview gear',
@@ -1211,7 +1211,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['talent-editor-dialog-render'] = 'no PC actor';
                     } else {
                         const created = await withTimeout(
-                            live.createEmbeddedDocuments('Item', [{ name: 'probe-editor-talent', type: 'talent', system: { gameSystem: 'dh2e' } }]),
+                            live.createEmbeddedDocuments('Item', [{ name: 'probe-editor-talent', type: 'talent', system: { gameSystem: 'dh2' } }]),
                             5_000,
                             'embed talent',
                         );

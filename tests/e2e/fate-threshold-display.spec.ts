@@ -51,12 +51,12 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
             withThreshold = await ActorCls.create({
                 name: 'fate-threshold-visible-probe',
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e', fate: { max: 5, value: 3, threshold: 2 } },
+                system: { gameSystem: 'dh2', fate: { max: 5, value: 3, threshold: 2 } },
             });
             withoutThreshold = await ActorCls.create({
                 name: 'fate-threshold-hidden-probe',
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e', fate: { max: 5, value: 3, threshold: 0 } },
+                system: { gameSystem: 'dh2', fate: { max: 5, value: 3, threshold: 0 } },
             });
         } catch (setupErr) {
             return { setupOk: false, withThresholdOk: false, withoutThresholdOk: false, error: String((setupErr as Error).message) };

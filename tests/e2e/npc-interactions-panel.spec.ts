@@ -49,14 +49,14 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
                 name: 'npc-interactions-pc-probe',
                 type: 'dh2-character',
                 system: {
-                    gameSystem: 'dh2e',
+                    gameSystem: 'dh2',
                     characteristics: { fellowship: { base: 40, total: 40, bonus: 4 } },
                 },
             });
             npc = await ActorCls.create({
                 name: 'npc-interactions-npc-probe',
                 type: 'bc-npc',
-                system: { gameSystem: 'dh2e' },
+                system: { gameSystem: 'dh2' },
             });
         } catch (err) {
             return { setupOk: false, panelPresent: false, rowCount: 0, error: err instanceof Error ? err.message : String(err) };

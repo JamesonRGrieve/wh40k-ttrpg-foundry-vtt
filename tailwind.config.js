@@ -1366,11 +1366,11 @@ module.exports = {
     }),
     // Per-system theme variants — apply a utility only when the sheet root
     // (or any ancestor) carries the matching `data-wh40k-system="<id>"` attr.
-    // Usage in templates: `tw-bg-gold dh2e:tw-bg-bronze rt:tw-bg-amber-700`.
-    // The 7 ids (`bc`, `dh1e`, `dh2e`, `dw`, `ow`, `rt`, `im`) match
+    // Usage in templates: `tw-bg-gold dh2:tw-bg-bronze rt:tw-bg-amber-700`.
+    // The 7 ids (`bc`, `dh1`, `dh2`, `dw`, `ow`, `rt`, `im`) match
     // `src/module/config/game-systems/types.ts` `GameSystemId`.
     plugin(function ({ addVariant }) {
-      ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'].forEach((id) => {
+      ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'].forEach((id) => {
         addVariant(id, `[data-wh40k-system="${id}"] &`);
       });
     }),

@@ -80,7 +80,7 @@ async function createDH2Character(page: Page, label: string): Promise<{ id: stri
             const actor = await ActorCls.create({
                 name,
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e' },
+                system: { gameSystem: 'dh2' },
             });
             return { id: actor?.id ?? null, createError: actor ? null : 'Actor.create returned null' };
         } catch (err) {
@@ -243,7 +243,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
                         name: 'probe-origin-background',
                         type: 'originPath',
                         system: {
-                            gameSystem: 'dh2e',
+                            gameSystem: 'dh2',
                             step: 'background',
                             stepIndex: 1,
                             positions: [4],
@@ -270,7 +270,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         else {
             if (result.step !== 'background') failures.push(`origin.step was ${result.step}, expected 'background'`);
             if (result.stepIndex !== 1) failures.push(`origin.stepIndex was ${result.stepIndex}, expected 1`);
-            if (result.gameSystem !== 'dh2e') failures.push(`origin.gameSystem was ${result.gameSystem}, expected 'dh2e'`);
+            if (result.gameSystem !== 'dh2') failures.push(`origin.gameSystem was ${result.gameSystem}, expected 'dh2'`);
             if (result.positionsLen !== 1) failures.push(`origin.positions length was ${result.positionsLen}, expected 1`);
             if (failures.length === 0) recordCoverage('dh2.origin-path', 'create-and-embed');
         }

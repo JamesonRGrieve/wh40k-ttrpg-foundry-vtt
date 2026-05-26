@@ -50,7 +50,7 @@
     Theming: the row hover background uses inline per-system variants so each
     game system tints its hover highlight distinctly without a helper.
 --}}
-<div class="tw-border-b dh2e:tw-border-bronze/20 rt:tw-border-amber-700/20 im:tw-border-crimson/20 {{#if dragType}}item-drag {{/if}}dh2e:hover:tw-bg-bronze/5 rt:hover:tw-bg-amber-700/5 im:hover:tw-bg-crimson/5{{#if rowClass}} {{rowClass}}{{/if}}" data-item-id="{{item.id}}"{{#if dragType}} data-item-type="{{dragType}}"{{/if}}>
+<div class="tw-border-b dh2:tw-border-bronze/20 rt:tw-border-amber-700/20 im:tw-border-crimson/20 {{#if dragType}}item-drag {{/if}}dh2:hover:tw-bg-bronze/5 rt:hover:tw-bg-amber-700/5 im:hover:tw-bg-crimson/5{{#if rowClass}} {{rowClass}}{{/if}}" data-item-id="{{item.id}}"{{#if dragType}} data-item-type="{{dragType}}"{{/if}}>
     {{#unless (eq editAction false)}}
         <div>
             <label class="item-edit tw-cursor-pointer hover:tw-opacity-100" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}"{{#if editTitleKey}} title="{{localize editTitleKey}}" aria-label="{{localize editTitleKey}}"{{/if}}>

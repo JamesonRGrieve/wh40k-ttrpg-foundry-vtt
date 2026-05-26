@@ -102,13 +102,13 @@ async function listActorTypes(page: Page): Promise<string[]> {
 /**
  * Per-system actor types follow a `<systemPrefix>-<role>` naming convention
  * (`dh2-character`, `bc-vehicle`, `rt-starship`, …). The GameSystemId used at
- * runtime carries a trailing 'e' for DH1/DH2 (dh1e, dh2e) which the manifest
+ * runtime carries a trailing 'e' for DH1/DH2 (dh1, dh2) which the manifest
  * prefix drops — this map keeps the test honest about that translation.
  */
 const SYSTEM_PREFIX: Record<string, string> = {
     bc: 'bc',
-    dh1e: 'dh1',
-    dh2e: 'dh2',
+    dh1: 'dh1',
+    dh2: 'dh2',
     dw: 'dw',
     ow: 'ow',
     rt: 'rt',

@@ -63,7 +63,7 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
                 name: 'dark-pact-panel-probe',
                 type: 'dh2-character',
                 system: {
-                    gameSystem: 'dh2e',
+                    gameSystem: 'dh2',
                     pacts: [
                         {
                             pactUuid: 'Compendium.wh40k-rpg.dh2-pacts.Item.PactOfHungerForKnowledge',

@@ -88,7 +88,7 @@ export default meta;
 type Story = StoryObj<CharacterSheetArgs>;
 
 export const DarkHeresy2Biography: Story = {
-    args: buildPlayerArgs('dh2e'),
+    args: buildPlayerArgs('dh2'),
     render: (args) => renderCharacterSheet(args, biographyTemplate),
     play: async ({ canvasElement }) => {
         const queries = within(canvasElement);

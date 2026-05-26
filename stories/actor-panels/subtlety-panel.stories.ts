@@ -16,8 +16,8 @@
  *   3. EmptyAdjusters       — GM view with no adjusters surfaced.
  *
  * The panel is normally rendered inside the DH2 character sheet root, which
- * carries `data-wh40k-system="dh2e"`; the stories wrap the panel in that
- * ancestor so the `dh2e:tw-*` per-system variants fire under visual review
+ * carries `data-wh40k-system="dh2"`; the stories wrap the panel in that
+ * ancestor so the `dh2:tw-*` per-system variants fire under visual review
  * (CLAUDE.md "Check the ancestor implication for variants"). The companion
  * e2e spec (`tests/e2e/subtlety-panel.spec.ts`) snaps the live-Foundry render.
  */
@@ -53,14 +53,14 @@ interface SubtletyContext {
 const panelTpl = HbsLib.compile(panelSrc);
 
 /**
- * Render the panel wrapped in the `.wh40k-rpg` + `data-wh40k-system="dh2e"`
+ * Render the panel wrapped in the `.wh40k-rpg` + `data-wh40k-system="dh2"`
  * ancestor the live DH2 sheet provides, so `important: '.wh40k-rpg'`-scoped
- * utilities and `dh2e:tw-*` per-system variants resolve under visual review.
+ * utilities and `dh2:tw-*` per-system variants resolve under visual review.
  */
 function renderPanel(ctx: SubtletyContext): HTMLElement {
     const root = document.createElement('div');
     root.className = 'wh40k-rpg sheet actor character';
-    root.dataset['wh40kSystem'] = 'dh2e';
+    root.dataset['wh40kSystem'] = 'dh2';
     root.append(renderStoryTemplate(panelTpl, ctx));
     return root;
 }

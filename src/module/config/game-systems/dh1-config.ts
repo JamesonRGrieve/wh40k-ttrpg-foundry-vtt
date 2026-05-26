@@ -8,7 +8,7 @@ import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
-    readonly id = 'dh1e' as const;
+    readonly id = 'dh1' as const;
     readonly label = 'WH40K.System.DarkHeresy1e';
     readonly cssClass = 'dark-heresy-1e';
     readonly theme = {

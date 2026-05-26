@@ -143,7 +143,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             gameSystem: new fields.StringField({
                 required: true,
                 initial: 'rt',
-                choices: ['rt', 'dh2e', 'dh1e', 'bc', 'ow', 'dw'],
+                choices: ['rt', 'dh2', 'dh1', 'bc', 'ow', 'dw'],
             }),
 
             // XP cost (for Into The Storm advanced origins)

@@ -115,7 +115,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
             actor = await ActorCls.create({
                 name: 'origin-builder-styling-probe',
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e' },
+                system: { gameSystem: 'dh2' },
             });
         } catch (err) {
             window.removeEventListener('error', errorListener);

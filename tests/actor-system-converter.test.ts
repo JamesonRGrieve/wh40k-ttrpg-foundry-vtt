@@ -190,7 +190,7 @@ describe('actor-system-converter', () => {
         expect(converted.type).toBe('dh2-character');
         expect(converted.system).toEqual(
             expect.objectContaining({
-                gameSystem: 'dh2e',
+                gameSystem: 'dh2',
                 wounds: { value: 11, max: 11 },
                 experience: { current: 250 },
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- vitest expect.objectContaining returns `any` by design

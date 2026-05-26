@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-/** DH1CharacterData is a thin wrapper with only gameSystem = 'dh1e' added. */
+/** DH1CharacterData is a thin wrapper with only gameSystem = 'dh1' added. */
 describe('DH1CharacterData', () => {
     it('exports a default class symbol', async () => {
         const mod = await import('./dh1-character').catch((err) => {
@@ -13,11 +13,11 @@ describe('DH1CharacterData', () => {
         expect(mod.default).toBeTruthy();
     });
 
-    it('static gameSystem is dh1e', async () => {
+    it('static gameSystem is dh1', async () => {
         const mod = await import('./dh1-character').catch(() => undefined);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
         if (mod === undefined) return;
-        expect((mod.default as { gameSystem?: string }).gameSystem).toBe('dh1e');
+        expect((mod.default as { gameSystem?: string }).gameSystem).toBe('dh1');
     });
 
     it('inherits CharacterBaseData', async () => {

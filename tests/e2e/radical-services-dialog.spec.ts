@@ -43,7 +43,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
                 actor = await ActorCls.create({
                     name: 'radical-services-probe',
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e', influence: 40 },
+                    system: { gameSystem: 'dh2', influence: 40 },
                 });
             } catch (err) {
                 return { ok: false, reason: `actor create failed: ${err instanceof Error ? err.message : String(err)}` };

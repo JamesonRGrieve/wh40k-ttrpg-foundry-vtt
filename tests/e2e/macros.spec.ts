@@ -155,7 +155,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                     name: 'macros-spec-actor',
                     type: 'dh2-character',
                     system: {
-                        gameSystem: 'dh2e',
+                        gameSystem: 'dh2',
                         characteristics: {
                             weaponSkill: { base: 30, advance: 0, modifier: 0 },
                         },
@@ -175,7 +175,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             let item: ItemDoc | null = null;
             try {
                 const created = await actorDoc.createEmbeddedDocuments('Item', [
-                    { name: 'macros-probe-talent', type: 'talent', system: { gameSystem: 'dh2e' } },
+                    { name: 'macros-probe-talent', type: 'talent', system: { gameSystem: 'dh2' } },
                 ]);
                 item = Array.isArray(created) ? created[0] ?? null : null;
             } catch {

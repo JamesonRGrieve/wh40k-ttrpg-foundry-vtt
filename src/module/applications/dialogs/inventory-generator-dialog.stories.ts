@@ -47,7 +47,7 @@ const meta = {
     title: 'Dialogs/InventoryGeneratorDialog',
     render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         actorName: 'Hive Quartermaster',
         poolEmpty: false,
         onGenerateTab: true,

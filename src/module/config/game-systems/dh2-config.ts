@@ -8,7 +8,7 @@ import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
-    readonly id = 'dh2e' as const;
+    readonly id = 'dh2' as const;
     readonly label = 'WH40K.System.DarkHeresy2e';
     readonly cssClass = 'dark-heresy';
     readonly theme = {

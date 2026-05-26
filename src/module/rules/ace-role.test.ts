@@ -24,7 +24,7 @@ import {
 
 describe('isRightStuffSystem', () => {
     it('enables Right Stuff for the six FFG-family systems', () => {
-        for (const sys of ['dh1e', 'dh2e', 'bc', 'dw', 'ow', 'rt']) {
+        for (const sys of ['dh1', 'dh2', 'bc', 'dw', 'ow', 'rt']) {
             expect(isRightStuffSystem(sys)).toBe(true);
         }
     });
@@ -79,7 +79,7 @@ function makeActor(opts: { gameSystem?: string; role?: string | undefined; fateV
     return {
         name: 'Vex Tannor',
         system: {
-            gameSystem: opts.gameSystem ?? 'dh2e',
+            gameSystem: opts.gameSystem ?? 'dh2',
             originPath: { role: opts.role ?? '' },
             fate: { value: opts.fateValue ?? 0 },
             characteristics: { agility: { bonus: opts.agilityBonus ?? 0 } },
@@ -117,7 +117,7 @@ describe('actorIsAce', () => {
     });
 
     it('matches across the other five FFG systems', () => {
-        for (const sys of ['dh1e', 'bc', 'dw', 'ow', 'rt']) {
+        for (const sys of ['dh1', 'bc', 'dw', 'ow', 'rt']) {
             expect(actorIsAce(asActor(makeActor({ gameSystem: sys, role: 'Ace' })))).toBe(true);
         }
     });

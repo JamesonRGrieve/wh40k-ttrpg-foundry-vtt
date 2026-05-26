@@ -22,7 +22,7 @@ describe('isWarpTravelAvailable (#193)', () => {
     });
 
     it('returns false for non-RT systems', () => {
-        for (const id of ['dh1e', 'dh2e', 'bc', 'dw', 'ow', 'im'] as const) {
+        for (const id of ['dh1', 'dh2', 'bc', 'dw', 'ow', 'im'] as const) {
             expect(isWarpTravelAvailable(id)).toBe(false);
         }
     });

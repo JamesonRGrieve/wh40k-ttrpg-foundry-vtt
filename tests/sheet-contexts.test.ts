@@ -37,7 +37,7 @@ afterAll(() => {
 });
 
 describe('mockPlayerSheetContext', () => {
-    it('produces a fully-populated context for dh2e by default', () => {
+    it('produces a fully-populated context for dh2 by default', () => {
         const ctx = mockPlayerSheetContext();
         expect(ctx.actor).toBeTruthy();
         expect(ctx.system).toBeTruthy();
@@ -56,7 +56,7 @@ describe('mockPlayerSheetContext', () => {
     });
 
     it('uses SystemConfigRegistry.getHeaderFields for header rows — DH2e shape', () => {
-        const ctx = mockPlayerSheetContext({ systemId: 'dh2e' });
+        const ctx = mockPlayerSheetContext({ systemId: 'dh2' });
         const names = ctx.headerFields.map((f) => f.name);
         expect(names).toEqual(['system.originPath.homeWorld', 'system.originPath.background', 'system.originPath.role', 'system.originPath.divination']);
     });
@@ -87,7 +87,7 @@ describe('mockPlayerSheetContext', () => {
 
     it('actorOverrides flow through to actor.system without clobbering bio defaults', () => {
         const ctx = mockPlayerSheetContext({
-            systemId: 'dh2e',
+            systemId: 'dh2',
             actorOverrides: {
                 system: {
                     bio: { age: '99' },
@@ -101,7 +101,7 @@ describe('mockPlayerSheetContext', () => {
     });
 
     it('emits non-empty origin-step IDs (sourced via randomId)', () => {
-        const ctx = mockPlayerSheetContext({ systemId: 'dh2e' });
+        const ctx = mockPlayerSheetContext({ systemId: 'dh2' });
         const stepIds = ctx.originPathSteps.map((s) => s.item?._id ?? '');
         expect(stepIds.every((id) => typeof id === 'string' && id.length > 0)).toBe(true);
         // All three IDs are unique even within a single fixture build.
@@ -110,7 +110,7 @@ describe('mockPlayerSheetContext', () => {
 });
 
 describe('mockPlayerSheetContext — per-system parity', () => {
-    const ALL_SYSTEMS: GameSystemId[] = ['rt', 'dh1e', 'dh2e', 'bc', 'ow', 'dw', 'im'];
+    const ALL_SYSTEMS: GameSystemId[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
 
     it('every system produces a valid context with non-empty headerFields', () => {
         for (const id of ALL_SYSTEMS) {
@@ -137,7 +137,7 @@ describe('mockPlayerSheetContext — per-system parity', () => {
     });
 
     it('actor.type is namespaced by system after withSystem is applied', () => {
-        const dh2 = mockPlayerSheetContext({ systemId: 'dh2e' });
+        const dh2 = mockPlayerSheetContext({ systemId: 'dh2' });
         expect(dh2.actor.type).toBe('dh2-character');
         const im = mockPlayerSheetContext({ systemId: 'im' });
         expect(im.actor.type).toBe('im-character');
@@ -166,7 +166,7 @@ describe('mockNpcSheetContext', () => {
 
 describe('mockVehicleSheetContext', () => {
     it('builds a minimal vehicle context with type-namespaced actor', () => {
-        const ctx = mockVehicleSheetContext({ systemId: 'dh2e' });
+        const ctx = mockVehicleSheetContext({ systemId: 'dh2' });
         expect(ctx.actor.type).toBe('dh2-vehicle');
         expect(ctx.tabs.length).toBeGreaterThan(0);
         expect(ctx.headerFields).toEqual([]);

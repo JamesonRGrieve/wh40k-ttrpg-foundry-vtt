@@ -136,7 +136,7 @@ export default class MutantBackgroundDialog extends ApplicationV2Mixin(Applicati
         const templateData = {
             startingCorruption: MUTANT_STARTING_CORRUPTION,
             actorName: actor?.name ?? null,
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mutant-background-chat.hbs', templateData);

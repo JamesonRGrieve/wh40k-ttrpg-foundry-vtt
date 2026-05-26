@@ -79,7 +79,7 @@ async function createCharacterActor(page: Page, name: string, system: Record<str
                 const actor = await ActorCls.create({
                     name,
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e', ...actorSystem },
+                    system: { gameSystem: 'dh2', ...actorSystem },
                 });
                 if (!actor) return { id: null, error: 'Actor.create returned null' };
                 return { id: actor.id ?? null, error: null };
@@ -267,12 +267,12 @@ async function probeGrantsTalentGrantsTalent(page: Page): Promise<FlowResult> {
                 sourceActor = await ActorCls.create({
                     name: 'probe-grants-source',
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e' },
+                    system: { gameSystem: 'dh2' },
                 });
                 parentActor = await ActorCls.create({
                     name: 'probe-grants-parent',
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e' },
+                    system: { gameSystem: 'dh2' },
                 });
             } catch (err) {
                 return { ok: false, error: `actor create failed: ${err instanceof Error ? err.message : String(err)}` };

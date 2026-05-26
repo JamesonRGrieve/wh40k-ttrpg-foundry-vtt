@@ -63,7 +63,7 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
                     }
 
                     const ctx = {
-                        gameSystem: 'dh2e',
+                        gameSystem: 'dh2',
                         damageTypeKey: 'WH40K.CriticalDamage.DamageType.Energy',
                         bodyPartKey: 'WH40K.CriticalDamage.BodyPart.Arm',
                         severityLabel: '5',
@@ -96,7 +96,7 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
                         const card = host.querySelector('.wh40k-critdmg-card');
                         rendered = card instanceof HTMLElement;
                         hasCardRoot = card !== null;
-                        hasSystemAttr = card?.getAttribute('data-wh40k-system') === 'dh2e';
+                        hasSystemAttr = card?.getAttribute('data-wh40k-system') === 'dh2';
                         hasWh40kAncestor = card?.closest('.wh40k-rpg') !== null;
                         riderPills = host.querySelectorAll('.wh40k-critdmg-card span.tw-rounded-full').length;
                         hasEffectText = (card?.textContent ?? '').includes('Stunned for 1 round');
@@ -128,7 +128,7 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
             expect(result.error, `card probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'card did not render').toBe(true);
             expect(result.hasCardRoot, 'card root should render').toBe(true);
-            expect(result.hasSystemAttr, 'data-wh40k-system should be dh2e').toBe(true);
+            expect(result.hasSystemAttr, 'data-wh40k-system should be dh2').toBe(true);
             expect(result.hasWh40kAncestor, 'card needs a .wh40k-rpg ancestor for Tailwind').toBe(true);
             expect(result.hasEffectText, 'effect prose should render in the card').toBe(true);
             expect(result.riderPills, 'expected two rider pills (Stunned + Lost Limb)').toBe(2);

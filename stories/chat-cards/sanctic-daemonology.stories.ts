@@ -38,7 +38,7 @@ interface SancticChatContext {
 function cardContext(input: SancticManifestInput): SancticChatContext {
     const r = resolveSancticManifestation(input);
     return {
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         powerName: r.power.name,
         modeKey: MODE_KEYS[input.mode],
         effectivePR: r.effectivePR,
@@ -67,7 +67,7 @@ export const UnfetteredNoPhenomena: Story = {
         // Per-system + outside-sheet cascade anchors must be present.
         const root = canvasElement.querySelector('.wh40k-sd-card');
         await expect(root?.classList.contains('wh40k-rpg')).toBe(true);
-        await expect(root?.getAttribute('data-wh40k-system')).toBe('dh2e');
+        await expect(root?.getAttribute('data-wh40k-system')).toBe('dh2');
     },
 };
 

@@ -16,18 +16,18 @@
         affordance attached to the header).
 
     Rendered only for DH2 actors; the include in tab-status.hbs gates on
-    `actor._gameSystemId === 'dh2e'`.
+    `actor._gameSystemId === 'dh2'`.
 --}}
 <section class="wh40k-subtlety-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
                 tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
                 tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                dh2e:tw-border-bronze"
+                dh2:tw-border-bronze"
          data-subtlety-value="{{system.subtlety.value}}">
 
     {{!-- Header: title + value/max readout + breakdown affordance --}}
     <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
         <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-user-secret dh2e:tw-text-bronze"></i>
+            <i class="fas fa-user-secret dh2:tw-text-bronze"></i>
             <span>{{localize "WH40K.SubtletyPanel.Header"}}</span>
         </h3>
         <span class="wh40k-subtlety-readout tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
@@ -70,7 +70,7 @@
         <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.SubtletyPanel.AdjusterList"}}</span>
         {{#if subtletyAdjusters.length}}
             {{#each subtletyAdjusters as |adj|}}
-                <div class="wh40k-subtlety-adjuster-row tw-grid tw-grid-cols-[1fr_auto] tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2e:tw-border-bronze"
+                <div class="wh40k-subtlety-adjuster-row tw-grid tw-grid-cols-[1fr_auto] tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze"
                      data-adjuster-kind="{{adj.kind}}">
                     <span class="wh40k-subtlety-adjuster-label tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)] tw-truncate" title="{{adj.label}}">{{adj.label}}</span>
                     {{#if (eq adj.kind 'clamp')}}
@@ -78,7 +78,7 @@
                             <i class="fas fa-shield"></i> {{localize "WH40K.SubtletyPanel.Clamped" value=adj.minAbsoluteDelta}}
                         </span>
                     {{else}}
-                        <span class="wh40k-subtlety-adjuster-delta tw-text-[0.85rem] tw-font-bold {{#if (gt adj.delta 0)}}tw-text-success{{else}}tw-text-crimson dh2e:tw-text-crimson-light{{/if}}">
+                        <span class="wh40k-subtlety-adjuster-delta tw-text-[0.85rem] tw-font-bold {{#if (gt adj.delta 0)}}tw-text-success{{else}}tw-text-crimson dh2:tw-text-crimson-light{{/if}}">
                             {{#if (gt adj.delta 0)}}+{{/if}}{{adj.delta}}
                         </span>
                     {{/if}}

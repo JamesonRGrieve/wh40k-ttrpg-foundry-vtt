@@ -92,7 +92,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                 actor = await ActorCls.create({
                     name: 'chargen-spec-actor',
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e' },
+                    system: { gameSystem: 'dh2' },
                 });
             } catch (err) {
                 for (const f of CHARGEN_FLOWS) record(f, false, `actor create threw: ${String(err instanceof Error ? err.message : err)}`);
@@ -112,7 +112,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                             type: 'originPath',
                             img: 'icons/svg/d20.svg',
                             system: {
-                                gameSystem: 'dh2e',
+                                gameSystem: 'dh2',
                                 step: 'homeWorld',
                                 identifier: 'hive-world',
                                 grants: { skills: [], talents: [], traits: [], equipment: [], aptitudes: [], specialAbilities: [], choices: [] },

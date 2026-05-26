@@ -221,7 +221,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             ActorCls.create({
                                 name: 'documents-extra-proxy-dh2',
                                 type: 'dh2-character',
-                                system: { gameSystem: 'dh2e' },
+                                system: { gameSystem: 'dh2' },
                             }),
                             5_000,
                             'proxy dh2-character Actor.create',
@@ -342,7 +342,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             ActorCls.create({
                                 name: 'documents-extra-container-host',
                                 type: 'dh2-character',
-                                system: { gameSystem: 'dh2e' },
+                                system: { gameSystem: 'dh2' },
                             }),
                             5_000,
                             'container-host Actor.create',

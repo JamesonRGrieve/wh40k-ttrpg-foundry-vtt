@@ -202,7 +202,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     browserActor.create({
                         name: 'weapon-attack-spec-pc',
                         type: 'dh2-character',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     }),
                     5_000,
                     'PC Actor.create',
@@ -499,7 +499,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                                 name: 'weapon-attack-spec-npc',
                                 type: 'dh2-npc',
                                 system: {
-                                    gameSystem: 'dh2e',
+                                    gameSystem: 'dh2',
                                     wounds: { max: 10, value: 10, critical: 0 },
                                     armour: { mode: 'simple', total: 4, locations: {} },
                                 },

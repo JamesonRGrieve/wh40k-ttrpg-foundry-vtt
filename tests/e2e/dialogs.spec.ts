@@ -219,7 +219,7 @@ async function probeDialogs(page: Page): Promise<{
                     actor = await ActorCls.create({
                         name: 'dialog-probe-actor',
                         type: 'dh2-character',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     });
                 } catch (err) {
                     return {

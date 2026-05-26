@@ -60,7 +60,7 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
                 name: 'crusader-probe',
                 type: 'dh2-character',
                 system: {
-                    gameSystem: 'dh2e',
+                    gameSystem: 'dh2',
                     fate: { max: 3, value: 3 },
                     characteristics: { willpower: { base: 40, advance: 0 } },
                 },

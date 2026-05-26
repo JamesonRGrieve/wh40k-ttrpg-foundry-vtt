@@ -6,9 +6,9 @@
       the data-action="rollShipManoeuvre" + data-manoeuvre-id="<id>"
       pair to a combined Pilot+Manoeuvrability roll. Difficulty,
       label, and benefit are read from src/module/rules/ship-manoeuvres.ts. --}}
-<section class="wh40k-starship-manoeuvre-bar tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-border-t tw-border-gold rt:tw-border-gold dh2e:tw-border-bronze">
+<section class="wh40k-starship-manoeuvre-bar tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-border-t tw-border-gold rt:tw-border-gold dh2:tw-border-bronze">
     <header class="tw-flex tw-items-baseline tw-justify-between tw-gap-3">
-        <h2 class="wh40k-starship-manoeuvre-bar__title tw-text-base tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gold rt:tw-text-gold dh2e:tw-text-bronze">{{localize "WH40K.Starship.Manoeuvre.BarTitle"}}</h2>
+        <h2 class="wh40k-starship-manoeuvre-bar__title tw-text-base tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gold rt:tw-text-gold dh2:tw-text-bronze">{{localize "WH40K.Starship.Manoeuvre.BarTitle"}}</h2>
         {{#if helmsmanName}}
             <span class="wh40k-starship-manoeuvre-bar__helmsman tw-text-xs tw-text-[#6a5239] tw-italic">{{localize "WH40K.Starship.Manoeuvre.Helmsman"}}: {{helmsmanName}}</span>
         {{/if}}

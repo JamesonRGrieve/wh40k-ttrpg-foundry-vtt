@@ -28,8 +28,8 @@ function make(gameSystem: string, className: string): typeof OriginPathBuilder {
     return SystemOriginPathBuilder;
 }
 
-export const DH2OriginPathBuilder = make('dh2e', 'DH2OriginPathBuilder');
-export const DH1OriginPathBuilder = make('dh1e', 'DH1OriginPathBuilder');
+export const DH2OriginPathBuilder = make('dh2', 'DH2OriginPathBuilder');
+export const DH1OriginPathBuilder = make('dh1', 'DH1OriginPathBuilder');
 export const RTOriginPathBuilder = make('rt', 'RTOriginPathBuilder');
 export const BCOriginPathBuilder = make('bc', 'BCOriginPathBuilder');
 export const OWOriginPathBuilder = make('ow', 'OWOriginPathBuilder');

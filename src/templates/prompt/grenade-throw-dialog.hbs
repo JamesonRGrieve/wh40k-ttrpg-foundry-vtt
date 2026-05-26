@@ -1,6 +1,6 @@
 {{!-- Within-supplement grenade throw dialog (#135). --}}
 {{!-- GM picks a grenade; "Throw" emits the chat card with the mechanical rider. --}}
-<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2">
 
     <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
         {{localize "WH40K.WithinGrenade.DialogTitle"}}
@@ -55,7 +55,7 @@
         <button type="button"
                 data-action="throw"
                 {{#unless selectedGrenade}}disabled{{/unless}}
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2e:tw-from-bronze tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]">
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2:tw-from-bronze tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]">
             <i class="fas fa-bomb"></i> {{localize "WH40K.WithinGrenade.ThrowButton"}}
         </button>
         <button type="button"

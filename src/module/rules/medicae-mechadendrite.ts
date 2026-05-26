@@ -162,7 +162,7 @@ export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: () =
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: `gameSystem` is declared on each concrete actor DataModel (character/NPC/vehicle) but not on the shared WH40KActorSystemData surface this helper is generic over, so a runtime fallback is required
-    const gameSystem = (actor.system as { gameSystem?: string }).gameSystem ?? 'dh2e';
+    const gameSystem = (actor.system as { gameSystem?: string }).gameSystem ?? 'dh2';
 
     const templateData = {
         actorName: actor.name,

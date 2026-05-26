@@ -794,13 +794,13 @@ export function renderTemplate<T>(template: HandlebarsTemplateDelegate, context:
     // screenshot regressions where all tab panels rendered simultaneously and
     // text contrast collapsed.
     //
-    // `data-wh40k-system="dh2e"` activates the per-system Tailwind variants
-    // (`dh2e:tw-text-bronze`, etc.) so stories that exercise system-aware
+    // `data-wh40k-system="dh2"` activates the per-system Tailwind variants
+    // (`dh2:tw-text-bronze`, etc.) so stories that exercise system-aware
     // theming render the active system's palette. Story-level overrides may
     // re-assign this attribute (e.g. for Rogue Trader or Black Crusade).
     const wrap = document.createElement('div');
     wrap.className = 'theme-dark wh40k-rpg wh40k-wrapper';
-    wrap.setAttribute('data-wh40k-system', 'dh2e');
+    wrap.setAttribute('data-wh40k-system', 'dh2');
     wrap.innerHTML = `
         <div class="app window-app sheet" data-appid="0">
             <section class="window-content">${template(context)}</section>

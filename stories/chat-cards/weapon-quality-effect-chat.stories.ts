@@ -24,8 +24,8 @@ import { initializeStoryHandlebars } from '../template-support';
  * `WEAPON_QUALITY_EFFECTS` payload surfaces here as well as in the
  * Vitest unit suite.
  *
- * Per-system theming: stories set `gameSystem: 'dh2e'` so the card's
- * `data-wh40k-system` anchor activates the `dh2e:*` Tailwind variant
+ * Per-system theming: stories set `gameSystem: 'dh2'` so the card's
+ * `data-wh40k-system` anchor activates the `dh2:*` Tailwind variant
  * chain on the border / accent.
  */
 
@@ -73,7 +73,7 @@ function ctx(opts: {
     const labelKey = `WH40K.Quality.${capitalize(String(opts.qualityKey))}.Name`;
     const descKey = `WH40K.Quality.${capitalize(String(opts.qualityKey))}.Description`;
     return {
-        gameSystem: opts.gameSystem ?? 'dh2e',
+        gameSystem: opts.gameSystem ?? 'dh2',
         qualityKey: opts.qualityKey,
         qualityLabelKey: labelKey,
         qualityDescKey: descKey,

@@ -163,7 +163,7 @@ export const RowExpanded: Story = {
         // Compose by hand to slot block content into the description.
         const wrapper = document.createElement('div');
         wrapper.classList.add('wh40k-rpg', 'sheet');
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        wrapper.dataset.wh40kSystem = 'dh2';
         const ctx = {
             item: { id: 'r-2', name: 'Bolt Pistol' },
             dragType: 'weapon',
@@ -190,8 +190,8 @@ function makeWeaponContext(systemId: string): { actor: { items: MockWeapon[] }; 
 export const WeaponPanelDH2: Story = {
     name: 'Composed / Weapon panel (DH2e)',
     render: () => {
-        const wrapper = renderSheetParts([{ template: weaponPanelSrc, context: makeWeaponContext('dh2e') }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        const wrapper = renderSheetParts([{ template: weaponPanelSrc, context: makeWeaponContext('dh2') }], {});
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
     play: async ({ canvasElement }) => {
@@ -226,7 +226,7 @@ export const ArmourPanelDH2: Story = {
     name: 'Composed / Armour panel (DH2e)',
     render: () => {
         const wrapper = renderSheetParts([{ template: armourPanelSrc, context: { actor: { items: makeArmour() } } }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
 };
@@ -246,7 +246,7 @@ export const ComposedWithMockItem: Story = {
     render: () => {
         const items = [mockItem({ name: 'Mock Weapon' })];
         const wrapper = renderSheetParts([{ template: weaponPanelSrc, context: { actor: { items } } }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
 };
@@ -353,8 +353,8 @@ function shipContext(systemId: string): {
 export const ShipWeaponsPanelDH2: Story = {
     name: 'Composed / Ship weapons (DH2e)',
     render: () => {
-        const wrapper = renderSheetParts([{ template: shipWeaponsPanelSrc, context: shipContext('dh2e') }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        const wrapper = renderSheetParts([{ template: shipWeaponsPanelSrc, context: shipContext('dh2') }], {});
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
     play: async ({ canvasElement }) => {
@@ -378,8 +378,8 @@ export const ShipWeaponsPanelRT: Story = {
 export const ShipComponentsPanelDH2: Story = {
     name: 'Composed / Ship components (DH2e)',
     render: () => {
-        const wrapper = renderSheetParts([{ template: shipComponentsPanelSrc, context: shipContext('dh2e') }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        const wrapper = renderSheetParts([{ template: shipComponentsPanelSrc, context: shipContext('dh2') }], {});
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
     play: async ({ canvasElement }) => {
@@ -392,8 +392,8 @@ export const ShipComponentsPanelDH2: Story = {
 export const ShipUpgradesPanelDH2: Story = {
     name: 'Composed / Ship upgrades (DH2e)',
     render: () => {
-        const wrapper = renderSheetParts([{ template: shipUpgradesPanelSrc, context: shipContext('dh2e') }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        const wrapper = renderSheetParts([{ template: shipUpgradesPanelSrc, context: shipContext('dh2') }], {});
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
 };
@@ -401,8 +401,8 @@ export const ShipUpgradesPanelDH2: Story = {
 export const ShipCrewPanelDH2: Story = {
     name: 'Composed / Ship crew (DH2e)',
     render: () => {
-        const wrapper = renderSheetParts([{ template: shipCrewPanelSrc, context: shipContext('dh2e') }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        const wrapper = renderSheetParts([{ template: shipCrewPanelSrc, context: shipContext('dh2') }], {});
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
 };
@@ -464,8 +464,8 @@ function vehicleContext(systemId: string): {
 export const VehicleWeaponsPanelDH2: Story = {
     name: 'Composed / Vehicle weapons (DH2e)',
     render: () => {
-        const wrapper = renderSheetParts([{ template: vehicleWeaponsPanelSrc, context: vehicleContext('dh2e') }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        const wrapper = renderSheetParts([{ template: vehicleWeaponsPanelSrc, context: vehicleContext('dh2') }], {});
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
     play: async ({ canvasElement }) => {
@@ -479,8 +479,8 @@ export const VehicleWeaponsPanelDH2: Story = {
 export const VehicleUpgradesPanelDH2: Story = {
     name: 'Composed / Vehicle upgrades (DH2e)',
     render: () => {
-        const wrapper = renderSheetParts([{ template: vehicleUpgradesPanelSrc, context: vehicleContext('dh2e') }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        const wrapper = renderSheetParts([{ template: vehicleUpgradesPanelSrc, context: vehicleContext('dh2') }], {});
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
 };

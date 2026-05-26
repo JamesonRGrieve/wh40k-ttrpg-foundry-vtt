@@ -75,8 +75,8 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
     // the Player row was dropped from getHeaderFields() — the player name is rendered as a paired
     // input on the identity row instead. These tests assert the post-removal field order.
 
-    it('dh2e returns HomeWorld + Background + Role + Divination', () => {
-        const fields = SystemConfigRegistry.get('dh2e').getHeaderFields(makeActor());
+    it('dh2 returns HomeWorld + Background + Role + Divination', () => {
+        const fields = SystemConfigRegistry.get('dh2').getHeaderFields(makeActor());
         expect(names(fields)).toEqual([
             'system.originPath.homeWorld',
             'system.originPath.background',
@@ -86,8 +86,8 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
         expect(fields.every((f) => f.type === 'text')).toBe(true);
     });
 
-    it('dh1e returns HomeWorld + Career + Rank(role) + Divination', () => {
-        const fields = SystemConfigRegistry.get('dh1e').getHeaderFields(makeActor());
+    it('dh1 returns HomeWorld + Career + Rank(role) + Divination', () => {
+        const fields = SystemConfigRegistry.get('dh1').getHeaderFields(makeActor());
         expect(names(fields)).toEqual(['system.originPath.homeWorld', 'system.originPath.career', 'system.originPath.role', 'system.originPath.divination']);
         const rankField = fields.find((f) => f.label === 'Rank');
         expect(rankField?.name).toBe('system.originPath.role');
@@ -155,7 +155,7 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
     });
 
     it('the player name field is no longer part of getHeaderFields (rendered separately on the identity row)', () => {
-        const ids: GameSystemId[] = ['rt', 'dh1e', 'dh2e', 'bc', 'ow', 'dw', 'im'];
+        const ids: GameSystemId[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
         const actor = makeActor({ system: { bio: {} } });
         for (const id of ids) {
             const fields = SystemConfigRegistry.get(id).getHeaderFields(actor);
@@ -164,7 +164,7 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
     });
 
     it('values flow through from the actor — homeWorld value populates the matching row across all systems', () => {
-        const ids: GameSystemId[] = ['rt', 'dh1e', 'dh2e', 'bc', 'ow', 'dw', 'im'];
+        const ids: GameSystemId[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
         const actor = makeActor({
             system: {
                 bio: { playerName: 'Mona' },

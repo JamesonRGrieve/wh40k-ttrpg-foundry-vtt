@@ -82,7 +82,7 @@ const meta = {
     title: 'Dialogs/AdvancementDialog',
     render: (args) => renderSheet(templateSrc, { ...args }),
     args: {
-        _gameSystemId: 'dh2e',
+        _gameSystemId: 'dh2',
         hasCareer: true,
         originCareerName: 'Adept',
         xp: { total: 1000, used: 250, available: 750, usedPercent: 25 },

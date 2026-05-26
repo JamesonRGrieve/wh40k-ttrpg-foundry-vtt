@@ -13,7 +13,7 @@ import { expect, test } from './lib/test';
  *   - src/module/data/actor/concrete/ow-character.ts (originPath.regiment)
  *   - src/module/data/actor/concrete/rt-character.ts (rogueTrader.profitFactor)
  *   - src/module/data/actor/character.ts (the shared base schema fields)
- *   - src/module/config/game-systems/{bc,dh1e,dw,ow,rt}-config.ts (gameSystem
+ *   - src/module/config/game-systems/{bc,dh1,dw,ow,rt}-config.ts (gameSystem
  *     dispatch, per-system theme classFor lookups triggered on actor create)
  *
  * Field notes (what the prompt asked for vs. what actually exists in the
@@ -158,7 +158,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const failures: string[] = [];
-        const created = await createActor(page, 'dh1-corruption-insanity-probe', 'dh1-character', 'dh1e');
+        const created = await createActor(page, 'dh1-corruption-insanity-probe', 'dh1-character', 'dh1');
         if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);

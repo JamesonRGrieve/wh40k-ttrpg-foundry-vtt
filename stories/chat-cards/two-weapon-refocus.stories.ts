@@ -24,7 +24,7 @@ interface TwoWeaponRefocusChatContext {
     attacks: TwoWeaponRefocusPlan['attacks'];
 }
 
-function cardContext(ctx: TwoWeaponRefocusContext, gameSystem = 'dh2e'): TwoWeaponRefocusChatContext {
+function cardContext(ctx: TwoWeaponRefocusContext, gameSystem = 'dh2'): TwoWeaponRefocusChatContext {
     const plan = resolveTwoWeaponRefocus(ctx);
     return {
         gameSystem,
@@ -55,7 +55,7 @@ export const RangedSingleShotWielder: Story = {
         // Per-system + outside-sheet cascade anchors must be present.
         const root = canvasElement.querySelector('.wh40k-twr-card');
         await expect(root?.classList.contains('wh40k-rpg')).toBe(true);
-        await expect(root?.getAttribute('data-wh40k-system')).toBe('dh2e');
+        await expect(root?.getAttribute('data-wh40k-system')).toBe('dh2');
     },
 };
 

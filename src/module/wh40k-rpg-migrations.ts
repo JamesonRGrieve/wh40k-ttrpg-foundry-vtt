@@ -56,13 +56,13 @@ async function migrateActorData(actor: MigratableActor, version: number): Promis
     // config instead of falling through to the Rogue-Trader default (v189).
     //
     // The canonical gameSystem key for an actor is derived from its type
-    // prefix: `dh2-*` → 'dh2e', `dh1-*` → 'dh1e' (matching every concrete
+    // prefix: `dh2-*` → 'dh2', `dh1-*` → 'dh1' (matching every concrete
     // DataModel's `static gameSystem` and the `GameSystemId` union). Writing
     // the canonical value both fixes actors that were saved as 'rt' / a stale
     // value AND no-ops actors already on the correct key. Non-dh1/dh2 actor
     // types are left untouched (homologation-safe).
     if (version < 189) {
-        const canonical = actor.type.startsWith('dh2-') ? 'dh2e' : actor.type.startsWith('dh1-') ? 'dh1e' : null;
+        const canonical = actor.type.startsWith('dh2-') ? 'dh2' : actor.type.startsWith('dh1-') ? 'dh1' : null;
         if (canonical !== null && actor.system?.gameSystem !== canonical) {
             await actor.update({ 'system.gameSystem': canonical });
         }

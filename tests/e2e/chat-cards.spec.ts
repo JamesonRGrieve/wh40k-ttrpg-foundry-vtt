@@ -114,7 +114,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                 const actor = await g.Actor.create({
                     name: 'e2e-chat-cards-actor',
                     type: 'dh2-character',
-                    system: { gameSystem: 'dh2e' },
+                    system: { gameSystem: 'dh2' },
                 });
                 if (actor?.id == null) return null;
                 const a = actor;
@@ -204,7 +204,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                     // empty-render path — that's intended.
                     const ctx = {
                         // Identity
-                        gameSystem: 'dh2e',
+                        gameSystem: 'dh2',
                         actor: {
                             _id: evalSetup.actorId,
                             id: evalSetup.actorId,

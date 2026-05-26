@@ -246,7 +246,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             await super._onRender(context, options);
 
             // Surface the active game-system id on the sheet root so per-system
-            // Tailwind variants (`bc:`, `dh1e:`, `dh2e:`, `dw:`, `ow:`, `rt:`,
+            // Tailwind variants (`bc:`, `dh1:`, `dh2:`, `dw:`, `ow:`, `rt:`,
             // `im:`) can resolve via `[data-wh40k-system="<id>"] &`.
             // `_gameSystemId` is set on the prototype by `makeSystemVariant()`
             // (see actor/game-system-sheets.ts); fall back to the document's

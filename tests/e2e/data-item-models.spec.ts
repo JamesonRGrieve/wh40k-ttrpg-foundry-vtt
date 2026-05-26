@@ -9,7 +9,7 @@ import { expect, test } from './lib/test';
  * mutation/mentalDisorder/criticalInjury/malignancy/drug/peer/cybernetic, and
  * weapon-attack.spec.ts weapon usesAmmo/isEmpty/isRangedWeapon/rateOfFire) do
  * NOT drive deeply. Each flow embeds one item on a seeded dh2-character actor
- * (gameSystem 'dh2e') and asserts the DataModel's defineSchema fields round-trip
+ * (gameSystem 'dh2') and asserts the DataModel's defineSchema fields round-trip
  * AND its derived getters / prepareBaseData / prepareDerivedData branches
  * compute the documented arithmetic.
  *
@@ -223,7 +223,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         name: 'data-item-model-spec-pc',
                         type: 'dh2-character',
                         system: {
-                            gameSystem: 'dh2e',
+                            gameSystem: 'dh2',
                             characteristics: {
                                 weaponSkill: { base: 30, advance: 0, modifier: 0 },
                                 toughness: { base: 30, advance: 0, modifier: 0 },

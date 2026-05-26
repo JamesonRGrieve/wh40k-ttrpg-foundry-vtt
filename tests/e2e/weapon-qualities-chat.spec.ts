@@ -175,7 +175,7 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                         }
 
                         const ctx = {
-                            gameSystem: 'dh2e',
+                            gameSystem: 'dh2',
                             qualityKey: inputs.qualityKey,
                             qualityLabelKey: inputs.labelKey,
                             qualityDescKey: inputs.descKey,
@@ -210,7 +210,7 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                             const card = host.querySelector('.wh40k-quality-card');
                             rendered = card instanceof HTMLElement;
                             hasCardRoot = card !== null;
-                            hasSystemAttr = card?.getAttribute('data-wh40k-system') === 'dh2e';
+                            hasSystemAttr = card?.getAttribute('data-wh40k-system') === 'dh2';
                             hasWh40kAncestor = card?.closest('.wh40k-rpg') !== null;
                             hasQualityKeyAttr = card?.getAttribute('data-quality-key') === inputs.qualityKey;
                         }
@@ -239,7 +239,7 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                 expect(result.error, `card probe error: ${result.error ?? ''}`).toBeNull();
                 expect(result.rendered, 'card root did not render').toBe(true);
                 expect(result.hasCardRoot, 'expected .wh40k-quality-card element').toBe(true);
-                expect(result.hasSystemAttr, 'expected data-wh40k-system="dh2e"').toBe(true);
+                expect(result.hasSystemAttr, 'expected data-wh40k-system="dh2"').toBe(true);
                 expect(result.hasWh40kAncestor, 'card needs .wh40k-rpg ancestor for Tailwind scoping (Gotcha 3a)').toBe(true);
                 expect(result.hasQualityKeyAttr, `expected data-quality-key="${qcase.qualityKey}"`).toBe(true);
                 expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);

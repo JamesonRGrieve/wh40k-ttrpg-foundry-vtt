@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DH2eSystemConfig } from './dh2e-config';
+import { DH2eSystemConfig } from './dh2-config';
 
 /**
  * DH2 errata regression tests (errata.md L33):

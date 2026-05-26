@@ -253,7 +253,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
              * as the auto-joined GM user.
              * ================================================================= */
             async function probeCharacterFlows(): Promise<void> {
-                const pc = await makeActor('dh2-character', 'dh2e');
+                const pc = await makeActor('dh2-character', 'dh2');
                 if (pc?.id == null) {
                     notes['character-sheet::toggleEquip'] = 'PC create returned null';
                     return;
@@ -490,7 +490,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
              * NPCSheet flows (dh2-npc + im-npc for the threat-level cross)
              * ================================================================= */
             async function probeNpcFlows(): Promise<void> {
-                const npc = await makeActor('dh2-npc', 'dh2e', {
+                const npc = await makeActor('dh2-npc', 'dh2', {
                     wounds: { max: 10, value: 10, critical: 0 },
                     horde: { active: false, magnitude: 0 },
                     tags: [],
@@ -723,7 +723,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
              * VehicleSheet flows (dh2-vehicle)
              * ================================================================= */
             async function probeVehicleFlows(): Promise<void> {
-                const vehicle = await makeActor('dh2-vehicle', 'dh2e', {
+                const vehicle = await makeActor('dh2-vehicle', 'dh2', {
                     wounds: { max: 20, value: 10 },
                     crew: { rating: 30, morale: 50 },
                 });
@@ -973,7 +973,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
              * LootActorSheet flow (loot type — system-agnostic root)
              * ================================================================= */
             async function probeLootFlows(): Promise<void> {
-                const loot = await makeActor('loot', 'dh2e');
+                const loot = await makeActor('loot', 'dh2');
                 if (loot?.id == null) {
                     notes['loot-sheet::pickupAll'] = 'Loot create returned null';
                     return;

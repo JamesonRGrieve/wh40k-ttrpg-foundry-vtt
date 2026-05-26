@@ -106,7 +106,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                     actor = await ActorCls.create({
                         name: 'sheet-interactions-probe',
                         type: 'dh2-character',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     });
                 } catch (err) {
                     return {

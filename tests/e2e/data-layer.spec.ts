@@ -283,7 +283,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                     actor = await ActorCls.create({
                         name: 'data-layer-spec-actor',
                         type: 'dh2-character',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     });
                 } catch {
                     /* per-flow failures below */

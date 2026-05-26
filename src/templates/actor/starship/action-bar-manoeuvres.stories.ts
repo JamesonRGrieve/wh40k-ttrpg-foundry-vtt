@@ -3,7 +3,7 @@
  *
  * Renders the partial against a deterministic starship mock and the
  * full RAW Table 8-10 catalogue resolved via
- * `resolveShipManoeuvreCombinedTest`. Per-system stories (`rt`, `dh2e`,
+ * `resolveShipManoeuvreCombinedTest`. Per-system stories (`rt`, `dh2`,
  * `im`) flip the wrapper `data-wh40k-system` attribute so the
  * `<system>:tw-*` theme variants fire and homologation regressions
  * surface in visual review.
@@ -107,7 +107,7 @@ export const ThemeRT: Story = {
 
 /**
  * Per-system homologation: Dark Heresy 2e. RT is canonical for starship
- * Manoeuvre Actions but the partial still respects the dh2e theme
+ * Manoeuvre Actions but the partial still respects the dh2 theme
  * tokens so a sibling ship surface (if/when authored) inherits the
  * common visual treatment.
  */
@@ -115,7 +115,7 @@ export const ThemeDH2: Story = {
     name: 'Theme / Dark Heresy 2e',
     render: () => {
         const wrapper = renderSheetParts([{ template: actionBarSrc, context: buildContext({ pilot: 40, helmsman: 'Scribe-Adjunct Calix' }) }], {});
-        wrapper.dataset.wh40kSystem = 'dh2e';
+        wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
 };

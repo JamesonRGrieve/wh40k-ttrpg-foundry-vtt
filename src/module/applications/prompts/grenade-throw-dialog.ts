@@ -155,7 +155,7 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
         const choice = toChoice(def, this.selectedId);
         const templateData = {
             ...choice,
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs', templateData);

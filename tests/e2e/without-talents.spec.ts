@@ -59,7 +59,7 @@ test.describe.serial('Without talents — Push the Limit chat card (Tier B)', ()
 
                     const template = 'systems/wh40k-rpg/templates/chat/push-the-limit-chat.hbs';
                     const context = {
-                        gameSystem: 'dh2e',
+                        gameSystem: 'dh2',
                         actorName: 'Acolyte Drake',
                         invoked: true,
                         modifier: 20,
@@ -72,7 +72,7 @@ test.describe.serial('Without talents — Push the Limit chat card (Tier B)', ()
                     const html = await renderTemplateFn(template, context);
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-push-the-limit-card');
-                    hasSystemAnchor = html.includes('data-wh40k-system="dh2e"');
+                    hasSystemAnchor = html.includes('data-wh40k-system="dh2"');
                     hasCriticalBanner = html.includes('WH40K.WithoutTalents.PushTheLimit.CriticalLabel') || html.includes('fa-skull-crossbones');
 
                     const ChatMessageCls = fg.ChatMessage;

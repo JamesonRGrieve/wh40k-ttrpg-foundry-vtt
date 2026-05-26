@@ -144,9 +144,9 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
             try {
                 const mod = (await import(`${base}/game-system-pack-prefix.js`)) as PackPrefixModule;
                 try {
-                    const a = mod.gameSystemPackPrefix?.('dh1e');
-                    const b = mod.gameSystemPackPrefix?.('dh2e');
-                    record('pack-prefix-dh-editions', a === 'dh1' && b === 'dh2', `dh1e=${String(a)} dh2e=${String(b)}`);
+                    const a = mod.gameSystemPackPrefix?.('dh1');
+                    const b = mod.gameSystemPackPrefix?.('dh2');
+                    record('pack-prefix-dh-editions', a === 'dh1' && b === 'dh2', `dh1=${String(a)} dh2=${String(b)}`);
                 } catch (err) {
                     record('pack-prefix-dh-editions', false, err instanceof Error ? err.message : String(err));
                 }
@@ -303,13 +303,13 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
             try {
                 const mod = (await import(`${base}/item-variant-utils.js`)) as ItemVariantModule;
                 try {
-                    const dh = mod.normalizeGameLineKey?.('dh2e');
+                    const dh = mod.normalizeGameLineKey?.('dh2');
                     const rt = mod.normalizeGameLineKey?.('rt');
                     const bad = mod.normalizeGameLineKey?.('not-a-system');
                     record(
                         'item-variant-normalize-line-key',
                         dh === 'dh2' && rt === 'rt' && bad === null,
-                        `dh2e=${String(dh)} rt=${String(rt)} bad=${JSON.stringify(bad)}`,
+                        `dh2=${String(dh)} rt=${String(rt)} bad=${JSON.stringify(bad)}`,
                     );
                 } catch (err) {
                     record('item-variant-normalize-line-key', false, err instanceof Error ? err.message : String(err));

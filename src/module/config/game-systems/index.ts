@@ -5,8 +5,8 @@
 
 import type { BaseSystemConfig } from './base-system-config.ts';
 import { BCSystemConfig } from './bc-config.ts';
-import { DH1eSystemConfig } from './dh1e-config.ts';
-import { DH2eSystemConfig } from './dh2e-config.ts';
+import { DH1eSystemConfig } from './dh1-config.ts';
+import { DH2eSystemConfig } from './dh2-config.ts';
 import { DWSystemConfig } from './dw-config.ts';
 import { IMSystemConfig } from './im-config.ts';
 import { OWSystemConfig } from './ow-config.ts';
@@ -16,8 +16,8 @@ import type { GameSystemId, SystemThemeRole } from './types.ts';
 /** Singleton instances, one per game system */
 const SYSTEM_CONFIGS: Record<GameSystemId, BaseSystemConfig> = {
     rt: new RTSystemConfig(),
-    dh1e: new DH1eSystemConfig(),
-    dh2e: new DH2eSystemConfig(),
+    dh1: new DH1eSystemConfig(),
+    dh2: new DH2eSystemConfig(),
     bc: new BCSystemConfig(),
     ow: new OWSystemConfig(),
     dw: new DWSystemConfig(),
@@ -78,7 +78,7 @@ const ROLE_PREFIX: Record<SystemThemeRole, string> = {
  * (`<id>-config.ts` `theme` block).
  *
  * @example
- *   themeClassFor('dh2e', 'border')  // → 'tw-border-gold-raw-d10'
+ *   themeClassFor('dh2', 'border')  // → 'tw-border-gold-raw-d10'
  *   themeClassFor('rt', 'primary')   // → 'tw-bg-accent-dynasty'
  */
 export function themeClassFor(systemId: GameSystemId, role: SystemThemeRole): string {

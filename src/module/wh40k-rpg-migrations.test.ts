@@ -5,8 +5,8 @@
  * once when the persisted world-version differs from WORLD_VERSION (and the
  * current user is GM), iterates world actors, and rewrites `system.gameSystem`
  * to the canonical key derived from the actor `type` prefix:
- *   - `dh2-*` → 'dh2e'
- *   - `dh1-*` → 'dh1e'
+ *   - `dh2-*` → 'dh2'
+ *   - `dh1-*` → 'dh1'
  * Other actor types are left untouched, and an already-canonical value is a
  * no-op (no `actor.update` call).
  *
@@ -66,27 +66,27 @@ afterEach(() => {
 });
 
 describe('checkAndMigrateWorld — v189 gameSystem normalization', () => {
-    it('rewrites a dh2- actor with a stale gameSystem to dh2e', async () => {
+    it('rewrites a dh2- actor with a stale gameSystem to dh2', async () => {
         const actor = makeActor('dh2-character', 'rt');
         installGame({ isGM: true, storedVersion: 188, actors: [actor] });
 
         await checkAndMigrateWorld();
 
         expect(actor.update).toHaveBeenCalledTimes(1);
-        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2e' });
+        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2' });
     });
 
-    it('rewrites a dh1- actor with a stale gameSystem to dh1e', async () => {
-        const actor = makeActor('dh1-npc', 'dh2e');
+    it('rewrites a dh1- actor with a stale gameSystem to dh1', async () => {
+        const actor = makeActor('dh1-npc', 'dh2');
         installGame({ isGM: true, storedVersion: 188, actors: [actor] });
 
         await checkAndMigrateWorld();
 
-        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh1e' });
+        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh1' });
     });
 
     it('no-ops a dh2- actor already on the canonical key', async () => {
-        const actor = makeActor('dh2-vehicle', 'dh2e');
+        const actor = makeActor('dh2-vehicle', 'dh2');
         installGame({ isGM: true, storedVersion: 188, actors: [actor] });
 
         await checkAndMigrateWorld();
@@ -97,7 +97,7 @@ describe('checkAndMigrateWorld — v189 gameSystem normalization', () => {
     it('leaves non-dh1/dh2 actors untouched (homologation-safe)', async () => {
         const rt = makeActor('rt-character', 'rt');
         const im = makeActor('im-character', 'im');
-        const ow = makeActor('ow-npc', 'dh2e'); // even a wrong value is left alone for non-dh1/dh2 types
+        const ow = makeActor('ow-npc', 'dh2'); // even a wrong value is left alone for non-dh1/dh2 types
         installGame({ isGM: true, storedVersion: 188, actors: [rt, im, ow] });
 
         await checkAndMigrateWorld();
@@ -113,7 +113,7 @@ describe('checkAndMigrateWorld — v189 gameSystem normalization', () => {
 
         await checkAndMigrateWorld();
 
-        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2e' });
+        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2' });
     });
 
     it('persists the new world version after migrating', async () => {
@@ -157,8 +157,8 @@ describe('checkAndMigrateWorld — v189 gameSystem normalization', () => {
 
         await checkAndMigrateWorld();
 
-        expect(bad.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2e' });
-        expect(good.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh1e' });
+        expect(bad.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2' });
+        expect(good.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh1' });
         expect(consoleErr).toHaveBeenCalled();
     });
 });

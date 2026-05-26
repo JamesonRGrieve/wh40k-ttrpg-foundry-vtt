@@ -43,7 +43,7 @@ interface AerialChatContext {
 
 function cardContext(result: ReturnType<typeof resolveAerialManoeuvre>): AerialChatContext {
     return {
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         manoeuvreNameKey: `WH40K.AerialManoeuvre.${result.key}.Name`,
         success: result.success,
         pilotBsBonus: result.pilotBsBonus,
@@ -80,7 +80,7 @@ export const TightTurnSuccess: Story = {
     render: () => renderTpl(aerialChatTemplate, cardContext(resolveAerialManoeuvre('tight-turn', true, { currentAltitude: 'low', altitudeDelta: 1 }))),
     play: ({ canvasElement }) => {
         void expect(canvasElement.querySelector('.wh40k-aerial-card')).toBeTruthy();
-        void expect(canvasElement.querySelector('[data-wh40k-system="dh2e"]')).toBeTruthy();
+        void expect(canvasElement.querySelector('[data-wh40k-system="dh2"]')).toBeTruthy();
     },
 };
 

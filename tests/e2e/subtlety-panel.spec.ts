@@ -75,7 +75,7 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                             name: 'subtlety-panel-probe',
                             type: 'dh2-character',
                             system: {
-                                gameSystem: 'dh2e',
+                                gameSystem: 'dh2',
                                 subtlety: { value: 45, max: 100 },
                             },
                         });

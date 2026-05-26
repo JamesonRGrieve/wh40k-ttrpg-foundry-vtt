@@ -9,8 +9,8 @@ import { gameSystemPackPrefix } from './game-system-pack-prefix.ts';
  */
 describe('gameSystemPackPrefix', () => {
     it('strips the trailing edition "e" for the two Dark Heresy editions', () => {
-        expect(gameSystemPackPrefix('dh1e')).toBe('dh1');
-        expect(gameSystemPackPrefix('dh2e')).toBe('dh2');
+        expect(gameSystemPackPrefix('dh1')).toBe('dh1');
+        expect(gameSystemPackPrefix('dh2')).toBe('dh2');
     });
 
     it('passes every other system id through unchanged', () => {

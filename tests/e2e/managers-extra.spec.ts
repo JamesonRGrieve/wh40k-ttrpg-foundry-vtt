@@ -628,7 +628,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                   ActorGbl.create({
                                       name: 'managers-extra-pc',
                                       type: 'dh2-character',
-                                      system: { gameSystem: 'dh2e' },
+                                      system: { gameSystem: 'dh2' },
                                   }),
                                   5_000,
                                   'PC Actor.create',
@@ -924,7 +924,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                  * Assert it returns an array of well-formed candidates
                  * (uuid/name/type/profiles) and excludes non-droppable
                  * types. Per-system: also call with 'im' so the
-                 * homologated scoping path is exercised, not just dh2e.
+                 * homologated scoping path is exercised, not just dh2.
                  * ============================================================ */
                 async function probeCollectCandidates(): Promise<void> {
                     try {
@@ -936,7 +936,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         if (typeof IGM?.collectCandidates !== 'function') {
                             notes['inventory-generator-collect-candidates'] = 'collectCandidates unavailable';
                         } else {
-                            const dh2 = await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates(dh2e)');
+                            const dh2 = await withTimeout(IGM.collectCandidates('dh2'), 15_000, 'collectCandidates(dh2)');
                             const im = await withTimeout(IGM.collectCandidates('im'), 15_000, 'collectCandidates(im)');
                             const shapeOk = dh2.every(
                                 (c) =>
@@ -958,7 +958,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 fired['inventory-generator-collect-candidates'] = true;
                                 notes[
                                     'inventory-generator-collect-candidates'
-                                ] = `dh2e=${dh2.length} candidates, im=${im.length} candidates; shapes valid, droppable-only, name-sorted`;
+                                ] = `dh2=${dh2.length} candidates, im=${im.length} candidates; shapes valid, droppable-only, name-sorted`;
                             } else {
                                 notes[
                                     'inventory-generator-collect-candidates'
@@ -975,7 +975,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                  * applyToActor(actor, [uuid]) resolves the compendium docs,
                  * runs ItemDropManager.planStackMerge against the actor's
                  * inventory, and creates / stack-bumps the items. We pick
-                 * the first dh2e candidate and apply it twice — the first
+                 * the first dh2 candidate and apply it twice — the first
                  * call creates, the second stack-merges (when the item is
                  * stackable) or creates a second copy. Assert the actor
                  * gained the item and applyToActor returned a positive
@@ -994,7 +994,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         } else if (typeof IGM?.applyToActor !== 'function' || typeof IGM.collectCandidates !== 'function') {
                             notes['inventory-generator-apply-to-actor'] = 'applyToActor/collectCandidates unavailable';
                         } else {
-                            const candidates = await withTimeout(IGM.collectCandidates('dh2e'), 15_000, 'collectCandidates for apply');
+                            const candidates = await withTimeout(IGM.collectCandidates('dh2'), 15_000, 'collectCandidates for apply');
                             const candidate = candidates.find((c) => typeof c.uuid === 'string');
                             if (candidate?.uuid == null) {
                                 notes['inventory-generator-apply-to-actor'] = 'no compendium candidate available to apply';
