@@ -402,6 +402,30 @@ export class WH40KBaseActor extends Actor {
         // Base implementation does nothing; subclasses override.
     }
 
+    /**
+     * Roll a weapon attack by item id. This is the public entry point used by
+     * the combat quick panel and any other UI surface that wants to fire a
+     * specific weapon. It routes through the same per-item dispatch as the
+     * sheet (`rollItem`), which in turn drives the targeted-action manager —
+     * so target selection (Foundry `game.user.targets`), distance, and the
+     * full attack→damage pipeline all apply identically.
+     *
+     * Defined on the base actor so it is available for all seven game systems
+     * and both PC and NPC subclasses (which override `rollItem`). Previously
+     * this method did not exist, so the quick-panel's `actor?.rollWeaponAttack?.(…)`
+     * optional-chained call silently no-opped and the attack buttons did nothing.
+     *
+     * @param weaponId The id of the weapon item to attack with.
+     * @param _options Reserved for future per-call overrides (rate of fire,
+     *        skip-dialog). The unified roll dialog is the single source of
+     *        truth for attack options today, so these are accepted but not yet
+     *        consumed; the parameter keeps the call sites stable.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: caller-supplied options bag is an opaque cross-cutting config consumed by per-system roll dialogs
+    async rollWeaponAttack(weaponId: string, _options: Record<string, unknown> = {}): Promise<void> {
+        await this.rollItem(weaponId);
+    }
+
     rollCharacteristic(characteristicName: string, override?: string): void {
         const characteristic = this.characteristics[characteristicName];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
