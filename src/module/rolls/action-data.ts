@@ -8,7 +8,7 @@ import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
-import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
+import { getDegreeForMode, getOpposedDegrees, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 
 export class ActionData {
     id: string = uuid();
@@ -270,9 +270,13 @@ export class ActionData {
             }
         }
 
+        // Degrees method resolves from the `degreesMode` setting + the source
+        // actor's game system (Gen 1 margin/10 vs Gen 2 tens-digit).
+        const degreesMethod = resolveDegreesMethod((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+
         if (this.rollData.success) {
             this.rollData.dof = 0;
-            this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0);
+            this.rollData.dos = 1 + getDegreeForMode(degreesMethod, this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0);
 
             const damageData = this.damageData;
             if (actionItem !== undefined && damageData !== undefined) {
@@ -315,7 +319,7 @@ export class ActionData {
             }
         } else {
             this.rollData.dos = 0;
-            this.rollData.dof = 1 + getDegree(this.rollData.roll?.total ?? 0, this.rollData.modifiedTarget);
+            this.rollData.dof = 1 + getDegreeForMode(degreesMethod, this.rollData.roll?.total ?? 0, this.rollData.modifiedTarget);
 
             if (weaponRollData.isThrown) {
                 this.addEffect('Deviation', `The attack deviates [[ 1d5 ]]m off course to the ${scatterDirection()}!`);
