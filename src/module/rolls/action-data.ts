@@ -419,6 +419,52 @@ export class ActionData {
         }
 
         await sendActionDataToChat(this);
+
+        await this.maybeAutoRollDamage();
+    }
+
+    /**
+     * After a damaging attack resolves as a hit, roll its damage automatically
+     * and post the damage card — so the table no longer has to click the chat
+     * "Roll Damage" button as a separate manual step.
+     *
+     * Gated by the `autoRollDamage` world setting (default on); when disabled,
+     * the attack card's manual "Roll Damage" button remains the path. The
+     * card's assign-damage flow (the `chat-roll-cards--damage-with-assignable-hit`
+     * story) is preserved either way — auto-rolling only front-runs the same
+     * `calculateHits` + damage-card render the manual button performs, so the
+     * assign-damage button still appears on the posted damage card.
+     *
+     * A target-only post (no roll entered — the GM is waiting on physical dice)
+     * never auto-rolls; there is no degrees-of-success result to drive hits yet.
+     */
+    async maybeAutoRollDamage(): Promise<void> {
+        if (!this.hasDamage || this.damageData === undefined) return;
+        // `isTargetOnly` is set on a "post target, await physical roll" submit;
+        // there is no resolved success/DoS to roll damage from.
+        if ((this.rollData as { isTargetOnly?: boolean }).isTargetOnly === true) return;
+
+        const weaponRollData = this.rollData as WeaponRollData;
+        const isHit = this.rollData.success || (weaponRollData.isThrown ?? false);
+        if (!isHit) return;
+
+        if (!WH40KSettings.isAutoRollDamageEnabled()) return;
+
+        // Hits may already be present if a prior step populated them; only
+        // calculate when empty so we don't double-roll.
+        if (this.damageData.hits.length === 0) {
+            await this.calculateHits();
+        }
+
+        // Propagate attack DoS to each hit so the damage card can still offer the
+        // "replace damage die with DoS" action (#129 — DH2 core L10398-10414),
+        // matching the manual `_rollDamage` path.
+        const attackDoS = this.rollData.dos;
+        for (const hit of this.damageData.hits) {
+            hit.dos = attackDoS;
+        }
+
+        await DHBasicActionManager._postDamageCard(this);
     }
 }
 
