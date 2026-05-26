@@ -14,6 +14,7 @@ import { allCombatActions } from './combat-actions';
  */
 const REQUIRED_ACTIONS: ReadonlyArray<string> = [
     'Standard Attack',
+    'Throw',
     'Aim',
     'All Out Attack',
     'Brace Heavy Weapon',
@@ -51,6 +52,7 @@ const REQUIRED_ACTIONS: ReadonlyArray<string> = [
  */
 const EXPECTED_ATTACK_MODIFIERS: Readonly<Record<string, number>> = {
     'Standard Attack': 0,
+    'Throw': 0,
     'All Out Attack': 30,
     'Called Shot': -20,
     'Charge': 20,

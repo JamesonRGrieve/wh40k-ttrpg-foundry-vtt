@@ -663,6 +663,8 @@ export type I18nKey =
     | 'WH40K.Combat.Action.SwiftAttackDesc'
     | 'WH40K.Combat.Action.TacticalAdvance'
     | 'WH40K.Combat.Action.TacticalAdvanceDesc'
+    | 'WH40K.Combat.Action.Throw'
+    | 'WH40K.Combat.Action.ThrowDesc'
     | 'WH40K.Combat.Actions.ButtonTitleClickForDescription'
     | 'WH40K.Combat.Actions.ClickHint'
     | 'WH40K.Combat.Actions.ClickHintFull'

@@ -1420,6 +1420,14 @@ WH40K.combatActions = {
             subtypes: ['Attack', 'Melee or Ranged'],
         },
         {
+            key: 'throw',
+            label: 'WH40K.Combat.Action.Throw',
+            type: 'half',
+            description: 'WH40K.Combat.Action.ThrowDesc',
+            icon: 'fa-hand',
+            subtypes: ['Attack', 'Ranged', 'Thrown'],
+        },
+        {
             key: 'calledShot',
             label: 'WH40K.Combat.Action.CalledShot',
             type: 'full',
