@@ -52,7 +52,7 @@ type Story = StoryObj<SheetContextLike>;
 
 export const Default: Story = {
     name: 'Default — DH2e Player',
-    args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'biography' }),
+    args: mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'biography' }),
     render: (args) => renderBaseActorSheet(args),
     play: async ({ canvasElement }) => {
         const cv = within(canvasElement);
@@ -68,7 +68,7 @@ export const Default: Story = {
 export const EditMode: Story = {
     name: 'Edit Mode — bio fields visible',
     args: mockPlayerSheetContext({
-        systemId: 'dh2e',
+        systemId: 'dh2',
         activeTab: 'biography',
         actorOverrides: {
             system: {
@@ -93,7 +93,7 @@ export const EditMode: Story = {
 
 export const ItemCreateClick: Story = {
     name: 'Interaction — itemCreate fires',
-    args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'biography' }),
+    args: mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'biography' }),
     render: (args) => renderBaseActorSheet(args),
     play: ({ canvasElement }) => {
         // clickAction throws if the element is not present — its presence

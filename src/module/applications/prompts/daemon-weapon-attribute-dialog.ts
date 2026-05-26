@@ -121,7 +121,7 @@ export default class DaemonWeaponAttributeDialog extends ApplicationV2Mixin(Appl
             bindingLabel: BINDING_STRENGTH_PROFILES[this.bindingStrength].label,
             accentClass: ALIGNMENT_ACCENT_CLASS[this.alignment],
             result: this.result,
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         });
         await ChatMessage.create({
             content,

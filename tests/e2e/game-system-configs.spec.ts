@@ -28,7 +28,7 @@ import { expect, test } from './lib/test';
  *       (3-rank getSkillRanks, 4-tier getCharacteristicTiers,
  *        getSkillAdvanceCost / getTalentAdvanceCost null contract,
  *        getVisibleSkills)
- *   - src/module/config/game-systems/{bc,dh1e,dh2e,dw,ow,rt,im}-config.ts
+ *   - src/module/config/game-systems/{bc,dh1,dh2,dw,ow,rt,im}-config.ts
  *       (id / label / cssClass / theme blocks, getOriginStepConfig,
  *        getCharacteristicAptitudes / getSkillAptitudeTable for the
  *        aptitude systems, BC patron-status / True-Allied-Opposed matrix
@@ -58,9 +58,9 @@ const ROLE_PREFIX: Record<'primary' | 'accent' | 'border', string> = {
 };
 
 /** Systems whose config extends AptitudeBasedSystemConfig (4 ranks, 5 tiers, aptitude dispatch). */
-const APTITUDE_SYSTEMS = ['dh2e', 'bc', 'ow', 'im'] as const;
+const APTITUDE_SYSTEMS = ['dh2', 'bc', 'ow', 'im'] as const;
 /** Systems whose config extends CareerBasedSystemConfig (3 ranks, 4 tiers, career dispatch). */
-const CAREER_SYSTEMS = ['rt', 'dh1e', 'dw'] as const;
+const CAREER_SYSTEMS = ['rt', 'dh1', 'dw'] as const;
 
 interface ProbeResult {
     name: string;
@@ -218,8 +218,8 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     try {
                         const unknownNull = Registry.getOrNull('not-a-system') === null;
                         const unknownHas = !Registry.has('not-a-system');
-                        const knownNonNull = Registry.getOrNull('dh2e') != null;
-                        const knownHas = Registry.has('dh2e');
+                        const knownNonNull = Registry.getOrNull('dh2') != null;
+                        const knownHas = Registry.has('dh2');
                         record(
                             'registry-getOrNull-and-has',
                             unknownNull && unknownHas && knownNonNull && knownHas,
@@ -422,12 +422,12 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         // Re-narrow the closed-over bindings: the outer guard's
                         // narrowing does not propagate into this nested function.
                         if (Registry === undefined || mod === null) return;
-                        // ── aptitude-cost-tables-dh2e ──────────────────────────
+                        // ── aptitude-cost-tables-dh2 ──────────────────────────
                         // The DH2e config's three default cost tables pin the
                         // canonical core-rulebook values (Tables 2-2 / 2-4 / 2-6)
                         // and countMatchingAptitudes is case-insensitive.
                         try {
-                            const cfg = Registry.get('dh2e');
+                            const cfg = Registry.get('dh2');
                             const skillCost = cfg?.getSkillCostTable?.() ?? {};
                             const charCost = cfg?.getCharacteristicCostTable?.() ?? {};
                             const talentCost = cfg?.getTalentCostTable?.() ?? {};
@@ -443,12 +443,12 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const matchCI = cfg?.countMatchingAptitudes?.(['weapon skill', 'OFFENCE'], ['Weapon Skill', 'Offence']) === 2;
                             const matchZero = cfg?.countMatchingAptitudes?.(['Fellowship'], ['Weapon Skill', 'Offence']) === 0;
                             record(
-                                'aptitude-cost-tables-dh2e',
+                                'aptitude-cost-tables-dh2',
                                 Boolean(skillOk && charOk && talentOk && matchCI && matchZero),
                                 `skillOk=${skillOk} charOk=${charOk} talentOk=${talentOk} matchCI=${matchCI}`,
                             );
                         } catch (err) {
-                            record('aptitude-cost-tables-dh2e', false, `threw: ${String((err as Error).message)}`);
+                            record('aptitude-cost-tables-dh2', false, `threw: ${String((err as Error).message)}`);
                         }
 
                         // ── aptitude-resolution-fallback ───────────────────────
@@ -483,7 +483,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         // against a synthetic actor-like (no Foundry document
                         // needed — the method only reads `system.aptitudes`).
                         try {
-                            const cfg = Registry.get('dh2e');
+                            const cfg = Registry.get('dh2');
                             const actorLike: ActorLike = { system: { aptitudes: ['Weapon Skill', 'Offence', 'Defence'] } };
                             const info: AdvanceMatchInfo = cfg?.getAdvanceMatchInfo?.(actorLike, ['Weapon Skill', 'Knowledge']) ?? {
                                 matches: 0,
@@ -578,11 +578,11 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                         // override to the canonical 1000 (regression guard for
                         // #14: DH1 must not be left at zero XP post origin-path).
                         try {
-                            const dh2 = Registry.get('dh2e')?.startingXP;
-                            const dh1 = Registry.get('dh1e')?.startingXP;
+                            const dh2 = Registry.get('dh2')?.startingXP;
+                            const dh1 = Registry.get('dh1')?.startingXP;
                             const rt = Registry.get('rt')?.startingXP;
                             const ok = dh2 === 1000 && dh1 === 1000 && typeof rt === 'number';
-                            record('starting-xp-divergence', Boolean(ok), `dh2e=${dh2} dh1e=${dh1} rt=${rt}`);
+                            record('starting-xp-divergence', Boolean(ok), `dh2=${dh2} dh1=${dh1} rt=${rt}`);
                         } catch (err) {
                             record('starting-xp-divergence', false, `threw: ${String((err as Error).message)}`);
                         }

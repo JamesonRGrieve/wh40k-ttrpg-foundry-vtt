@@ -58,7 +58,7 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                     const actor = await ActorCls.create({
                         name: 'probe-daemonic-npc',
                         type: 'dh2-npc',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     });
                     if (!actor) return { error: 'Actor.create returned null' };
                     actorId = actor.id ?? null;

@@ -52,7 +52,7 @@ type Story = StoryObj<SheetContextLike>;
 
 export const DarkHeresy2Default: Story = {
     name: 'Dark Heresy 2e — Default',
-    args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'biography' }),
+    args: mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
@@ -81,7 +81,7 @@ export const ImperiumMaledictum: Story = {
 export const EditModeBio: Story = {
     name: 'Edit Mode — bio fields',
     args: mockPlayerSheetContext({
-        systemId: 'dh2e',
+        systemId: 'dh2',
         activeTab: 'biography',
         actorOverrides: {
             system: {
@@ -109,7 +109,7 @@ export const EditModeBio: Story = {
 
 export const EnemyCreateClick: Story = {
     name: 'Interaction — itemCreate (enemy row)',
-    args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'biography' }),
+    args: mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: ({ canvasElement }) => {
         // The biography tab renders two itemCreate buttons (peer + enemy).
@@ -136,7 +136,7 @@ export const BlackCrusadeVariant: Story = {
 
 export const DarkHeresy1eVariant: Story = {
     name: 'Per-system — Dark Heresy 1e',
-    args: mockPlayerSheetContext({ systemId: 'dh1e', activeTab: 'biography' }),
+    args: mockPlayerSheetContext({ systemId: 'dh1', activeTab: 'biography' }),
     render: (args) => renderCharacterSheet(args),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
@@ -268,7 +268,7 @@ function renderCombatPanel(): HTMLElement {
 
 export const Issue19NonReactionLocalDescription: Story = {
     name: 'Issue #19 — non-Reaction action shows description locally',
-    args: mockPlayerSheetContext({ systemId: 'dh2e', activeTab: 'combat' }),
+    args: mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'combat' }),
     render: () => renderCombatPanel(),
     play: async ({ canvasElement }) => {
         const root = canvasElement;

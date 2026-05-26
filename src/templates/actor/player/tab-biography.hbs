@@ -1,7 +1,7 @@
 {{!-- Acolyte Sheet Biography Tab --}}
 {{!-- This part renders the Biography tab content with identity, origin path, and notes --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-<div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-w-full tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1e:tw-border-t-gold-raw-l5 dh2e:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure tw-pt-2">
+<div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-w-full tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure tw-pt-2">
     {{!-- Left Column: Identity & Origin --}}
     <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
         {{!-- Identity Panel --}}
@@ -78,7 +78,7 @@
                 </div>
                 <div class="wh40k-panel-body tw-flex-1 tw-flex tw-flex-col tw-gap-2">
                     <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-2">
-                        <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[#4a3728] bc:tw-text-crimson-dark dh1e:tw-text-gold-dark dh2e:tw-text-gold-dark dw:tw-text-accent-combat-d10 ow:tw-text-brass-d15 rt:tw-text-gold-dark im:tw-text-failure">Personality & Quirks</label>
+                        <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[#4a3728] bc:tw-text-crimson-dark dh1:tw-text-gold-dark dh2:tw-text-gold-dark dw:tw-text-accent-combat-d10 ow:tw-text-brass-d15 rt:tw-text-gold-dark im:tw-text-failure">Personality & Quirks</label>
                         <textarea class="tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.bio.quirks" rows="2" placeholder="Distinctive habits, mannerisms, beliefs...">{{system.bio.quirks}}</textarea>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-2">

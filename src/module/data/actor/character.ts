@@ -111,7 +111,7 @@ export default class CharacterData extends CreatureTemplate {
     // Typed property declarations matching defineSchema()
     declare rank: number;
     declare mutations: string;
-    declare gameSystem: 'rt' | 'dh1e' | 'dh2e' | 'bc' | 'ow' | 'dw' | 'im';
+    declare gameSystem: 'rt' | 'dh1' | 'dh2' | 'bc' | 'ow' | 'dw' | 'im';
     declare bio: {
         playerName: string;
         gender: string;
@@ -338,7 +338,7 @@ export default class CharacterData extends CreatureTemplate {
             gameSystem: new fields.StringField({
                 required: true,
                 initial: 'rt',
-                choices: ['rt', 'dh1e', 'dh2e', 'bc', 'ow', 'dw', 'im'],
+                choices: ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'],
             }),
 
             // ===== CHARACTER BIOGRAPHY =====
@@ -843,7 +843,7 @@ export default class CharacterData extends CreatureTemplate {
         this.aptitudes = [...allAptitudes];
 
         // Derive gameSystem: prefer the concrete DataModel's static identifier
-        // (set per actor type, e.g. dh2-character → 'dh2e') and fall back to
+        // (set per actor type, e.g. dh2-character → 'dh2') and fall back to
         // the first origin-path item's gameSystem. This prevents a fresh
         // dh2-character from being treated as Rogue Trader just because the
         // schema's neutral default is 'rt'.

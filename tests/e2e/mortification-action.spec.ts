@@ -44,7 +44,7 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
             actor = await ActorCls.create({
                 name: 'mortification-probe',
                 type: 'dh2-character',
-                system: { gameSystem: 'dh2e' },
+                system: { gameSystem: 'dh2' },
                 items: [
                     {
                         name: 'Penitent',

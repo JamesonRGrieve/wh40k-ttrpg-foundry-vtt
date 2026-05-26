@@ -1,16 +1,16 @@
 {{!-- Daemonhost binding chat card (GitHub #85). --}}
 {{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
-<div class="wh40k-rpg wh40k-dhb-card tw-p-4 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.35)] dh2e:tw-border-bronze tw-bg-[rgba(15,12,8,0.85)]"
+<div class="wh40k-rpg wh40k-dhb-card tw-p-4 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.35)] dh2:tw-border-bronze tw-bg-[rgba(15,12,8,0.85)]"
      data-wh40k-system="{{gameSystem}}">
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
-        <i class="fas fa-skull tw-text-[#c4871d] dh2e:tw-text-bronze tw-text-[1.1rem]"></i>
-        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-gold dh2e:tw-text-bronze bc:tw-text-crimson-light rt:tw-text-amber-700 im:tw-text-failure">
+        <i class="fas fa-skull tw-text-[#c4871d] dh2:tw-text-bronze tw-text-[1.1rem]"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-gold dh2:tw-text-bronze bc:tw-text-crimson-light rt:tw-text-amber-700 im:tw-text-failure">
             {{localize "WH40K.Daemonhost.ChatTitle"}}
         </div>
     </div>
     <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
         {{localize "WH40K.Daemonhost.BoundAtTier"}}
-        <strong class="tw-text-gold dh2e:tw-text-bronze">{{label}}</strong>
+        <strong class="tw-text-gold dh2:tw-text-bronze">{{label}}</strong>
     </div>
     <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
         <li class="tw-flex tw-justify-between tw-gap-3">

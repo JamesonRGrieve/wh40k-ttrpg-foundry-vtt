@@ -55,7 +55,7 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
                 name: 'shock-panel-probe',
                 type: 'dh2-character',
                 system: {
-                    gameSystem: 'dh2e',
+                    gameSystem: 'dh2',
                     shock: { value: 3, max: 10 },
                 },
             });

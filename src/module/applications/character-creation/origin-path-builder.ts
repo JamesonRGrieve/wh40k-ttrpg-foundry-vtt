@@ -427,7 +427,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charDragData = null;
         const actorSys = this._actorSys();
         this._divination = actorSys.originPath?.divination ?? '';
-        const isDH2Homebrew = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        const isDH2Homebrew = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
         this._thronesRolled = isDH2Homebrew ? 0 : actorSys.throneGelt ?? 0;
         this._influenceRolled = isDH2Homebrew ? 0 : actorSys.influence ?? 0;
         this._savedScrollTop = 0;
@@ -890,7 +890,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const optionalStepLabel = optionalStep ? this._getLocalizedStepLabel(optionalStep.key) : '';
         const optionalStepIcon = optionalStep?.icon ?? 'fa-crown';
 
-        const isDH2 = this.gameSystem === 'dh2e';
+        const isDH2 = this.gameSystem === 'dh2';
         const ruleset = WH40KSettings.getRuleset();
         const isHomebrew = isDH2 && ruleset === 'homebrew';
         const isRaw = isDH2 && ruleset === 'raw';
@@ -1703,7 +1703,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _getInfluenceBonus(): number {
         // Homebrew grants 3 starting Armoury acquisitions regardless of Influence; RAW uses the DH2e core pg 80 rule (floor(Influence/10)).
-        if (this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew()) return 3;
+        if (this.gameSystem === 'dh2' && WH40KSettings.isHomebrew()) return 3;
         const rolled = this._influenceRolled;
         const stored = Number(this._actorSys().influence ?? 0);
         const influence = rolled > 0 ? rolled : stored;
@@ -2086,7 +2086,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const thronesFormulaForItem = this._getSelectionThronesFormula(item);
         const itemSys = item.system as OriginPathSystemData;
         const thronesEligibleStep = itemSys.step === 'homeWorld';
-        const thronesAllowedByRuleset = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        const thronesAllowedByRuleset = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
         if (thronesFormulaForItem !== '' && thronesEligibleStep && thronesAllowedByRuleset) {
             const thronesResult = rollResults['thrones'];
             const hasRolled = thronesResult?.rolled !== undefined;
@@ -2132,7 +2132,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             isConfirmed = selection?.id === itemId;
         }
 
-        const isDH2Homebrew = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        const isDH2Homebrew = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
         // Influence is RAW-only: in homebrew it's not rolled at creation, so hide the block entirely.
         const showInfluence = currentStep.key === 'background' && !isDH2Homebrew;
         const influenceMod = this._getContextualInfluenceMod();
@@ -2982,7 +2982,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // _toggleEquipmentByUuid.
         const equipmentAvailable = this.systemConfig.equipmentStep != null;
         const equipmentMaxPicks = equipmentAvailable ? this._getInfluenceBonus() : 0;
-        const homebrewSkipsEquipment = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        const homebrewSkipsEquipment = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
         const equipmentRequired = equipmentAvailable && !homebrewSkipsEquipment;
         const equipmentComplete = !equipmentRequired || this.equipmentSelections.size > 0;
         let pendingChoices = 0;
@@ -4087,7 +4087,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Roll starting influence (1d5 + Fellowship Bonus + homeworld modifier).
      */
     static async #rollInfluence(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        if (this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew()) {
+        if (this.gameSystem === 'dh2' && WH40KSettings.isHomebrew()) {
             ui.notifications.info(game.i18n.localize('WH40K.OriginPath.HomebrewInfluenceNoRoll'));
             this._influenceRolled = 0;
             this._saveScrollPosition();

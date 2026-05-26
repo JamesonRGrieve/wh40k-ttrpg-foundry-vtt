@@ -1068,7 +1068,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Ruleset state (DH2e only) — controls Throne Gelt visibility
         const activeGameSystem = this._resolveGameSystemId();
-        const isDH2 = activeGameSystem === 'dh2e';
+        const isDH2 = activeGameSystem === 'dh2';
         const isBC = activeGameSystem === 'bc';
         const isOW = activeGameSystem === 'ow';
         const isDW = activeGameSystem === 'dw';
@@ -1386,7 +1386,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /**
      * Fetch unique origin path names grouped by step from compendium packs.
-     * @param {string} gameSystem - The game system ID (e.g. 'dh2e', 'rt')
+     * @param {string} gameSystem - The game system ID (e.g. 'dh2', 'rt')
      * @returns {Promise<Record<string, string[]>>}
      * @private
      */
@@ -2544,7 +2544,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // See wh40k-tooltip.ts for the same gate around the untrained-target
         // display.
         const systemId = this._resolveGameSystemId();
-        const isAptitudeSystem = systemId === 'dh2e' || systemId === 'dh1e' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
+        const isAptitudeSystem = systemId === 'dh2' || systemId === 'dh1' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
         const adjustUntrained = (base: number): number => (isAptitudeSystem ? base - 20 : Math.floor(base / 2));
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema

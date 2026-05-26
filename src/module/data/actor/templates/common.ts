@@ -41,6 +41,11 @@ export default class CommonTemplate extends ActorDataModel {
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         // Add shared migrations here that apply to ALL actor types
+        // Coerce legacy game-system identifiers (dh2e/dh1e) to the canonical
+        // short keys so actors saved under the old ids validate against the
+        // renamed schema on load, before the world-version migration runs.
+        if (source['gameSystem'] === 'dh2e') source['gameSystem'] = 'dh2';
+        else if (source['gameSystem'] === 'dh1e') source['gameSystem'] = 'dh1';
     }
 
     /* -------------------------------------------- */

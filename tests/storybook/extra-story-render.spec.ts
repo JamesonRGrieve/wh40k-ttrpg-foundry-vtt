@@ -486,7 +486,7 @@ test.describe('Storybook extra story render', () => {
     // ── Foundation — Icons, per-system ───────────────────────────────────────
     test('icons helper sample renders themed glyph', async ({ page }) => {
         await page.goto('/iframe.html?id=foundation-icons--default');
-        await expect(page.locator('[data-wh40k-system="dh2e"]').first()).toBeAttached();
+        await expect(page.locator('[data-wh40k-system="dh2"]').first()).toBeAttached();
         await expect(page.locator('svg').first()).toBeAttached();
     });
 

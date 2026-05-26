@@ -38,8 +38,8 @@
     Per-system theming: the table border + header background lift via inline
     `<system>:tw-*` variants so each game system gets a distinct visual tone.
 --}}
-<div class="tw-rounded-md tw-overflow-hidden dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-crimson{{#if rootClass}} {{rootClass}}{{/if}}" data-table>
-    <div class="dh2e:tw-bg-bronze/10 rt:tw-bg-amber-700/10 im:tw-bg-crimson/10" data-table-header>
+<div class="tw-rounded-md tw-overflow-hidden dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-crimson{{#if rootClass}} {{rootClass}}{{/if}}" data-table>
+    <div class="dh2:tw-bg-bronze/10 rt:tw-bg-amber-700/10 im:tw-bg-crimson/10" data-table-header>
         {{#each headers as |header|}}
             <div class="{{#if header.cellClass}}{{header.cellClass}}{{/if}}">
                 {{#if header.labelKey}}{{localize header.labelKey}}{{else}}{{header.label}}{{/if}}

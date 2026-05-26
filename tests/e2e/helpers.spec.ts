@@ -86,9 +86,9 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                     //    @root._gameSystemId path. The helper prefers explicit
                     //    arg over @root, so test both branches.
                     await runProbe('handlebars-themeClassFor-helper', () => {
-                        const tpl = HB.compile(`{{themeClassFor 'border'}}|{{themeClassFor 'border' 'dh2e'}}|{{themeClassFor 'primary' 'rt'}}`);
-                        const out = tpl({}, { data: { root: { _gameSystemId: 'dh2e' } } });
-                        // Expected: [tw-border-<dh2e-border>, tw-border-<dh2e-border>, tw-bg-<rt-primary>]
+                        const tpl = HB.compile(`{{themeClassFor 'border'}}|{{themeClassFor 'border' 'dh2'}}|{{themeClassFor 'primary' 'rt'}}`);
+                        const out = tpl({}, { data: { root: { _gameSystemId: 'dh2' } } });
+                        // Expected: [tw-border-<dh2-border>, tw-border-<dh2-border>, tw-bg-<rt-primary>]
                         const parts = out.split('|');
                         const allPrefixed = Boolean(parts[0]?.startsWith('tw-border-') && parts[1]?.startsWith('tw-border-') && parts[2]?.startsWith('tw-bg-'));
                         const dh2Match = parts[0] === parts[1];

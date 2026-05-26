@@ -1,10 +1,10 @@
 {{!-- Sanctic Purity / Emperor's Anathema Fate-spend prompt (GitHub #131) --}}
 {{!-- Asks the player whether to spend 1 Fate to negate a Psychic Phenomena roll. --}}
-<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9] dh2e:tw-border-gold dh2e:tw-bg-amber-900/30" data-wh40k-system="dh2e">
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9] dh2:tw-border-gold dh2:tw-bg-amber-900/30" data-wh40k-system="dh2">
 
     <div class="tw-mb-4 tw-flex tw-items-center tw-gap-2">
-        <i class="fas fa-shield-cross tw-text-[#c9a227] dh2e:tw-text-gold tw-text-[1.1rem]"></i>
-        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-gold dh2e:tw-text-gold">
+        <i class="fas fa-shield-cross tw-text-[#c9a227] dh2:tw-text-gold tw-text-[1.1rem]"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-gold dh2:tw-text-gold">
             {{localize "WH40K.SancticPurity.EmperorsAnathema"}}
         </div>
     </div>
@@ -15,7 +15,7 @@
 
     <div class="tw-flex tw-justify-between tw-gap-2 tw-mb-5 tw-p-3 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.25)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[0.85rem]">
         <span class="tw-text-[#9a9a8a]">{{actorName}}</span>
-        <span class="tw-font-bold tw-tabular-nums tw-text-gold dh2e:tw-text-gold">
+        <span class="tw-font-bold tw-tabular-nums tw-text-gold dh2:tw-text-gold">
             <i class="fas fa-coins"></i> {{fateAvailable}} / {{fateCost}}
         </span>
     </div>
@@ -25,7 +25,7 @@
         <button type="button"
                 data-action="spend"
                 {{#unless canSpend}}disabled{{/unless}}
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2e:tw-from-gold tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)] {{#unless canSpend}}tw-opacity-50 tw-cursor-not-allowed{{/unless}}">
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2:tw-from-gold tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)] {{#unless canSpend}}tw-opacity-50 tw-cursor-not-allowed{{/unless}}">
             <i class="fas fa-shield-cross"></i> {{localize "WH40K.SancticPurity.SpendButton"}}
         </button>
         <button type="button"

@@ -145,7 +145,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         (await ActorCls.create({
                             name: 'action-managers-probe-actor',
                             type: 'dh2-character',
-                            system: { gameSystem: 'dh2e' },
+                            system: { gameSystem: 'dh2' },
                         })) ?? null;
                     const createdActorId = probeActor?.id;
                     if (createdActorId != null) {
@@ -271,7 +271,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                                 (await ActorCls.create({
                                     name: 'action-managers-probe-combatant-2',
                                     type: 'dh2-character',
-                                    system: { gameSystem: 'dh2e' },
+                                    system: { gameSystem: 'dh2' },
                                 })) ?? null;
                             const created2Id = probeActor2?.id;
                             if (created2Id != null) {

@@ -49,7 +49,7 @@ function buildTalentCards(): TalentCard[] {
 /**
  * GM-only dialog: confirm the Sister of Battle elite advance, click
  * Apply, post a chat card. The chat card is system-themed via
- * `data-wh40k-system="dh2e"`.
+ * `data-wh40k-system="dh2"`.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
 export default class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
@@ -107,7 +107,7 @@ export default class SisterOfBattleDialog extends ApplicationV2Mixin(Application
         event.preventDefault();
         const templateData = {
             talents: buildTalentCards(),
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/sister-of-battle-chat.hbs', templateData);

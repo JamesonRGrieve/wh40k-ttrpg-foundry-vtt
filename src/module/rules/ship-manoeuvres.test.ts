@@ -101,7 +101,7 @@ describe('Per-system gating', () => {
         expect(rt).toHaveLength(SHIP_MANOEUVRES.length);
     });
 
-    it.each(['dh1e', 'dh2e', 'bc', 'ow', 'dw', 'im'] as const)('returns no entries for %s', (sys) => {
+    it.each(['dh1', 'dh2', 'bc', 'ow', 'dw', 'im'] as const)('returns no entries for %s', (sys) => {
         expect(getShipManoeuvresForSystem(sys)).toEqual([]);
     });
 });

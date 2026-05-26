@@ -75,12 +75,12 @@ test('dump enumerable inventory + reset coverage tracker', async ({ page }) => {
     // Per-system actor types follow a `<systemPrefix>-<role>` convention.
     // Build the valid (type, system) pairs explicitly so the e2e coverage
     // denominator only counts pairs that the system actually supports —
-    // 'dh2-character' counts toward 'dh2e', not the cross-product of all 7
+    // 'dh2-character' counts toward 'dh2', not the cross-product of all 7
     // game systems.
     const SYSTEM_PREFIX: Record<string, string> = {
         bc: 'bc',
-        dh1e: 'dh1',
-        dh2e: 'dh2',
+        dh1: 'dh1',
+        dh2: 'dh2',
         dw: 'dw',
         ow: 'ow',
         rt: 'rt',

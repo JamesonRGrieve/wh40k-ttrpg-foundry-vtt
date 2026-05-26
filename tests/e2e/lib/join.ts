@@ -32,5 +32,5 @@ export async function joinAsGM(page: Page): Promise<boolean> {
  * The 7 game systems this codebase homologates. Tier B specs that exercise
  * actor/item behavior iterate this list to cover all of them in one pass.
  */
-export const GAME_SYSTEM_IDS = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'] as const;
+export const GAME_SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'] as const;
 export type GameSystemId = (typeof GAME_SYSTEM_IDS)[number];

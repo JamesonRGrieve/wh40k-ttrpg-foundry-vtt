@@ -7,5 +7,5 @@ import CharacterBaseData from '../bases/character-base.ts';
  * fields here via defineSchema override if/when they diverge.
  */
 export default class DH2CharacterData extends CharacterBaseData {
-    static gameSystem = 'dh2e';
+    static gameSystem = 'dh2';
 }

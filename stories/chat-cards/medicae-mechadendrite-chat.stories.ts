@@ -49,7 +49,7 @@ const meta: Meta<MedicaeCardArgs> = {
         medicaeBonus: 10,
         success: true,
         bleedStopped: true,
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
     },
 };
 export default meta;
@@ -86,7 +86,7 @@ export const RenderSmoke: Story = {
         const card = canvasElement.querySelector('.wh40k-medicae-mechadendrite-card');
         await expect(card).toBeTruthy();
         // Card carries the per-system anchor and the wh40k-rpg cascade scope.
-        await expect(card?.getAttribute('data-wh40k-system')).toBe('dh2e');
+        await expect(card?.getAttribute('data-wh40k-system')).toBe('dh2');
         await expect(card?.classList.contains('wh40k-rpg')).toBe(true);
         // Success branch surfaces the staunched-blood-loss copy.
         await expect(view.getByText(/Brother Medicae Voss/i)).toBeTruthy();

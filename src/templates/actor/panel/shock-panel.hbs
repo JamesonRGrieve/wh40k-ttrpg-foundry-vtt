@@ -8,7 +8,7 @@
     via the shock-snap-chat partial.
 
     Render gate (parent template): only DH2 actors include this panel —
-    `actor._gameSystemId === 'dh2e'` (mirrors the Subtlety gate). The
+    `actor._gameSystemId === 'dh2'` (mirrors the Subtlety gate). The
     `wh40k-shock-panel` root class pins a stable selector for e2e specs.
 
     Mirrors fate-panel's shape: counter readout + action button. Increment
@@ -18,13 +18,13 @@
 <section class="wh40k-shock-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
                 tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
                 tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                dh2e:tw-border-bronze"
+                dh2:tw-border-bronze"
          data-shock-value="{{system.shock.value}}">
 
     {{!-- Header: title + value/max readout --}}
     <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
         <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-bolt dh2e:tw-text-bronze"></i>
+            <i class="fas fa-bolt dh2:tw-text-bronze"></i>
             <span>{{localize "WH40K.Shock.Header"}}</span>
         </h3>
         <span class="wh40k-shock-readout tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
@@ -59,11 +59,11 @@
 
     {{!-- Snap Out of It — Willpower test (Challenging +0); success → −1 shock. --}}
     <button type="button"
-            class="wh40k-shock-snap-btn tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded tw-cursor-pointer tw-bg-gray-700 tw-border-2 tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2e:tw-border-bronze tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)] hover:tw-opacity-90"
+            class="wh40k-shock-snap-btn tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded tw-cursor-pointer tw-bg-gray-700 tw-border-2 tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)] hover:tw-opacity-90"
             data-action="snapOutOfShock"
             title="{{localize 'WH40K.Shock.SnapOutTooltip'}}"
             {{#if (lte system.shock.value 0)}}disabled{{/if}}>
-        <i class="fas fa-brain dh2e:tw-text-bronze"></i>
+        <i class="fas fa-brain dh2:tw-text-bronze"></i>
         <span>{{localize "WH40K.Shock.SnapOutLabel"}}</span>
     </button>
 </section>

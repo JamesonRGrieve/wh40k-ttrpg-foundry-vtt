@@ -55,10 +55,10 @@ const vehicleStats = {
 };
 
 const defaultVehicleCtx: SheetContextLike = {
-    ...mockVehicleSheetContext({ systemId: 'dh2e' }),
+    ...mockVehicleSheetContext({ systemId: 'dh2' }),
     vehicleStats,
     source: {
-        ...mockVehicleSheetContext({ systemId: 'dh2e' }).source,
+        ...mockVehicleSheetContext({ systemId: 'dh2' }).source,
         type: 'vehicle',
         faction: 'Imperial Guard',
         wounds: { value: 30, max: 30 },

@@ -161,7 +161,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const failures: string[] = [];
-        const created = await createActor(page, 'dh2-influence-probe', 'dh2-character', 'dh2e');
+        const created = await createActor(page, 'dh2-influence-probe', 'dh2-character', 'dh2');
         if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);
@@ -185,7 +185,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const failures: string[] = [];
-        const created = await createActor(page, 'dh1-influence-probe', 'dh1-character', 'dh1e');
+        const created = await createActor(page, 'dh1-influence-probe', 'dh1-character', 'dh1');
         if (created.id === null) {
             failures.push(`actor create: ${created.createError ?? 'unknown'}`);
             expect(failures, failures.join('\n')).toEqual([]);

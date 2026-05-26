@@ -64,8 +64,8 @@ export type ConvertibleActorKind = 'character' | 'npc' | 'vehicle';
 export type ConvertibleActorType = `${ConvertibleCharacterSystem}-${ConvertibleActorKind}`;
 
 const TARGET_GAME_SYSTEM_IDS: Record<ConvertibleCharacterSystem, string> = {
-    dh2: 'dh2e',
-    dh1: 'dh1e',
+    dh2: 'dh2',
+    dh1: 'dh1',
     rt: 'rt',
     bc: 'bc',
     ow: 'ow',

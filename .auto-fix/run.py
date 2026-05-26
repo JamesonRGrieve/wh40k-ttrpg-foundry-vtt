@@ -1272,7 +1272,7 @@ classes to inline Tailwind utilities, with NO behavioral changes. Answer \
   - Animation / keyframes handling: `tw-animate-*` classes were added, or
     `@keyframes` rules were emitted, or `animation:` rules were touched.
     Animation porting is OUT OF SCOPE for this workstream.
-  - Per-system theme variants were added (`bc:tw-*`, `dh1e:tw-*`, `dh2e:tw-*`,
+  - Per-system theme variants were added (`bc:tw-*`, `dh1:tw-*`, `dh2:tw-*`,
     `dw:tw-*`, `ow:tw-*`, `rt:tw-*`, `im:tw-*`). Theming is OUT OF SCOPE.
   - Narrative comments were added explaining the port (e.g. "Ported X to Y",
     "Replaced .foo with tw-bar", "Migrated to Tailwind").

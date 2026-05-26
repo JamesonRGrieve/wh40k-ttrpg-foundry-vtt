@@ -357,7 +357,7 @@ function makeOrigin(overrides: Partial<TestOrigin> = {}): TestOrigin {
         isAdvanced: false,
         xpCost: 0,
         hasChoices: false,
-        gameSystem: 'dh2e',
+        gameSystem: 'dh2',
         system: {
             step: 'homeWorld',
             selectedChoices: {
@@ -761,7 +761,7 @@ describe('OriginPathBuilder commit (issue #206)', () => {
             showEquipment: true,
             systemConfig: { equipmentStep: null },
             equipmentSelections: new Map<string, string>(),
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
 
         await commit(host, new Event('click'), document.createElement('button'));
@@ -789,7 +789,7 @@ describe('OriginPathBuilder commit (issue #206)', () => {
                 equipmentStep: { key: 'equipment', step: 'equipment', icon: 'fa-box', descKey: 'EquipmentDesc', stepIndex: 6 },
             },
             equipmentSelections: new Map<string, string>(),
-            gameSystem: 'dh2e',
+            gameSystem: 'dh2',
         };
 
         await commit(host, new Event('click'), document.createElement('button'));

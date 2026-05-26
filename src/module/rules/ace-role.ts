@@ -135,7 +135,7 @@ export async function spendRightStuff(actor: WH40KBaseActorDocument, skill: Righ
     const currentFate = fate?.value ?? 0;
     await actor.update({ system: { fate: { value: Math.max(0, currentFate - 1) } } });
 
-    const gameSystem = (actor.system as { gameSystem?: string } | undefined)?.gameSystem ?? 'dh2e';
+    const gameSystem = (actor.system as { gameSystem?: string } | undefined)?.gameSystem ?? 'dh2';
 
     const templateData = {
         actorName: actor.name,

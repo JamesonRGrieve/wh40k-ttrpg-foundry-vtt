@@ -430,8 +430,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // Only RT/legacy systems block untrained Advanced skills.
             const actorGameSystem = (sourceActor as { system?: { gameSystem?: string } } | null | undefined)?.system?.gameSystem ?? '';
             const isAptitudeSystem =
-                actorGameSystem === 'dh2e' ||
-                actorGameSystem === 'dh1e' ||
+                actorGameSystem === 'dh2' ||
+                actorGameSystem === 'dh1' ||
                 actorGameSystem === 'bc' ||
                 actorGameSystem === 'dw' ||
                 actorGameSystem === 'ow' ||

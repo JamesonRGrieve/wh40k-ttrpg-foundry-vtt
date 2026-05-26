@@ -140,7 +140,7 @@ The CSS-mode grinder is told these rules in `CSS_HARD_RULES` (in `.auto-fix/run.
 2. **`tw-` prefix on every utility.** Bare `flex`, `bg-gold`, etc. won't be emitted by Tailwind.
 3. **JS hooks are sacred.** Foundry's tabs API (`navSelector`, `contentSelector`), `roll-control__*` listeners in `basic-action-manager.ts`, `wh40k-expandable*` toggles, and `active` state classes must remain on their original elements.
 4. **No animations.** No new `tw-animate-*` utilities, no new `@keyframes`, no `animation:` rule changes. Animation porting is owned by `animation-port.md`.
-5. **No theming.** No new `bc:tw-*` / `dh1e:tw-*` / `dh2e:tw-*` / `dw:tw-*` / `ow:tw-*` / `rt:tw-*` / `im:tw-*` variants, no new `data-wh40k-system=` attributes. Theming is owned by `theme-adoption.md`.
+5. **No theming.** No new `bc:tw-*` / `dh1:tw-*` / `dh2:tw-*` / `dw:tw-*` / `ow:tw-*` / `rt:tw-*` / `im:tw-*` variants, no new `data-wh40k-system=` attributes. Theming is owned by `theme-adoption.md`.
 6. **No narrative comments.** No `{{!-- Migrated to Tailwind --}}`, no "Replaced .foo with tw-bar" trailers. The diff documents the change.
 7. **TIER3_ENTANGLED is the abort sentinel.** If the model sees `@keyframes` or `[data-wh40k-system="..."]` inside the source-block during inference, it emits exactly `TIER3_ENTANGLED` inside the fence and the grinder records the file as `skipped` (not `failed`). The scraper should have caught this in classification, but the prompt-level guard catches manifest staleness too.
 

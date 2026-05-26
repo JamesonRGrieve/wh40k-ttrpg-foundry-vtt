@@ -13,8 +13,8 @@
  */
 
 export const GAME_SYSTEMS = {
-    dh2: { id: 'dh2e', label: 'Dark Heresy 2e' },
-    dh1: { id: 'dh1e', label: 'Dark Heresy 1e' },
+    dh2: { id: 'dh2', label: 'Dark Heresy 2e' },
+    dh1: { id: 'dh1', label: 'Dark Heresy 1e' },
     rt: { id: 'rt', label: 'Rogue Trader' },
     bc: { id: 'bc', label: 'Black Crusade' },
     ow: { id: 'ow', label: 'Only War' },

@@ -118,7 +118,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     actor = await ActorCls.create({
                         name: 'origin-builder-probe',
                         type: 'dh2-character',
-                        system: { gameSystem: 'dh2e' },
+                        system: { gameSystem: 'dh2' },
                     });
                 } catch (err) {
                     return {
