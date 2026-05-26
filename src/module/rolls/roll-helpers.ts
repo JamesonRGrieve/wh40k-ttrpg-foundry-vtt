@@ -1,3 +1,4 @@
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { ActionData } from './action-data.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: recursive dot-notation traversal; values are unknown by design
@@ -25,6 +26,29 @@ export function uuid(): string {
 }
 
 export function getDegree(a: number, b: number): number {
+    return Math.floor(a / 10) - Math.floor(b / 10);
+}
+
+/** FFG 1st-generation lines (Dark Heresy 1e, Deathwatch, Rogue Trader) count
+ * degrees by full 10s of margin; the later lines (Black Crusade, Only War,
+ * Dark Heresy 2e) use the tens-digit method. Imperium Maledictum defaults to
+ * the Gen-2 method (closest to its Success-Level rule). */
+const GEN1_DEGREE_SYSTEMS: ReadonlySet<string> = new Set(['dh1', 'dw', 'rt']);
+
+/** Resolve the effective degrees method for an actor's game system, honouring
+ * the `degreesMode` world setting. `raw` (default) → per-system; `gen1`/`gen2`
+ * force one method across every system. */
+export function resolveDegreesMethod(systemId: string | undefined): 'gen1' | 'gen2' {
+    const mode = WH40KSettings.getDegreesMode();
+    if (mode === 'gen1' || mode === 'gen2') return mode;
+    return systemId !== undefined && GEN1_DEGREE_SYSTEMS.has(systemId) ? 'gen1' : 'gen2';
+}
+
+/** Additional degrees between `a` and `b` for the given method, NOT counting
+ * the base success/failure (the caller adds the leading 1). Gen 1: full 10s of
+ * the absolute margin. Gen 2: difference of the tens digits (== {@link getDegree}). */
+export function getDegreeForMode(method: 'gen1' | 'gen2', a: number, b: number): number {
+    if (method === 'gen1') return Math.floor(Math.abs(a - b) / 10);
     return Math.floor(a / 10) - Math.floor(b / 10);
 }
 

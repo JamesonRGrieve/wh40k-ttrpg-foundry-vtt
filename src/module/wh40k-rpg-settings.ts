@@ -2,6 +2,10 @@ import { SYSTEM_ID } from './constants.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
 
+/** Degrees-of-success calculation mode. `raw` resolves per game system; the
+ * other two force one method across all systems. */
+export type DegreesMode = 'raw' | 'gen1' | 'gen2';
+
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with static SETTINGS constants and many callers
 export class WH40KSettings {
     static SETTINGS = {
@@ -12,6 +16,7 @@ export class WH40KSettings {
         combatPresets: 'combat-presets',
         movementAutomation: 'movement-automation',
         dh2Ruleset: 'dh2-ruleset',
+        degreesMode: 'degrees-mode',
         characteristicOffset: 'characteristic-offset',
         pointBuyPool: 'point-buy-pool',
         resyncOnReady: 'resync-on-ready',
@@ -73,6 +78,17 @@ export class WH40KSettings {
     }
 
     /** Current DH2e ruleset (raw vs homebrew). Safe to call before setting is registered (returns homebrew). */
+    /** The configured degrees-of-success mode (defaults to `raw`, which
+     *  resolves per game system at the call site). Safe before registration. */
+    static getDegreesMode(): DegreesMode {
+        try {
+            const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.degreesMode));
+            return value === 'gen1' || value === 'gen2' ? value : 'raw';
+        } catch {
+            return 'raw';
+        }
+    }
+
     static getRuleset(): DH2Ruleset {
         try {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset) === 'raw' ? 'raw' : 'homebrew';
@@ -157,6 +173,20 @@ export class WH40KSettings {
             choices: {
                 homebrew: 'Homebrew (Influence + Requisition + Throne Gelt)',
                 raw: 'RAW (Influence + Requisition)',
+            },
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.degreesMode, {
+            name: 'WH40K.SETTINGS.DegreesMode.Name',
+            hint: 'WH40K.SETTINGS.DegreesMode.Hint',
+            scope: 'world',
+            config: true,
+            requiresReload: false,
+            default: 'raw',
+            type: String,
+            choices: {
+                raw: 'WH40K.SETTINGS.DegreesMode.Choices.Raw',
+                gen1: 'WH40K.SETTINGS.DegreesMode.Choices.Gen1',
+                gen2: 'WH40K.SETTINGS.DegreesMode.Choices.Gen2',
             },
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset, {
