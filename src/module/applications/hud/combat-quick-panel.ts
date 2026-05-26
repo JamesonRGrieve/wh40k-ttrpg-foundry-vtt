@@ -101,12 +101,13 @@ interface PanelGearSystem {
 // eslint-disable-next-line no-restricted-syntax -- boundary: rollWeaponAttack/rollSkill option bag is opaque cross-cutting config consumed by per-system roll dialogs.
 type RollOptions = Record<string, unknown>;
 
-/** Subset of WH40KBaseActor that this panel calls into for rolls. The two methods
- *  are defined on the PC/NPC subclasses (acolyte / npc) and may be absent on a
- *  bare base actor; we keep them optional and let the runtime guard at the call
- *  site (`this.actor?.rollWeaponAttack(...)`) preserve original behavior. */
+/** Subset of WH40KBaseActor that this panel calls into for rolls.
+ *  `rollWeaponAttack` is defined on the base actor (routes through the
+ *  targeted-action manager) so it is always present; `rollSkill` is defined
+ *  on the PC/NPC subclasses and may be absent on a bare base actor, so it
+ *  stays optional and is runtime-guarded at the call site. */
 interface CombatPanelActor extends WH40KBaseActor {
-    rollWeaponAttack?: (weaponId: string, options: RollOptions) => Promise<void>;
+    rollWeaponAttack: (weaponId: string, options: RollOptions) => Promise<void>;
     rollSkill?: (skill: string, options: RollOptions) => Promise<void>;
 }
 
@@ -553,7 +554,7 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
         }
         if (this.primaryWeapon.id === null) return;
 
-        await this.actor?.rollWeaponAttack?.(this.primaryWeapon.id, {
+        await this.actor?.rollWeaponAttack(this.primaryWeapon.id, {
             skipDialog: true,
             rateOfFire: 'single',
         });
@@ -570,7 +571,7 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
         const weaponId = this.primaryWeapon?.id;
         if (weaponId === null || weaponId === undefined) return;
 
-        await this.actor?.rollWeaponAttack?.(weaponId, {
+        await this.actor?.rollWeaponAttack(weaponId, {
             skipDialog: true,
             rateOfFire: 'semiAuto',
         });
@@ -587,7 +588,7 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
         const weaponId = this.primaryWeapon?.id;
         if (weaponId === null || weaponId === undefined) return;
 
-        await this.actor?.rollWeaponAttack?.(weaponId, {
+        await this.actor?.rollWeaponAttack(weaponId, {
             skipDialog: true,
             rateOfFire: 'fullAuto',
         });

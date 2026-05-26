@@ -17,7 +17,20 @@ export class WH40KSettings {
         reconcileOriginGrantsOnReady: 'reconcile-origin-grants-on-ready',
         multipleFateBurnPerRoll: 'multiple-fate-burn-per-roll',
         autoPsychicPhenomena: 'auto-psychic-phenomena',
+        autoRollDamage: 'auto-roll-damage',
     };
+
+    /** When true, a successful weapon/psychic attack rolls its damage automatically
+     *  and posts the damage card, rather than waiting for the chat "Roll Damage"
+     *  button. Defaults to true. Safe to call before the setting is registered
+     *  (returns true). */
+    static isAutoRollDamageEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoRollDamage) !== false;
+        } catch {
+            return true;
+        }
+    }
 
     /** Homebrew: allow more than one Fate Point spend on the same roll. RAW permits only one. */
     static isMultipleFateBurnAllowed(): boolean {
@@ -96,6 +109,14 @@ export class WH40KSettings {
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.autoPsychicPhenomena, {
             name: 'Auto-roll Psychic Phenomena',
             hint: 'When a psychic power triggers phenomena (per PR sufficiency and doubles rules), automatically draw from the Psychic Phenomena roll table. A draw of 75+ auto-cascades to the Perils of the Warp table. Disable to let the GM draw manually via the sheet buttons.',
+            scope: 'world',
+            config: true,
+            default: true,
+            type: Boolean,
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.autoRollDamage, {
+            name: 'WH40K.SETTINGS.AutoRollDamage.Name',
+            hint: 'WH40K.SETTINGS.AutoRollDamage.Hint',
             scope: 'world',
             config: true,
             default: true,
