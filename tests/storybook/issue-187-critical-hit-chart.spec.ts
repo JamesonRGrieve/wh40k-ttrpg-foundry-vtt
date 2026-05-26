@@ -43,6 +43,7 @@ test('issue #187: ship critical hit chat card renders the vacuum result', async 
     // Story id derives from `title: 'Chat/Ship Critical Hit'` plus the
     // `Vacuum` named export, kebab-cased by Storybook.
     await page.goto('/iframe.html?id=chat-ship-critical-hit--vacuum');
+    await page.waitForLoadState('networkidle');
 
     // Lenient selector: the body element should be attached and contain
     // something — we don't pin to a specific class chain because the
@@ -50,24 +51,27 @@ test('issue #187: ship critical hit chat card renders the vacuum result', async 
     const body = page.locator('body');
     await expect(body).toBeAttached();
 
-    // The card text should mention the rolled entry. We don't require an
-    // exact match because the partial wraps content in a number of
-    // nested elements with extra whitespace.
-    const text = await body.textContent();
-    expect(text ?? '').toMatch(/Vacuum|Hull Breach/i);
+    // The card text should mention the rolled entry. Use a web-first
+    // assertion (auto-retries until the story iframe finishes rendering)
+    // rather than a one-shot textContent() read, which races the mount
+    // under heavy parallel load. We don't require an exact match because
+    // the partial wraps content in nested elements with extra whitespace.
+    await expect(body).toContainText(/Vacuum|Hull Breach/i);
 
     await page.screenshot({ path: SCREENSHOT_PATH, fullPage: true });
 });
 
 test('issue #187: ship critical hit chat card renders the fallback message', async ({ page }) => {
     await page.goto('/iframe.html?id=chat-ship-critical-hit--table-unavailable-fallback');
+    await page.waitForLoadState('networkidle');
 
     const body = page.locator('body');
     await expect(body).toBeAttached();
 
     // The fallback story uses the `TableUnavailable` format string; if
-    // the format key is dropped or renamed, this assertion catches it.
-    const text = await body.textContent();
-    expect(text ?? '').toMatch(/rolled 1 on 1d5/i);
-    expect(text ?? '').toMatch(/by hand/i);
+    // the format key is dropped or renamed, these assertions catch it.
+    // Web-first assertions auto-retry until the card mounts (avoids the
+    // textContent() render race seen under parallel pre-commit load).
+    await expect(body).toContainText(/rolled 1 on 1d5/i);
+    await expect(body).toContainText(/by hand/i);
 });
