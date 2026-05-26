@@ -13,6 +13,7 @@ export class WH40KSettings {
         movementAutomation: 'movement-automation',
         dh2Ruleset: 'dh2-ruleset',
         characteristicOffset: 'characteristic-offset',
+        pointBuyPool: 'point-buy-pool',
         resyncOnReady: 'resync-on-ready',
         reconcileOriginGrantsOnReady: 'reconcile-origin-grants-on-ready',
         multipleFateBurnPerRoll: 'multiple-fate-burn-per-roll',
@@ -41,6 +42,21 @@ export class WH40KSettings {
     /** Effective base characteristic value used by character generation: 20 + offset. */
     static getCharacteristicBase(): number {
         return 20 + WH40KSettings.getCharacteristicOffset();
+    }
+
+    /**
+     * Size of the point pool a player spends in point-buy character generation.
+     * Content-agnostic primitive (a budget integer, not a per-characteristic
+     * mechanic table) — the spend cost is a flat 1 point per +1, so no content
+     * lookup is involved. Defaults to 100. Clamped to a non-negative integer.
+     */
+    static getCharacteristicPointBuyPool(): number {
+        try {
+            const n = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.pointBuyPool));
+            return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 100;
+        } catch {
+            return 100;
+        }
     }
 
     /** Current DH2e ruleset (raw vs homebrew). Safe to call before setting is registered (returns homebrew). */
@@ -128,6 +144,14 @@ export class WH40KSettings {
             scope: 'world',
             config: true,
             default: 0,
+            type: Number,
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.pointBuyPool, {
+            name: 'WH40K.SETTINGS.PointBuyPool.Name',
+            hint: 'WH40K.SETTINGS.PointBuyPool.Hint',
+            scope: 'world',
+            config: true,
+            default: 100,
             type: Number,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.movementAutomation, {
