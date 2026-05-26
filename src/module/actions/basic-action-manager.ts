@@ -139,8 +139,12 @@ export class BasicActionManager {
         const statusSpan = btn.querySelector('span:last-child');
         if (statusSpan != null) statusSpan.textContent = 'Rolled';
 
-        // Calculate hits (deferred from attack roll)
-        await actionData.calculateHits();
+        // Calculate hits (deferred from attack roll). Idempotent: if hits were
+        // already produced (e.g. auto-roll-damage front-ran this), don't append
+        // a second set of hits — re-post the existing damage card instead.
+        if ((actionData.damageData?.hits.length ?? 0) === 0) {
+            await actionData.calculateHits();
+        }
 
         // Propagate attack DoS to each hit so the chat card can offer the
         // "replace damage die with DoS" action (#129 — DH2 core L10398-10414).
