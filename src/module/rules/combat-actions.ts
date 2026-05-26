@@ -42,13 +42,26 @@ export function calculateCombatActionModifier(rollData: WeaponRollData): void {
  */
 export function updateAvailableCombatActions(rollData: WeaponRollData): void {
     const weaponAttack = rollData.weapon.system['attack'] as { rateOfFire?: { semi?: number; full?: number } } | undefined;
+    // Thrown weapons (class 'thrown') report `isRanged === true` but use the
+    // dedicated Throw half-action rather than the BS shooting actions
+    // (Standard Attack / Semi-Auto / Full-Auto). Conversely, Throw is only
+    // available to thrown weapons. RAW DH2 "Throw" is a Half Action using BS,
+    // with range derived from the weapon's own range data (Strength-Bonus based).
+    const isThrownWeapon = rollData.weapon.isThrown;
+
     const actions = allCombatActions()
         .filter((action) => action.subtype.includes('Attack'))
         .filter((action) => {
+            const isThrowAction = action.subtype.includes('Thrown');
             if (rollData.weapon.isRanged) {
-                return action.subtype.includes('Ranged');
+                if (isThrownWeapon) {
+                    // Only the Throw action (and any action explicitly tagged Thrown).
+                    return isThrowAction;
+                }
+                // Non-thrown ranged weapons never offer Throw.
+                return !isThrowAction && action.subtype.includes('Ranged');
             } else {
-                return action.subtype.includes('Melee');
+                return !isThrowAction && action.subtype.includes('Melee');
             }
         });
 
@@ -87,6 +100,42 @@ export function updateAvailableCombatActions(rollData: WeaponRollData): void {
     }
 }
 
+/**
+ * Resolution path for a thrown weapon under the Throw half-action.
+ *
+ * - `grenade-dialog`: the item is a grenade (explosive payload). The
+ *   blast / scatter / damage emission is owned by the Within-grenade
+ *   registry + {@link GrenadeThrowDialog}; the Throw action reuses that
+ *   path rather than duplicating the blast logic.
+ * - `weapon-roll`: an ordinary thrown weapon (knife, throwing axe). It
+ *   resolves through the normal weapon-roll pipeline, which already
+ *   applies the thrown BS attack and scatters a miss (see
+ *   `rolls/action-data.ts`).
+ */
+export type ThrowResolutionPath = 'grenade-dialog' | 'weapon-roll';
+
+/** Item surface the throw classifier reads — content-driven, no name matching. */
+interface ThrowableWeaponLike {
+    isThrown?: boolean;
+    system?: { special?: string | string[] };
+}
+
+/**
+ * Decide how a thrown weapon's Throw action resolves. The grenade marker
+ * is the `grenade` weapon-quality on the item's `special` list — the same
+ * content-driven classifier `acolyte.ts:rollWeaponDamage` already uses to
+ * decide Strength-Bonus inclusion (Direction #7 — never a hardcoded
+ * weapon name). Grenades route to the grenade dialog so the blast /
+ * scatter / damage path is reused; ordinary thrown weapons resolve
+ * through the normal weapon roll (which already throws on BS and
+ * scatters a miss).
+ */
+export function throwResolutionPath(weapon: ThrowableWeaponLike): ThrowResolutionPath {
+    const special = weapon.system?.special;
+    const isGrenade = Array.isArray(special) ? special.includes('grenade') : typeof special === 'string' && special.includes('grenade');
+    return isGrenade ? 'grenade-dialog' : 'weapon-roll';
+}
+
 export function allCombatActions(): CombatAction[] {
     return [
         {
@@ -94,6 +143,21 @@ export function allCombatActions(): CombatAction[] {
             type: ['Half'],
             subtype: ['Attack', 'Melee', 'Ranged'],
             description: 'Make one melee or ranged attack; jam on 96+ result.',
+            attack: {
+                modifier: 0,
+            },
+        },
+        {
+            // DH2 Core "Throw" (Half Action): hurl a grenade or thrown weapon.
+            // Resolves as a Ballistic Skill attack (thrown weapons are ranged),
+            // with maximum range read from the weapon's own range data
+            // (Strength-Bonus-based formula); a miss scatters per the scatter
+            // diagram. No flat attack modifier — RAW applies no inherent
+            // bonus/penalty to the Throw test itself.
+            name: 'Throw',
+            type: ['Half'],
+            subtype: ['Attack', 'Ranged', 'Thrown'],
+            description: 'Throw a grenade or thrown weapon (Half Action, BS test). Range comes from the weapon; a miss scatters 1d5m in a random direction.',
             attack: {
                 modifier: 0,
             },

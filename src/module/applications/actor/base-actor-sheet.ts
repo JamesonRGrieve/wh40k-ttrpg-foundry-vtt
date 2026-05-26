@@ -1955,7 +1955,25 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     static async #itemRoll(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        if (itemId !== undefined && itemId !== '') await this.actor.rollItem(itemId);
+        if (itemId === undefined || itemId === '') return;
+
+        // Throw half-action reuse: a thrown grenade routes to the dedicated
+        // grenade dialog (which owns the blast / scatter / damage emission via
+        // the Within-grenade registry) rather than the standard weapon roll.
+        // Ordinary thrown weapons (and everything else) fall through to the
+        // normal roll, which already applies the thrown BS attack + scatter.
+        const item = this.actor.items.get(itemId);
+        if (item?.isThrown === true) {
+            const { throwResolutionPath } = await import('../../rules/combat-actions.ts');
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is a Foundry DataModel; the throw classifier reads only `special`, which is not on the typed weapon schema surface here.
+            if (throwResolutionPath(item as { system?: { special?: string | string[] } }) === 'grenade-dialog') {
+                const { openGrenadeThrowDialog } = await import('../prompts/grenade-throw-dialog.ts');
+                openGrenadeThrowDialog();
+                return;
+            }
+        }
+
+        await this.actor.rollItem(itemId);
     }
 
     /* -------------------------------------------- */
