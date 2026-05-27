@@ -3884,6 +3884,54 @@
             "flags": {}
         },
         {
+            "name": "hb-generic-items-wearables",
+            "label": "Generic Homebrew Wearables",
+            "path": "packs/homebrew/hb-generic-items-wearables",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-consumables",
+            "label": "Generic Homebrew Consumables",
+            "path": "packs/homebrew/hb-generic-items-consumables",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-tools",
+            "label": "Generic Homebrew Tools",
+            "path": "packs/homebrew/hb-generic-items-tools",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-gear",
+            "label": "Generic Homebrew Gear",
+            "path": "packs/homebrew/hb-generic-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "hb-rt-items-armour",
             "label": "Homebrew RT Armour",
             "path": "packs/homebrew/hb-rt-items-armour",
@@ -4309,7 +4357,13 @@
             "folders": [
                 {
                     "name": "Core Rulebook",
-                    "packs": ["dh1-core-items-armour", "dh1-core-items-gear", "dh1-core-items-psychic-powers", "dh1-core-items-talents", "dh1-core-items-weapons"]
+                    "packs": [
+                        "dh1-core-items-armour",
+                        "dh1-core-items-gear",
+                        "dh1-core-items-psychic-powers",
+                        "dh1-core-items-talents",
+                        "dh1-core-items-weapons"
+                    ]
                 },
                 {
                     "name": "Inquisitor's Handbook",

@@ -223,7 +223,7 @@ afterAll(() => {
     });
 });
 
-const { default: OriginPathBuilder } = await import('./origin-path-builder.ts');
+const { default: OriginPathBuilder, originProvenanceFlags } = await import('./origin-path-builder.ts');
 
 const proto = OriginPathBuilder.prototype;
 
@@ -1741,5 +1741,25 @@ describe('OriginPathBuilder._hasAssignedCharacteristics across modes', () => {
             host._charAssignments[key] = i;
         });
         expect(proto._hasAssignedCharacteristics.call(host)).toBe(true);
+    });
+});
+
+describe('originProvenanceFlags', () => {
+    const flags = (officialLines: string[], active: string): { isPureHomebrew: boolean; isAdaptedHomebrew: boolean; adaptedFromLabel: string } =>
+        originProvenanceFlags({ officialLines } as Parameters<typeof originProvenanceFlags>[0], active);
+
+    it('marks no flags when official for the active system', () => {
+        expect(flags(['dh2'], 'dh2')).toEqual({ isPureHomebrew: false, isAdaptedHomebrew: false, adaptedFromLabel: '' });
+    });
+
+    it('marks adapted homebrew when homebrew here but official elsewhere, listing the official lines', () => {
+        const result = flags(['dh1', 'rt'], 'dh2');
+        expect(result.isAdaptedHomebrew).toBe(true);
+        expect(result.isPureHomebrew).toBe(false);
+        expect(result.adaptedFromLabel).toBe('Dark Heresy 1e, Rogue Trader');
+    });
+
+    it('marks pure homebrew when no line is official', () => {
+        expect(flags([], 'dh2')).toEqual({ isPureHomebrew: true, isAdaptedHomebrew: false, adaptedFromLabel: '' });
     });
 });

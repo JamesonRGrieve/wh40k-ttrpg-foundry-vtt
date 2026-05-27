@@ -13,18 +13,27 @@ import BaseItemSheet from './base-item-sheet.ts';
 /** The grant arrays on an origin path that the sheet can edit row-by-row. */
 type EditableGrantKey = 'skills' | 'talents' | 'traits' | 'equipment';
 
+/** One authored grant row across the four editable grant kinds. */
+interface GrantRow {
+    name?: string;
+    specialization?: string;
+    level?: string | null;
+    uuid?: string;
+    quantity?: number;
+}
+
 /** Narrow view of the origin-path system data the sheet mutates. */
 interface OriginGrantsView {
     grants: {
-        skills: unknown[];
-        talents: unknown[];
-        traits: unknown[];
-        equipment: unknown[];
+        skills: GrantRow[];
+        talents: GrantRow[];
+        traits: GrantRow[];
+        equipment: GrantRow[];
     };
 }
 
 /** Default row inserted when adding a new grant of each kind. */
-const GRANT_ROW_DEFAULTS: Record<EditableGrantKey, () => Record<string, unknown>> = {
+const GRANT_ROW_DEFAULTS: Record<EditableGrantKey, () => GrantRow> = {
     skills: () => ({ name: '', specialization: '', level: 'trained' }),
     talents: () => ({ name: '', specialization: '', uuid: '' }),
     traits: () => ({ name: '', level: null, uuid: '' }),
@@ -45,7 +54,9 @@ export default class OriginPathSheet extends BaseItemSheet {
             icon: 'fa-solid fa-route',
         },
         actions: {
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             addGrant: OriginPathSheet.#addGrant,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             removeGrant: OriginPathSheet.#removeGrant,
         },
     };
@@ -240,9 +251,10 @@ export default class OriginPathSheet extends BaseItemSheet {
     }
 
     /** Read, mutate, and persist one grant array. */
-    async #updateGrantArray(grant: EditableGrantKey, mutate: (list: unknown[]) => void): Promise<void> {
+    async #updateGrantArray(grant: EditableGrantKey, mutate: (list: GrantRow[]) => void): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.document.system is the untyped Foundry DataModel union; OriginGrantsView is the narrow grants view this sheet mutates
         const view = this.document.system as unknown as OriginGrantsView;
-        const list = foundry.utils.deepClone(view.grants[grant]) as unknown[];
+        const list = foundry.utils.deepClone(view.grants[grant]);
         mutate(list);
         await this.document.update({ [`system.grants.${grant}`]: list });
     }
