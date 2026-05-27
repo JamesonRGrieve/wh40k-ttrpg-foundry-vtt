@@ -847,6 +847,26 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             );
         }
 
+        // Also surface world-created origin path Items. These are not backed by
+        // a compendium source, so they are marked `fromWorld` and rendered with
+        // a warning marker in the builder. Scope to the active game system when
+        // the item declares one; otherwise include it. See issue #219.
+        const worldOrigins = game.items.filter((i): i is typeof i & { type: string } => (i as { type?: string }).type === 'originPath');
+        for (const doc of worldOrigins) {
+            const itemSystem = (doc as unknown as { system?: { gameSystem?: string; gameSystems?: unknown } }).system ?? {};
+            const declaredSystem = typeof itemSystem.gameSystem === 'string' ? itemSystem.gameSystem : null;
+            const declaredSystems = Array.isArray(itemSystem.gameSystems) ? itemSystem.gameSystems : [];
+            const matchesSystem =
+                declaredSystem === null && declaredSystems.length === 0
+                    ? true
+                    : declaredSystem === this.gameSystem || declaredSystems.includes(this.gameSystem);
+            if (!matchesSystem) continue;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw document shape and validates structurally
+            const normalized = normalizeOrigin(doc as unknown as Record<string, unknown>);
+            normalized.fromWorld = true;
+            allOriginPaths.push(normalized);
+        }
+
         if (allOriginPaths.length === 0) {
             console.warn('No origin path items found in configured compendiums');
             return;
@@ -1585,6 +1605,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 hasChoices: origin.hasChoices,
                 isAdvanced: origin.isAdvanced,
                 xpCost: origin.xpCost,
+                fromWorld: origin.fromWorld,
                 badges: true,
             };
         });
@@ -2177,6 +2198,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     hasChoices: origin.hasChoices || card.hasChoices,
                     isAdvanced: card.isAdvanced,
                     xpCost: card.xpCost,
+                    fromWorld: origin.fromWorld,
                     badges: card.hasChoices || origin.hasChoices || card.isAdvanced || card.xpCost > 0,
                 };
             })
