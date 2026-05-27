@@ -566,6 +566,10 @@
                     "Gen2": "Gen 2 — tens-digit difference, +1"
                 }
             },
+            "PromptIncompleteOriginPath": {
+                "Name": "Prompt to Build Unfinished Characters",
+                "Hint": "When a character or NPC sheet is opened and its origin path has never been completed, show a prompt offering to open the origin-path builder. Players can dismiss it per-character."
+            },
             "MovementAutomation": {
                 "Name": "Movement Automation",
                 "Hint": "Controls whether token movement enforces character movement speeds via the ruler.",
@@ -2142,6 +2146,13 @@
         },
         "OriginPath": {
             "Header": "Origin Path",
+            "IncompletePrompt": {
+                "Title": "Origin Path Incomplete",
+                "Message": "Character has not completed an origin path and therefore has not been fully built. Do so now? You can always do so later by clicking the d20 on the character portrait.",
+                "Confirm": "Build Now",
+                "Later": "Later",
+                "DontShowAgain": "Don't show this again for this character"
+            },
             "Description": "Drag origin path items from the compendium to define your character's background. Each step grants unique abilities and bonuses.",
             "BuilderTitle": "{name}'s Origin Path",
             "HomeWorld": "Home World",
