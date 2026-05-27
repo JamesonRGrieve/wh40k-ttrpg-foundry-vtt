@@ -1070,9 +1070,9 @@ export default class CreatureTemplate extends CommonTemplate {
                 (item.isTalent ||
                     item.isTrait ||
                     item.isCondition ||
-                    (item.type === 'armour' && item.system.equipped === true) ||
-                    (item.type === 'cybernetic' && item.system.equipped === true) ||
-                    (item.type === 'gear' && item.system.equipped === true)),
+                    (item.type === 'armour' && item.system.state.equipped === true) ||
+                    (item.type === 'cybernetic' && item.system.state.equipped === true) ||
+                    (item.type === 'gear' && item.system.state.equipped === true)),
         );
 
         for (const item of modifierItems) {

@@ -81,7 +81,7 @@ interface PanelRateOfFire {
 
 /** Weapon system fields read by the panel that aren't on the canonical schema. */
 interface PanelWeaponSystem {
-    equipped?: boolean;
+    state?: { equipped?: boolean };
     damage?: string;
     penetration?: number;
     range?: string | number;
@@ -93,7 +93,7 @@ interface PanelWeaponSystem {
 
 /** Gear/consumable system fields. */
 interface PanelGearSystem {
-    equipped?: boolean;
+    state?: { equipped?: boolean };
     consumable?: boolean;
 }
 
@@ -231,7 +231,7 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
         const equipped = this.actor.items.find((i) => {
             if (i.type !== 'weapon') return false;
             const sys = i.system as PanelWeaponSystem;
-            return sys.equipped === true;
+            return sys.state?.equipped === true;
         });
         this.primaryWeapon = equipped ?? null;
     }
@@ -308,7 +308,7 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
             .filter((i) => {
                 if (i.type !== 'gear') return false;
                 const sys = i.system as PanelGearSystem;
-                return sys.consumable === true && sys.equipped === true;
+                return sys.consumable === true && sys.state?.equipped === true;
             })
             .slice(0, 3);
 
@@ -412,7 +412,7 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
             this.actor?.items.filter((i) => {
                 if (i.type !== 'weapon') return false;
                 const itemSys = i.system as PanelWeaponSystem;
-                return itemSys.equipped !== true;
+                return itemSys.state?.equipped !== true;
             }) ?? [];
         const unequippedWeapons = unequippedItems.length;
 
@@ -672,7 +672,7 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
         const weapons = this.actor?.items.filter((i: WH40KItem) => {
             if (i.type !== 'weapon') return false;
             const sys = i.system as PanelWeaponSystem;
-            return sys.equipped !== true;
+            return sys.state?.equipped !== true;
         });
 
         if (!weapons || weapons.length === 0) {
@@ -689,7 +689,7 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
         const chosen = weapons[0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array element may be undefined at runtime
         if (chosen === undefined) return;
-        await chosen.update({ 'system.equipped': true });
+        await chosen.update({ 'system.state.equipped': true });
         ui.notifications.info(t('WH40K.CombatPanel.DrewWeapon', { name: chosen.name }));
     }
 
@@ -704,11 +704,11 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
 
         // Unequip current
         if (this.primaryWeapon) {
-            await this.primaryWeapon.update({ 'system.equipped': false });
+            await this.primaryWeapon.update({ 'system.state.equipped': false });
         }
 
         // Equip new
-        await weapon.update({ 'system.equipped': true });
+        await weapon.update({ 'system.state.equipped': true });
 
         ui.notifications.info(t('WH40K.CombatPanel.SwitchedWeapon', { name: weapon.name }));
         void this.render(false);

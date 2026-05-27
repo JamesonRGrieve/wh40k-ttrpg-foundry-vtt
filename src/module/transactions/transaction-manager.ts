@@ -202,8 +202,8 @@ export class TransactionManager {
 
         return (
             source.items.contents
-                // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
-                .filter((item) => (item.system as Record<string, unknown>)['inShipStorage'] !== true)
+                // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is untyped Foundry data
+                .filter((item) => ((item.system as Record<string, unknown>)['state'] as Record<string, unknown> | undefined)?.['inShipStorage'] !== true)
                 .filter((item) => {
                     const quantity = TransactionManager.#getAvailableQuantity(item);
                     return quantity > 0;

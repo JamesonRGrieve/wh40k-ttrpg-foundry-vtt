@@ -45,11 +45,11 @@
 
             {{!-- Equipped Toggle --}}
             <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="Toggle Equipped">
-              <input type="checkbox" name="system.equipped" {{checked item.system.equipped}} class="tw-sr-only" />
-              <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 {{#if item.system.equipped}}tw-text-[var(--wh40k-accent-green-bright)]{{else}}tw-text-[rgba(255,255,255,0.3)]{{/if}}">
-                <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+              <input type="checkbox" name="system.state.equipped" {{checked item.system.state.equipped}} class="tw-sr-only" />
+              <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 {{#if item.system.state.equipped}}tw-text-[var(--wh40k-accent-green-bright)]{{else}}tw-text-[rgba(255,255,255,0.3)]{{/if}}">
+                <i class="fas {{#if item.system.state.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
               </span>
-              <span class="tw-text-xs tw-font-semibold tw-uppercase {{#if item.system.equipped}}tw-text-[var(--wh40k-accent-green-bright)]{{else}}tw-text-[rgba(255,255,255,0.5)]{{/if}}">{{#if item.system.equipped}}Worn{{else}}Stowed{{/if}}</span>
+              <span class="tw-text-xs tw-font-semibold tw-uppercase {{#if item.system.state.equipped}}tw-text-[var(--wh40k-accent-green-bright)]{{else}}tw-text-[rgba(255,255,255,0.5)]{{/if}}">{{#if item.system.state.equipped}}Worn{{else}}Stowed{{/if}}</span>
             </label>
           </div>
         </div>

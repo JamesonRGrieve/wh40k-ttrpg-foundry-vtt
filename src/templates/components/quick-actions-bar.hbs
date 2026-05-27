@@ -49,10 +49,10 @@
             class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="toggleEquip"
             data-item-id="{{item.id}}"
-            title="{{#if system.equipped}}{{localize 'WH40K.Action.Unequip'}}{{else}}{{localize 'WH40K.Action.Equip'}}{{/if}}">
-      <i class="fa-solid {{#if system.equipped}}fa-user-check{{else}}fa-user-plus{{/if}}"></i>
+            title="{{#if system.state.equipped}}{{localize 'WH40K.Action.Unequip'}}{{else}}{{localize 'WH40K.Action.Equip'}}{{/if}}">
+      <i class="fa-solid {{#if system.state.equipped}}fa-user-check{{else}}fa-user-plus{{/if}}"></i>
       {{#unless compact}}
-      <span>{{#if system.equipped}}{{localize "WH40K.Action.Unequip"}}{{else}}{{localize "WH40K.Action.Equip"}}{{/if}}</span>
+      <span>{{#if system.state.equipped}}{{localize "WH40K.Action.Unequip"}}{{else}}{{localize "WH40K.Action.Equip"}}{{/if}}</span>
       {{/unless}}
     </button>
   {{/if}}

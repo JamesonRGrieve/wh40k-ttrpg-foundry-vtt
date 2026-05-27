@@ -10,6 +10,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     declare availability: string;
     declare craftsmanship: string;
     declare quantity: number;
+    declare variantOf: string;
     declare homebrew: {
         inventory: {
             profiles: Set<string>;
@@ -29,15 +30,19 @@ export default class PhysicalItemTemplate extends SystemDataModel {
         };
         rt: {
             profitFactor: number | null;
+            homebrew: { throneGelt: number | null };
         };
         dw: {
             requisition: number | null;
+            homebrew: { throneGelt: number | null };
         };
         bc: {
             infamy: number | null;
+            homebrew: { throneGelt: number | null };
         };
         ow: {
             logistics: number | null;
+            homebrew: { throneGelt: number | null };
         };
     };
 
@@ -88,6 +93,15 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 min: 0,
                 integer: true,
             }),
+            // Variant linkage (see src/packs/CLAUDE.md "Variants"). `variantOf`
+            // is the Foundry UUID of the standard / most-vanilla variant this
+            // item is a variant of — '' when this item IS that base variant.
+            // A manufacturing pattern (Godwyn-Pattern Bolter) is just one kind
+            // of variant; the variant's identity lives in its own `name`, and
+            // `variantOf` points back to the vanilla base. Shared identity,
+            // never variantized; resolved at render time via uuidNameCache like
+            // other UUID-primary references.
+            variantOf: new fields.StringField({ required: false, blank: true, initial: '' }),
             // Inventory-generator tagging. Content-agnostic primitive: a free
             // set of profile tags + an optional relative draw weight. The tag
             // *values* (vendor types / armoury tiers) live in compendium
@@ -116,15 +130,27 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 }),
                 rt: new fields.SchemaField({
                     profitFactor: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    homebrew: new fields.SchemaField({
+                        throneGelt: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    }),
                 }),
                 dw: new fields.SchemaField({
                     requisition: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    homebrew: new fields.SchemaField({
+                        throneGelt: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    }),
                 }),
                 bc: new fields.SchemaField({
                     infamy: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    homebrew: new fields.SchemaField({
+                        throneGelt: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    }),
                 }),
                 ow: new fields.SchemaField({
                     logistics: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    homebrew: new fields.SchemaField({
+                        throneGelt: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    }),
                 }),
             }),
         };
@@ -198,15 +224,20 @@ export default class PhysicalItemTemplate extends SystemDataModel {
         }
 
         interface CostShape {
-            dh1?: { throneGelt?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            dh1?: { throneGelt?: unknown; homebrew?: { throneGelt?: unknown } }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
             dh2?: { influence?: unknown; homebrew?: { requisition?: unknown; throneGelt?: unknown } }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field values may be any type
-            rt?: { profitFactor?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
-            dw?: { requisition?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
-            bc?: { infamy?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
-            ow?: { logistics?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            rt?: { profitFactor?: unknown; homebrew?: { throneGelt?: unknown } }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            dw?: { requisition?: unknown; homebrew?: { throneGelt?: unknown } }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            bc?: { infamy?: unknown; homebrew?: { throneGelt?: unknown } }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            ow?: { logistics?: unknown; homebrew?: { throneGelt?: unknown } }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
         }
         const cost = source['cost'] as CostShape;
 
+        // Asymmetric homebrew shape (see src/packs/CLAUDE.md "Standard Cost
+        // Shape"): dh1 carries no homebrew block; homebrew.requisition is
+        // dh2-only; homebrew.throneGelt exists on every line except dh1.
+        // Legacy uniform-homebrew sources are tolerated — extra keys are
+        // simply not carried forward.
         source['cost'] = {
             dh1: {
                 throneGelt: normalizeNullableNumber(cost.dh1?.throneGelt),
@@ -220,15 +251,19 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             },
             rt: {
                 profitFactor: normalizeNullableNumber(cost.rt?.profitFactor),
+                homebrew: { throneGelt: normalizeNullableNumber(cost.rt?.homebrew?.throneGelt) },
             },
             dw: {
                 requisition: normalizeNullableNumber(cost.dw?.requisition),
+                homebrew: { throneGelt: normalizeNullableNumber(cost.dw?.homebrew?.throneGelt) },
             },
             bc: {
                 infamy: normalizeNullableNumber(cost.bc?.infamy),
+                homebrew: { throneGelt: normalizeNullableNumber(cost.bc?.homebrew?.throneGelt) },
             },
             ow: {
                 logistics: normalizeNullableNumber(cost.ow?.logistics),
+                homebrew: { throneGelt: normalizeNullableNumber(cost.ow?.homebrew?.throneGelt) },
             },
         };
     }
@@ -248,15 +283,19 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             },
             rt: {
                 profitFactor: null,
+                homebrew: { throneGelt: null },
             },
             dw: {
                 requisition: null,
+                homebrew: { throneGelt: null },
             },
             bc: {
                 infamy: null,
+                homebrew: { throneGelt: null },
             },
             ow: {
                 logistics: null,
+                homebrew: { throneGelt: null },
             },
         };
     }

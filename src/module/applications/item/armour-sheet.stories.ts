@@ -31,8 +31,8 @@ export const Unequipped: Story = {
         overrides: {
             isOwnedByActor: false,
             canEdit: false,
-            item: { system: { equipped: false } },
-            system: { equipped: false },
+            item: { system: { state: { equipped: false } } },
+            system: { state: { equipped: false } },
         },
     },
 };

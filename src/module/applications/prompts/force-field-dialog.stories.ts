@@ -12,8 +12,10 @@ interface ForceFieldView {
     name: string;
     system: {
         protectionRating: number;
-        activated: boolean;
-        overloaded: boolean;
+        state: {
+            activated: boolean;
+            overloaded: boolean;
+        };
     };
 }
 
@@ -31,7 +33,7 @@ const meta = {
         actor: { name: 'Rogue Trader Voss', img: 'icons/svg/mystery-man.svg' },
         forceField: {
             name: 'Refractor Field',
-            system: { protectionRating: 30, activated: true, overloaded: false },
+            system: { protectionRating: 30, state: { activated: true, overloaded: false } },
         },
         protectionRating: 30,
         overloadRating: 1,
@@ -49,7 +51,7 @@ export const Overloaded: Story = {
     args: {
         forceField: {
             name: 'Conversion Field',
-            system: { protectionRating: 50, activated: true, overloaded: true },
+            system: { protectionRating: 50, state: { activated: true, overloaded: true } },
         },
         protectionRating: 50,
         overloadRating: 3,

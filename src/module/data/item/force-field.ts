@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import EquippableTemplate from '../shared/equippable-template.ts';
+import EquippableTemplate, { type EquippableState } from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry parent document API */
@@ -22,8 +22,8 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare protectionRating: number;
-    declare activated: boolean;
-    declare overloaded: boolean;
+    // activated / overloaded are runtime state — inherited via EquippableTemplate's system.state.
+    declare state: EquippableState;
     declare overloadMin: number;
     declare overloadMax: number;
     declare overloadDuration: string;
@@ -70,9 +70,8 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
                 integer: true,
             }),
 
-            // Current state
-            activated: new fields.BooleanField({ required: true, initial: false }),
-            overloaded: new fields.BooleanField({ required: true, initial: false }),
+            // Current state (activated / overloaded) lives in system.state
+            // via EquippableTemplate — not redeclared here.
 
             // Overload threshold range (rolls within this range cause overload)
             // e.g., 01-10 means rolls 1-10 cause overload
@@ -120,8 +119,8 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get statusLabel(): string {
-        if (this.overloaded) return game.i18n.localize('WH40K.ForceField.Overloaded');
-        if (this.activated) return game.i18n.localize('WH40K.ForceField.Active');
+        if (this.state.overloaded) return game.i18n.localize('WH40K.ForceField.Overloaded');
+        if (this.state.activated) return game.i18n.localize('WH40K.ForceField.Active');
         return game.i18n.localize('WH40K.ForceField.Inactive');
     }
 
@@ -130,7 +129,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @type {boolean}
      */
     get isProtecting(): boolean {
-        return this.activated && !this.overloaded;
+        return this.state.activated && !this.state.overloaded;
     }
 
     /**
@@ -247,7 +246,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update return type
     toggleActivated(): Promise<unknown> | undefined {
         const parent = this.parent as ForceFieldParent | undefined;
-        return parent?.update?.({ 'system.activated': !this.activated });
+        return parent?.update?.({ 'system.state.activated': !this.state.activated });
     }
 
     /**
@@ -258,7 +257,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update return type
     setOverloaded(overloaded: boolean): Promise<unknown> | undefined {
         const parent = this.parent as ForceFieldParent | undefined;
-        return parent?.update?.({ 'system.overloaded': overloaded });
+        return parent?.update?.({ 'system.state.overloaded': overloaded });
     }
 
     /**
@@ -268,7 +267,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update return type
     recover(): Promise<unknown> | undefined {
         const parent = this.parent as ForceFieldParent | undefined;
-        return parent?.update?.({ 'system.overloaded': false });
+        return parent?.update?.({ 'system.state.overloaded': false });
     }
 
     /**
