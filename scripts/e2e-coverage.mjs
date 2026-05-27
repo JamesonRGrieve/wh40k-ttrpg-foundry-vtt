@@ -540,6 +540,11 @@ recordDimension('combat.ui', covered['combat.ui'], COMBAT_UI_CLASSES);
 const COMBAT_ATTACK_FLOWS = ['roll-weapon-attack-defined', 'auto-roll-damage-setting', 'auto-damage-gating', 'audit-row-renders'];
 recordDimension('combat.attack-flow', covered['combat.attack-flow'], COMBAT_ATTACK_FLOWS);
 
+// Character-generation modes (point-buy + roll) exercised by
+// tests/e2e/char-gen-modes.spec.ts. Keep in sync with CHAR_GEN_MODES there.
+const CHAR_GEN_MODES = ['mode-tabs-present', 'point-buy-mode-renders', 'roll-mode-renders'];
+recordDimension('char-gen.mode', covered['char-gen.mode'], CHAR_GEN_MODES);
+
 // Token + scene-embedded token document dimension exercised by
 // tests/e2e/token.spec.ts. Drives source-code coverage on
 // `src/module/documents/token.ts` (TokenDocumentWH40K, the registered

@@ -107,29 +107,29 @@ async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promis
                 /* ---- Flow 1: rollWeaponAttack defined across all 7 systems ---- */
                 async function probeRollWeaponAttackDefined(): Promise<void> {
                     if (ActorCls?.create == null) return;
-                    const missing: string[] = [];
-                    for (const sys of sysIds) {
-                        try {
-                            const actor = await ActorCls.create({
-                                name: `attack-flow-probe-${sys}`,
-                                type: `${sys}-character`,
-                                system: { gameSystem: sys },
-                            });
-                            const createdId = actor?.id;
-                            if (createdId != null) {
-                                cleanups.push(async () => {
-                                    try {
-                                        await gameObj?.actors?.get?.(createdId)?.delete?.();
-                                    } catch {
-                                        /* ignore */
-                                    }
-                                });
+                    const create = ActorCls.create;
+                    // Create the 7 probe actors in parallel (independent of each other).
+                    const checks = await Promise.all(
+                        sysIds.map(async (sys): Promise<string | null> => {
+                            try {
+                                const actor = await create({ name: `attack-flow-probe-${sys}`, type: `${sys}-character`, system: { gameSystem: sys } });
+                                const createdId = actor?.id;
+                                if (createdId != null) {
+                                    cleanups.push(async () => {
+                                        try {
+                                            await gameObj?.actors?.get?.(createdId)?.delete?.();
+                                        } catch {
+                                            /* ignore */
+                                        }
+                                    });
+                                }
+                                return typeof actor?.rollWeaponAttack === 'function' ? null : sys;
+                            } catch (err) {
+                                return `${sys}(create threw: ${String(err instanceof Error ? err.message : err)})`;
                             }
-                            if (typeof actor?.rollWeaponAttack !== 'function') missing.push(sys);
-                        } catch (err) {
-                            missing.push(`${sys}(create threw: ${String(err instanceof Error ? err.message : err)})`);
-                        }
-                    }
+                        }),
+                    );
+                    const missing = checks.filter((c): c is string => c !== null);
                     if (missing.length === 0) {
                         setResult('roll-weapon-attack-defined', true, `rollWeaponAttack is a function on all ${sysIds.length} systems`);
                     } else {
@@ -240,10 +240,14 @@ async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promis
                         type RollDataCtor = new () => RollDataLike;
                         // eslint-disable-next-line no-restricted-syntax -- boundary: resolveGettersForTemplate returns the untyped flattened template record
                         type ResolveFn = (instance: object) => Record<string, unknown>;
+                        // Indirect via variables so knip treats these as dynamic
+                        // (the `/systems/...` runtime URLs aren't resolvable files).
+                        const rdUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
+                        const rhUrl = '/systems/wh40k-rpg/module/rolls/roll-helpers.js';
                         // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM imports of Foundry-served modules have no static type
-                        const rdMod = (await import(/* @vite-ignore */ '/systems/wh40k-rpg/module/rolls/roll-data.js')) as Record<string, unknown>;
+                        const rdMod = (await import(/* @vite-ignore */ rdUrl)) as Record<string, unknown>;
                         // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM imports of Foundry-served modules have no static type
-                        const rhMod = (await import(/* @vite-ignore */ '/systems/wh40k-rpg/module/rolls/roll-helpers.js')) as Record<string, unknown>;
+                        const rhMod = (await import(/* @vite-ignore */ rhUrl)) as Record<string, unknown>;
                         const RollData = rdMod['RollData'] as RollDataCtor | undefined;
                         const resolveGettersForTemplate = rhMod['resolveGettersForTemplate'] as ResolveFn | undefined;
                         if (typeof RollData !== 'function' || typeof resolveGettersForTemplate !== 'function') {
@@ -296,13 +300,15 @@ async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promis
                     await probeAutoDamageGating();
                     await probeAuditRowRenders();
                 } finally {
-                    for (const fn of cleanups) {
-                        try {
-                            await fn();
-                        } catch {
-                            /* ignore */
-                        }
-                    }
+                    await Promise.all(
+                        cleanups.map(async (fn) => {
+                            try {
+                                await fn();
+                            } catch {
+                                /* ignore */
+                            }
+                        }),
+                    );
                 }
 
                 return { flows };
