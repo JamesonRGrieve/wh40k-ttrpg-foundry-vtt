@@ -112,6 +112,10 @@ export interface NormalizedOrigin {
      *  pack. World-sourced origins are surfaced in the builder with a warning
      *  marker because they are not backed by a persistent compendium source. */
     fromWorld: boolean;
+    /** Line ids whose source provenance is `raw` (official). System-agnostic;
+     *  the builder derives official / adapted-homebrew / pure-homebrew from
+     *  this against the active system. */
+    officialLines: string[];
     /** Raw system data preserved for compatibility */
     // eslint-disable-next-line no-restricted-syntax -- boundary: system holds raw Foundry compendium data with no schema; consumers cast to specific shapes they need
     system: Record<string, unknown>;
@@ -228,6 +232,27 @@ function resolvePositions(system: Record<string, unknown>): number[] {
  * Transform a raw Foundry compendium document into a NormalizedOrigin.
  * Call once per document during _loadOrigins().
  */
+const SUPPORTED_LINES = new Set(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow']);
+
+/**
+ * Lines whose `source.<line>.provenance` is `raw` (official). System-agnostic
+ * — the builder applies the active system to derive official/adapted/pure.
+ * Prefers the raw per-line `_source.system.source` map (full documents),
+ * falling back to `system.source` (compendium index entries hold the stored,
+ * un-flattened map; prepared documents collapse it to the active line, in
+ * which case no official lines are reported).
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: doc/system are raw Foundry compendium data with no schema; asRecord narrows every access below
+function collectOfficialLines(doc: Record<string, unknown>, system: Record<string, unknown>): string[] {
+    const rawSource = asRecord(asRecord(asRecord(doc['_source'])['system'])['source']);
+    const map = Object.keys(rawSource).length > 0 ? rawSource : asRecord(system['source']);
+    const lines: string[] = [];
+    for (const [line, entry] of Object.entries(map)) {
+        if (SUPPORTED_LINES.has(line) && asRecord(entry)['provenance'] === 'raw') lines.push(line);
+    }
+    return lines;
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin is the top-level entry point for raw Foundry compendium documents; asRecord and type coercion helpers validate every field access
 export function normalizeOrigin(doc: Record<string, unknown>): NormalizedOrigin {
     const system = asRecord(doc['system']);
@@ -278,6 +303,7 @@ export function normalizeOrigin(doc: Record<string, unknown>): NormalizedOrigin 
         hasChoices: grants.choices.length > 0,
         gameSystem: asString(system['gameSystem']),
         fromWorld: doc['fromWorld'] === true,
+        officialLines: collectOfficialLines(doc, system),
         system: system,
     };
 }
