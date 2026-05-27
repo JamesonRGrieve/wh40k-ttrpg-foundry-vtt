@@ -1580,13 +1580,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     _validateForceFieldRoll(): boolean {
-        const ff = this.rollData['forceField'] as { system?: { activated?: boolean; overloaded?: boolean } } | null | undefined;
-        if (ff?.system?.activated !== true) {
+        const ff = this.rollData['forceField'] as { system?: { state?: { activated?: boolean; overloaded?: boolean } } } | null | undefined;
+        if (ff?.system?.state?.activated !== true) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.ForceFieldNotActivated'));
             return false;
         }
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ff is cast as (obj | null | undefined); optional chains guard against null/absent forceField at runtime
-        if (ff?.system?.overloaded === true) {
+        if (ff?.system?.state?.overloaded === true) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.ForceFieldOverloaded'));
             return false;
         }

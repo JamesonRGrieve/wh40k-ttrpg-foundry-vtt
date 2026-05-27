@@ -53,7 +53,7 @@ export class ForceFieldData {
         // Update to overloaded if necessary
         if (this.overload) {
             this.forceField = (await this.forceField.update({
-                'system.overloaded': true,
+                'system.state.overloaded': true,
             })) as ForceFieldItem;
         }
 

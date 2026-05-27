@@ -256,8 +256,8 @@ export async function checkAndMigrateWorld() {
                 if (system.source.page === null) {
                     updateData['system.source.page'] = '';
                 }
-                if (system.source.custom === null) {
-                    updateData['system.source.custom'] = '';
+                if (typeof system.source.provenance !== 'string') {
+                    updateData['system.source.provenance'] = 'raw';
                 }
             }
 
@@ -359,8 +359,8 @@ export async function checkAndMigrateWorld() {
                     if (system.source.page === null) {
                         updateData['system.source.page'] = '';
                     }
-                    if (system.source.custom === null) {
-                        updateData['system.source.custom'] = '';
+                    if (typeof system.source.provenance !== 'string') {
+                        updateData['system.source.provenance'] = 'raw';
                     }
                 }
 

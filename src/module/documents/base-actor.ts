@@ -124,7 +124,7 @@ export class WH40KBaseActor extends Actor {
         const out: CollectedAdjuster[] = [];
         for (const item of this.items) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: subtletyAdjuster/equipped live on specific item DataModels; the mixin static type is not surfaced through SystemDataModel.mixin
-            const sys = item.system as { subtletyAdjuster?: RawSubtletyAdjuster; equipped?: boolean } | undefined;
+            const sys = item.system as { subtletyAdjuster?: RawSubtletyAdjuster; state?: { equipped?: boolean } } | undefined;
             const effect = subtletyAdjusterEffectOf(sys?.subtletyAdjuster);
             if (effect === null) continue;
             // If `requiresEquipped` is set, the carrier item must expose an
@@ -132,7 +132,7 @@ export class WH40KBaseActor extends Actor {
             // `equipped` field at all (e.g. talents) are treated as
             // always-on, so they pass this gate when the adjuster does not
             // require equipping.
-            if (effect.kind === 'passive' && effect.requiresEquipped && !('equipped' in (sys ?? {}) && sys?.equipped === true)) continue;
+            if (effect.kind === 'passive' && effect.requiresEquipped && !('equipped' in (sys?.state ?? {}) && sys?.state?.equipped === true)) continue;
             const sourceUuid = WH40KBaseActor.#compendiumSourceUuidOf(item);
             out.push({
                 sourceUuid,

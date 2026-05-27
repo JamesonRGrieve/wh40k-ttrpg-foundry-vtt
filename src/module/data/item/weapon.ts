@@ -8,7 +8,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 import AttackTemplate from '../shared/attack-template.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import EquippableTemplate from '../shared/equippable-template.ts';
+import EquippableTemplate, { type EquippableState } from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
@@ -135,9 +135,8 @@ export default class WeaponData extends ItemDataModel.mixin(
     declare craftsmanship: string;
     declare weight: number;
 
-    // Properties from EquippableTemplate
-    declare equipped: boolean;
-    declare inShipStorage: boolean;
+    // equipped / inShipStorage are runtime state — inherited via EquippableTemplate's system.state.
+    declare state: EquippableState;
 
     // Properties from DamageTemplate
     declare damage: { formula: string; type: string; bonus: number; penetration: number };
@@ -333,7 +332,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         super.prepareDerivedData();
 
         // Weapons are always equipped unless stowed in ship storage
-        this.equipped = !this.inShipStorage;
+        this.state.equipped = !this.state.inShipStorage;
 
         // Auto-derive twoHanded for heavy weapons (if not explicitly set)
         // This provides a sensible default while allowing manual override

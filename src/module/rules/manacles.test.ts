@@ -93,15 +93,28 @@ interface ManaclesItemSystem {
 interface ManaclesItemShape {
     type: string;
     name: string;
-    system: ManaclesItemSystem;
+    system: {
+        identifier?: string;
+        state?: {
+            equipped?: boolean;
+            inBackpack?: boolean;
+            inShipStorage?: boolean;
+        };
+    };
 }
 
 describe('isManaclesItemEquipped', () => {
-    const make = (overrides: ManaclesItemSystem): ManaclesItemShape => ({
-        type: 'gear',
-        name: 'Manacles',
-        system: { identifier: 'manacles', equipped: true, inBackpack: false, inShipStorage: false, ...overrides },
-    });
+    const make = (overrides: ManaclesItemSystem): ManaclesItemShape => {
+        const { identifier, ...stateOverrides } = overrides;
+        return {
+            type: 'gear',
+            name: 'Manacles',
+            system: {
+                identifier: identifier ?? 'manacles',
+                state: { equipped: true, inBackpack: false, inShipStorage: false, ...stateOverrides },
+            },
+        };
+    };
 
     it('is true when equipped and carried', () => {
         expect(isManaclesItemEquipped(make({}))).toBe(true);
@@ -151,15 +164,15 @@ function makeActor(
 
 describe('findEquippedManacles / actorHasManaclesEquipped', () => {
     it('returns the first equipped manacle item', () => {
-        const equipped = { type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: true } };
-        const stowed = { type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: false } };
+        const equipped = { type: 'gear', name: 'Manacles', system: { identifier: 'manacles', state: { equipped: true } } };
+        const stowed = { type: 'gear', name: 'Manacles', system: { identifier: 'manacles', state: { equipped: false } } };
         const actor = makeActor([stowed, equipped]);
         expect(findEquippedManacles(actor)).toBe(equipped);
         expect(actorHasManaclesEquipped(actor)).toBe(true);
     });
 
     it('returns null when no manacles are equipped', () => {
-        const actor = makeActor([{ type: 'gear', name: 'Rope', system: { identifier: 'rope', equipped: true } }]);
+        const actor = makeActor([{ type: 'gear', name: 'Rope', system: { identifier: 'rope', state: { equipped: true } } }]);
         expect(findEquippedManacles(actor)).toBeNull();
         expect(actorHasManaclesEquipped(actor)).toBe(false);
     });
@@ -251,7 +264,7 @@ describe('liftManaclesCondition', () => {
 describe('syncManaclesConditionForActor', () => {
     it('applies the AE when manacles are equipped and none is present', async () => {
         vi.mocked(createConditionEffect).mockClear();
-        const actor = makeActor([{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: true } }], []);
+        const actor = makeActor([{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', state: { equipped: true } } }], []);
         await syncManaclesConditionForActor(actor, 'Item.uuid');
         expect(createConditionEffect).toHaveBeenCalledTimes(1);
     });
@@ -260,7 +273,7 @@ describe('syncManaclesConditionForActor', () => {
         vi.mocked(createConditionEffect).mockClear();
         const deleted = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve());
         const actor = makeActor(
-            [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: false } }],
+            [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', state: { equipped: false } } }],
             [{ id: 'm', name: MANACLES_EFFECT_NAME }],
             deleted,
         );
@@ -273,7 +286,7 @@ describe('syncManaclesConditionForActor', () => {
         vi.mocked(createConditionEffect).mockClear();
         const deleted = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve());
         const actor = makeActor(
-            [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', equipped: true } }],
+            [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', state: { equipped: true } } }],
             [{ id: 'm', name: MANACLES_EFFECT_NAME }],
             deleted,
         );

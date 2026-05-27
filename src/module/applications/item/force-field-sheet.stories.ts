@@ -25,8 +25,7 @@ function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknow
         system: {
             protectionRating: 50,
             overloadChance: 5,
-            activated: true,
-            overloaded: false,
+            state: { activated: true, overloaded: false },
             statusLabel: 'Active',
             craftsmanship: 'good',
             craftsmanshipLabel: 'Good Craftsmanship',
@@ -67,8 +66,7 @@ export const Overloaded: Story = {
                 system: {
                     protectionRating: 50,
                     overloadChance: 5,
-                    activated: false,
-                    overloaded: true,
+                    state: { activated: false, overloaded: true },
                     statusLabel: 'Overloaded',
                     craftsmanship: 'good',
                     craftsmanshipLabel: 'Good Craftsmanship',

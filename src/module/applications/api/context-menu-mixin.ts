@@ -311,8 +311,8 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
             // Equip/Unequip for applicable items
             if (['weapon', 'armour', 'gear'].includes(item.type)) {
-                const system = item.system as { equipped?: boolean };
-                const equipped = system.equipped;
+                const system = item.system as { state?: { equipped?: boolean } };
+                const equipped = system.state?.equipped;
                 options.push({
                     name: equipped === true ? 'Unequip' : 'Equip',
                     icon: `<i class="fas ${equipped === true ? 'fa-times-circle' : 'fa-check-circle'}"></i>`,
@@ -321,8 +321,8 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             }
 
             // Activate/Deactivate for force fields, etc.
-            const activatableSystem = item.system as { activated?: boolean };
-            const activated = activatableSystem.activated;
+            const activatableSystem = item.system as { state?: { activated?: boolean } };
+            const activated = activatableSystem.state?.activated;
             if (activated !== undefined) {
                 options.push({
                     name: activated ? 'Deactivate' : 'Activate',
@@ -475,13 +475,13 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
         async _weaponAttack(_item: WH40KItem, _mode: string): Promise<void> {}
 
         async _toggleEquipped(item: WH40KItem): Promise<void> {
-            const sys = item.system as { equipped?: boolean };
-            await item.update({ 'system.equipped': sys.equipped !== true });
+            const sys = item.system as { state?: { equipped?: boolean } };
+            await item.update({ 'system.state.equipped': sys.state?.equipped !== true });
         }
 
         async _toggleActivated(item: WH40KItem): Promise<void> {
-            const sys = item.system as { activated?: boolean };
-            await item.update({ 'system.activated': sys.activated !== true });
+            const sys = item.system as { state?: { activated?: boolean } };
+            await item.update({ 'system.state.activated': sys.state?.activated !== true });
         }
 
         async _spendFate(_purpose: string): Promise<void> {}

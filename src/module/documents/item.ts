@@ -55,7 +55,7 @@ type SimpleD100Opts = {
 
 export class WH40KItem extends WH40KItemContainer {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 nested-container ref is opaque
-    declare system: WH40KItemSystemData & { container: unknown };
+    declare system: WH40KItemSystemData & { state: { container: unknown } };
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create return is opaque
     async toChat(): Promise<unknown> {
@@ -202,7 +202,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get equipped(): boolean {
-        return this.system.equipped === true;
+        return this.system.state.equipped === true;
     }
 
     get isMentalDisorder(): boolean {

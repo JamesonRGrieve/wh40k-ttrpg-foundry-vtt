@@ -116,7 +116,9 @@ interface WeaponLike {
     readonly name?: string | null;
     readonly id?: string | null;
     readonly system: {
-        readonly equipped?: boolean;
+        readonly state?: {
+            readonly equipped?: boolean;
+        };
         readonly craftsmanship?: string;
         readonly class?: string;
         readonly melee?: boolean;
@@ -129,7 +131,9 @@ interface ArmourLike {
     readonly name?: string | null;
     readonly id?: string | null;
     readonly system: {
-        readonly equipped?: boolean;
+        readonly state?: {
+            readonly equipped?: boolean;
+        };
         readonly craftsmanship?: string;
     };
 }
@@ -195,7 +199,7 @@ export function buildOwCraftsmanshipPanel(
         const itemName = typeof raw.name === 'string' && raw.name !== '' ? raw.name : itemId;
 
         if (raw.type === 'weapon' && isWeaponLike(raw)) {
-            if (raw.system.equipped !== true) continue;
+            if (raw.system.state?.equipped !== true) continue;
             const kind = classifyWeapon(raw);
             if (kind === null) continue;
             const tier = coerceCraftsmanship(raw.system.craftsmanship);
@@ -220,7 +224,7 @@ export function buildOwCraftsmanshipPanel(
         }
 
         if (raw.type === 'armour' && isArmourLike(raw)) {
-            if (raw.system.equipped !== true) continue;
+            if (raw.system.state?.equipped !== true) continue;
             const tier = coerceCraftsmanship(raw.system.craftsmanship);
             armours.push({
                 itemId,

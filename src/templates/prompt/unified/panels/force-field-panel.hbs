@@ -10,7 +10,7 @@
             <span class="tw-text-base tw-font-semibold tw-text-gold-raw bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{protectionRating}}</span>
         </div>
     {{/if}}
-    {{#if forceField.system.activated}}
+    {{#if forceField.system.state.activated}}
         <div class="tw-flex tw-items-center tw-gap-2 tw-py-2 tw-px-3 tw-rounded-md tw-text-sm tw-font-semibold tw-mt-2 tw-bg-[rgba(74,222,128,0.1)] tw-text-[#4ade80] tw-border tw-border-[rgba(74,222,128,0.3)]">
             <i class="fas fa-check-circle"></i>
             Activated
@@ -21,7 +21,7 @@
             Not Activated
         </div>
     {{/if}}
-    {{#if forceField.system.overloaded}}
+    {{#if forceField.system.state.overloaded}}
         <div class="tw-flex tw-items-center tw-gap-2 tw-py-2 tw-px-3 tw-rounded-md tw-text-sm tw-font-semibold tw-mt-2 tw-bg-[rgba(251,191,36,0.1)] tw-text-[#fbbf24] tw-border tw-border-[rgba(251,191,36,0.3)]">
             <i class="fas fa-exclamation-triangle"></i>
             Overloaded

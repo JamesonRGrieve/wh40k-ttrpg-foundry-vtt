@@ -128,15 +128,15 @@
 
     {{#if (eq variant "physical")}}
         {{!-- Equipped Toggle (for equippable items) --}}
-        {{#if system.equipped}}
+        {{#if system.state.equipped}}
         <div class="tw-flex tw-items-center tw-justify-end">
             <label class="tw-flex tw-cursor-pointer tw-items-center tw-gap-1.5 tw-rounded-md tw-border tw-border-[rgba(212,175,55,0.25)] tw-bg-[rgba(14,18,26,0.6)] tw-px-3 tw-py-1.5 tw-shadow-[0_10px_20px_rgba(0,0,0,0.3)] tw-transition-all hover:tw-border-[rgba(212,175,55,0.4)] hover:tw-bg-[rgba(20,24,34,0.7)]" title="{{localize 'WH40K.Weapon.ToggleEquipped'}}">
-                <input class="tw-hidden" type="checkbox" name="system.equipped" {{checked system.equipped}} />
+                <input class="tw-hidden" type="checkbox" name="system.state.equipped" {{checked system.state.equipped}} />
                 <span class="tw-text-[1.1rem] tw-text-[rgba(214,221,235,0.7)] tw-transition-colors">
-                    <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+                    <i class="fas {{#if system.state.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
                 </span>
                 <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(214,221,235,0.7)] tw-transition-colors">
-                    {{#if system.equipped}}{{localize "WH40K.Weapon.Equipped"}}{{else}}{{localize "WH40K.Weapon.Stowed"}}{{/if}}
+                    {{#if system.state.equipped}}{{localize "WH40K.Weapon.Equipped"}}{{else}}{{localize "WH40K.Weapon.Stowed"}}{{/if}}
                 </span>
             </label>
         </div>

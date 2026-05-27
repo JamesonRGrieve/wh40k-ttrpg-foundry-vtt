@@ -42,9 +42,11 @@ const DROP_ZONE_DEFAULT_LABEL = 'Drag and Drop from Compendium to Add';
 /** Subset of WH40K item.system fields touched by the drag-drop mixin. */
 interface DragDropItemSystem {
     quantity?: number;
-    equipped?: boolean;
-    inBackpack?: boolean;
-    inShipStorage?: boolean;
+    state?: {
+        equipped?: boolean;
+        inBackpack?: boolean;
+        inShipStorage?: boolean;
+    };
 }
 
 /** Drag payload data returned by TextEditor.getDragEventData. */
@@ -260,7 +262,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     <div class="ghost-details">
                         <div class="ghost-name">${item.name}</div>
                         ${quantity > 1 ? `<div class="ghost-quantity">×${quantity}</div>` : ''}
-                        ${system.equipped === true ? '<i class="fas fa-check-circle ghost-equipped"></i>' : ''}
+                        ${system.state?.equipped === true ? '<i class="fas fa-check-circle ghost-equipped"></i>' : ''}
                     </div>
                 </div>
             `;
@@ -493,29 +495,31 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 if (item.actor?.id !== this.document.id) {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: item.toObject() returns generic source data; system shape is gameSystem-specific
                     const itemData = item.toObject() as unknown as Item.CreateData & {
-                        system: { inShipStorage?: boolean; equipped?: boolean; inBackpack?: boolean };
+                        system: { state?: { inShipStorage?: boolean; equipped?: boolean; inBackpack?: boolean } };
                     };
-                    itemData.system.inShipStorage = false;
-                    itemData.system.equipped = false;
+                    itemData.system.state ??= {};
+                    itemData.system.state.inShipStorage = false;
+                    itemData.system.state.equipped = false;
                     await this.#actorDocument().createEmbeddedDocuments('Item', [itemData]);
                 } else {
-                    await item.update({ 'system.inShipStorage': false });
+                    await item.update({ 'system.state.inShipStorage': false });
                 }
             } else if (zoneType === 'ship') {
                 if (item.actor?.id !== this.document.id) {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: item.toObject() returns generic source data; system shape is gameSystem-specific
                     const itemData = item.toObject() as unknown as Item.CreateData & {
-                        system: { inShipStorage?: boolean; equipped?: boolean; inBackpack?: boolean };
+                        system: { state?: { inShipStorage?: boolean; equipped?: boolean; inBackpack?: boolean } };
                     };
-                    itemData.system.inShipStorage = true;
-                    itemData.system.equipped = false;
-                    itemData.system.inBackpack = false;
+                    itemData.system.state ??= {};
+                    itemData.system.state.inShipStorage = true;
+                    itemData.system.state.equipped = false;
+                    itemData.system.state.inBackpack = false;
                     await this.#actorDocument().createEmbeddedDocuments('Item', [itemData]);
                 } else {
                     await item.update({
-                        'system.equipped': false,
-                        'system.inBackpack': false,
-                        'system.inShipStorage': true,
+                        'system.state.equipped': false,
+                        'system.state.inBackpack': false,
+                        'system.state.inShipStorage': true,
                     });
                 }
             } else if (zoneType === 'equipment') {
@@ -548,7 +552,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 return;
             }
 
-            await item.update({ 'system.equipped': true });
+            await item.update({ 'system.state.equipped': true });
             ui.notifications.info(`Equipped ${item.name}`);
             this._animateSnapToSlot(item);
         }

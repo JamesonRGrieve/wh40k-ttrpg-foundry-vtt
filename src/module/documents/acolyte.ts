@@ -257,9 +257,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 doc.isTalent ||
                 doc.isTrait ||
                 doc.isCondition ||
-                (item.type === 'armour' && item.system.equipped === true) ||
-                (item.type === 'cybernetic' && item.system.equipped === true) ||
-                (item.type === 'gear' && item.system.equipped === true)
+                (item.type === 'armour' && item.system.state.equipped === true) ||
+                (item.type === 'cybernetic' && item.system.state.equipped === true) ||
+                (item.type === 'gear' && item.system.state.equipped === true)
             );
         });
 
@@ -411,7 +411,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     // eslint-disable-next-line @typescript-eslint/require-await -- signature returns Promise for caller compat
     async rollWeaponDamage(weapon: WH40KItem): Promise<void> {
-        if (weapon.system.equipped !== true) {
+        if (weapon.system.state.equipped !== true) {
             // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.WeaponNotEquipped localization key not yet in en.json
             ui.notifications.warn('Actor must have weapon equipped!');
             return;
@@ -480,7 +480,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         if (!item) return;
 
         if (item.type === 'weapon') {
-            if (item.system.equipped !== true) {
+            if (item.system.state.equipped !== true) {
                 // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.WeaponNotEquipped localization key not yet in en.json
                 ui.notifications.warn('Actor must have weapon equipped!');
                 return;
@@ -505,7 +505,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             return;
         }
         if (item.type === 'forceField') {
-            if (item.system.equipped !== true || item.system['activated'] !== true) {
+            if (item.system.state.equipped !== true || item.system.state.activated !== true) {
                 // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.ForceFieldNotReady localization key not yet in en.json
                 ui.notifications.warn('Actor must have force field equipped and activated!');
                 return;

@@ -16,9 +16,9 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * - Talents: Always active if item exists on actor
  * - Traits: Always active if item exists on actor
  * - Conditions: Always active if item exists on actor
- * - Armour: Active when system.equipped === true
- * - Cybernetics: Active when system.equipped === true
- * - Gear: Active when system.equipped === true
+ * - Armour: Active when system.state.equipped === true
+ * - Cybernetics: Active when system.state.equipped === true
+ * - Gear: Active when system.state.equipped === true
  *
  * MODIFIER FIELDS:
  *

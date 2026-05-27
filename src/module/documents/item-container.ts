@@ -11,8 +11,10 @@ interface NestedItemData extends Record<string, unknown> {
 
 /** System data shape expected by WH40KItemContainer for container/equipped checks. */
 interface ContainerSystemData extends Record<string, unknown> {
-    container: unknown;
-    equipped?: boolean;
+    state: {
+        container?: unknown;
+        equipped?: boolean;
+    };
     enabled?: boolean;
 }
 /* eslint-enable no-restricted-syntax */
@@ -106,7 +108,7 @@ export class WH40KItemContainer extends Item {
         // Parent is not an item -- ignore
         if (!(context['parent'] instanceof Item)) return callSuper();
         // None of the items being created are containers -- ignore
-        if (typedItems.filter((item) => item.system.container !== undefined && item.system.container !== null).length === 0) return callSuper();
+        if (typedItems.filter((item) => item.system.state.container !== undefined && item.system.state.container !== null).length === 0) return callSuper();
 
         const toCreate: Record<string, unknown>[] = [];
         for (const item of typedItems) {
@@ -133,12 +135,12 @@ export class WH40KItemContainer extends Item {
 
     hasItemByType(item: string, type: string): boolean {
         game.wh40k.log('Check for Has Nested Item', item);
-        if (this.system.container === undefined || this.system.container === null) return false;
+        if (this.system.state.container === undefined || this.system.state.container === null) return false;
         return (
             this.items.find((i) => {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: i.system is typed as Item system union; cast to ContainerSystemData is necessary to check equipped/enabled
                 const sys = i.system as unknown as ContainerSystemData;
-                return i.name === item && i.type === type && (sys.equipped === true || sys.enabled === true);
+                return i.name === item && i.type === type && (sys.state.equipped === true || sys.enabled === true);
             }) !== undefined
         );
     }
@@ -149,7 +151,7 @@ export class WH40KItemContainer extends Item {
 
     getItemByName(item: string, type: string): Item | undefined {
         game.wh40k.log('Check for item by name', item);
-        if (this.system.container === undefined || this.system.container === null) return undefined;
+        if (this.system.state.container === undefined || this.system.state.container === null) return undefined;
         return this.items.find((i) => i.name === item && i.type === type);
     }
 
@@ -219,7 +221,7 @@ export class WH40KItemContainer extends Item {
         // subclass like WH40KItem extends this class, two prototype hops land back on
         // WH40KItemContainer.prototype and recurse into this same method → stack overflow.
         (Item.prototype as { prepareEmbeddedDocuments?: () => void }).prepareEmbeddedDocuments?.call(this);
-        if (!(this instanceof Item) || this.system.container === undefined || this.system.container === null) return;
+        if (!(this instanceof Item) || this.system.state.container === undefined || this.system.state.container === null) return;
         game.wh40k.log(`ItemContainer: ${this.name}`, 'prepareEmbeddedDocuments');
         const containedItems = this.getNested();
         const oldItems = this.items;

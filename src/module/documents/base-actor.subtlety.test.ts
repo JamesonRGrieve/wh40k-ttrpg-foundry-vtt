@@ -62,7 +62,7 @@ interface SubtletySlot {
 
 interface FakeItem {
     name: string;
-    system: { subtletyAdjuster?: RawSubtletyAdjuster; equipped?: boolean };
+    system: { subtletyAdjuster?: RawSubtletyAdjuster; state?: { equipped?: boolean } };
     _stats?: { compendiumSource?: string | null };
 }
 
@@ -116,7 +116,7 @@ function adjusterItem(name: string, raw: RawSubtletyAdjuster, extra: { equipped?
         name,
         system: { subtletyAdjuster: raw },
     };
-    if (extra.equipped !== undefined) item.system.equipped = extra.equipped;
+    if (extra.equipped !== undefined) item.system.state = { equipped: extra.equipped };
     if (extra.compendiumSource !== undefined) item._stats = { compendiumSource: extra.compendiumSource };
     return item;
 }

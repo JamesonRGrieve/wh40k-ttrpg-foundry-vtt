@@ -170,7 +170,7 @@ export class TargetedActionManager {
         const weapons =
             weapon != null
                 ? [weapon]
-                : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.equipped === true) as WH40KItem[]);
+                : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.state.equipped === true) as WH40KItem[]);
         if (weapons.length === 0) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn('Actor must have an equipped weapon!');

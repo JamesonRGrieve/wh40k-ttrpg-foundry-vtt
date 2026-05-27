@@ -35,7 +35,7 @@ interface TalentSystem {
 }
 
 interface EquippableSystem {
-    equipped?: boolean;
+    state?: { equipped?: boolean };
     active?: boolean;
     modifiers?: WH40KItemModifiers;
 }
@@ -208,7 +208,9 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
             }
 
             // Collect equipped items with bonuses
-            const equipment = actor.items.filter((i) => ['weapon', 'armour', 'gear'].includes(i.type) && (i.system as EquippableSystem).equipped === true);
+            const equipment = actor.items.filter(
+                (i) => ['weapon', 'armour', 'gear'].includes(i.type) && (i.system as EquippableSystem).state?.equipped === true,
+            );
             for (const item of equipment) {
                 const system = item.system as EquippableSystem;
                 const mods = system.modifiers;

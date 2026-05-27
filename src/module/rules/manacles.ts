@@ -82,7 +82,7 @@ export const MANACLES_FLAG_KEY = 'manacles' as const;
 interface ManaclesCandidate {
     name?: string | null;
     type?: string | null;
-    system?: { identifier?: string | null; equipped?: boolean; inBackpack?: boolean; inShipStorage?: boolean } | undefined;
+    system?: { identifier?: string | null; state?: { equipped?: boolean; inBackpack?: boolean; inShipStorage?: boolean } } | undefined;
 }
 
 /**
@@ -109,9 +109,9 @@ export function isManaclesItemEquipped(item: ManaclesCandidate | null | undefine
     if (!isManaclesItem(item)) return false;
     const sys = item?.system;
     if (sys === undefined) return false;
-    if (sys.equipped !== true) return false;
-    if (sys.inBackpack === true) return false;
-    if (sys.inShipStorage === true) return false;
+    if (sys.state?.equipped !== true) return false;
+    if (sys.state?.inBackpack === true) return false;
+    if (sys.state?.inShipStorage === true) return false;
     return true;
 }
 

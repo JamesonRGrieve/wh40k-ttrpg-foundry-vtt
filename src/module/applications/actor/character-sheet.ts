@@ -552,8 +552,7 @@ type CategorizedItems = {
 
 type WeaponLike = WH40KItem & {
     system: WH40KItem['system'] & {
-        equipped: boolean;
-        activated: boolean;
+        state: { equipped: boolean; activated: boolean };
         class: string;
         type: string;
         clip: { max: number; value: number };
@@ -2442,9 +2441,9 @@ export default class CharacterSheet extends BaseActorSheet {
 
         for (const item of this.actor.items) {
             const itemType = item.type as string;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; inShipStorage is not on the typed schema yet; bracket access needs Record cast
-            const sys = item.system as Record<string, unknown>;
-            const inShip = sys['inShipStorage'] === true;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; transient flags not on the typed schema yet; bracket access needs Record cast
+            const sysState = (item.system as Record<string, unknown>)['state'] as Record<string, unknown> | undefined;
+            const inShip = sysState?.['inShipStorage'] === true;
 
             // Add all equipment to "all" for display
             if (equipmentTypes.includes(itemType)) {
@@ -2468,7 +2467,7 @@ export default class CharacterSheet extends BaseActorSheet {
             else if (itemType === 'criticalInjury' || (item as WH40KItem).isCriticalInjury) categories.criticalInjury.push(item);
 
             // Track equipped items (only non-ship items can be equipped)
-            if (sys['equipped'] === true && !inShip) categories.equipped.push(item);
+            if (sysState?.['equipped'] === true && !inShip) categories.equipped.push(item);
         }
 
         return categories;
@@ -2614,7 +2613,7 @@ export default class CharacterSheet extends BaseActorSheet {
         sheetContext.forceField =
             forceFields.find((ff) => {
                 const sys = ff.system as WeaponLike['system'];
-                return sys.equipped || sys.activated;
+                return sys.state.equipped || sys.state.activated;
             }) ?? forceFields[0];
         sheetContext.hasForceField = sheetContext.forceField !== undefined;
         sheetContext.armourDisplayLocations = this.#prepareArmourDisplayLocations(this.actor.system, categorized.armour);
@@ -6080,7 +6079,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const alreadyOwned = item.id !== null && item.id !== '' && this.actor.items.get(item.id) !== undefined;
 
         if (isOriginPath && !alreadyOwned && !WH40KSettings.isFreeformCharactersEnabled()) {
-            this._notify('warn', game.i18n.localize('WH40K.OriginPath.UseBuilderOnDrop'), { duration: 6000 });
+            this._notify('warning', game.i18n.localize('WH40K.OriginPath.UseBuilderOnDrop'), { duration: 6000 });
             return false;
         }
 

@@ -15,7 +15,7 @@ interface QuickAction {
 
 /** Narrow system fields read by QuickActionsBar across item types. */
 interface ItemSystemFlags {
-    equipped?: boolean;
+    state?: { equipped?: boolean };
     isRollable?: boolean;
     rollable?: boolean;
     consumable?: boolean;
@@ -44,7 +44,7 @@ export default class QuickActionsBar {
                 this.#createAction('reload', 'fa-solid fa-rotate-right', 'Reload', 'reloadWeapon', { itemId }),
             );
         } else if (type === 'armour') {
-            const isEquipped = system.equipped === true;
+            const isEquipped = system.state?.equipped === true;
             actions.push(
                 this.#createAction('equip', isEquipped ? 'fa-solid fa-user-check' : 'fa-solid fa-user-plus', isEquipped ? 'Unequip' : 'Equip', 'toggleEquip', {
                     itemId,

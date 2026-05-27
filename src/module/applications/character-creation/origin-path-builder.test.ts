@@ -318,6 +318,7 @@ type TestOrigin = {
     isAdvanced: boolean;
     xpCost: number;
     hasChoices: boolean;
+    fromWorld: boolean;
     gameSystem: string;
     system: TestOriginSystem;
     _sourceUuid?: string | null;
@@ -362,6 +363,7 @@ function makeOrigin(overrides: Partial<TestOrigin> = {}): TestOrigin {
         isAdvanced: false,
         xpCost: 0,
         hasChoices: false,
+        fromWorld: false,
         gameSystem: 'dh2',
         system: {
             step: 'homeWorld',

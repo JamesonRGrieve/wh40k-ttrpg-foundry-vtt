@@ -3,7 +3,7 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import { BODY_LOCATIONS, bodyLocationsSchema } from '../shared/body-locations.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import EquippableTemplate from '../shared/equippable-template.ts';
+import EquippableTemplate, { type EquippableState } from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
@@ -35,8 +35,8 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     declare craftsmanship: string;
     declare weight: number;
 
-    // Properties from EquippableTemplate
-    declare equipped: boolean;
+    // equipped is runtime state — inherited via EquippableTemplate's system.state.
+    declare state: EquippableState;
 
     /* -------------------------------------------- */
     /*  Data Migration                              */
@@ -694,7 +694,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {boolean}
      */
     get isWorn(): boolean {
-        return this.equipped;
+        return this.state.equipped;
     }
 
     /**
