@@ -4043,10 +4043,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 };
                 /* eslint-enable no-restricted-syntax */
                 if (data.system) {
-                    data.system.state ??= {};
-                    data.system.state.equipped = false;
-                    data.system.state.inBackpack = true;
-                    data.system.state.inShipStorage = false;
+                    data.system.state = { ...data.system.state, equipped: false, inBackpack: true, inShipStorage: false };
                 }
                 delete data._id;
                 return data;
@@ -4110,7 +4107,7 @@ export default class CharacterSheet extends BaseActorSheet {
             } else if (action === 'stow-gear') {
                 const gearItems = items.filter(
                     (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { state?: { inBackpack?: boolean } } }) =>
-                        (i.type === 'gear' || i.isGear) && i.system.state?.inBackpack !== true,
+                        (i.type === 'gear' || i.isGear) && i.system.state.inBackpack !== true,
                 );
                 await Promise.all(
                     gearItems.map(async (item) =>

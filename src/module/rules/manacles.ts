@@ -110,8 +110,8 @@ export function isManaclesItemEquipped(item: ManaclesCandidate | null | undefine
     const sys = item?.system;
     if (sys === undefined) return false;
     if (sys.state?.equipped !== true) return false;
-    if (sys.state?.inBackpack === true) return false;
-    if (sys.state?.inShipStorage === true) return false;
+    if (sys.state.inBackpack === true) return false;
+    if (sys.state.inShipStorage === true) return false;
     return true;
 }
 

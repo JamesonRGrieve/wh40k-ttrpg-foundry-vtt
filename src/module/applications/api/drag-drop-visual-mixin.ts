@@ -497,9 +497,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     const itemData = item.toObject() as unknown as Item.CreateData & {
                         system: { state?: { inShipStorage?: boolean; equipped?: boolean; inBackpack?: boolean } };
                     };
-                    itemData.system.state ??= {};
-                    itemData.system.state.inShipStorage = false;
-                    itemData.system.state.equipped = false;
+                    itemData.system.state = { ...itemData.system.state, inShipStorage: false, equipped: false };
                     await this.#actorDocument().createEmbeddedDocuments('Item', [itemData]);
                 } else {
                     await item.update({ 'system.state.inShipStorage': false });
@@ -510,10 +508,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     const itemData = item.toObject() as unknown as Item.CreateData & {
                         system: { state?: { inShipStorage?: boolean; equipped?: boolean; inBackpack?: boolean } };
                     };
-                    itemData.system.state ??= {};
-                    itemData.system.state.inShipStorage = true;
-                    itemData.system.state.equipped = false;
-                    itemData.system.state.inBackpack = false;
+                    itemData.system.state = { ...itemData.system.state, inShipStorage: true, equipped: false, inBackpack: false };
                     await this.#actorDocument().createEmbeddedDocuments('Item', [itemData]);
                 } else {
                     await item.update({
