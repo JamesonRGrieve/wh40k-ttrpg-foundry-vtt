@@ -95,7 +95,8 @@ export default class DescriptionTemplate extends SystemDataModel {
                 const custom = typeof src['custom'] === 'string' ? src['custom'] : '';
                 const hasBook = typeof src['book'] === 'string' && src['book'] !== '';
                 const hasPage = typeof src['page'] === 'string' && src['page'] !== '';
-                if (!hasBook && !hasPage && /homebrew/i.test(custom)) {
+                const looksHomebrew = /homebrew/i.test(custom);
+                if (!hasBook && !hasPage && looksHomebrew) {
                     src['provenance'] = 'homebrew';
                 } else {
                     src['provenance'] = 'raw';
