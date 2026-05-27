@@ -137,6 +137,7 @@ type SheetTabConfig = {
     label: string;
     group: string;
     cssClass?: string;
+    tooltip?: string;
 };
 
 /* eslint-disable no-restricted-syntax -- boundary: sheet→template payload; the types below describe untyped values passed to Handlebars, where a concrete TS shape doesn't propagate. */
@@ -960,14 +961,14 @@ export default class CharacterSheet extends BaseActorSheet {
      * @override
      */
     static TABS: SheetTabConfig[] = [
-        { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
-        { tab: 'status', label: 'WH40K.Tabs.Status', group: 'primary', cssClass: 'tab-status' },
-        { tab: 'skills', label: 'WH40K.Tabs.Statistics', group: 'primary', cssClass: 'tab-skills' },
+        { tab: 'overview', label: 'WH40K.Tabs.Overview', tooltip: 'WH40K.Tabs.Tooltip.Overview', group: 'primary', cssClass: 'tab-overview' },
+        { tab: 'status', label: 'WH40K.Tabs.Status', tooltip: 'WH40K.Tabs.Tooltip.Status', group: 'primary', cssClass: 'tab-status' },
+        { tab: 'skills', label: 'WH40K.Tabs.Statistics', tooltip: 'WH40K.Tabs.Tooltip.Skills', group: 'primary', cssClass: 'tab-skills' },
         // talents tab removed — content moved to overview and skills tabs
-        { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
-        { tab: 'equipment', label: 'WH40K.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
+        { tab: 'combat', label: 'WH40K.Tabs.Combat', tooltip: 'WH40K.Tabs.Tooltip.Combat', group: 'primary', cssClass: 'tab-combat' },
+        { tab: 'equipment', label: 'WH40K.Tabs.Equipment', tooltip: 'WH40K.Tabs.Tooltip.Equipment', group: 'primary', cssClass: 'tab-equipment' },
         // { tab: 'powers', label: 'WH40K.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
-        { tab: 'biography', label: 'WH40K.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
+        { tab: 'biography', label: 'WH40K.Tabs.Biography', tooltip: 'WH40K.Tabs.Tooltip.Biography', group: 'primary', cssClass: 'tab-biography' },
     ];
 
     /* -------------------------------------------- */
@@ -1321,6 +1322,17 @@ export default class CharacterSheet extends BaseActorSheet {
             Object.assign(context, powersData);
         }
 
+        // Loadout/combat-station data does not survive into the isolated part
+        // context, so re-prepare it for the tabs that render inventory and the
+        // combat station (mirrors the skills/powers re-prep above). Without this
+        // the Equipment tab renders an empty inventory even though the actor
+        // carries items.
+        if (partId === 'equipment' || partId === 'combat') {
+            const categorized = this._getCategorizedItems();
+            this._prepareLoadoutData(context, categorized);
+            this._prepareCombatData(context, categorized);
+        }
+
         return context;
     }
 
@@ -1462,6 +1474,7 @@ export default class CharacterSheet extends BaseActorSheet {
             ...tab,
             active: this.tabGroups[tab.group as keyof typeof this.tabGroups] === tab.tab,
             label: game.i18n.localize(tab.label),
+            tooltip: game.i18n.localize(tab.tooltip ?? tab.label),
         }));
         return context;
     }

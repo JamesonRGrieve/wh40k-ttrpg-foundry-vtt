@@ -29,7 +29,7 @@
            data-action="tab"
            data-group="{{#if group}}{{group}}{{else}}primary{{/if}}"
            data-tab="{{#if tab}}{{tab}}{{else}}{{id}}{{/if}}"
-           data-tooltip="{{label}}">
+           data-tooltip="{{#if tooltip}}{{tooltip}}{{else}}{{label}}{{/if}}" data-tooltip-direction="RIGHT">
             {{#if icon}}<span class="tw-text-[12px] tw-leading-none tw-mr-1 material-icons">{{icon}}</span>{{/if}}
             {{label}}
         </a>
@@ -39,7 +39,7 @@
        data-action="tab"
        data-group="{{#if group}}{{group}}{{else}}primary{{/if}}"
        data-tab="{{#if tab}}{{tab}}{{else}}{{id}}{{/if}}"
-       data-tooltip="{{label}}">
+       data-tooltip="{{#if tooltip}}{{tooltip}}{{else}}{{label}}{{/if}}" data-tooltip-direction="RIGHT">
         {{#if icon}}<span class="tw-text-[12px] tw-leading-none tw-mr-1 material-icons">{{icon}}</span>{{/if}}
         {{label}}
     </a>

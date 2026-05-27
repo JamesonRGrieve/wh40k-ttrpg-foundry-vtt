@@ -676,6 +676,14 @@
             }
         },
         "Tabs": {
+            "Tooltip": {
+                "Overview": "Overview — character summary and at-a-glance vitals",
+                "Status": "Status — wounds, fate, fatigue, corruption, insanity & conditions",
+                "Skills": "Statistics — characteristics, skills & aptitudes",
+                "Combat": "Combat — weapons, attacks & the combat station",
+                "Equipment": "Equipment — weapons, armour, gear & carried items",
+                "Biography": "Biography — origin, divination, background & notes"
+            },
             "Overview": "Overview",
             "Status": "Status",
             "Combat": "Combat",
