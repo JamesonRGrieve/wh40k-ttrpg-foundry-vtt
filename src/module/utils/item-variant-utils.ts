@@ -68,10 +68,35 @@ function firstDefinedVariant(value: Partial<Record<SupportedLineKey, unknown>>):
     return undefined;
 }
 
+/**
+ * Book-variant container: holds the same item attribute as published by
+ * multiple books of the SAME line (FFG re-printed items with divergent stats),
+ * keyed by book slug under `__books`, with `__canonical` naming the primary
+ * book to use at runtime. The other books' RAW data is retained on disk. This
+ * is a second variant axis nested inside (or independent of) the per-line axis.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard accepts unknown input from untyped item system data
+function isBookVariantContainer(value: unknown): value is { __books: Record<string, unknown>; __canonical?: string } {
+    return isPlainObject(value) && isPlainObject(value['__books']);
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: returns the canonical book's untyped payload from an item system book-variant container
+function resolveBookVariant(value: { __books: Record<string, unknown>; __canonical?: string }): unknown {
+    const books = value.__books;
+    const canonical = value.__canonical;
+    if (typeof canonical === 'string' && books[canonical] !== undefined && books[canonical] !== null) return books[canonical];
+    for (const book of Object.keys(books)) {
+        if (books[book] !== undefined && books[book] !== null) return books[book];
+    }
+    return undefined;
+}
+
 export function resolveLineVariant<T>(value: T, lineKey: SupportedLineKey): T {
-    if (!isLineVariantContainer(value)) return value;
-    const branch = value[lineKey] ?? firstDefinedVariant(value);
-    return (branch === undefined ? value : deepClone(branch)) as T;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: branch holds untyped variant payload (line then book) resolved from item system data
+    let branch: unknown = value;
+    if (isLineVariantContainer(value)) branch = value[lineKey] ?? firstDefinedVariant(value);
+    if (isBookVariantContainer(branch)) branch = resolveBookVariant(branch);
+    return branch === undefined || branch === value ? value : (deepClone(branch) as T);
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped Foundry item system data
@@ -85,7 +110,7 @@ export function materializeItemVariants(source: Record<string, unknown>, lineKey
             continue;
         }
 
-        if (isLineVariantContainer(rawValue)) {
+        if (isLineVariantContainer(rawValue) || isBookVariantContainer(rawValue)) {
             const resolved = resolveLineVariant(rawValue, lineKey);
             source[key] = isPlainObject(resolved) ? materializeItemVariants(resolved, lineKey, nextPath) : resolved;
             continue;
