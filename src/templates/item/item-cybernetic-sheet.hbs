@@ -37,11 +37,11 @@
 
           <div class="tw-flex tw-items-center tw-justify-end tw-shrink-0">
             <label class="tw-flex tw-items-center tw-cursor-pointer tw-gap-1" title="Toggle Equipped">
-              <input type="checkbox" name="system.equipped" {{checked system.equipped}} class="tw-sr-only" />
-              <span class="tw-text-xl tw-transition-colors {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-white/50{{/if}}">
-                <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+              <input type="checkbox" name="system.state.equipped" {{checked system.state.equipped}} class="tw-sr-only" />
+              <span class="tw-text-xl tw-transition-colors {{#if system.state.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-white/50{{/if}}">
+                <i class="fas {{#if system.state.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
               </span>
-              <span class="tw-text-xs {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.equipped}}Installed{{else}}Uninstalled{{/if}}</span>
+              <span class="tw-text-xs {{#if system.state.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.state.equipped}}Installed{{else}}Uninstalled{{/if}}</span>
             </label>
           </div>
         </div>
@@ -619,7 +619,7 @@
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Custom Reference</label>
-                <input type="text" name="system.source.custom" value="{{source.source.custom}}" 
+                <input type="text" name="system.source.url" value="{{source.source.url}}"
                        class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Optional: Custom source text overrides book/page" />
               </div>
             </div>

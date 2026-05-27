@@ -37,7 +37,7 @@ function makeCtx(overrides: Partial<ContainerCtx> = {}): ContainerCtx {
         id,
         name: "Rogue Trader's Chest",
         type: 'gear',
-        system: { container: true, description: { value: '<p>A battered iron-bound chest.</p>' } },
+        system: { state: { container: true }, description: { value: '<p>A battered iron-bound chest.</p>' } },
     });
     return {
         item,

@@ -35,10 +35,10 @@ export default class ContainerItemSheet extends BaseItemSheet {
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel extends with container-specific fields not in the base schema
-        const sys = this.item.system as unknown as { container?: boolean };
+        const sys = this.item.system as unknown as { state?: { container?: boolean } };
 
         // Add nested items if this is a container
-        if (sys.container === true) {
+        if (sys.state?.container === true) {
             context['nestedItems'] = this.item.items.contents;
             context['isContainer'] = true;
         }
@@ -57,8 +57,8 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
         // Set up drag-drop for container items
         // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel extends with container-specific fields not in the base schema
-        const sys = this.item.system as unknown as { container?: boolean };
-        if (this.isEditable && sys.container === true) {
+        const sys = this.item.system as unknown as { state?: { container?: boolean } };
+        if (this.isEditable && sys.state?.container === true) {
             this._setupContainerDragDrop();
         }
     }

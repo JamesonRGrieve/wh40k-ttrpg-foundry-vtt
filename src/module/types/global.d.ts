@@ -292,7 +292,14 @@ export type WH40KActorSystemData = ActorDataModel & {
 };
 
 export type WH40KItemSystemData = ItemDataModel & {
-    equipped?: boolean;
+    state?: {
+        equipped?: boolean;
+        inBackpack?: boolean;
+        inShipStorage?: boolean;
+        container?: string | null;
+        activated?: boolean;
+        overloaded?: boolean;
+    };
     quantity?: number;
     reload?: string;
     class?: string;
@@ -307,7 +314,6 @@ export type WH40KItemSystemData = ItemDataModel & {
     range?: number | string;
     rateOfFire?: { single: number; semi: number; full: number } | string;
     clip?: { value: number; max: number; type?: string };
-    container?: string | null;
     attackType?: string;
     detection?: number;
     detectionBonus?: number;

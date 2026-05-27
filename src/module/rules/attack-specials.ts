@@ -30,7 +30,7 @@ export function updateAttackSpecials(rollData: AttackSpecialSourceRollData): voi
     if (!actionItem) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is untyped in WH40KItemDocument; cast to structural type for attack-special access
     for (const i of actionItem.items as unknown as AttackSpecialCarrier[]) {
-        if (i.isAttackSpecial && (i.system.equipped === true || i.system.enabled === true)) {
+        if (i.isAttackSpecial && (i.system.state.equipped === true || i.system.enabled === true)) {
             const entry: AttackSpecialLike = { name: i.name };
             if (i.system.level !== undefined) entry.level = i.system.level;
             mutableRollData.attackSpecials.push(entry);

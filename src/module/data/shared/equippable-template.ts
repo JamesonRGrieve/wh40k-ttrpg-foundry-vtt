@@ -1,5 +1,15 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
 
+/** Shared transient runtime state shape for equippable items (system.state). */
+export interface EquippableState {
+    equipped: boolean;
+    inBackpack: boolean;
+    inShipStorage: boolean;
+    container: string;
+    activated: boolean;
+    overloaded: boolean;
+}
+
 interface UpdatableActor {
     updateEmbeddedDocuments?: (type: string, updates: object[], options: object) => Promise<object>;
 }
@@ -15,20 +25,25 @@ interface UpdatableItem {
  * @mixin
  */
 export default class EquippableTemplate extends SystemDataModel {
-    // Typed property declarations matching defineSchema()
-    declare equipped: boolean;
-    declare inBackpack: boolean;
-    declare inShipStorage: boolean;
-    declare container: string;
+    // Transient runtime state — shared (never variantized), namespaced
+    // under system.state (see src/packs/CLAUDE.md "Stateful Fields Live
+    // Under system.state"). activated/overloaded live here too so the one
+    // state container covers force-field runtime state without fragile
+    // per-mixin SchemaField merging.
+    declare state: EquippableState;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
-            equipped: new fields.BooleanField({ required: true, initial: false }),
-            inBackpack: new fields.BooleanField({ required: true, initial: false }),
-            inShipStorage: new fields.BooleanField({ required: true, initial: false }),
-            container: new fields.StringField({ required: false, blank: true }),
+            state: new fields.SchemaField({
+                equipped: new fields.BooleanField({ required: true, initial: false }),
+                inBackpack: new fields.BooleanField({ required: true, initial: false }),
+                inShipStorage: new fields.BooleanField({ required: true, initial: false }),
+                container: new fields.StringField({ required: false, blank: true, initial: '' }),
+                activated: new fields.BooleanField({ required: true, initial: false }),
+                overloaded: new fields.BooleanField({ required: true, initial: false }),
+            }),
         };
     }
 
@@ -44,16 +59,19 @@ export default class EquippableTemplate extends SystemDataModel {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
-        // Ensure boolean fields are proper booleans
-        if (source['equipped'] !== undefined && typeof source['equipped'] !== 'boolean') {
-            source['equipped'] = Boolean(source['equipped']);
+        // Relocate legacy flat state fields into system.state, then coerce
+        // booleans. Idempotent: already-nested data passes through.
+        const stateKeys = ['equipped', 'inBackpack', 'inShipStorage', 'container', 'activated', 'overloaded'] as const;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: state holds raw relocated values before schema validation
+        const state = (source['state'] !== null && typeof source['state'] === 'object' ? source['state'] : {}) as Record<string, unknown>;
+        for (const key of stateKeys) {
+            if (source[key] !== undefined && state[key] === undefined) state[key] = source[key];
+            delete source[key];
         }
-        if (source['inBackpack'] !== undefined && typeof source['inBackpack'] !== 'boolean') {
-            source['inBackpack'] = Boolean(source['inBackpack']);
+        for (const key of ['equipped', 'inBackpack', 'inShipStorage', 'activated', 'overloaded'] as const) {
+            if (state[key] !== undefined && typeof state[key] !== 'boolean') state[key] = Boolean(state[key]);
         }
-        if (source['inShipStorage'] !== undefined && typeof source['inShipStorage'] !== 'boolean') {
-            source['inShipStorage'] = Boolean(source['inShipStorage']);
-        }
+        source['state'] = state;
     }
 
     /* -------------------------------------------- */
@@ -78,7 +96,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @type {boolean}
      */
     get isCarried(): boolean {
-        return !this.container && !this.inBackpack && !this.inShipStorage;
+        return !this.state.container && !this.state.inBackpack && !this.state.inShipStorage;
     }
 
     /* -------------------------------------------- */
@@ -88,7 +106,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @type {boolean}
      */
     get isInShipStorage(): boolean {
-        return this.inShipStorage;
+        return this.state.inShipStorage;
     }
 
     /* -------------------------------------------- */
@@ -138,7 +156,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @returns {Promise<Item>}
      */
     toggleEquipped(): Promise<object> | undefined {
-        return this._applyForcedSystemUpdate({ equipped: !this.equipped });
+        return this._applyForcedSystemUpdate({ 'state.equipped': !this.state.equipped });
     }
 
     /* -------------------------------------------- */
@@ -149,8 +167,8 @@ export default class EquippableTemplate extends SystemDataModel {
      */
     stowInBackpack(): Promise<object> | undefined {
         return this._applyForcedSystemUpdate({
-            equipped: false,
-            inBackpack: true,
+            'state.equipped': false,
+            'state.inBackpack': true,
         });
     }
 
@@ -161,7 +179,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @returns {Promise<Item>}
      */
     removeFromBackpack(): Promise<object> | undefined {
-        return this._applyForcedSystemUpdate({ inBackpack: false });
+        return this._applyForcedSystemUpdate({ 'state.inBackpack': false });
     }
 
     /* -------------------------------------------- */
@@ -172,9 +190,9 @@ export default class EquippableTemplate extends SystemDataModel {
      */
     stowInShipStorage(): Promise<object> | undefined {
         return this._applyForcedSystemUpdate({
-            equipped: false,
-            inBackpack: false,
-            inShipStorage: true,
+            'state.equipped': false,
+            'state.inBackpack': false,
+            'state.inShipStorage': true,
         });
     }
 
@@ -185,6 +203,6 @@ export default class EquippableTemplate extends SystemDataModel {
      * @returns {Promise<Item>}
      */
     removeFromShipStorage(): Promise<object> | undefined {
-        return this._applyForcedSystemUpdate({ inShipStorage: false });
+        return this._applyForcedSystemUpdate({ 'state.inShipStorage': false });
     }
 }

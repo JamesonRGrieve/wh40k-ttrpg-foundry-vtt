@@ -283,11 +283,11 @@
                             <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)]">
                                 <span class="tw-font-semibold">{{forceField.name}}</span>
                                 <span class="tw-text-[color:var(--color-text-secondary)] tw-text-[var(--wh40k-font-size-sm)]">({{forceField.system.protectionRating}})</span>
-                                {{#if forceField.system.overloaded}}
+                                {{#if forceField.system.state.overloaded}}
                                     <span class="tw-ml-auto tw-text-[var(--wh40k-font-size-xs)] tw-font-bold tw-uppercase tw-text-[color:var(--wh40k-accent-combat)]">OVERLOADED</span>
                                 {{else}}
-                                    <span class="tw-ml-auto tw-text-[var(--wh40k-font-size-xs)] tw-font-bold tw-uppercase {{#if forceField.system.activated}}tw-text-[color:var(--wh40k-color-success)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
-                                        {{#if forceField.system.activated}}ACTIVE{{else}}OFF{{/if}}
+                                    <span class="tw-ml-auto tw-text-[var(--wh40k-font-size-xs)] tw-font-bold tw-uppercase {{#if forceField.system.state.activated}}tw-text-[color:var(--wh40k-color-success)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
+                                        {{#if forceField.system.state.activated}}ACTIVE{{else}}OFF{{/if}}
                                     </span>
                                 {{/if}}
                             </div>
@@ -311,9 +311,9 @@
                         </div>
                         {{#each actor.items as |item|}}
                         {{#if item.isWeapon}}
-                        <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit {{#if item.system.equipped}}tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
+                        <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit {{#if item.system.state.equipped}}tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
                             <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
-                                {{#if item.system.equipped}}<i class="fas fa-check-circle tw-text-[color:var(--wh40k-color-success)] tw-mr-[var(--wh40k-space-xs)] tw-text-[0.8em]"></i>{{/if}}
+                                {{#if item.system.state.equipped}}<i class="fas fa-check-circle tw-text-[color:var(--wh40k-color-success)] tw-mr-[var(--wh40k-space-xs)] tw-text-[0.8em]"></i>{{/if}}
                                 {{item.name}}
                             </span>
                             <span class="tw-text-sm tw-text-center tw-min-w-12">{{item.system.damageLabel}}</span>

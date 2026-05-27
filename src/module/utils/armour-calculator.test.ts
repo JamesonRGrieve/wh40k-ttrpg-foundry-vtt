@@ -16,7 +16,7 @@ import { computeArmour } from './armour-calculator';
 
 interface ItemSystemLike {
     level?: number;
-    equipped?: boolean;
+    state?: { equipped?: boolean };
     craftsmanship?: string;
     armourPoints?: Record<string, number>;
 }
@@ -42,7 +42,7 @@ function makeWornArmourItem(name: string, ap: number): ItemLike {
         type: 'armour',
         name,
         system: {
-            equipped: true,
+            state: { equipped: true },
             craftsmanship: 'common',
             armourPoints: {
                 body: ap,

@@ -13,8 +13,8 @@
 
             {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Character"  value=this.actor.name}}
             {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Quality"    value=this.forceField.system.protectionRating}}
-            {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Activated"  value=this.forceField.system.activated}}
-            {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Overloaded" value=this.forceField.system.overloaded last=true}}
+            {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Activated"  value=this.forceField.system.state.activated}}
+            {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Overloaded" value=this.forceField.system.state.overloaded last=true}}
         {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
 
         {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Protection" marginClass=""}}

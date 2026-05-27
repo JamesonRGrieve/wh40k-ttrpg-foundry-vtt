@@ -101,7 +101,7 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
     // Add cybernetic armour (cumulative)
     actor.items
         .filter((item: WH40KItem) => item.type === 'cybernetic')
-        .filter((item: WH40KItem) => (item.system as { equipped?: boolean }).equipped === true)
+        .filter((item: WH40KItem) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true)
         .filter((item: WH40KItem) => (item.system as { hasArmourPoints?: boolean }).hasArmourPoints === true)
         .forEach((cybernetic: WH40KItem) => {
             const armourPoints = getArmourPointsObject(cybernetic.system as ArmourSystemLike);
@@ -121,7 +121,7 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
 
     const equippedArmour = actor.items
         .filter((item: WH40KItem) => item.type === 'armour')
-        .filter((item: WH40KItem) => (item.system as { equipped?: boolean }).equipped === true);
+        .filter((item: WH40KItem) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true);
 
     for (const armourItem of equippedArmour) {
         // Check for Good craftsmanship armour

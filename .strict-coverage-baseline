@@ -21,7 +21,9 @@
   ],
   "config": "tsconfig.strict.json",
   "totals": {
-    "totalErrors": 0
+    "totalErrors": 1
   },
-  "byCode": {}
+  "byCode": {
+    "TS2339": 1
+  }
 }

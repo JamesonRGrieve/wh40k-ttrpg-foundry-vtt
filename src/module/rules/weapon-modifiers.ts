@@ -26,7 +26,6 @@ type WeaponModifierItem = WH40KItemDocument & {
     level?: unknown;
     system: WH40KItemDocument['system'] & {
         enabled?: boolean;
-        equipped?: boolean;
     };
 };
 
@@ -114,7 +113,7 @@ export function updateWeaponModifiers(rollData: WeaponModifierListRollData): voi
     if (!actionItem) return;
 
     for (const i of getModifierItems(actionItem)) {
-        if (i.isWeaponModification && (i.system.equipped === true || i.system.enabled === true)) {
+        if (i.isWeaponModification && (i.system.state.equipped === true || i.system.enabled === true)) {
             rollData.weaponModifications.push({
                 name: i.name,
                 level: i.level,
@@ -129,7 +128,7 @@ export function calculateWeaponModifiersDamageBonuses(actionData: WeaponModifier
 
     for (const item of getModifierItems(actionItem)) {
         game.wh40k.log('calculateWeaponModifiersDamageBonuses', item);
-        if (item.system.equipped !== true) continue;
+        if (item.system.state.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: MOD_EFFECTS[item.name] may be undefined at runtime
@@ -146,7 +145,7 @@ export function calculateWeaponModifiersPenetrationBonuses(actionData: WeaponMod
 
     for (const item of getModifierItems(actionItem)) {
         game.wh40k.log('calculateWeaponModifiersPenetrationBonuses', item);
-        if (item.system.equipped !== true) continue;
+        if (item.system.state.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: MOD_EFFECTS[item.name] may be undefined at runtime
@@ -163,7 +162,7 @@ export function calculateWeaponModifiersAttackSpecials(rollData: WeaponModifierB
 
     for (const item of getModifierItems(actionItem)) {
         game.wh40k.log('calculateWeaponModifiersAttackSpecials', item);
-        if (item.system.equipped !== true) continue;
+        if (item.system.state.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: MOD_EFFECTS[item.name] may be undefined at runtime
@@ -185,7 +184,7 @@ export function calculateWeaponModifiersAttackBonuses(rollData: WeaponModifierBo
 
     for (const item of getModifierItems(actionItem)) {
         game.wh40k.log('calculateWeaponModifiers', item);
-        if (item.system.equipped !== true) continue;
+        if (item.system.state.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: MOD_EFFECTS[item.name] may be undefined at runtime

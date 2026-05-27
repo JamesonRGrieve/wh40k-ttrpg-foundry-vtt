@@ -43,15 +43,15 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
     // Filter out storage location items and ship-stowed items
     const carriedItems = actor.items.filter((item) => {
         if (item.isStorageLocation) return false;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
-        if ((item.system as Record<string, unknown> | undefined)?.['inShipStorage'] === true) return false;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is untyped Foundry data
+        if (((item.system as Record<string, unknown> | undefined)?.['state'] as Record<string, unknown> | undefined)?.['inShipStorage'] === true) return false;
         return true;
     });
 
     if (backpack?.hasBackpack === true) {
         for (const item of carriedItems) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
-            if ((item.system as Record<string, unknown> | undefined)?.['inBackpack'] === true) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is untyped Foundry data
+            if (((item.system as Record<string, unknown> | undefined)?.['state'] as Record<string, unknown> | undefined)?.['inBackpack'] === true) {
                 backpackWeight += item.totalWeight;
             } else {
                 currentWeight += item.totalWeight;

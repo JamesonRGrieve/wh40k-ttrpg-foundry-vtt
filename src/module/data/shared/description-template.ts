@@ -8,7 +8,7 @@ import SystemDataModel from '../abstract/system-data-model.ts';
 export default class DescriptionTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
     declare description: { value: string; chat: string; summary: string };
-    declare source: { book: string; page: string; custom: string };
+    declare source: { provenance: string; book: string; page: string; url: string; derivedFrom: string };
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -19,10 +19,16 @@ export default class DescriptionTemplate extends SystemDataModel {
                 chat: new fields.HTMLField({ required: false, initial: '' }),
                 summary: new fields.StringField({ required: false, blank: true, initial: '' }),
             }),
+            // Per-line structured provenance (see src/packs/CLAUDE.md
+            // "Source & Provenance"). On disk this is authored as a per-line
+            // variant container; #flattenLineVariants collapses it to the
+            // active line's entry — this shape — before validation.
             source: new fields.SchemaField({
+                provenance: new fields.StringField({ required: false, blank: true, initial: 'raw' }),
                 book: new fields.StringField({ required: false, blank: true, initial: '' }),
                 page: new fields.StringField({ required: false, blank: true, initial: '' }),
-                custom: new fields.StringField({ required: false, blank: true, initial: '' }),
+                url: new fields.StringField({ required: false, blank: true, initial: '' }),
+                derivedFrom: new fields.StringField({ required: false, blank: true, initial: '' }),
             }),
         };
     }
@@ -75,22 +81,36 @@ export default class DescriptionTemplate extends SystemDataModel {
     // eslint-disable-next-line no-restricted-syntax -- boundary: receives raw Foundry document data before schema validation
     static #migrateSource(source: Record<string, unknown>): void {
         if (typeof source['source'] === 'string') {
-            source['source'] = {
-                book: '',
-                page: '',
-                custom: source['source'],
-            };
+            const raw = source['source'];
+            source['source'] = /homebrew/i.test(raw)
+                ? { provenance: 'homebrew', book: '', page: '', url: '', derivedFrom: '' }
+                : { provenance: 'raw', book: raw, page: '', url: '', derivedFrom: '' };
         }
         if (isLineVariantContainer(source['source'])) return;
         if (source['source'] !== null && source['source'] !== undefined && typeof source['source'] === 'object') {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: sub-field is raw Foundry stored data of unknown shape; ??= permitted in _migrateData to fill missing fields in stored data
+            // eslint-disable-next-line no-restricted-syntax -- boundary: sub-field is raw Foundry stored data of unknown shape
             const src = source['source'] as Record<string, unknown>;
-            // eslint-disable-next-line no-restricted-syntax -- ??= is permitted here: this IS the migrateData method setting schema defaults for legacy stored data
+            // Map legacy {book,page,custom} → structured provenance.
+            if (src['provenance'] === undefined) {
+                const custom = typeof src['custom'] === 'string' ? src['custom'] : '';
+                const hasBook = typeof src['book'] === 'string' && src['book'] !== '';
+                const hasPage = typeof src['page'] === 'string' && src['page'] !== '';
+                if (!hasBook && !hasPage && /homebrew/i.test(custom)) {
+                    src['provenance'] = 'homebrew';
+                } else {
+                    src['provenance'] = 'raw';
+                    if (!hasBook && custom !== '') src['book'] = custom;
+                }
+            }
+            // eslint-disable-next-line no-restricted-syntax -- ??= sets schema defaults for legacy stored data in _migrateData
             src['book'] ??= '';
-            // eslint-disable-next-line no-restricted-syntax -- ??= is permitted here: this IS the migrateData method setting schema defaults for legacy stored data
+            // eslint-disable-next-line no-restricted-syntax -- ??= sets schema defaults for legacy stored data in _migrateData
             src['page'] ??= '';
-            // eslint-disable-next-line no-restricted-syntax -- ??= is permitted here: this IS the migrateData method setting schema defaults for legacy stored data
-            src['custom'] ??= '';
+            // eslint-disable-next-line no-restricted-syntax -- ??= sets schema defaults for legacy stored data in _migrateData
+            src['url'] ??= '';
+            // eslint-disable-next-line no-restricted-syntax -- ??= sets schema defaults for legacy stored data in _migrateData
+            src['derivedFrom'] ??= '';
+            delete src['custom'];
         }
     }
 
@@ -104,9 +124,11 @@ export default class DescriptionTemplate extends SystemDataModel {
 
     static #emptySource(): Record<string, string> {
         return {
+            provenance: 'raw',
             book: '',
             page: '',
-            custom: '',
+            url: '',
+            derivedFrom: '',
         };
     }
 
@@ -153,10 +175,10 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @type {string}
      */
     get sourceReference(): string {
-        const { book, page, custom } = this.source;
-        if (custom) return custom;
+        const { book, page, url } = this.source;
         if (book && page) return `${book}, p.${page}`;
         if (book) return book;
+        if (url) return url;
         return '';
     }
 

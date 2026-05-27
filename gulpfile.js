@@ -14,6 +14,7 @@ const path = require("path");
 const zip = require("gulp-zip");
 const { ClassicLevel } = require("classic-level");
 const { exec } = require("child_process");
+const { validatePackSources } = require("./src/packs/validate-schema.cjs");
 
 const util = require('util');
 if (!util.isDate) {
@@ -93,6 +94,14 @@ function detectCollectionType(folder) {
  * V13 uses folder-based LevelDB databases instead of .db files.
  */
 async function compilePacks() {
+  // Warn-only canonical schema validation (never fails the build). The
+  // grouped deviation summary doubles as the migration worklist.
+  try {
+    validatePackSources({ rootDir: path.resolve(__dirname, PACK_SRC) });
+  } catch (err) {
+    console.warn(`pack schema validation skipped: ${err.message}`);
+  }
+
   // Collect all pack directories: src/packs/{group}/{pack-name}/_source
   const packEntries = [];
   for (const group of fs.readdirSync(PACK_SRC)) {
