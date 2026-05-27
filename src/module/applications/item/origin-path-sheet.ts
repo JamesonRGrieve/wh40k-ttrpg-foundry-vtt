@@ -10,6 +10,27 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Sheet for origin path items
  * @extends BaseItemSheet
  */
+/** The grant arrays on an origin path that the sheet can edit row-by-row. */
+type EditableGrantKey = 'skills' | 'talents' | 'traits' | 'equipment';
+
+/** Narrow view of the origin-path system data the sheet mutates. */
+interface OriginGrantsView {
+    grants: {
+        skills: unknown[];
+        talents: unknown[];
+        traits: unknown[];
+        equipment: unknown[];
+    };
+}
+
+/** Default row inserted when adding a new grant of each kind. */
+const GRANT_ROW_DEFAULTS: Record<EditableGrantKey, () => Record<string, unknown>> = {
+    skills: () => ({ name: '', specialization: '', level: 'trained' }),
+    talents: () => ({ name: '', specialization: '', uuid: '' }),
+    traits: () => ({ name: '', level: null, uuid: '' }),
+    equipment: () => ({ name: '', quantity: 1, uuid: '' }),
+};
+
 // @ts-expect-error - TS2417 static side inheritance
 export default class OriginPathSheet extends BaseItemSheet {
     /** @override */
@@ -22,6 +43,10 @@ export default class OriginPathSheet extends BaseItemSheet {
         window: {
             resizable: true,
             icon: 'fa-solid fa-route',
+        },
+        actions: {
+            addGrant: OriginPathSheet.#addGrant,
+            removeGrant: OriginPathSheet.#removeGrant,
         },
     };
 
@@ -203,5 +228,39 @@ export default class OriginPathSheet extends BaseItemSheet {
         const key = step.charAt(0).toUpperCase() + step.slice(1);
         const localizationKey = `WH40K.OriginPath.${key}`;
         return game.i18n.has(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] ?? step;
+    }
+
+    /* -------------------------------------------- */
+    /*  Grant Editing                               */
+    /* -------------------------------------------- */
+
+    /** Coerce a `data-grant` attribute into a known editable grant key. */
+    static #resolveGrantKey(value: string | undefined): EditableGrantKey | null {
+        return value === 'skills' || value === 'talents' || value === 'traits' || value === 'equipment' ? value : null;
+    }
+
+    /** Read, mutate, and persist one grant array. */
+    async #updateGrantArray(grant: EditableGrantKey, mutate: (list: unknown[]) => void): Promise<void> {
+        const view = this.document.system as unknown as OriginGrantsView;
+        const list = foundry.utils.deepClone(view.grants[grant]) as unknown[];
+        mutate(list);
+        await this.document.update({ [`system.grants.${grant}`]: list });
+    }
+
+    /** Append an empty row to a grant list (skills, talents, traits, equipment). */
+    static async #addGrant(this: OriginPathSheet, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const grant = OriginPathSheet.#resolveGrantKey(target.dataset['grant']);
+        if (grant === null) return;
+        await this.#updateGrantArray(grant, (list) => list.push(GRANT_ROW_DEFAULTS[grant]()));
+    }
+
+    /** Remove the row at `data-index` from a grant list. */
+    static async #removeGrant(this: OriginPathSheet, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const grant = OriginPathSheet.#resolveGrantKey(target.dataset['grant']);
+        const index = Number.parseInt(target.dataset['index'] ?? '', 10);
+        if (grant === null || Number.isNaN(index)) return;
+        await this.#updateGrantArray(grant, (list) => list.splice(index, 1));
     }
 }

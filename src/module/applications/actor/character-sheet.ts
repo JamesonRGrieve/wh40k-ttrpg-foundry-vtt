@@ -2629,14 +2629,14 @@ export default class CharacterSheet extends BaseActorSheet {
         sheetContext.armourDisplay = armourDisplayMap;
 
         // Weapon slots - categorize by class and equipped status
-        const equippedWeapons = weapons.filter((w) => w.system.equipped);
+        const equippedWeapons = weapons.filter((w) => w.system.state.equipped);
         sheetContext.equippedWeapons = equippedWeapons;
         const rangedWeapons = equippedWeapons.filter((w) => w.system.class !== 'Melee');
         const meleeWeapons = equippedWeapons.filter((w) => w.system.class === 'Melee');
 
         // Primary weapon
         sheetContext.primaryWeapon =
-            rangedWeapons.length > 0 ? rangedWeapons[0] : meleeWeapons.length > 0 ? meleeWeapons[0] : weapons.find((w) => w.system.equipped);
+            rangedWeapons.length > 0 ? rangedWeapons[0] : meleeWeapons.length > 0 ? meleeWeapons[0] : weapons.find((w) => w.system.state.equipped);
 
         // Secondary weapon
         if (sheetContext.primaryWeapon !== undefined) {
@@ -3825,8 +3825,8 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; equipped not on base type; bracket access needs Record cast
-        await item.update({ 'system.equipped': (item.system as Record<string, unknown>)['equipped'] !== true });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; equipped not on base type; bracket access needs Record cast
+        await item.update({ 'system.state.equipped': ((item.system as Record<string, unknown>)['state'] as Record<string, unknown>)['equipped'] !== true });
     }
 
     /* -------------------------------------------- */
@@ -3842,9 +3842,9 @@ export default class CharacterSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({
-            'system.equipped': false,
-            'system.inBackpack': true,
-            'system.inShipStorage': false,
+            'system.state.equipped': false,
+            'system.state.inBackpack': true,
+            'system.state.inShipStorage': false,
         });
     }
 
@@ -3860,7 +3860,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.inBackpack': false });
+        await item.update({ 'system.state.inBackpack': false });
     }
 
     /* -------------------------------------------- */
@@ -3876,9 +3876,9 @@ export default class CharacterSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({
-            'system.equipped': false,
-            'system.inBackpack': false,
-            'system.inShipStorage': true,
+            'system.state.equipped': false,
+            'system.state.inBackpack': false,
+            'system.state.inShipStorage': true,
         });
     }
 
@@ -3894,7 +3894,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.inShipStorage': false });
+        await item.update({ 'system.state.inShipStorage': false });
     }
 
     /* -------------------------------------------- */
@@ -3944,9 +3944,9 @@ export default class CharacterSheet extends BaseActorSheet {
 
             transferOperations.push(
                 item.update({
-                    'system.equipped': false,
-                    'system.inBackpack': false,
-                    'system.inShipStorage': true,
+                    'system.state.equipped': false,
+                    'system.state.inBackpack': false,
+                    'system.state.inShipStorage': true,
                 }),
             );
         });
@@ -3970,7 +3970,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             transferOperations.push(
                 item.update({
-                    'system.inShipStorage': false,
+                    'system.state.inShipStorage': false,
                 }),
             );
         });
@@ -4039,14 +4039,15 @@ export default class CharacterSheet extends BaseActorSheet {
             .map((item) => {
                 /* eslint-disable no-restricted-syntax -- boundary: item.toObject() returns Foundry document data with no typed shape; cast to access system fields for transfer */
                 const data = (item as WH40KItem).toObject() as Record<string, unknown> & {
-                    system?: Record<string, unknown> & { equipped?: unknown; inBackpack?: unknown; inShipStorage?: unknown };
+                    system?: Record<string, unknown> & { state?: { equipped?: unknown; inBackpack?: unknown; inShipStorage?: unknown } };
                     _id?: string;
                 };
                 /* eslint-enable no-restricted-syntax */
                 if (data.system) {
-                    data.system.equipped = false;
-                    data.system.inBackpack = true;
-                    data.system.inShipStorage = false;
+                    data.system.state ??= {};
+                    data.system.state.equipped = false;
+                    data.system.state.inBackpack = true;
+                    data.system.state.inShipStorage = false;
                 }
                 delete data._id;
                 return data;
@@ -4072,8 +4073,8 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; activated not on base type; bracket access needs Record cast
-        await item.update({ 'system.activated': (item.system as Record<string, unknown>)['activated'] !== true });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; activated not on base type; bracket access needs Record cast
+        await item.update({ 'system.state.activated': ((item.system as Record<string, unknown>)['state'] as Record<string, unknown>)['activated'] !== true });
     }
 
     /* -------------------------------------------- */
@@ -4094,29 +4095,29 @@ export default class CharacterSheet extends BaseActorSheet {
                 // no-op
             } else if (action === 'equip-armour') {
                 const armourItems = items.filter((i: WH40KItem & { isArmour?: boolean }) => i.type === 'armour' || i.isArmour);
-                const toEquip = armourItems.filter((item) => item.system.equipped !== true);
-                await Promise.all(toEquip.map(async (item) => item.update({ 'system.equipped': true })));
+                const toEquip = armourItems.filter((item) => item.system.state.equipped !== true);
+                await Promise.all(toEquip.map(async (item) => item.update({ 'system.state.equipped': true })));
                 count = toEquip.length;
                 this._notify('info', `Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
                     duration: 3000,
                 });
             } else if (action === 'unequip-all') {
-                const equippedItems = items.filter((i: WH40KItem) => (i.system as { equipped?: boolean }).equipped === true);
-                await Promise.all(equippedItems.map(async (item) => item.update({ 'system.equipped': false })));
+                const equippedItems = items.filter((i: WH40KItem) => (i.system as { state?: { equipped?: boolean } }).state?.equipped === true);
+                await Promise.all(equippedItems.map(async (item) => item.update({ 'system.state.equipped': false })));
                 count = equippedItems.length;
                 this._notify('info', `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
                     duration: 3000,
                 });
             } else if (action === 'stow-gear') {
                 const gearItems = items.filter(
-                    (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { inBackpack?: boolean } }) =>
-                        (i.type === 'gear' || i.isGear) && i.system.inBackpack !== true,
+                    (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { state?: { inBackpack?: boolean } } }) =>
+                        (i.type === 'gear' || i.isGear) && i.system.state?.inBackpack !== true,
                 );
                 await Promise.all(
                     gearItems.map(async (item) =>
                         item.update({
-                            'system.inBackpack': true,
-                            'system.equipped': false,
+                            'system.state.inBackpack': true,
+                            'system.state.equipped': false,
                         }),
                     ),
                 );
@@ -6070,11 +6071,20 @@ export default class CharacterSheet extends BaseActorSheet {
             return false;
         }
 
-        const result = await super._onDropItem(event, item);
-
-        // If dropped item is an origin path (trait with origin flag), re-render biography part
+        // Origin paths are authored in compendiums and consumed through the
+        // Origin Path Builder — dragging one onto an actor is not the supported
+        // build flow. Reject it (with guidance) unless the world has opted into
+        // freeform character building. See issue #219.
         const flags = item.flags as { rt?: { kind?: string } } | undefined;
         const isOriginPath = item.type === 'originPath' || (item.type === 'trait' && flags?.rt?.kind === 'origin');
+        const alreadyOwned = item.id !== null && item.id !== '' && this.actor.items.get(item.id) !== undefined;
+
+        if (isOriginPath && !alreadyOwned && !WH40KSettings.isFreeformCharactersEnabled()) {
+            this._notify('warn', game.i18n.localize('WH40K.OriginPath.UseBuilderOnDrop'), { duration: 6000 });
+            return false;
+        }
+
+        const result = await super._onDropItem(event, item);
 
         if (isOriginPath) {
             // Render only the biography part to update origin path panel
