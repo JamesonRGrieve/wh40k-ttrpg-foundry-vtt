@@ -368,9 +368,9 @@
             "flags": {}
         },
         {
-            "name": "bc-core-psychic-powers",
+            "name": "bc-core-items-psychic-powers",
             "label": "Core Rulebook Psychic Powers",
-            "path": "packs/black-crusade/bc-core-psychic-powers",
+            "path": "packs/black-crusade/bc-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -584,9 +584,9 @@
             "flags": {}
         },
         {
-            "name": "bc-fate-psychic-powers",
+            "name": "bc-fate-items-psychic-powers",
             "label": "Tome of Fate Psychic Powers",
-            "path": "packs/black-crusade/bc-fate-psychic-powers",
+            "path": "packs/black-crusade/bc-fate-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -632,9 +632,9 @@
             "flags": {}
         },
         {
-            "name": "bc-core-races",
+            "name": "bc-core-origins-races",
             "label": "Races",
-            "path": "packs/black-crusade/bc-core-races",
+            "path": "packs/black-crusade/bc-core-origins-races",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -644,9 +644,9 @@
             "flags": {}
         },
         {
-            "name": "bc-core-archetypes",
+            "name": "bc-core-origins-archetypes",
             "label": "Archetypes",
-            "path": "packs/black-crusade/bc-core-archetypes",
+            "path": "packs/black-crusade/bc-core-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -656,9 +656,9 @@
             "flags": {}
         },
         {
-            "name": "bc-blood-archetypes",
+            "name": "bc-blood-origins-archetypes",
             "label": "Tome of Blood Archetypes",
-            "path": "packs/black-crusade/bc-blood-archetypes",
+            "path": "packs/black-crusade/bc-blood-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -668,9 +668,9 @@
             "flags": {}
         },
         {
-            "name": "bc-decay-archetypes",
+            "name": "bc-decay-origins-archetypes",
             "label": "Tome of Decay Archetypes",
-            "path": "packs/black-crusade/bc-decay-archetypes",
+            "path": "packs/black-crusade/bc-decay-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -680,9 +680,9 @@
             "flags": {}
         },
         {
-            "name": "bc-excess-archetypes",
+            "name": "bc-excess-origins-archetypes",
             "label": "Tome of Excess Archetypes",
-            "path": "packs/black-crusade/bc-excess-archetypes",
+            "path": "packs/black-crusade/bc-excess-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -692,9 +692,9 @@
             "flags": {}
         },
         {
-            "name": "bc-fate-archetypes",
+            "name": "bc-fate-origins-archetypes",
             "label": "Tome of Fate Archetypes",
-            "path": "packs/black-crusade/bc-fate-archetypes",
+            "path": "packs/black-crusade/bc-fate-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -704,9 +704,9 @@
             "flags": {}
         },
         {
-            "name": "bc-core-prides",
+            "name": "bc-core-origins-prides",
             "label": "Prides",
-            "path": "packs/black-crusade/bc-core-prides",
+            "path": "packs/black-crusade/bc-core-origins-prides",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -716,9 +716,9 @@
             "flags": {}
         },
         {
-            "name": "bc-core-disgraces",
+            "name": "bc-core-origins-disgraces",
             "label": "Disgraces",
-            "path": "packs/black-crusade/bc-core-disgraces",
+            "path": "packs/black-crusade/bc-core-origins-disgraces",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -728,9 +728,9 @@
             "flags": {}
         },
         {
-            "name": "bc-core-motivations",
+            "name": "bc-core-origins-motivations",
             "label": "Motivations",
-            "path": "packs/black-crusade/bc-core-motivations",
+            "path": "packs/black-crusade/bc-core-origins-motivations",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -764,9 +764,9 @@
             "flags": {}
         },
         {
-            "name": "dh1-core-psychic-powers",
+            "name": "dh1-core-items-psychic-powers",
             "label": "Core Rulebook Psychic Powers",
-            "path": "packs/dark-heresy-1/dh1-core-psychic-powers",
+            "path": "packs/dark-heresy-1/dh1-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -920,9 +920,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-beyond-stats-homeworlds",
+            "name": "dh2-beyond-origins-homeworlds",
             "label": "Enemies Beyond Homeworlds",
-            "path": "packs/dark-heresy-2/dh2-beyond-stats-homeworlds",
+            "path": "packs/dark-heresy-2/dh2-beyond-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -932,9 +932,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-beyond-stats-backgrounds",
+            "name": "dh2-beyond-origins-backgrounds",
             "label": "Enemies Beyond Backgrounds",
-            "path": "packs/dark-heresy-2/dh2-beyond-stats-backgrounds",
+            "path": "packs/dark-heresy-2/dh2-beyond-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -944,9 +944,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-beyond-stats-roles",
+            "name": "dh2-beyond-origins-roles",
             "label": "Enemies Beyond Roles",
-            "path": "packs/dark-heresy-2/dh2-beyond-stats-roles",
+            "path": "packs/dark-heresy-2/dh2-beyond-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -968,21 +968,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-beyond-items-daemonic-remnants",
-            "label": "Enemies Beyond Daemonic Remnants",
-            "path": "packs/dark-heresy-2/dh2-beyond-items-daemonic-remnants",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "dh2-beyond-stats-psychic-powers",
+            "name": "dh2-beyond-items-psychic-powers",
             "label": "Enemies Beyond Psychic Powers",
-            "path": "packs/dark-heresy-2/dh2-beyond-stats-psychic-powers",
+            "path": "packs/dark-heresy-2/dh2-beyond-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -992,9 +980,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-beyond-stats-talents",
+            "name": "dh2-beyond-items-talents",
             "label": "Enemies Beyond Talents",
-            "path": "packs/dark-heresy-2/dh2-beyond-stats-talents",
+            "path": "packs/dark-heresy-2/dh2-beyond-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1016,6 +1004,18 @@
             "flags": {}
         },
         {
+            "name": "dh2-beyond-items-gear",
+            "label": "Enemies Beyond Gear",
+            "path": "packs/dark-heresy-2/dh2-beyond-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-beyond-items-weapon-mods",
             "label": "Enemies Beyond Weapon Modifications",
             "path": "packs/dark-heresy-2/dh2-beyond-items-weapon-mods",
@@ -1028,14 +1028,38 @@
             "flags": {}
         },
         {
-            "name": "dh2-actors-bestiary",
+            "name": "dh2-beyond-actors-npcs",
+            "label": "Enemies Beyond NPCs",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {},
+            "path": "packs/dark-heresy-2/dh2-beyond-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor"
+        },
+        {
+            "name": "dh2-beyond-actors-bestiary",
+            "label": "Enemies Beyond Bestiary",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {},
+            "path": "packs/dark-heresy-2/dh2-beyond-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor"
+        },
+        {
+            "name": "dh2-core-actors-bestiary",
             "label": "Core Rulebook Bestiary",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
             },
             "flags": {},
-            "path": "packs/dark-heresy-2/dh2-actors-bestiary",
+            "path": "packs/dark-heresy-2/dh2-core-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor"
         },
@@ -1064,9 +1088,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-conditions",
+            "name": "dh2-core-items-conditions",
             "label": "Core Rulebook Conditions",
-            "path": "packs/dark-heresy-2/dh2-core-stats-conditions",
+            "path": "packs/dark-heresy-2/dh2-core-items-conditions",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1076,9 +1100,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-critical-injuries",
+            "name": "dh2-core-items-critical-injuries",
             "label": "Core Rulebook Critical Injuries",
-            "path": "packs/dark-heresy-2/dh2-core-stats-critical-injuries",
+            "path": "packs/dark-heresy-2/dh2-core-items-critical-injuries",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1136,9 +1160,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-psychic-powers",
+            "name": "dh2-core-items-psychic-powers",
             "label": "Core Rulebook Psychic Powers",
-            "path": "packs/dark-heresy-2/dh2-core-stats-psychic-powers",
+            "path": "packs/dark-heresy-2/dh2-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1148,9 +1172,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-skills",
+            "name": "dh2-core-items-skills",
             "label": "Core Rulebook Skills",
-            "path": "packs/dark-heresy-2/dh2-core-stats-skills",
+            "path": "packs/dark-heresy-2/dh2-core-items-skills",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1160,9 +1184,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-talents",
+            "name": "dh2-core-items-talents",
             "label": "Core Rulebook Talents",
-            "path": "packs/dark-heresy-2/dh2-core-stats-talents",
+            "path": "packs/dark-heresy-2/dh2-core-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1172,9 +1196,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-traits",
+            "name": "dh2-core-items-traits",
             "label": "Core Rulebook Traits",
-            "path": "packs/dark-heresy-2/dh2-core-stats-traits",
+            "path": "packs/dark-heresy-2/dh2-core-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1208,9 +1232,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-homeworlds",
+            "name": "dh2-core-origins-homeworlds",
             "label": "Homeworlds",
-            "path": "packs/dark-heresy-2/dh2-core-stats-homeworlds",
+            "path": "packs/dark-heresy-2/dh2-core-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1220,9 +1244,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-backgrounds",
+            "name": "dh2-core-origins-backgrounds",
             "label": "Backgrounds",
-            "path": "packs/dark-heresy-2/dh2-core-stats-backgrounds",
+            "path": "packs/dark-heresy-2/dh2-core-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1232,9 +1256,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-roles",
+            "name": "dh2-core-origins-roles",
             "label": "Roles",
-            "path": "packs/dark-heresy-2/dh2-core-stats-roles",
+            "path": "packs/dark-heresy-2/dh2-core-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1292,9 +1316,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-within-stats-backgrounds",
+            "name": "dh2-within-origins-backgrounds",
             "label": "Enemies Within Backgrounds",
-            "path": "packs/dark-heresy-2/dh2-within-stats-backgrounds",
+            "path": "packs/dark-heresy-2/dh2-within-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1304,9 +1328,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-within-stats-roles",
+            "name": "dh2-within-origins-roles",
             "label": "Enemies Within Roles",
-            "path": "packs/dark-heresy-2/dh2-within-stats-roles",
+            "path": "packs/dark-heresy-2/dh2-within-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1352,9 +1376,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-within-stats-psychic-powers",
+            "name": "dh2-within-items-psychic-powers",
             "label": "Enemies Within Psychic Powers",
-            "path": "packs/dark-heresy-2/dh2-within-stats-psychic-powers",
+            "path": "packs/dark-heresy-2/dh2-within-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1364,9 +1388,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-within-stats-talents",
+            "name": "dh2-within-items-talents",
             "label": "Enemies Within Talents",
-            "path": "packs/dark-heresy-2/dh2-within-stats-talents",
+            "path": "packs/dark-heresy-2/dh2-within-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1412,9 +1436,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-without-stats-homeworlds",
+            "name": "dh2-without-origins-homeworlds",
             "label": "Enemies Without Homeworlds",
-            "path": "packs/dark-heresy-2/dh2-without-stats-homeworlds",
+            "path": "packs/dark-heresy-2/dh2-without-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1424,9 +1448,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-without-stats-backgrounds",
+            "name": "dh2-without-origins-backgrounds",
             "label": "Enemies Without Backgrounds",
-            "path": "packs/dark-heresy-2/dh2-without-stats-backgrounds",
+            "path": "packs/dark-heresy-2/dh2-without-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1436,9 +1460,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-without-stats-roles",
+            "name": "dh2-without-origins-roles",
             "label": "Enemies Without Roles",
-            "path": "packs/dark-heresy-2/dh2-without-stats-roles",
+            "path": "packs/dark-heresy-2/dh2-without-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1520,9 +1544,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-without-stats-talents",
+            "name": "dh2-without-items-talents",
             "label": "Enemies Without Talents",
-            "path": "packs/dark-heresy-2/dh2-without-stats-talents",
+            "path": "packs/dark-heresy-2/dh2-without-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1607,18 +1631,6 @@
             "name": "dw-core-items-weapons",
             "label": "Core Rulebook Weapons",
             "path": "packs/deathwatch/dw-core-items-weapons",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "dw-errata-items-weapons",
-            "label": "Errata Weapons",
-            "path": "packs/deathwatch/dw-errata-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1856,9 +1868,9 @@
             "flags": {}
         },
         {
-            "name": "ow-core-psychic-powers",
+            "name": "ow-core-items-psychic-powers",
             "label": "Core Rulebook Psychic Powers",
-            "path": "packs/only-war/ow-core-psychic-powers",
+            "path": "packs/only-war/ow-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2192,9 +2204,9 @@
             "flags": {}
         },
         {
-            "name": "ow-core-homeworlds",
+            "name": "ow-core-origins-homeworlds",
             "label": "Homeworlds",
-            "path": "packs/only-war/ow-core-homeworlds",
+            "path": "packs/only-war/ow-core-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2204,9 +2216,9 @@
             "flags": {}
         },
         {
-            "name": "ow-core-commanding-officers",
+            "name": "ow-core-origins-commanding-officers",
             "label": "Commanding Officers",
-            "path": "packs/only-war/ow-core-commanding-officers",
+            "path": "packs/only-war/ow-core-origins-commanding-officers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2216,9 +2228,9 @@
             "flags": {}
         },
         {
-            "name": "ow-core-regiment-types",
+            "name": "ow-core-origins-regiment-types",
             "label": "Regiment Types",
-            "path": "packs/only-war/ow-core-regiment-types",
+            "path": "packs/only-war/ow-core-origins-regiment-types",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2228,9 +2240,9 @@
             "flags": {}
         },
         {
-            "name": "ow-core-training-doctrines",
+            "name": "ow-core-origins-training-doctrines",
             "label": "Training Doctrines",
-            "path": "packs/only-war/ow-core-training-doctrines",
+            "path": "packs/only-war/ow-core-origins-training-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2240,9 +2252,9 @@
             "flags": {}
         },
         {
-            "name": "ow-core-special-equipment-doctrines",
+            "name": "ow-core-origins-special-equipment-doctrines",
             "label": "Special Equipment Doctrines",
-            "path": "packs/only-war/ow-core-special-equipment-doctrines",
+            "path": "packs/only-war/ow-core-origins-special-equipment-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2252,9 +2264,9 @@
             "flags": {}
         },
         {
-            "name": "ow-hammer-homeworlds",
+            "name": "ow-hammer-origins-homeworlds",
             "label": "Hammer Homeworlds",
-            "path": "packs/only-war/ow-hammer-homeworlds",
+            "path": "packs/only-war/ow-hammer-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2264,9 +2276,9 @@
             "flags": {}
         },
         {
-            "name": "ow-hammer-regiment-types",
+            "name": "ow-hammer-origins-regiment-types",
             "label": "Hammer Regiment Types",
-            "path": "packs/only-war/ow-hammer-regiment-types",
+            "path": "packs/only-war/ow-hammer-origins-regiment-types",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2276,9 +2288,9 @@
             "flags": {}
         },
         {
-            "name": "ow-hammer-training-doctrines",
+            "name": "ow-hammer-origins-training-doctrines",
             "label": "Hammer Training Doctrines",
-            "path": "packs/only-war/ow-hammer-training-doctrines",
+            "path": "packs/only-war/ow-hammer-origins-training-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2288,9 +2300,9 @@
             "flags": {}
         },
         {
-            "name": "ow-hammer-special-equipment-doctrines",
+            "name": "ow-hammer-origins-special-equipment-doctrines",
             "label": "Hammer Special Equipment Doctrines",
-            "path": "packs/only-war/ow-hammer-special-equipment-doctrines",
+            "path": "packs/only-war/ow-hammer-origins-special-equipment-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2300,9 +2312,9 @@
             "flags": {}
         },
         {
-            "name": "ow-hammer-regimental-drawbacks",
+            "name": "ow-hammer-origins-regimental-drawbacks",
             "label": "Hammer Regimental Drawbacks",
-            "path": "packs/only-war/ow-hammer-regimental-drawbacks",
+            "path": "packs/only-war/ow-hammer-origins-regimental-drawbacks",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2312,9 +2324,9 @@
             "flags": {}
         },
         {
-            "name": "ow-shield-homeworlds",
+            "name": "ow-shield-origins-homeworlds",
             "label": "Shield Homeworlds",
-            "path": "packs/only-war/ow-shield-homeworlds",
+            "path": "packs/only-war/ow-shield-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2324,9 +2336,9 @@
             "flags": {}
         },
         {
-            "name": "ow-shield-regiment-types",
+            "name": "ow-shield-origins-regiment-types",
             "label": "Shield Regiment Types",
-            "path": "packs/only-war/ow-shield-regiment-types",
+            "path": "packs/only-war/ow-shield-origins-regiment-types",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2336,9 +2348,9 @@
             "flags": {}
         },
         {
-            "name": "ow-shield-training-doctrines",
+            "name": "ow-shield-origins-training-doctrines",
             "label": "Shield Training Doctrines",
-            "path": "packs/only-war/ow-shield-training-doctrines",
+            "path": "packs/only-war/ow-shield-origins-training-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2348,9 +2360,9 @@
             "flags": {}
         },
         {
-            "name": "ow-shield-special-equipment-doctrines",
+            "name": "ow-shield-origins-special-equipment-doctrines",
             "label": "Shield Special Equipment Doctrines",
-            "path": "packs/only-war/ow-shield-special-equipment-doctrines",
+            "path": "packs/only-war/ow-shield-origins-special-equipment-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2360,9 +2372,9 @@
             "flags": {}
         },
         {
-            "name": "ow-shield-regimental-drawbacks",
+            "name": "ow-shield-origins-regimental-drawbacks",
             "label": "Shield Regimental Drawbacks",
-            "path": "packs/only-war/ow-shield-regimental-drawbacks",
+            "path": "packs/only-war/ow-shield-origins-regimental-drawbacks",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2372,9 +2384,9 @@
             "flags": {}
         },
         {
-            "name": "ow-core-specialities",
+            "name": "ow-core-origins-specialities",
             "label": "Specialities",
-            "path": "packs/only-war/ow-core-specialities",
+            "path": "packs/only-war/ow-core-origins-specialities",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2420,6 +2432,54 @@
             "flags": {}
         },
         {
+            "name": "hb-rt-actors-vehicles",
+            "label": "Homebrew RT Vehicles",
+            "path": "packs/homebrew/hb-rt-actors-vehicles",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-tau-actors-vehicles",
+            "label": "Tau Character Guide Vehicles",
+            "path": "packs/rogue-trader/rt-tau-actors-vehicles",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-koronus-actors-vehicles",
+            "label": "Battlefleet Koronus Vehicles",
+            "path": "packs/rogue-trader/rt-koronus-actors-vehicles",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-storm-actors-vehicles",
+            "label": "Into the Storm Vehicles",
+            "path": "packs/rogue-trader/rt-storm-actors-vehicles",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-abyss-actors-bestiary",
             "label": "Edge of the Abyss Bestiary",
             "path": "packs/rogue-trader/rt-abyss-actors-bestiary",
@@ -2444,9 +2504,9 @@
             "flags": {}
         },
         {
-            "name": "rt-abyss-psychic-powers",
+            "name": "rt-abyss-items-psychic-powers",
             "label": "Edge of the Abyss Psychic Powers",
-            "path": "packs/rogue-trader/rt-abyss-psychic-powers",
+            "path": "packs/rogue-trader/rt-abyss-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2495,18 +2555,6 @@
             "name": "rt-core-actors-ships",
             "label": "Core Rulebook Ships",
             "path": "packs/rogue-trader/rt-core-actors-ships",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "rt-core-actors-vehicles",
-            "label": "Core Rulebook Vehicles",
-            "path": "packs/rogue-trader/rt-core-actors-vehicles",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -2612,9 +2660,9 @@
             "flags": {}
         },
         {
-            "name": "rt-core-homeworlds",
+            "name": "rt-core-origins-homeworlds",
             "label": "Core Rulebook Homeworlds",
-            "path": "packs/rogue-trader/rt-core-homeworlds",
+            "path": "packs/rogue-trader/rt-core-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2624,9 +2672,9 @@
             "flags": {}
         },
         {
-            "name": "rt-core-birthrights",
+            "name": "rt-core-origins-birthrights",
             "label": "Core Rulebook Birthrights",
-            "path": "packs/rogue-trader/rt-core-birthrights",
+            "path": "packs/rogue-trader/rt-core-origins-birthrights",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2636,9 +2684,9 @@
             "flags": {}
         },
         {
-            "name": "rt-core-lure-of-the-void",
+            "name": "rt-core-origins-lure-of-the-void",
             "label": "Core Rulebook Lure of the Void",
-            "path": "packs/rogue-trader/rt-core-lure-of-the-void",
+            "path": "packs/rogue-trader/rt-core-origins-lure-of-the-void",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2648,9 +2696,9 @@
             "flags": {}
         },
         {
-            "name": "rt-core-trials-and-travails",
+            "name": "rt-core-origins-trials-and-travails",
             "label": "Core Rulebook Trials and Travails",
-            "path": "packs/rogue-trader/rt-core-trials-and-travails",
+            "path": "packs/rogue-trader/rt-core-origins-trials-and-travails",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2660,9 +2708,9 @@
             "flags": {}
         },
         {
-            "name": "rt-core-motivations",
+            "name": "rt-core-origins-motivations",
             "label": "Core Rulebook Motivations",
-            "path": "packs/rogue-trader/rt-core-motivations",
+            "path": "packs/rogue-trader/rt-core-origins-motivations",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2672,9 +2720,9 @@
             "flags": {}
         },
         {
-            "name": "rt-core-careers",
+            "name": "rt-core-origins-careers",
             "label": "Core Rulebook Careers",
-            "path": "packs/rogue-trader/rt-core-careers",
+            "path": "packs/rogue-trader/rt-core-origins-careers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2684,9 +2732,9 @@
             "flags": {}
         },
         {
-            "name": "rt-core-psychic-powers",
+            "name": "rt-core-items-psychic-powers",
             "label": "Core Rulebook Psychic Powers",
-            "path": "packs/rogue-trader/rt-core-psychic-powers",
+            "path": "packs/rogue-trader/rt-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -2792,9 +2840,9 @@
             "flags": {}
         },
         {
-            "name": "rt-core-rolltables-psychic",
+            "name": "rt-core-rolltables",
             "label": "Rogue Trader Psychic Phenomena Tables",
-            "path": "packs/rogue-trader/rt-core-rolltables-psychic",
+            "path": "packs/rogue-trader/rt-core-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
             "ownership": {
@@ -2996,18 +3044,6 @@
             "flags": {}
         },
         {
-            "name": "rt-items-navigator-powers",
-            "label": "Navigator Powers",
-            "path": "packs/rogue-trader/rt-items-navigator-powers",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
             "name": "rt-items-ship-extended-actions",
             "label": "Ship Extended Actions",
             "path": "packs/rogue-trader/rt-items-ship-extended-actions",
@@ -3020,9 +3056,9 @@
             "flags": {}
         },
         {
-            "name": "rt-items-ship-roles",
+            "name": "rt-core-items-ship-roles",
             "label": "Ship Roles",
-            "path": "packs/rogue-trader/rt-items-ship-roles",
+            "path": "packs/rogue-trader/rt-core-items-ship-roles",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3032,9 +3068,9 @@
             "flags": {}
         },
         {
-            "name": "rt-items-ship-weapons",
-            "label": "Ship Weapons",
-            "path": "packs/rogue-trader/rt-items-ship-weapons",
+            "name": "rt-core-items-ship-orders",
+            "label": "Core Rulebook Ship Orders",
+            "path": "packs/rogue-trader/rt-core-items-ship-orders",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3044,9 +3080,9 @@
             "flags": {}
         },
         {
-            "name": "rt-journals-character-actions",
+            "name": "rt-core-journals-character-actions",
             "label": "Character Actions",
-            "path": "packs/rogue-trader/rt-journals-character-actions",
+            "path": "packs/rogue-trader/rt-core-journals-character-actions",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -3056,9 +3092,9 @@
             "flags": {}
         },
         {
-            "name": "rt-journals-character-creation",
+            "name": "rt-core-journals-character-creation",
             "label": "Character Creation",
-            "path": "packs/rogue-trader/rt-journals-character-creation",
+            "path": "packs/rogue-trader/rt-core-journals-character-creation",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -3068,9 +3104,69 @@
             "flags": {}
         },
         {
-            "name": "rt-journals-colonies",
+            "name": "dh2-beyond-journals-daemon-binding",
+            "label": "Enemies Beyond Daemon Binding",
+            "path": "packs/dark-heresy-2/dh2-beyond-journals-daemon-binding",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-core-journals-daemon-binding",
+            "label": "Core Rulebook Daemon Binding",
+            "path": "packs/dark-heresy-2/dh2-core-journals-daemon-binding",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-journals-navigation",
+            "label": "Homebrew Navigation",
+            "path": "packs/homebrew/hb-rt-journals-navigation",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-navis-journals-navigation",
+            "label": "The Navis Primer Navigation",
+            "path": "packs/rogue-trader/rt-navis-journals-navigation",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-core-journals-navigation",
+            "label": "Core Rulebook Navigation",
+            "path": "packs/rogue-trader/rt-core-journals-navigation",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-inequity-journals-colonies",
             "label": "Colonies",
-            "path": "packs/rogue-trader/rt-journals-colonies",
+            "path": "packs/rogue-trader/rt-inequity-journals-colonies",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -3080,9 +3176,9 @@
             "flags": {}
         },
         {
-            "name": "rt-journals-fear-insanity-corruption",
+            "name": "rt-core-journals-fear-insanity-corruption",
             "label": "Fear, Insanity & Corruption",
-            "path": "packs/rogue-trader/rt-journals-fear-insanity-corruption",
+            "path": "packs/rogue-trader/rt-core-journals-fear-insanity-corruption",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -3092,9 +3188,9 @@
             "flags": {}
         },
         {
-            "name": "rt-journals-ship-vehicle-actions",
+            "name": "rt-core-journals-ship-vehicle-actions",
             "label": "Ship & Vehicle Actions",
-            "path": "packs/rogue-trader/rt-journals-ship-vehicle-actions",
+            "path": "packs/rogue-trader/rt-core-journals-ship-vehicle-actions",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -3224,9 +3320,9 @@
             "flags": {}
         },
         {
-            "name": "rt-navis-psychic-powers",
+            "name": "rt-navis-items-psychic-powers",
             "label": "The Navis Primer Psychic Powers",
-            "path": "packs/rogue-trader/rt-navis-psychic-powers",
+            "path": "packs/rogue-trader/rt-navis-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3464,9 +3560,9 @@
             "flags": {}
         },
         {
-            "name": "rt-storm-homeworlds",
+            "name": "rt-storm-origins-homeworlds",
             "label": "Into the Storm Homeworlds",
-            "path": "packs/rogue-trader/rt-storm-homeworlds",
+            "path": "packs/rogue-trader/rt-storm-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3476,9 +3572,9 @@
             "flags": {}
         },
         {
-            "name": "rt-storm-birthrights",
+            "name": "rt-storm-origins-birthrights",
             "label": "Into the Storm Birthrights",
-            "path": "packs/rogue-trader/rt-storm-birthrights",
+            "path": "packs/rogue-trader/rt-storm-origins-birthrights",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3488,9 +3584,9 @@
             "flags": {}
         },
         {
-            "name": "rt-storm-lure-of-the-void",
+            "name": "rt-storm-origins-lure-of-the-void",
             "label": "Into the Storm Lure of the Void",
-            "path": "packs/rogue-trader/rt-storm-lure-of-the-void",
+            "path": "packs/rogue-trader/rt-storm-origins-lure-of-the-void",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3500,9 +3596,9 @@
             "flags": {}
         },
         {
-            "name": "rt-storm-trials-and-travails",
+            "name": "rt-storm-origins-trials-and-travails",
             "label": "Into the Storm Trials and Travails",
-            "path": "packs/rogue-trader/rt-storm-trials-and-travails",
+            "path": "packs/rogue-trader/rt-storm-origins-trials-and-travails",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3512,9 +3608,9 @@
             "flags": {}
         },
         {
-            "name": "rt-storm-motivations",
+            "name": "rt-storm-origins-motivations",
             "label": "Into the Storm Motivations",
-            "path": "packs/rogue-trader/rt-storm-motivations",
+            "path": "packs/rogue-trader/rt-storm-origins-motivations",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3524,9 +3620,9 @@
             "flags": {}
         },
         {
-            "name": "rt-storm-lineages",
+            "name": "rt-storm-origins-lineages",
             "label": "Into the Storm Lineages",
-            "path": "packs/rogue-trader/rt-storm-lineages",
+            "path": "packs/rogue-trader/rt-storm-origins-lineages",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3536,9 +3632,9 @@
             "flags": {}
         },
         {
-            "name": "rt-storm-psychic-powers",
+            "name": "rt-storm-items-psychic-powers",
             "label": "Into the Storm Psychic Powers",
-            "path": "packs/rogue-trader/rt-storm-psychic-powers",
+            "path": "packs/rogue-trader/rt-storm-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3740,9 +3836,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-within-stats-homeworlds",
+            "name": "dh2-within-origins-homeworlds",
             "label": "Enemies Within Home Worlds",
-            "path": "packs/dark-heresy-2/dh2-within-stats-homeworlds",
+            "path": "packs/dark-heresy-2/dh2-within-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3776,9 +3872,57 @@
             "flags": {}
         },
         {
-            "name": "hb-dh2-stats-talents",
+            "name": "hb-dh2-items-talents",
             "label": "Homebrew DH2 Talents",
-            "path": "packs/homebrew/hb-dh2-stats-talents",
+            "path": "packs/homebrew/hb-dh2-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-armour",
+            "label": "Homebrew RT Armour",
+            "path": "packs/homebrew/hb-rt-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-traits",
+            "label": "Homebrew RT Traits",
+            "path": "packs/homebrew/hb-rt-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-talents",
+            "label": "Homebrew RT Talents",
+            "path": "packs/homebrew/hb-rt-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-bc-items-traits",
+            "label": "Homebrew BC Traits",
+            "path": "packs/homebrew/hb-bc-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3812,9 +3956,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-elite-advances",
+            "name": "dh2-core-origins-elite-advances",
             "label": "Dark Heresy 2E Elite Advances",
-            "path": "packs/dark-heresy-2/dh2-core-stats-elite-advances",
+            "path": "packs/dark-heresy-2/dh2-core-origins-elite-advances",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3836,9 +3980,9 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-stats-talents-specializations",
+            "name": "dh2-core-items-talents-specializations",
             "label": "Core Rulebook Talent Specializations",
-            "path": "packs/dark-heresy-2/dh2-core-stats-talents-specializations",
+            "path": "packs/dark-heresy-2/dh2-core-items-talents-specializations",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3944,6 +4088,42 @@
             "flags": {}
         },
         {
+            "name": "dw-chosen-items-armour",
+            "label": "The Emperor's Chosen Armour",
+            "path": "packs/deathwatch/dw-chosen-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-chosen-items-gear",
+            "label": "The Emperor's Chosen Gear",
+            "path": "packs/deathwatch/dw-chosen-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-chosen-items-weapons",
+            "label": "The Emperor's Chosen Weapons",
+            "path": "packs/deathwatch/dw-chosen-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-jericho-journals",
             "label": "The Jericho Reach Reference",
             "path": "packs/deathwatch/dw-jericho-journals",
@@ -4004,9 +4184,9 @@
             "flags": {}
         },
         {
-            "name": "dw-core-chapters",
+            "name": "dw-core-origins-chapters",
             "label": "Chapters",
-            "path": "packs/deathwatch/dw-core-chapters",
+            "path": "packs/deathwatch/dw-core-origins-chapters",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -4016,9 +4196,9 @@
             "flags": {}
         },
         {
-            "name": "dw-core-specialities",
+            "name": "dw-core-origins-specialities",
             "label": "Specialities",
-            "path": "packs/deathwatch/dw-core-specialities",
+            "path": "packs/deathwatch/dw-core-origins-specialities",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -4040,9 +4220,9 @@
             "flags": {}
         },
         {
-            "name": "dw-rites-chapters",
+            "name": "dw-rites-origins-chapters",
             "label": "Rites of Battle Chapters",
-            "path": "packs/deathwatch/dw-rites-chapters",
+            "path": "packs/deathwatch/dw-rites-origins-chapters",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -4052,9 +4232,9 @@
             "flags": {}
         },
         {
-            "name": "dw-founding-chapters",
+            "name": "dw-founding-origins-chapters",
             "label": "First Founding Chapters",
-            "path": "packs/deathwatch/dw-founding-chapters",
+            "path": "packs/deathwatch/dw-founding-origins-chapters",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -4077,7 +4257,7 @@
                         "bc-core-items-armour",
                         "bc-core-items-armor-mods",
                         "bc-core-items-gear",
-                        "bc-core-psychic-powers",
+                        "bc-core-items-psychic-powers",
                         "bc-core-items-rituals",
                         "bc-core-items-talents",
                         "bc-core-items-traits",
@@ -4114,7 +4294,7 @@
                         "bc-fate-items-ammo",
                         "bc-fate-items-armour",
                         "bc-fate-items-gear",
-                        "bc-fate-psychic-powers",
+                        "bc-fate-items-psychic-powers",
                         "bc-fate-items-rituals",
                         "bc-fate-items-traits",
                         "bc-fate-items-weapons"
@@ -4129,7 +4309,7 @@
             "folders": [
                 {
                     "name": "Core Rulebook",
-                    "packs": ["dh1-core-items-armour", "dh1-core-items-gear", "dh1-core-psychic-powers", "dh1-core-items-talents", "dh1-core-items-weapons"]
+                    "packs": ["dh1-core-items-armour", "dh1-core-items-gear", "dh1-core-items-psychic-powers", "dh1-core-items-talents", "dh1-core-items-weapons"]
                 },
                 {
                     "name": "Inquisitor's Handbook",
@@ -4153,24 +4333,23 @@
                 {
                     "name": "Core Rulebook",
                     "packs": [
-                        "dh2-actors-bestiary",
                         "dh2-core-items-ammo",
                         "dh2-core-items-armour",
-                        "dh2-core-stats-conditions",
-                        "dh2-core-stats-critical-injuries",
+                        "dh2-core-items-conditions",
+                        "dh2-core-items-critical-injuries",
                         "dh2-core-items-cybernetics",
                         "dh2-core-items-wearables",
                         "dh2-core-items-tools",
                         "dh2-core-items-consumables",
-                        "dh2-core-stats-psychic-powers",
-                        "dh2-core-stats-skills",
-                        "dh2-core-stats-talents",
-                        "dh2-core-stats-traits",
+                        "dh2-core-items-psychic-powers",
+                        "dh2-core-items-skills",
+                        "dh2-core-items-talents",
+                        "dh2-core-items-traits",
                         "dh2-core-items-weapons",
                         "dh2-core-rolltables",
-                        "dh2-core-stats-elite-advances",
+                        "dh2-core-origins-elite-advances",
                         "dh2-core-items-weapon-mods",
-                        "dh2-core-stats-talents-specializations",
+                        "dh2-core-items-talents-specializations",
                         "dh2-core-locations"
                     ]
                 },
@@ -4180,12 +4359,12 @@
                         "dh2-beyond-items-ammo",
                         "dh2-beyond-items-armour",
                         "dh2-beyond-items-armor-mods",
-                        "dh2-beyond-stats-backgrounds",
+                        "dh2-beyond-origins-backgrounds",
                         "dh2-beyond-items-tools",
-                        "dh2-beyond-items-daemonic-remnants",
-                        "dh2-beyond-stats-psychic-powers",
-                        "dh2-beyond-stats-talents",
+                        "dh2-beyond-items-psychic-powers",
+                        "dh2-beyond-items-talents",
                         "dh2-beyond-items-weapons",
+                        "dh2-beyond-items-gear",
                         "dh2-beyond-items-weapon-mods",
                         "dh2-beyond-actors-reinforcements",
                         "dh2-beyond-journals"
@@ -4197,13 +4376,13 @@
                         "dh2-within-items-ammo",
                         "dh2-within-items-armour",
                         "dh2-within-items-armor-mods",
-                        "dh2-within-stats-homeworlds",
-                        "dh2-within-stats-backgrounds",
+                        "dh2-within-origins-homeworlds",
+                        "dh2-within-origins-backgrounds",
                         "dh2-within-items-relics",
                         "dh2-within-items-services",
                         "dh2-within-items-weapon-mods",
-                        "dh2-within-stats-psychic-powers",
-                        "dh2-within-stats-talents",
+                        "dh2-within-items-psychic-powers",
+                        "dh2-within-items-talents",
                         "dh2-within-items-weapons",
                         "dh2-within-locations",
                         "dh2-within-actors-bestiary",
@@ -4217,14 +4396,14 @@
                     "packs": [
                         "dh2-without-items-ammo",
                         "dh2-without-items-armour",
-                        "dh2-without-stats-backgrounds",
+                        "dh2-without-origins-backgrounds",
                         "dh2-without-items-armor-mods",
                         "dh2-without-items-consumables",
                         "dh2-without-items-relics",
                         "dh2-without-items-services",
                         "dh2-without-items-tools",
                         "dh2-without-items-weapon-mods",
-                        "dh2-without-stats-talents",
+                        "dh2-without-items-talents",
                         "dh2-without-items-weapons",
                         "dh2-without-actors-bestiary",
                         "dh2-without-actors-reinforcements",
@@ -4234,7 +4413,7 @@
                 },
                 {
                     "name": "General",
-                    "packs": ["dh2-core-stats-backgrounds", "dh2-core-journals"]
+                    "packs": ["dh2-core-origins-backgrounds", "dh2-core-journals"]
                 }
             ]
         },
@@ -4281,7 +4460,7 @@
                 },
                 {
                     "name": "The Emperor's Chosen",
-                    "packs": ["dw-chosen-journals"]
+                    "packs": ["dw-chosen-journals", "dw-chosen-items-armour", "dw-chosen-items-gear", "dw-chosen-items-weapons"]
                 },
                 {
                     "name": "The Jericho Reach",
@@ -4307,7 +4486,7 @@
                         "hb-psychic-powers",
                         "hb-items-weapons",
                         "hb-items-actors",
-                        "hb-dh2-stats-talents"
+                        "hb-dh2-items-talents"
                     ]
                 }
             ]
@@ -4324,7 +4503,7 @@
                         "ow-core-items-armour",
                         "ow-core-items-gear",
                         "ow-core-items-orders",
-                        "ow-core-psychic-powers",
+                        "ow-core-items-psychic-powers",
                         "ow-core-items-talents",
                         "ow-core-items-traits",
                         "ow-core-items-weapons",
@@ -4382,7 +4561,6 @@
                     "packs": [
                         "rt-core-actors-bestiary",
                         "rt-core-actors-ships",
-                        "rt-core-actors-vehicles",
                         "rt-core-items-ammo",
                         "rt-core-items-armour",
                         "rt-core-items-armor-mods",
@@ -4392,7 +4570,7 @@
                         "rt-core-items-gear",
                         "rt-core-items-navigator-powers",
                         "rt-core-items-origin-path",
-                        "rt-core-psychic-powers",
+                        "rt-core-items-psychic-powers",
                         "rt-core-items-ship-components",
                         "rt-core-items-ship-weapons",
                         "rt-core-items-skills",
@@ -4401,7 +4579,7 @@
                         "rt-core-items-vehicle-traits",
                         "rt-core-items-weapon-qualities",
                         "rt-core-items-weapons",
-                        "rt-core-rolltables-psychic",
+                        "rt-core-rolltables",
                         "rt-core-rolltables-ship-combat"
                     ]
                 },
@@ -4409,7 +4587,7 @@
                     "name": "Edge of the Abyss",
                     "packs": [
                         "rt-abyss-items-gear",
-                        "rt-abyss-psychic-powers",
+                        "rt-abyss-items-psychic-powers",
                         "rt-abyss-items-talents",
                         "rt-abyss-items-weapons",
                         "rt-abyss-journals",
@@ -4433,16 +4611,14 @@
                 {
                     "name": "General",
                     "packs": [
-                        "rt-items-navigator-powers",
                         "rt-items-origin-path",
                         "rt-items-ship-extended-actions",
-                        "rt-items-ship-roles",
-                        "rt-items-ship-weapons",
-                        "rt-journals-character-actions",
-                        "rt-journals-character-creation",
-                        "rt-journals-colonies",
-                        "rt-journals-fear-insanity-corruption",
-                        "rt-journals-ship-vehicle-actions",
+                        "rt-core-items-ship-roles",
+                        "rt-core-journals-character-actions",
+                        "rt-core-journals-character-creation",
+                        "rt-inequity-journals-colonies",
+                        "rt-core-journals-fear-insanity-corruption",
+                        "rt-core-journals-ship-vehicle-actions",
                         "rt-rolltables-fear-insanity-corruption"
                     ]
                 },
@@ -4468,7 +4644,7 @@
                         "rt-storm-items-gear",
                         "rt-storm-items-navigator-powers",
                         "rt-storm-items-origin-path",
-                        "rt-storm-psychic-powers",
+                        "rt-storm-items-psychic-powers",
                         "rt-storm-items-ship-components",
                         "rt-storm-items-ship-upgrades",
                         "rt-storm-items-ship-weapons",
@@ -4516,7 +4692,7 @@
                         "rt-navis-items-armour",
                         "rt-navis-items-gear",
                         "rt-navis-items-navigator-powers",
-                        "rt-navis-psychic-powers",
+                        "rt-navis-items-psychic-powers",
                         "rt-navis-items-talents",
                         "rt-navis-items-traits",
                         "rt-navis-items-weapons"

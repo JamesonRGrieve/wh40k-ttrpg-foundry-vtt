@@ -85,7 +85,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         super.prepareBaseData();
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument -- boundary: this.parent._source is an opaque Foundry Document source; _source type is any in Foundry's type definitions
-        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        const lineKey = inferActiveGameLine(this.parent);
         // eslint-disable-next-line no-restricted-syntax -- boundary: weaponTypes may be a line-variant object {default: Set, bc: Set, ...}; cast to unknown required for resolveLineVariant dispatch
         const resolvedWeaponTypes = resolveLineVariant(this.weaponTypes as unknown, lineKey);
         this.weaponTypes = new Set(

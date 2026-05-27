@@ -54,7 +54,7 @@ describe('isSubtletyPrimitive', () => {
     });
 
     it('rejects a compendium UUID source ref', () => {
-        const ref: SubtletySourceRef = 'Compendium.wh40k-rpg.dh2-beyond-stats-talents.Item.hiKOrgqtppkvARtd';
+        const ref: SubtletySourceRef = 'Compendium.wh40k-rpg.dh2-beyond-items-talents.Item.hiKOrgqtppkvARtd';
         expect(isSubtletyPrimitive(ref)).toBe(false);
     });
 

@@ -100,7 +100,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     static override _validateJoint(data: Record<string, unknown>): void {
         super._validateJoint(data);
 
-        const lineKey = inferActiveGameLine(data);
+        const lineKey = inferActiveGameLine();
         // eslint-disable-next-line no-restricted-syntax -- boundary: data is untyped Foundry validation data; casts required for resolveLineVariant
         const armourPoints = resolveLineVariant(data['armourPoints'] as Record<string, unknown>, lineKey) as Record<string, number> | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: data is untyped Foundry validation data; casts required for resolveLineVariant
@@ -224,7 +224,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         super.prepareBaseData();
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument -- boundary: this.parent is any-typed Foundry document; _source is untyped
-        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        const lineKey = inferActiveGameLine(this.parent);
         this.type = resolveLineVariant(this.type, lineKey);
         this.armourPoints = foundry.utils.mergeObject(
             {

@@ -233,7 +233,7 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
 
         it.skipIf(!HAVE)('surfaces a passive adjuster with its delta + compendium source uuid + label', () => {
             const mod = requireModule();
-            const uuid = 'Compendium.wh40k-rpg.dh2-beyond-stats-talents.Item.abc123';
+            const uuid = 'Compendium.wh40k-rpg.dh2-beyond-items-talents.Item.abc123';
             const { actor } = makeActor(mod.WH40KBaseActor, {
                 items: [
                     adjusterItem(

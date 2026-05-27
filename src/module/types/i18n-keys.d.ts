@@ -2793,6 +2793,7 @@ export type I18nKey =
     | 'WH40K.SkillsGranted'
     | 'WH40K.Source.Book'
     | 'WH40K.Source.Custom'
+    | 'WH40K.Source.Errata'
     | 'WH40K.Source.Page'
     | 'WH40K.SpecialAbilities'
     | 'WH40K.SpecialUse.Add'

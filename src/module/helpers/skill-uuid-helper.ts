@@ -35,17 +35,17 @@ export function clearSkillUuidCache(): void {
  * @example
  * // Standard skill
  * const awarenessUuid = await findSkillUuid("Awareness");
- * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.xxx"
+ * // Returns: "Compendium.wh40k-rpg.dh2-core-items-skills.xxx"
  *
  * @example
  * // Specialist skill with inline specialization
  * const loreUuid = await findSkillUuid("Common Lore (Imperium)");
- * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.yyy"
+ * // Returns: "Compendium.wh40k-rpg.dh2-core-items-skills.yyy"
  *
  * @example
  * // Specialist skill with separate specialization parameter
  * const loreUuid = await findSkillUuid("Common Lore", "Imperium");
- * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.yyy"
+ * // Returns: "Compendium.wh40k-rpg.dh2-core-items-skills.yyy"
  */
 // eslint-disable-next-line complexity -- UUID lookup requires checking many skill key variants; refactor deferred
 export function findSkillUuid(skillName: string | null | undefined, specialization: string | null = null): string | null | undefined {

@@ -1,4 +1,5 @@
 import type { WH40KItem } from '../documents/item.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow';
 
@@ -35,18 +36,19 @@ export function normalizeGameLineKey(raw: unknown): SupportedLineKey | null {
     return (LINE_KEY_MAP[raw] as SupportedLineKey | undefined) ?? null;
 }
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: source and parent are untyped Foundry DataModel context
-export function inferActiveGameLine(source: Record<string, unknown>, parent?: { actor?: unknown } | null): SupportedLineKey {
+// Resolve the active line for variant materialization. Owned items follow
+// their actor's line; otherwise the world's primary game system is the
+// authoritative hint (per-item coverage already lives in the variant-container
+// keys, so no `gameSystems` list is consulted). Falls back to 'rt'.
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel parent.actor is untyped (unknown) framework context
+export function inferActiveGameLine(parent?: { actor?: unknown } | null): SupportedLineKey {
     // eslint-disable-next-line no-restricted-syntax -- boundary: parent.actor is typed unknown (Foundry DataModel parent context); narrowed via typeof guard above
     const actorSystem = parent?.actor !== null && typeof parent?.actor === 'object' ? (parent.actor as { system?: Record<string, unknown> }).system : undefined;
     const actorLine = normalizeGameLineKey(actorSystem?.['gameSystem']);
     if (actorLine !== null) return actorLine;
 
-    const sourceSystems = Array.isArray(source['gameSystems']) ? source['gameSystems'] : [];
-    for (const systemId of sourceSystems) {
-        const normalized = normalizeGameLineKey(systemId);
-        if (normalized !== null) return normalized;
-    }
+    const worldLine = normalizeGameLineKey(WH40KSettings.getPrimaryGameSystem());
+    if (worldLine !== null) return worldLine;
 
     return 'rt';
 }
@@ -104,7 +106,7 @@ export function getMaterializedItemSource(item: WH40KItem): Record<string, unkno
     // eslint-disable-next-line no-restricted-syntax -- boundary: item._source is untyped Foundry DataModel source data
     const rawSource = rawSystem?.['_source'] as Record<string, unknown> | undefined;
     const source = deepClone(rawSource ?? rawSystem ?? {});
-    const lineKey = inferActiveGameLine(source, item);
+    const lineKey = inferActiveGameLine(item);
     return materializeItemVariants(source, lineKey);
 }
 
@@ -114,7 +116,7 @@ export function remapSubmitDataToVariantPaths(item: WH40KItem, submitData: Recor
     const systemSource = (item.system as Record<string, unknown> | undefined)?.['_source'];
     if (!isPlainObject(systemSource)) return submitData;
 
-    const lineKey = inferActiveGameLine(systemSource, item);
+    const lineKey = inferActiveGameLine(item);
     // eslint-disable-next-line no-restricted-syntax -- boundary: remapped holds untyped remapped form data
     const remapped: Record<string, unknown> = {};
 

@@ -132,7 +132,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: parent _source is Foundry's pre-processed raw payload, untyped at this layer
         const parent = this.parent as { _source?: { system?: Record<string, unknown> }; actor?: unknown } | null;
-        const lineKey = inferActiveGameLine(parent?._source?.system ?? {}, parent);
+        const lineKey = inferActiveGameLine(parent);
         this.category = resolveLineVariant(this.category, lineKey);
         this.consumable = Boolean(resolveLineVariant(this.consumable, lineKey));
         this.uses = foundry.utils.mergeObject({ value: 0, max: 0 }, resolveLineVariant(this.uses, lineKey), {

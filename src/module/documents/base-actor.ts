@@ -7,6 +7,7 @@ import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type Su
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KItem } from './item.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: these utility types intersect with Record<string, unknown> to allow index access on opaque roll/characteristic/skill data models */
@@ -343,6 +344,9 @@ export class WH40KBaseActor extends Actor {
             const currentSystem = (this.system as { gameSystem?: string } | undefined)?.gameSystem;
             if (typeof staticGameSystem === 'string' && staticGameSystem !== '' && currentSystem !== staticGameSystem) {
                 initData['system.gameSystem'] = staticGameSystem;
+            } else if ((staticGameSystem === undefined || staticGameSystem === '') && (currentSystem === undefined || currentSystem === 'rt')) {
+                // Generic (non-line-specific) actor type: inherit the world's primary line.
+                initData['system.gameSystem'] = WH40KSettings.getPrimaryGameSystem();
             }
         }
         if (createData['type'] === 'vehicle') {

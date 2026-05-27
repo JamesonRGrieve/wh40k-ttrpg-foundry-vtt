@@ -111,10 +111,8 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     override prepareBaseData(): void {
         super.prepareBaseData();
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: parent is Foundry Document (any); _source is untyped backing store
-        const parentDoc = this.parent as { _source?: { system?: Record<string, unknown> } } | null | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: parent is Foundry Document type (any); actor field is untyped on base DataModel parent
-        const lineKey = inferActiveGameLine(parentDoc?._source?.system ?? {}, this.parent as { actor?: unknown } | null | undefined);
+        const lineKey = inferActiveGameLine(this.parent as { actor?: unknown } | null | undefined);
 
         this.type = resolveLineVariant(this.type, lineKey);
 

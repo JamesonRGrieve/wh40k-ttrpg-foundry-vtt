@@ -50,6 +50,24 @@
             />
         </div>
 
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
+            <input type="checkbox" name="system.source.errata" {{#if source.source.errata}}checked{{/if}} />
+            {{localize "WH40K.Source.Errata"}}
+        </label>
+
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+            <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
+                <i class="fas fa-hand-holding"></i>
+                {{localize "WH40K.Source.Acquired"}}
+            </label>
+            <textarea
+                class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm"
+                name="system.acquired"
+                rows="2"
+                placeholder="{{localize 'WH40K.Source.AcquiredPlaceholder'}}"
+            >{{source.acquired}}</textarea>
+        </div>
+
         {{#if system.sourceReference}}
             <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm tw-italic tw-text-gray-500">
                 <i class="fas fa-info-circle"></i>
