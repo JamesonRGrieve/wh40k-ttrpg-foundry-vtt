@@ -3549,7 +3549,10 @@
         "Source": {
             "Book": "Book",
             "Page": "Page",
-            "Custom": "Custom"
+            "Custom": "Custom",
+            "Errata": "Errata Applied",
+            "Acquired": "Acquired (in play)",
+            "AcquiredPlaceholder": "Where the party got this — e.g. recovered from The Cache, Session 4"
         },
         "Craftsmanship": {
             "Label": "Craftsmanship",
