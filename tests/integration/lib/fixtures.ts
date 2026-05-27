@@ -12,6 +12,8 @@ interface CreateData {
     type: string;
     name?: string;
     system?: object;
+    /** Embedded item documents to create alongside the actor. */
+    items?: object[];
 }
 
 interface DocumentClass {

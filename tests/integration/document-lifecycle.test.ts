@@ -32,6 +32,31 @@ describe.skipIf(skipAll)('document lifecycle (Tier A)', () => {
         expect(item).toBeDefined();
     });
 
+    // Regression guard: non-equippable item types (skill, originPath, talent, …)
+    // carry no `system.state` — only EquippableTemplate subtypes do. The container
+    // data-prep path (WH40KItemContainer.prepareEmbeddedDocuments) must not assume
+    // `system.state` exists, or prepareData throws for every such item.
+    // A `weapon`-only fixture never exercised this; these types are the ones that
+    // actually broke at runtime (item-container.ts reading undefined `.container`).
+    it.each(['skill', 'originPath', 'talent'])('creates a non-equippable %s item and prepareData runs without throwing', async (type) => {
+        const item = await createItem(runtime, { type, name: `Lifecycle ${type}` });
+        expect(item).toBeDefined();
+        // totalWeight reads `this.items.size`; prepareEmbeddedDocuments must have
+        // initialized the collection for non-container items too.
+        expect((item as { totalWeight?: number }).totalWeight).toBe(0);
+    });
+
+    it('creates a character carrying a non-equippable item; encumbrance prep does not throw', async () => {
+        // Reproduces the encumbrance-calculator crash: totalWeight on an embedded
+        // skill item whose container prep returned early before assigning `items`.
+        const actor = await createActor(runtime, {
+            type: 'character',
+            name: 'Encumbrance Actor',
+            items: [{ type: 'skill', name: 'Awareness' }],
+        });
+        expect(actor).toBeDefined();
+    });
+
     it('cleanData(_state) round-trips without dropping fields (V14 gotcha #9)', async () => {
         const actor = (await createActor(runtime, {
             type: 'character',
