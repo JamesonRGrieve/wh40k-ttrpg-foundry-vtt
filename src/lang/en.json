@@ -570,6 +570,10 @@
                 "Name": "Prompt to Build Unfinished Characters",
                 "Hint": "When a character or NPC sheet is opened and its origin path has never been completed, show a prompt offering to open the origin-path builder. Players can dismiss it per-character."
             },
+            "FreeformCharacters": {
+                "Name": "Allow Freeform Character Building",
+                "Hint": "When enabled, items such as origin paths may be dragged directly onto an actor to build a character outside the Origin Path Builder. When disabled (default), the builder is the supported path and such drops are rejected."
+            },
             "MovementAutomation": {
                 "Name": "Movement Automation",
                 "Hint": "Controls whether token movement enforces character movement speeds via the ruler.",
@@ -2146,6 +2150,27 @@
         },
         "OriginPath": {
             "Header": "Origin Path",
+            "ToggleEditMode": "Toggle edit mode",
+            "UseBuilderOnDrop": "Origin paths are applied through the Origin Path Builder, not by dragging them onto a character. Open the builder from the d20 on the portrait. (A GM can enable freeform building in system settings.)",
+            "WorldSourcedWarning": "Authored in this world, not in a compendium",
+            "PersistenceFootnote": "Tip: edits here only affect this world item. For changes that persist across worlds and updates, edit the source in its compendium instead.",
+            "AddSkill": "Add Skill",
+            "AddTalent": "Add Talent",
+            "AddTrait": "Add Trait",
+            "AddEquipment": "Add Equipment",
+            "NamePlaceholder": "Name",
+            "SpecializationPlaceholder": "Specialization",
+            "QuantityPlaceholder": "Qty",
+            "TraitLevelPlaceholder": "Level",
+            "SkillLevel": {
+                "known": "Known",
+                "trained": "Trained",
+                "plus10": "+10",
+                "experienced": "Experienced",
+                "plus20": "+20",
+                "veteran": "Veteran",
+                "plus30": "+30"
+            },
             "IncompletePrompt": {
                 "Title": "Origin Path Incomplete",
                 "Message": "Character has not completed an origin path and therefore has not been fully built. Do so now? You can always do so later by clicking the d20 on the character portrait.",
@@ -3075,6 +3100,7 @@
         },
         "Item": {
             "Properties": "Item Properties",
+            "DropFailed": "Could not add \"{name}\": {error}",
             "Tabs": {
                 "Details": "Details",
                 "Effects": "Effects",

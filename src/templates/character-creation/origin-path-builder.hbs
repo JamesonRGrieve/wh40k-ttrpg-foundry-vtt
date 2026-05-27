@@ -312,6 +312,12 @@
  <i class="fa-solid fa-check-circle tw-text-[1.2rem] tw-text-[color:var(--wh40k-bg-dark)]"></i>
  </div>
  {{/if}}
+ {{#if origin.fromWorld}}
+ <div class="tw-absolute tw-top-1 tw-left-1 tw-w-6 tw-h-6 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.8)] tw-border tw-border-[#ffaa00] tw-rounded-full tw-text-[#ffaa00] tw-z-[4]" data-tooltip="{{localize 'WH40K.OriginPath.WorldSourcedWarning'}}">
+ <i class="fa-solid fa-triangle-exclamation tw-text-[0.7rem]" aria-hidden="true"></i>
+ <span class="tw-sr-only">{{localize "WH40K.OriginPath.WorldSourcedWarning"}}</span>
+ </div>
+ {{/if}}
  <img src="{{origin.img}}" alt="{{origin.name}}" class="tw-w-full tw-aspect-[4/3] tw-object-cover tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)] tw-mb-[var(--wh40k-space-xs)]" />
  <h4 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-light)] tw-text-center tw-leading-[1.2]">{{origin.name}}</h4>
  {{#if origin.badges}}

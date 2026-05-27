@@ -18,6 +18,7 @@ export class WH40KSettings {
         dh2Ruleset: 'dh2-ruleset',
         degreesMode: 'degrees-mode',
         promptIncompleteOriginPath: 'prompt-incomplete-origin-path',
+        freeformCharacters: 'freeform-characters',
         characteristicOffset: 'characteristic-offset',
         pointBuyPool: 'point-buy-pool',
         resyncOnReady: 'resync-on-ready',
@@ -97,6 +98,18 @@ export class WH40KSettings {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.promptIncompleteOriginPath) !== false;
         } catch {
             return true;
+        }
+    }
+
+    /** When true, building a character by dragging items (e.g. an origin path)
+     *  directly onto an actor is permitted; otherwise the supported path is the
+     *  Origin Path Builder. Defaults to false. Safe before registration. See
+     *  issue #219. */
+    static isFreeformCharactersEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.freeformCharacters) === true;
+        } catch {
+            return false;
         }
     }
 
@@ -207,6 +220,15 @@ export class WH40KSettings {
             config: true,
             requiresReload: false,
             default: true,
+            type: Boolean,
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.freeformCharacters, {
+            name: 'WH40K.SETTINGS.FreeformCharacters.Name',
+            hint: 'WH40K.SETTINGS.FreeformCharacters.Hint',
+            scope: 'world',
+            config: true,
+            requiresReload: false,
+            default: false,
             type: Boolean,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset, {

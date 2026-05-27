@@ -49,6 +49,18 @@
     {{/systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
+         EDIT-MODE TOGGLE
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="tw-flex tw-shrink-0 tw-items-center tw-justify-end tw-gap-2 tw-px-3 tw-py-1">
+      {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs
+          action="toggleEditMode"
+          icon="fa-pen-to-square"
+          activeIcon="fa-lock-open"
+          isActive=inEditMode
+          titleKey="WH40K.OriginPath.ToggleEditMode"}}
+    </div>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
     <nav class="tw-flex tw-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
@@ -156,7 +168,27 @@
             <i class="fas fa-graduation-cap tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.SkillsGranted"}}
           </h3>
 
-          {{#if item.system.grants.skills.length}}
+          {{#if inEditMode}}
+          <div class="tw-flex tw-flex-col tw-gap-1">
+            {{#each item.system.grants.skills as |skill index|}}
+            <div class="tw-flex tw-items-center tw-gap-2" data-index="{{index}}">
+              <input type="text" name="system.grants.skills.{{index}}.name" value="{{skill.name}}" placeholder="{{localize 'WH40K.OriginPath.NamePlaceholder'}}" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <input type="text" name="system.grants.skills.{{index}}.specialization" value="{{skill.specialization}}" placeholder="{{localize 'WH40K.OriginPath.SpecializationPlaceholder'}}" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <select name="system.grants.skills.{{index}}.level" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+                <option value="known" {{#if (eq skill.level "known")}}selected{{/if}}>{{localize "WH40K.OriginPath.SkillLevel.known"}}</option>
+                <option value="trained" {{#if (eq skill.level "trained")}}selected{{/if}}>{{localize "WH40K.OriginPath.SkillLevel.trained"}}</option>
+                <option value="plus10" {{#if (eq skill.level "plus10")}}selected{{/if}}>{{localize "WH40K.OriginPath.SkillLevel.plus10"}}</option>
+                <option value="experienced" {{#if (eq skill.level "experienced")}}selected{{/if}}>{{localize "WH40K.OriginPath.SkillLevel.experienced"}}</option>
+                <option value="plus20" {{#if (eq skill.level "plus20")}}selected{{/if}}>{{localize "WH40K.OriginPath.SkillLevel.plus20"}}</option>
+                <option value="veteran" {{#if (eq skill.level "veteran")}}selected{{/if}}>{{localize "WH40K.OriginPath.SkillLevel.veteran"}}</option>
+                <option value="plus30" {{#if (eq skill.level "plus30")}}selected{{/if}}>{{localize "WH40K.OriginPath.SkillLevel.plus30"}}</option>
+              </select>
+              <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--wh40k-accent-combat)] tw-cursor-pointer" data-action="removeGrant" data-grant="skills" data-index="{{index}}" title="{{localize 'WH40K.OriginPath.Remove'}}"><i class="fas fa-trash"></i></button>
+            </div>
+            {{/each}}
+            <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-mt-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-self-start" data-action="addGrant" data-grant="skills"><i class="fas fa-plus"></i> {{localize "WH40K.OriginPath.AddSkill"}}</button>
+          </div>
+          {{else if item.system.grants.skills.length}}
           <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.skills as |skill index|}}
             <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
@@ -188,7 +220,18 @@
             <i class="fas fa-star tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.TalentsGranted"}}
           </h3>
 
-          {{#if item.system.grants.talents.length}}
+          {{#if inEditMode}}
+          <div class="tw-flex tw-flex-col tw-gap-1">
+            {{#each item.system.grants.talents as |talent index|}}
+            <div class="tw-flex tw-items-center tw-gap-2" data-index="{{index}}">
+              <input type="text" name="system.grants.talents.{{index}}.name" value="{{talent.name}}" placeholder="{{localize 'WH40K.OriginPath.NamePlaceholder'}}" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <input type="text" name="system.grants.talents.{{index}}.specialization" value="{{talent.specialization}}" placeholder="{{localize 'WH40K.OriginPath.SpecializationPlaceholder'}}" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--wh40k-accent-combat)] tw-cursor-pointer" data-action="removeGrant" data-grant="talents" data-index="{{index}}" title="{{localize 'WH40K.OriginPath.Remove'}}"><i class="fas fa-trash"></i></button>
+            </div>
+            {{/each}}
+            <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-mt-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-self-start" data-action="addGrant" data-grant="talents"><i class="fas fa-plus"></i> {{localize "WH40K.OriginPath.AddTalent"}}</button>
+          </div>
+          {{else if item.system.grants.talents.length}}
           <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.talents as |talent index|}}
             <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
@@ -216,7 +259,18 @@
             <i class="fas fa-shield-alt tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.TraitsGranted"}}
           </h3>
 
-          {{#if item.system.grants.traits.length}}
+          {{#if inEditMode}}
+          <div class="tw-flex tw-flex-col tw-gap-1">
+            {{#each item.system.grants.traits as |trait index|}}
+            <div class="tw-flex tw-items-center tw-gap-2" data-index="{{index}}">
+              <input type="text" name="system.grants.traits.{{index}}.name" value="{{trait.name}}" placeholder="{{localize 'WH40K.OriginPath.NamePlaceholder'}}" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <input type="number" name="system.grants.traits.{{index}}.level" value="{{trait.level}}" placeholder="{{localize 'WH40K.OriginPath.TraitLevelPlaceholder'}}" class="tw-w-20 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--wh40k-accent-combat)] tw-cursor-pointer" data-action="removeGrant" data-grant="traits" data-index="{{index}}" title="{{localize 'WH40K.OriginPath.Remove'}}"><i class="fas fa-trash"></i></button>
+            </div>
+            {{/each}}
+            <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-mt-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-self-start" data-action="addGrant" data-grant="traits"><i class="fas fa-plus"></i> {{localize "WH40K.OriginPath.AddTrait"}}</button>
+          </div>
+          {{else if item.system.grants.traits.length}}
           <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.traits as |trait index|}}
             <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
@@ -259,12 +313,24 @@
         </div>
 
         {{!-- Equipment Granted --}}
-        {{#if item.system.grants.equipment.length}}
+        {{#if (or inEditMode item.system.grants.equipment.length)}}
         <div class="tw-mb-3">
           <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-toolbox tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.EquipmentGranted"}}
           </h3>
 
+          {{#if inEditMode}}
+          <div class="tw-flex tw-flex-col tw-gap-1">
+            {{#each item.system.grants.equipment as |equip index|}}
+            <div class="tw-flex tw-items-center tw-gap-2" data-index="{{index}}">
+              <input type="text" name="system.grants.equipment.{{index}}.name" value="{{equip.name}}" placeholder="{{localize 'WH40K.OriginPath.NamePlaceholder'}}" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <input type="number" name="system.grants.equipment.{{index}}.quantity" value="{{equip.quantity}}" min="1" placeholder="{{localize 'WH40K.OriginPath.QuantityPlaceholder'}}" class="tw-w-20 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--wh40k-accent-combat)] tw-cursor-pointer" data-action="removeGrant" data-grant="equipment" data-index="{{index}}" title="{{localize 'WH40K.OriginPath.Remove'}}"><i class="fas fa-trash"></i></button>
+            </div>
+            {{/each}}
+            <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-mt-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-self-start" data-action="addGrant" data-grant="equipment"><i class="fas fa-plus"></i> {{localize "WH40K.OriginPath.AddEquipment"}}</button>
+          </div>
+          {{else}}
           <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.equipment as |equip index|}}
             <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
@@ -278,6 +344,7 @@
             </div>
             {{/each}}
           </div>
+          {{/if}}
         </div>
         {{/if}}
 
@@ -467,5 +534,15 @@
       </div>
 
     </section>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         PERSISTENCE FOOTNOTE
+    ═══════════════════════════════════════════════════════════════════ --}}
+    {{#if inEditMode}}
+    <footer class="tw-flex tw-shrink-0 tw-items-start tw-gap-2 tw-px-3 tw-py-2 tw-text-xs tw-italic tw-opacity-80 tw-border-t tw-border-[var(--wh40k-border-color)]">
+      <i class="fas fa-circle-info tw-mt-0.5"></i>
+      <span>{{localize "WH40K.OriginPath.PersistenceFootnote"}}</span>
+    </footer>
+    {{/if}}
   </form>
 </div>

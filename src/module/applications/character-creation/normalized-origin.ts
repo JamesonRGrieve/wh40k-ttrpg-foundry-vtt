@@ -108,6 +108,10 @@ export interface NormalizedOrigin {
     xpCost: number;
     hasChoices: boolean;
     gameSystem: string;
+    /** True when this origin came from a world Item rather than a compendium
+     *  pack. World-sourced origins are surfaced in the builder with a warning
+     *  marker because they are not backed by a persistent compendium source. */
+    fromWorld: boolean;
     /** Raw system data preserved for compatibility */
     // eslint-disable-next-line no-restricted-syntax -- boundary: system holds raw Foundry compendium data with no schema; consumers cast to specific shapes they need
     system: Record<string, unknown>;
@@ -273,6 +277,7 @@ export function normalizeOrigin(doc: Record<string, unknown>): NormalizedOrigin 
         xpCost: asNumber(system['xpCost']),
         hasChoices: grants.choices.length > 0,
         gameSystem: asString(system['gameSystem']),
+        fromWorld: doc['fromWorld'] === true,
         system: system,
     };
 }

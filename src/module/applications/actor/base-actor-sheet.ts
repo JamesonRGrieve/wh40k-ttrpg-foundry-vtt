@@ -2431,8 +2431,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             return this._onSortItem(event, item);
         }
 
-        // Create the item
-        return this.actor.createEmbeddedDocuments('Item', [item.toObject()]);
+        // Create the item. Surface validation/creation failures instead of
+        // letting them fail silently — e.g. armour whose coverage resolves
+        // empty throws in _validateJoint, which otherwise looks to the user
+        // like the drop did nothing. See issue #218.
+        try {
+            return await this.actor.createEmbeddedDocuments('Item', [item.toObject()]);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            ui.notifications.error(game.i18n.format('WH40K.Item.DropFailed', { name: item.name, error: message }));
+            return false;
+        }
     }
 
     /* -------------------------------------------- */
