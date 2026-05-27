@@ -1,4 +1,5 @@
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
+import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, readOriginDelta, type OriginModifierBag } from '../origin-grant-ledger.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import type { WH40KItemSystemData } from '../types/global.d.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
@@ -21,28 +22,6 @@ type OriginActorLike = WH40KBaseActor & {
         fate?: { total?: number };
     };
 };
-
-/** Resource delta a single origin previously committed, recorded for idempotent re-application. */
-interface OriginAppliedDelta {
-    characteristics?: Record<string, number>;
-    wounds?: number;
-    fate?: number;
-}
-
-/**
- * Read the per-origin delta record stored on an actor at
- * `flags.wh40k-rpg.originGrantDeltas[<key>]`. Returns an empty delta when none
- * has been committed yet (so the first apply is purely additive).
- */
-// eslint-disable-next-line no-restricted-syntax -- boundary: `flags` is the Foundry Document flags bag, untyped at the framework boundary
-function readOriginDelta(flags: unknown, key: string): OriginAppliedDelta {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: actor flags is an open Record at the Foundry document boundary
-    const bag = (flags as Record<string, Record<string, unknown> | undefined> | undefined)?.['wh40k-rpg']?.['originGrantDeltas'];
-    if (bag === undefined || bag === null || typeof bag !== 'object') return {};
-    // eslint-disable-next-line no-restricted-syntax -- boundary: per-origin delta entries are user-data-derived; narrowed to the numeric fields we read
-    const entry = (bag as Record<string, OriginAppliedDelta | undefined>)[key];
-    return entry ?? {};
-}
 
 /* eslint-disable no-restricted-syntax -- boundary: `extra` is a template-shaped card bag forwarded to renderTemplate */
 type SimpleD100Opts = {
@@ -804,15 +783,7 @@ export class WH40KItem extends WH40KItemContainer {
      */
     #originIdentityKey(): string {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document _stats / flags shapes; fvtt-types models them loosely. compendiumSource is the V14 location, flags.core.sourceId is the V11/V12 legacy location
-        const stats = (this as unknown as { _stats?: { compendiumSource?: unknown } })._stats;
-        const fromStats = stats?.compendiumSource;
-        if (typeof fromStats === 'string' && fromStats.length > 0) return fromStats;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: see above
-        const flags = (this as unknown as { flags?: { core?: { sourceId?: unknown } } }).flags;
-        const fromFlag = flags?.core?.sourceId;
-        if (typeof fromFlag === 'string' && fromFlag.length > 0) return fromFlag;
-        if (typeof this.id === 'string' && this.id.length > 0) return this.id;
-        return `name:${this.name}`;
+        return originIdentityKey(this as unknown as Parameters<typeof originIdentityKey>[0]);
     }
 
     /**
@@ -841,21 +812,21 @@ export class WH40KItem extends WH40KItemContainer {
         // eslint-disable-next-line no-restricted-syntax -- boundary: items destined for createEmbeddedDocuments
         const itemsToAdd: Record<string, unknown>[] = [];
         // eslint-disable-next-line no-restricted-syntax -- boundary: origin-path modifiers are stored as an opaque bag in the shared item schema
-        const modifiers = (this.system.modifiers ?? {}) as unknown as {
-            characteristics?: Record<string, number>;
-            wounds?: number;
-            fate?: number;
+        const modifiers = (this.system.modifiers ?? {}) as unknown as OriginModifierBag & {
             skills?: string[];
             talents?: string[];
             traits?: string[];
         };
 
         // Read the deltas this origin previously committed to the actor, so we
-        // can reverse them before re-applying (idempotency).
+        // can reverse them before re-applying (idempotency). `newDelta` is the
+        // canonical contribution of this origin's modifiers, derived by the same
+        // shared helper the builder uses when it stamps the ledger — so the two
+        // mechanisms never disagree on what an origin "already added".
         const identityKey = this.#originIdentityKey();
         const priorDelta = readOriginDelta(actor.flags, identityKey);
         const priorChars = priorDelta.characteristics ?? {};
-        const newDelta: { characteristics: Record<string, number>; wounds: number; fate: number } = { characteristics: {}, wounds: 0, fate: 0 };
+        const newDelta = deltaFromModifiers(modifiers);
 
         // Apply characteristic modifiers (reverse prior delta, add current).
         const charKeys = new Set<string>([...Object.keys(modifiers.characteristics ?? {}), ...Object.keys(priorChars)]);
@@ -865,32 +836,27 @@ export class WH40KItem extends WH40KItemContainer {
             if (charEntry === undefined) continue;
             const value = Number(modifiers.characteristics?.[key] ?? 0);
             const prior = Number(priorChars[key] ?? 0);
-            if (value !== 0) newDelta.characteristics[key] = value;
             if (value === prior) continue;
             const currentBonus: number = charEntry.advance;
             updates[`system.characteristics.${key}.advance`] = currentBonus - prior + value;
         }
 
         // Apply wounds modifier (reverse prior, add current).
-        const woundsValue = Number(modifiers.wounds ?? 0);
         const priorWounds = Number(priorDelta.wounds ?? 0);
-        newDelta.wounds = woundsValue;
-        if (woundsValue !== priorWounds) {
+        if (newDelta.wounds !== priorWounds) {
             const currentWounds: number = actor.system.wounds.max;
-            updates['system.wounds.max'] = currentWounds - priorWounds + woundsValue;
+            updates['system.wounds.max'] = currentWounds - priorWounds + newDelta.wounds;
         }
 
         // Apply fate modifier (reverse prior, add current).
-        const fateValue = Number(modifiers.fate ?? 0);
         const priorFate = Number(priorDelta.fate ?? 0);
-        newDelta.fate = fateValue;
-        if (fateValue !== priorFate) {
+        if (newDelta.fate !== priorFate) {
             const currentFate: number = actor.system.fate?.total ?? 0;
-            updates['system.fate.total'] = currentFate - priorFate + fateValue;
+            updates['system.fate.total'] = currentFate - priorFate + newDelta.fate;
         }
 
         // Record the delta this apply commits, so the next apply can reverse it.
-        updates[`flags.wh40k-rpg.originGrantDeltas.${identityKey}`] = newDelta;
+        updates[originDeltaFlagPath(identityKey)] = newDelta;
 
         // Collect skills to add — skip-if-exists (matched by name).
         if (Array.isArray(modifiers.skills)) {

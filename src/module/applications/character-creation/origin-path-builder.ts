@@ -16,6 +16,7 @@ import WH40K from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
+import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, type OriginModifierBag } from '../../origin-grant-ledger.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
@@ -853,7 +854,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // the item declares one; otherwise include it. See issue #219.
         const worldOrigins = game.items.filter((i): i is typeof i & { type: string } => (i as { type?: string }).type === 'originPath');
         for (const doc of worldOrigins) {
-            const itemSystem = (doc as unknown as { system?: { gameSystem?: string; gameSystems?: unknown } }).system ?? {};
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem.system is an untyped Foundry DataModel union; narrow to the originPath gameSystem fields we read, each guarded on the next lines
+            const itemSystem = doc.system as { gameSystem?: unknown; gameSystems?: unknown };
             const declaredSystem = typeof itemSystem.gameSystem === 'string' ? itemSystem.gameSystem : null;
             const declaredSystems = Array.isArray(itemSystem.gameSystems) ? itemSystem.gameSystems : [];
             const matchesSystem =
@@ -4759,6 +4761,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 await this.actor.update(resourceUpdate);
             }
 
+            // Record the resource deltas these origins represent in the shared
+            // ledger, so the boot-time reconcile pass treats them as already
+            // applied and does not additively double-count wounds/fate/chars on
+            // top of the absolute writes above. Must run AFTER the embedded
+            // origin items are created (it reads them back) and after the
+            // resource writes (so the recorded deltas reflect the committed
+            // selections).
+            await this._stampOriginGrantLedger();
+
             // Equip Acolyte: create the selected Armoury items on the actor (plus 2 clips for weapons)
             if (this.systemConfig.equipmentStep && this.equipmentSelections.size > 0) {
                 await this._applyEquipmentSelections();
@@ -4897,6 +4908,39 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         for (const [, selection] of this.selections) collectFromSelection(selection);
         collectFromSelection(this.lineageSelection);
         return sums;
+    }
+
+    /**
+     * Stamp the shared origin-grant resource ledger so the boot-time reconcile
+     * pass ({@link WH40KItem.applyOriginToActor}) becomes a no-op for the
+     * characteristics / wounds / fate this commit already baked in via its
+     * absolute writes.
+     *
+     * The builder writes resources absolutely (`system.wounds.max = rolled`,
+     * `system.characteristics.*.base = baseline + roll + originBonus`). The
+     * reconcile applier instead adds an origin's `system.modifiers` deltas on
+     * top of whatever it finds, reversing a recorded prior delta first. Without
+     * a recorded delta, the next world `ready` sees `prior = {}` and re-adds the
+     * origin's modifiers — double-applying. By recording each embedded origin's
+     * `deltaFromModifiers(...)` (the exact value the reconcile applier computes
+     * as `newDelta`), we guarantee `prior === newDelta` on the next reconcile,
+     * so every resource branch there is skipped. The ledger key is derived with
+     * the same {@link originIdentityKey} the applier uses, so they always agree.
+     * @private
+     */
+    async _stampOriginGrantLedger(): Promise<void> {
+        const embeddedOrigins = this.actor.items.filter((i) => i.type === 'originPath');
+        if (embeddedOrigins.length === 0) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
+        const ledgerUpdate: Record<string, unknown> = {};
+        for (const origin of embeddedOrigins) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: embedded item system bag is the open-ended shared item schema; we read only the modifier fields
+            const modifiers = (origin.system as { modifiers?: OriginModifierBag } | undefined)?.modifiers;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem's fvtt-typed _stats/flags shapes are looser than OriginIdentityItemLike; the same coercion is used in WH40KItem.#originIdentityKey
+            const identityKey = originIdentityKey(origin as unknown as Parameters<typeof originIdentityKey>[0]);
+            ledgerUpdate[originDeltaFlagPath(identityKey)] = deltaFromModifiers(modifiers);
+        }
+        await this.actor.update(ledgerUpdate);
     }
 
     /** Item types considered "inventory" — wiped on a Reset Inventory commit. */
