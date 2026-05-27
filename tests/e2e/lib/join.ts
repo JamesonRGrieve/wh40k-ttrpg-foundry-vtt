@@ -25,6 +25,18 @@ export async function joinAsGM(page: Page): Promise<boolean> {
         undefined,
         { timeout: 60_000 },
     );
+    // Disable the "build your unfinished character" sheet-open prompt so its
+    // modal dialog never overlays sheets that other specs render/screenshot.
+    // (Specs that exercise the prompt itself re-enable it explicitly.)
+    await page.evaluate(async () => {
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game.settings` is injected by the licensed app; no shipped types
+            const g = globalThis as unknown as { game?: { settings?: { set?: (s: string, k: string, v: boolean) => Promise<unknown> } } };
+            await g.game?.settings?.set?.('wh40k-rpg', 'prompt-incomplete-origin-path', false);
+        } catch {
+            /* setting not registered (older build) — non-fatal */
+        }
+    });
     return true;
 }
 

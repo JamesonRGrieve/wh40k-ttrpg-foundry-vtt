@@ -17,6 +17,7 @@ export class WH40KSettings {
         movementAutomation: 'movement-automation',
         dh2Ruleset: 'dh2-ruleset',
         degreesMode: 'degrees-mode',
+        promptIncompleteOriginPath: 'prompt-incomplete-origin-path',
         characteristicOffset: 'characteristic-offset',
         pointBuyPool: 'point-buy-pool',
         resyncOnReady: 'resync-on-ready',
@@ -86,6 +87,16 @@ export class WH40KSettings {
             return value === 'gen1' || value === 'gen2' ? value : 'raw';
         } catch {
             return 'raw';
+        }
+    }
+
+    /** When true (default), opening an unbuilt character/NPC sheet prompts to
+     *  run the origin-path builder. Safe before registration (returns true). */
+    static isOriginPathPromptEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.promptIncompleteOriginPath) !== false;
+        } catch {
+            return true;
         }
     }
 
@@ -188,6 +199,15 @@ export class WH40KSettings {
                 gen1: 'WH40K.SETTINGS.DegreesMode.Choices.Gen1',
                 gen2: 'WH40K.SETTINGS.DegreesMode.Choices.Gen2',
             },
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.promptIncompleteOriginPath, {
+            name: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Name',
+            hint: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Hint',
+            scope: 'world',
+            config: true,
+            requiresReload: false,
+            default: true,
+            type: Boolean,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset, {
             name: 'WH40K.SETTINGS.CharacteristicOffset.Name',

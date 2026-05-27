@@ -1474,6 +1474,11 @@ export default class CharacterSheet extends BaseActorSheet {
     override async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onFirstRender(context, options);
 
+        // Nudge the user to build an unfinished character via the origin-path
+        // builder (the d20 on the portrait isn't obvious enough). Fire-and-forget
+        // so the dialog doesn't block the sheet's first render.
+        void this.#maybePromptOriginPathIncomplete();
+
         // Ensure initial tab is active
         const activeTab = this.tabGroups.primary;
 
@@ -4965,6 +4970,65 @@ export default class CharacterSheet extends BaseActorSheet {
                 duration: 5000,
             });
             console.error('Origin Path Builder error:', error);
+        }
+    }
+
+    /**
+     * On first open of an unbuilt character/NPC, prompt to run the origin-path
+     * builder — the d20 on the portrait isn't obvious enough. A completed origin
+     * path (all three core steps set) never prompts; "don't show again" sets a
+     * per-actor flag so it stops nagging. The d20 stays the always-on entry point.
+     */
+    async #maybePromptOriginPathIncomplete(): Promise<void> {
+        if (!this.actor.isOwner) return;
+        if (!WH40KSettings.isOriginPathPromptEnabled()) return;
+        const op = this.actor.system.originPath;
+        const built = op.homeWorld !== '' && op.background !== '' && op.role !== '';
+        if (built) return;
+        if (this.actor.getFlag('wh40k-rpg', 'originPromptDismissed') === true) return;
+
+        const message = game.i18n.localize('WH40K.OriginPath.IncompletePrompt.Message');
+        const dontShow = game.i18n.localize('WH40K.OriginPath.IncompletePrompt.DontShowAgain');
+        const content = `<div class="wh40k-rpg"><p>${message}</p><label class="tw-flex tw-items-center tw-gap-2 tw-mt-2"><input type="checkbox" name="dontShowAgain" /> <span>${dontShow}</span></label></div>`;
+
+        const readDontShow = (button: HTMLElement): boolean => {
+            const form = (button as HTMLElement & { form?: HTMLFormElement }).form;
+            return (form?.elements.namedItem('dontShowAgain') as HTMLInputElement | null)?.checked === true;
+        };
+
+        // Mutable container: the flag is set inside the button callbacks, which
+        // TS/ESLint control-flow can't see (a plain `let` would narrow to false).
+        const promptState = { dismiss: false };
+        const choice = await dialogV2.wait({
+            window: { title: game.i18n.localize('WH40K.OriginPath.IncompletePrompt.Title') },
+            content,
+            buttons: [
+                {
+                    action: 'build',
+                    label: game.i18n.localize('WH40K.OriginPath.IncompletePrompt.Confirm'),
+                    icon: 'fas fa-dice-d20',
+                    default: true,
+                    callback: (_event: Event, button: HTMLElement): string => {
+                        promptState.dismiss = readDontShow(button);
+                        return 'build';
+                    },
+                },
+                {
+                    action: 'later',
+                    label: game.i18n.localize('WH40K.OriginPath.IncompletePrompt.Later'),
+                    callback: (_event: Event, button: HTMLElement): string => {
+                        promptState.dismiss = readDontShow(button);
+                        return 'later';
+                    },
+                },
+            ],
+        });
+
+        if (promptState.dismiss) {
+            await this.actor.setFlag('wh40k-rpg', 'originPromptDismissed', true);
+        }
+        if (choice === 'build') {
+            await this._openOriginPathBuilder();
         }
     }
 
