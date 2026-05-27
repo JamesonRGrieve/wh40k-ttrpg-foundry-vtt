@@ -285,6 +285,36 @@ function resolveBuilderGameSystem(actor: WH40KBaseActor, options: Record<string,
     throw new Error('Unable to resolve a game system for OriginPathBuilder');
 }
 
+/** Display labels for game lines, used in adapted-homebrew tooltips. */
+const GAME_LINE_LABELS: Record<string, string> = {
+    dh1: 'Dark Heresy 1e',
+    dh2: 'Dark Heresy 2e',
+    rt: 'Rogue Trader',
+    dw: 'Deathwatch',
+    bc: 'Black Crusade',
+    ow: 'Only War',
+    im: 'Imperium Maledictum',
+};
+
+/**
+ * Classify an origin's homebrew provenance relative to the active system:
+ * - official for the active system (`raw`)        → neither flag
+ * - homebrew here, but official (`raw`) elsewhere → adapted homebrew
+ * - no official source in any line                → pure homebrew
+ */
+export function originProvenanceFlags(
+    origin: NormalizedOrigin,
+    activeSystem: string,
+): { isPureHomebrew: boolean; isAdaptedHomebrew: boolean; adaptedFromLabel: string } {
+    const official = origin.officialLines;
+    if (official.includes(activeSystem)) return { isPureHomebrew: false, isAdaptedHomebrew: false, adaptedFromLabel: '' };
+    if (official.length > 0) {
+        const adaptedFromLabel = official.map((line) => GAME_LINE_LABELS[line] ?? line).join(', ');
+        return { isPureHomebrew: false, isAdaptedHomebrew: true, adaptedFromLabel };
+    }
+    return { isPureHomebrew: true, isAdaptedHomebrew: false, adaptedFromLabel: '' };
+}
+
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
     declare actor: WH40KBaseActor;
     declare gameSystem: GameSystemId;
@@ -1608,6 +1638,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 isAdvanced: origin.isAdvanced,
                 xpCost: origin.xpCost,
                 fromWorld: origin.fromWorld,
+                ...originProvenanceFlags(origin, this.gameSystem),
                 badges: true,
             };
         });
@@ -2201,6 +2232,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     isAdvanced: card.isAdvanced,
                     xpCost: card.xpCost,
                     fromWorld: origin.fromWorld,
+                    ...originProvenanceFlags(origin, this.gameSystem),
                     badges: card.hasChoices || origin.hasChoices || card.isAdvanced || card.xpCost > 0,
                 };
             })

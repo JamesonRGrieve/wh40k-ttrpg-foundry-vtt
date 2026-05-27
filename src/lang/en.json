@@ -2153,6 +2153,8 @@
             "ToggleEditMode": "Toggle edit mode",
             "UseBuilderOnDrop": "Origin paths are applied through the Origin Path Builder, not by dragging them onto a character. Open the builder from the d20 on the portrait. (A GM can enable freeform building in system settings.)",
             "WorldSourcedWarning": "Authored in this world, not in a compendium",
+            "HomebrewContent": "Homebrew content — no official source in any line",
+            "AdaptedHomebrew": "Homebrew conversion — official in:",
             "PersistenceFootnote": "Tip: edits here only affect this world item. For changes that persist across worlds and updates, edit the source in its compendium instead.",
             "AddSkill": "Add Skill",
             "AddTalent": "Add Talent",
