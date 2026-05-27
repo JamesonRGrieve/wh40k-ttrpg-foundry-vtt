@@ -150,11 +150,12 @@ export default class ItemDataModel extends SystemDataModel {
         // call sites pass the whole document. Materialize whichever shape we received.
         if (systemContainer !== null && typeof systemContainer === 'object' && !Array.isArray(systemContainer)) {
             const systemSource = systemContainer as Record<string, unknown>;
-            const lineKey = inferActiveGameLine(systemSource);
+            // No parent/actor at migration time; resolves to the world primary line.
+            const lineKey = inferActiveGameLine();
             materializeItemVariants(systemSource, lineKey);
             return;
         }
-        const rootLineKey = inferActiveGameLine(source);
+        const rootLineKey = inferActiveGameLine();
         materializeItemVariants(source, rootLineKey);
     }
 

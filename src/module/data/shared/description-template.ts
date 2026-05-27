@@ -8,7 +8,11 @@ import SystemDataModel from '../abstract/system-data-model.ts';
 export default class DescriptionTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
     declare description: { value: string; chat: string; summary: string };
-    declare source: { provenance: string; book: string; page: string; url: string; derivedFrom: string };
+    declare source: { provenance: string; book: string; page: string; url: string; derivedFrom: string; errata: boolean };
+    // In-campaign acquisition note ("where we got this"). NOT per-rulebook-line
+    // provenance (that is `source`) — this is campaign metadata, same across
+    // game lines, populated by the Obsidian-vault importer from `acquired:`.
+    declare acquired: string;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -29,7 +33,13 @@ export default class DescriptionTemplate extends SystemDataModel {
                 page: new fields.StringField({ required: false, blank: true, initial: '' }),
                 url: new fields.StringField({ required: false, blank: true, initial: '' }),
                 derivedFrom: new fields.StringField({ required: false, blank: true, initial: '' }),
+                // True when this line's data incorporates published errata corrections.
+                errata: new fields.BooleanField({ required: false, initial: false }),
             }),
+            // In-campaign acquisition note ("where we got this"). Campaign
+            // metadata, not per-line provenance — kept top-level so it does not
+            // get flattened by the per-line-variant resolution of `source`.
+            acquired: new fields.StringField({ required: false, blank: true, initial: '' }),
         };
     }
 
@@ -83,8 +93,8 @@ export default class DescriptionTemplate extends SystemDataModel {
         if (typeof source['source'] === 'string') {
             const raw = source['source'];
             source['source'] = /homebrew/i.test(raw)
-                ? { provenance: 'homebrew', book: '', page: '', url: '', derivedFrom: '' }
-                : { provenance: 'raw', book: raw, page: '', url: '', derivedFrom: '' };
+                ? { provenance: 'homebrew', book: '', page: '', url: '', derivedFrom: '', errata: false }
+                : { provenance: 'raw', book: raw, page: '', url: '', derivedFrom: '', errata: false };
         }
         if (isLineVariantContainer(source['source'])) return;
         if (source['source'] !== null && source['source'] !== undefined && typeof source['source'] === 'object') {
@@ -111,6 +121,7 @@ export default class DescriptionTemplate extends SystemDataModel {
             src['url'] ??= '';
             // eslint-disable-next-line no-restricted-syntax -- ??= sets schema defaults for legacy stored data in _migrateData
             src['derivedFrom'] ??= '';
+            src['errata'] = src['errata'] === true;
             delete src['custom'];
         }
     }
@@ -123,13 +134,14 @@ export default class DescriptionTemplate extends SystemDataModel {
         };
     }
 
-    static #emptySource(): Record<string, string> {
+    static #emptySource(): Record<string, string | boolean> {
         return {
             provenance: 'raw',
             book: '',
             page: '',
             url: '',
             derivedFrom: '',
+            errata: false,
         };
     }
 
@@ -152,10 +164,8 @@ export default class DescriptionTemplate extends SystemDataModel {
     override prepareBaseData(): void {
         super.prepareBaseData();
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: parent is a Foundry DataModel/Document with untyped _source backing store
-        const parentAny = this.parent as { _source?: { system?: Record<string, unknown> } } | null | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: parent is Foundry Document type (any); actor field is untyped on the base DataModel parent
-        const lineKey = inferActiveGameLine(parentAny?._source?.system ?? {}, this.parent as { actor?: unknown } | null | undefined);
+        const lineKey = inferActiveGameLine(this.parent as { actor?: unknown } | null | undefined);
         const resolvedDescription = resolveLineVariant(this.description, lineKey);
         const resolvedSource = resolveLineVariant(this.source, lineKey);
 

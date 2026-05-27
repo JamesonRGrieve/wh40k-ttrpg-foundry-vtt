@@ -87,7 +87,7 @@ export default class DamageTemplate extends SystemDataModel {
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent _source data
         const parent = this.parent as { _source?: { system?: Record<string, unknown> }; actor?: unknown } | undefined;
-        const lineKey = inferActiveGameLine(parent?._source?.system ?? {}, parent ?? null);
+        const lineKey = inferActiveGameLine(parent ?? null);
         // eslint-disable-next-line no-restricted-syntax -- boundary: per-line variant resolved at runtime
         const resolvedDamage = resolveLineVariant(this.damage, lineKey) as Record<string, unknown>;
         const resolvedSpecial = resolveLineVariant(this.special, lineKey) as string[] | Set<string> | null;

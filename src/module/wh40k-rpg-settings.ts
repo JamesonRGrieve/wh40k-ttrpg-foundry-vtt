@@ -1,3 +1,4 @@
+import type { GameSystemId } from './config/game-systems/types.ts';
 import { SYSTEM_ID } from './constants.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
@@ -10,6 +11,7 @@ export type DegreesMode = 'raw' | 'gen1' | 'gen2';
 export class WH40KSettings {
     static SETTINGS = {
         worldVersion: 'world-version',
+        primaryGameSystem: 'primary-game-system',
         simpleAttackRolls: 'simple-attack-rolls',
         simplePsychicRolls: 'simple-psychic-rolls',
         processActiveEffectsDuringCombat: 'active-effects-during-combat',
@@ -125,6 +127,17 @@ export class WH40KSettings {
         return WH40KSettings.getRuleset() === 'homebrew';
     }
 
+    /** The world's primary 40K RPG line; default dh2. Safe to call before settings init. */
+    static getPrimaryGameSystem(): GameSystemId {
+        try {
+            const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.primaryGameSystem));
+            const ids: string[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
+            return ids.includes(value) ? (value as GameSystemId) : 'dh2';
+        } catch {
+            return 'dh2';
+        }
+    }
+
     static registerSettings(): void {
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, {
             name: 'World Version',
@@ -185,6 +198,24 @@ export class WH40KSettings {
             config: false,
             default: [],
             type: Array,
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.primaryGameSystem, {
+            name: 'Primary Game System',
+            hint: 'The 40K RPG line this world runs. Sets the default line for newly-created actors and the active line used to resolve homologated content viewed outside an actor (e.g. compendium items).',
+            scope: 'world',
+            config: true,
+            requiresReload: true,
+            default: 'dh2',
+            type: String,
+            choices: {
+                rt: 'Rogue Trader',
+                dh1: 'Dark Heresy 1e',
+                dh2: 'Dark Heresy 2e',
+                bc: 'Black Crusade',
+                ow: 'Only War',
+                dw: 'Deathwatch',
+                im: 'Imperium Maledictum',
+            },
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset, {
             name: 'DH2e Economy Ruleset',

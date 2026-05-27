@@ -106,7 +106,7 @@ export default class AttackTemplate extends SystemDataModel {
         super.prepareBaseData();
 
         const parent = this.parent as AttackParentSource | undefined;
-        const lineKey = inferActiveGameLine(parent?._source?.system ?? {}, parent ?? null);
+        const lineKey = inferActiveGameLine(parent ?? null);
         // eslint-disable-next-line no-restricted-syntax -- boundary: per-line variant resolved at runtime
         const resolvedAttack = resolveLineVariant(this.attack, lineKey) as Record<string, unknown>;
 

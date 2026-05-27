@@ -349,9 +349,7 @@ export default class WeaponData extends ItemDataModel.mixin(
     override prepareBaseData(): void {
         super.prepareBaseData();
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: _source.system is Foundry raw document data (not DataModel); may be absent on uninitialized items
-        const sourceSystem = (this.parent._source.system ?? {}) as { gameSystems?: string[] };
-        const lineKey = inferActiveGameLine(sourceSystem, this.parent);
+        const lineKey = inferActiveGameLine(this.parent);
         this.class = resolveLineVariant(this.class, lineKey);
         this.type = resolveLineVariant(this.type, lineKey);
         this.twoHanded = Boolean(resolveLineVariant(this.twoHanded, lineKey));
