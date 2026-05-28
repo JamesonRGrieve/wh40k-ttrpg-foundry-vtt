@@ -13,6 +13,31 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 
+/**
+ * Valid weapon `class` / `type` choices. Shared between `defineSchema()` and the
+ * `_migrateData` coercion so a corrupt/legacy value (e.g. an imported `"low-tech"`
+ * type) is normalized to a valid choice instead of failing strict validation —
+ * which, for an owned item, drops it from the actor and empties the inventory.
+ */
+const WEAPON_CLASS_CHOICES = ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic'] as const;
+const WEAPON_TYPE_CHOICES = [
+    'primitive',
+    'las',
+    'solid-projectile',
+    'bolt',
+    'melta',
+    'plasma',
+    'flame',
+    'launcher',
+    'explosive',
+    'power',
+    'chain',
+    'shock',
+    'force',
+    'exotic',
+    'xenos',
+] as const;
+
 // Loose dictionary used as a structural shape for both pre-migration source data
 // and the data dictionaries passed to Foundry's update/create APIs.
 type DataDict = { [key: string]: SerializableValue };
@@ -171,29 +196,13 @@ export default class WeaponData extends ItemDataModel.mixin(
             class: new fields.StringField({
                 required: true,
                 initial: 'melee',
-                choices: ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic'],
+                choices: [...WEAPON_CLASS_CHOICES],
             }),
 
             type: new fields.StringField({
                 required: true,
                 initial: 'primitive',
-                choices: [
-                    'primitive',
-                    'las',
-                    'solid-projectile',
-                    'bolt',
-                    'melta',
-                    'plasma',
-                    'flame',
-                    'launcher',
-                    'explosive',
-                    'power',
-                    'chain',
-                    'shock',
-                    'force',
-                    'exotic',
-                    'xenos',
-                ],
+                choices: [...WEAPON_TYPE_CHOICES],
             }),
 
             // Weapon properties
@@ -279,7 +288,26 @@ export default class WeaponData extends ItemDataModel.mixin(
         super._migrateData(source);
         WeaponData.#migrateSpecial(source);
         WeaponData.#migrateClass(source);
+        WeaponData.#coerceEnums(source);
         WeaponData.#migrateProficiency(source);
+    }
+
+    /**
+     * Coerce an invalid/legacy `class` or `type` to the schema default so a
+     * corrupt value (e.g. an imported `"low-tech"` type) doesn't fail strict
+     * validation and drop the whole item from its owning actor. Runs after
+     * `#migrateClass` (which remaps tech-type values) and after super (which
+     * flattens any per-line variant container to a scalar).
+     * @param {object} source  The source data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors _migrateData source signature for internal migration helpers
+    static #coerceEnums(source: Record<string, unknown>): void {
+        if (typeof source['class'] === 'string' && !(WEAPON_CLASS_CHOICES as readonly string[]).includes(source['class'])) {
+            source['class'] = 'melee';
+        }
+        if (typeof source['type'] === 'string' && !(WEAPON_TYPE_CHOICES as readonly string[]).includes(source['type'])) {
+            source['type'] = 'primitive';
+        }
     }
 
     /**

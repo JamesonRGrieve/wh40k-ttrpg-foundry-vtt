@@ -7,6 +7,28 @@ import EquippableTemplate, { type EquippableState } from '../shared/equippable-t
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
+ * Valid armour `type` choices. Shared between `defineSchema()` and the
+ * `_migrateData` coercion so a corrupt/legacy value (e.g. an imported
+ * `"basic"`) is normalized to a valid choice instead of failing strict
+ * validation — which, for an owned item, drops it from the actor entirely
+ * and silently empties the inventory.
+ */
+const ARMOUR_TYPE_CHOICES = [
+    'flak',
+    'mesh',
+    'carapace',
+    'power',
+    'light-power',
+    'storm-trooper',
+    'feudal-world',
+    'primitive',
+    'xenos',
+    'void',
+    'enforcer',
+    'hostile-environment',
+] as const;
+
+/**
  * Data model for Armour items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
@@ -50,6 +72,13 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
+        // Coerce an invalid/legacy `type` to the schema default so a corrupt
+        // value (e.g. an imported "basic") doesn't fail strict validation and
+        // drop the whole item from its owning actor. Runs after super (which
+        // flattens any per-line variant container down to a scalar first).
+        if (typeof source['type'] === 'string' && !(ARMOUR_TYPE_CHOICES as readonly string[]).includes(source['type'])) {
+            source['type'] = 'flak';
+        }
         // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
         source['properties'] ??= [];
         if (Array.isArray(source['coverage'])) {
@@ -160,20 +189,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             type: new fields.StringField({
                 required: true,
                 initial: 'flak',
-                choices: [
-                    'flak',
-                    'mesh',
-                    'carapace',
-                    'power',
-                    'light-power',
-                    'storm-trooper',
-                    'feudal-world',
-                    'primitive',
-                    'xenos',
-                    'void',
-                    'enforcer',
-                    'hostile-environment',
-                ],
+                choices: [...ARMOUR_TYPE_CHOICES],
             }),
 
             // Armour points per location
