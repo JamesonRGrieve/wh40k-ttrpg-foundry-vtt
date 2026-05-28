@@ -86,6 +86,7 @@ interface OriginPathSystemData {
         traits?: GrantItemRaw[];
         choices?: GrantChoiceRaw[];
         equipment?: GrantItemRaw[];
+        specialAbilities?: Array<{ name?: string; description?: string }>;
         woundsFormula?: string;
         fateFormula?: string;
     };
@@ -184,7 +185,72 @@ interface GrantChoiceRaw {
     name?: string;
     type?: string;
     count?: number;
-    options?: Array<{ value?: string; name?: string; label?: string; grants?: WH40KItemModifiers }>;
+    options?: Array<{ value?: string; name?: string; label?: string; description?: string; grants?: WH40KItemModifiers }>;
+}
+
+/**
+ * A freeform content item to materialize on the actor at commit time.
+ * @see OriginPathBuilder._applyContentItemGrantsFromOrigins
+ */
+interface ContentItemPlan {
+    type: string;
+    name: string;
+    description: string;
+}
+
+/** Item types instantiated from freeform name+description origin-path grants. */
+const CONTENT_ITEM_TYPES = new Set(['specialAbility', 'malignancy', 'mutation', 'mentalDisorder']);
+
+/** Strip a trailing "(specialization)" so a composite pick matches the option label. */
+function stripCompositeSpecialization(raw: string): string {
+    const match = raw.match(/^(.+?)\s*\(.+\)\s*$/);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: capture-group access is `string | undefined` under strict tsconfig, `string` under regular tsconfig
+    return match === null ? raw : (match[1] ?? raw).trim();
+}
+
+/**
+ * Walk one committed origin's `system` and append freeform content-item plans
+ * (special ability / malignancy / mutation / mental disorder) to `out`.
+ *
+ * Two sources are read: fixed `grants.specialAbilities` and choice-resolved
+ * options whose choice `type` is a content type, located via the same
+ * `selectedChoices` key disambiguation as `OriginPathData._calculateActiveModifiers`.
+ */
+function collectContentItemPlans(system: OriginPathSystemData, out: ContentItemPlan[]): void {
+    const push = (type: string, name: string | undefined, description: string | undefined): void => {
+        if (!CONTENT_ITEM_TYPES.has(type)) return;
+        const cleanName = (name ?? '').trim();
+        if (cleanName === '') return;
+        out.push({ type, name: cleanName, description: description ?? '' });
+    };
+
+    // Fixed special-ability grants ({ name, description }).
+    for (const ability of system.grants?.specialAbilities ?? []) {
+        push('specialAbility', ability.name, ability.description);
+    }
+
+    // Choice-resolved content options.
+    const selectedChoices = system.selectedChoices ?? {};
+    const labelCounts: Record<string, number> = {};
+    for (const choice of system.grants?.choices ?? []) {
+        const choiceType = typeof choice.type === 'string' ? choice.type : '';
+        const baseLabel = choice.label !== undefined && choice.label !== '' ? choice.label : choice.name ?? '';
+        labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
+        const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
+        if (!CONTENT_ITEM_TYPES.has(choiceType)) continue;
+
+        const choiceKey = `${baseLabel}${suffix}`;
+        const selectedScoped = selectedChoices[choiceKey];
+        const selectedLegacy = selectedChoices[baseLabel];
+        const selected = Array.isArray(selectedScoped) ? selectedScoped : Array.isArray(selectedLegacy) ? selectedLegacy : [];
+        const options = choice.options ?? [];
+        for (const selectedValue of selected) {
+            const selectedStr = String(selectedValue);
+            const option = options.find((opt) => (opt.value ?? opt.name) === selectedStr || opt.name === selectedStr || opt.label === selectedStr);
+            const name = option?.name ?? option?.label ?? stripCompositeSpecialization(selectedStr);
+            push(choiceType, name, option?.description);
+        }
+    }
 }
 
 /**
@@ -4678,6 +4744,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // (see OriginPathData._calculateActiveModifiers).
             await this._applyTalentGrantsFromOrigins();
 
+            // Materialize freeform content-item grants (special abilities,
+            // malignancies, mutations, mental disorders) that carry no UUID.
+            await this._applyContentItemGrantsFromOrigins();
+
             // Apply characteristic rolls if any are assigned
             const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
             const charRolls = this._charRolls;
@@ -5261,6 +5331,60 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             itemFlags['wh40k-rpg'].originPathGranted = true;
             itemData.flags = itemFlags;
 
+            toCreate.push(itemData);
+        }
+
+        if (toCreate.length > 0) {
+            await this.actor.createEmbeddedDocuments('Item', toCreate as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
+        }
+    }
+
+    /**
+     * Materialize freeform content-item grants from committed origins onto the
+     * actor: special abilities, malignancies, mutations, mental disorders.
+     *
+     * Unlike talents/skills/traits, these options carry no compendium UUID —
+     * they are authored inline as `{ name, description }` on the origin (see the
+     * Deathwatch speciality packs). So each grant/choice becomes a freeform
+     * world item of the matching type, built from the option's name and
+     * description (written into `system.description.value`).
+     *
+     * Two sources are walked, mirroring {@link _applyTalentGrantsFromOrigins}:
+     *   1. Fixed grants in `grants.specialAbilities` (always specialAbility).
+     *   2. Choice-resolved options whose choice `type` is one of the content
+     *      types, located via the same `selectedChoices` key logic as
+     *      `OriginPathData._calculateActiveModifiers`.
+     *
+     * Re-commit is idempotent: an item of the same type + name (case-insensitive)
+     * already on the actor is skipped.
+     * @private
+     */
+    async _applyContentItemGrantsFromOrigins(): Promise<void> {
+        const plans: ContentItemPlan[] = [];
+        for (const [, selection] of this.selections) {
+            collectContentItemPlans(this._getSelectionSystem(selection), plans);
+        }
+        if (plans.length === 0) return;
+
+        const norm = (s: string): string => s.toLowerCase().trim();
+        const actorHas = (type: string, name: string): boolean => this.actor.items.some((i) => i.type === type && norm(i.name) === norm(name));
+
+        const toCreate: ItemDataLike[] = [];
+        const seenKeys = new Set<string>();
+        for (const plan of plans) {
+            const dedupKey = `${plan.type}::${norm(plan.name)}`;
+            if (seenKeys.has(dedupKey)) continue;
+            seenKeys.add(dedupKey);
+            if (actorHas(plan.type, plan.name)) continue;
+
+            const itemFlags: { 'wh40k-rpg'?: { originPathGranted?: boolean } } & ItemDataLike['flags'] = {};
+            itemFlags['wh40k-rpg'] = { originPathGranted: true };
+            const itemData: ItemDataLike = {
+                name: plan.name,
+                type: plan.type,
+                system: { description: { value: plan.description } },
+                flags: itemFlags,
+            };
             toCreate.push(itemData);
         }
 
