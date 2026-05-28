@@ -642,6 +642,19 @@ export default class CharacterData extends CreatureTemplate {
                 experience[field] = Number(experience[field]);
             }
         }
+
+        // Clamp `used` to never exceed `total`. DH2 has no "XP debt" — used > total
+        // is always corruption (e.g. an external builder import that wrote the full
+        // build cost as `used` while leaving `total` at the out-of-box value).
+        // Without this guard the sheet renders a negative `available` (issue #214)
+        // and downstream "can I afford X?" math is undefined. Mirrors the Origin
+        // Path Builder's defensive clamp so the invariant holds on every load,
+        // not only when the builder runs.
+        const used = experience['used'];
+        const total = experience['total'];
+        if (typeof used === 'number' && typeof total === 'number' && used > total) {
+            experience['used'] = total;
+        }
     }
 
     /**
