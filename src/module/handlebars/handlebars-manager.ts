@@ -341,6 +341,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/item/item-armour-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-gear-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-trait-sheet.hbs',
+            'systems/wh40k-rpg/templates/item/item-content-block-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-skill-sheet.hbs',
             'systems/wh40k-rpg/templates/item/item-psychic-power-sheet.hbs',
             'systems/wh40k-rpg/templates/item/ship-component-sheet.hbs',

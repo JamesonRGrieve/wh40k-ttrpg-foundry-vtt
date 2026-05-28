@@ -571,8 +571,8 @@
                 "Hint": "When a character or NPC sheet is opened and its origin path has never been completed, show a prompt offering to open the origin-path builder. Players can dismiss it per-character."
             },
             "FreeformCharacters": {
-                "Name": "Allow Freeform Character Building",
-                "Hint": "When enabled, items such as origin paths may be dragged directly onto an actor to build a character outside the Origin Path Builder. When disabled (default), the builder is the supported path and such drops are rejected."
+                "Name": "Freeform Character Editing",
+                "Hint": "When enabled, content items (special abilities, malignancies, mutations, mental disorders) and world origin paths can be edited directly in Foundry, and items such as origin paths may be dragged onto an actor to build a character outside the Origin Path Builder. When disabled (default), these surfaces are read-only and the builder is the supported path. To make changes that persist across worlds and updates, edit the source in its compendium instead."
             },
             "MovementAutomation": {
                 "Name": "Movement Automation",
@@ -922,6 +922,10 @@
             "ForceField": "Force Field Sheet",
             "CriticalInjury": "Critical Injury Sheet",
             "Condition": "Condition Sheet",
+            "SpecialAbility": "Special Ability Sheet",
+            "Malignancy": "Malignancy Sheet",
+            "Mutation": "Mutation Sheet",
+            "MentalDisorder": "Mental Disorder Sheet",
             "StorageLocation": "Storage Location Sheet",
             "PeerEnemy": "Peer/Enemy Sheet",
             "JournalEntry": "Journal Entry Sheet",
@@ -2412,7 +2416,13 @@
             "skill": "Skill",
             "characteristic": "Characteristic",
             "equipment": "Equipment",
-            "trait": "Trait"
+            "trait": "Trait",
+            "aptitude": "Aptitude",
+            "psychicPower": "Psychic Power",
+            "specialAbility": "Special Ability",
+            "malignancy": "Malignancy",
+            "mutation": "Mutation",
+            "mentalDisorder": "Mental Disorder"
         },
         "Biography": {
             "Header": "Biography",
@@ -3111,6 +3121,7 @@
         "Item": {
             "Properties": "Item Properties",
             "DropFailed": "Could not add \"{name}\": {error}",
+            "PersistenceFootnote": "Tip: edits here only affect this world item. For changes that persist across worlds and updates, edit the source in its compendium instead.",
             "Tabs": {
                 "Details": "Details",
                 "Effects": "Effects",
@@ -3121,6 +3132,32 @@
                 "Qualities": "Qualities",
                 "Notes": "Notes"
             }
+        },
+        "SpecialAbility": {
+            "Benefit": "Benefit"
+        },
+        "Malignancy": {
+            "Effect": "Effect"
+        },
+        "Mutation": {
+            "Category": "Category",
+            "Effect": "Effect",
+            "Drawback": "Drawback",
+            "Visible": "Visible"
+        },
+        "MutationCategory": {
+            "Minor": "Minor",
+            "Major": "Major",
+            "Malignancy": "Malignancy"
+        },
+        "MentalDisorder": {
+            "Severity": "Severity",
+            "Trigger": "Trigger",
+            "Effect": "Effect",
+            "Treatment": "Treatment",
+            "Minor": "Minor",
+            "Severe": "Severe",
+            "Acute": "Acute"
         },
         "NPC": {
             "Name": "Name",
