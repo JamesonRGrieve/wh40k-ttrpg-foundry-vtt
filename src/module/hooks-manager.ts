@@ -57,6 +57,10 @@ import {
     ForceFieldSheet,
     CriticalInjurySheet,
     ConditionSheet,
+    SpecialAbilitySheet,
+    MalignancySheet,
+    MutationSheet,
+    MentalDisorderSheet,
     StorageLocationSheet,
     PeerEnemySheet,
     JournalEntryItemSheet,
@@ -742,6 +746,28 @@ export class HooksManager {
             types: ['condition'],
             makeDefault: true,
             label: 'WH40K.Sheet.Condition',
+        });
+
+        // Content-block sheets (freeform-gated): special ability, malignancy, mutation, mental disorder
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, SpecialAbilitySheet, {
+            types: ['specialAbility'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.SpecialAbility',
+        });
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, MalignancySheet, {
+            types: ['malignancy'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.Malignancy',
+        });
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, MutationSheet, {
+            types: ['mutation'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.Mutation',
+        });
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, MentalDisorderSheet, {
+            types: ['mentalDisorder'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.MentalDisorder',
         });
 
         // Storage Location sheet
