@@ -4770,8 +4770,8 @@
     "primaryTokenAttribute": "wounds",
     "secondaryTokenAttribute": "fate",
     "url": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt",
-    "manifest": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/system.json",
-    "download": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/wh40k-rpg.zip",
+    "manifest": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/download/latest/system.json",
+    "download": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/download/latest/wh40k-rpg.zip",
     "license": "LICENSE.txt",
     "bugs": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues",
     "relationships": {
