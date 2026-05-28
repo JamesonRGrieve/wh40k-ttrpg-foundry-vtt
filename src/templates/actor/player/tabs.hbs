@@ -1,6 +1,9 @@
 {{!-- Sidebar tab navigation — rendered inside the wh40k-sidebar container.
-     Vertical column of label buttons; styling applies to PC and NPC sheets. --}}
+     Responsive button grid: fills the aside's full width and auto-fits as many
+     columns as fit (two on a wide sheet, collapsing to one when narrow) via
+     auto-fit/minmax — keyed off the sheet/aside width, not the viewport, so it
+     reflows as the window resizes. Styling applies to PC and NPC sheets. --}}
 {{> systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs
     tabs=tabs
-    navClass="!tw-flex !tw-flex-col !tw-gap-1 !tw-m-0 !tw-p-2 !tw-shrink-0 !tw-grow-0 !tw-basis-auto !tw-bg-transparent"
-    itemClass="wh40k-nav-item tw-flex tw-w-full tw-items-center tw-rounded-md tw-px-2 tw-py-1.5 tw-text-sm tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw-l5 dh2:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-border-l-transparent"}}
+    navClass="!tw-flex !tw-flex-row !tw-flex-wrap !tw-content-start !tw-gap-1 !tw-m-0 !tw-p-2 !tw-w-full !tw-shrink-0 !tw-grow-0 !tw-bg-transparent"
+    itemClass="wh40k-nav-item tw-flex tw-grow tw-basis-[5.5rem] tw-items-center tw-justify-center tw-text-center tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis tw-rounded-md tw-px-2 tw-py-1.5 tw-text-xs tw-border-b-2 tw-border-b-gold bc:tw-border-b-crimson-light dh1:tw-border-b-gold-raw-l5 dh2:tw-border-b-gold-raw dw:tw-border-b-accent-combat ow:tw-border-b-brass-l20 rt:tw-border-b-gold im:tw-border-b-failure tw-border-b-transparent"}}
