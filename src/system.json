@@ -4244,6 +4244,18 @@
             "flags": {}
         },
         {
+            "name": "dw-achilus-actors-npcs",
+            "label": "The Achilus Assault NPCs",
+            "path": "packs/deathwatch/dw-achilus-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-core-origins-chapters",
             "label": "Chapters",
             "path": "packs/deathwatch/dw-core-origins-chapters",
