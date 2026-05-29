@@ -3500,6 +3500,30 @@
             "flags": {}
         },
         {
+            "name": "rt-stars-actors-npcs",
+            "label": "Stars of Inequity NPCs",
+            "path": "packs/rogue-trader/rt-stars-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-stars-actors-bestiary",
+            "label": "Stars of Inequity Bestiary",
+            "path": "packs/rogue-trader/rt-stars-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-storm-actors-ships",
             "label": "Into the Storm Ships",
             "path": "packs/rogue-trader/rt-storm-actors-ships",
@@ -4818,6 +4842,8 @@
                 {
                     "name": "Stars of Inequity",
                     "packs": [
+                        "rt-stars-actors-bestiary",
+                        "rt-stars-actors-npcs",
                         "rt-stars-items-armour",
                         "rt-stars-items-armor-mods",
                         "rt-stars-items-cybernetics",
