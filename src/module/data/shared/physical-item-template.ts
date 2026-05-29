@@ -1,3 +1,5 @@
+import { inferActiveGameLine } from '../../utils/item-variant-utils.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 
 /**
@@ -359,5 +361,22 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             props.push(this.craftsmanshipLabel);
         }
         return props;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Baseline Foundry-standard price for third-party economy/merchant plugins
+     * (Item Piles, Loot Sheet, …). Derived, never authored: mirrors the active
+     * line's homebrew throne-gelt valuation (DH1 uses its native `throneGelt`).
+     * In RAW worlds throne gelt is hidden, so the value is null. The structured
+     * `system.cost` remains the source of truth — see docs/VALUATION.md.
+     * @type {{ value: number | null; denomination: string }}
+     */
+    get price(): { value: number | null; denomination: string } {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.parent is the untyped Foundry document; inferActiveGameLine reads its actor's line
+        const line = inferActiveGameLine(this.parent as { actor?: unknown } | null | undefined);
+        const gelt = line === 'dh1' ? this.cost.dh1.throneGelt : this.cost[line].homebrew.throneGelt;
+        return { value: WH40KSettings.isHomebrew() ? gelt : null, denomination: 'throne' };
     }
 }

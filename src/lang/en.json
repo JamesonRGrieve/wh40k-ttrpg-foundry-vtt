@@ -3118,6 +3118,14 @@
             "NearUnique": "Near Unique",
             "Unique": "Unique"
         },
+        "Currency": {
+            "ThroneGelt": "Throne Gelt",
+            "Influence": "Influence",
+            "ProfitFactor": "Profit Factor",
+            "Requisition": "Requisition",
+            "Infamy": "Infamy",
+            "Logistics": "Logistics"
+        },
         "Item": {
             "Properties": "Item Properties",
             "DropFailed": "Could not add \"{name}\": {error}",
