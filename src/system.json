@@ -4256,6 +4256,18 @@
             "flags": {}
         },
         {
+            "name": "dw-jericho-actors-npcs",
+            "label": "The Jericho Reach NPCs",
+            "path": "packs/deathwatch/dw-jericho-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-core-origins-chapters",
             "label": "Chapters",
             "path": "packs/deathwatch/dw-core-origins-chapters",
