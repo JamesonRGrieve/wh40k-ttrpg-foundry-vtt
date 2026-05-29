@@ -97,6 +97,7 @@
     "e2e:ratchet:update": "node scripts/e2e-ratchet.mjs --update",
     "foundry:setup-test-world": "bash scripts/setup-foundry-test-world.sh",
     "check": "pnpm validate:json && pnpm lint && pnpm lint:biome && pnpm format && pnpm stylelint && pnpm typecheck && pnpm typecheck:tests && pnpm test",
+    "ci:ratchets": "pnpm i18n:check && pnpm lint:ratchet && pnpm biome:ratchet && pnpm ts:ratchet && pnpm strict:ratchet && pnpm test:typecheck:ratchet && pnpm type-coverage:ratchet && pnpm knip:ratchet && pnpm deps:ratchet && pnpm css:ratchet && pnpm important:ratchet && pnpm animation:ratchet && pnpm theme:ratchet && pnpm symmetry:ratchet && pnpm preload:drift && pnpm css:plugin-audit && pnpm lockfile:validate",
     "prepare": "husky"
   },
   "browserslist": [
