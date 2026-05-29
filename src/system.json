@@ -4280,6 +4280,18 @@
             "flags": {}
         },
         {
+            "name": "ow-shield-actors-vehicles",
+            "label": "OW: Shield of Humanity Vehicles",
+            "path": "packs/only-war/ow-shield-actors-vehicles",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-core-origins-chapters",
             "label": "Chapters",
             "path": "packs/deathwatch/dw-core-origins-chapters",
