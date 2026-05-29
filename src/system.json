@@ -4316,6 +4316,18 @@
             "flags": {}
         },
         {
+            "name": "rt-faith-items-weapon-mods",
+            "label": "RT: Faith and Coin Weapon Modifications",
+            "path": "packs/rogue-trader/rt-faith-items-weapon-mods",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-core-origins-chapters",
             "label": "Chapters",
             "path": "packs/deathwatch/dw-core-origins-chapters",
