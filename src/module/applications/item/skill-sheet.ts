@@ -13,6 +13,7 @@ import defineSimpleItemSheet from './define-simple-item-sheet.ts';
  */
 interface SkillSheetItemSystem {
     specialUses: Array<{ name: string; description: string; modifier: number; difficulty: string }>;
+    exampleAdditionalUses: Array<{ name: string; description: string }>;
     toChatSpecialUse: (index: number) => Promise<void>;
 }
 
@@ -96,6 +97,23 @@ async function specialUseRoll(this: BaseItemSheet, _event: Event, target: HTMLEl
     }
 }
 
+async function additionalUseAdd(this: BaseItemSheet): Promise<void> {
+    const system = getSkillSheetItem(this).system;
+    const existing = Array.isArray(system.exampleAdditionalUses) ? system.exampleAdditionalUses : [];
+    const next = [...existing.map((entry) => ({ ...entry })), { name: '', description: '' }];
+    await this.item.update({ 'system.exampleAdditionalUses': next });
+}
+
+async function additionalUseDelete(this: BaseItemSheet, _event: Event, target: HTMLElement): Promise<void> {
+    const index = readIndex(target);
+    if (index === null) return;
+    const system = getSkillSheetItem(this).system;
+    const existing = Array.isArray(system.exampleAdditionalUses) ? system.exampleAdditionalUses : [];
+    if (index < 0 || index >= existing.length) return;
+    const next = existing.filter((_, i) => i !== index).map((entry) => ({ ...entry }));
+    await this.item.update({ 'system.exampleAdditionalUses': next });
+}
+
 /**
  * Sheet for skill items (used in compendiums).
  * Redesigned with Imperial Gothic theme and comprehensive layout.
@@ -117,6 +135,8 @@ const SkillSheet = defineSimpleItemSheet({
         specialUseDelete,
         specialUseChat,
         specialUseRoll,
+        additionalUseAdd,
+        additionalUseDelete,
     },
 });
 

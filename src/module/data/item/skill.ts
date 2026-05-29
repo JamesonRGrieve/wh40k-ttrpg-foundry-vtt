@@ -22,7 +22,8 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     declare requirements: string;
     declare source: { book: string; page: string; custom: string };
     declare specialRules: string;
-    declare exampleDifficulties: Array<{ difficulty: string; modifier: number; example: string }>;
+    declare exampleDifficulties: Array<{ difficulty: string; modifier: number; example: string; specialization: string }>;
+    declare exampleAdditionalUses: Array<{ name: string; description: string }>;
     declare specialUses: Array<{ name: string; description: string; modifier: number; difficulty: string }>;
     declare useTime: string;
     declare rollConfig: { defaultModifier: number; canBeUsedUntrained: boolean; untrainedPenalty: number };
@@ -74,12 +75,26 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             // Special rules for this skill
             specialRules: new fields.HTMLField({ required: false, blank: true }),
 
-            // Example difficulties
+            // Example difficulties — the book's "Example Modifiers" table for the
+            // skill. `specialization` tags a row to a specialist skill's variant
+            // (e.g. Navigate "Surface"/"Stellar"/"Warp"); blank for basic skills.
             exampleDifficulties: new fields.ArrayField(
                 new fields.SchemaField({
                     difficulty: new fields.StringField({ required: true }),
                     modifier: new fields.NumberField({ required: true, integer: true }),
                     example: new fields.StringField({ required: true }),
+                    specialization: new fields.StringField({ required: false, blank: true, initial: '' }),
+                }),
+                { required: true, initial: [] },
+            ),
+
+            // Additional uses — the RAW "Special Use" / additional-use prose each
+            // skill specifies in the rulebook. Narrative, non-rollable (distinct
+            // from the structured, rollable `specialUses` below).
+            exampleAdditionalUses: new fields.ArrayField(
+                new fields.SchemaField({
+                    name: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    description: new fields.HTMLField({ required: false, blank: true, initial: '' }),
                 }),
                 { required: true, initial: [] },
             ),
