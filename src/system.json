@@ -4268,6 +4268,18 @@
             "flags": {}
         },
         {
+            "name": "bc-core-items-cybernetics",
+            "label": "BC: Core Cybernetics",
+            "path": "packs/black-crusade/bc-core-items-cybernetics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-core-origins-chapters",
             "label": "Chapters",
             "path": "packs/deathwatch/dw-core-origins-chapters",
