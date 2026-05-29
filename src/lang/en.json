@@ -433,6 +433,22 @@
             "Modifier": "Modifier",
             "Difficulty": "Difficulty"
         },
+        "AdditionalUse": {
+            "Header": "Additional Uses",
+            "Add": "Add Additional Use",
+            "Delete": "Remove",
+            "None": "No additional uses defined",
+            "NamePlaceholder": "Use name (e.g., Climbing)",
+            "DescriptionPlaceholder": "Describe this use of the skill…"
+        },
+        "ExampleDifficulty": {
+            "Header": "Example Difficulties",
+            "Difficulty": "Difficulty",
+            "Modifier": "Modifier",
+            "Example": "Example",
+            "Specialization": "Specialization",
+            "None": "No example difficulties defined"
+        },
         "SkillsGranted": "Skills Granted",
         "Talents": "Talents",
         "TalentsGranted": "Talents Granted",
