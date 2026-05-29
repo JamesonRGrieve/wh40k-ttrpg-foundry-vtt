@@ -4304,6 +4304,18 @@
             "flags": {}
         },
         {
+            "name": "rt-core-actors-npcs",
+            "label": "RT: Core NPCs",
+            "path": "packs/rogue-trader/rt-core-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-core-origins-chapters",
             "label": "Chapters",
             "path": "packs/deathwatch/dw-core-origins-chapters",
