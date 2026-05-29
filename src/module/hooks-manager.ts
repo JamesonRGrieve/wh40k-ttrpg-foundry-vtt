@@ -87,6 +87,7 @@ import { WH40KActorProxy } from './documents/actor-proxy.ts';
 import type { WH40KBaseActor } from './documents/base-actor.ts';
 import { WH40KItem } from './documents/item.ts';
 import { HandlebarManager } from './handlebars/handlebars-manager.ts';
+import { registerItemPilesValuation } from './integrations/item-piles.ts';
 import {
     createCharacteristicMacro,
     createItemMacro,
@@ -136,6 +137,7 @@ export class HooksManager {
         /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax */
         Hooks.once('init', () => {
             HooksManager.init();
+            registerItemPilesValuation();
         });
         hooksOn('ready', () => {
             void HooksManager.ready();

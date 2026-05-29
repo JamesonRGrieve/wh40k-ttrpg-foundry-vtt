@@ -114,9 +114,26 @@ interface CareerConfig {
     description?: string;
 }
 
+/** A per-line acquisition currency, surfaced to economy plugins (Item Piles). */
+export interface CurrencyConfig {
+    /** i18n label key. */
+    label: string;
+    /** Short symbol, e.g. 'tg', 'Inf'. */
+    abbreviation: string;
+    /** Owning game line id. */
+    line: string;
+    /** Item-cost path this currency reads, e.g. 'system.cost.dh2.influence'. */
+    costPath: string;
+    /** Actor field holding a character's amount of this currency (the wallet). */
+    walletPath: string;
+    /** The throne-gelt baseline currency, mirrored to system.price. */
+    primary?: boolean;
+}
+
 export interface WH40KSystemConfig {
     characteristics: Record<string, LabelAbbreviationConfig>;
     availabilities: Record<string, LabelModifierConfig>;
+    currencies: Record<string, CurrencyConfig>;
     movementTypes: Record<string, MovementTypeConfig>;
     tokenRulerColors: Record<string, number>;
     craftsmanships: Record<string, LabelModifierConfig>;
@@ -204,6 +221,50 @@ WH40K.availabilities = {
     'extremely-rare': { label: 'WH40K.Availability.ExtremelyRare', modifier: -30 },
     'near-unique': { label: 'WH40K.Availability.NearUnique', modifier: -50 },
     'unique': { label: 'WH40K.Availability.Unique', modifier: -70 },
+};
+
+/* -------------------------------------------- */
+/*  Currencies (per-line acquisition + Item Piles integration)  */
+/* -------------------------------------------- */
+
+/**
+ * Per-line acquisition currencies. `throne` is the universal baseline
+ * (DH1's native price and every other line's homebrew gelt) mirrored to the
+ * derived `system.price`; the rest are each line's RAW acquisition stat.
+ * Consumed by the Item Piles integration and documented in docs/VALUATION.md.
+ */
+WH40K.currencies = {
+    throne: {
+        label: 'WH40K.Currency.ThroneGelt',
+        abbreviation: 'tg',
+        line: 'dh1',
+        costPath: 'system.cost.dh1.throneGelt',
+        walletPath: 'system.throneGelt',
+        primary: true,
+    },
+    influence: { label: 'WH40K.Currency.Influence', abbreviation: 'Inf', line: 'dh2', costPath: 'system.cost.dh2.influence', walletPath: 'system.influence' },
+    profitFactor: {
+        label: 'WH40K.Currency.ProfitFactor',
+        abbreviation: 'PF',
+        line: 'rt',
+        costPath: 'system.cost.rt.profitFactor',
+        walletPath: 'system.rogueTrader.profitFactor.current',
+    },
+    requisition: {
+        label: 'WH40K.Currency.Requisition',
+        abbreviation: 'Req',
+        line: 'dw',
+        costPath: 'system.cost.dw.requisition',
+        walletPath: 'system.requisition',
+    },
+    infamy: { label: 'WH40K.Currency.Infamy', abbreviation: 'Ifm', line: 'bc', costPath: 'system.cost.bc.infamy', walletPath: 'system.infamy' },
+    logistics: {
+        label: 'WH40K.Currency.Logistics',
+        abbreviation: 'Log',
+        line: 'ow',
+        costPath: 'system.cost.ow.logistics',
+        walletPath: 'system.logisticsRating',
+    },
 };
 
 /* -------------------------------------------- */
