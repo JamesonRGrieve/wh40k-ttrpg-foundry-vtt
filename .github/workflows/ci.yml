@@ -1,110 +1,74 @@
 name: CI
 
-# Runs the full test suite minus the licensed-Foundry tiers, and on pushes to
-# main publishes the build to a rolling `latest` prerelease that the Foundry
-# manifest (src/system.json → releases/download/latest/{system.json,wh40k-rpg.zip})
-# points at. No versioned/official releases yet — `latest` is an auto-build channel.
+# Code-quality gate for every push and pull request (including forks). This is
+# intentionally self-contained — it does NOT need the licensed Foundry runtime
+# or the compendium content:
+#   * The `src/packs` submodule (copyright content, private) is NOT checked out.
+#     No unit test or ratchet reads it; vitest excludes tests/integration +
+#     tests/e2e, and the build/release that bundles packs is handled elsewhere.
+#   * Tier A integration + Tier B e2e require `.foundry-release/` (licensed,
+#     gitignored) and self-skip; they are not run here.
 #
-# NOTE on the integration (Tier A) and e2e (Tier B) suites: both key off the
-# presence of `.foundry-release/` (the licensed Foundry runtime, gitignored) and
-# print a skip banner + exit 0 when it's absent — so they are effectively
-# excluded here without any extra wiring. To actually run e2e in CI you need the
-# Foundry runtime on the runner, and `pull-foundry.sh` mirrors it from the LAN
-# host (192.168.5.40) over SSH — unreachable from GitHub-hosted runners. Options:
-#   (a) a self-hosted runner on that network (can run pull-foundry.sh), or
-#   (b) mirror `.foundry-release/` into a private repo + add it via a deploy key
-#       and restore it before `pnpm test:e2e`.
-# Wire either as a separate job gated on a `FOUNDRY_CI` secret when ready.
+# Building the distributable + publishing it for the Foundry manifest is
+# deliberately NOT done here, because it would require the copyright packs. That
+# lives in the private CI (Forgejo) where the content can be present.
+#
+# Portability: only actions/checkout, pnpm/action-setup, actions/setup-node are
+# used (all available on Forgejo Actions), and the work is plain `pnpm` scripts,
+# so this migrates to Forgejo with at most a runner-label change.
 
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test (suite minus e2e)
+  check:
+    name: Lint · typecheck · tests (no e2e)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          # src/packs is a submodule the build compiles from. If it is private,
-          # the default GITHUB_TOKEN cannot fetch it — add a PAT/deploy key here
-          # via `token:` or `ssh-key:`.
-          submodules: recursive
-
+          submodules: false # packs are private/copyright and not needed here
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
       - run: pnpm install --frozen-lockfile
-
       # lint + format-check + stylelint + typecheck + typecheck:tests + vitest.
-      # Tier A (integration) and Tier B (e2e) self-skip without .foundry-release.
       - run: pnpm check
-
       # Storybook functional render/interaction tests. --ignore-snapshots skips
-      # the pixel-diff visual-regression baselines, which are environment-bound
-      # (generated locally as *-chromium-linux.png) and enforced by the local
-      # pre-commit hook rather than in CI.
+      # the env-bound pixel baselines (enforced by the local pre-commit hook).
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm exec storybook build
       - run: pnpm exec playwright test -c playwright.storybook.config.ts --ignore-snapshots
 
-  release:
-    name: Publish rolling latest build
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  ratchets:
+    name: Coverage ratchets (no regressions)
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: recursive
-
+          submodules: false
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
       - run: pnpm install --frozen-lockfile
-
-      # Builds dist/ (system + compiled packs). The Foundry release zip must have
-      # system.json at its ROOT, so zip the dist contents directly.
-      - run: pnpm build
-      - name: Package system zip
-        run: |
-          cd dist
-          zip -r -9 ../wh40k-rpg.zip .
-          cd ..
-          test -f dist/system.json
-
-      - name: Publish to rolling `latest` prerelease
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          name: Latest build
-          prerelease: true
-          # Re-point the `latest` tag at this commit each build.
-          target_commitish: ${{ github.sha }}
-          body: |
-            Automated rolling build of `main` (no official release yet).
-            Commit: ${{ github.sha }}
-
-            Install in Foundry via the manifest URL:
-            `https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/download/latest/system.json`
-          files: |
-            dist/system.json
-            wh40k-rpg.zip
+      # Enforce the one-way valve on every PR: no ratchet may regress vs the
+      # committed baselines. (The pre-commit hook is the only other place these
+      # run, and it is bypassable / does not fire on contributors' branches.)
+      # i18n codegen freshness, lockfile host allow-list, and the plugin-audit
+      # hard gate are included; e2e:ratchet / integration:ratchet are omitted
+      # (they need the licensed Foundry).
+      - run: pnpm ci:ratchets
