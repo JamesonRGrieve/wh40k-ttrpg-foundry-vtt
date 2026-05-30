@@ -1907,6 +1907,30 @@
       "flags": {}
     },
     {
+      "name": "dw-honour-origins-chapters",
+      "label": "DW: Honour the Chapter — Chapters",
+      "path": "packs/deathwatch/dw-honour-origins-chapters",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-honour-items-talents",
+      "label": "DW: Honour the Chapter — Talents",
+      "path": "packs/deathwatch/dw-honour-items-talents",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "dw-rites-items-ammo",
       "label": "Rites of Battle Ammunition",
       "path": "packs/deathwatch/dw-rites-items-ammo",
