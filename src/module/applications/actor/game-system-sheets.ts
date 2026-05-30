@@ -25,8 +25,8 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId } from '../../config/game-systems/types.ts';
 import CharacterSheet from './character-sheet.ts';
 import NPCSheet from './npc-sheet.ts';
-import StarshipSheet from './starship-sheet.ts';
-import VehicleSheet from './vehicle-sheet.ts';
+import VoidcraftActorSheet from './voidcraft-sheet.ts';
+import CraftActorSheet from './craft-sheet.ts';
 
 const HEADER = 'systems/wh40k-rpg/templates/actor/player/';
 
@@ -101,20 +101,21 @@ export const DeathwatchNPCSheet = makeSystemVariant(NPCSheet, 'DeathwatchNPCShee
 export const DarkHeresy1NPCSheet = makeSystemVariant(NPCSheet, 'DarkHeresy1NPCSheet', SYSTEMS.dh1);
 export const ImperiumMaledictumNPCSheet = makeSystemVariant(NPCSheet, 'ImperiumMaledictumNPCSheet', SYSTEMS.im);
 
-// -- Vehicle sheets (extend VehicleSheet) ---------------------------------
+// -- Craft sheets (terracraft / aircraft / watercraft — extend CraftActorSheet) ---
+// One per-line craft sheet variant; registered for that line's terracraft/aircraft/watercraft types.
 
-export const DarkHeresy2VehicleSheet = makeSystemVariant(VehicleSheet, 'DarkHeresy2VehicleSheet', SYSTEMS.dh2);
-export const RogueTraderVehicleSheet = makeSystemVariant(VehicleSheet, 'RogueTraderVehicleSheet', SYSTEMS.rt);
-export const BlackCrusadeVehicleSheet = makeSystemVariant(VehicleSheet, 'BlackCrusadeVehicleSheet', SYSTEMS.bc);
-export const OnlyWarVehicleSheet = makeSystemVariant(VehicleSheet, 'OnlyWarVehicleSheet', SYSTEMS.ow);
-export const DeathwatchVehicleSheet = makeSystemVariant(VehicleSheet, 'DeathwatchVehicleSheet', SYSTEMS.dw);
-export const DarkHeresy1VehicleSheet = makeSystemVariant(VehicleSheet, 'DarkHeresy1VehicleSheet', SYSTEMS.dh1);
-export const ImperiumMaledictumVehicleSheet = makeSystemVariant(VehicleSheet, 'ImperiumMaledictumVehicleSheet', SYSTEMS.im);
+export const DarkHeresy2CraftSheet = makeSystemVariant(CraftActorSheet, 'DarkHeresy2CraftSheet', SYSTEMS.dh2);
+export const RogueTraderCraftSheet = makeSystemVariant(CraftActorSheet, 'RogueTraderCraftSheet', SYSTEMS.rt);
+export const BlackCrusadeCraftSheet = makeSystemVariant(CraftActorSheet, 'BlackCrusadeCraftSheet', SYSTEMS.bc);
+export const OnlyWarCraftSheet = makeSystemVariant(CraftActorSheet, 'OnlyWarCraftSheet', SYSTEMS.ow);
+export const DeathwatchCraftSheet = makeSystemVariant(CraftActorSheet, 'DeathwatchCraftSheet', SYSTEMS.dw);
+export const DarkHeresy1CraftSheet = makeSystemVariant(CraftActorSheet, 'DarkHeresy1CraftSheet', SYSTEMS.dh1);
+export const ImperiumMaledictumCraftSheet = makeSystemVariant(CraftActorSheet, 'ImperiumMaledictumCraftSheet', SYSTEMS.im);
 
-// -- Starship sheets (extend StarshipSheet) -------------------------------
-// Only RT ships starships. Factory leaves room for other systems.
+// -- Voidcraft sheets (extend VoidcraftActorSheet) ------------------------
+// Only RT fields voidcraft. Factory leaves room for other systems.
 
-export const RogueTraderStarshipSheet = makeSystemVariant(StarshipSheet, 'RogueTraderStarshipSheet', SYSTEMS.rt);
+export const RogueTraderVoidcraftSheet = makeSystemVariant(VoidcraftActorSheet, 'RogueTraderVoidcraftSheet', SYSTEMS.rt);
 
 // -- Back-compat aliases ---------------------------------------------------
 // `DarkHeresy2Sheet` (etc.) was the PC sheet export name before the split.
