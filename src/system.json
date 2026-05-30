@@ -971,6 +971,18 @@
       "flags": {}
     },
     {
+      "name": "dh1-core-items-ammo",
+      "label": "DH1: Core Rulebook — Ammunition",
+      "path": "packs/dark-heresy-1/dh1-core-items-ammo",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "dh1-inquisitor-items-ammo",
       "label": "Inquisitor's Handbook Ammunition",
       "path": "packs/dark-heresy-1/dh1-inquisitor-items-ammo",
