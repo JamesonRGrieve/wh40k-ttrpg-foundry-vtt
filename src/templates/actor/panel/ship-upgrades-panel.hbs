@@ -1,13 +1,13 @@
-{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Starship.Upgrades.Header") rootClass="tw-col-span-6 tw-row-span-1" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Voidcraft.Upgrades.Header") rootClass="tw-col-span-6 tw-row-span-1" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
     {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
         addAction="itemCreate"
         addType="shipUpgrade"
         addTitleKey="WH40K.Common.AddShipUpgrade"
         headers=(array
-            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Upgrades.Name")
-            (object labelKey="WH40K.Starship.Upgrades.Power")
-            (object labelKey="WH40K.Starship.Upgrades.Space")
-            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Upgrades.Effect"))}}
+            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Upgrades.Name")
+            (object labelKey="WH40K.Voidcraft.Upgrades.Power")
+            (object labelKey="WH40K.Voidcraft.Upgrades.Space")
+            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Upgrades.Effect"))}}
         {{#each actor.items as |item|}}
             {{#if item.isShipUpgrade}}
                 {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs

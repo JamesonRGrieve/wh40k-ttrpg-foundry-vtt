@@ -118,7 +118,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
         ],
     },
     {
-        title: 'Actor/StarshipSheet',
+        title: 'Actor/VoidcraftActorSheet',
         exports: ['Default', 'EditMode', 'RollInitiative', 'BlackCruisadeVariant', 'MacrobatteryFiring', 'LanceFiring', 'MacrobatteryMiss', 'ExtendedActions'],
     },
     {

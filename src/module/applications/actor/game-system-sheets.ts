@@ -24,9 +24,9 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId } from '../../config/game-systems/types.ts';
 import CharacterSheet from './character-sheet.ts';
+import CraftActorSheet from './craft-sheet.ts';
 import NPCSheet from './npc-sheet.ts';
 import VoidcraftActorSheet from './voidcraft-sheet.ts';
-import CraftActorSheet from './craft-sheet.ts';
 
 const HEADER = 'systems/wh40k-rpg/templates/actor/player/';
 

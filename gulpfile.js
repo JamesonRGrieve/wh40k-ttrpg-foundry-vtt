@@ -81,6 +81,8 @@ function detectCollectionType(folder) {
 
   if (segment('adventures')) return 'adventures';
   if (segment('actors')) return 'actors';
+  // Craft actor packs use the `vehicles-<craft>` group prefix; they are Actors.
+  if (segment('vehicles')) return 'actors';
   if (segment('scenes')) return 'scenes';
   if (segment('items')) return 'items';
   if (segment('journals')) return 'journal';

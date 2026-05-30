@@ -11,7 +11,7 @@ import {
 import { WH40KBaseActor } from './base-actor.ts';
 import type { WH40KItem } from './item.ts';
 
-type StarshipSystemData = WH40KBaseActor['system'] & {
+type VoidcraftSystemData = WH40KBaseActor['system'] & {
     hullType: string;
     hullClass: string;
     gameSystem: string;
@@ -48,8 +48,8 @@ type StarshipSystemData = WH40KBaseActor['system'] & {
  */
 const RT_CREW_ECONOMY_GAME_SYSTEM = 'rt';
 
-export class WH40KStarship extends WH40KBaseActor {
-    declare system: StarshipSystemData;
+export class WH40KVoidcraft extends WH40KBaseActor {
+    declare system: VoidcraftSystemData;
 
     protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | undefined> {
         await super._preCreate(data, options, user);
@@ -191,7 +191,7 @@ export class WH40KStarship extends WH40KBaseActor {
         const weapon = this.items.get(weaponId);
         if (weapon?.type !== 'shipWeapon') {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
-            ui.notifications.warn('WH40K.Starship.Errors.InvalidShipWeapon', { localize: true });
+            ui.notifications.warn('WH40K.Voidcraft.Errors.InvalidShipWeapon', { localize: true });
             return;
         }
 
@@ -208,7 +208,7 @@ export class WH40KStarship extends WH40KBaseActor {
 
         await ChatMessage.create({
             user: game.user.id,
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker requires Actor.Implementation; WH40KStarship extends it but type narrowing requires cast
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker requires Actor.Implementation; WH40KVoidcraft extends it but type narrowing requires cast
             speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
             content: html,
         });
@@ -387,7 +387,7 @@ export class WH40KStarship extends WH40KBaseActor {
         `;
 
         await ChatMessage.create({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker requires Actor.Implementation; WH40KStarship extends it but type narrowing requires cast
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker requires Actor.Implementation; WH40KVoidcraft extends it but type narrowing requires cast
             speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
             content: content,
             rolls: [roll],

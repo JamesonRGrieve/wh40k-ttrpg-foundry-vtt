@@ -25,5 +25,5 @@ export { default as WH40KOWNPC } from './ow-npc.ts';
 export { default as WH40KOWVehicle } from './ow-vehicle.ts';
 export { default as WH40KRTCharacter } from './rt-character.ts';
 export { default as WH40KRTNPC } from './rt-npc.ts';
-export { default as WH40KRTStarship } from './rt-starship.ts';
+export { default as WH40KRTVoidcraft } from './rt-voidcraft.ts';
 export { default as WH40KRTVehicle } from './rt-vehicle.ts';

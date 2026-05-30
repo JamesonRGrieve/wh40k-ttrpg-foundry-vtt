@@ -18,7 +18,7 @@
     Context required:
         buildSummaryRows — Array<{
             statKey:   string;
-            labelKey:  string;  // WH40K.Starship.Build.Stat.* localization key
+            labelKey:  string;  // WH40K.Voidcraft.Build.Stat.* localization key
             base:      number;
             modifier:  number;  // signed (may be negative)
             total:     number;  // base + modifier
@@ -27,7 +27,7 @@
         hasAppliedModifiers — boolean, true iff any row was emitted.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
-    label=(localize "WH40K.Starship.Build.SummaryHeader")
+    label=(localize "WH40K.Voidcraft.Build.SummaryHeader")
     rootClass="tw-col-span-6 wh40k-ship-build-summary-panel"
     titleClass="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3" data-component="ship-build-summary">
@@ -61,7 +61,7 @@
                                         <span class="wh40k-ship-build-summary__source-name tw-opacity-90">
                                             {{src.name}}
                                             <span class="tw-text-xs tw-opacity-50 tw-ml-1">
-                                                ({{localize (concat "WH40K.Starship.Build.SourceType." src.type)}})
+                                                ({{localize (concat "WH40K.Voidcraft.Build.SourceType." src.type)}})
                                             </span>
                                         </span>
                                         <span class="wh40k-ship-build-summary__source-value tw-font-semibold {{#if (gt src.value 0)}}tw-text-success{{else}}{{#if (lt src.value 0)}}tw-text-crimson{{/if}}{{/if}}">
@@ -76,7 +76,7 @@
             </ul>
         {{else}}
             <p class="wh40k-ship-build-summary__empty tw-text-sm tw-opacity-70 tw-italic">
-                {{localize "WH40K.Starship.Build.SummaryEmpty"}}
+                {{localize "WH40K.Voidcraft.Build.SummaryEmpty"}}
             </p>
         {{/if}}
     </div>

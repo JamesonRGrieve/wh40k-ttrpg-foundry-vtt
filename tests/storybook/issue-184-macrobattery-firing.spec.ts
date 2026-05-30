@@ -20,7 +20,7 @@ test.describe('Issue #184 — RT macrobattery firing flow', () => {
             if (msg.type() === 'error') consoleErrors.push(msg.text());
         });
 
-        await page.goto('/iframe.html?id=actor-starshipsheet--macrobattery-firing');
+        await page.goto('/iframe.html?id=actor-voidcraftactorsheet--macrobattery-firing');
         await page.waitForLoadState('networkidle');
 
         // Snapshot first so visual review always has the artefact.

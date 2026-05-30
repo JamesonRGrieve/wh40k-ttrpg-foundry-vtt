@@ -66,7 +66,7 @@ export const Components: Story = {
     name: 'Components — multi-source detection + armour + hull',
     args: {
         buildSummaryRows: [
-            row('detection', 'WH40K.Starship.Build.Stat.Detection', 10, [
+            row('detection', 'WH40K.Voidcraft.Build.Stat.Detection', 10, [
                 {
                     name: 'Mark-201.b Auger Array',
                     type: 'shipComponent',
@@ -82,7 +82,7 @@ export const Components: Story = {
                     value: 3,
                 },
             ]),
-            row('armour', 'WH40K.Starship.Build.Stat.Armour', 18, [
+            row('armour', 'WH40K.Voidcraft.Build.Stat.Armour', 18, [
                 {
                     name: 'Reinforced Bulkheads',
                     type: 'shipUpgrade',
@@ -91,7 +91,7 @@ export const Components: Story = {
                     value: 1,
                 },
             ]),
-            row('hullIntegrity', 'WH40K.Starship.Build.Stat.HullIntegrity', 60, [
+            row('hullIntegrity', 'WH40K.Voidcraft.Build.Stat.HullIntegrity', 60, [
                 {
                     name: 'Reinforced Bulkheads',
                     type: 'shipUpgrade',
@@ -100,7 +100,7 @@ export const Components: Story = {
                     value: 4,
                 },
             ]),
-            row('speed', 'WH40K.Starship.Build.Stat.Speed', 7, [
+            row('speed', 'WH40K.Voidcraft.Build.Stat.Speed', 7, [
                 {
                     name: 'Modified Plasma Drive',
                     type: 'shipComponent',
@@ -119,7 +119,7 @@ export const WithRole: Story = {
     name: 'With role — role bonuses appear alongside component modifiers',
     args: {
         buildSummaryRows: [
-            row('manoeuvrability', 'WH40K.Starship.Build.Stat.Manoeuvrability', 15, [
+            row('manoeuvrability', 'WH40K.Voidcraft.Build.Stat.Manoeuvrability', 15, [
                 {
                     name: 'Helmsman',
                     type: 'shipRole',
@@ -128,7 +128,7 @@ export const WithRole: Story = {
                     value: 5,
                 },
             ]),
-            row('detection', 'WH40K.Starship.Build.Stat.Detection', 10, [
+            row('detection', 'WH40K.Voidcraft.Build.Stat.Detection', 10, [
                 {
                     name: 'First Officer',
                     type: 'shipRole',
@@ -144,7 +144,7 @@ export const WithRole: Story = {
                     value: 8,
                 },
             ]),
-            row('ballisticSkill', 'WH40K.Starship.Build.Stat.BallisticSkill', 30, [
+            row('ballisticSkill', 'WH40K.Voidcraft.Build.Stat.BallisticSkill', 30, [
                 {
                     name: 'Master Gunner',
                     type: 'shipRole',

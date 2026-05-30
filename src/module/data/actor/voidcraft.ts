@@ -1,4 +1,4 @@
-import VehicleData from './vehicle.ts';
+import VehicleData, { LOCOMOTION_CHOICES } from './vehicle.ts';
 
 /** Subset of ship-component item.system fields used in voidcraft preparation. */
 interface ShipComponentSystem {
@@ -254,12 +254,12 @@ export default class VoidcraftData extends VehicleData {
         return {
             ...super.defineSchema(),
 
-            // Fix the locomotion discriminator to 'void' for ship-scale craft
-            // (overrides the base VehicleData default of 'terra').
+            // Voidcraft default to the ship-scale `voidship` locomotion
+            // (overrides the base VehicleData default of 'wheeled').
             locomotion: new fields.StringField({
                 required: true,
-                initial: 'void',
-                choices: ['terra', 'air', 'water', 'void'],
+                initial: 'voidship',
+                choices: [...LOCOMOTION_CHOICES],
                 label: 'WH40K.Vehicle.Locomotion',
             }),
 
@@ -310,7 +310,7 @@ export default class VoidcraftData extends VehicleData {
             // Ship Points budget vs spent (issue #190 — RAW build validation).
             // `spent` is recomputed in prepareDerivedData from owned components;
             // `budget` is the hull's SP budget (mirrors the hull entry's shipPoints
-            // value from the rt-core-actors-ships compendium).
+            // value from the rt-core-vehicles-voidcraft compendium).
             shipPoints: new fields.SchemaField({
                 spent: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 budget: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),

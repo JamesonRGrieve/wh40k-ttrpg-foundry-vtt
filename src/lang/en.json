@@ -77,7 +77,20 @@
     },
     "WH40K": {
         "Warning": {
-            "ConditionGMOnly": "Only the GM may add, modify, or remove conditions on an actor."
+            "InvalidCharacteristic": "Invalid characteristic.",
+            "SkillNotSpecified": "Skill not specified.",
+            "SkillsCompendiumNotFound": "Skills compendium not found.",
+            "InvalidItem": "{itemType} cannot be dropped on a {actorType}.",
+            "NoActiveCombatEncounter": "No active combat encounter.",
+            "RangeFormulaFailed": "Range formula failed — setting to 0",
+            "InvalidAmmunition": "Invalid ammunition item",
+            "NoAmmunitionLoaded": "No ammunition loaded",
+            "UnknownCondition": "Unknown condition: {condition}",
+            "LootNoToken": "Place {actor}'s token on the scene before dropping items.",
+            "LootNotDroppable": "{item} cannot be dropped.",
+            "LootNoReceiver": "Select the token that should pick this up first.",
+            "LootPickupDenied": "You do not have permission to pick this up.",
+            "LootDropDenied": "You do not have permission to drop this item."
         },
         "Confirm": "Confirm",
         "Cancel": "Cancel",
@@ -335,7 +348,7 @@
             }
         },
         "RighteousFury": {
-            "Title": "\u26a1 Righteous Fury! \u26a1",
+            "Title": "⚡ Righteous Fury! ⚡",
             "Triggered": "Righteous Fury Triggered!",
             "Confirmed": "Righteous Fury Confirmed!",
             "NotConfirmed": "Righteous Fury (Not Confirmed)",
@@ -400,15 +413,15 @@
             "Skill": {
                 "BasicUntrained": "Basic (Untrained)",
                 "CharacteristicValue": "Characteristic Total",
-                "UntrainedBase": "Untrained Test Base (Characteristic \u00f7 2)",
+                "UntrainedBase": "Untrained Test Base (Characteristic ÷ 2)",
                 "Modifiers": "Modifiers",
                 "TrainingProgression": "Training Progression",
                 "ClickNameToRoll": "Use the die button to roll",
                 "RankWithBonus": "{rank} ({bonus})",
                 "UntrainedWithPenalty": "Untrained ({penalty})",
-                "UntrainedHalfBase": "Untrained (\u00f72)",
+                "UntrainedHalfBase": "Untrained (÷2)",
                 "CharacteristicLabel": "Characteristic: {name} ({value})",
-                "UntrainedTargetLabel": "Untrained target (characteristic \u00f7 2): {value}"
+                "UntrainedTargetLabel": "Untrained target (characteristic ÷ 2): {value}"
             }
         },
         "Favourites": {
@@ -646,7 +659,7 @@
         "Advancement": {
             "Title": "Character Advancement",
             "TitleWithCareer": "{career} Advancement",
-            "PurchaseTalentViaAdvancement": "Open the Advancement window to purchase {name} with XP \u2014 talents can't be dragged directly onto an acolyte.",
+            "PurchaseTalentViaAdvancement": "Open the Advancement window to purchase {name} with XP — talents can't be dragged directly onto an acolyte.",
             "SpecializationAlreadyOwned": "That specialization is already owned.",
             "PsyRatingMaximum": "Psy Rating is already at maximum (10).",
             "XPAvailable": "XP Available",
@@ -813,62 +826,17 @@
             }
         },
         "Condition": {
-            "Label": "Condition",
-            "Type": "Condition",
-            "Description": "Status effect that modifies gameplay",
-            "Nature": {
-                "Label": "Nature",
-                "Beneficial": "Beneficial",
-                "Harmful": "Harmful",
-                "Neutral": "Neutral",
-                "Description": "Is this condition helpful or harmful?"
-            },
-            "Effect": {
-                "Label": "Effect",
-                "Placeholder": "Describe the mechanical effect...",
-                "Description": "What does this condition do?"
-            },
-            "Removal": {
-                "Label": "Removal",
-                "Placeholder": "How is this condition removed?",
-                "Description": "Conditions for removal"
-            },
-            "Stackable": {
-                "Label": "Stackable",
-                "Description": "Can this condition stack multiple times?"
-            },
-            "Stacks": {
-                "Label": "Stacks",
-                "Current": "Current Stacks",
-                "Description": "How many times is this condition applied?"
-            },
-            "AppliesTo": {
-                "Label": "Applies To",
-                "Self": "Self",
-                "Target": "Target",
-                "Both": "Both",
-                "Area": "Area",
-                "Description": "Who is affected by this condition?"
-            },
-            "Duration": {
-                "Label": "Duration",
-                "Value": "Value",
-                "Units": "Units",
-                "Permanent": "Permanent",
-                "Rounds": "Rounds",
-                "Minutes": "Minutes",
-                "Hours": "Hours",
-                "Days": "Days",
-                "Description": "How long does this last?"
-            },
-            "Notes": {
-                "Label": "Notes",
-                "Placeholder": "Additional notes..."
-            },
-            "Chat": {
-                "Applied": "{name} applied to {target}",
-                "Removed": "{name} removed from {target}",
-                "Stacked": "{name} stacked on {target} (\u00d7{stacks})"
+            "Manacles": {
+                "Name": "Manacled",
+                "Description": "Bound in manacles — a -40 penalty applies to all Ballistic and Weapon Skill tests until the restraints are removed.",
+                "Source": "Manacles (errata p. 176)",
+                "AppliedNotification": "Manacled condition applied — -40 BS/WS until removed.",
+                "LiftedNotification": "Manacled condition lifted.",
+                "AppliedFromEquip": "Manacles equipped — -40 BS/WS applied.",
+                "LiftedFromUnequip": "Manacles removed — -40 BS/WS lifted.",
+                "ActionApply": "Apply Manacled",
+                "ActionLift": "Lift Manacled",
+                "BadgeLabel": "Manacled"
             }
         },
         "ProfaneObject": {
@@ -977,7 +945,8 @@
             "OnlyWarVehicle": "Only War Vehicle",
             "DeathwatchVehicle": "Deathwatch Vehicle",
             "ImperiumMaledictumVehicle": "Imperium Maledictum Vehicle",
-            "RogueTraderStarship": "Rogue Trader Starship"
+            "RogueTraderStarship": "Rogue Trader Starship",
+            "Location": "Location"
         },
         "TYPES": {
             "Actor": {
@@ -1343,20 +1312,6 @@
                 "CriticalLabel": "Catastrophic failure — roll on:",
                 "MotiveSystemsTable": "Table 7-32: Motive Systems Critical Hit Effects (DH Core p. 257)",
                 "ImpactLegTable": "Table 7-18: Impact Critical Effects — Leg (DH Core p. 239)"
-            }
-        },
-        "Condition": {
-            "Manacles": {
-                "Name": "Manacled",
-                "Description": "Bound in manacles — a -40 penalty applies to all Ballistic and Weapon Skill tests until the restraints are removed.",
-                "Source": "Manacles (errata p. 176)",
-                "AppliedNotification": "Manacled condition applied — -40 BS/WS until removed.",
-                "LiftedNotification": "Manacled condition lifted.",
-                "AppliedFromEquip": "Manacles equipped — -40 BS/WS applied.",
-                "LiftedFromUnequip": "Manacles removed — -40 BS/WS lifted.",
-                "ActionApply": "Apply Manacled",
-                "ActionLift": "Lift Manacled",
-                "BadgeLabel": "Manacled"
             }
         },
         "Quality": {
@@ -1929,25 +1884,63 @@
                     "ToggleImplantTitle": "Toggle implant"
                 },
                 "Implant": {
-                    "SecondaryHeart": { "Name": "Secondary Heart" },
-                    "Ossmodula": { "Name": "Ossmodula" },
-                    "Biscopea": { "Name": "Biscopea" },
-                    "Haemastamen": { "Name": "Haemastamen" },
-                    "LarramansOrgan": { "Name": "Larraman's Organ" },
-                    "CatalepseanNode": { "Name": "Catalepsean Node" },
-                    "Preomnor": { "Name": "Preomnor" },
-                    "Omophagea": { "Name": "Omophagea" },
-                    "MultiLung": { "Name": "Multi-lung" },
-                    "Occulobe": { "Name": "Occulobe" },
-                    "LymansEar": { "Name": "Lyman's Ear" },
-                    "SusAnMembrane": { "Name": "Sus-an Membrane" },
-                    "MelanchromicOrgan": { "Name": "Melanchromic Organ" },
-                    "OoliticKidney": { "Name": "Oolitic Kidney" },
-                    "Neuroglottis": { "Name": "Neuroglottis" },
-                    "Mucranoid": { "Name": "Mucranoid" },
-                    "BetchersGland": { "Name": "Betcher's Gland" },
-                    "Progenoids": { "Name": "Progenoids" },
-                    "BlackCarapace": { "Name": "Black Carapace" }
+                    "SecondaryHeart": {
+                        "Name": "Secondary Heart"
+                    },
+                    "Ossmodula": {
+                        "Name": "Ossmodula"
+                    },
+                    "Biscopea": {
+                        "Name": "Biscopea"
+                    },
+                    "Haemastamen": {
+                        "Name": "Haemastamen"
+                    },
+                    "LarramansOrgan": {
+                        "Name": "Larraman's Organ"
+                    },
+                    "CatalepseanNode": {
+                        "Name": "Catalepsean Node"
+                    },
+                    "Preomnor": {
+                        "Name": "Preomnor"
+                    },
+                    "Omophagea": {
+                        "Name": "Omophagea"
+                    },
+                    "MultiLung": {
+                        "Name": "Multi-lung"
+                    },
+                    "Occulobe": {
+                        "Name": "Occulobe"
+                    },
+                    "LymansEar": {
+                        "Name": "Lyman's Ear"
+                    },
+                    "SusAnMembrane": {
+                        "Name": "Sus-an Membrane"
+                    },
+                    "MelanchromicOrgan": {
+                        "Name": "Melanchromic Organ"
+                    },
+                    "OoliticKidney": {
+                        "Name": "Oolitic Kidney"
+                    },
+                    "Neuroglottis": {
+                        "Name": "Neuroglottis"
+                    },
+                    "Mucranoid": {
+                        "Name": "Mucranoid"
+                    },
+                    "BetchersGland": {
+                        "Name": "Betcher's Gland"
+                    },
+                    "Progenoids": {
+                        "Name": "Progenoids"
+                    },
+                    "BlackCarapace": {
+                        "Name": "Black Carapace"
+                    }
                 }
             },
             "Oath": {
@@ -2157,7 +2150,7 @@
             "Career": "Career"
         },
         "Talent": {
-            "Tier0": "\u2014",
+            "Tier0": "—",
             "Tier1": "Tier 1",
             "Tier2": "Tier 2",
             "Tier3": "Tier 3",
@@ -2355,7 +2348,7 @@
             "EquipmentLimitReached": "Selection limit reached ({max}).",
             "EquipmentNoInfluence": "Roll or enter starting Influence before selecting equipment.",
             "EquipmentNeedsCharacteristics": "Assign characteristics before equipping your Acolyte.",
-            "HomebrewInfluenceNoRoll": "Homebrew ruleset: Influence is not rolled at creation \u2014 it starts at 0 and is earned and spent during play.",
+            "HomebrewInfluenceNoRoll": "Homebrew ruleset: Influence is not rolled at creation — it starts at 0 and is earned and spent during play.",
             "ResetBaseStatsNote": "Base characteristics are always overridden with the rolled generation values.",
             "ResetInventory": "Reset Inventory",
             "ResetExperience": "Reset Experience and Advancements",
@@ -2373,8 +2366,8 @@
             "TrialsDesc": "A defining event that shaped who you became",
             "MotivationDesc": "The core drive that pushes you forward",
             "CareerDesc": "Your trained profession and role aboard the ship",
-            "DirectionForward": "Home World \u2192 Career",
-            "DirectionBackward": "Career \u2192 Home World",
+            "DirectionForward": "Home World → Career",
+            "DirectionBackward": "Career → Home World",
             "DirectionChange": "Change Direction",
             "DirectionChangeWarning": "Changing direction will reset all current selections. Continue?",
             "GoBack": "Go Back",
@@ -2452,9 +2445,9 @@
             "Mementos": "Mementos",
             "Notes": "Notes",
             "Contacts": "Contacts",
-            "ContactsHint": "Friendly NPCs with a positive disposition modifier. Distinct from the Peer talent \u2014 purchase that separately for the mechanical bonus.",
+            "ContactsHint": "Friendly NPCs with a positive disposition modifier. Distinct from the Peer talent — purchase that separately for the mechanical bonus.",
             "Adversaries": "Adversaries",
-            "AdversariesHint": "Hostile NPCs with a negative disposition modifier. Distinct from the Enemy / Hatred talents \u2014 purchase those separately."
+            "AdversariesHint": "Hostile NPCs with a negative disposition modifier. Distinct from the Enemy / Hatred talents — purchase those separately."
         },
         "NavigatorPowers": {
             "Header": "Navigator Powers",
@@ -2628,12 +2621,12 @@
             "WeightTotal": "Weight (Total)",
             "WeightCurrent": "Weight (Current)",
             "ArmourHeader": "Armour by Location",
-            "ArmourHead": "Head (1\u201310)",
-            "ArmourRightArm": "RA (11\u201320)",
-            "ArmourLeftArm": "LA (21\u201330)",
-            "ArmourBody": "Body (31\u201370)",
-            "ArmourRightLeg": "RL (71\u201385)",
-            "ArmourLeftLeg": "LL (86\u2013100)",
+            "ArmourHead": "Head (1–10)",
+            "ArmourRightArm": "RA (11–20)",
+            "ArmourLeftArm": "LA (21–30)",
+            "ArmourBody": "Body (31–70)",
+            "ArmourRightLeg": "RL (71–85)",
+            "ArmourLeftLeg": "LL (86–100)",
             "HealthHeader": "Combat Trackers",
             "WoundsTotal": "Wounds (Total)",
             "WoundsCurrent": "Wounds (Current)",
@@ -2666,7 +2659,7 @@
             "OriginPath": "Origin Path",
             "Condition": "Condition"
         },
-        "Starship": {
+        "Voidcraft": {
             "Name": "Ship Name",
             "HullType": "Hull Type",
             "HullClass": "Hull Class",
@@ -2811,14 +2804,26 @@
                 "Roll": "Roll",
                 "RollTitle": "Roll this Manoeuvre Action (Pilot (Space Craft) + Manoeuvrability)",
                 "Empty": "No Manoeuvre Actions available for this game system.",
-                "AdjustBearing": { "Label": "Adjust Bearing", "Benefit": "Turn earlier than normal." },
-                "AdjustSpeed": { "Label": "Adjust Speed", "Benefit": "Move faster or slower than normal." },
+                "AdjustBearing": {
+                    "Label": "Adjust Bearing",
+                    "Benefit": "Turn earlier than normal."
+                },
+                "AdjustSpeed": {
+                    "Label": "Adjust Speed",
+                    "Benefit": "Move faster or slower than normal."
+                },
                 "AdjustSpeedAndBearing": {
                     "Label": "Adjust Speed & Bearing",
                     "Benefit": "Turn earlier than normal while moving faster or slower than normal."
                 },
-                "ComeToNewHeading": { "Label": "Come to New Heading", "Benefit": "Make two turns in one Round (-20 BS to fire this turn)." },
-                "Disengage": { "Label": "Disengage", "Benefit": "Escape combat (opposed by enemy Detection+Scrutiny within 20 VU)." },
+                "ComeToNewHeading": {
+                    "Label": "Come to New Heading",
+                    "Benefit": "Make two turns in one Round (-20 BS to fire this turn)."
+                },
+                "Disengage": {
+                    "Label": "Disengage",
+                    "Benefit": "Escape combat (opposed by enemy Detection+Scrutiny within 20 VU)."
+                },
                 "EvasiveManoeuvres": {
                     "Label": "Evasive Manoeuvres",
                     "Benefit": "Inflicts -10 (per DoS) penalty on incoming fire; same penalty applies to own shooting."
@@ -3307,7 +3312,7 @@
             "BatchCreate": {
                 "Title": "Batch Create NPCs",
                 "NamePattern": "Name Pattern",
-                "NamePatternHint": "Use {n} for numbering (e.g., 'Guard {n}' \u2192 'Guard 1', 'Guard 2', ...)",
+                "NamePatternHint": "Use {n} for numbering (e.g., 'Guard {n}' → 'Guard 1', 'Guard 2', ...)",
                 "Count": "Number to Create",
                 "Folder": "Target Folder",
                 "NoFolder": "No Folder (Root)",
@@ -3467,6 +3472,54 @@
                 "ItemNotFound": "Vehicle item not found: {id}",
                 "NoCharacterForRoll": "Vehicle items are rolled using the current user's character. However, no character found.",
                 "NoActionForItemType": "No actions implemented for item type: {type}"
+            },
+            "Altitude": "Altitude",
+            "Ceiling": "Ceiling",
+            "Draught": "Draught",
+            "ArmourFront": "Front",
+            "ArmourSide": "Side",
+            "ArmourRear": "Rear",
+            "CarryingCapacity": "Carrying Capacity",
+            "ComponentsAndUpgrades": "Components & Upgrades",
+            "CrewInformation": "Crew Information",
+            "CrewNotes": "Crew Notes",
+            "CrewRequired": "Crew Required",
+            "Description": "Description",
+            "FactionPlaceholder": "e.g. Imperial Guard",
+            "Locomotion": "Locomotion",
+            "NoComponents": "No components installed.",
+            "NoTraits": "No traits.",
+            "NoWeapons": "No weapons.",
+            "Source": "Source",
+            "SourcePlaceholder": "e.g. Core Rulebook p. 100",
+            "SpeedCruising": "Cruising Speed",
+            "SpeedTactical": "Tactical Speed",
+            "Statistics": "Statistics",
+            "Traits": "Traits",
+            "AltitudeTier": {
+                "Ground": "Ground",
+                "Low": "Low Altitude",
+                "High": "High Altitude",
+                "Orbital": "Orbital"
+            },
+            "LocomotionGroup": {
+                "Land": "Land",
+                "Air": "Air",
+                "Water": "Water",
+                "Void": "Void"
+            },
+            "LocomotionType": {
+                "Wheeled": "Wheeled",
+                "Tracked": "Tracked",
+                "Walker": "Walker",
+                "Hover": "Hover",
+                "Flyer": "Flyer",
+                "Skimmer": "Skimmer",
+                "Vtol": "VTOL",
+                "Hull": "Hull",
+                "Submersible": "Submersible",
+                "Hydrofoil": "Hydrofoil",
+                "Voidship": "Voidship"
             }
         },
         "Theme": {
@@ -3682,15 +3735,15 @@
             "Storm": "Storm",
             "StormDesc": "Can reroll missed attacks when firing on Full Auto.",
             "Concussive": "Concussive (X)",
-            "ConcussiveDesc": "Target must make Toughness test at -10\u00d7X or be stunned for 1 round.",
+            "ConcussiveDesc": "Target must make Toughness test at -10×X or be stunned for 1 round.",
             "Corrosive": "Corrosive",
             "CorrosiveDesc": "Permanently reduces target's Armour by 1d10 on hit.",
             "Toxic": "Toxic (X)",
-            "ToxicDesc": "Target must make Toughness test at -10\u00d7X or take additional 1d10 damage.",
+            "ToxicDesc": "Target must make Toughness test at -10×X or take additional 1d10 damage.",
             "Hallucinogenic": "Hallucinogenic (X)",
-            "HallucinogenicDesc": "Target must make Willpower test at -10\u00d7X or suffer hallucinations.",
+            "HallucinogenicDesc": "Target must make Willpower test at -10×X or suffer hallucinations.",
             "Snare": "Snare (X)",
-            "SnareDesc": "Target must make Agility test at -10\u00d7X or be immobilized.",
+            "SnareDesc": "Target must make Agility test at -10×X or be immobilized.",
             "Shocking": "Shocking",
             "ShockingDesc": "Target must make Toughness test or be stunned for 1 round.",
             "Shock": "Shock",
@@ -3764,9 +3817,9 @@
             "Lance": "Lance",
             "LanceDesc": "Designed for mounted combat. +1d10 damage when charging.",
             "Decay": "Decay (X)",
-            "DecayDesc": "Living targets that take Critical Damage must make Toughness test at -10\u00d7X or suffer disease.",
+            "DecayDesc": "Living targets that take Critical Damage must make Toughness test at -10×X or suffer disease.",
             "Irradiated": "Irradiated (X)",
-            "IrradiatedDesc": "Target hit must make Toughness test at -10\u00d7X or suffer radiation poisoning.",
+            "IrradiatedDesc": "Target hit must make Toughness test at -10×X or suffer radiation poisoning.",
             "Reactive": "Reactive",
             "ReactiveDesc": "Can parry ranged attacks as if they were melee attacks.",
             "Unstable": "Unstable",
@@ -3912,11 +3965,11 @@
             "Throw": "Throw",
             "ThrowDesc": "Half Action. Throw a grenade or thrown weapon (Ballistic Skill test). Range comes from the weapon; a miss scatters in a random direction.",
             "CalledShot": "Called Shot",
-            "CalledShotDesc": "Attack a specific location on your target with a \u201320 to WS or BS.",
+            "CalledShotDesc": "Attack a specific location on your target with a –20 to WS or BS.",
             "AllOutAttack": "All Out Attack",
             "AllOutAttackDesc": "+20 to WS, cannot Dodge or Parry.",
             "GuardedAttack": "Guarded Attack",
-            "GuardedAttackDesc": "\u201310 WS, +10 to Parry and Dodge.",
+            "GuardedAttackDesc": "–10 WS, +10 to Parry and Dodge.",
             "Charge": "Charge",
             "ChargeDesc": "Must move 4 metres, +10 to WS.",
             "SemiAutoBurst": "Semi-Auto Burst",
@@ -3924,15 +3977,15 @@
             "FullAutoBurst": "Full Auto Burst",
             "FullAutoBurstDesc": "+20 to BS, additional hit for every degree of success.",
             "SuppressingFire": "Suppressing Fire",
-            "SuppressingFireDesc": "Force opponents to take cover, \u201320 to BS.",
+            "SuppressingFireDesc": "Force opponents to take cover, –20 to BS.",
             "Overwatch": "Overwatch",
-            "OverwatchDesc": "Shoot targets coming into a set kill zone, \u201320 to BS.",
+            "OverwatchDesc": "Shoot targets coming into a set kill zone, –20 to BS.",
             "MultipleAttacks": "Multiple Attacks",
-            "MultipleAttacksDesc": "Attack more than once in the same round\u2014requires two weapons or a talent.",
+            "MultipleAttacksDesc": "Attack more than once in the same round—requires two weapons or a talent.",
             "SwiftAttack": "Swift Attack",
-            "SwiftAttackDesc": "Half Action, melee. Make multiple attacks against one target \u2014 +0 WS, one extra hit per two DoS. Requires the Swift Attack talent.",
+            "SwiftAttackDesc": "Half Action, melee. Make multiple attacks against one target — +0 WS, one extra hit per two DoS. Requires the Swift Attack talent.",
             "LightningAttack": "Lightning Attack",
-            "LightningAttackDesc": "Half Action, melee. A flurry of strikes \u2014 \u201310 WS, one extra hit per DoS. Requires the Lightning Attack talent.",
+            "LightningAttackDesc": "Half Action, melee. A flurry of strikes — –10 WS, one extra hit per DoS. Requires the Lightning Attack talent.",
             "FocusPower": "Focus Power",
             "FocusPowerDesc": "Manifest a known psychic power; action type varies by power. Requires Psy Rating.",
             "Evasion": "Evasion",
@@ -3940,7 +3993,7 @@
             "Move": "Move",
             "MoveDesc": "Move up to your movement as a Half Action or twice your movement as a Full Action.",
             "Run": "Run",
-            "RunDesc": "Move triple, enemies \u201320 BS and +20 WS.",
+            "RunDesc": "Move triple, enemies –20 BS and +20 WS.",
             "Disengage": "Disengage",
             "DisengageDesc": "Break off from melee and move.",
             "JumpLeap": "Jump/Leap",
@@ -3966,7 +4019,7 @@
             "Grapple": "Grapple",
             "GrappleDesc": "Affect a Grappled opponent or escape from a Grapple.",
             "DefensiveStance": "Defensive Stance",
-            "DefensiveStanceDesc": "Gain an additional Reaction, opponents suffer \u201320 to WS.",
+            "DefensiveStanceDesc": "Gain an additional Reaction, opponents suffer –20 to WS.",
             "BraceHeavy": "Brace Heavy Weapon",
             "BraceHeavyDesc": "Prepare to fire a heavy weapon.",
             "KnockDown": "Knock Down",
@@ -4020,9 +4073,9 @@
                 "Increase": "Increase Corruption",
                 "EditTitle": "Edit Corruption",
                 "EditLabel": "Corruption Points (0-100)",
-                "Threshold30": "TAINTED \u2192 SOILED (30)",
-                "Threshold60": "SOILED \u2192 DEBASED (60)",
-                "Threshold90": "DEBASED \u2192 PROFANE (90)",
+                "Threshold30": "TAINTED → SOILED (30)",
+                "Threshold60": "SOILED → DEBASED (60)",
+                "Threshold90": "DEBASED → PROFANE (90)",
                 "Warn100": "DAMNED - Soul Lost to Chaos!",
                 "Warn90": "PROFANE - On the Edge of Damnation (-30)",
                 "Warn60": "DEBASED - Deeply Corrupted (-20)",
@@ -4065,10 +4118,10 @@
                 "Increase": "Increase Insanity",
                 "EditTitle": "Edit Insanity",
                 "EditLabel": "Insanity Points (0-100)",
-                "Threshold10": "STABLE \u2192 UNSETTLED (10)",
-                "Threshold40": "UNSETTLED \u2192 DISTURBED (40)",
-                "Threshold60": "DISTURBED \u2192 UNHINGED (60)",
-                "Threshold80": "UNHINGED \u2192 DERANGED (80)",
+                "Threshold10": "STABLE → UNSETTLED (10)",
+                "Threshold40": "UNSETTLED → DISTURBED (40)",
+                "Threshold60": "DISTURBED → UNHINGED (60)",
+                "Threshold80": "UNHINGED → DERANGED (80)",
                 "Warn100": "TERMINALLY INSANE - Mind Lost to Madness!",
                 "Warn80": "DERANGED - On the Edge of Madness (-20)",
                 "Warn60": "UNHINGED - Severe Mental Instability (-10)",
@@ -4114,9 +4167,9 @@
         "VitalInfoCard": {
             "FatigueRulesTitle": "Fatigue Rules (Core)",
             "FatigueAnyTitle": "Any Fatigue:",
-            "FatigueAnyDesc": "\u201310 penalty to all Tests.",
+            "FatigueAnyDesc": "–10 penalty to all Tests.",
             "FatigueExceedsTitle": "Exceeds TB:",
-            "FatigueExceedsDesc": "Collapse unconscious for (10 \u2013 TB) minutes. Upon waking, fatigue resets to TB.",
+            "FatigueExceedsDesc": "Collapse unconscious for (10 – TB) minutes. Upon waking, fatigue resets to TB.",
             "FatigueRecoveryTitle": "Recovery:",
             "FatigueRecoveryDesc": "Each hour of rest removes 1 fatigue. Eight consecutive hours removes all fatigue.",
             "FateAboutTitle": "About Fate Points",
@@ -4245,7 +4298,7 @@
         },
         "AmmoPicker": {
             "Title": "Select Ammunition",
-            "LoadTitle": "Load Ammunition \u2014 {weaponName}"
+            "LoadTitle": "Load Ammunition — {weaponName}"
         },
         "InventoryGenerator": {
             "Title": "Inventory Generator — {actor}",
@@ -4295,22 +4348,6 @@
             "Source": "Dropped by {actor}",
             "Tab": "Loot",
             "Title": "Loot Pile"
-        },
-        "Warning": {
-            "InvalidCharacteristic": "Invalid characteristic.",
-            "SkillNotSpecified": "Skill not specified.",
-            "SkillsCompendiumNotFound": "Skills compendium not found.",
-            "InvalidItem": "{itemType} cannot be dropped on a {actorType}.",
-            "NoActiveCombatEncounter": "No active combat encounter.",
-            "RangeFormulaFailed": "Range formula failed — setting to 0",
-            "InvalidAmmunition": "Invalid ammunition item",
-            "NoAmmunitionLoaded": "No ammunition loaded",
-            "UnknownCondition": "Unknown condition: {condition}",
-            "LootNoToken": "Place {actor}'s token on the scene before dropping items.",
-            "LootNotDroppable": "{item} cannot be dropped.",
-            "LootNoReceiver": "Select the token that should pick this up first.",
-            "LootPickupDenied": "You do not have permission to pick this up.",
-            "LootDropDenied": "You do not have permission to drop this item."
         },
         "Trade": {
             "HudButton": "Trade",
@@ -4769,6 +4806,56 @@
                 "Awardable": {
                     "Title": "Eligible Awards"
                 }
+            }
+        },
+        "Location": {
+            "ControllingFaction": "Controlling Faction",
+            "ControllingFactionPlaceholder": "e.g. Imperium",
+            "Coordinates": "Coordinates",
+            "CoordinatesPlaceholder": "e.g. Segmentum Obscurus",
+            "Description": "Description",
+            "Governance": "Governance",
+            "HomeWorldRules": "Home World Rules",
+            "NamePlaceholder": "Location name",
+            "Parent": "Parent Location",
+            "ParentPlaceholder": "Containing location (UUID)",
+            "Placement": "Placement",
+            "Population": "Population",
+            "PopulationPlaceholder": "e.g. 12 billion",
+            "Region": "Region",
+            "RegionPlaceholder": "e.g. Calixis Sector",
+            "SampleCharacters": "Sample Characters",
+            "Sector": "Sector",
+            "SectorPlaceholder": "e.g. Calixis",
+            "Source": "Source",
+            "SourceBook": "Book",
+            "SourceBookPlaceholder": "e.g. Core Rulebook",
+            "SourcePage": "Page",
+            "SourcePagePlaceholder": "e.g. 100",
+            "SourceUrl": "URL",
+            "SourceUrlPlaceholder": "https://…",
+            "SpecialRules": "Special Rules",
+            "SpecialRulesPlaceholder": "Narrative special rules…",
+            "Tags": "Tags",
+            "TagsPlaceholder": "comma-separated",
+            "TypeLabel": "Type",
+            "Type": {
+                "Sector": "Sector",
+                "Subsector": "Subsector",
+                "System": "System",
+                "Star": "Star",
+                "Planet": "Planet",
+                "Moon": "Moon",
+                "Continent": "Continent",
+                "Region": "Region",
+                "Settlement": "Settlement",
+                "District": "District",
+                "Site": "Site",
+                "Structure": "Structure",
+                "Vessel": "Vessel",
+                "Station": "Station",
+                "Realm": "Realm",
+                "Other": "Other"
             }
         }
     }
