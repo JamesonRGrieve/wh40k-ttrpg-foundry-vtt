@@ -4340,6 +4340,54 @@
             "flags": {}
         },
         {
+            "name": "rt-reaver-actors-bestiary",
+            "label": "RT: The Soul Reaver Bestiary",
+            "path": "packs/rogue-trader/rt-reaver-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-reaver-actors-npcs",
+            "label": "RT: The Soul Reaver NPCs",
+            "path": "packs/rogue-trader/rt-reaver-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-reaver-actors-ships",
+            "label": "RT: The Soul Reaver Ships",
+            "path": "packs/rogue-trader/rt-reaver-actors-ships",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-reaver-actors-vehicles",
+            "label": "RT: The Soul Reaver Vehicles",
+            "path": "packs/rogue-trader/rt-reaver-actors-vehicles",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-faith-items-weapon-mods",
             "label": "RT: Faith and Coin Weapon Modifications",
             "path": "packs/rogue-trader/rt-faith-items-weapon-mods",
