@@ -1,0 +1,238 @@
+{{!--
+  Location Item Sheet — ApplicationV2
+  Structured, queryable place: type, hierarchy, metadata, per-line lore.
+--}}
+<div class="tw-flex tw-flex-col tw-h-full">
+  <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Location identity with type / faction / sector chips
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-16 tw-h-16" frameClass="" overlayIcon=item.system.locationTypeIcon overlayBgClass="tw-bg-black/60" overlayTextClass="" overlayIconClass="" extraClass="tw-shrink-0"}}
+
+      <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="{{localize 'WH40K.Location.NamePlaceholder'}}" />
+
+        <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.Location.TypeLabel'}}">
+            <i class="fas {{item.system.locationTypeIcon}}"></i>
+            {{item.system.locationTypeLabel}}
+          </span>
+          {{#if item.system.controllingFaction}}
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.Location.ControllingFaction'}}">
+            <i class="fas fa-flag"></i>
+            {{item.system.controllingFaction}}
+          </span>
+          {{/if}}
+          {{#if item.system.sector}}
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.Location.Sector'}}">
+            <i class="fas fa-map"></i>
+            {{item.system.sector}}
+          </span>
+          {{/if}}
+        </div>
+      </div>
+    </header>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="details"     label="Details"     icon="fa-info-circle" active=true)
+        (object tab="description" label="Description" icon="fa-book")
+        (object tab="effects"     label="Effects"     icon="fa-magic"))}}
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+
+      {{!-- DETAILS TAB --}}
+      <div class="tab active" data-tab="details" data-group="primary">
+
+        {{!-- Placement / Hierarchy --}}
+        <div class="tw-mb-3">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-sitemap tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.Placement'}}</h3>
+          </div>
+          <div class="tw-p-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.TypeLabel'}}</label>
+                <select name="system.locationType" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+                  {{#each locationTypes as |label slug|}}
+                  <option value="{{slug}}" {{#if (eq ../item.system.locationType slug)}}selected{{/if}}>{{label}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.Parent'}}</label>
+                <input type="text" name="system.parent" value="{{item.system.parent}}"
+                       placeholder="{{localize 'WH40K.Location.ParentPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.Sector'}}</label>
+                <input type="text" name="system.sector" value="{{item.system.sector}}"
+                       placeholder="{{localize 'WH40K.Location.SectorPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.Region'}}</label>
+                <input type="text" name="system.region" value="{{item.system.region}}"
+                       placeholder="{{localize 'WH40K.Location.RegionPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.Coordinates'}}</label>
+                <input type="text" name="system.coordinates" value="{{item.system.coordinates}}"
+                       placeholder="{{localize 'WH40K.Location.CoordinatesPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Governance / Demographics --}}
+        <div class="tw-mb-3">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-flag tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.Governance'}}</h3>
+          </div>
+          <div class="tw-p-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.ControllingFaction'}}</label>
+                <input type="text" name="system.controllingFaction" value="{{item.system.controllingFaction}}"
+                       placeholder="{{localize 'WH40K.Location.ControllingFactionPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.Population'}}</label>
+                <input type="text" name="system.population" value="{{item.system.population}}"
+                       placeholder="{{localize 'WH40K.Location.PopulationPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Tags --}}
+        <div class="tw-mb-3">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-tags tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.Tags'}}</h3>
+          </div>
+          <div class="tw-p-3">
+            {{#if item.system.tags.length}}
+            <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mb-2">
+              {{#each item.system.tags as |tag|}}
+              <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs"><i class="fas fa-tag"></i>{{tag}}</span>
+              {{/each}}
+            </div>
+            {{/if}}
+            <input type="text" name="system.tags" value="{{join item.system.tags ', '}}"
+                   placeholder="{{localize 'WH40K.Location.TagsPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+          </div>
+        </div>
+
+        {{!-- Home World Rules --}}
+        {{#if item.system.homeWorldRules.length}}
+        <div class="tw-mb-3">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-scroll tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.HomeWorldRules'}}</h3>
+          </div>
+          <div class="tw-p-3">
+            <ul class="tw-list-disc tw-pl-5 tw-text-sm tw-space-y-1">
+              {{#each item.system.homeWorldRules as |rule|}}
+              <li>{{rule}}</li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        {{/if}}
+
+        {{!-- Special Rules --}}
+        <div class="tw-mb-3">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-bolt tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.SpecialRules'}}</h3>
+          </div>
+          <div class="tw-p-3">
+            <textarea name="system.specialRules" rows="3" placeholder="{{localize 'WH40K.Location.SpecialRulesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.specialRules}}</textarea>
+          </div>
+        </div>
+
+        {{!-- Sample Characters --}}
+        {{#if item.system.sampleCharacters.length}}
+        <div class="tw-mb-3">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-users tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.SampleCharacters'}}</h3>
+          </div>
+          <div class="tw-p-3 tw-space-y-2">
+            {{#each item.system.sampleCharacters as |sample|}}
+            <div class="tw-text-sm">
+              <span class="tw-font-semibold">{{sample.name}}</span>
+              <span class="tw-opacity-80"> — {{sample.description}}</span>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+        {{/if}}
+
+      </div>
+
+      {{!-- DESCRIPTION TAB --}}
+      <div class="tab" data-tab="description" data-group="primary">
+
+        {{!-- Full Description --}}
+        <div class="tw-mb-3">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-book tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.Description'}}</h3>
+          </div>
+          <div class="tw-p-2">
+            {{#if inEditMode}}
+            {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+            {{else}}
+            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Source --}}
+        <div class="tw-mb-3">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-book-open tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.Source'}}</h3>
+          </div>
+          <div class="tw-p-3">
+            <div class="tw-grid tw-grid-cols-3 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.SourceBook'}}</label>
+                <input type="text" name="system.source.book" value="{{source.source.book}}"
+                       placeholder="{{localize 'WH40K.Location.SourceBookPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.SourcePage'}}</label>
+                <input type="text" name="system.source.page" value="{{source.source.page}}"
+                       placeholder="{{localize 'WH40K.Location.SourcePagePlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.SourceUrl'}}</label>
+                <input type="text" name="system.source.url" value="{{source.source.url}}"
+                       placeholder="{{localize 'WH40K.Location.SourceUrlPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {{!-- EFFECTS TAB --}}
+      <div class="tab" data-tab="effects" data-group="primary">
+        {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
+      </div>
+
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,37 @@
+{{!-- Voidcraft Extended Actions Tab — issue #186 --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-hidden tw-flex-col tw-gap-3 tw-p-3 {{#if tab.active}}tw-flex{{/if}} tw-border-t tw-border-gold bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    <div class="wh40k-panel">
+        <h1 class="wh40k-panel-header tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Starship.ExtendedAction.Header"}}</h1>
+        <p class="tw-text-[0.85em] tw-text-[#4a3728] tw-px-3 tw-py-2 tw-opacity-80">{{localize "WH40K.Starship.ExtendedAction.Description"}}</p>
+
+        {{#if extendedActions.length}}
+            <ul class="wh40k-extended-action-list tw-flex tw-flex-col tw-gap-1.5 tw-list-none tw-p-2 tw-m-0">
+                {{#each extendedActions as |action|}}
+                    <li class="wh40k-extended-action-item tw-flex tw-items-center tw-gap-2 tw-px-2.5 tw-py-1.5 tw-rounded-md tw-border tw-border-[rgba(74,55,40,0.2)] tw-bg-white/60" data-action-uuid="{{action.uuid}}" data-action-id="{{action.id}}">
+                        {{#if action.img}}
+                            <img class="tw-w-6 tw-h-6 tw-rounded-sm tw-flex-none" src="{{action.img}}" alt="{{action.name}}"/>
+                        {{/if}}
+                        <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
+                            <span class="wh40k-extended-action-name tw-font-semibold tw-text-[0.95em] tw-text-[#4a3728] tw-uppercase tw-tracking-wide">{{action.name}}</span>
+                            <span class="wh40k-extended-action-meta tw-text-[0.75em] tw-text-[#6a5239] tw-opacity-80">
+                                {{#if action.skill}}{{localize "WH40K.Starship.ExtendedAction.Skill"}}: {{action.skill}}{{/if}}
+                                {{#if action.duration}} &middot; {{localize "WH40K.Starship.ExtendedAction.Duration"}}: {{action.duration}}{{/if}}
+                            </span>
+                        </div>
+                        <button type="button"
+                                class="wh40k-extended-action-dispatch tw-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-1 tw-rounded-md tw-border tw-border-[#2a4a6a] tw-bg-[linear-gradient(180deg,#4a6b8a_0%,#3a5a7a_100%)] tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer"
+                                data-action="dispatchExtendedAction"
+                                data-action-uuid="{{action.uuid}}"
+                                data-action-id="{{action.id}}"
+                                title="{{localize 'WH40K.Starship.ExtendedAction.DispatchTitle'}}">
+                            <span class="material-icons tw-text-[0.95em]">send</span>
+                            <span>{{localize "WH40K.Starship.ExtendedAction.Dispatch"}}</span>
+                        </button>
+                    </li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <p class="tw-text-[0.85em] tw-italic tw-text-[#6a5239] tw-px-3 tw-py-2">{{localize "WH40K.Starship.ExtendedAction.Empty"}}</p>
+        {{/if}}
+    </div>
+</section>
