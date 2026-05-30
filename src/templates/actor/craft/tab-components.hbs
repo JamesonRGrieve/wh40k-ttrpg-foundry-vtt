@@ -1,0 +1,50 @@
+{{!-- Craft Components & Upgrades Tab (terracraft / aircraft / watercraft). --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+    <div class="tw-flex tw-flex-col tw-gap-4">
+
+        {{!-- Components/Upgrades List --}}
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-cog tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
+                {{localize "WH40K.Vehicle.ComponentsAndUpgrades"}}
+            </h3>
+            <div class="tw-flex tw-flex-col tw-gap-3">
+                {{#each components}}
+                <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]" data-item-id="{{this._id}}">
+                    <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
+                        <input type="checkbox"
+                               class="tw-m-0"
+                               data-action="toggleComponentActive"
+                               data-item-id="{{this._id}}"
+                               {{#if this.system.active}}checked{{/if}} />
+                        {{this.name}}
+                    </div>
+                    {{#if this.system.description}}
+                    <div class="tw-text-[0.85rem] tw-text-[#888] tw-mt-2">
+                        {{{this.system.description}}}
+                    </div>
+                    {{/if}}
+                </div>
+                {{/each}}
+
+                {{#each vehicleUpgrades}}
+                <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]" data-item-id="{{this._id}}">
+                    <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
+                        {{this.name}}
+                    </div>
+                    {{#if this.system.description}}
+                    <div class="tw-text-[0.85rem] tw-text-[#888] tw-mt-2">
+                        {{{this.system.description}}}
+                    </div>
+                    {{/if}}
+                </div>
+                {{/each}}
+
+                {{#unless (or components.length vehicleUpgrades.length)}}
+                <div class="tw-py-8 tw-text-center tw-text-[#888] tw-italic">{{localize "WH40K.Vehicle.NoComponents"}}</div>
+                {{/unless}}
+            </div>
+        </div>
+
+    </div>
+</section>

@@ -1,0 +1,71 @@
+{{!-- Craft Combat Tab (terracraft / aircraft / watercraft). --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+    <div class="tw-flex tw-flex-col tw-gap-4">
+
+        {{!-- Directional Armour --}}
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-shield-alt tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
+                {{localize "WH40K.Vehicle.Armour"}}
+            </h3>
+            <div class="tw-grid tw-grid-cols-3 tw-gap-4">
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.ArmourFront"}}</label>
+                    <input type="number" name="system.armour.front.value" value="{{craftStats.armour.front}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
+                </div>
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.ArmourSide"}}</label>
+                    <input type="number" name="system.armour.side.value" value="{{craftStats.armour.side}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
+                </div>
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.ArmourRear"}}</label>
+                    <input type="number" name="system.armour.rear.value" value="{{craftStats.armour.rear}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
+                </div>
+            </div>
+        </div>
+
+        {{!-- Weapons List --}}
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-crosshairs tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
+                {{localize "WH40K.Vehicle.Weapons"}}
+            </h3>
+            <div class="tw-flex tw-flex-col tw-gap-2">
+                {{#each weapons}}
+                <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px] tw-transition-all" data-item-id="{{this._id}}">
+                    <div class="tw-font-bold tw-cursor-pointer hover:tw-text-gold" data-action="rollWeapon" data-item-id="{{this._id}}">
+                        {{this.name}}
+                    </div>
+                    <div class="tw-flex tw-gap-4 tw-text-[0.85rem] tw-text-[#888]">
+                        <span>{{this.system.damage}}</span>
+                        <span>{{this.system.range}}m</span>
+                    </div>
+                </div>
+                {{else}}
+                <div class="tw-py-8 tw-text-center tw-text-[#888] tw-italic">{{localize "WH40K.Vehicle.NoWeapons"}}</div>
+                {{/each}}
+            </div>
+        </div>
+
+        {{!-- Traits --}}
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-bolt tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
+                {{localize "WH40K.Vehicle.Traits"}}
+            </h3>
+            <div class="tw-flex tw-flex-col tw-gap-3">
+                {{#each vehicleTraits}}
+                <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]">
+                    <strong class="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{this.name}}</strong>
+                    {{#if this.system.description}}
+                    <p class="tw-mt-2 tw-text-[0.85rem] tw-text-[#888]">{{{this.system.description}}}</p>
+                    {{/if}}
+                </div>
+                {{else}}
+                <div class="tw-py-8 tw-text-center tw-text-[#888] tw-italic">{{localize "WH40K.Vehicle.NoTraits"}}</div>
+                {{/each}}
+            </div>
+        </div>
+
+    </div>
+</section>

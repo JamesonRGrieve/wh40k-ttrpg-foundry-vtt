@@ -15,6 +15,7 @@ const zip = require("gulp-zip");
 const { ClassicLevel } = require("classic-level");
 const { exec } = require("child_process");
 const { validatePackSources } = require("./src/packs/validate-schema.cjs");
+const { buildUuidIndex, resolveAdventure } = require("./scripts/resolve-adventures.cjs");
 
 const util = require('util');
 if (!util.isDate) {
@@ -78,7 +79,9 @@ function resolvePackSourceDocument(filePath, seen = new Set()) {
 function detectCollectionType(folder) {
   const segment = (name) => new RegExp(`(^|-)${name}(-|$)`).test(folder);
 
+  if (segment('adventures')) return 'adventures';
   if (segment('actors')) return 'actors';
+  if (segment('scenes')) return 'scenes';
   if (segment('items')) return 'items';
   if (segment('journals')) return 'journal';
   if (segment('rolltables')) return 'tables';
@@ -116,6 +119,12 @@ async function compilePacks() {
       }
     }
   }
+
+  // Build a global UUID -> source-document index so the adventure resolver can
+  // embed COPIES of referenced actors/items/scenes/tables into compiled
+  // Adventure documents. Built once, reused across all adventure packs. Reuses
+  // the same reference-stub resolution as ordinary pack compilation.
+  const uuidIndex = buildUuidIndex(path.resolve(__dirname, PACK_SRC), resolvePackSourceDocument);
 
   const packsDir = path.resolve(__dirname, PACK_BUILD_DIR);
 
@@ -206,8 +215,15 @@ async function compilePacks() {
         const filePath = path.join(sourceDir, file);
         
         try {
-          const doc = resolvePackSourceDocument(filePath);
-          
+          let doc = resolvePackSourceDocument(filePath);
+
+          // Adventure packs: resolve the DRY source into a true Foundry
+          // Adventure document, embedding COPIES of every UUID-referenced
+          // actor/item/scene/table into the Adventure's content sets.
+          if (collectionType === 'adventures') {
+            doc = resolveAdventure(doc, uuidIndex, path.join(folder, file));
+          }
+
           // For origin-path items, assign to appropriate folder based on stepIndex
           if (folder === 'rt-items-origin-path' && doc.flags?.wh40k?.stepIndex) {
             const stepIndex = doc.flags.wh40k.stepIndex;

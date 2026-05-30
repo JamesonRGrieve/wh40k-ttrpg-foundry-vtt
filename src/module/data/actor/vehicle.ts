@@ -1,51 +1,50 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
 
 /**
- * Data model for Vehicle actors.
- * Enhanced V13 schema with proper structure for all vehicle data.
+ * Data models for Vehicle actors.
+ *
+ * Hierarchy:
+ *     VehicleData (abstract base — universally-shared fields + `locomotion` discriminator)
+ *     └── ConventionalCraftData (intermediate — conventional-craft block: directional
+ *         armour / ground speed / crew / integrity / manoeuverability …)
+ *         ├── TerracraftData  (land — adds nothing)
+ *         ├── AircraftData    (air — adds altitude + ceiling)
+ *         └── WatercraftData  (water — adds draught)
+ *     VoidcraftData (ship/void scale — see voidcraft.ts; extends VehicleData directly
+ *         and overrides crew / speed / armour with its own ship shapes)
  */
+
 /** Shape of an armour facing (front/side/rear). */
 interface VehicleArmourFacing {
     value: number;
     descriptor: string;
 }
 
+/**
+ * Abstract base for every vehicle actor (conventional craft AND voidcraft).
+ *
+ * Holds ONLY fields whose shape is universal across both conventional craft
+ * and voidcraft: classification metadata, size, weapons / special-rules text,
+ * and the `locomotion` discriminator. Any field whose SHAPE differs between
+ * conventional craft and voidcraft — crew, speed, armour, integrity — lives
+ * below this base (on `ConventionalCraftData` or `VoidcraftData`), never here.
+ */
 export default class VehicleData extends ActorDataModel {
     // Typed property declarations matching defineSchema()
-    declare vehicleClass: 'ground' | 'air' | 'water' | 'space' | 'walker';
+    /**
+     * Locomotion discriminator. Distinguishes the conventional-craft subtypes
+     * (`terra` / `air` / `water`) from voidcraft (`void`). The concrete model
+     * fixes this per subtype.
+     */
+    declare locomotion: 'terra' | 'air' | 'water' | 'void';
     declare size: number;
     declare sizeDescriptor: string;
     declare faction: string;
     declare subfaction: string;
     declare type: 'vehicle' | 'walker' | 'flyer' | 'skimmer' | 'bike' | 'tank';
-    declare threatLevel: number;
-    declare armour: {
-        front: VehicleArmourFacing;
-        side: VehicleArmourFacing;
-        rear: VehicleArmourFacing;
-    };
-    declare speed: {
-        cruising: number;
-        tactical: number;
-        notes: string;
-    };
-    declare crew: {
-        required: number;
-        notes: string;
-    };
-    declare passengers: number;
-    declare manoeuverability: number;
-    declare carryingCapacity: number;
-    declare integrity: {
-        max: number;
-        value: number;
-        critical: number;
-    };
     declare weapons: string;
     declare specialRules: string;
     declare traitsText: string;
-    /** Flyer altitude tier (without.md p. 54). Ground for non-Flyer vehicles. */
-    declare altitude: 'ground' | 'low' | 'high' | 'orbital';
     declare availability: string;
     declare source: string;
 
@@ -55,12 +54,12 @@ export default class VehicleData extends ActorDataModel {
         return {
             ...super.defineSchema(),
 
-            // === Vehicle Classification ===
-            vehicleClass: new fields.StringField({
+            // === Locomotion discriminator ===
+            locomotion: new fields.StringField({
                 required: true,
-                initial: 'ground',
-                choices: ['ground', 'air', 'water', 'space', 'walker'],
-                label: 'WH40K.Vehicle.Class',
+                initial: 'terra',
+                choices: ['terra', 'air', 'water', 'void'],
+                label: 'WH40K.Vehicle.Locomotion',
             }),
 
             // === Size ===
@@ -89,6 +88,107 @@ export default class VehicleData extends ActorDataModel {
                 choices: ['vehicle', 'walker', 'flyer', 'skimmer', 'bike', 'tank'],
                 label: 'WH40K.Vehicle.Type',
             }),
+
+            // === Weapons (rich text for weapon descriptions) ===
+            weapons: new fields.HTMLField({ required: true, blank: true }),
+
+            // === Special Rules (rich text) ===
+            specialRules: new fields.HTMLField({ required: true, blank: true }),
+
+            // === Traits (text until items are dragged on) ===
+            traitsText: new fields.StringField({ required: false, initial: '', blank: true }),
+
+            // === Availability & Source ===
+            availability: new fields.StringField({ required: false, initial: 'common', blank: true }),
+            source: new fields.StringField({ required: false, initial: '', blank: true }),
+        };
+    }
+
+    /* -------------------------------------------- */
+    /*  Properties                                  */
+    /* -------------------------------------------- */
+
+    /**
+     * Get size label from config.
+     * @type {string}
+     */
+    get sizeLabel(): string {
+        const wh40kCfg = CONFIG.wh40k as
+            | { vehicleSizes?: Record<string, { label: string } | undefined>; sizes?: Record<string, { label: string } | undefined> }
+            | undefined;
+        const sizeConfig = wh40kCfg?.vehicleSizes ?? wh40kCfg?.sizes ?? {};
+        const sizeData = sizeConfig[this.size];
+        if (sizeData !== undefined) {
+            return game.i18n.localize(sizeData.label);
+        }
+        return this.sizeDescriptor !== '' ? this.sizeDescriptor : `Size ${this.size}`;
+    }
+
+    /**
+     * Get vehicle type label from config.
+     * @type {string}
+     */
+    get vehicleTypeLabel(): string {
+        const wh40kCfg = CONFIG.wh40k as { vehicleTypes?: Record<string, { label: string } | undefined> } | undefined;
+        const types = wh40kCfg?.vehicleTypes ?? {};
+        const typeData = types[this.type];
+        if (typeData !== undefined) {
+            return game.i18n.localize(typeData.label);
+        }
+        return this.type;
+    }
+}
+
+/**
+ * Intermediate base for conventional (non-void) craft — land, air, and water
+ * vehicles. Carries the FFG-era ground-vehicle stat block (directional armour,
+ * ground speed, crew, manoeuverability, passengers, carrying capacity,
+ * structural integrity, vehicle class, threat level) plus the vehicle-trait
+ * modifier engine. The three locomotion subtypes (`TerracraftData`,
+ * `AircraftData`, `WatercraftData`) extend this so the shared block is authored
+ * exactly once.
+ */
+export class ConventionalCraftData extends VehicleData {
+    declare vehicleClass: 'ground' | 'air' | 'water' | 'space' | 'walker';
+    declare threatLevel: number;
+    declare armour: {
+        front: VehicleArmourFacing;
+        side: VehicleArmourFacing;
+        rear: VehicleArmourFacing;
+    };
+    declare speed: {
+        cruising: number;
+        tactical: number;
+        notes: string;
+    };
+    declare crew: {
+        required: number;
+        notes: string;
+    };
+    declare passengers: number;
+    declare manoeuverability: number;
+    declare carryingCapacity: number;
+    declare integrity: {
+        max: number;
+        value: number;
+        critical: number;
+    };
+
+    /** @inheritdoc */
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+        const fields = foundry.data.fields;
+        return {
+            ...super.defineSchema(),
+
+            // === Vehicle Classification ===
+            vehicleClass: new fields.StringField({
+                required: true,
+                initial: 'ground',
+                choices: ['ground', 'air', 'water', 'space', 'walker'],
+                label: 'WH40K.Vehicle.Class',
+            }),
+
+            // === Threat Level ===
             threatLevel: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
             // === Armour by Facing (nested for value + descriptor) ===
@@ -134,27 +234,6 @@ export default class VehicleData extends ActorDataModel {
                 value: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 critical: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
-
-            // === Weapons (rich text for weapon descriptions) ===
-            weapons: new fields.HTMLField({ required: true, blank: true }),
-
-            // === Special Rules (rich text) ===
-            specialRules: new fields.HTMLField({ required: true, blank: true }),
-
-            // === Traits (text until items are dragged on) ===
-            traitsText: new fields.StringField({ required: false, initial: '', blank: true }),
-
-            // === Flyer altitude (without.md p. 54-55) ===
-            // Only meaningful when the vehicle has the Flyer trait.
-            altitude: new fields.StringField({
-                required: true,
-                initial: 'ground',
-                choices: ['ground', 'low', 'high', 'orbital'],
-            }),
-
-            // === Availability & Source ===
-            availability: new fields.StringField({ required: false, initial: 'common', blank: true }),
-            source: new fields.StringField({ required: false, initial: '', blank: true }),
         };
     }
 
@@ -264,22 +343,6 @@ export default class VehicleData extends ActorDataModel {
     }
 
     /**
-     * Get size label from config.
-     * @type {string}
-     */
-    get sizeLabel(): string {
-        const wh40kCfg = CONFIG.wh40k as
-            | { vehicleSizes?: Record<string, { label: string } | undefined>; sizes?: Record<string, { label: string } | undefined> }
-            | undefined;
-        const sizeConfig = wh40kCfg?.vehicleSizes ?? wh40kCfg?.sizes ?? {};
-        const sizeData = sizeConfig[this.size];
-        if (sizeData !== undefined) {
-            return game.i18n.localize(sizeData.label);
-        }
-        return this.sizeDescriptor !== '' ? this.sizeDescriptor : `Size ${this.size}`;
-    }
-
-    /**
      * Get vehicle class label from config.
      * @type {string}
      */
@@ -291,20 +354,6 @@ export default class VehicleData extends ActorDataModel {
             return game.i18n.localize(classData.label);
         }
         return this.vehicleClass;
-    }
-
-    /**
-     * Get vehicle type label from config.
-     * @type {string}
-     */
-    get vehicleTypeLabel(): string {
-        const wh40kCfg = CONFIG.wh40k as { vehicleTypes?: Record<string, { label: string } | undefined> } | undefined;
-        const types = wh40kCfg?.vehicleTypes ?? {};
-        const typeData = types[this.type];
-        if (typeData !== undefined) {
-            return game.i18n.localize(typeData.label);
-        }
-        return this.type;
     }
 
     /**
