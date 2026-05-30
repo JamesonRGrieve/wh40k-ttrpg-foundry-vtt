@@ -1067,6 +1067,30 @@
       "flags": {}
     },
     {
+      "name": "dh1-inquisitor-origins-backgrounds",
+      "label": "DH1: Inquisitor's Handbook — Backgrounds",
+      "path": "packs/dark-heresy-1/dh1-inquisitor-origins-backgrounds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-inquisitor-origins-homeworlds",
+      "label": "DH1: Inquisitor's Handbook — Home Worlds",
+      "path": "packs/dark-heresy-1/dh1-inquisitor-origins-homeworlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "dh1-core-origins-homeworlds",
       "label": "DH1: Core Rulebook — Home Worlds",
       "path": "packs/dark-heresy-1/dh1-core-origins-homeworlds",
@@ -1094,6 +1118,18 @@
       "name": "dh1-core-origins-divinations",
       "label": "DH1: Core Rulebook — Imperial Divinations",
       "path": "packs/dark-heresy-1/dh1-core-origins-divinations",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-core-actors-bestiary",
+      "label": "DH1: Core Rulebook — Bestiary",
+      "path": "packs/dark-heresy-1/dh1-core-actors-bestiary",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -1994,6 +2030,18 @@
       "name": "dw-xenos-items-weapons",
       "label": "Mark of the Xenos Weapons",
       "path": "packs/deathwatch/dw-xenos-items-weapons",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-xenos-actors-bestiary",
+      "label": "DW: Mark of the Xenos — Bestiary",
+      "path": "packs/deathwatch/dw-xenos-actors-bestiary",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -4742,6 +4790,30 @@
       "name": "dw-founding-origins-chapters",
       "label": "First Founding Chapters",
       "path": "packs/deathwatch/dw-founding-origins-chapters",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-items-talents",
+      "label": "DH1: Ascension — Talents",
+      "path": "packs/dark-heresy-1/dh1-ascension-items-talents",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-origins-careers",
+      "label": "DH1: Ascension — Career Paths",
+      "path": "packs/dark-heresy-1/dh1-ascension-origins-careers",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
