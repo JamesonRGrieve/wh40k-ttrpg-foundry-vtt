@@ -33,12 +33,7 @@ export interface ScenarioSource {
 }
 
 /** Scene kind — drives tooling presentation, not mechanics. */
-export type ScenarioSceneType =
-    | 'investigation'
-    | 'combat'
-    | 'social'
-    | 'travel'
-    | 'set-piece';
+export type ScenarioSceneType = 'investigation' | 'combat' | 'social' | 'travel' | 'set-piece';
 
 /** A skill / characteristic test gating a scene, with per-outcome prose. */
 export interface ScenarioCheck {
@@ -153,22 +148,151 @@ export interface ScenarioValidationIssue {
     message: string;
 }
 
-const SCENE_TYPES = new Set<ScenarioSceneType>([
-    'investigation',
-    'combat',
-    'social',
-    'travel',
-    'set-piece',
-]);
+const SCENE_TYPES = new Set<ScenarioSceneType>(['investigation', 'combat', 'social', 'travel', 'set-piece']);
 const PROVENANCES = new Set<ScenarioSource['provenance']>(['raw', 'homebrew', 'derived']);
 const DISPOSITIONS = new Set<ScenarioEncounter['disposition']>(['hostile', 'neutral', 'friendly']);
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard accepts unknown input from untyped scenario flag payload
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard accepts unknown input
 function isUuid(value: unknown): value is string {
     return typeof value === 'string' && value.startsWith('Compendium.');
+}
+
+/** Sink for validation issues, threaded through the per-scene helpers. */
+type AddIssue = (path: string, message: string) => void;
+
+/** Validate the provenance `source` sub-object (already record-narrowed). */
+// eslint-disable-next-line no-restricted-syntax -- boundary: validates the untyped scenario flag payload
+function validateSource(source: Record<string, unknown>, add: AddIssue): void {
+    const provenance = source['provenance'];
+    if (!PROVENANCES.has(provenance as ScenarioSource['provenance'])) {
+        add('source.provenance', 'provenance must be one of raw | homebrew | derived');
+    }
+    if (provenance === 'raw') {
+        const book = source['book'];
+        const page = source['page'];
+        if (typeof book !== 'string' || book.length === 0) {
+            add('source.book', 'raw provenance requires a book citation');
+        }
+        if (typeof page !== 'string' || page.length === 0) {
+            add('source.page', 'raw provenance requires a page citation');
+        }
+    }
+}
+
+/** Validate one scene's intrinsic shape; records its id/check ids into the sets. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: validates the untyped scenario flag payload
+function validateSceneShape(raw: Record<string, unknown>, base: string, add: AddIssue, sceneIds: Set<string>, checkIds: Set<string>): void {
+    const rawId = raw['id'];
+    if (typeof rawId !== 'string' || rawId.length === 0) {
+        add(`${base}.id`, 'scene id must be a non-empty string');
+    } else {
+        if (sceneIds.has(rawId)) add(`${base}.id`, `duplicate scene id "${rawId}"`);
+        sceneIds.add(rawId);
+    }
+    const rawName = raw['name'];
+    if (typeof rawName !== 'string' || rawName.length === 0) {
+        add(`${base}.name`, 'scene name must be a non-empty string');
+    }
+    if (!SCENE_TYPES.has(raw['type'] as ScenarioSceneType)) {
+        add(`${base}.type`, `scene type must be one of ${[...SCENE_TYPES].join(' | ')}`);
+    }
+    const sceneUuid = raw['sceneUuid'];
+    if (sceneUuid != null && !isUuid(sceneUuid)) {
+        add(`${base}.sceneUuid`, 'sceneUuid must be a Compendium UUID or null');
+    }
+    validateSceneChecks(raw['checks'], base, add, checkIds);
+    validateSceneEncounters(raw['encounters'], base, add);
+    validateSceneRewards(raw['rewards'], base, add);
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: validates the untyped scenario flag payload
+function validateSceneChecks(checks: unknown, base: string, add: AddIssue, checkIds: Set<string>): void {
+    if (checks === undefined) return;
+    if (!Array.isArray(checks)) {
+        add(`${base}.checks`, 'checks must be an array');
+        return;
+    }
+    for (const [ci, check] of checks.entries()) {
+        if (!isRecord(check)) {
+            add(`${base}.checks[${ci}]`, 'check must be an object');
+            continue;
+        }
+        const checkId = check['id'];
+        if (typeof checkId === 'string' && checkId.length > 0) checkIds.add(checkId);
+        if (typeof check['difficulty'] !== 'number') {
+            add(`${base}.checks[${ci}].difficulty`, 'difficulty must be a number');
+        }
+    }
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: validates the untyped scenario flag payload
+function validateSceneEncounters(encounters: unknown, base: string, add: AddIssue): void {
+    if (encounters === undefined) return;
+    if (!Array.isArray(encounters)) {
+        add(`${base}.encounters`, 'encounters must be an array');
+        return;
+    }
+    for (const [ei, enc] of encounters.entries()) {
+        if (!isRecord(enc)) {
+            add(`${base}.encounters[${ei}]`, 'encounter must be an object');
+            continue;
+        }
+        if (!isUuid(enc['actorUuid'])) {
+            add(`${base}.encounters[${ei}].actorUuid`, 'actorUuid must be a Compendium UUID');
+        }
+        const disposition = enc['disposition'];
+        if (disposition !== undefined && !DISPOSITIONS.has(disposition as ScenarioEncounter['disposition'])) {
+            add(`${base}.encounters[${ei}].disposition`, 'disposition must be hostile | neutral | friendly');
+        }
+    }
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: validates the untyped scenario flag payload
+function validateSceneRewards(rewards: unknown, base: string, add: AddIssue): void {
+    if (!Array.isArray(rewards)) return;
+    for (const [ri, rew] of rewards.entries()) {
+        if (isRecord(rew)) {
+            const itemUuid = rew['itemUuid'];
+            if (itemUuid != null && !isUuid(itemUuid)) {
+                add(`${base}.rewards[${ri}].itemUuid`, 'itemUuid must be a Compendium UUID or null');
+            }
+        }
+    }
+}
+
+/** Second-pass edge integrity for one scene (needs the full id sets). */
+// eslint-disable-next-line no-restricted-syntax -- boundary: validates the untyped scenario flag payload
+function validateSceneEdges(raw: Record<string, unknown>, base: string, add: AddIssue, sceneIds: Set<string>, checkIds: Set<string>): void {
+    const transitions = raw['transitions'];
+    if (Array.isArray(transitions)) {
+        for (const [ti, tr] of transitions.entries()) {
+            if (isRecord(tr)) {
+                const toSceneId = tr['toSceneId'];
+                if (typeof toSceneId === 'string' && !sceneIds.has(toSceneId)) {
+                    add(`${base}.transitions[${ti}].toSceneId`, `unknown scene id "${toSceneId}"`);
+                }
+            }
+        }
+    }
+    const leads = raw['leads'];
+    if (Array.isArray(leads)) {
+        for (const [li, lead] of leads.entries()) {
+            if (!isRecord(lead)) continue;
+            const revealsSceneId = lead['revealsSceneId'];
+            if (typeof revealsSceneId === 'string' && !sceneIds.has(revealsSceneId)) {
+                add(`${base}.leads[${li}].revealsSceneId`, `unknown scene id "${revealsSceneId}"`);
+            }
+            const requiresCheckId = lead['requiresCheckId'];
+            if (typeof requiresCheckId === 'string' && !checkIds.has(requiresCheckId)) {
+                add(`${base}.leads[${li}].requiresCheckId`, `unknown check id "${requiresCheckId}"`);
+            }
+        }
+    }
 }
 
 /**
@@ -179,9 +303,10 @@ function isUuid(value: unknown): value is string {
  * verifies that referenced ids form a coherent graph and that UUID-shaped
  * fields look like Compendium UUIDs.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: validator entry point accepts the untyped scenario flag payload
 export function validateScenario(candidate: unknown): ScenarioValidationIssue[] {
     const issues: ScenarioValidationIssue[] = [];
-    const add = (path: string, message: string): void => {
+    const add: AddIssue = (path, message) => {
         issues.push({ path, message });
     };
 
@@ -190,28 +315,19 @@ export function validateScenario(candidate: unknown): ScenarioValidationIssue[] 
         return issues;
     }
 
-    if (typeof candidate.id !== 'string' || candidate.id.length === 0) {
+    const candidateId = candidate['id'];
+    if (typeof candidateId !== 'string' || candidateId.length === 0) {
         add('id', 'id must be a non-empty string');
     }
 
-    const source = candidate.source;
+    const source = candidate['source'];
     if (!isRecord(source)) {
         add('source', 'source must be an object');
     } else {
-        if (!PROVENANCES.has(source.provenance as ScenarioSource['provenance'])) {
-            add('source.provenance', 'provenance must be one of raw | homebrew | derived');
-        }
-        if (source.provenance === 'raw') {
-            if (typeof source.book !== 'string' || source.book.length === 0) {
-                add('source.book', 'raw provenance requires a book citation');
-            }
-            if (typeof source.page !== 'string' || source.page.length === 0) {
-                add('source.page', 'raw provenance requires a page citation');
-            }
-        }
+        validateSource(source, add);
     }
 
-    const scenes = candidate.scenes;
+    const scenes = candidate['scenes'];
     if (!Array.isArray(scenes) || scenes.length === 0) {
         add('scenes', 'scenes must be a non-empty array');
         return issues;
@@ -225,100 +341,25 @@ export function validateScenario(candidate: unknown): ScenarioValidationIssue[] 
             add(base, 'scene must be an object');
             continue;
         }
-        if (typeof raw.id !== 'string' || raw.id.length === 0) {
-            add(`${base}.id`, 'scene id must be a non-empty string');
-        } else {
-            if (sceneIds.has(raw.id)) add(`${base}.id`, `duplicate scene id "${raw.id}"`);
-            sceneIds.add(raw.id);
-        }
-        if (typeof raw.name !== 'string' || raw.name.length === 0) {
-            add(`${base}.name`, 'scene name must be a non-empty string');
-        }
-        if (!SCENE_TYPES.has(raw.type as ScenarioSceneType)) {
-            add(`${base}.type`, `scene type must be one of ${[...SCENE_TYPES].join(' | ')}`);
-        }
-        if (raw.sceneUuid != null && !isUuid(raw.sceneUuid)) {
-            add(`${base}.sceneUuid`, 'sceneUuid must be a Compendium UUID or null');
-        }
-
-        const checks = raw.checks;
-        if (checks !== undefined && !Array.isArray(checks)) {
-            add(`${base}.checks`, 'checks must be an array');
-        } else if (Array.isArray(checks)) {
-            for (const [ci, check] of checks.entries()) {
-                if (!isRecord(check)) {
-                    add(`${base}.checks[${ci}]`, 'check must be an object');
-                    continue;
-                }
-                if (typeof check.id === 'string' && check.id.length > 0) checkIds.add(check.id);
-                if (typeof check.difficulty !== 'number') {
-                    add(`${base}.checks[${ci}].difficulty`, 'difficulty must be a number');
-                }
-            }
-        }
-
-        const encounters = raw.encounters;
-        if (encounters !== undefined && !Array.isArray(encounters)) {
-            add(`${base}.encounters`, 'encounters must be an array');
-        } else if (Array.isArray(encounters)) {
-            for (const [ei, enc] of encounters.entries()) {
-                if (!isRecord(enc)) {
-                    add(`${base}.encounters[${ei}]`, 'encounter must be an object');
-                    continue;
-                }
-                if (!isUuid(enc.actorUuid)) {
-                    add(`${base}.encounters[${ei}].actorUuid`, 'actorUuid must be a Compendium UUID');
-                }
-                if (enc.disposition !== undefined && !DISPOSITIONS.has(enc.disposition as ScenarioEncounter['disposition'])) {
-                    add(`${base}.encounters[${ei}].disposition`, 'disposition must be hostile | neutral | friendly');
-                }
-            }
-        }
-
-        const rewards = raw.rewards;
-        if (Array.isArray(rewards)) {
-            for (const [ri, rew] of rewards.entries()) {
-                if (isRecord(rew) && rew.itemUuid != null && !isUuid(rew.itemUuid)) {
-                    add(`${base}.rewards[${ri}].itemUuid`, 'itemUuid must be a Compendium UUID or null');
-                }
-            }
-        }
+        validateSceneShape(raw, base, add, sceneIds, checkIds);
     }
 
-    if (typeof candidate.entrySceneId !== 'string' || !sceneIds.has(candidate.entrySceneId)) {
+    const entrySceneId = candidate['entrySceneId'];
+    if (typeof entrySceneId !== 'string' || !sceneIds.has(entrySceneId)) {
         add('entrySceneId', 'entrySceneId must reference an existing scene id');
     }
 
     // Second pass: edge integrity (now that all scene/check ids are known).
     for (const [index, raw] of scenes.entries()) {
         if (!isRecord(raw)) continue;
-        const base = `scenes[${index}]`;
-        const transitions = raw.transitions;
-        if (Array.isArray(transitions)) {
-            for (const [ti, tr] of transitions.entries()) {
-                if (isRecord(tr) && typeof tr.toSceneId === 'string' && !sceneIds.has(tr.toSceneId)) {
-                    add(`${base}.transitions[${ti}].toSceneId`, `unknown scene id "${tr.toSceneId}"`);
-                }
-            }
-        }
-        const leads = raw.leads;
-        if (Array.isArray(leads)) {
-            for (const [li, lead] of leads.entries()) {
-                if (!isRecord(lead)) continue;
-                if (lead.revealsSceneId != null && typeof lead.revealsSceneId === 'string' && !sceneIds.has(lead.revealsSceneId)) {
-                    add(`${base}.leads[${li}].revealsSceneId`, `unknown scene id "${lead.revealsSceneId}"`);
-                }
-                if (lead.requiresCheckId != null && typeof lead.requiresCheckId === 'string' && !checkIds.has(lead.requiresCheckId)) {
-                    add(`${base}.leads[${li}].requiresCheckId`, `unknown check id "${lead.requiresCheckId}"`);
-                }
-            }
-        }
+        validateSceneEdges(raw, `scenes[${index}]`, add, sceneIds, checkIds);
     }
 
     return issues;
 }
 
 /** Type guard: a structurally-valid scenario. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard accepts the untyped scenario flag payload
 export function isScenario(candidate: unknown): candidate is Scenario {
     return validateScenario(candidate).length === 0;
 }
@@ -338,10 +379,10 @@ export function collectScenarioUuids(scenario: Scenario): {
     const scenes = new Set<string>();
     for (const scene of scenario.scenes) {
         if (typeof scene.sceneUuid === 'string') scenes.add(scene.sceneUuid);
-        for (const enc of scene.encounters ?? []) {
+        for (const enc of scene.encounters) {
             if (typeof enc.actorUuid === 'string') actors.add(enc.actorUuid);
         }
-        for (const rew of scene.rewards ?? []) {
+        for (const rew of scene.rewards) {
             if (typeof rew.itemUuid === 'string') items.add(rew.itemUuid);
         }
     }

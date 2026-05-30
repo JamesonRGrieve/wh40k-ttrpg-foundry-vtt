@@ -1,4 +1,4 @@
-import { ConventionalCraftData } from './vehicle.ts';
+import { ConventionalCraftData, LOCOMOTION_CHOICES } from './vehicle.ts';
 
 /**
  * Data model for atmospheric / sub-orbital flyers and skimmers.
@@ -19,8 +19,8 @@ export default class AircraftData extends ConventionalCraftData {
         const schema = super.defineSchema();
         schema['locomotion'] = new fields.StringField({
             required: true,
-            initial: 'air',
-            choices: ['terra', 'air', 'water', 'void'],
+            initial: 'flyer',
+            choices: [...LOCOMOTION_CHOICES],
             label: 'WH40K.Vehicle.Locomotion',
         });
 

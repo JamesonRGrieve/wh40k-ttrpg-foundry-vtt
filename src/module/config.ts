@@ -882,7 +882,11 @@ WH40K.defaultIcons = {
     character: 'modules/game-icons-net-font/svg/cowled.svg',
     npc: 'modules/game-icons-net-font/svg/person.svg',
     vehicle: 'modules/game-icons-net-font/svg/jeep.svg',
+    terracraft: 'modules/game-icons-net-font/svg/jeep.svg',
+    aircraft: 'modules/game-icons-net-font/svg/delta-wing.svg',
+    watercraft: 'modules/game-icons-net-font/svg/sailboat.svg',
     starship: 'modules/game-icons-net-font/svg/spaceship.svg',
+    voidcraft: 'modules/game-icons-net-font/svg/spaceship.svg',
 };
 
 const gameIconPath = (name: string): string => `modules/game-icons-net-font/svg/${name}.svg`;

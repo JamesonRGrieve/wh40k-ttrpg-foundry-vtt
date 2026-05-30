@@ -67,7 +67,7 @@ const COMPENDIUM_CONTENT_FLOWS = [
     'ow-core-homeworlds::validated',
     'rt-core-items-talents::validated',
     'rt-core-items-weapons::validated',
-    'rt-core-actors-ships::validated',
+    'rt-core-vehicles-voidcraft::validated',
     'rt-core-items-traits::validated',
 ] as const;
 

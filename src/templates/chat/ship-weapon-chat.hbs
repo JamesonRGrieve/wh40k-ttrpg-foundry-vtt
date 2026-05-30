@@ -28,19 +28,19 @@
     {{!-- Static stats panel (always rendered) --}}
     <div class="wh40k-ship-weapon-card__stats tw-grid tw-grid-cols-2 tw-gap-1 tw-p-[10px] tw-mb-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
         <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
-            <span class="tw-font-semibold tw-text-bronze bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Starship.Combat.Strength"}}:</span>
+            <span class="tw-font-semibold tw-text-bronze bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Voidcraft.Combat.Strength"}}:</span>
             <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.strength}}</span>
         </div>
         <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
-            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Starship.Combat.DamageLabel"}}:</span>
+            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Voidcraft.Combat.DamageLabel"}}:</span>
             <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.damage}}</span>
         </div>
         <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
-            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Starship.Combat.CritLabel"}}:</span>
+            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Voidcraft.Combat.CritLabel"}}:</span>
             <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.crit}}</span>
         </div>
         <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
-            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Starship.Combat.RangeLabel"}}:</span>
+            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Voidcraft.Combat.RangeLabel"}}:</span>
             <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.range}}</span>
         </div>
     </div>
@@ -52,14 +52,14 @@
             <div class="wh40k-ship-weapon-card__bs tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
                 <div class="tw-flex tw-items-baseline tw-gap-2">
                     <i class="fas fa-crosshairs tw-text-bronze"></i>
-                    <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[0.75rem] tw-text-bronze">{{localize "WH40K.Starship.Combat.BSTest"}}</span>
+                    <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[0.75rem] tw-text-bronze">{{localize "WH40K.Voidcraft.Combat.BSTest"}}</span>
                 </div>
                 <div class="tw-flex tw-items-baseline tw-gap-2 tw-text-[0.9rem]">
                     <span class="tw-text-[var(--wh40k-text-dark)]">{{resolution.bs.total}} / {{resolution.bs.target}}</span>
                     {{#if resolution.bs.succeeded}}
-                        <span class="wh40k-ship-weapon-card__bs-success tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(75,192,115,0.18)] tw-text-[#4bc073] tw-text-[0.7rem] tw-font-bold tw-uppercase">{{localize "WH40K.Starship.Combat.Success"}}{{#if resolution.bs.dos}} +{{resolution.bs.dos}}{{/if}}</span>
+                        <span class="wh40k-ship-weapon-card__bs-success tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(75,192,115,0.18)] tw-text-[#4bc073] tw-text-[0.7rem] tw-font-bold tw-uppercase">{{localize "WH40K.Voidcraft.Combat.Success"}}{{#if resolution.bs.dos}} +{{resolution.bs.dos}}{{/if}}</span>
                     {{else}}
-                        <span class="wh40k-ship-weapon-card__bs-failure tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(220,38,38,0.18)] tw-text-[#fca5a5] tw-text-[0.7rem] tw-font-bold tw-uppercase">{{localize "WH40K.Starship.Combat.Miss"}}</span>
+                        <span class="wh40k-ship-weapon-card__bs-failure tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(220,38,38,0.18)] tw-text-[#fca5a5] tw-text-[0.7rem] tw-font-bold tw-uppercase">{{localize "WH40K.Voidcraft.Combat.Miss"}}</span>
                     {{/if}}
                 </div>
             </div>
@@ -70,12 +70,12 @@
                     <div class="tw-flex tw-items-center tw-justify-between tw-mb-1">
                         <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[0.75rem] tw-text-bronze">
                             <i class="fas fa-dice-d6"></i>
-                            {{localize "WH40K.Starship.Combat.Hits"}}
+                            {{localize "WH40K.Voidcraft.Combat.Hits"}}
                         </span>
                         <span class="tw-text-[1.05rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{resolution.hits}}</span>
                     </div>
                     {{#if resolution.hitsFormula}}
-                        <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Starship.Combat.Pool"}}: {{resolution.hitsFormula}}</div>
+                        <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Voidcraft.Combat.Pool"}}: {{resolution.hitsFormula}}</div>
                     {{/if}}
                 </div>
 
@@ -85,7 +85,7 @@
                         <div class="tw-flex tw-items-center tw-justify-between tw-mb-1">
                             <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[0.75rem] tw-text-bronze">
                                 <i class="fas fa-fire"></i>
-                                {{localize "WH40K.Starship.Combat.Damage"}}
+                                {{localize "WH40K.Voidcraft.Combat.Damage"}}
                             </span>
                             <span class="tw-text-[1.05rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{resolution.totalDamage}}</span>
                         </div>
@@ -101,27 +101,27 @@
                         <div class="wh40k-ship-weapon-card__shields tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
                             <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-bronze tw-mb-1">
                                 <i class="fas fa-shield-alt"></i>
-                                {{localize "WH40K.Starship.Combat.VoidShields"}}
+                                {{localize "WH40K.Voidcraft.Combat.VoidShields"}}
                             </div>
                             {{#if resolution.ignoresShields}}
-                                <div class="tw-text-[0.8rem] tw-text-[var(--wh40k-text-muted)] tw-italic">{{localize "WH40K.Starship.Combat.LanceBypass"}}</div>
+                                <div class="tw-text-[0.8rem] tw-text-[var(--wh40k-text-muted)] tw-italic">{{localize "WH40K.Voidcraft.Combat.LanceBypass"}}</div>
                             {{else if resolution.shieldedDamage}}
                                 <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-dark)]">
-                                    {{localize "WH40K.Starship.Combat.ShieldAbsorbed"}}: {{resolution.shieldedDamage}}
+                                    {{localize "WH40K.Voidcraft.Combat.ShieldAbsorbed"}}: {{resolution.shieldedDamage}}
                                 </div>
                                 <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{resolution.shieldsBefore}} → {{resolution.shieldsAfter}}</div>
                             {{else}}
-                                <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-dark)]">{{localize "WH40K.Starship.Combat.NoShields"}}</div>
+                                <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-dark)]">{{localize "WH40K.Voidcraft.Combat.NoShields"}}</div>
                                 <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{resolution.shieldsBefore}} → {{resolution.shieldsAfter}}</div>
                             {{/if}}
                         </div>
                         <div class="wh40k-ship-weapon-card__hull tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
                             <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-bronze tw-mb-1">
                                 <i class="fas fa-heart"></i>
-                                {{localize "WH40K.Starship.Combat.Hull"}}
+                                {{localize "WH40K.Voidcraft.Combat.Hull"}}
                             </div>
                             <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-dark)]">
-                                {{localize "WH40K.Starship.Combat.HullApplied"}}: {{resolution.appliedDamage}}
+                                {{localize "WH40K.Voidcraft.Combat.HullApplied"}}: {{resolution.appliedDamage}}
                             </div>
                             <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{resolution.hullBefore}} → {{resolution.hullAfter}} / {{resolution.hullMax}}</div>
                         </div>
@@ -133,7 +133,7 @@
         {{!-- Legacy fallback: stat-block only. --------------------------------- --}}
         {{#if weapon.system.special}}
             <div class="tw-flex tw-items-baseline tw-gap-1 tw-py-1 tw-mb-2 tw-text-[0.9rem]">
-                <span class="tw-font-semibold tw-text-bronze tw-flex-shrink-0">{{localize "WH40K.Starship.Combat.Special"}}:</span>
+                <span class="tw-font-semibold tw-text-bronze tw-flex-shrink-0">{{localize "WH40K.Voidcraft.Combat.Special"}}:</span>
                 <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.special}}</span>
             </div>
         {{/if}}

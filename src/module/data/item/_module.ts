@@ -11,6 +11,7 @@ export { default as CyberneticData } from './cybernetic.ts';
 export { default as ForceFieldData } from './force-field.ts';
 export { default as BackpackData } from './backpack.ts';
 export { default as StorageLocationData } from './storage-location.ts';
+export { default as LocationData } from './location.ts';
 
 // Character Features
 export { default as TalentData } from './talent.ts';

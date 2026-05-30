@@ -349,7 +349,13 @@ export class WH40KBaseActor extends Actor {
                 initData['system.gameSystem'] = WH40KSettings.getPrimaryGameSystem();
             }
         }
-        if (createData['type'] === 'vehicle') {
+        const createType = createData['type'];
+        if (
+            typeof createType === 'string' &&
+            (createType.includes('terracraft') || createType.includes('aircraft') || createType.includes('watercraft') || createType.includes('vehicle'))
+        ) {
+            // Conventional craft track structural `integrity`; voidcraft use
+            // `hullIntegrity` and set their own bars in WH40KVoidcraft._preCreate.
             initData['token.bar1'] = { attribute: 'integrity' };
             initData['token.bar2'] = undefined;
         }

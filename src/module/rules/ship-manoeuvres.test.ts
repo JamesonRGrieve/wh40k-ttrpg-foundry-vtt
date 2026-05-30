@@ -47,8 +47,8 @@ describe('SHIP_MANOEUVRES registry shape', () => {
 
     it('every entry carries i18n keys for label and benefit', () => {
         for (const m of SHIP_MANOEUVRES) {
-            expect(m.labelKey).toMatch(/^WH40K\.Starship\.Manoeuvre\.[A-Za-z]+\.Label$/);
-            expect(m.benefitKey).toMatch(/^WH40K\.Starship\.Manoeuvre\.[A-Za-z]+\.Benefit$/);
+            expect(m.labelKey).toMatch(/^WH40K\.Voidcraft\.Manoeuvre\.[A-Za-z]+\.Label$/);
+            expect(m.benefitKey).toMatch(/^WH40K\.Voidcraft\.Manoeuvre\.[A-Za-z]+\.Benefit$/);
         }
     });
 

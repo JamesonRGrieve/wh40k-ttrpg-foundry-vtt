@@ -952,11 +952,11 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             'WH40KBaseActor',
                             'CharacterDocBase',
                             'NPCDocBase',
-                            'StarshipDocBase',
+                            'VoidcraftDocBase',
                             'VehicleDocBase',
                             'ChatMessageWH40K',
                             'WH40KNPC',
-                            'WH40KStarship',
+                            'WH40KVoidcraft',
                             'TokenDocumentWH40K',
                             'WH40KVehicle',
                         ];

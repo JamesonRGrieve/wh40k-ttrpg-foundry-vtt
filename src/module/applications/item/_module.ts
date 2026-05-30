@@ -31,6 +31,7 @@ export { default as ShipUpgradeSheet } from './ship-upgrade-sheet.ts';
 export { default as SkillSheet } from './skill-sheet.ts';
 export { default as SpecialAbilitySheet } from './special-ability-sheet.ts';
 export { default as StorageLocationSheet } from './storage-location-sheet.ts';
+export { default as LocationSheet } from './location-sheet.ts';
 export { default as TalentSheet } from './talent-sheet.ts';
 export { default as TraitSheet } from './trait-sheet.ts';
 export { default as WeaponModSheet } from './weapon-mod-sheet.ts';

@@ -107,7 +107,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     // crew/morale tick.
                     const actor = await ActorCls.create({
                         name: 'Crew Economy Probe',
-                        type: 'rt-starship',
+                        type: 'rt-voidcraft',
                         system: {
                             gameSystem: 'rt',
                             hullIntegrity: { value: 35, max: 35 },
@@ -160,7 +160,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     // touched by applyHullDamage.
                     const dhActor = await ActorCls.create({
                         name: 'DH2 Hull Probe',
-                        type: 'rt-starship',
+                        type: 'rt-voidcraft',
                         system: {
                             gameSystem: 'dh2',
                             hullIntegrity: { value: 30, max: 30 },

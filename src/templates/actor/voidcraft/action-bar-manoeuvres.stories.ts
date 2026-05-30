@@ -77,7 +77,7 @@ export const Default: Story = {
             void expect(tile, `tile missing for ${id}`).not.toBeNull();
         }
         // Disengage is the opposed Manoeuvre — its badge should render.
-        void expect(cv.getByText('WH40K.Starship.Manoeuvre.Opposed')).toBeTruthy();
+        void expect(cv.getByText('WH40K.Voidcraft.Manoeuvre.Opposed')).toBeTruthy();
     },
 };
 
@@ -91,7 +91,7 @@ export const Empty: Story = {
         }),
     play: ({ canvasElement }) => {
         const cv = within(canvasElement);
-        void expect(cv.getByText('WH40K.Starship.Manoeuvre.Empty')).toBeTruthy();
+        void expect(cv.getByText('WH40K.Voidcraft.Manoeuvre.Empty')).toBeTruthy();
     },
 };
 

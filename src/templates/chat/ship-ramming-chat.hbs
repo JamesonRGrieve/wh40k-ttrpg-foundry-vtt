@@ -6,7 +6,7 @@
     <header class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
         <i class="fas fa-bullseye tw-text-[1.1rem] tw-text-amber-300"></i>
         <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-amber-200">
-            {{localize "WH40K.Starship.Ramming.ChatTitle"}}
+            {{localize "WH40K.Voidcraft.Ramming.ChatTitle"}}
         </div>
     </header>
 
@@ -14,20 +14,20 @@
         <strong class="tw-text-amber-200">{{attackerName}}</strong>
         <span class="tw-mx-1 tw-text-amber-400">→</span>
         <strong class="tw-text-amber-200">{{defenderName}}</strong>
-        — {{#if toHit.success}}<span class="tw-text-emerald-300">{{localize "WH40K.Starship.Ramming.OutcomeHit"}}</span>{{else}}<span class="tw-text-rose-300">{{localize "WH40K.Starship.Ramming.OutcomeMiss"}}</span>{{/if}}
+        — {{#if toHit.success}}<span class="tw-text-emerald-300">{{localize "WH40K.Voidcraft.Ramming.OutcomeHit"}}</span>{{else}}<span class="tw-text-rose-300">{{localize "WH40K.Voidcraft.Ramming.OutcomeMiss"}}</span>{{/if}}
     </div>
 
     <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
         <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-amber-300">{{localize "WH40K.Starship.Ramming.AttackerDoS"}}</span>
+            <span class="tw-text-amber-300">{{localize "WH40K.Voidcraft.Ramming.AttackerDoS"}}</span>
             <span class="tw-font-bold tw-text-emerald-300">{{toHit.attackerDoS}}</span>
         </li>
         <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-amber-300">{{localize "WH40K.Starship.Ramming.DefenderDoS"}}</span>
+            <span class="tw-text-amber-300">{{localize "WH40K.Voidcraft.Ramming.DefenderDoS"}}</span>
             <span class="tw-font-bold tw-text-rose-300">{{toHit.defenderDoS}}</span>
         </li>
         <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-amber-300">{{localize "WH40K.Starship.Ramming.NetDoS"}}</span>
+            <span class="tw-text-amber-300">{{localize "WH40K.Voidcraft.Ramming.NetDoS"}}</span>
             <span class="tw-font-bold tw-text-amber-200">{{toHit.netDoS}}</span>
         </li>
     </ul>
@@ -35,27 +35,27 @@
     {{#if damage}}
     <div class="tw-p-2 tw-mb-2 tw-rounded-sm tw-border tw-border-amber-500/50 tw-bg-[rgba(96,64,16,0.25)] tw-text-[0.85rem] tw-text-amber-100">
         <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
-            {{localize "WH40K.Starship.Ramming.DamageHeader"}}
+            {{localize "WH40K.Voidcraft.Ramming.DamageHeader"}}
         </div>
         <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Starship.Ramming.DefenderHull"}}</span>
+            <span>{{localize "WH40K.Voidcraft.Ramming.DefenderHull"}}</span>
             <span class="tw-font-bold tw-text-rose-300">{{damage.defender.hullDamage}}
-                <span class="tw-text-amber-400/80 tw-font-normal">({{damage.defender.raw}} − {{damage.defender.armour}} {{localize "WH40K.Starship.Ramming.ArmourSuffix"}})</span></span>
+                <span class="tw-text-amber-400/80 tw-font-normal">({{damage.defender.raw}} − {{damage.defender.armour}} {{localize "WH40K.Voidcraft.Ramming.ArmourSuffix"}})</span></span>
         </div>
         <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Starship.Ramming.AttackerHull"}}</span>
+            <span>{{localize "WH40K.Voidcraft.Ramming.AttackerHull"}}</span>
             <span class="tw-font-bold tw-text-rose-300">{{damage.attacker.hullDamage}}
-                <span class="tw-text-amber-400/80 tw-font-normal">({{damage.attacker.raw}} − {{damage.attacker.armour}} {{localize "WH40K.Starship.Ramming.ArmourSuffix"}})</span></span>
+                <span class="tw-text-amber-400/80 tw-font-normal">({{damage.attacker.raw}} − {{damage.attacker.armour}} {{localize "WH40K.Voidcraft.Ramming.ArmourSuffix"}})</span></span>
         </div>
         {{#if damage.bonusDamage}}
         <div class="tw-mt-1 tw-text-[0.8rem] tw-text-amber-200">
-            <i class="fas fa-plus-circle tw-mr-1"></i>{{localize "WH40K.Starship.Ramming.BonusDamage"}} +{{damage.bonusDamage}}
+            <i class="fas fa-plus-circle tw-mr-1"></i>{{localize "WH40K.Voidcraft.Ramming.BonusDamage"}} +{{damage.bonusDamage}}
         </div>
         {{/if}}
     </div>
     {{else}}
     <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(56,189,248,0.4)] tw-bg-[rgba(14,116,144,0.18)] tw-text-[0.85rem] tw-text-[#e0f2fe]">
-        {{localize "WH40K.Starship.Ramming.MissExplain"}}
+        {{localize "WH40K.Voidcraft.Ramming.MissExplain"}}
     </div>
     {{/if}}
 </div>

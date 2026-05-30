@@ -1,3 +1,4 @@
+import { LOCATION_TYPE_SLUGS } from '../../config/location-types.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
@@ -13,8 +14,8 @@ export interface LocationSampleCharacter {
  * Data model for Location items.
  *
  * A structured, queryable place in the setting — sector, system, planet, moon,
- * settlement, site, etc. Locations form a hierarchy via {@link parent} (a
- * Foundry UUID of the containing location) and carry queryable metadata
+ * settlement, site, etc. Locations form a hierarchy via {@link parentLocation}
+ * (a Foundry UUID of the containing location) and carry queryable metadata
  * (controlling faction, population, coordinates) alongside per-line lore.
  *
  * Description and source provenance come from {@link DescriptionTemplate} as
@@ -26,7 +27,9 @@ export interface LocationSampleCharacter {
  */
 export default class LocationData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
-    declare parent: string;
+    // NB: `parent` is reserved by Foundry's DataModel (the owning document), so
+    // the hierarchy edge is named `parentLocation`.
+    declare parentLocation: string;
     declare locationType: string;
     declare region: string;
     declare sector: string;
@@ -39,30 +42,13 @@ export default class LocationData extends ItemDataModel.mixin(DescriptionTemplat
     declare sampleCharacters: LocationSampleCharacter[];
 
     /**
-     * The canonical set of location-type slugs, ordered from largest to
-     * smallest spatial scale. Content-agnostic enum of place kinds (not
-     * content data) — used to populate the sheet's type selector.
+     * The canonical set of location-type slugs (see {@link LOCATION_TYPE_SLUGS}),
+     * ordered from largest to smallest spatial scale. Content-agnostic enum of
+     * place kinds — used to populate the sheet's type selector.
      * @type {string[]}
      */
     static get locationTypes(): string[] {
-        return [
-            'sector',
-            'subsector',
-            'system',
-            'star',
-            'planet',
-            'moon',
-            'continent',
-            'region',
-            'settlement',
-            'district',
-            'site',
-            'structure',
-            'vessel',
-            'station',
-            'realm',
-            'other',
-        ];
+        return [...LOCATION_TYPE_SLUGS];
     }
 
     /** @inheritdoc */
@@ -73,7 +59,9 @@ export default class LocationData extends ItemDataModel.mixin(DescriptionTemplat
 
             // UUID of the containing location (hierarchy edge). Empty when this
             // is a top-level place. Resolved at render time via uuidNameCache.
-            parent: new fields.StringField({ required: false, blank: true, initial: '' }),
+            // Named `parentLocation` (not `parent`) — `parent` is reserved by
+            // Foundry's DataModel for the owning document.
+            parentLocation: new fields.StringField({ required: false, blank: true, initial: '' }),
 
             // Spatial scale / kind of place.
             locationType: new fields.StringField({

@@ -67,7 +67,7 @@ test.describe.serial('Ship Boarding chat card (Tier B)', () => {
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-ship-boarding-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="rt"');
-                    hasDamageBlock = html.includes('WH40K.Starship.Boarding.HullDamage');
+                    hasDamageBlock = html.includes('WH40K.Voidcraft.Boarding.HullDamage');
 
                     const msg = await g.ChatMessage?.create({ user: g.game?.user?.id, content: html });
                     messageId = msg?.id ?? null;

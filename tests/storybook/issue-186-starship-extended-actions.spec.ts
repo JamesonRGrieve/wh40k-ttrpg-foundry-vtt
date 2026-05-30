@@ -19,7 +19,7 @@ test.describe('Issue #186 — Starship Extended Actions panel', () => {
             if (msg.type() === 'error') consoleErrors.push(msg.text());
         });
 
-        await page.goto('/iframe.html?id=actor-starshipsheet--extended-actions');
+        await page.goto('/iframe.html?id=actor-voidcraftactorsheet--extended-actions');
         await page.waitForLoadState('networkidle');
         // Always screenshot first so visual review has the artefact.
         await page.screenshot({ path: '.e2e-screenshots/issue-186-extended-actions.png', fullPage: true });

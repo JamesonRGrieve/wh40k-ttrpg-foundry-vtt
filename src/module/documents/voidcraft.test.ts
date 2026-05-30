@@ -2,19 +2,19 @@ import { describe, expect, it } from 'vitest';
 
 describe('WH40KStarship', () => {
     it('exports WH40KStarship class', async () => {
-        const mod = await import('./starship').catch((err) => {
+        const mod = await import('./voidcraft').catch((err) => {
             const msg = err instanceof Error ? err.message : String(err);
             console.warn(`WH40KStarship could not be imported in this environment: ${msg}`);
             return undefined;
         });
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
         if (mod === undefined) return;
-        expect(mod.WH40KStarship).toBeTruthy();
+        expect(mod.WH40KVoidcraft).toBeTruthy();
     });
 
     it('WH40KStarship extends WH40KBaseActor', async () => {
         const [starshipMod, baseMod] = await Promise.all([
-            import('./starship').catch((err) => {
+            import('./voidcraft').catch((err) => {
                 console.warn(`WH40KStarship import failed: ${err instanceof Error ? err.message : String(err)}`);
                 return undefined;
             }),
@@ -25,11 +25,11 @@ describe('WH40KStarship', () => {
         ]);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
         if (starshipMod === undefined || baseMod === undefined) return;
-        expect(starshipMod.WH40KStarship.prototype).toBeInstanceOf(baseMod.WH40KBaseActor);
+        expect(starshipMod.WH40KVoidcraft.prototype).toBeInstanceOf(baseMod.WH40KBaseActor);
     });
 
     it('hullType / hullClass / speed / armour getters read from system', async () => {
-        const mod = await import('./starship').catch((err) => {
+        const mod = await import('./voidcraft').catch((err) => {
             const msg = err instanceof Error ? err.message : String(err);
             console.warn(`WH40KStarship could not be imported in this environment: ${msg}`);
             return undefined;
@@ -37,7 +37,7 @@ describe('WH40KStarship', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
         if (mod === undefined) return;
 
-        const fakeStarship = Object.create(mod.WH40KStarship.prototype) as InstanceType<typeof mod.WH40KStarship>;
+        const fakeStarship = Object.create(mod.WH40KVoidcraft.prototype) as InstanceType<typeof mod.WH40KVoidcraft>;
         Object.defineProperty(fakeStarship, 'system', {
             value: {
                 hullType: 'Frigate',
@@ -107,15 +107,15 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
           }
         | undefined
     > {
-        const mod = await import('./starship').catch((err) => {
+        const mod = await import('./voidcraft').catch((err) => {
             console.warn(`WH40KStarship import failed: ${err instanceof Error ? err.message : String(err)}`);
             return undefined;
         });
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when runtime unavailable
         if (mod === undefined) return undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: reading the document's prototype methods through a structural test interface (the class type and StarshipMethods do not overlap)
-        const proto = mod.WH40KStarship.prototype as unknown as StarshipMethods;
-        const desc = Object.getOwnPropertyDescriptor(mod.WH40KStarship.prototype, 'usesRTCrewEconomy');
+        const proto = mod.WH40KVoidcraft.prototype as unknown as StarshipMethods;
+        const desc = Object.getOwnPropertyDescriptor(mod.WH40KVoidcraft.prototype, 'usesRTCrewEconomy');
         if (desc === undefined) throw new Error('usesRTCrewEconomy descriptor missing on WH40KStarship prototype');
 
         const fake: FakeStarship = {

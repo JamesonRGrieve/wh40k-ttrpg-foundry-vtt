@@ -16,6 +16,7 @@
 export { default as DH2CharacterData } from './dh2-character.ts';
 export { default as DH2NPCData } from './dh2-npc.ts';
 export { default as DH2TerracraftData } from './dh2-terracraft.ts';
+export { default as DH2AircraftData } from './dh2-aircraft.ts';
 
 // Dark Heresy 1e
 export { default as DH1CharacterData } from './dh1-character.ts';
@@ -26,6 +27,7 @@ export { default as DH1TerracraftData } from './dh1-terracraft.ts';
 export { default as RTCharacterData } from './rt-character.ts';
 export { default as RTNPCData } from './rt-npc.ts';
 export { default as RTTerracraftData } from './rt-terracraft.ts';
+export { default as RTAircraftData } from './rt-aircraft.ts';
 export { default as RTVoidcraftData } from './rt-voidcraft.ts';
 
 // Black Crusade
@@ -37,11 +39,13 @@ export { default as BCTerracraftData } from './bc-terracraft.ts';
 export { default as OWCharacterData } from './ow-character.ts';
 export { default as OWNPCData } from './ow-npc.ts';
 export { default as OWTerracraftData } from './ow-terracraft.ts';
+export { default as OWAircraftData } from './ow-aircraft.ts';
 
 // Deathwatch
 export { default as DWCharacterData } from './dw-character.ts';
 export { default as DWNPCData } from './dw-npc.ts';
 export { default as DWTerracraftData } from './dw-terracraft.ts';
+export { default as DWAircraftData } from './dw-aircraft.ts';
 
 // Imperium Maledictum
 export { default as IMCharacterData } from './im-character.ts';

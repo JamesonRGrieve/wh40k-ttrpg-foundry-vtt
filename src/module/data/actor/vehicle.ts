@@ -29,14 +29,39 @@ interface VehicleArmourFacing {
  * conventional craft and voidcraft — crew, speed, armour, integrity — lives
  * below this base (on `ConventionalCraftData` or `VoidcraftData`), never here.
  */
+/**
+ * Means of locomotion (propulsion adjective). One shared vocabulary across all
+ * craft scales; the coarse craft class (land / air / water / void) is the actor
+ * `type` (terracraft / aircraft / watercraft / voidcraft), not this field.
+ * Grouped by the transit element they suit, but any craft may pick any value.
+ */
+export const LOCOMOTION_CHOICES = [
+    // land
+    'wheeled',
+    'tracked',
+    'walker',
+    'hover',
+    // air
+    'flyer',
+    'skimmer',
+    'vtol',
+    // water
+    'hull',
+    'submersible',
+    'hydrofoil',
+    // void
+    'voidship',
+] as const;
+
+export type Locomotion = (typeof LOCOMOTION_CHOICES)[number];
+
 export default class VehicleData extends ActorDataModel {
     // Typed property declarations matching defineSchema()
     /**
-     * Locomotion discriminator. Distinguishes the conventional-craft subtypes
-     * (`terra` / `air` / `water`) from voidcraft (`void`). The concrete model
-     * fixes this per subtype.
+     * Means of locomotion — the propulsion adjective (wheeled / tracked /
+     * walker / flyer / hull / …). See {@link LOCOMOTION_CHOICES}.
      */
-    declare locomotion: 'terra' | 'air' | 'water' | 'void';
+    declare locomotion: Locomotion;
     declare size: number;
     declare sizeDescriptor: string;
     declare faction: string;
@@ -54,11 +79,11 @@ export default class VehicleData extends ActorDataModel {
         return {
             ...super.defineSchema(),
 
-            // === Locomotion discriminator ===
+            // === Locomotion (propulsion adjective) ===
             locomotion: new fields.StringField({
                 required: true,
-                initial: 'terra',
-                choices: ['terra', 'air', 'water', 'void'],
+                initial: 'wheeled',
+                choices: [...LOCOMOTION_CHOICES],
                 label: 'WH40K.Vehicle.Locomotion',
             }),
 

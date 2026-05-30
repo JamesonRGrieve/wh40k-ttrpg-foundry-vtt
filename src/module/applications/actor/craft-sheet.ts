@@ -62,8 +62,8 @@ interface CraftSystemData {
 /** Craft actor — an Actor whose `system` is one of the craft DataModels. */
 type CraftActor = Actor.Implementation & {
     system: CraftSystemData;
-    rollCharacteristic: (characteristic: string) => unknown;
-    rollSkill: (skill: string, specialization?: string) => unknown;
+    rollCharacteristic: (characteristic: string) => void;
+    rollSkill: (skill: string, specialization?: string) => void;
     rollInitiative: (options: { createCombatants?: boolean }) => Promise<void>;
 };
 
@@ -231,13 +231,16 @@ export default class CraftActorSheet extends BaseActorSheet {
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext return contract
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        // Coarse craft class is the actor `type` suffix (`*-terracraft` /
+        // `*-aircraft` / `*-watercraft`); legacy `*-vehicle` renders as land.
+        // (The `locomotion` field is the fine propulsion adjective, not this.)
         const actorType = this.actor.type;
         const context: CraftSheetContext = {
             ...(await super._prepareContext(options)),
             isCraft: true,
-            isTerracraft: actorType === 'terracraft',
-            isAircraft: actorType === 'aircraft',
-            isWatercraft: actorType === 'watercraft',
+            isTerracraft: actorType.includes('terracraft') || actorType.includes('vehicle'),
+            isAircraft: actorType.includes('aircraft'),
+            isWatercraft: actorType.includes('watercraft'),
         };
 
         context.craftStats = this._prepareCraftStats();

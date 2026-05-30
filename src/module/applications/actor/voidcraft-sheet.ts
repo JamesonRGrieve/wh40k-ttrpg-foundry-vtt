@@ -5,16 +5,16 @@
  * components / weaponCapacity / …) — only the name changed.
  */
 
-import StarshipData, {
+import VoidcraftData, {
     ESSENTIAL_SHIP_SLOTS,
     SHIP_MODIFIER_STAT_KEYS,
     type ShipAppliedModifier,
     type ShipModifierStatKey,
     type ShipStatModifierSource,
-    type StarshipBuildValidation,
-} from '../../data/actor/starship.ts';
+    type VoidcraftBuildValidation,
+} from '../../data/actor/voidcraft.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import type { WH40KStarship } from '../../documents/starship.ts';
+import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
 /** Localization key per essential slot for the build panel. */
@@ -31,21 +31,21 @@ const ESSENTIAL_SLOT_LABEL_KEY: Record<string, string> = {
 
 /** Localization key per applied-modifier stat for the Build Summary panel (issue #196). */
 const BUILD_STAT_LABEL_KEY: Record<ShipModifierStatKey, string> = {
-    speed: 'WH40K.Starship.Build.Stat.Speed',
-    manoeuvrability: 'WH40K.Starship.Build.Stat.Manoeuvrability',
-    detection: 'WH40K.Starship.Build.Stat.Detection',
-    armour: 'WH40K.Starship.Build.Stat.Armour',
-    hullIntegrity: 'WH40K.Starship.Build.Stat.HullIntegrity',
-    turretRating: 'WH40K.Starship.Build.Stat.TurretRating',
-    voidShields: 'WH40K.Starship.Build.Stat.VoidShields',
-    morale: 'WH40K.Starship.Build.Stat.Morale',
-    crewRating: 'WH40K.Starship.Build.Stat.CrewRating',
-    ballisticSkill: 'WH40K.Starship.Build.Stat.BallisticSkill',
-    weaponCapacityDorsal: 'WH40K.Starship.Build.Stat.WeaponCapacityDorsal',
-    weaponCapacityProw: 'WH40K.Starship.Build.Stat.WeaponCapacityProw',
-    weaponCapacityPort: 'WH40K.Starship.Build.Stat.WeaponCapacityPort',
-    weaponCapacityStarboard: 'WH40K.Starship.Build.Stat.WeaponCapacityStarboard',
-    weaponCapacityKeel: 'WH40K.Starship.Build.Stat.WeaponCapacityKeel',
+    speed: 'WH40K.Voidcraft.Build.Stat.Speed',
+    manoeuvrability: 'WH40K.Voidcraft.Build.Stat.Manoeuvrability',
+    detection: 'WH40K.Voidcraft.Build.Stat.Detection',
+    armour: 'WH40K.Voidcraft.Build.Stat.Armour',
+    hullIntegrity: 'WH40K.Voidcraft.Build.Stat.HullIntegrity',
+    turretRating: 'WH40K.Voidcraft.Build.Stat.TurretRating',
+    voidShields: 'WH40K.Voidcraft.Build.Stat.VoidShields',
+    morale: 'WH40K.Voidcraft.Build.Stat.Morale',
+    crewRating: 'WH40K.Voidcraft.Build.Stat.CrewRating',
+    ballisticSkill: 'WH40K.Voidcraft.Build.Stat.BallisticSkill',
+    weaponCapacityDorsal: 'WH40K.Voidcraft.Build.Stat.WeaponCapacityDorsal',
+    weaponCapacityProw: 'WH40K.Voidcraft.Build.Stat.WeaponCapacityProw',
+    weaponCapacityPort: 'WH40K.Voidcraft.Build.Stat.WeaponCapacityPort',
+    weaponCapacityStarboard: 'WH40K.Voidcraft.Build.Stat.WeaponCapacityStarboard',
+    weaponCapacityKeel: 'WH40K.Voidcraft.Build.Stat.WeaponCapacityKeel',
 };
 
 /**
@@ -124,13 +124,13 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
 
     /** @override */
     static TABS: HandlebarsApplicationV14.TabDescriptor[] = [
-        { tab: 'stats', label: 'WH40K.Starship.Tabs.Stats', group: 'primary', cssClass: 'tab-stats' },
-        { tab: 'components', label: 'WH40K.Starship.Tabs.Components', group: 'primary', cssClass: 'tab-components' },
-        { tab: 'weapons', label: 'WH40K.Starship.Tabs.Weapons', group: 'primary', cssClass: 'tab-weapons' },
-        { tab: 'crew', label: 'WH40K.Starship.Tabs.Crew', group: 'primary', cssClass: 'tab-crew' },
-        { tab: 'history', label: 'WH40K.Starship.Tabs.History', group: 'primary', cssClass: 'tab-history' },
-        { tab: 'extendedActions', label: 'WH40K.Starship.Tabs.ExtendedActions', group: 'primary', cssClass: 'tab-extended-actions' },
-        { tab: 'manoeuvreActions', label: 'WH40K.Starship.Tabs.ManoeuvreActions', group: 'primary', cssClass: 'tab-manoeuvre-actions' },
+        { tab: 'stats', label: 'WH40K.Voidcraft.Tabs.Stats', group: 'primary', cssClass: 'tab-stats' },
+        { tab: 'components', label: 'WH40K.Voidcraft.Tabs.Components', group: 'primary', cssClass: 'tab-components' },
+        { tab: 'weapons', label: 'WH40K.Voidcraft.Tabs.Weapons', group: 'primary', cssClass: 'tab-weapons' },
+        { tab: 'crew', label: 'WH40K.Voidcraft.Tabs.Crew', group: 'primary', cssClass: 'tab-crew' },
+        { tab: 'history', label: 'WH40K.Voidcraft.Tabs.History', group: 'primary', cssClass: 'tab-history' },
+        { tab: 'extendedActions', label: 'WH40K.Voidcraft.Tabs.ExtendedActions', group: 'primary', cssClass: 'tab-extended-actions' },
+        { tab: 'manoeuvreActions', label: 'WH40K.Voidcraft.Tabs.ManoeuvreActions', group: 'primary', cssClass: 'tab-manoeuvre-actions' },
     ];
 
     /* -------------------------------------------- */
@@ -185,8 +185,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: render context is an untyped Record per ApplicationV2 contract
     _prepareShipData(context: Record<string, unknown>): void {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const items = actor.items;
 
         // Get ship components grouped by type
@@ -240,10 +240,10 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         // calculated value when the actor was constructed before the schema
         // was extended (legacy worlds prior to migration running).
         const sys = this.actor.system as {
-            buildValidation?: StarshipBuildValidation;
+            buildValidation?: VoidcraftBuildValidation;
             shipPoints?: { budget?: number; spent?: number };
         };
-        let buildValidation: StarshipBuildValidation;
+        let buildValidation: VoidcraftBuildValidation;
         if (sys.buildValidation) {
             buildValidation = sys.buildValidation;
         } else {
@@ -253,7 +253,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
                 type: it.type,
                 system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean },
             }));
-            buildValidation = StarshipData.validateBuild(budget, itemViews);
+            buildValidation = VoidcraftData.validateBuild(budget, itemViews);
         }
         context['buildValidation'] = buildValidation;
 
@@ -280,12 +280,12 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * @issue #196
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: render context is an untyped Record per ApplicationV2 contract
-    _prepareBuildSummary(context: Record<string, unknown>, actor: WH40KStarship): void {
+    _prepareBuildSummary(context: Record<string, unknown>, actor: WH40KVoidcraft): void {
         const sys = actor.system as {
             appliedModifiers?: Record<ShipModifierStatKey, ShipAppliedModifier>;
             baseStatSnapshot?: Record<ShipModifierStatKey, number>;
         };
-        const applied: Record<ShipModifierStatKey, ShipAppliedModifier> = sys.appliedModifiers ?? StarshipData._emptyAppliedModifiers();
+        const applied: Record<ShipModifierStatKey, ShipAppliedModifier> = sys.appliedModifiers ?? VoidcraftData._emptyAppliedModifiers();
 
         // Reconstruct a base snapshot from current stat values when the actor
         // is legacy. The displayed base will then equal the displayed total —
@@ -416,8 +416,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             typeAndAction: string;
         }>
     > {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const gameSystemId = (actor.system as { gameSystem: string }).gameSystem;
 
         const out: Array<{
@@ -527,8 +527,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             typeAndAction: string;
         }>
     > {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const gameSystemId = (actor.system as { gameSystem: string }).gameSystem;
 
         const out: Array<{
@@ -630,12 +630,12 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      *   5. Post a structured chat card with the full breakdown.
      */
     static async #fireShipWeapon(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const weapon = actor.items.get(itemId ?? '');
         if (!weapon) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Starship.Combat.NoWeapon'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Voidcraft.Combat.NoWeapon'));
             return;
         }
 
@@ -690,7 +690,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         }
 
         // ── Apply void shields (issue #184 RAW: shields absorb hits) ────────
-        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarshipSystemData carries voidShieldsStatus on the concrete subclass not the shared ActorDataModel union; narrow via unknown
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraftSystemData carries voidShieldsStatus on the concrete subclass not the shared ActorDataModel union; narrow via unknown
         const shieldStatusBefore = (actor.system as unknown as { voidShieldsStatus: { active: number; exhausted: number } }).voidShieldsStatus;
         let shieldsActive = shieldStatusBefore.active;
         let shieldsExhausted = shieldStatusBefore.exhausted;
@@ -770,7 +770,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
         const speaker = ChatMessage.getSpeaker({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
             actor: actor as unknown as Actor.Implementation,
         });
         const payload = {
@@ -793,8 +793,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * back online when the round resets.
      */
     static async #raiseVoidShield(this: VoidcraftActorSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const sys = actor.system as {
             voidShields?: number;
             voidShieldsStatus?: { active?: number; exhausted?: number };
@@ -803,11 +803,11 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         const active = sys.voidShieldsStatus?.active ?? 0;
         const exhausted = sys.voidShieldsStatus?.exhausted ?? 0;
         if (active >= max) {
-            ui.notifications.info(game.i18n.localize('WH40K.Starship.Combat.AllShieldsUp'));
+            ui.notifications.info(game.i18n.localize('WH40K.Voidcraft.Combat.AllShieldsUp'));
             return;
         }
         if (exhausted <= 0) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Starship.Combat.NoShieldsExhausted'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Voidcraft.Combat.NoShieldsExhausted'));
             return;
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
@@ -826,15 +826,15 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * dropped shield moves to the exhausted pool.
      */
     static async #lowerVoidShield(this: VoidcraftActorSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const sys = actor.system as {
             voidShieldsStatus?: { active?: number; exhausted?: number };
         };
         const active = sys.voidShieldsStatus?.active ?? 0;
         const exhausted = sys.voidShieldsStatus?.exhausted ?? 0;
         if (active <= 0) {
-            ui.notifications.info(game.i18n.localize('WH40K.Starship.Combat.AllShieldsDown'));
+            ui.notifications.info(game.i18n.localize('WH40K.Voidcraft.Combat.AllShieldsDown'));
             return;
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
@@ -852,15 +852,15 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * and `exhausted` returns to zero. Called by the GM at round refresh.
      */
     static async #restoreVoidShields(this: VoidcraftActorSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const max = (actor.system as { voidShields: number }).voidShields;
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
         await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
             'system.voidShieldsStatus.active': max,
             'system.voidShieldsStatus.exhausted': 0,
         });
-        ui.notifications.info(game.i18n.localize('WH40K.Starship.Combat.ShieldsRestored'));
+        ui.notifications.info(game.i18n.localize('WH40K.Voidcraft.Combat.ShieldsRestored'));
     }
 
     /* -------------------------------------------- */
@@ -880,7 +880,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Returns the current `StarshipBuildValidation` for this starship and
+     * Returns the current `VoidcraftBuildValidation` for this starship and
      * surfaces it to the player via `ui.notifications`. Used by the
      * "Validate Build" button in the SP-budget panel (issue #190).
      *
@@ -891,19 +891,19 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         const validation = this.computeBuildValidation();
         const i18n = game.i18n;
         if (validation.isValid) {
-            ui.notifications.info(i18n.localize('WH40K.Starship.Build.NotifyValid'));
+            ui.notifications.info(i18n.localize('WH40K.Voidcraft.Build.NotifyValid'));
         } else {
             const parts: string[] = [];
             if (validation.isOverBudget) {
                 parts.push(
-                    i18n.format('WH40K.Starship.Build.NotifyOverBudgetBy', {
+                    i18n.format('WH40K.Voidcraft.Build.NotifyOverBudgetBy', {
                         amount: String(validation.spent - validation.budget),
                     }),
                 );
             }
             if (validation.missingEssentialSlots.length > 0) {
                 parts.push(
-                    i18n.format('WH40K.Starship.Build.NotifyMissingSlots', {
+                    i18n.format('WH40K.Voidcraft.Build.NotifyMissingSlots', {
                         count: String(validation.missingEssentialSlots.length),
                     }),
                 );
@@ -925,10 +925,10 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     static #commitBuild(this: VoidcraftActorSheet, _event: PointerEvent, _target: HTMLElement): void {
         const validation = this.computeBuildValidation();
         if (!validation.isValid) {
-            ui.notifications.error(game.i18n.localize('WH40K.Starship.Build.NotifyCannotCommit'));
+            ui.notifications.error(game.i18n.localize('WH40K.Voidcraft.Build.NotifyCannotCommit'));
             return;
         }
-        ui.notifications.info(game.i18n.localize('WH40K.Starship.Build.NotifyCommitted'));
+        ui.notifications.info(game.i18n.localize('WH40K.Voidcraft.Build.NotifyCommitted'));
     }
 
     /* -------------------------------------------- */
@@ -938,9 +938,9 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * the live `system.buildValidation` populated by `prepareDerivedData`; if
      * absent (legacy world pre-migration), reconstructs it from owned items.
      */
-    computeBuildValidation(): StarshipBuildValidation {
+    computeBuildValidation(): VoidcraftBuildValidation {
         const sys = this.actor.system as {
-            buildValidation?: StarshipBuildValidation;
+            buildValidation?: VoidcraftBuildValidation;
             shipPoints?: { budget?: number };
         };
         if (sys.buildValidation) return sys.buildValidation;
@@ -951,7 +951,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             type: it.type,
             system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean },
         }));
-        return StarshipData.validateBuild(budget, itemViews);
+        return VoidcraftData.validateBuild(budget, itemViews);
     }
 
     /* -------------------------------------------- */
@@ -965,8 +965,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * effects) is intentionally out of scope at this stage and is a follow-up.
      */
     static async #dispatchExtendedAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const uuid = target.dataset['actionUuid'] ?? '';
         const itemId = target.dataset['actionId'] ?? '';
 
@@ -984,7 +984,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             item = actor.items.get(itemId);
         }
         if (item === undefined) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Starship.ExtendedAction.Empty'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Voidcraft.ExtendedAction.Empty'));
             return;
         }
 
@@ -1022,24 +1022,24 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             const i18n = game.i18n;
             if (restored.hullRestored > 0 || restored.crewRestored > 0 || restored.moraleRestored > 0) {
                 ui.notifications.info(
-                    i18n.format('WH40K.Starship.Crew.NotifyCancelled', {
+                    i18n.format('WH40K.Voidcraft.Crew.NotifyCancelled', {
                         hull: String(restored.hullRestored),
                         crew: String(restored.crewRestored),
                         morale: String(restored.moraleRestored),
                     }),
                 );
             } else {
-                ui.notifications.info(i18n.localize('WH40K.Starship.Crew.NotifyNothingToCancel'));
+                ui.notifications.info(i18n.localize('WH40K.Voidcraft.Crew.NotifyNothingToCancel'));
             }
         } else if (effect === 'replenishMorale') {
             await actor.replenishBetweenCombat();
-            ui.notifications.info(game.i18n.localize('WH40K.Starship.Crew.NotifyReplenished'));
+            ui.notifications.info(game.i18n.localize('WH40K.Voidcraft.Crew.NotifyReplenished'));
         }
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/extended-action-chat.hbs', cardData);
 
         const speaker = ChatMessage.getSpeaker({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
             actor: actor as unknown as Actor.Implementation,
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
@@ -1060,17 +1060,17 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * Resolution order, mirroring the divination roll in issue #199:
      *   1. world `RollTable.getName("Critical Hit")` — GM-imported copy;
      *   2. `wh40k-rpg.rt-core-rolltables-ship-combat` compendium pack;
-     *   3. fallback to a bare 1d5 with the `WH40K.Starship.Critical.TableUnavailable`
+     *   3. fallback to a bare 1d5 with the `WH40K.Voidcraft.Critical.TableUnavailable`
      *      message — the player still gets a result and the GM is told to
      *      apply the corresponding effect by hand.
      *
      * The drawn result is appended to `system.shipStatuses` (a typed array
-     * on `StarshipData`) AND posted to chat via the
+     * on `VoidcraftData`) AND posted to chat via the
      * `ship-critical-hit-chat.hbs` template.
      */
     static async #rollShipCriticalHit(this: VoidcraftActorSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const i18n = game.i18n;
 
         // 1 + 2: try the world tables, then the compendium pack.
@@ -1140,17 +1140,17 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             } else {
                 rolled = Math.floor(Math.random() * 5) + 1;
             }
-            resultText = i18n.format('WH40K.Starship.Critical.TableUnavailable', { rolled: String(rolled) });
+            resultText = i18n.format('WH40K.Voidcraft.Critical.TableUnavailable', { rolled: String(rolled) });
         }
 
         // Map 1d5 result → stable status id + localized label.
         const STATUS_IDS = ['vacuum', 'fire', 'bridge', 'drive', 'crew'] as const;
         const STATUS_LABEL_KEYS = [
-            'WH40K.Starship.Critical.Effect.Vacuum',
-            'WH40K.Starship.Critical.Effect.Fire',
-            'WH40K.Starship.Critical.Effect.Bridge',
-            'WH40K.Starship.Critical.Effect.Drive',
-            'WH40K.Starship.Critical.Effect.Crew',
+            'WH40K.Voidcraft.Critical.Effect.Vacuum',
+            'WH40K.Voidcraft.Critical.Effect.Fire',
+            'WH40K.Voidcraft.Critical.Effect.Bridge',
+            'WH40K.Voidcraft.Critical.Effect.Drive',
+            'WH40K.Voidcraft.Critical.Effect.Crew',
         ] as const;
         const idx = Math.min(Math.max(rolled, 1), 5) - 1;
         const statusId = STATUS_IDS[idx] ?? 'vacuum';
@@ -1176,7 +1176,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             resultText,
             statusLabel,
             rolled,
-            rollLabel: i18n.format('WH40K.Starship.Critical.RollLabel', { rolled: String(rolled) }),
+            rollLabel: i18n.format('WH40K.Voidcraft.Critical.RollLabel', { rolled: String(rolled) }),
             image: 'icons/svg/explosion.svg',
             gameSystem: (actor.system as { gameSystem: string }).gameSystem,
         };
@@ -1184,7 +1184,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-critical-hit-chat.hbs', cardData);
 
         const speaker = ChatMessage.getSpeaker({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
             actor: actor as unknown as Actor.Implementation,
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
@@ -1205,8 +1205,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * remains a follow-up.
      */
     static async #dispatchManoeuvreAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
-        const actor = this.actor as unknown as WH40KStarship;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
         const uuid = target.dataset['actionUuid'] ?? '';
         const itemId = target.dataset['actionId'] ?? '';
 
@@ -1224,7 +1224,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             item = actor.items.get(itemId);
         }
         if (item === undefined) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Starship.ManoeuvreAction.Empty'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Voidcraft.ManoeuvreAction.Empty'));
             return;
         }
 
@@ -1254,7 +1254,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/manoeuvre-action-chat.hbs', cardData);
 
         const speaker = ChatMessage.getSpeaker({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
             actor: actor as unknown as Actor.Implementation,
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape

@@ -7,13 +7,13 @@
  * tags) plus per-line lore and home-world rules.
  */
 
-import LocationData from '../../data/item/location.ts';
+import { LOCATION_TYPE_SLUGS } from '../../config/location-types.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 
 /** Build the `{ slug: Label }` map for the location-type selector. */
 function locationTypeChoices(): Record<string, string> {
     const out: Record<string, string> = {};
-    for (const slug of LocationData.locationTypes) {
+    for (const slug of LOCATION_TYPE_SLUGS) {
         const key = `WH40K.Location.Type.${slug.capitalize()}`;
         out[slug] = game.i18n.has(key) ? game.i18n.localize(key) : slug.capitalize();
     }

@@ -15,7 +15,7 @@ interface LocationItem {
         locationType: string;
         locationTypeLabel: string;
         locationTypeIcon: string;
-        parent: string;
+        parentLocation: string;
         sector: string;
         region: string;
         coordinates: string;
@@ -34,7 +34,6 @@ interface Args {
     item: LocationItem;
     locationTypes: Record<string, string>;
     source: { source: { book: string; page: string; url: string } };
-    [key: string]: unknown;
 }
 
 const meta = {
@@ -50,7 +49,7 @@ const meta = {
                 locationType: 'planet',
                 locationTypeLabel: 'Planet',
                 locationTypeIcon: 'fa-globe',
-                parent: '',
+                parentLocation: '',
                 sector: 'Calixis',
                 region: 'Josian Reach',
                 coordinates: '',
@@ -72,7 +71,7 @@ type Story = StoryObj<Args>;
 
 export const Default: Story = {
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        await expect(canvas.getByDisplayValue('Hive Desoleum')).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Hive Desoleum')).toBeTruthy();
     },
 };

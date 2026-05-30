@@ -53,7 +53,7 @@ export interface ShipManoeuvre {
      */
     difficulty: number;
     /**
-     * Localization-key suffix under the action's `WH40K.Starship.Manoeuvre.*`
+     * Localization-key suffix under the action's `WH40K.Voidcraft.Manoeuvre.*`
      * namespace for the one-line benefit summary (matches Table 8-10
      * "Benefit" column).
      */
@@ -75,51 +75,51 @@ export interface ShipManoeuvre {
 export const SHIP_MANOEUVRES: readonly ShipManoeuvre[] = [
     {
         id: 'adjust-bearing',
-        labelKey: 'WH40K.Starship.Manoeuvre.AdjustBearing.Label',
+        labelKey: 'WH40K.Voidcraft.Manoeuvre.AdjustBearing.Label',
         test: 'Pilot (Space Craft)',
         difficulty: 0,
-        benefitKey: 'WH40K.Starship.Manoeuvre.AdjustBearing.Benefit',
+        benefitKey: 'WH40K.Voidcraft.Manoeuvre.AdjustBearing.Benefit',
         gameSystem: 'rt',
     },
     {
         id: 'adjust-speed',
-        labelKey: 'WH40K.Starship.Manoeuvre.AdjustSpeed.Label',
+        labelKey: 'WH40K.Voidcraft.Manoeuvre.AdjustSpeed.Label',
         test: 'Pilot (Space Craft)',
         difficulty: 0,
-        benefitKey: 'WH40K.Starship.Manoeuvre.AdjustSpeed.Benefit',
+        benefitKey: 'WH40K.Voidcraft.Manoeuvre.AdjustSpeed.Benefit',
         gameSystem: 'rt',
     },
     {
         id: 'adjust-speed-and-bearing',
-        labelKey: 'WH40K.Starship.Manoeuvre.AdjustSpeedAndBearing.Label',
+        labelKey: 'WH40K.Voidcraft.Manoeuvre.AdjustSpeedAndBearing.Label',
         test: 'Pilot (Space Craft)',
         difficulty: -20,
-        benefitKey: 'WH40K.Starship.Manoeuvre.AdjustSpeedAndBearing.Benefit',
+        benefitKey: 'WH40K.Voidcraft.Manoeuvre.AdjustSpeedAndBearing.Benefit',
         gameSystem: 'rt',
     },
     {
         id: 'come-to-new-heading',
-        labelKey: 'WH40K.Starship.Manoeuvre.ComeToNewHeading.Label',
+        labelKey: 'WH40K.Voidcraft.Manoeuvre.ComeToNewHeading.Label',
         test: 'Pilot (Space Craft)',
         difficulty: -10,
-        benefitKey: 'WH40K.Starship.Manoeuvre.ComeToNewHeading.Benefit',
+        benefitKey: 'WH40K.Voidcraft.Manoeuvre.ComeToNewHeading.Benefit',
         gameSystem: 'rt',
     },
     {
         id: 'disengage',
-        labelKey: 'WH40K.Starship.Manoeuvre.Disengage.Label',
+        labelKey: 'WH40K.Voidcraft.Manoeuvre.Disengage.Label',
         test: 'Pilot (Space Craft)',
         difficulty: 0,
-        benefitKey: 'WH40K.Starship.Manoeuvre.Disengage.Benefit',
+        benefitKey: 'WH40K.Voidcraft.Manoeuvre.Disengage.Benefit',
         opposed: true,
         gameSystem: 'rt',
     },
     {
         id: 'evasive-manoeuvres',
-        labelKey: 'WH40K.Starship.Manoeuvre.EvasiveManoeuvres.Label',
+        labelKey: 'WH40K.Voidcraft.Manoeuvre.EvasiveManoeuvres.Label',
         test: 'Pilot (Space Craft)',
         difficulty: -10,
-        benefitKey: 'WH40K.Starship.Manoeuvre.EvasiveManoeuvres.Benefit',
+        benefitKey: 'WH40K.Voidcraft.Manoeuvre.EvasiveManoeuvres.Benefit',
         gameSystem: 'rt',
     },
 ] as const;

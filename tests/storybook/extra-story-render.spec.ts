@@ -246,17 +246,17 @@ test.describe('Storybook extra story render', () => {
 
     // ── Actor — StarshipSheet (Rogue Trader) ─────────────────────────────────
     test('starship sheet renders ship name', async ({ page }) => {
-        await page.goto('/iframe.html?id=actor-starshipsheet--default');
+        await page.goto('/iframe.html?id=actor-voidcraftactorsheet--default');
         await expect(page.locator('input[value="Sword of Terra"]').first()).toBeVisible();
     });
 
     test('starship sheet exposes rollInitiative action', async ({ page }) => {
-        await page.goto('/iframe.html?id=actor-starshipsheet--roll-initiative');
+        await page.goto('/iframe.html?id=actor-voidcraftactorsheet--roll-initiative');
         await expect(page.locator('[data-action="rollInitiative"]').first()).toBeAttached();
     });
 
     test('starship sheet Black Crusade variant renders', async ({ page }) => {
-        await page.goto('/iframe.html?id=actor-starshipsheet--black-cruisade-variant');
+        await page.goto('/iframe.html?id=actor-voidcraftactorsheet--black-cruisade-variant');
         await expect(page.locator('input[value="Despoiler-class Battleship"]').first()).toBeVisible();
     });
 
