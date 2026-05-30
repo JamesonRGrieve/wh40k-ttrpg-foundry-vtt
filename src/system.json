@@ -2051,6 +2051,18 @@
       "flags": {}
     },
     {
+      "name": "dw-xenos-actors-npcs",
+      "label": "DW: Mark of the Xenos — Named Individuals",
+      "path": "packs/deathwatch/dw-xenos-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "hb-items-backgrounds",
       "label": "Homebrew Backgrounds",
       "path": "packs/homebrew/hb-items-backgrounds",
@@ -4814,6 +4826,102 @@
       "name": "dh1-ascension-origins-careers",
       "label": "DH1: Ascension — Career Paths",
       "path": "packs/dark-heresy-1/dh1-ascension-origins-careers",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-actors-bestiary",
+      "label": "DH1: Ascension — Bestiary",
+      "path": "packs/dark-heresy-1/dh1-ascension-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-actors-npcs",
+      "label": "DH1: Ascension — Named Individuals",
+      "path": "packs/dark-heresy-1/dh1-ascension-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-items-ammo",
+      "label": "DH1: Ascension — Ammunition",
+      "path": "packs/dark-heresy-1/dh1-ascension-items-ammo",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-items-armour",
+      "label": "DH1: Ascension — Armour",
+      "path": "packs/dark-heresy-1/dh1-ascension-items-armour",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-items-cybernetics",
+      "label": "DH1: Ascension — Cybernetics",
+      "path": "packs/dark-heresy-1/dh1-ascension-items-cybernetics",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-items-gear",
+      "label": "DH1: Ascension — Gear",
+      "path": "packs/dark-heresy-1/dh1-ascension-items-gear",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-items-psychic-powers",
+      "label": "DH1: Ascension — Psychic Powers",
+      "path": "packs/dark-heresy-1/dh1-ascension-items-psychic-powers",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-ascension-items-weapons",
+      "label": "DH1: Ascension — Weapons",
+      "path": "packs/dark-heresy-1/dh1-ascension-items-weapons",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
