@@ -4929,6 +4929,846 @@
         "ASSISTANT": "OWNER"
       },
       "flags": {}
+    },
+    {
+      "name": "ow-adventures",
+      "label": "OW: Adventures",
+      "path": "packs/only-war/ow-adventures",
+      "system": "wh40k-rpg",
+      "type": "Adventure",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-eleventh-actors-bestiary",
+      "label": "OW: Eleventh Hour — Bestiary",
+      "path": "packs/only-war/ow-eleventh-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-eleventh-actors-npcs",
+      "label": "OW: Eleventh Hour — NPCs",
+      "path": "packs/only-war/ow-eleventh-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-gmkit-actors-bestiary",
+      "label": "OW: Game Master’s Kit — Bestiary",
+      "path": "packs/only-war/ow-gmkit-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-gmkit-actors-npcs",
+      "label": "OW: Game Master’s Kit — NPCs",
+      "path": "packs/only-war/ow-gmkit-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-gmkit-actors-vehicles",
+      "label": "OW: Game Master’s Kit — Vehicles",
+      "path": "packs/only-war/ow-gmkit-actors-vehicles",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-testament-actors-bestiary",
+      "label": "OW: Final Testament — Bestiary",
+      "path": "packs/only-war/ow-testament-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-testament-actors-mounts",
+      "label": "OW: Final Testament — Mounts",
+      "path": "packs/only-war/ow-testament-actors-mounts",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-testament-actors-npcs",
+      "label": "OW: Final Testament — NPCs",
+      "path": "packs/only-war/ow-testament-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-testament-actors-vehicles",
+      "label": "OW: Final Testament — Vehicles",
+      "path": "packs/only-war/ow-testament-actors-vehicles",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-testament-journals",
+      "label": "OW: Final Testament — Journals",
+      "path": "packs/only-war/ow-testament-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-adventures",
+      "label": "IM: Adventures",
+      "path": "packs/imperium-maledictum/im-adventures",
+      "system": "wh40k-rpg",
+      "type": "Adventure",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-chemical-actors-bestiary",
+      "label": "IM: Chemical Burn — Bestiary",
+      "path": "packs/imperium-maledictum/im-chemical-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-chemical-actors-npcs",
+      "label": "IM: Chemical Burn — NPCs",
+      "path": "packs/imperium-maledictum/im-chemical-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-chemical-items-gear",
+      "label": "IM: Chemical Burn — Gear",
+      "path": "packs/imperium-maledictum/im-chemical-items-gear",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-chemical-items-weapons",
+      "label": "IM: Chemical Burn — Weapons",
+      "path": "packs/imperium-maledictum/im-chemical-items-weapons",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-actors-bestiary",
+      "label": "IM: Core Rulebook — Bestiary",
+      "path": "packs/imperium-maledictum/im-core-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-endeavours",
+      "label": "IM: Core Rulebook — Endeavours",
+      "path": "packs/imperium-maledictum/im-core-endeavours",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-ammo",
+      "label": "IM: Core Rulebook — Ammunition",
+      "path": "packs/imperium-maledictum/im-core-items-ammo",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-armour",
+      "label": "IM: Core Rulebook — Armour",
+      "path": "packs/imperium-maledictum/im-core-items-armour",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-conditions",
+      "label": "IM: Core Rulebook — Conditions",
+      "path": "packs/imperium-maledictum/im-core-items-conditions",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-critical-injuries",
+      "label": "IM: Core Rulebook — Critical Injuries",
+      "path": "packs/imperium-maledictum/im-core-items-critical-injuries",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-cybernetics",
+      "label": "IM: Core Rulebook — Cybernetics",
+      "path": "packs/imperium-maledictum/im-core-items-cybernetics",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-gear",
+      "label": "IM: Core Rulebook — Gear",
+      "path": "packs/imperium-maledictum/im-core-items-gear",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-psychic-powers",
+      "label": "IM: Core Rulebook — Psychic Powers",
+      "path": "packs/imperium-maledictum/im-core-items-psychic-powers",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-skills",
+      "label": "IM: Core Rulebook — Skills",
+      "path": "packs/imperium-maledictum/im-core-items-skills",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-talents",
+      "label": "IM: Core Rulebook — Talents",
+      "path": "packs/imperium-maledictum/im-core-items-talents",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-weapon-mods",
+      "label": "IM: Core Rulebook — Weapon Mods",
+      "path": "packs/imperium-maledictum/im-core-items-weapon-mods",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-items-weapons",
+      "label": "IM: Core Rulebook — Weapons",
+      "path": "packs/imperium-maledictum/im-core-items-weapons",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-journals",
+      "label": "IM: Core Rulebook — Journals",
+      "path": "packs/imperium-maledictum/im-core-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-origins-factions",
+      "label": "IM: Core Rulebook — Factions",
+      "path": "packs/imperium-maledictum/im-core-origins-factions",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-origins-roles",
+      "label": "IM: Core Rulebook — Roles",
+      "path": "packs/imperium-maledictum/im-core-origins-roles",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-origins-worlds",
+      "label": "IM: Core Rulebook — Origins (Worlds)",
+      "path": "packs/imperium-maledictum/im-core-origins-worlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-patrons",
+      "label": "IM: Core Rulebook — Patrons",
+      "path": "packs/imperium-maledictum/im-core-patrons",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-core-rolltables",
+      "label": "IM: Core Rulebook — Roll Tables",
+      "path": "packs/imperium-maledictum/im-core-rolltables",
+      "system": "wh40k-rpg",
+      "type": "RollTable",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-actors-bestiary",
+      "label": "IM: Inquisition Player’s Guide — Bestiary",
+      "path": "packs/imperium-maledictum/im-inquisition-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-items-ammo",
+      "label": "IM: Inquisition Player’s Guide — Ammunition",
+      "path": "packs/imperium-maledictum/im-inquisition-items-ammo",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-items-armour",
+      "label": "IM: Inquisition Player’s Guide — Armour",
+      "path": "packs/imperium-maledictum/im-inquisition-items-armour",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-items-gear",
+      "label": "IM: Inquisition Player’s Guide — Gear",
+      "path": "packs/imperium-maledictum/im-inquisition-items-gear",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-items-psychic-powers",
+      "label": "IM: Inquisition Player’s Guide — Psychic Powers",
+      "path": "packs/imperium-maledictum/im-inquisition-items-psychic-powers",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-items-talents",
+      "label": "IM: Inquisition Player’s Guide — Talents",
+      "path": "packs/imperium-maledictum/im-inquisition-items-talents",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-items-weapons",
+      "label": "IM: Inquisition Player’s Guide — Weapons",
+      "path": "packs/imperium-maledictum/im-inquisition-items-weapons",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-journals",
+      "label": "IM: Inquisition Player’s Guide — Journals",
+      "path": "packs/imperium-maledictum/im-inquisition-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-origins-factions",
+      "label": "IM: Inquisition Player’s Guide — Factions",
+      "path": "packs/imperium-maledictum/im-inquisition-origins-factions",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-origins-inquisition",
+      "label": "IM: Inquisition Player’s Guide — Origins (Inquisition)",
+      "path": "packs/imperium-maledictum/im-inquisition-origins-inquisition",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-origins-roles",
+      "label": "IM: Inquisition Player’s Guide — Roles",
+      "path": "packs/imperium-maledictum/im-inquisition-origins-roles",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "im-inquisition-rolltables",
+      "label": "IM: Inquisition Player’s Guide — Roll Tables",
+      "path": "packs/imperium-maledictum/im-inquisition-rolltables",
+      "system": "wh40k-rpg",
+      "type": "RollTable",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-adventures",
+      "label": "BC: Adventures",
+      "path": "packs/black-crusade/bc-adventures",
+      "system": "wh40k-rpg",
+      "type": "Adventure",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-chains-actors-bestiary",
+      "label": "BC: Broken Chains — Bestiary",
+      "path": "packs/black-crusade/bc-chains-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-chains-actors-npcs",
+      "label": "BC: Broken Chains — NPCs",
+      "path": "packs/black-crusade/bc-chains-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-chains-items-armour",
+      "label": "BC: Broken Chains — Armour",
+      "path": "packs/black-crusade/bc-chains-items-armour",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-chains-items-psychic-powers",
+      "label": "BC: Broken Chains — Psychic Powers",
+      "path": "packs/black-crusade/bc-chains-items-psychic-powers",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-chains-items-weapons",
+      "label": "BC: Broken Chains — Weapons",
+      "path": "packs/black-crusade/bc-chains-items-weapons",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-corruption-actors-bestiary",
+      "label": "BC: Hand of Corruption — Bestiary",
+      "path": "packs/black-crusade/bc-corruption-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-corruption-actors-npcs",
+      "label": "BC: Hand of Corruption — NPCs",
+      "path": "packs/black-crusade/bc-corruption-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-corruption-items-gear",
+      "label": "BC: Hand of Corruption — Gear",
+      "path": "packs/black-crusade/bc-corruption-items-gear",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-gmkit-actors-bestiary",
+      "label": "BC: Game Master’s Kit — Bestiary",
+      "path": "packs/black-crusade/bc-gmkit-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-gmkit-actors-npcs",
+      "label": "BC: Game Master’s Kit — NPCs",
+      "path": "packs/black-crusade/bc-gmkit-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-gmkit-items-gear",
+      "label": "BC: Game Master’s Kit — Gear",
+      "path": "packs/black-crusade/bc-gmkit-items-gear",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-gmkit-items-weapons",
+      "label": "BC: Game Master’s Kit — Weapons",
+      "path": "packs/black-crusade/bc-gmkit-items-weapons",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-ark-actors-bestiary",
+      "label": "DW: Ark of Lost Souls — Bestiary",
+      "path": "packs/deathwatch/dw-ark-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-ark-actors-npcs",
+      "label": "DW: Ark of Lost Souls — NPCs",
+      "path": "packs/deathwatch/dw-ark-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-ark-items-weapons",
+      "label": "DW: Ark of Lost Souls — Weapons",
+      "path": "packs/deathwatch/dw-ark-items-weapons",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-gmkit-actors-bestiary",
+      "label": "DW: Game Master’s Kit — Bestiary",
+      "path": "packs/deathwatch/dw-gmkit-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-gmkit-actors-npcs",
+      "label": "DW: Game Master’s Kit — NPCs",
+      "path": "packs/deathwatch/dw-gmkit-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-gmkit-actors-vehicles",
+      "label": "DW: Game Master’s Kit — Vehicles",
+      "path": "packs/deathwatch/dw-gmkit-actors-vehicles",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-knownofear-journals",
+      "label": "DW: Know No Fear — Journals",
+      "path": "packs/deathwatch/dw-knownofear-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-tempest-actors-bestiary",
+      "label": "DW: Rising Tempest — Bestiary",
+      "path": "packs/deathwatch/dw-tempest-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-tempest-actors-npcs",
+      "label": "DW: Rising Tempest — NPCs",
+      "path": "packs/deathwatch/dw-tempest-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-epoch-journals",
+      "label": "RT: Epoch Koronus — Journals",
+      "path": "packs/rogue-trader/rt-epoch-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     }
   ],
   "packFolders": [
