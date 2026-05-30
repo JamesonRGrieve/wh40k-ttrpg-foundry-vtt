@@ -4340,6 +4340,54 @@
             "flags": {}
         },
         {
+            "name": "rt-kin-items-weapons",
+            "label": "RT: The Dark Kin Weapons",
+            "path": "packs/rogue-trader/rt-kin-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-kin-items-talents",
+            "label": "RT: The Dark Kin Talents",
+            "path": "packs/rogue-trader/rt-kin-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-kin-items-traits",
+            "label": "RT: The Dark Kin Traits",
+            "path": "packs/rogue-trader/rt-kin-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-kin-origins-careers",
+            "label": "RT: The Dark Kin Careers",
+            "path": "packs/rogue-trader/rt-kin-origins-careers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-reaver-actors-bestiary",
             "label": "RT: The Soul Reaver Bestiary",
             "path": "packs/rogue-trader/rt-reaver-actors-bestiary",
