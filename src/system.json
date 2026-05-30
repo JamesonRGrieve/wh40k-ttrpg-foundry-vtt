@@ -1139,6 +1139,42 @@
       "flags": {}
     },
     {
+      "name": "dh1-core-actors-npcs",
+      "label": "DH1: Core Rulebook — Named Individuals",
+      "path": "packs/dark-heresy-1/dh1-core-actors-npcs",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-core-journals",
+      "label": "DH1: Core Rulebook — Journals",
+      "path": "packs/dark-heresy-1/dh1-core-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh1-core-rolltables",
+      "label": "DH1: Core Rulebook — Roll Tables",
+      "path": "packs/dark-heresy-1/dh1-core-rolltables",
+      "system": "wh40k-rpg",
+      "type": "RollTable",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "dh2-beyond-items-ammo",
       "label": "Enemies Beyond Ammunition",
       "path": "packs/dark-heresy-2/dh2-beyond-items-ammo",
