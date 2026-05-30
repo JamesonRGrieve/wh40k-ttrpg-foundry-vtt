@@ -1,15 +1,15 @@
-{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Starship.Weapons.Header") rootClass="tw-col-span-6 tw-row-span-2 tw-pb-[5pt]" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Voidcraft.Weapons.Header") rootClass="tw-col-span-6 tw-row-span-2 tw-pb-[5pt]" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
     {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
         addAction="itemCreate"
         addType="shipWeapon"
         addTitleKey="WH40K.Common.AddShipWeapon"
         headers=(array
-            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Weapons.Name")
-            (object labelKey="WH40K.Starship.Weapons.Location")
-            (object labelKey="WH40K.Starship.Weapons.Strength")
-            (object labelKey="WH40K.Starship.Weapons.Damage")
-            (object labelKey="WH40K.Starship.Weapons.Crit")
-            (object labelKey="WH40K.Starship.Weapons.Range"))}}
+            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Weapons.Name")
+            (object labelKey="WH40K.Voidcraft.Weapons.Location")
+            (object labelKey="WH40K.Voidcraft.Weapons.Strength")
+            (object labelKey="WH40K.Voidcraft.Weapons.Damage")
+            (object labelKey="WH40K.Voidcraft.Weapons.Crit")
+            (object labelKey="WH40K.Voidcraft.Weapons.Range"))}}
         {{#each actor.items as |item|}}
             {{#if item.isShipWeapon}}
                 {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs

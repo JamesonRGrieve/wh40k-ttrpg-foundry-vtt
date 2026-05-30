@@ -1,19 +1,19 @@
-{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Starship.Crew.Header") rootClass="tw-col-span-6 tw-row-span-1" bodyClass="tw-p-0"}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Voidcraft.Crew.Header") rootClass="tw-col-span-6 tw-row-span-1" bodyClass="tw-p-0"}}
     <div class="tw-grid tw-grid-cols-4 tw-gap-2 tw-p-2">
         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
-            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Starship.Crew.Population"}}</span>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Voidcraft.Crew.Population"}}</span>
             <input type="number" class="tw-text-center tw-font-bold tw-text-lg tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.crew.population" value="{{source.crew.population}}" />
         </div>
         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
-            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Starship.Crew.Rating"}}</span>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Voidcraft.Crew.Rating"}}</span>
             <input type="number" class="tw-text-center tw-font-bold tw-text-lg tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.crew.crewRating" value="{{source.crew.crewRating}}" />
         </div>
         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
-            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Starship.Crew.MoraleCurrent"}}</span>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Voidcraft.Crew.MoraleCurrent"}}</span>
             <input type="number" class="tw-text-center tw-font-bold tw-text-lg tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.crew.morale.value" value="{{source.crew.morale.value}}" />
         </div>
         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
-            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Starship.Crew.MoraleMax"}}</span>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Voidcraft.Crew.MoraleMax"}}</span>
             <input type="number" class="tw-text-center tw-font-bold tw-text-lg tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.crew.morale.max" value="{{source.crew.morale.max}}" />
         </div>
     </div>
@@ -21,14 +21,14 @@
 
 <div class="wh40k-panel tw-col-span-6 tw-row-span-1">
     <h1 class="wh40k-panel-header">
-        <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Starship.Crew.Officers"}}</span>
+        <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Voidcraft.Crew.Officers"}}</span>
     </h1>
-    <p class="tw-text-sm tw-italic tw-opacity-70 tw-px-2 tw-pt-2">{{localize "WH40K.Starship.Crew.OfficersDesc"}}</p>
+    <p class="tw-text-sm tw-italic tw-opacity-70 tw-px-2 tw-pt-2">{{localize "WH40K.Voidcraft.Crew.OfficersDesc"}}</p>
     {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
         headers=(array
-            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Crew.Role")
-            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Crew.Officer")
-            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Crew.Bonus"))}}
+            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Crew.Role")
+            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Crew.Officer")
+            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Crew.Bonus"))}}
         {{#each shipRoles as |role|}}
             {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
                 item=role

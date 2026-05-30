@@ -14,23 +14,27 @@
 import type {
     BCCharacterData,
     BCNPCData,
-    BCVehicleData,
+    BCTerracraftData,
     DH1CharacterData,
     DH1NPCData,
-    DH1VehicleData,
+    DH1TerracraftData,
+    DH2AircraftData,
     DH2CharacterData,
     DH2NPCData,
-    DH2VehicleData,
+    DH2TerracraftData,
+    DWAircraftData,
     DWCharacterData,
     DWNPCData,
-    DWVehicleData,
+    DWTerracraftData,
+    OWAircraftData,
     OWCharacterData,
     OWNPCData,
-    OWVehicleData,
+    OWTerracraftData,
+    RTAircraftData,
     RTCharacterData,
     RTNPCData,
-    RTStarshipData,
-    RTVehicleData,
+    RTTerracraftData,
+    RTVoidcraftData,
 } from '../data/actor/_module.ts';
 // Item data models
 import type {
@@ -48,6 +52,7 @@ import type {
     GearData,
     JournalEntryItemData,
     LeadData,
+    LocationData,
     MalignancyData,
     MentalDisorderData,
     MutationData,
@@ -141,23 +146,27 @@ declare module 'fvtt-types/configuration' {
         Actor: {
             'dh2-character': typeof DH2CharacterData;
             'dh2-npc': typeof DH2NPCData;
-            'dh2-vehicle': typeof DH2VehicleData;
+            'dh2-terracraft': typeof DH2TerracraftData;
+            'dh2-aircraft': typeof DH2AircraftData;
             'dh1-character': typeof DH1CharacterData;
             'dh1-npc': typeof DH1NPCData;
-            'dh1-vehicle': typeof DH1VehicleData;
+            'dh1-terracraft': typeof DH1TerracraftData;
             'rt-character': typeof RTCharacterData;
             'rt-npc': typeof RTNPCData;
-            'rt-vehicle': typeof RTVehicleData;
-            'rt-starship': typeof RTStarshipData;
+            'rt-terracraft': typeof RTTerracraftData;
+            'rt-aircraft': typeof RTAircraftData;
+            'rt-voidcraft': typeof RTVoidcraftData;
             'bc-character': typeof BCCharacterData;
             'bc-npc': typeof BCNPCData;
-            'bc-vehicle': typeof BCVehicleData;
+            'bc-terracraft': typeof BCTerracraftData;
             'ow-character': typeof OWCharacterData;
             'ow-npc': typeof OWNPCData;
-            'ow-vehicle': typeof OWVehicleData;
+            'ow-terracraft': typeof OWTerracraftData;
+            'ow-aircraft': typeof OWAircraftData;
             'dw-character': typeof DWCharacterData;
             'dw-npc': typeof DWNPCData;
-            'dw-vehicle': typeof DWVehicleData;
+            'dw-terracraft': typeof DWTerracraftData;
+            'dw-aircraft': typeof DWAircraftData;
         };
         Item: {
             weapon: typeof WeaponData;
@@ -201,6 +210,7 @@ declare module 'fvtt-types/configuration' {
             journalEntry: typeof JournalEntryItemData;
             endeavour: typeof EndeavourData;
             lead: typeof LeadData;
+            location: typeof LocationData;
             npcTemplate: typeof NPCTemplateData;
         };
     }

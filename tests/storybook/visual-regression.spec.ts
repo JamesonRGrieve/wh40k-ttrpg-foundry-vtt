@@ -80,8 +80,8 @@ const STORY_IDS: readonly string[] = [
     'actor-npcsheet--default',
     'actor-npcsheet--dark-heresy-2-npc',
     'actor-npcsheet--rogue-trader-npc',
-    'actor-starshipsheet--default',
-    'actor-starshipsheet--black-cruisade-variant',
+    'actor-voidcraftactorsheet--default',
+    'actor-voidcraftactorsheet--black-cruisade-variant',
 
     // ── Inventory item-table panels per-system ───────────────────────────────
     'inventory-item-table--weapon-panel-dh-2',

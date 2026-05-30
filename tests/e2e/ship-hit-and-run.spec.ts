@@ -81,8 +81,8 @@ test.describe.serial('Ship Hit-and-Run chat card (Tier B)', () => {
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-ship-har-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="rt"');
-                    hasCritPick = html.includes('WH40K.Starship.HitAndRun.AppliedCrit');
-                    hasHullDamage = html.includes('WH40K.Starship.HitAndRun.HullDamage');
+                    hasCritPick = html.includes('WH40K.Voidcraft.HitAndRun.AppliedCrit');
+                    hasHullDamage = html.includes('WH40K.Voidcraft.HitAndRun.HullDamage');
 
                     const msg = await g.ChatMessage?.create({ user: g.game?.user?.id, content: html });
                     messageId = msg?.id ?? null;

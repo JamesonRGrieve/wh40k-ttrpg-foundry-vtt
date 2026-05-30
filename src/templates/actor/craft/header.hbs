@@ -15,17 +15,29 @@
         {{!-- Meta: locomotion + faction --}}
         <div class="tw-flex tw-flex-1">
             <div class="tw-flex tw-gap-4 tw-flex-wrap">
-                {{!-- Locomotion (shared discriminator) --}}
+                {{!-- Locomotion (propulsion adjective) --}}
                 <div class="tw-flex tw-flex-col tw-gap-0.5">
                     <label class="tw-text-[0.7rem] tw-uppercase tw-text-[var(--wh40k-text-muted,#888)]">{{localize "WH40K.Vehicle.Locomotion"}}</label>
                     <select name="system.locomotion" class="tw-bg-[var(--wh40k-input-bg,rgba(0,0,0,0.3))] tw-border tw-border-[var(--wh40k-border-color,#444)] tw-text-[var(--wh40k-text-dark,#f0f0f0)] tw-px-2 tw-py-1 tw-rounded-sm tw-text-[0.85rem] focus:tw-border-gold focus:tw-outline-none">
-                        <option value="wheeled" {{#if (eq system.locomotion "wheeled")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Wheeled"}}</option>
-                        <option value="tracked" {{#if (eq system.locomotion "tracked")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Tracked"}}</option>
-                        <option value="walker" {{#if (eq system.locomotion "walker")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Walker"}}</option>
-                        <option value="hover" {{#if (eq system.locomotion "hover")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Hover"}}</option>
-                        <option value="flyer" {{#if (eq system.locomotion "flyer")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Flyer"}}</option>
-                        <option value="hull" {{#if (eq system.locomotion "hull")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Hull"}}</option>
-                        <option value="submersible" {{#if (eq system.locomotion "submersible")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Submersible"}}</option>
+                        <optgroup label="{{localize "WH40K.Vehicle.LocomotionGroup.Land"}}">
+                            <option value="wheeled" {{#if (eq system.locomotion "wheeled")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Wheeled"}}</option>
+                            <option value="tracked" {{#if (eq system.locomotion "tracked")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Tracked"}}</option>
+                            <option value="walker" {{#if (eq system.locomotion "walker")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Walker"}}</option>
+                            <option value="hover" {{#if (eq system.locomotion "hover")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Hover"}}</option>
+                        </optgroup>
+                        <optgroup label="{{localize "WH40K.Vehicle.LocomotionGroup.Air"}}">
+                            <option value="flyer" {{#if (eq system.locomotion "flyer")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Flyer"}}</option>
+                            <option value="skimmer" {{#if (eq system.locomotion "skimmer")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Skimmer"}}</option>
+                            <option value="vtol" {{#if (eq system.locomotion "vtol")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Vtol"}}</option>
+                        </optgroup>
+                        <optgroup label="{{localize "WH40K.Vehicle.LocomotionGroup.Water"}}">
+                            <option value="hull" {{#if (eq system.locomotion "hull")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Hull"}}</option>
+                            <option value="submersible" {{#if (eq system.locomotion "submersible")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Submersible"}}</option>
+                            <option value="hydrofoil" {{#if (eq system.locomotion "hydrofoil")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Hydrofoil"}}</option>
+                        </optgroup>
+                        <optgroup label="{{localize "WH40K.Vehicle.LocomotionGroup.Void"}}">
+                            <option value="voidship" {{#if (eq system.locomotion "voidship")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Voidship"}}</option>
+                        </optgroup>
                     </select>
                 </div>
 

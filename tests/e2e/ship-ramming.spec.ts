@@ -77,7 +77,7 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-ship-ramming-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="rt"');
-                    hasDamageBlock = html.includes('WH40K.Starship.Ramming.DefenderHull');
+                    hasDamageBlock = html.includes('WH40K.Voidcraft.Ramming.DefenderHull');
 
                     const ChatMessageCls = fg.ChatMessage;
                     const msg = await ChatMessageCls?.create({ user: fg.game?.user?.id, content: html });

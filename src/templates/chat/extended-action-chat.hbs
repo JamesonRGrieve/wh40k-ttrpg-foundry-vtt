@@ -5,7 +5,7 @@
     image=action.img
     imageAlt=action.name
     title=action.name
-    subtitle=(localize "WH40K.Starship.ExtendedAction.ChatSubtitle")
+    subtitle=(localize "WH40K.Voidcraft.ExtendedAction.ChatSubtitle")
     gameSystem=gameSystem
     footerLabel=actorName
 }}
@@ -14,12 +14,12 @@
             <div class="tw-text-[0.85em] tw-uppercase tw-tracking-wide tw-text-[#8b6914] tw-font-semibold">{{action.typeAndAction}}</div>
         {{/if}}
         {{#if action.requirements}}
-            <div class="tw-text-[0.85em]"><strong>{{localize "WH40K.Starship.ExtendedAction.Requirements"}}:</strong> {{action.requirements}}</div>
+            <div class="tw-text-[0.85em]"><strong>{{localize "WH40K.Voidcraft.ExtendedAction.Requirements"}}:</strong> {{action.requirements}}</div>
         {{/if}}
         <div class="tw-flex tw-flex-wrap tw-gap-3 tw-text-[0.8em] tw-opacity-90">
-            {{#if action.skill}}<span><strong>{{localize "WH40K.Starship.ExtendedAction.Skill"}}:</strong> {{action.skill}}</span>{{/if}}
-            {{#if action.modifier}}<span><strong>{{localize "WH40K.Starship.ExtendedAction.Modifier"}}:</strong> {{action.modifier}}</span>{{/if}}
-            {{#if action.duration}}<span><strong>{{localize "WH40K.Starship.ExtendedAction.Duration"}}:</strong> {{action.duration}}</span>{{/if}}
+            {{#if action.skill}}<span><strong>{{localize "WH40K.Voidcraft.ExtendedAction.Skill"}}:</strong> {{action.skill}}</span>{{/if}}
+            {{#if action.modifier}}<span><strong>{{localize "WH40K.Voidcraft.ExtendedAction.Modifier"}}:</strong> {{action.modifier}}</span>{{/if}}
+            {{#if action.duration}}<span><strong>{{localize "WH40K.Voidcraft.ExtendedAction.Duration"}}:</strong> {{action.duration}}</span>{{/if}}
         </div>
         {{#if action.description}}
             <div class="wh40k-extended-action-description tw-mt-1 tw-text-sm">{{{action.description}}}</div>

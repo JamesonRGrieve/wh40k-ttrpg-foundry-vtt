@@ -26,16 +26,16 @@ import {
     OnlyWarNPCSheet,
     DeathwatchNPCSheet,
     ImperiumMaledictumNPCSheet,
-    // Vehicle sheets (default for {system}-vehicle)
-    DarkHeresy1VehicleSheet,
-    DarkHeresy2VehicleSheet,
-    RogueTraderVehicleSheet,
-    BlackCrusadeVehicleSheet,
-    OnlyWarVehicleSheet,
-    DeathwatchVehicleSheet,
-    ImperiumMaledictumVehicleSheet,
-    // Starship sheet (default for rt-starship)
-    RogueTraderStarshipSheet,
+    // Craft sheets (default for {system}-terracraft/aircraft/watercraft)
+    DarkHeresy1CraftSheet,
+    DarkHeresy2CraftSheet,
+    RogueTraderCraftSheet,
+    BlackCrusadeCraftSheet,
+    OnlyWarCraftSheet,
+    DeathwatchCraftSheet,
+    ImperiumMaledictumCraftSheet,
+    // Voidcraft sheet (default for rt-voidcraft)
+    RogueTraderVoidcraftSheet,
 } from './applications/actor/game-system-sheets.ts';
 import LootActorSheet from './applications/actor/loot-sheet.ts';
 import * as characterCreation from './applications/character-creation/_module.ts';
@@ -62,6 +62,7 @@ import {
     MutationSheet,
     MentalDisorderSheet,
     StorageLocationSheet,
+    LocationSheet,
     PeerEnemySheet,
     JournalEntryItemSheet,
     EndeavourSheet,
@@ -446,31 +447,47 @@ export class HooksManager {
         CONFIG.Actor.dataModels = {
             'dh2-character': dataModels.DH2CharacterData,
             'dh2-npc': dataModels.DH2NPCData,
-            'dh2-vehicle': dataModels.DH2VehicleData,
+            'dh2-terracraft': dataModels.DH2TerracraftData,
+            'dh2-aircraft': dataModels.DH2AircraftData,
             'dh1-character': dataModels.DH1CharacterData,
             'dh1-npc': dataModels.DH1NPCData,
-            'dh1-vehicle': dataModels.DH1VehicleData,
+            'dh1-terracraft': dataModels.DH1TerracraftData,
             'rt-character': dataModels.RTCharacterData,
             'rt-npc': dataModels.RTNPCData,
-            'rt-vehicle': dataModels.RTVehicleData,
-            'rt-starship': dataModels.RTStarshipData,
+            'rt-terracraft': dataModels.RTTerracraftData,
+            'rt-aircraft': dataModels.RTAircraftData,
+            'rt-voidcraft': dataModels.RTVoidcraftData,
             'bc-character': dataModels.BCCharacterData,
             'bc-npc': dataModels.BCNPCData,
-            'bc-vehicle': dataModels.BCVehicleData,
+            'bc-terracraft': dataModels.BCTerracraftData,
             'ow-character': dataModels.OWCharacterData,
             'ow-npc': dataModels.OWNPCData,
-            'ow-vehicle': dataModels.OWVehicleData,
+            'ow-terracraft': dataModels.OWTerracraftData,
+            'ow-aircraft': dataModels.OWAircraftData,
             'dw-character': dataModels.DWCharacterData,
             'dw-npc': dataModels.DWNPCData,
-            'dw-vehicle': dataModels.DWVehicleData,
+            'dw-terracraft': dataModels.DWTerracraftData,
+            'dw-aircraft': dataModels.DWAircraftData,
             'im-character': dataModels.IMCharacterData,
             'im-npc': dataModels.IMNPCData,
-            'im-vehicle': dataModels.IMVehicleData,
-            // Legacy-type data-model fallbacks (same reasoning as above).
+            'im-terracraft': dataModels.IMTerracraftData,
+            // Legacy-type data-model fallbacks (same reasoning as documentClasses).
             'character': dataModels.DH2CharacterData,
             'npc': dataModels.DH2NPCData,
-            'vehicle': dataModels.DH2VehicleData,
-            'starship': dataModels.RTStarshipData,
+            'dh2-vehicle': dataModels.DH2TerracraftData,
+            'dh1-vehicle': dataModels.DH1TerracraftData,
+            'rt-vehicle': dataModels.RTTerracraftData,
+            'rt-starship': dataModels.RTVoidcraftData,
+            'bc-vehicle': dataModels.BCTerracraftData,
+            'ow-vehicle': dataModels.OWTerracraftData,
+            'dw-vehicle': dataModels.DWTerracraftData,
+            'im-vehicle': dataModels.IMTerracraftData,
+            'vehicle': dataModels.DH2TerracraftData,
+            'terracraft': dataModels.TerracraftData,
+            'aircraft': dataModels.AircraftData,
+            'watercraft': dataModels.WatercraftData,
+            'starship': dataModels.RTVoidcraftData,
+            'voidcraft': dataModels.VoidcraftData,
             // Content-agnostic loot pile — one homologated type for all lines.
             // No concrete document class: the actor proxy falls back to
             // WH40KBaseActor, which is all a pile of embedded items needs.
@@ -492,6 +509,7 @@ export class HooksManager {
             forceField: dataModels.ForceFieldData,
             backpack: dataModels.BackpackData,
             storageLocation: dataModels.StorageLocationData,
+            location: dataModels.LocationData,
             // Character Features
             talent: dataModels.TalentData,
             trait: dataModels.TraitData,
@@ -621,45 +639,47 @@ export class HooksManager {
             makeDefault: true,
             label: 'WH40K.Sheet.ImperiumMaledictumNPC',
         });
-        // --- Per-system default Vehicle sheets ---
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2VehicleSheet, {
-            types: ['dh2-vehicle'],
+        // --- Per-system default Craft sheets (terracraft / aircraft / watercraft) ---
+        // Each line's CraftSheet also covers its legacy `{line}-vehicle` type so
+        // pre-rename world actors keep rendering until the migration retypes them.
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2CraftSheet, {
+            types: ['dh2-terracraft', 'dh2-aircraft', 'dh2-vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy2Vehicle',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1VehicleSheet, {
-            types: ['dh1-vehicle'],
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1CraftSheet, {
+            types: ['dh1-terracraft', 'dh1-vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy1Vehicle',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderVehicleSheet, {
-            types: ['rt-vehicle'],
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderCraftSheet, {
+            types: ['rt-terracraft', 'rt-aircraft', 'rt-vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.RogueTraderVehicle',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeVehicleSheet, {
-            types: ['bc-vehicle'],
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeCraftSheet, {
+            types: ['bc-terracraft', 'bc-vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.BlackCrusadeVehicle',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarVehicleSheet, {
-            types: ['ow-vehicle'],
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarCraftSheet, {
+            types: ['ow-terracraft', 'ow-aircraft', 'ow-vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.OnlyWarVehicle',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchVehicleSheet, {
-            types: ['dw-vehicle'],
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchCraftSheet, {
+            types: ['dw-terracraft', 'dw-aircraft', 'dw-vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.DeathwatchVehicle',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, ImperiumMaledictumVehicleSheet, {
-            types: ['im-vehicle'],
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, ImperiumMaledictumCraftSheet, {
+            types: ['im-terracraft', 'im-vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.ImperiumMaledictumVehicle',
         });
-        // --- Starship (RT only for now) ---
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderStarshipSheet, {
-            types: ['rt-starship'],
+        // --- Voidcraft (RT only for now); also covers legacy `rt-starship` ---
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderVoidcraftSheet, {
+            types: ['rt-voidcraft', 'rt-starship'],
             makeDefault: true,
             label: 'WH40K.Sheet.RogueTraderStarship',
         });
@@ -791,6 +811,13 @@ export class HooksManager {
             types: ['storageLocation'],
             makeDefault: true,
             label: 'WH40K.Sheet.StorageLocation',
+        });
+
+        // Location sheet (structured place metadata)
+        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, LocationSheet, {
+            types: ['location'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.Location',
         });
 
         // Peer/Enemy sheet
@@ -976,12 +1003,12 @@ export class HooksManager {
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is DataModel-backed but primaryUse field access requires index signature; fix defineSchema() is tracked separately
         const primaryUse = (actor.system as Record<string, unknown>)['primaryUse'];
 
-        // Auto-select vehicle sheet for vehicle/ship NPCs
+        // Auto-select a craft sheet for vehicle/ship NPCs
         if (primaryUse === 'vehicle' || primaryUse === 'ship') {
-            // Find VehicleSheet in registered sheets
-            const vehicleSheet = Object.values(sheetData).find((s) => s.id === 'wh40k-rpg.VehicleSheet');
-            if (vehicleSheet) {
-                return vehicleSheet.id;
+            // Find the first registered craft/voidcraft sheet
+            const craftSheet = Object.values(sheetData).find((s) => /Craft|Voidcraft/.test(s.id));
+            if (craftSheet) {
+                return craftSheet.id;
             }
         }
 

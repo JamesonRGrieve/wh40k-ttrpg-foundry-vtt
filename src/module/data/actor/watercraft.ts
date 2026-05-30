@@ -1,4 +1,4 @@
-import { ConventionalCraftData } from './vehicle.ts';
+import { ConventionalCraftData, LOCOMOTION_CHOICES } from './vehicle.ts';
 
 /**
  * Data model for waterborne conventional vehicles (boats, hovercraft on water,
@@ -18,8 +18,8 @@ export default class WatercraftData extends ConventionalCraftData {
         const schema = super.defineSchema();
         schema['locomotion'] = new fields.StringField({
             required: true,
-            initial: 'water',
-            choices: ['terra', 'air', 'water', 'void'],
+            initial: 'hull',
+            choices: [...LOCOMOTION_CHOICES],
             label: 'WH40K.Vehicle.Locomotion',
         });
 

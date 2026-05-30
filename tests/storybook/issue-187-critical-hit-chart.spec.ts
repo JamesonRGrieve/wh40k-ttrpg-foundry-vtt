@@ -11,7 +11,7 @@
  * The runtime fix in `starship-sheet.ts::#rollShipCriticalHit` consults
  * the world `RollTable.getName("Critical Hit")`, then the
  * `rt-core-rolltables-ship-combat` compendium pack, then falls back to
- * a bare 1d5 with the `WH40K.Starship.Critical.TableUnavailable`
+ * a bare 1d5 with the `WH40K.Voidcraft.Critical.TableUnavailable`
  * message — so the player never sees Foundry's "no available results"
  * notification even when the compendium pack is absent. The Critical
  * Hit RollTable JSON itself ships in the `src/packs` submodule at

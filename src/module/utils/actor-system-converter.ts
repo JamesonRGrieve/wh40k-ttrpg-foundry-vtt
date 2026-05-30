@@ -60,7 +60,7 @@ type ActorSourceData = {
 };
 
 export type ConvertibleCharacterSystem = keyof typeof ACTOR_SYSTEM_LABELS;
-export type ConvertibleActorKind = 'character' | 'npc' | 'vehicle';
+export type ConvertibleActorKind = 'character' | 'npc' | 'terracraft' | 'aircraft' | 'watercraft';
 export type ConvertibleActorType = `${ConvertibleCharacterSystem}-${ConvertibleActorKind}`;
 
 const TARGET_GAME_SYSTEM_IDS: Record<ConvertibleCharacterSystem, string> = {
@@ -104,7 +104,7 @@ const ORIGIN_PATH_FIELDS_BY_SYSTEM: Record<ConvertibleCharacterSystem, ReadonlyS
 };
 
 export const CONVERTIBLE_CHARACTER_SYSTEMS = Object.freeze(Object.keys(ACTOR_SYSTEM_LABELS));
-export const CONVERTIBLE_ACTOR_KINDS = Object.freeze(['character', 'npc', 'vehicle'] as const);
+export const CONVERTIBLE_ACTOR_KINDS = Object.freeze(['character', 'npc', 'terracraft', 'aircraft', 'watercraft'] as const);
 
 export function isConvertibleActorKind(kind: string): kind is ConvertibleActorKind {
     return CONVERTIBLE_ACTOR_KINDS.includes(kind as ConvertibleActorKind);

@@ -8,9 +8,9 @@
       label, and benefit are read from src/module/rules/ship-manoeuvres.ts. --}}
 <section class="wh40k-voidcraft-manoeuvre-bar tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-border-t tw-border-gold rt:tw-border-gold dh2:tw-border-bronze">
     <header class="tw-flex tw-items-baseline tw-justify-between tw-gap-3">
-        <h2 class="wh40k-voidcraft-manoeuvre-bar__title tw-text-base tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gold rt:tw-text-gold dh2:tw-text-bronze">{{localize "WH40K.Starship.Manoeuvre.BarTitle"}}</h2>
+        <h2 class="wh40k-voidcraft-manoeuvre-bar__title tw-text-base tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gold rt:tw-text-gold dh2:tw-text-bronze">{{localize "WH40K.Voidcraft.Manoeuvre.BarTitle"}}</h2>
         {{#if helmsmanName}}
-            <span class="wh40k-voidcraft-manoeuvre-bar__helmsman tw-text-xs tw-text-[#6a5239] tw-italic">{{localize "WH40K.Starship.Manoeuvre.Helmsman"}}: {{helmsmanName}}</span>
+            <span class="wh40k-voidcraft-manoeuvre-bar__helmsman tw-text-xs tw-text-[#6a5239] tw-italic">{{localize "WH40K.Voidcraft.Manoeuvre.Helmsman"}}: {{helmsmanName}}</span>
         {{/if}}
     </header>
 
@@ -25,23 +25,23 @@
                     <span class="wh40k-voidcraft-manoeuvre-tile__benefit tw-text-[0.78em] tw-text-[#4a3728] tw-opacity-80">{{localize m.benefitKey}}</span>
                     <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-mt-1">
                         <span class="wh40k-voidcraft-manoeuvre-tile__target tw-text-[0.78em] tw-text-[#4a3728]">
-                            {{localize "WH40K.Starship.Manoeuvre.Target"}}: <strong>{{m.target}}</strong>
+                            {{localize "WH40K.Voidcraft.Manoeuvre.Target"}}: <strong>{{m.target}}</strong>
                             {{#if m.opposed}}
-                                <span class="wh40k-voidcraft-manoeuvre-tile__opposed tw-text-[0.7em] tw-uppercase tw-px-1 tw-py-0.5 tw-rounded-sm tw-border tw-border-[#5a3a2a] tw-bg-[#f4e9d8] tw-text-[#5a3a2a] tw-ml-1">{{localize "WH40K.Starship.Manoeuvre.Opposed"}}</span>
+                                <span class="wh40k-voidcraft-manoeuvre-tile__opposed tw-text-[0.7em] tw-uppercase tw-px-1 tw-py-0.5 tw-rounded-sm tw-border tw-border-[#5a3a2a] tw-bg-[#f4e9d8] tw-text-[#5a3a2a] tw-ml-1">{{localize "WH40K.Voidcraft.Manoeuvre.Opposed"}}</span>
                             {{/if}}
                         </span>
                         <button type="button"
                                 class="wh40k-voidcraft-manoeuvre-tile__roll tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[#2a4a6a] tw-bg-[#4a6b8a] tw-text-white tw-cursor-pointer"
                                 data-action="rollShipManoeuvre"
                                 data-manoeuvre-id="{{m.id}}"
-                                title="{{localize 'WH40K.Starship.Manoeuvre.RollTitle'}}">
-                            {{localize "WH40K.Starship.Manoeuvre.Roll"}}
+                                title="{{localize 'WH40K.Voidcraft.Manoeuvre.RollTitle'}}">
+                            {{localize "WH40K.Voidcraft.Manoeuvre.Roll"}}
                         </button>
                     </div>
                 </li>
             {{/each}}
         </ul>
     {{else}}
-        <p class="wh40k-voidcraft-manoeuvre-bar__empty tw-text-[0.85em] tw-italic tw-text-[#6a5239] tw-px-1 tw-py-2">{{localize "WH40K.Starship.Manoeuvre.Empty"}}</p>
+        <p class="wh40k-voidcraft-manoeuvre-bar__empty tw-text-[0.85em] tw-italic tw-text-[#6a5239] tw-px-1 tw-py-2">{{localize "WH40K.Voidcraft.Manoeuvre.Empty"}}</p>
     {{/if}}
 </section>

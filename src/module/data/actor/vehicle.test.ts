@@ -30,10 +30,12 @@ describe('VehicleData', () => {
         const mod = await import('./vehicle').catch(() => undefined);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
         if (mod === undefined) return;
-        const VehicleData = mod.default;
+        // Integrity/armour getters live on ConventionalCraftData, not the
+        // abstract VehicleData base.
+        const ConventionalCraftData = mod.ConventionalCraftData;
 
         // Simulate the instance shape without constructing via Foundry
-        const fakeInstance = Object.create(VehicleData.prototype) as {
+        const fakeInstance = Object.create(ConventionalCraftData.prototype) as {
             integrity: { max: number; value: number; critical: number };
             isDamaged: boolean;
             isCritical: boolean;
@@ -49,9 +51,9 @@ describe('VehicleData', () => {
         const mod = await import('./vehicle').catch(() => undefined);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
         if (mod === undefined) return;
-        const VehicleData = mod.default;
+        const ConventionalCraftData = mod.ConventionalCraftData;
 
-        const fakeInstance = Object.create(VehicleData.prototype) as {
+        const fakeInstance = Object.create(ConventionalCraftData.prototype) as {
             integrity: { max: number; value: number; critical: number };
             isDestroyed: boolean;
         };
@@ -63,9 +65,9 @@ describe('VehicleData', () => {
         const mod = await import('./vehicle').catch(() => undefined);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
         if (mod === undefined) return;
-        const VehicleData = mod.default;
+        const ConventionalCraftData = mod.ConventionalCraftData;
 
-        const fakeInstance = Object.create(VehicleData.prototype) as {
+        const fakeInstance = Object.create(ConventionalCraftData.prototype) as {
             armour: { front: { value: number }; side: { value: number }; rear: { value: number } };
             armourSummary: string;
         };

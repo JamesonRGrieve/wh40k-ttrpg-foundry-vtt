@@ -3,7 +3,7 @@
  *
  * Replaces Foundry's default actor-create flow with:
  *   1. System select (DH2 / DH1 / RT / BC / OW / DW / IM)
- *   2. Kind select — options filtered by system (e.g. hides Starship when
+ *   2. Kind select — options filtered by system (e.g. hides Voidcraft when
  *      system !== RT)
  *   3. Name input
  *
@@ -12,13 +12,13 @@
  */
 
 export const ACTOR_SYSTEM_AVAILABILITY: Record<string, string[]> = {
-    dh2: ['character', 'npc', 'vehicle'],
-    dh1: ['character', 'npc', 'vehicle'],
-    rt: ['character', 'npc', 'vehicle', 'starship'],
-    bc: ['character', 'npc', 'vehicle'],
-    ow: ['character', 'npc', 'vehicle'],
-    dw: ['character', 'npc', 'vehicle'],
-    im: ['character', 'npc', 'vehicle'],
+    dh2: ['character', 'npc', 'terracraft', 'aircraft'],
+    dh1: ['character', 'npc', 'terracraft'],
+    rt: ['character', 'npc', 'terracraft', 'aircraft', 'voidcraft'],
+    bc: ['character', 'npc', 'terracraft'],
+    ow: ['character', 'npc', 'terracraft', 'aircraft'],
+    dw: ['character', 'npc', 'terracraft', 'aircraft'],
+    im: ['character', 'npc', 'terracraft'],
 };
 
 export const ACTOR_SYSTEM_LABELS: Record<string, string> = {
@@ -34,8 +34,10 @@ export const ACTOR_SYSTEM_LABELS: Record<string, string> = {
 export const ACTOR_KIND_LABELS: Record<string, string> = {
     character: 'Player Character',
     npc: 'NPC',
-    vehicle: 'Vehicle',
-    starship: 'Starship',
+    terracraft: 'Land Vehicle',
+    aircraft: 'Aircraft',
+    watercraft: 'Watercraft',
+    voidcraft: 'Voidcraft',
 };
 
 export interface CreateActorOptions {
