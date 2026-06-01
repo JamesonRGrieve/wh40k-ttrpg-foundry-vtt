@@ -27,8 +27,19 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     }
 
     getOriginStepConfig(): OriginStepConfig {
-        // DH1e origin path not yet defined — placeholder
-        return { coreSteps: [], optionalStep: null, packs: [] };
+        // DH1e core character creation is Home World → Career Path. Divination is
+        // rolled on the Tarot RollTable (handled separately, not a card step) and
+        // "Rank"/role is derived within the chosen career — neither is a builder
+        // step. Inquisitor's Handbook home worlds extend the same Home World step.
+        // Ascension careers (a post-campaign tier) are intentionally excluded.
+        return {
+            coreSteps: [
+                { key: 'homeWorld', step: 'homeWorld', icon: 'fa-globe', descKey: 'HomeWorldDesc', stepIndex: 1 },
+                { key: 'career', step: 'career', icon: 'fa-user-tie', descKey: 'CareerDesc', stepIndex: 2 },
+            ],
+            optionalStep: null,
+            packs: ['dh1-core-origins-homeworlds', 'dh1-inquisitor-origins-homeworlds', 'dh1-core-origins-careers'],
+        };
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: matches abstract CareerBasedSystemConfig.getCareerRegistry() return type
