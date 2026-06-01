@@ -24,7 +24,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
                 { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
             ],
             optionalStep: null,
-            packs: ['dw-core-chapters', 'dw-core-specialities', 'dw-founding-chapters', 'dw-rites-chapters'],
+            packs: ['dw-core-origins-chapters', 'dw-core-origins-specialities', 'dw-founding-origins-chapters', 'dw-rites-origins-chapters'],
         };
     }
 

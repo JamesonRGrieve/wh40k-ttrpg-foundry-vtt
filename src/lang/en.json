@@ -2365,7 +2365,7 @@
             "LureDesc": "What called you to the stars and a life among them",
             "TrialsDesc": "A defining event that shaped who you became",
             "MotivationDesc": "The core drive that pushes you forward",
-            "CareerDesc": "Your trained profession and role aboard the ship",
+            "CareerDesc": "Your trained profession and role",
             "DirectionForward": "Home World → Career",
             "DirectionBackward": "Career → Home World",
             "DirectionChange": "Change Direction",

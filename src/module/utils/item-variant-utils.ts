@@ -1,7 +1,7 @@
 import type { WH40KItem } from '../documents/item.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
-type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow';
+type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow' | 'im';
 
 const LINE_KEY_MAP: Record<string, SupportedLineKey> = {
     dh1: 'dh1',
@@ -10,9 +10,10 @@ const LINE_KEY_MAP: Record<string, SupportedLineKey> = {
     dw: 'dw',
     bc: 'bc',
     ow: 'ow',
+    im: 'im',
 };
 
-const LINE_KEYS = new Set<SupportedLineKey>(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow']);
+const LINE_KEYS = new Set<SupportedLineKey>(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow', 'im']);
 const SHARED_LINE_OBJECT_KEYS = new Set(['cost']);
 
 // eslint-disable-next-line @typescript-eslint/no-shadow -- intentional local shim for Foundry's deepClone; safe in this module
@@ -62,7 +63,7 @@ export function isLineVariantContainer(value: unknown): value is Partial<Record<
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: returns unknown variant data from untyped item system
 function firstDefinedVariant(value: Partial<Record<SupportedLineKey, unknown>>): unknown {
-    for (const key of ['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow'] as const) {
+    for (const key of ['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow', 'im'] as const) {
         if (value[key] !== undefined && value[key] !== null) return value[key];
     }
     return undefined;

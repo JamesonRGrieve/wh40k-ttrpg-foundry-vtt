@@ -232,7 +232,7 @@ function resolvePositions(system: Record<string, unknown>): number[] {
  * Transform a raw Foundry compendium document into a NormalizedOrigin.
  * Call once per document during _loadOrigins().
  */
-const SUPPORTED_LINES = new Set(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow']);
+const SUPPORTED_LINES = new Set(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow', 'im']);
 
 /**
  * Lines whose `source.<line>.provenance` is `raw` (official). System-agnostic

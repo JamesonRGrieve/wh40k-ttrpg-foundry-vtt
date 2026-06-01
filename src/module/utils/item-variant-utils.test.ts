@@ -58,9 +58,9 @@ describe('inferActiveGameLine', () => {
         expect(inferActiveGameLine()).toBe('bc');
     });
 
-    it('returns rt when the world primary is not a variant line (e.g. im)', () => {
+    it('resolves im from the world primary now that it is a recognised variant line', () => {
         vi.stubGlobal('game', { settings: { get: (): string => 'im' } });
-        expect(inferActiveGameLine()).toBe('rt');
+        expect(inferActiveGameLine()).toBe('im');
     });
 });
 
@@ -71,9 +71,9 @@ describe('isLineVariantContainer / normalizeGameLineKey', () => {
         expect(isLineVariantContainer({ __books: {} })).toBe(false);
     });
 
-    it('normalizes supported line keys and rejects others', () => {
+    it('normalizes supported line keys (including im) and rejects others', () => {
         expect(normalizeGameLineKey('dh2')).toBe('dh2');
-        expect(normalizeGameLineKey('im')).toBeNull();
+        expect(normalizeGameLineKey('im')).toBe('im');
         expect(normalizeGameLineKey('nope')).toBeNull();
     });
 });

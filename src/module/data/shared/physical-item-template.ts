@@ -376,6 +376,9 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     get price(): { value: number | null; denomination: string } {
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.parent is the untyped Foundry document; inferActiveGameLine reads its actor's line
         const line = inferActiveGameLine(this.parent as { actor?: unknown } | null | undefined);
+        // IM's cost branch is `solars` — it has no throne-gelt valuation to mirror,
+        // so there is no gelt baseline price for an Imperium Maledictum line.
+        if (line === 'im') return { value: null, denomination: 'throne' };
         const gelt = line === 'dh1' ? this.cost.dh1.throneGelt : this.cost[line].homebrew.throneGelt;
         return { value: WH40KSettings.isHomebrew() ? gelt : null, denomination: 'throne' };
     }

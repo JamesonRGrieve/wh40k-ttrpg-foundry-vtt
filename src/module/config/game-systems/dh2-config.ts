@@ -31,18 +31,18 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
             optionalStep: { key: 'elite', step: 'elite', icon: 'fa-star', descKey: 'EliteDesc', stepIndex: 4 },
             equipmentStep: { key: 'equipment', step: 'equipment', icon: 'fa-box', descKey: 'EquipmentDesc', stepIndex: 6 },
             packs: [
-                'dh2-core-stats-homeworlds',
-                'dh2-core-stats-backgrounds',
-                'dh2-core-stats-roles',
-                'dh2-core-stats-elite-advances',
-                'dh2-beyond-stats-homeworlds',
-                'dh2-beyond-stats-backgrounds',
-                'dh2-beyond-stats-roles',
-                'dh2-within-stats-backgrounds',
-                'dh2-within-stats-roles',
-                'dh2-without-stats-homeworlds',
-                'dh2-without-stats-backgrounds',
-                'dh2-without-stats-roles',
+                'dh2-core-origins-homeworlds',
+                'dh2-core-origins-backgrounds',
+                'dh2-core-origins-roles',
+                'dh2-core-origins-elite-advances',
+                'dh2-beyond-origins-homeworlds',
+                'dh2-beyond-origins-backgrounds',
+                'dh2-beyond-origins-roles',
+                'dh2-within-origins-backgrounds',
+                'dh2-within-origins-roles',
+                'dh2-without-origins-homeworlds',
+                'dh2-without-origins-backgrounds',
+                'dh2-without-origins-roles',
             ],
             equipmentPacks: [
                 'dh2-core-items-weapons',
@@ -58,7 +58,6 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
                 'dh2-beyond-items-armor-mods',
                 'dh2-beyond-items-ammo',
                 'dh2-beyond-items-tools',
-                'dh2-beyond-items-daemonic-remnants',
                 'dh2-beyond-items-weapon-mods',
                 'dh2-within-items-weapons',
                 'dh2-within-items-armour',
@@ -82,7 +81,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * DH2e: psyker unlock is the "Psyker" elite advance (step='elite').
-     * Compendium item: dh2-core-stats-elite-advances/psyker.
+     * Compendium item: dh2-core-origins-elite-advances/psyker.
      */
     override isPsyker(actor: WH40KBaseActor): boolean {
         return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === 'elite' && i.name.toLowerCase() === 'psyker');
