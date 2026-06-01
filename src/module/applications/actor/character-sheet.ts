@@ -5010,6 +5010,12 @@ export default class CharacterSheet extends BaseActorSheet {
         // TS/ESLint control-flow can't see (a plain `let` would narrow to false).
         const promptState = { dismiss: false };
         const choice = await dialogV2.wait({
+            // Modal so the dialog renders in the browser top layer (showModal) and
+            // can't be covered by the character sheet it was opened from. Narrow +
+            // taller so the long prompt message wraps comfortably instead of
+            // stretching the auto-width dialog across the screen.
+            modal: true,
+            position: { width: 300, height: 320 },
             window: { title: game.i18n.localize('WH40K.OriginPath.IncompletePrompt.Title') },
             content,
             buttons: [
