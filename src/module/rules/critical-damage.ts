@@ -125,7 +125,7 @@ export function classifyCriticalEffect(effectText: string | null | undefined): C
     });
 }
 
-const CRITICAL_INJURY_PACK = 'wh40k-rpg.dh2-core-stats-critical-injuries';
+const CRITICAL_INJURY_PACK = 'wh40k-rpg.dh2-core-items-critical-injuries';
 
 type ConsolidatedEffect = { text?: string | null; permanent?: boolean };
 type ConsolidatedCriticalInjuryItem = {

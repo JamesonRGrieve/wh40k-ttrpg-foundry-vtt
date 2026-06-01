@@ -31,7 +31,7 @@ export type RightStuffSkill = (typeof RIGHT_STUFF.applicableSkills)[number];
 /**
  * Case-insensitive substrings on the actor's `originPath.role` string
  * that identify the Ace role. Matching by name keeps detection content-
- * agnostic: the compendium role item (dh2-without-stats-roles/ace_*.json)
+ * agnostic: the compendium role item (dh2-without-origins-roles/ace_*.json)
  * is the source of truth; this only narrows the actor's resolved role
  * to the Without "Ace" entry at runtime. No hardcoded UUIDs (Direction
  * #7).

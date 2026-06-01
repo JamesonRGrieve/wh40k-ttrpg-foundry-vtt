@@ -1102,7 +1102,7 @@ export class GrantsProcessor {
     /**
      * Find an item by name across all Item compendium packs.
      * Talents/traits/gear are spread across system-specific packs
-     * (dh2-core-stats-talents, rt-core-items-traits, etc.).
+     * (dh2-core-items-talents, rt-core-items-traits, etc.).
      * @private
      */
     static async _findInAllPacks(itemName: string): Promise<WH40KItem | null> {
