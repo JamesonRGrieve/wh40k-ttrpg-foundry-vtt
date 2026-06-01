@@ -1,24 +1,22 @@
 import { SYSTEM_ID } from './constants.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
-// Baseline release. Version 0.0.1 shipped with migration worldVersion = 1.
-// Historical (pre-0.0.1) migration steps were inherited from the upstream fork
-// and ran on worldVersion gates up to `< 188`; they are retained, commented
-// out, at the bottom of this file purely as reference. The first real migration
-// past that lineage is the v189 actor gameSystem normalization below.
+// Pre-release baseline: WORLD_VERSION is reset to 1, with NO active migration
+// steps. The previous steps — the v189 actor `gameSystem` normalization
+// (commented out in `migrateActorData` below) and the inherited pre-0.0.1
+// historical steps (the block at the bottom of this file) — are kept, commented
+// out, for reference only.
 //
-// Versioning scheme: each new migration step bumps WORLD_VERSION and gates its
-// work on `if (currentVersion < N)` where N is the new WORLD_VERSION. A world
-// last migrated at version V runs every step whose gate `currentVersion < N`
-// holds (i.e. all steps with N > V), then the new WORLD_VERSION is persisted —
-// so each step runs exactly once for an existing world and never re-runs.
-const WORLD_VERSION = 189;
+// To author the next migration: add an `if (version < N)` step in
+// `migrateActorData` and bump WORLD_VERSION to N. Each step is gated on
+// `currentVersion < N`, runs exactly once per world, then WORLD_VERSION is
+// persisted so it never re-runs.
+const WORLD_VERSION = 1;
 
 /**
- * Minimal shape of a world Actor for migration purposes. Mirrors the
- * `ActorLike` pattern in compendium-resync.ts: only the surface the migration
- * touches is modelled, so structural typing covers real Foundry Actors without
- * dragging in the full Document type.
+ * Minimal shape of a world Actor for migration purposes — only the surface a
+ * migration step touches is modelled, so structural typing covers real Foundry
+ * Actors without the full Document type.
  */
 interface MigratableActor {
     type: string;
@@ -46,29 +44,26 @@ export async function checkAndMigrateWorld(): Promise<void> {
 }
 
 /**
- * Per-actor migration steps. Each step is gated on the world's last-migrated
- * `version` so it runs exactly once. Mirrors the historical `migrateActorData`
- * gating convention preserved in the reference block below.
+ * Per-actor migration steps, gated on the world's last-migrated `version`.
+ * There are NO active steps at the v1 pre-release baseline. The previous step
+ * is preserved here for reference:
  *
- * @param actor   The world actor to migrate.
- * @param version The world's last-migrated version (`currentVersion`).
+ *   // v189 — normalize DH1/DH2 actor gameSystem (dh2-* → 'dh2', dh1-* → 'dh1')
+ *   if (version < 189) {
+ *       const canonical = actor.type.startsWith('dh2-') ? 'dh2' : actor.type.startsWith('dh1-') ? 'dh1' : null;
+ *       if (canonical !== null && actor.system?.gameSystem !== canonical) {
+ *           await actor.update({ 'system.gameSystem': canonical });
+ *       }
+ *   }
+ *
+ * @param _actor   The world actor to migrate (unused — no active steps at v1).
+ * @param _version The world's last-migrated version (unused — no active steps).
  */
-async function migrateActorData(actor: MigratableActor, version: number): Promise<void> {
-    // Normalize actor gameSystem so DH1/DH2 actors resolve to their system
-    // config instead of falling through to the Rogue-Trader default (v189).
-    //
-    // The canonical gameSystem key for an actor is derived from its type
-    // prefix: `dh2-*` → 'dh2', `dh1-*` → 'dh1' (matching every concrete
-    // DataModel's `static gameSystem` and the `GameSystemId` union). Writing
-    // the canonical value both fixes actors that were saved as 'rt' / a stale
-    // value AND no-ops actors already on the correct key. Non-dh1/dh2 actor
-    // types are left untouched (homologation-safe).
-    if (version < 189) {
-        const canonical = actor.type.startsWith('dh2-') ? 'dh2' : actor.type.startsWith('dh1-') ? 'dh1' : null;
-        if (canonical !== null && actor.system?.gameSystem !== canonical) {
-            await actor.update({ 'system.gameSystem': canonical });
-        }
-    }
+async function migrateActorData(_actor: MigratableActor, _version: number): Promise<void> {
+    // No active migration steps at the v1 pre-release baseline (the previous
+    // v189 step is preserved in the doc comment above). The trivial await keeps
+    // this a valid async entry point for future `if (version < N)` steps.
+    await Promise.resolve();
 }
 
 /* ---------------------------------------------------------------------------
