@@ -3,6 +3,10 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow' | 'im';
 
+/** A document's untyped Foundry `system` payload (variant resolution boundary). */
+// eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry item system data
+type ItemSystemSource = Record<string, unknown>;
+
 const LINE_KEY_MAP: Record<string, SupportedLineKey> = {
     dh1: 'dh1',
     dh2: 'dh2',
@@ -70,6 +74,41 @@ function firstDefinedVariant(value: Partial<Record<SupportedLineKey, unknown>>):
 }
 
 /**
+ * When the active line has no branch in a variant container, the correct
+ * fallback is the line whose `system.source.<line>.provenance` is `raw` — the
+ * authoritative printing the others adapt from — NOT an arbitrary id-order
+ * pick. This keeps a homebrew conversion (e.g. a `dh2` homebrew branch) from
+ * leaking onto sibling lines that merely reference the canonical: those lines
+ * fall back to the RAW line's stats, while the active line that owns a branch
+ * still gets its own. `rawLines` is derived from the document's source map
+ * (see `rawProvenanceLines`); an empty list reverts to `firstDefinedVariant`.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: returns untyped variant payload from item system data
+function firstRawVariant(value: Partial<Record<SupportedLineKey, unknown>>, rawLines: readonly SupportedLineKey[]): unknown {
+    for (const line of rawLines) {
+        if (value[line] !== undefined && value[line] !== null) return value[line];
+    }
+    return undefined;
+}
+
+/**
+ * The line ids whose `provenance` is `raw` in a document's `system.source`
+ * map, in canonical id order. Used as the variant-resolution fallback so that
+ * unauthored lines inherit the official printing rather than a homebrew
+ * conversion branch.
+ */
+export function rawProvenanceLines(systemSource: ItemSystemSource): SupportedLineKey[] {
+    const sourceMap = systemSource['source'];
+    if (!isPlainObject(sourceMap)) return [];
+    const lines: SupportedLineKey[] = [];
+    for (const line of LINE_KEYS) {
+        const entry = sourceMap[line];
+        if (isPlainObject(entry) && entry['provenance'] === 'raw') lines.push(line);
+    }
+    return lines;
+}
+
+/**
  * Book-variant container: holds the same item attribute as published by
  * multiple books of the SAME line (FFG re-printed items with divergent stats),
  * keyed by book slug under `__books`, with `__canonical` naming the primary
@@ -92,33 +131,43 @@ function resolveBookVariant(value: { __books: Record<string, unknown>; __canonic
     return undefined;
 }
 
-export function resolveLineVariant<T>(value: T, lineKey: SupportedLineKey): T {
+export function resolveLineVariant<T>(value: T, lineKey: SupportedLineKey, rawLines: readonly SupportedLineKey[] = []): T {
     // eslint-disable-next-line no-restricted-syntax -- boundary: branch holds untyped variant payload (line then book) resolved from item system data
     let branch: unknown = value;
-    if (isLineVariantContainer(value)) branch = value[lineKey] ?? firstDefinedVariant(value);
+    if (isLineVariantContainer(value)) branch = value[lineKey] ?? firstRawVariant(value, rawLines) ?? firstDefinedVariant(value);
     if (isBookVariantContainer(branch)) branch = resolveBookVariant(branch);
     return branch === undefined || branch === value ? value : (deepClone(branch) as T);
 }
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped Foundry item system data
-export function materializeItemVariants(source: Record<string, unknown>, lineKey: SupportedLineKey, path: string[] = []): Record<string, unknown> {
+export function materializeItemVariants(
+    source: ItemSystemSource,
+    lineKey: SupportedLineKey,
+    path: string[] = [],
+    rawLines?: readonly SupportedLineKey[],
+): ItemSystemSource {
     if (!isPlainObject(source)) return source;
+
+    // Derive the raw-provenance fallback lines once, from the top-level system
+    // source map, before the `source` field is itself collapsed below. Threaded
+    // into every nested resolution so unauthored lines inherit the official
+    // printing rather than a homebrew conversion branch.
+    const fallbackLines = rawLines ?? (path.length === 0 ? rawProvenanceLines(source) : []);
 
     for (const [key, rawValue] of Object.entries(source)) {
         const nextPath = [...path, key];
         if (SHARED_LINE_OBJECT_KEYS.has(key)) {
-            if (isPlainObject(rawValue)) materializeItemVariants(rawValue, lineKey, nextPath);
+            if (isPlainObject(rawValue)) materializeItemVariants(rawValue, lineKey, nextPath, fallbackLines);
             continue;
         }
 
         if (isLineVariantContainer(rawValue) || isBookVariantContainer(rawValue)) {
-            const resolved = resolveLineVariant(rawValue, lineKey);
-            source[key] = isPlainObject(resolved) ? materializeItemVariants(resolved, lineKey, nextPath) : resolved;
+            const resolved = resolveLineVariant(rawValue, lineKey, fallbackLines);
+            source[key] = isPlainObject(resolved) ? materializeItemVariants(resolved, lineKey, nextPath, fallbackLines) : resolved;
             continue;
         }
 
         if (isPlainObject(rawValue)) {
-            materializeItemVariants(rawValue, lineKey, nextPath);
+            materializeItemVariants(rawValue, lineKey, nextPath, fallbackLines);
         }
     }
 

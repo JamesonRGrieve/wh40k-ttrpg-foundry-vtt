@@ -98,7 +98,7 @@ const FIXTURE: FixtureItem[] = [
 function stubGameWithFixture(docs: FixtureItem[]): void {
     vi.stubGlobal('game', {
         packs: {
-            get: (id: string) => (id === 'wh40k-rpg.dh2-core-stats-critical-injuries' ? { getDocuments: async () => Promise.resolve(docs) } : undefined),
+            get: (id: string) => (id === 'wh40k-rpg.dh2-core-items-critical-injuries' ? { getDocuments: async () => Promise.resolve(docs) } : undefined),
         },
     });
 }

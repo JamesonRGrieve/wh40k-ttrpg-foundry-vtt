@@ -1,5 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { inferActiveGameLine, isLineVariantContainer, materializeItemVariants, normalizeGameLineKey, resolveLineVariant } from './item-variant-utils.ts';
+import {
+    inferActiveGameLine,
+    isLineVariantContainer,
+    materializeItemVariants,
+    normalizeGameLineKey,
+    rawProvenanceLines,
+    resolveLineVariant,
+} from './item-variant-utils.ts';
 
 describe('resolveLineVariant', () => {
     it('returns plain values unchanged', () => {
@@ -27,6 +34,49 @@ describe('resolveLineVariant', () => {
     it('resolves a book-variant nested inside the active line branch', () => {
         const value = { dh2: { __canonical: 'ew', __books: { core: 'x', ew: 'y' } }, dh1: 'z' };
         expect(resolveLineVariant(value, 'dh2')).toBe('y');
+    });
+
+    it('falls back to the raw-provenance line, not id order, when the active line is absent', () => {
+        // ow is the raw line; dh2 is a homebrew conversion branch. An unauthored
+        // line (rt) must inherit the RAW (ow) stats, never the dh2 homebrew branch.
+        const grants = { ow: 'official', dh2: 'homebrew-conversion' };
+        expect(resolveLineVariant(grants, 'rt', ['ow'])).toBe('official');
+        // The active line that owns a branch still gets its own.
+        expect(resolveLineVariant(grants, 'dh2', ['ow'])).toBe('homebrew-conversion');
+        // Without a raw-line hint, behaviour reverts to first-defined (id order).
+        expect(resolveLineVariant(grants, 'rt')).toBe('homebrew-conversion');
+    });
+});
+
+describe('rawProvenanceLines', () => {
+    it('lists only lines whose source provenance is raw, in id order', () => {
+        const system = {
+            source: {
+                ow: { provenance: 'raw' },
+                rt: { provenance: 'raw' },
+                dh2: { provenance: 'homebrew' },
+            },
+        };
+        expect(rawProvenanceLines(system)).toEqual(['rt', 'ow']);
+    });
+
+    it('returns an empty list when there is no source map', () => {
+        expect(rawProvenanceLines({})).toEqual([]);
+    });
+});
+
+describe('materializeItemVariants — raw-provenance fallback', () => {
+    it('collapses a homebrew dh2 conversion without leaking it onto sibling lines', () => {
+        const make = (): { source: Record<string, { provenance: string }>; grants: Record<string, string> } => ({
+            source: { ow: { provenance: 'raw' }, dh2: { provenance: 'homebrew' } },
+            grants: { ow: 'OW-STATS', dh2: 'DH2-HOMEBREW' },
+        });
+        // dh2 actor → its own homebrew branch.
+        expect(materializeItemVariants(make(), 'dh2')['grants']).toBe('DH2-HOMEBREW');
+        // ow actor → the raw branch.
+        expect(materializeItemVariants(make(), 'ow')['grants']).toBe('OW-STATS');
+        // rt actor (references the doc, no branch) → inherits the RAW (ow) stats.
+        expect(materializeItemVariants(make(), 'rt')['grants']).toBe('OW-STATS');
     });
 });
 
