@@ -1,17 +1,14 @@
 /**
  * Unit tests for the world-migration runner in wh40k-rpg-migrations.ts.
  *
- * Focus: the v189 actor `gameSystem` normalization step. The migration runs
- * once when the persisted world-version differs from WORLD_VERSION (and the
- * current user is GM), iterates world actors, and rewrites `system.gameSystem`
- * to the canonical key derived from the actor `type` prefix:
- *   - `dh2-*` → 'dh2'
- *   - `dh1-*` → 'dh1'
- * Other actor types are left untouched, and an already-canonical value is a
- * no-op (no `actor.update` call).
+ * Pre-release baseline: WORLD_VERSION is 1 with NO active migration steps. The
+ * runner is still functional (it bumps a world whose stored version differs
+ * from 1 and persists the new version), but `migrateActorData` is a no-op, so
+ * no actor data is modified — including the previously-active v189 `gameSystem`
+ * normalization, which is now commented out for reference.
  *
- * `game` is stubbed at the global boundary; the migration function reaches only
- * the surface modelled here, so no full Foundry runtime is needed.
+ * `game` is stubbed at the global boundary; the runner reaches only the surface
+ * modelled here, so no full Foundry runtime is needed.
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -23,14 +20,9 @@ interface ActorStub {
     update: ReturnType<typeof vi.fn>;
 }
 
-interface SettingsStub {
-    get: (system: string, key: string) => number;
-    set: ReturnType<typeof vi.fn>;
-}
-
 interface GameStub {
     user: { isGM: boolean };
-    settings: SettingsStub;
+    settings: { get: () => number; set: ReturnType<typeof vi.fn> };
     actors: { contents: ActorStub[] };
 }
 
@@ -50,11 +42,7 @@ function installGame(opts: { isGM: boolean; storedVersion: number; actors: Actor
     const set = vi.fn().mockResolvedValue(undefined);
     G.game = {
         user: { isGM: opts.isGM },
-        settings: {
-            // worldVersion is the only setting read by the migration runner
-            get: (_system: string, _key: string): number => opts.storedVersion,
-            set,
-        },
+        settings: { get: (): number => opts.storedVersion, set },
         actors: { contents: opts.actors },
     };
     return { set };
@@ -65,76 +53,27 @@ afterEach(() => {
     vi.restoreAllMocks();
 });
 
-describe('checkAndMigrateWorld — v189 gameSystem normalization', () => {
-    it('rewrites a dh2- actor with a stale gameSystem to dh2', async () => {
-        const actor = makeActor('dh2-character', 'rt');
-        installGame({ isGM: true, storedVersion: 188, actors: [actor] });
-
-        await checkAndMigrateWorld();
-
-        expect(actor.update).toHaveBeenCalledTimes(1);
-        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2' });
-    });
-
-    it('rewrites a dh1- actor with a stale gameSystem to dh1', async () => {
-        const actor = makeActor('dh1-npc', 'dh2');
-        installGame({ isGM: true, storedVersion: 188, actors: [actor] });
-
-        await checkAndMigrateWorld();
-
-        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh1' });
-    });
-
-    it('no-ops a dh2- actor already on the canonical key', async () => {
-        const actor = makeActor('dh2-vehicle', 'dh2');
-        installGame({ isGM: true, storedVersion: 188, actors: [actor] });
-
-        await checkAndMigrateWorld();
-
-        expect(actor.update).not.toHaveBeenCalled();
-    });
-
-    it('leaves non-dh1/dh2 actors untouched (homologation-safe)', async () => {
-        const rt = makeActor('rt-character', 'rt');
-        const im = makeActor('im-character', 'im');
-        const ow = makeActor('ow-npc', 'dh2'); // even a wrong value is left alone for non-dh1/dh2 types
-        installGame({ isGM: true, storedVersion: 188, actors: [rt, im, ow] });
-
-        await checkAndMigrateWorld();
-
-        expect(rt.update).not.toHaveBeenCalled();
-        expect(im.update).not.toHaveBeenCalled();
-        expect(ow.update).not.toHaveBeenCalled();
-    });
-
-    it('normalizes a dh2- actor with no gameSystem field set', async () => {
-        const actor = makeActor('dh2-character');
-        installGame({ isGM: true, storedVersion: 188, actors: [actor] });
-
-        await checkAndMigrateWorld();
-
-        expect(actor.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2' });
-    });
-
-    it('persists the new world version after migrating', async () => {
+describe('checkAndMigrateWorld — v1 pre-release baseline (no active steps)', () => {
+    it('bumps a pre-baseline world to version 1 (GM) without modifying actors', async () => {
+        // Stale gameSystem must NOT be touched — the v189 step is commented out.
         const actor = makeActor('dh2-character', 'rt');
         const { set } = installGame({ isGM: true, storedVersion: 188, actors: [actor] });
 
         await checkAndMigrateWorld();
 
-        // Final argument is the bumped WORLD_VERSION (189)
         expect(set).toHaveBeenCalledTimes(1);
-        expect(set.mock.calls[0]?.[2]).toBe(189);
+        expect(set.mock.calls[0]?.[2]).toBe(1);
+        expect(actor.update).not.toHaveBeenCalled();
     });
 
-    it('does not run when already at the current world version', async () => {
+    it('does nothing when already at version 1', async () => {
         const actor = makeActor('dh2-character', 'rt');
-        const { set } = installGame({ isGM: true, storedVersion: 189, actors: [actor] });
+        const { set } = installGame({ isGM: true, storedVersion: 1, actors: [actor] });
 
         await checkAndMigrateWorld();
 
-        expect(actor.update).not.toHaveBeenCalled();
         expect(set).not.toHaveBeenCalled();
+        expect(actor.update).not.toHaveBeenCalled();
     });
 
     it('does not run for a non-GM user', async () => {
@@ -143,21 +82,7 @@ describe('checkAndMigrateWorld — v189 gameSystem normalization', () => {
 
         await checkAndMigrateWorld();
 
-        expect(actor.update).not.toHaveBeenCalled();
         expect(set).not.toHaveBeenCalled();
-    });
-
-    it('continues migrating remaining actors when one actor.update throws', async () => {
-        const consoleErr = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-        const bad = makeActor('dh2-character', 'rt');
-        bad.update.mockRejectedValueOnce(new Error('boom'));
-        const good = makeActor('dh1-character', 'rt');
-        installGame({ isGM: true, storedVersion: 188, actors: [bad, good] });
-
-        await checkAndMigrateWorld();
-
-        expect(bad.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh2' });
-        expect(good.update).toHaveBeenCalledWith({ 'system.gameSystem': 'dh1' });
-        expect(consoleErr).toHaveBeenCalled();
+        expect(actor.update).not.toHaveBeenCalled();
     });
 });

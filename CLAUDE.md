@@ -388,7 +388,13 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 20. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
 21. Pack validation if `gulpfile.js` or `src/packs/` changed.
 22. `vitest run` — full Vitest suite must pass.
-23. Storybook Playwright integration tests.
+
+The Storybook Playwright visual suite (storybook build + ~700 screenshot tests)
+is **not** in the pre-commit hook — it is the browser-based, multi-minute long
+pole and does not worker-scale on a shared box, so it ran serially alongside the
+parallel ratchet fanout and dominated wall-clock. Run it **on command** with
+`pnpm test:storybook:integration` (it also runs in the licensed CI lane). Keep it
+green before pushing UI/template/CSS/story changes.
 
 Hooks run for 30–60s on large commits. Wait for them; do not interrupt or `--no-verify` past failures. If a hook fails, investigate and fix; do not silence.
 

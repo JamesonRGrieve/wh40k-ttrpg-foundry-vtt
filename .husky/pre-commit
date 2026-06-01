@@ -86,8 +86,13 @@ wait_all
 # ---------------------------------------------------------------------------
 echo "[pre-commit] phase 3: ratchets + tests (parallel)"
 
-# Start the slowest first so they overlap with the cheap ones.
-run_bg "storybook-pw"   sh ./scripts/run-storybook-playwright-tests.sh
+# Vitest is the slowest remaining job — start it first so it overlaps the rest.
+#
+# The Storybook Playwright visual suite (storybook build + ~700 screenshot
+# tests) is intentionally NOT run here: it's the browser-based, multi-minute
+# long pole and does not worker-scale on a shared box. Run it on command:
+#   pnpm test:storybook:integration
+# (also runs in the licensed CI lane). Keep it green before pushing UI changes.
 run_bg "vitest"         ./node_modules/.bin/vitest run
 
 # tsc passes — heaviest, several GB each.
