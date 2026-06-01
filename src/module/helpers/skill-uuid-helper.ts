@@ -75,10 +75,10 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
 
     try {
         // Find the skills compendium pack
-        const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-stats-skills' && p.documentName === 'Item');
+        const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-items-skills' && p.documentName === 'Item');
 
         if (!skillPack) {
-            console.warn("Skill compendium pack 'dh2-core-stats-skills' not found");
+            console.warn("Skill compendium pack 'dh2-core-items-skills' not found");
             _skillUuidCache.set(cacheKey, null);
             return null;
         }

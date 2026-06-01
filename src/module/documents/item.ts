@@ -863,7 +863,7 @@ export class WH40KItem extends WH40KItemContainer {
             for (const skillName of modifiers.skills) {
                 const alreadyHas = actor.items.some((i) => i.type === 'skill' && i.name.toLowerCase() === skillName.toLowerCase());
                 if (alreadyHas) continue;
-                const skillPack = game.packs.get('wh40k-rpg.dh2-core-stats-skills');
+                const skillPack = game.packs.get('wh40k-rpg.dh2-core-items-skills');
                 if (skillPack) {
                     // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                     const index = await skillPack.getIndex({ fields: ['name'] });
@@ -882,7 +882,7 @@ export class WH40KItem extends WH40KItemContainer {
             for (const talentName of modifiers.talents) {
                 const alreadyHas = actor.items.some((i) => i.type === 'talent' && i.name.toLowerCase() === talentName.toLowerCase());
                 if (alreadyHas) continue;
-                const talentPack = game.packs.get('wh40k-rpg.dh2-core-stats-talents');
+                const talentPack = game.packs.get('wh40k-rpg.dh2-core-items-talents');
                 if (talentPack) {
                     // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                     const index = await talentPack.getIndex({ fields: ['name'] });
