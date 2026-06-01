@@ -2824,7 +2824,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _findSkillUuid(skillName: string | null | undefined, specialization: string | null | undefined = null): string | null {
         try {
-            const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-stats-skills');
+            const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-items-skills');
             if (!skillPack) return null;
 
             const index = skillPack.index;

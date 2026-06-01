@@ -2369,7 +2369,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         // Try to find the skill item in the compendium (check all game-line packs)
-        const skillPackNames = ['wh40k-rpg.dh2-core-stats-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
+        const skillPackNames = ['wh40k-rpg.dh2-core-items-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
         const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p !== undefined);
         if (pack === undefined) {
             ui.notifications.warn(game.i18n.localize('WH40K.Warning.SkillsCompendiumNotFound'));
