@@ -9,8 +9,10 @@
         iconColor    — required CSS color string for icon glyph
         fillPercent  — number 0..100 for the gold progress bar
         unit         — optional, default "m"
+        action       — optional data-action name; when set the row becomes a clickable control
+        movementType — optional value for data-movement-type (e.g. "half"); paired with `action`
 --}}
-<div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]" style="background:var(--color-bg-option);border-color:var(--color-border-light);">
+<div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]{{#if action}} tw-cursor-pointer{{/if}}" style="background:var(--color-bg-option);border-color:var(--color-border-light);"{{#if action}} data-action="{{action}}" data-movement-type="{{movementType}}"{{/if}}>
     <div class="tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2] tw-text-[0.9rem]" style="background:{{iconBgGrad}};color:{{iconColor}};">
         <i class="fas {{icon}}"></i>
     </div>
