@@ -28,6 +28,7 @@ export class WH40KSettings {
         multipleFateBurnPerRoll: 'multiple-fate-burn-per-roll',
         autoPsychicPhenomena: 'auto-psychic-phenomena',
         autoRollDamage: 'auto-roll-damage',
+        autoApplyDamage: 'auto-apply-damage',
     };
 
     /** When true, a successful weapon/psychic attack rolls its damage automatically
@@ -39,6 +40,19 @@ export class WH40KSettings {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoRollDamage) !== false;
         } catch {
             return true;
+        }
+    }
+
+    /** When true, a damage roll resolved on a GM client against a selected target
+     *  automatically applies the reduced damage (armour by hit location + Toughness
+     *  Bonus) to the target — rolling critical damage and applying its status on
+     *  overflow — instead of waiting for the chat "Assign Damage" button. Opt-in;
+     *  defaults to false. Safe before registration (returns false). */
+    static isAutoApplyDamageEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoApplyDamage) === true;
+        } catch {
+            return false;
         }
     }
 
@@ -189,6 +203,14 @@ export class WH40KSettings {
             scope: 'world',
             config: true,
             default: true,
+            type: Boolean,
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.autoApplyDamage, {
+            name: 'WH40K.SETTINGS.AutoApplyDamage.Name',
+            hint: 'WH40K.SETTINGS.AutoApplyDamage.Hint',
+            scope: 'world',
+            config: true,
+            default: false,
             type: Boolean,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.combatPresets, {

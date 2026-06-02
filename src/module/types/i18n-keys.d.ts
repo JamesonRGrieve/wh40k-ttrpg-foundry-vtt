@@ -2679,6 +2679,8 @@ export type I18nKey =
     | 'WH40K.Roll.TargetFirst'
     | 'WH40K.Roll.Title'
     | 'WH40K.Roll.WeaponAttack'
+    | 'WH40K.SETTINGS.AutoApplyDamage.Hint'
+    | 'WH40K.SETTINGS.AutoApplyDamage.Name'
     | 'WH40K.SETTINGS.AutoRollDamage.Hint'
     | 'WH40K.SETTINGS.AutoRollDamage.Name'
     | 'WH40K.SETTINGS.CharacteristicOffset.Hint'
