@@ -405,8 +405,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             const rollKey = (rollData['rollKey'] as string | null | undefined) ?? null;
             const actorSkill = rollKey !== null ? sourceActor?.skills?.[rollKey] : undefined;
             const listedChar = actorSkill?.characteristic ?? '';
-            const advance = Number(actorSkill?.advance ?? 0);
-            const skillCurrent = Number(actorSkill?.current ?? rollData.baseTarget);
+            // Specialist-skill rolls target one entry; the document passes that entry's
+            // effective rank + current via rollData.skillRank/baseTarget. Prefer those so
+            // a trained specialisation isn't read as the parent skill's ~0 advance and
+            // halved/blocked as "untrained" (#225). Falls back to the parent skill for
+            // non-specialist rolls (skillRank absent).
+            const rolledRank = rollData['skillRank'];
+            const advance = rolledRank === undefined ? Number(actorSkill?.advance ?? 0) : Number(rolledRank);
+            const skillCurrent = rolledRank === undefined ? Number(actorSkill?.current ?? rollData.baseTarget) : Number(rollData.baseTarget);
             const listedCharTotal = Number(sourceActor?.characteristics?.[listedChar]?.total ?? 0);
             const trainingBonus = skillCurrent - listedCharTotal;
 
