@@ -183,11 +183,22 @@ export class BasicActionManager {
         // front. The manual "Assign Damage" button below still performs the application.
         const damageTarget = actionData.rollData.targetActor;
         let targetName: string | null = null;
+        let autoApplied = false;
         if (damageTarget != null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; AssignDamageData consumes the untyped ActorLike system shape and .name is the document name
             const targetLike = damageTarget as unknown as ActorLike & { name?: string };
             targetName = targetLike.name ?? null;
-            for (const hit of actionData.damageData?.hits ?? []) {
+            // Auto-apply (#248) runs only on a GM client: applying damage updates the
+            // target actor, so it must happen once on a client with permission. The card
+            // HTML is generated here, so a GM-rolled attack bakes in autoApplied=true (and
+            // hides the manual button) for everyone; player-rolled attacks fall back to the
+            // manual "Assign Damage" button.
+            const autoApply = WH40KSettings.isAutoApplyDamageEnabled() && game.user.isGM;
+            // Process hits as a sequential promise chain (not a for-await loop): each
+            // auto-apply writes the target's wounds, so they must run one at a time to
+            // avoid racing actor.update.
+            await (actionData.damageData?.hits ?? []).reduce<Promise<void>>(async (previous, hit) => {
+                await previous;
                 const assign = new AssignDamageData(targetLike, hit);
                 assign.update();
                 const preview = assign.previewReducedDamage();
@@ -196,7 +207,15 @@ export class BasicActionManager {
                 hit.effectiveArmour = preview.armour;
                 hit.effectiveTb = preview.toughnessBonus;
                 hit.effectiveAbsorbed = preview.absorbed;
-            }
+                if (autoApply) {
+                    // finalize() applies wounds + rolls critical damage; performAction…()
+                    // writes the wound/critical update and posts the assign-damage card
+                    // (incl. the critical-injury status item).
+                    await assign.finalize();
+                    await assign.performActionAndSendToChat();
+                    autoApplied = true;
+                }
+            }, Promise.resolve());
         }
 
         const templateData = {
@@ -204,6 +223,7 @@ export class BasicActionManager {
             hits: actionData.damageData?.hits,
             targetActor: actionData.rollData.targetActor,
             targetName,
+            autoApplied,
             rollId: actionData.id,
             // The replacement option is offered while the original ActionData is still
             // resident in `storedRolls` — once it expires (page reload, etc.) the
