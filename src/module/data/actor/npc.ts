@@ -1116,6 +1116,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         NPCData.#migrateSize(source);
         NPCData.#migrateWounds(source);
         NPCData.#migrateThreatLevel(source);
+        NPCData.#migrateCharacteristics(source);
+        NPCData.#migrateWeapons(source);
     }
 
     /**
@@ -1160,6 +1162,86 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         if (source['threatLevel'] !== undefined) {
             source['threatLevel'] = this._toInt(source['threatLevel'], 5);
         }
+    }
+
+    /**
+     * Migrate legacy characteristics into the structured per-characteristic shape.
+     * Legacy bestiary/NPC source data stores characteristics under abbreviated
+     * keys (`ws`, `bs`, `s`, …) and/or as flat scalars (`"45"`); neither matches
+     * the full-name `{ base, total, bonus, advancement }` schema, so every
+     * characteristic silently falls back to the 30 default. This remaps the keys
+     * and wraps the scalars. Idempotent — already-structured, full-name data is
+     * left untouched.
+     * @param {object} source - The source system data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
+    static #migrateCharacteristics(source: Record<string, unknown>): void {
+        const chars = source['characteristics'];
+        if (typeof chars !== 'object' || chars === null) return;
+
+        // Case-insensitive short-label → full-name lookup, reused from
+        // CHARACTERISTIC_MAP (DRY) so legacy abbreviations resolve to the same
+        // canonical keys the rest of the model uses. Source data is lower-cased
+        // (`ws`), the map is title-cased (`WS`); normalise both ends.
+        const shortToFull = new Map<string, string>(Object.entries(NPCData.CHARACTERISTIC_MAP).map(([short, full]) => [short.toLowerCase(), full]));
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: migrated map holds pre-validation source values (legacy scalar or already-structured)
+        const migrated: Record<string, unknown> = {};
+        let changed = false;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: legacy characteristics object is untyped migration data
+        for (const [key, value] of Object.entries(chars as Record<string, unknown>)) {
+            const fullKey = shortToFull.get(key.toLowerCase()) ?? key;
+            if (fullKey !== key) changed = true;
+
+            if (typeof value === 'object' && value !== null && 'total' in value) {
+                // Already structured — keep (possibly under a remapped key).
+                migrated[fullKey] = value;
+            } else {
+                const total = this._toInt(value, 30);
+                migrated[fullKey] = { base: total, total, bonus: Math.floor(total / 10), advancement: false };
+                changed = true;
+            }
+        }
+
+        if (changed) source['characteristics'] = migrated;
+    }
+
+    /**
+     * Migrate a legacy NPC `weapons[]` array of stat blocks into the
+     * `{ mode: 'simple', simple: [...] }` shape the schema expects. A bare array
+     * sits at the wrong path and renders no weapons; this maps each legacy block
+     * to the simple-weapon fields (coercing `pen`/`clip` to ints, folding
+     * `qualities` into `special`, inferring melee vs ranged class from range).
+     * No-op once the field is already in object form.
+     * @param {object} source - The source system data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
+    static #migrateWeapons(source: Record<string, unknown>): void {
+        const weapons = source['weapons'];
+        if (!Array.isArray(weapons)) return;
+
+        const simple = weapons.map((entry) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: legacy weapon entry is untyped migration data
+            const w = (typeof entry === 'object' && entry !== null ? entry : {}) as Record<string, unknown>;
+            const range = typeof w['range'] === 'string' && w['range'] !== '' ? w['range'] : 'Melee';
+            const isMelee = range === '-' || /melee/i.test(range);
+            let special = '';
+            if (typeof w['special'] === 'string') special = w['special'];
+            else if (typeof w['qualities'] === 'string') special = w['qualities'];
+            return {
+                name: typeof w['name'] === 'string' ? w['name'] : '',
+                damage: typeof w['damage'] === 'string' && w['damage'] !== '' ? w['damage'] : '1d10',
+                pen: this._toInt(w['pen'], 0),
+                range,
+                rof: typeof w['rof'] === 'string' && w['rof'] !== '' ? w['rof'] : 'S/-/-',
+                clip: this._toInt(w['clip'], 0),
+                reload: typeof w['reload'] === 'string' && w['reload'] !== '' ? w['reload'] : '-',
+                special,
+                class: isMelee ? 'melee' : 'basic',
+            };
+        });
+
+        source['weapons'] = { mode: 'simple', simple };
     }
 }
 
