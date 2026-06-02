@@ -257,10 +257,6 @@ export default class NPCSheet extends CharacterSheet {
             healWounds: NPCSheet.#healWounds,
             applyCustomDamage: NPCSheet.#applyCustomDamage,
             healCustomWounds: NPCSheet.#healCustomWounds,
-            // Combat tracker actions
-            rerollInitiative: NPCSheet.#rerollInitiative,
-            addToCombat: NPCSheet.#addToCombat,
-            removeFromCombat: NPCSheet.#removeFromCombat,
             removeItem: NPCSheet.#removeItem,
             // Tag actions
             addTag: NPCSheet.#addTag,
@@ -1819,71 +1815,6 @@ export default class NPCSheet extends CharacterSheet {
         const input = this.element.querySelector<HTMLInputElement>('[data-custom-damage]');
         const amount = parseInt(input?.value ?? '1', 10);
         await this.npcActor.healWounds(amount);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle rerolling initiative.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #rerollInitiative(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const actorId = this.actor.id;
-        const combat = game.combat;
-        if (actorId === null || !combat) return;
-        const combatant = combat.combatants.find((c) => c.actorId === actorId);
-        if (combatant?.id !== undefined) {
-            await combat.rollInitiative([combatant.id]);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle adding to combat.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #addToCombat(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        if (!game.combat) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Warning.NoActiveCombatEncounter'));
-            return;
-        }
-        // Prevent duplicate combatants
-        const actorId = this.actor.id;
-        if (actorId === null || this.npcActor.id === null) return;
-        const existing = game.combat.combatants.find((c) => c.actorId === actorId);
-        if (existing) {
-            ui.notifications.info(`${this.actor.name} is already in combat.`);
-            return;
-        }
-        await game.combat.createEmbeddedDocuments('Combatant', [
-            {
-                actorId: this.npcActor.id,
-                tokenId: this.npcActor.token?.id,
-            },
-        ]);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle removing from combat.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #removeFromCombat(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const actorId = this.actor.id;
-        const combat = game.combat;
-        if (actorId === null || !combat) return;
-        const combatant = combat.combatants.find((c) => c.actorId === actorId);
-        if (combatant?.id !== undefined) {
-            await combat.deleteEmbeddedDocuments('Combatant', [combatant.id]);
-        }
     }
 
     /* -------------------------------------------- */
