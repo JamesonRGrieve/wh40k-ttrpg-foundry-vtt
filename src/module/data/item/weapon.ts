@@ -128,6 +128,13 @@ export default class WeaponData extends ItemDataModel.mixin(
     declare type: string;
     declare twoHanded: boolean;
     declare melee: boolean;
+    /**
+     * When `true`, this weapon is granted to every newly-created creature actor
+     * (character / npc) by the default-grant hook, so e.g. an Unarmed strike is
+     * always present. Content-declared policy (read by `default-grants.ts`); the
+     * system code never name-matches the item (Direction #7).
+     */
+    declare grantedByDefault: boolean;
     declare clip: { max: number; value: number; type: string };
     // Note: 'reload' schema field accessed via [key: string]: any; to avoid conflict with reload() method
     // May be undefined at runtime when the schema fails to initialize (e.g. an
@@ -208,6 +215,12 @@ export default class WeaponData extends ItemDataModel.mixin(
             // Weapon properties
             twoHanded: new fields.BooleanField({ required: true, initial: false }),
             melee: new fields.BooleanField({ required: true, initial: false }),
+
+            // Content-declared policy: grant this weapon to every new creature
+            // actor (see default-grants.ts). Shared (never variantized) — the
+            // grant decision is line-agnostic; per-line stats still resolve from
+            // the variant containers when owned.
+            grantedByDefault: new fields.BooleanField({ required: false, initial: false }),
 
             // Ammunition
             clip: new fields.SchemaField({

@@ -82,6 +82,7 @@ import { resyncWorldFromCompendiums } from './compendium-resync.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
+import { grantDefaultItemsToActor } from './default-grants.ts';
 import * as dice from './dice/_module.ts';
 import * as documents from './documents/_module.ts';
 import { WH40KActorProxy } from './documents/actor-proxy.ts';
@@ -182,6 +183,15 @@ export class HooksManager {
             hooksOn(`update${docType}`, onDocChange);
             hooksOn(`delete${docType}`, onDocDelete);
         }
+
+        // Grant content-flagged default weapons (e.g. Unarmed) to every new
+        // creature actor. Only the creating client performs the grant — gated on
+        // the triggering userId — so concurrent clients don't stack duplicate copies.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createActor hook payload is framework-typed; the grant surface is narrowed in default-grants.ts
+        hooksOn('createActor', (actor: Parameters<typeof grantDefaultItemsToActor>[0], _options: unknown, userId: string) => {
+            if (game.user.id !== userId) return;
+            void grantDefaultItemsToActor(actor);
+        });
     }
 
     /**
