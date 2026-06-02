@@ -89,12 +89,10 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
-        return [
-            this.makeField(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', get('homeWorld'), 'Home World'),
-            this.makeField(game.i18n.localize('WH40K.OriginPath.Background'), 'system.originPath.background', get('background'), 'Background'),
-            this.makeField(game.i18n.localize('WH40K.OriginPath.Role'), 'system.originPath.role', get('role'), 'Role'),
-            this.makeField('Divination', 'system.originPath.divination', get('divination'), 'Divination'),
-        ];
+        // Home World / Background / Role are shown as origin-path bubbles in the sidebar
+        // header, so listing them again as text rows here is redundant (#226). Only
+        // Divination — which the bubbles do not display — remains.
+        return [this.makeField('Divination', 'system.originPath.divination', get('divination'), 'Divination')];
     }
 
     // TODO(dry): this + getSkillAptitudeTable are byte-identical in bc-config.ts and ow-config.ts. Promote to AptitudeBasedSystemConfig defaults; override only when a system diverges.

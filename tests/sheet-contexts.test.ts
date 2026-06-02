@@ -55,10 +55,11 @@ describe('mockPlayerSheetContext', () => {
         expect(ctx.journalEntries).toHaveLength(1);
     });
 
-    it('uses SystemConfigRegistry.getHeaderFields for header rows — DH2e shape', () => {
+    it('uses SystemConfigRegistry.getHeaderFields for header rows — DH2e shape (origin steps render as bubbles, #226)', () => {
         const ctx = mockPlayerSheetContext({ systemId: 'dh2' });
         const names = ctx.headerFields.map((f) => f.name);
-        expect(names).toEqual(['system.originPath.homeWorld', 'system.originPath.background', 'system.originPath.role', 'system.originPath.divination']);
+        // Home World / Background / Role are shown by the origin-path bubbles, not as text rows.
+        expect(names).toEqual(['system.originPath.divination']);
     });
 
     it('uses SystemConfigRegistry.getHeaderFields for header rows — IM shape', () => {
@@ -125,8 +126,10 @@ describe('mockPlayerSheetContext — per-system parity', () => {
         }
     });
 
-    it('every system passes the homeWorld value through to its sidebar row', () => {
-        for (const id of ALL_SYSTEMS) {
+    it('every system (except DH2, where origin steps render as bubbles — #226) passes the homeWorld value through to its sidebar row', () => {
+        // DH2 drops the Home World / Background / Role text rows in favour of the
+        // origin-path bubbles, so it has no homeWorld header row to populate.
+        for (const id of ALL_SYSTEMS.filter((s) => s !== 'dh2')) {
             const ctx = mockPlayerSheetContext({
                 systemId: id,
                 actorOverrides: { system: { originPath: { homeWorld: 'Cadia' } } },

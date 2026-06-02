@@ -75,14 +75,9 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
     // the Player row was dropped from getHeaderFields() — the player name is rendered as a paired
     // input on the identity row instead. These tests assert the post-removal field order.
 
-    it('dh2 returns HomeWorld + Background + Role + Divination', () => {
+    it('dh2 returns Divination only — Home World/Background/Role render as origin bubbles (#226)', () => {
         const fields = SystemConfigRegistry.get('dh2').getHeaderFields(makeActor());
-        expect(names(fields)).toEqual([
-            'system.originPath.homeWorld',
-            'system.originPath.background',
-            'system.originPath.role',
-            'system.originPath.divination',
-        ]);
+        expect(names(fields)).toEqual(['system.originPath.divination']);
         expect(fields.every((f) => f.type === 'text')).toBe(true);
     });
 
@@ -163,8 +158,10 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
         }
     });
 
-    it('values flow through from the actor — homeWorld value populates the matching row across all systems', () => {
-        const ids: GameSystemId[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
+    it('values flow through from the actor — homeWorld value populates the matching row (DH2 excepted, #226)', () => {
+        // DH2 drops the origin-step text rows (shown as bubbles instead), so it has no
+        // homeWorld header row; every other system still surfaces one.
+        const ids: GameSystemId[] = ['rt', 'dh1', 'bc', 'ow', 'dw', 'im'];
         const actor = makeActor({
             system: {
                 bio: { playerName: 'Mona' },
