@@ -1,4 +1,5 @@
 import type { WH40KItem } from '../../documents/item.ts';
+import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
 import { bcDaemonPrinceSchemaFields, type BcDaemonPrinceDeclarations } from './mixins/bc-daemon-prince-template.ts';
 import { bcGiftsSchemaFields, type BcGiftsDeclarations } from './mixins/bc-gifts-template.ts';
@@ -177,6 +178,7 @@ export default class CharacterData extends CreatureTemplate {
         spentSkills?: number;
         spentTalents?: number;
         spentPsychicPowers?: number;
+        spentInfamy?: number;
         calculatedTotal?: number;
     };
     declare rogueTrader: {
@@ -912,9 +914,11 @@ export default class CharacterData extends CreatureTemplate {
         this.experience.spentSkills = 0;
         this.experience.spentTalents = 0;
 
+        // Psy Rating has no per-rank stored cost field, so derive its spend from the
+        // current rating via the shared DH2 formula (#240). Owned powers add to this below.
         // eslint-disable-next-line no-restricted-syntax -- boundary: psy field is added by CreatureTemplate mixin at runtime; not in CharacterData's own declare list
-        const psySelf = this as unknown as { psy?: { cost?: number } };
-        this.experience.spentPsychicPowers = psySelf.psy?.cost ?? 0;
+        const psySelf = this as unknown as { psy?: { rating?: number } };
+        this.experience.spentPsychicPowers = psyRatingTotalCost(Number(psySelf.psy?.rating ?? 0));
 
         for (const characteristic of Object.values(this.characteristics) as Array<{ cost: number | string }>) {
             this.experience.spentCharacteristics += parseInt(String(characteristic.cost), 10);
@@ -931,17 +935,41 @@ export default class CharacterData extends CreatureTemplate {
         }
 
         for (const item of actor.items) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.cost may be undefined on items without an explicit cost field; default 0
-            const itemCost = String(item.system.cost ?? '0');
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system cost/prCost are absent on items without those fields; coerced with defaults
+            const sys = item.system as { cost?: number | string; prCost?: number | string };
             if (item.isTalent) {
-                this.experience.spentTalents += parseInt(itemCost, 10);
+                this.experience.spentTalents += parseInt(String(sys.cost ?? '0'), 10);
             } else if (item.isPsychicPower) {
-                this.experience.spentPsychicPowers += parseInt(itemCost, 10);
+                // Psychic powers carry no XP cost in the compendium; prefer a stored cost
+                // when present, else fall back to the same heuristic the dialog charges.
+                const stored = parseInt(String(sys.cost ?? '0'), 10);
+                this.experience.spentPsychicPowers += stored > 0 ? stored : psychicPowerCost(Number(sys.prCost ?? 1));
             }
         }
 
+        // BC Infamy advances are recorded only in the chaosAdvancements ledger, not in
+        // the per-advance .cost fields, so sum them here. Other ledger categories
+        // (characteristic/skill/talent/psychic-power) are already counted via .cost
+        // above, so only the 'infamy' category is added to avoid double-counting.
+        let spentInfamy = 0;
+        for (const adv of this.chaosAdvancements) {
+            if (adv.category === 'infamy') spentInfamy += adv.xpCost;
+        }
+        this.experience.spentInfamy = spentInfamy;
+
         this.experience.calculatedTotal =
-            this.experience.spentCharacteristics + this.experience.spentSkills + this.experience.spentTalents + this.experience.spentPsychicPowers;
+            this.experience.spentCharacteristics +
+            this.experience.spentSkills +
+            this.experience.spentTalents +
+            this.experience.spentPsychicPowers +
+            this.experience.spentInfamy;
+
+        // Experience spent is fully derived from purchased advancements (#240): mirror it
+        // onto `used` (the field the sheet and affordability checks read) and recompute
+        // `available`, so a stale or externally-imported `used` can no longer drift from
+        // reality (fixes the "1000/1000 with no advancements" report, #224).
+        this.experience.used = this.experience.calculatedTotal;
+        this.experience.available = this.experience.total - this.experience.calculatedTotal;
     }
 
     /**

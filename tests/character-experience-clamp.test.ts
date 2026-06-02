@@ -51,3 +51,34 @@ describe('character DataModel experience clamp', () => {
         expect(body).toMatch(/typeof total === 'number'/);
     });
 });
+
+/**
+ * #240 / #224: experience spent is fully DERIVED from purchased advancements, so
+ * `used`/`available` are recomputed from `calculatedTotal` every prepare and a
+ * stale or externally-imported `used` can no longer drift (the "1000/1000 with
+ * no advancements" report). CharacterData can't load under happy-dom, so this
+ * asserts the wiring at the source level (the arithmetic itself is unit-tested
+ * in `src/module/rules/xp-costs.test.ts`).
+ */
+describe('character DataModel experience derivation (#240)', () => {
+    // Anchor on the method signature (`(): void {`) so we match the definition, not a
+    // call site like `this._computeExperienceSpent()`.
+    const m = charSrc.match(/_computeExperienceSpent\(\):\s*void\s*\{([\s\S]*?)\n {4}\}/);
+    const body = m?.[1] ?? '';
+
+    it('derives used + available from calculatedTotal', () => {
+        expect(body, '_computeExperienceSpent must exist').not.toBe('');
+        expect(body, 'used mirrors calculatedTotal').toMatch(/experience\.used\s*=\s*this\.experience\.calculatedTotal/);
+        expect(body, 'available = total - calculatedTotal').toMatch(
+            /experience\.available\s*=\s*this\.experience\.total\s*-\s*this\.experience\.calculatedTotal/,
+        );
+    });
+
+    it('counts the spend categories that have no per-advance .cost field', () => {
+        // Psy Rating (formula) and BC Infamy (chaosAdvancements ledger) are not
+        // captured by the .cost sums, so they must be added to calculatedTotal.
+        expect(body, 'psy rating spend derived from rating').toMatch(/psyRatingTotalCost/);
+        expect(body, 'psychic powers fall back to the shared heuristic').toMatch(/psychicPowerCost/);
+        expect(body, 'BC infamy summed from the chaosAdvancements ledger').toMatch(/category === 'infamy'/);
+    });
+});

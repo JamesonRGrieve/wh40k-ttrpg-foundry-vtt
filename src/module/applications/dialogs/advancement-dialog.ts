@@ -13,6 +13,7 @@ import type { Prerequisite } from '../../config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
+import { psychicPowerCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { canAfford, getAvailableXP, spendXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -924,9 +925,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sys.psy may be absent on non-psychic actors; optional chain + ?? is defensive
         const currentRating = sys?.psy?.rating ?? 0;
 
-        // DH2 RAW: cost to advance PR N→N+1 is (N+1) × 200, cap 10
+        // DH2 RAW: cost to advance PR N→N+1 is (N+1) × 200, cap 10 (shared with the
+        // character DataModel's derived-spend calc — see rules/xp-costs.ts, #240).
         const nextRating = currentRating + 1;
-        const ratingCost = nextRating <= 10 ? nextRating * 200 : null;
+        const ratingCost = nextRating <= 10 ? psyRatingStepCost(nextRating) : null;
 
         const psyAdvance = {
             currentRating,
@@ -974,8 +976,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             // eslint-disable-next-line no-restricted-syntax -- boundary: entries here are raw index/document objects with loose Foundry typing; `?? {}` covers the case where the index entry omits the system block
             const entrySys = entry.system ?? {};
             const prCost = entrySys.prCost ?? 1;
-            // Heuristic XP cost: max(100, 200 × prCost). Powers in DH2 core range 100-600 XP.
-            const cost = Math.max(100, 200 * prCost);
+            // Heuristic XP cost (shared with the DataModel's derived-spend calc — see
+            // rules/xp-costs.ts, #240): max(100, 200 × prCost). DH2 core powers: 100-600 XP.
+            const cost = psychicPowerCost(prCost);
             const owned = ownedPowers.has(entry.name.toLowerCase());
             const prGate = prCost > currentRating;
             const discipline = (entrySys.discipline ?? 'unknown').toString();

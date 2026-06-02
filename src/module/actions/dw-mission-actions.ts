@@ -261,10 +261,9 @@ export async function dwCompleteMission(this: DwMissionActionHost, _event: Event
         if (reward.totalXp > 0) {
             const experience = this.actor.system.experience;
             const currentTotal = typeof experience?.total === 'number' ? experience.total : 0;
+            // `available` is derived from total − spent at prepare time (#240), so bumping
+            // `total` is sufficient; an explicit `available` write would just be overwritten.
             updates['system.experience.total'] = currentTotal + reward.totalXp;
-            if (typeof experience?.available === 'number') {
-                updates['system.experience.available'] = experience.available + reward.totalXp;
-            }
         }
 
         await this.actor.update(updates);
