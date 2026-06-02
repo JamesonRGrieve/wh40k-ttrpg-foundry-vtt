@@ -87,12 +87,12 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
         return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === 'elite' && i.name.toLowerCase() === 'psyker');
     }
 
-    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        const get = (key: string): string | number => this.readOriginPathField(actor, key);
-        // Home World / Background / Role are shown as origin-path bubbles in the sidebar
-        // header, so listing them again as text rows here is redundant (#226). Only
-        // Divination — which the bubbles do not display — remains.
-        return [this.makeField('Divination', 'system.originPath.divination', get('divination'), 'Divination')];
+    getHeaderFields(_actor: WH40KBaseActor): SidebarHeaderField[] {
+        // Home World / Background / Role are shown as origin-path bubbles, and
+        // Divination already renders as the italic quote beneath the portrait
+        // (sidebar-header). Listing any of them again as static text rows here is
+        // redundant (#226), so the sidebar fields panel is empty for DH2.
+        return [];
     }
 
     // TODO(dry): this + getSkillAptitudeTable are byte-identical in bc-config.ts and ow-config.ts. Promote to AptitudeBasedSystemConfig defaults; override only when a system diverges.
