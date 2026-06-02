@@ -178,6 +178,7 @@ interface RollDataShape {
     type: string;
     rollKey: string;
     baseTarget: number;
+    skillRank?: number;
     modifiers: {
         modifier: number;
         situational?: number;
@@ -371,6 +372,41 @@ describe('_buildSimpleSkillRoll — PC (acolyte) paths honour situational modifi
         });
 
         expect(rollDataOf(result).nameOverride).toBe('Common Lore: Imperium Test');
+    });
+
+    it('rollSkill specialist: skillRank is threaded onto rollData so the dialog sees the entry as trained (#225)', () => {
+        const actor = makeActor({
+            name: 'Acolyte Vex',
+            situationalSkills: { commonLore: [] },
+        });
+
+        const result = buildRoll(actor, {
+            key: 'commonLore',
+            type: 'skill',
+            label: 'Common Lore: Imperium Test',
+            target: 40,
+            situationalKey: 'commonLore',
+            skillRank: 2,
+        });
+
+        expect(rollDataOf(result).skillRank).toBe(2);
+    });
+
+    it('omitting skillRank leaves rollData.skillRank unset (non-specialist rolls behave as before)', () => {
+        const actor = makeActor({
+            name: 'Acolyte Vex',
+            situationalSkills: { dodge: [] },
+        });
+
+        const result = buildRoll(actor, {
+            key: 'dodge',
+            type: 'skill',
+            label: 'Dodge Test',
+            target: 50,
+            situationalKey: 'dodge',
+        });
+
+        expect(rollDataOf(result).skillRank).toBeUndefined();
     });
 
     it('zero situational total leaves modifiers.situational unset (does not write 0)', () => {

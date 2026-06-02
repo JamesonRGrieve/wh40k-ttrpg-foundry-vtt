@@ -18,6 +18,13 @@ type RollDataLike = Record<string, unknown> & {
     type?: string;
     rollKey?: string;
     baseTarget?: number;
+    /**
+     * Effective training rank of the *specific* thing being rolled (0 = untrained,
+     * >0 = trained at some tier). Set for specialist-skill rolls so the roll dialog
+     * reads the rolled specialisation entry's rank rather than the parent skill's
+     * advance (which is ~0 for specialist skills). See #225.
+     */
+    skillRank?: number;
     modifiers: { modifier: number; situational?: number };
 };
 
@@ -472,6 +479,7 @@ export class WH40KBaseActor extends Actor {
         target: number;
         situationalKey?: string | undefined;
         nameOverride?: string | undefined;
+        skillRank?: number | undefined;
     }): SimpleSkillData {
         const TYPE_LITERAL: Record<typeof opts.type, string> = {
             characteristic: 'Characteristic',
@@ -488,6 +496,7 @@ export class WH40KBaseActor extends Actor {
         rollData.type = TYPE_LITERAL[opts.type];
         rollData.rollKey = opts.key;
         rollData.baseTarget = opts.target;
+        if (opts.skillRank !== undefined) rollData.skillRank = opts.skillRank;
         rollData.modifiers.modifier = 0;
 
         if (opts.situationalKey !== undefined) {
