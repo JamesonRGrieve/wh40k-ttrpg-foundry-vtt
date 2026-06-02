@@ -51,8 +51,15 @@ type AttackOptionWeaponLike = WH40KItemDocument & {
 };
 
 /**
- * Unified dialog for configuring all roll types.
+ * Shared scroll-region container for the dialog's body parts. Grouping the body
+ * parts (header → diceInput) into one bounded, overflow-y-auto div keeps the
+ * footer part (the Roll button) pinned below it instead of being pushed
+ * off-screen when the expandable sections open. See #230.
  */
+const URD_BODY_CONTAINER = {
+    id: 'urd-body',
+    classes: ['tw-flex', 'tw-flex-col', 'tw-min-h-0', 'tw-overflow-y-auto', 'tw-overflow-x-hidden', 'tw-max-h-[60vh]'],
+};
 
 /**
  * Unified dialog for configuring all roll types.
@@ -213,18 +220,23 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     static override PARTS = {
         header: {
             template: 'systems/wh40k-rpg/templates/prompt/unified/header.hbs',
+            container: URD_BODY_CONTAINER,
         },
         targetDisplay: {
             template: 'systems/wh40k-rpg/templates/prompt/unified/target-display.hbs',
+            container: URD_BODY_CONTAINER,
         },
         modifiers: {
             template: 'systems/wh40k-rpg/templates/prompt/unified/modifiers.hbs',
+            container: URD_BODY_CONTAINER,
         },
         contextPanel: {
             template: 'systems/wh40k-rpg/templates/prompt/unified/context-panel.hbs',
+            container: URD_BODY_CONTAINER,
         },
         diceInput: {
             template: 'systems/wh40k-rpg/templates/prompt/unified/dice-input.hbs',
+            container: URD_BODY_CONTAINER,
         },
         footer: {
             template: 'systems/wh40k-rpg/templates/prompt/unified/footer.hbs',
