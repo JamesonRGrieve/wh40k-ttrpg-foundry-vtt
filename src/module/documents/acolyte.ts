@@ -73,6 +73,9 @@ interface SkillEntry {
     name?: string;
     label?: string;
     current?: number;
+    /** Effective training rank, computed in CreatureTemplate._prepareSkills. */
+    rank?: number;
+    trained?: boolean;
 }
 
 const SKILL_ALIASES: Record<string, string> = {
@@ -384,6 +387,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         }
         let label = skill.label;
         let targetValue = skill.current;
+        let skillRank: number | undefined;
 
         // Handle specialist skills
         if (specialityName !== undefined && Array.isArray(skill.entries)) {
@@ -392,6 +396,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 const specialityLabel = speciality.name ?? speciality.label ?? specialityName;
                 label = `${label}: ${specialityLabel}`;
                 targetValue = speciality.current ?? skill.current;
+                // Pass the specialisation entry's own effective rank so the roll dialog
+                // treats a trained specialisation as trained. Specialist skills carry
+                // their training per-entry; the parent skill's advance is ~0, which the
+                // dialog would otherwise read as "untrained" and halve/block (#225).
+                skillRank = speciality.rank ?? (speciality.trained === true ? 1 : 0);
             }
         }
 
@@ -401,6 +410,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             label: `${label} Test`,
             target: targetValue,
             situationalKey: resolvedSkillName,
+            ...(skillRank !== undefined ? { skillRank } : {}),
         });
         prepareUnifiedRoll(simpleSkillData);
     }
