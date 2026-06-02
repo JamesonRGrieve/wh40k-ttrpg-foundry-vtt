@@ -338,6 +338,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 this._attackModeKey = getAttackModeKeyForAction(this.rollData.action, isRanged);
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rollData.modifiers may be absent at runtime on uninitialised weapon roll data
                 this._aimModeKey = getAimKeyForModifier(this.rollData.modifiers?.['aim'] ?? 0);
+                // Auto-calculate range from the user's current target (#233): if a ranged
+                // weapon roll opens with a target already selected, resolve the distance from
+                // the token positions so the range band/bonus are correct on open — the player
+                // no longer has to press "select target" first. No-ops when nothing is targeted.
+                if (isRanged) {
+                    this.#applyTargetDistance(false);
+                }
             }
         }
 
@@ -1362,40 +1369,45 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onSelectTarget(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
-        // Get source token
+    /**
+     * Resolve the distance to the user's current target from the source token and
+     * write it (plus the target actor) onto rollData so the range band/bonus
+     * recompute (#233). Returns false when there is no source token or no target;
+     * when `notify` is true the player is told why (the manual "select target"
+     * button passes true — the auto-calc on dialog open stays silent).
+     */
+    #applyTargetDistance(notify: boolean): boolean {
         const rd = this.rollData;
         const actor = rd.sourceActor;
-        if (!actor) return;
+        if (!actor) return false;
         type ActorToken = foundry.canvas.placeables.Token;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in typings.
         const actorWithTokens = actor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] };
         const sourceToken: ActorToken | undefined = actorWithTokens.token ?? actorWithTokens.getActiveTokens()[0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- sourceToken may be undefined at runtime (noUncheckedIndexedAccess); guard is defensive
         if (!sourceToken) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Roll.NoTokenForActor'));
-            return;
+            if (notify) ui.notifications.warn(game.i18n.localize('WH40K.Roll.NoTokenForActor'));
+            return false;
         }
-
-        // Check for existing target
         const targets = game.user.targets;
         if (targets.size === 0) {
-            ui.notifications.info(game.i18n.localize('WH40K.Roll.TargetFirst'));
-            return;
+            if (notify) ui.notifications.info(game.i18n.localize('WH40K.Roll.TargetFirst'));
+            return false;
         }
         const targetToken = [...targets.values()][0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: [0] may be undefined; guard is defensive
-        if (!targetToken) return;
-
-        // Calculate distance
-        const distance = calculateTokenDistance(sourceToken, targetToken);
-        rd.distance = distance;
+        if (!targetToken) return false;
+        rd.distance = calculateTokenDistance(sourceToken, targetToken);
         rd.targetActor = targetToken.actor;
+        return true;
+    }
 
-        // Recalculate range with new distance
+    static async #onSelectTarget(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        if (!this.#applyTargetDistance(true)) return;
+        const rd = this.rollData;
+        // Recalculate range with the new distance, then clear any manual bracket
+        // override so the calculated bracket takes effect.
         if (typeof rd['update'] === 'function') await (rd['update'] as () => Promise<void>)();
-
-        // Clear manual bracket override so calculated bracket takes effect
         this._selectedRangeBracket = null;
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
