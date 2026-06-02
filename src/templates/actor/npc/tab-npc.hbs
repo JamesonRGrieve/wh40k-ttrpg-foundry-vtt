@@ -71,33 +71,6 @@
     </div>
     {{/if}}
 
-    {{!-- ═══ COMBAT TRACKER ═══ --}}
-    {{#if isGM}}
-    <div class="wh40k-panel">
-      <div class="wh40k-panel-header">
-        <i class="fa-solid fa-swords"></i>
-        <span>Combat Tracker</span>
-      </div>
-      <div class="wh40k-panel-body">
-        {{#if actor.inCombat}}
-        <div class="tw-flex tw-items-center tw-gap-[0.4rem] tw-text-[0.75rem] tw-text-[color:var(--color-text-light-secondary,#aaa)] [&_i]:tw-text-[color:var(--npc-accent-combat)] [&_strong]:tw-text-[color:var(--color-text-light-primary,#f0f0f0)]">
-          <i class="fa-solid fa-swords"></i>
-          <span>Initiative: {{actor.combatant.initiative}}</span>
-        </div>
-        <div class="tw-flex tw-gap-2 tw-mt-2">
-          <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="rerollInitiative" data-tooltip="Reroll Initiative"><i class="fa-solid fa-dice"></i> Reroll</button>
-          <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-combat)] hover:tw-text-[color:var(--npc-accent-combat)]" data-action="removeFromCombat" data-tooltip="Remove from Combat"><i class="fa-solid fa-xmark"></i> Remove</button>
-        </div>
-        {{else}}
-        <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-[0.3rem] tw-w-full tw-py-[0.35rem] tw-border tw-border-[color:rgb(from_var(--npc-accent-combat)_r_g_b_/_0.3)] tw-rounded-[var(--wh40k-radius-md)] tw-bg-[rgb(from_var(--npc-accent-combat)_r_g_b_/_0.1)] tw-text-[color:var(--npc-accent-combat)] tw-cursor-pointer tw-text-[0.7rem] hover:tw-bg-[rgb(from_var(--npc-accent-combat)_r_g_b_/_0.2)] hover:tw-border-[color:var(--npc-accent-combat)]" data-action="addToCombat" data-tooltip="Add to Combat">
-          <i class="fa-solid fa-swords"></i>
-          <span>Add to Combat</span>
-        </button>
-        {{/if}}
-      </div>
-    </div>
-    {{/if}}
-
     {{!-- ═══ TAGS ═══ --}}
     <div class="wh40k-panel">
       <div class="wh40k-panel-header">
