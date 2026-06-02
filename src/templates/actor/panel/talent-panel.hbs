@@ -1,13 +1,12 @@
-{{!-- Talents Panel - Compact Table View --}}
-<div class="{{concat 'wh40k-panel wh40k-panel-talents-table'}} tw-mt-0 tw-mb-0 tw-w-full tw-box-border tw-self-stretch">
-    <div class="{{concat 'wh40k-panel-header'}}">
-        <span class="{{concat 'wh40k-panel-title'}}">
-            <i class="{{concat 'fas fa-star'}}"></i> Talents
-            {{#if talentsCount}}<span class="{{concat 'wh40k-count-badge'}} tw-rounded-[10px] tw-px-[6px] tw-py-[2px] tw-text-[0.65rem] tw-font-semibold tw-min-w-[20px] tw-text-center">{{talentsCount}}</span>{{/if}}
-        </span>
-    </div>
-
-    <div class="{{concat 'wh40k-panel-body'}} tw-flex tw-flex-col tw-gap-2 tw-w-full tw-box-border">
+{{!-- Talents Panel — routed through the shared panel.hbs header so its heading
+     matches the other Statistics-tab panels instead of a bare hand-rolled
+     header (#238). --}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
+    label="Talents"
+    icon="fa-star"
+    count=talentsCount
+    rootClass="wh40k-panel-talents-table tw-mt-0 tw-mb-0 tw-w-full tw-box-border tw-self-stretch"
+    bodyClass="tw-flex tw-flex-col tw-gap-2 tw-w-full tw-box-border"}}
         {{#if talentsCount}}
         <div class="tw-flex tw-flex-col tw-gap-[2px]" data-drop-zone="talents" data-accepts="talent">
             {{#each talents as |talent|}}
@@ -46,5 +45,4 @@
         {{/if}}
 
         {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="talent" iconClass="fa-star" hasItems=talentsCount label="Drop Talent to Add" compactLabel="Drop to add" clickToCreate=false}}
-    </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
