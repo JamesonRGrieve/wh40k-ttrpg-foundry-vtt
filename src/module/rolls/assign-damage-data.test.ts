@@ -260,3 +260,53 @@ describe('DW horde branch (#166 — core.md p. 359 "Damaging a Horde")', () => {
         expect(data.damageTaken).toBe(5);
     });
 });
+
+describe('AssignDamageData.previewReducedDamage (#247)', () => {
+    it('reduces damage by location armour and Toughness Bonus', () => {
+        const actor = buildActor(); // BODY armour 4, TB 3
+        const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 });
+        data.update();
+        const p = data.previewReducedDamage();
+        expect(p.effective).toBe(5); // 12 - (4 armour + 3 TB)
+        expect(p.armour).toBe(4);
+        expect(p.toughnessBonus).toBe(3);
+        expect(p.absorbed).toBe(false);
+    });
+
+    it('penetration reduces usable armour, floored at zero', () => {
+        const actor = buildActor();
+        const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 12, totalPenetration: 6, totalFatigue: 0 });
+        data.update();
+        const p = data.previewReducedDamage();
+        expect(p.armour).toBe(0); // pen 6 > armour 4
+        expect(p.effective).toBe(9); // 12 - (0 + 3 TB)
+    });
+
+    it('applies the RAW 1-point minimum when defences fully absorb the hit', () => {
+        const actor = buildActor();
+        const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 5, totalPenetration: 0, totalFatigue: 0 });
+        data.update();
+        const p = data.previewReducedDamage();
+        expect(p.absorbed).toBe(true); // 5 - (4+3) <= 0
+        expect(p.effective).toBe(1);
+    });
+
+    it('ignores armour (but keeps TB) when ignoreArmour is set', () => {
+        const actor = buildActor();
+        const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 });
+        data.ignoreArmour = true;
+        data.update();
+        const p = data.previewReducedDamage();
+        expect(p.armour).toBe(0);
+        expect(p.effective).toBe(9); // 12 - (0 + 3 TB)
+    });
+
+    it('includes cover AP in the armour reduction', () => {
+        const actor = buildActor();
+        const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 20, totalPenetration: 0, totalFatigue: 0, coverAP: 6 });
+        data.update();
+        const p = data.previewReducedDamage();
+        expect(p.armour).toBe(10); // armour 4 + cover 6
+        expect(p.effective).toBe(7); // 20 - (10 + 3 TB)
+    });
+});

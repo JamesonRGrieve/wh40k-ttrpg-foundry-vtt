@@ -163,6 +163,19 @@ export class Hit {
      */
     isExplosive = false;
 
+    /**
+     * Effective-damage preview vs the current target (#247), filled by the damage
+     * chat-card renderer when an attack resolves with a target selected — total
+     * damage after the target's location armour (− penetration) and Toughness Bonus.
+     * `hasEffective` gates the card block; `effectiveAbsorbed` flags a fully-absorbed
+     * hit (RAW 1-point minimum). These are display-only and do not apply damage.
+     */
+    hasEffective = false;
+    effectiveDamage = 0;
+    effectiveArmour = 0;
+    effectiveTb = 0;
+    effectiveAbsorbed = false;
+
     /** Number of Righteous Fury triggers from this hit's damage roll. */
     get righteousFuryCount(): number {
         return this.righteousFury.length;

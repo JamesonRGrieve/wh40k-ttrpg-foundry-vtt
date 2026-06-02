@@ -178,10 +178,32 @@ export class BasicActionManager {
             hit.isExplosive = explosive;
         }
 
+        // Auto-calculate effective damage vs the current target (#247): when the attack
+        // resolved against a target, surface the post-armour/TB damage on the card up
+        // front. The manual "Assign Damage" button below still performs the application.
+        const damageTarget = actionData.rollData.targetActor;
+        let targetName: string | null = null;
+        if (damageTarget != null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; AssignDamageData consumes the untyped ActorLike system shape and .name is the document name
+            const targetLike = damageTarget as unknown as ActorLike & { name?: string };
+            targetName = targetLike.name ?? null;
+            for (const hit of actionData.damageData?.hits ?? []) {
+                const assign = new AssignDamageData(targetLike, hit);
+                assign.update();
+                const preview = assign.previewReducedDamage();
+                hit.hasEffective = true;
+                hit.effectiveDamage = preview.effective;
+                hit.effectiveArmour = preview.armour;
+                hit.effectiveTb = preview.toughnessBonus;
+                hit.effectiveAbsorbed = preview.absorbed;
+            }
+        }
+
         const templateData = {
             weaponName: actionData.rollData.name,
             hits: actionData.damageData?.hits,
             targetActor: actionData.rollData.targetActor,
+            targetName,
             rollId: actionData.id,
             // The replacement option is offered while the original ActionData is still
             // resident in `storedRolls` — once it expires (page reload, etc.) the

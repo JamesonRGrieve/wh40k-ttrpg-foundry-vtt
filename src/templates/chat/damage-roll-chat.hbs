@@ -47,6 +47,21 @@
                         <span class="tw-text-[1.1rem] tw-font-bold tw-text-[var(--wh40k-card-text)]">{{hit.totalPenetration}}</span>
                     </div>
 
+                    {{! Effective damage vs target — auto-calculated from the target's armour + TB (#247) }}
+                    {{#if hit.hasEffective}}
+                    <div class="tw-flex tw-justify-between tw-items-center tw-px-3.5 tw-py-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-[3px] tw-border-[var(--wh40k-card-gold)] tw-rounded-[0_4px_4px_0]">
+                        <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-muted)]">
+                            {{#if @root.targetName}}Effective vs {{@root.targetName}}{{else}}Effective{{/if}}
+                            <span class="tw-block tw-text-[0.7rem] tw-normal-case tw-opacity-80">after armour {{hit.effectiveArmour}} (post-pen) + TB {{hit.effectiveTb}}</span>
+                        </span>
+                        {{#if hit.effectiveAbsorbed}}
+                        <span class="tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-card-muted)]" title="Defences fully absorbed the hit; RAW applies 1 point of damage.">Absorbed (1)</span>
+                        {{else}}
+                        <span class="tw-text-[1.3rem] tw-font-bold tw-text-[var(--wh40k-card-gold)]">{{hit.effectiveDamage}}</span>
+                        {{/if}}
+                    </div>
+                    {{/if}}
+
                     {{! Effects }}
                     {{#each hit.effects as |effect|}}
                         <div class="tw-flex tw-items-start tw-gap-2 tw-py-1.5 tw-text-[0.85rem]">

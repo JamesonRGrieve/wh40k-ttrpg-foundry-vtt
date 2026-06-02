@@ -125,6 +125,24 @@ export class AssignDamageData {
     }
 
     /**
+     * Preview the effective damage this hit deals to the target: total damage minus
+     * the location armour (reduced by penetration, floored at 0) minus the location's
+     * Toughness Bonus, with the RAW 1-point minimum when defences fully absorb the hit
+     * (core.md L10398-10414). Pure — call after {@link update}; unlike {@link finalize}
+     * it neither applies wounds nor posts to chat. Used to surface effective damage on
+     * the damage chat card up front (#247). The DW-horde application path diverges at
+     * apply time; this reports the standard armour + TB reduction.
+     */
+    previewReducedDamage(): { effective: number; armour: number; toughnessBonus: number; penetration: number; absorbed: boolean } {
+        const totalDamage = Number(this.hit.totalDamage);
+        const totalPenetration = Number(this.hit.totalPenetration);
+        const usableArmour = this.ignoreArmour ? 0 : Math.max(0, this.armour - totalPenetration);
+        const raw = totalDamage - (usableArmour + this.tb);
+        const absorbed = raw <= 0;
+        return { effective: absorbed ? 1 : raw, armour: usableArmour, toughnessBonus: this.tb, penetration: totalPenetration, absorbed };
+    }
+
+    /**
      * DW horde branch (#166): when the target is a horde *and* runs on
      * the DW ruleset, RAW collapses the wounds path entirely. The hit
      * either does damage (after armour + TB) or it doesn't; a damaging
