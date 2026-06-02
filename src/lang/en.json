@@ -625,6 +625,10 @@
             "AutoRollDamage": {
                 "Name": "Auto-roll Damage on Hit",
                 "Hint": "When a weapon or psychic attack succeeds, automatically roll its damage and post the damage card. Disable to require clicking the chat \"Roll Damage\" button manually."
+            },
+            "AutoApplyDamage": {
+                "Name": "Auto-apply Damage to Target",
+                "Hint": "When a GM resolves a damage roll made against a selected target, automatically apply the reduced damage (armour by hit location + Toughness Bonus) to the target's wounds — rolling critical damage and applying its status on overflow — instead of clicking the chat \"Assign Damage\" button. Player-rolled attacks still apply via the button. Defaults to off."
             }
         },
         "ActiveEffect": {
