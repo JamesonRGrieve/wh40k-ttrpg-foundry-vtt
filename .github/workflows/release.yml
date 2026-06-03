@@ -1,0 +1,88 @@
+name: Nightly prerelease
+
+# Publishes a rolling, ephemeral PRE-RELEASE build of `main` to the `nightly`
+# release tag, so testers can install the system from a stable, anonymous
+# manifest URL without us cutting versioned releases. This is NOT an official
+# release channel.
+#
+# What testers get / DON'T get:
+#   * System code only — sheets, rules engine, settings, lang, templates.
+#   * NO compendium content. src/packs is a private submodule of copyrighted
+#     material; it is never checked out here, and the packs[] array is stripped
+#     from the published system.json (see .github/scripts/prepare-nightly-manifest.mjs)
+#     so Foundry doesn't hunt for pack dirs that aren't in the zip.
+#
+# Versioning: this workflow's run_number IS the alpha counter. A fresh workflow
+# file starts at run 1, so the first push to main publishes 0.0.1-alpha.1 and
+# each subsequent push (or manual dispatch) increments the last segment. The
+# base prefix comes from src/system.json's version (bump it to 0.0.2-alpha etc.
+# when you want a new base; the counter keeps appending).
+#
+# This intentionally does NOT gate on the CI workflow (ci.yml) — keeping it a
+# separate file is what gives the run_number counter a clean start at 1. If the
+# build itself fails to compile, nothing is published. ci.yml remains the
+# quality gate on the same push.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # required to create/update the `nightly` release
+
+concurrency:
+  group: nightly-release
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Build + publish nightly prerelease
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false # src/packs is private/copyright and is NOT shipped
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # System code only. build:system runs buildSystem (no compilePacks), so
+      # dist/packs is never created.
+      - run: pnpm build:system
+
+      - name: Stamp version + manifest URLs, strip packs[]
+        env:
+          RUN: ${{ github.run_number }}
+          REPO_URL: https://github.com/${{ github.repository }}
+          TAG: nightly
+        run: node .github/scripts/prepare-nightly-manifest.mjs
+
+      - name: Package system zip (system.json at zip root, no packs)
+        run: |
+          test -f dist/system.json
+          test ! -d dist/packs
+          cd dist
+          zip -r -9 ../wh40k-rpg.zip . -x 'packs/*'
+
+      - name: Publish rolling `nightly` prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly
+          name: Nightly build (pre-release)
+          prerelease: true
+          target_commitish: ${{ github.sha }} # re-point the nightly tag at this build
+          body: |
+            Automated rolling build of `main`. Ephemeral, pre-release, **no compendium content**.
+            Commit: ${{ github.sha }}
+
+            Install in Foundry → Game Systems → Install System → paste Manifest URL:
+            `https://github.com/${{ github.repository }}/releases/download/nightly/system.json`
+          files: |
+            dist/system.json
+            wh40k-rpg.zip
