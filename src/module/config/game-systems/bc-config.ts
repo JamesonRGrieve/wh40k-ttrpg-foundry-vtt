@@ -292,7 +292,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * advances" treatment in :2599).
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: context matches abstract base signature; advanceAlignment is extracted and narrowed below
-    override getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
+    override getSkillAdvanceCost(actor: WH40KBaseActor, _skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         const advAlignment = this.#extractAdvanceAlignment(context) ?? 'unaligned';
         return skillAdvanceCost(this.getCharacterAlignment(actor), advAlignment, currentRank);
     }
