@@ -26,38 +26,11 @@
                 actionColor="--wh40k-accent-combat"}}
         {{/if}}
 
-        {{! GENERAL ATTACK ACTIONS (Melee or Ranged) }}
-        {{#if generalAttacks.length}}
-        {{> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
-            heading="Attack Actions"
-            icon="fa-crosshairs"
-            items=generalAttacks
-            mode="action"
-            dataAction="vocalizeCombatAction"
-            actionColor="--wh40k-accent-combat"}}
-        {{/if}}
-
-        {{! MELEE ATTACK ACTIONS }}
-        {{#if meleeAttacks.length}}
-        {{> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
-            heading="Melee Attacks"
-            icon="fa-fist-raised"
-            items=meleeAttacks
-            mode="action"
-            dataAction="vocalizeCombatAction"
-            actionColor="--wh40k-accent-combat"}}
-        {{/if}}
-
-        {{! RANGED ATTACK ACTIONS }}
-        {{#if rangedAttacks.length}}
-        {{> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
-            heading="Ranged Attacks"
-            icon="fa-bullseye"
-            items=rangedAttacks
-            mode="action"
-            dataAction="vocalizeCombatAction"
-            actionColor="--wh40k-accent-combat"}}
-        {{/if}}
+        {{! Attack actions (Standard / Semi / Full / Charge / All-Out / Called Shot, etc.)
+            are NOT listed here — they live on the per-weapon attack dialog opened from a
+            weapon, which is where a target, RoF mode, and modifiers are chosen (#227).
+            This panel keeps only the non-per-weapon actions: combat talents, movement,
+            reactions, and utility tools. }}
 
         {{! MOVEMENT ACTIONS }}
         {{> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
