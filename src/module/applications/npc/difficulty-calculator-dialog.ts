@@ -238,7 +238,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      */
     static #updateQuantity(this: DifficultyCalculatorDialog, event: PointerEvent, target: HTMLElement): void {
         event.preventDefault();
-        const input = target.closest('form')?.querySelector('[name="quantity"]') as HTMLInputElement | null;
+        const input = target.closest('form')?.querySelector<HTMLInputElement>('[name="quantity"]');
         if (!input) return;
         const quantity = parseInt(input.value, 10) || 1;
         this.#state.quantity = Math.max(1, quantity);
