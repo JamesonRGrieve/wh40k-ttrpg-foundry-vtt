@@ -66,6 +66,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare role: 'bruiser' | 'sniper' | 'caster' | 'support' | 'commander' | 'specialist';
     declare type: 'troop' | 'elite' | 'master' | 'horde' | 'swarm' | 'creature' | 'daemon' | 'xenos';
     declare threatLevel: number;
+    declare fate: { value: number; max: number };
     declare characteristics: {
         weaponSkill: NPCCharacteristicData;
         ballisticSkill: NPCCharacteristicData;
@@ -255,6 +256,14 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 min: 1,
                 max: 30,
                 integer: true,
+            }),
+
+            // Fate points (#258) — RAW: only elite/master-tier NPCs carry Fate, but
+            // the field is always present (initial 0); the sheet surfaces the control
+            // only for those tiers. Mirrors the character fate {value,max} shape.
+            fate: new SchemaField({
+                value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
             // === CHARACTERISTICS ===
