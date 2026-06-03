@@ -145,5 +145,3 @@ export class WH40KCreateActorDialog {
         });
     }
 }
-
-export default WH40KCreateActorDialog;
