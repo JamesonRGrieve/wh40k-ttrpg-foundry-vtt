@@ -27,4 +27,21 @@ describe('NPC sidebar header fields (#252)', () => {
     it('exposes the Source / book-reference field (the previously-missing one)', () => {
         expect(SRC).toContain("name: 'system.source'");
     });
+
+    it('exposes a Fate field gated to elite/master tiers (#258)', () => {
+        // The Fate header field is only pushed for elite/master NPCs.
+        expect(SRC).toMatch(/const isFated = npcActor\.system\.type === 'elite' \|\| npcActor\.system\.type === 'master'/);
+        expect(SRC).toContain("name: 'system.fate.value'");
+        // It is spread conditionally on isFated, not unconditional.
+        expect(SRC).toMatch(/isFated\s*\?\s*\[[\s\S]*name: 'system\.fate\.value'/);
+    });
+});
+
+describe('NPC fate schema (#258)', () => {
+    const NPC_SRC = readFileSync(resolve(__dirname, '../src/module/data/actor/npc.ts'), 'utf8');
+
+    it('defines a fate {value,max} schema field', () => {
+        expect(NPC_SRC).toMatch(/fate: new SchemaField\(\{/);
+        expect(NPC_SRC).toContain('declare fate: { value: number; max: number }');
+    });
 });
