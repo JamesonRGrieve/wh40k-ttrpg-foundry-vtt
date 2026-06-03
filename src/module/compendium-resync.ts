@@ -12,7 +12,7 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
  */
 const RUNTIME_PRESERVE_PATHS: Record<string, ReadonlyArray<string>> = {
     'skill': ['advance', 'specializations', 'bonus'],
-    'weapon': ['clip', 'equipped', 'stowed', 'jammed', 'modifications'],
+    'weapon': ['clip', 'equipped', 'stowed', 'jammed', 'modifications', 'state.identified'],
     'armour': ['equipped', 'damageTaken', 'modifications'],
     'ammunition': ['quantity', 'equipped'],
     'gear': ['quantity', 'equipped', 'stowed', 'uses'],
