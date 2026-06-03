@@ -25,6 +25,21 @@
 {{/if}}
 
 {{#if weapon}}
+    {{!-- Current target (Foundry-native targeting, #250). Surfaced for every weapon
+         attack so the attacker can see / pick the defender; the button reads
+         game.user.targets and feeds effective-damage + auto-range. --}}
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-py-1.5 tw-px-2.5 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md {{#if hasTarget}}tw-border-gold-raw{{else}}tw-border-[rgba(255,255,255,0.08)]{{/if}}">
+        <i class="fas fa-crosshairs tw-text-gold-raw bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-sm tw-shrink-0"></i>
+        {{#if hasTarget}}
+        <span class="tw-flex-1 tw-min-w-0 tw-text-sm tw-text-[#e8e4d9] tw-font-medium tw-truncate"><span class="tw-text-[#7a7a6a] tw-text-2xs tw-uppercase tw-tracking-wide tw-mr-1">{{localize "WH40K.Roll.TargetLabel"}}</span>{{targetName}}</span>
+        {{else}}
+        <span class="tw-flex-1 tw-min-w-0 tw-text-sm tw-text-[#9a9a8a] tw-italic tw-truncate">{{localize "WH40K.Roll.NoTargetSelected"}}</span>
+        {{/if}}
+        <button type="button" class="tw-flex-none tw-py-0.5 tw-px-2 tw-text-2xs tw-font-ui tw-text-[#9a9a8a] tw-bg-[rgba(255,255,255,0.04)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-sm tw-cursor-pointer tw-transition-all hover:tw-text-[#e8e4d9] hover:tw-border-gold-raw hover:tw-bg-[rgba(201,162,39,0.08)] [&>i]:tw-mr-0.5" data-action="selectTarget" data-tooltip="{{localize 'WH40K.Roll.TargetFirst'}}">
+            <i class="fas fa-crosshairs"></i> {{localize "WH40K.Roll.SelectTarget"}}
+        </button>
+    </div>
+
     {{!-- Ammo Info --}}
     {{#if usesAmmo}}
         <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
@@ -138,7 +153,7 @@
                 </div>
                 <div class="tw-flex tw-items-center tw-gap-1 tw-mt-0.5">
                     <button type="button" class="tw-ml-auto tw-py-0.5 tw-px-2 tw-text-2xs tw-font-ui tw-text-[#9a9a8a] tw-bg-[rgba(255,255,255,0.04)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-sm tw-cursor-pointer tw-transition-all hover:tw-text-[#e8e4d9] hover:tw-border-gold-raw hover:tw-bg-[rgba(201,162,39,0.08)] [&>i]:tw-mr-0.5" data-action="selectTarget">
-                        <i class="fas fa-crosshairs"></i> Select Target
+                        <i class="fas fa-crosshairs"></i> {{localize "WH40K.Roll.SelectTarget"}}
                     </button>
                 </div>
                 {{#if rangeModifiedBy}}
