@@ -913,12 +913,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             ? { label: currentSizeOption.label, modifier: currentSizeOption.modifier, modifierLabel: currentSizeOption.modifierLabel }
             : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
 
+        // Current Foundry-native target (#250) — surfaced so the attacker can see
+        // and pick the defender; `selectTarget` reads game.user.targets.
+        const targetActorForDisplay = rd.targetActor as { name?: string } | null | undefined;
+
         return {
             weapons: Array.isArray(rd['weapons']) ? rd['weapons'] : [],
             weapon: rd.weapon,
             weaponSelect: rd['weaponSelect'],
             isRanged,
             isMelee: !isRanged,
+            targetName: targetActorForDisplay?.name ?? null,
+            hasTarget: targetActorForDisplay != null,
             // Card data
             attackModes,
             meleeSpecialOptions,
