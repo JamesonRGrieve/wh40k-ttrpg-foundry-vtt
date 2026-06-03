@@ -1,11 +1,12 @@
 /**
- * Regression guard (#252): the NPC sidebar header must expose both the Faction
- * and the Source / book-reference fields. Source previously lived only on the
- * NPC tab, so it read as "missing" on the sheet.
+ * Regression guard (#252): the NPC sidebar header exposes Faction, but the
+ * Source / book-reference field lives on the NPC tab's Faction & Allegiance
+ * panel — rendered through the `sourceLabel` helper so a structured `source`
+ * object never prints `[object Object]` — and is NOT duplicated into the header.
  *
  * Source scan rather than runtime: the NPC sheet class pulls in Foundry globals
  * at module load and cannot instantiate under the unit env, and the contract here
- * is a literal one on the `_getSidebarHeaderFields()` return.
+ * is a literal one on the `_getSidebarHeaderFields()` return / the tab template.
  */
 
 import { readFileSync } from 'node:fs';
@@ -13,6 +14,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const SRC = readFileSync(resolve(__dirname, '../src/module/applications/actor/npc-sheet.ts'), 'utf8');
+const TAB_NPC = readFileSync(resolve(__dirname, '../src/templates/actor/npc/tab-npc.hbs'), 'utf8');
 
 describe('NPC sidebar header fields (#252)', () => {
     it('defines _getSidebarHeaderFields', () => {
@@ -24,8 +26,16 @@ describe('NPC sidebar header fields (#252)', () => {
         expect(SRC).toContain("name: 'system.faction'");
     });
 
-    it('exposes the Source / book-reference field (the previously-missing one)', () => {
-        expect(SRC).toContain("name: 'system.source'");
+    it('does NOT duplicate the Source field into the sidebar header', () => {
+        // The Source / book-reference field belongs on the NPC tab, not the header.
+        expect(SRC).not.toContain("label: 'Source'");
+    });
+
+    it('renders the NPC-tab Source field through the sourceLabel helper', () => {
+        // A structured `source` object bound raw printed `[object Object]`; the
+        // helper collapses either shape to a display string.
+        expect(TAB_NPC).toContain('{{sourceLabel source.source}}');
+        expect(TAB_NPC).not.toContain('value="{{source.source}}"');
     });
 
     it('exposes a Fate field gated to elite/master tiers (#258)', () => {
