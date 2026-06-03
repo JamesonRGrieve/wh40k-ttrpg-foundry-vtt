@@ -8,6 +8,7 @@ import type AmmunitionData from '../data/item/ammunition.ts';
 import type WeaponData from '../data/item/weapon.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
+import { isActorInActiveCombat } from '../rules/combat-state.ts';
 
 interface AmmunitionDataWithQuantity extends AmmunitionData {
     quantity?: number;
@@ -302,12 +303,14 @@ export class ReloadActionManager {
             return { success: true, message: 'Free action' };
         }
 
-        // Check if in combat
+        // Check if in combat (shared with the attack gate, #251).
         const combat = game.combat;
-        const isInCombat = combat?.started === true && combat.combatants.some((c: Combatant) => c.actor?.id === actor.id);
+        const isInCombat = isActorInActiveCombat(actor.id, combat);
 
-        if (!isInCombat) {
-            // Out of combat - allow reload with notification
+        if (!isInCombat || combat == null) {
+            // Out of combat - allow reload with notification. (combat == null is
+            // implied by !isInCombat at runtime, but narrows combat for the turn
+            // check below.)
             return { success: true, message: 'Out of combat - no action cost' };
         }
 
