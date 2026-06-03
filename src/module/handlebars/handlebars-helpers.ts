@@ -121,6 +121,19 @@ export function registerHandlebarsHelpers(): void {
      */
     Handlebars.registerHelper('sourceLabel', (source: TplValue): string => formatSourceLabel(source as SourceInput));
 
+    /**
+     * Character count for an `<input size="…">`, so a text input shrinks/grows to
+     * fit its content — a browser-native alternative to the CSS `field-sizing:
+     * content` property (which Tailwind does not currently emit, and which older
+     * runtimes ignore). Floors at the supplied `min` (so the placeholder still
+     * fits when empty) and a hard floor of 2 (#249).
+     */
+    Handlebars.registerHelper('inputSize', (value: TplValue, min: TplValue): number => {
+        const text = typeof value === 'string' ? value : typeof value === 'number' ? String(value) : '';
+        const floor = Number(min);
+        return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
+    });
+
     Handlebars.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: TplValue[]): string {
         // Last arg is Handlebars options object; preceding args are user-supplied.
         const userArgs = rest.slice(0, -1);

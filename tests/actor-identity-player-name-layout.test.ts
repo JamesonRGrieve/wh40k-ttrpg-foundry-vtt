@@ -41,6 +41,13 @@ describe('actor-identity player-name input layout (#249)', () => {
         expect(playerInput).toContain('tw-w-auto');
     });
 
+    it('carries a browser-native size= fallback (field-sizing is not emitted by Tailwind / unsupported on older runtimes)', () => {
+        // The CSS `field-sizing: content` rule never reaches the bundle, so the
+        // input must also shrink/grow via the HTML `size` attribute, computed from
+        // the player name with an 8-char floor for the placeholder.
+        expect(playerInput).toMatch(/size="\{\{inputSize system\.bio\.playerName 8\}\}"/);
+    });
+
     it('keeps a usable floor and a cap so it neither collapses nor sprawls', () => {
         expect(playerInput).toContain('tw-min-w-[3rem]');
         expect(playerInput).toContain('tw-max-w-[200px]');
