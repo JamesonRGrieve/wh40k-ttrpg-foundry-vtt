@@ -116,7 +116,7 @@ import TransactionRequestDialog from '../dialogs/transaction-request-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
 import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
-import BaseActorSheet, { type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
+import BaseActorSheet, { ADVANCE_XP_COSTS, type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract the TextEditor implementation
 const TextEditor = (foundry.applications as unknown as { ux: { TextEditor: { implementation: TextEditorImplementationLike } } }).ux.TextEditor.implementation;
@@ -124,6 +124,16 @@ const TextEditor = (foundry.applications as unknown as { ux: { TextEditor: { imp
 const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; Toast is an optional extension with no shipped types
 const toast = (foundry.applications as unknown as { api?: { Toast?: Record<string, (...args: unknown[]) => void> } }).api?.Toast;
+
+/**
+ * Convert a kebab-case (or bare) id to PascalCase for building langpack keys —
+ * e.g. `squad-mode` → `SquadMode`. Single source for the (formerly six)
+ * identical inline definitions across the engine-panel context builders (#284).
+ */
+function titleCase(s: string): string {
+    return s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
+}
+
 const ARMOUR_DISPLAY_LOCATIONS = [
     { key: 'head', label: 'Head', shortLabel: 'Head', rollRange: '01-10' },
     { key: 'rightArm', label: 'Right Arm', shortLabel: 'R.Arm', rollRange: '11-20' },
@@ -1626,7 +1636,6 @@ export default class CharacterSheet extends BaseActorSheet {
         const sb = sys.characteristics.strength.bonus;
         const tb = sys.characteristics.toughness.bonus;
         const implantSet = new Set<AstartesImplantId>(implants);
-        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
         return {
             implants: ASTARTES_IMPLANTS.map((id) => {
                 // The implant's `mechanic` (kebab-case) maps directly onto the
@@ -1783,7 +1792,6 @@ export default class CharacterSheet extends BaseActorSheet {
         // state yet, so assume full action + half action remain and let
         // the issue dialog refine. Cohesion gate uses the live pool.
         const cohesionAvailable = sys.cohesionCurrent > 0;
-        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
         const available = GENERIC_ORDERS.map((order) => {
             const check = canIssueOrder({ order, hasFullAction: true, hasHalfAction: true, cohesionAvailable });
             return {
@@ -1971,7 +1979,6 @@ export default class CharacterSheet extends BaseActorSheet {
     _prepareDwAmmoPanel(): DwAmmoPanelContext {
         const sys = this.actor.system;
         const selected: DwSelectedAmmoId = sys.selectedAmmo;
-        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
         const labelFor = (id: DwSelectedAmmoId): string => game.i18n.localize(`WH40K.DW.SpecialAmmo.Kind.${titleCase(id)}`);
         const effect = selected === 'standard' ? null : DW_SPECIAL_AMMO_EFFECTS[selected];
         return {
@@ -2027,7 +2034,6 @@ export default class CharacterSheet extends BaseActorSheet {
         if (active === null) {
             return { hasMission: false, mission: null };
         }
-        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
         return {
             hasMission: true,
             mission: {
@@ -2086,7 +2092,6 @@ export default class CharacterSheet extends BaseActorSheet {
         if (last === null) {
             return { hasOutcome: false, outcomeKey: null };
         }
-        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
         return {
             hasOutcome: true,
             outcomeKey: `WH40K.OW.MissionGear.Outcome.${titleCase(last)}`,
@@ -2099,7 +2104,6 @@ export default class CharacterSheet extends BaseActorSheet {
     _prepareOwVehicleMovementPanel(): OwVehicleMovementPanelContext {
         const sys = this.actor.system;
         const chase = sys.chaseState;
-        const titleCase = (s: string): string => s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
         const actions = [
             { id: 'evasive-manoeuvring', timing: 'half' },
             { id: 'floor-it', timing: 'full' },
@@ -2185,8 +2189,7 @@ export default class CharacterSheet extends BaseActorSheet {
             char.progressOffset = circumference * (1 - advance / 5);
 
             // XP cost for next advancement (using WH40K progression)
-            const xpCosts = [100, 250, 500, 750, 1000]; // Simple to Expert
-            char.nextAdvanceCost = advance < 5 ? xpCosts[advance] : 0;
+            char.nextAdvanceCost = advance < 5 ? ADVANCE_XP_COSTS[advance] : 0;
 
             // Prepare tooltip data using the mixin helper
             char.tooltipData = this.prepareCharacteristicTooltip(key, char, modifierSources);
