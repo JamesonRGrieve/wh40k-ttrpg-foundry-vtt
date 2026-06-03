@@ -38,12 +38,24 @@ describe('NPC sidebar header fields (#252)', () => {
         expect(TAB_NPC).not.toContain('value="{{source.source}}"');
     });
 
-    it('exposes a Fate field gated to elite/master tiers (#258)', () => {
-        // The Fate header field is only pushed for elite/master NPCs.
-        expect(SRC).toMatch(/const isFated = npcActor\.system\.type === 'elite' \|\| npcActor\.system\.type === 'master'/);
-        expect(SRC).toContain("name: 'system.fate.value'");
-        // It is spread conditionally on isFated, not unconditional.
-        expect(SRC).toMatch(/isFated\s*\?\s*\[[\s\S]*name: 'system\.fate\.value'/);
+    it('does NOT put Fate in the sidebar header — it belongs on the Combat tab (#258)', () => {
+        // The Fate control was wrongly added to the header; it must be removed.
+        expect(SRC).not.toContain("name: 'system.fate.value'");
+        expect(SRC).not.toContain("label: 'Fate'");
+    });
+
+    it('gates the Combat-tab Fate control to elite/master NPCs via npcFateHidden (#258)', () => {
+        // The sheet sets npcFateHidden = true for NPCs that are neither elite nor
+        // master; PCs never set it (undefined → control renders).
+        expect(SRC).toMatch(/npcTier === 'elite' \|\| npcTier === 'master'/);
+        expect(SRC).toContain("context['npcFateHidden'] = !(");
+    });
+
+    it('the combat panel renders Fate only when npcFateHidden is falsy (#258)', () => {
+        const COMBAT = readFileSync(resolve(__dirname, '../src/templates/actor/panel/combat-station-panel.hbs'), 'utf8');
+        expect(COMBAT).toContain('{{#unless npcFateHidden}}');
+        // The fate block (its data-field bindings) sits inside the guard.
+        expect(COMBAT).toMatch(/\{\{#unless npcFateHidden\}\}[\s\S]*data-field="system\.fate\.value"[\s\S]*\{\{\/unless\}\}/);
     });
 });
 
