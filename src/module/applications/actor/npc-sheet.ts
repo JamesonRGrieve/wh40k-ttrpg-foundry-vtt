@@ -493,6 +493,15 @@ export default class NPCSheet extends CharacterSheet {
                 value: npcActor.system.faction,
                 placeholder: 'Faction',
             },
+            {
+                // Source / book reference — was only on the NPC tab, never the
+                // sidebar header, so it read as "missing" on the sheet (#252).
+                label: 'Source',
+                name: 'system.source',
+                type: 'text' as const,
+                value: npcActor.system.source,
+                placeholder: 'Source',
+            },
         ];
     }
 
