@@ -319,8 +319,14 @@ const NPC_DEFAULT_HEADER_FIELDS: SidebarHeaderField[] = [
         valueClass: 'wh40k-threat-tier',
         valueColor: '#f97316',
     },
-    { label: 'Type', name: 'system.type', type: 'select', value: 'elite', options: { elite: 'Elite', troop: 'Troop' } },
-    { label: 'Role', name: 'system.role', type: 'select', value: 'commander', options: { commander: 'Commander', bruiser: 'Bruiser' } },
+    { label: 'Tier', name: 'system.tier', type: 'select', value: 'elite', options: { troop: 'Troop', elite: 'Elite', master: 'Master', horde: 'Horde' } },
+    {
+        label: 'Nature',
+        name: 'system.nature',
+        type: 'select',
+        value: 'daemon',
+        options: { none: 'None', swarm: 'Swarm', creature: 'Creature', daemon: 'Daemon', xenos: 'Xenos' },
+    },
     { label: 'Faction', name: 'system.faction', type: 'text', value: 'Imperium Nihilus Separatists', placeholder: 'Faction' },
 ];
 
