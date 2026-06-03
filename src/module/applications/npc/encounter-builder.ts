@@ -524,7 +524,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: html[0] is the V1 Dialog callback array element; optional chains guard V1 API runtime behaviour
-            callback: (html: HTMLElement[]) => (html[0]?.querySelector('[name="name"]') as HTMLInputElement)?.value ?? '',
+            callback: (html: HTMLElement[]) => html[0]?.querySelector<HTMLInputElement>('[name="name"]')?.value ?? '',
             rejectClose: false,
         });
 

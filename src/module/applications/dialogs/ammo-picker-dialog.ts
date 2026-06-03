@@ -147,7 +147,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
 
     static async #onSelect(this: AmmoPickerDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         const form = this.element.querySelector('.ammo-picker-content');
-        const selected = form?.querySelector('input[name="selectedAmmo"]:checked') as HTMLInputElement | null;
+        const selected = form?.querySelector<HTMLInputElement>('input[name="selectedAmmo"]:checked');
         if (!selected) return;
 
         const selectedUuid = selected.value;

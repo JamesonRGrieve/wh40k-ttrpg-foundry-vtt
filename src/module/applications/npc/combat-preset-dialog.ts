@@ -339,8 +339,8 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         event.preventDefault();
 
         const form = target.closest('form');
-        const name = (form?.querySelector('[name="presetName"]') as HTMLInputElement | null)?.value.trim();
-        const description = (form?.querySelector('[name="presetDescription"]') as HTMLTextAreaElement | null)?.value.trim();
+        const name = form?.querySelector<HTMLInputElement>('[name="presetName"]')?.value.trim();
+        const description = form?.querySelector<HTMLTextAreaElement>('[name="presetDescription"]')?.value.trim();
 
         if (name === undefined || name === '') {
             // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetNameRequired localization key
