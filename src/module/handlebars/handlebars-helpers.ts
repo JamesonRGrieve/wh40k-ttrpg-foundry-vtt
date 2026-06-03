@@ -2,6 +2,7 @@ import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeCla
 import WH40K from '../config.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
+import { formatSourceLabel, type SourceInput } from './source-label.ts';
 
 /**
  * Template-supplied value. Handlebars helpers receive heterogeneous values from .hbs files
@@ -112,6 +113,14 @@ export function registerHandlebarsHelpers(): void {
      * @example  {{themeClassFor 'border'}}            // uses @root system
      * @example  {{themeClassFor 'accent' 'dh2'}}     // explicit override
      */
+    /**
+     * Format an item's `source` (structured `{book,page,url}` object OR a plain
+     * string) into a display label. Returns '' when there is nothing to show,
+     * so callers can guard with `{{#if (sourceLabel item.system.source)}}`.
+     * Fixes the `[object Object]` render of structured sources (#229).
+     */
+    Handlebars.registerHelper('sourceLabel', (source: TplValue): string => formatSourceLabel(source as SourceInput));
+
     Handlebars.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: TplValue[]): string {
         // Last arg is Handlebars options object; preceding args are user-supplied.
         const userArgs = rest.slice(0, -1);

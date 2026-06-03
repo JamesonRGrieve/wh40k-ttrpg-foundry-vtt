@@ -13,9 +13,9 @@
                         <i class="fas fa-tags"></i> {{item.system.subtype}}
                     </span>
                     {{/if}}
-                    {{#if item.system.source}}
+                    {{#if (sourceLabel item.system.source)}}
                     <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
-                        <i class="fas fa-book"></i> {{item.system.source}}
+                        <i class="fas fa-book"></i> {{sourceLabel item.system.source}}
                     </span>
                     {{/if}}
                 </div>

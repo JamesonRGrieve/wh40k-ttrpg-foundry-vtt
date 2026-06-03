@@ -118,9 +118,9 @@
         {{/if}}
 
         {{!-- Footer --}}
-        {{#if item.system.source}}
+        {{#if (sourceLabel item.system.source)}}
             <div class="tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-text-right">
-                <span class="tw-text-xs tw-italic tw-text-[var(--wh40k-text-muted)]">{{item.system.source}}</span>
+                <span class="tw-text-xs tw-italic tw-text-[var(--wh40k-text-muted)]">{{sourceLabel item.system.source}}</span>
             </div>
         {{/if}}
 
