@@ -26,6 +26,7 @@ import { owMountSchemaFields, type OwMountDeclarations } from './mixins/ow-mount
 import { owOrdersSchemaFields, type OwOrdersDeclarations } from './mixins/ow-orders-template.ts';
 import { owRegimentSchemaFields, type OwRegimentDeclarations } from './mixins/ow-regiment-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
+import { ORIGIN_STEP_KEYS, mapOriginStepNames } from './origin-step-names.ts';
 import CreatureTemplate from './templates/creature.ts';
 
 /** Minimal shape of an actor parent that character data methods depend on. */
@@ -755,31 +756,11 @@ export default class CharacterData extends CreatureTemplate {
 
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
 
-        // Map step keys (camelCase from schema) to items — covers all game systems
-        const stepMap: Record<string, WH40KItem | null> = {
-            // Rogue Trader
-            homeWorld: null,
-            birthright: null,
-            lureOfTheVoid: null,
-            trialsAndTravails: null,
-            motivation: null,
-            career: null,
-            lineage: null,
-            // Dark Heresy 2e
-            background: null,
-            role: null,
-            elite: null,
-            divination: null,
-            // Black Crusade
-            race: null,
-            archetype: null,
-            pride: null,
-            disgrace: null,
-            // Only War / Deathwatch
-            regiment: null,
-            speciality: null,
-            chapter: null,
-        };
+        // Map step keys (camelCase from schema) to items — covers all game systems.
+        // Keys are the canonical ORIGIN_STEP_KEYS plus `lineage` (an RT-only step
+        // tracked in backgroundEffects but not surfaced in the originPath field) (#272).
+        const stepMap: Record<string, WH40KItem | null> = {};
+        for (const key of [...ORIGIN_STEP_KEYS, 'lineage']) stepMap[key] = null;
 
         // Reset background abilities
         this.backgroundEffects.abilities = [];
@@ -813,28 +794,17 @@ export default class CharacterData extends CreatureTemplate {
         // Store origin path selections
         this.backgroundEffects.originPath = stepMap;
 
-        // Update the originPath system data with the names (only if origin builder items exist)
-        // RT steps
-        if (stepMap['homeWorld'] != null) this.originPath.homeWorld = stepMap['homeWorld'].name;
-        if (stepMap['birthright'] != null) this.originPath.birthright = stepMap['birthright'].name;
-        if (stepMap['lureOfTheVoid'] != null) this.originPath.lureOfTheVoid = stepMap['lureOfTheVoid'].name;
-        if (stepMap['trialsAndTravails'] != null) this.originPath.trialsAndTravails = stepMap['trialsAndTravails'].name;
-        if (stepMap['motivation'] != null) this.originPath.motivation = stepMap['motivation'].name;
-        if (stepMap['career'] != null) this.originPath.career = stepMap['career'].name;
-        // DH2e steps
-        if (stepMap['background'] != null) this.originPath.background = stepMap['background'].name;
-        if (stepMap['role'] != null) this.originPath.role = stepMap['role'].name;
-        if (stepMap['elite'] != null) this.originPath.elite = stepMap['elite'].name;
-        if (stepMap['divination'] != null) this.originPath.divination = stepMap['divination'].name;
-        // BC steps
-        if (stepMap['race'] != null) this.originPath.race = stepMap['race'].name;
-        if (stepMap['archetype'] != null) this.originPath.archetype = stepMap['archetype'].name;
-        if (stepMap['pride'] != null) this.originPath.pride = stepMap['pride'].name;
-        if (stepMap['disgrace'] != null) this.originPath.disgrace = stepMap['disgrace'].name;
-        // OW / DW steps
-        if (stepMap['regiment'] != null) this.originPath.regiment = stepMap['regiment'].name;
-        if (stepMap['speciality'] != null) this.originPath.speciality = stepMap['speciality'].name;
-        if (stepMap['chapter'] != null) this.originPath.chapter = stepMap['chapter'].name;
+        // Update the originPath step names. mapOriginStepNames seeds every step
+        // ('' when unfilled); the stepMap loop then writes the resolved names —
+        // stepMap was built in the abilities loop above using the legacy
+        // `flags.rt.step` fallback, so older items without a typed step are
+        // preserved without re-reading flags here (#272).
+        const stepNames = mapOriginStepNames(originItems);
+        for (const key of ORIGIN_STEP_KEYS) {
+            const item = stepMap[key];
+            if (item != null) stepNames[key] = item.name;
+        }
+        Object.assign(this.originPath, stepNames);
 
         // Collect aptitudes from origin path (DH2e/BC/OW use aptitudes for XP costs).
         // Sources: fixed grants.aptitudes + resolved grants.choices[type=aptitude].

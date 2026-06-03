@@ -1,4 +1,4 @@
-import { ConventionalCraftData, LOCOMOTION_CHOICES } from './vehicle.ts';
+import { ConventionalCraftData, locomotionField } from './vehicle.ts';
 
 /**
  * Data model for waterborne conventional vehicles (boats, hovercraft on water,
@@ -16,12 +16,7 @@ export default class WatercraftData extends ConventionalCraftData {
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         const schema = super.defineSchema();
-        schema['locomotion'] = new fields.StringField({
-            required: true,
-            initial: 'hull',
-            choices: [...LOCOMOTION_CHOICES],
-            label: 'WH40K.Vehicle.Locomotion',
-        });
+        schema['locomotion'] = locomotionField('hull');
 
         // === Draught — hull depth below the waterline ===
         schema['draught'] = new fields.NumberField({
