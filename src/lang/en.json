@@ -767,6 +767,8 @@
             "Title": "Combat",
             "CoverAPTooltip": "Cover doesn't penalise the attack roll — it adds this Armour at the hit location, absorbing part of the damage.",
             "NoActiveCombatAttack": "Attacks can only be made during an active combat encounter. Start an encounter and add this token to the tracker first.",
+            "NotYourTurnMove": "It is not this combatant's turn — only the active combatant may move.",
+            "OverMovementBudget": "That move exceeds the movement remaining this turn ({remaining}m left). Spend a Charge or Run action for more.",
             "BattleStation": "Battle Station",
             "Initiative": "Initiative",
             "RollInitiative": "Roll Initiative",
