@@ -757,6 +757,7 @@
         },
         "Combat": {
             "Title": "Combat",
+            "CoverAPTooltip": "Cover doesn't penalise the attack roll — it adds this Armour at the hit location, absorbing part of the damage.",
             "BattleStation": "Battle Station",
             "Initiative": "Initiative",
             "RollInitiative": "Roll Initiative",
