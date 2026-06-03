@@ -282,7 +282,7 @@ export function calculateTokenDistance(
     if (elevation1 !== elevation2) {
         const elevationDiff = Math.abs(elevation2 - elevation1);
         // Pythagorean theorem: sqrt(horizontal^2 + vertical^2)
-        distance = Math.sqrt(Math.pow(distance, 2) + Math.pow(elevationDiff, 2));
+        distance = Math.sqrt(distance ** 2 + elevationDiff ** 2);
     }
 
     return Math.floor(distance);

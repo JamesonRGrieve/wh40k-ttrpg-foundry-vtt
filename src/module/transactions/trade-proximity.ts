@@ -155,10 +155,13 @@ async function openTradeForToken(buyerToken: TokenLike): Promise<void> {
     }
 
     const { default: TransactionRequestDialog } = await import('../applications/dialogs/transaction-request-dialog.ts');
-    const [primary] = nearby;
+    // `.at(0)` is `T | undefined` under both tsconfigs (unlike `nearby[0]`, which
+    // the test config narrows to `T`), so the guard needs no `!` and isn't flagged
+    // as unnecessary — nearby is non-empty here, so this never returns.
+    const primary = nearby.at(0);
+    if (primary === undefined) return;
     await TransactionRequestDialog.show(actor, {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess parser mismatch: tsc requires the `!` (destructure under the flag yields T | undefined despite the length check above); ESLint runs under tsconfig.test.json without the flag and sees the assertion as unnecessary
-        sourceId: primary!.actorId,
+        sourceId: primary.actorId,
         restrictToSourceIds: nearby.map((entry) => entry.actorId),
     });
 }

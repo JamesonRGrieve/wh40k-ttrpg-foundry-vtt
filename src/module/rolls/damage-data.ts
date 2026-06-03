@@ -84,23 +84,24 @@ export function replaceDamageDieWithDoS(
     let target: DamageDieResult | undefined;
     let replacedIndex = 0;
     if (dieIndex === undefined) {
-        // active is non-empty (checked above); active[0] is defined.
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- noUncheckedIndexedAccess: active is provably non-empty (length > 0 checked above)
-        target = active[0]!;
+        // `.at()` is `T | undefined` under BOTH tsconfigs (unlike active[i], which the
+        // test config narrows to T), so the guards below need no `!` and are never
+        // flagged as unnecessary. active is non-empty here, so `first` is always set.
+        const first = active.at(0);
+        if (first === undefined) return null;
+        target = first;
         for (let i = 1; i < active.length; i += 1) {
-            const candidate = active[i];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array element may be undefined at strict-level typechecks
+            const candidate = active.at(i);
             if (candidate !== undefined && candidate.result < target.result) {
                 target = candidate;
                 replacedIndex = i;
             }
         }
     } else {
-        target = active[dieIndex];
+        target = active.at(dieIndex);
         replacedIndex = dieIndex;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: dieIndex may be out-of-range at runtime even though TypeScript types it as DamageDieResult
     if (target === undefined) return null;
     const previous = target.result;
     target.result = dos;
