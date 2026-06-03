@@ -4,6 +4,7 @@ import { characteristicField, initiativeField, movementField, sizeField, woundsF
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
+import { CHARACTERISTIC_SHORT_TO_FULL, type Json, type JsonObject, migrateCharacteristics, migrateWeapons, toInt } from './npc-import-migration.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 
@@ -598,18 +599,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Map characteristic short names to full keys.
      * @type {Object<string, string>}
      */
-    static CHARACTERISTIC_MAP: Record<string, string> = {
-        WS: 'weaponSkill',
-        BS: 'ballisticSkill',
-        S: 'strength',
-        T: 'toughness',
-        Ag: 'agility',
-        Int: 'intelligence',
-        Per: 'perception',
-        WP: 'willpower',
-        Fel: 'fellowship',
-        Inf: 'influence',
-    };
+    static CHARACTERISTIC_MAP: Record<string, string> = CHARACTERISTIC_SHORT_TO_FULL;
 
     /**
      * Get a characteristic by its short name or full key.
@@ -1101,12 +1091,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {number}
      * @private
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: value is untyped migration source data; unknown is intentional here as the entry point of conversion
+    // eslint-disable-next-line no-restricted-syntax -- boundary: value is untyped pre-validation migration source; unknown is the coercion entry point
     static _toInt(value: unknown, fallback = 0): number {
-        if (value === null || value === undefined || value === '') return fallback;
-        const num = Number(value);
-        if (Number.isNaN(num)) return fallback;
-        return Math.floor(num);
+        return toInt(value as Json, fallback);
     }
 
     /** @inheritDoc */
@@ -1176,34 +1163,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateCharacteristics(source: Record<string, unknown>): void {
-        const chars = source['characteristics'];
-        if (typeof chars !== 'object' || chars === null) return;
-
-        // Case-insensitive short-label → full-name lookup, reused from
-        // CHARACTERISTIC_MAP (DRY) so legacy abbreviations resolve to the same
-        // canonical keys the rest of the model uses. Source data is lower-cased
-        // (`ws`), the map is title-cased (`WS`); normalise both ends.
-        const shortToFull = new Map<string, string>(Object.entries(NPCData.CHARACTERISTIC_MAP).map(([short, full]) => [short.toLowerCase(), full]));
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: migrated map holds pre-validation source values (legacy scalar or already-structured)
-        const migrated: Record<string, unknown> = {};
-        let changed = false;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: legacy characteristics object is untyped migration data
-        for (const [key, value] of Object.entries(chars as Record<string, unknown>)) {
-            const fullKey = shortToFull.get(key.toLowerCase()) ?? key;
-            if (fullKey !== key) changed = true;
-
-            if (typeof value === 'object' && value !== null && 'total' in value) {
-                // Already structured — keep (possibly under a remapped key).
-                migrated[fullKey] = value;
-            } else {
-                const total = this._toInt(value, 30);
-                migrated[fullKey] = { base: total, total, bonus: Math.floor(total / 10), advancement: false };
-                changed = true;
-            }
-        }
-
-        if (changed) source['characteristics'] = migrated;
+        migrateCharacteristics(source as JsonObject);
     }
 
     /**
@@ -1217,31 +1177,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateWeapons(source: Record<string, unknown>): void {
-        const weapons = source['weapons'];
-        if (!Array.isArray(weapons)) return;
-
-        const simple = weapons.map((entry) => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: legacy weapon entry is untyped migration data
-            const w = (typeof entry === 'object' && entry !== null ? entry : {}) as Record<string, unknown>;
-            const range = typeof w['range'] === 'string' && w['range'] !== '' ? w['range'] : 'Melee';
-            const isMelee = range === '-' || /melee/i.test(range);
-            let special = '';
-            if (typeof w['special'] === 'string') special = w['special'];
-            else if (typeof w['qualities'] === 'string') special = w['qualities'];
-            return {
-                name: typeof w['name'] === 'string' ? w['name'] : '',
-                damage: typeof w['damage'] === 'string' && w['damage'] !== '' ? w['damage'] : '1d10',
-                pen: this._toInt(w['pen'], 0),
-                range,
-                rof: typeof w['rof'] === 'string' && w['rof'] !== '' ? w['rof'] : 'S/-/-',
-                clip: this._toInt(w['clip'], 0),
-                reload: typeof w['reload'] === 'string' && w['reload'] !== '' ? w['reload'] : '-',
-                special,
-                class: isMelee ? 'melee' : 'basic',
-            };
-        });
-
-        source['weapons'] = { mode: 'simple', simple };
+        migrateWeapons(source as JsonObject);
     }
 }
 
