@@ -37,7 +37,9 @@
 
         {{!-- Three-Column Layout --}}
         <div class="tw-grid tw-grid-cols-3 tw-gap-3">
-            {{!-- Role Select --}}
+            {{!-- Role Select — generation archetype only; shapes the generated
+                 stat profile (ROLE_PROFILES). It is NOT stored on the created
+                 actor (the NPC schema dropped role in #257). --}}
             <div class="tw-flex tw-flex-col tw-gap-1">
                 <label for="role" class="tw-font-medium tw-text-[0.85rem] tw-text-[var(--color-text-light-heading,#eee)]">{{localize "WH40K.NPC.Role"}}</label>
                 <select name="role" class="tw-w-full tw-p-2 tw-border tw-border-solid tw-border-[var(--color-border-light,#555)] tw-rounded-md tw-bg-[var(--color-bg-input,#222)] tw-text-[var(--color-text-light,#fff)] tw-text-base tw-cursor-pointer focus:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))] focus:tw-outline-none">

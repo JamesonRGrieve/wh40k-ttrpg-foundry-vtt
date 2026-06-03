@@ -719,11 +719,13 @@ WH40K.actionTypes = {
  * NPC threat types.
  * @type {Object<string, {label: string}>}
  */
+// NPC tiers — reconciled to the NPCData `tier` schema (troop/elite/master/horde);
+// the old `legendary` entry never matched the schema and is dropped (#257).
 WH40K.npcTypes = {
     troop: { label: 'WH40K.NPCType.Troop' },
     elite: { label: 'WH40K.NPCType.Elite' },
     master: { label: 'WH40K.NPCType.Master' },
-    legendary: { label: 'WH40K.NPCType.Legendary' },
+    horde: { label: 'WH40K.NPCType.Horde' },
 };
 
 /* -------------------------------------------- */

@@ -40,25 +40,25 @@ describe('base-actor-sheet XP-cost source (#284)', () => {
     });
 });
 
-describe('npc-sheet constant de-dup (#284)', () => {
-    it('declares the NPC option + skill constants once', () => {
-        expect(NPC).toContain('const NPC_TYPE_OPTIONS');
-        expect(NPC).toContain('const NPC_ROLE_OPTIONS');
+describe('npc-sheet constant de-dup (#284, options updated by #257)', () => {
+    it('declares the NPC tier/nature option + skill constants once', () => {
+        // #257 split the overloaded NPC type into tier + nature (role dropped).
+        expect(NPC).toContain('const NPC_TIER_OPTIONS');
+        expect(NPC).toContain('const NPC_NATURE_OPTIONS');
+        expect(NPC).not.toContain('const NPC_ROLE_OPTIONS');
         expect(NPC).toContain('const NPC_BASIC_SKILLS');
     });
 
-    it('references the option constants from both the context and the header', () => {
-        expect(NPC).toContain("context['npcTypeOptions'] = NPC_TYPE_OPTIONS");
-        expect(NPC).toContain("context['npcRoleOptions'] = NPC_ROLE_OPTIONS");
-        expect(NPC).toContain('options: NPC_TYPE_OPTIONS');
-        expect(NPC).toContain('options: NPC_ROLE_OPTIONS');
+    it('references the tier/nature option constants from both the context and the header', () => {
+        expect(NPC).toContain("context['npcTierOptions'] = NPC_TIER_OPTIONS");
+        expect(NPC).toContain("context['npcNatureOptions'] = NPC_NATURE_OPTIONS");
+        expect(NPC).toContain('options: NPC_TIER_OPTIONS');
+        expect(NPC).toContain('options: NPC_NATURE_OPTIONS');
     });
 
     it('keeps the 21-skill list in exactly one place (the other projections derive)', () => {
-        // `bruiser: 'Bruiser'` (role) appears once: the NPC_ROLE_OPTIONS source.
-        expect(countOccurrences(NPC, "bruiser: 'Bruiser'")).toBe(1);
-        // The skill key 'sleightOfHand' appears once as data (the canonical list)
-        // plus only inside NPC_SKILL_CHAR_MAP — never a second hard-coded list.
+        // The skill key 'sleightOfHand' appears once as data (the canonical list);
+        // the {key,name} / [key,label,charShort] projections derive via .map().
         expect(countOccurrences(NPC, "sleightOfHand: 'Sleight of Hand'")).toBe(0);
         expect(NPC).toContain("key: 'sleightOfHand', name: 'Sleight of Hand'");
     });
