@@ -77,21 +77,23 @@ export class WH40KSettings {
 
     /** Effective base characteristic value used by character generation: 20 + offset. */
     static getCharacteristicBase(): number {
-        return 20 + WH40KSettings.getCharacteristicOffset();
+        // RAW characteristic base for the FFG d100 family (2d10+25 → base 25). The
+        // offset setting tunes it per world; experienced starts add +5 on top (#223).
+        return 25 + WH40KSettings.getCharacteristicOffset();
     }
 
     /**
      * Size of the point pool a player spends in point-buy character generation.
      * Content-agnostic primitive (a budget integer, not a per-characteristic
      * mechanic table) — the spend cost is a flat 1 point per +1, so no content
-     * lookup is involved. Defaults to 100. Clamped to a non-negative integer.
+     * lookup is involved. Defaults to 60 (DH2e). Clamped to a non-negative integer.
      */
     static getCharacteristicPointBuyPool(): number {
         try {
             const n = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.pointBuyPool));
-            return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 100;
+            return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 60;
         } catch {
-            return 100;
+            return 60;
         }
     }
 
@@ -297,7 +299,8 @@ export class WH40KSettings {
             hint: 'WH40K.SETTINGS.PointBuyPool.Hint',
             scope: 'world',
             config: true,
-            default: 100,
+            // DH2e point-buy allocates 60 points over the base values (#223).
+            default: 60,
             type: Number,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.movementAutomation, {
