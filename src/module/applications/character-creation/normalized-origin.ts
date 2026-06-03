@@ -237,10 +237,15 @@ const SUPPORTED_LINES = new Set(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow', 'im']);
 /**
  * Lines whose `source.<line>.provenance` is `raw` (official). System-agnostic
  * — the builder applies the active system to derive official/adapted/pure.
- * Prefers the raw per-line `_source.system.source` map (full documents),
- * falling back to `system.source` (compendium index entries hold the stored,
- * un-flattened map; prepared documents collapse it to the active line, in
- * which case no official lines are reported).
+ * Prefers the raw per-line `_source.system.source` map (un-flattened documents),
+ * iterating the line keys whose provenance is `raw`. At runtime, though,
+ * `ItemDataModel#flattenLineVariants` collapses `source` to the active line's
+ * `{ provenance, book, page }` before we ever see the document (#295), dropping
+ * the line keys — so the map yields nothing and every origin reads as homebrew.
+ * In that case fall back to the document's `gameSystems` membership, which by the
+ * content model carries exactly the line(s) where the item is RAW (see
+ * `src/packs/CLAUDE.md`). This recovers all three states: active line ∈ raw lines
+ * → official (no badge); ∉ but non-empty → adaptation; empty → pure homebrew.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: doc/system are raw Foundry compendium data with no schema; asRecord narrows every access below
 function collectOfficialLines(doc: Record<string, unknown>, system: Record<string, unknown>): string[] {
@@ -250,7 +255,27 @@ function collectOfficialLines(doc: Record<string, unknown>, system: Record<strin
     for (const [line, entry] of Object.entries(map)) {
         if (SUPPORTED_LINES.has(line) && asRecord(entry)['provenance'] === 'raw') lines.push(line);
     }
-    return lines;
+    if (lines.length > 0) return lines;
+    // Flattened/missing per-line source → the gameSystems membership is the raw-line set.
+    return declaredRawLines(system);
+}
+
+/**
+ * The line(s) a document declares it is RAW for, from `gameSystem` (string) +
+ * `gameSystems` (array). Per the content model, `gameSystems` lists only the lines
+ * where the item is official, so it doubles as the raw-line set when the per-line
+ * `source` provenance map has been flattened away at runtime (#295).
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: system is raw Foundry compendium data with no schema; reads are guarded by typeof / Array checks
+function declaredRawLines(system: Record<string, unknown>): string[] {
+    const out = new Set<string>();
+    const single = system['gameSystem'];
+    if (typeof single === 'string' && SUPPORTED_LINES.has(single)) out.add(single);
+    const many = system['gameSystems'];
+    if (Array.isArray(many)) {
+        for (const line of many) if (typeof line === 'string' && SUPPORTED_LINES.has(line)) out.add(line);
+    }
+    return [...out];
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin is the top-level entry point for raw Foundry compendium documents; asRecord and type coercion helpers validate every field access
