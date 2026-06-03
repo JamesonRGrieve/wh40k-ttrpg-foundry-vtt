@@ -38,6 +38,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
                 'dh2-beyond-origins-homeworlds',
                 'dh2-beyond-origins-backgrounds',
                 'dh2-beyond-origins-roles',
+                'dh2-within-origins-homeworlds',
                 'dh2-within-origins-backgrounds',
                 'dh2-within-origins-roles',
                 'dh2-without-origins-homeworlds',
