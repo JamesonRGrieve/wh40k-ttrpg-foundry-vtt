@@ -75,15 +75,16 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
     // the Player row was dropped from getHeaderFields() — the player name is rendered as a paired
     // input on the identity row instead. These tests assert the post-removal field order.
 
-    it('dh2 returns Divination only — Home World/Background/Role render as origin bubbles (#226)', () => {
+    it('dh2 returns no static header rows — Home World/Background/Role render as origin bubbles and Divination as the italic quote (#226)', () => {
         const fields = SystemConfigRegistry.get('dh2').getHeaderFields(makeActor());
-        expect(names(fields)).toEqual(['system.originPath.divination']);
-        expect(fields.every((f) => f.type === 'text')).toBe(true);
+        // Divination is the italic quote beneath the portrait; the origin steps are bubbles.
+        // Nothing remains for the static sidebar fields panel.
+        expect(names(fields)).toEqual([]);
     });
 
-    it('dh1 returns HomeWorld + Career + Rank(role) + Divination', () => {
+    it('dh1 returns HomeWorld + Career + Rank(role) — Divination renders as the italic quote, not a row (#226)', () => {
         const fields = SystemConfigRegistry.get('dh1').getHeaderFields(makeActor());
-        expect(names(fields)).toEqual(['system.originPath.homeWorld', 'system.originPath.career', 'system.originPath.role', 'system.originPath.divination']);
+        expect(names(fields)).toEqual(['system.originPath.homeWorld', 'system.originPath.career', 'system.originPath.role']);
         const rankField = fields.find((f) => f.label === 'Rank');
         expect(rankField?.name).toBe('system.originPath.role');
     });
