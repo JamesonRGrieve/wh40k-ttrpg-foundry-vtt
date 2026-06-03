@@ -28,10 +28,12 @@ import {
 } from '../../rules/attack-options.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
+import { availableSkillVariants, filterModifiersByVariant, type SkillVariant } from '../../rules/skill-variants.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { calculateTokenDistance, RANGE_BRACKETS } from '../../utils/range-calculator.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -91,6 +93,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _previousTarget: number | null;
     declare _selectedRangeBracket: string | null;
     declare _attackModeKey: string;
+    /** Selected skill test variant (#246), or null when none chosen / not applicable. */
+    declare _selectedSkillVariant: string | null;
     declare _aimModeKey: string;
     declare _activeCombatSituationals: Set<string>;
     declare _sizeModifierKey: string | null;
@@ -99,7 +103,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _rangeExpanded: boolean;
     declare _situationalExpanded: boolean;
     declare _initialized: boolean;
-    declare _cachedSituationalModifiers: Array<{ key: string; source: string; value: number; label: string }> | null;
+    declare _cachedSituationalModifiers: Array<{ key: string; source: string; value: number; label: string; appliesToVariant?: string }> | null;
     declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
     declare _psyMode: PsyMode;
     declare _pushLevel: number;
@@ -137,6 +141,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Card-based weapon panel state
         this._attackModeKey = 'standard';
+        this._selectedSkillVariant = null;
         this._aimModeKey = 'none';
         this._activeCombatSituationals = new Set();
         this._sizeModifierKey = null; // null = use target actor size, string = user override
@@ -179,6 +184,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             selectPower: UnifiedRollDialog.#onSelectPower,
             selectRangeBracket: UnifiedRollDialog.#onSelectRangeBracket,
             selectTarget: UnifiedRollDialog.#onSelectTarget,
+            selectSkillVariant: UnifiedRollDialog.#onSelectSkillVariant,
             selectAttackMode: UnifiedRollDialog.#onSelectAttackMode,
             selectAimMode: UnifiedRollDialog.#onSelectAimMode,
             toggleCombatSituational: UnifiedRollDialog.#onToggleCombatSituational,
@@ -591,6 +597,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }));
         const hasSituationalModifiers = situationalModifiers.length > 0;
 
+        // Test variants (#246) — homebrew-gated skill sub-tests.
+        const skillVariants = this._getSkillVariants();
+
         // Modifier aggregate
         const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty + climbMod;
 
@@ -637,6 +646,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             difficultyPickerOpen: this._difficultyPickerOpen,
             situationalModifiers,
             hasSituationalModifiers,
+            skillVariants,
+            hasSkillVariants: skillVariants.length > 0,
+            selectedSkillVariant: this._selectedSkillVariant,
             showCustomModifier: this._showCustomModifier || this._customModifier !== 0,
             assistantCount: this._assistantCount,
             assistanceBonus: assistanceMod,
@@ -1013,7 +1025,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /*  Helper Methods                               */
     /* -------------------------------------------- */
 
-    _collectSituationalModifiers(): Array<{ key: string; source: string; value: number; label: string }> {
+    _collectSituationalModifiers(): Array<{ key: string; source: string; value: number; label: string; appliesToVariant?: string }> {
         /* eslint-disable no-restricted-syntax -- boundary: rollData is a heterogeneous bag; actor may be on sourceActor or the legacy 'actor' key */
         const actor = this.rollData.sourceActor ?? (this.rollData as Record<string, unknown>)['actor'];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: actor is unknown; cast + type-guard pattern; optional chain guards real runtime possibility
@@ -1023,16 +1035,48 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const type = rd['type'] === 'Skill' ? 'skills' : rd['type'] === 'Characteristic' ? 'characteristics' : 'combat';
         const key = (rd['rollKey'] as string | null) ?? null;
         return (
-            actor as { getSituationalModifiers: (type: string, key: string | null) => Array<{ key: string; source: string; value: number; label: string }> }
+            actor as {
+                getSituationalModifiers: (
+                    type: string,
+                    key: string | null,
+                ) => Array<{ key: string; source: string; value: number; label: string; appliesToVariant?: string }>;
+            }
         ).getSituationalModifiers(type, key);
+    }
+
+    /**
+     * Test variants available for this roll (#246): a skill roll's declared
+     * variants, surfaced only when homebrew refinements are on. Empty otherwise,
+     * which keeps the selector hidden in RAW mode.
+     */
+    _getSkillVariants(): SkillVariant[] {
+        const rd = this.rollData;
+        if (rd['type'] !== 'Skill') return [];
+        const rollKey = (rd['rollKey'] as string | null | undefined) ?? null;
+        if (rollKey === null) return [];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle; per-system skill item schema is read structurally
+        const sourceActor = (rd.sourceActor ?? rd['actor']) as
+            | { items?: Iterable<{ type?: string; name?: string; system?: { identifier?: string; variants?: SkillVariant[] } }> }
+            | null
+            | undefined;
+        let variants: SkillVariant[] = [];
+        for (const item of sourceActor?.items ?? []) {
+            if (item.type === 'skill' && (item.system?.identifier === rollKey || item.name === rollKey)) {
+                if (Array.isArray(item.system?.variants)) variants = item.system.variants;
+                break;
+            }
+        }
+        return availableSkillVariants(variants, WH40KSettings.isHomebrew());
     }
 
     _calculateSituationalModifiers(): number {
         let total = 0;
+        // Active, then gated by the selected test variant (#246): a variant-tagged
+        // modifier only counts when its variant is the one being rolled.
         // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
-        for (const mod of this._cachedSituationalModifiers ?? []) {
-            const toggleKey = `${mod.key}_${mod.source}`;
-            if (this._situationalModifiers[toggleKey]) total += mod.value;
+        const active = (this._cachedSituationalModifiers ?? []).filter((mod) => this._situationalModifiers[`${mod.key}_${mod.source}`]);
+        for (const mod of filterModifiersByVariant(active, this._selectedSkillVariant)) {
+            total += mod.value;
         }
         return total;
     }
@@ -1418,6 +1462,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // override so the calculated bracket takes effect.
         if (typeof rd['update'] === 'function') await (rd['update'] as () => Promise<void>)();
         this._selectedRangeBracket = null;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+    }
+
+    static async #onSelectSkillVariant(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const variant = target.dataset['variant'] ?? null;
+        // Re-selecting the active variant clears it (back to the un-gated test).
+        this._selectedSkillVariant = variant !== null && variant === this._selectedSkillVariant ? null : variant;
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 

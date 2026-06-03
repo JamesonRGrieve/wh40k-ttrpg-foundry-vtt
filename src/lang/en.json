@@ -156,6 +156,7 @@
             "SelectTarget": "Select Target",
             "NoTargetSelected": "No target — target a token, then Select Target",
             "TargetLabel": "Target",
+            "TestVariant": "Test Variant",
             "NotEnoughAmmo": "Not enough ammo to perform action. Do you need to reload?",
             "ForceFieldTitle": "Force Field",
             "ForceFieldNotActivated": "Force Field not activated!",

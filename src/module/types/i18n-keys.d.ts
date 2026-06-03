@@ -2682,6 +2682,7 @@ export type I18nKey =
     | 'WH40K.Roll.Success'
     | 'WH40K.Roll.TargetFirst'
     | 'WH40K.Roll.TargetLabel'
+    | 'WH40K.Roll.TestVariant'
     | 'WH40K.Roll.Title'
     | 'WH40K.Roll.WeaponAttack'
     | 'WH40K.SETTINGS.AutoApplyDamage.Hint'
