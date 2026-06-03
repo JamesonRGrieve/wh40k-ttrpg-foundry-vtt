@@ -51,12 +51,15 @@ const REQUIRED_ACTIONS: ReadonlyArray<string> = [
  * (Aim, Defensive Stance, Delay etc.) don't carry one.
  */
 const EXPECTED_ATTACK_MODIFIERS: Readonly<Record<string, number>> = {
-    'Standard Attack': 0,
+    // RAW Rate-of-Fire to-hit modifiers (#231): single shot +10, semi-auto +0,
+    // full-auto -10. Full Auto Burst was wrongly +20 (read as a bonus, not the
+    // RAW penalty); Standard Attack now carries the +10 single-shot/strike bonus.
+    'Standard Attack': 10,
     'Throw': 0,
     'All Out Attack': 30,
     'Called Shot': -20,
     'Charge': 20,
-    'Full Auto Burst': 20,
+    'Full Auto Burst': -10,
     'Guarded Action': -10,
     'Lightning Attack': -10,
     'Semi-Auto Burst': 0,

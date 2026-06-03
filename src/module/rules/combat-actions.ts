@@ -142,9 +142,9 @@ export function allCombatActions(): CombatAction[] {
             name: 'Standard Attack',
             type: ['Half'],
             subtype: ['Attack', 'Melee', 'Ranged'],
-            description: 'Make one melee or ranged attack; jam on 96+ result.',
+            description: 'Make one melee or ranged attack; +10 to WS/BS; jam on 96+ result.',
             attack: {
-                modifier: 0,
+                modifier: 10,
             },
         },
         {
@@ -236,9 +236,9 @@ export function allCombatActions(): CombatAction[] {
             name: 'Full Auto Burst',
             type: ['Half'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Grants +20 BS, one hit for every DoS; Jam on 94+ result; 2m spread.',
+            description: 'Grants -10 BS, one hit for every DoS; Jam on 94+ result; 2m spread.',
             attack: {
-                modifier: 20,
+                modifier: -10,
             },
         },
         {

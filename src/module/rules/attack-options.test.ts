@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { aggregateSituationalDamageEffects, getSituationalModifiers, MELEE_SITUATIONAL_MODIFIERS, RANGED_SITUATIONAL_MODIFIERS } from './attack-options';
+import {
+    aggregateSituationalDamageEffects,
+    getSituationalModifiers,
+    MELEE_ATTACK_MODES,
+    MELEE_SITUATIONAL_MODIFIERS,
+    MELEE_SPECIAL_OPTIONS,
+    RANGED_ATTACK_MODES,
+    RANGED_SITUATIONAL_MODIFIERS,
+} from './attack-options';
+import { allCombatActions } from './combat-actions';
 
 describe('attack-options situational modifiers', () => {
     describe('ranged set', () => {
@@ -77,5 +86,44 @@ describe('attack-options situational modifiers', () => {
         it('returns the melee set for isRanged=false', () => {
             expect(getSituationalModifiers(false)).toBe(MELEE_SITUATIONAL_MODIFIERS);
         });
+    });
+});
+
+describe('ranged Rate-of-Fire to-hit modifiers (#231)', () => {
+    const findRanged = (key: string): (typeof RANGED_ATTACK_MODES)[number] | undefined => RANGED_ATTACK_MODES.find((m) => m.key === key);
+
+    it('uses RAW values: single shot +10, semi-auto +0, full-auto -10', () => {
+        expect(findRanged('standard')?.modifier).toBe(10);
+        expect(findRanged('semiAuto')?.modifier).toBe(0);
+        expect(findRanged('fullAuto')?.modifier).toBe(-10);
+    });
+
+    it('does not regress to the reported +10 semi / +20 full bonuses', () => {
+        expect(findRanged('semiAuto')?.modifier).not.toBe(10);
+        expect(findRanged('fullAuto')?.modifier).not.toBe(20);
+    });
+
+    it('tooltips agree with the numeric modifier (no stale +10/+20 text)', () => {
+        expect(findRanged('standard')?.tooltip).toContain('+10 to BS');
+        expect(findRanged('semiAuto')?.tooltip).toContain('+0 BS');
+        expect(findRanged('fullAuto')?.tooltip).toContain('-10 BS');
+    });
+});
+
+describe('attack-mode ↔ combat-action modifier consistency (single source, #231)', () => {
+    // The dialog DISPLAYS the attack-mode modifier; the roll APPLIES the linked
+    // combat action's modifier (calculateCombatActionModifier reads
+    // allCombatActions()[].attack.modifier by action name). If they drift the UI
+    // shows one number while the roll uses another — exactly how Full-Auto came
+    // to read +20 while applying 0. This locks them together.
+    const actionModifier = (name: string): number => {
+        const action = allCombatActions().find((a) => a.name === name);
+        return action?.attack?.modifier ?? 0;
+    };
+
+    const allModes = [...RANGED_ATTACK_MODES, ...MELEE_ATTACK_MODES, ...MELEE_SPECIAL_OPTIONS];
+
+    it.each(allModes)('mode "$key" displays the same modifier its action ($actionName) applies', (mode) => {
+        expect(mode.modifier, `${mode.key} → ${mode.actionName}`).toBe(actionModifier(mode.actionName));
     });
 });
