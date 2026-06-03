@@ -1,3 +1,5 @@
+import { errorMessage } from '../../utils/error-message.ts';
+
 type MappingFieldOptions = Partial<foundry.data.fields.ObjectField.DefaultOptions> & {
     initialKeys?: string[];
     initialKeysOnly?: boolean;
@@ -87,7 +89,7 @@ export default class MappingField extends foundry.data.fields.ObjectField {
                     this.model.validate(v, options);
                 }
             } catch (err) {
-                errors.push(`${key}: ${(err as Error).message}`);
+                errors.push(`${key}: ${errorMessage(err)}`);
             }
         }
 

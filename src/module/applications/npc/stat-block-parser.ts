@@ -11,6 +11,7 @@
  */
 
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
+import { errorMessage } from '../../utils/error-message.ts';
 import StatBlockValidator, { type StatBlockData } from '../../utils/stat-block-validator.ts';
 import TextPatternExtractor from '../../utils/text-pattern-extractor.ts';
 import ThreatCalculator, {
@@ -464,7 +465,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 }
             }
         } catch (err) {
-            result.errors.push(`Invalid JSON: ${(err as Error).message}`);
+            result.errors.push(`Invalid JSON: ${errorMessage(err)}`);
         }
 
         return result;

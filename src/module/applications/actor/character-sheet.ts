@@ -101,6 +101,7 @@ import {
 } from '../../rules/possession.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
+import { errorMessage } from '../../utils/error-message.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
@@ -4134,7 +4135,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 });
             }
         } catch (error) {
-            this._notify('error', `Bulk operation failed: ${(error as Error).message}`, {
+            this._notify('error', `Bulk operation failed: ${errorMessage(error)}`, {
                 duration: 5000,
             });
             console.error('Bulk equipment error:', error);
@@ -4466,7 +4467,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to vocalize bonus: ${(error as Error).message}`, {
+            this._notify('error', `Failed to vocalize bonus: ${errorMessage(error)}`, {
                 duration: 5000,
             });
             console.error('Bonus vocalize error:', error);
@@ -4512,7 +4513,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
             this._notify('info', game.i18n.localize('WH40K.Possession.UnleashSpent'), { duration: 2500 });
         } catch (error) {
-            this._notify('error', `Failed to unleash daemon: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to unleash daemon: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Unleash daemon error:', error);
         }
     }
@@ -4536,7 +4537,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
             this._notify('info', game.i18n.localize('WH40K.Possession.ResetDone'), { duration: 2500 });
         } catch (error) {
-            this._notify('error', `Failed to reset possession session: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to reset possession session: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Reset possession session error:', error);
         }
     }
@@ -4587,7 +4588,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 { duration: 3000 },
             );
         } catch (error) {
-            this._notify('error', `Frenzy test failed: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Frenzy test failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Possession frenzy test error:', error);
         }
     }
@@ -4633,7 +4634,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 { duration: 3500 },
             );
         } catch (error) {
-            this._notify('error', `Mismanifest contest failed: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Mismanifest contest failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Possession mismanifest error:', error);
         }
     }
@@ -4684,7 +4685,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content,
             });
         } catch (error) {
-            this._notify('error', `Failed to apply Mortification of the Flesh: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to apply Mortification of the Flesh: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Mortification of the Flesh error:', error);
         }
     }
@@ -4757,7 +4758,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content,
             });
         } catch (error) {
-            this._notify('error', `Failed to apply Death to All Who Oppose Me: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to apply Death to All Who Oppose Me: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Death to All Who Oppose Me error:', error);
         }
     }
@@ -4788,7 +4789,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content,
             });
         } catch (error) {
-            this._notify('error', `Smite the Unholy failed: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Smite the Unholy failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Smite the Unholy error:', error);
         }
     }
@@ -4799,7 +4800,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await applyManaclesCondition(this.actor);
             this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.AppliedNotification'), { duration: 2500 });
         } catch (error) {
-            this._notify('error', `Failed to apply Manacled: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to apply Manacled: ${errorMessage(error)}`, { duration: 5000 });
             console.error('applyManacles error:', error);
         }
     }
@@ -4812,7 +4813,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.LiftedNotification'), { duration: 2500 });
             }
         } catch (error) {
-            this._notify('error', `Failed to lift Manacled: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to lift Manacled: ${errorMessage(error)}`, { duration: 5000 });
             console.error('liftManacles error:', error);
         }
     }
@@ -4822,7 +4823,7 @@ export default class CharacterSheet extends BaseActorSheet {
         try {
             openRightStuffDialog({ actor: this.actor });
         } catch (error) {
-            this._notify('error', `Right Stuff dialog failed: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Right Stuff dialog failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error('openRightStuff error:', error);
         }
     }
@@ -4856,7 +4857,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 opponentStrength: strengthTotal,
             });
         } catch (error) {
-            this._notify('error', `Grapple action failed: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Grapple action failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Grapple action error:', error);
             return null;
         }
@@ -4943,7 +4944,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content,
             });
         } catch (error) {
-            this._notify('error', `Failed to snap out of shock: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to snap out of shock: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Snap Out of It error:', error);
         }
     }
@@ -4970,7 +4971,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 console.warn('game.wh40k.openOriginPathBuilder not found');
             }
         } catch (error) {
-            this._notify('error', `Failed to open Origin Path Builder: ${(error as Error).message}`, {
+            this._notify('error', `Failed to open Origin Path Builder: ${errorMessage(error)}`, {
                 duration: 5000,
             });
             console.error('Origin Path Builder error:', error);
@@ -5140,7 +5141,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content: `<p><strong>${game.i18n.localize('WH40K.BC.Advancement.RecheckChatTitle')}</strong></p><p>${formatted}</p>`,
             });
         } catch (error) {
-            this._notify('error', `Failed to re-check BC alignment: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to re-check BC alignment: ${errorMessage(error)}`, { duration: 5000 });
             console.error('BC alignment recheck error:', error);
         }
     }
@@ -5207,7 +5208,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 ],
             });
         } catch (error) {
-            this._notify('error', `Failed to purchase Infamy advance: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Failed to purchase Infamy advance: ${errorMessage(error)}`, { duration: 5000 });
             console.error('BC infamy advance purchase error:', error);
         }
     }
@@ -5327,7 +5328,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 ui.notifications.warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
             }
         } catch (error) {
-            ui.notifications.error(`${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${(error as Error).message}`);
+            ui.notifications.error(`${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${errorMessage(error)}`);
             console.error('Origin Path Builder error:', error);
         }
     }
@@ -5616,7 +5617,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 duration: 2000,
             });
         } catch (error) {
-            this._notify('error', `Failed to create effect: ${(error as Error).message}`, {
+            this._notify('error', `Failed to create effect: ${errorMessage(error)}`, {
                 duration: 5000,
             });
             console.error('Create effect error:', error);
@@ -5648,7 +5649,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 duration: 2000,
             });
         } catch (error) {
-            this._notify('error', `Failed to toggle effect: ${(error as Error).message}`, {
+            this._notify('error', `Failed to toggle effect: ${errorMessage(error)}`, {
                 duration: 5000,
             });
             console.error('Toggle effect error:', error);
@@ -5688,7 +5689,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to delete effect: ${(error as Error).message}`, {
+            this._notify('error', `Failed to delete effect: ${errorMessage(error)}`, {
                 duration: 5000,
             });
             console.error('Delete effect error:', error);
@@ -5715,7 +5716,7 @@ export default class CharacterSheet extends BaseActorSheet {
             }
             await sheet.actor.rollItem(itemId);
         } catch (error) {
-            sheet._notify('error', `${label} roll failed: ${(error as Error).message}`, { duration: 5000 });
+            sheet._notify('error', `${label} roll failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error(`${label} roll error:`, error);
         }
     }
@@ -5743,7 +5744,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 });
             }
         } catch (error) {
-            sheet._notify('error', `Failed to post ${label.toLowerCase()}: ${(error as Error).message}`, { duration: 5000 });
+            sheet._notify('error', `Failed to post ${label.toLowerCase()}: ${errorMessage(error)}`, { duration: 5000 });
             console.error(`Vocalize ${label.toLowerCase()} error:`, error);
         }
     }
@@ -5781,7 +5782,7 @@ export default class CharacterSheet extends BaseActorSheet {
             // Use the actor's damageItem method
             await this.actor.damageItem(itemId);
         } catch (error) {
-            this._notify('error', `Damage roll failed: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Damage roll failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Power damage error:', error);
         }
     }
@@ -5908,7 +5909,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 }
             }
         } catch (error) {
-            this._notify('error', `Phenomena roll failed: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Phenomena roll failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Phenomena roll error:', error);
         }
     }
@@ -5951,7 +5952,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 }
             }
         } catch (error) {
-            this._notify('error', `Perils roll failed: ${(error as Error).message}`, { duration: 5000 });
+            this._notify('error', `Perils roll failed: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Perils roll error:', error);
         }
     }
