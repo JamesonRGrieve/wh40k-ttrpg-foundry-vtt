@@ -323,10 +323,11 @@
                                 <span class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--color-text-primary)] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{weapon.name}}</span>
                                 <span class="tw-flex tw-gap-[6px] tw-text-[0.6rem] tw-text-[color:var(--color-text-tertiary)]">
                                     <span class="tw-font-semibold tw-uppercase">{{weapon.system.classLabel}}</span>
-                                    {{#if weapon.system.rangeLabel}}<span class="">{{weapon.system.rangeLabel}}</span>{{/if}}
+                                    {{!-- #262: range hidden from players on unidentified weapons; GM always sees it. --}}
+                                    {{#if (or weapon.system.state.identified @root.isGM)}}{{#if weapon.system.rangeLabel}}<span class="">{{weapon.system.rangeLabel}}</span>{{/if}}{{/if}}
                                 </span>
                             </div>
-                            <span class=" tw-text-[0.7rem] tw-text-[color:var(--color-text-secondary)] tw-font-alt tw-whitespace-nowrap tw-shrink-0">{{weapon.system.damageLabel}}</span>
+                            <span class=" tw-text-[0.7rem] tw-text-[color:var(--color-text-secondary)] tw-font-alt tw-whitespace-nowrap tw-shrink-0">{{#if (or weapon.system.state.identified @root.isGM)}}{{weapon.system.damageLabel}}{{else}}{{localize "WH40K.Weapon.ConcealedStat"}}{{/if}}</span>
                         </div>
                         {{/each}}
                     </div>
