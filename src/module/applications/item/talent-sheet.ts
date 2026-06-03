@@ -887,7 +887,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {Event} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static #switchTab(this: TalentSheet, event: Event, target: HTMLElement): void {
+    static #switchTab(this: TalentSheet, _event: Event, target: HTMLElement): void {
         const tab = target.dataset['tab'];
         const group = target.dataset['group'] ?? 'primary';
         if (tab === undefined || tab === '') return;
