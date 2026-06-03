@@ -32,7 +32,7 @@
     {{/if}}
     <div class="tw-grid tw-gap-2 tw-grid-cols-{{#if columns}}{{columns}}{{else}}3{{/if}}{{#if gridClass}} {{gridClass}}{{/if}}">
         {{#each stats}}
-        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md tw-bg-white/50{{#if action}} tw-cursor-pointer hover:tw-bg-white/80{{/if}}{{#if cellClass}} {{cellClass}}{{/if}}"
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5 tw-p-1 tw-rounded-md tw-bg-white/50{{#if action}} tw-cursor-pointer hover:tw-bg-white/80{{/if}}{{#if cellClass}} {{cellClass}}{{/if}}"
             {{#if action}}data-action="{{action}}"{{/if}}
             {{#if attrs}}{{{attrs}}}{{/if}}
             {{#if title}}title="{{title}}"{{/if}}>
