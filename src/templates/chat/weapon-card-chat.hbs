@@ -85,19 +85,22 @@
     </div>
     {{/if}}
 
-    {{!-- Action Buttons --}}
+    {{!-- Action Buttons. Attack is the larger, central primary; Damage is a compact
+         secondary that hides when auto-apply-damage is on (#248). --}}
     {{#if hasActions}}
-    <div class="tw-flex tw-gap-1.5 tw-justify-center">
-      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-3.5 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border-[var(--wh40k-red-dark)] tw-text-white hover:tw-bg-[linear-gradient(135deg,var(--wh40k-red-bright)_0%,var(--wh40k-red)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(139,0,0,0.4)]" data-action="attack" data-item-uuid="{{item.uuid}}">
+    <div class="tw-flex tw-gap-1.5 tw-justify-center tw-items-stretch">
+      <button type="button" class="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-1.5 tw-px-5 tw-py-2 tw-border tw-rounded-md tw-text-[0.9rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border-[var(--wh40k-red-dark)] tw-text-white tw-shadow-[0_2px_6px_rgba(139,0,0,0.3)] hover:tw-bg-[linear-gradient(135deg,var(--wh40k-red-bright)_0%,var(--wh40k-red)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(139,0,0,0.4)]" data-action="attack" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-crosshairs"></i>
         Attack
       </button>
-      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-3.5 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border-[var(--wh40k-gold-dark)] tw-text-white hover:tw-bg-[linear-gradient(135deg,var(--wh40k-gold-bright)_0%,var(--wh40k-gold)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(212,175,55,0.4)]" data-action="rollDamage" data-item-uuid="{{item.uuid}}">
+      {{#unless autoApplyDamage}}
+      <button type="button" class="tw-flex tw-flex-none tw-items-center tw-gap-1 tw-px-3 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border-[var(--wh40k-gold-dark)] tw-text-white hover:tw-bg-[linear-gradient(135deg,var(--wh40k-gold-bright)_0%,var(--wh40k-gold)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(212,175,55,0.4)]" data-action="rollDamage" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-burst"></i>
         Damage
       </button>
+      {{/unless}}
       {{#if item.system.usesAmmo}}
-      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-3.5 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[var(--wh40k-btn-bg)] tw-border-[var(--wh40k-border-color)] tw-text-[var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:-tw-translate-y-px" data-action="reload" data-item-uuid="{{item.uuid}}">
+      <button type="button" class="tw-flex tw-flex-none tw-items-center tw-gap-1 tw-px-3 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[var(--wh40k-btn-bg)] tw-border-[var(--wh40k-border-color)] tw-text-[var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:-tw-translate-y-px" data-action="reload" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-rotate-right"></i>
         Reload
       </button>
