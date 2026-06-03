@@ -5,6 +5,7 @@ import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-v
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
 import { CHARACTERISTIC_SHORT_TO_FULL, type Json, type JsonObject, migrateCharacteristics, migrateWeapons, toInt } from './npc-import-migration.ts';
+import { mapOriginStepNames, type OriginItemLike } from './origin-step-names.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 
@@ -181,33 +182,16 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     }
 
     /**
-     * NPCs do not have an origin path (they're built from threat tier, not
-     * lifepath). The NPC sheet inherits from CharacterSheet, whose
-     * `_prepareContext` reads `system.originPath.{homeWorld,background,role}`
-     * to decide whether the origin-path widget is complete. Returning a
-     * fully-blank object here keeps the inherited code path working without
-     * baking origin-path schema fields the NPC never uses into the model.
+     * NPC origin path, derived from the NPC's owned `originPath` items (#243).
+     * NPCs reuse the character sheet's origin-path UI + builder; this getter
+     * reflects whatever origins are on the NPC so the bubbles, header rows, and
+     * `originPathComplete` flag populate (rather than the old all-blank stub).
+     * Computed from items (no schema field) since NPC origins are optional.
      */
     get originPath(): Record<string, string> {
-        return {
-            homeWorld: '',
-            birthright: '',
-            lureOfTheVoid: '',
-            trialsAndTravails: '',
-            motivation: '',
-            career: '',
-            background: '',
-            role: '',
-            elite: '',
-            divination: '',
-            race: '',
-            archetype: '',
-            pride: '',
-            disgrace: '',
-            regiment: '',
-            speciality: '',
-            chapter: '',
-        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the parent Actor + its items collection are loosely typed on the DataModel base
+        const items = (this.parent as { items?: Iterable<OriginItemLike> } | null)?.items ?? [];
+        return mapOriginStepNames(items);
     }
 
     /* -------------------------------------------- */
