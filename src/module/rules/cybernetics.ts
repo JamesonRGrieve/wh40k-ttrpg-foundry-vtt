@@ -131,7 +131,7 @@ export interface InstallTestInput {
     surgeonModifier?: number;
 }
 
-export interface TestModifierLine {
+interface TestModifierLine {
     label: string;
     value: number;
 }

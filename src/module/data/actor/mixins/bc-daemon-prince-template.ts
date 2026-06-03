@@ -37,7 +37,7 @@ const ALIGNMENT_CHOICES: readonly DaemonPrinceAlignment[] = ['khorne', 'slaanesh
  * fired and {@link isAscended} returns `true` against the matching
  * non-null record.
  */
-export interface BcDaemonPrinceAscensionData {
+interface BcDaemonPrinceAscensionData {
     /** World-time (or session number) at which apotheosis fired; null = never ascended. */
     ascendedAt: number | null;
     /** Chaos alignment held at the moment of ascension. */

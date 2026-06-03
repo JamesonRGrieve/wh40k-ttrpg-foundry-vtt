@@ -105,7 +105,7 @@ const AMMO_EFFECTS: Partial<Record<string, AmmoEffects>> = {
 /*  Ammo Utility Functions                      */
 /* -------------------------------------------- */
 
-export function ammoText(item: AmmoItem): string | undefined {
+function ammoText(item: AmmoItem): string | undefined {
     game.wh40k.log('ammoText', item);
     if (item.usesAmmo) {
         const loadedName = item.system.loadedAmmo?.name;

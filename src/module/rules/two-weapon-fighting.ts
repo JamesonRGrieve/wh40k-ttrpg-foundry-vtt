@@ -103,7 +103,7 @@ const MELEE_REFOCUS_MODES: ReadonlySet<TwoWeaponAttackMode> = new Set<TwoWeaponA
 const RANGED_REFOCUS_MODES: ReadonlySet<TwoWeaponAttackMode> = new Set<TwoWeaponAttackMode>(['Standard Attack', 'Semi-Auto Burst', 'Full Auto Burst']);
 
 /** One scheduled attack in the errata's two-Half-Action plan. */
-export interface TwoWeaponPlannedAttack {
+interface TwoWeaponPlannedAttack {
     /** 'main' fires first with the main-hand weapon; 'off' is the errata's Free-Action follow-up. */
     hand: 'main' | 'off';
     /** The combat-action name to invoke. Both attacks share the same mode (errata "following the same restrictions"). */

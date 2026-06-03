@@ -7,7 +7,7 @@
  * dialog can validate purchases without re-deriving them per system.
  */
 
-export interface EliteAdvancePrerequisite {
+interface EliteAdvancePrerequisite {
     type: 'characteristic' | 'skill' | 'talent';
     key: string;
     /** For characteristics: minimum total. For skills: minimum advance level. */

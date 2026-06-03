@@ -48,7 +48,7 @@ export interface DistinctionDef {
  * Each field is independently optional so a Mark can grant a stat
  * bump, a trait, an active-effect hook, or any combination thereof.
  */
-export interface DistinctionGrant {
+interface DistinctionGrant {
     /** Stable identifier matching the parent Mark / Distinction. */
     id: string;
     /** Player-facing description of what the grant does. */

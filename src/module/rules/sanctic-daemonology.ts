@@ -202,7 +202,7 @@ export function getSancticCorruptionCost(_effectivePR: number, _success: boolean
  *    a Phenomena would fire, the resolver reports a Fate point may be
  *    spent to negate it.
  */
-export interface SancticMitigation {
+interface SancticMitigation {
     soulBinding?: boolean;
     emperorsAnathema?: boolean;
 }

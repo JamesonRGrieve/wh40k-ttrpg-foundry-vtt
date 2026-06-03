@@ -19,12 +19,12 @@ export interface HazardEntry {
     description: string;
 }
 
-export interface HazardTable {
+interface HazardTable {
     dieSize: number;
     entries: HazardEntry[];
 }
 
-export const OUT_OF_CONTROL_TABLE: HazardTable = {
+const OUT_OF_CONTROL_TABLE: HazardTable = {
     dieSize: 10,
     entries: [
         { range: [1, 2], label: 'Wide Skid', description: 'Vehicle drifts d5 metres in a random direction; no further consequence.' },
@@ -40,7 +40,7 @@ export const OUT_OF_CONTROL_TABLE: HazardTable = {
     ],
 };
 
-export const CRASH_TABLE: HazardTable = {
+const CRASH_TABLE: HazardTable = {
     dieSize: 10,
     entries: [
         { range: [1, 3], label: 'Glancing', description: 'Vehicle takes (speed) integrity damage; occupants take 1d10 Impact at the body location.' },
@@ -55,7 +55,7 @@ export const CRASH_TABLE: HazardTable = {
     ],
 };
 
-export const ON_FIRE_TABLE: HazardTable = {
+const ON_FIRE_TABLE: HazardTable = {
     dieSize: 10,
     entries: [
         {
@@ -83,7 +83,7 @@ const HAZARD_TABLES: Record<HazardKind, HazardTable> = {
     onFire: ON_FIRE_TABLE,
 };
 
-export function getHazardTable(kind: HazardKind): HazardTable {
+function getHazardTable(kind: HazardKind): HazardTable {
     return HAZARD_TABLES[kind];
 }
 

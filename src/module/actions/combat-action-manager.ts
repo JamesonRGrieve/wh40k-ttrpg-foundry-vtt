@@ -6,7 +6,7 @@ interface CombatUpdateData {
     turn: number | null;
 }
 
-export class CombatActionManager {
+class CombatActionManager {
     combatTurnHook: number | undefined;
     combatRoundHook: number | undefined;
 

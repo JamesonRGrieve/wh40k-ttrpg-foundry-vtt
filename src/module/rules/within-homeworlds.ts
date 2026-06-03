@@ -29,19 +29,19 @@ export type WithinCharacteristic =
     | 'fellowship';
 
 /** A homeworld's characteristic adjustment — both positives and the single penalty. */
-export interface WithinCharacteristicMods {
+interface WithinCharacteristicMods {
     readonly positive: readonly WithinCharacteristic[];
     readonly negative: readonly WithinCharacteristic[];
 }
 
 /** Fate threshold + the d10 face required to trigger Emperor's Blessing (an extra Fate point). */
-export interface WithinFateThreshold {
+interface WithinFateThreshold {
     readonly base: number;
     readonly emperorsBlessingMin: number;
 }
 
 /** Starting-wounds expression: `flat + Nd5` matches every Within homeworld's wording. */
-export interface WithinWoundsRoll {
+interface WithinWoundsRoll {
     readonly flat: number;
     readonly dice: number;
     readonly faces: 5;

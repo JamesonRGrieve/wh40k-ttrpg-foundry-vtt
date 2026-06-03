@@ -17,7 +17,7 @@
 /** Toughness, Agility, or Willpower test on each target inside the blast. */
 export type GrenadeSaveCharacteristic = 'toughness' | 'agility' | 'willpower';
 
-export interface GrenadeSave {
+interface GrenadeSave {
     /** Characteristic the on-target save uses. */
     characteristic: GrenadeSaveCharacteristic;
     /**

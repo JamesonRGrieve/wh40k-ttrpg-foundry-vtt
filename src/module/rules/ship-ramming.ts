@@ -112,7 +112,7 @@ export interface RammingDamageInput {
 }
 
 /** Damage-side payload (a hit applied to one ship's Hull Integrity). */
-export interface RammingDamageSide {
+interface RammingDamageSide {
     /** Raw damage before armour. */
     raw: number;
     /** Armour subtracted from `raw`. */

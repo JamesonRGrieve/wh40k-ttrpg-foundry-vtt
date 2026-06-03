@@ -108,7 +108,7 @@ export function replaceDamageDieWithDoS(
     return { replacedIndex, previous, delta: dos - previous };
 }
 
-export class DamageData {
+class DamageData {
     template = '';
     // eslint-disable-next-line no-restricted-syntax -- boundary: actor types are opaque Foundry documents; kept unknown to avoid circular imports
     sourceActor: unknown = undefined;

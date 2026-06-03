@@ -39,7 +39,7 @@ const COMRADE_STATE_CHOICES = ['unharmed', 'wounded', 'dead'] as const satisfies
  * Mirrors the SchemaField below so the compiler narrows access without
  * casts.
  */
-export interface OwComradeData {
+interface OwComradeData {
     /** Display name; blank until the player names their Comrade. */
     name: string;
     /** Current state on the unharmed → wounded → dead track. */

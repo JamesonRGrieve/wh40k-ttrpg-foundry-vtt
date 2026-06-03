@@ -74,7 +74,7 @@ export interface DaemonPrinceStatBoost {
 }
 
 /** Reason an attempted ascension was blocked. */
-export type AscensionBlockedReason = 'insufficient-infamy' | 'insufficient-corruption';
+type AscensionBlockedReason = 'insufficient-infamy' | 'insufficient-corruption';
 
 /** Input shape for {@link ascendCharacter}. */
 export interface AscendCharacterArgs {

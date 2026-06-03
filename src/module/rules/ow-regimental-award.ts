@@ -34,7 +34,7 @@
  * commendation for valour), a trait (e.g. an honorific keyword used by
  * other rules), or one or more bonus Fate Points.
  */
-export interface RegimentalAwardBonus {
+interface RegimentalAwardBonus {
     /**
      * Short code of the characteristic to bump (e.g. `WS`, `WP`, `Fel`).
      * Paired with `modifier`; both must be present for a delta to apply.

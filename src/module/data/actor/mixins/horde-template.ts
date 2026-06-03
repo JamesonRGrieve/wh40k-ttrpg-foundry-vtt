@@ -29,7 +29,7 @@ export interface HordeMixinExtensions {
 /**
  * Interface representing a single entry in the horde magnitude log.
  */
-export interface HordeLogEntry {
+interface HordeLogEntry {
     amount: number;
     source: string;
     timestamp: number;

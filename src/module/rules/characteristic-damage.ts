@@ -12,7 +12,7 @@
  * consumer's job (sheet update + ActiveEffect / status condition).
  */
 
-export type AtZeroEffect =
+type AtZeroEffect =
     /** Skill / talent tests using this characteristic auto-fail. */
     | 'cannot-test'
     /** Actor falls Unconscious. */

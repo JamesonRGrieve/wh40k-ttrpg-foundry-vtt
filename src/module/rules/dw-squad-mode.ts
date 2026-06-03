@@ -74,7 +74,7 @@ export function getSupportRange(rank: RenownRank): SupportRangeTier {
 /* -------------------------------------------- */
 
 /** Means by which a Battle-Brother transitioned into Squad Mode. */
-export type SquadEntryMethod = 'full-action' | 'cohesion-challenge';
+type SquadEntryMethod = 'full-action' | 'cohesion-challenge';
 
 /** Input shape for {@link canEnterSquadMode}. */
 export interface CanEnterSquadModeArgs {
@@ -171,7 +171,7 @@ export interface SquadAbilityActivation {
 }
 
 /** Why a {@link activateSquadAbility} call returned `allowed: false`. */
-export type SquadAbilityFailureReason = 'not-in-squad-mode' | 'insufficient-cohesion';
+type SquadAbilityFailureReason = 'not-in-squad-mode' | 'insufficient-cohesion';
 
 /** Input shape for {@link activateSquadAbility}. */
 export interface ActivateSquadAbilityArgs {
