@@ -2,7 +2,9 @@ import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.
 import { SYSTEM_ID } from '../constants.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
+import { t } from '../i18n/t.ts';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
+import { isActorInActiveCombat } from '../rules/combat-state.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
@@ -165,6 +167,13 @@ export class TargetedActionManager {
         game.wh40k.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
         if (rollData == null) return;
+
+        // #251: attacks require an active encounter the attacker is part of. The
+        // GM can disable this gate via the RequireCombatToAttack setting.
+        if (WH40KSettings.isCombatRequiredToAttack() && !isActorInActiveCombat(rollData.actor.id, game.combat)) {
+            ui.notifications.warn(t('WH40K.Combat.NoActiveCombatAttack'));
+            return;
+        }
 
         // Weapon
         const weapons =

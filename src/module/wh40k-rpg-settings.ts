@@ -29,6 +29,7 @@ export class WH40KSettings {
         autoPsychicPhenomena: 'auto-psychic-phenomena',
         autoRollDamage: 'auto-roll-damage',
         autoApplyDamage: 'auto-apply-damage',
+        requireCombatToAttack: 'require-combat-to-attack',
     };
 
     /** When true, a successful weapon/psychic attack rolls its damage automatically
@@ -53,6 +54,18 @@ export class WH40KSettings {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoApplyDamage) === true;
         } catch {
             return false;
+        }
+    }
+
+    /** When true, weapon attacks may only be initiated during an active combat
+     *  encounter the attacker is part of (#251). Defaults to true; GMs can
+     *  disable it for out-of-combat / narrative attacks. Safe before
+     *  registration (returns true). */
+    static isCombatRequiredToAttack(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.requireCombatToAttack) !== false;
+        } catch {
+            return true;
         }
     }
 
@@ -213,6 +226,14 @@ export class WH40KSettings {
             scope: 'world',
             config: true,
             default: false,
+            type: Boolean,
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.requireCombatToAttack, {
+            name: 'WH40K.SETTINGS.RequireCombatToAttack.Name',
+            hint: 'WH40K.SETTINGS.RequireCombatToAttack.Hint',
+            scope: 'world',
+            config: true,
+            default: true,
             type: Boolean,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.combatPresets, {
