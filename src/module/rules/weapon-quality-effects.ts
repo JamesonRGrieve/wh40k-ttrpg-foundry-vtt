@@ -976,5 +976,3 @@ export const WeaponQualityEffects = {
     resolveCripplingTickDamage,
     resolveIndirectPenalty,
 };
-
-export default WeaponQualityEffects;

@@ -91,5 +91,3 @@ export class ConvertActorSystemDialog {
         });
     }
 }
-
-export default ConvertActorSystemDialog;
