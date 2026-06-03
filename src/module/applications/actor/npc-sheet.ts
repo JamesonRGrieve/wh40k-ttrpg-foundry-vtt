@@ -31,6 +31,28 @@ interface NPCV2TrainedSkillData {
 }
 
 /** Mapping from WH40K skill key to its governing characteristic key. */
+/** NPC tier/nature `type` dropdown options — single source for the context key and the sidebar-field descriptor (#284). */
+const NPC_TYPE_OPTIONS: Record<string, string> = {
+    troop: 'Troop',
+    elite: 'Elite',
+    master: 'Master',
+    horde: 'Horde',
+    swarm: 'Swarm',
+    creature: 'Creature',
+    daemon: 'Daemon',
+    xenos: 'Xenos',
+};
+
+/** NPC `role` dropdown options — single source for the context key and the sidebar-field descriptor (#284). */
+const NPC_ROLE_OPTIONS: Record<string, string> = {
+    bruiser: 'Bruiser',
+    sniper: 'Sniper',
+    caster: 'Caster',
+    support: 'Support',
+    commander: 'Commander',
+    specialist: 'Specialist',
+};
+
 const NPC_SKILL_CHAR_MAP: Readonly<Record<string, string>> = {
     acrobatics: 'agility',
     athletics: 'strength',
@@ -54,6 +76,36 @@ const NPC_SKILL_CHAR_MAP: Readonly<Record<string, string>> = {
     survival: 'perception',
     techUse: 'intelligence',
 } as const;
+
+/**
+ * Canonical 21 basic DH2 skills with governing characteristic (short form) and
+ * grouping category. Single source for the three projections this sheet used to
+ * hard-code inline — the skills tab ({key,name,char,category}), the add-skill
+ * dialog ({key,name}), and `_prepareSkills` ([key,label,charShort]) (#284).
+ */
+const NPC_BASIC_SKILLS: ReadonlyArray<{ key: string; name: string; char: string; category: string }> = [
+    { key: 'acrobatics', name: 'Acrobatics', char: 'Ag', category: 'stealth' },
+    { key: 'athletics', name: 'Athletics', char: 'S', category: 'combat' },
+    { key: 'awareness', name: 'Awareness', char: 'Per', category: 'stealth' },
+    { key: 'charm', name: 'Charm', char: 'Fel', category: 'social' },
+    { key: 'command', name: 'Command', char: 'Fel', category: 'social' },
+    { key: 'commerce', name: 'Commerce', char: 'Fel', category: 'social' },
+    { key: 'deceive', name: 'Deceive', char: 'Fel', category: 'social' },
+    { key: 'dodge', name: 'Dodge', char: 'Ag', category: 'combat' },
+    { key: 'inquiry', name: 'Inquiry', char: 'Fel', category: 'social' },
+    { key: 'interrogation', name: 'Interrogation', char: 'WP', category: 'social' },
+    { key: 'intimidate', name: 'Intimidate', char: 'S', category: 'social' },
+    { key: 'logic', name: 'Logic', char: 'Int', category: 'technical' },
+    { key: 'medicae', name: 'Medicae', char: 'Int', category: 'technical' },
+    { key: 'parry', name: 'Parry', char: 'WS', category: 'combat' },
+    { key: 'psyniscience', name: 'Psyniscience', char: 'Per', category: 'technical' },
+    { key: 'scrutiny', name: 'Scrutiny', char: 'Per', category: 'social' },
+    { key: 'security', name: 'Security', char: 'Int', category: 'technical' },
+    { key: 'sleightOfHand', name: 'Sleight of Hand', char: 'Ag', category: 'stealth' },
+    { key: 'stealth', name: 'Stealth', char: 'Ag', category: 'stealth' },
+    { key: 'survival', name: 'Survival', char: 'Per', category: 'stealth' },
+    { key: 'techUse', name: 'Tech-Use', char: 'Int', category: 'technical' },
+];
 
 /** Pick characteristic from existing state or fall back to the map default. */
 function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, skillKey: string): string {
@@ -358,24 +410,8 @@ export default class NPCSheet extends CharacterSheet {
 
         // Header + NPC-tab additions
         context['threatTier'] = this.npcActor.system.threatTier;
-        context['npcTypeOptions'] = {
-            troop: 'Troop',
-            elite: 'Elite',
-            master: 'Master',
-            horde: 'Horde',
-            swarm: 'Swarm',
-            creature: 'Creature',
-            daemon: 'Daemon',
-            xenos: 'Xenos',
-        };
-        context['npcRoleOptions'] = {
-            bruiser: 'Bruiser',
-            sniper: 'Sniper',
-            caster: 'Caster',
-            support: 'Support',
-            commander: 'Commander',
-            specialist: 'Specialist',
-        };
+        context['npcTypeOptions'] = NPC_TYPE_OPTIONS;
+        context['npcRoleOptions'] = NPC_ROLE_OPTIONS;
         context['weaponClassOptions'] = {
             melee: 'Melee',
             pistol: 'Pistol',
@@ -468,30 +504,14 @@ export default class NPCSheet extends CharacterSheet {
                 name: 'system.type',
                 type: 'select' as const,
                 value: npcActor.system.type,
-                options: {
-                    troop: 'Troop',
-                    elite: 'Elite',
-                    master: 'Master',
-                    horde: 'Horde',
-                    swarm: 'Swarm',
-                    creature: 'Creature',
-                    daemon: 'Daemon',
-                    xenos: 'Xenos',
-                },
+                options: NPC_TYPE_OPTIONS,
             },
             {
                 label: 'Role',
                 name: 'system.role',
                 type: 'select' as const,
                 value: npcActor.system.role,
-                options: {
-                    bruiser: 'Bruiser',
-                    sniper: 'Sniper',
-                    caster: 'Caster',
-                    support: 'Support',
-                    commander: 'Commander',
-                    specialist: 'Specialist',
-                },
+                options: NPC_ROLE_OPTIONS,
             },
             {
                 label: 'Faction',
@@ -847,30 +867,8 @@ export default class NPCSheet extends CharacterSheet {
         // Get favorite skills
         const favoriteSkillKeys = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
 
-        // Define all basic skills with their characteristics
-        const allBasicSkills = [
-            { key: 'acrobatics', name: 'Acrobatics', char: 'Ag', category: 'stealth' },
-            { key: 'athletics', name: 'Athletics', char: 'S', category: 'combat' },
-            { key: 'awareness', name: 'Awareness', char: 'Per', category: 'stealth' },
-            { key: 'charm', name: 'Charm', char: 'Fel', category: 'social' },
-            { key: 'command', name: 'Command', char: 'Fel', category: 'social' },
-            { key: 'commerce', name: 'Commerce', char: 'Fel', category: 'social' },
-            { key: 'deceive', name: 'Deceive', char: 'Fel', category: 'social' },
-            { key: 'dodge', name: 'Dodge', char: 'Ag', category: 'combat' },
-            { key: 'inquiry', name: 'Inquiry', char: 'Fel', category: 'social' },
-            { key: 'interrogation', name: 'Interrogation', char: 'WP', category: 'social' },
-            { key: 'intimidate', name: 'Intimidate', char: 'S', category: 'social' },
-            { key: 'logic', name: 'Logic', char: 'Int', category: 'technical' },
-            { key: 'medicae', name: 'Medicae', char: 'Int', category: 'technical' },
-            { key: 'parry', name: 'Parry', char: 'WS', category: 'combat' },
-            { key: 'psyniscience', name: 'Psyniscience', char: 'Per', category: 'technical' },
-            { key: 'scrutiny', name: 'Scrutiny', char: 'Per', category: 'social' },
-            { key: 'security', name: 'Security', char: 'Int', category: 'technical' },
-            { key: 'sleightOfHand', name: 'Sleight of Hand', char: 'Ag', category: 'stealth' },
-            { key: 'stealth', name: 'Stealth', char: 'Ag', category: 'stealth' },
-            { key: 'survival', name: 'Survival', char: 'Per', category: 'stealth' },
-            { key: 'techUse', name: 'Tech-Use', char: 'Int', category: 'technical' },
-        ];
+        // All basic skills with their characteristics (canonical source, #284).
+        const allBasicSkills = NPC_BASIC_SKILLS;
 
         // Characteristic key mapping
         const charKeyMap: Record<string, string> = {
@@ -1174,30 +1172,9 @@ export default class NPCSheet extends CharacterSheet {
         const skillKey = target.dataset['skill'];
         if (skillKey === undefined || skillKey === '') {
             // Show skill selection dialog
-            const skills = [
-                { key: 'acrobatics', name: 'Acrobatics' },
-                { key: 'athletics', name: 'Athletics' },
-                { key: 'awareness', name: 'Awareness' },
-                { key: 'charm', name: 'Charm' },
-                { key: 'command', name: 'Command' },
-                { key: 'commerce', name: 'Commerce' },
-                { key: 'deceive', name: 'Deceive' },
-                { key: 'dodge', name: 'Dodge' },
-                { key: 'inquiry', name: 'Inquiry' },
-                { key: 'interrogation', name: 'Interrogation' },
-                { key: 'intimidate', name: 'Intimidate' },
-                { key: 'logic', name: 'Logic' },
-                { key: 'medicae', name: 'Medicae' },
-                { key: 'parry', name: 'Parry' },
-                { key: 'psyniscience', name: 'Psyniscience' },
-                { key: 'scrutiny', name: 'Scrutiny' },
-                { key: 'security', name: 'Security' },
-                { key: 'sleightOfHand', name: 'Sleight of Hand' },
-                { key: 'stealth', name: 'Stealth' },
-                { key: 'survival', name: 'Survival' },
-                { key: 'techUse', name: 'Tech-Use' },
+            const skills = NPC_BASIC_SKILLS.map((s) => ({ key: s.key, name: s.name }))
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- trainedSkills is a sparse Record; indexer is genuinely optional at runtime
-            ].filter((s) => this.npcActor.system.trainedSkills[s.key] === undefined);
+                .filter((s) => this.npcActor.system.trainedSkills[s.key] === undefined);
 
             const options = skills.map((s) => `<option value="${s.key}">${s.name}</option>`).join('');
 
@@ -1870,30 +1847,8 @@ export default class NPCSheet extends CharacterSheet {
         const characteristics = actor.system.characteristics;
         const trainedSkills = actor.system.trainedSkills;
 
-        // 21 basic WH40K skills with their governing characteristic short names.
-        const BASIC_SKILLS: Array<[string, string, string]> = [
-            ['acrobatics', 'Acrobatics', 'Ag'],
-            ['athletics', 'Athletics', 'S'],
-            ['awareness', 'Awareness', 'Per'],
-            ['charm', 'Charm', 'Fel'],
-            ['command', 'Command', 'Fel'],
-            ['commerce', 'Commerce', 'Fel'],
-            ['deceive', 'Deceive', 'Fel'],
-            ['dodge', 'Dodge', 'Ag'],
-            ['inquiry', 'Inquiry', 'Fel'],
-            ['interrogation', 'Interrogation', 'WP'],
-            ['intimidate', 'Intimidate', 'S'],
-            ['logic', 'Logic', 'Int'],
-            ['medicae', 'Medicae', 'Int'],
-            ['parry', 'Parry', 'WS'],
-            ['psyniscience', 'Psyniscience', 'Per'],
-            ['scrutiny', 'Scrutiny', 'Per'],
-            ['security', 'Security', 'Int'],
-            ['sleightOfHand', 'Sleight of Hand', 'Ag'],
-            ['stealth', 'Stealth', 'Ag'],
-            ['survival', 'Survival', 'Per'],
-            ['techUse', 'Tech-Use', 'Int'],
-        ];
+        // 21 basic WH40K skills with their governing characteristic short names (canonical source, #284).
+        const BASIC_SKILLS: Array<[string, string, string]> = NPC_BASIC_SKILLS.map((s) => [s.key, s.name, s.char] as [string, string, string]);
 
         const standard: Array<[string, SkillLike]> = BASIC_SKILLS.map((tuple) => {
             const key = tuple[0];
