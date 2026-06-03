@@ -629,6 +629,10 @@
             "AutoApplyDamage": {
                 "Name": "Auto-apply Damage to Target",
                 "Hint": "When a GM resolves a damage roll made against a selected target, automatically apply the reduced damage (armour by hit location + Toughness Bonus) to the target's wounds — rolling critical damage and applying its status on overflow — instead of clicking the chat \"Assign Damage\" button. Player-rolled attacks still apply via the button. Defaults to off."
+            },
+            "RequireCombatToAttack": {
+                "Name": "Require Active Combat to Attack",
+                "Hint": "When enabled, weapon attacks can only be initiated during an active combat encounter that the attacker's token is part of. Disable for out-of-combat or narrative attacks. Defaults to on."
             }
         },
         "ActiveEffect": {
@@ -758,6 +762,7 @@
         "Combat": {
             "Title": "Combat",
             "CoverAPTooltip": "Cover doesn't penalise the attack roll — it adds this Armour at the hit location, absorbing part of the damage.",
+            "NoActiveCombatAttack": "Attacks can only be made during an active combat encounter. Start an encounter and add this token to the tracker first.",
             "BattleStation": "Battle Station",
             "Initiative": "Initiative",
             "RollInitiative": "Roll Initiative",
