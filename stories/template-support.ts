@@ -126,6 +126,11 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
     if (globalState[INIT_KEY] === true) return HandlebarsLib;
 
     HandlebarsLib.registerHelper('join', (arr: HbsValue, sep: string) => asArray(arr).join(typeof sep === 'string' ? sep : ', '));
+    HandlebarsLib.registerHelper('inputSize', (value: HbsValue, min: HbsValue) => {
+        const text = typeof value === 'string' ? value : typeof value === 'number' ? String(value) : '';
+        const floor = Number(min);
+        return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
+    });
     HandlebarsLib.registerHelper('eq', (a: HbsValue, b: HbsValue) => a === b);
     HandlebarsLib.registerHelper('ne', (a: HbsValue, b: HbsValue) => a !== b);
     HandlebarsLib.registerHelper('gt', (a: number, b: number) => Number(a) > Number(b));
