@@ -1569,8 +1569,11 @@ interface PointBuyHost {
     _charPointBuy: Record<string, number>;
     _charRolls: number[];
     _charAssignments: Record<string, number | null>;
+    _charAdvancedMode: boolean;
+    _charCustomBases: Record<string, number>;
     _pointBuySpent: () => number;
     _pointBuyRemaining: () => number;
+    _pointBuyBaseFor: (key: string) => number;
 }
 
 function makePointBuyHost(overrides: Partial<PointBuyHost> = {}): PointBuyHost {
@@ -1579,8 +1582,11 @@ function makePointBuyHost(overrides: Partial<PointBuyHost> = {}): PointBuyHost {
         _charPointBuy: Object.fromEntries(GEN_CHARS.map((k) => [k, 0])),
         _charRolls: Array<number>(9).fill(0),
         _charAssignments: Object.fromEntries(GEN_CHARS.map((k) => [k, null])),
+        _charAdvancedMode: false,
+        _charCustomBases: {},
         _pointBuySpent: (): number => proto._pointBuySpent.call(host),
         _pointBuyRemaining: (): number => proto._pointBuyRemaining.call(host),
+        _pointBuyBaseFor: (key: string): number => proto._pointBuyBaseFor.call(host, key),
         ...overrides,
     };
     return host;
@@ -1631,22 +1637,29 @@ describe('OriginPathBuilder point-buy pure logic', () => {
         expect(pbSpent(host)).toBe(before);
     });
 
-    it('sets an absolute value, refunding the field before applying headroom', () => {
+    it('refunds the field before applying pool headroom, then clamps to the per-characteristic cap', () => {
         const host = makePointBuyHost();
         host._charPointBuy['intelligence'] = 30;
-        // 70 left; re-setting the same field to 50 must succeed (its own 30 is
-        // refunded into headroom first), not fight its own current spend.
-        expect(pbSet(host, 'intelligence', 50)).toBe(50);
-        expect(pbSpent(host)).toBe(50);
+        // The field's own 30 is refunded into headroom (so it doesn't fight itself),
+        // but base(20) + points may not exceed the gen cap of 40 → at most 20 points.
+        expect(pbSet(host, 'intelligence', 50)).toBe(20);
+        expect(pbSpent(host)).toBe(20);
     });
 
-    it('caps an absolute set at the remaining pool, dropping the excess', () => {
+    it('caps an absolute set at the remaining pool when the pool is the tighter limit', () => {
         const host = makePointBuyHost();
-        host._charPointBuy['perception'] = 60; // 40 remain elsewhere
+        host._charPointBuy['perception'] = 95; // only 5 of the pool remain
         host._charPointBuy['willpower'] = 0;
-        // Setting willpower to 80 can only take the 40 of headroom left.
-        expect(pbSet(host, 'willpower', 80)).toBe(40);
+        // Setting willpower to 80 can take only the 5 of pool headroom left
+        // (tighter than the cap's 20 points).
+        expect(pbSet(host, 'willpower', 80)).toBe(5);
         expect(pbSpent(host)).toBe(100);
+    });
+
+    it('clamps base + points at the generation cap (DH2e: 40) regardless of pool headroom (#223)', () => {
+        // Fresh pool (100 headroom), mocked base 20 → at most 20 points (total 40).
+        expect(pbSet(makePointBuyHost(), 'strength', 100)).toBe(20);
+        expect(pbAdjust(makePointBuyHost(), 'strength', 100)).toBe(20);
     });
 
     it('floors non-finite / negative absolute sets at 0', () => {
