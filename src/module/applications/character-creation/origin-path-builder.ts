@@ -559,6 +559,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     ];
 
     /**
+     * Maximum starting characteristic value (base + points spent) during
+     * point-buy generation. DH2e caps a created characteristic at 40 before
+     * advances/origin bonuses (#223). Origin-path bonuses are separate grants
+     * and may legitimately push the displayed total above this.
+     */
+    static CHARACTERISTIC_GEN_MAX = 40;
+
+    /**
      * Dice expression rolled for the bonus added on top of the characteristic
      * base in BOTH dice-driven modes (`roll-pool-hb` shared bank and per-slot
      * `roll`). The full characteristic is `base (settings) + this roll +
@@ -1202,7 +1210,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const pointBuyRemaining = pointBuyPool - pointBuySpent;
         const pointBuyCharacteristics = CHARS.map((key) => {
             const charData = (this._actorSys().characteristics?.[key] ?? {}) as Partial<WH40KCharacteristic>;
-            const base = this._charAdvancedMode ? this._charCustomBases[key] || DEFAULT_BASE : DEFAULT_BASE;
+            const base = this._pointBuyBaseFor(key);
             const originBonus = originBonuses.totals[key] ?? 0;
             const points = Math.max(0, this._charPointBuy[key] ?? 0);
             return {
@@ -1217,8 +1225,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 originBonusTooltip: this._formatOriginBonusTooltip(originBonuses.breakdowns[key] ?? []),
                 originBonusTooltipData: this._formatOriginBonusTooltipData(originBonuses.breakdowns[key] ?? []),
                 total: base + points + originBonus,
-                // A +1 can only be added while the pool has headroom.
-                canIncrease: pointBuyRemaining > 0,
+                // A +1 can only be added while the pool has headroom AND base+points
+                // is still under the generation cap (DH2e: 40).
+                canIncrease: pointBuyRemaining > 0 && base + points < OriginPathBuilder.CHARACTERISTIC_GEN_MAX,
                 canDecrease: points > 0,
             };
         });
@@ -1602,8 +1611,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         const current = Math.max(0, this._charPointBuy[key] ?? 0);
         if (delta > 0) {
-            // Cannot spend more than what remains in the pool.
-            const allowed = Math.min(delta, Math.max(0, this._pointBuyRemaining()));
+            // Cannot spend more than what remains in the pool, nor push base + points
+            // past the generation cap (DH2e: 40) — origin bonuses are added separately.
+            const capHeadroom = Math.max(0, OriginPathBuilder.CHARACTERISTIC_GEN_MAX - this._pointBuyBaseFor(key) - current);
+            const allowed = Math.min(delta, Math.max(0, this._pointBuyRemaining()), capHeadroom);
             this._charPointBuy[key] = current + allowed;
         } else {
             this._charPointBuy[key] = Math.max(0, current + delta);
@@ -1612,11 +1623,21 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Base value for a generation characteristic in the current mode: the custom
+     * race baseline in advanced mode, otherwise the world's setting default.
+     */
+    _pointBuyBaseFor(key: string): number {
+        const defaultBase = WH40KSettings.getCharacteristicBase();
+        return this._charAdvancedMode ? this._charCustomBases[key] || defaultBase : defaultBase;
+    }
+
+    /**
      * Set the points allocated to one characteristic to an absolute value,
-     * validating against the pool. Used by the numeric input. The requested
-     * value is floored at 0 and then capped so the running total never exceeds
-     * the pool (excess is dropped, not borrowed from other characteristics).
-     * Returns the clamped value actually stored.
+     * validating against the pool AND the per-characteristic generation cap.
+     * Used by the numeric input. The requested value is floored at 0 and then
+     * capped so the running total never exceeds the pool (excess is dropped, not
+     * borrowed from other characteristics) and base + points never exceeds
+     * CHARACTERISTIC_GEN_MAX (DH2e: 40). Returns the clamped value stored.
      * @private
      */
     _setPointBuy(key: string, value: number): number {
@@ -1627,8 +1648,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const current = Math.max(0, this._charPointBuy[key] ?? 0);
         // Headroom = remaining pool with THIS characteristic's current spend
         // refunded, so re-setting the same field doesn't fight its own spend.
-        const headroom = WH40KSettings.getCharacteristicPointBuyPool() - (this._pointBuySpent() - current);
-        this._charPointBuy[key] = Math.max(0, Math.min(desired, headroom));
+        const poolHeadroom = WH40KSettings.getCharacteristicPointBuyPool() - (this._pointBuySpent() - current);
+        const capHeadroom = OriginPathBuilder.CHARACTERISTIC_GEN_MAX - this._pointBuyBaseFor(key);
+        this._charPointBuy[key] = Math.max(0, Math.min(desired, poolHeadroom, capHeadroom));
         return this._charPointBuy[key];
     }
 
