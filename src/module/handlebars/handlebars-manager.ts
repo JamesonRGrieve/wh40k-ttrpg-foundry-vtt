@@ -89,7 +89,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
             'systems/wh40k-rpg/templates/actor/player/body.hbs',
             'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
-            'systems/wh40k-rpg/templates/actor/player/tab-status.hbs',
             'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
             'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
             'systems/wh40k-rpg/templates/actor/player/tab-talents.hbs',

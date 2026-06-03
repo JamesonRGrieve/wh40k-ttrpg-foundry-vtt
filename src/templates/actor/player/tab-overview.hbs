@@ -444,5 +444,77 @@
             {{> systems/wh40k-rpg/templates/actor/panel/ow-drawback-panel.hbs drawbackPanel=drawbackPanel}}
         {{/if}}
 
+        {{!-- ══ Relocated from the former Status tab (#263) ══
+             The Status tab was redundant with Overview (wounds / fatigue /
+             corruption / insanity / experience / fate already shown above;
+             movement moved to Combat in #266). These panels were Status-only,
+             so they move here to avoid silent data loss. Each keeps its
+             original system / state gate; the context vars (alignmentPanel,
+             cohesionPanel, …) come from the shared CharacterSheet context. --}}
+
+        {{!-- Shock (#66) — DH2-only Shock counter + Snap-Out-Of-It. --}}
+        {{#if isDH2}}
+            {{> systems/wh40k-rpg/templates/actor/panel/shock-panel.hbs}}
+        {{/if}}
+
+        {{!-- Possession (#82) — only when the possession track is engaged. --}}
+        {{#if (neq system.possession.state 'none')}}
+            {{> systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs}}
+        {{/if}}
+
+        {{!-- Subtlety (#87) — DH2-only warband subtlety pool. --}}
+        {{#if isDH2}}
+            {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
+        {{/if}}
+
+        {{!-- BC Alignment / Infamy (#173) — Black-Crusade-only. --}}
+        {{#if isBC}}
+            {{> systems/wh40k-rpg/templates/actor/panel/bc-alignment-panel.hbs alignmentPanel=alignmentPanel}}
+        {{/if}}
+
+        {{!-- DW engine panels (#162-165, #168-170) — Deathwatch-only. --}}
+        {{#if isDW}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-cohesion-panel.hbs cohesionPanel=cohesionPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-mode-panel.hbs modePanel=modePanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-renown-panel.hbs renownPanel=renownPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-requisition-panel.hbs requisitionPanel=requisitionPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs oathPanel=oathPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs missionPanel=missionPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/dw-vehicle-panel.hbs vehiclePanel=vehiclePanel}}
+        {{/if}}
+
+        {{!-- OW engine panels (#152-155 + batch-2) — Only-War-only. --}}
+        {{#if isOW}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-comrade-panel.hbs comradePanel=comradePanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-logistics-panel.hbs logisticsPanel=logisticsPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-orders-panel.hbs ordersPanel=ordersPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-mission-gear-panel.hbs missionGearPanel=missionGearPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-vehicle-movement-panel.hbs vehicleMovementPanel=vehicleMovementPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-comrade-healing-panel.hbs comradeHealingPanel=comradeHealingPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-mount-panel.hbs mountPanel=mountPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/ow-battlefield-panel.hbs battlefieldPanel=battlefieldPanel}}
+        {{/if}}
+
+        {{!-- Active Effects (was Status-only; not otherwise on Overview). --}}
+        {{> systems/wh40k-rpg/templates/actor/panel/active-effects-panel.hbs}}
+
     </div>
+
+    {{!-- Status-tab action panels relocated full-width (#263). --}}
+    {{!-- Dark Pacts (Enemies Beyond p.72, #84) — renders only when a pact is active. --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs}}
+
+    {{!-- Penitent: Mortification of the Flesh (#94). Hidden unless hasPenitent. --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/mortification-button.hbs hasPenitent=hasPenitent}}
+
+    {{!-- Fanatic: Death to All Who Oppose Me (#93). Hidden unless hasFanatic. --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/fanatic-button.hbs hasFanatic=hasFanatic}}
+
+    {{!-- Crusader: Smite the Unholy (#141). Hidden unless hasCrusader. --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/crusader-button.hbs hasCrusader=hasCrusader}}
+
+    {{!-- Grapple Controller (#120) — rendered only mid-grapple. --}}
+    {{#if (and grappleState (neq grappleState 'none'))}}
+        {{> systems/wh40k-rpg/templates/actor/panel/grapple-controller-panel.hbs grappleState=grappleState}}
+    {{/if}}
 </section>

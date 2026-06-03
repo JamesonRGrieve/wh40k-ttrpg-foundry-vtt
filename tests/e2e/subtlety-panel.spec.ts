@@ -109,9 +109,9 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                         await new Promise<void>((r) => {
                             setTimeout(r, 250);
                         });
-                        // Navigate to the Status tab where the panel lives.
+                        // Navigate to the Overview tab where the panel now lives (#263).
                         try {
-                            actor.sheet?.changeTab?.('status', 'primary');
+                            actor.sheet?.changeTab?.('overview', 'primary');
                             await new Promise<void>((r) => {
                                 setTimeout(r, 150);
                             });
