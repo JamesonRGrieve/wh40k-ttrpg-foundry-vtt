@@ -91,9 +91,9 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
             setTimeout(r, 250);
         });
 
-        // Navigate to the Status tab if the sheet's tab API is reachable.
+        // Navigate to the Overview tab (Status was consolidated into Overview, #263).
         try {
-            createdActor.sheet.changeTab?.('status', 'primary');
+            createdActor.sheet.changeTab?.('overview', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });

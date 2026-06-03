@@ -70,7 +70,7 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
         });
 
         try {
-            actor.sheet.changeTab?.('status', 'primary');
+            actor.sheet.changeTab?.('overview', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });

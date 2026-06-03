@@ -90,7 +90,7 @@ test('manacles-condition renders Manacled AE on the sheet (#105)', async ({ page
         });
 
         try {
-            actor.sheet.changeTab?.('status', 'primary');
+            actor.sheet.changeTab?.('overview', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });

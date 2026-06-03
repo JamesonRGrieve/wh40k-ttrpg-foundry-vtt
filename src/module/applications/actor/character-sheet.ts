@@ -919,11 +919,6 @@ export default class CharacterSheet extends BaseActorSheet {
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
-        status: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-status.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
         combat: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
@@ -960,7 +955,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static TABS: SheetTabConfig[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', tooltip: 'WH40K.Tabs.Tooltip.Overview', group: 'primary', cssClass: 'tab-overview' },
-        { tab: 'status', label: 'WH40K.Tabs.Status', tooltip: 'WH40K.Tabs.Tooltip.Status', group: 'primary', cssClass: 'tab-status' },
+        // Status tab removed (#263) — its panels were consolidated into Overview.
         { tab: 'skills', label: 'WH40K.Tabs.Statistics', tooltip: 'WH40K.Tabs.Tooltip.Skills', group: 'primary', cssClass: 'tab-skills' },
         // talents tab removed — content moved to overview and skills tabs
         { tab: 'combat', label: 'WH40K.Tabs.Combat', tooltip: 'WH40K.Tabs.Tooltip.Combat', group: 'primary', cssClass: 'tab-combat' },
@@ -1266,7 +1261,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (partId === 'tabs') return this._prepareTabsContext(partContext, options);
         if (partId === 'biography') return this._prepareBiographyContext(partContext, options);
         if (partId === 'overview') return this._prepareOverviewDashboardContext(partContext, options);
-        if (partId === 'status' || partId === 'combat' || partId === 'skills' || partId === 'equipment' || partId === 'powers' || partId === 'dynasty') {
+        if (partId === 'combat' || partId === 'skills' || partId === 'equipment' || partId === 'powers' || partId === 'dynasty') {
             // Provide tab object for the template
             return this._prepareTabPartContext(partId, partContext, options);
         }

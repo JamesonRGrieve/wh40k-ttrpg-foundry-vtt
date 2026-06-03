@@ -84,9 +84,9 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
             setTimeout(r, 250);
         });
 
-        // Navigate to the Status tab if the sheet's tab API is reachable.
+        // Navigate to the Overview tab (Status was consolidated into Overview, #263).
         try {
-            actor.sheet.changeTab?.('status', 'primary');
+            actor.sheet.changeTab?.('overview', 'primary');
             await new Promise<void>((r) => {
                 setTimeout(r, 150);
             });
