@@ -1,4 +1,5 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
@@ -63,8 +64,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare subfaction: string;
     declare allegiance: string;
     declare primaryUse: 'npc' | 'vehicle' | 'ship';
-    declare role: 'bruiser' | 'sniper' | 'caster' | 'support' | 'commander' | 'specialist';
-    declare type: 'troop' | 'elite' | 'master' | 'horde' | 'swarm' | 'creature' | 'daemon' | 'xenos';
+    // #257: `type` was overloaded with two orthogonal axes — RAW tier and
+    // creature nature. Split into `tier` (RAW) and `nature`. The legacy combined
+    // `type` / dropped `role` are exposed as read-only getters for back-compat.
+    declare tier: 'troop' | 'elite' | 'master' | 'horde';
+    declare nature: 'none' | 'swarm' | 'creature' | 'daemon' | 'xenos';
     declare threatLevel: number;
     declare fate: { value: number; max: number };
     declare characteristics: {
@@ -238,16 +242,19 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 label: 'WH40K.NPC.PrimaryUse',
             }),
 
-            role: new StringField({
-                required: true,
-                initial: 'bruiser',
-                choices: ['bruiser', 'sniper', 'caster', 'support', 'commander', 'specialist'],
-            }),
-
-            type: new StringField({
+            // Tier (RAW magnitude) and nature (creature kind) — the two axes the
+            // old single `type` overloaded. `role` dropped (#257). Migration in
+            // #migrateTypeRole maps a legacy `type` onto whichever axis it belongs to.
+            tier: new StringField({
                 required: true,
                 initial: 'troop',
-                choices: ['troop', 'elite', 'master', 'horde', 'swarm', 'creature', 'daemon', 'xenos'],
+                choices: ['troop', 'elite', 'master', 'horde'],
+            }),
+
+            nature: new StringField({
+                required: true,
+                initial: 'none',
+                choices: ['none', 'swarm', 'creature', 'daemon', 'xenos'],
             }),
 
             threatLevel: new NumberField({
@@ -402,6 +409,21 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /* -------------------------------------------- */
 
     /**
+     * Back-compat read-only view of the legacy single `type` field (#257). Returns
+     * the creature nature when set, otherwise the tier — the same value the old
+     * overloaded field held. Readers that only care about the combined value (token
+     * darkvision, threat tooling, exporters) keep working unchanged.
+     */
+    get type(): 'troop' | 'elite' | 'master' | 'horde' | 'swarm' | 'creature' | 'daemon' | 'xenos' {
+        return this.nature !== 'none' ? this.nature : this.tier;
+    }
+
+    /** Back-compat: `role` was dropped (#257); always empty now. */
+    get role(): string {
+        return '';
+    }
+
+    /**
      * Get the NPC type label.
      * @type {string}
      */
@@ -451,6 +473,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @type {string}
      */
     get roleLabel(): string {
+        // Role was dropped (#257); the getter returns '' so there is no label.
+        if (this.role === '') return '';
         const key = `WH40K.NPCRole.${this.role.charAt(0).toUpperCase()}${this.role.slice(1)}`;
         return game.i18n.localize(key);
     }
@@ -1093,11 +1117,29 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data before schema validation
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
+        NPCData.#migrateTypeRole(source);
         NPCData.#migrateSize(source);
         NPCData.#migrateWounds(source);
         NPCData.#migrateThreatLevel(source);
         NPCData.#migrateCharacteristics(source);
         NPCData.#migrateWeapons(source);
+    }
+
+    /**
+     * Split the legacy overloaded `type` into `tier` + `nature` and drop `role` (#257).
+     * Runs on load and on create/import, so dialogs/templates/importers that still
+     * write a single `type` keep working — the value is routed onto the right axis.
+     * @param {object} source - The source data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
+    static #migrateTypeRole(source: Record<string, unknown>): void {
+        if (typeof source['type'] === 'string' && source['tier'] === undefined && source['nature'] === undefined) {
+            const { tier, nature } = splitNpcType(source['type']);
+            source['tier'] = tier;
+            source['nature'] = nature;
+        }
+        delete source['type'];
+        delete source['role'];
     }
 
     /**

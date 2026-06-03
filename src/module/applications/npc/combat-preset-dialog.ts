@@ -1,4 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -270,10 +271,13 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Promise<void>}
      */
     static async applyPresetToNPC(npc: WH40KNPC, preset: Preset): Promise<void> {
+        // The preset stores the legacy combined `type`; split it onto the
+        // tier/nature axes the NPC schema now uses, and drop role (#257).
+        const { tier, nature } = splitNpcType(preset.type);
         const updates = {
             'system.faction': preset.faction,
-            'system.type': preset.type,
-            'system.role': preset.role,
+            'system.tier': tier,
+            'system.nature': nature,
             'system.threatLevel': preset.threatLevel,
             'system.characteristics': preset.characteristics,
             'system.wounds': preset.wounds,

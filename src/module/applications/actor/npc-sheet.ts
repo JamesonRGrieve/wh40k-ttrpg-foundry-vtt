@@ -31,26 +31,21 @@ interface NPCV2TrainedSkillData {
 }
 
 /** Mapping from WH40K skill key to its governing characteristic key. */
-/** NPC tier/nature `type` dropdown options — single source for the context key and the sidebar-field descriptor (#284). */
-const NPC_TYPE_OPTIONS: Record<string, string> = {
+/** NPC RAW tier dropdown options — single source for the context key + sidebar field (#257). */
+const NPC_TIER_OPTIONS: Record<string, string> = {
     troop: 'Troop',
     elite: 'Elite',
     master: 'Master',
     horde: 'Horde',
+};
+
+/** NPC creature-nature dropdown options — single source for the context key + sidebar field (#257). */
+const NPC_NATURE_OPTIONS: Record<string, string> = {
+    none: 'None',
     swarm: 'Swarm',
     creature: 'Creature',
     daemon: 'Daemon',
     xenos: 'Xenos',
-};
-
-/** NPC `role` dropdown options — single source for the context key and the sidebar-field descriptor (#284). */
-const NPC_ROLE_OPTIONS: Record<string, string> = {
-    bruiser: 'Bruiser',
-    sniper: 'Sniper',
-    caster: 'Caster',
-    support: 'Support',
-    commander: 'Commander',
-    specialist: 'Specialist',
 };
 
 const NPC_SKILL_CHAR_MAP: Readonly<Record<string, string>> = {
@@ -399,7 +394,7 @@ export default class NPCSheet extends CharacterSheet {
         // combat panel renders the Fate control for everyone; this flag hides it
         // for NPCs that are neither elite nor master. PCs never set it (undefined),
         // so the panel keeps rendering for them.
-        const npcTier = this.npcActor.system.type;
+        const npcTier = this.npcActor.system.tier;
         context['npcFateHidden'] = !(npcTier === 'elite' || npcTier === 'master');
 
         // Daemonic immunities header badge (#143 — DH2 Errata L69-73).
@@ -410,8 +405,8 @@ export default class NPCSheet extends CharacterSheet {
 
         // Header + NPC-tab additions
         context['threatTier'] = this.npcActor.system.threatTier;
-        context['npcTypeOptions'] = NPC_TYPE_OPTIONS;
-        context['npcRoleOptions'] = NPC_ROLE_OPTIONS;
+        context['npcTierOptions'] = NPC_TIER_OPTIONS;
+        context['npcNatureOptions'] = NPC_NATURE_OPTIONS;
         context['weaponClassOptions'] = {
             melee: 'Melee',
             pistol: 'Pistol',
@@ -500,18 +495,18 @@ export default class NPCSheet extends CharacterSheet {
                 valueClass: 'wh40k-threat-tier',
             },
             {
-                label: 'Type',
-                name: 'system.type',
+                label: 'Tier',
+                name: 'system.tier',
                 type: 'select' as const,
-                value: npcActor.system.type,
-                options: NPC_TYPE_OPTIONS,
+                value: npcActor.system.tier,
+                options: NPC_TIER_OPTIONS,
             },
             {
-                label: 'Role',
-                name: 'system.role',
+                label: 'Nature',
+                name: 'system.nature',
                 type: 'select' as const,
-                value: npcActor.system.role,
-                options: NPC_ROLE_OPTIONS,
+                value: npcActor.system.nature,
+                options: NPC_NATURE_OPTIONS,
             },
             {
                 label: 'Faction',

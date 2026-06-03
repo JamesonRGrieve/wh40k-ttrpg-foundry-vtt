@@ -125,7 +125,8 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
-        // Get available options
+        // Get available options. `roles` is a generation archetype (shapes the
+        // stat profile); it is not stored on the created actor (#257).
         const roles = ThreatCalculator.getRoles();
         const presets = ThreatCalculator.getPresets();
         const types = ThreatCalculator.getTypes();
