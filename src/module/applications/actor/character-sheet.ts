@@ -215,9 +215,6 @@ type CharacterSheetContextDeclaredFields = {
     favoriteTalents?: unknown;
     effects?: unknown[];
     combatTalents?: unknown[];
-    meleeAttacks?: unknown[];
-    rangedAttacks?: unknown[];
-    generalAttacks?: unknown[];
     woundsPercent?: number;
     fatiguePercent?: number;
     dodgeTarget?: number;
@@ -2719,11 +2716,8 @@ export default class CharacterSheet extends BaseActorSheet {
                 };
             });
 
-        // Partition attack actions into melee, ranged, and general (both)
-        const attacks = sheetContext.dh?.combatActions?.attacks ?? [];
-        sheetContext.meleeAttacks = attacks.filter((a: { subtypes?: string[] }) => a.subtypes?.includes('Melee') ?? false);
-        sheetContext.rangedAttacks = attacks.filter((a: { subtypes?: string[] }) => a.subtypes?.includes('Ranged') ?? false);
-        sheetContext.generalAttacks = attacks.filter((a: { subtypes?: string[] }) => a.subtypes?.includes('Melee or Ranged') ?? false);
+        // Attack actions are no longer surfaced on the combat panel — they live on the
+        // per-weapon attack dialog (#227), so the panel no longer needs them partitioned.
     }
 
     /* -------------------------------------------- */
