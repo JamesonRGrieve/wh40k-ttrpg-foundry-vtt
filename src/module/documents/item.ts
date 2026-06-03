@@ -2,6 +2,7 @@ import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, readOriginDelta, type OriginModifierBag } from '../origin-grant-ledger.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import type { WH40KItemSystemData } from '../types/global.d.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 import { WH40KItemContainer } from './item-container.ts';
 
@@ -543,6 +544,9 @@ export class WH40KItem extends WH40KItemContainer {
             isUsable: this.isConsumable || this.isDrug || this.isTool,
             actor: this.actor,
             gameSystem: (this.actor?.system as { gameSystem?: string } | undefined)?.gameSystem,
+            // When auto-apply-damage is on, the manual Damage button is redundant (#248) —
+            // the weapon card hides it and leans on Attack as the primary action.
+            autoApplyDamage: WH40KSettings.isAutoApplyDamageEnabled(),
             ...options,
         };
 
