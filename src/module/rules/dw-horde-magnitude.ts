@@ -155,7 +155,7 @@ export function psychicHitsForPsyRating(psyRating: number, areaD10 = 0): number 
 /*  Breaking a Horde                            */
 /* -------------------------------------------- */
 
-export type BreakOutcome = 'auto-break' | 'test-penalised' | 'test-normal' | 'no-test';
+type BreakOutcome = 'auto-break' | 'test-penalised' | 'test-normal' | 'no-test';
 
 export interface BreakCheck {
     outcome: BreakOutcome;

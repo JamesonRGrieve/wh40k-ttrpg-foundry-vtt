@@ -16,11 +16,11 @@ import type { WH40KItemModifiers } from '../../types/global.d.ts';
  * alternative to `Record<string, unknown>` where the index signature really is
  * the right model (e.g. a foundry `update()` payload).
  */
-export interface KeyedAnyBag {
+interface KeyedAnyBag {
     [key: string]: KeyedValue;
 }
 
-export type KeyedValue = string | number | boolean | null | undefined | KeyedAnyBag | KeyedValue[];
+type KeyedValue = string | number | boolean | null | undefined | KeyedAnyBag | KeyedValue[];
 
 /**
  * Shape of an entry stored in the equipment-selections map. Every field is
@@ -134,7 +134,7 @@ export interface ActiveModifier {
  * Shape of `system.grants` — kept loose since each grant kind has its own
  * downstream consumer.
  */
-export interface GrantsSlice {
+interface GrantsSlice {
     characteristics?: Record<string, number>;
     skills?: GrantSkillRaw[];
     talents?: GrantTalentRaw[];
@@ -145,25 +145,25 @@ export interface GrantsSlice {
     fateFormula?: string;
 }
 
-export interface GrantSkillRaw {
+interface GrantSkillRaw {
     name?: string;
     specialization?: string;
     level?: string;
     uuid?: string;
 }
 
-export interface GrantTalentRaw {
+interface GrantTalentRaw {
     name?: string;
     uuid?: string;
     specialization?: string;
 }
 
-export interface GrantTraitRaw {
+interface GrantTraitRaw {
     name?: string;
     uuid?: string;
 }
 
-export interface GrantChoiceRaw {
+interface GrantChoiceRaw {
     label?: string;
     name?: string;
     type?: string;
@@ -171,7 +171,7 @@ export interface GrantChoiceRaw {
     options?: Array<{ value?: string; name?: string; label?: string; grants?: WH40KItemModifiers }>;
 }
 
-export interface GrantEquipmentRaw {
+interface GrantEquipmentRaw {
     name?: string;
     uuid?: string;
     quantity?: number;
@@ -197,7 +197,7 @@ export interface PreviewGrantEntry {
 /**
  * Single equipment entry shown in the preview summary.
  */
-export interface PreviewEquipmentEntry {
+interface PreviewEquipmentEntry {
     name: string;
 }
 

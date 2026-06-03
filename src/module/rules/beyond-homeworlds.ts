@@ -20,32 +20,32 @@
 /* -------------------------------------------- */
 
 /** Characteristic-mod tuple keyed by canonical DH2 characteristic id. */
-export interface BeyondCharacteristicMods {
+interface BeyondCharacteristicMods {
     readonly bonuses: readonly string[];
     readonly penalties: readonly string[];
 }
 
 /** Fate-threshold rule: base value + Emperor's Blessing trigger (`d10 >= N`). */
-export interface BeyondFateThreshold {
+interface BeyondFateThreshold {
     readonly base: number;
     readonly emperorsBlessing: number;
 }
 
 /** Starting wounds — Beyond home-worlds use `<base> + 1d5` form. */
-export interface BeyondWounds {
+interface BeyondWounds {
     readonly base: number;
     /** Always a d5 in Beyond. Kept as a field so future tables can vary. */
     readonly dieFaces: 5;
 }
 
 /** Starting-Corruption rider (Daemon World only). */
-export interface BeyondCorruptionRider {
+interface BeyondCorruptionRider {
     readonly base: number;
     readonly dieFaces: number;
 }
 
 /** Subtlety-decrease clamp (Quarantine World only). */
-export interface BeyondSubtletyClamp {
+interface BeyondSubtletyClamp {
     /** Amount the decrease is reduced by. */
     readonly reducedBy: number;
     /** Floor on the actual reduction applied. */

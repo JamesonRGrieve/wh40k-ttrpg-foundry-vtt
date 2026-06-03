@@ -10,14 +10,14 @@
  * wielder performs a triggering action (kill, blessing, etc.).
  */
 
-export interface ProfaneObjectAura {
+interface ProfaneObjectAura {
     radiusMetres: number;
     label: string;
     /** Active-Effect change keys applied to actors inside the radius. */
     effects: Array<{ key: string; mode: number; value: number }>;
 }
 
-export interface ProfaneObjectPerActionHook {
+interface ProfaneObjectPerActionHook {
     /** Action category that triggers the hook (kill / blessing / heal / etc.). */
     trigger: 'killTarget' | 'blessAlly' | 'invokeFaith' | 'manifestPower' | 'manual';
     /** Corruption gained by the holder per trigger. */

@@ -40,13 +40,13 @@ const { ArrayField, BooleanField, NumberField, SchemaField, StringField } = foun
  * Exposed as a runtime array so the SchemaField `choices` constraint and
  * UI selectors can iterate without re-deriving from the type-only union.
  */
-export const DW_MISSION_RATINGS: readonly MissionRating[] = ['standard', 'extended', 'priority', 'critical'] as const;
+const DW_MISSION_RATINGS: readonly MissionRating[] = ['standard', 'extended', 'priority', 'critical'] as const;
 
 /**
  * Objective lifecycle states (matches `ObjectiveStatus` on the engine).
  * The panel cycles `pending` → `complete` → `failed` → `pending`.
  */
-export const DW_OBJECTIVE_STATUSES = ['pending', 'complete', 'failed'] as const;
+const DW_OBJECTIVE_STATUSES = ['pending', 'complete', 'failed'] as const;
 
 /**
  * Persisted shape of a single objective. Mirrors the engine's

@@ -48,7 +48,7 @@ const STATE_LABEL_KEY: Record<ComradeState, string> = {
  * already exposes `actor` + `_updateSystemField`; the additional
  * narrowing here is the OW-specific `system.comrade` sub-document.
  */
-export interface OwComradeHost {
+interface OwComradeHost {
     actor: WH40KBaseActor & {
         name: string;
         system: {

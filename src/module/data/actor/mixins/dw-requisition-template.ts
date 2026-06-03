@@ -31,7 +31,7 @@ const { NumberField, StringField } = foundry.data.fields;
  * StringField `choices` constraint and by callers that need to iterate
  * the tiers (UI dropdowns, mission-rating select panels).
  */
-export const DW_MISSION_RATINGS: readonly MissionRating[] = ['standard', 'extended', 'priority', 'critical'] as const;
+const DW_MISSION_RATINGS: readonly MissionRating[] = ['standard', 'extended', 'priority', 'critical'] as const;
 
 /**
  * Instance declarations the host DataModel class must apply via

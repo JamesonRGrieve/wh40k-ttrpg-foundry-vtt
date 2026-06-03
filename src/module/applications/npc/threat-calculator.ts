@@ -67,7 +67,7 @@ export interface NPCCharacteristics {
     [key: string]: NPCCharacteristic;
 }
 
-export interface NPCSkillEntry {
+interface NPCSkillEntry {
     name: string;
     characteristic: string;
     trained: boolean;

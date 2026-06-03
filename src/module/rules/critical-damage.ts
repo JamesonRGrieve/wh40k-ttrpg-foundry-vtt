@@ -1,6 +1,6 @@
 import { type CanonicalBodyPart, type CanonicalDamageType, normalizeBodyPart, normalizeDamageType } from './damage-type.ts';
 
-export interface CriticalDamageTable {
+interface CriticalDamageTable {
     [key: string]: {
         [key: string]: {
             [key: number]: string;
@@ -145,7 +145,7 @@ let CACHED_TABLE_PROMISE: Promise<CriticalDamageTable> | null = null;
  * installed, the returned table is empty and callers should degrade to a
  * minimal fallback string.
  */
-export async function loadCriticalDamageTable(): Promise<CriticalDamageTable> {
+async function loadCriticalDamageTable(): Promise<CriticalDamageTable> {
     if (CACHED_TABLE_PROMISE !== null) return CACHED_TABLE_PROMISE;
     const promise = buildCriticalDamageTable();
     CACHED_TABLE_PROMISE = promise;
@@ -202,7 +202,7 @@ function stripOuterParagraph(html: string): string {
     return match?.[1] ?? trimmed;
 }
 
-export function getFuzzy<T>(obj: Record<string, T>, term: string): T | undefined {
+function getFuzzy<T>(obj: Record<string, T>, term: string): T | undefined {
     let resolvedTerm = term;
     if (resolvedTerm.toUpperCase() === 'LEFT LEG' || resolvedTerm.toUpperCase() === 'RIGHT LEG') {
         resolvedTerm = 'Leg';

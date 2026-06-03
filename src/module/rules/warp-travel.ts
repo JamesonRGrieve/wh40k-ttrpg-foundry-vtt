@@ -54,10 +54,10 @@ import type { GameSystemId } from '../config/game-systems/types.ts';
 export type WarpStageId = 'duration' | 'locate-astronomican' | 'chart-course' | 'steer-vessel' | 'leave-warp';
 
 /** Outcome verdicts for a single stage. */
-export type WarpStageStatus = 'success' | 'failure' | 'peril' | 'pending';
+type WarpStageStatus = 'success' | 'failure' | 'peril' | 'pending';
 
 /** Base result for any stage. */
-export interface WarpStageResult {
+interface WarpStageResult {
     /** Stable stage identifier. */
     readonly stage: WarpStageId;
     /** Localization key for the stage label. */
@@ -353,7 +353,7 @@ export function resolveLeaveWarp(input: LeaveWarpInput): LeaveWarpResult {
 // ---------------------------------------------------------------------------
 
 /** Stable identifiers for the canonical Perils of the Warp entries. */
-export type PerilId =
+type PerilId =
     | 'the-gibbering'
     | 'warp-burn'
     | 'psychic-concussion'

@@ -39,7 +39,7 @@ export const COHESION_CHALLENGE_DIE_SIZE = 10;
  * the weapon is `accurate` *and* `basic`. The caller assembles the
  * boolean from the weapon document.
  */
-export type CohesionDamagingWeaponQuality = 'accurate-basic' | 'blast' | 'devastating';
+type CohesionDamagingWeaponQuality = 'accurate-basic' | 'blast' | 'devastating';
 
 /** RNG hook — same shape used by `dw-horde-magnitude` callers: returns 1..size inclusive. */
 export type CohesionRng = (size: number) => number;
@@ -48,7 +48,7 @@ export type CohesionRng = (size: number) => number;
 export type CohesionRecoverySource = 'objective' | 'fate' | 'gm';
 
 /** Reason a `applyCohesionDamage` call returned a loss / no-loss. */
-export type CohesionLossReason = 'below-threshold' | 'unqualified-weapon' | 'rallied' | 'cap-reached' | 'already-empty' | 'lost';
+type CohesionLossReason = 'below-threshold' | 'unqualified-weapon' | 'rallied' | 'cap-reached' | 'already-empty' | 'lost';
 
 /* -------------------------------------------- */
 /*  Maximum Cohesion                            */

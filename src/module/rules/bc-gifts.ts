@@ -39,7 +39,7 @@ import type { ChaosAlignment } from '../config/game-systems/types.ts';
  * matches this rider's `alignment`, the rider's deltas, trait, and
  * Active Effect compose with the gift's base entries.
  */
-export interface GiftRider {
+interface GiftRider {
     /** The Chaos alignment that activates this rider. */
     alignment: ChaosAlignment;
     /** Narrative description of the rider's effect. */

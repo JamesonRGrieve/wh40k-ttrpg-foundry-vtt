@@ -32,26 +32,26 @@
 /* -------------------------------------------- */
 
 /** Characteristic-mod tuple keyed by canonical DH2 characteristic id. */
-export interface WithoutCharacteristicMods {
+interface WithoutCharacteristicMods {
     readonly bonuses: readonly string[];
     readonly penalties: readonly string[];
 }
 
 /** Fate-threshold rule: base value + Emperor's Blessing trigger (`d10 >= N`). */
-export interface WithoutFateThreshold {
+interface WithoutFateThreshold {
     readonly base: number;
     readonly emperorsBlessing: number;
 }
 
 /** Starting wounds — Without home-worlds use `<base> + 1d5` form. */
-export interface WithoutWounds {
+interface WithoutWounds {
     readonly base: number;
     /** Always a d5 in Without. Kept as a field so future tables can vary. */
     readonly dieFaces: 5;
 }
 
 /** Surprise-attack bonus suppression rider (Death World only). */
-export interface WithoutSurpriseBonusSuppression {
+interface WithoutSurpriseBonusSuppression {
     /** The numeric WS/BS bonus that non-Surprised attackers normally gain. */
     readonly suppressedBonus: number;
     /** The skills the bonus targets when the rider is active. */
@@ -59,7 +59,7 @@ export interface WithoutSurpriseBonusSuppression {
 }
 
 /** Shock / Mental Trauma duration + Insanity XP rider (Garden World only). */
-export interface WithoutSerenityRider {
+interface WithoutSerenityRider {
     /** Multiplier applied to Shock / Mental Trauma durations (0.5 = halved). */
     readonly durationMultiplier: number;
     /** Rounding direction for the multiplied duration. */
@@ -71,7 +71,7 @@ export interface WithoutSerenityRider {
 }
 
 /** Scholastic Lore -> Forbidden Lore advancement rider (Research Station only). */
-export interface WithoutPursuitOfDataRider {
+interface WithoutPursuitOfDataRider {
     /** Scholastic Lore rank at which the rider fires (Rank 2 = Trained). */
     readonly triggerScholasticRank: number;
     /** Forbidden Lore rank granted (Rank 1 = Known). */

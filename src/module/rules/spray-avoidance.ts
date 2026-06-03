@@ -12,7 +12,7 @@
  * Agility (default) or Dodge (with Leaping Dodge talent).
  */
 
-export type SprayAvoidanceSkill = 'agility' | 'dodge';
+type SprayAvoidanceSkill = 'agility' | 'dodge';
 
 export interface SprayAvoidanceInput {
     /** True if the target has the Leaping Dodge talent. */

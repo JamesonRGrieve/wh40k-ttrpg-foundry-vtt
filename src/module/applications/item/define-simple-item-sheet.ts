@@ -24,7 +24,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 /* -------------------------------------------- */
 
 /** Tab descriptor matching the V14 `static TABS` shape used by `BaseItemSheet`. */
-export interface SimpleItemSheetTab {
+interface SimpleItemSheetTab {
     tab: string;
     group: string;
     label: string;
@@ -34,10 +34,10 @@ export interface SimpleItemSheetTab {
 
 /** Action handler matching the V14 ApplicationV2 action shape. */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 action return type is untyped; unknown is the widest safe type
-export type SimpleItemSheetAction = (this: BaseItemSheet, event: Event, target: HTMLElement) => unknown;
+type SimpleItemSheetAction = (this: BaseItemSheet, event: Event, target: HTMLElement) => unknown;
 
 /** Subset of the V14 `static PARTS.sheet` shape we let callers override. */
-export interface SimpleItemSheetPartOverrides {
+interface SimpleItemSheetPartOverrides {
     /** CSS selectors that should be scrollable inside the rendered part. */
     scrollable?: string[];
 }
