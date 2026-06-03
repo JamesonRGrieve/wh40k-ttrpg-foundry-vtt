@@ -13,6 +13,8 @@
 
 import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
+import woundsPanelSrc from '../src/templates/actor/panel/wounds-panel.hbs?raw';
+import degreeMeterSrc from '../src/templates/actor/partial/degree-meter-panel.hbs?raw';
 import editBodySrc from '../src/templates/actor/partial/vital-edit-body.hbs?raw';
 import editInputSrc from '../src/templates/actor/partial/vital-edit-input.hbs?raw';
 import infoCardSrc from '../src/templates/actor/partial/vital-info-card.hbs?raw';
@@ -416,5 +418,22 @@ describe('vital-edit-body partial', () => {
         const wrapper = root.firstElementChild as HTMLElement;
         expect(wrapper.className).toContain('experience_details');
         expect(wrapper.className).toContain('tw-extra');
+    });
+});
+
+describe('#259 — corruption/insanity counter aligns to Wounds', () => {
+    it('degree-meter counter controls use the same justify-between row as Wounds', () => {
+        // Wounds lays its quick-controls out with justify-between (label/buttons
+        // left, counter right). Corruption + insanity (degree-meter) must match.
+        expect(woundsPanelSrc).toContain('wrapperClass="tw-flex tw-items-center tw-justify-between"');
+        expect(degreeMeterSrc).toContain('wrapperClass="tw-flex tw-items-center tw-justify-between"');
+        // The looser left-packed gap-2 row must be gone.
+        expect(degreeMeterSrc).not.toContain('wrapperClass="tw-flex tw-items-center tw-gap-2"');
+    });
+
+    it('degree-meter modifier readout drops to its own right-aligned line', () => {
+        // Modifier moved below the counter and right-aligned so it no longer
+        // shares the counter row (which is what pushed the counter off-right).
+        expect(degreeMeterSrc).toContain('tw-flex tw-items-center tw-justify-end tw-gap-1 tw-text-sm tw-font-medium');
     });
 });
