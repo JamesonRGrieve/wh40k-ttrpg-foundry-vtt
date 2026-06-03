@@ -5778,31 +5778,61 @@
             "sorting": "a",
             "folders": [
                 {
+                    "name": "Binding Contracts",
+                    "packs": ["bc-binding-items-traits"]
+                },
+                {
+                    "name": "Broken Chains",
+                    "packs": [
+                        "bc-chains-actors-bestiary",
+                        "bc-chains-actors-npcs",
+                        "bc-chains-items-armour",
+                        "bc-chains-items-psychic-powers",
+                        "bc-chains-items-weapons"
+                    ]
+                },
+                {
                     "name": "Core Rulebook",
                     "packs": [
                         "bc-core-items-ammo",
-                        "bc-core-items-armour",
                         "bc-core-items-armor-mods",
+                        "bc-core-items-armour",
+                        "bc-core-items-cybernetics",
                         "bc-core-items-gear",
                         "bc-core-items-psychic-powers",
                         "bc-core-items-rituals",
                         "bc-core-items-talents",
                         "bc-core-items-traits",
                         "bc-core-items-weapons",
-                        "bc-core-items-origin-path"
+                        "bc-core-origins-archetypes",
+                        "bc-core-origins-disgraces",
+                        "bc-core-origins-motivations",
+                        "bc-core-origins-prides",
+                        "bc-core-origins-races"
                     ]
                 },
                 {
-                    "name": "Binding Contracts",
-                    "packs": ["bc-binding-items-traits"]
+                    "name": "Game Master's Kit",
+                    "packs": ["bc-gmkit-actors-bestiary", "bc-gmkit-actors-npcs", "bc-gmkit-items-gear", "bc-gmkit-items-weapons"]
+                },
+                {
+                    "name": "Hand of Corruption",
+                    "packs": ["bc-corruption-actors-bestiary", "bc-corruption-actors-npcs", "bc-corruption-items-gear"]
                 },
                 {
                     "name": "Tome of Blood",
-                    "packs": ["bc-blood-items-armour", "bc-blood-items-armor-mods", "bc-blood-items-gear", "bc-blood-items-rituals", "bc-blood-items-weapons"]
+                    "packs": [
+                        "bc-blood-items-armor-mods",
+                        "bc-blood-items-armour",
+                        "bc-blood-items-gear",
+                        "bc-blood-items-rituals",
+                        "bc-blood-items-weapons",
+                        "bc-blood-origins-archetypes"
+                    ]
                 },
                 {
                     "name": "Tome of Decay",
-                    "packs": ["bc-decay-items-ammo", "bc-decay-items-gear", "bc-decay-items-rituals", "bc-decay-items-weapons"]
+                    "packs": ["bc-decay-items-ammo", "bc-decay-items-gear", "bc-decay-items-rituals", "bc-decay-items-weapons", "bc-decay-origins-archetypes"]
                 },
                 {
                     "name": "Tome of Excess",
@@ -5812,7 +5842,8 @@
                         "bc-excess-items-gear",
                         "bc-excess-items-rituals",
                         "bc-excess-items-talents",
-                        "bc-excess-items-weapons"
+                        "bc-excess-items-weapons",
+                        "bc-excess-origins-archetypes"
                     ]
                 },
                 {
@@ -5824,8 +5855,13 @@
                         "bc-fate-items-psychic-powers",
                         "bc-fate-items-rituals",
                         "bc-fate-items-traits",
-                        "bc-fate-items-weapons"
+                        "bc-fate-items-weapons",
+                        "bc-fate-origins-archetypes"
                     ]
+                },
+                {
+                    "name": "General",
+                    "packs": ["bc-adventures"]
                 }
             ]
         },
@@ -5835,25 +5871,50 @@
             "sorting": "a",
             "folders": [
                 {
+                    "name": "Ascension",
+                    "packs": [
+                        "dh1-ascension-actors-bestiary",
+                        "dh1-ascension-actors-npcs",
+                        "dh1-ascension-items-ammo",
+                        "dh1-ascension-items-armour",
+                        "dh1-ascension-items-cybernetics",
+                        "dh1-ascension-items-gear",
+                        "dh1-ascension-items-psychic-powers",
+                        "dh1-ascension-items-talents",
+                        "dh1-ascension-items-weapons",
+                        "dh1-ascension-origins-careers"
+                    ]
+                },
+                {
                     "name": "Core Rulebook",
                     "packs": [
+                        "dh1-core-actors-bestiary",
+                        "dh1-core-actors-npcs",
+                        "dh1-core-items-ammo",
                         "dh1-core-items-armour",
                         "dh1-core-items-gear",
                         "dh1-core-items-psychic-powers",
                         "dh1-core-items-talents",
-                        "dh1-core-items-weapons"
+                        "dh1-core-items-weapons",
+                        "dh1-core-journals",
+                        "dh1-core-origins-careers",
+                        "dh1-core-origins-divinations",
+                        "dh1-core-origins-homeworlds",
+                        "dh1-core-rolltables"
                     ]
                 },
                 {
                     "name": "Inquisitor's Handbook",
                     "packs": [
                         "dh1-inquisitor-items-ammo",
-                        "dh1-inquisitor-items-armour",
                         "dh1-inquisitor-items-armor-mods",
+                        "dh1-inquisitor-items-armour",
                         "dh1-inquisitor-items-gear",
                         "dh1-inquisitor-items-talents",
                         "dh1-inquisitor-items-traits",
-                        "dh1-inquisitor-items-weapons"
+                        "dh1-inquisitor-items-weapons",
+                        "dh1-inquisitor-origins-backgrounds",
+                        "dh1-inquisitor-origins-homeworlds"
                     ]
                 }
             ]
@@ -5864,90 +5925,100 @@
             "sorting": "a",
             "folders": [
                 {
-                    "name": "Core Rulebook",
-                    "packs": [
-                        "dh2-core-items-ammo",
-                        "dh2-core-items-armour",
-                        "dh2-core-items-conditions",
-                        "dh2-core-items-critical-injuries",
-                        "dh2-core-items-cybernetics",
-                        "dh2-core-items-wearables",
-                        "dh2-core-items-tools",
-                        "dh2-core-items-consumables",
-                        "dh2-core-items-psychic-powers",
-                        "dh2-core-items-skills",
-                        "dh2-core-items-talents",
-                        "dh2-core-items-traits",
-                        "dh2-core-items-weapons",
-                        "dh2-core-rolltables",
-                        "dh2-core-origins-elite-advances",
-                        "dh2-core-items-weapon-mods",
-                        "dh2-core-items-talents-specializations",
-                        "dh2-core-locations"
-                    ]
-                },
-                {
                     "name": "Enemies Beyond",
                     "packs": [
+                        "dh2-beyond-actors-bestiary",
+                        "dh2-beyond-actors-npcs",
+                        "dh2-beyond-actors-reinforcements",
                         "dh2-beyond-items-ammo",
-                        "dh2-beyond-items-armour",
                         "dh2-beyond-items-armor-mods",
-                        "dh2-beyond-origins-backgrounds",
-                        "dh2-beyond-items-tools",
+                        "dh2-beyond-items-armour",
+                        "dh2-beyond-items-gear",
                         "dh2-beyond-items-psychic-powers",
                         "dh2-beyond-items-talents",
-                        "dh2-beyond-items-weapons",
-                        "dh2-beyond-items-gear",
+                        "dh2-beyond-items-tools",
                         "dh2-beyond-items-weapon-mods",
-                        "dh2-beyond-actors-reinforcements",
-                        "dh2-beyond-journals"
+                        "dh2-beyond-items-weapons",
+                        "dh2-beyond-journals",
+                        "dh2-beyond-journals-daemon-binding",
+                        "dh2-beyond-origins-backgrounds",
+                        "dh2-beyond-origins-homeworlds",
+                        "dh2-beyond-origins-roles"
                     ]
                 },
                 {
                     "name": "Enemies Within",
                     "packs": [
-                        "dh2-within-items-ammo",
-                        "dh2-within-items-armour",
-                        "dh2-within-items-armor-mods",
-                        "dh2-within-origins-homeworlds",
-                        "dh2-within-origins-backgrounds",
-                        "dh2-within-items-relics",
-                        "dh2-within-items-services",
-                        "dh2-within-items-weapon-mods",
-                        "dh2-within-items-psychic-powers",
-                        "dh2-within-items-talents",
-                        "dh2-within-items-weapons",
-                        "dh2-within-locations",
                         "dh2-within-actors-bestiary",
                         "dh2-within-actors-reinforcements",
-                        "dh2-within-vehicles-terracraft",
-                        "dh2-within-journals"
+                        "dh2-within-items-ammo",
+                        "dh2-within-items-armor-mods",
+                        "dh2-within-items-armour",
+                        "dh2-within-items-psychic-powers",
+                        "dh2-within-items-relics",
+                        "dh2-within-items-services",
+                        "dh2-within-items-talents",
+                        "dh2-within-items-weapon-mods",
+                        "dh2-within-items-weapons",
+                        "dh2-within-journals",
+                        "dh2-within-locations",
+                        "dh2-within-origins-backgrounds",
+                        "dh2-within-origins-homeworlds",
+                        "dh2-within-origins-roles",
+                        "dh2-within-vehicles-terracraft"
                     ]
                 },
                 {
                     "name": "Enemies Without",
                     "packs": [
+                        "dh2-without-actors-bestiary",
+                        "dh2-without-actors-reinforcements",
                         "dh2-without-items-ammo",
-                        "dh2-without-items-armour",
-                        "dh2-without-origins-backgrounds",
                         "dh2-without-items-armor-mods",
+                        "dh2-without-items-armour",
                         "dh2-without-items-consumables",
                         "dh2-without-items-relics",
                         "dh2-without-items-services",
+                        "dh2-without-items-talents",
                         "dh2-without-items-tools",
                         "dh2-without-items-weapon-mods",
-                        "dh2-without-items-talents",
                         "dh2-without-items-weapons",
-                        "dh2-without-actors-bestiary",
-                        "dh2-without-actors-reinforcements",
+                        "dh2-without-journals",
+                        "dh2-without-origins-backgrounds",
+                        "dh2-without-origins-homeworlds",
+                        "dh2-without-origins-roles",
                         "dh2-without-vehicles-aircraft",
-                        "dh2-without-vehicles-terracraft",
-                        "dh2-without-journals"
+                        "dh2-without-vehicles-terracraft"
                     ]
                 },
                 {
                     "name": "General",
-                    "packs": ["dh2-core-origins-backgrounds", "dh2-core-journals"]
+                    "packs": [
+                        "dh2-core-actors-bestiary",
+                        "dh2-core-items-ammo",
+                        "dh2-core-items-armour",
+                        "dh2-core-items-conditions",
+                        "dh2-core-items-consumables",
+                        "dh2-core-items-critical-injuries",
+                        "dh2-core-items-cybernetics",
+                        "dh2-core-items-psychic-powers",
+                        "dh2-core-items-skills",
+                        "dh2-core-items-talents",
+                        "dh2-core-items-talents-specializations",
+                        "dh2-core-items-tools",
+                        "dh2-core-items-traits",
+                        "dh2-core-items-weapon-mods",
+                        "dh2-core-items-weapons",
+                        "dh2-core-items-wearables",
+                        "dh2-core-journals",
+                        "dh2-core-journals-daemon-binding",
+                        "dh2-core-locations",
+                        "dh2-core-origins-backgrounds",
+                        "dh2-core-origins-elite-advances",
+                        "dh2-core-origins-homeworlds",
+                        "dh2-core-origins-roles",
+                        "dh2-core-rolltables"
+                    ]
                 }
             ]
         },
@@ -5957,6 +6028,10 @@
             "sorting": "a",
             "folders": [
                 {
+                    "name": "Ark of Lost Souls",
+                    "packs": ["dw-ark-actors-bestiary", "dw-ark-actors-npcs", "dw-ark-items-weapons"]
+                },
+                {
                     "name": "Core Rulebook",
                     "packs": [
                         "dw-core-items-ammo",
@@ -5965,44 +6040,59 @@
                         "dw-core-items-skills",
                         "dw-core-items-talents",
                         "dw-core-items-weapons",
-                        "dw-core-items-origin-path"
+                        "dw-core-origins-chapters",
+                        "dw-core-origins-specialities"
                     ]
                 },
                 {
-                    "name": "Errata",
-                    "packs": ["dw-errata-items-weapons"]
+                    "name": "First Founding",
+                    "packs": ["dw-founding-items-gear", "dw-founding-items-weapons", "dw-founding-origins-chapters"]
                 },
                 {
-                    "name": "First Founding",
-                    "packs": ["dw-founding-items-gear", "dw-founding-items-weapons"]
+                    "name": "Game Master's Kit",
+                    "packs": ["dw-gmkit-actors-bestiary", "dw-gmkit-actors-npcs", "dw-gmkit-vehicles-aircraft", "dw-gmkit-vehicles-terracraft"]
                 },
                 {
                     "name": "Honour the Chapter",
-                    "packs": ["dw-honour-items-armour", "dw-honour-items-gear", "dw-honour-items-weapons"]
+                    "packs": [
+                        "dw-honour-items-armour",
+                        "dw-honour-items-gear",
+                        "dw-honour-items-talents",
+                        "dw-honour-items-weapons",
+                        "dw-honour-origins-chapters"
+                    ]
+                },
+                {
+                    "name": "Know No Fear",
+                    "packs": ["dw-knownofear-journals"]
                 },
                 {
                     "name": "Mark of the Xenos",
-                    "packs": ["dw-xenos-items-weapons"]
+                    "packs": ["dw-xenos-actors-bestiary", "dw-xenos-actors-npcs", "dw-xenos-items-weapons"]
+                },
+                {
+                    "name": "Rising Tempest",
+                    "packs": ["dw-tempest-actors-bestiary", "dw-tempest-actors-npcs"]
                 },
                 {
                     "name": "Rites of Battle",
-                    "packs": ["dw-rites-items-ammo", "dw-rites-items-armour", "dw-rites-items-gear", "dw-rites-items-weapons"]
+                    "packs": ["dw-rites-items-ammo", "dw-rites-items-armour", "dw-rites-items-gear", "dw-rites-items-weapons", "dw-rites-origins-chapters"]
                 },
                 {
                     "name": "The Achilus Assault",
-                    "packs": ["dw-achilus-journals", "dw-achilus-actors-bestiary"]
+                    "packs": ["dw-achilus-actors-bestiary", "dw-achilus-actors-npcs", "dw-achilus-journals"]
                 },
                 {
                     "name": "The Emperor's Chosen",
-                    "packs": ["dw-chosen-journals", "dw-chosen-items-armour", "dw-chosen-items-gear", "dw-chosen-items-weapons"]
+                    "packs": ["dw-chosen-items-armour", "dw-chosen-items-gear", "dw-chosen-items-weapons", "dw-chosen-journals"]
                 },
                 {
                     "name": "The Jericho Reach",
-                    "packs": ["dw-jericho-journals", "dw-jericho-actors-bestiary"]
+                    "packs": ["dw-jericho-actors-bestiary", "dw-jericho-actors-npcs", "dw-jericho-journals"]
                 },
                 {
                     "name": "The Outer Reach",
-                    "packs": ["dw-outer-journals", "dw-outer-actors-bestiary", "dw-outer-vehicles-aircraft"]
+                    "packs": ["dw-outer-actors-bestiary", "dw-outer-actors-npcs", "dw-outer-journals", "dw-outer-vehicles-aircraft"]
                 }
             ]
         },
@@ -6014,14 +6104,80 @@
                 {
                     "name": "Homebrew",
                     "packs": [
-                        "hb-items-backgrounds",
-                        "hb-items-armour",
-                        "hb-items-gear",
-                        "hb-psychic-powers",
-                        "hb-items-weapons",
+                        "hb-bc-items-traits",
+                        "hb-dh2-items-talents",
+                        "hb-generic-items-consumables",
+                        "hb-generic-items-gear",
+                        "hb-generic-items-tools",
+                        "hb-generic-items-wearables",
                         "hb-items-actors",
-                        "hb-dh2-items-talents"
+                        "hb-items-armour",
+                        "hb-items-backgrounds",
+                        "hb-items-gear",
+                        "hb-items-weapons",
+                        "hb-psychic-powers",
+                        "hb-rt-items-armour",
+                        "hb-rt-items-talents",
+                        "hb-rt-items-traits",
+                        "hb-rt-journals-navigation",
+                        "hb-rt-vehicles-terracraft"
                     ]
+                }
+            ]
+        },
+        {
+            "name": "Imperium Maledictum",
+            "color": "",
+            "sorting": "a",
+            "folders": [
+                {
+                    "name": "Chemical Burn",
+                    "packs": ["im-chemical-actors-bestiary", "im-chemical-actors-npcs", "im-chemical-items-gear", "im-chemical-items-weapons"]
+                },
+                {
+                    "name": "Core Rulebook",
+                    "packs": [
+                        "im-core-actors-bestiary",
+                        "im-core-endeavours",
+                        "im-core-items-ammo",
+                        "im-core-items-armour",
+                        "im-core-items-conditions",
+                        "im-core-items-critical-injuries",
+                        "im-core-items-cybernetics",
+                        "im-core-items-gear",
+                        "im-core-items-psychic-powers",
+                        "im-core-items-skills",
+                        "im-core-items-talents",
+                        "im-core-items-weapon-mods",
+                        "im-core-items-weapons",
+                        "im-core-journals",
+                        "im-core-origins-factions",
+                        "im-core-origins-roles",
+                        "im-core-origins-worlds",
+                        "im-core-patrons",
+                        "im-core-rolltables"
+                    ]
+                },
+                {
+                    "name": "Inquisition Player's Guide",
+                    "packs": [
+                        "im-inquisition-actors-bestiary",
+                        "im-inquisition-items-ammo",
+                        "im-inquisition-items-armour",
+                        "im-inquisition-items-gear",
+                        "im-inquisition-items-psychic-powers",
+                        "im-inquisition-items-talents",
+                        "im-inquisition-items-weapons",
+                        "im-inquisition-journals",
+                        "im-inquisition-origins-factions",
+                        "im-inquisition-origins-inquisition",
+                        "im-inquisition-origins-roles",
+                        "im-inquisition-rolltables"
+                    ]
+                },
+                {
+                    "name": "General",
+                    "packs": ["im-adventures"]
                 }
             ]
         },
@@ -6041,30 +6197,70 @@
                         "ow-core-items-talents",
                         "ow-core-items-traits",
                         "ow-core-items-weapons",
-                        "ow-core-items-origin-path"
+                        "ow-core-origins-commanding-officers",
+                        "ow-core-origins-homeworlds",
+                        "ow-core-origins-regiment-types",
+                        "ow-core-origins-special-equipment-doctrines",
+                        "ow-core-origins-specialities",
+                        "ow-core-origins-training-doctrines"
                     ]
+                },
+                {
+                    "name": "Eleventh Hour",
+                    "packs": ["ow-eleventh-actors-bestiary", "ow-eleventh-actors-npcs"]
                 },
                 {
                     "name": "Enemies of the Imperium",
                     "packs": [
+                        "ow-enemies-actors-bestiary",
                         "ow-enemies-items-armour",
                         "ow-enemies-items-gear",
                         "ow-enemies-items-talents",
                         "ow-enemies-journals",
-                        "ow-enemies-actors-bestiary",
                         "ow-enemies-vehicles-aircraft",
                         "ow-enemies-vehicles-terracraft"
                     ]
                 },
                 {
+                    "name": "Final Testament",
+                    "packs": [
+                        "ow-testament-actors-bestiary",
+                        "ow-testament-actors-mounts",
+                        "ow-testament-actors-npcs",
+                        "ow-testament-journals",
+                        "ow-testament-vehicles-aircraft",
+                        "ow-testament-vehicles-terracraft"
+                    ]
+                },
+                {
+                    "name": "Game Master's Kit",
+                    "packs": ["ow-gmkit-actors-bestiary", "ow-gmkit-actors-npcs", "ow-gmkit-vehicles-terracraft"]
+                },
+                {
                     "name": "Hammer of the Emperor",
                     "packs": [
+                        "ow-hammer-actors-mounts",
                         "ow-hammer-items-ammo",
                         "ow-hammer-items-gear",
                         "ow-hammer-items-orders",
                         "ow-hammer-items-talents",
                         "ow-hammer-items-traits",
-                        "ow-hammer-items-weapons"
+                        "ow-hammer-items-weapons",
+                        "ow-hammer-origins-homeworlds",
+                        "ow-hammer-origins-regiment-types",
+                        "ow-hammer-origins-regimental-drawbacks",
+                        "ow-hammer-origins-special-equipment-doctrines",
+                        "ow-hammer-origins-training-doctrines"
+                    ]
+                },
+                {
+                    "name": "No Surrender",
+                    "packs": [
+                        "ow-surrender-actors-bestiary",
+                        "ow-surrender-actors-npcs",
+                        "ow-surrender-journals",
+                        "ow-surrender-vehicles-aircraft",
+                        "ow-surrender-vehicles-terracraft"
                     ]
                 },
                 {
@@ -6077,12 +6273,18 @@
                         "ow-shield-items-talents",
                         "ow-shield-items-traits",
                         "ow-shield-items-vehicle-upgrades",
-                        "ow-shield-items-weapons"
+                        "ow-shield-items-weapons",
+                        "ow-shield-origins-homeworlds",
+                        "ow-shield-origins-regiment-types",
+                        "ow-shield-origins-regimental-drawbacks",
+                        "ow-shield-origins-special-equipment-doctrines",
+                        "ow-shield-origins-training-doctrines",
+                        "ow-shield-vehicles-terracraft"
                     ]
                 },
                 {
-                    "name": "No Surrender",
-                    "packs": ["ow-surrender-journals"]
+                    "name": "General",
+                    "packs": ["ow-adventures"]
                 }
             ]
         },
@@ -6092,44 +6294,21 @@
             "sorting": "a",
             "folders": [
                 {
-                    "name": "Core Rulebook",
-                    "packs": [
-                        "rt-core-actors-bestiary",
-                        "rt-core-vehicles-voidcraft",
-                        "rt-core-items-ammo",
-                        "rt-core-items-armour",
-                        "rt-core-items-armor-mods",
-                        "rt-core-items-conditions",
-                        "rt-core-items-critical-injuries",
-                        "rt-core-items-cybernetics",
-                        "rt-core-items-gear",
-                        "rt-core-items-navigator-powers",
-                        "rt-core-items-origin-path",
-                        "rt-core-items-psychic-powers",
-                        "rt-core-items-ship-components",
-                        "rt-core-items-ship-weapons",
-                        "rt-core-items-skills",
-                        "rt-core-items-talents",
-                        "rt-core-items-traits",
-                        "rt-core-items-vehicle-traits",
-                        "rt-core-items-weapon-qualities",
-                        "rt-core-items-weapons",
-                        "rt-core-rolltables",
-                        "rt-core-rolltables-ship-combat"
-                    ]
-                },
-                {
                     "name": "Edge of the Abyss",
                     "packs": [
+                        "rt-abyss-actors-bestiary",
                         "rt-abyss-items-gear",
                         "rt-abyss-items-psychic-powers",
                         "rt-abyss-items-talents",
                         "rt-abyss-items-weapons",
                         "rt-abyss-journals",
-                        "rt-abyss-actors-bestiary",
                         "rt-abyss-vehicles-terracraft",
                         "rt-abyss-vehicles-voidcraft"
                     ]
+                },
+                {
+                    "name": "Epoch Koronus",
+                    "packs": ["rt-epoch-journals"]
                 },
                 {
                     "name": "Faith and Coin",
@@ -6140,29 +6319,16 @@
                         "rt-faith-items-ship-components",
                         "rt-faith-items-talents",
                         "rt-faith-items-traits",
+                        "rt-faith-items-weapon-mods",
                         "rt-faith-items-weapons"
-                    ]
-                },
-                {
-                    "name": "General",
-                    "packs": [
-                        "rt-items-origin-path",
-                        "rt-items-ship-extended-actions",
-                        "rt-core-items-ship-roles",
-                        "rt-core-journals-character-actions",
-                        "rt-core-journals-character-creation",
-                        "rt-inequity-journals-colonies",
-                        "rt-core-journals-fear-insanity-corruption",
-                        "rt-core-journals-ship-vehicle-actions",
-                        "rt-rolltables-fear-insanity-corruption"
                     ]
                 },
                 {
                     "name": "Hostile Acquisitions",
                     "packs": [
                         "rt-hostile-items-ammo",
-                        "rt-hostile-items-armour",
                         "rt-hostile-items-armor-mods",
+                        "rt-hostile-items-armour",
                         "rt-hostile-items-gear",
                         "rt-hostile-items-ship-components",
                         "rt-hostile-items-talents",
@@ -6173,31 +6339,39 @@
                 {
                     "name": "Into the Storm",
                     "packs": [
-                        "rt-storm-vehicles-voidcraft",
                         "rt-storm-items-ammo",
                         "rt-storm-items-armour",
                         "rt-storm-items-gear",
                         "rt-storm-items-navigator-powers",
-                        "rt-storm-items-origin-path",
                         "rt-storm-items-psychic-powers",
                         "rt-storm-items-ship-components",
                         "rt-storm-items-ship-upgrades",
                         "rt-storm-items-ship-weapons",
                         "rt-storm-items-talents",
                         "rt-storm-items-traits",
-                        "rt-storm-items-weapons"
+                        "rt-storm-items-weapons",
+                        "rt-storm-origins-birthrights",
+                        "rt-storm-origins-homeworlds",
+                        "rt-storm-origins-lineages",
+                        "rt-storm-origins-lure-of-the-void",
+                        "rt-storm-origins-motivations",
+                        "rt-storm-origins-trials-and-travails",
+                        "rt-storm-vehicles-aircraft",
+                        "rt-storm-vehicles-terracraft",
+                        "rt-storm-vehicles-voidcraft"
                     ]
                 },
                 {
                     "name": "Koronus Bestiary",
                     "packs": [
-                        "rt-koronus-vehicles-voidcraft",
+                        "rt-koronus-actors-bestiary",
                         "rt-koronus-items-gear",
                         "rt-koronus-items-ship-components",
                         "rt-koronus-items-ship-weapons",
                         "rt-koronus-items-weapons",
                         "rt-koronus-journals",
-                        "rt-koronus-actors-bestiary"
+                        "rt-koronus-vehicles-aircraft",
+                        "rt-koronus-vehicles-voidcraft"
                     ]
                 },
                 {
@@ -6205,8 +6379,8 @@
                     "packs": [
                         "rt-stars-actors-bestiary",
                         "rt-stars-actors-npcs",
-                        "rt-stars-items-armour",
                         "rt-stars-items-armor-mods",
+                        "rt-stars-items-armour",
                         "rt-stars-items-cybernetics",
                         "rt-stars-items-gear",
                         "rt-stars-items-weapons"
@@ -6220,8 +6394,13 @@
                         "rt-tau-items-gear",
                         "rt-tau-items-talents",
                         "rt-tau-items-traits",
-                        "rt-tau-items-weapons"
+                        "rt-tau-items-weapons",
+                        "rt-tau-vehicles-terracraft"
                     ]
+                },
+                {
+                    "name": "The Dark Kin",
+                    "packs": ["rt-kin-items-talents", "rt-kin-items-traits", "rt-kin-items-weapons", "rt-kin-journals", "rt-kin-origins-careers"]
                 },
                 {
                     "name": "The Navis Primer",
@@ -6232,16 +6411,67 @@
                         "rt-navis-items-psychic-powers",
                         "rt-navis-items-talents",
                         "rt-navis-items-traits",
-                        "rt-navis-items-weapons"
+                        "rt-navis-items-weapons",
+                        "rt-navis-journals-navigation"
                     ]
                 },
                 {
                     "name": "The Soul Reaver",
-                    "packs": ["rt-reaver-items-armour", "rt-reaver-items-gear", "rt-reaver-items-talents", "rt-reaver-items-traits", "rt-reaver-items-weapons"]
+                    "packs": [
+                        "rt-reaver-actors-bestiary",
+                        "rt-reaver-actors-npcs",
+                        "rt-reaver-items-armour",
+                        "rt-reaver-items-gear",
+                        "rt-reaver-items-talents",
+                        "rt-reaver-items-traits",
+                        "rt-reaver-items-weapons",
+                        "rt-reaver-vehicles-aircraft",
+                        "rt-reaver-vehicles-terracraft",
+                        "rt-reaver-vehicles-voidcraft"
+                    ]
                 },
                 {
-                    "name": "The Dark Kin",
-                    "packs": ["rt-kin-journals"]
+                    "name": "General",
+                    "packs": [
+                        "rt-core-actors-bestiary",
+                        "rt-core-actors-npcs",
+                        "rt-core-items-ammo",
+                        "rt-core-items-armor-mods",
+                        "rt-core-items-armour",
+                        "rt-core-items-conditions",
+                        "rt-core-items-critical-injuries",
+                        "rt-core-items-cybernetics",
+                        "rt-core-items-gear",
+                        "rt-core-items-navigator-powers",
+                        "rt-core-items-psychic-powers",
+                        "rt-core-items-ship-components",
+                        "rt-core-items-ship-orders",
+                        "rt-core-items-ship-roles",
+                        "rt-core-items-ship-weapons",
+                        "rt-core-items-skills",
+                        "rt-core-items-talents",
+                        "rt-core-items-traits",
+                        "rt-core-items-vehicle-traits",
+                        "rt-core-items-weapon-qualities",
+                        "rt-core-items-weapons",
+                        "rt-core-journals-character-actions",
+                        "rt-core-journals-character-creation",
+                        "rt-core-journals-fear-insanity-corruption",
+                        "rt-core-journals-navigation",
+                        "rt-core-journals-ship-vehicle-actions",
+                        "rt-core-origins-birthrights",
+                        "rt-core-origins-careers",
+                        "rt-core-origins-homeworlds",
+                        "rt-core-origins-lure-of-the-void",
+                        "rt-core-origins-motivations",
+                        "rt-core-origins-trials-and-travails",
+                        "rt-core-rolltables",
+                        "rt-core-rolltables-ship-combat",
+                        "rt-core-vehicles-voidcraft",
+                        "rt-inequity-journals-colonies",
+                        "rt-items-ship-extended-actions",
+                        "rt-rolltables-fear-insanity-corruption"
+                    ]
                 }
             ]
         }

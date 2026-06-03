@@ -59,6 +59,8 @@
     "packs:audit": "node scripts/build-compendium-uuid-index.mjs",
     "packs:audit:strict": "node scripts/build-compendium-uuid-index.mjs --strict",
     "packs:validate": "node src/packs/validate-schema.cjs",
+    "packs:folders": "node scripts/gen-pack-folders.mjs",
+    "packs:folders:check": "node scripts/gen-pack-folders.mjs --check",
     "i18n:gen": "node scripts/gen-i18n-types.mjs",
     "i18n:check": "node scripts/gen-i18n-types.mjs --check",
     "icons:gen": "node scripts/gen-icons.mjs",
