@@ -4,10 +4,16 @@
  * reserving a wide fixed width.
  *
  * History (#249): the input used a fixed flex basis (`flex-[0_1_140px]`), which
- * reserved ~140px regardless of content, so a short player name (or the empty
- * placeholder) left a large gap inside the `( … )` punctuation. The fix sizes
- * the input to its content via the CSS `field-sizing: content` property, with a
- * 3rem floor (so an empty field still shows the placeholder) and a 200px cap.
+ * reserved ~140px regardless of content. Later attempts used `field-sizing:
+ * content` (never emitted into the bundle) and an HTML `size` attribute (computed
+ * from the content) — but the field still spanned the header width. Root cause:
+ * Foundry's core `foundry2.css` declares `input[type=text] { width: 100% }`, and a
+ * CSS `width` overrides the HTML `size` attribute. The prefixed Tailwind utility
+ * `.wh40k-rpg .tw-w-auto` did not reliably win that cascade, so the input stayed
+ * 100% wide and `size` was ignored. The fix forces `width: auto !important`
+ * (`!tw-w-auto`), which beats the non-important Foundry rule unconditionally;
+ * `size` (8-char floor) then sizes the input to its content, bounded by a 3rem
+ * floor and a 200px cap.
  *
  * The test is a source scan rather than runtime: rendering the partial requires
  * Foundry's Handlebars + sheet context the unit env does not provide, and the
@@ -34,17 +40,19 @@ function inputWithName(name: string): string {
 describe('actor-identity player-name input layout (#249)', () => {
     const playerInput = inputWithName('system.bio.playerName');
 
-    it('sizes the player-name input to its content', () => {
-        // field-sizing: content makes the input width track the typed value /
-        // placeholder instead of a fixed basis.
+    it('forces width:auto with !important so Foundry’s input[type=text]{width:100%} cannot win', () => {
+        // A CSS `width` overrides the HTML `size` attribute, so the size= fallback
+        // is dead unless width:auto wins the cascade. Foundry's core rule is
+        // layered + non-important; `!tw-w-auto` (width:auto !important) beats it
+        // unconditionally. field-sizing:content stays as progressive enhancement.
+        expect(playerInput).toContain('!tw-w-auto');
+        expect(playerInput).not.toMatch(/[^!]tw-w-auto/);
         expect(playerInput).toContain('tw-[field-sizing:content]');
-        expect(playerInput).toContain('tw-w-auto');
     });
 
-    it('carries a browser-native size= fallback (field-sizing is not emitted by Tailwind / unsupported on older runtimes)', () => {
-        // The CSS `field-sizing: content` rule never reaches the bundle, so the
-        // input must also shrink/grow via the HTML `size` attribute, computed from
-        // the player name with an 8-char floor for the placeholder.
+    it('carries a browser-native size= fallback that now actually applies (width:auto no longer overridden)', () => {
+        // With width:auto winning, the HTML `size` attribute sizes the input to the
+        // player name (8-char floor for the placeholder).
         expect(playerInput).toMatch(/size="\{\{inputSize system\.bio\.playerName 8\}\}"/);
     });
 
