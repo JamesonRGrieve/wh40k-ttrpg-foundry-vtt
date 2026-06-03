@@ -183,7 +183,12 @@
                                 data-tooltip="{{tooltip}}">
                             <i class="urd-card__icon {{icon}} tw-text-xs tw-text-[#7a7a6a] tw-transition-colors"></i>
                             <span class="tw-font-medium tw-text-2xs tw-leading-[1.1]">{{label}}</span>
+                            {{#if coverAP}}
+                            {{!-- Cover adds Armour at the hit location, not a to-hit modifier (#232). --}}
+                            <span class="tw-font-semibold tw-text-2xs tw-text-gold-raw" data-tooltip="{{localize 'WH40K.Combat.CoverAPTooltip'}}">{{localize 'WH40K.Armour.AP'}} {{coverAP}}</span>
+                            {{else}}
                             <span class="tw-font-semibold tw-text-2xs {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else if (lt modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{modifierLabel}}</span>
+                            {{/if}}
                         </button>
                     {{/each}}
                 </div>
