@@ -1011,7 +1011,7 @@
             "label": "DH1: Core Rulebook — Bestiary",
             "path": "packs/dark-heresy-1/dh1-core-actors-bestiary",
             "system": "wh40k-rpg",
-            "type": "Item",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1959,7 +1959,7 @@
             "label": "DW: Mark of the Xenos — Bestiary",
             "path": "packs/deathwatch/dw-xenos-actors-bestiary",
             "system": "wh40k-rpg",
-            "type": "Item",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1971,7 +1971,7 @@
             "label": "DW: Mark of the Xenos — Named Individuals",
             "path": "packs/deathwatch/dw-xenos-actors-npcs",
             "system": "wh40k-rpg",
-            "type": "Item",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -4815,7 +4815,7 @@
             "label": "DH1: Ascension — Bestiary",
             "path": "packs/dark-heresy-1/dh1-ascension-actors-bestiary",
             "system": "wh40k-rpg",
-            "type": "Item",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -4827,7 +4827,7 @@
             "label": "DH1: Ascension — Named Individuals",
             "path": "packs/dark-heresy-1/dh1-ascension-actors-npcs",
             "system": "wh40k-rpg",
-            "type": "Item",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
