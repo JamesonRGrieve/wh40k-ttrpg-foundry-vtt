@@ -69,6 +69,20 @@ export class WH40KSettings {
         }
     }
 
+    /**
+     * Movement-automation level (#235): `full` enforces character movement speeds
+     * during combat, `display` shows the ruler only, `none` is off. Defaults to
+     * `full`. Safe before registration (returns `full`).
+     */
+    static getMovementAutomation(): 'full' | 'display' | 'none' {
+        try {
+            const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.movementAutomation));
+            return value === 'display' || value === 'none' ? value : 'full';
+        } catch {
+            return 'full';
+        }
+    }
+
     /** Homebrew: allow more than one Fate Point spend on the same roll. RAW permits only one. */
     static isMultipleFateBurnAllowed(): boolean {
         try {

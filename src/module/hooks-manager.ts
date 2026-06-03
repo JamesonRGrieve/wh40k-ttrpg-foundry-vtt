@@ -101,6 +101,7 @@ import {
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { WH40K } from './rules/config.ts';
+import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import { registerTradeProximityHud } from './transactions/trade-proximity.ts';
 import { TransactionManager } from './transactions/transaction-manager.ts';
@@ -166,6 +167,9 @@ export class HooksManager {
         DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
         DHCombatActionManager.initializeHooks();
+
+        // Turn-gate + rate-limit token movement during combat (#235).
+        registerMovementEnforcement();
 
         // Keep the UUID → display-name cache warm as world docs change.
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document hook payloads carry framework-typed loose shapes
