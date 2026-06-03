@@ -356,7 +356,14 @@
               <input type="checkbox" name="system.melee" {{checked system.melee}}
                      {{#unless inEditMode}}disabled{{/unless}} />
               <span class="wh40k-toggle-switch__slider"></span>
-              <span class="wh40k-toggle-switch__label"><i class="fa-solid fa-sword"></i> Can Melee</span>
+              <span class="wh40k-toggle-switch__label"><i class="fa-solid fa-sword"></i> {{localize "WH40K.Weapon.CanMelee"}}</span>
+            </label>
+            {{!-- #262: GM marks a weapon (un)identified; unidentified hides damage/pen/range from players. --}}
+            <label class="wh40k-toggle-switch {{#unless inEditMode}}wh40k-toggle-switch--readonly{{/unless}}" title="{{localize "WH40K.Weapon.ConcealedHint"}}">
+              <input type="checkbox" name="system.state.identified" {{checked system.state.identified}}
+                     {{#unless inEditMode}}disabled{{/unless}} />
+              <span class="wh40k-toggle-switch__slider"></span>
+              <span class="wh40k-toggle-switch__label"><i class="fa-solid fa-eye"></i> {{localize "WH40K.Weapon.Identified"}}</span>
             </label>
           </div>
         </div>

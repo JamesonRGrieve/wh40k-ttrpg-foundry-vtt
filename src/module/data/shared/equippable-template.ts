@@ -8,6 +8,13 @@ export interface EquippableState {
     container: string;
     activated: boolean;
     overloaded: boolean;
+    /**
+     * Whether the item's mechanical stats are known to players (#262). Defaults
+     * to `true`; a GM can mark a weapon unidentified so players cannot see its
+     * damage / penetration / range until it is identified. Runtime per-instance
+     * state, so it is preserved across the compendium→world resync.
+     */
+    identified: boolean;
 }
 
 interface UpdatableActor {
@@ -43,6 +50,9 @@ export default class EquippableTemplate extends SystemDataModel {
                 container: new fields.StringField({ required: false, blank: true, initial: '' }),
                 activated: new fields.BooleanField({ required: true, initial: false }),
                 overloaded: new fields.BooleanField({ required: true, initial: false }),
+                // #262 — players cannot see an unidentified weapon's stats. Defaults
+                // to identified so existing/RAW gear is visible; GM toggles per item.
+                identified: new fields.BooleanField({ required: true, initial: true }),
             }),
         };
     }
