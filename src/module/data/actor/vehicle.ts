@@ -55,6 +55,20 @@ export const LOCOMOTION_CHOICES = [
 
 export type Locomotion = (typeof LOCOMOTION_CHOICES)[number];
 
+/**
+ * Build the shared `locomotion` StringField with a craft-specific default (#272).
+ * The choices + label are identical across all craft scales; only the default
+ * propulsion differs (wheeled / flyer / hull), so the subtypes pass `initial`.
+ */
+export function locomotionField(initial: Locomotion): foundry.data.fields.DataField.Any {
+    return new foundry.data.fields.StringField({
+        required: true,
+        initial,
+        choices: [...LOCOMOTION_CHOICES],
+        label: 'WH40K.Vehicle.Locomotion',
+    });
+}
+
 export default class VehicleData extends ActorDataModel {
     // Typed property declarations matching defineSchema()
     /**
@@ -80,12 +94,7 @@ export default class VehicleData extends ActorDataModel {
             ...super.defineSchema(),
 
             // === Locomotion (propulsion adjective) ===
-            locomotion: new fields.StringField({
-                required: true,
-                initial: 'wheeled',
-                choices: [...LOCOMOTION_CHOICES],
-                label: 'WH40K.Vehicle.Locomotion',
-            }),
+            locomotion: locomotionField('wheeled'),
 
             // === Size ===
             size: new fields.NumberField({

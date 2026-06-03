@@ -1,4 +1,4 @@
-import { ConventionalCraftData, LOCOMOTION_CHOICES } from './vehicle.ts';
+import { ConventionalCraftData, locomotionField } from './vehicle.ts';
 
 /**
  * Data model for atmospheric / sub-orbital flyers and skimmers.
@@ -17,12 +17,7 @@ export default class AircraftData extends ConventionalCraftData {
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         const schema = super.defineSchema();
-        schema['locomotion'] = new fields.StringField({
-            required: true,
-            initial: 'flyer',
-            choices: [...LOCOMOTION_CHOICES],
-            label: 'WH40K.Vehicle.Locomotion',
-        });
+        schema['locomotion'] = locomotionField('flyer');
 
         // === Flyer altitude (without.md p. 54-55) ===
         schema['altitude'] = new fields.StringField({
