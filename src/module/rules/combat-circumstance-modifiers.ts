@@ -51,17 +51,11 @@ export interface CombatCircumstanceModifier {
  * Combat" so a reader can cross-walk this list to page 229–231 directly.
  */
 export const COMBAT_CIRCUMSTANCE_MODIFIERS: readonly CombatCircumstanceModifier[] = [
-    // Cover doesn't modify the BS test itself — hits to a concealed location
-    // are absorbed by the cover's Armour. Listed here for discoverability;
-    // value is 0 and the engine handles the AP redirect in damage-data.
-    {
-        id: 'cover',
-        label: 'Cover',
-        value: 0,
-        appliesTo: 'bs',
-        source: 'core.md p.229',
-        note: 'Hits to concealed locations are absorbed by cover AP, not penalised at the BS test.',
-    },
+    // Cover is intentionally NOT listed here: it does not modify the BS test (a
+    // +0 modifier reads as broken). Hits to a concealed location are absorbed by
+    // the cover's Armour, so cover is surfaced on the attack screen as AP (the
+    // RANGED_SITUATIONAL_MODIFIERS cover tiers carry `coverAP`), and the engine
+    // applies that AP in assign-damage-data (#232).
     { id: 'darkness-melee', label: 'Darkness (melee)', value: -20, appliesTo: 'ws', source: 'core.md p.229' },
     { id: 'darkness-ranged', label: 'Darkness (ranged)', value: -30, appliesTo: 'bs', source: 'core.md p.229' },
     { id: 'darkness-stealth', label: 'Darkness (stealth concealment)', value: 20, appliesTo: 'stealth', source: 'core.md p.229' },

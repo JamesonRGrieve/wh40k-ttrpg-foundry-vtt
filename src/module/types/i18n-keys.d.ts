@@ -703,6 +703,7 @@ export type I18nKey =
     | 'WH40K.Combat.AssignDamage'
     | 'WH40K.Combat.Attack'
     | 'WH40K.Combat.BattleStation'
+    | 'WH40K.Combat.CoverAPTooltip'
     | 'WH40K.Combat.CriticalInjuries'
     | 'WH40K.Combat.Dodge'
     | 'WH40K.Combat.EmptySlot'

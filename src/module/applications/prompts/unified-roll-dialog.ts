@@ -866,6 +866,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   ...s,
                   isActive: this._activeCombatSituationals.has(s.key),
                   modifierLabel: s.modifier >= 0 ? `+${s.modifier}` : `${s.modifier}`,
+                  // Cover doesn't penalise the to-hit roll — it adds Armour at the hit
+                  // location. Surface that AP instead of a misleading "+0" (#232).
+                  coverAP: s.damageEffect?.coverAP ?? null,
               }))
             : [];
 

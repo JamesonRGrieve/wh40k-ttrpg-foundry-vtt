@@ -63,6 +63,17 @@ describe('getCombatModifier', () => {
     });
 });
 
+describe('cover is not surfaced as a +0 BS modifier (#232)', () => {
+    it('has no "cover" entry in the circumstance registry', () => {
+        expect(getCombatModifier('cover')).toBeUndefined();
+        expect(COMBAT_CIRCUMSTANCE_MODIFIERS.find((m) => m.id === 'cover')).toBeUndefined();
+    });
+
+    it('does not return cover among the BS-target modifiers', () => {
+        expect(getCombatModifiersForTarget('bs').find((m) => m.id === 'cover')).toBeUndefined();
+    });
+});
+
 describe('getCombatModifiersForTarget', () => {
     it('returns only ranged-relevant entries for "bs" (including bs-or-ws)', () => {
         const ranged = getCombatModifiersForTarget('bs');
