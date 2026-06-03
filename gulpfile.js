@@ -14,7 +14,22 @@ const path = require("path");
 const zip = require("gulp-zip");
 const { ClassicLevel } = require("classic-level");
 const { exec } = require("child_process");
-const { validatePackSources } = require("./src/packs/validate-schema.cjs");
+// src/packs is a private submodule of copyrighted content that is intentionally
+// absent from the public CI build. validatePackSources is only used by
+// compilePacks (build:compendium), which the public nightly build never runs, so
+// load it lazily and fail clearly only if compendium compilation is attempted
+// without the submodule.
+let validatePackSources;
+try {
+  ({ validatePackSources } = require("./src/packs/validate-schema.cjs"));
+} catch {
+  validatePackSources = () => {
+    throw new Error(
+      "src/packs submodule is not checked out — cannot build compendiums (compilePacks). " +
+      "Run a system-only build (build:system) instead, or check out the private content submodule."
+    );
+  };
+}
 const { buildUuidIndex, resolveAdventure } = require("./scripts/resolve-adventures.cjs");
 
 const util = require('util');

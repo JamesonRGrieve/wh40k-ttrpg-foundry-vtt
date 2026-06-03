@@ -10,6 +10,7 @@ import type { WH40KBaseActor as WH40KActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { SkillKeyHelper } from '../helpers/skill-key-helper.ts';
 import { evaluateWoundsFormula, evaluateFateFormula } from './formula-evaluator.ts';
+import { stripSpecializationSuffix } from './specialization-name.ts';
 
 /* eslint-disable @typescript-eslint/no-unused-vars -- documentation: union of all grant DataModel types this processor handles */
 // biome-ignore lint/correctness/noUnusedVariables: documentation: union of all grant DataModel types this processor handles
@@ -761,9 +762,11 @@ export class GrantsProcessor {
             // eslint-disable-next-line no-restricted-syntax -- assigning to cloned item-data object, not an actor's .system field
             itemData.system ??= {};
             itemData.system['specialization'] = grantSpec;
-            // Strip any existing "(X)" suffix so we don't produce "Name (X) (X)"
-            const bareName = itemData.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
-            itemData.name = `${bareName} (${grantSpec})`;
+            // SPEC invariant (#261): the base `name` never carries the specialization —
+            // the `specialization` field is the sole carrier and `fullName` composes the
+            // display exactly once. Store the bare base name; do NOT bake "(grantSpec)"
+            // in, or the display would read "Name (Spec) (Spec)".
+            itemData.name = stripSpecializationSuffix(itemData.name);
         }
 
         // Mark as granted

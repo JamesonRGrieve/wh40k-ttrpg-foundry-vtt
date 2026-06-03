@@ -2,7 +2,7 @@
     "id": "wh40k-rpg",
     "title": "Warhammer 40K RPG",
     "description": "Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs (Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch).",
-    "version": "0.0.1",
+    "version": "0.0.1-alpha.1",
     "compatibility": {
         "minimum": 13,
         "verified": "14.349",
@@ -6253,8 +6253,8 @@
     "primaryTokenAttribute": "wounds",
     "secondaryTokenAttribute": "fate",
     "url": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt",
-    "manifest": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/system.json",
-    "download": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/wh40k-rpg.zip",
+    "manifest": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/download/nightly/system.json",
+    "download": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/download/nightly/wh40k-rpg.zip",
     "license": "LICENSE.txt",
     "bugs": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues",
     "relationships": {

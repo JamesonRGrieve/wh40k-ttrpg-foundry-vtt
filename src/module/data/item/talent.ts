@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -266,8 +267,12 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get fullName(): string {
-        let name = (this.parent as { name?: string } | null)?.name ?? '';
-        if (this.specialization) name += ` (${this.specialization})`;
+        // SPEC invariant (#261): the specialization field is the sole carrier; the
+        // display name is composed exactly once via composeSpecializationName (which
+        // strips the "(X)" placeholder and won't re-append a spec a legacy/contaminated
+        // name already carries — so no actor-data migration is needed).
+        const base = (this.parent as { name?: string } | null)?.name ?? '';
+        let name = composeSpecializationName(base, this.specialization);
         if (this.stackable && this.rank > 1) name += ` x${this.rank}`;
         return name;
     }
