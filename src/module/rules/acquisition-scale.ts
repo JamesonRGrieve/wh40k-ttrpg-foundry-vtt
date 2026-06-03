@@ -243,7 +243,7 @@ export interface ResolveAcquisitionInput {
     extra?: number;
 }
 
-export interface AcquisitionBreakdownEntry {
+interface AcquisitionBreakdownEntry {
     /** i18n key for the row label. */
     labelKey: string;
     /** Optional template-substitution values (e.g. component count). */

@@ -21,7 +21,7 @@ type ActorType = WH40KAcolyte | WH40KNPC | WH40KBaseActor;
  * Custom ContextMenu subclass for WH40K RPG styling.
  * Uses Foundry V13's native ContextMenu with fixed positioning.
  */
-export class WH40KContextMenu extends applicationUX.ContextMenu {
+class WH40KContextMenu extends applicationUX.ContextMenu {
     // biome-ignore lint/complexity/noUselessConstructor: required to forward deprecated ContextMenu args with explicit annotation
     constructor(...args: ConstructorParameters<typeof applicationUX.ContextMenu>) {
         // eslint-disable-next-line @typescript-eslint/no-deprecated -- boundary: ContextMenu super-call deprecated jQuery default; we always pass jQuery: false at call sites

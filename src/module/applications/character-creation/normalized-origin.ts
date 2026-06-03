@@ -72,7 +72,7 @@ export interface NormalizedChoiceOption {
     specializations: string[] | null;
 }
 
-export interface NormalizedGrants {
+interface NormalizedGrants {
     skills: Grant[];
     talents: Grant[];
     traits: Grant[];
@@ -142,7 +142,7 @@ function stripHtml(html: string): string {
  * Normalize a single choice entry.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeChoice accepts raw compendium data of unknown shape; all fields are accessed via string keys with type coercion helpers
-export function normalizeChoice(raw: Record<string, unknown>): NormalizedChoice {
+function normalizeChoice(raw: Record<string, unknown>): NormalizedChoice {
     const rawOptions = Array.isArray(raw['options']) ? raw['options'] : [];
     return {
         label: firstString(raw['label'], raw['name']),

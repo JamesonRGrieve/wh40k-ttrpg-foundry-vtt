@@ -56,7 +56,7 @@ export const COMRADE_CORRUPTION_DEATH_THRESHOLD = 10;
 export type ComradeState = 'unharmed' | 'wounded' | 'dead';
 
 /** Why {@link transfersToComrade} returned `transfers: true`, or `'none'` when it didn't. */
-export type ComradeHitTransferReason = 'doubles' | 'blast-spray' | 'none';
+type ComradeHitTransferReason = 'doubles' | 'blast-spray' | 'none';
 
 /* -------------------------------------------- */
 /*  Cohesion check                              */

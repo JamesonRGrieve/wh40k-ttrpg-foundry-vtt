@@ -13,7 +13,7 @@
  * the cumulative-DoS accumulation.
  */
 
-export type ExplicationObjective = 'eradication' | 'aegis' | 'detection' | 'communication' | 'comprehension';
+type ExplicationObjective = 'eradication' | 'aegis' | 'detection' | 'communication' | 'comprehension';
 
 export const EXPLICATION_THRESHOLDS: Record<'minor' | 'standard' | 'major' | 'grand', number> = {
     minor: 10,

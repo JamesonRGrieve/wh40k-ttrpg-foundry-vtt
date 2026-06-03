@@ -32,10 +32,10 @@
  * Action economy cost of issuing the Order. `free` is reserved for
  * Sweeping Orders (passive) and compendium effects flagged as free.
  */
-export type OrderActionCost = 'free' | 'half' | 'full';
+type OrderActionCost = 'free' | 'half' | 'full';
 
 /** Discriminator for the three Order classes. */
-export type OrderKind = 'generic' | 'speciality' | 'sweeping';
+type OrderKind = 'generic' | 'speciality' | 'sweeping';
 
 /**
  * Content-agnostic effect descriptor. Concrete labels resolve via i18n

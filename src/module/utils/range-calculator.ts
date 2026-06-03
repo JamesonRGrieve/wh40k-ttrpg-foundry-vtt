@@ -10,7 +10,7 @@
  * - Extreme Range: > weapon range * 3 (-30)
  */
 
-export interface RangeBracket {
+interface RangeBracket {
     label: string;
     modifier: number;
     description: string;

@@ -11,7 +11,7 @@ import { applyRollModeWhispers } from './roll-helpers.ts';
  * DW game system, AssignDamageData routes the resolved hit through the
  * RAW "single hit removes 1 Magnitude" branch instead of wounds.
  */
-export interface ActorHordeState {
+interface ActorHordeState {
     enabled: boolean;
     magnitude: { current: number; max: number };
     /** Trait identifiers (Fearless / Disciplined / …) governing break-check behaviour. */

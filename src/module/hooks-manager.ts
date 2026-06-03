@@ -113,8 +113,6 @@ import { uuidNameCache } from './utils/uuid-name-cache.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
-export { SYSTEM_ID };
-
 interface DirectoryContextOption {
     name: string;
     icon: string;

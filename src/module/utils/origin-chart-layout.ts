@@ -15,7 +15,7 @@
 /**
  * Direction constants for path navigation
  */
-export const DIRECTION = {
+const DIRECTION = {
     FORWARD: 'forward',
     BACKWARD: 'backward',
 };

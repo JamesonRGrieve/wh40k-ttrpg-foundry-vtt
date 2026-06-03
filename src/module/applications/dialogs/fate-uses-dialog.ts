@@ -14,7 +14,7 @@ import { SystemConfigRegistry, type FatePointUseDef, type GameSystemId } from '.
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /** Bonus-attribute entry rendered alongside the canonical uses list. */
-export interface FateBonusAttribute {
+interface FateBonusAttribute {
     /** Item / talent / career name. */
     name: string;
     /** One-line summary of how that attribute consumes fate points. */

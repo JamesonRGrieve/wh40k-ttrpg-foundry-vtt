@@ -48,7 +48,7 @@ export const CRAFTSMANSHIP_TIERS: ReadonlyArray<Craftsmanship> = Object.freeze([
  *   - `reliable` — Good: gain the Reliable quality (jam chance reduced).
  *   - `never-jams` — Best: the weapon never jams regardless of result.
  */
-export type RangedReliabilityShift = 'unreliable' | 'standard' | 'reliable' | 'never-jams';
+type RangedReliabilityShift = 'unreliable' | 'standard' | 'reliable' | 'never-jams';
 
 /**
  * Mechanical effect of Craftsmanship on a ranged weapon. The shift is

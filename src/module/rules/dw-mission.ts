@@ -74,7 +74,7 @@ export interface DwMission {
 }
 
 /** Per-objective payout entry. */
-export interface MissionRewardEntry {
+interface MissionRewardEntry {
     id: string;
     renown: number;
     xp: number;
