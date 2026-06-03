@@ -92,33 +92,35 @@
         {{/if}}
     </div>
 
-    {{!-- Reactions --}}
+    {{!-- Reactions — only the ones the actor can actually use are present (#245). --}}
+    {{#if (or reactions.dodge reactions.parry)}}
     <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2">
         <h3 class="tw-m-0 tw-mb-2 tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[0.9rem] tw-font-bold tw-uppercase"><i class="fas fa-shield-alt"></i> Reactions ({{reactions.remaining}})</h3>
         <div class="tw-flex tw-gap-2 tw-flex-wrap">
+            {{#if reactions.dodge}}
             <button type="button"
                     class="tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:not-disabled:tw-bg-[var(--wh40k-bronze,#cd7f32)] hover:not-disabled:tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
                     data-action="dodge"
                     {{#unless reactions.dodge.available}}disabled{{/unless}}
                     data-tooltip="{{reactions.dodge.label}}">
                 <i class="fas fa-wind"></i> Dodge
-                {{#if reactions.dodge.available}}
-                    <span class="tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">({{reactions.dodge.target}})</span>
-                {{/if}}
+                <span class="tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">({{reactions.dodge.target}})</span>
             </button>
+            {{/if}}
 
+            {{#if reactions.parry}}
             <button type="button"
                     class="tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:not-disabled:tw-bg-[var(--wh40k-bronze,#cd7f32)] hover:not-disabled:tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
                     data-action="parry"
                     {{#unless reactions.parry.available}}disabled{{/unless}}
                     data-tooltip="{{reactions.parry.label}}">
                 <i class="fas fa-hand-paper"></i> Parry
-                {{#if reactions.parry.available}}
-                    <span class="tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">({{reactions.parry.target}})</span>
-                {{/if}}
+                <span class="tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">({{reactions.parry.target}})</span>
             </button>
+            {{/if}}
         </div>
     </div>
+    {{/if}}
 
     {{!-- Quick Actions --}}
     <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2">

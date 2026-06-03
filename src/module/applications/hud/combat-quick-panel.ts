@@ -17,6 +17,7 @@ import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { t } from '../../i18n/t.ts';
+import { buildReactionState, type ReactionState } from './reaction-state.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -358,25 +359,19 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
 
     /* -------------------------------------------- */
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: returned to the Handlebars template context (Record-shaped by template convention).
-    _prepareReactions(): Record<string, unknown> {
+    _prepareReactions(): ReactionState {
         const skills = this.actor?.system.skills;
-        const dodge = skills?.dodge;
-        const parry = skills?.parry;
-
-        return {
-            dodge: {
-                available: !this.reactionsUsed.dodge,
-                target: dodge?.current ?? 0,
-                label: dodge !== undefined ? t('WH40K.CombatPanel.DodgeWithRank', { rank: dodge.current }) : t('WH40K.CombatPanel.Dodge'),
-            },
-            parry: {
-                available: !this.reactionsUsed.parry,
-                target: parry?.current ?? 0,
-                label: parry !== undefined ? t('WH40K.CombatPanel.ParryWithRank', { rank: parry.current }) : t('WH40K.CombatPanel.Parry'),
-            },
-            remaining: (this.reactionsUsed.dodge ? 0 : 1) + (this.reactionsUsed.parry ? 0 : 1),
-        };
+        // Only surface reactions the actor can actually use (a real, positive skill
+        // TN) — NPCs/actors without Dodge or Parry no longer show a placeholder (0)
+        // (#245). buildReactionState omits absent reactions entirely.
+        return buildReactionState({
+            dodgeTarget: skills?.dodge.current,
+            parryTarget: skills?.parry.current,
+            dodgeUsed: this.reactionsUsed.dodge,
+            parryUsed: this.reactionsUsed.parry,
+            dodgeLabel: (target) => t('WH40K.CombatPanel.DodgeWithRank', { rank: target }),
+            parryLabel: (target) => t('WH40K.CombatPanel.ParryWithRank', { rank: target }),
+        });
     }
 
     /* -------------------------------------------- */
