@@ -63,6 +63,13 @@ export type SkillLike = Partial<
 > &
     Record<string, unknown>;
 export type CharacteristicLike = WH40KCharacteristic;
+
+/**
+ * Per-rank XP cost for a characteristic/skill advance (Simple → Expert).
+ * Single source shared by BaseActorSheet and CharacterSheet (#284).
+ */
+export const ADVANCE_XP_COSTS = [100, 250, 500, 750, 1000] as const;
+
 type TalentLike = WH40KItem & {
     system: WH40KItem['system'] & {
         tier?: number | string;
@@ -467,10 +474,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
             // Calculate XP cost for next advance (follows WH40K progression)
             // Simple: 100, Intermediate: 250, Trained: 500, Proficient: 750, Expert: 1000
-            const advanceCosts = [100, 250, 500, 750, 1000];
             const nextAdvance = char.advance;
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array index access may return undefined at runtime even when bounds-checked by the ternary
-            char.nextAdvanceCost = (nextAdvance < 5 ? advanceCosts[nextAdvance] : 0) ?? 0;
+            char.nextAdvanceCost = (nextAdvance < 5 ? ADVANCE_XP_COSTS[nextAdvance] : 0) ?? 0;
 
             // Prepare tooltip data if not already present
             if (typeof char.tooltipData !== 'string' || char.tooltipData === '') {
