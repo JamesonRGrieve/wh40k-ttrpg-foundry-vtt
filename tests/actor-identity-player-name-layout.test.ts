@@ -52,3 +52,16 @@ describe('actor-identity player-name input layout (#249)', () => {
         expect(playerInput).not.toMatch(/tw-basis-\[\d+px\]/);
     });
 });
+
+describe('actor-identity player-name is PC-only (#253)', () => {
+    it('gates the player-name block on {{#unless isNPC}} so NPC sheets never render it', () => {
+        // NPCs carry a truthy-but-empty `system.bio` getter, so `{{#if system.bio}}`
+        // alone let the player input leak onto NPC sheets. The isNPC guard is what
+        // suppresses it (isNPC is set true in npc-sheet.ts context).
+        expect(src).toMatch(/\{\{#unless isNPC\}\}[\s\S]*name="system\.bio\.playerName"[\s\S]*\{\{\/unless\}\}/);
+    });
+
+    it('still keeps the inner system.bio guard (skips vehicles/starships with no bio)', () => {
+        expect(src).toMatch(/\{\{#unless isNPC\}\}\s*\{\{#if system\.bio\}\}/);
+    });
+});
