@@ -441,6 +441,9 @@ export default class NPCSheet extends CharacterSheet {
         const threatTier = (typeof tierRaw === 'object' && tierRaw !== null ? tierRaw : {}) as { color?: string; label?: string };
         const threatColor = threatTier.color;
         const threatLabel = threatTier.label;
+        // Fate is RAW-restricted to elite/master-tier NPCs (#258); only those tiers
+        // get the Fate control in the header.
+        const isFated = npcActor.system.type === 'elite' || npcActor.system.type === 'master';
         return [
             {
                 label: 'Threat',
@@ -502,6 +505,19 @@ export default class NPCSheet extends CharacterSheet {
                 value: npcActor.system.source,
                 placeholder: 'Source',
             },
+            // Fate — only for elite/master tiers (#258).
+            ...(isFated
+                ? [
+                      {
+                          label: 'Fate',
+                          name: 'system.fate.value',
+                          type: 'number' as const,
+                          value: npcActor.system.fate.value,
+                          min: 0,
+                          icon: 'fa-solid fa-clover',
+                      },
+                  ]
+                : []),
         ];
     }
 
