@@ -343,6 +343,13 @@ export default class NPCSheet extends CharacterSheet {
         // {{#unless isNPC}}. isGM is now inherited from BaseActorSheet.
         context['isNPC'] = true;
 
+        // Fate is RAW-restricted to elite/master-tier NPCs (#258). The shared
+        // combat panel renders the Fate control for everyone; this flag hides it
+        // for NPCs that are neither elite nor master. PCs never set it (undefined),
+        // so the panel keeps rendering for them.
+        const npcTier = this.npcActor.system.type;
+        context['npcFateHidden'] = !(npcTier === 'elite' || npcTier === 'master');
+
         // Daemonic immunities header badge (#143 — DH2 Errata L69-73).
         // Surfaces a crimson skull pill above the sidebar-fields panel when
         // the actor carries the Daemonic trait. Disease/poison auto-skip and
@@ -441,9 +448,6 @@ export default class NPCSheet extends CharacterSheet {
         const threatTier = (typeof tierRaw === 'object' && tierRaw !== null ? tierRaw : {}) as { color?: string; label?: string };
         const threatColor = threatTier.color;
         const threatLabel = threatTier.label;
-        // Fate is RAW-restricted to elite/master-tier NPCs (#258); only those tiers
-        // get the Fate control in the header.
-        const isFated = npcActor.system.type === 'elite' || npcActor.system.type === 'master';
         return [
             {
                 label: 'Threat',
@@ -498,19 +502,8 @@ export default class NPCSheet extends CharacterSheet {
             },
             // Source / book-reference lives on the NPC tab's Faction & Allegiance
             // panel (rendered through the `sourceLabel` helper), not the header (#252).
-            // Fate — only for elite/master tiers (#258).
-            ...(isFated
-                ? [
-                      {
-                          label: 'Fate',
-                          name: 'system.fate.value',
-                          type: 'number' as const,
-                          value: npcActor.system.fate.value,
-                          min: 0,
-                          icon: 'fa-solid fa-clover',
-                      },
-                  ]
-                : []),
+            // Fate lives on the Combat tab, gated to elite/master tiers via the
+            // `npcFateHidden` context flag — never in the header (#258).
         ];
     }
 
