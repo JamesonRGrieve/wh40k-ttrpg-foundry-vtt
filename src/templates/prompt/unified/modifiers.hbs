@@ -23,6 +23,23 @@
     </div>
     {{/if}}
 
+    {{!-- Test variant selector (#246): homebrew skill sub-tests (e.g. Visual / Auditory).
+         Picking one gates which conditional modifiers apply. --}}
+    {{#if hasSkillVariants}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-2.5">
+        <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em] tw-font-medium">{{localize "WH40K.Roll.TestVariant"}}</span>
+        <div class="tw-flex tw-flex-wrap tw-gap-1.5">
+            {{#each skillVariants}}
+            <button type="button"
+                    class="tw-inline-flex tw-items-center tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all {{#if (eq name ../selectedSkillVariant)}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)]{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
+                    data-action="selectSkillVariant" data-variant="{{name}}" data-tooltip="{{description}}">
+                {{name}}
+            </button>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+
     {{!-- Situational modifier pills from character talents/traits/conditions --}}
     {{#if hasSituationalModifiers}}
     <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mb-2.5">

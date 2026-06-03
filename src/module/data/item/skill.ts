@@ -24,6 +24,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     declare specialRules: string;
     declare exampleDifficulties: Array<{ difficulty: string; modifier: number; example: string; specialization: string }>;
     declare exampleAdditionalUses: Array<{ name: string; description: string }>;
+    declare variants: Array<{ name: string; description: string }>;
     declare specialUses: Array<{ name: string; description: string; modifier: number; difficulty: string }>;
     declare useTime: string;
     declare rollConfig: { defaultModifier: number; canBeUsedUntrained: boolean; untrainedPenalty: number };
@@ -92,6 +93,19 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             // skill specifies in the rulebook. Narrative, non-rollable (distinct
             // from the structured, rollable `specialUses` below).
             exampleAdditionalUses: new fields.ArrayField(
+                new fields.SchemaField({
+                    name: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    description: new fields.HTMLField({ required: false, blank: true, initial: '' }),
+                }),
+                { required: true, initial: [] },
+            ),
+
+            // Test variants (#246): sub-tests of a skill that gate which conditional
+            // modifiers apply (e.g. Awareness → Visual / Auditory, where an auspex's
+            // +20 applies only to the Visual variant). The variant just NAMES the
+            // sub-test; a modifier opts in by tagging its `appliesToVariant`. Surfaced
+            // only when homebrew refinements are enabled.
+            variants: new fields.ArrayField(
                 new fields.SchemaField({
                     name: new fields.StringField({ required: true, blank: true, initial: '' }),
                     description: new fields.HTMLField({ required: false, blank: true, initial: '' }),
