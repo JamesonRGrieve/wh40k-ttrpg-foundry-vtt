@@ -11,6 +11,7 @@
 
 import HB from 'handlebars';
 import { describe, expect, it } from 'vitest';
+import movementFullSrc from '../src/templates/actor/panel/movement-panel-full.hbs?raw';
 import statGridSrc from '../src/templates/actor/partial/stat-grid-section.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
@@ -150,5 +151,37 @@ describe('stat-grid-section partial', () => {
         const rt = tpl(ctx);
         expect(dh2).toEqual(im);
         expect(im).toEqual(rt);
+    });
+});
+
+describe('#260 — carrying-capacity icons + tightened label/value gap', () => {
+    it('renders the icon above the label when a stat supplies one', () => {
+        const root = dom(
+            tpl({
+                stats: [{ label: 'Push/Drag', value: 250, unit: 'kg', icon: 'fa-cart-flatbed' }],
+            }),
+        );
+        const cell = root.querySelector('.tw-grid > div');
+        // Icon is the first child of the cell, before the label/value spans.
+        expect(cell?.querySelector('.fa-cart-flatbed')).not.toBeNull();
+        expect(cell?.firstElementChild?.classList.contains('fa-cart-flatbed')).toBe(true);
+    });
+
+    it('uses a tightened tw-gap-0.5 stack (not the looser tw-gap-1)', () => {
+        const root = dom(tpl({ stats: [{ label: 'Lift', value: 100, unit: 'kg' }] }));
+        const cell = root.querySelector('.tw-grid > div');
+        expect(cell?.className).toContain('tw-gap-0.5');
+        expect(cell?.className).not.toContain('tw-gap-1 ');
+    });
+
+    it('movement-panel-full gives Lift, Carry AND Push/Drag an icon (Push no longer bare)', () => {
+        // Source assertion — the panel is composed via inline `(object …)` helpers
+        // and can't be unit-rendered without the full sheet, so guard the source.
+        expect(movementFullSrc).toContain('icon="fa-dumbbell"');
+        expect(movementFullSrc).toContain('icon="fa-hands-holding"');
+        expect(movementFullSrc).toContain('icon="fa-cart-flatbed"');
+        // Push/Drag stat block specifically carries an icon.
+        const pushBlock = movementFullSrc.slice(movementFullSrc.indexOf('WH40K.MOVEMENT.Stat.PushDrag'));
+        expect(pushBlock).toContain('icon="fa-cart-flatbed"');
     });
 });
