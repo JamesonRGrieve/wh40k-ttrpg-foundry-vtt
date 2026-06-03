@@ -48,7 +48,9 @@ describe('mockPlayerSheetContext', () => {
         expect(ctx.isNPC).toBe(false);
         expect(ctx.tabs.length).toBeGreaterThan(0);
         expect(ctx.tab.id).toBe('biography');
-        expect(ctx.headerFields.length).toBeGreaterThan(0);
+        // DH2 renders origin steps as bubbles and Divination as the italic quote, so the
+        // static sidebar fields panel is empty (#226).
+        expect(ctx.headerFields).toEqual([]);
         expect(ctx.originPathSteps).toHaveLength(3);
         expect(ctx.originPathComplete).toBe(true);
         expect(ctx.biography.source.notes).toContain('Background notes');
@@ -58,8 +60,9 @@ describe('mockPlayerSheetContext', () => {
     it('uses SystemConfigRegistry.getHeaderFields for header rows — DH2e shape (origin steps render as bubbles, #226)', () => {
         const ctx = mockPlayerSheetContext({ systemId: 'dh2' });
         const names = ctx.headerFields.map((f) => f.name);
-        // Home World / Background / Role are shown by the origin-path bubbles, not as text rows.
-        expect(names).toEqual(['system.originPath.divination']);
+        // Home World / Background / Role are shown by the origin-path bubbles, and Divination
+        // renders as the italic quote beneath the portrait — so no static text rows remain.
+        expect(names).toEqual([]);
     });
 
     it('uses SystemConfigRegistry.getHeaderFields for header rows — IM shape', () => {
@@ -113,11 +116,14 @@ describe('mockPlayerSheetContext', () => {
 describe('mockPlayerSheetContext — per-system parity', () => {
     const ALL_SYSTEMS: GameSystemId[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
 
-    it('every system produces a valid context with non-empty headerFields', () => {
+    it('every system produces a valid context with header rows (except DH2, whose origin steps are bubbles — #226)', () => {
         for (const id of ALL_SYSTEMS) {
             const ctx = mockPlayerSheetContext({ systemId: id });
             expect(ctx.actor, `system ${id}`).toBeTruthy();
-            expect(ctx.headerFields.length, `system ${id}`).toBeGreaterThan(0);
+            // DH2 surfaces origin steps as bubbles + Divination as the italic quote, so its
+            // static fields panel is intentionally empty; every other system still has rows.
+            const expectsRows = id !== 'dh2';
+            expect(ctx.headerFields.length > 0, `system ${id} has header rows`).toBe(expectsRows);
             // Player name is rendered on the identity row, not in headerFields.
             expect(
                 ctx.headerFields.every((f) => f.name !== 'system.bio.playerName'),
