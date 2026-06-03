@@ -1,5 +1,6 @@
 import HandlebarsLib from 'handlebars';
 import enLang from '../src/lang/en.json';
+import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
 
 const TEMPLATE_PREFIX = 'systems/wh40k-rpg/templates/';
@@ -126,6 +127,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
     if (globalState[INIT_KEY] === true) return HandlebarsLib;
 
     HandlebarsLib.registerHelper('join', (arr: HbsValue, sep: string) => asArray(arr).join(typeof sep === 'string' ? sep : ', '));
+    HandlebarsLib.registerHelper('sourceLabel', (source: HbsValue) => formatSourceLabel(source as SourceInput));
     HandlebarsLib.registerHelper('inputSize', (value: HbsValue, min: HbsValue) => {
         const text = typeof value === 'string' ? value : typeof value === 'number' ? String(value) : '';
         const floor = Number(min);
