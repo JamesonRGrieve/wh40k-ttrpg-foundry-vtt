@@ -54,10 +54,12 @@
     {{!-- Main Display --}}
     <div class="tw-flex tw-flex-col tw-gap-2">
 
-        {{!-- Current Value & Modifier --}}
-        <div class="tw-flex tw-items-center tw-justify-between tw-mb-2">
+        {{!-- Current Value & Modifier — counter row matches the Wounds panel
+             (label/buttons left, counter right via justify-between); the modifier
+             readout drops to its own right-aligned line below (#259). --}}
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-mb-2">
             {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-controls
-                wrapperClass="tw-flex tw-items-center tw-gap-2"
+                wrapperClass="tw-flex tw-items-center tw-justify-between"
                 cssPrefix=cssPrefix
                 field=field
                 current=value
@@ -67,7 +69,7 @@
                 maxValue="100"
                 valueWrapperClass="tw-flex tw-items-baseline tw-gap-1"}}
 
-            <div class="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-font-medium">
+            <div class="tw-flex tw-items-center tw-justify-end tw-gap-1 tw-text-sm tw-font-medium">
                 <span class="tw-text-muted">{{modifierWord}}</span>
                 <span class="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{meta.modifier}}</span>
             </div>
