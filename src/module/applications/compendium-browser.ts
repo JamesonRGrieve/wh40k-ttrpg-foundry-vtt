@@ -3,6 +3,7 @@
  * Enhanced compendium browsing with filtering, searching, and type organization
  */
 
+import { queryItemIndex } from '../utils/compendium-query.ts';
 import { formatSigned } from '../utils/format.ts';
 import type { ApplicationV2Ctor } from './api/application-types.ts';
 import ApplicationV2Mixin from './api/application-v2-mixin.ts';
@@ -239,111 +240,81 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: _getSources stores result in context[]; Promise<unknown> matches how caller consumes it
     async _getSources(): Promise<unknown> {
-        const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
-        const perPackSources = await Promise.all(
-            packs.map(async (pack) => {
-                const index = await pack.getIndex({ fields: ['system.source'] });
-                /* eslint-disable no-restricted-syntax -- boundary: Foundry compendium index entries have untyped system fields */
-                return index
-                    .map((entry) => this._getEntrySource(entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown> }))
-                    .filter((s): s is string => s !== '');
-                /* eslint-enable no-restricted-syntax */
-            }),
+        const collected = await queryItemIndex(
+            ['system.source'],
+            // eslint-disable-next-line no-restricted-syntax -- boundary: index entry's system field is an untyped compendium payload
+            (entry) => {
+                const s = this._getEntrySource(entry);
+                return s !== '' ? s : undefined;
+            },
+            true,
         );
-        const sources = new Set<string>(perPackSources.flat());
-        return Array.from(sources).sort((a, b) => a.localeCompare(b));
+        return Array.from(new Set<string>(collected)).sort((a, b) => a.localeCompare(b));
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: _getCategories stores result in context[]; Promise<unknown> matches caller usage
     async _getCategories(): Promise<unknown> {
-        const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
-        const perPackCategories = await Promise.all(
-            packs.map(async (pack) => {
-                const index = await pack.getIndex({ fields: ['system.category', 'flags'] });
-                /* eslint-disable no-restricted-syntax -- boundary: Foundry compendium index entries have untyped system/flags fields */
-                return index
-                    .map((entry) =>
-                        this._getEntryCategory(
-                            entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> },
-                        ),
-                    )
-                    .filter((c): c is string => c !== '');
-                /* eslint-enable no-restricted-syntax */
-            }),
+        const collected = await queryItemIndex(
+            ['system.category', 'flags'],
+            // eslint-disable-next-line no-restricted-syntax -- boundary: index entry's system/flags fields are untyped compendium payloads
+            (entry) => {
+                const c = this._getEntryCategory(entry);
+                return c !== '' ? c : undefined;
+            },
+            true,
         );
-        const categories = new Set<string>(perPackCategories.flat());
-        return Array.from(categories).sort((a, b) => a.localeCompare(b));
+        return Array.from(new Set<string>(collected)).sort((a, b) => a.localeCompare(b));
     }
 
     async _getFilteredResults(): Promise<BrowserResult[]> {
-        const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg');
-        const perPackResults = await Promise.all(
-            packs.map(async (pack) => {
-                const packResults: BrowserResult[] = [];
-                const index = await pack.getIndex({
-                    fields: [
-                        'name',
-                        'type',
-                        'img',
-                        'system.source',
-                        'system.category',
-                        'flags',
-                        // Armour-specific fields
-                        'system.type',
-                        'system.armourPoints',
-                        'system.coverage',
-                        'system.maxAgility',
-                        'system.properties',
-                        // Armour modification fields
-                        'system.restrictions.armourTypes',
-                        'system.modifiers.armourPoints',
-                        'system.modifiers.maxAgility',
-                        'system.modifiers.weight',
-                        'system.addedProperties',
-                        'system.removedProperties',
-                    ],
-                });
+        /* eslint-disable no-restricted-syntax -- boundary: Foundry getIndex entries are minimally typed; system/flags are compendium payloads */
+        const results = await queryItemIndex<BrowserResult>(
+            [
+                'name',
+                'type',
+                'img',
+                'system.source',
+                'system.category',
+                'flags',
+                // Armour-specific fields
+                'system.type',
+                'system.armourPoints',
+                'system.coverage',
+                'system.maxAgility',
+                'system.properties',
+                // Armour modification fields
+                'system.restrictions.armourTypes',
+                'system.modifiers.armourPoints',
+                'system.modifiers.maxAgility',
+                'system.modifiers.weight',
+                'system.addedProperties',
+                'system.removedProperties',
+            ],
+            (entry, pack) => {
+                const e = entry as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> };
+                if (!this._passesFilters(e, pack as unknown as CompendiumPack)) return undefined;
 
-                /* eslint-disable no-restricted-syntax -- boundary: Foundry CompendiumCollection.getIndex returns minimally-typed entries; system/flags are compendium payloads */
-                for (const entry of index) {
-                    const e = entry as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> };
-                    if (!this._passesFilters(e, pack as unknown as CompendiumPack)) continue;
+                const sourceLabel = this._getEntrySource(e);
+                const categoryLabel = this._getEntryCategory(e);
 
-                    const sourceLabel = this._getEntrySource(e);
-                    const categoryLabel = this._getEntryCategory(e);
+                const result: BrowserResult = {
+                    ...e,
+                    pack: pack.metadata.label,
+                    packId: pack.metadata.id,
+                    sourceLabel,
+                    categoryLabel,
+                    uuid: `Compendium.${pack.metadata.id}.${e._id}`,
+                };
 
-                    const result: BrowserResult = {
-                        ...e,
-                        pack: pack.metadata.label,
-                        packId: pack.metadata.id,
-                        sourceLabel,
-                        categoryLabel,
-                        uuid: `Compendium.${pack.metadata.id}.${e._id}`,
-                    };
+                if (e.type === 'armour' && e.system) result.armourData = this._prepareArmourData(e.system);
+                if (e.type === 'armourModification' && e.system) result.armourModData = this._prepareArmourModData(e.system);
+                if (e.type === 'weaponQuality' && e.system) result.qualityData = this._prepareQualityData(e.system);
 
-                    // Add armour-specific metadata
-                    if (e.type === 'armour' && e.system) {
-                        result.armourData = this._prepareArmourData(e.system);
-                    }
-
-                    // Add armour modification metadata
-                    if (e.type === 'armourModification' && e.system) {
-                        result.armourModData = this._prepareArmourModData(e.system);
-                    }
-
-                    // Add weapon quality metadata
-                    if (e.type === 'weaponQuality' && e.system) {
-                        result.qualityData = this._prepareQualityData(e.system);
-                    }
-
-                    packResults.push(result);
-                }
-                /* eslint-enable no-restricted-syntax */
-                return packResults;
-            }),
+                return result;
+            },
         );
+        /* eslint-enable no-restricted-syntax */
 
-        const results = perPackResults.flat();
         results.sort((a, b) => a.name.localeCompare(b.name));
         return results;
     }
