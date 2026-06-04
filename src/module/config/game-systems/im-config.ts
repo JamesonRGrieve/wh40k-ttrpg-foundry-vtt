@@ -42,51 +42,5 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
         ];
     }
 
-    getCharacteristicAptitudes(charKey: string): [string, string] {
-        const map: Record<string, [string, string]> = {
-            weaponSkill: ['Weapon Skill', 'Offence'],
-            ballisticSkill: ['Ballistic Skill', 'Finesse'],
-            strength: ['Strength', 'Offence'],
-            toughness: ['Toughness', 'Defence'],
-            agility: ['Agility', 'Finesse'],
-            intelligence: ['Intelligence', 'Knowledge'],
-            perception: ['Perception', 'Fieldcraft'],
-            willpower: ['Willpower', 'Psyker'],
-            fellowship: ['Fellowship', 'Social'],
-        };
-        return map[charKey] ?? ['General', 'General'];
-    }
-
-    getSkillAptitudeTable(): Record<string, [string, string]> {
-        return {
-            acrobatics: ['Agility', 'General'],
-            athletics: ['Strength', 'General'],
-            awareness: ['Perception', 'Fieldcraft'],
-            charm: ['Fellowship', 'Social'],
-            command: ['Fellowship', 'Leadership'],
-            commerce: ['Intelligence', 'Knowledge'],
-            commonLore: ['Intelligence', 'General'],
-            deceive: ['Fellowship', 'Social'],
-            dodge: ['Agility', 'Defence'],
-            forbiddenLore: ['Intelligence', 'Knowledge'],
-            inquiry: ['Fellowship', 'Social'],
-            interrogation: ['Willpower', 'Social'],
-            intimidate: ['Strength', 'General'],
-            linguistics: ['Intelligence', 'General'],
-            logic: ['Intelligence', 'Knowledge'],
-            medicae: ['Intelligence', 'Fieldcraft'],
-            navigate: ['Intelligence', 'Fieldcraft'],
-            operate: ['Agility', 'Fieldcraft'],
-            parry: ['Weapon Skill', 'Defence'],
-            psyniscience: ['Perception', 'Psyker'],
-            scholasticLore: ['Intelligence', 'Knowledge'],
-            scrutiny: ['Perception', 'General'],
-            security: ['Intelligence', 'Tech'],
-            sleightOfHand: ['Agility', 'Knowledge'],
-            stealth: ['Agility', 'Fieldcraft'],
-            survival: ['Perception', 'Fieldcraft'],
-            techUse: ['Intelligence', 'Tech'],
-            trade: ['Intelligence', 'General'],
-        };
-    }
+    // Characteristic + skill aptitude tables are inherited from AptitudeBasedSystemConfig (#298) — IM shares the DH2e values.
 }
