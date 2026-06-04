@@ -7,9 +7,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
+import { renderSheet } from '../../../stories/test-helpers';
 import { applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../../module/rules/ow-mission-gear.ts';
 import chatSrc from './ow-mission-gear-chat.hbs?raw';
 
@@ -33,11 +32,9 @@ interface MissionGearChatCtx {
     bonusItemRoll: number | null;
 }
 
-const chatTpl = HBS.compile(chatSrc);
-
 function renderChat(ctx: MissionGearChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.appendChild(renderTpl(chatTpl, ctx));
+    wrapper.appendChild(renderSheet(chatSrc, ctx));
     return wrapper;
 }
 

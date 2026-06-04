@@ -7,9 +7,8 @@
  *   3. Recovered       — objective-completion recovery (+1).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
-import { renderTemplate as renderMockTemplate } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
+import { renderSheet } from '../../../stories/test-helpers';
 import cardSrc from './dw-cohesion-chat.hbs?raw';
 
 initializeStoryHandlebars();
@@ -25,13 +24,11 @@ interface CohesionChatCtx {
     sourceKey: string | null;
 }
 
-const cardTpl = HandlebarsLib.compile(cardSrc);
-
 function renderCard(ctx: CohesionChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderMockTemplate(cardTpl, ctx));
+    wrapper.appendChild(renderSheet(cardSrc, ctx));
     return wrapper;
 }
 

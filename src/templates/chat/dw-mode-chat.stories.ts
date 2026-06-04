@@ -6,9 +6,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HB from 'handlebars';
-import { renderTemplate as compileAndRender } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
+import { renderSheet } from '../../../stories/test-helpers';
 import type { RenownRank } from '../../module/rules/dw-renown';
 import { getSupportRange, type DwMode } from '../../module/rules/dw-squad-mode';
 import chatSrc from './dw-mode-chat.hbs?raw';
@@ -28,10 +27,8 @@ interface DwModeChatCtx {
     supportRange: { visual: number; vocal: number };
 }
 
-const chatTpl = HB.compile(chatSrc);
-
 function renderChat(ctx: DwModeChatCtx): HTMLElement {
-    return compileAndRender(chatTpl, ctx);
+    return renderSheet(chatSrc, ctx);
 }
 
 function rankKey(rank: RenownRank): string {

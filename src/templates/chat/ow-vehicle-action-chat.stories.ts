@@ -8,9 +8,8 @@
  *                            tracker fires the Danger Zone flag.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
-import { renderTemplate as renderMockTemplate } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
+import { renderSheet } from '../../../stories/test-helpers';
 import cardSrc from './ow-vehicle-action-chat.hbs?raw';
 
 initializeStoryHandlebars();
@@ -30,13 +29,11 @@ interface VehicleActionChatCtx {
     chase: ChaseChatState | null;
 }
 
-const cardTpl = HandlebarsLib.compile(cardSrc);
-
 function renderCard(ctx: VehicleActionChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderMockTemplate(cardTpl, ctx));
+    wrapper.appendChild(renderSheet(cardSrc, ctx));
     return wrapper;
 }
 
