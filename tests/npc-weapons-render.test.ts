@@ -4,11 +4,10 @@
  * items — so an imported bestiary NPC's guns/blades actually show on the sheet.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const TAB_NPC = readFileSync(resolve(__dirname, '../src/templates/actor/npc/tab-npc.hbs'), 'utf8');
+const TAB_NPC = readRepoFile('src/templates/actor/npc/tab-npc.hbs');
 
 describe('NPC weapons surface on the NPC tab (#254)', () => {
     it('renders a Weapons panel gated on having weapons', () => {

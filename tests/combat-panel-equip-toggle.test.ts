@@ -8,12 +8,11 @@
  * literal toggle control + registered action.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const COMBAT = readFileSync(resolve(__dirname, '../src/templates/actor/panel/combat-station-panel.hbs'), 'utf8');
-const CHAR_SHEET = readFileSync(resolve(__dirname, '../src/module/applications/actor/character-sheet.ts'), 'utf8');
+const COMBAT = readRepoFile('src/templates/actor/panel/combat-station-panel.hbs');
+const CHAR_SHEET = readRepoFile('src/module/applications/actor/character-sheet.ts');
 
 describe('Combat-tab weapon equip toggle (#265)', () => {
     it('renders an equip/unequip control on the weapon rows', () => {
