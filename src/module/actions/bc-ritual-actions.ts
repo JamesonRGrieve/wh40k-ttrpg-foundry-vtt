@@ -29,7 +29,7 @@
  */
 
 import type { BcRitualDeclarations } from '../data/actor/mixins/bc-ritual-template.ts';
-import { roll1d100 } from '../rolls/roll-helpers.ts';
+import { postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
 import { computeRitualTarget, resolveContemptOfTheWarp, type RitualModifier, type RitualModifierKind, type RitualTemplate } from '../rules/bc-chaos-ritual.ts';
 
 /* -------------------------------------------- */
@@ -279,10 +279,5 @@ export async function bcPerformRitual(this: BcRitualSheetLike, _event: Event, _t
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
-    await ChatMessage.create({
-        user: game.user.id,
-        speaker: ChatMessage.getSpeaker(speakerActor),
-        content,
-        rolls: [roll],
-    });
+    await postChatCard(content, { speaker: ChatMessage.getSpeaker(speakerActor), rolls: [roll] });
 }

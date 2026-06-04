@@ -22,6 +22,7 @@
  */
 
 import type { BcDaemonPrinceDeclarations } from '../data/actor/mixins/bc-daemon-prince-template.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { ascendCharacter, getDaemonPrinceBoost, isAscended, type DaemonPrinceAlignment } from '../rules/bc-daemon-prince.ts';
 
 /* -------------------------------------------- */
@@ -161,9 +162,5 @@ export async function bcAscend(this: BcDaemonPrinceSheetLike, _event: Event, _ta
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
-    await ChatMessage.create({
-        user: game.user.id,
-        speaker: ChatMessage.getSpeaker(speakerActor),
-        content,
-    });
+    await postChatCard(content, { speaker: ChatMessage.getSpeaker(speakerActor) });
 }

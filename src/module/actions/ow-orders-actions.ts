@@ -33,6 +33,7 @@
 
 import type { ActiveOrderEntry } from '../data/actor/mixins/ow-orders-template.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { GENERIC_ORDERS, canIssueOrder, type OrderDef, type OrderBlockReason } from '../rules/ow-orders.ts';
 
 /**
@@ -157,7 +158,5 @@ export async function owIssueOrder(this: OwOrdersActionContext, event: Event, ta
     };
 
     const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-orders-chat.hbs', templateData);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
-    await ChatMessage.create(payload);
+    await postChatCard(html);
 }

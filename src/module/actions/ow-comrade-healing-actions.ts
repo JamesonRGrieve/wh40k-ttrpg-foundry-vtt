@@ -37,6 +37,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import {
     applyMedicaeAttempt,
     OW_COMRADE_AUTO_RECOVERY_DAYS,
@@ -103,11 +104,9 @@ async function emitHealingChat(host: Host, event: ChatPayload): Promise<void> {
         event,
     };
     const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-comrade-healing-chat.hbs', templateData);
-    await ChatMessage.create({
-        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry Actor type
-        speaker: ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor }),
-        content: html,
-    });
+    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry Actor type
+    const speaker = ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor });
+    await postChatCard(html, { speaker });
 }
 
 /* -------------------------------------------- */

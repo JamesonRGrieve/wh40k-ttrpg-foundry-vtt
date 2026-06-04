@@ -28,6 +28,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { applySupportCooldown, requestSupport, type SupportAssetDef, type SupportAssetKind } from '../rules/ow-battlefield-support.ts';
 import type { I18nKey } from '../types/i18n-keys';
 
@@ -182,11 +183,9 @@ async function emitBattlefieldChat(host: Host, event: ChatPayload): Promise<void
     };
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate expects AnyObject; templateData is structurally compatible
     const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, templateData as unknown as Record<string, unknown>);
-    await ChatMessage.create({
-        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry Actor type
-        speaker: ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor }),
-        content: html,
-    });
+    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry Actor type
+    const speaker = ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor });
+    await postChatCard(html, { speaker });
 }
 
 /* -------------------------------------------- */
