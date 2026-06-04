@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
 import medicaeChatSrc from '../../src/templates/chat/medicae-mechadendrite-chat.hbs?raw';
-import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story for the Medicae Mechadendrite Half-Action Blood-Loss
@@ -14,8 +13,6 @@ import { initializeStoryHandlebars } from '../template-support';
  * scope are visible in review (the card renders outside the sheet root).
  */
 initializeStoryHandlebars();
-
-const medicaeTemplate = HBS.compile(medicaeChatSrc);
 
 interface MedicaeCardArgs {
     actorName: string;
@@ -41,7 +38,7 @@ function buildContext(args: MedicaeCardArgs): MedicaeCardArgs {
 
 const meta: Meta<MedicaeCardArgs> = {
     title: 'Chat/Medicae Mechadendrite (#104)',
-    render: (args) => renderTpl(medicaeTemplate, buildContext(args)),
+    render: (args) => renderSheet(medicaeChatSrc, buildContext(args)),
     args: {
         actorName: 'Brother Medicae Voss',
         roll: 32,

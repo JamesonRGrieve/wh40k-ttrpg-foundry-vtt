@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveSancticManifestation, type SancticManifestInput } from '../../src/module/rules/sanctic-daemonology.ts';
 import sancticChatSrc from '../../src/templates/chat/sanctic-daemonology-chat.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 /**
  * Sanctic Daemonology manifestation chat card (#130 — beyond.md
@@ -14,8 +13,6 @@ import { initializeStoryHandlebars } from '../template-support';
  * resolver produces.
  */
 initializeStoryHandlebars();
-
-const sancticTemplate = HandlebarsLib.compile(sancticChatSrc);
 
 const MODE_KEYS: Record<SancticManifestInput['mode'], string> = {
     fettered: 'WH40K.SancticDaemonology.Mode.Fettered',
@@ -60,7 +57,7 @@ type Story = StoryObj;
 
 export const UnfetteredNoPhenomena: Story = {
     name: 'Unfettered Banishment — no corruption, no phenomena',
-    render: () => renderStoryTemplate(sancticTemplate, cardContext({ powerId: 'banishment', mode: 'unfettered', basePR: 4, success: true })),
+    render: () => renderSheet(sancticChatSrc, cardContext({ powerId: 'banishment', mode: 'unfettered', basePR: 4, success: true })),
     play: async ({ canvasElement }) => {
         const withinCanvas = within(canvasElement);
         await expect(withinCanvas.getByText(/Banishment/i)).toBeTruthy();
@@ -73,12 +70,12 @@ export const UnfetteredNoPhenomena: Story = {
 
 export const FetteredHolocaust: Story = {
     name: 'Fettered Holocaust — half PR, +10 focus',
-    render: () => renderStoryTemplate(sancticTemplate, cardContext({ powerId: 'holocaust', mode: 'fettered', basePR: 5, success: true })),
+    render: () => renderSheet(sancticChatSrc, cardContext({ powerId: 'holocaust', mode: 'fettered', basePR: 5, success: true })),
 };
 
 export const PushPhenomena: Story = {
     name: 'Pushed Cleansing Flame — Phenomena fires (no corruption)',
-    render: () => renderStoryTemplate(sancticTemplate, cardContext({ powerId: 'cleansing-flame', mode: 'push', basePR: 4, pushLevel: 2, success: true })),
+    render: () => renderSheet(sancticChatSrc, cardContext({ powerId: 'cleansing-flame', mode: 'push', basePR: 4, pushLevel: 2, success: true })),
     play: async ({ canvasElement }) => {
         // Phenomena block renders on a pushed success.
         await expect(canvasElement.querySelector('.tw-text-red-300')).toBeTruthy();
@@ -88,8 +85,8 @@ export const PushPhenomena: Story = {
 export const PushWithSoulBinding: Story = {
     name: 'Pushed Sanctuary — Soul Binding (#86) can ignore',
     render: () =>
-        renderStoryTemplate(
-            sancticTemplate,
+        renderSheet(
+            sancticChatSrc,
             cardContext({
                 powerId: 'sanctuary',
                 mode: 'push',
@@ -104,8 +101,8 @@ export const PushWithSoulBinding: Story = {
 export const PushWithEmperorsAnathema: Story = {
     name: "Pushed Sanctuary — Emperor's Anathema (#131) can Fate-negate",
     render: () =>
-        renderStoryTemplate(
-            sancticTemplate,
+        renderSheet(
+            sancticChatSrc,
             cardContext({
                 powerId: 'sanctuary',
                 mode: 'push',

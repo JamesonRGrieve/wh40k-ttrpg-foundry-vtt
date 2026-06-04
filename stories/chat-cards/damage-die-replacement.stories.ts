@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import damageRollChatSrc from '../../src/templates/chat/damage-roll-chat.hbs?raw';
-import { mockDamageRollData, renderTemplate as renderTpl } from '../mocks';
+import { mockDamageRollData } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story for the "Replace damage die with DoS" action (#129 —
@@ -11,8 +11,6 @@ import { initializeStoryHandlebars } from '../template-support';
  * `canReplaceDie: true` and the hit carries a positive `dos` value.
  */
 initializeStoryHandlebars();
-
-const damageRollTemplate = Hbs.compile(damageRollChatSrc);
 
 const meta: Meta = {
     title: 'Chat/Damage Die Replacement (#129)',
@@ -25,8 +23,8 @@ type Story = StoryObj;
 export const ReplaceDieAvailable: Story = {
     name: 'Damage Card / Replacement button visible',
     render: () =>
-        renderTpl(
-            damageRollTemplate,
+        renderSheet(
+            damageRollChatSrc,
             mockDamageRollData({
                 rollId: 'mock-roll-129',
                 canReplaceDie: true,
@@ -51,8 +49,8 @@ export const ReplaceDieAvailable: Story = {
 export const ReplaceDieHiddenWhenZeroDoS: Story = {
     name: 'Damage Card / Hidden when DoS = 0',
     render: () =>
-        renderTpl(
-            damageRollTemplate,
+        renderSheet(
+            damageRollChatSrc,
             mockDamageRollData({
                 rollId: 'mock-roll-129',
                 canReplaceDie: true,
@@ -77,8 +75,8 @@ export const ReplaceDieHiddenWhenZeroDoS: Story = {
 export const ReplaceDieHiddenWhenFlagFalse: Story = {
     name: 'Damage Card / Hidden when canReplaceDie is false (re-rendered card)',
     render: () =>
-        renderTpl(
-            damageRollTemplate,
+        renderSheet(
+            damageRollChatSrc,
             mockDamageRollData({
                 canReplaceDie: false,
                 hits: [

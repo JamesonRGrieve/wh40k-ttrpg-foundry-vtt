@@ -15,16 +15,13 @@
  * fire outside the sheet root.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveRamming, type RammingResolution } from '../../src/module/rules/ship-ramming.ts';
 import shipRammingChatSrc from '../../src/templates/chat/ship-ramming-chat.hbs?raw';
-import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
-
-const shipRammingTemplate = Hbs.compile(shipRammingChatSrc);
 
 interface CardArgs {
     attackerName: string;
@@ -53,7 +50,7 @@ function cardContext(args: CardArgs): RammingChatContext {
 
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Ramming (#188)',
-    render: (args) => renderTpl(shipRammingTemplate, cardContext(args)),
+    render: (args) => renderSheet(shipRammingChatSrc, cardContext(args)),
 };
 
 export default meta;

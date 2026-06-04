@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
 import criticalDamageChatSrc from '../../src/templates/chat/critical-damage-chat.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story for the DH2 Critical Damage table lookup (#108 —
@@ -15,8 +14,6 @@ import { initializeStoryHandlebars } from '../template-support';
  * are visible in review.
  */
 initializeStoryHandlebars();
-
-const criticalDamageTemplate = HbsLib.compile(criticalDamageChatSrc);
 
 interface CriticalDamageCardArgs {
     damageType: 'Energy' | 'Explosive' | 'Impact' | 'Rending';
@@ -49,7 +46,7 @@ function buildContext(args: CriticalDamageCardArgs): CriticalDamageCardContext {
 
 const meta: Meta<CriticalDamageCardArgs> = {
     title: 'Chat/Critical Damage (#108)',
-    render: (args) => renderStoryTemplate(criticalDamageTemplate, buildContext(args)),
+    render: (args) => renderSheet(criticalDamageChatSrc, buildContext(args)),
     args: {
         damageType: 'Energy',
         bodyPart: 'Arm',
