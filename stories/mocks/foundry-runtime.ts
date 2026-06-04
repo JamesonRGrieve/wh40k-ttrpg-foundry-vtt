@@ -25,6 +25,8 @@
  * tiny — extend it only when a story-level need surfaces.
  */
 
+import { localizeKey } from './lang-localize.ts';
+
 interface FoundryRuntimeGlobals {
     game?: GameStub;
     CONFIG?: ConfigStub;
@@ -91,10 +93,11 @@ interface HooksStub {
 
 const gameStub: GameStub = {
     i18n: {
-        localize: (key) => key,
+        localize: (key) => localizeKey(key),
         format: (key, data) => {
-            if (data === undefined) return key;
-            return key.replace(/\{(\w+)\}/g, (_, name: string) => {
+            const template = localizeKey(key);
+            if (data === undefined) return template;
+            return template.replace(/\{(\w+)\}/g, (_, name: string) => {
                 const val = data[name];
                 if (val === null || val === undefined) return '';
                 if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') return String(val);
