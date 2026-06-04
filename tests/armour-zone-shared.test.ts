@@ -5,14 +5,14 @@
  * (panel.hbs wrapper) is gone, so the two tabs can't drift apart again.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const read = (p: string): string => readFileSync(resolve(__dirname, '..', p), 'utf8');
-const OVERVIEW = read('src/templates/actor/player/tab-overview.hbs');
-const COMBAT = read('src/templates/actor/panel/combat-station-panel.hbs');
-const PRELOAD = read('src/module/handlebars/handlebars-manager.ts');
+const OVERVIEW = readRepoFile('src/templates/actor/player/tab-overview.hbs');
+const COMBAT = readRepoFile('src/templates/actor/panel/combat-station-panel.hbs');
+const PRELOAD = readRepoFile('src/module/handlebars/handlebars-manager.ts');
 
 describe('shared armour-zone (#234)', () => {
     it('ships the shared armour-zone partial and preloads it', () => {

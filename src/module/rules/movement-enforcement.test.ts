@@ -6,9 +6,8 @@
  * hooks are registered. The budget maths live in movement-budget.test.ts.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from '../testing/repo-file.ts';
 import { decideTokenMove } from './movement-enforcement.ts';
 
 describe('decideTokenMove', () => {
@@ -63,8 +62,8 @@ describe('decideTokenMove', () => {
 });
 
 describe('movement enforcement wiring (#235)', () => {
-    const src = readFileSync(resolve(__dirname, './movement-enforcement.ts'), 'utf8');
-    const hooks = readFileSync(resolve(__dirname, '../hooks-manager.ts'), 'utf8');
+    const src = readRepoFile('src/module/rules/movement-enforcement.ts');
+    const hooks = readRepoFile('src/module/hooks-manager.ts');
 
     it('registers preUpdateToken / updateToken / updateCombat hooks', () => {
         expect(src).toContain("Hooks.on('preUpdateToken'");

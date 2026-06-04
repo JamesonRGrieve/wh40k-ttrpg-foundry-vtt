@@ -13,19 +13,16 @@
  * need Foundry's sheet context, so the contract is asserted on the source text.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const read = (p: string): string => readFileSync(resolve(__dirname, '..', p), 'utf8');
-
-const EQUIPPABLE = read('src/module/data/shared/equippable-template.ts');
-const RESYNC = read('src/module/compendium-resync.ts');
-const WEAPON_PANEL = read('src/templates/actor/panel/weapon-panel.hbs');
-const COMBAT_PANEL = read('src/templates/actor/panel/combat-station-panel.hbs');
-const OVERVIEW = read('src/templates/actor/player/tab-overview.hbs');
-const WEAPON_SHEET = read('src/templates/item/item-weapon-sheet.hbs');
-const LANG = JSON.parse(read('src/lang/en.json')) as { WH40K: { Weapon: Record<string, string> } };
+const EQUIPPABLE = readRepoFile('src/module/data/shared/equippable-template.ts');
+const RESYNC = readRepoFile('src/module/compendium-resync.ts');
+const WEAPON_PANEL = readRepoFile('src/templates/actor/panel/weapon-panel.hbs');
+const COMBAT_PANEL = readRepoFile('src/templates/actor/panel/combat-station-panel.hbs');
+const OVERVIEW = readRepoFile('src/templates/actor/player/tab-overview.hbs');
+const WEAPON_SHEET = readRepoFile('src/templates/item/item-weapon-sheet.hbs');
+const LANG = JSON.parse(readRepoFile('src/lang/en.json')) as { WH40K: { Weapon: Record<string, string> } };
 
 describe('weapon identification schema (#262)', () => {
     it('declares identified on the shared EquippableState, defaulting to true', () => {

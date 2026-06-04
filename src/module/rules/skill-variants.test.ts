@@ -2,9 +2,8 @@
  * Tests for the test-variant rule logic (#246).
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from '../testing/repo-file.ts';
 import { availableSkillVariants, filterModifiersByVariant, modifierAppliesToVariant, type SkillVariant } from './skill-variants.ts';
 
 const AWARENESS: SkillVariant[] = [
@@ -60,8 +59,8 @@ describe('filterModifiersByVariant', () => {
 });
 
 describe('unified roll dialog wires test variants (#246)', () => {
-    const dialog = readFileSync(resolve(__dirname, '../applications/prompts/unified-roll-dialog.ts'), 'utf8');
-    const modifiers = readFileSync(resolve(__dirname, '../../templates/prompt/unified/modifiers.hbs'), 'utf8');
+    const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
+    const modifiers = readRepoFile('src/templates/prompt/unified/modifiers.hbs');
 
     it('computes available variants (homebrew-gated) and applies the variant filter to the modifier sum', () => {
         expect(dialog).toContain('availableSkillVariants(');

@@ -8,9 +8,8 @@
  * the object and the plain-string shapes to a display string.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from '../testing/repo-file.ts';
 import { formatSourceLabel } from './source-label.ts';
 
 describe('formatSourceLabel', () => {
@@ -53,22 +52,20 @@ describe('formatSourceLabel', () => {
 });
 
 describe('templates render source via the helper, not the raw object (#229 regression)', () => {
-    const read = (rel: string): string => readFileSync(resolve(__dirname, '../../', rel), 'utf8');
-
     it('item-card-chat footer uses sourceLabel', () => {
-        const src = read('templates/chat/item-card-chat.hbs');
+        const src = readRepoFile('src/templates/chat/item-card-chat.hbs');
         expect(src).toContain('sourceLabel item.system.source');
         expect(src).not.toMatch(/\{\{\s*item\.system\.source\s*\}\}/);
     });
 
     it('item-psychic-power-sheet uses sourceLabel for the source badge', () => {
-        const src = read('templates/item/item-psychic-power-sheet.hbs');
+        const src = readRepoFile('src/templates/item/item-psychic-power-sheet.hbs');
         // The display badge uses the helper; the raw {{item.system.source}} interpolation is gone.
         expect(src).toContain('sourceLabel item.system.source');
     });
 
     it('the sourceLabel helper is registered', () => {
-        const src = read('module/handlebars/handlebars-helpers.ts');
+        const src = readRepoFile('src/module/handlebars/handlebars-helpers.ts');
         expect(src).toContain("registerHelper('sourceLabel'");
     });
 });
