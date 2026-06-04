@@ -24,23 +24,12 @@ export type Json = string | number | boolean | null | undefined | Json[] | { [ke
 /** A JSON object node. */
 export type JsonObject = { [key: string]: Json };
 
-/**
- * Characteristic short label → full schema key (Core Rulebook abbreviations).
- * Legacy bestiary/NPC source stores characteristics under abbreviated keys
- * (`ws`, `bs`, …); the schema uses the full names (`weaponSkill`, …).
- */
-export const CHARACTERISTIC_SHORT_TO_FULL: Record<string, string> = {
-    WS: 'weaponSkill',
-    BS: 'ballisticSkill',
-    S: 'strength',
-    T: 'toughness',
-    Ag: 'agility',
-    Int: 'intelligence',
-    Per: 'perception',
-    WP: 'willpower',
-    Fel: 'fellowship',
-    Inf: 'influence',
-};
+import { coerceInt } from '../fields/coerce.ts';
+import { CHARACTERISTIC_SHORT_TO_FULL } from '../shared/characteristics.ts';
+
+// The characteristic short→full map is single-sourced in data/shared/characteristics.ts;
+// re-exported here for the existing npc.ts import path.
+export { CHARACTERISTIC_SHORT_TO_FULL };
 
 /**
  * A characteristic in the structured per-characteristic shape the schema expects.
@@ -82,10 +71,7 @@ export function isJsonArray(value: Json): value is Json[] {
  * `null` / `undefined` / `''` / non-numeric all yield the fallback.
  */
 export function toInt(value: Json, fallback = 0): number {
-    if (value === null || value === undefined || value === '') return fallback;
-    const num = Number(value);
-    if (Number.isNaN(num)) return fallback;
-    return Math.floor(num);
+    return coerceInt(value, fallback);
 }
 
 /**
