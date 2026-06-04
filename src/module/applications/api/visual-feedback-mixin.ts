@@ -3,7 +3,20 @@
  * Adds animated feedback when actor values are updated
  */
 
+import { flashElement, rafTween } from './animation-utils.ts';
 import type { ApplicationV2Ctor } from './application-types.ts';
+
+/** CSS animation classes cleared before (re-)applying a stat-change animation. */
+const STAT_ANIMATION_CLASSES = [
+    'tw-animate-stat-increase',
+    'tw-animate-stat-decrease',
+    'tw-animate-flash-update',
+    'tw-animate-stat-heal',
+    'tw-animate-stat-damage',
+    'tw-animate-stat-advance',
+    'pulse-gold',
+    'pulse-glow',
+] as const;
 
 /**
  * Mixin to add visual feedback capabilities to ApplicationV2 sheets.
@@ -151,25 +164,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
          * @protected
          */
         _applyAnimation(element: HTMLElement, animationClass: string): void {
-            const animationClasses = [
-                'tw-animate-stat-increase',
-                'tw-animate-stat-decrease',
-                'tw-animate-flash-update',
-                'tw-animate-stat-heal',
-                'tw-animate-stat-damage',
-                'tw-animate-stat-advance',
-                'pulse-gold',
-                'pulse-glow',
-            ];
-            element.classList.remove(...animationClasses);
-
-            void element.offsetWidth;
-
-            element.classList.add(animationClass);
-
-            setTimeout(() => {
-                element.classList.remove(animationClass);
-            }, 1000);
+            flashElement(element, animationClass, 1000, STAT_ANIMATION_CLASSES);
         }
 
         /* -------------------------------------------- */
@@ -182,14 +177,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
         _animateDerivedStat(selector: string): void {
             const element = this.element.querySelector<HTMLElement>(selector);
             if (!element) return;
-
-            element.classList.remove('tw-animate-pulse-glow');
-            void element.offsetWidth;
-            element.classList.add('tw-animate-pulse-glow');
-
-            setTimeout(() => {
-                element.classList.remove('tw-animate-pulse-glow');
-            }, 1000);
+            flashElement(element, 'tw-animate-pulse-glow', 1000);
         }
 
         /* -------------------------------------------- */
@@ -203,26 +191,17 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
          * @protected
          */
         _animateCounter(element: HTMLElement, fromValue: number, toValue: number, duration: number = 500): void {
-            const start = Date.now();
-            const difference = toValue - fromValue;
-
-            const animate = (): void => {
-                const elapsed = Date.now() - start;
-                const progress = Math.min(elapsed / duration, 1);
-
-                const eased = 1 - (1 - progress) ** 3;
-                const current = Math.round(fromValue + difference * eased);
-
-                element.textContent = current.toString();
-
-                if (progress < 1) {
-                    requestAnimationFrame(animate);
-                } else {
+            rafTween({
+                from: fromValue,
+                to: toValue,
+                duration,
+                onFrame: (value) => {
+                    element.textContent = Math.round(value).toString();
+                },
+                onComplete: () => {
                     element.textContent = toValue.toString();
-                }
-            };
-
-            requestAnimationFrame(animate);
+                },
+            });
         }
 
         /* -------------------------------------------- */
