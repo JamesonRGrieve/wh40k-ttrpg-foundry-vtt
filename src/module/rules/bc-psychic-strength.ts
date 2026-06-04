@@ -27,6 +27,8 @@
  * No DataModel coupling, no actor lookups, no Foundry imports.
  */
 
+import { nonNegInt } from './_num.ts';
+
 /** Psyker class identifiers from BC Table 6-1. */
 export type PsykerClass = 'bound' | 'unbound' | 'daemonic';
 
@@ -93,11 +95,11 @@ export interface EffectivePsyRatingArgs {
  * clamped to the class ceiling (RAW does not allow exceeding it).
  */
 export function effectivePsyRating(args: EffectivePsyRatingArgs): number {
-    const base = sanitiseNonNegativeInt(args.basePR);
+    const base = nonNegInt(args.basePR);
     if (args.mode === 'fettered') return Math.floor(base / 2);
     if (args.mode === 'unfettered') return base;
     // push
-    const requested = sanitiseNonNegativeInt(args.pushLevel);
+    const requested = nonNegInt(args.pushLevel);
     const ceiling = maxPushLevel(args.psykerClass);
     return base + Math.min(requested, ceiling);
 }
@@ -117,7 +119,7 @@ export function effectivePsyRating(args: EffectivePsyRatingArgs): number {
  * @returns The cumulative penalty (≤ 0).
  */
 export function sustainPenalty(sustainedPowerCount: number): number {
-    const count = sanitiseNonNegativeInt(sustainedPowerCount);
+    const count = nonNegInt(sustainedPowerCount);
     const excess = Math.max(0, count - 1);
     if (excess === 0) return 0;
     return excess * BC_PSY_SUSTAIN_PENALTY_PER_POWER;
@@ -151,7 +153,7 @@ export interface PhenomenaRollCountArgs {
 export function phenomenaRollCount(args: PhenomenaRollCountArgs): number {
     if (args.mode === 'fettered') return 0;
     if (args.mode === 'push') {
-        const level = sanitiseNonNegativeInt(args.pushLevel);
+        const level = nonNegInt(args.pushLevel);
         return 1 + level;
     }
     return 1;
@@ -193,7 +195,7 @@ export interface PsychicTestResolution {
  * that will actually be rolled.
  */
 export function resolvePsychicTest(input: PsychicTestInput): PsychicTestResolution {
-    const clampedPush = input.mode === 'push' ? Math.min(sanitiseNonNegativeInt(input.pushLevel), maxPushLevel(input.psykerClass)) : 0;
+    const clampedPush = input.mode === 'push' ? Math.min(nonNegInt(input.pushLevel), maxPushLevel(input.psykerClass)) : 0;
     const effectivePR = effectivePsyRating({
         mode: input.mode,
         basePR: input.basePR,
@@ -210,9 +212,3 @@ export function resolvePsychicTest(input: PsychicTestInput): PsychicTestResoluti
 /* -------------------------------------------- */
 /*  internals                                   */
 /* -------------------------------------------- */
-
-function sanitiseNonNegativeInt(value: number): number {
-    if (!Number.isFinite(value)) return 0;
-    const v = Math.trunc(value);
-    return v < 0 ? 0 : v;
-}

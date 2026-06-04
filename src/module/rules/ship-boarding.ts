@@ -38,15 +38,10 @@ export const BOARDING_HULL_DAMAGE_PER_DOS = 1;
 /** DoS margin for the defender at which the boarding party is captured/destroyed. */
 export const BOARDING_BOARDERS_LOST_DOS = 3;
 
-/**
- * Degrees of Success: floor((target − roll) / 10) + 1 on a pass, 0 on a
- * fail. Duplicated locally so this module stays free of cross-rule
- * imports.
- */
-export function degreesOfSuccess(roll: number, target: number): number {
-    if (roll > target) return 0;
-    return Math.floor((target - roll) / 10) + 1;
-}
+import { degreesOfSuccess, resolveOpposed } from './_dice.ts';
+
+/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
+export { degreesOfSuccess };
 
 /** Composed Command targets after content modifiers have been applied. */
 export interface BoardingOpposedInput {
@@ -82,15 +77,19 @@ export interface BoardingOpposedResolution {
  * lost".
  */
 export function resolveBoardingOpposed(input: BoardingOpposedInput): BoardingOpposedResolution {
-    const attackerPassed = input.attackerRoll <= input.attackerCommandTarget;
-    const defenderPassed = input.defenderRoll <= input.defenderCommandTarget;
-    const attackerDoS = attackerPassed ? degreesOfSuccess(input.attackerRoll, input.attackerCommandTarget) : 0;
-    const defenderDoS = defenderPassed ? degreesOfSuccess(input.defenderRoll, input.defenderCommandTarget) : 0;
-    const netDoS = attackerDoS - defenderDoS;
-    // Attacker only wins on strictly more DoS AND a passed roll. If the
-    // attacker fluffed the roll outright the boarders never made it
-    // across the gap — no breach.
-    const success = attackerPassed && netDoS > 0;
+    // Attacker only wins on strictly more DoS (tie → defender); a both-fail
+    // 0–0 contest also routes to the defender — the boarders never made it
+    // across the gap, so there is no breach.
+    const {
+        success,
+        aDoS: attackerDoS,
+        bDoS: defenderDoS,
+        netDoS,
+    } = resolveOpposed(
+        { roll: input.attackerRoll, target: input.attackerCommandTarget },
+        { roll: input.defenderRoll, target: input.defenderCommandTarget },
+        { tie: 'b' },
+    );
     const boardersLost = !success && -netDoS >= BOARDING_BOARDERS_LOST_DOS;
     return { success, attackerDoS, defenderDoS, netDoS, boardersLost };
 }

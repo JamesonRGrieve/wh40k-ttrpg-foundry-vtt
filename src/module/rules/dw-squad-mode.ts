@@ -31,6 +31,7 @@
  * triggers `enterSquadMode`; the DataModel slot holding `currentMode`.
  */
 
+import { nonNegDistance, nonNegInt } from './_num.ts';
 import type { RenownRank } from './dw-renown';
 
 /** Combat-mode state for a Deathwatch Battle-Brother. */
@@ -204,8 +205,8 @@ export interface ActivateSquadAbilityResult {
  * call.
  */
 export function activateSquadAbility(args: ActivateSquadAbilityArgs): ActivateSquadAbilityResult {
-    const cohesion = sanitiseNonNegativeInt(args.currentCohesion);
-    const cost = sanitiseNonNegativeInt(args.ability.cohesionCost);
+    const cohesion = nonNegInt(args.currentCohesion);
+    const cost = nonNegInt(args.ability.cohesionCost);
 
     if (args.currentMode !== 'squad') {
         return { allowed: false, cohesionAfter: cohesion, reason: 'not-in-squad-mode' };
@@ -249,21 +250,6 @@ export function withinSupportRange(args: WithinSupportRangeArgs): boolean {
     if (!args.hasVisual && !args.hasVocal) return false;
     const tier = SUPPORT_RANGE_BY_RANK[args.actorRank];
     const channelLimit = Math.max(args.hasVisual ? tier.visual : 0, args.hasVocal ? tier.vocal : 0);
-    const distance = sanitiseNonNegativeDistance(args.distance);
+    const distance = nonNegDistance(args.distance);
     return distance <= channelLimit;
-}
-
-/* -------------------------------------------- */
-/*  internals                                   */
-/* -------------------------------------------- */
-
-function sanitiseNonNegativeInt(value: number): number {
-    if (!Number.isFinite(value)) return 0;
-    const v = Math.trunc(value);
-    return v < 0 ? 0 : v;
-}
-
-function sanitiseNonNegativeDistance(value: number): number {
-    if (!Number.isFinite(value)) return 0;
-    return value < 0 ? 0 : value;
 }

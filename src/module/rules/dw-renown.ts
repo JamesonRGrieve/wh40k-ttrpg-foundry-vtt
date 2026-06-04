@@ -22,6 +22,8 @@
  * `Math.min(RENOWN_MAX, value)` at the rendering edge.
  */
 
+import { compareLadder } from './_ladder.ts';
+
 /** Renown rank identifiers — ordered ascending by threshold. */
 export type RenownRank = 'initiated' | 'respected' | 'distinguished' | 'famed' | 'hero';
 
@@ -94,7 +96,8 @@ export function renownRankIndex(rank: RenownRank): number {
  */
 export function canRequisition(args: { renown: number; requiredRank: RenownRank }): boolean {
     const actorRank = getRenownRank(args.renown);
-    return renownRankIndex(actorRank) >= renownRankIndex(args.requiredRank);
+    // Actor's rank must equal or exceed the required rank on the renown ladder.
+    return compareLadder(RENOWN_RANK_ORDER, actorRank, args.requiredRank) >= 0;
 }
 
 /**

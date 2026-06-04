@@ -14,6 +14,11 @@
  * the chat card. `rng` is injectable so stories/tests stay deterministic.
  */
 
+import type { Rng } from './_dice.ts';
+
+/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
+export type { Rng };
+
 /** Three canonical severity tiers, mirroring `MentalDisorderData.severity`. */
 export type DisorderSeverity = 'minor' | 'severe' | 'acute';
 
@@ -117,9 +122,6 @@ export function getDisorder(id: string): DisorderDef | null {
 export function listDisordersBySeverity(severity: DisorderSeverity): DisorderDef[] {
     return DISORDERS_TABLE.filter((d) => d.severities.includes(severity)).slice();
 }
-
-/** Injectable RNG signature: a 0..1 generator (matches `Math.random`). */
-export type Rng = () => number;
 
 /**
  * Pick a Disorder appropriate to the given severity tier. Pure given

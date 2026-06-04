@@ -10,6 +10,8 @@
  * surface remain follow-ups under #122 and #75.
  */
 
+import { stepLadder } from './_ladder.ts';
+
 export type AddictionTier = 'none' | 'mild' | 'moderate' | 'severe';
 
 /**
@@ -58,10 +60,8 @@ export function resolveAddictionCheck(input: AddictionCheckInput): AddictionChec
     const rating = Math.max(0, Math.trunc(input.substanceRating));
     const target = Math.max(0, wp - rating);
 
-    const currentIdx = TIER_ORDER.indexOf(input.currentTier);
-    const safeIdx = currentIdx < 0 ? 0 : currentIdx;
-    const nextIdx = Math.min(safeIdx + 1, TIER_ORDER.length - 1);
-    const nextTier = TIER_ORDER[nextIdx] ?? 'severe';
+    // One tier worse per failure, clamped at the top of the ladder (severe).
+    const nextTier = stepLadder(TIER_ORDER, input.currentTier, 1);
 
     return { target, nextTierOnFailure: nextTier };
 }

@@ -36,6 +36,12 @@
  * the other six lines; only the DH2 character-sheet surfaces wire it.
  */
 
+import { degreesOfFailure, degreesOfSuccess, rollDie, type Rng } from './_dice.ts';
+
+/** Re-exported from the shared dice primitives for callers/tests importing them from this module. */
+export { degreesOfFailure, degreesOfSuccess };
+export type { Rng };
+
 /* -------------------------------------------- */
 /*  Craftsmanship → effective install band      */
 /* -------------------------------------------- */
@@ -177,24 +183,6 @@ export function composeInstallTest(input: InstallTestInput): InstallTestComposit
 /*  Degrees of success / failure                */
 /* -------------------------------------------- */
 
-/**
- * Degrees of Success (roll ≤ target): floor((target − roll) / 10) + 1.
- * A failed roll yields 0 DoS.
- */
-export function degreesOfSuccess(roll: number, target: number): number {
-    if (roll > target) return 0;
-    return Math.floor((target - roll) / 10) + 1;
-}
-
-/**
- * Degrees of Failure (roll > target): floor((roll − target) / 10) + 1.
- * A passing roll yields 0 DoF.
- */
-export function degreesOfFailure(roll: number, target: number): number {
-    if (roll <= target) return 0;
-    return Math.floor((roll - target) / 10) + 1;
-}
-
 /* -------------------------------------------- */
 /*  Install resolution                          */
 /* -------------------------------------------- */
@@ -250,16 +238,6 @@ export function resolveInstall(composition: InstallTestComposition, roll: number
 /* -------------------------------------------- */
 /*  Recovery time                               */
 /* -------------------------------------------- */
-
-/** Injectable RNG signature: a 0..1 generator (matches `Math.random`). */
-export type Rng = () => number;
-
-/** Roll a single dN face (1..n) from a 0..1 rng. */
-function rollDie(faces: number, rng: Rng): number {
-    const raw = Number(rng());
-    const r = Number.isFinite(raw) ? Math.min(0.9999999, Math.max(0, raw)) : 0;
-    return Math.floor(r * faces) + 1;
-}
 
 export interface RecoveryResult {
     /** The raw 2d10 roll before the Toughness reduction. */
