@@ -26,6 +26,7 @@
  */
 
 import type { BcPsychicDeclarations } from '../data/actor/mixins/bc-psychic-template.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../rules/bc-psychic-strength.ts';
 
 /* -------------------------------------------- */
@@ -199,9 +200,5 @@ export async function bcPsychicTest(this: BcPsychicSheetLike, _event: Event, _ta
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
-    await ChatMessage.create({
-        user: game.user.id,
-        speaker: ChatMessage.getSpeaker(speakerActor),
-        content,
-    });
+    await postChatCard(content, { speaker: ChatMessage.getSpeaker(speakerActor) });
 }

@@ -21,7 +21,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import { roll1d100 } from '../rolls/roll-helpers.ts';
+import { postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
 import { type GearOutcome, ORDINARY_BONUS_KEY, applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../rules/ow-mission-gear.ts';
 
 /** Sheet-like host shape; the ApplicationV2 dispatcher binds the sheet as `this`. */
@@ -238,7 +238,5 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
     };
 
     const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-mission-gear-chat.hbs', templateData);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
-    await ChatMessage.create(payload);
+    await postChatCard(html);
 }
