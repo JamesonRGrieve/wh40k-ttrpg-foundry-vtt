@@ -15,9 +15,8 @@
  * the static tables.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import {
     type ArmourCraftsmanshipEffect,
     type Craftsmanship,
@@ -74,13 +73,11 @@ function armour(itemId: string, name: string, tier: Craftsmanship): ArmourEntry 
     return { itemId, name, tier, effect: getArmourCraftsmanshipEffect(tier) };
 }
 
-const panelTpl = Hbs.compile(panelSrc);
-
 function renderPanel(ctx: CraftsmanshipPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTpl(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 

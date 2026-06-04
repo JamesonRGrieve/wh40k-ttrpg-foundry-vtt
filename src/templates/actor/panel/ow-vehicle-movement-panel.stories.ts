@@ -13,9 +13,8 @@
  * Every value is fixed for diff stability (no Math.random).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './ow-vehicle-movement-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -40,8 +39,6 @@ interface VehicleMovementPanelCtx {
         chaseState: ChaseState | null;
     };
 }
-
-const panelTpl = Hbs.compile(panelSrc);
 
 const FIVE_ACTIONS: VehicleMovementAction[] = [
     {
@@ -85,7 +82,7 @@ function renderPanel(ctx: VehicleMovementPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderTpl(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 

@@ -10,9 +10,8 @@
  * screenshot-diff stability per CLAUDE.md "Seeded RNG in stories".
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HB from 'handlebars';
-import { renderTemplate as compileAndRender } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './ow-logistics-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -25,13 +24,11 @@ interface LogisticsPanelCtx {
     };
 }
 
-const panelTpl = HB.compile(panelSrc);
-
 function renderPanel(ctx: LogisticsPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(compileAndRender(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 
