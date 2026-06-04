@@ -117,55 +117,61 @@ export async function decrement(this: Host, event: Event, target: HTMLElement): 
 }
 
 /* -------------------------------------------- */
+/*  Throttled-action factory                    */
+/* -------------------------------------------- */
+
+/**
+ * Build a throttled stat-action handler (#278): stop event propagation, throttle
+ * by `${keyPrefix}-${actor.id}`, and dispatch to `impl`. Collapses the repeated
+ * stopPropagation + throttle-key + `_throttle(impl as unknown as …)` envelope (and
+ * its boundary disable) that every direct stat setter open-coded.
+ */
+function throttledAction(
+    keyPrefix: string,
+    wait: number,
+    impl: (this: Host, event: Event, target: HTMLElement) => Promise<void>,
+): (this: Host, event: Event, target: HTMLElement) => Promise<void> {
+    return async function (this: Host, event: Event, target: HTMLElement): Promise<void> {
+        event.stopPropagation();
+        const throttleKey = `${keyPrefix}-${this.actor.id}`;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the typed impl is widened to _throttle's generic (...args: unknown[]) signature
+        await this._throttle(throttleKey, wait, impl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
+    };
+}
+
+/* -------------------------------------------- */
 /*  Pip toggles — clicking a pip sets its value */
 /* -------------------------------------------- */
 
-async function setCriticalPipImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const level = parseInt(target.dataset['critLevel'] ?? '0', 10);
-    const currentCrit = this.actor.system.wounds?.critical ?? 0;
-    const newValue = level === currentCrit ? level - 1 : level;
-    const clampedValue = Math.min(Math.max(newValue, 0), 10);
-    await this._updateSystemField('system.wounds.critical', clampedValue);
+/**
+ * Shared pip-toggle body (#278): read a 0-based index from `data-<indexAttr>`,
+ * toggle off when it equals the current value (else set to it), clamp to `[0, max]`,
+ * and write `field`. The three pip setters differ only in these four parameters.
+ */
+async function togglePipImpl(this: Host, target: HTMLElement, indexAttr: string, current: number, max: number, field: string): Promise<void> {
+    const index = parseInt(target.dataset[indexAttr] ?? '0', 10);
+    const newValue = index === current ? index - 1 : index;
+    const clampedValue = Math.min(Math.max(newValue, 0), max);
+    await this._updateSystemField(field, clampedValue);
 }
 
-export async function setCriticalPip(this: Host, event: Event, target: HTMLElement): Promise<void> {
-    event.stopPropagation();
-    const throttleKey = `setCriticalPip-${this.actor.id}`;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
-    await this._throttle(throttleKey, 200, setCriticalPipImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
+async function setCriticalPipImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
+    return togglePipImpl.call(this, target, 'critLevel', this.actor.system.wounds?.critical ?? 0, 10, 'system.wounds.critical');
 }
+
+export const setCriticalPip = throttledAction('setCriticalPip', 200, setCriticalPipImpl);
 
 async function setFateStarImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const index = parseInt(target.dataset['fateIndex'] ?? '0', 10);
-    const currentFate = this.actor.system.fate?.value ?? 0;
-    const newValue = index === currentFate ? index - 1 : index;
-    const maxFate = this.actor.system.fate?.max ?? 0;
-    const clampedValue = Math.min(Math.max(newValue, 0), maxFate);
-    await this._updateSystemField('system.fate.value', clampedValue);
+    return togglePipImpl.call(this, target, 'fateIndex', this.actor.system.fate?.value ?? 0, this.actor.system.fate?.max ?? 0, 'system.fate.value');
 }
 
-export async function setFateStar(this: Host, event: Event, target: HTMLElement): Promise<void> {
-    event.stopPropagation();
-    const throttleKey = `setFateStar-${this.actor.id}`;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
-    await this._throttle(throttleKey, 200, setFateStarImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
-}
+export const setFateStar = throttledAction('setFateStar', 200, setFateStarImpl);
 
 async function setFatigueBoltImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const index = parseInt(target.dataset['fatigueIndex'] ?? '0', 10);
-    const currentFatigue = this.actor.system.fatigue?.value ?? 0;
-    const newValue = index === currentFatigue ? index - 1 : index;
-    const maxFatigue = this.actor.system.fatigue?.max ?? 0;
-    const clampedValue = Math.min(Math.max(newValue, 0), maxFatigue);
-    await this._updateSystemField('system.fatigue.value', clampedValue);
+    return togglePipImpl.call(this, target, 'fatigueIndex', this.actor.system.fatigue?.value ?? 0, this.actor.system.fatigue?.max ?? 0, 'system.fatigue.value');
 }
 
-export async function setFatigueBolt(this: Host, event: Event, target: HTMLElement): Promise<void> {
-    event.stopPropagation();
-    const throttleKey = `setFatigueBolt-${this.actor.id}`;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
-    await this._throttle(throttleKey, 200, setFatigueBoltImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
-}
+export const setFatigueBolt = throttledAction('setFatigueBolt', 200, setFatigueBoltImpl);
 
 /* -------------------------------------------- */
 /*  Direct value setters (corruption / insanity) */
@@ -180,12 +186,7 @@ async function setCorruptionImpl(this: Host, _event: Event, target: HTMLElement)
     await this._updateSystemField('system.corruption', targetValue);
 }
 
-export async function setCorruption(this: Host, event: Event, target: HTMLElement): Promise<void> {
-    event.stopPropagation();
-    const throttleKey = `setCorruption-${this.actor.id}`;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
-    await this._throttle(throttleKey, 200, setCorruptionImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
-}
+export const setCorruption = throttledAction('setCorruption', 200, setCorruptionImpl);
 
 async function setInsanityImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const targetValue = parseInt(target.dataset['value'] ?? '0', 10);
@@ -196,12 +197,7 @@ async function setInsanityImpl(this: Host, _event: Event, target: HTMLElement): 
     await this._updateSystemField('system.insanity', targetValue);
 }
 
-export async function setInsanity(this: Host, event: Event, target: HTMLElement): Promise<void> {
-    event.stopPropagation();
-    const throttleKey = `setInsanity-${this.actor.id}`;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
-    await this._throttle(throttleKey, 200, setInsanityImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
-}
+export const setInsanity = throttledAction('setInsanity', 200, setInsanityImpl);
 
 /* -------------------------------------------- */
 /*  Fate point management                       */
@@ -213,12 +209,7 @@ async function restoreFateImpl(this: Host, _event: Event, _target: HTMLElement):
     this._notify('info', `Restored all fate points to ${maxFate}`, { duration: 3000 });
 }
 
-export async function restoreFate(this: Host, event: Event, target: HTMLElement): Promise<void> {
-    event.stopPropagation();
-    const throttleKey = `restoreFate-${this.actor.id}`;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
-    await this._throttle(throttleKey, 500, restoreFateImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
-}
+export const restoreFate = throttledAction('restoreFate', 500, restoreFateImpl);
 
 async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const action = target.dataset['fateAction'];

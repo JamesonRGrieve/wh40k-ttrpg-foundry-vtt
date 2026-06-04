@@ -126,13 +126,9 @@ export class BasicActionManager {
     async _rollDamage(event: Event): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget as HTMLButtonElement;
-        const rollId = btn.dataset['rollId'];
-        const actionData = this.getActionData(rollId);
-        if (actionData == null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
-            return;
-        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
+        const actionData = this.#resolveStoredAction(btn, 'Roll data no longer available. Cannot roll damage.');
+        if (actionData == null) return;
 
         // Disable button to prevent double-rolling
         btn.disabled = true;
@@ -248,15 +244,11 @@ export class BasicActionManager {
     async _replaceDamageDieWithDoS(event: Event): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget as HTMLButtonElement;
-        const rollId = btn.dataset['rollId'];
         const hitIndexRaw = btn.dataset['hitIndex'];
         const dosRaw = btn.dataset['dos'];
 
-        const actionData = this.getActionData(rollId);
-        if (actionData == null) {
-            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
-            return;
-        }
+        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
+        if (actionData == null) return;
 
         const hitIndex = hitIndexRaw !== undefined && hitIndexRaw !== '' ? Number.parseInt(hitIndexRaw, 10) : 0;
         const dos = dosRaw !== undefined && dosRaw !== '' ? Number.parseInt(dosRaw, 10) : actionData.rollData.dos;
@@ -309,12 +301,8 @@ export class BasicActionManager {
     async _assassinsStrike(event: Event): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget as HTMLButtonElement;
-        const rollId = btn.dataset['rollId'];
-        const actionData = this.getActionData(rollId);
-        if (actionData == null) {
-            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
-            return;
-        }
+        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
+        if (actionData == null) return;
 
         const sourceActor: WithRollSkill | null = actionData.rollData.sourceActor;
         if (sourceActor == null) {
@@ -390,14 +378,9 @@ export class BasicActionManager {
     async _refundResources(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
-        const rollId = div.dataset['rollId'];
-        const actionData = this.getActionData(rollId);
-
-        if (actionData == null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn(`Action data expired. Unable to perform action.`);
-            return;
-        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
+        const actionData = this.#resolveStoredAction(div, `Action data expired. Unable to perform action.`);
+        if (actionData == null) return;
 
         const confirmed = await ConfirmationDialog.confirm({
             title: 'Confirm Refund',
@@ -416,13 +399,8 @@ export class BasicActionManager {
     async _fateReroll(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
-        const rollId = div.dataset['rollId'];
-        const actionData = this.getActionData(rollId);
-
-        if (actionData == null) {
-            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
-            return;
-        }
+        const actionData = this.#resolveStoredAction(div, game.i18n.localize('WH40K.FateActionExpired'));
+        if (actionData == null) return;
 
         if (!WH40KSettings.isMultipleFateBurnAllowed() && (actionData.fateUses.reroll || actionData.fateUses.addDoS)) {
             ui.notifications.warn(game.i18n.localize('WH40K.FateAlreadySpent'));
@@ -462,13 +440,8 @@ export class BasicActionManager {
     async _fateAddDoS(event: Event): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget as HTMLElement;
-        const rollId = btn.dataset['rollId'];
-        const actionData = this.getActionData(rollId);
-
-        if (actionData == null) {
-            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
-            return;
-        }
+        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
+        if (actionData == null) return;
 
         if (!actionData.rollData.success) {
             ui.notifications.warn(game.i18n.localize('WH40K.FateAddDoSNotSuccess'));
@@ -638,6 +611,20 @@ export class BasicActionManager {
     getActionData(id: string | undefined): ActionData | null {
         if (id == null || id === '') return null;
         return this.storedRolls[id] ?? null;
+    }
+
+    /**
+     * Resolve the stored ActionData for a clicked control's `data-roll-id`, warning
+     * with `expiredMessage` and returning null when the roll has expired. Collapses
+     * the `dataset.rollId → getActionData → warn` idiom repeated across the chat
+     * action handlers (#278). Callers keep their own early `return` on null.
+     */
+    #resolveStoredAction(element: HTMLElement, expiredMessage: string): ActionData | null {
+        const actionData = this.getActionData(element.dataset['rollId']);
+        if (actionData == null) {
+            ui.notifications.warn(expiredMessage);
+        }
+        return actionData;
     }
 
     storeActionData(actionData: ActionData): void {
