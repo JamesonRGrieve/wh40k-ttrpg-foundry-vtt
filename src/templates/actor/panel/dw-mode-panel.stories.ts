@@ -12,9 +12,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import type { RenownRank } from '../../../module/rules/dw-renown';
 import { getSupportRange, type DwMode } from '../../../module/rules/dw-squad-mode';
 import panelSrc from './dw-mode-panel.hbs?raw';
@@ -36,13 +35,11 @@ interface DwModePanelCtx {
     };
 }
 
-const panelTpl = HBS.compile(panelSrc);
-
 function renderPanel(ctx: DwModePanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTpl(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 
