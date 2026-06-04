@@ -11,10 +11,9 @@
  * source-scan (the dialog needs the Foundry runtime to instantiate).
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { RANGED_SITUATIONAL_MODIFIERS } from '../src/module/rules/attack-options';
+import { readRepoFile } from './lib/repo-file.ts';
 
 describe('cover situational tiers carry AP, not a to-hit penalty (#232)', () => {
     const cover = RANGED_SITUATIONAL_MODIFIERS.filter((m) => m.key.startsWith('cover'));
@@ -29,8 +28,8 @@ describe('cover situational tiers carry AP, not a to-hit penalty (#232)', () => 
 });
 
 describe('attack screen renders cover as AP (#232)', () => {
-    const dialog = readFileSync(resolve(__dirname, '../src/module/applications/prompts/unified-roll-dialog.ts'), 'utf8');
-    const panel = readFileSync(resolve(__dirname, '../src/templates/prompt/unified/panels/weapon-panel.hbs'), 'utf8');
+    const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
+    const panel = readRepoFile('src/templates/prompt/unified/panels/weapon-panel.hbs');
 
     it('the dialog passes coverAP onto each combat-situational tile', () => {
         expect(dialog).toContain('coverAP: s.damageEffect?.coverAP');

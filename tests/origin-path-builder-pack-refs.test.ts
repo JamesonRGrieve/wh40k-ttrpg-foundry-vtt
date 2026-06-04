@@ -19,12 +19,11 @@
  * system-config-header-fields.test.ts for the same `game.i18n` stub pattern).
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts';
 import { ALL_SYSTEM_IDS, type GameSystemId } from '../src/module/config/game-systems/types.ts';
 import { stepsInPack } from './helpers/origin-pack-content.ts';
+import { readRepoFile } from './lib/repo-file.ts';
 
 interface I18nStub {
     localize: (key: string) => string;
@@ -58,7 +57,7 @@ afterAll(() => {
  * builder's pack references must match.
  */
 function registeredPackNames(): Set<string> {
-    const raw = readFileSync(resolve(__dirname, '../src/system.json'), 'utf8');
+    const raw = readRepoFile('src/system.json');
     // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown (ts-reset); cast to the minimal system.json shape we read, name narrowed below
     const manifest = JSON.parse(raw) as { packs?: ReadonlyArray<{ name?: unknown }> };
     const names = new Set<string>();

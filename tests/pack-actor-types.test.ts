@@ -9,9 +9,8 @@
  * declaration was simply wrong.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
 interface PackDecl {
     name: string;
@@ -21,7 +20,7 @@ interface SystemJson {
     packs: PackDecl[];
 }
 
-const system = JSON.parse(readFileSync(resolve(__dirname, '../src/system.json'), 'utf8')) as SystemJson;
+const system = JSON.parse(readRepoFile('src/system.json')) as SystemJson;
 
 describe('system.json actor-pack types (#296)', () => {
     const actorPacks = system.packs.filter((p) => p.name.includes('-actors-'));
