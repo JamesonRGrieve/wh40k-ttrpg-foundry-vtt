@@ -1,0 +1,23 @@
+{{!--
+    Shared panel-header title — the icon + label span that every panel wrapper
+    (panel.hbs / collapsible-panel.hbs / vital-panel-shell.hbs) renders identically.
+    Extracting it here means the canonical gold-gothic title styling and the
+    per-system icon-accent variant chain live in exactly ONE place, so the three
+    wrappers can never drift apart again (#291).
+
+    The wrappers still own their own header BAR (background, padding, toggle
+    affordance, count badge placement, status badges) because those genuinely
+    differ by interaction model — this partial owns only the title span itself.
+
+    Hash arguments:
+        label       — header title text (required).
+        icon        — Font Awesome class (e.g. "fa-shield-alt"). Optional; omitted
+                      icons leave the title text flush.
+        iconAccent  — optional CSS color string applied inline to the icon, used
+                      by collapsible panels that pass a per-panel accent colour.
+        titleClass  — optional extra utility classes appended to the title span
+                      (e.g. "tw-tracking-[0.02em] tw-min-w-0").
+--}}
+<span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis{{#if titleClass}} {{titleClass}}{{/if}}">
+    {{#if icon}}<i class="fas {{icon}} tw-text-[color:var(--panel-accent,var(--wh40k-accent-gold))] bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-flex-shrink-0"{{#if iconAccent}} style="color: {{iconAccent}};"{{/if}}></i> {{/if}}{{label}}
+</span>
