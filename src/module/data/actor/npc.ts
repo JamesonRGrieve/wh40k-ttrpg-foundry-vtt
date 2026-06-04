@@ -1,5 +1,6 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
+import { tierBandFor } from '../../utils/threat-bands.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { computeMovement } from '../shared/movement-math.ts';
@@ -448,11 +449,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @type {string}
      */
     get threatDescription(): string {
-        if (this.threatLevel <= 5) return game.i18n.localize('WH40K.Threat.Low');
-        if (this.threatLevel <= 10) return game.i18n.localize('WH40K.Threat.Moderate');
-        if (this.threatLevel <= 15) return game.i18n.localize('WH40K.Threat.Dangerous');
-        if (this.threatLevel <= 20) return game.i18n.localize('WH40K.Threat.Deadly');
-        return game.i18n.localize('WH40K.Threat.Apocalyptic');
+        return game.i18n.localize(tierBandFor(this.threatLevel).descriptionKey);
     }
 
     /**
@@ -503,12 +500,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @type {Object}
      */
     get threatTier(): { key: string; label: string; color: string } {
-        const t = this.threatLevel;
-        if (t <= 5) return { key: 'minor', label: 'Hereticus Minoris', color: '#4caf50' };
-        if (t <= 10) return { key: 'standard', label: 'Hereticus Medius', color: '#2196f3' };
-        if (t <= 15) return { key: 'tough', label: 'Hereticus Gravis', color: '#ff9800' };
-        if (t <= 20) return { key: 'elite', label: 'Hereticus Extremis', color: '#f44336' };
-        return { key: 'boss', label: 'Hereticus Maximus', color: '#9c27b0' };
+        const band = tierBandFor(this.threatLevel);
+        return { key: band.key, label: band.latinLabel, color: band.color };
     }
 
     /**
