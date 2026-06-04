@@ -11,16 +11,13 @@
  *   3. Boarders Lost — defender wins by 3+ DoS.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveBoarding, type BoardingResolution } from '../../src/module/rules/ship-boarding.ts';
 import shipBoardingChatSrc from '../../src/templates/chat/ship-boarding-chat.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
-
-const shipBoardingTemplate = HandlebarsLib.compile(shipBoardingChatSrc);
 
 interface CardArgs {
     attackerName: string;
@@ -49,7 +46,7 @@ function cardContext(args: CardArgs): BoardingChatContext {
 
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Boarding (#188)',
-    render: (args) => renderStoryTemplate(shipBoardingTemplate, cardContext(args)),
+    render: (args) => renderSheet(shipBoardingChatSrc, cardContext(args)),
 };
 
 export default meta;
