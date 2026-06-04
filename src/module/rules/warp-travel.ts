@@ -45,6 +45,10 @@
  */
 
 import type { GameSystemId } from '../config/game-systems/types.ts';
+import type { Rng } from './_dice.ts';
+
+/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
+export type { Rng };
 
 // ---------------------------------------------------------------------------
 // Per-stage primitives
@@ -504,9 +508,6 @@ export function getPerilForRoll(d100: number): PerilDef | null {
     const normalized = d100 === 0 ? 100 : d100;
     return PERILS_OF_THE_WARP.find((p) => normalized >= p.rangeMin && normalized <= p.rangeMax) ?? null;
 }
-
-/** Injectable RNG signature (matches `Math.random`). */
-export type Rng = () => number;
 
 /** Roll a fresh d100 and return the matching Peril. Returns null only when
  * the table has a gap (the canonical RT table has a 56-58 gap reserved for

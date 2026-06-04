@@ -21,6 +21,11 @@
  * responsible for prompting the rolls and emitting chat cards.
  */
 
+import { degreesOfSuccess, resolveOpposed } from './_dice.ts';
+
+/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
+export { degreesOfSuccess };
+
 /** Three legal states for a combatant with respect to a grapple. */
 export type GrappleState = 'none' | 'grappling' | 'controlled';
 
@@ -54,38 +59,20 @@ export interface GrappleResolution {
 }
 
 /**
- * Degrees of Success: floor((target − roll) / 10) + 1 when the test passes,
- * 0 otherwise (a failed roll yields 0 DoS, not negative DoS — the failure
- * is the absence of DoS, and the opposing side scores its own DoS instead).
- */
-export function degreesOfSuccess(roll: number, target: number): number {
-    if (roll > target) return 0;
-    return Math.floor((target - roll) / 10) + 1;
-}
-
-/**
- * Generic opposed Strength resolver. The acting side wins when:
- *   - actor passes and opponent fails, OR
- *   - both pass and actorDoS ≥ opponentDoS (ties favor controller; the
- *     caller wires that semantic by passing the controller in as `actor`),
- *   - both fail and actorDoS ≥ opponentDoS (both are 0; tie goes to actor).
- * Returns `success: false` only when the opponent strictly outscores the
- * actor on DoS (the opponent passed and the actor either failed or scored
- * fewer DoS).
+ * Generic opposed Strength resolver. The acting side wins when it scores at
+ * least as many degrees of success as the opponent — `tie: 'a'` routes the
+ * equal-DoS contest (and the both-fail 0–0 contest) to the actor, modelling
+ * the controller-favoring tie at every call site (the resolver always returns
+ * `success` for the side passed in as `actor`). See {@link resolveOpposed} for
+ * the shared core; the grapple-specific net-DoS scaling is read off the result.
  */
 function resolveOpposedStrength(input: OpposedStrengthInput, action: GrappleAction): GrappleResolution {
-    const actorPassed = input.actorRoll <= input.actorStrength;
-    const opponentPassed = input.opponentRoll <= input.opponentStrength;
-    const actorDoS = actorPassed ? degreesOfSuccess(input.actorRoll, input.actorStrength) : 0;
-    const opponentDoS = opponentPassed ? degreesOfSuccess(input.opponentRoll, input.opponentStrength) : 0;
-    // Tie semantics: when both DoS values are equal, the actor wins. This
-    // models the controller-favoring tie at the call sites where the
-    // controller is the actor (Damage / Throw Down) and is permissive
-    // toward the controlled side at the call sites where they are the
-    // actor (Break Free / Stand Up / Move) — but in both cases the
-    // resolver returns `success` for the side that called it.
-    const success = actorDoS >= opponentDoS && (actorPassed || !opponentPassed);
-    const netDoS = actorDoS - opponentDoS;
+    const {
+        success,
+        aDoS: actorDoS,
+        bDoS: opponentDoS,
+        netDoS,
+    } = resolveOpposed({ roll: input.actorRoll, target: input.actorStrength }, { roll: input.opponentRoll, target: input.opponentStrength }, { tie: 'a' });
     return { success, actorDoS, opponentDoS, netDoS, action };
 }
 
