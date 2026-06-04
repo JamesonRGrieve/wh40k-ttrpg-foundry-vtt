@@ -214,6 +214,43 @@ export class RollData {
         this.rawModifierTotal = raw;
         this.modifierCapFired = capFired;
     }
+
+    /**
+     * Set the transient `isSelected` roll-dialog marker on a weapon / power
+     * item. The flag is not part of the shipped item schema, so it is written
+     * through a structural cast — concentrated here so the cast lives once
+     * rather than at every select / initialize site.
+     */
+    protected static setSelected(item: WH40KItem, value: boolean): void {
+        (item as { isSelected?: boolean }).isSelected = value;
+    }
+
+    /**
+     * Unselect every item except the one whose `id` matches, mark the match
+     * selected, and return it (`undefined` when no id matches). Shared by
+     * {@link WeaponRollData.selectWeapon} and {@link PsychicRollData.selectPower}.
+     */
+    protected selectFrom(items: WH40KItem[], id: string): WH40KItem | undefined {
+        let found: WH40KItem | undefined;
+        for (const item of items) {
+            const isMatch = item.id === id;
+            RollData.setSelected(item, isMatch);
+            if (isMatch) found = item;
+        }
+        return found;
+    }
+
+    /**
+     * Mark the first item selected and report whether the list holds more than
+     * one entry (drives the weapon / power picker dropdown). Shared by both
+     * subclasses' `initialize()`.
+     */
+    protected pickSelected(items: WH40KItem[]): { hasMultiple: boolean; first: WH40KItem | undefined } {
+        const first = items[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees items[0] as defined, tsconfig.json (flag on) types it `WH40KItem | undefined` and requires this guard
+        if (first !== undefined) RollData.setSelected(first, true);
+        return { hasMultiple: items.length > 1, first };
+    }
 }
 
 export class WeaponRollData extends RollData {
@@ -345,26 +382,15 @@ export class WeaponRollData extends RollData {
             this.hasEyeOfVengeanceAvailable = true;
         }
 
-        this.weaponSelect = this.weapons.length > 1;
-        const firstWeapon = this.weapons[0];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: weapons[0] may be undefined despite WH40KItem[] type
-        if (firstWeapon === undefined) return;
-        this.weapon = firstWeapon;
-        (this.weapon as { isSelected?: boolean }).isSelected = true;
+        const { hasMultiple, first } = this.pickSelected(this.weapons);
+        this.weaponSelect = hasMultiple;
+        if (first === undefined) return;
+        this.weapon = first;
     }
 
     selectWeapon(weaponName: string): void {
-        // Unselect All
-        this.weapons
-            .filter((weapon) => weapon.id !== weaponName)
-            .forEach((weapon) => {
-                (weapon as { isSelected?: boolean }).isSelected = false;
-            });
-        const found = this.weapons.find((weapon) => weapon.id === weaponName);
-        if (found) {
-            this.weapon = found;
-            (this.weapon as { isSelected?: boolean }).isSelected = true;
-        }
+        const found = this.selectFrom(this.weapons, weaponName);
+        if (found !== undefined) this.weapon = found;
     }
 
     updateBaseTarget(): void {
@@ -403,7 +429,7 @@ export class WeaponRollData extends RollData {
         // Unselect Weapon -- UI issues if it's selected on start
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- defensive: weapon may be unset before initialize() runs
         if (this.weapon) {
-            (this.weapon as { isSelected?: boolean }).isSelected = false;
+            RollData.setSelected(this.weapon, false);
         }
 
         // Suppressing Fire ignores other modifiers
@@ -446,26 +472,16 @@ export class PsychicRollData extends RollData {
         this.pr = (this.sourceActor as ActorWithPsy).psy?.rating ?? 0;
         this.hasFocus = (this.sourceActor as ActorWithPsy).psy?.['hasFocus'] === true;
 
-        this.powerSelect = this.psychicPowers.length > 1;
-        const firstPower = this.psychicPowers[0];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: psychicPowers[0] may be undefined despite WH40KItem[] type
-        if (firstPower === undefined) return;
-        this.power = firstPower;
-        (this.power as { isSelected?: boolean }).isSelected = true;
+        const { hasMultiple, first } = this.pickSelected(this.psychicPowers);
+        this.powerSelect = hasMultiple;
+        if (first === undefined) return;
+        this.power = first;
         this.hasDamage = (this.power.system as { isAttack?: boolean }).isAttack === true;
     }
 
     selectPower(powerName: string): void {
-        this.psychicPowers
-            .filter((power) => power.id !== powerName)
-            .forEach((power) => {
-                (power as { isSelected?: boolean }).isSelected = false;
-            });
-        const found = this.psychicPowers.find((power) => power.id === powerName);
-        if (found) {
-            this.power = found;
-            (this.power as { isSelected?: boolean }).isSelected = true;
-        }
+        const found = this.selectFrom(this.psychicPowers, powerName);
+        if (found !== undefined) this.power = found;
     }
 
     async update(): Promise<void> {
