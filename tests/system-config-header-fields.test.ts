@@ -34,10 +34,35 @@ interface GlobalShim {
 const G = globalThis as GlobalShim;
 const ORIGINAL_GAME = G.game;
 
+/**
+ * Header labels are now localized via makeOriginField (#298 item 3); resolve the
+ * header-label keys to their English so these tests keep asserting the displayed
+ * label (and confirm each key resolves). The `name=` path assertions below are the
+ * real save/load contract and are unaffected by labels.
+ */
+const HEADER_I18N: Record<string, string> = {
+    'WH40K.OriginPath.HomeWorld': 'Home World',
+    'WH40K.OriginPath.Career': 'Career',
+    'WH40K.OriginPath.CareerPath': 'Career Path',
+    'WH40K.OriginPath.Regiment': 'Regiment',
+    'WH40K.OriginPath.Speciality': 'Speciality',
+    'WH40K.OriginPath.Demeanour': 'Demeanour',
+    'WH40K.OriginPath.Patron': 'Patron',
+    'WH40K.OriginPath.Faction': 'Faction',
+    'WH40K.OriginPath.Role': 'Role',
+    'WH40K.OriginPath.Endeavour': 'Endeavour',
+    'WH40K.OriginPath.Archetype': 'Archetype',
+    'WH40K.OriginPath.Pride': 'Pride',
+    'WH40K.OriginPath.Disgrace': 'Disgrace',
+    'WH40K.OriginPath.Motivation': 'Motivation',
+    'WH40K.OriginPath.Chapter': 'Chapter',
+    'WH40K.Character.Rank': 'Rank',
+};
+
 beforeAll(() => {
     G.game = {
         i18n: {
-            localize: (key: string): string => key,
+            localize: (key: string): string => HEADER_I18N[key] ?? key,
             format: (key: string): string => key,
         },
     };

@@ -142,11 +142,11 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         return [
-            this.makeField('Home World', 'system.originPath.homeWorld', this.readOriginPathField(actor, 'homeWorld')),
-            this.makeField('Archetype', 'system.originPath.role', this.readOriginPathField(actor, 'role'), 'Archetype'),
-            this.makeField('Pride', 'system.originPath.background', this.readOriginPathField(actor, 'background')),
-            this.makeField('Disgrace', 'system.originPath.trialsAndTravails', this.readOriginPathField(actor, 'trialsAndTravails'), 'Disgrace'),
-            this.makeField('Motivation', 'system.originPath.motivation', this.readOriginPathField(actor, 'motivation')),
+            this.makeOriginField(actor, 'WH40K.OriginPath.HomeWorld', 'homeWorld'),
+            this.makeOriginField(actor, 'WH40K.OriginPath.Archetype', 'role'),
+            this.makeOriginField(actor, 'WH40K.OriginPath.Pride', 'background'),
+            this.makeOriginField(actor, 'WH40K.OriginPath.Disgrace', 'trialsAndTravails'),
+            this.makeOriginField(actor, 'WH40K.OriginPath.Motivation', 'motivation'),
         ];
     }
 

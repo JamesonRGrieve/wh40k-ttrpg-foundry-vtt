@@ -54,13 +54,12 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        const get = (key: string): string | number => this.readOriginPathField(actor, key);
         // Divination renders as the italic quote beneath the portrait
         // (sidebar-header), so it is not repeated as a static row here (#226).
         return [
-            this.makeField('Home World', 'system.originPath.homeWorld', get('homeWorld')),
-            this.makeField('Career Path', 'system.originPath.career', get('career'), 'Career Path'),
-            this.makeField('Rank', 'system.originPath.role', get('role')),
+            this.makeOriginField(actor, 'WH40K.OriginPath.HomeWorld', 'homeWorld'),
+            this.makeOriginField(actor, 'WH40K.OriginPath.CareerPath', 'career'),
+            this.makeOriginField(actor, 'WH40K.Character.Rank', 'role'),
         ];
     }
 }
