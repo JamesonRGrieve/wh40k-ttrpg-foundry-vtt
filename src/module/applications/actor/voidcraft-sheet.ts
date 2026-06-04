@@ -15,7 +15,22 @@ import VoidcraftData, {
 } from '../../data/actor/voidcraft.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
+import { RollTableUtils } from '../../utils/roll-table-utils.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
+
+/** One ship-action row surfaced in the Extended / Manoeuvre Actions tabs. */
+interface ShipActionRow {
+    uuid: string;
+    id: string;
+    name: string;
+    img: string;
+    skill: string;
+    modifier: number;
+    duration: string;
+    description: string;
+    requirements: string;
+    typeAndAction: string;
+}
 
 /** Localization key per essential slot for the build panel. */
 const ESSENTIAL_SLOT_LABEL_KEY: Record<string, string> = {
@@ -195,45 +210,21 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         context['shipUpgrades'] = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
         context['shipRoles'] = items.filter((item: WH40KItem) => item.type === 'shipRole');
 
-        // Calculate power and space usage (use DataModel fields)
-        let powerGenerated = 0;
-        let powerUsed = 0;
-        let spaceUsed = 0;
-
-        for (const component of context['shipComponents'] as WH40KItem[]) {
-            const compSys = component.system as {
-                condition?: string;
-                power?: { generated?: number; used?: number };
-                space?: number;
-            };
-            if (compSys.condition === 'functional') {
-                powerGenerated += compSys.power?.generated ?? 0;
-                powerUsed += compSys.power?.used ?? 0;
-                spaceUsed += compSys.space ?? 0;
-            }
-        }
-
-        for (const weapon of context['shipWeapons'] as WH40KItem[]) {
-            const weapSys = weapon.system as { power?: number; space?: number };
-            powerUsed += weapSys.power ?? 0;
-            spaceUsed += weapSys.space ?? 0;
-        }
-
-        for (const upgrade of context['shipUpgrades'] as WH40KItem[]) {
-            const upgSys = upgrade.system as {
-                power?: { generated?: number; used?: number };
-                space?: number;
-            };
-            powerGenerated += upgSys.power?.generated ?? 0;
-            powerUsed += upgSys.power?.used ?? 0;
-            spaceUsed += upgSys.space ?? 0;
-        }
-
-        context['powerGenerated'] = powerGenerated;
-        context['powerUsed'] = powerUsed;
-        context['spaceUsed'] = spaceUsed;
-        context['powerAvailable'] = powerGenerated - powerUsed;
-        context['spaceAvailable'] = ((this.actor.system as { space?: { total?: number } }).space?.total ?? 0) - spaceUsed;
+        // Power and space are computed authoritatively by the DataModel's
+        // prepareEmbeddedData (the same component/weapon/upgrade accumulation,
+        // run before render); bind the prepared values rather than re-walking
+        // the item list here, so the sheet can never disagree with the model.
+        // `generated` / `available` are written at prepare time but live outside
+        // the SchemaField type, so the read is through a structural view.
+        const shipSystem = this.actor.system as {
+            power?: { generated?: number; used?: number; available?: number };
+            space?: { used?: number; available?: number };
+        };
+        context['powerGenerated'] = shipSystem.power?.generated ?? 0;
+        context['powerUsed'] = shipSystem.power?.used ?? 0;
+        context['spaceUsed'] = shipSystem.space?.used ?? 0;
+        context['powerAvailable'] = shipSystem.power?.available ?? 0;
+        context['spaceAvailable'] = shipSystem.space?.available ?? 0;
 
         // SP-budget panel context (issue #190). The DataModel computes
         // `buildValidation` during prepareDerivedData; fall back to a freshly
@@ -402,98 +393,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      *
      * @issue #186
      */
-    async _prepareExtendedActions(): Promise<
-        Array<{
-            uuid: string;
-            id: string;
-            name: string;
-            img: string;
-            skill: string;
-            modifier: number;
-            duration: string;
-            description: string;
-            requirements: string;
-            typeAndAction: string;
-        }>
-    > {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
-        const actor = this.actor as unknown as WH40KVoidcraft;
-        const gameSystemId = (actor.system as { gameSystem: string }).gameSystem;
-
-        const out: Array<{
-            uuid: string;
-            id: string;
-            name: string;
-            img: string;
-            skill: string;
-            modifier: number;
-            duration: string;
-            description: string;
-            requirements: string;
-            typeAndAction: string;
-        }> = [];
-
-        const seenUuids = new Set<string>();
-
-        const pushItem = (item: WH40KItem, uuid: string): void => {
-            if (seenUuids.has(uuid)) return;
-            seenUuids.add(uuid);
-            const sys = item.system as {
-                shipAction?: boolean;
-                gameSystems?: string[];
-                skill?: string;
-                modifier?: number;
-                duration?: string;
-                requirements?: string;
-                typeAndAction?: string;
-                description?: { value?: string };
-            };
-            if (sys.shipAction !== true) return;
-            const systems = sys.gameSystems ?? [];
-            if (systems.length > 0 && !systems.includes(gameSystemId)) return;
-            out.push({
-                uuid,
-                id: item.id ?? '',
-                name: item.name,
-                img: item.img ?? '',
-                skill: sys.skill ?? '',
-                modifier: sys.modifier ?? 0,
-                duration: sys.duration ?? '',
-                description: sys.description?.value ?? '',
-                requirements: sys.requirements ?? '',
-                typeAndAction: sys.typeAndAction ?? '',
-            });
-        };
-
-        // 1. Owned items already on the actor.
-        for (const item of actor.items) {
-            if (item.type !== 'order') continue;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem.uuid not in shipped types for our narrow view
-            const uuid = (item as unknown as { uuid?: string }).uuid ?? '';
-            if (uuid === '') continue;
-            pushItem(item, uuid);
-        }
-
-        // 2. Compendium pack: rt-items-ship-extended-actions (and any future per-system equivalent).
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs typing in fvtt-types is loose
-        const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
-        const packId = `wh40k-rpg.${gameSystemId}-items-ship-extended-actions`;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
-        const pack = packs?.get?.(packId) as undefined | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
-        if (pack?.getDocuments !== undefined) {
-            try {
-                const docs = await pack.getDocuments();
-                for (const doc of docs) {
-                    if (doc.type !== 'order') continue;
-                    pushItem(doc, doc.uuid);
-                }
-            } catch {
-                // Pack unavailable (e.g. during early sheet renders before world ready) — silently skip.
-            }
-        }
-
-        out.sort((a, b) => a.name.localeCompare(b.name));
-        return out;
+    async _prepareExtendedActions(): Promise<ShipActionRow[]> {
+        return this._prepareShipActions('shipAction', 'ship-extended-actions');
     }
 
     /* -------------------------------------------- */
@@ -513,37 +414,26 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      *
      * @issue #185
      */
-    async _prepareManoeuvreActions(): Promise<
-        Array<{
-            uuid: string;
-            id: string;
-            name: string;
-            img: string;
-            skill: string;
-            modifier: number;
-            duration: string;
-            description: string;
-            requirements: string;
-            typeAndAction: string;
-        }>
-    > {
+    async _prepareManoeuvreActions(): Promise<ShipActionRow[]> {
+        return this._prepareShipActions('manoeuvreAction', 'ship-manoeuvre-actions');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Shared resolver for the Extended / Manoeuvre Actions tabs. Pulls owned
+     * `order` items plus the active game system's `wh40k-rpg.<sys>-items-<suffix>`
+     * compendium pack, keeping only those whose `filterFlag` is set and whose
+     * optional `gameSystems` list admits the active system. Per Direction #7 the
+     * compendium pack is the source of truth, so the list is correct whether or
+     * not the GM has imported the entries onto the actor.
+     */
+    async _prepareShipActions(filterFlag: 'shipAction' | 'manoeuvreAction', packSuffix: string): Promise<ShipActionRow[]> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         const actor = this.actor as unknown as WH40KVoidcraft;
         const gameSystemId = (actor.system as { gameSystem: string }).gameSystem;
 
-        const out: Array<{
-            uuid: string;
-            id: string;
-            name: string;
-            img: string;
-            skill: string;
-            modifier: number;
-            duration: string;
-            description: string;
-            requirements: string;
-            typeAndAction: string;
-        }> = [];
-
+        const out: ShipActionRow[] = [];
         const seenUuids = new Set<string>();
 
         const pushItem = (item: WH40KItem, uuid: string): void => {
@@ -560,7 +450,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
                 typeAndAction?: string;
                 description?: { value?: string };
             };
-            if (sys.manoeuvreAction !== true) return;
+            if (sys[filterFlag] !== true) return;
             const systems = sys.gameSystems ?? [];
             if (systems.length > 0 && !systems.includes(gameSystemId)) return;
             out.push({
@@ -586,10 +476,10 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             pushItem(item, uuid);
         }
 
-        // 2. Compendium pack: rt-items-ship-manoeuvre-actions (and any future per-system equivalent).
+        // 2. Compendium pack: wh40k-rpg.<sys>-items-<suffix> (and any future per-system equivalent).
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs typing in fvtt-types is loose
         const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
-        const packId = `wh40k-rpg.${gameSystemId}-items-ship-manoeuvre-actions`;
+        const packId = `wh40k-rpg.${gameSystemId}-items-${packSuffix}`;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
         const pack = packs?.get?.(packId) as undefined | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
         if (pack?.getDocuments !== undefined) {
@@ -1073,60 +963,26 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         const actor = this.actor as unknown as WH40KVoidcraft;
         const i18n = game.i18n;
 
-        // 1 + 2: try the world tables, then the compendium pack.
+        // Resolve the Critical Hit table via the shared util: world tables
+        // first, then the RT ship-combat compendium pack (scoped so a shared
+        // "Critical Hit" name can't mis-resolve across systems), with the util's
+        // out-of-range clamp. The d5 fallback below remains the last branch.
         let rolled = 0;
         let resultText = '';
-        let tableFound = false;
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.tables typing in fvtt-types is loose
-        const worldTables = (globalThis as unknown as { game?: { tables?: { getName?: (name: string) => unknown } } }).game?.tables;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable shape narrowed locally
-        const worldTable = worldTables?.getName?.('Critical Hit') as
-            | undefined
-            | { draw?: (opts?: { displayChat?: boolean }) => Promise<{ roll?: { total?: number }; results?: Array<{ text?: string }> }> };
-        if (worldTable?.draw !== undefined) {
-            try {
-                const draw = await worldTable.draw({ displayChat: false });
-                rolled = draw.roll?.total ?? 0;
-                resultText = draw.results?.[0]?.text ?? '';
-                tableFound = resultText !== '';
-            } catch {
-                tableFound = false;
-            }
+        const draw = await RollTableUtils.rollTable('Critical Hit', {
+            displayChat: false,
+            pack: 'wh40k-rpg.rt-core-rolltables-ship-combat',
+        });
+        if (draw !== null) {
+            rolled = draw.roll.total ?? 0;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable result Collection is untyped; reading the drawn result's display text
+            const first = (draw.results as unknown as Array<{ text?: string }>)[0];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json has the flag off, but tsc (flag on) types the array index as possibly-undefined and requires this optional chain
+            resultText = first?.text ?? '';
         }
 
-        if (!tableFound) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs typing in fvtt-types is loose
-            const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
-            const pack = packs?.get?.('wh40k-rpg.rt-core-rolltables-ship-combat') as
-                | undefined
-                | {
-                      getDocuments?: () => Promise<
-                          Array<{
-                              name?: string;
-                              draw?: (opts?: { displayChat?: boolean }) => Promise<{ roll?: { total?: number }; results?: Array<{ text?: string }> }>;
-                          }>
-                      >;
-                  };
-            if (pack?.getDocuments !== undefined) {
-                try {
-                    const docs = await pack.getDocuments();
-                    const table = docs.find((d) => d.name === 'Critical Hit');
-                    if (table?.draw !== undefined) {
-                        const draw = await table.draw({ displayChat: false });
-                        rolled = draw.roll?.total ?? 0;
-                        resultText = draw.results?.[0]?.text ?? '';
-                        tableFound = resultText !== '';
-                    }
-                } catch {
-                    tableFound = false;
-                }
-            }
-        }
-
-        // 3: fallback — bare 1d5 with table-unavailable message.
-        if (!tableFound) {
+        // Fallback — bare 1d5 with table-unavailable message.
+        if (resultText === '') {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll typings vary between versions
             const RollCtor = (globalThis as unknown as { Roll?: new (formula: string) => { evaluate: () => Promise<{ total: number }>; total?: number } }).Roll;
             if (RollCtor !== undefined) {
