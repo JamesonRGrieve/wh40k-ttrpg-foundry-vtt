@@ -1,5 +1,5 @@
 {{!-- Wounds Panel — vital meter for hit-point tracking + critical-damage pip array. --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="wounds" label="Wounds" icon="fa-heart-broken" actor=actor
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="wounds" label=(localize "WH40K.Status.Wounds.Label") icon="fa-heart-broken" actor=actor
     rootStateClass=(concat (iff (eq system.wounds.value 0) "wh40k-wounds-critical") " " (iff (lt (percent system.wounds.value system.wounds.max) 25) "wh40k-wounds-warning"))}}
 
     {{!-- Main Display: Current/Max with Quick Controls --}}
@@ -10,8 +10,8 @@
             field="system.wounds.value"
             current=system.wounds.value
             maxLabel=system.wounds.max
-            decTitle="Reduce Wounds"
-            incTitle="Increase Wounds"
+            decTitle=(localize "WH40K.Status.Wounds.ReduceTitle")
+            incTitle=(localize "WH40K.Status.Wounds.IncreaseTitle")
             showCalculator=true
             statKey="wounds"
             currentAnimateClass=(iff (eq system.wounds.value 0) "tw-animate-pulse-scale" "")}}
@@ -25,21 +25,21 @@
             fillExtraClass="tw-h-full tw-rounded-full tw-bg-gradient-to-r tw-from-crimson tw-to-crimson-light tw-shadow-[0_0_10px_rgba(182,58,43,0.3)] tw-transition-[width] tw-duration-[400ms]"
             showPercentText="right"
             thresholds=(array
-                (object at=25 label="25%" title="Severely Injured (25%)")
-                (object at=50 label="50%" title="Half Health (50%)")
-                (object at=75 label="75%" title="Good Health (75%)"))}}
+                (object at=25 label="25%" title=(localize "WH40K.Status.Wounds.SeverelyInjuredThreshold"))
+                (object at=50 label="50%" title=(localize "WH40K.Status.Wounds.HalfHealthThreshold"))
+                (object at=75 label="75%" title=(localize "WH40K.Status.Wounds.GoodHealthThreshold")))}}
     </div>
 
     {{!-- Warning Messages --}}
     {{#if (eq system.wounds.value 0)}}
     <div class="tw-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-mt-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-rounded-[6px] tw-border-2 tw-border-solid tw-border-crimson bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-bg-[var(--wh40k-wounds-bg)] tw-text-crimson bc:tw-text-crimson-light dh1:tw-text-gold-raw dh2:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-animate-pulse-red">
         <i class="fas fa-skull-crossbones"></i>
-        <span>CRITICALLY WOUNDED - At 0 wounds!</span>
+        <span>{{localize "WH40K.Status.Wounds.CriticallyWounded"}}</span>
     </div>
     {{else if (lt (percent system.wounds.value system.wounds.max) 25)}}
     <div class="tw-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-mt-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-rounded-[6px] tw-border-2 tw-border-solid tw-border-[rgba(196,135,29,0.5)] tw-bg-[var(--wh40k-warning-bg)] tw-text-warning">
         <i class="fas fa-exclamation-triangle"></i>
-        <span>Severely Injured - Below 25%</span>
+        <span>{{localize "WH40K.Status.Wounds.SeverelyInjured"}}</span>
     </div>
     {{/if}}
 
@@ -48,7 +48,7 @@
     <div class="tw-mt-2 tw-p-1.5 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-wounds-border)] tw-rounded-lg">
         <div class="tw-flex tw-items-center tw-justify-between tw-mb-1.5">
             <span class="tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-text-[0.8rem] tw-uppercase tw-tracking-[0.05em] tw-text-crimson bc:tw-text-crimson-light dh1:tw-text-gold-raw dh2:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
-                <i class="fas fa-skull"></i> Critical Damage
+                <i class="fas fa-skull"></i> {{localize "WH40K.Status.Wounds.CriticalDamage"}}
             </span>
             <span class="tw-text-[0.8rem] tw-font-bold tw-text-crimson bc:tw-text-crimson-light dh1:tw-text-gold-raw dh2:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-font-alt">{{system.wounds.critical}} / 10</span>
         </div>
@@ -67,7 +67,7 @@
         {{!-- Critical Damage Editor --}}
         <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1.5">
             <div class="tw-flex tw-items-center tw-justify-between tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-medium)] tw-mb-1.5">
-                <i class="fas fa-skull" style="margin-right:4px;font-size:0.9em;"></i> Critical Damage
+                <i class="fas fa-skull" style="margin-right:4px;font-size:0.9em;"></i> {{localize "WH40K.Status.Wounds.CriticalDamage"}}
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-mb-2">
@@ -76,7 +76,7 @@
                         data-action="decrement"
                         data-field="system.wounds.critical"
                         data-min="0"
-                        title="Reduce Critical">
+                        title="{{localize 'WH40K.Status.Wounds.ReduceCritical'}}">
                     <i class="fas fa-minus" style="font-size:0.75rem;"></i>
                 </button>
 
@@ -87,14 +87,14 @@
                        value="{{source.wounds.critical}}"
                        min="0"
                        max="10"
-                       title="Critical Damage (0-10)" />
+                       title="{{localize 'WH40K.Status.Wounds.CriticalRange'}}" />
 
                 <button type="button"
                         class="tw-w-8 tw-h-8 tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-input-bg)] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[6px] tw-cursor-pointer tw-text-success"
                         data-action="increment"
                         data-field="system.wounds.critical"
                         data-max="10"
-                        title="Increase Critical">
+                        title="{{localize 'WH40K.Status.Wounds.IncreaseCritical'}}">
                     <i class="fas fa-plus" style="font-size:0.75rem;"></i>
                 </button>
             </div>
