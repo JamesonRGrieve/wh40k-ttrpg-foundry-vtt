@@ -1,13 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import skillCardSrc from '../src/templates/chat/skill-card.hbs?raw';
-import { mockSkill, renderTemplate as renderTpl, type MockSkill } from './mocks';
-
-const template = Hbs.compile(skillCardSrc);
+import { mockSkill, type MockSkill } from './mocks';
+import { renderSheet } from './test-helpers';
 
 const meta: Meta<MockSkill> = {
     title: 'Chat/Skill Card',
-    render: (skill) => renderTpl(template, { skill }),
+    render: (skill) => renderSheet(skillCardSrc, { skill }),
     args: mockSkill(),
 };
 

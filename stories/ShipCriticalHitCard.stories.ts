@@ -18,14 +18,8 @@
  * screenshot and assert the rendered body is attached.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import shipCriticalHitChatSrc from '../src/templates/chat/ship-critical-hit-chat.hbs?raw';
-import { renderTemplate as renderMockTemplate } from './mocks';
-import { initializeStoryHandlebars } from './template-support';
-
-initializeStoryHandlebars();
-
-const shipCriticalHitTemplate = HBS.compile(shipCriticalHitChatSrc);
+import { renderSheet } from './test-helpers';
 
 interface CardArgs {
     actorName: string;
@@ -54,7 +48,7 @@ function baseArgs(): CardArgs {
 
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Critical Hit',
-    render: (args) => renderMockTemplate(shipCriticalHitTemplate, args),
+    render: (args) => renderSheet(shipCriticalHitChatSrc, args),
     args: baseArgs(),
 };
 

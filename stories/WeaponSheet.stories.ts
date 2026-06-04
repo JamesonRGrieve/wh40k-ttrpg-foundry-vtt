@@ -1,12 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import weaponSheetSrc from '../src/templates/item/item-weapon-sheet.hbs?raw';
-import { mockWeaponSheetContext, renderTemplate as renderStoryTemplate } from './mocks';
-import { initializeStoryHandlebars } from './template-support';
-
-initializeStoryHandlebars();
-
-const template = HandlebarsLib.compile(weaponSheetSrc);
+import { mockWeaponSheetContext } from './mocks';
+import { renderSheet } from './test-helpers';
 
 const meta: Meta = {
     title: 'Item Sheets/Weapon Sheet',
@@ -17,13 +12,13 @@ export default meta;
 type Story = StoryObj;
 
 export const Standard: Story = {
-    render: () => renderStoryTemplate(template, mockWeaponSheetContext()),
+    render: () => renderSheet(weaponSheetSrc, mockWeaponSheetContext()),
 };
 
 export const CollapsedBody: Story = {
     render: () =>
-        renderStoryTemplate(
-            template,
+        renderSheet(
+            weaponSheetSrc,
             mockWeaponSheetContext({
                 bodyCollapsed: true,
             }),
@@ -32,8 +27,8 @@ export const CollapsedBody: Story = {
 
 export const EditModeNoAmmoLoaded: Story = {
     render: () =>
-        renderStoryTemplate(
-            template,
+        renderSheet(
+            weaponSheetSrc,
             mockWeaponSheetContext({
                 inEditMode: true,
                 hasLoadedAmmo: false,
