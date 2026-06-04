@@ -18,6 +18,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, type OriginModifierBag } from '../../origin-grant-ledger.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
+import { resolvePack } from '../../utils/compendium-query.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
@@ -944,8 +945,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         for (const packName of packNames) {
             // Try fully qualified ID first, then metadata.name fallback
-            const pack =
-                game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
+            const pack = resolvePack(packName);
             if (!pack) {
                 console.warn(`Origin path compendium '${packName}' not found`);
                 continue;
@@ -2087,9 +2087,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const scarceModifier = availabilityConfig['scarce']?.modifier ?? 0;
         const packLoadResults = await Promise.all(
             packNames.map(async (packName): Promise<EquipmentEntry[]> => {
-                const pack =
-                    game.packs.get(`wh40k-rpg.${packName}`) ??
-                    game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
+                const pack = resolvePack(packName);
                 if (!pack) return [];
 
                 const index = await pack.getIndex({
@@ -5435,8 +5433,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         for (const packName of packNames) {
             if (!packName.includes('ammo')) continue;
-            const pack =
-                game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
+            const pack = resolvePack(packName);
             if (!pack) continue;
 
             // eslint-disable-next-line no-await-in-loop -- sequential: search packs in priority order, stop at first match
