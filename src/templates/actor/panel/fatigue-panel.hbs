@@ -1,5 +1,5 @@
 {{!-- Fatigue Panel — vital meter for fatigue levels with collapse threshold + rest/clear actions. --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="fatigue" label="Fatigue" icon="fa-bolt" actor=actor
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="fatigue" label=(localize "WH40K.Status.Fatigue.Label") icon="fa-bolt" actor=actor
     rootStateClass=(concat (iff (gt system.fatigue.value system.fatigue.max) "wh40k-unconscious") " " (iff (and (lte system.fatigue.value system.fatigue.max) (gt system.fatigue.value 0)) "wh40k-fatigued"))}}
 
     {{!-- Main Display: Current/Threshold with Quick Controls --}}
@@ -10,8 +10,8 @@
             field="system.fatigue.value"
             current=system.fatigue.value
             maxLabel=system.fatigue.max
-            decTitle="Reduce Fatigue"
-            incTitle="Increase Fatigue"}}
+            decTitle=(localize "WH40K.Status.Fatigue.ReduceTitle")
+            incTitle=(localize "WH40K.Status.Fatigue.IncreaseTitle")}}
 
         {{> systems/wh40k-rpg/templates/actor/partial/vital-progress-bar
             cssPrefix="wh40k-fatigue"
@@ -23,19 +23,19 @@
             showPercentText="below"
             percentText=(concat system.fatigue.value " / " system.fatigue.max)
             percentTextClass="tw-text-xs tw-text-gray-400"
-            thresholds=(array (object at=100 label="TB" title="Collapse Threshold"))}}
+            thresholds=(array (object at=100 label="TB" title=(localize "WH40K.Status.Fatigue.CollapseThreshold")))}}
     </div>
 
     {{!-- Warning Messages --}}
     {{#if (gt system.fatigue.value system.fatigue.max)}}
     <div class="tw-text-crimson bc:tw-text-crimson-light dh1:tw-text-gold-raw dh2:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-mt-1">
         <i class="{{concat 'fas fa-dizzy'}}"></i>
-        <span>UNCONSCIOUS - Collapsed for {{sub 10 characteristics.toughness.bonus}} minutes!</span>
+        <span>{{localize "WH40K.Status.Fatigue.Unconscious" minutes=(sub 10 characteristics.toughness.bonus)}}</span>
     </div>
     {{else if (gt system.fatigue.value 0)}}
     <div class="tw-text-warning tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-mt-1">
         <i class="{{concat 'fas fa-exclamation-triangle'}}"></i>
-        <span>FATIGUED - Suffer –10 penalty to all Tests</span>
+        <span>{{localize "WH40K.Status.Fatigue.Fatigued"}}</span>
     </div>
     {{/if}}
 
@@ -46,17 +46,17 @@
                 data-action="decrement"
                 data-field="system.fatigue.value"
                 data-min="0"
-                title="Rest to recover 1 fatigue">
+                title="{{localize 'WH40K.Status.Fatigue.RestTitle'}}">
             <i class="{{concat 'fas fa-bed'}}"></i>
-            <span>Rest (-1)</span>
+            <span>{{localize "WH40K.Status.Fatigue.RestLabel"}}</span>
         </button>
         {{#if (gt system.fatigue.value 0)}}
         <button type="button"
                 class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1 tw-bg-gray-700 tw-px-2 tw-py-1 tw-rounded-lg tw-border-2 tw-border-warning/40 tw-text-warning tw-text-xs tw-font-bold tw-cursor-pointer"
                 data-action="clear-fatigue"
-                title="Clear all fatigue (full rest)">
+                title="{{localize 'WH40K.Status.Fatigue.ClearTitle'}}">
             <i class="{{concat 'fas fa-broom'}}"></i>
-            <span>Clear All</span>
+            <span>{{localize "WH40K.Status.Fatigue.ClearLabel"}}</span>
         </button>
         {{/if}}
     </div>
