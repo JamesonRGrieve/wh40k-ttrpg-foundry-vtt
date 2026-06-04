@@ -11,6 +11,7 @@ import type { WH40KNPC } from '../../documents/npc.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
+import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
@@ -1458,10 +1459,9 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #deleteNPC(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const confirmed = await foundry.applications.api.DialogV2.confirm({
-            window: { title: 'Delete NPC' },
+        const confirmed = await ConfirmationDialog.confirm({
+            title: 'Delete NPC',
             content: `<p>Are you sure you want to delete <strong>${this.actor.name}</strong>?</p>`,
-            rejectClose: false,
         });
 
         if (confirmed) {
