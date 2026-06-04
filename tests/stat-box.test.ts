@@ -5,20 +5,13 @@
  * and that base-class overrides (vehicle's wh40k-vehicle-stat-* prefix) do what they should.
  */
 
-import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import statBoxSrc from '../src/templates/actor/partial/stat-box.hbs?raw';
-import { initializeStoryHandlebars } from '../stories/template-support';
+import { renderSheet } from '../stories/test-helpers';
 
-initializeStoryHandlebars();
-
-const statBoxTemplate = Hbs.compile(statBoxSrc);
-
-function dom(html: string): HTMLElement {
-    const root = document.createElement('div');
-    root.innerHTML = html;
-    return root;
-}
+// Render through the shared renderSheet helper (#269) instead of a hand-rolled
+// Hbs.compile + document.innerHTML mount. statBoxTemplate now returns the mounted root.
+const statBoxTemplate = (ctx: object): HTMLElement => renderSheet(statBoxSrc, ctx);
 
 describe('stat-box partial', () => {
     it('renders single-input layout when maxName is omitted (vehicle Armour)', () => {
@@ -32,7 +25,7 @@ describe('stat-box partial', () => {
             value: 7,
             min: '0',
         });
-        const root = dom(html);
+        const root = html;
         const box = root.querySelector('.wh40k-vehicle-stat-box');
         expect(box).not.toBeNull();
         expect(box?.className).toContain('wh40k-vehicle-armour');
@@ -55,7 +48,7 @@ describe('stat-box partial', () => {
             maxName: 'system.hullIntegrity.max',
             max: 30,
         });
-        const root = dom(html);
+        const root = html;
         const inputs = root.querySelectorAll('input[type="number"]');
         expect(inputs).toHaveLength(2);
         expect(inputs[0].getAttribute('name')).toBe('system.hullIntegrity.value');
@@ -79,7 +72,7 @@ describe('stat-box partial', () => {
             min: '0',
             minMax: '1',
         });
-        const inputs = dom(html).querySelectorAll('input[type="number"]');
+        const inputs = html.querySelectorAll('input[type="number"]');
         expect(inputs[0].getAttribute('min')).toBe('0');
         expect(inputs[1].getAttribute('min')).toBe('1');
     });
@@ -92,7 +85,7 @@ describe('stat-box partial', () => {
             valueName: 'system.crew.population',
             value: 4500,
         });
-        const input = dom(html).querySelector('input[type="number"]');
+        const input = html.querySelector('input[type="number"]');
         expect(input?.className).toContain('wh40k-stat-single');
     });
 
@@ -104,7 +97,7 @@ describe('stat-box partial', () => {
             min: '1',
             maxAttr: '10',
         });
-        const input = dom(html).querySelector('input[type="number"]');
+        const input = html.querySelector('input[type="number"]');
         expect(input?.getAttribute('max')).toBe('10');
     });
 });

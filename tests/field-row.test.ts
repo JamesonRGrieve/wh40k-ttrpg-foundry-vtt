@@ -6,20 +6,12 @@
  * renders the correct element structure with Tailwind utility classes.
  */
 
-import HandlebarsLib from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import fieldRowSrc from '../src/templates/shared/field-row.hbs?raw';
-import { initializeStoryHandlebars } from '../stories/template-support';
+import { renderSheet } from '../stories/test-helpers';
 
-initializeStoryHandlebars();
-
-const fieldRowTemplate = HandlebarsLib.compile(fieldRowSrc);
-
-function dom(html: string): HTMLElement {
-    const root = document.createElement('div');
-    root.innerHTML = html;
-    return root;
-}
+// Render through the shared renderSheet helper (#269); fieldRowTemplate returns the mounted root.
+const fieldRowTemplate = (ctx: object): HTMLElement => renderSheet(fieldRowSrc, ctx);
 
 describe('field-row partial', () => {
     it('renders default text input with required hash params', () => {
@@ -28,7 +20,7 @@ describe('field-row partial', () => {
             name: 'system.bio.gender',
             value: 'Male',
         });
-        const root = dom(html);
+        const root = html;
         const row = root.querySelector('div');
         expect(row).not.toBeNull();
         const labelEl = root.querySelector('label');
@@ -46,7 +38,7 @@ describe('field-row partial', () => {
             value: 32,
             type: 'number',
         });
-        const input = dom(html).querySelector('input');
+        const input = html.querySelector('input');
         expect(input?.getAttribute('type')).toBe('number');
         expect(input?.getAttribute('name')).toBe('system.bio.age');
         expect(input?.getAttribute('value')).toBe('32');
@@ -60,7 +52,7 @@ describe('field-row partial', () => {
             type: 'select',
             options: { lean: 'Lean', stocky: 'Stocky', tall: 'Tall' },
         });
-        const root = dom(html);
+        const root = html;
         const select = root.querySelector('select');
         expect(select).not.toBeNull();
         expect(select?.getAttribute('name')).toBe('system.bio.build');
@@ -77,7 +69,7 @@ describe('field-row partial', () => {
             value: '',
             placeholder: 'Eye colour',
         });
-        const input = dom(html).querySelector('input');
+        const input = html.querySelector('input');
         expect(input?.getAttribute('placeholder')).toBe('Eye colour');
     });
 
@@ -90,8 +82,10 @@ describe('field-row partial', () => {
             labelClass: 'tw-text-xs',
             inputClass: 'tw-uppercase',
         });
-        const root = dom(html);
-        expect(root.querySelector('div')?.className).toContain('tw-col-span-2');
+        const root = html;
+        // renderSheet wraps the partial in Foundry's .app > .window-content shell, so scope to
+        // the field-row's own root (tw-flex-col) rather than the shell's first <div>.
+        expect(root.querySelector('.tw-flex-col')?.className).toContain('tw-col-span-2');
         expect(root.querySelector('label')?.className).toContain('tw-text-xs');
         expect(root.querySelector('input')?.className).toContain('tw-uppercase');
     });
