@@ -84,41 +84,10 @@ module.exports = {
                 },
             },
         },
-        ".wh40k-panel": {
-            "background": "var(--color-bg-secondary, #252525)",
-            "border": "1px solid var(--color-border-secondary, #444)",
-            "border-radius": "var(--wh40k-radius-lg)",
-            "overflow": "hidden",
-            "margin-bottom": "0.75rem",
-            "&:last-child": {
-                "margin-bottom": "0",
-            },
-            ".wh40k-panel-header": {
-                "display": "flex",
-                "align-items": "center",
-                "gap": "0.5rem",
-                "padding": "0.5rem 0.75rem",
-                "background": "var(--color-bg-tertiary, rgba(30, 30, 30, 0.9))",
-                "border-bottom": "1px solid var(--color-border-secondary, #444)",
-                "font-weight": "600",
-                "font-size": "0.85rem",
-                "> i:first-child": {
-                    "font-size": "1rem",
-                    "color": "var(--npc-accent-primary)",
-                },
-            },
-            ".wh40k-panel-body": {
-                "padding": "0.75rem",
-            },
-            ".wh40k-count-badge": {
-                "margin-left": "auto",
-                "background": "var(--color-bg-primary, #1a1a1a)",
-                "padding": "0.15rem 0.5rem",
-                "border-radius": "10px",
-                "font-size": "0.7rem",
-                "font-weight": "700",
-            },
-        },
+        // NOTE (#291): the divergent `.wh40k-panel` redefinition was removed here so
+        // NPC sheets use the single canonical gold-gothic panel from
+        // tailwind/panel-components.js (no more PC↔NPC font/color fork). The NPC
+        // count-badge styling lives in the top-level `.wh40k-count-badge` rule below.
         ".wh40k-weapon-card": {
             "background": "var(--color-bg-tertiary, rgba(30, 30, 30, 0.9))",
             "border": "1px solid var(--color-border-secondary, #444)",
