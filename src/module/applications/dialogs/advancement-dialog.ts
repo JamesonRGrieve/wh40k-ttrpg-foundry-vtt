@@ -17,6 +17,7 @@ import { psychicPowerCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { canAfford, getAvailableXP, spendXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import ConfirmationDialog from './confirmation-dialog.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } =
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
@@ -1285,11 +1286,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const tierLabel = game.i18n.localize(CONFIG.wh40k.advancementTiers[nextCost.tier]?.label ?? nextCost.tier);
         /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions */
 
-        const confirmed = await foundry.appv1.api.Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(nextCost.cost), name: `${charLabel} (${tierLabel})` }),
         });
-        if (confirmed !== true) return;
+        if (!confirmed) return;
 
         const result = await spendXP(this.actor, nextCost.cost, `${charLabel} (${tierLabel})`);
         if (!result.success) {
@@ -1374,11 +1375,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const displayName =
             advance.specialization !== undefined && advance.specialization.length > 0 ? `${advance.name} (${advance.specialization})` : advance.name;
 
-        const confirmed = await foundry.appv1.api.Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(advance.cost), name: displayName }),
         });
-        if (confirmed !== true) return;
+        if (!confirmed) return;
 
         const result = await spendXP(this.actor, advance.cost, displayName);
         if (!result.success) {
@@ -1438,11 +1439,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
 
             const addDisplayName = `${entry.name.replace(' — add specialization', '')} (${specName}) — ${entry.nextLabel}`;
-            const addConfirmed = await foundry.appv1.api.Dialog.confirm({
+            const addConfirmed = await ConfirmationDialog.confirm({
                 title: game.i18n.localize('WH40K.Advancement.Title'),
                 content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: addDisplayName }),
             });
-            if (addConfirmed !== true) return;
+            if (!addConfirmed) return;
 
             const addResult = await spendXP(this.actor, entry.cost, addDisplayName);
             if (!addResult.success) {
@@ -1475,11 +1476,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             if (entryIndex < 0) return;
 
             const bumpDisplayName = entry.nextLabel !== null && entry.nextLabel.length > 0 ? `${entry.name} — ${entry.nextLabel}` : entry.name;
-            const bumpConfirmed = await foundry.appv1.api.Dialog.confirm({
+            const bumpConfirmed = await ConfirmationDialog.confirm({
                 title: game.i18n.localize('WH40K.Advancement.Title'),
                 content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: bumpDisplayName }),
             });
-            if (bumpConfirmed !== true) return;
+            if (!bumpConfirmed) return;
 
             const bumpResult = await spendXP(this.actor, entry.cost, bumpDisplayName);
             if (!bumpResult.success) {
@@ -1503,11 +1504,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         // Basic skill: single track
         const displayName = entry.nextLabel !== null && entry.nextLabel.length > 0 ? `${entry.name} (${entry.nextLabel})` : entry.name;
-        const confirmed = await foundry.appv1.api.Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: displayName }),
         });
-        if (confirmed !== true) return;
+        if (!confirmed) return;
 
         const result = await spendXP(this.actor, entry.cost, displayName);
         if (!result.success) {
@@ -1589,11 +1590,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             displayName = `${entry.name} (Rank ${(entry.currentRank ?? 0) + 1})`;
         }
 
-        const confirmed = await foundry.appv1.api.Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: displayName }),
         });
-        if (confirmed !== true) return;
+        if (!confirmed) return;
 
         const result = await spendXP(this.actor, entry.cost, displayName);
         if (!result.success) {
@@ -1686,11 +1687,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await foundry.appv1.api.Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(cost), name: `Psy Rating ${nextRating}` }),
         });
-        if (confirmed !== true) return;
+        if (!confirmed) return;
 
         const result = await spendXP(this.actor, cost, `Psy Rating ${nextRating}`);
         if (!result.success) {
@@ -1724,11 +1725,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await foundry.appv1.api.Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: entry.name }),
         });
-        if (confirmed !== true) return;
+        if (!confirmed) return;
 
         const result = await spendXP(this.actor, entry.cost, entry.name);
         if (!result.success) {
@@ -1764,12 +1765,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await foundry.appv1.api.Dialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: `<p>${game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: entry.name })}</p>
                 <p class="notes"><i class="fas fa-exclamation-triangle"></i> Elite advances represent large, lasting character changes. GM approval is expected per RAW.</p>`,
         });
-        if (confirmed !== true) return;
+        if (!confirmed) return;
 
         const result = await spendXP(this.actor, entry.cost, `Elite: ${entry.name}`);
         if (!result.success) {

@@ -9,9 +9,8 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
+import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
-
-const LegacyDialog = foundry.appv1.api.Dialog;
 
 /** Weapon item document narrowed to its DataModel. */
 type WeaponItem = WH40KItemDocument & { system: WeaponData };
@@ -629,14 +628,12 @@ export default class WeaponSheet extends ContainerItemSheet {
         const nestedItem = this.item.items.get(itemId);
         if (nestedItem === undefined) return;
 
-        const confirmed = await LegacyDialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.format('WH40K.WeaponSheet.ConfirmDeleteTitle', { name: nestedItem.name }),
             content: game.i18n.format('WH40K.WeaponSheet.ConfirmDeleteContent', { name: nestedItem.name }),
-            yes: () => true,
-            no: () => false,
         });
 
-        if (confirmed === true) {
+        if (confirmed) {
             await nestedItem.delete();
         }
     }
@@ -747,14 +744,12 @@ export default class WeaponSheet extends ContainerItemSheet {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard: index might exceed array
         if (mod === undefined) return;
 
-        const confirmed = await LegacyDialog.confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.WeaponSheet.ConfirmRemoveModificationTitle'),
             content: game.i18n.format('WH40K.WeaponSheet.ConfirmRemoveModificationContent', { name: mod.name }),
-            yes: () => true,
-            no: () => false,
         });
 
-        if (confirmed !== true) return;
+        if (!confirmed) return;
 
         const mods = this.item.system.modifications.filter((_, i) => i !== index);
         await this.item.update({ 'system.modifications': mods });
