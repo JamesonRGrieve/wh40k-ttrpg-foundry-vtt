@@ -9,12 +9,11 @@
  * templates.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const OVERVIEW = readFileSync(resolve(__dirname, '../src/templates/actor/player/tab-overview.hbs'), 'utf8');
-const COMBAT = readFileSync(resolve(__dirname, '../src/templates/actor/panel/combat-station-panel.hbs'), 'utf8');
+const OVERVIEW = readRepoFile('src/templates/actor/player/tab-overview.hbs');
+const COMBAT = readRepoFile('src/templates/actor/panel/combat-station-panel.hbs');
 
 describe('Movement panel placement (#266)', () => {
     it('removes the Movement dashboard-zone from the Overview tab', () => {

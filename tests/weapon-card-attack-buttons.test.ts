@@ -10,12 +10,11 @@
  * runtime; the contract here is literal on the template + the context builder.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const CARD = readFileSync(resolve(__dirname, '../src/templates/chat/weapon-card-chat.hbs'), 'utf8');
-const ITEM = readFileSync(resolve(__dirname, '../src/module/documents/item.ts'), 'utf8');
+const CARD = readRepoFile('src/templates/chat/weapon-card-chat.hbs');
+const ITEM = readRepoFile('src/module/documents/item.ts');
 
 /** Extract the `<button …>` tag carrying the given data-action. */
 function button(action: string): string {

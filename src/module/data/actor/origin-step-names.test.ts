@@ -6,9 +6,8 @@
  * so the bubbles / header rows / completeness flag populate.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from '../../testing/repo-file.ts';
 import { mapOriginStepNames, ORIGIN_STEP_KEYS, type OriginItemLike } from './origin-step-names.ts';
 
 describe('mapOriginStepNames', () => {
@@ -51,8 +50,8 @@ describe('mapOriginStepNames', () => {
 });
 
 describe('NPC origin-path wiring (#243)', () => {
-    const npc = readFileSync(resolve(__dirname, './npc.ts'), 'utf8');
-    const npcSheet = readFileSync(resolve(__dirname, '../../applications/actor/npc-sheet.ts'), 'utf8');
+    const npc = readRepoFile('src/module/data/actor/npc.ts');
+    const npcSheet = readRepoFile('src/module/applications/actor/npc-sheet.ts');
 
     it('the NPC originPath getter derives from owned items, not the all-blank stub', () => {
         expect(npc).toContain('return mapOriginStepNames(items)');
