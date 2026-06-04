@@ -29,10 +29,10 @@
 
 import type { DwActiveMissionData, DwMissionComplicationData, DwMissionObjectiveData } from '../data/actor/mixins/dw-mission-template.ts';
 import { t } from '../i18n/t.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
 import { computeMissionRewards, type DwMission, type MissionObjective, type MissionRewardResult, type ObjectiveStatus } from '../rules/dw-mission.ts';
 import { awardRenown } from '../rules/dw-renown.ts';
 import type { I18nKey } from '../types/i18n-keys';
+import { type ActionHost, postActionChat, reportFailure } from './action-host.ts';
 
 /* -------------------------------------------- */
 /*  Host shape                                  */
@@ -43,23 +43,13 @@ import type { I18nKey } from '../types/i18n-keys';
  * `this` to the host; we keep the type narrow so the action module
  * never reaches into framework surfaces it does not own.
  */
-export interface DwMissionActionHost {
-    readonly actor: {
-        readonly id: string;
-        readonly name: string;
-        readonly system: {
-            activeMission: DwActiveMissionData | null;
-            renown: number;
-            cohesionCurrent: number;
-            cohesionMax: number;
-            experience?: { total?: number; available?: number };
-        };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() signature accepts arbitrary diff records and returns the resolved Document or undefined
-        update: (data: Record<string, unknown>) => Promise<unknown>;
-    };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications.notify() forwards arbitrary options to Foundry's notification API
-    _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
-}
+export type DwMissionActionHost = ActionHost<{
+    activeMission: DwActiveMissionData | null;
+    renown: number;
+    cohesionCurrent: number;
+    cohesionMax: number;
+    experience?: { total?: number; available?: number };
+}>;
 
 const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/dw-mission-reward-chat.hbs';
 
@@ -79,13 +69,6 @@ const STATUS_CYCLE: Record<ObjectiveStatus, ObjectiveStatus> = {
     complete: 'failed',
     failed: 'pending',
 };
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: catch-clause exception payload is intrinsically unknown; narrowed on the next line via `instanceof Error`
-function reportFailure(host: DwMissionActionHost, label: string, error: unknown): void {
-    const message = error instanceof Error ? error.message : String(error);
-    host._notify('error', `${label}: ${message}`, { duration: 5000 });
-    console.error(`${label} error:`, error);
-}
 
 /**
  * Locate the target id stored on the clicked element. Foundry's static-
@@ -154,9 +137,7 @@ interface ChatCardContext {
 }
 
 async function postMissionRewardChat(host: DwMissionActionHost, ctx: ChatCardContext): Promise<void> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
-    const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
-    await postChatCard(html, { speaker: { alias: host.actor.name } });
+    return postActionChat(CHAT_TEMPLATE, ctx, host);
 }
 
 /* -------------------------------------------- */

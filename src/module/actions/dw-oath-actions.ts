@@ -24,9 +24,9 @@
  * a subsequent round.
  */
 import { t } from '../i18n/t.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
 import { canSwearOath, isOathActive, releaseOath, swearOath, type CanSwearOathFailureReason, type OathBuff, type OathDef } from '../rules/dw-oath.ts';
 import type { I18nKey } from '../types/i18n-keys';
+import { type ActionHost, postActionChat, reportFailure } from './action-host.ts';
 
 const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/dw-oath-chat.hbs';
 
@@ -37,20 +37,10 @@ const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/dw-oath-chat.hbs';
  * import-data-models-directly` runs the other way, but the reverse
  * coupling is equally undesirable for a rules-driven action handler).
  */
-export interface DwOathActionHost {
-    readonly actor: {
-        readonly id: string;
-        readonly name: string;
-        readonly system: {
-            activeOathId: string | null;
-            isLeader: boolean;
-        };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update payload is an open bag; values are not statically known
-        update: (data: Record<string, unknown>) => Promise<unknown>;
-    };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications options bag is Foundry-untyped (duration, permanent, console, etc.)
-    _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
-}
+export type DwOathActionHost = ActionHost<{
+    activeOathId: string | null;
+    isLeader: boolean;
+}>;
 
 /* -------------------------------------------- */
 /*  Internal helpers                            */
@@ -68,16 +58,7 @@ interface ChatCardContext {
 }
 
 async function postOathChat(host: DwOathActionHost, ctx: ChatCardContext): Promise<void> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
-    const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
-    await postChatCard(html, { speaker: { alias: host.actor.name } });
-}
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: thrown values are `unknown` per TS contract; this helper is fed directly into an `instanceof Error` type-guard
-function reportFailure(host: DwOathActionHost, label: string, error: unknown): void {
-    const message = error instanceof Error ? error.message : String(error);
-    host._notify('error', `${label}: ${message}`, { duration: 5000 });
-    console.error(`${label} error:`, error);
+    return postActionChat(CHAT_TEMPLATE, ctx, host);
 }
 
 const REASON_TO_KEY: Readonly<Record<Exclude<CanSwearOathFailureReason, 'none'>, I18nKey>> = {
