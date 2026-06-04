@@ -23,6 +23,19 @@ interface ShipItemView {
     _stats?: { compendiumSource?: string };
 }
 
+/** The three item types whose `shipPoints` count toward the build budget. */
+function contributesSp(type: string): boolean {
+    return type === 'shipComponent' || type === 'shipWeapon' || type === 'shipUpgrade';
+}
+
+/**
+ * A component fills its essential slot only while functional. Missing
+ * `condition` (legacy / un-tracked items) is treated as functional.
+ */
+function isFunctional(sys: { condition?: string }): boolean {
+    return sys.condition === undefined || sys.condition === 'functional';
+}
+
 /**
  * Stat keys that owned items can modify on a starship. Authored as a
  * literal-typed tuple so the iterator in `_recomputeAppliedModifiers` narrows
@@ -483,41 +496,9 @@ export default class VoidcraftData extends VehicleData {
      * @protected
      */
     _refreshBuildValidation(items: Iterable<ShipItemView>): void {
-        let spSpent = 0;
-        const covered = new Set<string>();
-        for (const item of items) {
-            const sys = item.system;
-            if (item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade') {
-                spSpent += sys.shipPoints ?? 0;
-            }
-            if (item.type === 'shipComponent' && typeof sys.componentType === 'string') {
-                // Only "functional" components count toward filling a required slot —
-                // a destroyed bridge does not satisfy the bridge requirement.
-                if (sys.condition === undefined || sys.condition === 'functional') {
-                    covered.add(sys.componentType);
-                    // Some compendium components are tagged `essential: true` but use
-                    // an `essential` / `supplemental` componentType bucket; in that
-                    // case fall back to the explicit flag.
-                    if (sys.essential === true && sys.componentType === 'essential') {
-                        // Cannot determine which slot it fills without more data;
-                        // skip silently — the explicit slot types above are preferred.
-                    }
-                }
-            }
-        }
-
-        this.shipPoints.spent = spSpent;
-
-        const budget = this.shipPoints.budget;
-        const missing: string[] = ESSENTIAL_SHIP_SLOTS.filter((slot) => !covered.has(slot));
-        const isOverBudget = spSpent > budget;
-        this.buildValidation = {
-            spent: spSpent,
-            budget,
-            isOverBudget,
-            missingEssentialSlots: missing,
-            isValid: !isOverBudget && missing.length === 0,
-        };
+        const validation = VoidcraftData.validateBuild(this.shipPoints.budget, items);
+        this.shipPoints.spent = validation.spent;
+        this.buildValidation = validation;
     }
 
     /**
@@ -530,13 +511,11 @@ export default class VoidcraftData extends VehicleData {
         const covered = new Set<string>();
         for (const item of items) {
             const sys = item.system;
-            if (item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade') {
+            if (contributesSp(item.type)) {
                 spent += sys.shipPoints ?? 0;
             }
-            if (item.type === 'shipComponent' && typeof sys.componentType === 'string') {
-                if (sys.condition === undefined || sys.condition === 'functional') {
-                    covered.add(sys.componentType);
-                }
+            if (item.type === 'shipComponent' && typeof sys.componentType === 'string' && isFunctional(sys)) {
+                covered.add(sys.componentType);
             }
         }
         const missing: string[] = ESSENTIAL_SHIP_SLOTS.filter((slot) => !covered.has(slot));
@@ -780,7 +759,7 @@ export default class VoidcraftData extends VehicleData {
         // visible. The earlier `_prepareBuildValidation()` call seeded the
         // shape with stale `spent` and the full essential-slot list; this pass
         // computes the accurate state for the rendered sheet.
-        const itemsForValidation = itemViews.filter((item) => item.type === 'shipComponent' || item.type === 'shipWeapon' || item.type === 'shipUpgrade');
+        const itemsForValidation = itemViews.filter((item) => contributesSp(item.type));
         this._refreshBuildValidation(itemsForValidation);
     }
 
