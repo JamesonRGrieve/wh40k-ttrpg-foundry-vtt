@@ -4,6 +4,10 @@ import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
+import { coerceInt } from '../../fields/coerce.ts';
+import { applyCharacteristicRollData, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
+import { CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
+import { computeMovement } from '../../shared/movement-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
 import CommonTemplate from './common.ts';
 
@@ -818,21 +822,8 @@ export default class CreatureTemplate extends CommonTemplate {
         }
     }
 
-    /**
-     * Map characteristic short names to full keys.
-     * @type {Object<string, string>}
-     */
-    static CHARACTERISTIC_MAP: Record<string, string> = {
-        WS: 'weaponSkill',
-        BS: 'ballisticSkill',
-        S: 'strength',
-        T: 'toughness',
-        Ag: 'agility',
-        Int: 'intelligence',
-        Per: 'perception',
-        WP: 'willpower',
-        Fel: 'fellowship',
-    };
+    /** Map characteristic short names to full keys (shared superset, includes Influence). */
+    static CHARACTERISTIC_MAP: Record<string, string> = CHARACTERISTIC_SHORT_TO_FULL;
 
     /**
      * Get a characteristic by its short name or full key.
@@ -920,13 +911,20 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {number} fallback - Fallback value if conversion fails
      * @returns {number}
      */
-    // TODO(dry): this integer-coercion idiom is re-inlined ~7 sites (npc.ts, ship-weapon.ts, gear.ts, armour-modification.ts, ship-component.ts). Promote one coerceInt() to data/fields/.
-    // eslint-disable-next-line no-restricted-syntax -- boundary: accepts raw migration source values
+    // eslint-disable-next-line no-restricted-syntax -- boundary: accepts raw untyped migration source values; delegates to the coerceInt coercion entry point
     static _toInt(value: unknown, fallback = 0): number {
-        if (value === null || value === undefined || value === '') return fallback;
-        const num = Number(value);
-        if (Number.isNaN(num)) return fallback;
-        return Math.floor(num);
+        return coerceInt(value, fallback);
+    }
+
+    /**
+     * The actor's origin-path items (homeworld / background / role / …).
+     * Centralizes the `this.parent.items.filter(i => i.isOriginPath)` idiom
+     * repeated across the PC preparation methods. Returns `[]` when the parent
+     * or its items are unavailable (compendium / pre-embed contexts).
+     */
+    protected _originPathItems(): WH40KItem[] {
+        const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
+        return actor?.items?.filter((item) => item.isOriginPath) ?? [];
     }
 
     /**
@@ -938,16 +936,10 @@ export default class CreatureTemplate extends CommonTemplate {
      */
     _prepareCharacteristics(): void {
         for (const [, char] of Object.entries(this.characteristics)) {
-            // Calculate total: base + (advance * 5) + modifier
-            // Initial prep without modifier accumulation; damage subtraction lands in _applyModifiersToCharacteristics.
-            char.total = char.base + char.advance * 5 + char.modifier - char.damage;
-
-            // Base modifier is tens digit
-            const baseModifier = Math.floor(char.total / 10);
-
-            // Unnatural multiplies the modifier (0 = no unnatural, 2+ = multiplier)
-            const unnaturalLevel = char.unnatural || 0;
-            char.bonus = unnaturalLevel >= 2 ? baseModifier * unnaturalLevel : baseModifier;
+            // total = base + (advance * 5) + modifier - damage; bonus = unnatural-adjusted tens digit.
+            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0, char.advance * 5 - char.damage);
+            char.total = total;
+            char.bonus = bonus;
         }
 
         // Update initiative bonus from characteristic
@@ -1288,7 +1280,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
         if (actor?.items === undefined) return 0;
         let total = 0;
-        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
+        const originItems = this._originPathItems();
         for (const item of originItems) {
             const wounds = (item.system.modifiers as { wounds?: number } | null | undefined)?.wounds;
             if (typeof wounds === 'number') {
@@ -1306,7 +1298,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
         if (actor?.items === undefined) return 0;
         let total = 0;
-        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
+        const originItems = this._originPathItems();
         for (const item of originItems) {
             const fate = (item.system.modifiers as { fate?: number } | null | undefined)?.fate;
             if (typeof fate === 'number') {
@@ -1341,7 +1333,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const actor = this.parent as ActorWithItems | null | undefined;
         if (actor?.items === undefined) return;
 
-        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
+        const originItems = this._originPathItems();
         for (const item of originItems) {
             const source = { name: item.name, type: 'originPath', id: item.id, uuid: item.uuid, sourceUuid: compendiumSourceUuidOf(item) };
 
@@ -1393,7 +1385,7 @@ export default class CreatureTemplate extends CommonTemplate {
         if (actor?.items === undefined) return 0;
 
         let maxRank = 0;
-        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
+        const originItems = this._originPathItems();
         const isSpecialist = SkillKeyHelper.SPECIALIST_KEYS.has(skillKey);
 
         if (originItems.length === 0) return 0;
@@ -1440,7 +1432,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const actor = this.parent as ActorWithItems | null | undefined;
         if (actor?.items === undefined) return;
 
-        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
+        const originItems = this._originPathItems();
         for (const item of originItems) {
             const grants = (item.system.grants as { skills?: SkillGrantEntry[] } | null | undefined)?.skills ?? [];
             for (const grant of grants) {
@@ -1497,12 +1489,12 @@ export default class CreatureTemplate extends CommonTemplate {
         const ab = agility.bonus;
         const sb = strength.bonus;
 
-        // Movement based on AB + Size adjustment
-        const baseMove = ab + this.size - 4;
-        this.movement.half = baseMove;
-        this.movement.full = baseMove * 2;
-        this.movement.charge = baseMove * 3;
-        this.movement.run = baseMove * 6;
+        // Movement based on AB + Size adjustment (PCs take raw values, no floors).
+        const { half, full, charge, run } = computeMovement(ab, this.size, false);
+        this.movement.half = half;
+        this.movement.full = full;
+        this.movement.charge = charge;
+        this.movement.run = run;
 
         // Leap/Jump based on Strength Bonus
         // Standing vertical leap: SB / 4 meters (round up to nearest 0.5m)
@@ -1531,11 +1523,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const data = super.getRollData();
 
         // Add characteristic values and bonuses for formulas
-        for (const [key, char] of Object.entries(this.characteristics)) {
-            data[char.short] = char.total;
-            data[`${char.short}B`] = char.bonus;
-            data[key] = char.total;
-        }
+        applyCharacteristicRollData(data, this.characteristics);
 
         // Add skill values
 

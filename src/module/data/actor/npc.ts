@@ -1,6 +1,8 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
+import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
+import { computeMovement } from '../shared/movement-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
@@ -1037,15 +1039,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     // TODO(dry): this + _prepareMovement/getRollData/_toInt/#migrateSize/#migrateWounds duplicate data/actor/templates/creature.ts. Extract shared statics (parameterize the advance term and Math.max floors).
     _prepareCharacteristics(): void {
         for (const [, char] of Object.entries(this.characteristics)) {
-            // Total = base + modifier
-            char.total = char.base + char.modifier;
-
-            // Base bonus is tens digit
-            const baseBonus = Math.floor(char.total / 10);
-
-            // Unnatural multiplies the bonus (0 = no unnatural, 2+ = multiplier)
-            const unnaturalLevel = char.unnatural || 0;
-            char.bonus = unnaturalLevel >= 2 ? baseBonus * unnaturalLevel : baseBonus;
+            // total = base + modifier; bonus = unnatural-adjusted tens digit (no advance term for NPCs).
+            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0);
+            char.total = total;
+            char.bonus = bonus;
         }
     }
 
@@ -1054,14 +1051,12 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @protected
      */
     _prepareMovement(): void {
-        const agility = this.characteristics.agility;
-        const ab = agility.bonus;
-        const baseMove = ab + this.size - 4;
-
-        this.movement.half = Math.max(1, baseMove);
-        this.movement.full = Math.max(2, baseMove * 2);
-        this.movement.charge = Math.max(3, baseMove * 3);
-        this.movement.run = Math.max(6, baseMove * 6);
+        const ab = this.characteristics.agility.bonus;
+        const { half, full, charge, run } = computeMovement(ab, this.size, true);
+        this.movement.half = half;
+        this.movement.full = full;
+        this.movement.charge = charge;
+        this.movement.run = run;
     }
 
     /**
@@ -1084,11 +1079,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         const data = super.getRollData();
 
         // Add characteristic values and bonuses for formulas
-        for (const [key, char] of Object.entries(this.characteristics)) {
-            data[char.short] = char.total;
-            data[`${char.short}B`] = char.bonus;
-            data[key] = char.total;
-        }
+        applyCharacteristicRollData(data, this.characteristics);
 
         // Add common roll data
         data['threatLevel'] = this.threatLevel;
