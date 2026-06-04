@@ -28,6 +28,15 @@ function localize(key: string): string {
     return game.i18n.localize(key);
 }
 
+/**
+ * Flatten a skill name/key to the separator-free lowercase form used as the
+ * skill-description cache key. Both the populate side (compendium entry names)
+ * and the lookup side must agree, so the transform lives in one place (#279).
+ */
+function normalizeSkillCacheKey(name: string): string {
+    return name.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
+}
+
 /** Source modifier entry for tooltip breakdown. */
 interface TooltipModifierSource {
     name: string;
@@ -223,7 +232,7 @@ export class TooltipsWH40K {
                 const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
                 if (item !== null) {
                     const entryName = entry.name ?? '';
-                    const key = entryName.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
+                    const key = normalizeSkillCacheKey(entryName);
                     const system = item.system as {
                         descriptor?: string;
                         uses?: string;
@@ -248,7 +257,7 @@ export class TooltipsWH40K {
     }
 
     getSkillDescription(skillKey: string): CachedSkillInfo | null {
-        const normalizedKey = skillKey.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
+        const normalizedKey = normalizeSkillCacheKey(skillKey);
         return this.#skillDescriptions.get(normalizedKey) ?? null;
     }
 

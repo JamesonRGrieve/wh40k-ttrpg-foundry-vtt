@@ -48,3 +48,31 @@ export function composeSpecializationName(baseName: string, specialization: stri
     const stripped = base.replace(PLACEHOLDER_SUFFIX, '').trim();
     return stripped.includes(`(${specialization})`) ? stripped : `${stripped} (${specialization})`;
 }
+
+/** Splits a trailing "(Specialization)" off a full name. The capturing inverse of {@link composeSpecializationName}. */
+const SKILL_NAME_WITH_SPEC = /^(.+?)\s*\((.+?)\)\s*$/;
+
+/**
+ * Decompose a full skill/item name into its base name and (optional) specialization —
+ * the parse counterpart to {@link composeSpecializationName}. Pure and content-agnostic;
+ * the single owner of the "Name (Spec)" parse regex so callers don't re-derive it.
+ *
+ * @param fullName Full name, e.g. "Common Lore (Imperium)" or "Awareness".
+ * @returns `{ name, specialization }` — `specialization` is `null` when the name carries none.
+ *
+ * @example
+ * parseSpecializationName("Common Lore (Imperium)") // → { name: "Common Lore", specialization: "Imperium" }
+ * parseSpecializationName("Awareness")              // → { name: "Awareness", specialization: null }
+ */
+export function parseSpecializationName(fullName: string): { name: string; specialization: string | null } {
+    if (fullName === '') return { name: '', specialization: null };
+
+    const match = fullName.match(SKILL_NAME_WITH_SPEC);
+    const base = match?.[1];
+    const spec = match?.[2];
+    if (base !== undefined && spec !== undefined) {
+        return { name: base.trim(), specialization: spec.trim() };
+    }
+
+    return { name: fullName.trim(), specialization: null };
+}
