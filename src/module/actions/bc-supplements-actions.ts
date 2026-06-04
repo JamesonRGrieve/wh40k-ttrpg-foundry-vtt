@@ -21,20 +21,12 @@
 
 import type { BcSupplementsDeclarations } from '../data/actor/mixins/bc-supplements-template.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { isActorOfSystem } from './action-host.ts';
 
 /** Sheet-like host shape; the ApplicationV2 dispatcher binds the sheet as `this`. */
 interface BcSupplementsActionHost {
     readonly actor: WH40KBaseActor & { readonly system: BcSupplementsDeclarations };
     _resolveGameSystemId?: () => string;
-}
-
-function isBcActor(host: BcSupplementsActionHost): boolean {
-    if (typeof host._resolveGameSystemId === 'function') {
-        return host._resolveGameSystemId() === 'bc';
-    }
-    // eslint-disable-next-line no-restricted-syntax -- boundary: per-system gameSystem id lives on the system data; the abstract WH40KBaseActor surface doesn't expose it
-    const sys = host.actor.system as { gameSystem?: string };
-    return sys.gameSystem === 'bc';
 }
 
 /**
@@ -43,7 +35,7 @@ function isBcActor(host: BcSupplementsActionHost): boolean {
  */
 export async function bcToggleQuickAndTheDead(this: BcSupplementsActionHost, event: Event, _target: HTMLElement): Promise<void> {
     event.preventDefault();
-    if (!isBcActor(this)) return;
+    if (!isActorOfSystem(this, 'bc')) return;
     const current = this.actor.system.quickAndTheDeadActive;
     await this.actor.update({ 'system.quickAndTheDeadActive': !current });
 }

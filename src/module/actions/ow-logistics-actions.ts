@@ -18,6 +18,7 @@
 
 import LogisticsTestDialog from '../applications/prompts/logistics-test-dialog.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { isActorOfSystem } from './action-host.ts';
 
 /** Sheet-like host shape; the ApplicationV2 dispatcher binds the sheet as `this`. */
 interface LogisticsActionHost {
@@ -25,21 +26,12 @@ interface LogisticsActionHost {
     _resolveGameSystemId?: () => string;
 }
 
-function isOwActor(host: LogisticsActionHost): boolean {
-    if (typeof host._resolveGameSystemId === 'function') {
-        return host._resolveGameSystemId() === 'ow';
-    }
-    // eslint-disable-next-line no-restricted-syntax -- boundary: per-system gameSystem id lives on the system data; the abstract WH40KBaseActor surface doesn't expose it
-    const sys = host.actor.system as { gameSystem?: string };
-    return sys.gameSystem === 'ow';
-}
-
 /**
  * Open the Logistics Test dialog for the active actor (`data-action="owLogisticsTest"`).
  */
 export function owLogisticsTest(this: LogisticsActionHost, event: Event, _target: HTMLElement): void {
     event.preventDefault();
-    if (!isOwActor(this)) return;
+    if (!isActorOfSystem(this, 'ow')) return;
     LogisticsTestDialog.show(this.actor);
 }
 
@@ -48,7 +40,7 @@ export function owLogisticsTest(this: LogisticsActionHost, event: Event, _target
  */
 export async function owToggleMunitorum(this: LogisticsActionHost, event: Event, _target: HTMLElement): Promise<void> {
     event.preventDefault();
-    if (!isOwActor(this)) return;
+    if (!isActorOfSystem(this, 'ow')) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: per-system Logistics scalars live on per-system actor system data, not the abstract base surface
     const sys = this.actor.system as { munitorum?: boolean };
     const current = sys.munitorum === true;
@@ -63,7 +55,7 @@ export async function owToggleMunitorum(this: LogisticsActionHost, event: Event,
  */
 export async function owAdjustSituational(this: LogisticsActionHost, event: Event, target: HTMLElement): Promise<void> {
     event.preventDefault();
-    if (!isOwActor(this)) return;
+    if (!isActorOfSystem(this, 'ow')) return;
     const delta = Number(target.dataset['delta'] ?? '0');
     if (!Number.isFinite(delta)) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: per-system Logistics scalars live on per-system actor system data, not the abstract base surface

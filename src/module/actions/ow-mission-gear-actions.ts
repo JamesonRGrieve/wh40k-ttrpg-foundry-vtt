@@ -23,6 +23,7 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
 import { type GearOutcome, ORDINARY_BONUS_KEY, applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../rules/ow-mission-gear.ts';
+import { isActorOfSystem } from './action-host.ts';
 
 /** Sheet-like host shape; the ApplicationV2 dispatcher binds the sheet as `this`. */
 interface MissionGearActionHost {
@@ -47,15 +48,6 @@ const OUTCOME_LABEL_KEYS: Record<GearOutcome, string> = {
 /** Per-breakdown-row label keys for the chat card. */
 const ORDINARY_LABEL_KEY = 'WH40K.OW.MissionGear.Modifier.OrdinaryBonus';
 const CUSTOM_LABEL_KEY = 'WH40K.OW.MissionGear.Modifier.Title';
-
-function isOwActor(host: MissionGearActionHost): boolean {
-    if (typeof host._resolveGameSystemId === 'function') {
-        return host._resolveGameSystemId() === 'ow';
-    }
-    // eslint-disable-next-line no-restricted-syntax -- boundary: per-system gameSystem id lives on the system data; the abstract WH40KBaseActor surface doesn't expose it
-    const sys = host.actor.system as { gameSystem?: string };
-    return sys.gameSystem === 'ow';
-}
 
 /**
  * Compose the base Logistics target from the actor's persisted scalars.
@@ -125,7 +117,7 @@ function parseModifierDialogForm(form: HTMLFormElement | null): ModifierDialogRe
  */
 export async function owRequestGear(this: MissionGearActionHost, event: Event, _target: HTMLElement): Promise<void> {
     event.preventDefault();
-    if (!isOwActor(this)) return;
+    if (!isActorOfSystem(this, 'ow')) return;
 
     const baseTarget = readBaseLogisticsTarget(this.actor);
     const modifierTitle = game.i18n.localize('WH40K.OW.MissionGear.Modifier.Title');
