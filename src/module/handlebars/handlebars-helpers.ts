@@ -1,5 +1,6 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import WH40K from '../config.ts';
+import { formatSigned } from '../utils/format.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
 import { formatSourceLabel, type SourceInput } from './source-label.ts';
@@ -521,12 +522,7 @@ export function registerHandlebarsHelpers(): void {
      * Format a number with a + or - sign
      * Usage: {{signedNumber 5}} → "+5", {{signedNumber -3}} → "-3"
      */
-    Handlebars.registerHelper('signedNumber', (value: TplValue): string => {
-        const raw = Number(value);
-        const num = Number.isFinite(raw) ? raw : 0;
-        if (num >= 0) return `+${num}`;
-        return `${num}`;
-    });
+    Handlebars.registerHelper('signedNumber', (value: TplValue): string => formatSigned(Number(value)));
 
     Handlebars.registerHelper('eq', (a: TplValue, b: TplValue): boolean => a === b);
     Handlebars.registerHelper('neq', (a: TplValue, b: TplValue): boolean => a !== b);

@@ -21,6 +21,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { roll1d100 } from '../rolls/roll-helpers.ts';
 import { type GearOutcome, ORDINARY_BONUS_KEY, applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../rules/ow-mission-gear.ts';
 
 /** Sheet-like host shape; the ApplicationV2 dispatcher binds the sheet as `this`. */
@@ -180,8 +181,7 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
     );
 
     // d100 roll for the underlying Logistics Test.
-    const roll = new Roll('1d100');
-    await roll.evaluate();
+    const roll = await roll1d100();
     // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.total is typed loosely on Foundry's surface; the 1d100 evaluator yields a finite integer
     const rollTotal = Math.trunc(Number(roll.total ?? 0));
 

@@ -102,6 +102,7 @@ import {
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { errorMessage } from '../../utils/error-message.ts';
+import { formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
@@ -3519,7 +3520,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             const roll = await new Roll(`${formula} + @ab + @mod`, { ab: agBonus, mod: modifier }).evaluate();
             if (modifier !== 0) {
-                formulaLabel += ` ${modifier >= 0 ? '+' : ''}${modifier}`;
+                formulaLabel += ` ${formatSigned(modifier)}`;
             }
 
             const content = `

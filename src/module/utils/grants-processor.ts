@@ -9,6 +9,7 @@ import type { ItemGrantData, SkillGrantData, CharacteristicGrantData, ChoiceGran
 import type { WH40KBaseActor as WH40KActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { SkillKeyHelper } from '../helpers/skill-key-helper.ts';
+import { formatSigned } from './format.ts';
 import { evaluateWoundsFormula, evaluateFateFormula } from './formula-evaluator.ts';
 import { stripSpecializationSuffix } from './specialization-name.ts';
 
@@ -538,7 +539,7 @@ export class GrantsProcessor {
                     for (const [char, value] of Object.entries(optionGrants.characteristics)) {
                         if (value !== 0) {
                             context.result.characteristics[char] = (context.result.characteristics[char] ?? 0) + Number(value);
-                            game.wh40k.log(`Origin choice "${choice.label}" grants ${Number(value) >= 0 ? '+' : ''}${value} ${char}`);
+                            game.wh40k.log(`Origin choice "${choice.label}" grants ${formatSigned(Number(value))} ${char}`);
                         }
                     }
                 }

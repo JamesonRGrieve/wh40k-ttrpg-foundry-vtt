@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -352,13 +353,13 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         const mods = this.modifiers;
 
         if (mods.armourPoints !== 0) {
-            parts.push(`AP ${mods.armourPoints >= 0 ? '+' : ''}${mods.armourPoints}`);
+            parts.push(`AP ${formatSigned(mods.armourPoints)}`);
         }
         if (mods.maxAgility !== 0) {
-            parts.push(`Ag ${mods.maxAgility >= 0 ? '+' : ''}${mods.maxAgility}`);
+            parts.push(`Ag ${formatSigned(mods.maxAgility)}`);
         }
         if (mods.weight !== 0) {
-            parts.push(`${mods.weight >= 0 ? '+' : ''}${mods.weight}kg`);
+            parts.push(`${formatSigned(mods.weight)}kg`);
         }
 
         return parts.length ? parts.join(', ') : game.i18n.localize('WH40K.Modification.NoModifiers');

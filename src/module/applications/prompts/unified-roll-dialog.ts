@@ -32,6 +32,7 @@ import { availableSkillVariants, filterModifiersByVariant, type SkillVariant } f
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { formatSigned } from '../../utils/format.ts';
 import { calculateTokenDistance, RANGE_BRACKETS } from '../../utils/range-calculator.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -534,15 +535,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Build target breakdown tooltip
         const tooltipParts = [`Base: ${baseTarget}`];
-        if (weaponModSum !== 0) tooltipParts.push(`Weapon/Combat: ${weaponModSum >= 0 ? '+' : ''}${weaponModSum}`);
-        if (difficultyMod !== 0) tooltipParts.push(`Difficulty: ${difficultyMod >= 0 ? '+' : ''}${difficultyMod}`);
-        if (situationalMod !== 0) tooltipParts.push(`Situational: ${situationalMod >= 0 ? '+' : ''}${situationalMod}`);
-        if (customMod !== 0) tooltipParts.push(`Custom: ${customMod >= 0 ? '+' : ''}${customMod}`);
-        if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${combatSitMod >= 0 ? '+' : ''}${combatSitMod}`);
-        if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${psyMod >= 0 ? '+' : ''}${psyMod}`);
+        if (weaponModSum !== 0) tooltipParts.push(`Weapon/Combat: ${formatSigned(weaponModSum)}`);
+        if (difficultyMod !== 0) tooltipParts.push(`Difficulty: ${formatSigned(difficultyMod)}`);
+        if (situationalMod !== 0) tooltipParts.push(`Situational: ${formatSigned(situationalMod)}`);
+        if (customMod !== 0) tooltipParts.push(`Custom: ${formatSigned(customMod)}`);
+        if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${formatSigned(combatSitMod)}`);
+        if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${formatSigned(psyMod)}`);
         if (assistanceMod !== 0) tooltipParts.push(`Assistance: +${assistanceMod}`);
         if (tryAgainPenalty !== 0) tooltipParts.push(`Try-Again: ${tryAgainPenalty}`);
-        if (climbMod !== 0) tooltipParts.push(`Climb Surface: ${climbMod >= 0 ? '+' : ''}${climbMod}`);
+        if (climbMod !== 0) tooltipParts.push(`Climb Surface: ${formatSigned(climbMod)}`);
         tooltipParts.push(`= ${finalTarget}`);
         const targetBreakdownTooltip = tooltipParts.join('\n');
 

@@ -9,6 +9,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
+import { formatSigned } from '../../utils/format.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
@@ -996,7 +997,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             parts.push(`${charLabel}: ${charTotal}/2 = ${baseValue}`);
         }
         if (trainingBonus > 0) parts.push(`Training: +${trainingBonus}`);
-        if (bonus !== 0) parts.push(`Bonus: ${bonus >= 0 ? '+' : ''}${bonus}`);
+        if (bonus !== 0) parts.push(`Bonus: ${formatSigned(bonus)}`);
 
         return parts.join(', ');
     }

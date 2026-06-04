@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import ActivationTemplate from '../shared/activation-template.ts';
@@ -140,7 +141,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     get focusTestLabel(): string {
         let label = this.focusCharacteristicLabel;
         if (this.focusPower.modifier !== 0) {
-            label += ` ${this.focusPower.modifier >= 0 ? '+' : ''}${this.focusPower.modifier}`;
+            label += ` ${formatSigned(this.focusPower.modifier)}`;
         }
         if (this.focusPower.opposed) {
             const oppChar = this.focusPower.opposedCharacteristic || 'willpower';

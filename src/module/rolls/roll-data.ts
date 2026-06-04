@@ -11,6 +11,7 @@ import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
+import { evaluateFormula } from './evaluate-formula.ts';
 
 /** Maximum total bonus / penalty allowed on a single test target.
  *  Per DH2 core.md L1050: "no accumulated bonus exceeds +60 and no
@@ -207,19 +208,11 @@ export class RollData {
 
     async calculateTotalModifiers(): Promise<void> {
         const rollDetails = this.modifiersToRollData();
-        try {
-            const roll = new Roll(rollDetails.formula, rollDetails.params);
-            await roll.evaluate();
-            const rollTotal = roll.total ?? 0;
-            const { clamped, raw, capFired } = clampModifierToCap(rollTotal);
-            this.modifierTotal = clamped;
-            this.rawModifierTotal = raw;
-            this.modifierCapFired = capFired;
-        } catch {
-            this.modifierTotal = 0;
-            this.rawModifierTotal = 0;
-            this.modifierCapFired = false;
-        }
+        const rollTotal = await evaluateFormula(rollDetails.formula, rollDetails.params);
+        const { clamped, raw, capFired } = clampModifierToCap(rollTotal);
+        this.modifierTotal = clamped;
+        this.rawModifierTotal = raw;
+        this.modifierCapFired = capFired;
     }
 }
 

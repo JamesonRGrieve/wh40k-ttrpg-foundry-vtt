@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -196,10 +197,10 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         const props: string[] = [...inheritedProps, this.restrictionsLabel];
 
         const mods = this.modifiers;
-        if (mods.damage !== 0) props.push(`Damage: ${mods.damage >= 0 ? '+' : ''}${mods.damage}`);
-        if (mods.penetration !== 0) props.push(`Pen: ${mods.penetration >= 0 ? '+' : ''}${mods.penetration}`);
-        if (mods.toHit !== 0) props.push(`To Hit: ${mods.toHit >= 0 ? '+' : ''}${mods.toHit}`);
-        if (mods.range !== 0) props.push(`Range: ${mods.range >= 0 ? '+' : ''}${mods.range}`);
+        if (mods.damage !== 0) props.push(`Damage: ${formatSigned(mods.damage)}`);
+        if (mods.penetration !== 0) props.push(`Pen: ${formatSigned(mods.penetration)}`);
+        if (mods.toHit !== 0) props.push(`To Hit: ${formatSigned(mods.toHit)}`);
+        if (mods.range !== 0) props.push(`Range: ${formatSigned(mods.range)}`);
 
         if (this.addedQualities.size > 0) {
             props.push(`Adds: ${Array.from(this.addedQualities).join(', ')}`);

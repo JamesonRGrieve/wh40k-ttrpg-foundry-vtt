@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -414,7 +415,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         const charMods = this.modifiers.characteristics;
         for (const [char, numVal] of Object.entries(charMods)) {
             if (numVal !== 0) {
-                summary.push(`${char}: ${numVal >= 0 ? '+' : ''}${numVal}`);
+                summary.push(`${char}: ${formatSigned(numVal)}`);
             }
         }
 

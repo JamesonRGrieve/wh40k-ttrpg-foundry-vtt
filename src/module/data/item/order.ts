@@ -1,4 +1,5 @@
 import { SHIP_ACTION_EFFECTS, type ShipActionEffect } from '../../rules/ship-crew-morale.ts';
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -133,7 +134,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
         const { skill, modifier } = this.test;
         let label = skill;
         if (modifier !== 0) {
-            label += ` ${modifier >= 0 ? '+' : ''}${modifier}`;
+            label += ` ${formatSigned(modifier)}`;
         }
         return label;
     }

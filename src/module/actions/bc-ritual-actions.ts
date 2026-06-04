@@ -29,6 +29,7 @@
  */
 
 import type { BcRitualDeclarations } from '../data/actor/mixins/bc-ritual-template.ts';
+import { roll1d100 } from '../rolls/roll-helpers.ts';
 import { computeRitualTarget, resolveContemptOfTheWarp, type RitualModifier, type RitualModifierKind, type RitualTemplate } from '../rules/bc-chaos-ritual.ts';
 
 /* -------------------------------------------- */
@@ -258,8 +259,7 @@ export async function bcPerformRitual(this: BcRitualSheetLike, _event: Event, _t
 
     // Roll d100 via Foundry's Roll API so the result lands in the
     // dice-so-nice / chat-roll plumbing the rest of the system uses.
-    const roll = new Roll('1d100');
-    await roll.evaluate();
+    const roll = await roll1d100();
     const rolled = Math.trunc(roll.total ?? 0);
 
     const outcome = resolveContemptOfTheWarp({ target: composed.target, roll: rolled });

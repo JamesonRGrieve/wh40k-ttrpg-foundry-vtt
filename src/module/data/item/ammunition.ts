@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -180,10 +181,10 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
         const mods = this.modifiers;
         if (mods.damage !== 0) {
-            props.push(`Damage: ${mods.damage >= 0 ? '+' : ''}${mods.damage}`);
+            props.push(`Damage: ${formatSigned(mods.damage)}`);
         }
         if (mods.penetration !== 0) {
-            props.push(`Pen: ${mods.penetration >= 0 ? '+' : ''}${mods.penetration}`);
+            props.push(`Pen: ${formatSigned(mods.penetration)}`);
         }
 
         if (this.addedQualities.size) {

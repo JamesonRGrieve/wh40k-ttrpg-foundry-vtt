@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -259,7 +260,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
         const props = [this.componentTypeLabel, `Hull: ${this.hullTypeLabel}`, `Power: ${this.powerLabel}`, `Space: ${this.space}`, `SP: ${this.shipPoints}`];
 
         for (const mod of this.modifiersList) {
-            props.push(`${mod.label}: ${mod.value >= 0 ? '+' : ''}${mod.value}`);
+            props.push(`${mod.label}: ${formatSigned(mod.value)}`);
         }
 
         return props;
