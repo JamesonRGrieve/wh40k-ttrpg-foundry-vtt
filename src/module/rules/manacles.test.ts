@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { asBaseActor } from '../testing/actor-stub.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { createConditionEffect } from './active-effects.ts';
 import {
@@ -158,8 +159,7 @@ function makeActor(
     deleteEmbeddedDocuments: DeleteEmbeddedDocumentsFn = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve()),
 ): WH40KBaseActorDocument {
     const actor: FakeActor = { items, effects, deleteEmbeddedDocuments };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: FakeActor is a structural subset of WH40KBaseActorDocument exposing only the surface these helpers read
-    return actor as unknown as WH40KBaseActorDocument;
+    return asBaseActor(actor);
 }
 
 describe('findEquippedManacles / actorHasManaclesEquipped', () => {

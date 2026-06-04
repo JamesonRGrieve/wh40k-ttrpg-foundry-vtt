@@ -8,7 +8,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import type { GameSystemId } from '../src/module/config/game-systems/types';
+import { ALL_SYSTEM_IDS, type GameSystemId } from '../src/module/config/game-systems/types';
 import { mockNpcSheetContext, mockPlayerSheetContext, mockStarshipSheetContext, mockVehicleSheetContext } from '../stories/mocks/sheet-contexts';
 
 interface GameI18nStub {
@@ -114,7 +114,7 @@ describe('mockPlayerSheetContext', () => {
 });
 
 describe('mockPlayerSheetContext — per-system parity', () => {
-    const ALL_SYSTEMS: GameSystemId[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
+    const ALL_SYSTEMS: readonly GameSystemId[] = ALL_SYSTEM_IDS;
 
     it('every system produces a valid context with header rows (except DH2, whose origin steps are bubbles — #226)', () => {
         for (const id of ALL_SYSTEMS) {

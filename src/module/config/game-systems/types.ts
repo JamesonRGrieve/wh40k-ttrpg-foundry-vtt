@@ -3,8 +3,16 @@
  * All WH40K RPG game lines share these interfaces.
  */
 
-/** Canonical game system identifiers */
-export type GameSystemId = 'rt' | 'dh1' | 'dh2' | 'bc' | 'ow' | 'dw' | 'im';
+/**
+ * Canonical game system identifiers, in display order — the single source of
+ * truth for "all seven systems". {@link GameSystemId} is derived from this tuple
+ * so a new system is added in exactly one place and the homologation sweeps in
+ * tests (`it.each(ALL_SYSTEM_IDS)`) can never silently omit one.
+ */
+export const ALL_SYSTEM_IDS = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'] as const;
+
+/** Canonical game system identifier. */
+export type GameSystemId = (typeof ALL_SYSTEM_IDS)[number];
 
 /** Skill rank definition for display and computation */
 export interface SkillRankDef {

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { asBaseActor } from '../testing/actor-stub.ts';
 import { computeArmour } from './armour-calculator';
 
 /**
@@ -87,8 +88,7 @@ function mockActor(opts: MockActorOpts): WH40KBaseActor {
         }),
         getFlag: (_scope: string, _key: string) => false,
     };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: mockActor satisfies the structural surface that computeArmour reaches into; full WH40KBaseActor type has fields irrelevant to this unit test
-    return actor as unknown as WH40KBaseActor;
+    return asBaseActor(actor);
 }
 
 describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {

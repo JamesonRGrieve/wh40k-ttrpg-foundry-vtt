@@ -23,7 +23,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts';
-import type { GameSystemId } from '../src/module/config/game-systems/types.ts';
+import { ALL_SYSTEM_IDS, type GameSystemId } from '../src/module/config/game-systems/types.ts';
 import { stepsInPack } from './helpers/origin-pack-content.ts';
 
 interface I18nStub {
@@ -69,7 +69,7 @@ function registeredPackNames(): Set<string> {
 }
 
 const PACK_NAMES = registeredPackNames();
-const SYSTEM_IDS: GameSystemId[] = ['bc', 'dh1', 'dh2', 'dw', 'im', 'ow', 'rt'];
+const SYSTEM_IDS: readonly GameSystemId[] = ALL_SYSTEM_IDS;
 
 describe('origin-path builder pack references resolve to registered compendiums', () => {
     it('system.json registers packs (guards against an empty/garbled manifest read)', () => {

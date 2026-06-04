@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { asBaseActor as asActor } from '../testing/actor-stub.ts';
+import { stubChatRuntime, type ChatRuntimeHandle } from '../testing/chat-runtime.ts';
 import {
     actorHasFatePoints,
     actorIsAce,
@@ -88,12 +89,6 @@ function makeActor(opts: { gameSystem?: string; role?: string | undefined; fateV
     };
 }
 
-/** Cast a FakeAceActor to the Foundry WH40KBaseActorDocument surface the rule helpers consume. */
-function asActor(a: FakeAceActor): WH40KBaseActorDocument {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: FakeAceActor is a structural subset of Foundry's WH40KBaseActorDocument; the rule helpers only read the listed fields
-    return a as unknown as WH40KBaseActorDocument;
-}
-
 describe('actorIsAce', () => {
     it('matches a DH2 actor whose role is "Ace"', () => {
         expect(actorIsAce(asActor(makeActor({ role: 'Ace' })))).toBe(true);
@@ -177,43 +172,26 @@ describe('resolveRightStuff', () => {
 /* -------------------------------------------- */
 
 describe('spendRightStuff', () => {
-    let createdContent: string | null;
+    interface RightStuffCardContext {
+        actorName?: string;
+        skillRaw?: string;
+        degrees?: number;
+        gameSystem?: string;
+    }
+
+    let chat: ChatRuntimeHandle;
 
     beforeEach(() => {
-        createdContent = null;
-        vi.stubGlobal('game', {
-            user: { id: 'gm-1' },
-            settings: { get: () => 'roll' },
-        });
-        vi.stubGlobal('ChatMessage', {
-            create: vi.fn((data: { content: string }) => {
-                createdContent = data.content;
-                return data;
-            }),
-            getWhisperRecipients: () => [],
-        });
-        interface RightStuffCardContext {
-            actorName?: string;
-            skillRaw?: string;
-            degrees?: number;
-            gameSystem?: string;
-        }
-        vi.stubGlobal('foundry', {
-            applications: {
-                handlebars: {
-                    renderTemplate: vi.fn(
-                        (_tpl: string, ctx: RightStuffCardContext) =>
-                            `<card actor="${String(ctx.actorName)}" skill="${String(ctx.skillRaw)}" dos="${String(ctx.degrees)}" sys="${String(
-                                ctx.gameSystem,
-                            )}">`,
-                    ),
-                },
+        chat = stubChatRuntime({
+            renderTemplate: (_tpl, context) => {
+                const ctx = context as RightStuffCardContext;
+                return `<card actor="${String(ctx.actorName)}" skill="${String(ctx.skillRaw)}" dos="${String(ctx.degrees)}" sys="${String(ctx.gameSystem)}">`;
             },
         });
     });
 
     afterEach(() => {
-        vi.unstubAllGlobals();
+        chat.restore();
         vi.restoreAllMocks();
     });
 
@@ -226,8 +204,8 @@ describe('spendRightStuff', () => {
 
         expect(actor.update).toHaveBeenCalledTimes(1);
         expect(actor.update.mock.calls[0]?.[0]).toEqual({ system: { fate: { value: 2 } } });
-        expect(createdContent).toContain('skill="operate"');
-        expect(createdContent).toContain('dos="4"');
+        expect(chat.lastContent()).toContain('skill="operate"');
+        expect(chat.lastContent()).toContain('dos="4"');
     });
 
     it('refuses to spend when the actor is not an Ace', async () => {
@@ -235,7 +213,7 @@ describe('spendRightStuff', () => {
         const res = await spendRightStuff(asActor(actor), 'operate');
         expect(res).toBeNull();
         expect(actor.update).not.toHaveBeenCalled();
-        expect(createdContent).toBeNull();
+        expect(chat.lastContent()).toBeNull();
     });
 
     it('refuses to spend when the actor has no Fate points', async () => {
@@ -255,8 +233,8 @@ describe('spendRightStuff', () => {
     it('propagates the actor game system onto the chat card for per-system theming', async () => {
         const actor = makeActor({ gameSystem: 'rt', role: 'Ace', fateValue: 2, agilityBonus: 3 });
         await spendRightStuff(asActor(actor), 'survival');
-        expect(createdContent).toContain('sys="rt"');
-        expect(createdContent).toContain('skill="survival"');
+        expect(chat.lastContent()).toContain('sys="rt"');
+        expect(chat.lastContent()).toContain('skill="survival"');
     });
 
     it('refuses on Imperium Maledictum even when role is "Ace"', async () => {
@@ -271,6 +249,6 @@ describe('spendRightStuff', () => {
         expect(res).not.toBeNull();
         expect(res?.degrees).toBe(0);
         expect(res?.hasDegrees).toBe(false);
-        expect(createdContent).toContain('dos="0"');
+        expect(chat.lastContent()).toContain('dos="0"');
     });
 });

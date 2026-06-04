@@ -12,6 +12,7 @@
 import { describe, expect, it } from 'vitest';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { ChaosAdvanceEntry } from '../../rules/bc-alignment-derivation.ts';
+import { asBaseActor } from '../../testing/actor-stub.ts';
 import { BCSystemConfig } from './bc-config.ts';
 import type { ChaosAlignment } from './types.ts';
 
@@ -26,7 +27,7 @@ interface BcActorStub {
 
 function makeActor(stub: BcActorStub = {}): WH40KBaseActor {
     const archetypeName = stub.archetypeName ?? '';
-    return {
+    return asBaseActor({
         items: {
             some: (predicate: (item: { isOriginPath: boolean; system: { step?: string }; name: string }) => boolean) =>
                 archetypeName !== '' &&
@@ -43,8 +44,7 @@ function makeActor(stub: BcActorStub = {}): WH40KBaseActor {
             corruption: stub.corruption ?? 0,
             infamy: stub.infamy ?? 0,
         },
-        // eslint-disable-next-line no-restricted-syntax -- boundary: test stub for WH40KBaseActor; only the surface BCSystemConfig touches is implemented
-    } as unknown as WH40KBaseActor;
+    });
 }
 
 const cfg = new BCSystemConfig();
