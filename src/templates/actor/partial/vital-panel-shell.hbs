@@ -14,9 +14,7 @@
     <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-min-w-0 tw-cursor-pointer sheet-control__hide-control"
          data-toggle="{{key}}_details"
          title="Click to {{#if (isExpanded (concat key '_details') actor)}}collapse{{else}}expand{{/if}}">
-        <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-gold)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis tw-tracking-[0.02em] tw-min-w-0">
-            <i class="fas {{icon}} tw-text-[var(--panel-accent,var(--wh40k-accent-gold))] bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-flex-shrink-0"></i> {{label}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label=label icon=icon titleClass="tw-tracking-[0.02em] tw-min-w-0"}}
 
         {{#if badge}}
         <div class="tw-flex tw-items-center tw-gap-[10px] tw-ml-auto tw-mr-2">
