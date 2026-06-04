@@ -765,6 +765,12 @@
         },
         "Combat": {
             "Title": "Combat",
+            "ActionEconomy": "Actions",
+            "FullAction": "Full",
+            "HalfAction": "Half",
+            "FreeAction": "Free",
+            "ReactionAction": "Reaction",
+            "ResetActions": "Reset action budget for a fresh turn",
             "CoverAPTooltip": "Cover doesn't penalise the attack roll — it adds this Armour at the hit location, absorbing part of the damage.",
             "NoActiveCombatAttack": "Attacks can only be made during an active combat encounter. Start an encounter and add this token to the tracker first.",
             "NotYourTurnMove": "It is not this combatant's turn — only the active combatant may move.",
