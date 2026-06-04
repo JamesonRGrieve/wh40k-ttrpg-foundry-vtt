@@ -23,6 +23,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { canRequisition, type RenownRank } from '../rules/dw-renown.ts';
 import { type Craftsmanship, type PooledContribution, canActorRequisition, canPoolRequisition, computeItemCost } from '../rules/dw-requisition.ts';
 
@@ -241,10 +242,7 @@ async function emitChatCard(
     };
     try {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/dw-requisition-chat.hbs', templateData);
-        const messageData = { user: game.user.id, speaker: ChatMessage.getSpeaker({ actor }), content: html };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const messagePayload = messageData as unknown as Parameters<typeof ChatMessage.create>[0];
-        await ChatMessage.create(messagePayload);
+        await postChatCard(html, { speaker: ChatMessage.getSpeaker({ actor }) });
     } catch (error) {
         console.error('DW requisition chat-card emission failed:', error);
     }

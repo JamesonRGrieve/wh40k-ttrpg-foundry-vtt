@@ -33,6 +33,7 @@
 
 import type { ChaseStateEntry } from '../data/actor/mixins/ow-vehicle-movement-template.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { getOwVehicleAction, type OwVehicleAction, type OwVehicleActionId, type VehicleActionTiming } from '../rules/ow-vehicle-movement.ts';
 import type { I18nKey } from '../types/i18n-keys';
 
@@ -113,7 +114,5 @@ export async function owVehicleAction(this: OwVehicleActionContext, event: Event
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the templateData literal is structurally compatible
     const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, templateData as unknown as Record<string, unknown>);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user.id, content: html, speaker: { alias: this.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
-    await ChatMessage.create(payload);
+    await postChatCard(html, { speaker: { alias: this.actor.name } });
 }

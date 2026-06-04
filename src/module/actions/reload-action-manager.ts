@@ -8,6 +8,7 @@ import type AmmunitionData from '../data/item/ammunition.ts';
 import type WeaponData from '../data/item/weapon.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
 
 interface AmmunitionDataWithQuantity extends AmmunitionData {
@@ -366,7 +367,7 @@ export class ReloadActionManager {
      * @param result - Reload result object
      * @returns
      */
-    static async sendReloadToChat(actor: WH40KBaseActor, weapon: WH40KItem, result: ReloadResult): Promise<ChatMessage | undefined> {
+    static async sendReloadToChat(actor: WH40KBaseActor, weapon: WH40KItem, result: ReloadResult): Promise<void> {
         const system = this.getWeaponSystem(weapon);
         const templateData = {
             actor: actor,
@@ -381,17 +382,9 @@ export class ReloadActionManager {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/reload-action-chat.hbs', templateData);
 
-        const chatData = {
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor }),
-            content: html,
-            // eslint-disable-next-line @typescript-eslint/no-deprecated -- Foundry V14 transition: CHAT_MESSAGE_TYPES still works while CHAT_MESSAGE_STYLES rolls out
-            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-            flavor: `${weapon.name} - Reload`,
-        };
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts loose document-data shape
-        return ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]) as Promise<ChatMessage | undefined>;
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Foundry V14 transition: CHAT_MESSAGE_TYPES still works while CHAT_MESSAGE_STYLES rolls out
+        const messageType = CONST.CHAT_MESSAGE_TYPES.OTHER;
+        await postChatCard(html, { speaker: ChatMessage.getSpeaker({ actor }), type: messageType, flavor: `${weapon.name} - Reload` });
     }
 
     /**

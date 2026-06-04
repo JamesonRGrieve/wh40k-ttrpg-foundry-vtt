@@ -25,6 +25,7 @@
  * and a notify hook for failure messages.
  */
 import { t } from '../i18n/t.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import {
     recoverCohesion,
     cohesionChallenge,
@@ -79,9 +80,7 @@ interface ChatCardContext {
 async function postCohesionChat(host: DwCohesionActionHost, ctx: ChatCardContext): Promise<void> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
     const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user.id, content: html, speaker: { alias: host.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
-    await ChatMessage.create(payload);
+    await postChatCard(html, { speaker: { alias: host.actor.name } });
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: catch-clause exception payload is intrinsically unknown; narrowed on the next line via `instanceof Error`

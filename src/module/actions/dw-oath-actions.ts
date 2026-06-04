@@ -24,6 +24,7 @@
  * a subsequent round.
  */
 import { t } from '../i18n/t.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { canSwearOath, isOathActive, releaseOath, swearOath, type CanSwearOathFailureReason, type OathBuff, type OathDef } from '../rules/dw-oath.ts';
 import type { I18nKey } from '../types/i18n-keys';
 
@@ -69,9 +70,7 @@ interface ChatCardContext {
 async function postOathChat(host: DwOathActionHost, ctx: ChatCardContext): Promise<void> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
     const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const payload = { user: game.user.id, content: html, speaker: { alias: host.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
-    await ChatMessage.create(payload);
+    await postChatCard(html, { speaker: { alias: host.actor.name } });
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: thrown values are `unknown` per TS contract; this helper is fed directly into an `instanceof Error` type-guard

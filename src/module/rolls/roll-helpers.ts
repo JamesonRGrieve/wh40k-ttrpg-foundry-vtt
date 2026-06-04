@@ -145,7 +145,7 @@ export function applyRollModeWhispers(chatData: Record<string, unknown>): void {
 export async function postChatCard(
     content: string,
     // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
-    opts: { rolls?: Roll[] | undefined; speaker?: unknown; rollMode?: string | undefined } = {},
+    opts: { rolls?: Roll[] | undefined; speaker?: unknown; rollMode?: string | undefined; flavor?: string | undefined; type?: number | undefined } = {},
 ): Promise<void> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped payload; Record<string, unknown> is the correct boundary type
     const chatData: Record<string, unknown> = {
@@ -155,6 +155,8 @@ export async function postChatCard(
     };
     if (opts.rolls !== undefined) chatData['rolls'] = opts.rolls;
     if (opts.speaker !== undefined) chatData['speaker'] = opts.speaker;
+    if (opts.flavor !== undefined) chatData['flavor'] = opts.flavor;
+    if (opts.type !== undefined) chatData['type'] = opts.type;
     applyRollModeWhispers(chatData);
     await ChatMessage.create(chatData);
 }

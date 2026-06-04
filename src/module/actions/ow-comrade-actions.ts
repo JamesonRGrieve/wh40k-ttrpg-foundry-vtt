@@ -35,6 +35,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { postChatCard } from '../rolls/roll-helpers.ts';
 import { type ComradeState, applyComradeHit, healComrade, replaceComrade } from '../rules/ow-comrade.ts';
 
 const STATE_LABEL_KEY: Record<ComradeState, string> = {
@@ -91,11 +92,9 @@ async function emitStateChangeChat(host: Host, payload: StateChangePayload): Pro
         },
     };
     const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-comrade-chat.hbs', templateData);
-    await ChatMessage.create({
-        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry Actor type
-        speaker: ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor }),
-        content: html,
-    });
+    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry Actor type
+    const speaker = ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor });
+    await postChatCard(html, { speaker });
 }
 
 /* -------------------------------------------- */
