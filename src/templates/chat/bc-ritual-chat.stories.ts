@@ -8,9 +8,8 @@
  *   3. NoModifiers — clean roll with no Table 6-7 stack, marginal success.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HB from 'handlebars';
-import { renderTemplate as compileAndRender } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
+import { renderSheet } from '../../../stories/test-helpers';
 import {
     computeRitualTarget,
     resolveContemptOfTheWarp,
@@ -53,13 +52,11 @@ const MODIFIER_LABEL_KEYS: Record<RitualModifierKind, string> = {
     'gm-other': 'WH40K.BC.Ritual.Modifier.GmOther',
 };
 
-const cardTpl = HB.compile(cardSrc);
-
 function renderCard(ctx: RitualChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(compileAndRender(cardTpl, ctx));
+    wrapper.appendChild(renderSheet(cardSrc, ctx));
     return wrapper;
 }
 
