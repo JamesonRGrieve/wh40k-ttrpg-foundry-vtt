@@ -348,7 +348,16 @@ function resolveBuilderGameSystem(actor: WH40KBaseActor, options: Record<string,
     if (typeof requested === 'string' && requested !== '' && SystemConfigRegistry.has(requested)) {
         return requested as GameSystemId;
     }
-    throw new Error('Unable to resolve a game system for OriginPathBuilder');
+    // Fallback (#222): an actor whose `system.gameSystem` is empty/missing used to
+    // throw here — which surfaced as the Origin Path builder opening with ZERO
+    // selections (the builder never finished constructing). Recover by deriving the
+    // system from the actor's `<system>-<role>` type, then the DH2 canonical default,
+    // so the builder always has a valid line to load origins from.
+    const [fromType = ''] = typeof actor.type === 'string' ? actor.type.split('-') : [];
+    if (fromType !== '' && SystemConfigRegistry.has(fromType)) {
+        return fromType as GameSystemId;
+    }
+    return 'dh2';
 }
 
 /** Display labels for game lines, used in adapted-homebrew tooltips. */
