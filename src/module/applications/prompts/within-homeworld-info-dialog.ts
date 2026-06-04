@@ -13,13 +13,8 @@
  * See GitHub issue #139.
  */
 
-import {
-    WITHIN_HOMEWORLDS,
-    WITHIN_HOMEWORLD_IDS,
-    type WithinCharacteristic,
-    type WithinHomeworldDef,
-    type WithinHomeworldId,
-} from '../../rules/within-homeworlds.ts';
+import { characteristicLabel, formatCharacteristicMods, formatWounds } from '../../helpers/characteristic-labels.ts';
+import { WITHIN_HOMEWORLDS, WITHIN_HOMEWORLD_IDS, type WithinHomeworldDef, type WithinHomeworldId } from '../../rules/within-homeworlds.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -64,19 +59,6 @@ const HOMEWORLD_ACCENTS: Record<WithinHomeworldId, AccentClasses> = {
     },
 };
 
-/** i18n label keys for each Characteristic — short, capitalised. */
-const CHARACTERISTIC_LABEL_KEYS: Record<WithinCharacteristic, string> = {
-    weaponSkill: 'WH40K.Characteristic.WeaponSkill',
-    ballisticSkill: 'WH40K.Characteristic.BallisticSkill',
-    strength: 'WH40K.Characteristic.Strength',
-    toughness: 'WH40K.Characteristic.Toughness',
-    agility: 'WH40K.Characteristic.Agility',
-    intelligence: 'WH40K.Characteristic.Intelligence',
-    perception: 'WH40K.Characteristic.Perception',
-    willpower: 'WH40K.Characteristic.Willpower',
-    fellowship: 'WH40K.Characteristic.Fellowship',
-};
-
 /** Card view-model — one entry per homeworld rendered in the grid. */
 interface HomeworldCard {
     id: WithinHomeworldId;
@@ -100,18 +82,8 @@ function localize(key: string): string {
     return game.i18n.localize(key);
 }
 
-function formatCharacteristicMods(def: WithinHomeworldDef): string {
-    const positives = def.characteristicMods.positive.map((c) => `+${localize(CHARACTERISTIC_LABEL_KEYS[c])}`);
-    const negatives = def.characteristicMods.negative.map((c) => `−${localize(CHARACTERISTIC_LABEL_KEYS[c])}`);
-    return [...positives, ...negatives].join(', ');
-}
-
 function formatFateThreshold(def: WithinHomeworldDef): string {
     return `${String(def.fateThreshold.base)} (${def.fateThreshold.emperorsBlessingMin.toString()}+)`;
-}
-
-function formatWounds(def: WithinHomeworldDef): string {
-    return `${String(def.wounds.flat)} + ${String(def.wounds.dice)}d${String(def.wounds.faces)}`;
 }
 
 /**
@@ -170,10 +142,10 @@ export default class WithinHomeworldInfoDialog extends ApplicationV2Mixin(Applic
                 label: localize(HOMEWORLD_LABEL_KEYS[id]),
                 bonusName: def.homeWorldBonus.name,
                 bonusDescription: def.homeWorldBonus.description,
-                characteristicModsLabel: formatCharacteristicMods(def),
+                characteristicModsLabel: formatCharacteristicMods(def.characteristicMods.positive, def.characteristicMods.negative),
                 fateThresholdLabel: formatFateThreshold(def),
-                woundsLabel: formatWounds(def),
-                keyAptitudes: def.keyAptitudes.map((c) => localize(CHARACTERISTIC_LABEL_KEYS[c])),
+                woundsLabel: formatWounds(def.wounds.flat, def.wounds.dice, def.wounds.faces),
+                keyAptitudes: def.keyAptitudes.map((c) => characteristicLabel(c)),
                 accent: HOMEWORLD_ACCENTS[id],
             };
         });

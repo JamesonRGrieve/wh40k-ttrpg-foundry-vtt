@@ -12,6 +12,7 @@
 import type TalentData from '../../data/item/talent.ts';
 import type DescriptionTemplate from '../../data/shared/description-template.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
+import { characteristicAbbrev, characteristicLabel, combatLabel, resourceLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
@@ -652,19 +653,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _getCharacteristicLabel(key: string): string {
-        const labels: Record<string, string> = {
-            weaponSkill: 'Weapon Skill',
-            ballisticSkill: 'Ballistic Skill',
-            strength: 'Strength',
-            toughness: 'Toughness',
-            agility: 'Agility',
-            intelligence: 'Intelligence',
-            perception: 'Perception',
-            willpower: 'Willpower',
-            fellowship: 'Fellowship',
-            influence: 'Influence',
-        };
-        return labels[key] ?? key;
+        return characteristicLabel(key);
     }
 
     /**
@@ -674,19 +663,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _getCharacteristicShort(key: string): string {
-        const shorts: Record<string, string> = {
-            weaponSkill: 'WS',
-            ballisticSkill: 'BS',
-            strength: 'S',
-            toughness: 'T',
-            agility: 'Ag',
-            intelligence: 'Int',
-            perception: 'Per',
-            willpower: 'WP',
-            fellowship: 'Fel',
-            influence: 'Inf',
-        };
-        return shorts[key] ?? key.substring(0, 3).toUpperCase();
+        return characteristicAbbrev(key);
     }
 
     /**
@@ -710,15 +687,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _formatCombatLabel(key: string): string {
-        const labels: Record<string, string> = {
-            attack: 'Attack Bonus',
-            damage: 'Damage Bonus',
-            penetration: 'Penetration',
-            defense: 'Defense Bonus',
-            initiative: 'Initiative',
-            speed: 'Movement Speed',
-        };
-        return labels[key] ?? key.charAt(0).toUpperCase() + key.slice(1);
+        return combatLabel(key);
     }
 
     /**
@@ -728,13 +697,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _formatResourceLabel(key: string): string {
-        const labels: Record<string, string> = {
-            wounds: 'Wounds',
-            fate: 'Fate Points',
-            insanity: 'Insanity Threshold',
-            corruption: 'Corruption Threshold',
-        };
-        return labels[key] ?? key.charAt(0).toUpperCase() + key.slice(1);
+        return resourceLabel(key);
     }
 
     /**

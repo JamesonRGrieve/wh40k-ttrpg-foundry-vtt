@@ -10,6 +10,7 @@
 
 import type TalentData from '../../data/item/talent.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
+import { characteristicAbbrev, characteristicLabel, combatLabel, resourceLabel } from '../../helpers/characteristic-labels.ts';
 import type { ApplicationV2Ctor, FoundryApplicationApiLike } from '../api/application-types.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's applications namespace is not natively typed; narrow to the API surface we need
@@ -433,18 +434,11 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _getCharacteristicOptions(): { value: string; label: string }[] {
-        return [
-            { value: 'weaponSkill', label: 'Weapon Skill (WS)' },
-            { value: 'ballisticSkill', label: 'Ballistic Skill (BS)' },
-            { value: 'strength', label: 'Strength (S)' },
-            { value: 'toughness', label: 'Toughness (T)' },
-            { value: 'agility', label: 'Agility (Ag)' },
-            { value: 'intelligence', label: 'Intelligence (Int)' },
-            { value: 'perception', label: 'Perception (Per)' },
-            { value: 'willpower', label: 'Willpower (WP)' },
-            { value: 'fellowship', label: 'Fellowship (Fel)' },
-            { value: 'influence', label: 'Influence (Inf)' },
-        ];
+        // Built from CONFIG.wh40k.characteristics (single-sourced, langpack-backed) — #286.
+        return Object.keys(CONFIG.wh40k.characteristics).map((key) => ({
+            value: key,
+            label: `${characteristicLabel(key)} (${characteristicAbbrev(key)})`,
+        }));
     }
 
     /**
@@ -567,19 +561,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _getCharacteristicLabel(key: string): string {
-        const labels: Record<string, string> = {
-            weaponSkill: 'Weapon Skill',
-            ballisticSkill: 'Ballistic Skill',
-            strength: 'Strength',
-            toughness: 'Toughness',
-            agility: 'Agility',
-            intelligence: 'Intelligence',
-            perception: 'Perception',
-            willpower: 'Willpower',
-            fellowship: 'Fellowship',
-            influence: 'Influence',
-        };
-        return labels[key] ?? key;
+        return characteristicLabel(key);
     }
 
     /**
@@ -603,15 +585,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _getCombatLabel(key: string): string {
-        const labels: Record<string, string> = {
-            attack: 'Attack Bonus',
-            damage: 'Damage Bonus',
-            penetration: 'Penetration',
-            defense: 'Defense Bonus',
-            initiative: 'Initiative',
-            speed: 'Movement Speed',
-        };
-        return labels[key] ?? key;
+        return combatLabel(key);
     }
 
     /**
@@ -621,13 +595,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _getResourceLabel(key: string): string {
-        const labels: Record<string, string> = {
-            wounds: 'Wounds',
-            fate: 'Fate Points',
-            insanity: 'Insanity Threshold',
-            corruption: 'Corruption Threshold',
-        };
-        return labels[key] ?? key;
+        return resourceLabel(key);
     }
 
     /* -------------------------------------------- */

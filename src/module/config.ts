@@ -132,6 +132,10 @@ export interface CurrencyConfig {
 
 export interface WH40KSystemConfig {
     characteristics: Record<string, LabelAbbreviationConfig>;
+    /** Combat bonus categories a talent/effect can grant (attack/damage/penetration/defense/initiative/speed). */
+    combatBonuses: Record<string, LabelConfig>;
+    /** Derived resource pools a talent/effect can modify (wounds/fate/insanity/corruption). */
+    resources: Record<string, LabelConfig>;
     availabilities: Record<string, LabelModifierConfig>;
     currencies: Record<string, CurrencyConfig>;
     movementTypes: Record<string, MovementTypeConfig>;
@@ -198,6 +202,30 @@ WH40K.characteristics = {
     willpower: { label: 'WH40K.Characteristic.Willpower', abbreviation: 'WP' },
     fellowship: { label: 'WH40K.Characteristic.Fellowship', abbreviation: 'Fel' },
     influence: { label: 'WH40K.Characteristic.Influence', abbreviation: 'Inf' },
+};
+
+/**
+ * Combat bonus categories a talent or effect can grant. Single source for the
+ * labels that talent sheets / editors previously hard-coded inline (#286).
+ */
+WH40K.combatBonuses = {
+    attack: { label: 'WH40K.Combat.AttackBonus' },
+    damage: { label: 'WH40K.Combat.DamageBonus' },
+    penetration: { label: 'WH40K.Combat.Penetration' },
+    defense: { label: 'WH40K.Combat.DefenseBonus' },
+    initiative: { label: 'WH40K.Combat.Initiative' },
+    speed: { label: 'WH40K.Combat.MovementSpeed' },
+};
+
+/**
+ * Derived resource pools a talent or effect can modify. Single source for the
+ * labels that talent sheets / editors previously hard-coded inline (#286).
+ */
+WH40K.resources = {
+    wounds: { label: 'WH40K.Resource.Wounds' },
+    fate: { label: 'WH40K.Resource.FatePoints' },
+    insanity: { label: 'WH40K.Resource.InsanityThreshold' },
+    corruption: { label: 'WH40K.Resource.CorruptionThreshold' },
 };
 
 /* -------------------------------------------- */

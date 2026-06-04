@@ -4,6 +4,7 @@
  */
 
 import type NPCTemplateData from '../../data/item/npc-template.ts';
+import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
@@ -225,23 +226,15 @@ export default class NPCTemplateSheet extends BaseItemSheet {
             { key: 'custom', name: 'Custom' },
         ].map((p) => ({ ...p, selected: p.key === sys.equipmentPreset }));
 
-        // Prepare characteristics for display
+        // Prepare characteristics for display — list + labels/abbreviations come
+        // from CONFIG.wh40k.characteristics (single-sourced, langpack-backed) — #286.
         const baseChars = sys.baseCharacteristics;
-        const characteristics = [
-            { key: 'weaponSkill', label: 'Weapon Skill', short: 'WS' },
-            { key: 'ballisticSkill', label: 'Ballistic Skill', short: 'BS' },
-            { key: 'strength', label: 'Strength', short: 'S' },
-            { key: 'toughness', label: 'Toughness', short: 'T' },
-            { key: 'agility', label: 'Agility', short: 'Ag' },
-            { key: 'intelligence', label: 'Intelligence', short: 'Int' },
-            { key: 'perception', label: 'Perception', short: 'Per' },
-            { key: 'willpower', label: 'Willpower', short: 'WP' },
-            { key: 'fellowship', label: 'Fellowship', short: 'Fel' },
-            { key: 'influence', label: 'Influence', short: 'Inf' },
-        ].map((c) => ({
-            ...c,
-            value: baseChars[c.key as keyof typeof baseChars],
-            unnatural: sys.unnaturals[c.key] ?? 0,
+        const characteristics = Object.keys(CONFIG.wh40k.characteristics).map((key) => ({
+            key,
+            label: characteristicLabel(key),
+            short: characteristicAbbrev(key),
+            value: baseChars[key as keyof typeof baseChars],
+            unnatural: sys.unnaturals[key] ?? 0,
         }));
 
         // Generate preview data

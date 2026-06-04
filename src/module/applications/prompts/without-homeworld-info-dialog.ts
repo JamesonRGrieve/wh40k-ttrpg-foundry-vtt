@@ -15,6 +15,7 @@
  * See GitHub issue #102.
  */
 
+import { formatCharacteristicMods, formatWounds } from '../../helpers/characteristic-labels.ts';
 import { listWithoutHomeworlds, type WithoutHomeworldDef } from '../../rules/without-homeworlds.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -52,14 +53,6 @@ interface WithoutHomeworldInfoContext extends Record<string, unknown> {
     homeworlds: readonly WithoutHomeworldCardContext[];
 }
 
-function formatBonuses(bonuses: readonly string[]): string {
-    return bonuses.map((b) => `+${b.charAt(0).toUpperCase()}${b.slice(1)}`).join(', ');
-}
-
-function formatPenalties(penalties: readonly string[]): string {
-    return penalties.map((p) => `-${p.charAt(0).toUpperCase()}${p.slice(1)}`).join(', ');
-}
-
 function buildCardContext(def: WithoutHomeworldDef): WithoutHomeworldCardContext {
     const surpriseSuppressionLabel = def.surpriseBonusSuppression
         ? `Suppresses +${def.surpriseBonusSuppression.suppressedBonus} WS/BS bonus from non-Surprised attackers`
@@ -74,10 +67,10 @@ function buildCardContext(def: WithoutHomeworldDef): WithoutHomeworldCardContext
         id: def.id,
         label: def.label,
         accent: ACCENT_BY_ID[def.id],
-        bonusesLabel: formatBonuses(def.characteristicMods.bonuses),
-        penaltiesLabel: formatPenalties(def.characteristicMods.penalties),
+        bonusesLabel: formatCharacteristicMods(def.characteristicMods.bonuses, []),
+        penaltiesLabel: formatCharacteristicMods([], def.characteristicMods.penalties),
         fateLabel: `${def.fateThreshold.base} (Emperor's Blessing ${def.fateThreshold.emperorsBlessing}+)`,
-        woundsLabel: `${def.wounds.base} + 1d${def.wounds.dieFaces}`,
+        woundsLabel: formatWounds(def.wounds.base, 1, def.wounds.dieFaces),
         aptitude: def.aptitude,
         keyTalents: def.keyTalents,
         recommendedBackgrounds: def.recommendedBackgrounds,
