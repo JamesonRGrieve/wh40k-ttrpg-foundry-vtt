@@ -17,9 +17,8 @@
  * the engine's deterministic output for the documented inputs.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../../../module/rules/bc-psychic-strength';
 import panelSrc from './bc-psychic-panel.hbs?raw';
 
@@ -39,13 +38,11 @@ interface PsychicPanelCtx {
     };
 }
 
-const panelTpl = Hbs.compile(panelSrc);
-
 function renderPanel(ctx: PsychicPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderTpl(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 

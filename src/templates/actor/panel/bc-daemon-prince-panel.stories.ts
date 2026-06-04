@@ -13,9 +13,8 @@
  * deterministic stories"). No randomness, no hand-authored multipliers.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsStory from 'handlebars';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import {
     DAEMON_PRINCE_CORRUPTION_THRESHOLD,
     DAEMON_PRINCE_INFAMY_THRESHOLD,
@@ -41,13 +40,11 @@ interface DaemonPrincePanelCtx {
     };
 }
 
-const panelTpl = HbsStory.compile(panelSrc);
-
 function renderPanel(ctx: DaemonPrincePanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 
