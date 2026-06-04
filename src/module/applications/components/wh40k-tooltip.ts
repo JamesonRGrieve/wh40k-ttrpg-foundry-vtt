@@ -37,6 +37,46 @@ function normalizeSkillCacheKey(name: string): string {
     return name.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
 }
 
+/* -------------------------------------------- */
+/*  Tooltip HTML builder helpers (#277)         */
+/* -------------------------------------------- */
+
+/** Tooltip header — title plus an optional total badge. */
+function tipHeader(title: string, total?: number | string): string {
+    const totalHtml = total !== undefined ? `<div class="wh40k-tooltip__total">${total}</div>` : '';
+    return `<div class="wh40k-tooltip__header"><h4 class="wh40k-tooltip__title">${title}</h4>${totalHtml}</div>`;
+}
+
+/** A horizontal divider between tooltip sections. */
+function tipDivider(): string {
+    return `<div class="wh40k-tooltip__divider"></div>`;
+}
+
+/** A single label/value breakdown line; `extraClass` appends a modifier class (e.g. `wh40k-tooltip__line--modifier`). */
+function tipLine(label: string, value: string | number, extraClass = ''): string {
+    const cls = extraClass !== '' ? ` ${extraClass}` : '';
+    return `<div class="wh40k-tooltip__line${cls}"><span class="wh40k-tooltip__label">${label}</span><span class="wh40k-tooltip__value">${value}</span></div>`;
+}
+
+/** Source name/value rows for a sources block (values signed). */
+function tipSourceRows(sources: readonly { name: string; value: number }[]): string {
+    return sources
+        .map(
+            (s) =>
+                `<div class="wh40k-tooltip__source"><span class="wh40k-tooltip__source-name">${
+                    s.name
+                }</span><span class="wh40k-tooltip__source-value">${formatSigned(s.value)}</span></div>`,
+        )
+        .join('');
+}
+
+/** A sources block (preceded by a divider) with an optional title; empty string when there are no sources. */
+function tipSourceList(sources: readonly { name: string; value: number }[], title?: string): string {
+    if (sources.length === 0) return '';
+    const titleHtml = title !== undefined ? `<div class="wh40k-tooltip__sources-title">${title}</div>` : '';
+    return `${tipDivider()}<div class="wh40k-tooltip__sources">${titleHtml}${tipSourceRows(sources)}</div>`;
+}
+
 /** Source modifier entry for tooltip breakdown. */
 interface TooltipModifierSource {
     name: string;
@@ -356,50 +396,18 @@ export class TooltipsWH40K {
         const bonus = data.bonus ?? 0;
         const sources = data.sources ?? [];
 
-        let html = `
-            <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${label ?? name ?? ''}</h4>
-                <div class="wh40k-tooltip__total">${total}</div>
-            </div>
-            <div class="wh40k-tooltip__divider"></div>
-            <div class="wh40k-tooltip__breakdown">
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Base:</span>
-                    <span class="wh40k-tooltip__value">${base}</span>
-                </div>
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Advances:</span>
-                    <span class="wh40k-tooltip__value">${advance} (×5 = +${advance * 5})</span>
-                </div>
-        `;
+        let html = tipHeader(label ?? name ?? '', total);
+        html += tipDivider();
+        html += `<div class="wh40k-tooltip__breakdown">`;
+        html += tipLine('Base:', base);
+        html += tipLine('Advances:', `${advance} (×5 = +${advance * 5})`);
 
         if (modifier !== 0) {
-            html += `
-                <div class="wh40k-tooltip__line wh40k-tooltip__line--modifier">
-                    <span class="wh40k-tooltip__label">Modifiers:</span>
-                    <span class="wh40k-tooltip__value">${formatSigned(modifier)}</span>
-                </div>
-            `;
+            html += tipLine('Modifiers:', formatSigned(modifier), 'wh40k-tooltip__line--modifier');
         }
 
         html += `</div>`;
-
-        if (sources.length > 0) {
-            html += `
-                <div class="wh40k-tooltip__divider"></div>
-                <div class="wh40k-tooltip__sources">
-                    <div class="wh40k-tooltip__sources-title">Modifier Sources:</div>
-            `;
-            for (const source of sources) {
-                html += `
-                    <div class="wh40k-tooltip__source">
-                        <span class="wh40k-tooltip__source-name">${source.name}</span>
-                        <span class="wh40k-tooltip__source-value">${formatSigned(source.value)}</span>
-                    </div>
-                `;
-            }
-            html += `</div>`;
-        }
+        html += tipSourceList(sources, 'Modifier Sources:');
 
         html += `
             <div class="wh40k-tooltip__divider"></div>
@@ -504,12 +512,7 @@ export class TooltipsWH40K {
         const skillInfo = tooltipSystem?.getSkillDescription?.(name) ?? null;
         const descriptor = typeof skillInfo?.descriptor === 'string' ? skillInfo.descriptor : '';
 
-        let html = `
-            <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${label ?? name}</h4>
-                <div class="wh40k-tooltip__total">${current}</div>
-            </div>
-        `;
+        let html = tipHeader(label ?? name, current);
 
         if (descriptor !== '') {
             html += `
@@ -623,37 +626,12 @@ export class TooltipsWH40K {
         const armorValue = data.armorValue ?? 0;
         const equipped = data.equipped ?? [];
 
-        let html = `
-            <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${location ?? 'Armour'}</h4>
-                <div class="wh40k-tooltip__total">AP ${total}</div>
-            </div>
-            <div class="wh40k-tooltip__divider"></div>
-            <div class="wh40k-tooltip__breakdown">
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Toughness Bonus:</span>
-                    <span class="wh40k-tooltip__value">${toughnessBonus}</span>
-                </div>
-        `;
-
-        if (traitBonus > 0) {
-            html += `
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Trait Bonus:</span>
-                    <span class="wh40k-tooltip__value">${traitBonus}</span>
-                </div>
-            `;
-        }
-
-        if (armorValue > 0) {
-            html += `
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Armour:</span>
-                    <span class="wh40k-tooltip__value">${armorValue}</span>
-                </div>
-            `;
-        }
-
+        let html = tipHeader(location ?? 'Armour', `AP ${total}`);
+        html += tipDivider();
+        html += `<div class="wh40k-tooltip__breakdown">`;
+        html += tipLine('Toughness Bonus:', toughnessBonus);
+        if (traitBonus > 0) html += tipLine('Trait Bonus:', traitBonus);
+        if (armorValue > 0) html += tipLine('Armour:', armorValue);
         html += `</div>`;
 
         if (equipped.length > 0) {
@@ -685,30 +663,14 @@ export class TooltipsWH40K {
         const rof = data.rof ?? '—';
         const qualities = data.qualities ?? [];
 
-        let html = `
-            <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${name}</h4>
-            </div>
-            <div class="wh40k-tooltip__divider"></div>
-            <div class="wh40k-tooltip__breakdown">
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Damage:</span>
-                    <span class="wh40k-tooltip__value">${damage}</span>
-                </div>
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Penetration:</span>
-                    <span class="wh40k-tooltip__value">${penetration}</span>
-                </div>
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Range:</span>
-                    <span class="wh40k-tooltip__value">${range}</span>
-                </div>
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Rate of Fire:</span>
-                    <span class="wh40k-tooltip__value">${rof}</span>
-                </div>
-            </div>
-        `;
+        let html = tipHeader(name);
+        html += tipDivider();
+        html += `<div class="wh40k-tooltip__breakdown">`;
+        html += tipLine('Damage:', damage);
+        html += tipLine('Penetration:', penetration);
+        html += tipLine('Range:', range);
+        html += tipLine('Rate of Fire:', rof);
+        html += `</div>`;
 
         if (qualities.length > 0) {
             html += `
@@ -736,24 +698,9 @@ export class TooltipsWH40K {
         const { title } = data;
         const sources = data.sources ?? [];
 
-        let html = `
-            <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${title ?? 'Modifiers'}</h4>
-            </div>
-            <div class="wh40k-tooltip__divider"></div>
-            <div class="wh40k-tooltip__sources">
-        `;
-
-        for (const source of sources) {
-            html += `
-                <div class="wh40k-tooltip__source">
-                    <span class="wh40k-tooltip__source-name">${source.name}</span>
-                    <span class="wh40k-tooltip__source-value">${formatSigned(source.value)}</span>
-                </div>
-            `;
-        }
-
-        html += `</div>`;
+        let html = tipHeader(title ?? 'Modifiers');
+        html += tipDivider();
+        html += `<div class="wh40k-tooltip__sources">${tipSourceRows(sources)}</div>`;
         return html;
     }
 
@@ -821,14 +768,7 @@ export class TooltipsWH40K {
 
     _buildGenericTooltip(data: GenericTooltipPayload): string {
         const { title, content } = data;
-        return `
-            <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${title ?? 'Information'}</h4>
-            </div>
-            <div class="wh40k-tooltip__content">
-                ${content ?? ''}
-            </div>
-        `;
+        return `${tipHeader(title ?? 'Information')}<div class="wh40k-tooltip__content">${content ?? ''}</div>`;
     }
 
     _repositionTooltip(): void {
