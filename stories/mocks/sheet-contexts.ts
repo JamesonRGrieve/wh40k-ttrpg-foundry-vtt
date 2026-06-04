@@ -23,6 +23,7 @@ import { SystemConfigRegistry } from '../../src/module/config/game-systems';
 import type { GameSystemId, SidebarHeaderField } from '../../src/module/config/game-systems/types';
 import type { WH40KBaseActor } from '../../src/module/documents/base-actor';
 import { randomId, withSystem, type SystemId } from './extended';
+import { localizeKey } from './lang-localize';
 import { mockActor, type MockActor, type MockItem } from './index';
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -118,10 +119,11 @@ const SYSTEM_ID_TO_WITH_SYSTEM: Record<GameSystemId, SystemId> = {
 // ── i18n stub ───────────────────────────────────────────────────────────────
 
 /**
- * `getHeaderFields()` calls `game.i18n.localize(...)` for some systems.
- * Stories run in Storybook (no Foundry runtime); tests run in vitest+happy-dom
- * (also no Foundry runtime). Install a passthrough stub once if `game.i18n` is
- * absent so factories can be called without surrounding `beforeAll` plumbing.
+ * `getHeaderFields()` calls `game.i18n.localize(...)` for some systems (the header
+ * labels became langpack keys in #298). Stories run in Storybook (no Foundry runtime);
+ * tests run in vitest+happy-dom (also no Foundry runtime). Install a stub once if
+ * `game.i18n` is absent — it resolves keys against en.json via {@link localizeKey} so
+ * TS-side labels render as real text (not raw keys) in story screenshots.
  *
  * Tests that already install their own `game` stub keep it — we only fill in
  * a missing surface, never overwrite.
@@ -155,10 +157,11 @@ function ensureGameI18nStub(): void {
     g.game = {
         ...existingGame,
         i18n: {
-            localize: (key: string) => key,
+            localize: (key: string) => localizeKey(key),
             format: (key: string, data?: Record<string, string | number | boolean>) => {
-                if (!data) return key;
-                return key.replace(/\{(\w+)\}/g, (_, name: string) => String(data[name] ?? ''));
+                const template = localizeKey(key);
+                if (!data) return template;
+                return template.replace(/\{(\w+)\}/g, (_, name: string) => String(data[name] ?? ''));
             },
         },
     };
