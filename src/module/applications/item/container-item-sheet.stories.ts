@@ -4,15 +4,14 @@
  * is instantiated without a subclass override).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HB from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as compileAndRender } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HB.compile(templateSrc);
 const rng = seedRandom(0xc0a1be7);
 
 interface ContainerCtx {
@@ -62,14 +61,14 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => compileAndRender(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
 export const Empty: Story = {
-    render: () => compileAndRender(compiled, makeCtx({ nestedItems: [] })),
+    render: () => renderSheet(templateSrc, makeCtx({ nestedItems: [] })),
 };
 
 export const RendersContainerName: Story = {
-    render: () => compileAndRender(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByDisplayValue("Rogue Trader's Chest")).toBeTruthy();
@@ -77,7 +76,7 @@ export const RendersContainerName: Story = {
 };
 
 export const RendersDescriptionTab: Story = {
-    render: () => compileAndRender(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const tab = canvasElement.querySelector('[data-tab="description"]');
         await expect(tab).toBeTruthy();

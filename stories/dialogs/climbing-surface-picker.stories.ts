@@ -1,13 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import { getClimbingModifier, type ClimbingSurface } from '../../src/module/rules/climbing.ts';
 import contextPanelSrc from '../../src/templates/prompt/unified/context-panel.hbs?raw';
-import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
-
-const contextPanelTemplate = HBS.compile(contextPanelSrc);
 
 interface ClimbSurfaceArgs {
     surface: ClimbingSurface;
@@ -64,7 +61,7 @@ const meta: Meta<ClimbSurfaceArgs> = {
     argTypes: {
         surface: { control: 'inline-radio', options: ['standard', 'sheer', 'easy'] },
     },
-    render: (args) => renderTpl(contextPanelTemplate, buildContext(args)),
+    render: (args) => renderSheet(contextPanelSrc, buildContext(args)),
 };
 
 export default meta;

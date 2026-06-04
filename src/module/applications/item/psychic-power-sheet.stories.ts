@@ -2,15 +2,14 @@
  * Stories for PsychicPowerSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-psychic-power-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HbsLib.compile(templateSrc);
 const rng = seedRandom(0x5a1e71);
 
 interface PsychicPowerCtx {
@@ -65,12 +64,12 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderStoryTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderStoryTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
 
 export const RendersPowerName: Story = {
-    render: () => renderStoryTemplate(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         void expect(storyCanvas.getByDisplayValue('Smite')).toBeTruthy();
@@ -78,7 +77,7 @@ export const RendersPowerName: Story = {
 };
 
 export const RendersDisciplineBadge: Story = {
-    render: () => renderStoryTemplate(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         void expect(storyCanvas.getByText('Biomancy Power')).toBeTruthy();

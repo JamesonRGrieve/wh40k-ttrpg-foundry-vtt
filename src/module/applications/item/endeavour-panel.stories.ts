@@ -11,14 +11,12 @@
  * pass that array directly so the partial works without a full sheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { randomId, seedRandom } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/actor/panel/endeavour-panel.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0xe7de8a04);
 
 interface EndeavourObjectiveLike {
@@ -82,14 +80,14 @@ type Story = StoryObj;
 
 /** No embedded endeavour items — placeholder line renders. */
 export const Empty: Story = {
-    render: () => renderStoryTemplate(compiled, makeCtx([])),
+    render: () => renderSheet(templateSrc, makeCtx([])),
 };
 
 /** One Endeavour mid-flight: two of four objectives complete, 50%. */
 export const InProgress: Story = {
     render: () =>
-        renderStoryTemplate(
-            compiled,
+        renderSheet(
+            templateSrc,
             makeCtx([
                 makeEndeavour({
                     name: 'Recover the Lathe Records',
@@ -111,8 +109,8 @@ export const InProgress: Story = {
 /** One Endeavour fully complete — the "Grant Reward" header button appears. */
 export const Completed: Story = {
     render: () =>
-        renderStoryTemplate(
-            compiled,
+        renderSheet(
+            templateSrc,
             makeCtx([
                 makeEndeavour({
                     name: 'Cleanse the Sump Cell',
