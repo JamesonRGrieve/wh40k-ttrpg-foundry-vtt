@@ -8,9 +8,8 @@
  * Values are fixed for screenshot-diff stability (no Math.random).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './movement-panel-compact.hbs?raw';
 
 initializeStoryHandlebars();
@@ -19,8 +18,6 @@ interface MovementCompactCtx {
     system: { movement: { half: number; full: number; charge: number; run: number } };
 }
 
-const panelTpl = Hbs.compile(panelSrc);
-
 function renderPanel(ctx: MovementCompactCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
@@ -28,7 +25,7 @@ function renderPanel(ctx: MovementCompactCtx): HTMLElement {
     // Constrain width to the combat panel's vitals-column footprint so the
     // composed look matches where this panel actually renders.
     wrapper.style.maxWidth = '280px';
-    wrapper.appendChild(renderTpl(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 
