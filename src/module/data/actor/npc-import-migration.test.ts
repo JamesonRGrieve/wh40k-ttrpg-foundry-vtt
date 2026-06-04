@@ -12,7 +12,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { isJsonArray, isJsonObject, type Json, type JsonObject, migrateCharacteristics, migrateWeapons, toInt } from './npc-import-migration.ts';
+import { isJsonArray, isJsonObject, type Json, type JsonObject, migrateCharacteristics, migrateSkills, migrateWeapons, toInt } from './npc-import-migration.ts';
 
 /** Narrow a JSON-parse result (the one true boundary) to an object, throwing on mismatch. */
 // eslint-disable-next-line no-restricted-syntax -- boundary: argument is the raw JSON.parse() result before any validation
@@ -143,6 +143,49 @@ describe('migrateWeapons', () => {
         const source: JsonObject = { weapons: already };
         migrateWeapons(source);
         expect(source['weapons']).toBe(already);
+    });
+});
+
+describe('migrateSkills (#256)', () => {
+    it('parses a raw skills stat-block string into structured trainedSkills', () => {
+        const source: JsonObject = {
+            skills: 'S: Intimidate\nT:\nAg: Dodge\nInt: Common Lore (Adeptus Arbites), Inquiry, Scrutiny\nPer: Awareness +10\nWP:\nFel: Charm',
+        };
+        migrateSkills(source);
+        const ts = source['trainedSkills'] as JsonObject;
+        // Camel-cased keys, no content table.
+        expect(Object.keys(ts).sort()).toEqual(['awareness', 'charm', 'commonLore', 'dodge', 'inquiry', 'intimidate', 'scrutiny'].sort());
+        expect(ts['dodge']).toMatchObject({ name: 'Dodge', characteristic: 'agility', trained: true, plus10: false });
+        // Advance parsed off the name; characteristic resolved from the line abbrev.
+        expect(ts['awareness']).toMatchObject({ name: 'Awareness', characteristic: 'perception', trained: true, plus10: true });
+        // Specialisation kept in the display name, dropped from the key.
+        expect(ts['commonLore']).toMatchObject({ name: 'Common Lore (Adeptus Arbites)', characteristic: 'intelligence', trained: true });
+        // Empty characteristic lines (T:/WP:) contribute nothing.
+        expect(ts['toughness']).toBeUndefined();
+    });
+
+    it('camel-cases multi-word and hyphenated skill names', () => {
+        const source: JsonObject = { skills: 'Ag: Sleight of Hand\nInt: Tech-Use +20' };
+        migrateSkills(source);
+        const ts = source['trainedSkills'] as JsonObject;
+        expect(Object.keys(ts).sort()).toEqual(['sleightOfHand', 'techUse'].sort());
+        expect(ts['techUse']).toMatchObject({ name: 'Tech-Use', plus20: true });
+    });
+
+    it('does not clobber an already-populated trainedSkills', () => {
+        const existing = { dodge: { trained: true } };
+        const source: JsonObject = { skills: 'Ag: Awareness', trainedSkills: existing };
+        migrateSkills(source);
+        expect(source['trainedSkills']).toBe(existing);
+    });
+
+    it('is a no-op when the skills string is absent or blank', () => {
+        const a: JsonObject = {};
+        migrateSkills(a);
+        expect(a['trainedSkills']).toBeUndefined();
+        const b: JsonObject = { skills: '   ' };
+        migrateSkills(b);
+        expect(b['trainedSkills']).toBeUndefined();
     });
 });
 
