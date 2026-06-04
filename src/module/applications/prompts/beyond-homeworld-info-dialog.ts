@@ -15,10 +15,7 @@
  */
 
 import { listBeyondHomeworlds, type BeyondHomeworldDef } from '../../rules/beyond-homeworlds.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
+import { defineInfoCardDialog } from './define-info-card-dialog.ts';
 
 /** Per-card accent palette — drives the themed border / heading on each card. */
 type AccentKey = 'crimson' | 'grey' | 'green';
@@ -43,11 +40,6 @@ interface BeyondHomeworldCardContext {
     readonly mechanicalHook: string;
     readonly corruptionRiderLabel: string | null;
     readonly subtletyClampLabel: string | null;
-}
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
-interface BeyondHomeworldInfoContext extends Record<string, unknown> {
-    homeworlds: readonly BeyondHomeworldCardContext[];
 }
 
 function formatBonuses(bonuses: readonly string[]): string {
@@ -85,54 +77,16 @@ function buildCardContext(def: BeyondHomeworldDef): BeyondHomeworldCardContext {
  * side-by-side cards. Read-only; closes via the standard ApplicationV2
  * window chrome.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class BeyondHomeworldInfoDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
-    /** @override */
-    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
-        tag: 'div',
-        classes: ['wh40k-rpg', 'dialog', 'beyond-homeworld-info-dialog'],
-        position: {
-            width: 720,
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts the literal 'auto' at runtime but the type is `number`
-            height: 'auto' as unknown as number,
-        },
-        window: {
-            title: 'WH40K.BeyondHomeworld.DialogTitle',
-            resizable: true,
-        },
-    };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
-        cards: {
-            template: 'systems/wh40k-rpg/templates/prompt/beyond-homeworld-info-dialog.hbs',
-            classes: [],
-            scrollable: ['.beyond-homeworld-info-dialog__scroll'],
-        },
-    };
-
-    /* -------------------------------------------- */
-    /*  Rendering                                   */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<BeyondHomeworldInfoContext> {
-        const context = (await super._prepareContext(options)) as BeyondHomeworldInfoContext;
-        return {
-            ...context,
-            homeworlds: listBeyondHomeworlds().map(buildCardContext),
-        };
-    }
-}
-
-/* -------------------------------------------- */
-/*  Helper                                      */
-/* -------------------------------------------- */
+const BeyondHomeworldInfoDialog = defineInfoCardDialog({
+    id: 'beyond-homeworld-info-dialog',
+    titleKey: 'WH40K.BeyondHomeworld.DialogTitle',
+    template: 'systems/wh40k-rpg/templates/prompt/beyond-homeworld-info-dialog.hbs',
+    contextKey: 'homeworlds',
+    cards: () => listBeyondHomeworlds().map(buildCardContext),
+});
+export default BeyondHomeworldInfoDialog;
 
 /** Convenience opener for menu entries / macros. */
 export function openBeyondHomeworldInfoDialog(): void {
-    const dialog = new BeyondHomeworldInfoDialog();
-    void dialog.render({ force: true });
+    void new BeyondHomeworldInfoDialog().render({ force: true });
 }

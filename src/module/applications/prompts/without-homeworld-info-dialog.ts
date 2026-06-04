@@ -17,10 +17,7 @@
 
 import { formatCharacteristicMods, formatWounds } from '../../helpers/characteristic-labels.ts';
 import { listWithoutHomeworlds, type WithoutHomeworldDef } from '../../rules/without-homeworlds.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
+import { defineInfoCardDialog } from './define-info-card-dialog.ts';
 
 /** Per-card accent palette — drives the themed border / heading on each card. */
 type AccentKey = 'crimson' | 'green' | 'grey';
@@ -46,11 +43,6 @@ interface WithoutHomeworldCardContext {
     readonly surpriseSuppressionLabel: string | null;
     readonly serenityLabel: string | null;
     readonly pursuitOfDataLabel: string | null;
-}
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
-interface WithoutHomeworldInfoContext extends Record<string, unknown> {
-    homeworlds: readonly WithoutHomeworldCardContext[];
 }
 
 function buildCardContext(def: WithoutHomeworldDef): WithoutHomeworldCardContext {
@@ -82,58 +74,19 @@ function buildCardContext(def: WithoutHomeworldDef): WithoutHomeworldCardContext
 }
 
 /**
- * GM-only info dialog presenting the three Without home-worlds as
- * side-by-side cards. Read-only; closes via the standard ApplicationV2
- * window chrome.
+ * GM-only info dialog presenting the three Without home-worlds as side-by-side
+ * cards. Read-only; built from the shared info-card-dialog factory (#287).
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class WithoutHomeworldInfoDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
-    /** @override */
-    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
-        tag: 'div',
-        classes: ['wh40k-rpg', 'dialog', 'without-homeworld-info-dialog'],
-        position: {
-            width: 720,
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts the literal 'auto' at runtime but the type is `number`
-            height: 'auto' as unknown as number,
-        },
-        window: {
-            title: 'WH40K.WithoutHomeworld.DialogTitle',
-            resizable: true,
-        },
-    };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
-        cards: {
-            template: 'systems/wh40k-rpg/templates/prompt/without-homeworld-info-dialog.hbs',
-            classes: [],
-            scrollable: ['.without-homeworld-info-dialog__scroll'],
-        },
-    };
-
-    /* -------------------------------------------- */
-    /*  Rendering                                   */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<WithoutHomeworldInfoContext> {
-        const context = (await super._prepareContext(options)) as WithoutHomeworldInfoContext;
-        return {
-            ...context,
-            homeworlds: listWithoutHomeworlds().map(buildCardContext),
-        };
-    }
-}
-
-/* -------------------------------------------- */
-/*  Helper                                      */
-/* -------------------------------------------- */
+const WithoutHomeworldInfoDialog = defineInfoCardDialog({
+    id: 'without-homeworld-info-dialog',
+    titleKey: 'WH40K.WithoutHomeworld.DialogTitle',
+    template: 'systems/wh40k-rpg/templates/prompt/without-homeworld-info-dialog.hbs',
+    contextKey: 'homeworlds',
+    cards: () => listWithoutHomeworlds().map(buildCardContext),
+});
+export default WithoutHomeworldInfoDialog;
 
 /** Convenience opener for menu entries / macros. */
 export function openWithoutHomeworldInfoDialog(): void {
-    const dialog = new WithoutHomeworldInfoDialog();
-    void dialog.render({ force: true });
+    void new WithoutHomeworldInfoDialog().render({ force: true });
 }
