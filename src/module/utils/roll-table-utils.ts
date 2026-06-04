@@ -6,6 +6,12 @@ type RollTableDialog = HTMLDialogElement;
 type RollTableRollOptions = {
     displayChat?: boolean;
     roll?: Roll | null;
+    /**
+     * Optional compendium pack id to scope the lookup to. When set, only that
+     * pack is searched (after world tables) — so a table name shared across
+     * systems (e.g. "Critical Hit") can't mis-resolve to another system's copy.
+     */
+    pack?: string;
 };
 
 /**
@@ -31,13 +37,14 @@ export class RollTableUtils {
      * @returns {Promise<TableResult | null>} The table result
      */
     static async rollTable(tableName: string, options: RollTableRollOptions = {}): Promise<RollTableResult | null> {
-        const { displayChat = true, roll = null } = options;
+        const { displayChat = true, roll = null, pack } = options;
 
-        // Find the table in world tables first, then compendiums
+        // Find the table in world tables first, then compendiums (scoped to
+        // `pack` when given, so a shared table name can't mis-resolve).
         let table: RollTable | null = game.tables.getName(tableName) as RollTable | null;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ??= is the idiomatic null-fill pattern; table is initialised from getName() above, not from schema
-        table ??= await this.findTableInCompendiums(tableName);
+        table ??= await this.findTableInCompendiums(tableName, pack);
 
         if (table === null) {
             ui.notifications.warn(`Roll table "${tableName}" not found.`);
@@ -88,11 +95,16 @@ export class RollTableUtils {
     /**
      * Find a roll table in compendium packs.
      * @param {string} tableName - The name of the table to find
+     * @param {string} [packId] - When set, search only this pack instead of all
+     *   RollTable packs (scopes a shared table name to one system's copy).
      * @returns {Promise<RollTable|null>} The found table or null
      */
-    static async findTableInCompendiums(tableName: string): Promise<RollTable | null> {
+    static async findTableInCompendiums(tableName: string, packId?: string): Promise<RollTable | null> {
         for (const pack of game.packs) {
             if (pack.documentName !== 'RollTable') continue;
+            // Scope to a single pack when requested, so a table name shared
+            // across systems doesn't mis-resolve to another system's copy.
+            if (packId !== undefined && pack.collection !== packId) continue;
 
             // eslint-disable-next-line no-await-in-loop -- sequential pack search; early-exit on first match requires ordered iteration
             const index = await pack.getIndex();
