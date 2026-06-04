@@ -7,15 +7,14 @@
  * template, preload entry) must be gone.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const read = (p: string): string => readFileSync(resolve(__dirname, '..', p), 'utf8');
-
-const CHAR_SHEET = read('src/module/applications/actor/character-sheet.ts');
-const OVERVIEW = read('src/templates/actor/player/tab-overview.hbs');
-const PRELOAD = read('src/module/handlebars/handlebars-manager.ts');
+const CHAR_SHEET = readRepoFile('src/module/applications/actor/character-sheet.ts');
+const OVERVIEW = readRepoFile('src/templates/actor/player/tab-overview.hbs');
+const PRELOAD = readRepoFile('src/module/handlebars/handlebars-manager.ts');
 
 describe('Status tab removal (#263)', () => {
     it('deletes the tab-status.hbs template', () => {
