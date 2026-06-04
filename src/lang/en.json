@@ -4198,7 +4198,31 @@
             "Wounds": {
                 "CriticalInjuries": "Critical Injuries",
                 "AddCriticalInjury": "Add Critical Injury",
-                "NoCriticalInjuries": "No critical injuries"
+                "NoCriticalInjuries": "No critical injuries",
+                "Label": "Wounds",
+                "ReduceTitle": "Reduce Wounds",
+                "IncreaseTitle": "Increase Wounds",
+                "CriticallyWounded": "Critically Wounded — At 0 wounds!",
+                "SeverelyInjured": "Severely Injured — Below 25%",
+                "SeverelyInjuredThreshold": "Severely Injured (25%)",
+                "HalfHealthThreshold": "Half Health (50%)",
+                "GoodHealthThreshold": "Good Health (75%)",
+                "CriticalDamage": "Critical Damage",
+                "ReduceCritical": "Reduce Critical",
+                "IncreaseCritical": "Increase Critical",
+                "CriticalRange": "Critical Damage (0-10)"
+            },
+            "Fatigue": {
+                "Label": "Fatigue",
+                "ReduceTitle": "Reduce Fatigue",
+                "IncreaseTitle": "Increase Fatigue",
+                "CollapseThreshold": "Collapse Threshold",
+                "Unconscious": "Unconscious — Collapsed for {minutes} minutes!",
+                "Fatigued": "Fatigued — Suffer –10 penalty to all Tests",
+                "RestLabel": "Rest (-1)",
+                "RestTitle": "Rest to recover 1 fatigue",
+                "ClearLabel": "Clear All",
+                "ClearTitle": "Clear all fatigue (full rest)"
             }
         },
         "VitalInfoCard": {
