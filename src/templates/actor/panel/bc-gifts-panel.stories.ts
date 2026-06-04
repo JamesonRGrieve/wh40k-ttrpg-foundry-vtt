@@ -14,14 +14,10 @@
  * gifts with no matching rider }).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HB from 'handlebars';
-import { renderTemplate as compileAndRender } from '../../../../stories/mocks';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import type { ChaosAlignment } from '../../../module/config/game-systems/types';
 import { mergeGiftDeltas, resolveGiftForAlignment, type GiftDef } from '../../../module/rules/bc-gifts';
 import panelSrc from './bc-gifts-panel.hbs?raw';
-
-initializeStoryHandlebars();
 
 interface RenderedGift {
     id: string;
@@ -43,13 +39,11 @@ interface GiftsPanelCtx {
     };
 }
 
-const panelTpl = HB.compile(panelSrc);
-
 function renderPanel(ctx: GiftsPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(compileAndRender(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 

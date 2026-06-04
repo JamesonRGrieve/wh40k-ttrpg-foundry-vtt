@@ -14,9 +14,8 @@
  * engine's deterministic output for the documented inputs.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import {
     daemonEngineRageBonus,
     QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT,
@@ -41,13 +40,11 @@ interface SupplementsPanelCtx {
     };
 }
 
-const panelTpl = HandlebarsLib.compile(panelSrc);
-
 function renderPanel(ctx: SupplementsPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 

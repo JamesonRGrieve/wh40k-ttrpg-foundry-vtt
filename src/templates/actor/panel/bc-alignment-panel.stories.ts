@@ -17,12 +17,8 @@
  * value is fixed for diff stability).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './bc-alignment-panel.hbs?raw';
-
-initializeStoryHandlebars();
 
 interface AlignmentPanelCtx {
     alignmentPanel: {
@@ -42,13 +38,11 @@ interface AlignmentPanelCtx {
     };
 }
 
-const panelTpl = HbsLib.compile(panelSrc);
-
 function renderPanel(ctx: AlignmentPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderTpl(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 
