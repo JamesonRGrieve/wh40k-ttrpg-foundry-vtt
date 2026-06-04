@@ -16,6 +16,8 @@
  * sibling flows that read this constant.
  */
 
+import { lookupById } from './homeworlds-common.ts';
+
 /** The five core Characteristics used by every homeworld mod table. */
 export type WithinCharacteristic =
     | 'weaponSkill'
@@ -126,5 +128,5 @@ export const WITHIN_HOMEWORLD_IDS: readonly WithinHomeworldId[] = ['agriWorld', 
 
 /** Convenience: typed lookup. Returns `undefined` for unknown ids. */
 export function getWithinHomeworld(id: string): WithinHomeworldDef | undefined {
-    return Object.hasOwn(WITHIN_HOMEWORLDS, id) ? WITHIN_HOMEWORLDS[id as WithinHomeworldId] : undefined;
+    return lookupById(WITHIN_HOMEWORLDS, id);
 }

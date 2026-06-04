@@ -27,28 +27,11 @@
  * See GitHub issue #102.
  */
 
+import { type HomeworldDefBase, lookupById } from './homeworlds-common.ts';
+
 /* -------------------------------------------- */
 /*  Types                                       */
 /* -------------------------------------------- */
-
-/** Characteristic-mod tuple keyed by canonical DH2 characteristic id. */
-interface WithoutCharacteristicMods {
-    readonly bonuses: readonly string[];
-    readonly penalties: readonly string[];
-}
-
-/** Fate-threshold rule: base value + Emperor's Blessing trigger (`d10 >= N`). */
-interface WithoutFateThreshold {
-    readonly base: number;
-    readonly emperorsBlessing: number;
-}
-
-/** Starting wounds — Without home-worlds use `<base> + 1d5` form. */
-interface WithoutWounds {
-    readonly base: number;
-    /** Always a d5 in Without. Kept as a field so future tables can vary. */
-    readonly dieFaces: 5;
-}
 
 /** Surprise-attack bonus suppression rider (Death World only). */
 interface WithoutSurpriseBonusSuppression {
@@ -80,19 +63,8 @@ interface WithoutPursuitOfDataRider {
     readonly requiresRelatedSpecialisation: boolean;
 }
 
-export interface WithoutHomeworldDef {
+export interface WithoutHomeworldDef extends HomeworldDefBase {
     readonly id: 'deathWorld' | 'gardenWorld' | 'researchStation';
-    readonly label: string;
-    readonly characteristicMods: WithoutCharacteristicMods;
-    readonly fateThreshold: WithoutFateThreshold;
-    readonly wounds: WithoutWounds;
-    readonly aptitude: string;
-    /** Key talents and skills granted at character creation. */
-    readonly keyTalents: readonly string[];
-    /** Recommended backgrounds per RAW. */
-    readonly recommendedBackgrounds: readonly string[];
-    /** Human-readable mechanical hook (also drives the GM info dialog body). */
-    readonly mechanicalHook: string;
     /** Surprise-bonus suppression rider (Death World only). */
     readonly surpriseBonusSuppression?: WithoutSurpriseBonusSuppression;
     /** Shock / Trauma + Insanity rider (Garden World only). */
@@ -210,7 +182,7 @@ export const WITHOUT_HOMEWORLDS: Record<WithoutHomeworldDef['id'], WithoutHomewo
 
 /** Look up a Without home-world definition by id, returning undefined when unknown. */
 export function getWithoutHomeworld(id: string): WithoutHomeworldDef | undefined {
-    return Object.hasOwn(WITHOUT_HOMEWORLDS, id) ? WITHOUT_HOMEWORLDS[id as WithoutHomeworldDef['id']] : undefined;
+    return lookupById(WITHOUT_HOMEWORLDS, id);
 }
 
 /** Ordered list of definitions, suitable for rendering as cards in a UI. */
