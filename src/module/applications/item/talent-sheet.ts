@@ -12,9 +12,10 @@
 import type TalentData from '../../data/item/talent.ts';
 import type DescriptionTemplate from '../../data/shared/description-template.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
-import { characteristicAbbrev, characteristicLabel, combatLabel, resourceLabel } from '../../helpers/characteristic-labels.ts';
+import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+import { formatSkillLabel, prepareTalentModifierRows, prepareTalentSituationalRows } from './talent-display-data.ts';
 
 /** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
 const TAB_LABEL_OVERVIEW = 'WH40K.Tabs.Overview';
@@ -379,46 +380,14 @@ export default class TalentSheet extends BaseItemSheet {
     _prepareModifiersData(system: TalentSystem): ModifiersDisplayData {
         const mods = system.modifiers;
 
-        // Characteristic modifiers (free-form Record<string, unknown>)
-        const charMods: ModifierRow[] = Object.entries(mods.characteristics)
-            .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && entry[1] !== 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._getCharacteristicLabel(key),
-                short: this._getCharacteristicShort(key),
-                value,
-                positive: value > 0,
-            }));
+        // Shared row walk (#288); the display sheet layers on `positive` (and the
+        // characteristic abbreviation) that the editor doesn't need.
+        const rows = prepareTalentModifierRows(mods);
 
-        // Skill modifiers (free-form Record<string, unknown>)
-        const skillMods: ModifierRow[] = Object.entries(mods.skills)
-            .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && entry[1] !== 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._formatSkillLabel(key),
-                value,
-                positive: value > 0,
-            }));
-
-        // Combat modifiers
-        const combatMods: ModifierRow[] = Object.entries(mods.combat)
-            .filter(([_, value]) => value !== 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._formatCombatLabel(key),
-                value,
-                positive: value > 0,
-            }));
-
-        // Resource modifiers
-        const resourceMods: ModifierRow[] = Object.entries(mods.resources)
-            .filter(([_, value]) => value !== 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._formatResourceLabel(key),
-                value,
-                positive: value > 0,
-            }));
+        const charMods: ModifierRow[] = rows.characteristics.map((r) => ({ ...r, short: characteristicAbbrev(r.key), positive: r.value > 0 }));
+        const skillMods: ModifierRow[] = rows.skills.map((r) => ({ ...r, positive: r.value > 0 }));
+        const combatMods: ModifierRow[] = rows.combat.map((r) => ({ ...r, positive: r.value > 0 }));
+        const resourceMods: ModifierRow[] = rows.resources.map((r) => ({ ...r, positive: r.value > 0 }));
 
         // Other modifiers
         const otherMods: OtherModifierRow[] = mods.other.map((mod) => ({
@@ -505,34 +474,13 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _prepareSituationalData(system: TalentSystem): SituationalDisplayData {
-        const situational = system.modifiers.situational;
+        // Shared situational row walk (#288); the display sheet layers on `icon` and
+        // `positive`, which the editor doesn't need.
+        const rows = prepareTalentSituationalRows(system.modifiers.situational);
 
-        const characteristics = situational.characteristics.map((mod) => ({
-            key: mod.key,
-            label: this._getCharacteristicLabel(mod.key),
-            value: mod.value,
-            condition: mod.condition,
-            icon: this._getCharacteristicIcon(mod.key),
-            positive: mod.value > 0,
-        }));
-
-        const skills = situational.skills.map((mod) => ({
-            key: mod.key,
-            label: this._formatSkillLabel(mod.key),
-            value: mod.value,
-            condition: mod.condition,
-            icon: this._getSkillIcon(mod.key),
-            positive: mod.value > 0,
-        }));
-
-        const combat = situational.combat.map((mod) => ({
-            key: mod.key,
-            label: this._formatCombatLabel(mod.key),
-            value: mod.value,
-            condition: mod.condition,
-            icon: this._getCombatIcon(mod.key),
-            positive: mod.value > 0,
-        }));
+        const characteristics = rows.characteristics.map((r) => ({ ...r, icon: this._getCharacteristicIcon(r.key), positive: r.value > 0 }));
+        const skills = rows.skills.map((r) => ({ ...r, icon: this._getSkillIcon(r.key), positive: r.value > 0 }));
+        const combat = rows.combat.map((r) => ({ ...r, icon: this._getCombatIcon(r.key), positive: r.value > 0 }));
 
         const hasAny = characteristics.length > 0 || skills.length > 0 || combat.length > 0;
 
@@ -673,31 +621,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _formatSkillLabel(key: string): string {
-        // Convert camelCase to Title Case
-        return key
-            .replace(/([A-Z])/g, ' $1')
-            .replace(/^./, (str) => str.toUpperCase())
-            .trim();
-    }
-
-    /**
-     * Format combat modifier key to label.
-     * @param {string} key - Combat key
-     * @returns {string} Formatted label
-     * @protected
-     */
-    _formatCombatLabel(key: string): string {
-        return combatLabel(key);
-    }
-
-    /**
-     * Format resource key to label.
-     * @param {string} key - Resource key
-     * @returns {string} Formatted label
-     * @protected
-     */
-    _formatResourceLabel(key: string): string {
-        return resourceLabel(key);
+        return formatSkillLabel(key);
     }
 
     /**
