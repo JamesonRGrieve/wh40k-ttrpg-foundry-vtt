@@ -7,6 +7,8 @@
  * @module helpers/skill-uuid-helper
  */
 
+import { gameSystemPackPrefix } from '../utils/game-system-pack-prefix.ts';
+
 /**
  * Cache for skill UUID lookups to avoid repeated compendium searches
  * @type {Map<string, string|null>}
@@ -48,7 +50,7 @@ export function clearSkillUuidCache(): void {
  * // Returns: "Compendium.wh40k-rpg.dh2-core-items-skills.yyy"
  */
 // eslint-disable-next-line complexity -- UUID lookup requires checking many skill key variants; refactor deferred
-export function findSkillUuid(skillName: string | null | undefined, specialization: string | null = null): string | null | undefined {
+export function findSkillUuid(skillName: string | null | undefined, specialization: string | null = null, gameSystem?: string): string | null | undefined {
     if (skillName === null || skillName === undefined || skillName === '') return null;
 
     // Check if specialization is embedded in the name
@@ -65,8 +67,13 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
         }
     }
 
-    // Build cache key
-    const cacheKey = resolvedSpecialization !== null && resolvedSpecialization !== '' ? `${resolvedSkillName}::${resolvedSpecialization}` : resolvedSkillName;
+    // The skills pack is per-system (dh2-core-items-skills, rt-core-items-skills, …);
+    // pick it by the actor's game-system prefix so all seven systems resolve (#279).
+    const packName = `${gameSystemPackPrefix(gameSystem)}-core-items-skills`;
+
+    // Build cache key — scoped by pack so same-named skills in different systems don't collide.
+    const baseKey = resolvedSpecialization !== null && resolvedSpecialization !== '' ? `${resolvedSkillName}::${resolvedSpecialization}` : resolvedSkillName;
+    const cacheKey = `${packName}::${baseKey}`;
 
     // Check cache first
     if (_skillUuidCache.has(cacheKey)) {
@@ -75,10 +82,10 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
 
     try {
         // Find the skills compendium pack
-        const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-items-skills' && p.documentName === 'Item');
+        const skillPack = game.packs.find((p) => p.metadata.name === packName && p.documentName === 'Item');
 
         if (!skillPack) {
-            console.warn("Skill compendium pack 'dh2-core-items-skills' not found");
+            console.warn(`Skill compendium pack '${packName}' not found`);
             _skillUuidCache.set(cacheKey, null);
             return null;
         }
@@ -157,11 +164,11 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
  * const results = await batchFindSkillUuids(skills);
  * // Returns: Map { "Awareness" => "Compendium...", "Common Lore::Imperium" => "Compendium...", ... }
  */
-export function batchFindSkillUuids(skills: Array<{ name: string; specialization?: string }>): Map<string, string | null | undefined> {
+export function batchFindSkillUuids(skills: Array<{ name: string; specialization?: string }>, gameSystem?: string): Map<string, string | null | undefined> {
     const results = new Map<string, string | null | undefined>();
 
     for (const skill of skills) {
-        const uuid = findSkillUuid(skill.name, skill.specialization ?? null);
+        const uuid = findSkillUuid(skill.name, skill.specialization ?? null, gameSystem);
         const cacheKey = skill.specialization !== undefined && skill.specialization !== '' ? `${skill.name}::${skill.specialization}` : skill.name;
         results.set(cacheKey, uuid);
     }

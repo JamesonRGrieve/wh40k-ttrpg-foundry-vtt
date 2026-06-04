@@ -279,9 +279,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                 if ((grants.talents?.length ?? 0) > 0 && firstTalent?.uuid !== undefined) {
                                     optUuid = firstTalent.uuid;
                                 } else if ((grants.skills?.length ?? 0) > 0) {
+                                    // eslint-disable-next-line no-restricted-syntax -- boundary: per-system gameSystem lives on the actor's system data, not the abstract base surface
+                                    const skillGameSystem = (this.actor.system as { gameSystem?: string }).gameSystem;
                                     const skillData = (grants.skills ?? [])[0];
                                     if (typeof skillData === 'string') {
-                                        optUuid = findSkillUuid(skillData, null) ?? null;
+                                        optUuid = findSkillUuid(skillData, null, skillGameSystem) ?? null;
                                         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skillData may be undefined at runtime after typeof narrowing; guard is correct
                                     } else if (skillData !== undefined) {
                                         if (skillData.uuid !== undefined) {
@@ -289,7 +291,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                         } else {
                                             const skillName = skillData.name ?? '';
                                             const specialization = skillData.specialization ?? null;
-                                            optUuid = findSkillUuid(skillName, specialization) ?? null;
+                                            optUuid = findSkillUuid(skillName, specialization, skillGameSystem) ?? null;
                                         }
                                     }
                                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: optional chains guard runtime; type narrowing is incomplete on index access
