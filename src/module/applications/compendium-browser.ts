@@ -3,6 +3,7 @@
  * Enhanced compendium browsing with filtering, searching, and type organization
  */
 
+import { formatSigned } from '../utils/format.ts';
 import type { ApplicationV2Ctor } from './api/application-types.ts';
 import ApplicationV2Mixin from './api/application-v2-mixin.ts';
 
@@ -452,21 +453,21 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         if (modifiers.armourPoints !== undefined && modifiers.armourPoints !== 0) {
             modifierBadges.push({
                 type: 'ap',
-                label: `AP ${modifiers.armourPoints >= 0 ? '+' : ''}${modifiers.armourPoints}`,
+                label: `AP ${formatSigned(modifiers.armourPoints)}`,
                 positive: modifiers.armourPoints > 0,
             });
         }
         if (modifiers.maxAgility !== undefined && modifiers.maxAgility !== 0) {
             modifierBadges.push({
                 type: 'agility',
-                label: `Ag ${modifiers.maxAgility >= 0 ? '+' : ''}${modifiers.maxAgility}`,
+                label: `Ag ${formatSigned(modifiers.maxAgility)}`,
                 positive: modifiers.maxAgility > 0,
             });
         }
         if (modifiers.weight !== undefined && modifiers.weight !== 0) {
             modifierBadges.push({
                 type: 'weight',
-                label: `${modifiers.weight >= 0 ? '+' : ''}${modifiers.weight}kg`,
+                label: `${formatSigned(modifiers.weight)}kg`,
                 positive: modifiers.weight <= 0, // Lighter is better
             });
         }

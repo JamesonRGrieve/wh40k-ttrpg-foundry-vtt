@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -113,7 +114,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
                     key,
                     label,
                     value,
-                    formatted: `${value >= 0 ? '+' : ''}${value}`,
+                    formatted: `${formatSigned(value)}`,
                 });
             }
         }

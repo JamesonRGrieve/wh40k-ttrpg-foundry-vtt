@@ -8,6 +8,7 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
+import { formatSigned } from '../../utils/format.ts';
 
 /** Minimal typed interface for the Foundry tooltip manager. */
 interface TooltipManager {
@@ -367,7 +368,7 @@ export class TooltipsWH40K {
             html += `
                 <div class="wh40k-tooltip__line wh40k-tooltip__line--modifier">
                     <span class="wh40k-tooltip__label">Modifiers:</span>
-                    <span class="wh40k-tooltip__value">${modifier >= 0 ? '+' : ''}${modifier}</span>
+                    <span class="wh40k-tooltip__value">${formatSigned(modifier)}</span>
                 </div>
             `;
         }
@@ -384,7 +385,7 @@ export class TooltipsWH40K {
                 html += `
                     <div class="wh40k-tooltip__source">
                         <span class="wh40k-tooltip__source-name">${source.name}</span>
-                        <span class="wh40k-tooltip__source-value">${source.value >= 0 ? '+' : ''}${source.value}</span>
+                        <span class="wh40k-tooltip__source-value">${formatSigned(source.value)}</span>
                     </div>
                 `;
             }
@@ -552,7 +553,7 @@ export class TooltipsWH40K {
             html += `
                 <div class="wh40k-tooltip__line wh40k-tooltip__line--modifier">
                     <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Skill.Modifiers')}:</span>
-                    <span class="wh40k-tooltip__value">${bonus >= 0 ? '+' : ''}${bonus}</span>
+                    <span class="wh40k-tooltip__value">${formatSigned(bonus)}</span>
                 </div>
             `;
         }
@@ -561,7 +562,7 @@ export class TooltipsWH40K {
         // makes the rule-correct values explicit (Known (0) → Trained (+10) → …).
         // Untrained for aptitude systems shows the flat -20 penalty; career systems
         // (RT) halve the characteristic instead and surface that as "(÷2)".
-        const formatBonus = (bonusValue: number): string => `${bonusValue >= 0 ? '+' : ''}${bonusValue}`;
+        const formatBonus = (bonusValue: number): string => formatSigned(bonusValue);
         const RANK_TOOLTIP_I18N: Record<string, string | undefined> = {
             Known: 'WH40K.Skills.Rank.Known',
             Trained: 'WH40K.Skills.Rank.Trained',
@@ -738,7 +739,7 @@ export class TooltipsWH40K {
             html += `
                 <div class="wh40k-tooltip__source">
                     <span class="wh40k-tooltip__source-name">${source.name}</span>
-                    <span class="wh40k-tooltip__source-value">${source.value >= 0 ? '+' : ''}${source.value}</span>
+                    <span class="wh40k-tooltip__source-value">${formatSigned(source.value)}</span>
                 </div>
             `;
         }

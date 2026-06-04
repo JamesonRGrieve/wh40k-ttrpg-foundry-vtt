@@ -4,6 +4,7 @@
  */
 
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KSkill, WH40KSkillEntry } from './types/global.d.ts';
+import { formatSigned } from './utils/format.ts';
 
 type EnrichmentOptions = foundry.applications.ux.TextEditor.EnrichmentOptions;
 
@@ -236,7 +237,7 @@ async function enrichModifier(match: RegExpMatchArray, _options?: EnrichmentOpti
     span.dataset['enricherType'] = 'modifier';
     span.dataset['enricherConfig'] = config;
 
-    const displayLabel = label ?? `${stat} ${numValue >= 0 ? '+' : ''}${numValue}`;
+    const displayLabel = label ?? `${stat} ${formatSigned(numValue)}`;
     const icon = numValue >= 0 ? 'arrow-up' : 'arrow-down';
     span.innerHTML = `<i class="fas fa-${icon}"></i> ${displayLabel}`;
 
