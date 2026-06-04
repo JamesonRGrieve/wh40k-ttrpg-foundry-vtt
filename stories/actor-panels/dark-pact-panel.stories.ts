@@ -18,8 +18,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import HandlebarsLib from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/dark-pact-panel.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
 
@@ -45,10 +45,8 @@ interface PanelContext {
     system: { pacts: PactRow[] };
 }
 
-const panelTpl = HandlebarsLib.compile(panelSrc);
-
 function renderPanel(ctx: PanelContext): HTMLElement {
-    return renderStoryTemplate(panelTpl, ctx);
+    return renderSheet(panelSrc, ctx);
 }
 
 const meta: Meta<PanelContext> = {

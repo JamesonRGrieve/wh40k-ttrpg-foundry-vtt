@@ -14,21 +14,15 @@
  * is created.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/mortification-button.hbs?raw';
-import { renderTemplate as renderTpl } from '../mocks';
-import { initializeStoryHandlebars } from '../template-support';
-
-initializeStoryHandlebars();
+import { renderSheet } from '../test-helpers';
 
 interface MortificationContext {
     hasPenitent: boolean;
 }
 
-const panelTpl = Hbs.compile(panelSrc);
-
 function renderPanel(ctx: MortificationContext): HTMLElement {
-    return renderTpl(panelTpl, ctx);
+    return renderSheet(panelSrc, ctx);
 }
 
 const meta: Meta<MortificationContext> = {
