@@ -1,7 +1,30 @@
-import type { GameSystemId } from './config/game-systems/types.ts';
+import { ALL_SYSTEM_IDS, type GameSystemId } from './config/game-systems/types.ts';
 import { SYSTEM_ID } from './constants.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
+
+/** JSON-serialisable setting default — a primitive or an array thereof. */
+type SettingDefault = number | boolean | string | readonly SettingDefault[];
+
+/**
+ * Declarative descriptor for one registered world/client setting (#299). The
+ * registration order of the descriptor array, plus each entry's key/scope/config/
+ * requiresReload/default/type/choice-keys, is load-bearing for migrations and is
+ * pinned by the structural-shape snapshot in `wh40k-rpg-settings.test.ts`.
+ * `name` / `hint` (and choice values) are WH40K.SETTINGS.* langpack keys —
+ * Foundry localizes them at render time.
+ */
+interface SettingDescriptor {
+    key: string;
+    name: string;
+    hint: string;
+    scope: 'world' | 'client';
+    config: boolean;
+    requiresReload?: boolean;
+    default: SettingDefault;
+    type: NumberConstructor | BooleanConstructor | StringConstructor | ArrayConstructor;
+    choices?: Record<string, string>;
+}
 
 /** Degrees-of-success calculation mode. `raw` resolves per game system; the
  * other two force one method across all systems. */
@@ -174,206 +197,232 @@ export class WH40KSettings {
     static getPrimaryGameSystem(): GameSystemId {
         try {
             const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.primaryGameSystem));
-            const ids: string[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
-            return ids.includes(value) ? (value as GameSystemId) : 'dh2';
+            return ALL_SYSTEM_IDS.find((id) => id === value) ?? 'dh2';
         } catch {
             return 'dh2';
         }
     }
 
     static registerSettings(): void {
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, {
-            name: 'World Version',
-            hint: 'Used to handle data migration during system upgrades.',
-            scope: 'world',
-            config: true,
-            requiresReload: true,
-            default: 1,
-            type: Number,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat, {
-            name: 'Active Effect Processing',
-            hint: 'Process effects like Fire or Blood Loss on combat turn change.',
-            scope: 'world',
-            config: true,
-            requiresReload: true,
-            default: true,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls, {
-            name: 'Simple Attack Rolls',
-            hint: 'Changes the default weapon automation behavior to disabled. Attack rolls will trigger a WeaponSkill or BallisticSkill roll as needed.',
-            scope: 'client',
-            config: true,
-            requiresReload: true,
-            default: false,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls, {
-            name: 'Simple Psychic Rolls',
-            hint: 'Changes the default psychic power automation behavior to disabled. Psychic rolls will trigger a simple WillPower roll.',
-            scope: 'client',
-            config: true,
-            requiresReload: true,
-            default: false,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.autoPsychicPhenomena, {
-            name: 'Auto-roll Psychic Phenomena',
-            hint: 'When a psychic power triggers phenomena (per PR sufficiency and doubles rules), automatically draw from the Psychic Phenomena roll table. A draw of 75+ auto-cascades to the Perils of the Warp table. Disable to let the GM draw manually via the sheet buttons.',
-            scope: 'world',
-            config: true,
-            default: true,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.autoRollDamage, {
-            name: 'WH40K.SETTINGS.AutoRollDamage.Name',
-            hint: 'WH40K.SETTINGS.AutoRollDamage.Hint',
-            scope: 'world',
-            config: true,
-            default: true,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.autoApplyDamage, {
-            name: 'WH40K.SETTINGS.AutoApplyDamage.Name',
-            hint: 'WH40K.SETTINGS.AutoApplyDamage.Hint',
-            scope: 'world',
-            config: true,
-            default: false,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.requireCombatToAttack, {
-            name: 'WH40K.SETTINGS.RequireCombatToAttack.Name',
-            hint: 'WH40K.SETTINGS.RequireCombatToAttack.Hint',
-            scope: 'world',
-            config: true,
-            default: true,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.combatPresets, {
-            name: 'Combat Presets',
-            hint: 'Saved NPC combat presets (templates).',
-            scope: 'world',
-            config: false,
-            default: [],
-            type: Array,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.primaryGameSystem, {
-            name: 'Primary Game System',
-            hint: 'The 40K RPG line this world runs. Sets the default line for newly-created actors and the active line used to resolve homologated content viewed outside an actor (e.g. compendium items).',
-            scope: 'world',
-            config: true,
-            requiresReload: true,
-            default: 'dh2',
-            type: String,
-            choices: {
-                rt: 'Rogue Trader',
-                dh1: 'Dark Heresy 1e',
-                dh2: 'Dark Heresy 2e',
-                bc: 'Black Crusade',
-                ow: 'Only War',
-                dw: 'Deathwatch',
-                im: 'Imperium Maledictum',
+        const S = WH40KSettings.SETTINGS;
+        const descriptors: readonly SettingDescriptor[] = [
+            {
+                key: S.worldVersion,
+                name: 'WH40K.SETTINGS.WorldVersion.Name',
+                hint: 'WH40K.SETTINGS.WorldVersion.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: true,
+                default: 1,
+                type: Number,
             },
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset, {
-            name: 'DH2e Economy Ruleset',
-            hint: 'RAW uses only Influence + Requisition (Throne Gelt hidden). Homebrew adds Throne Gelt as street-level currency and keeps Influence at 0 until earned (no starting roll).',
-            scope: 'world',
-            config: true,
-            requiresReload: true,
-            default: 'homebrew',
-            type: String,
-            choices: {
-                homebrew: 'Homebrew (Influence + Requisition + Throne Gelt)',
-                raw: 'RAW (Influence + Requisition)',
+            {
+                key: S.processActiveEffectsDuringCombat,
+                name: 'WH40K.SETTINGS.ProcessActiveEffectsDuringCombat.Name',
+                hint: 'WH40K.SETTINGS.ProcessActiveEffectsDuringCombat.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: true,
+                default: true,
+                type: Boolean,
             },
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.degreesMode, {
-            name: 'WH40K.SETTINGS.DegreesMode.Name',
-            hint: 'WH40K.SETTINGS.DegreesMode.Hint',
-            scope: 'world',
-            config: true,
-            requiresReload: false,
-            default: 'raw',
-            type: String,
-            choices: {
-                raw: 'WH40K.SETTINGS.DegreesMode.Choices.Raw',
-                gen1: 'WH40K.SETTINGS.DegreesMode.Choices.Gen1',
-                gen2: 'WH40K.SETTINGS.DegreesMode.Choices.Gen2',
+            {
+                key: S.simpleAttackRolls,
+                name: 'WH40K.SETTINGS.SimpleAttackRolls.Name',
+                hint: 'WH40K.SETTINGS.SimpleAttackRolls.Hint',
+                scope: 'client',
+                config: true,
+                requiresReload: true,
+                default: false,
+                type: Boolean,
             },
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.promptIncompleteOriginPath, {
-            name: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Name',
-            hint: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Hint',
-            scope: 'world',
-            config: true,
-            requiresReload: false,
-            default: true,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.freeformCharacters, {
-            name: 'WH40K.SETTINGS.FreeformCharacters.Name',
-            hint: 'WH40K.SETTINGS.FreeformCharacters.Hint',
-            scope: 'world',
-            config: true,
-            requiresReload: false,
-            default: false,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset, {
-            name: 'WH40K.SETTINGS.CharacteristicOffset.Name',
-            hint: 'WH40K.SETTINGS.CharacteristicOffset.Hint',
-            scope: 'world',
-            config: true,
-            default: 0,
-            type: Number,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.pointBuyPool, {
-            name: 'WH40K.SETTINGS.PointBuyPool.Name',
-            hint: 'WH40K.SETTINGS.PointBuyPool.Hint',
-            scope: 'world',
-            config: true,
-            // DH2e point-buy allocates 60 points over the base values (#223).
-            default: 60,
-            type: Number,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.movementAutomation, {
-            name: 'WH40K.SETTINGS.MovementAutomation.Name',
-            hint: 'WH40K.SETTINGS.MovementAutomation.Hint',
-            scope: 'world',
-            config: true,
-            default: 'full',
-            type: String,
-            choices: {
-                full: 'WH40K.SETTINGS.MovementAutomation.Full',
-                display: 'WH40K.SETTINGS.MovementAutomation.Display',
-                none: 'WH40K.SETTINGS.MovementAutomation.None',
+            {
+                key: S.simplePsychicRolls,
+                name: 'WH40K.SETTINGS.SimplePsychicRolls.Name',
+                hint: 'WH40K.SETTINGS.SimplePsychicRolls.Hint',
+                scope: 'client',
+                config: true,
+                requiresReload: true,
+                default: false,
+                type: Boolean,
             },
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.multipleFateBurnPerRoll, {
-            name: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Name',
-            hint: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Hint',
-            scope: 'world',
-            config: true,
-            default: false,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady, {
-            name: 'Resync Embedded Items From Compendiums on World Boot',
-            hint: 'On every world load (GM only), reconcile every embedded item that originated from a compendium with its current source. Definition fields (description, mechanics, classification) are overwritten; per-actor state (skill advances, ammo counts, equipped flags, modifications, quantities) is preserved. Set flags.wh40k-rpg.frozenFromCompendium = true on a specific item to opt that one out.',
-            scope: 'world',
-            config: true,
-            default: true,
-            type: Boolean,
-        });
-        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.reconcileOriginGrantsOnReady, {
-            name: 'Reconcile Origin-Path Grants on World Boot',
-            hint: "On every world load (GM only), re-apply each actor's embedded origin paths idempotently so missing trained-skill grants self-heal without re-running character creation. Characteristic/wounds/fate contributions are reconciled against a recorded per-origin delta (no double-counting); skills, talents, and the origin item itself are skip-if-exists. Safe to run every boot.",
-            scope: 'world',
-            config: true,
-            default: true,
-            type: Boolean,
-        });
+            {
+                key: S.autoPsychicPhenomena,
+                name: 'WH40K.SETTINGS.AutoPsychicPhenomena.Name',
+                hint: 'WH40K.SETTINGS.AutoPsychicPhenomena.Hint',
+                scope: 'world',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.autoRollDamage,
+                name: 'WH40K.SETTINGS.AutoRollDamage.Name',
+                hint: 'WH40K.SETTINGS.AutoRollDamage.Hint',
+                scope: 'world',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.autoApplyDamage,
+                name: 'WH40K.SETTINGS.AutoApplyDamage.Name',
+                hint: 'WH40K.SETTINGS.AutoApplyDamage.Hint',
+                scope: 'world',
+                config: true,
+                default: false,
+                type: Boolean,
+            },
+            {
+                key: S.requireCombatToAttack,
+                name: 'WH40K.SETTINGS.RequireCombatToAttack.Name',
+                hint: 'WH40K.SETTINGS.RequireCombatToAttack.Hint',
+                scope: 'world',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.combatPresets,
+                name: 'WH40K.SETTINGS.CombatPresets.Name',
+                hint: 'WH40K.SETTINGS.CombatPresets.Hint',
+                scope: 'world',
+                config: false,
+                default: [],
+                type: Array,
+            },
+            {
+                key: S.primaryGameSystem,
+                name: 'WH40K.SETTINGS.PrimaryGameSystem.Name',
+                hint: 'WH40K.SETTINGS.PrimaryGameSystem.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: true,
+                default: 'dh2',
+                type: String,
+                choices: Object.fromEntries(ALL_SYSTEM_IDS.map((id) => [id, `WH40K.SETTINGS.PrimaryGameSystem.Choices.${id}`])),
+            },
+            {
+                key: S.dh2Ruleset,
+                name: 'WH40K.SETTINGS.DH2Ruleset.Name',
+                hint: 'WH40K.SETTINGS.DH2Ruleset.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: true,
+                default: 'homebrew',
+                type: String,
+                choices: {
+                    homebrew: 'WH40K.SETTINGS.DH2Ruleset.Choices.Homebrew',
+                    raw: 'WH40K.SETTINGS.DH2Ruleset.Choices.Raw',
+                },
+            },
+            {
+                key: S.degreesMode,
+                name: 'WH40K.SETTINGS.DegreesMode.Name',
+                hint: 'WH40K.SETTINGS.DegreesMode.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: 'raw',
+                type: String,
+                choices: {
+                    raw: 'WH40K.SETTINGS.DegreesMode.Choices.Raw',
+                    gen1: 'WH40K.SETTINGS.DegreesMode.Choices.Gen1',
+                    gen2: 'WH40K.SETTINGS.DegreesMode.Choices.Gen2',
+                },
+            },
+            {
+                key: S.promptIncompleteOriginPath,
+                name: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Name',
+                hint: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.freeformCharacters,
+                name: 'WH40K.SETTINGS.FreeformCharacters.Name',
+                hint: 'WH40K.SETTINGS.FreeformCharacters.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: false,
+                type: Boolean,
+            },
+            {
+                key: S.characteristicOffset,
+                name: 'WH40K.SETTINGS.CharacteristicOffset.Name',
+                hint: 'WH40K.SETTINGS.CharacteristicOffset.Hint',
+                scope: 'world',
+                config: true,
+                default: 0,
+                type: Number,
+            },
+            {
+                key: S.pointBuyPool,
+                name: 'WH40K.SETTINGS.PointBuyPool.Name',
+                hint: 'WH40K.SETTINGS.PointBuyPool.Hint',
+                scope: 'world',
+                config: true,
+                // DH2e point-buy allocates 60 points over the base values (#223).
+                default: 60,
+                type: Number,
+            },
+            {
+                key: S.movementAutomation,
+                name: 'WH40K.SETTINGS.MovementAutomation.Name',
+                hint: 'WH40K.SETTINGS.MovementAutomation.Hint',
+                scope: 'world',
+                config: true,
+                default: 'full',
+                type: String,
+                choices: {
+                    full: 'WH40K.SETTINGS.MovementAutomation.Full',
+                    display: 'WH40K.SETTINGS.MovementAutomation.Display',
+                    none: 'WH40K.SETTINGS.MovementAutomation.None',
+                },
+            },
+            {
+                key: S.multipleFateBurnPerRoll,
+                name: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Name',
+                hint: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Hint',
+                scope: 'world',
+                config: true,
+                default: false,
+                type: Boolean,
+            },
+            {
+                key: S.resyncOnReady,
+                name: 'WH40K.SETTINGS.ResyncOnReady.Name',
+                hint: 'WH40K.SETTINGS.ResyncOnReady.Hint',
+                scope: 'world',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.reconcileOriginGrantsOnReady,
+                name: 'WH40K.SETTINGS.ReconcileOriginGrantsOnReady.Name',
+                hint: 'WH40K.SETTINGS.ReconcileOriginGrantsOnReady.Hint',
+                scope: 'world',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+        ];
+        for (const d of descriptors) {
+            game.settings.register(SYSTEM_ID, d.key, {
+                name: d.name,
+                hint: d.hint,
+                scope: d.scope,
+                config: d.config,
+                default: d.default,
+                type: d.type,
+                ...(d.requiresReload !== undefined ? { requiresReload: d.requiresReload } : {}),
+                ...(d.choices !== undefined ? { choices: d.choices } : {}),
+            });
+        }
     }
 }
