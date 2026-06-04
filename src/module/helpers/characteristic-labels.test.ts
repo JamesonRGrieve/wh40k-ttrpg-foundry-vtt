@@ -1,5 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { characteristicAbbrev, characteristicLabel, combatLabel, formatCharacteristicMods, formatWounds, resourceLabel } from './characteristic-labels.ts';
+import {
+    characteristicAbbrev,
+    characteristicFromAbbrev,
+    characteristicLabel,
+    combatLabel,
+    formatCharacteristicMods,
+    formatWounds,
+    resourceLabel,
+} from './characteristic-labels.ts';
 
 /** Minimal CONFIG.wh40k stub exposing only the tables these helpers read. */
 const I18N: Record<string, string> = {
@@ -36,6 +44,21 @@ describe('characteristicLabel / characteristicAbbrev', () => {
     it('falls back for unknown keys (raw key / first-3 upper)', () => {
         expect(characteristicLabel('unknownKey')).toBe('unknownKey');
         expect(characteristicAbbrev('unknownKey')).toBe('UNK');
+    });
+});
+
+describe('characteristicFromAbbrev', () => {
+    it('inverts an abbreviation back to its full characteristic key', () => {
+        expect(characteristicFromAbbrev('WS')).toBe('weaponSkill');
+        expect(characteristicFromAbbrev('Ag')).toBe('agility');
+    });
+
+    it('round-trips with characteristicAbbrev', () => {
+        expect(characteristicFromAbbrev(characteristicAbbrev('weaponSkill'))).toBe('weaponSkill');
+    });
+
+    it('returns null when no characteristic declares the abbreviation', () => {
+        expect(characteristicFromAbbrev('ZZ')).toBeNull();
     });
 });
 

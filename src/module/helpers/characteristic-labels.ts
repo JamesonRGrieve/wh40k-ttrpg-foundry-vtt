@@ -31,6 +31,19 @@ export function characteristicAbbrev(key: string): string {
     return config !== undefined ? config.abbreviation : key.substring(0, 3).toUpperCase();
 }
 
+/**
+ * Inverse of {@link characteristicAbbrev}: resolve an abbreviation (e.g. "WS") back to
+ * its full characteristic key (e.g. `weaponSkill`); `null` when no characteristic in the
+ * active system declares that abbreviation. Reads the same `CONFIG.wh40k.characteristics`
+ * config, so it is system-aware and stays in sync with the forward map.
+ */
+export function characteristicFromAbbrev(abbrev: string): string | null {
+    for (const [key, config] of Object.entries(CONFIG.wh40k.characteristics)) {
+        if (config.abbreviation === abbrev) return key;
+    }
+    return null;
+}
+
 /** Localized combat-bonus label (e.g. `attack` → "Attack Bonus"). */
 export function combatLabel(key: string): string {
     const config = CONFIG.wh40k.combatBonuses[key];
