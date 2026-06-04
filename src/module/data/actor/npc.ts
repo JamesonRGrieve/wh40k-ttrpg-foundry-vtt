@@ -3,6 +3,7 @@ import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { computeMovement } from '../shared/movement-math.ts';
+import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
@@ -650,40 +651,13 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /* -------------------------------------------- */
 
     /**
-     * Default skill-to-characteristic mapping.
+     * Default skill-to-characteristic fallback mapping, derived from the single
+     * source SKILL_DEFINITIONS catalog (#273) so it can no longer drift from the
+     * CreatureTemplate skill schema. Used by getSkillTarget() only when an
+     * individual skill carries no `characteristic` of its own.
      * @type {Object<string, string>}
      */
-    static SKILL_CHARACTERISTIC_MAP: Record<string, string> = {
-        acrobatics: 'agility',
-        athletics: 'strength',
-        awareness: 'perception',
-        charm: 'fellowship',
-        command: 'fellowship',
-        commerce: 'fellowship',
-        commonLore: 'intelligence',
-        deceive: 'fellowship',
-        dodge: 'agility',
-        evaluate: 'intelligence',
-        forbiddenLore: 'intelligence',
-        inquiry: 'fellowship',
-        interrogation: 'willpower',
-        intimidate: 'strength',
-        linguistics: 'intelligence',
-        logic: 'intelligence',
-        medicae: 'intelligence',
-        navigate: 'intelligence',
-        operate: 'agility',
-        parry: 'weaponSkill',
-        psyniscience: 'perception',
-        scholasticLore: 'intelligence',
-        scrutiny: 'perception',
-        security: 'intelligence',
-        sleightOfHand: 'agility',
-        stealth: 'agility',
-        survival: 'perception',
-        techUse: 'intelligence',
-        trade: 'intelligence',
-    };
+    static SKILL_CHARACTERISTIC_MAP: Record<string, string> = skillCharacteristicMap();
 
     /**
      * Calculate the target number for a skill test.
