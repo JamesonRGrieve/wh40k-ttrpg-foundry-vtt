@@ -7,9 +7,8 @@
  * regenerates it; this test fails the build if it is ever out of sync.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
 interface PackFolder {
     name: string;
@@ -21,7 +20,7 @@ interface SystemJson {
     packFolders?: PackFolder[];
 }
 
-const system = JSON.parse(readFileSync(resolve(__dirname, '../src/system.json'), 'utf8')) as SystemJson;
+const system = JSON.parse(readRepoFile('src/system.json')) as SystemJson;
 
 function collectFolderedPacks(folders: PackFolder[] | undefined, out: string[] = []): string[] {
     for (const f of folders ?? []) {

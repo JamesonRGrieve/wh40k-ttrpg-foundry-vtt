@@ -9,11 +9,10 @@
  * pulls Foundry globals at load, so the contract is asserted on the source.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const SRC = readFileSync(resolve(__dirname, '../src/module/applications/character-creation/origin-path-builder.ts'), 'utf8');
+const SRC = readRepoFile('src/module/applications/character-creation/origin-path-builder.ts');
 
 describe('origin builder game-system resolution (#222)', () => {
     it('no longer throws when the game system is unresolved', () => {

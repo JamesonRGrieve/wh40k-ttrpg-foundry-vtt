@@ -9,12 +9,11 @@
  * action (which reads game.user.targets and sets rollData.targetActor).
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const dialog = readFileSync(resolve(__dirname, '../src/module/applications/prompts/unified-roll-dialog.ts'), 'utf8');
-const panel = readFileSync(resolve(__dirname, '../src/templates/prompt/unified/panels/weapon-panel.hbs'), 'utf8');
+const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
+const panel = readRepoFile('src/templates/prompt/unified/panels/weapon-panel.hbs');
 
 describe('attack target selection (#250)', () => {
     it('the dialog exposes the current target to the template', () => {

@@ -6,10 +6,9 @@
  * and bails with a localized warning, and the setting defaults to on.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { WH40KSettings } from '../src/module/wh40k-rpg-settings.ts';
+import { readRepoFile } from './lib/repo-file.ts';
 
 describe('require-combat-to-attack setting (#251)', () => {
     it('defaults to enabled', () => {
@@ -18,7 +17,7 @@ describe('require-combat-to-attack setting (#251)', () => {
 });
 
 describe('performWeaponAttack gates on active combat (#251)', () => {
-    const src = readFileSync(resolve(__dirname, '../src/module/actions/targeted-action-manager.ts'), 'utf8');
+    const src = readRepoFile('src/module/actions/targeted-action-manager.ts');
 
     function performWeaponAttackBody(): string {
         const start = src.indexOf('performWeaponAttack(');

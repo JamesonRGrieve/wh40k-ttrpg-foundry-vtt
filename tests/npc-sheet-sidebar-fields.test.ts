@@ -9,12 +9,11 @@
  * is a literal one on the `_getSidebarHeaderFields()` return / the tab template.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const SRC = readFileSync(resolve(__dirname, '../src/module/applications/actor/npc-sheet.ts'), 'utf8');
-const TAB_NPC = readFileSync(resolve(__dirname, '../src/templates/actor/npc/tab-npc.hbs'), 'utf8');
+const SRC = readRepoFile('src/module/applications/actor/npc-sheet.ts');
+const TAB_NPC = readRepoFile('src/templates/actor/npc/tab-npc.hbs');
 
 describe('NPC sidebar header fields (#252)', () => {
     it('defines _getSidebarHeaderFields', () => {
@@ -52,7 +51,7 @@ describe('NPC sidebar header fields (#252)', () => {
     });
 
     it('the combat panel renders Fate only when npcFateHidden is falsy (#258)', () => {
-        const COMBAT = readFileSync(resolve(__dirname, '../src/templates/actor/panel/combat-station-panel.hbs'), 'utf8');
+        const COMBAT = readRepoFile('src/templates/actor/panel/combat-station-panel.hbs');
         expect(COMBAT).toContain('{{#unless npcFateHidden}}');
         // The fate block (its data-field bindings) sits inside the guard.
         expect(COMBAT).toMatch(/\{\{#unless npcFateHidden\}\}[\s\S]*data-field="system\.fate\.value"[\s\S]*\{\{\/unless\}\}/);
@@ -60,7 +59,7 @@ describe('NPC sidebar header fields (#252)', () => {
 });
 
 describe('NPC fate schema (#258)', () => {
-    const NPC_SRC = readFileSync(resolve(__dirname, '../src/module/data/actor/npc.ts'), 'utf8');
+    const NPC_SRC = readRepoFile('src/module/data/actor/npc.ts');
 
     it('defines a fate {value,max} schema field', () => {
         expect(NPC_SRC).toMatch(/fate: new SchemaField\(\{/);

@@ -5,12 +5,11 @@
  * actions: combat talents, movement, reactions, and utility tools.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const panel = readFileSync(resolve(__dirname, '../src/templates/actor/panel/combat-actions-panel.hbs'), 'utf8');
-const sheet = readFileSync(resolve(__dirname, '../src/module/applications/actor/character-sheet.ts'), 'utf8');
+const panel = readRepoFile('src/templates/actor/panel/combat-actions-panel.hbs');
+const sheet = readRepoFile('src/module/applications/actor/character-sheet.ts');
 
 describe('combat panel no longer lists per-weapon attack actions (#227)', () => {
     it('drops the Attack / Melee / Ranged attack-action groups', () => {
