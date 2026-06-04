@@ -8,6 +8,7 @@
 
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { characteristicFromAbbrev } from '../../helpers/characteristic-labels.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
@@ -49,30 +50,6 @@ const NPC_NATURE_OPTIONS: Record<string, string> = {
     xenos: 'Xenos',
 };
 
-const NPC_SKILL_CHAR_MAP: Readonly<Record<string, string>> = {
-    acrobatics: 'agility',
-    athletics: 'strength',
-    awareness: 'perception',
-    charm: 'fellowship',
-    command: 'fellowship',
-    commerce: 'fellowship',
-    deceive: 'fellowship',
-    dodge: 'agility',
-    inquiry: 'fellowship',
-    interrogation: 'willpower',
-    intimidate: 'strength',
-    logic: 'intelligence',
-    medicae: 'intelligence',
-    parry: 'weaponSkill',
-    psyniscience: 'perception',
-    scrutiny: 'perception',
-    security: 'intelligence',
-    sleightOfHand: 'agility',
-    stealth: 'agility',
-    survival: 'perception',
-    techUse: 'intelligence',
-} as const;
-
 /**
  * Canonical 21 basic DH2 skills with governing characteristic (short form) and
  * grouping category. Single source for the three projections this sheet used to
@@ -103,10 +80,17 @@ const NPC_BASIC_SKILLS: ReadonlyArray<{ key: string; name: string; char: string;
     { key: 'techUse', name: 'Tech-Use', char: 'Int', category: 'technical' },
 ];
 
-/** Pick characteristic from existing state or fall back to the map default. */
+/**
+ * Pick characteristic from existing state, else derive the full characteristic key
+ * from the single-source NPC_BASIC_SKILLS table (#310) — its short `char` is mapped
+ * back to the full key via the system-aware characteristicFromAbbrev helper. Falls
+ * back to `perception` for keys outside the basic set (unchanged behaviour).
+ */
 function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, skillKey: string): string {
     const fromState = existing?.characteristic;
-    return fromState !== undefined && fromState !== '' ? fromState : NPC_SKILL_CHAR_MAP[skillKey] ?? 'perception';
+    if (fromState !== undefined && fromState !== '') return fromState;
+    const basic = NPC_BASIC_SKILLS.find((s) => s.key === skillKey);
+    return (basic ? characteristicFromAbbrev(basic.char) : null) ?? 'perception';
 }
 
 /** Build a trained-skill entry at the requested level, preserving characteristic and bonus from the prior state. */
