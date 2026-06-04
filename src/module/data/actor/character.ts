@@ -754,7 +754,7 @@ export default class CharacterData extends CreatureTemplate {
         const actor = this.parent as ActorParent | null | undefined;
         if (actor?.items === undefined) return;
 
-        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
+        const originItems = this._originPathItems();
 
         // Map step keys (camelCase from schema) to items — covers all game systems.
         // Keys are the canonical ORIGIN_STEP_KEYS plus `lineage` (an RT-only step
@@ -979,7 +979,7 @@ export default class CharacterData extends CreatureTemplate {
         const actor = this.parent as ActorParent | null | undefined;
         if (actor?.items === undefined) return;
 
-        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
+        const originItems = this._originPathItems();
         const tb = this.characteristics.toughness.bonus;
 
         let computedMax = 0;
