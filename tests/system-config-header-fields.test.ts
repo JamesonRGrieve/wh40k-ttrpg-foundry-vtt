@@ -186,8 +186,9 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
 
     it('values flow through from the actor — homeWorld value populates the matching row (DH2 excepted, #226)', () => {
         // DH2 drops the origin-step text rows (shown as bubbles instead), so it has no
-        // homeWorld header row; every other system still surfaces one.
-        const ids: GameSystemId[] = ['rt', 'dh1', 'bc', 'ow', 'dw', 'im'];
+        // homeWorld header row; every other system still surfaces one. Derived from the
+        // canonical list (#312) so a newly-added system is covered automatically.
+        const ids: readonly GameSystemId[] = ALL_SYSTEM_IDS.filter((s) => s !== 'dh2');
         const actor = makeActor({
             system: {
                 bio: { playerName: 'Mona' },

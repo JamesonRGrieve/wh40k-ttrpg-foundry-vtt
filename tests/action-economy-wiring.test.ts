@@ -5,15 +5,13 @@
  * src/module/rules/action-budget.test.ts and action-economy.test.ts.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const read = (p: string): string => readFileSync(resolve(__dirname, '..', p), 'utf8');
-const HOOKS = read('src/module/hooks-manager.ts');
-const PANEL = read('src/module/applications/hud/combat-quick-panel.ts');
-const TEMPLATE = read('src/templates/hud/combat-quick-panel.hbs');
-const LANG = JSON.parse(read('src/lang/en.json')) as { WH40K: { Combat: Record<string, string> } };
+const HOOKS = readRepoFile('src/module/hooks-manager.ts');
+const PANEL = readRepoFile('src/module/applications/hud/combat-quick-panel.ts');
+const TEMPLATE = readRepoFile('src/templates/hud/combat-quick-panel.hbs');
+const LANG = JSON.parse(readRepoFile('src/lang/en.json')) as { WH40K: { Combat: Record<string, string> } };
 
 describe('action-economy wiring (#264)', () => {
     it('registers the per-turn reset hook at boot', () => {
