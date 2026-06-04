@@ -8,15 +8,13 @@
  *    they call the shared locomotionField(initial) exported from vehicle.ts.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const read = (p: string): string => readFileSync(resolve(__dirname, '..', p), 'utf8');
-const CHARACTER = read('src/module/data/actor/character.ts');
-const VEHICLE = read('src/module/data/actor/vehicle.ts');
-const AIRCRAFT = read('src/module/data/actor/aircraft.ts');
-const WATERCRAFT = read('src/module/data/actor/watercraft.ts');
+const CHARACTER = readRepoFile('src/module/data/actor/character.ts');
+const VEHICLE = readRepoFile('src/module/data/actor/vehicle.ts');
+const AIRCRAFT = readRepoFile('src/module/data/actor/aircraft.ts');
+const WATERCRAFT = readRepoFile('src/module/data/actor/watercraft.ts');
 
 describe('character origin-step de-dup (#272)', () => {
     it('uses the shared ORIGIN_STEP_KEYS + mapOriginStepNames helper', () => {

@@ -10,14 +10,12 @@
  *    NPC_BASIC_SKILLS canonical list, the other two projections derive from it.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
-const read = (p: string): string => readFileSync(resolve(__dirname, '..', p), 'utf8');
-const CHAR = read('src/module/applications/actor/character-sheet.ts');
-const BASE = read('src/module/applications/actor/base-actor-sheet.ts');
-const NPC = read('src/module/applications/actor/npc-sheet.ts');
+const CHAR = readRepoFile('src/module/applications/actor/character-sheet.ts');
+const BASE = readRepoFile('src/module/applications/actor/base-actor-sheet.ts');
+const NPC = readRepoFile('src/module/applications/actor/npc-sheet.ts');
 
 const countOccurrences = (haystack: string, needle: string): number => haystack.split(needle).length - 1;
 
