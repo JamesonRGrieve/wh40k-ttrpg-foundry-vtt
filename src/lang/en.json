@@ -590,6 +590,59 @@
             }
         },
         "SETTINGS": {
+            "WorldVersion": {
+                "Name": "World Version",
+                "Hint": "Used to handle data migration during system upgrades."
+            },
+            "ProcessActiveEffectsDuringCombat": {
+                "Name": "Active Effect Processing",
+                "Hint": "Process effects like Fire or Blood Loss on combat turn change."
+            },
+            "SimpleAttackRolls": {
+                "Name": "Simple Attack Rolls",
+                "Hint": "Changes the default weapon automation behavior to disabled. Attack rolls will trigger a WeaponSkill or BallisticSkill roll as needed."
+            },
+            "SimplePsychicRolls": {
+                "Name": "Simple Psychic Rolls",
+                "Hint": "Changes the default psychic power automation behavior to disabled. Psychic rolls will trigger a simple WillPower roll."
+            },
+            "AutoPsychicPhenomena": {
+                "Name": "Auto-roll Psychic Phenomena",
+                "Hint": "When a psychic power triggers phenomena (per PR sufficiency and doubles rules), automatically draw from the Psychic Phenomena roll table. A draw of 75+ auto-cascades to the Perils of the Warp table. Disable to let the GM draw manually via the sheet buttons."
+            },
+            "CombatPresets": {
+                "Name": "Combat Presets",
+                "Hint": "Saved NPC combat presets (templates)."
+            },
+            "PrimaryGameSystem": {
+                "Name": "Primary Game System",
+                "Hint": "The 40K RPG line this world runs. Sets the default line for newly-created actors and the active line used to resolve homologated content viewed outside an actor (e.g. compendium items).",
+                "Choices": {
+                    "rt": "Rogue Trader",
+                    "dh1": "Dark Heresy 1e",
+                    "dh2": "Dark Heresy 2e",
+                    "bc": "Black Crusade",
+                    "ow": "Only War",
+                    "dw": "Deathwatch",
+                    "im": "Imperium Maledictum"
+                }
+            },
+            "DH2Ruleset": {
+                "Name": "DH2e Economy Ruleset",
+                "Hint": "RAW uses only Influence + Requisition (Throne Gelt hidden). Homebrew adds Throne Gelt as street-level currency and keeps Influence at 0 until earned (no starting roll).",
+                "Choices": {
+                    "Homebrew": "Homebrew (Influence + Requisition + Throne Gelt)",
+                    "Raw": "RAW (Influence + Requisition)"
+                }
+            },
+            "ResyncOnReady": {
+                "Name": "Resync Embedded Items From Compendiums on World Boot",
+                "Hint": "On every world load (GM only), reconcile every embedded item that originated from a compendium with its current source. Definition fields (description, mechanics, classification) are overwritten; per-actor state (skill advances, ammo counts, equipped flags, modifications, quantities) is preserved. Set flags.wh40k-rpg.frozenFromCompendium = true on a specific item to opt that one out."
+            },
+            "ReconcileOriginGrantsOnReady": {
+                "Name": "Reconcile Origin-Path Grants on World Boot",
+                "Hint": "On every world load (GM only), re-apply each actor's embedded origin paths idempotently so missing trained-skill grants self-heal without re-running character creation. Characteristic/wounds/fate contributions are reconciled against a recorded per-origin delta (no double-counting); skills, talents, and the origin item itself are skip-if-exists. Safe to run every boot."
+            },
             "DegreesMode": {
                 "Name": "Degrees of Success Calculation",
                 "Hint": "How degrees of success/failure are counted. RAW resolves per game system. Gen 1 (DH1, Deathwatch, Rogue Trader): one extra degree per full 10 points of margin — floor(|target − roll| / 10). Gen 2 (Black Crusade, Only War, Dark Heresy 2e): 1 + the difference of the tens digits.",
