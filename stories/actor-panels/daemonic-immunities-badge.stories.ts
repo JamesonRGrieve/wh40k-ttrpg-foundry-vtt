@@ -11,12 +11,8 @@
  * exist for visual review of the badge in isolation.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import badgeSrc from '../../src/templates/actor/partial/daemonic-immunities-badge.hbs?raw';
-import { renderTemplate as renderTpl } from '../mocks';
-import { initializeStoryHandlebars } from '../template-support';
-
-initializeStoryHandlebars();
+import { renderSheet } from '../test-helpers';
 
 interface BadgeContext {
     /** Reserved — the badge consumes no context fields; carried so the
@@ -24,10 +20,8 @@ interface BadgeContext {
     _: never;
 }
 
-const badgeTpl = HBS.compile(badgeSrc);
-
 function renderBadge(): HTMLElement {
-    return renderTpl(badgeTpl, {});
+    return renderSheet(badgeSrc, {});
 }
 
 const meta: Meta<BadgeContext> = {

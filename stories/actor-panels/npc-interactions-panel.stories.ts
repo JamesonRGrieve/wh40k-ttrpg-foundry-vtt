@@ -13,12 +13,8 @@
  * creates a live NPC, opens its sheet, and snaps the panel.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/npc-interactions-panel.hbs?raw';
-import { renderTemplate as renderTpl } from '../mocks';
-import { initializeStoryHandlebars } from '../template-support';
-
-initializeStoryHandlebars();
+import { renderSheet } from '../test-helpers';
 
 interface InteractionRow {
     pcId: string;
@@ -36,10 +32,8 @@ interface InteractionsPanelContext {
     };
 }
 
-const panelTpl = HbsLib.compile(panelSrc);
-
 function renderPanel(ctx: InteractionsPanelContext): HTMLElement {
-    return renderTpl(panelTpl, ctx);
+    return renderSheet(panelSrc, ctx);
 }
 
 const meta: Meta<InteractionsPanelContext> = {

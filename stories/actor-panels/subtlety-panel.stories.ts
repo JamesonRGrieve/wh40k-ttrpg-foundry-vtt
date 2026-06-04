@@ -22,12 +22,11 @@
  * e2e spec (`tests/e2e/subtlety-panel.spec.ts`) snaps the live-Foundry render.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
 import panelSrc from '../../src/templates/actor/panel/subtlety-panel.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { seedRandom } from '../mocks/extended';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
 
@@ -50,8 +49,6 @@ interface SubtletyContext {
     subtletyAdjusters: SubtletyAdjusterRow[];
 }
 
-const panelTpl = HbsLib.compile(panelSrc);
-
 /**
  * Render the panel wrapped in the `.wh40k-rpg` + `data-wh40k-system="dh2"`
  * ancestor the live DH2 sheet provides, so `important: '.wh40k-rpg'`-scoped
@@ -61,7 +58,7 @@ function renderPanel(ctx: SubtletyContext): HTMLElement {
     const root = document.createElement('div');
     root.className = 'wh40k-rpg sheet actor character';
     root.dataset['wh40kSystem'] = 'dh2';
-    root.append(renderStoryTemplate(panelTpl, ctx));
+    root.append(renderSheet(panelSrc, ctx));
     return root;
 }
 
