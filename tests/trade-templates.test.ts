@@ -4,18 +4,14 @@
  * regression fails here (fast) instead of only in the Playwright story run.
  */
 
-import HB from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import approvalSrc from '../src/templates/dialogs/transaction-approval-dialog.hbs?raw';
 import requestSrc from '../src/templates/dialogs/transaction-request-dialog.hbs?raw';
-import { renderTemplate as compileAndRender } from '../stories/mocks';
-import { initializeStoryHandlebars } from '../stories/template-support';
+import { renderSheet } from '../stories/test-helpers';
 
-initializeStoryHandlebars();
-
-function compile(source: string, context: object): HTMLElement {
-    return compileAndRender(HB.compile(source), context);
-}
+// Route both trade dialogs through the shared renderSheet helper (#269) — the prior
+// HB.compile + renderTemplate was identical to renderSheet for these sources.
+const compile = (source: string, context: object): HTMLElement => renderSheet(source, context);
 
 const baseRequestCtx = {
     hasSources: true,

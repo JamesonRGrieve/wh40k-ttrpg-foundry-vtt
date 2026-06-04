@@ -1,4 +1,3 @@
-import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import type { SidebarHeaderField } from '../src/module/config/game-systems/types';
 import npcTabSrc from '../src/templates/actor/npc/tab-npc.hbs?raw';
@@ -8,22 +7,11 @@ import biographyTabSrc from '../src/templates/actor/player/tab-biography.hbs?raw
 import skillsTabSrc from '../src/templates/actor/player/tab-skills.hbs?raw';
 import tabsSrc from '../src/templates/actor/player/tabs.hbs?raw';
 import { mockNpcSheetContext, mockPlayerSheetContext } from '../stories/mocks/sheet-contexts';
-import { initializeStoryHandlebars } from '../stories/template-support';
+import { renderSheet, renderSheetParts } from '../stories/test-helpers';
 
-initializeStoryHandlebars();
-
-const headerTemplate = Hbs.compile(headerSrc);
-const headerRtTemplate = Hbs.compile(headerRtSrc);
-const tabsTemplate = Hbs.compile(tabsSrc);
-const biographyTemplate = Hbs.compile(biographyTabSrc);
-const skillsTemplate = Hbs.compile(skillsTabSrc);
-const npcTemplate = Hbs.compile(npcTabSrc);
-
-function wrap(html: string): HTMLElement {
-    const root = document.createElement('div');
-    root.innerHTML = html;
-    return root;
-}
+// Compose templates through the shared renderSheet / renderSheetParts helpers (#269)
+// instead of hand-rolled Hbs.compile + innerHTML mounts. Single-template tests use
+// renderSheet; multi-template composites use renderSheetParts (one slot per partial).
 
 /**
  * Legacy DH2 header shape kept here so the input[name="system.rank"] assertion
@@ -68,10 +56,7 @@ function npcContext(): ReturnType<typeof mockNpcSheetContext> {
 describe('character sheet template composition', () => {
     it('renders the DH2 sidebar header and biography tab together', () => {
         const context = playerContext('dh2');
-        const element = wrap(`
-            <aside>${headerTemplate(context)}${tabsTemplate(context)}</aside>
-            <main>${biographyTemplate(context)}</main>
-        `);
+        const element = renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: biographyTabSrc }], context);
 
         expect(element.querySelector('input[name="system.rank"]')).not.toBeNull();
         // After commit 6b6f164 origin-path bubbles render in the shared DH header too;
@@ -82,14 +67,14 @@ describe('character sheet template composition', () => {
 
     it('renders Rogue Trader origin-path stages only in the RT header variant', () => {
         const context = playerContext('rt');
-        const element = wrap(headerRtTemplate(context));
+        const element = renderSheet(headerRtSrc, context);
 
         expect(element.querySelector('[data-item-id^="origin"]')).not.toBeNull();
     });
 
     it('renders the IM sidebar header fields in the shared layout', () => {
         const context = playerContext('im');
-        const element = wrap(headerTemplate(context));
+        const element = renderSheet(headerSrc, context);
 
         expect(element.querySelector('input[name="system.originPath.homeWorld"]')?.getAttribute('value')).toBe('House Varonius');
         expect(element.querySelector('input[name="system.originPath.motivation"]')?.getAttribute('value')).toBe('Recover a lost ledger');
@@ -99,10 +84,7 @@ describe('character sheet template composition', () => {
 
     it('renders the NPC tab with IM-compatible sheet chrome and controls', () => {
         const context = npcContext();
-        const element = wrap(`
-            <aside>${headerTemplate(context)}${tabsTemplate(context)}</aside>
-            <main>${npcTemplate(context)}</main>
-        `);
+        const element = renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: npcTabSrc }], context);
 
         expect(element.textContent).toContain('GM Tools');
         expect(element.textContent).toContain('Scale to Threat');
@@ -115,7 +97,7 @@ describe('character sheet template composition', () => {
             ...playerContext('dh2'),
             tab: { id: 'skills', group: 'primary', cssClass: 'tab-skills', active: true },
         };
-        const element = wrap(skillsTemplate(context));
+        const element = renderSheet(skillsTabSrc, context);
 
         const overlay = element.querySelector<HTMLElement>('.wh40k-char-hud-circle [data-roll-type="characteristic"]');
         expect(overlay).not.toBeNull();

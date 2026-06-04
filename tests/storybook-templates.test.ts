@@ -1,4 +1,3 @@
-import HandlebarsLib from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import actionRollChatSrc from '../src/templates/chat/action-roll-chat.hbs?raw';
 import damageRollChatSrc from '../src/templates/chat/damage-roll-chat.hbs?raw';
@@ -19,16 +18,13 @@ import {
     mockQuickActionItem,
     mockRollData,
     mockWeaponSheetContext,
-    renderTemplate as renderMockTemplate,
 } from '../stories/mocks';
-import { initializeStoryHandlebars } from '../stories/template-support';
+import { renderSheet } from '../stories/test-helpers';
 
-initializeStoryHandlebars();
-
-function compileToElement(source: string, context: object): HTMLElement {
-    const template = HandlebarsLib.compile(source);
-    return renderMockTemplate(template, context);
-}
+// Route the shared component templates through renderSheet (#269) — the prior
+// hand-rolled compile + renderTemplate was identical to renderSheet for these
+// (non-@partial-block) sources, so this is a behavior-preserving DRY swap.
+const compileToElement = (source: string, context: object): HTMLElement => renderSheet(source, context);
 
 describe('storybook shared component templates', () => {
     it('renders active effects panel controls for non-embedded items', () => {
