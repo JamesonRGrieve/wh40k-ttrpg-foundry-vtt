@@ -9,6 +9,8 @@
  * - Scaling formulas for balanced NPC creation
  */
 
+import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
+
 /* -------------------------------------------- */
 /*  Internal shape interfaces                   */
 /* -------------------------------------------- */
@@ -433,44 +435,8 @@ export default class ThreatCalculator {
         const baseValue = Math.round(tier.charMin + (tier.charMax - tier.charMin) * positionInTier);
 
         const characteristics: NPCCharacteristics = {};
-        const allStats = [
-            'weaponSkill',
-            'ballisticSkill',
-            'strength',
-            'toughness',
-            'agility',
-            'intelligence',
-            'perception',
-            'willpower',
-            'fellowship',
-            'influence',
-        ];
-
-        const labels: Record<string, string> = {
-            weaponSkill: 'Weapon Skill',
-            ballisticSkill: 'Ballistic Skill',
-            strength: 'Strength',
-            toughness: 'Toughness',
-            agility: 'Agility',
-            intelligence: 'Intelligence',
-            perception: 'Perception',
-            willpower: 'Willpower',
-            fellowship: 'Fellowship',
-            influence: 'Influence',
-        };
-
-        const shorts: Record<string, string> = {
-            weaponSkill: 'WS',
-            ballisticSkill: 'BS',
-            strength: 'S',
-            toughness: 'T',
-            agility: 'Ag',
-            intelligence: 'Int',
-            perception: 'Per',
-            willpower: 'WP',
-            fellowship: 'Fel',
-            influence: 'Inf',
-        };
+        // Characteristic list + labels/abbreviations come from CONFIG.wh40k.characteristics (#286).
+        const allStats = Object.keys(CONFIG.wh40k.characteristics);
 
         for (const stat of allStats) {
             let value = baseValue;
@@ -492,8 +458,8 @@ export default class ThreatCalculator {
             value = Math.max(10, Math.min(99, value));
 
             characteristics[stat] = {
-                label: labels[stat] ?? stat,
-                short: shorts[stat] ?? stat,
+                label: characteristicLabel(stat),
+                short: characteristicAbbrev(stat),
                 base: value,
                 modifier: 0,
                 unnatural: 0,
