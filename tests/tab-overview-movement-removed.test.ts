@@ -24,9 +24,9 @@ describe('Movement panel placement (#266)', () => {
         expect(OVERVIEW).not.toContain('actor.movement.charge');
     });
 
-    it('keeps the Armour dashboard-zone on the Overview tab', () => {
-        expect(OVERVIEW).toContain('title="Armour"');
-        expect(OVERVIEW).toContain('armour-silhouette.hbs');
+    it('keeps the Armour zone on the Overview tab', () => {
+        // The Armour zone is now the shared armour-zone.hbs partial (#234).
+        expect(OVERVIEW).toContain('armour-zone.hbs');
     });
 
     it('keeps the movement panel on the Combat tab (compact variant)', () => {
