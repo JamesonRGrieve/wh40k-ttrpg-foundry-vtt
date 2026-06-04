@@ -727,14 +727,8 @@ export default class WeaponSheet extends ContainerItemSheet {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard: index might exceed array
         if (mod === undefined) return;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns the broad Foundry document union; we only need the sheet handle
-        const modItem = (await fromUuid(mod.uuid)) as { sheet?: { render: (force: boolean) => unknown } | null } | null;
-        if (modItem === null) {
-            ui.notifications.error(`Modification "${mod.name}" not found. It may have been deleted.`);
-            return;
-        }
-
-        void modItem.sheet?.render(true);
+        // Shared fromUuid → sheet.render idiom (#290).
+        await this.viewItemByUuid(mod.uuid, `Modification "${mod.name}" not found. It may have been deleted.`);
     }
 
     /* -------------------------------------------- */
