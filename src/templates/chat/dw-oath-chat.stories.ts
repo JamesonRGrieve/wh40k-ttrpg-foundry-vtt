@@ -6,9 +6,8 @@
  *   2. Released — Oath released, no buff/abilities (bookkeeping card).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
+import { renderSheet } from '../../../stories/test-helpers';
 import cardSrc from './dw-oath-chat.hbs?raw';
 
 initializeStoryHandlebars();
@@ -32,13 +31,11 @@ interface OathChatCtx {
     showGrantedEmpty: boolean;
 }
 
-const cardTpl = HbsLib.compile(cardSrc);
-
 function renderCard(ctx: OathChatCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTpl(cardTpl, ctx));
+    wrapper.appendChild(renderSheet(cardSrc, ctx));
     return wrapper;
 }
 
