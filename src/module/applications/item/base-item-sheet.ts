@@ -44,6 +44,26 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /* -------------------------------------------- */
 
+    /**
+     * Open the sheet of the document referenced by `uuid` — the
+     * `fromUuid(uuid) → sheet.render(true)` idiom shared across the item sheets
+     * (weapon/armour modifications, talent/container nested items, …) (#290).
+     * Returns false (and optionally notifies) when the uuid no longer resolves.
+     */
+    async viewItemByUuid(uuid: string, notFoundMessage?: string): Promise<boolean> {
+        if (uuid === '') return false;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns the broad Foundry document union; we only need the sheet handle
+        const doc = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => unknown } | null } | null;
+        if (doc === null) {
+            if (notFoundMessage !== undefined && notFoundMessage !== '') ui.notifications.error(notFoundMessage);
+            return false;
+        }
+        void doc.sheet?.render(true);
+        return true;
+    }
+
+    /* -------------------------------------------- */
+
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {

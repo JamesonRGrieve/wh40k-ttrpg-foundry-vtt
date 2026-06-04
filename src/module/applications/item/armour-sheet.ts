@@ -243,14 +243,8 @@ export default class ArmourSheet extends ContainerItemSheet {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes this possibly undefined in strict mode
         if (mod === null || mod === undefined || mod.uuid === '') return;
 
-        try {
-            const doc = await fromUuid(mod.uuid);
-            const sheet =
-                doc !== null && typeof doc === 'object' && 'sheet' in doc ? (doc as { sheet: { render: (force: boolean) => void } | null }).sheet : null;
-            sheet?.render(true);
-        } catch (err) {
-            console.error('Failed to open modification:', err);
-        }
+        // Shared fromUuid → sheet.render idiom (#290).
+        await this.viewItemByUuid(mod.uuid);
     }
 
     /**

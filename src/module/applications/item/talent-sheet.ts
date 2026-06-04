@@ -181,10 +181,6 @@ interface SelectOption {
     selected: boolean;
 }
 
-interface FromUuidResult {
-    sheet?: { render: (force: boolean) => void } | null;
-}
-
 type RollSkillFn = (key: string) => Promise<void>;
 
 /**
@@ -835,14 +831,8 @@ export default class TalentSheet extends BaseItemSheet {
         const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 
-        try {
-            const item = (await fromUuid(uuid)) as FromUuidResult | null;
-            if (item?.sheet !== undefined && item.sheet !== null) {
-                item.sheet.render(true);
-            }
-        } catch (err) {
-            console.warn(`Could not load item from UUID: ${uuid}`, err);
-        }
+        // Shared fromUuid → sheet.render idiom (#290).
+        await this.viewItemByUuid(uuid);
     }
 
     /* -------------------------------------------- */
