@@ -19,9 +19,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import type { ComradeState } from '../../../module/rules/ow-comrade';
 import {
     applyMedicaeAttempt,
@@ -68,13 +67,11 @@ function buildContext(opts: { recoveryDays: number; refitAvailable: boolean; com
     };
 }
 
-const panelTpl = HandlebarsLib.compile(panelSrc);
-
 function renderPanel(ctx: ComradeHealingPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'ow';
-    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 
