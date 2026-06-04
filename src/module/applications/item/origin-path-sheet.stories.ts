@@ -2,15 +2,14 @@
  * Stories for OriginPathSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-origin-path-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HBS.compile(templateSrc);
 const rng = seedRandom(0x0a1b2c);
 
 interface OriginPathCtx {
@@ -90,12 +89,12 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTpl(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
 
 export const RendersOriginName: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByDisplayValue('Hive World')).toBeTruthy();
@@ -103,7 +102,7 @@ export const RendersOriginName: Story = {
 };
 
 export const RendersStepBadge: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByText('Home World')).toBeTruthy();

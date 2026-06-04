@@ -1,12 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HB from 'handlebars';
 import modifiersSrc from '../../src/templates/prompt/unified/modifiers.hbs?raw';
-import { renderTemplate as compileAndRender } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
-
-const modifiersTemplate = HB.compile(modifiersSrc);
 
 interface ExtendedToggleArgs {
     extended: boolean;
@@ -56,7 +53,7 @@ const meta: Meta<ExtendedToggleArgs> = {
         extended: { control: { type: 'boolean' } },
         extendedThreshold: { control: { type: 'number', min: 1, step: 1 } },
     },
-    render: (args) => compileAndRender(modifiersTemplate, buildContext(args)),
+    render: (args) => renderSheet(modifiersSrc, buildContext(args)),
 };
 
 export default meta;

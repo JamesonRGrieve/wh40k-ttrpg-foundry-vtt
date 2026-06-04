@@ -1,13 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { resolvePsyMode, type PsyMode, type PsyModeResolved } from '../../src/module/rules/psychic-push.ts';
 import psychicPanelSrc from '../../src/templates/prompt/unified/panels/psychic-panel.hbs?raw';
-import { renderTemplate as renderMockTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
-
-const psychicPanelTemplate = HandlebarsLib.compile(psychicPanelSrc);
 
 interface PsyContextArgs {
     mode: PsyMode;
@@ -64,7 +61,7 @@ const meta: Meta<PsyContextArgs> = {
         pushLevel: { control: { type: 'number', min: 1, max: 3, step: 1 } },
         pr: { control: { type: 'number', min: 0, max: 12, step: 1 } },
     },
-    render: (args) => renderMockTemplate(psychicPanelTemplate, buildContext(args)),
+    render: (args) => renderSheet(psychicPanelSrc, buildContext(args)),
 };
 
 export default meta;

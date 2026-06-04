@@ -3,12 +3,12 @@ import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-gear-sheet.hbs?raw';
 import activeEffectsPanelSrc from '../../../../src/templates/item/panel/active-effects-panel.hbs?raw';
-import { mockGearSheetContext, renderTemplate as renderTpl } from '../../../../stories/mocks';
+import { mockGearSheetContext } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 initializeStoryHandlebars();
 Hbs.registerPartial('systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs', activeEffectsPanelSrc);
-const compiled = Hbs.compile(templateSrc);
 
 interface Args {
     overrides?: Parameters<typeof mockGearSheetContext>[0];
@@ -16,7 +16,7 @@ interface Args {
 
 const meta = {
     title: 'Item Sheets/GearSheet',
-    render: (args) => renderTpl(compiled, mockGearSheetContext(args.overrides)),
+    render: (args) => renderSheet(templateSrc, mockGearSheetContext(args.overrides)),
     args: {},
 } satisfies Meta<Args>;
 export default meta;

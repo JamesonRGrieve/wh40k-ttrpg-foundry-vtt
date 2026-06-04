@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-ammo-sheet.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 initializeStoryHandlebars();
 // AmmoSheet exposes setIncludes / setToArray on its render context. The story
@@ -13,7 +13,6 @@ HbsStory.registerHelper('setIncludes', (key: string | number, set: Set<string | 
     if (Array.isArray(set)) return set.includes(key);
     return false;
 });
-const compiled = HbsStory.compile(templateSrc);
 
 interface AmmoArgs {
     item: {
@@ -55,7 +54,7 @@ const baseSystem = (): AmmoArgs['item']['system'] => ({
 
 const meta: Meta<AmmoArgs> = {
     title: 'Item Sheets/AmmoSheet',
-    render: (args) => renderStoryTemplate(compiled, args),
+    render: (args) => renderSheet(templateSrc, args),
     args: {
         item: { name: 'Bolt Rounds (Standard)', img: 'icons/svg/bullet.svg', system: baseSystem() },
         system: baseSystem(),

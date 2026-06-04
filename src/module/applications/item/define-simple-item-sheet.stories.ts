@@ -5,15 +5,14 @@
  * correct class name, tab list, and template wiring.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import { expect } from 'storybook/test';
-import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-weapon-mod-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Hbs.compile(templateSrc);
 const rng = seedRandom(0xd3f100);
 
 interface SimpleSheetCtx {
@@ -45,12 +44,12 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTpl(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
 
 export const RendersItemName: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const field = canvasElement.querySelector<HTMLInputElement>('[name="name"]');
         await expect(field).toBeTruthy();
@@ -59,7 +58,7 @@ export const RendersItemName: Story = {
 };
 
 export const RendersWeightField: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const field = canvasElement.querySelector<HTMLInputElement>('[name="system.weight"]');
         await expect(field).toBeTruthy();

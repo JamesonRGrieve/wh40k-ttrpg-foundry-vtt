@@ -2,15 +2,14 @@
  * Stories for CyberneticSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-cybernetic-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0xc7b3a1c);
 
 interface CyberneticCtx {
@@ -73,12 +72,12 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderMockTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderMockTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
 
 export const RendersCyberneticName: Story = {
-    render: () => renderMockTemplate(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         await expect(storyCanvas.getByDisplayValue('Mechadendrite (Basic)')).toBeTruthy();
@@ -86,7 +85,7 @@ export const RendersCyberneticName: Story = {
 };
 
 export const RendersTypeLabel: Story = {
-    render: () => renderMockTemplate(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         await expect(storyCanvas.getByText('Mechadendrite')).toBeTruthy();

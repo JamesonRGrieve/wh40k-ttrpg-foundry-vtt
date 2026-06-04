@@ -2,14 +2,13 @@
  * Stories for ArmourSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockArmourSheetContext, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
+import { mockArmourSheetContext } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-armour-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HbsLib.compile(templateSrc);
 
 interface Args {
     overrides?: Parameters<typeof mockArmourSheetContext>[0];
@@ -17,7 +16,7 @@ interface Args {
 
 const meta = {
     title: 'Item Sheets/ArmourSheet',
-    render: (args: Args) => renderStoryTemplate(compiled, mockArmourSheetContext(args.overrides)),
+    render: (args: Args) => renderSheet(templateSrc, mockArmourSheetContext(args.overrides)),
     args: {},
 } satisfies Meta<Args>;
 export default meta;

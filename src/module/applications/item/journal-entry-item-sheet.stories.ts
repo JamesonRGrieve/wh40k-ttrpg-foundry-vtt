@@ -2,15 +2,14 @@
  * Stories for JournalEntryItemSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-journal-entry-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Hbs.compile(templateSrc);
 const rng = seedRandom(0xd0c5a3e);
 
 interface JournalSheetCtx {
@@ -53,12 +52,12 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderTpl(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
 
 export const RendersTitle: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: ({ canvasElement }) => {
         const cv = within(canvasElement);
         void expect(cv.getByDisplayValue('Encounter at Ore Processor 12')).toBeTruthy();
@@ -66,7 +65,7 @@ export const RendersTitle: Story = {
 };
 
 export const RendersLocationField: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: ({ canvasElement }) => {
         const field = canvasElement.querySelector<HTMLInputElement>('[name="system.place"]');
         void expect(field).toBeTruthy();

@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Hbs from 'handlebars';
 import { expect } from 'storybook/test';
-import { renderTemplate as renderTpl, mockActor } from '../../../../stories/mocks';
+import { mockActor } from '../../../../stories/mocks';
 import { withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 initializeStoryHandlebars();
 
@@ -52,8 +53,7 @@ export default meta;
 
 type Story = StoryObj;
 
-const wrapperTemplate = Hbs.compile(
-    `{{> systems/wh40k-rpg/templates/actor/partial/degree-meter-panel
+const wrapperTemplateSrc = `{{> systems/wh40k-rpg/templates/actor/partial/degree-meter-panel
         key=key label=label icon=icon actor=actor system=system value=value
         sourceValue=sourceValue field=field cssPrefix=cssPrefix
         gradientClass=gradientClass decTitle=decTitle incTitle=incTitle
@@ -63,8 +63,7 @@ const wrapperTemplate = Hbs.compile(
         itemSingular=itemSingular dropType=dropType dropLabel=dropLabel
         dropCompactLabel=dropCompactLabel infoIcon=infoIcon
         infoIntro=infoIntro degreeInfoTitle=degreeInfoTitle
-        degreeInfo=degreeInfo}}`,
-);
+        degreeInfo=degreeInfo}}`;
 
 interface CorruptionLikeContext {
     key: string;
@@ -183,7 +182,7 @@ function insanityContext(value: number, systemId: SystemId): CorruptionLikeConte
 
 export const CorruptionDH2Pure: Story = {
     name: 'Corruption · DH2 · Pure',
-    render: () => renderTpl(wrapperTemplate, corruptionContext(0, 'dh2')),
+    render: () => renderSheet(wrapperTemplateSrc, corruptionContext(0, 'dh2')),
     play: async ({ canvasElement }) => {
         // No active warning at value=0.
         const banner = canvasElement.querySelector('.tw-text-warning, .tw-text-crimson, .tw-text-crimson-light');
@@ -193,12 +192,12 @@ export const CorruptionDH2Pure: Story = {
 
 export const CorruptionDH2Soiled: Story = {
     name: 'Corruption · DH2 · Soiled (45)',
-    render: () => renderTpl(wrapperTemplate, corruptionContext(45, 'dh2')),
+    render: () => renderSheet(wrapperTemplateSrc, corruptionContext(45, 'dh2')),
 };
 
 export const CorruptionDH2Debased: Story = {
     name: 'Corruption · DH2 · Debased (75)',
-    render: () => renderTpl(wrapperTemplate, corruptionContext(75, 'dh2')),
+    render: () => renderSheet(wrapperTemplateSrc, corruptionContext(75, 'dh2')),
     play: async ({ canvasElement }) => {
         // Warning banner is rendered when value >= 60.
         const icon = canvasElement.querySelector('.fa-skull-crossbones');
@@ -208,15 +207,15 @@ export const CorruptionDH2Debased: Story = {
 
 export const InsanityDH2: Story = {
     name: 'Insanity · DH2 · Mid (50)',
-    render: () => renderTpl(wrapperTemplate, insanityContext(50, 'dh2')),
+    render: () => renderSheet(wrapperTemplateSrc, insanityContext(50, 'dh2')),
 };
 
 export const CorruptionIM: Story = {
     name: 'Corruption · IM · Mid (40)',
-    render: () => renderTpl(wrapperTemplate, corruptionContext(40, 'im')),
+    render: () => renderSheet(wrapperTemplateSrc, corruptionContext(40, 'im')),
 };
 
 export const CorruptionRT: Story = {
     name: 'Corruption · RT · Profane (95)',
-    render: () => renderTpl(wrapperTemplate, corruptionContext(95, 'rt')),
+    render: () => renderSheet(wrapperTemplateSrc, corruptionContext(95, 'rt')),
 };

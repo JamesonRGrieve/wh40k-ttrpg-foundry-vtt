@@ -6,13 +6,12 @@
  * bonus/penalty, and accent class.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/prompt/without-homeworld-info-dialog.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Hbs.compile(templateSrc);
 
 interface CardCtx {
     // eslint-disable-next-line no-restricted-syntax -- boundary: a mock Handlebars card context is a heterogeneous bag with no single shared shape
@@ -47,10 +46,10 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => compiled(makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
 export const RendersACardPerEntry: Story = {
-    render: () => compiled(makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const card = canvasElement.querySelector('.without-homeworld-card');
         await expect(card).toBeTruthy();

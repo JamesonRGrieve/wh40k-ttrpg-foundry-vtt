@@ -2,15 +2,14 @@
  * Stories for EndeavourSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { randomId, seedRandom } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-endeavour-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HbsLib.compile(templateSrc);
 const rng = seedRandom(0xe7de8a04);
 
 interface EndeavourTab {
@@ -74,10 +73,10 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
 export const RendersProgressBar: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }): Promise<void> => {
         const bar = canvasElement.querySelector('[data-testid="endeavour-progress-bar"]');
         await expect(bar).toBeTruthy();
@@ -89,8 +88,8 @@ export const RendersProgressBar: Story = {
 
 export const RendersObjectiveRows: Story = {
     render: () =>
-        renderTpl(
-            compiled,
+        renderSheet(
+            templateSrc,
             makeCtx({
                 tabs: {
                     details: { id: 'details', tab: 'details', group: 'primary', active: false, cssClass: '', label: 'WH40K.Endeavours.Header' },

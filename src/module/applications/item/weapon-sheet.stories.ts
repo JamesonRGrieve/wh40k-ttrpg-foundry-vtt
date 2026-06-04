@@ -2,14 +2,13 @@
  * Stories for WeaponSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockWeaponSheetContext, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
+import { mockWeaponSheetContext } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-weapon-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HandlebarsLib.compile(templateSrc);
 
 interface Args {
     overrides?: Parameters<typeof mockWeaponSheetContext>[0];
@@ -17,7 +16,7 @@ interface Args {
 
 const meta = {
     title: 'Item Sheets/WeaponSheet',
-    render: (args: Args) => renderStoryTemplate(compiled, mockWeaponSheetContext(args.overrides)),
+    render: (args: Args) => renderSheet(templateSrc, mockWeaponSheetContext(args.overrides)),
     args: {},
 } satisfies Meta<Args>;
 export default meta;
