@@ -50,5 +50,6 @@ export async function createItem(runtime: FoundryRuntime, data: CreateData): Pro
     return klass.create({ name: data.name ?? 'Test Item', ...data });
 }
 
-export const GAME_SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'] as const;
-export type GameSystemId = (typeof GAME_SYSTEM_IDS)[number];
+// Single-sourced from the engine's canonical list (#312) so the per-system integration
+// loop iterates exactly the systems the system config knows about — no drift.
+export { ALL_SYSTEM_IDS as GAME_SYSTEM_IDS, type GameSystemId } from '../../../src/module/config/game-systems/types.ts';

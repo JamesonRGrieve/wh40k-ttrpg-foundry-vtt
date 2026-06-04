@@ -8,17 +8,15 @@
  * NPC DataModel + sheet pull Foundry globals at load).
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from './lib/repo-file.ts';
 
 // The pure splitNpcType / vocabulary behaviour is unit-tested co-located at
 // src/module/data/actor/npc-type-axes.test.ts; this file asserts the wiring.
 
-const read = (p: string): string => readFileSync(resolve(__dirname, '..', p), 'utf8');
-const NPC = read('src/module/data/actor/npc.ts');
-const SHEET = read('src/module/applications/actor/npc-sheet.ts');
-const CONFIG_SRC = read('src/module/config.ts');
+const NPC = readRepoFile('src/module/data/actor/npc.ts');
+const SHEET = readRepoFile('src/module/applications/actor/npc-sheet.ts');
+const CONFIG_SRC = readRepoFile('src/module/config.ts');
 
 describe('NPC schema split (#257 — source contract)', () => {
     it('declares tier + nature schema fields, not type/role', () => {
