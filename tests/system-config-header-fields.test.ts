@@ -9,8 +9,9 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts';
-import type { GameSystemId, SidebarHeaderField } from '../src/module/config/game-systems/types.ts';
+import { ALL_SYSTEM_IDS, type GameSystemId, type SidebarHeaderField } from '../src/module/config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../src/module/documents/base-actor.ts';
+import { asBaseActor } from './lib/actor-stub.ts';
 
 interface ActorLike {
     system?: {
@@ -47,7 +48,7 @@ afterAll(() => {
 });
 
 function makeActor(overrides: ActorLike = {}): WH40KBaseActor {
-    return {
+    return asBaseActor({
         system: {
             bio: { playerName: 'Mona' },
             originPath: {
@@ -62,8 +63,7 @@ function makeActor(overrides: ActorLike = {}): WH40KBaseActor {
             rank: 3,
             ...overrides.system,
         },
-        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is the full Foundry actor type; this is a structural test mock satisfying only the surface getHeaderFields reaches into
-    } as unknown as WH40KBaseActor;
+    });
 }
 
 function names(fields: SidebarHeaderField[]): string[] {
@@ -151,7 +151,7 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
     });
 
     it('the player name field is no longer part of getHeaderFields (rendered separately on the identity row)', () => {
-        const ids: GameSystemId[] = ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'];
+        const ids: readonly GameSystemId[] = ALL_SYSTEM_IDS;
         const actor = makeActor({ system: { bio: {} } });
         for (const id of ids) {
             const fields = SystemConfigRegistry.get(id).getHeaderFields(actor);

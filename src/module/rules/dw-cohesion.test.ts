@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { scriptedRng } from '../testing/rng.ts';
 import {
     applyCohesionDamage,
     cohesionChallenge,
@@ -7,7 +8,6 @@ import {
     COHESION_DAMAGE_THRESHOLD,
     maxCohesion,
     recoverCohesion,
-    type CohesionRng,
 } from './dw-cohesion';
 
 /**
@@ -17,17 +17,6 @@ import {
  * RAW citation and a hand-checked value, so failures fingerprint to a
  * specific rule rather than a vague "math drifted".
  */
-
-/** Build a deterministic RNG that returns the supplied values in order. */
-function scriptedRng(values: readonly number[]): CohesionRng {
-    let i = 0;
-    return (_size: number): number => {
-        // Clamp the index so the last value is repeated when the script is exhausted.
-        const idx = Math.min(i, values.length - 1);
-        i++;
-        return values[idx] ?? 1;
-    };
-}
 
 describe('Constants', () => {
     it('threshold is 10 pre-soak damage', () => {

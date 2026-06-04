@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { asBaseActor as asActor } from '../testing/actor-stub.ts';
+import { stubChatRuntime, type ChatRuntimeHandle } from '../testing/chat-runtime.ts';
 import {
     MEDICAE_MECHADENDRITE,
     actorHasMedicaeMechadendrite,
@@ -131,12 +132,6 @@ function makeActor(opts: { gameSystem?: string; items?: FakeItem[]; medicae?: nu
     };
 }
 
-/** Cast a FakeMedicaeActor to the Foundry WH40KBaseActorDocument surface the rule helpers consume. */
-function asActor(a: FakeMedicaeActor): WH40KBaseActorDocument {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: FakeMedicaeActor is a structural subset of Foundry's WH40KBaseActorDocument; the rule helpers only read the listed fields
-    return a as unknown as WH40KBaseActorDocument;
-}
-
 describe('findMedicaeMechadendrite / actorHasMedicaeMechadendrite', () => {
     it('finds the cybernetic on a DH2 actor that owns one', () => {
         const actor = makeActor({ gameSystem: 'dh2', items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
@@ -167,39 +162,25 @@ describe('findMedicaeMechadendrite / actorHasMedicaeMechadendrite', () => {
 /* -------------------------------------------- */
 
 describe('staunchBloodLoss (runtime, #104)', () => {
-    let createdContent: string | null;
+    interface StaunchCardContext {
+        success?: boolean;
+        bleedStopped?: boolean;
+        gameSystem?: string;
+    }
+
+    let chat: ChatRuntimeHandle;
 
     beforeEach(() => {
-        createdContent = null;
-        vi.stubGlobal('game', {
-            user: { id: 'gm-1' },
-            settings: { get: () => 'roll' },
-        });
-        vi.stubGlobal('ChatMessage', {
-            create: vi.fn(async (data: { content: string }) => {
-                createdContent = data.content;
-                return Promise.resolve(data);
-            }),
-            getWhisperRecipients: () => [],
-        });
-        interface StaunchCardContext {
-            success?: boolean;
-            bleedStopped?: boolean;
-            gameSystem?: string;
-        }
-        vi.stubGlobal('foundry', {
-            applications: {
-                handlebars: {
-                    renderTemplate: vi.fn(async (_tpl: string, ctx: StaunchCardContext) =>
-                        Promise.resolve(`<card success="${String(ctx.success)}" bleed="${String(ctx.bleedStopped)}" sys="${String(ctx.gameSystem)}">`),
-                    ),
-                },
+        chat = stubChatRuntime({
+            renderTemplate: (_tpl, context) => {
+                const ctx = context as StaunchCardContext;
+                return `<card success="${String(ctx.success)}" bleed="${String(ctx.bleedStopped)}" sys="${String(ctx.gameSystem)}">`;
             },
         });
     });
 
     afterEach(() => {
-        vi.unstubAllGlobals();
+        chat.restore();
         vi.restoreAllMocks();
     });
 
@@ -214,8 +195,8 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         expect(res.success).toBe(true);
         expect(res.target).toBe(50);
         expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', ['ae-1']);
-        expect(createdContent).toContain('success="true"');
-        expect(createdContent).toContain('bleed="true"');
+        expect(chat.lastContent()).toContain('success="true"');
+        expect(chat.lastContent()).toContain('bleed="true"');
     });
 
     it('on failure leaves the Blood Loss effect intact and emits a failure card', async () => {
@@ -228,8 +209,8 @@ describe('staunchBloodLoss (runtime, #104)', () => {
 
         expect(res.success).toBe(false);
         expect(actor.deleteEmbeddedDocuments).not.toHaveBeenCalled();
-        expect(createdContent).toContain('success="false"');
-        expect(createdContent).toContain('bleed="false"');
+        expect(chat.lastContent()).toContain('success="false"');
+        expect(chat.lastContent()).toContain('bleed="false"');
     });
 
     it('only removes effects flagged as blood loss, not other harmful AEs', async () => {
@@ -246,6 +227,6 @@ describe('staunchBloodLoss (runtime, #104)', () => {
     it('propagates the actor game system onto the chat card for per-system theming', async () => {
         const actor = makeActor({ gameSystem: 'rt', medicae: 50 });
         await staunchBloodLoss(asActor(actor), () => 5);
-        expect(createdContent).toContain('sys="rt"');
+        expect(chat.lastContent()).toContain('sys="rt"');
     });
 });
