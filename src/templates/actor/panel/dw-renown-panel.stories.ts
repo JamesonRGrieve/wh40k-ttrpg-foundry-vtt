@@ -16,9 +16,8 @@
  * fixed for diff stability — no Math.random in this module.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsStory from 'handlebars';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './dw-renown-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -38,13 +37,11 @@ interface RenownPanelCtx {
     };
 }
 
-const panelTpl = HbsStory.compile(panelSrc);
-
 function renderPanel(ctx: RenownPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 

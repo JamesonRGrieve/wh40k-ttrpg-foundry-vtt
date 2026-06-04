@@ -10,9 +10,8 @@
  * Every value is fixed for diff stability (no Math.random).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './dw-oath-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -28,13 +27,11 @@ interface OathPanelCtx {
     };
 }
 
-const panelTpl = HbsLib.compile(panelSrc);
-
 function renderPanel(ctx: OathPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderTpl(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 

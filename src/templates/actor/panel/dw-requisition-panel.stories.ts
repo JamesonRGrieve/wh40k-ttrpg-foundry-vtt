@@ -12,9 +12,8 @@
  * in stories" rule in CLAUDE.md.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsLib from 'handlebars';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import type { RenownRank } from '../../../module/rules/dw-renown.ts';
 import type { MissionRating } from '../../../module/rules/dw-requisition.ts';
 import panelSrc from './dw-requisition-panel.hbs?raw';
@@ -29,13 +28,11 @@ interface RequisitionPanelCtx {
     };
 }
 
-const panelTpl = HbsLib.compile(panelSrc);
-
 function renderPanel(ctx: RequisitionPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dw';
-    wrapper.appendChild(renderStoryTemplate(panelTpl, ctx));
+    wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
 }
 
