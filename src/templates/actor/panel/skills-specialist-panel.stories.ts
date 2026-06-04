@@ -8,9 +8,8 @@
  * Values fixed for screenshot-diff stability (no Math.random).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import specialistSrc from './skills-specialist-panel.hbs?raw';
 import talentSrc from './talent-panel.hbs?raw';
 
@@ -25,16 +24,13 @@ interface StatsHeadingsCtx {
     inEditMode: boolean;
 }
 
-const specialistTpl = Hbs.compile(specialistSrc);
-const talentTpl = Hbs.compile(talentSrc);
-
 function renderPanels(ctx: StatsHeadingsCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = 'dh2';
     wrapper.style.maxWidth = '420px';
-    wrapper.appendChild(renderTpl(specialistTpl, ctx));
-    wrapper.appendChild(renderTpl(talentTpl, ctx));
+    wrapper.appendChild(renderSheet(specialistSrc, ctx));
+    wrapper.appendChild(renderSheet(talentSrc, ctx));
     return wrapper;
 }
 

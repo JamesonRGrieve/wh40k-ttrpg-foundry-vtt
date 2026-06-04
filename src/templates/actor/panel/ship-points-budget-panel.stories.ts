@@ -10,9 +10,8 @@
  * navigates each of these stories and asserts the matching status indicators.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './ship-points-budget-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -61,10 +60,8 @@ function buildContext(opts: { spent: number; budget: number; missing: Set<string
     };
 }
 
-const panelTpl = HandlebarsLib.compile(panelSrc);
-
 function renderPanel(ctx: PanelContext): HTMLElement {
-    return renderStoryTemplate(panelTpl, ctx);
+    return renderSheet(panelSrc, ctx);
 }
 
 const meta: Meta<PanelContext> = {
