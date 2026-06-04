@@ -5,7 +5,15 @@ import { characteristicField, initiativeField, movementField, sizeField, woundsF
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
-import { CHARACTERISTIC_SHORT_TO_FULL, type Json, type JsonObject, migrateCharacteristics, migrateWeapons, toInt } from './npc-import-migration.ts';
+import {
+    CHARACTERISTIC_SHORT_TO_FULL,
+    type Json,
+    type JsonObject,
+    migrateCharacteristics,
+    migrateSkills,
+    migrateWeapons,
+    toInt,
+} from './npc-import-migration.ts';
 import { mapOriginStepNames, type OriginItemLike } from './origin-step-names.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
@@ -1123,6 +1131,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         NPCData.#migrateThreatLevel(source);
         NPCData.#migrateCharacteristics(source);
         NPCData.#migrateWeapons(source);
+        NPCData.#migrateSkills(source);
     }
 
     /**
@@ -1213,6 +1222,16 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateWeapons(source: Record<string, unknown>): void {
         migrateWeapons(source as JsonObject);
+    }
+
+    /**
+     * Parse the legacy raw `skills` stat-block string into the structured
+     * `trainedSkills` map so imported NPCs surface their known skills (#256).
+     * @param {object} source - The source system data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
+    static #migrateSkills(source: Record<string, unknown>): void {
+        migrateSkills(source as JsonObject);
     }
 }
 

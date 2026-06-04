@@ -168,3 +168,61 @@ export function migrateWeapons(source: JsonObject): void {
 
     source['weapons'] = { mode: 'simple', simple };
 }
+
+/**
+ * Map a skill display name to its camelCase `trainedSkills` key by pure string
+ * transform (no content table): "Sleight of Hand" → `sleightOfHand`, "Tech-Use"
+ * → `techUse`, "Common Lore (Adeptus Arbites)" → `commonLore`. Specialisation
+ * parentheticals are dropped from the key but kept in the stored display name.
+ */
+function skillNameToKey(name: string): string {
+    const base = name.replace(/\([^)]*\)/g, ' ').trim();
+    const words = base.split(/[\s/-]+/).filter((w) => w !== '');
+    return words.map((w, i) => (i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())).join('');
+}
+
+/**
+ * Parse a legacy raw `skills` stat-block string into the structured
+ * `trainedSkills` map the schema expects (#256). The string is line-per-
+ * governing-characteristic, e.g.:
+ *   "S: Intimidate\nAg: Dodge\nInt: Common Lore (Adeptus Arbites), Inquiry, Scrutiny\nPer: Awareness +10"
+ * Each comma-separated skill becomes a trained entry; a trailing +10/+20/+30 is
+ * parsed off as the advance, and the line's characteristic abbreviation
+ * (S/Ag/Int/…) is resolved to the full key. No-op when `trainedSkills` is already
+ * populated (so a hand-curated NPC is never clobbered).
+ */
+export function migrateSkills(source: JsonObject): void {
+    const raw = source['skills'];
+    if (typeof raw !== 'string' || raw.trim() === '') return;
+    const existing = source['trainedSkills'];
+    if (isJsonObject(existing) && Object.keys(existing).length > 0) return;
+
+    const shortToFull = new Map<string, string>(Object.entries(CHARACTERISTIC_SHORT_TO_FULL).map(([short, full]) => [short.toLowerCase(), full]));
+    const trained: JsonObject = {};
+    for (const line of raw.split('\n')) {
+        const colon = line.indexOf(':');
+        if (colon < 0) continue;
+        const characteristic = shortToFull.get(line.slice(0, colon).trim().toLowerCase()) ?? '';
+        const list = line.slice(colon + 1).trim();
+        if (list === '') continue;
+        for (const part of list.split(',')) {
+            const entry = part.trim();
+            if (entry === '') continue;
+            const advMatch = /\+(\d+)\s*$/.exec(entry);
+            const plus = advMatch !== null ? toInt(advMatch[1], 0) : 0;
+            const name = entry.replace(/\s*\+\d+\s*$/, '').trim();
+            const key = skillNameToKey(name);
+            if (key === '') continue;
+            trained[key] = {
+                name,
+                characteristic,
+                trained: true,
+                plus10: plus >= 10,
+                plus20: plus >= 20,
+                plus30: plus >= 30,
+                bonus: 0,
+            };
+        }
+    }
+    if (Object.keys(trained).length > 0) source['trainedSkills'] = trained;
+}
