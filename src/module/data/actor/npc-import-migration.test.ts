@@ -121,17 +121,21 @@ describe('migrateWeapons', () => {
         });
     });
 
-    it('defaults null/blank damage to 1d10 (the administratum-adept "Data-slate" shape)', () => {
+    it('drops non-weapon rows: tools with no damage and the Gear/Talents catch-all rows (#254)', () => {
         const source: JsonObject = {
-            weapons: [{ name: 'Data-slate', range: '-', rof: '-', damage: null, pen: null, clip: null, reload: null, qualities: 'Tool (not a weapon)' }],
+            weapons: [
+                { name: 'Combat Shotgun', range: '30m', damage: '1d10+4 I', pen: '0', qualities: 'Scatter' },
+                { name: 'Shock Maul', range: '-', damage: '1d10+3 E', pen: '0', qualities: 'Shocking' },
+                { name: 'Data-slate', range: '-', damage: null, qualities: 'Tool (not a weapon)' },
+                { name: 'Gear/\nOther', range: 'robes, chrono', damage: null },
+                { name: 'Talents/\nTraits', range: 'Total Recall', damage: null },
+            ],
         };
         migrateWeapons(source);
-        expect(source['weapons']).toEqual({
-            mode: 'simple',
-            simple: [
-                { name: 'Data-slate', damage: '1d10', pen: 0, range: '-', rof: '-', clip: 0, reload: '-', special: 'Tool (not a weapon)', class: 'melee' },
-            ],
-        });
+        const result = source['weapons'] as { mode: string; simple: { name: string }[] };
+        expect(result.mode).toBe('simple');
+        // Only the two real weapons survive; tools + Gear/Talents rows are dropped.
+        expect(result.simple.map((w) => w.name)).toEqual(['Combat Shotgun', 'Shock Maul']);
     });
 
     it('is a no-op when weapons is already an object', () => {

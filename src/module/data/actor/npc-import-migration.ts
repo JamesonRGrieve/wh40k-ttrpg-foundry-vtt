@@ -127,12 +127,26 @@ export function migrateCharacteristics(source: JsonObject): void {
  * `source.weapons`. Coerces `pen`/`clip` to ints, folds `qualities` into
  * `special`, and infers melee vs ranged class from `range`. No-op once the
  * field is already an object.
+ *
+ * Stat-block parsing folds non-weapon rows into the same array — tool entries
+ * ("Data-slate", "Auto-quill") and the catch-all "Gear/Other" / "Talents/Traits"
+ * rows, all of which carry no real damage value (#254). Those are dropped so the
+ * NPC's weapon list shows only actual weapons.
  */
 export function migrateWeapons(source: JsonObject): void {
     const weapons = source['weapons'];
     if (!isJsonArray(weapons)) return;
 
-    const simple: SimpleWeapon[] = weapons.map((entry) => {
+    const realWeapons = weapons.filter((entry) => {
+        if (!isJsonObject(entry)) return false;
+        const damage = entry['damage'];
+        const name = typeof entry['name'] === 'string' ? entry['name'] : '';
+        // A weapon has a real damage value and isn't one of the parser's
+        // catch-all gear/talents rows.
+        return typeof damage === 'string' && damage.trim() !== '' && !/^(gear|talents?|traits?)\b/i.test(name.trim());
+    });
+
+    const simple: SimpleWeapon[] = realWeapons.map((entry) => {
         const w: JsonObject = isJsonObject(entry) ? entry : {};
         const range = typeof w['range'] === 'string' && w['range'] !== '' ? w['range'] : 'Melee';
         const isMelee = range === '-' || /melee/i.test(range);

@@ -6,6 +6,36 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
   <div>
 
+    {{!-- ═══ WEAPONS (#254) — surfaces the NPC's simple weapons + any embedded weapon items. ═══ --}}
+    {{#if (or system.weapons.simple.length embeddedWeapons.length)}}
+    <div class="wh40k-panel">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-crosshairs"></i>
+        <span class="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">Weapons</span>
+      </div>
+      <div class="wh40k-panel-body">
+        <div class="tw-grid tw-grid-cols-[1fr_auto_auto_auto] tw-gap-x-4 tw-gap-y-1 tw-text-[0.8rem] tw-items-center">
+          <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Name</span>
+          <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-text-center">Dmg</span>
+          <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-text-center">Pen</span>
+          <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Range</span>
+          {{#each system.weapons.simple as |w|}}
+          <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{w.name}}</span>
+          <span class="tw-text-center">{{w.damage}}</span>
+          <span class="tw-text-center">{{w.pen}}</span>
+          <span>{{w.range}}{{#if w.special}} <span class="tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)]">({{w.special}})</span>{{/if}}</span>
+          {{/each}}
+          {{#each embeddedWeapons as |item|}}
+          <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-primary)] tw-cursor-pointer item-edit" data-item-id="{{item.id}}">{{item.name}}</span>
+          <span class="tw-text-center">{{item.system.damageLabel}}</span>
+          <span class="tw-text-center">{{item.system.damage.penetration}}</span>
+          <span>{{item.system.rangeLabel}}</span>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
     {{!-- ═══ HORDE ═══ --}}
     <div class="wh40k-panel">
       <div class="wh40k-panel-header">
