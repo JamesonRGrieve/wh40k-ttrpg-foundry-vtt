@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import assignDamageChatSrc from '../../src/templates/chat/assign-damage-chat.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story for the DW Horde Magnitude resolution path (#166 —
@@ -12,8 +11,6 @@ import { initializeStoryHandlebars } from '../template-support';
  * per-system theme cascade and the RAW math are both visible in review.
  */
 initializeStoryHandlebars();
-
-const assignDamageTemplate = HandlebarsLib.compile(assignDamageChatSrc);
 
 interface HordeMagnitudeCardArgs {
     actorName: string;
@@ -55,7 +52,7 @@ function buildContext(args: HordeMagnitudeCardArgs): HordeMagnitudeCardContext {
 
 const meta: Meta<HordeMagnitudeCardArgs> = {
     title: 'Chat/DW Horde Magnitude (#166)',
-    render: (args) => renderStoryTemplate(assignDamageTemplate, buildContext(args)),
+    render: (args) => renderSheet(assignDamageChatSrc, buildContext(args)),
     args: {
         actorName: 'Tyranid Hormagaunt Horde',
         gameSystem: 'dw',

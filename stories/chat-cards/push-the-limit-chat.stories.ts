@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolvePushTheLimit } from '../../src/module/rules/without-talents.ts';
 import pushChatSrc from '../../src/templates/chat/push-the-limit-chat.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story for the Push the Limit Operate-test outcome card
@@ -19,8 +18,6 @@ import { initializeStoryHandlebars } from '../template-support';
  * fire even though chat lives outside the sheet root.
  */
 initializeStoryHandlebars();
-
-const pushChatTemplate = HbsStory.compile(pushChatSrc);
 
 interface PushTheLimitCardContext {
     gameSystem: string;
@@ -64,8 +61,8 @@ type Story = StoryObj;
 export const SuccessWithBonus: Story = {
     name: '+20 invoked — Operate test passes by 2',
     render: () =>
-        renderStoryTemplate(
-            pushChatTemplate,
+        renderSheet(
+            pushChatSrc,
             cardContext(
                 resolvePushTheLimit({
                     invoke: true,
@@ -86,8 +83,8 @@ export const SuccessWithBonus: Story = {
 export const MotiveSystemsCritical: Story = {
     name: 'Catastrophic failure — Motive Systems critical (vehicle)',
     render: () =>
-        renderStoryTemplate(
-            pushChatTemplate,
+        renderSheet(
+            pushChatSrc,
             cardContext(
                 resolvePushTheLimit({
                     invoke: true,
@@ -109,8 +106,8 @@ export const MotiveSystemsCritical: Story = {
 export const ImpactLegCritical: Story = {
     name: 'Catastrophic failure — Impact Leg critical (living mount)',
     render: () =>
-        renderStoryTemplate(
-            pushChatTemplate,
+        renderSheet(
+            pushChatSrc,
             cardContext(
                 resolvePushTheLimit({
                     invoke: true,
@@ -127,8 +124,8 @@ export const ImpactLegCritical: Story = {
 export const NotInvoked: Story = {
     name: 'Talent not invoked — raw test',
     render: () =>
-        renderStoryTemplate(
-            pushChatTemplate,
+        renderSheet(
+            pushChatSrc,
             cardContext(
                 resolvePushTheLimit({
                     invoke: false,

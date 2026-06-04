@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect } from 'storybook/test';
 import {
     resolveGravitonBonusDamage,
@@ -13,8 +12,8 @@ import {
     type WEAPON_QUALITY_EFFECTS,
 } from '../../src/module/rules/weapon-quality-effects.ts';
 import qualityChatSrc from '../../src/templates/chat/weapon-quality-effect-chat.hbs?raw';
-import { renderTemplate as renderMockTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story coverage for the bespoke weapon-quality outcomes
@@ -30,8 +29,6 @@ import { initializeStoryHandlebars } from '../template-support';
  */
 
 initializeStoryHandlebars();
-
-const qualityChatTemplate = HandlebarsLib.compile(qualityChatSrc);
 
 interface QualityPayload {
     radius?: number;
@@ -102,8 +99,8 @@ type Story = StoryObj;
 export const SprayTemplate: Story = {
     name: 'Spray — cone template + Agility avoidance',
     render: () =>
-        renderMockTemplate(
-            qualityChatTemplate,
+        renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'spray',
                 accentClass: 'tw-text-orange-300',
@@ -129,8 +126,8 @@ export const FlameBurning: Story = {
     name: 'Flame — Agility test or Burning',
     render: () => {
         const target = resolveHitEffectSaveTarget({ characteristicTotal: 35, key: 'flame', level: 0 });
-        return renderMockTemplate(
-            qualityChatTemplate,
+        return renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'flame',
                 accentClass: 'tw-text-red-400',
@@ -152,8 +149,8 @@ export const FlameBurning: Story = {
 export const GravitonKnockdown: Story = {
     name: 'Graviton — Strength test or Prone (+armour as damage)',
     render: () =>
-        renderMockTemplate(
-            qualityChatTemplate,
+        renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'graviton',
                 accentClass: 'tw-text-violet-300',
@@ -171,8 +168,8 @@ export const GravitonKnockdown: Story = {
 export const LancePenByDoS: Story = {
     name: 'Lance — Pen × DoS (4 base × 3 DoS → +8 delta)',
     render: () =>
-        renderMockTemplate(
-            qualityChatTemplate,
+        renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'lance',
                 accentClass: 'tw-text-sky-300',
@@ -192,8 +189,8 @@ export const MaximalRecharge: Story = {
     name: 'Maximal — recharge / overheat package',
     render: () => {
         const r = resolveMaximalEffect();
-        return renderMockTemplate(
-            qualityChatTemplate,
+        return renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'maximal',
                 accentClass: 'tw-text-amber-300',
@@ -215,8 +212,8 @@ export const PowerFieldParryDestroy: Story = {
         const pf = { system: { special: new Set(['power-field']) } } as Parameters<typeof resolvePowerFieldParryDestroys>[0];
         const ord = { system: { special: new Set<string>() } } as Parameters<typeof resolvePowerFieldParryDestroys>[1];
         const destroyed = resolvePowerFieldParryDestroys(pf, ord);
-        return renderMockTemplate(
-            qualityChatTemplate,
+        return renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'power-field',
                 accentClass: 'tw-text-cyan-300',
@@ -234,8 +231,8 @@ export const PowerFieldParryDestroy: Story = {
 export const ScatterPointBlank: Story = {
     name: 'Scatter — Point Blank (+3 damage)',
     render: () =>
-        renderMockTemplate(
-            qualityChatTemplate,
+        renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'scatter',
                 accentClass: 'tw-text-amber-200',
@@ -251,8 +248,8 @@ export const ScatterPointBlank: Story = {
 export const ScatterLongRange: Story = {
     name: 'Scatter — Long Range (−3 damage)',
     render: () =>
-        renderMockTemplate(
-            qualityChatTemplate,
+        renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'scatter',
                 accentClass: 'tw-text-amber-200',
@@ -272,8 +269,8 @@ export const ScatterLongRange: Story = {
 export const ShockingStun: Story = {
     name: 'Shocking — Toughness or 1-round Stun + Fatigue',
     render: () =>
-        renderMockTemplate(
-            qualityChatTemplate,
+        renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'shocking',
                 accentClass: 'tw-text-yellow-300',
@@ -297,8 +294,8 @@ export const ShockingStun: Story = {
 export const BlastRadius: Story = {
     name: 'Blast (5) — 5m sphere',
     render: () =>
-        renderMockTemplate(
-            qualityChatTemplate,
+        renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'blast',
                 accentClass: 'tw-text-orange-400',
@@ -311,8 +308,8 @@ export const BlastRadius: Story = {
 export const PerSystemImperiumMaledictum: Story = {
     name: 'Per-system homologation check — IM Concussive variant',
     render: () =>
-        renderMockTemplate(
-            qualityChatTemplate,
+        renderSheet(
+            qualityChatSrc,
             ctx({
                 qualityKey: 'concussive',
                 accentClass: 'tw-text-red-300',

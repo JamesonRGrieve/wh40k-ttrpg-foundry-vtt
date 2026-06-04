@@ -13,16 +13,13 @@
  *      damage per DoS.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { resolveHitAndRun, type HitAndRunResolution } from '../../src/module/rules/ship-hit-and-run.ts';
 import shipHarChatSrc from '../../src/templates/chat/ship-hit-and-run-chat.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
-
-const shipHarTemplate = HbsStory.compile(shipHarChatSrc);
 
 interface CardArgs {
     attackerName: string;
@@ -61,7 +58,7 @@ function cardContext(args: CardArgs): HitAndRunChatContext {
 
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Hit-and-Run (#188)',
-    render: (args) => renderStoryTemplate(shipHarTemplate, cardContext(args)),
+    render: (args) => renderSheet(shipHarChatSrc, cardContext(args)),
 };
 
 export default meta;
