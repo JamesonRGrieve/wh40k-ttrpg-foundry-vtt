@@ -7,20 +7,12 @@
  * and the optional <label> wrapper used by the older vehicle/starship chrome.
  */
 
-import HbsLib from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import tabStripSrc from '../src/templates/actor/partial/tab-strip.hbs?raw';
-import { initializeStoryHandlebars } from '../stories/template-support';
+import { renderSheet } from '../stories/test-helpers';
 
-initializeStoryHandlebars();
-
-const tabStripTemplate = HbsLib.compile(tabStripSrc);
-
-function dom(html: string): HTMLElement {
-    const root = document.createElement('div');
-    root.innerHTML = html;
-    return root;
-}
+// Render through the shared renderSheet helper (#269); tabStripTemplate returns the mounted root.
+const tabStripTemplate = (ctx: object): HTMLElement => renderSheet(tabStripSrc, ctx);
 
 describe('tab-strip partial', () => {
     it('renders one <a> per tab with data-tab from `tab` field (player shape)', () => {
@@ -33,7 +25,7 @@ describe('tab-strip partial', () => {
             navClass: '!tw-flex !tw-flex-col',
             itemClass: 'wh40k-nav-item',
         });
-        const root = dom(html);
+        const root = html;
         const items = root.querySelectorAll('a.wh40k-nav-item');
         expect(items).toHaveLength(3);
         expect(items[0].getAttribute('data-tab')).toBe('overview');
@@ -52,7 +44,7 @@ describe('tab-strip partial', () => {
             navClass: 'wh40k-vehicle-tabs',
             itemClass: 'wh40k-tab-btn',
         });
-        const items = dom(html).querySelectorAll('a.wh40k-nav-item');
+        const items = html.querySelectorAll('a.wh40k-nav-item');
         expect(items[0].getAttribute('data-tab')).toBe('stats');
         expect(items[1].getAttribute('data-tab')).toBe('crew');
         expect(items[1].className).toContain('active');
@@ -67,7 +59,7 @@ describe('tab-strip partial', () => {
             withLabelWrap: true,
             itemClass: 'wh40k-nav-item',
         });
-        const root = dom(html);
+        const root = html;
         const labels = root.querySelectorAll('label.wh40k-navigation__item');
         expect(labels).toHaveLength(2);
         expect((labels[0].querySelector('.material-icons')?.textContent ?? '').trim()).toBe('speed');
@@ -81,7 +73,7 @@ describe('tab-strip partial', () => {
                 { tab: 'combat', group: 'primary', label: 'Combat' },
             ],
         });
-        const items = dom(html).querySelectorAll('a.wh40k-nav-item');
+        const items = html.querySelectorAll('a.wh40k-nav-item');
         Array.from(items).forEach((a) => expect(a.getAttribute('data-action')).toBe('tab'));
     });
 
@@ -89,7 +81,7 @@ describe('tab-strip partial', () => {
         const html = tabStripTemplate({
             tabs: [{ tab: 'overview', label: 'Overview' }],
         });
-        const item = dom(html).querySelector('a.wh40k-nav-item');
+        const item = html.querySelector('a.wh40k-nav-item');
         expect(item?.getAttribute('data-group')).toBe('primary');
     });
 });
