@@ -4919,10 +4919,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const xpData = (this.actor.system as { experience?: { total?: number; used?: number } } | undefined)?.experience;
             const availableXP = (xpData?.total ?? 0) - (xpData?.used ?? 0);
             if (availableXP > 0) {
-                const openAdvancement = await foundry.applications.api.DialogV2.confirm({
-                    window: { title: game.i18n.localize('WH40K.OriginPath.OpenAdvancementTitle') },
+                const openAdvancement = await ConfirmationDialog.confirm({
+                    title: game.i18n.localize('WH40K.OriginPath.OpenAdvancementTitle'),
                     content: `<p>${game.i18n.format('WH40K.OriginPath.OpenAdvancementPrompt', { xp: String(availableXP) })}</p>`,
-                    rejectClose: false,
                 });
                 if (openAdvancement) {
                     AdvancementDialog.open(this.actor);

@@ -111,23 +111,9 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unk
     /*  Static Helper Methods                       */
     /* -------------------------------------------- */
 
-    /**
-     * A helper to create a simple confirmation dialog.
-     * @param {object} options          Dialog options.
-     * @param {string} options.title    Dialog title.
-     * @param {string} options.content  Dialog content HTML.
-     * @param {boolean} [options.defaultYes=true]  Whether "Yes" is the default button.
-     * @returns {Promise<boolean|null>}
-     */
-    static async confirm({ title, content, defaultYes = true }: { title?: string; content?: string; defaultYes?: boolean } = {}): Promise<boolean | null> {
-        return foundry.applications.api.DialogV2.confirm({
-            window: { title },
-            content,
-            yes: { default: defaultYes },
-            no: { default: !defaultYes },
-            rejectClose: false,
-        });
-    }
+    // Confirmation dialogs are standardized on ConfirmationDialog.confirm (#287);
+    // the redundant DialogWH40K.confirm wrapper (an uncalled DialogV2.confirm shim)
+    // was removed in favour of it.
 
     /**
      * A helper to create a simple prompt dialog.

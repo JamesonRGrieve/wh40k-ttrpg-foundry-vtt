@@ -1,6 +1,7 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
+import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -410,10 +411,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const preset = CombatPresetDialog.getPreset(presetId);
         if (preset === null) return;
 
-        const confirmed = await foundry.applications.api.DialogV2.confirm({
-            window: { title: 'Delete Preset' },
+        const confirmed = await ConfirmationDialog.confirm({
+            title: 'Delete Preset',
             content: `<p>Delete preset <strong>${preset.name}</strong>?</p>`,
-            rejectClose: false,
         });
 
         if (confirmed) {
