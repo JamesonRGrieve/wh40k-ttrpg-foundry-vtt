@@ -93,10 +93,23 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     // ── Aptitude Resolution ──────────────────────────────────────
 
     /**
-     * Get the 2 aptitudes associated with a characteristic.
-     * Subclasses provide system-specific pairings.
+     * The 2 aptitudes associated with each characteristic (DH2e Core Table 2-3).
+     * Default shared by DH2e / BC / OW / IM; override only on genuine divergence.
      */
-    abstract getCharacteristicAptitudes(charKey: string): [string, string];
+    getCharacteristicAptitudes(charKey: string): [string, string] {
+        const map: Record<string, [string, string]> = {
+            weaponSkill: ['Weapon Skill', 'Offence'],
+            ballisticSkill: ['Ballistic Skill', 'Finesse'],
+            strength: ['Strength', 'Offence'],
+            toughness: ['Toughness', 'Defence'],
+            agility: ['Agility', 'Finesse'],
+            intelligence: ['Intelligence', 'Knowledge'],
+            perception: ['Perception', 'Fieldcraft'],
+            willpower: ['Willpower', 'Psyker'],
+            fellowship: ['Fellowship', 'Social'],
+        };
+        return map[charKey] ?? ['General', 'General'];
+    }
 
     /**
      * Get the 2 aptitudes associated with a skill.
@@ -108,10 +121,41 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     }
 
     /**
-     * Skill aptitude table. Subclasses provide system-specific mappings.
-     * Keys are schema skill keys (camelCase).
+     * Skill aptitude pairs (DH2e Core Table 2-5). Default shared by DH2e / BC / OW / IM;
+     * override only on genuine divergence. Keys are schema skill keys (camelCase).
      */
-    abstract getSkillAptitudeTable(): Record<string, [string, string]>;
+    getSkillAptitudeTable(): Record<string, [string, string]> {
+        return {
+            acrobatics: ['Agility', 'General'],
+            athletics: ['Strength', 'General'],
+            awareness: ['Perception', 'Fieldcraft'],
+            charm: ['Fellowship', 'Social'],
+            command: ['Fellowship', 'Leadership'],
+            commerce: ['Intelligence', 'Knowledge'],
+            commonLore: ['Intelligence', 'General'],
+            deceive: ['Fellowship', 'Social'],
+            dodge: ['Agility', 'Defence'],
+            forbiddenLore: ['Intelligence', 'Knowledge'],
+            inquiry: ['Fellowship', 'Social'],
+            interrogation: ['Willpower', 'Social'],
+            intimidate: ['Strength', 'General'],
+            linguistics: ['Intelligence', 'General'],
+            logic: ['Intelligence', 'Knowledge'],
+            medicae: ['Intelligence', 'Fieldcraft'],
+            navigate: ['Intelligence', 'Fieldcraft'],
+            operate: ['Agility', 'Fieldcraft'],
+            parry: ['Weapon Skill', 'Defence'],
+            psyniscience: ['Perception', 'Psyker'],
+            scholasticLore: ['Intelligence', 'Knowledge'],
+            scrutiny: ['Perception', 'General'],
+            security: ['Intelligence', 'Tech'],
+            sleightOfHand: ['Agility', 'Knowledge'],
+            stealth: ['Agility', 'Fieldcraft'],
+            survival: ['Perception', 'Fieldcraft'],
+            techUse: ['Intelligence', 'Tech'],
+            trade: ['Intelligence', 'General'],
+        };
+    }
 
     /**
      * Collect all aptitudes the character possesses.

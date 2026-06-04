@@ -669,25 +669,6 @@ WH40K.originPathSteps = {
 };
 
 /* -------------------------------------------- */
-/*  Careers                                     */
-/* -------------------------------------------- */
-
-/**
- * Character careers/archetypes.
- * @type {Object<string, {label: string}>}
- */
-WH40K.careers = {
-    rogueTrader: { label: 'WH40K.Career.WH40K' },
-    archMilitant: { label: 'WH40K.Career.ArchMilitant' },
-    astropathTranscendent: { label: 'WH40K.Career.AstropathTranscendent' },
-    explorator: { label: 'WH40K.Career.Explorator' },
-    missionary: { label: 'WH40K.Career.Missionary' },
-    navigator: { label: 'WH40K.Career.Navigator' },
-    seneschal: { label: 'WH40K.Career.Seneschal' },
-    voidMaster: { label: 'WH40K.Career.VoidMaster' },
-};
-
-/* -------------------------------------------- */
 /*  Talent Categories                           */
 /* -------------------------------------------- */
 
