@@ -32,18 +32,13 @@
  * rolls the d100s and the d10 damage die, then feeds the totals in here.
  */
 
+import { degreesOfSuccess, resolveOpposed } from './_dice.ts';
+
+/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
+export { degreesOfSuccess };
+
 /** Ties in the opposed Pilot test resolve in favor of the defender. */
 export const RAMMING_RESOLUTION_FAVORS_DEFENDER = true;
-
-/**
- * Degrees of Success: floor((target − roll) / 10) + 1 when the test passes,
- * 0 otherwise. Mirrors the convention in `grapple.ts`; duplicated rather
- * than imported to keep ship-* modules free of cross-rule cycles.
- */
-export function degreesOfSuccess(roll: number, target: number): number {
-    if (roll > target) return 0;
-    return Math.floor((target - roll) / 10) + 1;
-}
 
 /** Input shape for the opposed Pilot (Space Craft) + Manoeuvrability test. */
 export interface RammingToHitInput {
@@ -75,17 +70,15 @@ export interface RammingToHitResolution {
  * {@link RAMMING_RESOLUTION_FAVORS_DEFENDER}.
  */
 export function resolveRammingToHit(input: RammingToHitInput): RammingToHitResolution {
-    const attackerPassed = input.attackerRoll <= input.attackerTarget;
-    const defenderPassed = input.defenderRoll <= input.defenderTarget;
-    const attackerDoS = attackerPassed ? degreesOfSuccess(input.attackerRoll, input.attackerTarget) : 0;
-    const defenderDoS = defenderPassed ? degreesOfSuccess(input.defenderRoll, input.defenderTarget) : 0;
-    const netDoS = attackerDoS - defenderDoS;
-    // Attacker only wins when they strictly outscore the defender on DoS.
-    // (Tie → defender.) An attacker who failed their roll while the
-    // defender failed too still loses because the ram needs the attacker
-    // to actually steer the collision home — both-fail also routes to the
-    // defender.
-    const success = attackerPassed && netDoS > 0;
+    // Attacker only wins by strictly outscoring the defender on DoS. Tie (and
+    // the both-fail 0–0 case) routes to the defender — the manoeuvring side
+    // that "saw" the ram coming — per RAMMING_RESOLUTION_FAVORS_DEFENDER.
+    const {
+        success,
+        aDoS: attackerDoS,
+        bDoS: defenderDoS,
+        netDoS,
+    } = resolveOpposed({ roll: input.attackerRoll, target: input.attackerTarget }, { roll: input.defenderRoll, target: input.defenderTarget }, { tie: 'b' });
     return { success, attackerDoS, defenderDoS, netDoS };
 }
 

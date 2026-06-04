@@ -45,6 +45,11 @@
  * the 1d5 × 2 crit picks.
  */
 
+import { degreesOfFailure as degreesOfFailureCore, degreesOfSuccess, resolveOpposed } from './_dice.ts';
+
+/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
+export { degreesOfSuccess };
+
 /** Base Pilot (Space Craft) test difficulty — Challenging (+0). */
 export const APPROACH_BASE_DIFFICULTY = 0;
 
@@ -61,24 +66,13 @@ export const HIT_AND_RUN_HULL_DAMAGE_PER_DOS = 1;
 export const HIT_AND_RUN_CRIT_PICKS = 2;
 
 /**
- * Degrees of Success: floor((target − roll) / 10) + 1 on a pass, 0 on a
- * fail. Duplicated locally to keep ship-* modules cycle-free.
- */
-export function degreesOfSuccess(roll: number, target: number): number {
-    if (roll > target) return 0;
-    return Math.floor((target - roll) / 10) + 1;
-}
-
-/**
- * Degrees of Failure: floor((roll − target − 1) / 10) + 1 on a fail, 0 on
- * a pass. Used to detect the "shot down" outcome at 4+ DoF.
- *
- * A bare fail (roll = target + 1 through target + 10) is 1 DoF.
- * (Mirror of {@link degreesOfSuccess} but on the failure side.)
+ * Degrees of Failure for the approach test: floor((roll − target − 1) / 10) + 1
+ * on a fail, 0 on a pass — used to detect the "shot down" outcome at 4+ DoF.
+ * This counts the margin from the first point *past* the target (a bare fail at
+ * target + 1 is 1 DoF), so it uses the shared core's `inclusive: false` mode.
  */
 export function degreesOfFailure(roll: number, target: number): number {
-    if (roll <= target) return 0;
-    return Math.floor((roll - target - 1) / 10) + 1;
+    return degreesOfFailureCore(roll, target, { inclusive: false });
 }
 
 /**
@@ -159,12 +153,14 @@ export function resolveHitAndRunCommand(input: HitAndRunCommandInput): HitAndRun
     const apply = input.applyOrdinaryBaseline !== false;
     const atkTarget = input.attackerCommandTarget + (apply ? COMMAND_BASE_DIFFICULTY : 0);
     const defTarget = input.defenderCommandTarget + (apply ? COMMAND_BASE_DIFFICULTY : 0);
-    const attackerPassed = input.attackerRoll <= atkTarget;
-    const defenderPassed = input.defenderRoll <= defTarget;
-    const attackerDoS = attackerPassed ? degreesOfSuccess(input.attackerRoll, atkTarget) : 0;
-    const defenderDoS = defenderPassed ? degreesOfSuccess(input.defenderRoll, defTarget) : 0;
-    const netDoS = attackerDoS - defenderDoS;
-    const success = attackerPassed && netDoS > 0;
+    // Attacker wins on strictly more DoS (tie → defender); both-fail also
+    // routes to the defender, so the boarding craft never breaches.
+    const {
+        success,
+        aDoS: attackerDoS,
+        bDoS: defenderDoS,
+        netDoS,
+    } = resolveOpposed({ roll: input.attackerRoll, target: atkTarget }, { roll: input.defenderRoll, target: defTarget }, { tie: 'b' });
     return { success, attackerDoS, defenderDoS, netDoS };
 }
 
