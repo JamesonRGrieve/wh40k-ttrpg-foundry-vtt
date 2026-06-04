@@ -192,6 +192,17 @@ export abstract class BaseSystemConfig {
         return '';
     }
 
+    /**
+     * Build one origin-path header row declaratively (#298): localizes `labelKey`, targets the
+     * `system.originPath.{originKey}` schema slot (the form parser is path-sensitive on `name=`),
+     * and reads the current value via {@link readOriginPathField}. Lets each per-system
+     * `getHeaderFields` be a flat row list with no `readOriginPathField` closure and no repeated
+     * `system.originPath.` prefix. Placeholder defaults to the label (via {@link makeField}).
+     */
+    protected makeOriginField(actor: WH40KBaseActor, labelKey: string, originKey: string): SidebarHeaderField {
+        return this.makeField(game.i18n.localize(labelKey), `system.originPath.${originKey}`, this.readOriginPathField(actor, originKey));
+    }
+
     // ── UI Labels ─────────────────────────────────────────────────
 
     /**

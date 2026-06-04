@@ -2253,6 +2253,11 @@
             "Regiment": "Regiment",
             "Speciality": "Speciality",
             "Chapter": "Chapter",
+            "CareerPath": "Career Path",
+            "Demeanour": "Demeanour",
+            "Patron": "Patron",
+            "Faction": "Faction",
+            "Endeavour": "Endeavour",
             "Lineage": "Lineage",
             "YourJourney": "Your Journey Through the Void",
             "JourneyTitle": {
