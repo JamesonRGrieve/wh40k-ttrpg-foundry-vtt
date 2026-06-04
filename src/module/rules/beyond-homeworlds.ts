@@ -15,28 +15,11 @@
  * See GitHub issue #140.
  */
 
+import { type HomeworldDefBase, lookupById } from './homeworlds-common.ts';
+
 /* -------------------------------------------- */
 /*  Types                                       */
 /* -------------------------------------------- */
-
-/** Characteristic-mod tuple keyed by canonical DH2 characteristic id. */
-interface BeyondCharacteristicMods {
-    readonly bonuses: readonly string[];
-    readonly penalties: readonly string[];
-}
-
-/** Fate-threshold rule: base value + Emperor's Blessing trigger (`d10 >= N`). */
-interface BeyondFateThreshold {
-    readonly base: number;
-    readonly emperorsBlessing: number;
-}
-
-/** Starting wounds — Beyond home-worlds use `<base> + 1d5` form. */
-interface BeyondWounds {
-    readonly base: number;
-    /** Always a d5 in Beyond. Kept as a field so future tables can vary. */
-    readonly dieFaces: 5;
-}
 
 /** Starting-Corruption rider (Daemon World only). */
 interface BeyondCorruptionRider {
@@ -52,19 +35,8 @@ interface BeyondSubtletyClamp {
     readonly minimumReduction: number;
 }
 
-export interface BeyondHomeworldDef {
+export interface BeyondHomeworldDef extends HomeworldDefBase {
     readonly id: 'daemonWorld' | 'penalColony' | 'quarantineWorld';
-    readonly label: string;
-    readonly characteristicMods: BeyondCharacteristicMods;
-    readonly fateThreshold: BeyondFateThreshold;
-    readonly wounds: BeyondWounds;
-    readonly aptitude: string;
-    /** Key talents and skills granted at character creation. */
-    readonly keyTalents: readonly string[];
-    /** Recommended backgrounds per RAW. */
-    readonly recommendedBackgrounds: readonly string[];
-    /** Human-readable mechanical hook (also drives the GM info dialog body). */
-    readonly mechanicalHook: string;
     /** Starting-Corruption rider (Daemon World only). */
     readonly corruptionRider?: BeyondCorruptionRider;
     /** Subtlety-decrease clamp (Quarantine World only — composes with #197). */
@@ -162,7 +134,7 @@ export const BEYOND_HOMEWORLDS: Record<BeyondHomeworldDef['id'], BeyondHomeworld
 
 /** Look up a Beyond home-world definition by id, returning undefined when unknown. */
 export function getBeyondHomeworld(id: string): BeyondHomeworldDef | undefined {
-    return Object.hasOwn(BEYOND_HOMEWORLDS, id) ? BEYOND_HOMEWORLDS[id as BeyondHomeworldDef['id']] : undefined;
+    return lookupById(BEYOND_HOMEWORLDS, id);
 }
 
 /** Ordered list of definitions, suitable for rendering as cards in a UI. */
