@@ -8,6 +8,7 @@ import { coerceInt } from '../../fields/coerce.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
 import { CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
 import { computeMovement } from '../../shared/movement-math.ts';
+import { SKILL_DEFINITIONS } from '../../shared/skill-definitions.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
 import CommonTemplate from './common.ts';
 
@@ -469,67 +470,13 @@ export default class CreatureTemplate extends CommonTemplate {
 
             // Skills — union of all game lines. Per-system visibility controlled by
             // BaseSystemConfig.getVisibleSkills(); hidden skills don't render on sheet.
-            skills: new SchemaField({
-                // === RT/DH1e Standard Skills ===
-                acrobatics: this.SkillField('Acrobatics', 'Ag', true),
-                awareness: this.SkillField('Awareness', 'Per', false),
-                barter: this.SkillField('Barter', 'Fel', false), // RT/DH1e only
-                blather: this.SkillField('Blather', 'Fel', true), // RT/DH1e only
-                carouse: this.SkillField('Carouse', 'T', false), // RT/DH1e only
-                charm: this.SkillField('Charm', 'Fel', false),
-                chemUse: this.SkillField('Chem-Use', 'Int', true), // RT/DH1e only
-                climb: this.SkillField('Climb', 'S', false), // RT/DH1e only
-                command: this.SkillField('Command', 'Fel', false),
-                commerce: this.SkillField('Commerce', 'Fel', true),
-                concealment: this.SkillField('Concealment', 'Ag', false), // RT/DH1e only
-                contortionist: this.SkillField('Contortionist', 'Ag', false), // RT/DH1e only
-                deceive: this.SkillField('Deceive', 'Fel', false),
-                demolition: this.SkillField('Demolition', 'Int', true), // RT/DH1e only
-                disguise: this.SkillField('Disguise', 'Fel', false), // RT/DH1e only
-                dodge: this.SkillField('Dodge', 'Ag', false),
-                evaluate: this.SkillField('Evaluate', 'Int', false), // RT/DH1e only
-                gamble: this.SkillField('Gamble', 'Int', false), // RT/DH1e only
-                inquiry: this.SkillField('Inquiry', 'Fel', false),
-                interrogation: this.SkillField('Interrogation', 'WP', true),
-                intimidate: this.SkillField('Intimidate', 'S', false),
-                invocation: this.SkillField('Invocation', 'WP', true), // RT/DH1e only
-                literacy: this.SkillField('Literacy', 'Int', false), // RT/DH1e only
-                logic: this.SkillField('Logic', 'Int', false),
-                medicae: this.SkillField('Medicae', 'Int', true),
-                psyniscience: this.SkillField('Psyniscience', 'Per', true),
-                scrutiny: this.SkillField('Scrutiny', 'Per', false),
-                search: this.SkillField('Search', 'Per', false), // RT/DH1e only
-                security: this.SkillField('Security', 'Ag', true),
-                shadowing: this.SkillField('Shadowing', 'Ag', true), // RT/DH1e only
-                silentMove: this.SkillField('Silent Move', 'Ag', false), // RT/DH1e only
-                sleightOfHand: this.SkillField('Sleight of Hand', 'Ag', true),
-                survival: this.SkillField('Survival', 'Int', false),
-                swim: this.SkillField('Swim', 'S', false), // RT/DH1e only
-                tracking: this.SkillField('Tracking', 'Int', true), // RT/DH1e only
-                wrangling: this.SkillField('Wrangling', 'Int', true), // RT/DH1e only
-
-                // === DH2e/BC/OW Standard Skills (not in RT) ===
-                athletics: this.SkillField('Athletics', 'S', false), // DH2e/BC/OW
-                linguistics: this.SkillField('Linguistics', 'Int', true, true), // DH2e/BC/OW, Group
-                navigate: this.SkillField('Navigate', 'Int', true, true), // DH2e/BC/OW, Group
-                operate: this.SkillField('Operate', 'Ag', true, true), // DH2e/BC/OW, Group
-                parry: this.SkillField('Parry', 'WS', true), // DH2e/BC/OW
-                stealth: this.SkillField('Stealth', 'Ag', false), // DH2e/BC/OW
-
-                // === Specialist Skill Groups (all systems) ===
-                ciphers: this.SkillField('Ciphers', 'Int', true, true), // RT/DH1e only
-                commonLore: this.SkillField('Common Lore', 'Int', true, true),
-                drive: this.SkillField('Drive', 'Ag', true, true), // RT/DH1e only
-                forbiddenLore: this.SkillField('Forbidden Lore', 'Int', true, true),
-                navigation: this.SkillField('Navigation', 'Int', true, true), // RT/DH1e only
-                performer: this.SkillField('Performer', 'Fel', true, true), // RT/DH1e only
-                pilot: this.SkillField('Pilot', 'Ag', true, true), // RT/DH1e only
-                scholasticLore: this.SkillField('Scholastic Lore', 'Int', true, true),
-                secretTongue: this.SkillField('Secret Tongue', 'Int', true, true), // RT/DH1e only
-                speakLanguage: this.SkillField('Speak Language', 'Int', true, true), // RT/DH1e only
-                techUse: this.SkillField('Tech-Use', 'Int', true), // Standard in DH2e, Group in RT
-                trade: this.SkillField('Trade', 'Int', true, true),
-            }),
+            // Built from the single-sourced SKILL_DEFINITIONS catalog (#273) — the
+            // skill→characteristic association is authored once in data/shared and
+            // shared with NPCData's fallback map. Insertion order in the catalog
+            // matches this schema, so the generated SchemaField is byte-identical.
+            skills: new SchemaField(
+                Object.fromEntries(Object.entries(SKILL_DEFINITIONS).map(([key, d]) => [key, this.SkillField(d.label, d.char, d.advanced, d.hasEntries)])),
+            ),
 
             // Computed armor by location
             armour: new SchemaField({
