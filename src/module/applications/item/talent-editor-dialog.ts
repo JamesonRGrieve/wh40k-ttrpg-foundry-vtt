@@ -10,8 +10,9 @@
 
 import type TalentData from '../../data/item/talent.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
-import { characteristicAbbrev, characteristicLabel, combatLabel, resourceLabel } from '../../helpers/characteristic-labels.ts';
+import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { ApplicationV2Ctor, FoundryApplicationApiLike } from '../api/application-types.ts';
+import { formatSkillLabel, prepareTalentModifierRows, prepareTalentSituationalRows } from './talent-display-data.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's applications namespace is not natively typed; narrow to the API surface we need
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike & { ApplicationV2: ApplicationV2Ctor } }).api;
@@ -304,35 +305,11 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     _prepareModifiersEditData(system: TalentSystem): PreparedModifiers {
         const mods = system.modifiers;
 
-        // Convert characteristics object to array
-        const characteristics: LabelledEntry[] = Object.entries(mods.characteristics).flatMap(([key, value]) =>
-            typeof value === 'number' && value !== 0 ? [{ key, label: this._getCharacteristicLabel(key), value }] : [],
-        );
+        // Shared row walk (#288); the editor's row shape is exactly the base
+        // {key, label, value}, so the groups are used as-is. Only `other` carries
+        // the array index the editor needs for in-place edits.
+        const rows = prepareTalentModifierRows(mods);
 
-        // Convert skills object to array
-        const skills: LabelledEntry[] = Object.entries(mods.skills).flatMap(([key, value]) =>
-            typeof value === 'number' && value !== 0 ? [{ key, label: this._formatSkillLabel(key), value }] : [],
-        );
-
-        // Combat modifiers
-        const combat: LabelledEntry[] = Object.entries(mods.combat)
-            .filter(([, value]) => value !== 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._getCombatLabel(key),
-                value,
-            }));
-
-        // Resource modifiers
-        const resources: LabelledEntry[] = Object.entries(mods.resources)
-            .filter(([, value]) => value !== 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._getResourceLabel(key),
-                value,
-            }));
-
-        // Other modifiers
         const other = mods.other.map((mod, index) => ({
             index,
             key: mod.key,
@@ -342,10 +319,10 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         }));
 
         return {
-            characteristics,
-            skills,
-            combat,
-            resources,
+            characteristics: rows.characteristics,
+            skills: rows.skills,
+            combat: rows.combat,
+            resources: rows.resources,
             other,
         };
     }
@@ -359,30 +336,13 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _prepareSituationalEditData(system: TalentSystem): PreparedSituational {
-        const situational = system.modifiers.situational;
+        // Shared situational row walk (#288); the editor adds the array index.
+        const rows = prepareTalentSituationalRows(system.modifiers.situational);
 
         return {
-            characteristics: situational.characteristics.map((mod, index) => ({
-                index,
-                key: mod.key,
-                label: this._getCharacteristicLabel(mod.key),
-                value: mod.value,
-                condition: mod.condition,
-            })),
-            skills: situational.skills.map((mod, index) => ({
-                index,
-                key: mod.key,
-                label: this._formatSkillLabel(mod.key),
-                value: mod.value,
-                condition: mod.condition,
-            })),
-            combat: situational.combat.map((mod, index) => ({
-                index,
-                key: mod.key,
-                label: this._getCombatLabel(mod.key),
-                value: mod.value,
-                condition: mod.condition,
-            })),
+            characteristics: rows.characteristics.map((r, index) => ({ index, ...r })),
+            skills: rows.skills.map((r, index) => ({ index, ...r })),
+            combat: rows.combat.map((r, index) => ({ index, ...r })),
         };
     }
 
@@ -571,31 +531,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _formatSkillLabel(key: string): string {
-        if (key === '') return '';
-        return key
-            .replace(/([A-Z])/g, ' $1')
-            .replace(/^./, (str) => str.toUpperCase())
-            .trim();
-    }
-
-    /**
-     * Get combat modifier label.
-     * @param {string} key - Combat key
-     * @returns {string}
-     * @protected
-     */
-    _getCombatLabel(key: string): string {
-        return combatLabel(key);
-    }
-
-    /**
-     * Get resource label.
-     * @param {string} key - Resource key
-     * @returns {string}
-     * @protected
-     */
-    _getResourceLabel(key: string): string {
-        return resourceLabel(key);
+        return formatSkillLabel(key);
     }
 
     /* -------------------------------------------- */
