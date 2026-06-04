@@ -150,60 +150,9 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         ];
     }
 
-    /**
-     * Aptitude pairs retained for the shared skill-bonus formula in
-     * `creature.ts` (gated on `usesAptitudes`). These do NOT drive BC's
-     * advancement cost — that goes through `characteristicAdvanceCost`
-     * et al. and the True/Allied/Opposed matrix.
-     */
-    getCharacteristicAptitudes(charKey: string): [string, string] {
-        const map: Record<string, [string, string]> = {
-            weaponSkill: ['Weapon Skill', 'Offence'],
-            ballisticSkill: ['Ballistic Skill', 'Finesse'],
-            strength: ['Strength', 'Offence'],
-            toughness: ['Toughness', 'Defence'],
-            agility: ['Agility', 'Finesse'],
-            intelligence: ['Intelligence', 'Knowledge'],
-            perception: ['Perception', 'Fieldcraft'],
-            willpower: ['Willpower', 'Psyker'],
-            fellowship: ['Fellowship', 'Social'],
-        };
-        return map[charKey] ?? ['General', 'General'];
-    }
-
-    /** Aptitude pairs retained for the same reason as `getCharacteristicAptitudes`. */
-    getSkillAptitudeTable(): Record<string, [string, string]> {
-        return {
-            acrobatics: ['Agility', 'General'],
-            athletics: ['Strength', 'General'],
-            awareness: ['Perception', 'Fieldcraft'],
-            charm: ['Fellowship', 'Social'],
-            command: ['Fellowship', 'Leadership'],
-            commerce: ['Intelligence', 'Knowledge'],
-            commonLore: ['Intelligence', 'General'],
-            deceive: ['Fellowship', 'Social'],
-            dodge: ['Agility', 'Defence'],
-            forbiddenLore: ['Intelligence', 'Knowledge'],
-            inquiry: ['Fellowship', 'Social'],
-            interrogation: ['Willpower', 'Social'],
-            intimidate: ['Strength', 'General'],
-            linguistics: ['Intelligence', 'General'],
-            logic: ['Intelligence', 'Knowledge'],
-            medicae: ['Intelligence', 'Fieldcraft'],
-            navigate: ['Intelligence', 'Fieldcraft'],
-            operate: ['Agility', 'Fieldcraft'],
-            parry: ['Weapon Skill', 'Defence'],
-            psyniscience: ['Perception', 'Psyker'],
-            scholasticLore: ['Intelligence', 'Knowledge'],
-            scrutiny: ['Perception', 'General'],
-            security: ['Intelligence', 'Tech'],
-            sleightOfHand: ['Agility', 'Knowledge'],
-            stealth: ['Agility', 'Fieldcraft'],
-            survival: ['Perception', 'Fieldcraft'],
-            techUse: ['Intelligence', 'Tech'],
-            trade: ['Intelligence', 'General'],
-        };
-    }
+    // Characteristic + skill aptitude pairs are inherited from AptitudeBasedSystemConfig (#298).
+    // BC uses them only for the shared skill-bonus display formula (gated on `usesAptitudes`);
+    // its advancement cost runs through the True/Allied/Opposed matrix, not these tables.
 
     // ── Alignment System ─────────────────────────────────────────
 
