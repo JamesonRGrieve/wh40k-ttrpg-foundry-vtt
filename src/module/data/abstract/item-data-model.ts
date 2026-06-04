@@ -10,7 +10,7 @@
 /* eslint-disable no-restricted-syntax -- migration / cleaning operate on raw Foundry V14 source payloads (true framework boundary) */
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import { inferActiveGameLine, isLineVariantContainer, materializeItemVariants } from '../../utils/item-variant-utils.ts';
+import { inferActiveGameLine, materializeItemVariants } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from './system-data-model.ts';
 
 const { NumberField } = foundry.data.fields;
@@ -127,8 +127,6 @@ export default class ItemDataModel extends SystemDataModel {
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         ItemDataModel.#migrateImg(source);
-        ItemDataModel.#migrateDescription(source);
-        ItemDataModel.#migrateSource(source);
         ItemDataModel.#migrateCollections(source);
         ItemDataModel.#flattenLineVariants(source);
     }
@@ -181,51 +179,6 @@ export default class ItemDataModel extends SystemDataModel {
             };
             const type = typeof source['type'] === 'string' ? source['type'] : '';
             source['img'] = defaultIcons[type] ?? 'icons/svg/mystery-man.svg';
-        }
-    }
-
-    /**
-     * Migrate flat description string to object structure.
-     * @param {object} source  The source data
-     */
-    static #migrateDescription(source: Record<string, unknown>): void {
-        if (typeof source['description'] === 'string') {
-            source['description'] = {
-                value: source['description'],
-                chat: '',
-                summary: '',
-            };
-        }
-        if (isLineVariantContainer(source['description'])) return;
-
-        // Ensure description sub-fields are not null (V13 HTMLField strictness)
-        if (source['description'] !== null && typeof source['description'] === 'object') {
-            const desc = source['description'] as Record<string, unknown>;
-            desc['chat'] ??= '';
-            desc['summary'] ??= '';
-        }
-    }
-
-    /**
-     * Migrate flat source string to object structure.
-     * @param {object} source  The source data
-     */
-    static #migrateSource(source: Record<string, unknown>): void {
-        if (typeof source['source'] === 'string') {
-            source['source'] = {
-                book: '',
-                page: '',
-                custom: source['source'],
-            };
-        }
-        if (isLineVariantContainer(source['source'])) return;
-
-        // Ensure source sub-fields are not null
-        if (source['source'] !== null && typeof source['source'] === 'object') {
-            const src = source['source'] as Record<string, unknown>;
-            src['book'] ??= '';
-            src['page'] ??= '';
-            src['custom'] ??= '';
         }
     }
 
