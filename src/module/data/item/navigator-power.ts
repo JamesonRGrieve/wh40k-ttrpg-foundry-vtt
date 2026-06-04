@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import ActivationTemplate from '../shared/activation-template.ts';
@@ -98,7 +99,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
         let label = this.testCharacteristicLabel;
         const { modifier } = this.test;
         if (modifier !== 0) {
-            label += ` ${modifier >= 0 ? '+' : ''}${modifier}`;
+            label += ` ${formatSigned(modifier)}`;
         }
         return label;
     }
