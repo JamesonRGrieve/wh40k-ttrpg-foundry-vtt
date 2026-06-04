@@ -271,9 +271,8 @@ export default class NPCSheet extends CharacterSheet {
             toggleHordeMode: NPCSheet.#toggleHordeMode,
             applyMagnitudeDamage: NPCSheet.#applyMagnitudeDamage,
             restoreMagnitude: NPCSheet.#restoreMagnitude,
-            // Roll actions (rollCharacteristic & rollSkill kept for NPC-specific roll paths)
-            rollCharacteristic: NPCSheet.#rollCharacteristic,
-            rollSkill: NPCSheet.#rollSkill,
+            // Roll actions — characteristic/skill rolls dispatch through the inherited base `roll`
+            // handler (data-roll-type); only initiative stays NPC-registered (#285).
             rollInitiative: NPCSheet.#rollInitiative,
             // Weapon actions
             reloadWeapon: NPCSheet.#reloadWeapon,
@@ -1040,22 +1039,6 @@ export default class NPCSheet extends CharacterSheet {
     /* -------------------------------------------- */
 
     /**
-     * Handle characteristic roll.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static #rollCharacteristic(this: NPCSheet, event: Event, target: HTMLElement): void {
-        event.preventDefault();
-        const charKey = target.dataset['characteristic'];
-        if (charKey === undefined || charKey === '') return;
-        this.npcActor.rollCharacteristic(charKey);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle weapon attack roll.
-    /**
      * Reload an embedded weapon using the ReloadActionManager.
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
@@ -1101,20 +1084,6 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const amount = parseInt(target.dataset['amount'] ?? '1', 10);
         await this.npcActor.system.restoreMagnitude(amount, 'Manual');
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle skill roll.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #rollSkill(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const skillKey = target.dataset['skill'];
-        if (skillKey === undefined || skillKey === '') return;
-        await this.actor.rollSkill(skillKey);
     }
 
     /* -------------------------------------------- */
