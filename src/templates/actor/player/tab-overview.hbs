@@ -339,12 +339,10 @@
                     {{/if}}
             {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
-            {{!-- Armour — reuses the combat-tab silhouette (issue #7). Movement was
-                 relocated to the Combat tab exclusively (#266); the speed rates are
-                 only meaningful during combat/initiative, so Armour stands alone here. --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Armour" icon="fa-shield-alt" zoneClass="tw-border-l-[3px] tw-border-l-[#7f8c8d]"}}
-                    {{> systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs armourDisplay=armourDisplay compact=true}}
-            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
+            {{!-- Armour — shared armour-zone, also reused on the Combat tab (#234).
+                 Movement was relocated to the Combat tab exclusively (#266), so
+                 Armour stands alone here. --}}
+            {{> systems/wh40k-rpg/templates/actor/partial/armour-zone.hbs armourDisplay=armourDisplay compact=true}}
 
             {{#unless isNPC}}
             {{!-- Resources (Influence / Requisition / Gelt) — PC-only.
