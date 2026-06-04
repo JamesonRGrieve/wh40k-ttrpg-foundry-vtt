@@ -2,15 +2,14 @@
  * Stories for BaseItemSheet — the fallback generic item sheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HandlebarsLib.compile(templateSrc);
 
 const rng = seedRandom(0xba5e1);
 
@@ -51,15 +50,15 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-    render: () => renderStoryTemplate(compiled, baseCtx()),
+    render: () => renderSheet(templateSrc, baseCtx()),
 };
 
 export const EditMode: Story = {
-    render: () => renderStoryTemplate(compiled, baseCtx({ inEditMode: true })),
+    render: () => renderSheet(templateSrc, baseCtx({ inEditMode: true })),
 };
 
 export const RendersTitle: Story = {
-    render: () => renderStoryTemplate(compiled, baseCtx()),
+    render: () => renderSheet(templateSrc, baseCtx()),
     play: async ({ canvasElement }) => {
         const withinCanvas = within(canvasElement);
         await expect(withinCanvas.getByDisplayValue('Imperial Aquila Icon')).toBeTruthy();
@@ -67,7 +66,7 @@ export const RendersTitle: Story = {
 };
 
 export const RendersDescriptionTab: Story = {
-    render: () => renderStoryTemplate(compiled, baseCtx()),
+    render: () => renderSheet(templateSrc, baseCtx()),
     play: async ({ canvasElement }) => {
         const descTab = canvasElement.querySelector('[data-tab="description"]');
         await expect(descTab).toBeTruthy();

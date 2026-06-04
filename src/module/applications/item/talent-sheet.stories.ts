@@ -2,11 +2,11 @@
  * Stories for TalentSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/talent-sheet.hbs?raw';
 
 initializeStoryHandlebars();
@@ -15,7 +15,10 @@ initializeStoryHandlebars();
 // between the variable and the literal. Compiling at module load asserts the
 // template parses cleanly; if a future edit reintroduces the typo, Storybook
 // (and the regression spec in tests/storybook/issue-201-...) will fail loudly.
-const compiled = HandlebarsLib.compile(templateSrc);
+// renderSheet(templateSrc, ctx) compiles the src string on each call, which
+// surfaces the same parse-error as the old HandlebarsLib.compile(templateSrc)
+// module-level compile: if the template has the typo, the first renderSheet call
+// in any story will throw.
 const rng = seedRandom(0x7a1e47);
 
 interface TalentTab {
@@ -188,12 +191,12 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderMockTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderMockTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
 
 export const RendersTalentName: Story = {
-    render: () => renderMockTemplate(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         void expect(storyCanvas.getByRole('heading', { name: 'Mighty Shot' })).toBeTruthy();
@@ -201,7 +204,7 @@ export const RendersTalentName: Story = {
 };
 
 export const RendersEditImageAction: Story = {
-    render: () => renderMockTemplate(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: ({ canvasElement }) => {
         const btn = canvasElement.querySelector('[data-action="editImage"]');
         void expect(btn).toBeTruthy();
@@ -225,7 +228,7 @@ export const RendersEditImageAction: Story = {
  */
 export const CompendiumRender: Story = {
     name: 'Issue 201 — Compendium Render',
-    render: () => renderMockTemplate(compiled, makeCtx({ inEditMode: false, editable: false, isCompendiumItem: true })),
+    render: () => renderSheet(templateSrc, makeCtx({ inEditMode: false, editable: false, isCompendiumItem: true })),
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         // No parse error => rendered output contains the tab nav.

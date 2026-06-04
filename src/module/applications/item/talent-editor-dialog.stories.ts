@@ -3,15 +3,13 @@
  * prerequisites, situational modifiers, and grants.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect } from 'storybook/test';
-import { renderTemplate as renderMockTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/dialogs/talent-editor-dialog.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HandlebarsLib.compile(templateSrc);
 const rng = seedRandom(0x7a1de0);
 
 interface CharacteristicEntry {
@@ -103,14 +101,14 @@ export default meta;
 
 type Story = StoryObj;
 
-export const PrerequisitesTab: Story = { render: () => renderMockTemplate(compiled, makeCtx('prerequisites')) };
+export const PrerequisitesTab: Story = { render: () => renderSheet(templateSrc, makeCtx('prerequisites')) };
 
-export const ModifiersTab: Story = { render: () => renderMockTemplate(compiled, makeCtx('modifiers')) };
+export const ModifiersTab: Story = { render: () => renderSheet(templateSrc, makeCtx('modifiers')) };
 
-export const GrantsTab: Story = { render: () => renderMockTemplate(compiled, makeCtx('grants')) };
+export const GrantsTab: Story = { render: () => renderSheet(templateSrc, makeCtx('grants')) };
 
 export const RendersSectionTabs: Story = {
-    render: () => renderMockTemplate(compiled, makeCtx('prerequisites')),
+    render: () => renderSheet(templateSrc, makeCtx('prerequisites')),
     play: async ({ canvasElement }) => {
         const prereqBtn = canvasElement.querySelector('[data-section="prerequisites"]');
         const modBtn = canvasElement.querySelector('[data-section="modifiers"]');
@@ -122,7 +120,7 @@ export const RendersSectionTabs: Story = {
 };
 
 export const ClicksModifiersSection: Story = {
-    render: () => renderMockTemplate(compiled, makeCtx('prerequisites')),
+    render: () => renderSheet(templateSrc, makeCtx('prerequisites')),
     play: async ({ canvasElement }) => {
         const modBtn = canvasElement.querySelector<HTMLElement>('[data-action="switchSection"][data-section="modifiers"]');
         await expect(modBtn).toBeTruthy();

@@ -2,15 +2,14 @@
  * Stories for ForceFieldSheet (defineSimpleItemSheet variant).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-force-field-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = Hbs.compile(templateSrc);
 const rng = seedRandom(0xf03ce1d);
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: story overrides for freeform template testing
@@ -56,12 +55,12 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderTpl(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
 export const Overloaded: Story = {
     render: () =>
-        renderTpl(
-            compiled,
+        renderSheet(
+            templateSrc,
             makeCtx({
                 system: {
                     protectionRating: 50,
@@ -78,7 +77,7 @@ export const Overloaded: Story = {
 };
 
 export const RendersFieldName: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const queries = within(canvasElement);
         await expect(queries.getByDisplayValue('Conversion Field')).toBeTruthy();
@@ -86,7 +85,7 @@ export const RendersFieldName: Story = {
 };
 
 export const RendersStatusBadge: Story = {
-    render: () => renderTpl(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const queries = within(canvasElement);
         await expect(queries.getByText('Active')).toBeTruthy();

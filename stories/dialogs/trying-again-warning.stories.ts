@@ -1,13 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { getTryAgainAdvice, type RetryAdvice } from '../../src/module/rules/trying-again.ts';
 import modifiersSrc from '../../src/templates/prompt/unified/modifiers.hbs?raw';
-import { renderTemplate as renderStoryTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
-
-const modifiersTemplate = HandlebarsLib.compile(modifiersSrc);
 
 interface TryingAgainArgs {
     skillKey: 'inquiry' | 'awareness' | 'charm' | 'intimidate';
@@ -57,7 +54,7 @@ const meta: Meta<TryingAgainArgs> = {
         skillKey: { control: { type: 'select' }, options: ['inquiry', 'awareness', 'charm', 'intimidate'] },
         previousAttempts: { control: { type: 'number', min: 0, max: 5, step: 1 } },
     },
-    render: (args) => renderStoryTemplate(modifiersTemplate, buildContext(args)),
+    render: (args) => renderSheet(modifiersSrc, buildContext(args)),
 };
 
 export default meta;

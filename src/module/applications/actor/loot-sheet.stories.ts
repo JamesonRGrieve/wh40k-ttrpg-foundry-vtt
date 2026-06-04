@@ -7,15 +7,12 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HandlebarsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import lootSrc from '../../../templates/actor/loot/loot-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-
-const lootTpl = HandlebarsLib.compile(lootSrc);
 
 interface LootStoryCtx {
     actor: { name: string; img: string };
@@ -26,7 +23,7 @@ interface LootStoryCtx {
 }
 
 function renderLootSheet(ctx: LootStoryCtx): HTMLElement {
-    return renderStoryTemplate(lootTpl, ctx);
+    return renderSheet(lootSrc, ctx);
 }
 
 const meta: Meta<LootStoryCtx> = {

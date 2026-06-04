@@ -2,15 +2,14 @@
  * Stories for ShipComponentSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
+import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/ship-component-sheet.hbs?raw';
 
 initializeStoryHandlebars();
-const compiled = HbsStory.compile(templateSrc);
 const rng = seedRandom(0x5c0a200);
 
 interface TabEntry {
@@ -86,12 +85,12 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderStoryTemplate(compiled, makeCtx()) };
+export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
-export const EditMode: Story = { render: () => renderStoryTemplate(compiled, makeCtx({ inEditMode: true })) };
+export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
 
 export const RendersComponentName: Story = {
-    render: () => renderStoryTemplate(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByDisplayValue('Jovian Pattern Drive')).toBeTruthy();
@@ -99,7 +98,7 @@ export const RendersComponentName: Story = {
 };
 
 export const RendersDetailsTab: Story = {
-    render: () => renderStoryTemplate(compiled, makeCtx()),
+    render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
         const tab = canvasElement.querySelector('[data-tab="details"]');
         await expect(tab).toBeTruthy();

@@ -1,13 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import { resolveUntrainedTarget } from '../../src/module/rules/untrained-skill.ts';
 import contextPanelSrc from '../../src/templates/prompt/unified/context-panel.hbs?raw';
-import { renderTemplate as renderTpl } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
+import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
-
-const contextPanelTemplate = Hbs.compile(contextPanelSrc);
 
 interface SkillContextArgs {
     /** Active characteristic value selected in the dropdown. */
@@ -90,7 +87,7 @@ const meta: Meta<SkillContextArgs> = {
         advance: { control: { type: 'number', min: 0, max: 2, step: 1 } },
         isBasic: { control: 'boolean' },
     },
-    render: (args) => renderTpl(contextPanelTemplate, buildContext(args)),
+    render: (args) => renderSheet(contextPanelSrc, buildContext(args)),
 };
 
 export default meta;
@@ -115,7 +112,7 @@ export const UntrainedBasicHalved: Story = {
         // Story override: force the legacy halving rule on top of the resolver
         // so the visual indicator is exercised independently of the rules module.
         ctx.skillPanel.halved = true;
-        return renderTpl(contextPanelTemplate, ctx);
+        return renderSheet(contextPanelSrc, ctx);
     },
 };
 
