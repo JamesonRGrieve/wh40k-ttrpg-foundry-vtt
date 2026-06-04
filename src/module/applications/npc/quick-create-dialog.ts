@@ -1,4 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { tierBandFor } from '../../utils/threat-bands.ts';
 import ThreatCalculator from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -217,11 +218,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @private
      */
     _getTierDescription(threatLevel: number): string {
-        if (threatLevel <= 5) return game.i18n.localize('WH40K.NPC.TierMinor');
-        if (threatLevel <= 10) return game.i18n.localize('WH40K.NPC.TierStandard');
-        if (threatLevel <= 15) return game.i18n.localize('WH40K.NPC.TierTough');
-        if (threatLevel <= 20) return game.i18n.localize('WH40K.NPC.TierElite');
-        return game.i18n.localize('WH40K.NPC.TierBoss');
+        return game.i18n.localize(`WH40K.NPC.Tier${tierBandFor(threatLevel).label}`);
     }
 
     /* -------------------------------------------- */
