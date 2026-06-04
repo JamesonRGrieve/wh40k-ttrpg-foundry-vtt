@@ -17,6 +17,8 @@ import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { t } from '../../i18n/t.ts';
+import type { ActionKind } from '../../rules/action-budget.ts';
+import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
 import { buildReactionState, type ReactionState } from './reaction-state.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -184,6 +186,10 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
             useConsumable: CombatQuickPanel.#useConsumable as ActionHandler,
             // eslint-disable-next-line @typescript-eslint/unbound-method
             toggleOpacity: CombatQuickPanel.#toggleOpacity as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            spendAction: CombatQuickPanel.#spendAction as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            resetActions: CombatQuickPanel.#resetActions as ActionHandler,
         },
     };
 
@@ -290,6 +296,9 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
             value: combatantInit ?? 0,
             bonus: initiativeBonus,
         };
+
+        // Per-turn action economy (#264) — null when this actor isn't in combat.
+        context['actionBudget'] = actorId !== null ? actionBudgetForActor(actorId) : null;
 
         // Primary weapon
         this._updatePrimaryWeapon();
@@ -735,6 +744,27 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
     static #toggleOpacity(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): void {
         this.opacityLevel = (this.opacityLevel + 1) % 4;
         this.element.dataset['opacity'] = this._getOpacityKey();
+    }
+
+    /* -------------------------------------------- */
+
+    /** Spend one action of the kind named in the button's `data-kind` (#264). */
+    static #spendAction(this: CombatQuickPanel, _event: PointerEvent, target: HTMLElement): void {
+        const actorId = this.actor?.id ?? null;
+        const kind = target.dataset['kind'] as ActionKind | undefined;
+        if (actorId === null || kind === undefined) return;
+        spendActionForActor(actorId, kind);
+        void this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    /** Reset this combatant's action budget to a fresh turn (#264). */
+    static #resetActions(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): void {
+        const actorId = this.actor?.id ?? null;
+        if (actorId === null) return;
+        resetActionsForActor(actorId);
+        void this.render();
     }
 
     /* -------------------------------------------- */
