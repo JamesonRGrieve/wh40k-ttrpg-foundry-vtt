@@ -36,6 +36,10 @@ module.exports = {
                     'src/module/icons/registry\\.generated\\.ts$',
                     '\\.stories\\.ts$',
                     '\\.test\\.ts$',
+                    // Test-only helpers under src/module/testing/ are reached solely
+                    // from *.test.ts (which depcruise does not follow), so they read
+                    // as orphans; they are test infrastructure, exempt like *.test.ts.
+                    '^src/module/testing/',
                 ],
             },
             to: {},
