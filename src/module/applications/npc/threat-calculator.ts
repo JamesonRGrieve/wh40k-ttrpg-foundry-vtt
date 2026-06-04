@@ -10,6 +10,7 @@
  */
 
 import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
+import { tierBandFor } from '../../utils/threat-bands.ts';
 
 /* -------------------------------------------- */
 /*  Internal shape interfaces                   */
@@ -390,17 +391,10 @@ export default class ThreatCalculator {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: getTierInfo returns a loose shape consumed by templates; Record<string,unknown> is intentional
     static getTierInfo(threatLevel: number): Record<string, unknown> {
-        const tier = this.getTier(threatLevel);
-        const colors: Record<string, string> = {
-            Minor: '#4caf50',
-            Standard: '#2196f3',
-            Tough: '#ff9800',
-            Elite: '#f44336',
-            Boss: '#9c27b0',
-        };
+        const band = tierBandFor(threatLevel);
         return {
-            label: tier.name,
-            color: colors[tier.name] ?? '#666',
+            label: band.label,
+            color: band.color,
         };
     }
 
