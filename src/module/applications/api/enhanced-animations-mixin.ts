@@ -5,6 +5,7 @@
  */
 
 import type { WH40KBaseActorDocument, WH40KWounds } from '../../types/global.d.ts';
+import { flashElement, rafTween } from './animation-utils.ts';
 import type { ApplicationV2Ctor } from './application-types.ts';
 import type { EnhancedAnimationsMixinAPI } from './sheet-mixin-types.js';
 
@@ -188,30 +189,22 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
                 element.classList.remove('tw-animate-count-up');
             }
 
-            const startTime = Date.now();
-            const difference = toValue - fromValue;
-
-            const animate = (): void => {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-
-                // Ease-out cubic for smooth deceleration
-                const eased = 1 - (1 - progress) ** 3;
-                const current = fromValue + difference * eased;
-
-                element.textContent = formatFn(current);
-
-                if (progress < 1) {
-                    const frameId = requestAnimationFrame(animate);
+            rafTween({
+                from: fromValue,
+                to: toValue,
+                duration,
+                onFrame: (value) => {
+                    element.textContent = formatFn(value);
+                },
+                onSchedule: (frameId) => {
                     this._runningAnimations.set(animationKey, frameId);
-                } else {
+                },
+                onComplete: () => {
                     element.textContent = formatFn(toValue);
                     this._runningAnimations.delete(animationKey);
                     element.classList.remove('tw-animate-count-up', 'tw-animate-count-down');
-                }
-            };
-
-            requestAnimationFrame(animate);
+                },
+            });
         }
 
         /* -------------------------------------------- */
@@ -265,24 +258,14 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             if (!fill) return;
 
             const duration = this._animationConfig.barDuration;
-            const startTime = Date.now();
-
-            const animate = (): void => {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-
-                // Ease-out for smooth transition
-                const eased = 1 - (1 - progress) ** 3;
-                const current = fromPercent + (toPercent - fromPercent) * eased;
-
-                barElement.style.setProperty('--wounds-percent', `${current}%`);
-
-                if (progress < 1) {
-                    requestAnimationFrame(animate);
-                }
-            };
-
-            requestAnimationFrame(animate);
+            rafTween({
+                from: fromPercent,
+                to: toPercent,
+                duration,
+                onFrame: (value) => {
+                    barElement.style.setProperty('--wounds-percent', `${value}%`);
+                },
+            });
         }
 
         /* -------------------------------------------- */
@@ -405,13 +388,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
          * @protected
          */
         _flashElement(element: HTMLElement, animClass: string, duration: number = 500): void {
-            element.classList.remove(animClass);
-            void element.offsetWidth; // Force reflow
-            element.classList.add(animClass);
-
-            setTimeout(() => {
-                element.classList.remove(animClass);
-            }, duration);
+            flashElement(element, animClass, duration);
         }
 
         /* -------------------------------------------- */
