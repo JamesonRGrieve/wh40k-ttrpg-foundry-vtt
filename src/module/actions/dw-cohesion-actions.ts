@@ -25,7 +25,6 @@
  * and a notify hook for failure messages.
  */
 import { t } from '../i18n/t.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
 import {
     recoverCohesion,
     cohesionChallenge,
@@ -34,6 +33,7 @@ import {
     type RecoverCohesionResult,
 } from '../rules/dw-cohesion.ts';
 import type { I18nKey } from '../types/i18n-keys';
+import { type ActionHost, postActionChat, reportFailure } from './action-host.ts';
 
 /**
  * Minimal `this` shape exposed by sheet static actions. CharacterSheet
@@ -43,22 +43,12 @@ import type { I18nKey } from '../types/i18n-keys';
  * but the reverse coupling is equally undesirable for a rules-driven
  * action handler).
  */
-export interface DwCohesionActionHost {
-    readonly actor: {
-        readonly id: string;
-        readonly name: string;
-        readonly system: {
-            cohesionMax: number;
-            cohesionCurrent: number;
-            cohesionLostThisTurn: number;
-            rallied: boolean;
-        };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() signature accepts arbitrary diff records and returns the resolved Document or undefined
-        update: (data: Record<string, unknown>) => Promise<unknown>;
-    };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications.notify() forwards arbitrary options to Foundry's notification API
-    _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
-}
+export type DwCohesionActionHost = ActionHost<{
+    cohesionMax: number;
+    cohesionCurrent: number;
+    cohesionLostThisTurn: number;
+    rallied: boolean;
+}>;
 
 const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/dw-cohesion-chat.hbs';
 
@@ -78,16 +68,7 @@ interface ChatCardContext {
 }
 
 async function postCohesionChat(host: DwCohesionActionHost, ctx: ChatCardContext): Promise<void> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
-    const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
-    await postChatCard(html, { speaker: { alias: host.actor.name } });
-}
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: catch-clause exception payload is intrinsically unknown; narrowed on the next line via `instanceof Error`
-function reportFailure(host: DwCohesionActionHost, label: string, error: unknown): void {
-    const message = error instanceof Error ? error.message : String(error);
-    host._notify('error', `${label}: ${message}`, { duration: 5000 });
-    console.error(`${label} error:`, error);
+    return postActionChat(CHAT_TEMPLATE, ctx, host);
 }
 
 /* -------------------------------------------- */

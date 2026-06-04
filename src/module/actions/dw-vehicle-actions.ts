@@ -32,9 +32,9 @@
  * a notify hook for failure messages.
  */
 import { t } from '../i18n/t.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
 import { rollVehicleCrit, repairDifficultyFor, type DwVehicleCritResult, type RepairDifficulty, type RollVehicleCritResult } from '../rules/dw-vehicle-crit.ts';
 import type { I18nKey } from '../types/i18n-keys';
+import { type ActionHost, postActionChat, reportFailure } from './action-host.ts';
 
 /**
  * Minimal `this` shape exposed by sheet static actions. Both
@@ -42,18 +42,10 @@ import type { I18nKey } from '../types/i18n-keys';
  * vehicle can be either) — the structural duck-type avoids coupling
  * the action module to either sheet class.
  */
-export interface DwVehicleActionHost {
-    readonly actor: {
-        readonly id: string;
-        readonly name: string;
-        readonly system: {
-            vehicleIntegrity: number;
-            overIntegrity: number;
-        };
-    };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications.notify() forwards arbitrary options to Foundry's notification API
-    _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
-}
+export type DwVehicleActionHost = ActionHost<{
+    vehicleIntegrity: number;
+    overIntegrity: number;
+}>;
 
 const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/dw-vehicle-crit-chat.hbs';
 
@@ -95,16 +87,7 @@ interface ChatCardContext {
 }
 
 async function postVehicleChat(host: DwVehicleActionHost, ctx: ChatCardContext): Promise<void> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the ChatCardContext interface is structurally compatible
-    const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, ctx as unknown as Record<string, unknown>);
-    await postChatCard(html, { speaker: { alias: host.actor.name } });
-}
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: catch-clause exception payload is intrinsically unknown; narrowed on the next line via `instanceof Error`
-function reportFailure(host: DwVehicleActionHost, label: string, error: unknown): void {
-    const message = error instanceof Error ? error.message : String(error);
-    host._notify('error', `${label}: ${message}`, { duration: 5000 });
-    console.error(`${label} error:`, error);
+    return postActionChat(CHAT_TEMPLATE, ctx, host);
 }
 
 /* -------------------------------------------- */
