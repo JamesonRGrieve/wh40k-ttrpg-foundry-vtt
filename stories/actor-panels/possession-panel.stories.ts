@@ -15,13 +15,9 @@
  * a live Foundry instance.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import { expect } from 'storybook/test';
 import panelSrc from '../../src/templates/actor/panel/possession-panel.hbs?raw';
-import { renderTemplate as renderTpl } from '../mocks';
-import { initializeStoryHandlebars } from '../template-support';
-
-initializeStoryHandlebars();
+import { renderSheet } from '../test-helpers';
 
 interface PossessionContext {
     isGM: boolean;
@@ -34,10 +30,8 @@ interface PossessionContext {
     };
 }
 
-const panelTpl = HBS.compile(panelSrc);
-
 function renderPanel(ctx: PossessionContext): HTMLElement {
-    return renderTpl(panelTpl, ctx);
+    return renderSheet(panelSrc, ctx);
 }
 
 const meta: Meta<PossessionContext> = {

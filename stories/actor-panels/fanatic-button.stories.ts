@@ -14,21 +14,15 @@
  * is created.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HB from 'handlebars';
 import panelSrc from '../../src/templates/actor/panel/fanatic-button.hbs?raw';
-import { renderTemplate as compileAndRender } from '../mocks';
-import { initializeStoryHandlebars } from '../template-support';
-
-initializeStoryHandlebars();
+import { renderSheet } from '../test-helpers';
 
 interface FanaticContext {
     hasFanatic: boolean;
 }
 
-const panelTpl = HB.compile(panelSrc);
-
 function renderPanel(ctx: FanaticContext): HTMLElement {
-    return compileAndRender(panelTpl, ctx);
+    return renderSheet(panelSrc, ctx);
 }
 
 const meta: Meta<FanaticContext> = {
