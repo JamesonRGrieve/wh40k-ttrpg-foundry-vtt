@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { composeSpecializationName, stripSpecializationSuffix } from './specialization-name.ts';
+import { composeSpecializationName, parseSpecializationName, stripSpecializationSuffix } from './specialization-name.ts';
 
 describe('composeSpecializationName', () => {
     it('appends the specialization to a bare base name (the normal SPEC case)', () => {
@@ -47,5 +47,29 @@ describe('stripSpecializationSuffix', () => {
 
     it('only strips the final trailing parenthetical', () => {
         expect(stripSpecializationSuffix('Foo (Bar) (Baz)')).toBe('Foo (Bar)');
+    });
+});
+
+describe('parseSpecializationName', () => {
+    it('splits a "Name (Spec)" full name into base and specialization', () => {
+        expect(parseSpecializationName('Common Lore (Imperium)')).toEqual({ name: 'Common Lore', specialization: 'Imperium' });
+        expect(parseSpecializationName('Acrobatics (Tumbling)')).toEqual({ name: 'Acrobatics', specialization: 'Tumbling' });
+    });
+
+    it('returns a null specialization for a bare name', () => {
+        expect(parseSpecializationName('Awareness')).toEqual({ name: 'Awareness', specialization: null });
+    });
+
+    it('round-trips with composeSpecializationName', () => {
+        const parsed = parseSpecializationName('Trade (Armourer)');
+        expect(composeSpecializationName(parsed.name, parsed.specialization)).toBe('Trade (Armourer)');
+    });
+
+    it('trims whitespace around the base and the specialization', () => {
+        expect(parseSpecializationName('  Speak Language ( Low Gothic ) ')).toEqual({ name: 'Speak Language', specialization: 'Low Gothic' });
+    });
+
+    it('handles the empty string without throwing', () => {
+        expect(parseSpecializationName('')).toEqual({ name: '', specialization: null });
     });
 });

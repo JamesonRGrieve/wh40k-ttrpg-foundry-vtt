@@ -8,6 +8,11 @@
  */
 
 import { gameSystemPackPrefix } from '../utils/game-system-pack-prefix.ts';
+import { parseSpecializationName } from '../utils/specialization-name.ts';
+
+// Re-export the canonical name parser under its historical name so existing
+// consumers (and the e2e helper probe) keep resolving it from this module (#279).
+export { parseSpecializationName as parseSkillName } from '../utils/specialization-name.ts';
 
 /**
  * Cache for skill UUID lookups to avoid repeated compendium searches
@@ -53,17 +58,15 @@ export function clearSkillUuidCache(): void {
 export function findSkillUuid(skillName: string | null | undefined, specialization: string | null = null, gameSystem?: string): string | null | undefined {
     if (skillName === null || skillName === undefined || skillName === '') return null;
 
-    // Check if specialization is embedded in the name
-    // Pattern: "Skill Name (Specialization)"
+    // Check if specialization is embedded in the name ("Skill Name (Specialization)").
+    // Decomposition is owned by parseSpecializationName so the parse regex lives in one place (#279).
     let resolvedSkillName: string = skillName;
     let resolvedSpecialization: string | null = specialization;
     if ((resolvedSpecialization === null || resolvedSpecialization === '') && resolvedSkillName.includes('(') && resolvedSkillName.includes(')')) {
-        const match = resolvedSkillName.match(/^(.+?)\s*\((.+?)\)\s*$/);
-        const matchG1 = match?.[1];
-        const matchG2 = match?.[2];
-        if (matchG1 !== undefined && matchG2 !== undefined) {
-            resolvedSkillName = matchG1.trim();
-            resolvedSpecialization = matchG2.trim();
+        const parsed = parseSpecializationName(resolvedSkillName);
+        if (parsed.specialization !== null) {
+            resolvedSkillName = parsed.name;
+            resolvedSpecialization = parsed.specialization;
         }
     }
 
@@ -199,34 +202,5 @@ export async function getSkillFromUuid(uuid: string): Promise<SkillItemLike | nu
     }
 }
 
-/**
- * Parse a skill name into base name and specialization
- *
- * @param {string} fullName - Full skill name (e.g., "Common Lore (Imperium)")
- * @returns {{name: string, specialization: string|null}}
- *
- * @example
- * parseSkillName("Common Lore (Imperium)")
- * // Returns: { name: "Common Lore", specialization: "Imperium" }
- *
- * parseSkillName("Awareness")
- * // Returns: { name: "Awareness", specialization: null }
- */
-export function parseSkillName(fullName: string): { name: string; specialization: string | null } {
-    if (fullName === '') return { name: '', specialization: null };
-
-    const match = fullName.match(/^(.+?)\s*\((.+?)\)\s*$/);
-    const parseG1 = match?.[1];
-    const parseG2 = match?.[2];
-    if (parseG1 !== undefined && parseG2 !== undefined) {
-        return {
-            name: parseG1.trim(),
-            specialization: parseG2.trim(),
-        };
-    }
-
-    return {
-        name: fullName.trim(),
-        specialization: null,
-    };
-}
+// parseSkillName now lives in utils/specialization-name.ts as parseSpecializationName
+// (the inverse of composeSpecializationName) and is re-exported above (#279).
