@@ -38,6 +38,23 @@ type ExperienceLike = {
 };
 
 /**
+ * Minimal actor surface the read-only XP helpers consult — a structural view of
+ * the actor Document, so the XP math is testable without a full Document.
+ */
+export interface XpActorView {
+    system: {
+        experience?: {
+            total: number;
+            used: number;
+            spentCharacteristics?: number;
+            spentSkills?: number;
+            spentTalents?: number;
+            spentPsychicPowers?: number;
+        };
+    };
+}
+
+/**
  * @typedef {Object} TransactionResult
  * @property {boolean} success - Whether the transaction succeeded
  * @property {string} [error] - Error message if failed
@@ -49,8 +66,8 @@ type ExperienceLike = {
  * @param {Actor} actor - The actor to check
  * @returns {number} Available XP
  */
-export function getAvailableXP(actor: WH40KBaseActorDocument): number {
-    const experience = actor.system.experience as ExperienceLike | undefined;
+export function getAvailableXP(actor: XpActorView): number {
+    const experience = actor.system.experience;
     if (experience === undefined) return 0;
 
     // Available = total - used
@@ -63,7 +80,7 @@ export function getAvailableXP(actor: WH40KBaseActorDocument): number {
  * @param {number} cost - The XP cost
  * @returns {boolean}
  */
-export function canAfford(actor: WH40KBaseActorDocument, cost: number): boolean {
+export function canAfford(actor: XpActorView, cost: number): boolean {
     return getAvailableXP(actor) >= cost;
 }
 
@@ -186,8 +203,9 @@ export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPP
  * @param {Actor} actor - The actor to check
  * @returns {Object} Summary of XP allocation
  */
-export function getXPSummary(actor: WH40KBaseActorDocument): XPSummary {
-    const exp = (actor.system.experience as ExperienceLike | undefined) ?? ({} as Partial<ExperienceLike>);
+export function getXPSummary(actor: XpActorView): XPSummary {
+    const experience = actor.system.experience;
+    const exp = experience ?? ({} as Partial<ExperienceLike>);
 
     return {
         total: exp.total ?? 0,
