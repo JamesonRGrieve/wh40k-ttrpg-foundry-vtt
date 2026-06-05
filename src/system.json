@@ -1343,6 +1343,18 @@
             "flags": {}
         },
         {
+            "name": "dh2-adventures",
+            "label": "Dark Heresy 2 Adventures",
+            "path": "packs/dark-heresy-2/dh2-adventures",
+            "system": "wh40k-rpg",
+            "type": "Adventure",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-core-items-consumables",
             "label": "Core Rulebook Consumables",
             "path": "packs/dark-heresy-2/dh2-core-items-consumables",
@@ -6024,6 +6036,7 @@
                         "dh2-core-items-conditions",
                         "dh2-core-items-consumables",
                         "dh2-core-items-critical-injuries",
+                        "dh2-adventures",
                         "dh2-core-items-cybernetics",
                         "dh2-core-items-misc",
                         "dh2-core-items-psychic-powers",
