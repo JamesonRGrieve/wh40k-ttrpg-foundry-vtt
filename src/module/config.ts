@@ -1412,6 +1412,31 @@ WH40K.weaponQualities = {
 };
 
 /**
+ * Parse a quality identifier into its base id and level. `blast-3` →
+ * `{ baseId: 'blast', level: 3 }`; `flamer-x` → `{ baseId: 'flamer', level: null }`
+ * (the `(X)` placeholder); a bare `tearing` → `{ baseId: 'tearing', level: null }`.
+ * Content-agnostic — pure suffix parsing, no quality table is consulted.
+ */
+export function parseQualityLevel(identifier: string): { baseId: string; level: number | null } {
+    const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
+    const base = levelMatch?.[1];
+    const lvl = levelMatch?.[2];
+    const baseId = base ?? identifier;
+    const level: number | null = lvl !== undefined ? (lvl.toLowerCase() === 'x' ? null : parseInt(lvl, 10)) : null;
+    return { baseId, level };
+}
+
+/**
+ * Append the level suffix to a localized quality label: ` (N)` for a known
+ * level, ` (X)` when the quality takes a level but none was supplied, nothing
+ * otherwise.
+ */
+export function buildQualityLabel(localizedBase: string, hasLevel: boolean, level: number | null): string {
+    if (!hasLevel) return localizedBase;
+    return level !== null ? `${localizedBase} (${level})` : `${localizedBase} (X)`;
+}
+
+/**
  * Get quality definition from identifier.
  * @param {string} identifier    Quality identifier (e.g., "tearing", "blast-3")
  * @returns {object|null}        Quality definition or null
@@ -1431,15 +1456,7 @@ WH40K.getQualityDefinition = function (identifier) {
 WH40K.getQualityLabel = function (identifier, level = null) {
     const def = this.getQualityDefinition(identifier);
     if (!def) return identifier;
-
-    let label = game.i18n.localize(def.label);
-    if (def.hasLevel && level !== null) {
-        label += ` (${level})`;
-    } else if (def.hasLevel) {
-        label += ` (X)`;
-    }
-
-    return label;
+    return buildQualityLabel(game.i18n.localize(def.label), def.hasLevel, level);
 };
 
 /**
