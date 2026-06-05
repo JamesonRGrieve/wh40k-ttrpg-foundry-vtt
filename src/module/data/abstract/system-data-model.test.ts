@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
  * Tests for SystemDataModel static utilities.
@@ -8,27 +9,23 @@ import { describe, expect, it } from 'vitest';
  */
 describe('SystemDataModel', () => {
     it('exports a default class symbol', async () => {
-        const mod = await import('./system-data-model').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`SystemDataModel could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./system-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.default).toBeTruthy();
     });
 
     it('static metadata has systemFlagsModel null by default', async () => {
-        const mod = await import('./system-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./system-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const SystemDataModel = mod.default;
         expect(SystemDataModel.metadata.systemFlagsModel).toBeNull();
     });
 
     it('_migrateData with empty source does not throw', async () => {
-        const mod = await import('./system-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./system-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const SystemDataModel = mod.default;
         const source = {};
@@ -36,8 +33,8 @@ describe('SystemDataModel', () => {
     });
 
     it('_cleanData with empty source does not throw', async () => {
-        const mod = await import('./system-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./system-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const SystemDataModel = mod.default;
         expect(() => SystemDataModel._cleanData(undefined)).not.toThrow();

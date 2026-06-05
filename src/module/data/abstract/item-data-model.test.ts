@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /** Narrow shape of migrated description field. */
 interface DescriptionField {
@@ -24,19 +25,15 @@ interface SourceField {
  */
 describe('ItemDataModel', () => {
     it('exports a default class symbol', async () => {
-        const mod = await import('./item-data-model').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`ItemDataModel could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.default).toBeTruthy();
     });
 
     it('_migrateData promotes flat description string to object', async () => {
-        const mod = await import('./item-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
 
@@ -50,8 +47,8 @@ describe('ItemDataModel', () => {
     });
 
     it('_migrateData does not overwrite an existing description object', async () => {
-        const mod = await import('./item-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
 
@@ -64,8 +61,8 @@ describe('ItemDataModel', () => {
     });
 
     it('_migrateData promotes flat source string to object', async () => {
-        const mod = await import('./item-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
 
@@ -79,8 +76,8 @@ describe('ItemDataModel', () => {
     });
 
     it('_migrateData promotes Array coverage to Set', async () => {
-        const mod = await import('./item-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
 
@@ -92,8 +89,8 @@ describe('ItemDataModel', () => {
     });
 
     it('_migrateData promotes Array properties to Set', async () => {
-        const mod = await import('./item-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
 
@@ -104,8 +101,8 @@ describe('ItemDataModel', () => {
     });
 
     it('_migrateData replaces img with invalid extension to default icon', async () => {
-        const mod = await import('./item-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
 
@@ -115,8 +112,8 @@ describe('ItemDataModel', () => {
     });
 
     it('_migrateData preserves img with valid .webp extension', async () => {
-        const mod = await import('./item-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
 
@@ -126,8 +123,8 @@ describe('ItemDataModel', () => {
     });
 
     it('static metadata has enchantable, hasEffects, singleton all false', async () => {
-        const mod = await import('./item-data-model').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
         const meta = ItemDataModel.metadata as { enchantable: boolean; hasEffects: boolean; singleton: boolean };
