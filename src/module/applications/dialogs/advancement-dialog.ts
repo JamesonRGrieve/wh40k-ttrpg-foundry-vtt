@@ -1257,6 +1257,45 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         void this.render();
     }
 
+    /**
+     * Shared purchase tail for the seven `#purchase*` handlers: confirm → spend
+     * → `apply` (actor update/create + success toast) → mark-recent → render →
+     * clear-recent (after 2s). The afford check and entry preparation stay in
+     * each caller — their guard order varies. `content` overrides the default
+     * `ConfirmPurchase` body (elite GM-approval warning); `spendLabel` overrides
+     * the XP-ledger label when it differs from the confirm name (`Elite: …`);
+     * omit `recentKey` to skip recent-purchase highlighting (psy rating, elite).
+     */
+    async #confirmAndSpend(opts: {
+        cost: number;
+        displayName: string;
+        spendLabel?: string;
+        content?: string;
+        recentKey?: string;
+        apply: () => Promise<void>;
+    }): Promise<void> {
+        const confirmed = await ConfirmationDialog.confirm({
+            title: game.i18n.localize('WH40K.Advancement.Title'),
+            content: opts.content ?? game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(opts.cost), name: opts.displayName }),
+        });
+        if (!confirmed) return;
+
+        const result = await spendXP(this.actor, opts.cost, opts.spendLabel ?? opts.displayName);
+        if (!result.success) {
+            ui.notifications.error(result.error ?? '');
+            return;
+        }
+
+        await opts.apply();
+
+        if (opts.recentKey !== undefined) this.#recentPurchases.add(opts.recentKey);
+        void this.render();
+        if (opts.recentKey !== undefined) {
+            const key = opts.recentKey;
+            setTimeout(() => this.#recentPurchases.delete(key), 2000);
+        }
+    }
+
     static async #purchaseCharacteristic(this: AdvancementDialog, _event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset['characteristic'];
         if (charKey === undefined) return;
@@ -1286,41 +1325,24 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const tierLabel = game.i18n.localize(CONFIG.wh40k.advancementTiers[nextCost.tier]?.label ?? nextCost.tier);
         /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions */
 
-        const confirmed = await ConfirmationDialog.confirm({
-            title: game.i18n.localize('WH40K.Advancement.Title'),
-            content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(nextCost.cost), name: `${charLabel} (${tierLabel})` }),
+        await this.#confirmAndSpend({
+            cost: nextCost.cost,
+            displayName: `${charLabel} (${tierLabel})`,
+            recentKey: `char:${charKey}`,
+            apply: async () => {
+                await this.actor.update({
+                    [`system.characteristics.${charKey}.advance`]: currentAdvances + 1,
+                    [`system.characteristics.${charKey}.cost`]: (char.cost ?? 0) + nextCost.cost,
+                });
+                ui.notifications.info(
+                    game.i18n.format('WH40K.Advancement.PurchasedCharacteristic', {
+                        char: charLabel,
+                        tier: tierLabel,
+                        cost: String(nextCost.cost),
+                    }),
+                );
+            },
         });
-        if (!confirmed) return;
-
-        const result = await spendXP(this.actor, nextCost.cost, `${charLabel} (${tierLabel})`);
-        if (!result.success) {
-            ui.notifications.error(result.error ?? '');
-            return;
-        }
-
-        const newAdvance = currentAdvances + 1;
-        const currentCost = char.cost ?? 0;
-
-        await this.actor.update({
-            [`system.characteristics.${charKey}.advance`]: newAdvance,
-            [`system.characteristics.${charKey}.cost`]: currentCost + nextCost.cost,
-        });
-
-        this.#recentPurchases.add(`char:${charKey}`);
-
-        ui.notifications.info(
-            game.i18n.format('WH40K.Advancement.PurchasedCharacteristic', {
-                char: charLabel,
-                tier: tierLabel,
-                cost: String(nextCost.cost),
-            }),
-        );
-
-        void this.render();
-
-        setTimeout(() => {
-            this.#recentPurchases.delete(`char:${charKey}`);
-        }, 2000);
     }
 
     static async #purchaseAdvance(this: AdvancementDialog, _event: Event, target: HTMLElement): Promise<void> {
@@ -1375,40 +1397,26 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const displayName =
             advance.specialization !== undefined && advance.specialization.length > 0 ? `${advance.name} (${advance.specialization})` : advance.name;
 
-        const confirmed = await ConfirmationDialog.confirm({
-            title: game.i18n.localize('WH40K.Advancement.Title'),
-            content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(advance.cost), name: displayName }),
-        });
-        if (!confirmed) return;
-
-        const result = await spendXP(this.actor, advance.cost, displayName);
-        if (!result.success) {
-            ui.notifications.error(result.error ?? '');
-            return;
-        }
-
-        if (advance.type === 'skill') {
-            await this.#applySkillAdvance(advance);
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvancementAdvance.type union may grow; exhaustive guard is defensive
-        } else if (advance.type === 'talent') {
-            await this.#applyTalentAdvance(advance);
-        }
-
         const id = `${advance.type}:${advance.name}:${advance.specialization ?? ''}`;
-        this.#recentPurchases.add(id);
-
-        ui.notifications.info(
-            game.i18n.format('WH40K.Advancement.Purchased', {
-                name: displayName,
-                cost: String(advance.cost),
-            }),
-        );
-
-        void this.render();
-
-        setTimeout(() => {
-            this.#recentPurchases.delete(id);
-        }, 2000);
+        await this.#confirmAndSpend({
+            cost: advance.cost,
+            displayName,
+            recentKey: id,
+            apply: async () => {
+                if (advance.type === 'skill') {
+                    await this.#applySkillAdvance(advance);
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvancementAdvance.type union may grow; exhaustive guard is defensive
+                } else if (advance.type === 'talent') {
+                    await this.#applyTalentAdvance(advance);
+                }
+                ui.notifications.info(
+                    game.i18n.format('WH40K.Advancement.Purchased', {
+                        name: displayName,
+                        cost: String(advance.cost),
+                    }),
+                );
+            },
+        });
     }
 
     // eslint-disable-next-line complexity -- purchase flow is inherently branchy: new-spec / bump-entry / simple cases; extracting sub-methods would scatter the guard-and-update sequence
@@ -1426,6 +1434,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
+        // `entry.cost` is narrowed to a number by the guard above; capture it so the
+        // narrowing survives into the #confirmAndSpend apply closures.
+        const cost = entry.cost;
+
         // Specialist skill: adding a new specialization (prompt for name)
         if (entry.specialization === '__new') {
             const specName = await this.#promptForSpecialization(entry.skillKey, entry.name);
@@ -1439,34 +1451,25 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
 
             const addDisplayName = `${entry.name.replace(' — add specialization', '')} (${specName}) — ${entry.nextLabel}`;
-            const addConfirmed = await ConfirmationDialog.confirm({
-                title: game.i18n.localize('WH40K.Advancement.Title'),
-                content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: addDisplayName }),
+            await this.#confirmAndSpend({
+                cost,
+                displayName: addDisplayName,
+                recentKey: entry.id,
+                apply: async () => {
+                    const newEntry = {
+                        name: specName,
+                        slug: specName.toLowerCase().replace(/\s+/g, '-'),
+                        advance: 1,
+                        bonus: 0,
+                        cost,
+                    };
+                    const currentEntries = actorSkill.entries ?? [];
+                    await this.actor.update({
+                        [`system.skills.${entry.skillKey}.entries`]: [...currentEntries, newEntry],
+                    });
+                    ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: addDisplayName, cost: String(cost) }));
+                },
             });
-            if (!addConfirmed) return;
-
-            const addResult = await spendXP(this.actor, entry.cost, addDisplayName);
-            if (!addResult.success) {
-                ui.notifications.error(addResult.error ?? '');
-                return;
-            }
-
-            const newEntry = {
-                name: specName,
-                slug: specName.toLowerCase().replace(/\s+/g, '-'),
-                advance: 1,
-                bonus: 0,
-                cost: entry.cost,
-            };
-            const currentEntries = actorSkill.entries ?? [];
-            await this.actor.update({
-                [`system.skills.${entry.skillKey}.entries`]: [...currentEntries, newEntry],
-            });
-
-            this.#recentPurchases.add(entry.id);
-            ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: addDisplayName, cost: String(entry.cost) }));
-            void this.render();
-            setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
             return;
         }
 
@@ -1476,57 +1479,39 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             if (entryIndex < 0) return;
 
             const bumpDisplayName = entry.nextLabel !== null && entry.nextLabel.length > 0 ? `${entry.name} — ${entry.nextLabel}` : entry.name;
-            const bumpConfirmed = await ConfirmationDialog.confirm({
-                title: game.i18n.localize('WH40K.Advancement.Title'),
-                content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: bumpDisplayName }),
+            await this.#confirmAndSpend({
+                cost,
+                displayName: bumpDisplayName,
+                recentKey: entry.id,
+                apply: async () => {
+                    const bumpCurrentAdvance = actorSkill.entries?.[entryIndex]?.advance ?? 0;
+                    const bumpCurrentCost = actorSkill.entries?.[entryIndex]?.cost ?? 0;
+                    await this.actor.update({
+                        [`system.skills.${entry.skillKey}.entries.${entryIndex}.advance`]: bumpCurrentAdvance + 1,
+                        [`system.skills.${entry.skillKey}.entries.${entryIndex}.cost`]: bumpCurrentCost + cost,
+                    });
+                    ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: bumpDisplayName, cost: String(cost) }));
+                },
             });
-            if (!bumpConfirmed) return;
-
-            const bumpResult = await spendXP(this.actor, entry.cost, bumpDisplayName);
-            if (!bumpResult.success) {
-                ui.notifications.error(bumpResult.error ?? '');
-                return;
-            }
-
-            const bumpCurrentAdvance = actorSkill.entries?.[entryIndex]?.advance ?? 0;
-            const bumpCurrentCost = actorSkill.entries?.[entryIndex]?.cost ?? 0;
-            await this.actor.update({
-                [`system.skills.${entry.skillKey}.entries.${entryIndex}.advance`]: bumpCurrentAdvance + 1,
-                [`system.skills.${entry.skillKey}.entries.${entryIndex}.cost`]: bumpCurrentCost + entry.cost,
-            });
-
-            this.#recentPurchases.add(entry.id);
-            ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: bumpDisplayName, cost: String(entry.cost) }));
-            void this.render();
-            setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
             return;
         }
 
         // Basic skill: single track
         const displayName = entry.nextLabel !== null && entry.nextLabel.length > 0 ? `${entry.name} (${entry.nextLabel})` : entry.name;
-        const confirmed = await ConfirmationDialog.confirm({
-            title: game.i18n.localize('WH40K.Advancement.Title'),
-            content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: displayName }),
+        await this.#confirmAndSpend({
+            cost,
+            displayName,
+            recentKey: entry.id,
+            apply: async () => {
+                const currentAdvance = actorSkill.advance ?? 0;
+                const currentCost = actorSkill.cost ?? 0;
+                await this.actor.update({
+                    [`system.skills.${entry.skillKey}.advance`]: currentAdvance + 1,
+                    [`system.skills.${entry.skillKey}.cost`]: currentCost + cost,
+                });
+                ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(cost) }));
+            },
         });
-        if (!confirmed) return;
-
-        const result = await spendXP(this.actor, entry.cost, displayName);
-        if (!result.success) {
-            ui.notifications.error(result.error ?? '');
-            return;
-        }
-
-        const currentAdvance = actorSkill.advance ?? 0;
-        const currentCost = actorSkill.cost ?? 0;
-        await this.actor.update({
-            [`system.skills.${entry.skillKey}.advance`]: currentAdvance + 1,
-            [`system.skills.${entry.skillKey}.cost`]: currentCost + entry.cost,
-        });
-
-        this.#recentPurchases.add(entry.id);
-        ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
-        void this.render();
-        setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
     }
 
     async #promptForSpecialization(_skillKey: string, skillLabel: string): Promise<string | null> {
@@ -1590,49 +1575,40 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             displayName = `${entry.name} (Rank ${(entry.currentRank ?? 0) + 1})`;
         }
 
-        const confirmed = await ConfirmationDialog.confirm({
-            title: game.i18n.localize('WH40K.Advancement.Title'),
-            content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: displayName }),
+        await this.#confirmAndSpend({
+            cost: entry.cost,
+            displayName,
+            recentKey: entry.id,
+            apply: async () => {
+                if (entry.kind === 'stackable') {
+                    // Find existing talent item on actor, bump rank; create if missing
+                    const base = entry.name.toLowerCase();
+                    const existing = this.actor.items.find((i) => i.type === 'talent' && i.name.toLowerCase() === base);
+                    if (existing) {
+                        // eslint-disable-next-line no-restricted-syntax -- stackable talents default to rank 1 when not previously incremented
+                        const currentRank = (existing.system as { rank?: number }).rank ?? 1;
+                        await existing.update({ 'system.rank': currentRank + 1 });
+                    } else {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
+                        const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
+                        data['_id'] = foundry.utils.randomID();
+                        data.system['rank'] = 1;
+                        await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
+                    }
+                } else {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
+                    const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
+                    data['_id'] = foundry.utils.randomID();
+                    if (specialization) {
+                        data['name'] = `${entry.name} (${specialization})`;
+                        data.system['specialization'] = specialization;
+                        data.system['hasSpecialization'] = true;
+                    }
+                    await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
+                }
+                ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
+            },
         });
-        if (!confirmed) return;
-
-        const result = await spendXP(this.actor, entry.cost, displayName);
-        if (!result.success) {
-            ui.notifications.error(result.error ?? '');
-            return;
-        }
-
-        if (entry.kind === 'stackable') {
-            // Find existing talent item on actor, bump rank; create if missing
-            const base = entry.name.toLowerCase();
-            const existing = this.actor.items.find((i) => i.type === 'talent' && i.name.toLowerCase() === base);
-            if (existing) {
-                // eslint-disable-next-line no-restricted-syntax -- stackable talents default to rank 1 when not previously incremented
-                const currentRank = (existing.system as { rank?: number }).rank ?? 1;
-                await existing.update({ 'system.rank': currentRank + 1 });
-            } else {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
-                const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
-                data['_id'] = foundry.utils.randomID();
-                data.system['rank'] = 1;
-                await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
-            }
-        } else {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
-            const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
-            data['_id'] = foundry.utils.randomID();
-            if (specialization) {
-                data['name'] = `${entry.name} (${specialization})`;
-                data.system['specialization'] = specialization;
-                data.system['hasSpecialization'] = true;
-            }
-            await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
-        }
-
-        this.#recentPurchases.add(entry.id);
-        ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
-        void this.render();
-        setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
     }
 
     async #promptForTalentSpecialization(talentName: string, ownedSpecs: string[]): Promise<string | null> {
@@ -1687,21 +1663,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await ConfirmationDialog.confirm({
-            title: game.i18n.localize('WH40K.Advancement.Title'),
-            content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(cost), name: `Psy Rating ${nextRating}` }),
+        await this.#confirmAndSpend({
+            cost,
+            displayName: `Psy Rating ${nextRating}`,
+            apply: async () => {
+                await this.actor.update({ 'system.psy.rating': nextRating });
+                ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: `Psy Rating ${nextRating}`, cost: String(cost) }));
+            },
         });
-        if (!confirmed) return;
-
-        const result = await spendXP(this.actor, cost, `Psy Rating ${nextRating}`);
-        if (!result.success) {
-            ui.notifications.error(result.error ?? '');
-            return;
-        }
-
-        await this.actor.update({ 'system.psy.rating': nextRating });
-        ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: `Psy Rating ${nextRating}`, cost: String(cost) }));
-        void this.render();
     }
 
     async #purchasePsychicPowerAt(advanceIndex: number): Promise<void> {
@@ -1725,27 +1694,18 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await ConfirmationDialog.confirm({
-            title: game.i18n.localize('WH40K.Advancement.Title'),
-            content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: entry.name }),
+        await this.#confirmAndSpend({
+            cost: entry.cost,
+            displayName: entry.name,
+            recentKey: entry.id,
+            apply: async () => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
+                const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
+                data['_id'] = foundry.utils.randomID();
+                await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
+                ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: entry.name, cost: String(entry.cost) }));
+            },
         });
-        if (!confirmed) return;
-
-        const result = await spendXP(this.actor, entry.cost, entry.name);
-        if (!result.success) {
-            ui.notifications.error(result.error ?? '');
-            return;
-        }
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
-        const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
-        data['_id'] = foundry.utils.randomID();
-        await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
-
-        this.#recentPurchases.add(entry.id);
-        ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: entry.name, cost: String(entry.cost) }));
-        void this.render();
-        setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
     }
 
     async #purchaseEliteAt(advanceIndex: number): Promise<void> {
@@ -1765,36 +1725,31 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await ConfirmationDialog.confirm({
-            title: game.i18n.localize('WH40K.Advancement.Title'),
+        await this.#confirmAndSpend({
+            cost: entry.cost,
+            displayName: entry.name,
+            spendLabel: `Elite: ${entry.name}`,
             content: `<p>${game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: entry.name })}</p>
                 <p class="notes"><i class="fas fa-exclamation-triangle"></i> Elite advances represent large, lasting character changes. GM approval is expected per RAW.</p>`,
+            apply: async () => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
+                const itemData = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
+                itemData['_id'] = foundry.utils.randomID();
+                itemData['type'] = 'originPath';
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments returns plain Document refs
+                const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData] as never[])) as unknown as Item[];
+
+                try {
+                    const { default: GrantsManager } = await import('../../managers/grants-manager.ts');
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: cross-cast between Foundry Item and project WH40KItem
+                    await GrantsManager.applyItemGrants(created as unknown as WH40KItem, this.actor, { showNotification: false });
+                } catch (err) {
+                    console.warn('Elite grant application failed (item was still added):', err);
+                }
+
+                ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: entry.name, cost: String(entry.cost) }));
+            },
         });
-        if (!confirmed) return;
-
-        const result = await spendXP(this.actor, entry.cost, `Elite: ${entry.name}`);
-        if (!result.success) {
-            ui.notifications.error(result.error ?? '');
-            return;
-        }
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
-        const itemData = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
-        itemData['_id'] = foundry.utils.randomID();
-        itemData['type'] = 'originPath';
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments returns plain Document refs
-        const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData] as never[])) as unknown as Item[];
-
-        try {
-            const { default: GrantsManager } = await import('../../managers/grants-manager.ts');
-            // eslint-disable-next-line no-restricted-syntax -- boundary: cross-cast between Foundry Item and project WH40KItem
-            await GrantsManager.applyItemGrants(created as unknown as WH40KItem, this.actor, { showNotification: false });
-        } catch (err) {
-            console.warn('Elite grant application failed (item was still added):', err);
-        }
-
-        ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: entry.name, cost: String(entry.cost) }));
-        void this.render();
     }
 
     async #applySkillAdvance(advance: AdvancementAdvance): Promise<void> {

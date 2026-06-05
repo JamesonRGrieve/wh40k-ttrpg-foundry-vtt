@@ -2520,24 +2520,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     async _prepareTalentsWithTooltips(talents: GrantItemRaw[]): Promise<PreparedTalent[]> {
         return Promise.all(
             talents.map(async (talent) => {
-                let tooltipText = talent.name;
-                let hasItem = false;
-
-                if (talent.uuid !== undefined && talent.uuid !== '') {
-                    try {
-                        const item = (await fromUuid(talent.uuid)) as ResolvedDocument | null;
-                        if (item) {
-                            hasItem = true;
-                            const desc = item.system?.description?.value;
-                            if (desc !== undefined && desc !== '') {
-                                tooltipText = this._stripHtml(desc).substring(0, 200);
-                                if (tooltipText.length >= 200) tooltipText += '...';
-                            }
-                        }
-                    } catch {
-                        // Item not found, use name
-                    }
-                }
+                const { hasItem, tooltipText } = await this._resolveGrantTooltip(talent.name, talent.uuid);
 
                 const preparedTalent: PreparedTalent = {
                     specialization: talent.specialization ?? null,
@@ -2561,24 +2544,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     async _prepareTraitsWithTooltips(traits: GrantItemRaw[]): Promise<PreparedTrait[]> {
         return Promise.all(
             traits.map(async (trait) => {
-                let tooltipText = trait.name;
-                let hasItem = false;
-
-                if (trait.uuid !== undefined && trait.uuid !== '') {
-                    try {
-                        const item = (await fromUuid(trait.uuid)) as ResolvedDocument | null;
-                        if (item) {
-                            hasItem = true;
-                            const desc = item.system?.description?.value;
-                            if (desc !== undefined && desc !== '') {
-                                tooltipText = this._stripHtml(desc).substring(0, 200);
-                                if (tooltipText.length >= 200) tooltipText += '...';
-                            }
-                        }
-                    } catch {
-                        // Item not found
-                    }
-                }
+                const { hasItem, tooltipText } = await this._resolveGrantTooltip(trait.name, trait.uuid);
 
                 const preparedTrait: PreparedTrait = {
                     level: trait.level ?? null,
@@ -2595,6 +2561,32 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 return preparedTrait;
             }),
         );
+    }
+
+    /**
+     * Resolve a grant's compendium UUID to a stripped 200-char tooltip preview.
+     * Shared by talent and trait tooltip preparation; returns the entry name
+     * when the item can't be resolved or carries no description.
+     */
+    async _resolveGrantTooltip(name: string | undefined, uuid: string | undefined): Promise<{ hasItem: boolean; tooltipText: string | undefined }> {
+        let tooltipText = name;
+        let hasItem = false;
+        if (uuid !== undefined && uuid !== '') {
+            try {
+                const item = (await fromUuid(uuid)) as ResolvedDocument | null;
+                if (item) {
+                    hasItem = true;
+                    const desc = item.system?.description?.value;
+                    if (desc !== undefined && desc !== '') {
+                        tooltipText = this._stripHtml(desc).substring(0, 200);
+                        if (tooltipText.length >= 200) tooltipText += '...';
+                    }
+                }
+            } catch {
+                // Item not found, use name
+            }
+        }
+        return { hasItem, tooltipText };
     }
 
     async _prepareGrantTooltipData(title: string | null, uuid: string | null, fallbackDescription = ''): Promise<string> {
@@ -4033,6 +4025,29 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Prompt for a single value via DialogV2 (the four manual-entry handlers
+     * share this one-field read). Returns the raw input string, or null when the
+     * dialog is dismissed; callers parse/validate per field. `min` and `hint`
+     * are emitted only when provided.
+     */
+    async _promptForValue(opts: { title: string; label: string; name: string; type: 'number' | 'text'; min?: string; hint?: string }): Promise<string | null> {
+        const minAttr = opts.min !== undefined ? ` min="${opts.min}"` : '';
+        const hintHtml = opts.hint !== undefined && opts.hint !== '' ? `<p class="notes">${opts.hint}</p>` : '';
+        const result = await foundry.applications.api.DialogV2.prompt({
+            window: { title: opts.title },
+            content: `<div class="form-group"><label>${opts.label}</label><input type="${opts.type}" name="${opts.name}"${minAttr} autofocus />${hintHtml}</div>`,
+            ok: {
+                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
+                    const input = button.form?.elements.namedItem(opts.name) as HTMLInputElement | null;
+                    return input?.value ?? '';
+                },
+            },
+            rejectClose: false,
+        });
+        return typeof result === 'string' ? result : null;
+    }
+
+    /**
      * Manually set a stat value (alternative to rolling)
      */
     static async #manualStat(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
@@ -4059,31 +4074,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (formula === undefined || formula === '') return;
 
-        // Show a simple input dialog
-        const result = await foundry.applications.api.DialogV2.prompt({
-            window: {
-                title: game.i18n.localize(`WH40K.OriginPath.Enter${statType.charAt(0).toUpperCase() + statType.slice(1)}`),
-            },
-            content: `
-                <div class="form-group">
-                    <label>${game.i18n.localize('WH40K.OriginPath.ManualValue')}</label>
-                    <input type="number" name="value" value="" min="1" autofocus />
-                    <p class="notes">${game.i18n.localize('WH40K.OriginPath.FormulaHint')}: ${formula}</p>
-                </div>
-            `,
-            ok: {
-                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
-                    const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
-                    return parseInt(input?.value ?? '', 10) || null;
-                },
-            },
-            rejectClose: false,
+        const raw = await this._promptForValue({
+            title: game.i18n.localize(`WH40K.OriginPath.Enter${statType.charAt(0).toUpperCase() + statType.slice(1)}`),
+            label: game.i18n.localize('WH40K.OriginPath.ManualValue'),
+            name: 'value',
+            type: 'number',
+            min: '1',
+            hint: `${game.i18n.localize('WH40K.OriginPath.FormulaHint')}: ${formula}`,
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: DialogV2.prompt resolves with unknown; null check guards the no-input path
-        if (result !== null && result !== undefined) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: confirmation-dialog returns unknown until the call sites narrow; here the result is a number
-            const rolledValue = result as unknown as number;
+        const rolledValue = raw === null ? null : parseInt(raw, 10) || null;
+        if (rolledValue !== null) {
             const rollData = {
                 formula: formula,
                 rolled: rolledValue,
@@ -4403,18 +4404,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Manually enter a divination.
      */
     static async #manualDivination(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        const text = await foundry.applications.api.DialogV2.prompt({
-            window: { title: 'Enter Divination' },
-            content: '<div class="form-group"><label>Divination:</label><input type="text" name="divination" autofocus /></div>',
-            ok: {
-                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
-                    const input = button.form?.elements.namedItem('divination') as HTMLInputElement | null;
-                    return input?.value ?? '';
-                },
-            },
-            rejectClose: false,
-        });
-        if (typeof text === 'string' && text !== '') {
+        const text = await this._promptForValue({ title: 'Enter Divination', label: 'Divination:', name: 'divination', type: 'text' });
+        if (text !== null && text !== '') {
             this._divination = text;
             this._saveScrollPosition();
             void this.render();
@@ -4439,18 +4430,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     static async #manualThrones(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        const val = await foundry.applications.api.DialogV2.prompt({
-            window: { title: 'Enter Starting Throne Gelt' },
-            content: '<div class="form-group"><label>Thrones:</label><input type="number" name="value" min="0" autofocus /></div>',
-            ok: {
-                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
-                    const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
-                    return parseInt(input?.value ?? '', 10);
-                },
-            },
-            rejectClose: false,
-        });
-        if (typeof val === 'number' && !Number.isNaN(val)) {
+        const raw = await this._promptForValue({ title: 'Enter Starting Throne Gelt', label: 'Thrones:', name: 'value', type: 'number', min: '0' });
+        const val = raw === null ? NaN : parseInt(raw, 10);
+        if (!Number.isNaN(val)) {
             this._thronesRolled = val;
             this._saveScrollPosition();
             void this.render();
@@ -4478,18 +4460,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     static async #manualInfluence(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        const val = await foundry.applications.api.DialogV2.prompt({
-            window: { title: 'Enter Starting Influence' },
-            content: '<div class="form-group"><label>Influence:</label><input type="number" name="value" min="0" autofocus /></div>',
-            ok: {
-                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
-                    const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
-                    return parseInt(input?.value ?? '', 10);
-                },
-            },
-            rejectClose: false,
-        });
-        if (typeof val === 'number' && !Number.isNaN(val)) {
+        const raw = await this._promptForValue({ title: 'Enter Starting Influence', label: 'Influence:', name: 'value', type: 'number', min: '0' });
+        const val = raw === null ? NaN : parseInt(raw, 10);
+        if (!Number.isNaN(val)) {
             this._influenceRolled = val;
             this._saveScrollPosition();
             void this.render();
