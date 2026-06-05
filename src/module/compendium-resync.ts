@@ -193,6 +193,12 @@ function isFrozen(item: EmbeddedItemLike): boolean {
     return Boolean(item.flags?.[SYSTEM_ID]?.[FROZEN_FLAG]);
 }
 
+/** A per-actor variant (`system.variantOf` set) is self-contained by design. */
+function isActorVariant(item: EmbeddedItemLike): boolean {
+    const variantOf = item.system['variantOf'];
+    return typeof variantOf === 'string' && variantOf !== '';
+}
+
 function compendiumSourceUuid(item: EmbeddedItemLike): string | null {
     const stats = item._stats;
     return stats?.compendiumSource ?? null;
@@ -265,6 +271,11 @@ async function processActor(
             stats.frozen += 1;
             continue;
         }
+        // A `variantOf` item is a self-contained per-actor variant of a compendium
+        // base (see src/packs/CLAUDE.md "Variants"): it intentionally diverges from
+        // every compendium record, so the name fallback must never flatten it back
+        // onto its base. Skip outright — it has no source to reconcile against.
+        if (isActorVariant(item)) continue;
         if (SKIP_TYPES.has(item.type)) continue;
         if (item.name !== null && item.name !== '' && STUB_NAMES.has(item.name)) continue;
 
@@ -332,7 +343,8 @@ async function processActor(
  *      path (1).
  *
  * Items with no resolved source are warned about and left alone, as are items
- * flagged `flags.wh40k-rpg.frozenFromCompendium`.
+ * flagged `flags.wh40k-rpg.frozenFromCompendium` and per-actor variants
+ * (`system.variantOf` set), which intentionally diverge from every compendium record.
  */
 export async function resyncWorldFromCompendiums(): Promise<void> {
     if (!game.user.isGM) return;
