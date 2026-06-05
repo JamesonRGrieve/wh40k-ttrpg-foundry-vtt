@@ -1,8 +1,5 @@
-import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
-import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
-import { SYSTEM_ID } from '../constants.ts';
 import { D100Roll } from '../dice/_module.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
@@ -18,7 +15,6 @@ import type {
     WH40KPsy,
     WH40KSkill,
 } from '../types/global.d.ts';
-import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 import type { WH40KItem } from './item.ts';
 
@@ -175,9 +171,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         super.prepareData();
 
         // Now run item-based calculations (DataModel has access to this.parent.items)
-        if (typeof this.system.prepareEmbeddedData === 'function') {
-            this.system.prepareEmbeddedData();
-        }
+        this._runEmbeddedDataPrep();
     }
 
     /* -------------------------------------------- */
@@ -483,37 +477,12 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * Roll/use an item
      * @param {string} itemId - The item ID
      */
-    // TODO(dry): this weapon/psychic rollItem dispatch duplicates documents/npc.ts. Extract _dispatchItemRoll(item, { requireEquipped }) on WH40KBaseActor.
     override async rollItem(itemId: string): Promise<void> {
         game.wh40k.log('RollItem', itemId);
         const item = this.items.get(itemId);
         if (!item) return;
 
-        if (item.type === 'weapon') {
-            if (item.system.state.equipped !== true) {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.WeaponNotEquipped localization key not yet in en.json
-                ui.notifications.warn('Actor must have weapon equipped!');
-                return;
-            }
-            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {
-                if (item.isRanged) {
-                    await this.rollCharacteristic('ballisticSkill', item.name);
-                } else {
-                    await this.rollCharacteristic('weaponSkill', item.name);
-                }
-            } else {
-                DHTargetedActionManager.performWeaponAttack(this, null, item);
-            }
-            return;
-        }
-        if (item.type === 'psychicPower') {
-            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
-                await this.rollCharacteristic('willpower', item.name);
-            } else {
-                DHTargetedActionManager.performPsychicCast(this, null, item);
-            }
-            return;
-        }
+        // PC-only branch: force fields must be equipped AND activated.
         if (item.type === 'forceField') {
             if (item.system.state.equipped !== true || item.system.state.activated !== true) {
                 // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.ForceFieldNotReady localization key not yet in en.json
@@ -524,31 +493,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
             prepareUnifiedRoll(new ForceFieldData(this, item as unknown as ConstructorParameters<typeof ForceFieldData>[1]) as unknown as ActionData);
             return;
         }
-        // Default: vocalize the item's benefit/description in chat.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: per-item-type field narrowed inline before string-vs-object dispatch
-        const benefit = (item.system as { benefit?: unknown }).benefit;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: per-item-type field narrowed inline before string-vs-object dispatch
-        const description = (item.system as { description?: unknown }).description;
-        const rawDescription =
-            (typeof benefit === 'string' ? benefit : null) ??
-            (typeof description === 'string'
-                ? description
-                : typeof description === 'object' && description !== null && 'value' in description
-                ? (description as { value?: string }).value ?? ''
-                : '');
-        await DHBasicActionManager.sendItemVocalizeChat({
-            actor: this.name,
-            name: item.name,
-            type: item.type.toUpperCase(),
-            // eslint-disable-next-line @typescript-eslint/no-deprecated -- TextEditor.enrichHTML still works in V14; foundry.applications.ux.TextEditor.implementation is the V15 path
-            description: await TextEditor.enrichHTML(rawDescription, {
-                rollData: {
-                    actor: this,
-                    item: item,
-                    pr: this.psy.rating,
-                },
-            }),
-        });
+
+        // Weapon / psychic / default-vocalize dispatch is shared with NPCs; PCs enforce the equipped check.
+        await this._dispatchItemRoll(item, { enforceEquipped: true });
+    }
+
+    /** PCs expose their psy rating to vocalized-item enrichHTML (`@pr`). */
+    protected override _rollPsyRating(): number | undefined {
+        return this.psy.rating;
     }
 
     /**

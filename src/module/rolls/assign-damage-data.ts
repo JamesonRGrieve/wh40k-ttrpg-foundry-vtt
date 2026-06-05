@@ -3,7 +3,7 @@ import { getCriticalDamage } from '../rules/critical-damage.ts';
 import { damageTypeDropdown } from '../rules/damage-type.ts';
 import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
-import { applyRollModeWhispers } from './roll-helpers.ts';
+import { postChatCard, resolveGettersForTemplate } from './roll-helpers.ts';
 
 /**
  * Optional horde state surfaced by NPC actors carrying the HordeTemplate
@@ -299,17 +299,11 @@ export class AssignDamageData {
             await this._createCriticalInjuryItem();
         }
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate expects a plain record; AssignDamageData is duck-typed to satisfy the shape
-        const templateData = this as unknown as Record<string, unknown>;
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', templateData);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped record-shaped payload
-        const chatData: Record<string, unknown> = {
-            user: game.user.id,
-            rollMode: game.settings.get('core', 'rollMode'),
-            content: html,
-        };
-        applyRollModeWhispers(chatData);
-        await ChatMessage.create(chatData);
+        const html = await foundry.applications.handlebars.renderTemplate(
+            'systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs',
+            resolveGettersForTemplate(this),
+        );
+        await postChatCard(html);
     }
 
     /**
