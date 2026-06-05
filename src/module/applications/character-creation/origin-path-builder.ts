@@ -20,6 +20,7 @@ import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, type Origin
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { resolvePack } from '../../utils/compendium-query.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
+import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -232,23 +233,12 @@ function collectContentItemPlans(system: OriginPathSystemData, out: ContentItemP
 
     // Choice-resolved content options.
     const selectedChoices = system.selectedChoices ?? {};
-    const labelCounts: Record<string, number> = {};
-    for (const choice of system.grants?.choices ?? []) {
+    for (const { choice, selectedValues, resolveOption } of iterateResolvedChoices(system.grants?.choices ?? [], selectedChoices)) {
         const choiceType = typeof choice.type === 'string' ? choice.type : '';
-        const baseLabel = choice.label !== undefined && choice.label !== '' ? choice.label : choice.name ?? '';
-        labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
-        const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
         if (!CONTENT_ITEM_TYPES.has(choiceType)) continue;
-
-        const choiceKey = `${baseLabel}${suffix}`;
-        const selectedScoped = selectedChoices[choiceKey];
-        const selectedLegacy = selectedChoices[baseLabel];
-        const selected = Array.isArray(selectedScoped) ? selectedScoped : Array.isArray(selectedLegacy) ? selectedLegacy : [];
-        const options = choice.options ?? [];
-        for (const selectedValue of selected) {
-            const selectedStr = String(selectedValue);
-            const option = options.find((opt) => (opt.value ?? opt.name) === selectedStr || opt.name === selectedStr || opt.label === selectedStr);
-            const name = option?.name ?? option?.label ?? stripCompositeSpecialization(selectedStr);
+        for (const selectedValue of selectedValues) {
+            const option = resolveOption(selectedValue);
+            const name = option?.name ?? option?.label ?? stripCompositeSpecialization(selectedValue);
             push(choiceType, name, option?.description);
         }
     }
@@ -1432,16 +1422,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             const selectedChoices = sys.selectedChoices ?? {};
-            const choices = selection.grants.choices;
-            const labelCounts: Record<string, number> = {};
+            const choices = selection.grants.choices as Array<NormalizedChoice & { name?: string }>;
 
-            for (const choice of choices as Array<NormalizedChoice & { name?: string }>) {
-                const baseLabel = choice.label !== '' ? choice.label : choice.name ?? 'choice';
-                labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
-                const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
-                const choiceKey = `${baseLabel}${suffix}`;
-                const selectedValues = selectedChoices[choiceKey] ?? [];
-
+            // Keying is shared (#305); the composite-spec prefix matcher + option.grants read stay local to this site.
+            for (const { choice, choiceKey, selectedValues } of iterateResolvedChoices(choices, selectedChoices)) {
                 for (const selectedValue of selectedValues) {
                     const option = choice.options.find((opt) => {
                         const optionValue = opt.value !== '' ? opt.value : (opt as NormalizedChoiceOption & { name?: string }).name;
@@ -2941,13 +2925,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         if (grants.choices && grants.choices.length > 0) {
-            const labelCounts: Record<string, number> = {};
-            for (const choice of grants.choices) {
-                const base = choice.label ?? choice.name ?? '';
-                labelCounts[base] = (labelCounts[base] ?? 0) + 1;
-                const suffix = labelCounts[base] > 1 ? ` (${labelCounts[base]})` : '';
+            for (const { choice, selectedValues } of iterateResolvedChoices(grants.choices, selectedChoices)) {
                 if (choice.type === 'aptitude') {
-                    this._collectAptitudeChoices(choice, selectedChoices[`${base}${suffix}`] ?? [], perOrigin);
+                    this._collectAptitudeChoices(choice, selectedValues, perOrigin);
                 }
             }
         }
@@ -4950,18 +4930,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const selectedChoices = selSys.selectedChoices ?? {};
             // Deduplicate labels the same way the choice dialog does,
             // so we look up the right key in selectedChoices.
-            const labelCounts: Record<string, number> = {};
-            for (let i = 0; i < choices.length; i++) {
-                const choiceRaw = choices[i];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: choices is an array; index may be out of bounds
-                if (choiceRaw === undefined) continue;
-                const rawLabel = choiceRaw.label;
-                const rawName = choiceRaw.name;
-                const baseLabel =
-                    typeof rawLabel === 'string' && rawLabel !== '' ? rawLabel : typeof rawName === 'string' && rawName !== '' ? rawName : 'choice';
-                labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
-                const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
-                const choiceKey = `${baseLabel}${suffix}`;
+            // Shared keying (#305); the per-index deterministic id + singleton-preserving
+            // strict-scoped read (no legacy fallback) stay local to this site.
+            let i = -1;
+            for (const { baseLabel, choiceKey } of iterateResolvedChoices(choices, selectedChoices)) {
+                i += 1;
                 const selected = selectedChoices[choiceKey];
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: selectedChoices is a Record; key may be absent
                 if (selected !== undefined && selected !== null) {
