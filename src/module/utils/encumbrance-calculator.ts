@@ -3,8 +3,6 @@
  * Extracts weight/carry capacity logic from the main actor document.
  */
 
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
-
 type BackpackLike = {
     hasBackpack: boolean;
     isCombatVest: boolean;
@@ -12,6 +10,23 @@ type BackpackLike = {
         max: number;
     };
 };
+
+/** Minimal carried-item surface {@link computeEncumbrance} reads. */
+export interface EncumbranceItemView {
+    isStorageLocation: boolean;
+    totalWeight: number;
+    system?: { state?: { inShipStorage?: boolean; inBackpack?: boolean } };
+}
+
+/**
+ * Minimal actor surface {@link computeEncumbrance} reads — a structural view of
+ * the actor Document, so the calculation is testable without a full Document.
+ */
+export interface EncumbranceActorView {
+    system: { backpack?: BackpackLike };
+    items: { filter: (predicate: (item: EncumbranceItemView) => boolean) => EncumbranceItemView[] };
+    characteristics: Record<string, { bonus?: number } | undefined>;
+}
 
 /**
  * Encumbrance lookup table (S+T bonus -> carry capacity in kg)
@@ -27,7 +42,7 @@ const ENCUMBRANCE_TABLE = [0.9, 2.25, 4.5, 9, 18, 27, 36, 45, 56, 67, 78, 90, 11
  * @param {Actor} actor - The actor to compute encumbrance for
  * @returns {object} Encumbrance data with current, max, and encumbered flags
  */
-export function computeEncumbrance(actor: WH40KBaseActorDocument): {
+export function computeEncumbrance(actor: EncumbranceActorView): {
     max: number;
     value: number;
     encumbered: boolean;
@@ -37,21 +52,19 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
 } {
     let currentWeight = 0;
     let backpackWeight = 0;
-    const backpack = actor.system.backpack as BackpackLike | undefined;
+    const backpack = actor.system.backpack;
     const backpackMax = backpack?.hasBackpack === true ? backpack.weight.max : 0;
 
     // Filter out storage location items and ship-stowed items
     const carriedItems = actor.items.filter((item) => {
         if (item.isStorageLocation) return false;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is untyped Foundry data
-        if (((item.system as Record<string, unknown> | undefined)?.['state'] as Record<string, unknown> | undefined)?.['inShipStorage'] === true) return false;
+        if (item.system?.state?.inShipStorage === true) return false;
         return true;
     });
 
     if (backpack?.hasBackpack === true) {
         for (const item of carriedItems) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is untyped Foundry data
-            if (((item.system as Record<string, unknown> | undefined)?.['state'] as Record<string, unknown> | undefined)?.['inBackpack'] === true) {
+            if (item.system?.state?.inBackpack === true) {
                 backpackWeight += item.totalWeight;
             } else {
                 currentWeight += item.totalWeight;
@@ -68,8 +81,8 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
     }
 
     // Calculate max carry capacity from S+T bonus using lookup table
-    const strengthBonus = Number((actor.characteristics['strength'] as (typeof actor.characteristics)[string] | undefined)?.bonus ?? 0);
-    const toughnessBonus = Number((actor.characteristics['toughness'] as (typeof actor.characteristics)[string] | undefined)?.bonus ?? 0);
+    const strengthBonus = Number(actor.characteristics['strength']?.bonus ?? 0);
+    const toughnessBonus = Number(actor.characteristics['toughness']?.bonus ?? 0);
     const attrBonus = Math.max(0, Math.min(strengthBonus + toughnessBonus, ENCUMBRANCE_TABLE.length - 1));
     const maxWeight = (ENCUMBRANCE_TABLE[attrBonus] as number | undefined) ?? 0;
 
