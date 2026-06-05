@@ -1,5 +1,4 @@
 import RollConfigurationDialog from '../applications/dialogs/roll-configuration-dialog.ts';
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import BasicRollWH40K from './basic-roll.ts';
 
 /**
@@ -345,13 +344,8 @@ export default class D100Roll extends BasicRollWH40K {
     /* -------------------------------------------- */
 
     /**
-     * Create and roll a d100 test against a target number
-     * @param {Object} options - Roll options
-     * @param {number} options.target - Target number to roll against
-     * @param {string} [options.flavor] - Roll flavor text
-     * @param {Actor} [options.actor] - The actor making the test
-     * @param {Object} [options.modifiers] - Named modifiers affecting the target
-     * @param {boolean} [options.configure=true] - Whether to show configuration
+     * Create and roll a d100 test against a target number.
+     * @param {Object} options - Roll options (target / baseTarget, flavor, actor, …)
      * @returns {Promise<ChatMessage|null>}
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: roll options is a Foundry pass-through bag with no schema; Record<string, unknown> is the honest type
@@ -359,58 +353,6 @@ export default class D100Roll extends BasicRollWH40K {
         return this.build({
             ...options,
             baseTarget: options['baseTarget'] ?? options['target'],
-        });
-    }
-
-    /**
-     * Perform a quick characteristic test
-     * @param {Actor} actor - The actor making the test
-     * @param {string} characteristic - The characteristic key (e.g., "weaponSkill")
-     * @param {Object} [options] - Additional options
-     * @returns {Promise<ChatMessage|null>}
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: options is a Foundry pass-through bag for additional roll config; Record<string, unknown> is the honest type
-    static async characteristicTest(actor: WH40KBaseActor, characteristic: string, options: Record<string, unknown> = {}): Promise<ChatMessage | null> {
-        const system = actor.system as { characteristics?: Record<string, { total: number; label?: string }> };
-        const charData = system.characteristics?.[characteristic];
-        if (charData === undefined) {
-            ui.notifications.warn(`Characteristic "${characteristic}" not found`);
-            return null;
-        }
-
-        return this.test({
-            actor: actor,
-            target: charData.total,
-            baseTarget: charData.total,
-            flavor: `${charData.label ?? characteristic} Test`,
-            speaker: ChatMessage.getSpeaker({ actor }),
-            ...options,
-        });
-    }
-
-    /**
-     * Perform a quick skill test
-     * @param {Actor} actor - The actor making the test
-     * @param {string} skill - The skill key (e.g., "dodge")
-     * @param {Object} [options] - Additional options
-     * @returns {Promise<ChatMessage|null>}
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: options is a Foundry pass-through bag for additional roll config; Record<string, unknown> is the honest type
-    static async skillTest(actor: WH40KBaseActor, skill: string, options: Record<string, unknown> = {}): Promise<ChatMessage | null> {
-        const system = actor.system as { skills?: Record<string, { current: number; label?: string }> };
-        const skillData = system.skills?.[skill];
-        if (skillData === undefined) {
-            ui.notifications.warn(`Skill "${skill}" not found`);
-            return null;
-        }
-
-        return this.test({
-            actor: actor,
-            target: skillData.current,
-            baseTarget: skillData.current,
-            flavor: `${skillData.label ?? skill} Test`,
-            speaker: ChatMessage.getSpeaker({ actor }),
-            ...options,
         });
     }
 }
