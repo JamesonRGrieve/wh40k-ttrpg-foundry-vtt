@@ -1331,6 +1331,18 @@
             "flags": {}
         },
         {
+            "name": "dh2-core-items-misc",
+            "label": "Core Rulebook Miscellanea",
+            "path": "packs/dark-heresy-2/dh2-core-items-misc",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-core-items-consumables",
             "label": "Core Rulebook Consumables",
             "path": "packs/dark-heresy-2/dh2-core-items-consumables",
@@ -6013,6 +6025,7 @@
                         "dh2-core-items-consumables",
                         "dh2-core-items-critical-injuries",
                         "dh2-core-items-cybernetics",
+                        "dh2-core-items-misc",
                         "dh2-core-items-psychic-powers",
                         "dh2-core-items-skills",
                         "dh2-core-items-talents",
