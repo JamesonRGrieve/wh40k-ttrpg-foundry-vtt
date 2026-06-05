@@ -1,24 +1,17 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../testing/model-import.ts';
 
 describe('WH40KActiveEffect', () => {
     it('exports WH40KActiveEffect class', async () => {
-        const mod = await import('./active-effect').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KActiveEffect could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./active-effect.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.WH40KActiveEffect).toBeTruthy();
     });
 
     it('isTemporary returns true when duration.rounds is positive', async () => {
-        const mod = await import('./active-effect').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KActiveEffect could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./active-effect.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeEffect = Object.create(mod.WH40KActiveEffect.prototype) as InstanceType<typeof mod.WH40KActiveEffect>;
@@ -27,12 +20,8 @@ describe('WH40KActiveEffect', () => {
     });
 
     it('isTemporary returns false when duration fields are null', async () => {
-        const mod = await import('./active-effect').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KActiveEffect could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./active-effect.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeEffect = Object.create(mod.WH40KActiveEffect.prototype) as InstanceType<typeof mod.WH40KActiveEffect>;
@@ -41,12 +30,8 @@ describe('WH40KActiveEffect', () => {
     });
 
     it('isTemporary returns true when duration.seconds is positive', async () => {
-        const mod = await import('./active-effect').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KActiveEffect could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./active-effect.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeEffect = Object.create(mod.WH40KActiveEffect.prototype) as InstanceType<typeof mod.WH40KActiveEffect>;
@@ -55,12 +40,8 @@ describe('WH40KActiveEffect', () => {
     });
 
     it('natureClass returns a wh40k-effect-* CSS class string', async () => {
-        const mod = await import('./active-effect').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KActiveEffect could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./active-effect.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeEffect = Object.create(mod.WH40KActiveEffect.prototype) as InstanceType<typeof mod.WH40KActiveEffect>;
@@ -82,12 +63,8 @@ describe('WH40KActiveEffect', () => {
     });
 
     it('source returns null when origin is empty', async () => {
-        const mod = await import('./active-effect').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KActiveEffect could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./active-effect.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeEffect = Object.create(mod.WH40KActiveEffect.prototype) as InstanceType<typeof mod.WH40KActiveEffect>;

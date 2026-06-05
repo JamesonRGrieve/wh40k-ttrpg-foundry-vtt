@@ -1,13 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../testing/model-import.ts';
 
 describe('WH40KAcolyte', () => {
     it('exports WH40KAcolyte class', async () => {
-        const mod = await import('./acolyte').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KAcolyte could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./acolyte.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.WH40KAcolyte).toBeTruthy();
     });
@@ -29,12 +26,8 @@ describe('WH40KAcolyte', () => {
     });
 
     it('SKILL_ALIASES includes navigate → navigation mapping', async () => {
-        const mod = await import('./acolyte').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KAcolyte could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./acolyte.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         // SKILL_ALIASES is module-level; access it through the module namespace
         // (it is not exported but the class behaviour depends on it — tested via rollSkill)

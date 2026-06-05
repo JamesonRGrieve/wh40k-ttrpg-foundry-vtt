@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { importModelOrSkip } from '../testing/model-import.ts';
 
 /* eslint-disable no-restricted-syntax -- test boundary: structural stubs of the Foundry item/actor surface applyOriginToActor() reaches into, narrowed to the fields under test */
 /** Write a dot-path value into a nested record, creating intermediate objects. */
@@ -84,8 +85,8 @@ describe('WH40KItem.applyOriginToActor idempotency', () => {
     });
 
     it('applying the same origin twice converges to applying it once', async () => {
-        const mod = await import('./item').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const apply = getApply(mod);
         const modifiers = { characteristics: { willpower: 5 }, wounds: 3, fate: 1 };
@@ -106,8 +107,8 @@ describe('WH40KItem.applyOriginToActor idempotency', () => {
     });
 
     it('does not duplicate characteristic advances across repeated applies', async () => {
-        const mod = await import('./item').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./item.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const apply = getApply(mod);
         const actor = makeOriginActor();
@@ -123,23 +124,15 @@ describe('WH40KItem.applyOriginToActor idempotency', () => {
 
 describe('WH40KItem', () => {
     it('exports WH40KItem class', async () => {
-        const mod = await import('./item').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KItem could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./item.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.WH40KItem).toBeTruthy();
     });
 
     it('_getDefaultIcon returns type-specific icon paths', async () => {
-        const mod = await import('./item').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KItem could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./item.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.WH40KItem._getDefaultIcon('weapon')).toBe('icons/svg/sword.svg');
         expect(mod.WH40KItem._getDefaultIcon('armour')).toBe('icons/svg/shield.svg');
@@ -147,36 +140,24 @@ describe('WH40KItem', () => {
     });
 
     it('_getDefaultIcon falls back to mystery-man for unknown types', async () => {
-        const mod = await import('./item').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KItem could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./item.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.WH40KItem._getDefaultIcon('unknownType')).toBe('icons/svg/mystery-man.svg');
         expect(mod.WH40KItem._getDefaultIcon('')).toBe('icons/svg/mystery-man.svg');
     });
 
     it('cleanData handles missing img field without error', async () => {
-        const mod = await import('./item').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KItem could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./item.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         // source without img field should not throw
         expect(() => mod.WH40KItem.cleanData({ type: 'weapon' })).not.toThrow();
     });
 
     it('cleanData replaces invalid img extension with type default', async () => {
-        const mod = await import('./item').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KItem could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./item.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const source = { type: 'weapon', img: 'path/without/extension' };
         mod.WH40KItem.cleanData(source);
@@ -184,12 +165,8 @@ describe('WH40KItem', () => {
     });
 
     it('cleanData replaces empty img string with type default', async () => {
-        const mod = await import('./item').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KItem could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./item.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const source = { type: 'talent', img: '' };
         mod.WH40KItem.cleanData(source);
