@@ -20,39 +20,96 @@ interface EnricherActorLike {
     system: WH40KActorSystemData;
 }
 
+/** Parsed enricher invocation: the raw `config` body and optional `{label}` override. */
+interface ParsedEnricher {
+    config: string;
+    label: string | undefined;
+}
+
+/**
+ * Shared enricher prologue: validate the match and pull the `config` body and
+ * optional `{label}`. Returns an error `<span>` (which the caller returns as-is)
+ * when the match is malformed.
+ */
+function parseEnricherMatch(match: RegExpMatchArray): ParsedEnricher | HTMLElement {
+    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
+    const label = getGroup(match.groups, 'label');
+    const config = match.groups['config'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
+    if (config === undefined) return createErrorElement(match[0], 'Missing config group');
+    return { config, label };
+}
+
+/**
+ * Resolve the actor an enricher renders against from `options.relativeTo`.
+ * Returns an error `<span>` when there is no actor context.
+ */
+function resolveEnricherActor(match: RegExpMatchArray, options?: EnrichmentOptions): EnricherActorLike | HTMLElement {
+    const actor = options?.relativeTo as EnricherActorLike | undefined;
+    if (actor?.documentName !== 'Actor') {
+        return createErrorElement(match[0], 'No actor context');
+    }
+    return actor;
+}
+
+/** Options for {@link makeEnricherSpan}. Attribute insertion order is load-bearing for the serialized DOM. */
+interface EnricherSpanOptions {
+    type: string;
+    /** Extra class appended after the base classes (e.g. `positive` / `negative`). */
+    extraClass?: string;
+    config: string;
+    /** `string | undefined` because the source actor's `uuid` is itself optional. */
+    actorUuid?: string | undefined;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the tooltip JSON payload has no fixed schema across enricher types
+    tooltip?: Record<string, unknown>;
+    /** Font-Awesome icon class, e.g. `fa-dice-d20`. */
+    icon: string;
+    label: string;
+    title?: string;
+}
+
+/**
+ * Build an enriched `<span>`. Attributes are inserted in the order
+ * `class → data-enricher-type → data-enricher-config → data-actor-uuid →
+ * data-tooltip → title` so the serialized markup is identical to the
+ * per-enricher hand-built spans this replaces.
+ */
+function makeEnricherSpan(opts: EnricherSpanOptions): HTMLElement {
+    const span = document.createElement('span');
+    span.className =
+        opts.extraClass === undefined ? `wh40k-enricher wh40k-enricher-${opts.type}` : `wh40k-enricher wh40k-enricher-${opts.type} ${opts.extraClass}`;
+    span.dataset['enricherType'] = opts.type;
+    span.dataset['enricherConfig'] = opts.config;
+    if (opts.actorUuid !== undefined) span.dataset['actorUuid'] = opts.actorUuid;
+    if (opts.tooltip !== undefined) span.dataset['tooltip'] = JSON.stringify(opts.tooltip);
+    if (opts.title !== undefined) span.title = opts.title;
+    span.innerHTML = `<i class="fas ${opts.icon}"></i> ${opts.label}`;
+    return span;
+}
+
 /**
  * Register custom text enrichers for WH40K RPG system.
  */
 export function registerCustomEnrichers(): void {
-    // Register enricher patterns
+    // Every enricher shares the `[[/<keyword> <config>]]{<label>}` grammar and
+    // differs only by keyword, so build the four from one descriptor + template.
+    //   - characteristic: [[/characteristic ws]], [[/characteristic weaponSkill]]
+    //   - skill:          [[/skill dodge]], [[/skill commonLore:imperium]]
+    //   - modifier:       [[/modifier strength +10]]
+    //   - armor:          [[/armor head]], [[/armor all]]
+    // (`@Quality` / `@Property` / `@Condition` name-based enrichers were removed
+    // in favour of Foundry's native `@UUID[Compendium.…]` syntax.)
+    const enricherDescriptors: ReadonlyArray<{ keyword: string; enricher: (match: RegExpMatchArray, options?: EnrichmentOptions) => Promise<HTMLElement> }> = [
+        { keyword: 'characteristic', enricher: enrichCharacteristic },
+        { keyword: 'skill', enricher: enrichSkill },
+        { keyword: 'modifier', enricher: enrichModifier },
+        { keyword: 'armor', enricher: enrichArmor },
+    ];
     CONFIG.TextEditor.enrichers.push(
-        {
-            // [[/characteristic ws]], [[/characteristic weaponSkill]]
-            pattern: /\[\[\/characteristic (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
-            enricher: enrichCharacteristic,
-        },
-        {
-            // [[/skill dodge]], [[/skill commonLore:imperium]]
-            pattern: /\[\[\/skill (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
-            enricher: enrichSkill,
-        },
-        {
-            // [[/modifier strength +10]]
-            pattern: /\[\[\/modifier (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
-            enricher: enrichModifier,
-        },
-        {
-            // [[/armor head]], [[/armor all]]
-            pattern: /\[\[\/armor (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
-            enricher: enrichArmor,
-        },
-        // Note: `@Quality[name]`, `@Property[name]`, `@Condition[name]` were
-        // custom name-based enrichers that did `pack.getIndex().find(name)`
-        // at render time. They've been removed in favor of Foundry's native
-        // `@UUID[Compendium.wh40k-rpg.<pack>.<type>.<id>]` syntax, which
-        // renders the linked document's *current* name with no custom code,
-        // no per-render index scan, and standard click-through behavior.
-        // Authoring docs: use @UUID for any compendium-document reference.
+        ...enricherDescriptors.map(({ keyword, enricher }) => ({
+            pattern: new RegExp(`\\[\\[\\/${keyword} (?<config>[^\\]]+)]](?:{(?<label>[^}]+)})?`, 'gi'),
+            enricher,
+        })),
     );
 
     // Register click handlers for interactive elements
@@ -71,12 +128,9 @@ export function registerCustomEnrichers(): void {
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 async function enrichCharacteristic(match: RegExpMatchArray, options?: EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
-    const label = getGroup(match.groups, 'label');
-    const configRaw = match.groups['config'];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
-    if (configRaw === undefined) return createErrorElement(match[0], 'Missing config group');
-    const config = configRaw.trim().toLowerCase();
+    const parsed = parseEnricherMatch(match);
+    if (parsed instanceof HTMLElement) return parsed;
+    const config = parsed.config.trim().toLowerCase();
 
     // Map short codes to full names
     const charMap: Record<string, string> = {
@@ -93,11 +147,8 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: Enrichmen
 
     const charKey = charMap[config] ?? config;
 
-    // Get actor from relativeTo
-    const actor = options?.relativeTo as EnricherActorLike | undefined;
-    if (actor?.documentName !== 'Actor') {
-        return createErrorElement(match[0], 'No actor context');
-    }
+    const actor = resolveEnricherActor(match, options);
+    if (actor instanceof HTMLElement) return actor;
 
     const actorSystem = actor.system;
     const charData: WH40KCharacteristic | undefined = charKey in actorSystem.characteristics ? actorSystem.characteristics[charKey] : undefined;
@@ -105,32 +156,23 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: Enrichmen
         return createErrorElement(match[0], `Unknown characteristic: ${config}`);
     }
 
-    // Create enriched element
-    const span = document.createElement('span');
-    span.className = 'wh40k-enricher wh40k-enricher-characteristic';
-    span.dataset['enricherType'] = 'characteristic';
-    span.dataset['enricherConfig'] = charKey;
-    span.dataset['actorUuid'] = actor.uuid;
-
-    // Build tooltip data
-    const tooltipData = {
-        label: charData.label,
-        total: charData.total,
-        bonus: charData.bonus,
-        base: charData.base,
-        advance: charData.advance,
-        modifier: charData.modifier,
-        unnatural: charData.unnatural,
-    };
-    span.dataset['tooltip'] = JSON.stringify(tooltipData);
-
-    // Create label
-    const displayLabel = label ?? `${charData.label} (${charData.total})`;
-    span.innerHTML = `<i class="fas fa-dice-d20"></i> ${displayLabel}`;
-
-    span.title = `Click to roll ${charData.label}`;
-
-    return span;
+    return makeEnricherSpan({
+        type: 'characteristic',
+        config: charKey,
+        actorUuid: actor.uuid,
+        tooltip: {
+            label: charData.label,
+            total: charData.total,
+            bonus: charData.bonus,
+            base: charData.base,
+            advance: charData.advance,
+            modifier: charData.modifier,
+            unnatural: charData.unnatural,
+        },
+        icon: 'fa-dice-d20',
+        label: parsed.label ?? `${charData.label} (${charData.total})`,
+        title: `Click to roll ${charData.label}`,
+    });
 }
 
 /* -------------------------------------------- */
@@ -143,21 +185,15 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: Enrichmen
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
-    const label = getGroup(match.groups, 'label');
-    const configRawSkill = match.groups['config'];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
-    if (configRawSkill === undefined) return createErrorElement(match[0], 'Missing config group');
-    const config = configRawSkill.trim().toLowerCase();
+    const parsed = parseEnricherMatch(match);
+    if (parsed instanceof HTMLElement) return parsed;
+    const config = parsed.config.trim().toLowerCase();
 
     // Parse skill and specialization
     const [skillKey, specialization] = config.split(':').map((s: string) => s.trim()) as [string, string | undefined];
 
-    // Get actor from relativeTo
-    const actor = options?.relativeTo as EnricherActorLike | undefined;
-    if (actor?.documentName !== 'Actor') {
-        return createErrorElement(match[0], 'No actor context');
-    }
+    const actor = resolveEnricherActor(match, options);
+    if (actor instanceof HTMLElement) return actor;
 
     const actorSystem = actor.system;
     const skillData: WH40KSkill | undefined = skillKey in actorSystem.skills ? actorSystem.skills[skillKey] : undefined;
@@ -175,32 +211,25 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
         targetData = entry;
     }
 
-    // Create enriched element
-    const span = document.createElement('span');
-    span.className = 'wh40k-enricher wh40k-enricher-skill';
-    span.dataset['enricherType'] = 'skill';
-    span.dataset['enricherConfig'] = specialization !== undefined && specialization.length > 0 ? `${skillKey}:${specialization}` : skillKey;
-    span.dataset['actorUuid'] = actor.uuid;
-
-    // Build tooltip data
-    const tooltipData = {
-        label: specialization !== undefined && specialization.length > 0 ? `${skillData.label} (${(targetData as WH40KSkillEntry).name})` : skillData.label,
-        current: targetData.current,
-        characteristic: skillData.characteristic,
-        trained: targetData.trained,
-        plus10: targetData.plus10,
-        plus20: targetData.plus20,
-        bonus: targetData.bonus,
-    };
-    span.dataset['tooltip'] = JSON.stringify(tooltipData);
-
-    // Create label
-    const displayLabel = label ?? `${tooltipData.label} (${targetData.current}%)`;
-    span.innerHTML = `<i class="fas fa-dice-d100"></i> ${displayLabel}`;
-
-    span.title = `Click to roll ${tooltipData.label}`;
-
-    return span;
+    const hasSpec = specialization !== undefined && specialization.length > 0;
+    const tooltipLabel = hasSpec ? `${skillData.label} (${(targetData as WH40KSkillEntry).name})` : skillData.label;
+    return makeEnricherSpan({
+        type: 'skill',
+        config: hasSpec ? `${skillKey}:${specialization}` : skillKey,
+        actorUuid: actor.uuid,
+        tooltip: {
+            label: tooltipLabel,
+            current: targetData.current,
+            characteristic: skillData.characteristic,
+            trained: targetData.trained,
+            plus10: targetData.plus10,
+            plus20: targetData.plus20,
+            bonus: targetData.bonus,
+        },
+        icon: 'fa-dice-d100',
+        label: parsed.label ?? `${tooltipLabel} (${targetData.current}%)`,
+        title: `Click to roll ${tooltipLabel}`,
+    });
 }
 
 /* -------------------------------------------- */
@@ -213,12 +242,9 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 async function enrichModifier(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
-    const config = match.groups['config'];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
-    if (config === undefined) return createErrorElement(match[0], 'Missing config group');
-    const label = getGroup(match.groups, 'label');
-    const parts = config.trim().split(/\s+/);
+    const parsed = parseEnricherMatch(match);
+    if (parsed instanceof HTMLElement) return parsed;
+    const parts = parsed.config.trim().split(/\s+/);
 
     if (parts.length < 2) {
         return createErrorElement(match[0], 'Invalid modifier format');
@@ -231,17 +257,13 @@ async function enrichModifier(match: RegExpMatchArray, _options?: EnrichmentOpti
         return createErrorElement(match[0], 'Invalid modifier value');
     }
 
-    // Create enriched element
-    const span = document.createElement('span');
-    span.className = `wh40k-enricher wh40k-enricher-modifier ${numValue >= 0 ? 'positive' : 'negative'}`;
-    span.dataset['enricherType'] = 'modifier';
-    span.dataset['enricherConfig'] = config;
-
-    const displayLabel = label ?? `${stat} ${formatSigned(numValue)}`;
-    const icon = numValue >= 0 ? 'arrow-up' : 'arrow-down';
-    span.innerHTML = `<i class="fas fa-${icon}"></i> ${displayLabel}`;
-
-    return span;
+    return makeEnricherSpan({
+        type: 'modifier',
+        extraClass: numValue >= 0 ? 'positive' : 'negative',
+        config: parsed.config,
+        icon: numValue >= 0 ? 'fa-arrow-up' : 'fa-arrow-down',
+        label: parsed.label ?? `${stat} ${formatSigned(numValue)}`,
+    });
 }
 
 /* -------------------------------------------- */
@@ -254,31 +276,18 @@ async function enrichModifier(match: RegExpMatchArray, _options?: EnrichmentOpti
  */
 // eslint-disable-next-line @typescript-eslint/require-await
 async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
-    const label = getGroup(match.groups, 'label');
-    const configRawArmor = match.groups['config'];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
-    if (configRawArmor === undefined) return createErrorElement(match[0], 'Missing config group');
-    const config = configRawArmor.trim().toLowerCase();
+    const parsed = parseEnricherMatch(match);
+    if (parsed instanceof HTMLElement) return parsed;
+    const config = parsed.config.trim().toLowerCase();
 
-    // Get actor from relativeTo
-    const actor = options?.relativeTo as EnricherActorLike | undefined;
-    if (actor?.documentName !== 'Actor') {
-        return createErrorElement(match[0], 'No actor context');
-    }
+    const actor = resolveEnricherActor(match, options);
+    if (actor instanceof HTMLElement) return actor;
 
     const actorSystem = actor.system;
     const armorData = actorSystem.armour;
     if (armorData === undefined) {
         return createErrorElement(match[0], 'No armor data');
     }
-
-    // Create enriched element
-    const span = document.createElement('span');
-    span.className = 'wh40k-enricher wh40k-enricher-armor';
-    span.dataset['enricherType'] = 'armor';
-    span.dataset['enricherConfig'] = config;
-    span.dataset['actorUuid'] = actor.uuid;
 
     let displayValue: string;
     // Tooltip is a heterogeneous bag of per-location or single-location summaries serialised to JSON for display.
@@ -321,12 +330,14 @@ async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions)
         };
     }
 
-    span.dataset['tooltip'] = JSON.stringify(tooltipData);
-
-    const displayLabel = label ?? displayValue;
-    span.innerHTML = `<i class="fas fa-shield-alt"></i> ${displayLabel}`;
-
-    return span;
+    return makeEnricherSpan({
+        type: 'armor',
+        config,
+        actorUuid: actor.uuid,
+        tooltip: tooltipData,
+        icon: 'fa-shield-alt',
+        label: parsed.label ?? displayValue,
+    });
 }
 
 /* -------------------------------------------- */
