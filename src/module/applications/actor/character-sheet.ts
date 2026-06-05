@@ -591,6 +591,65 @@ type UtilityMenuOption = {
 };
 
 /**
+ * Per-system overview-panel registry (#282). Replaces the three copy-pasted
+ * `if (isBC)/if (isDW)/if (isOW)` dispatch blocks with one table: the active
+ * system's entries are looped and each `build` result written into the context
+ * under its `key`. Adding a system's panel is now a one-row edit. The exact
+ * context-key names the `.hbs` partials read are preserved verbatim.
+ */
+interface PanelBuilder {
+    key: string;
+    build: (sheet: CharacterSheet) => object;
+}
+
+/** OW pass-through panels read `system.*` by string key (no dedicated _prepare method yet). */
+function owSystemRecord(sheet: CharacterSheet): Record<string, unknown> {
+    return sheet.actor.system;
+}
+
+const PANEL_BUILDERS: Partial<Record<GameSystemId, readonly PanelBuilder[]>> = {
+    bc: [
+        { key: 'alignmentPanel', build: (s) => s._prepareBcAlignmentPanel() },
+        { key: 'psychicPanel', build: (s) => s._prepareBcPsychicPanel() },
+        { key: 'ritualPanel', build: (s) => s._prepareBcRitualPanel() },
+        { key: 'giftsPanel', build: (s) => s._prepareBcGiftsPanel() },
+        { key: 'supplementsPanel', build: (s) => s._prepareBcSupplementsPanel() },
+        { key: 'daemonPrincePanel', build: (s) => s._prepareBcDaemonPrincePanel() },
+    ],
+    dw: [
+        { key: 'cohesionPanel', build: (s) => s._prepareDwCohesionPanel() },
+        { key: 'modePanel', build: (s) => s._prepareDwModePanel() },
+        { key: 'renownPanel', build: (s) => s._prepareDwRenownPanel() },
+        { key: 'requisitionPanel', build: (s) => s._prepareDwRequisitionPanel() },
+        { key: 'astartesPanel', build: (s) => s._prepareDwAstartesPanel() },
+        { key: 'oathPanel', build: (s) => s._prepareDwOathPanel() },
+        { key: 'missionPanel', build: (s) => s._prepareDwMissionPanel() },
+        { key: 'vehiclePanel', build: (s) => s._prepareDwVehiclePanel() },
+        { key: 'distinctionPanel', build: (s) => s._prepareDwDistinctionPanel() },
+        { key: 'ammoPanel', build: (s) => s._prepareDwAmmoPanel() },
+    ],
+    ow: [
+        { key: 'regimentPanel', build: (s) => s._prepareOwRegimentPanel() },
+        { key: 'comradePanel', build: (s) => s._prepareOwComradePanel() },
+        { key: 'ordersPanel', build: (s) => s._prepareOwOrdersPanel() },
+        { key: 'logisticsPanel', build: (s) => s._prepareOwLogisticsPanel() },
+        { key: 'missionGearPanel', build: (s) => s._prepareOwMissionGearPanel() },
+        { key: 'vehicleMovementPanel', build: (s) => s._prepareOwVehicleMovementPanel() },
+        { key: 'comradeHealingPanel', build: (s) => s._prepareOwComradeHealingPanel() },
+        { key: 'craftsmanshipPanel', build: (s) => buildOwCraftsmanshipPanel(Array.from(s.actor.items.values())) },
+        { key: 'mountPanel', build: (s) => ({ mountedOn: owSystemRecord(s)['mountedOn'] ?? null }) },
+        {
+            key: 'drawbackPanel',
+            build: (s) => ({ drawbacks: owSystemRecord(s)['regimentDrawbacks'] ?? [], multiComradeRoster: owSystemRecord(s)['multiComradeRoster'] ?? null }),
+        },
+        {
+            key: 'battlefieldPanel',
+            build: (s) => ({ supportCooldown: owSystemRecord(s)['supportCooldown'] ?? 0, awards: owSystemRecord(s)['regimentalAwards'] ?? [] }),
+        },
+    ],
+};
+
+/**
  * Actor sheet for Acolyte/Character type actors.
  */
 export default class CharacterSheet extends BaseActorSheet {
@@ -1090,60 +1149,15 @@ export default class CharacterSheet extends BaseActorSheet {
         context.isOW = isOW;
         context.isDW = isDW;
 
-        // BC Alignment / Infamy panel (#173) — only built for BC actors;
-        // other systems leave `alignmentPanel` undefined so the tab-status
-        // gate (`{{#if isBC}}`) keeps the include site no-op.
-        if (isBC) {
-            context.alignmentPanel = this._prepareBcAlignmentPanel();
-            context.psychicPanel = this._prepareBcPsychicPanel();
-            // Batch-2 BC overview panels (#179 Ritual, #180 Gifts, #181 Supplements, #182 Daemon Prince).
-            context.ritualPanel = this._prepareBcRitualPanel();
-            context.giftsPanel = this._prepareBcGiftsPanel();
-            context.supplementsPanel = this._prepareBcSupplementsPanel();
-            context.daemonPrincePanel = this._prepareBcDaemonPrincePanel();
-        }
-
-        // DW engine panels (#162, #163, #164, #165, #167).
-        if (isDW) {
-            context.cohesionPanel = this._prepareDwCohesionPanel();
-            context.modePanel = this._prepareDwModePanel();
-            context.renownPanel = this._prepareDwRenownPanel();
-            context.requisitionPanel = this._prepareDwRequisitionPanel();
-            context.astartesPanel = this._prepareDwAstartesPanel();
-            // Batch-2 DW panels (#168 Oath, #169 Mission, #170 Vehicle, #171 Distinctions, #172 Ammo).
-            context.oathPanel = this._prepareDwOathPanel();
-            context.missionPanel = this._prepareDwMissionPanel();
-            context.vehiclePanel = this._prepareDwVehiclePanel();
-            context.distinctionPanel = this._prepareDwDistinctionPanel();
-            context.ammoPanel = this._prepareDwAmmoPanel();
-        }
-
-        // OW engine panels (#151, #152, #153, #154).
-        if (isOW) {
-            context.regimentPanel = this._prepareOwRegimentPanel();
-            context.comradePanel = this._prepareOwComradePanel();
-            context.ordersPanel = this._prepareOwOrdersPanel();
-            context.logisticsPanel = this._prepareOwLogisticsPanel();
-            // Batch-2 OW Mission Assignment Gear panel (#155).
-            context.missionGearPanel = this._prepareOwMissionGearPanel();
-            // Batch-3 OW panels (#156, #157, #158).
-            context.vehicleMovementPanel = this._prepareOwVehicleMovementPanel();
-            context.comradeHealingPanel = this._prepareOwComradeHealingPanel();
-            context.craftsmanshipPanel = buildOwCraftsmanshipPanel(Array.from(this.actor.items.values()));
-            // Batch-4 OW panels (#159, #160, #161) — minimal pass-through; the
-            // panels read system.* directly. A future _prepare<Panel>() method
-            // can resolve compendium descriptors via uuidNameCache.
-            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape is the union of CharacterData declarations; the panel partials walk specific fields
-            const sysAny = this.actor.system as unknown as Record<string, unknown>;
-            context.mountPanel = { mountedOn: sysAny['mountedOn'] ?? null };
-            context.drawbackPanel = {
-                drawbacks: sysAny['regimentDrawbacks'] ?? [],
-                multiComradeRoster: sysAny['multiComradeRoster'] ?? null,
-            };
-            context.battlefieldPanel = {
-                supportCooldown: sysAny['supportCooldown'] ?? 0,
-                awards: sysAny['regimentalAwards'] ?? [],
-            };
+        // Per-system overview panels — table-driven (#282). Each system's entries
+        // (see PANEL_BUILDERS above) are written into the context under their exact
+        // partial-facing keys; non-listed systems (DH2/DH1/RT/IM) build no panels,
+        // and the `{{#if isBC}}`/etc. tab gates keep their include sites no-op.
+        if (activeGameSystem !== null) {
+            for (const { key, build } of PANEL_BUILDERS[activeGameSystem] ?? []) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic panel-context key written into the free-form CharacterSheetContext
+                (context as Record<string, unknown>)[key] = build(this);
+            }
         }
 
         // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
