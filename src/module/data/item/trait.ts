@@ -1,3 +1,4 @@
+import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -17,6 +18,13 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
     declare benefit: string;
     declare level: number;
     declare notes: string;
+    /**
+     * SPEC philosophy (#261) for parameterized traits: "Unnatural Characteristic (X)"
+     * is one base item whose `specialization` carries the characteristic (Strength,
+     * Toughness, …). The base name never carries it; the display name composes once.
+     * Per-actor instance state — preserved by the compendium resync.
+     */
+    declare specialization: string;
     /**
      * Fear (X) rating per core.md §"Fear" — 0 = no fear test required,
      * 1–4 = test difficulty tiers, 5+ = roll on Shock table with the X
@@ -63,6 +71,9 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // SPEC philosophy carrier (e.g. "Strength" for Unnatural Characteristic (X))
+            specialization: new fields.StringField({ required: false, blank: true, initial: '' }),
         };
     }
 
@@ -84,7 +95,9 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      */
     get fullName(): string {
         const parent = this.parent as { name?: string } | undefined;
-        let name: string = parent?.name ?? '';
+        // SPEC philosophy: compose base + specialization once (e.g. "Unnatural
+        // Characteristic (X)" + "Strength" -> "Unnatural Characteristic (Strength)").
+        let name: string = composeSpecializationName(parent?.name ?? '', this.specialization);
         if (this.hasLevel) {
             name += ` (${this.level})`;
         }

@@ -18,8 +18,12 @@ const RUNTIME_PRESERVE_PATHS: Record<string, ReadonlyArray<string>> = {
     'gear': ['quantity', 'equipped', 'stowed', 'uses'],
     'consumable': ['quantity', 'uses'],
     'cybernetic': ['installed'],
-    'talent': [],
-    'trait': [],
+    // Specialization (SPEC philosophy) + per-actor magnitude are instance state, not
+    // definition: a base "Weapon Training (X)" / "Unnatural Characteristic (X)" item is
+    // owned per-actor as "(Bolt)" / "(Strength) level 3". Preserve so resync doesn't
+    // clobber the chosen specialization/level back to the base's blank/zero.
+    'talent': ['specialization', 'rank'],
+    'trait': ['specialization', 'level', 'fearRating'],
     'psychic-power': [],
 };
 
