@@ -3842,11 +3842,25 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleEquip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        const item = this.actor.items.get(itemId as string);
+        const item = this._resolveItemFromTarget(target);
         if (!item) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; equipped not on base type; bracket access needs Record cast
         await item.update({ 'system.state.equipped': ((item.system as Record<string, unknown>)['state'] as Record<string, unknown>)['equipped'] !== true });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Apply a stow-state patch to the item a clicked control refers to. The four
+     * stow/ship-storage actions differ only by their `system.state.*` patch.
+     * @this {CharacterSheet}
+     * @param {HTMLElement} target              Button that was clicked.
+     * @param {Record<string, boolean>} patch   Dotted `system.state.*` writes.
+     */
+    async #setStowState(target: HTMLElement, patch: Record<string, boolean>): Promise<void> {
+        const item = this._resolveItemFromTarget(target);
+        if (!item) return;
+        await item.update(patch);
     }
 
     /* -------------------------------------------- */
@@ -3858,10 +3872,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #stowItem(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        const item = this.actor.items.get(itemId as string);
-        if (!item) return;
-        await item.update({
+        await this.#setStowState(target, {
             'system.state.equipped': false,
             'system.state.inBackpack': true,
             'system.state.inShipStorage': false,
@@ -3877,10 +3888,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #unstowItem(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        const item = this.actor.items.get(itemId as string);
-        if (!item) return;
-        await item.update({ 'system.state.inBackpack': false });
+        await this.#setStowState(target, { 'system.state.inBackpack': false });
     }
 
     /* -------------------------------------------- */
@@ -3892,10 +3900,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #stowToShip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        const item = this.actor.items.get(itemId as string);
-        if (!item) return;
-        await item.update({
+        await this.#setStowState(target, {
             'system.state.equipped': false,
             'system.state.inBackpack': false,
             'system.state.inShipStorage': true,
@@ -3911,10 +3916,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #unstowFromShip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        const item = this.actor.items.get(itemId as string);
-        if (!item) return;
-        await item.update({ 'system.state.inShipStorage': false });
+        await this.#setStowState(target, { 'system.state.inShipStorage': false });
     }
 
     /* -------------------------------------------- */
@@ -4087,8 +4089,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleActivate(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        const item = this.actor.items.get(itemId as string);
+        const item = this._resolveItemFromTarget(target);
         if (!item) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; activated not on base type; bracket access needs Record cast
         await item.update({ 'system.state.activated': ((item.system as Record<string, unknown>)['state'] as Record<string, unknown>)['activated'] !== true });
