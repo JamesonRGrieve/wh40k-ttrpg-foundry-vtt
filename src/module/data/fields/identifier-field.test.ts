@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
  * Resolve the module at collection time. If the Foundry runtime is unavailable
@@ -6,11 +7,7 @@ import { describe, expect, it } from 'vitest';
  * via `it.skipIf(!HAVE)` instead of an in-test early-return conditional. The
  * `describe`/`it` bodies never deref `MOD` until the skip guard has passed.
  */
-const MOD = await import('./identifier-field').catch((err) => {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.warn(`identifier-field could not be imported in this environment: ${msg}`);
-    return undefined;
-});
+const MOD = await importModelOrSkip(import('./identifier-field.ts'));
 const HAVE = MOD !== undefined;
 
 describe('IdentifierField', () => {
