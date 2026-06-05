@@ -1416,10 +1416,70 @@
         },
         {
             "name": "dh2-core-rolltables",
-            "label": "Core Rulebook Psychic Phenomena Tables",
+            "label": "Core Rulebook Tables",
             "path": "packs/dark-heresy-2/dh2-core-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-within-rolltables",
+            "label": "Enemies Within Tables",
+            "path": "packs/dark-heresy-2/dh2-within-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-rolltables",
+            "label": "Enemies Without Tables",
+            "path": "packs/dark-heresy-2/dh2-without-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-beyond-rolltables",
+            "label": "Enemies Beyond Tables",
+            "path": "packs/dark-heresy-2/dh2-beyond-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-forgotten-rolltables",
+            "label": "Forgotten Gods Tables",
+            "path": "packs/dark-heresy-2/dh2-forgotten-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-forgotten-journals",
+            "label": "Forgotten Gods Journals",
+            "path": "packs/dark-heresy-2/dh2-forgotten-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1464,7 +1524,7 @@
         },
         {
             "name": "dh2-core-journals",
-            "label": "Character Creation",
+            "label": "Core Rulebook Journals",
             "path": "packs/dark-heresy-2/dh2-core-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -4187,6 +4247,30 @@
             "flags": {}
         },
         {
+            "name": "hb-dh2-items-armour",
+            "label": "Homebrew DH2 Armour",
+            "path": "packs/homebrew/hb-dh2-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-weapons",
+            "label": "Homebrew DH2 Weapons",
+            "path": "packs/homebrew/hb-dh2-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "hb-generic-items-wearables",
             "label": "Generic Homebrew Wearables",
             "path": "packs/homebrew/hb-generic-items-wearables",
@@ -5959,6 +6043,7 @@
             "name": "Dark Heresy 2e",
             "color": "#4a0a14",
             "sorting": "a",
+            "packs": ["dh2-adventures"],
             "folders": [
                 {
                     "name": "Enemies Beyond",
@@ -5979,7 +6064,8 @@
                         "dh2-beyond-journals-daemon-binding",
                         "dh2-beyond-origins-backgrounds",
                         "dh2-beyond-origins-homeworlds",
-                        "dh2-beyond-origins-roles"
+                        "dh2-beyond-origins-roles",
+                        "dh2-beyond-rolltables"
                     ]
                 },
                 {
@@ -6001,6 +6087,7 @@
                         "dh2-within-origins-backgrounds",
                         "dh2-within-origins-homeworlds",
                         "dh2-within-origins-roles",
+                        "dh2-within-rolltables",
                         "dh2-within-vehicles-terracraft"
                     ]
                 },
@@ -6023,12 +6110,17 @@
                         "dh2-without-origins-backgrounds",
                         "dh2-without-origins-homeworlds",
                         "dh2-without-origins-roles",
+                        "dh2-without-rolltables",
                         "dh2-without-vehicles-aircraft",
                         "dh2-without-vehicles-terracraft"
                     ]
                 },
                 {
-                    "name": "General",
+                    "name": "Forgotten Gods",
+                    "packs": ["dh2-forgotten-actors-bestiary", "dh2-forgotten-journals", "dh2-forgotten-rolltables"]
+                },
+                {
+                    "name": "Core Rulebook",
                     "packs": [
                         "dh2-core-actors-bestiary",
                         "dh2-core-items-ammo",
@@ -6036,7 +6128,6 @@
                         "dh2-core-items-conditions",
                         "dh2-core-items-consumables",
                         "dh2-core-items-critical-injuries",
-                        "dh2-adventures",
                         "dh2-core-items-cybernetics",
                         "dh2-core-items-psychic-powers",
                         "dh2-core-items-skills",
@@ -6142,8 +6233,10 @@
                     "name": "Homebrew",
                     "packs": [
                         "hb-bc-items-traits",
+                        "hb-dh2-items-armour",
                         "hb-dh2-items-misc",
                         "hb-dh2-items-talents",
+                        "hb-dh2-items-weapons",
                         "hb-generic-items-consumables",
                         "hb-generic-items-gear",
                         "hb-generic-items-tools",
