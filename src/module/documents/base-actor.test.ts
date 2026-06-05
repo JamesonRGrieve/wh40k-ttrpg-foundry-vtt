@@ -1,24 +1,17 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../testing/model-import.ts';
 
 describe('WH40KBaseActor', () => {
     it('exports WH40KBaseActor class', async () => {
-        const mod = await import('./base-actor').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KBaseActor could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./base-actor.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.WH40KBaseActor).toBeTruthy();
     });
 
     it('_computeCharacteristics calculates total and bonus from base + advance', async () => {
-        const mod = await import('./base-actor').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KBaseActor could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./base-actor.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         // Build a minimal actor-like object to test the computation logic directly.
@@ -51,12 +44,8 @@ describe('WH40KBaseActor', () => {
     });
 
     it('_computeCharacteristics applies unnatural multiplier to bonus', async () => {
-        const mod = await import('./base-actor').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KBaseActor could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./base-actor.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         // base=40, advance=0, modifier=0, unnatural=2 → total=40, bonus = floor(40/10)*2 = 8
@@ -88,12 +77,8 @@ describe('WH40KBaseActor', () => {
     });
 
     it('_computeMovement skips calculation when agility is absent', async () => {
-        const mod = await import('./base-actor').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KBaseActor could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./base-actor.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const movement = { half: 0, full: 0, charge: 0, run: 0 };
@@ -109,12 +94,8 @@ describe('WH40KBaseActor', () => {
     });
 
     it('getStatBreakdown returns null for unknown stat key', async () => {
-        const mod = await import('./base-actor').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KBaseActor could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./base-actor.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeActor = Object.create(mod.WH40KBaseActor.prototype) as InstanceType<typeof mod.WH40KBaseActor>;

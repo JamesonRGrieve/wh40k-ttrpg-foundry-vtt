@@ -1,46 +1,31 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../testing/model-import.ts';
 
 describe('TokenDocumentWH40K', () => {
     it('exports TokenDocumentWH40K class', async () => {
-        const mod = await import('./token').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`TokenDocumentWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./token.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.TokenDocumentWH40K).toBeTruthy();
     });
 
     it('registerMovementActions is a static method', async () => {
-        const mod = await import('./token').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`TokenDocumentWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./token.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(typeof mod.TokenDocumentWH40K.registerMovementActions).toBe('function');
     });
 
     it('registerHUDListeners is a static method', async () => {
-        const mod = await import('./token').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`TokenDocumentWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./token.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(typeof mod.TokenDocumentWH40K.registerHUDListeners).toBe('function');
     });
 
     it('onTokenHUDRender bails out early when actor has no movement data', async () => {
-        const mod = await import('./token').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`TokenDocumentWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./token.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         // Provide a fake app whose actor has no movement property — onTokenHUDRender should return without throwing.

@@ -1,24 +1,17 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../testing/model-import.ts';
 
 describe('ChatMessageWH40K', () => {
     it('exports ChatMessageWH40K class', async () => {
-        const mod = await import('./chat-message').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`ChatMessageWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./chat-message.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.ChatMessageWH40K).toBeTruthy();
     });
 
     it('calculateDegrees returns null when no rolls present', async () => {
-        const mod = await import('./chat-message').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`ChatMessageWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./chat-message.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeMsg = Object.create(mod.ChatMessageWH40K.prototype) as InstanceType<typeof mod.ChatMessageWH40K>;
@@ -28,12 +21,8 @@ describe('ChatMessageWH40K', () => {
     });
 
     it('calculateDegrees computes success and degrees correctly', async () => {
-        const mod = await import('./chat-message').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`ChatMessageWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./chat-message.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeMsg = Object.create(mod.ChatMessageWH40K.prototype) as InstanceType<typeof mod.ChatMessageWH40K>;
@@ -52,12 +41,8 @@ describe('ChatMessageWH40K', () => {
     });
 
     it('calculateDegrees reports failure when roll exceeds target', async () => {
-        const mod = await import('./chat-message').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`ChatMessageWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./chat-message.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeMsg = Object.create(mod.ChatMessageWH40K.prototype) as InstanceType<typeof mod.ChatMessageWH40K>;
@@ -75,12 +60,8 @@ describe('ChatMessageWH40K', () => {
     });
 
     it('isItemCard returns false when flag is absent', async () => {
-        const mod = await import('./chat-message').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`ChatMessageWH40K could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./chat-message.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeMsg = Object.create(mod.ChatMessageWH40K.prototype) as InstanceType<typeof mod.ChatMessageWH40K>;

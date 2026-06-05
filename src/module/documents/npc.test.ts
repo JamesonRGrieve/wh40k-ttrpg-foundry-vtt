@@ -1,13 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../testing/model-import.ts';
 
 describe('WH40KNPC', () => {
     it('exports WH40KNPC class', async () => {
-        const mod = await import('./npc').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KNPC could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.WH40KNPC).toBeTruthy();
     });
@@ -29,12 +26,8 @@ describe('WH40KNPC', () => {
     });
 
     it('isHordeMode returns false when horde.enabled is absent', async () => {
-        const mod = await import('./npc').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KNPC could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeNPC = Object.create(mod.WH40KNPC.prototype) as InstanceType<typeof mod.WH40KNPC>;
@@ -43,12 +36,8 @@ describe('WH40KNPC', () => {
     });
 
     it('isHordeMode returns true when horde.enabled is true', async () => {
-        const mod = await import('./npc').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KNPC could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeNPC = Object.create(mod.WH40KNPC.prototype) as InstanceType<typeof mod.WH40KNPC>;
