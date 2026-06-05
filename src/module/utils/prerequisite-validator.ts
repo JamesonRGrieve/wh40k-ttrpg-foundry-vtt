@@ -5,13 +5,25 @@
  * Returns validation results with human-readable failure reasons.
  */
 
-import type { WH40KBaseActorDocument, WH40KSkill, WH40KSkillEntry } from '../types/global.d.ts';
+import type { WH40KSkill, WH40KSkillEntry } from '../types/global.d.ts';
 
 type Prerequisite = {
     type: 'characteristic' | 'skill' | 'talent';
     key: string;
     value?: number;
 };
+
+/**
+ * Minimal actor surface the prerequisite checks read — a structural view of the
+ * actor Document, so validation is testable without a full Document.
+ */
+export interface PrereqActorView {
+    system: {
+        characteristics: Record<string, { total: number } | undefined>;
+        skills: Record<string, WH40KSkill | undefined>;
+    };
+    items: { some: (predicate: (item: { type: string; name: string }) => boolean) => boolean };
+}
 
 type ValidationResult = {
     valid: boolean;
@@ -75,7 +87,7 @@ function normalizeCharacteristicKey(key: string): string {
  * @param {Prerequisite[]} prerequisites - Array of prerequisites to check
  * @returns {ValidationResult} Validation result
  */
-export function checkPrerequisites(actor: WH40KBaseActorDocument, prerequisites: Prerequisite[]): ValidationResult {
+export function checkPrerequisites(actor: PrereqActorView, prerequisites: Prerequisite[]): ValidationResult {
     if (prerequisites.length === 0) {
         return { valid: true, unmet: [] };
     }
@@ -101,7 +113,7 @@ export function checkPrerequisites(actor: WH40KBaseActorDocument, prerequisites:
  * @param {Prerequisite} prereq - The prerequisite to check
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkSinglePrerequisite(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
+function checkSinglePrerequisite(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
     if (prereq.type === 'characteristic') return checkCharacteristicPrereq(actor, prereq);
     if (prereq.type === 'skill') return checkSkillPrereq(actor, prereq);
     return checkTalentPrereq(actor, prereq);
@@ -113,7 +125,7 @@ function checkSinglePrerequisite(actor: WH40KBaseActorDocument, prereq: Prerequi
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkCharacteristicPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
+function checkCharacteristicPrereq(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
     const charKey = normalizeCharacteristicKey(prereq.key);
     const characteristic = actor.system.characteristics[charKey];
 
@@ -152,7 +164,7 @@ function checkCharacteristicPrereq(actor: WH40KBaseActorDocument, prereq: Prereq
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkSkillPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
+function checkSkillPrereq(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
     const skillName = prereq.key;
     const requiredLevel = prereq.value === 20 ? 'plus20' : prereq.value === 10 ? 'plus10' : 'trained';
 
@@ -188,7 +200,7 @@ function checkSkillPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite): 
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkTalentPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
+function checkTalentPrereq(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
     const talentName = prereq.key.toLowerCase();
 
     // Check if actor has the talent as an item
@@ -211,7 +223,7 @@ function checkTalentPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite):
  * @param {string} skillName - Skill name, optionally with specialization in parentheses
  * @returns {Object|null} The skill object or null
  */
-function findSkill(actor: WH40KBaseActorDocument, skillName: string): SkillLike | null {
+function findSkill(actor: PrereqActorView, skillName: string): SkillLike | null {
     const skills = actor.system.skills;
 
     // Parse skill name and optional specialization
