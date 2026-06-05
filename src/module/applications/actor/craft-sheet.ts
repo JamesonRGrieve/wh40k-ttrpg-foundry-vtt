@@ -208,26 +208,6 @@ export default class CraftActorSheet extends BaseActorSheet {
     /*  Context Preparation                         */
     /* -------------------------------------------- */
 
-    /**
-     * Craft actors extend the shared `vehicle` base DataModel directly and have
-     * no `characteristics` field — the inherited
-     * `BaseActorSheet._prepareCharacteristicsHUD` blindly iterates
-     * `system.characteristics`, which is undefined. Override to a no-op.
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: matches the mixin-erased base method signature
-    override _prepareCharacteristicsHUD(_context: Record<string, unknown>): void {
-        // Intentionally empty: craft have no characteristics block.
-    }
-
-    /**
-     * Craft actors have no actor-level skills schema either; the inherited
-     * `_prepareSkills` iterates `system.skills`, which is undefined.
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: matches the mixin-erased base method signature
-    override _prepareSkills(_context: Record<string, unknown>): void {
-        // Intentionally empty: craft have no skills block.
-    }
-
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext return contract
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {

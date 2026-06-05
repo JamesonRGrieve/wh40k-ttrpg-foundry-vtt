@@ -283,7 +283,6 @@ export default class NPCSheet extends CharacterSheet {
             saveCombatPreset: NPCSheet.#saveCombatPreset,
             loadCombatPreset: NPCSheet.#loadCombatPreset,
             deleteNPC: NPCSheet.#deleteNPC,
-            editImage: NPCSheet.#editImage,
             applyDamage: NPCSheet.#applyDamage,
             healWounds: NPCSheet.#healWounds,
             applyCustomDamage: NPCSheet.#applyCustomDamage,
@@ -1293,27 +1292,6 @@ export default class NPCSheet extends CharacterSheet {
         const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
         await this.npcActor.system.unpinAbility(itemId);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle editing the actor image.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static #editImage(this: NPCSheet, event: Event, _target: HTMLElement): void {
-        event.preventDefault();
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.ux.FilePicker is untyped in Foundry V14; constructor options shape is opaque Record.
-        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse: () => Promise<void> };
-        const fp = new FilePickerCtor({
-            type: 'image',
-            ...(this.actor.img !== null ? { current: this.actor.img } : {}),
-            callback: (path: string) => {
-                void this.actor.update({ img: path });
-            },
-        });
-        void fp.browse();
     }
 
     /* -------------------------------------------- */

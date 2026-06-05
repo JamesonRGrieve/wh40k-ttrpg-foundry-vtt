@@ -460,7 +460,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // eslint-disable-next-line no-restricted-syntax -- boundary: _context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareCharacteristicsHUD(_context: Record<string, unknown>): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is a DataModel field typed as a known-key object; cast to Record needed to iterate with string keys and HUD-augmented values
-        const characteristics = this.actor.system.characteristics as Record<string, HudCharacteristic>;
+        const characteristics = this.actor.system.characteristics as Record<string, HudCharacteristic> | undefined;
+        // Craft / voidcraft extend the vehicle base directly and have no characteristics block.
+        if (characteristics === undefined) return;
 
         for (const [key, char] of Object.entries(characteristics)) {
             // Calculate advancement progress (0-5)
@@ -724,6 +726,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     _prepareSkills(context: Record<string, unknown>): void {
         const skills = this.actor.system.skills;
         const characteristics = this.actor.system.characteristics;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: skills/characteristics are absent on craft/voidcraft, whose system extends the vehicle base directly; the system type is broad
+        if (skills === undefined || characteristics === undefined) return;
 
         // Apply filters
         const filters = this._skillsFilter;
