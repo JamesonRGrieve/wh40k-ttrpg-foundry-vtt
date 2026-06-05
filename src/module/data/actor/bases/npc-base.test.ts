@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../../testing/model-import.ts';
 
 /**
  * Tests for NPCBaseData.
@@ -6,19 +7,15 @@ import { describe, expect, it } from 'vitest';
  */
 describe('NPCBaseData', () => {
     it('exports a default class symbol', async () => {
-        const mod = await import('./npc-base').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`NPCBaseData could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc-base.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.default).toBeTruthy();
     });
 
     it('inherits NPCData as its parent class', async () => {
-        const [npcMod, baseMod] = await Promise.all([import('../npc').catch(() => undefined), import('./npc-base').catch(() => undefined)]);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const [npcMod, baseMod] = await Promise.all([importModelOrSkip(import('../npc.ts')), importModelOrSkip(import('./npc-base.ts'))]);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (npcMod === undefined || baseMod === undefined) return;
         const NPCData = npcMod.default;
         const NPCBaseData = baseMod.default;
@@ -26,8 +23,8 @@ describe('NPCBaseData', () => {
     });
 
     it('_toInt is inherited from NPCData', async () => {
-        const mod = await import('./npc-base').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc-base.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCBaseData = mod.default;
         // eslint-disable-next-line no-restricted-syntax -- boundary: test-only cast to inspect static property existence on class; read-only and test-scoped
@@ -36,8 +33,8 @@ describe('NPCBaseData', () => {
     });
 
     it('CHARACTERISTIC_MAP is inherited from NPCData', async () => {
-        const mod = await import('./npc-base').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc-base.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCBaseData = mod.default;
         const cls = NPCBaseData as { CHARACTERISTIC_MAP?: Record<string, string> };
@@ -45,8 +42,8 @@ describe('NPCBaseData', () => {
     });
 
     it('_migrateData with empty source does not throw', async () => {
-        const mod = await import('./npc-base').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc-base.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCBaseData = mod.default;
         expect(() => NPCBaseData._migrateData({})).not.toThrow();
