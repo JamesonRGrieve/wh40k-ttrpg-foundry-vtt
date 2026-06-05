@@ -159,26 +159,6 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /**
-     * Starships extend `ActorDataModel` directly and have no `characteristics`
-     * field — the inherited `BaseActorSheet._prepareCharacteristicsHUD`
-     * blindly does `Object.entries(this.actor.system.characteristics)` which
-     * throws on the undefined value. Override to a no-op for starships.
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: matches the mixin-erased base method signature
-    override _prepareCharacteristicsHUD(_context: Record<string, unknown>): void {
-        // Intentionally empty: starships have no characteristics block.
-    }
-
-    /**
-     * Starships have no actor-level skills schema either; the inherited
-     * `_prepareSkills` iterates `system.skills` which is undefined.
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: matches the mixin-erased base method signature
-    override _prepareSkills(_context: Record<string, unknown>): void {
-        // Intentionally empty: starships have no skills block.
-    }
-
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
