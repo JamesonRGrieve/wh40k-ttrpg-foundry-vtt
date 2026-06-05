@@ -1,12 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { WH40KSkill } from '../types/global.d.ts';
 import { checkPrerequisites, parsePrerequisiteString, type PrereqActorView } from './prerequisite-validator.ts';
 
 /**
  * Coverage for the prerequisite validator. parsePrerequisiteString is pure;
  * checkPrerequisites is driven through a structural PrereqActorView (the param
- * was narrowed for this) with CONFIG/i18n stubbed. The skill path needs a
- * WH40KSkill stub and is left for a skills harness.
+ * was narrowed for this) with CONFIG/i18n stubbed — covering the characteristic,
+ * skill, and talent paths.
  */
+
+function skill(overrides: Partial<WH40KSkill> = {}): WH40KSkill {
+    return { characteristic: 'agility', advanced: false, trained: false, plus10: false, plus20: false, bonus: 0, notes: '', cost: 0, current: 0, ...overrides };
+}
 describe('parsePrerequisiteString', () => {
     it('parses a characteristic prerequisite ("<KEY> <N>")', () => {
         expect(parsePrerequisiteString('Fel 30')).toEqual({ type: 'characteristic', key: 'Fel', value: 30 });
@@ -29,10 +34,12 @@ describe('parsePrerequisiteString', () => {
 });
 
 describe('checkPrerequisites', () => {
-    function actorView(opts: { characteristics?: Record<string, { total: number }>; talents?: string[] } = {}): PrereqActorView {
+    function actorView(
+        opts: { characteristics?: Record<string, { total: number }>; skills?: Record<string, WH40KSkill>; talents?: string[] } = {},
+    ): PrereqActorView {
         const talents = opts.talents ?? [];
         return {
-            system: { characteristics: opts.characteristics ?? {}, skills: {} },
+            system: { characteristics: opts.characteristics ?? {}, skills: opts.skills ?? {} },
             items: { some: (predicate) => talents.some((name) => predicate({ type: 'talent', name })) },
         };
     }
@@ -70,5 +77,17 @@ describe('checkPrerequisites', () => {
     it('passes a present talent and fails a missing one', () => {
         expect(checkPrerequisites(actorView({ talents: ['hardy'] }), [{ type: 'talent', key: 'Hardy' }]).valid).toBe(true);
         expect(checkPrerequisites(actorView({ talents: [] }), [{ type: 'talent', key: 'Hardy' }]).valid).toBe(false);
+    });
+
+    it('passes a trained-skill prerequisite (display-name → key mapping)', () => {
+        expect(checkPrerequisites(actorView({ skills: { dodge: skill({ trained: true }) } }), [{ type: 'skill', key: 'Dodge' }]).valid).toBe(true);
+    });
+
+    it('fails a missing skill', () => {
+        expect(checkPrerequisites(actorView({ skills: {} }), [{ type: 'skill', key: 'Dodge' }]).valid).toBe(false);
+    });
+
+    it('fails when the skill is below the required +20 level', () => {
+        expect(checkPrerequisites(actorView({ skills: { dodge: skill({ trained: true }) } }), [{ type: 'skill', key: 'Dodge', value: 20 }]).valid).toBe(false);
     });
 });
