@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
  * `stat-fields.ts` constructs Foundry `SchemaField`/`NumberField` instances at
@@ -9,12 +10,8 @@ import { describe, expect, it } from 'vitest';
  */
 describe('stat-fields builders', () => {
     it('expose the shared characteristic / wounds / size / initiative / movement builders when Foundry is available', async () => {
-        const mod = await import('./stat-fields').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`stat-fields could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./stat-fields.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(typeof mod.characteristicField).toBe('function');
         expect(typeof mod.woundsField).toBe('function');

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
  * `SubtletyAdjusterTemplate` extends a Foundry-bound `SystemDataModel`, so it
@@ -8,12 +9,8 @@ import { describe, expect, it } from 'vitest';
  */
 describe('SubtletyAdjusterTemplate', () => {
     it('exposes a default DataModel export when the Foundry runtime is available', async () => {
-        const mod = await import('./subtlety-adjuster-template').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`SubtletyAdjusterTemplate could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./subtlety-adjuster-template.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.default).toBeTruthy();
     });
