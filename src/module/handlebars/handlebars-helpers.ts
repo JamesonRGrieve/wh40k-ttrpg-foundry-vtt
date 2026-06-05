@@ -1137,16 +1137,3 @@ export function truncate(str: string, maxLength = 100): string {
     if (plainText.length <= maxLength) return str;
     return `${plainText.substring(0, maxLength).trim()}…`;
 }
-
-/**
- * Select helper for dropdown options
- * Usage: {{#select currentValue}}...options...{{/select}}
- * Marks the matching option as selected
- */
-export function select(selected: TplValue, options: { fn: (ctx: TplValue) => string }): string {
-    const escapedValue = String(selected).replace(/['"]/g, '\\$&');
-
-    // Replace selected attribute in options
-    const html = options.fn(undefined);
-    return html.replace(new RegExp(` value="${escapedValue}"`), ` value="${escapedValue}" selected="selected"`);
-}
