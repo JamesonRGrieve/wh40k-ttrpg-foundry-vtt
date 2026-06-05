@@ -3,6 +3,7 @@
  * Provides inline content enrichment for characteristics, skills, modifiers, etc.
  */
 
+import { t } from './i18n/t.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KSkill, WH40KSkillEntry } from './types/global.d.ts';
 import { formatSigned } from './utils/format.ts';
 
@@ -32,11 +33,11 @@ interface ParsedEnricher {
  * when the match is malformed.
  */
 function parseEnricherMatch(match: RegExpMatchArray): ParsedEnricher | HTMLElement {
-    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
+    if (match.groups === undefined) return createErrorElement(match[0], t('WH40K.Enricher.Error.NoMatchGroups'));
     const label = getGroup(match.groups, 'label');
     const config = match.groups['config'];
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
-    if (config === undefined) return createErrorElement(match[0], 'Missing config group');
+    if (config === undefined) return createErrorElement(match[0], t('WH40K.Enricher.Error.MissingConfig'));
     return { config, label };
 }
 
@@ -47,7 +48,7 @@ function parseEnricherMatch(match: RegExpMatchArray): ParsedEnricher | HTMLEleme
 function resolveEnricherActor(match: RegExpMatchArray, options?: EnrichmentOptions): EnricherActorLike | HTMLElement {
     const actor = options?.relativeTo as EnricherActorLike | undefined;
     if (actor?.documentName !== 'Actor') {
-        return createErrorElement(match[0], 'No actor context');
+        return createErrorElement(match[0], t('WH40K.Enricher.Error.NoActorContext'));
     }
     return actor;
 }
@@ -153,7 +154,7 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: Enrichmen
     const actorSystem = actor.system;
     const charData: WH40KCharacteristic | undefined = charKey in actorSystem.characteristics ? actorSystem.characteristics[charKey] : undefined;
     if (charData === undefined) {
-        return createErrorElement(match[0], `Unknown characteristic: ${config}`);
+        return createErrorElement(match[0], t('WH40K.Enricher.Error.UnknownCharacteristic', { config }));
     }
 
     return makeEnricherSpan({
@@ -171,7 +172,7 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: Enrichmen
         },
         icon: 'fa-dice-d20',
         label: parsed.label ?? `${charData.label} (${charData.total})`,
-        title: `Click to roll ${charData.label}`,
+        title: t('WH40K.Enricher.ClickToRoll', { name: charData.label }),
     });
 }
 
@@ -198,7 +199,7 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
     const actorSystem = actor.system;
     const skillData: WH40KSkill | undefined = skillKey in actorSystem.skills ? actorSystem.skills[skillKey] : undefined;
     if (skillData === undefined) {
-        return createErrorElement(match[0], `Unknown skill: ${skillKey}`);
+        return createErrorElement(match[0], t('WH40K.Enricher.Error.UnknownSkill', { skill: skillKey }));
     }
 
     // Handle specialist skills
@@ -206,7 +207,7 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
     if (specialization !== undefined && specialization.length > 0 && skillData.entries !== undefined) {
         const entry = skillData.entries.find((e: { name?: string }) => e.name?.toLowerCase() === specialization);
         if (entry === undefined) {
-            return createErrorElement(match[0], `Unknown specialization: ${specialization}`);
+            return createErrorElement(match[0], t('WH40K.Enricher.Error.UnknownSpecialization', { specialization }));
         }
         targetData = entry;
     }
@@ -228,7 +229,7 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
         },
         icon: 'fa-dice-d100',
         label: parsed.label ?? `${tooltipLabel} (${targetData.current}%)`,
-        title: `Click to roll ${tooltipLabel}`,
+        title: t('WH40K.Enricher.ClickToRoll', { name: tooltipLabel ?? '' }),
     });
 }
 
@@ -247,14 +248,14 @@ async function enrichModifier(match: RegExpMatchArray, _options?: EnrichmentOpti
     const parts = parsed.config.trim().split(/\s+/);
 
     if (parts.length < 2) {
-        return createErrorElement(match[0], 'Invalid modifier format');
+        return createErrorElement(match[0], t('WH40K.Enricher.Error.InvalidModifierFormat'));
     }
 
     const [stat, value] = parts as [string, string];
     const numValue = parseInt(value, 10);
 
     if (Number.isNaN(numValue)) {
-        return createErrorElement(match[0], 'Invalid modifier value');
+        return createErrorElement(match[0], t('WH40K.Enricher.Error.InvalidModifierValue'));
     }
 
     return makeEnricherSpan({
@@ -286,7 +287,7 @@ async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions)
     const actorSystem = actor.system;
     const armorData = actorSystem.armour;
     if (armorData === undefined) {
-        return createErrorElement(match[0], 'No armor data');
+        return createErrorElement(match[0], t('WH40K.Enricher.Error.NoArmorData'));
     }
 
     let displayValue: string;
@@ -317,7 +318,7 @@ async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions)
         const locData = armorData[config];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime: arbitrary user config may not match any indexed location key
         if (locData === undefined) {
-            return createErrorElement(match[0], `Unknown armor location: ${config}`);
+            return createErrorElement(match[0], t('WH40K.Enricher.Error.UnknownArmorLocation', { location: config }));
         }
 
         displayValue = `${locData.total} AP`;

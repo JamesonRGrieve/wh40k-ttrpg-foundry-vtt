@@ -3780,7 +3780,23 @@
             "Exceptional": "Exceptional",
             "Master": "Master"
         },
+        "Enricher": {
+            "ClickToRoll": "Click to roll {name}",
+            "Error": {
+                "NoMatchGroups": "No match groups",
+                "MissingConfig": "Missing config group",
+                "NoActorContext": "No actor context",
+                "NoArmorData": "No armor data",
+                "InvalidModifierFormat": "Invalid modifier format",
+                "InvalidModifierValue": "Invalid modifier value",
+                "UnknownCharacteristic": "Unknown characteristic: {config}",
+                "UnknownSkill": "Unknown skill: {skill}",
+                "UnknownSpecialization": "Unknown specialization: {specialization}",
+                "UnknownArmorLocation": "Unknown armor location: {location}"
+            }
+        },
         "WeaponQuality": {
+            "Unknown": "Unknown quality",
             "Accurate": "Accurate",
             "AccurateDesc": "This weapon is easier to fire accurately. Aim action grants +10 bonus to hit.",
             "Inaccurate": "Inaccurate",

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import enLang from '../lang/en.json';
 import { registerCustomEnrichers } from './enrichers.ts';
 
 /**
@@ -7,8 +8,26 @@ import { registerCustomEnrichers } from './enrichers.ts';
  * the `CONFIG.TextEditor.enrichers.push(...)` registration — then invoke each
  * against a stub actor and snapshot the produced element's `outerHTML`. The
  * refactor must keep this byte-identical (classes, dataset, tooltip JSON,
- * innerHTML, title).
+ * innerHTML, title). The labels/errors resolve through a faithful en.json stub,
+ * so the langpack migration of those strings keeps the snapshots unchanged.
  */
+
+type LangNode = string | { readonly [k: string]: LangNode };
+const LANG_STRINGS = new Map<string, string>();
+function flattenLang(node: LangNode, prefix: string): void {
+    if (typeof node === 'string') {
+        if (prefix !== '') LANG_STRINGS.set(prefix, node);
+        return;
+    }
+    for (const [k, v] of Object.entries(node)) flattenLang(v, prefix === '' ? k : `${prefix}.${k}`);
+}
+flattenLang(enLang, '');
+
+const i18nStub = {
+    localize: (key: string): string => LANG_STRINGS.get(key) ?? key,
+    format: (key: string, data?: Record<string, string | number>): string =>
+        (LANG_STRINGS.get(key) ?? key).replace(/\{(\w+)\}/g, (_, name: string) => (data?.[name] !== undefined ? String(data[name]) : '')),
+};
 
 type EnricherFn = (match: RegExpMatchArray, options?: { relativeTo?: object }) => Promise<HTMLElement>;
 
@@ -51,6 +70,7 @@ const STUB_ACTOR = {
 function registered(): Registered[] {
     const enrichers: Registered[] = [];
     vi.stubGlobal('CONFIG', { TextEditor: { enrichers } });
+    vi.stubGlobal('game', { i18n: i18nStub });
     registerCustomEnrichers();
     return enrichers;
 }
