@@ -1,4 +1,5 @@
 import { formatSigned } from '../../utils/format.ts';
+import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -473,24 +474,11 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             return { base: base.trim(), specialization: specialization.trim() };
         };
 
-        // Labels can collide ("Skill", "Skill") — the choice dialog disambiguates
-        // duplicates by appending " (N)" to the second+ occurrence so each entry
-        // gets its own slot in selectedChoices. Mirror that here so each choice
-        // resolves to its own player picks instead of all colliding on the first.
-        const labelCounts: Record<string, number> = {};
-
-        for (const choice of this.grants.choices) {
-            // DH2e/BC/OW packs use 'name' while RT uses 'label' — handle both
-            const baseLabel: string = choice.label !== '' ? choice.label : choice.name ?? '';
-            labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
-            const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
-            const choiceKey = `${baseLabel}${suffix}`;
-            const selectedChoice = this.selectedChoices[choiceKey];
-            const legacyChoice = this.selectedChoices[baseLabel];
-            const selected = Array.isArray(selectedChoice) ? selectedChoice : Array.isArray(legacyChoice) ? legacyChoice : [];
-
-            for (const selectedValue of selected) {
-                const selectedStr = String(selectedValue);
+        // Label disambiguation + scoped/legacy pick lookup is shared (#305); the
+        // narrow `value ?? name` matcher stays inline here so the synthesized
+        // active-modifier path is byte-identical.
+        for (const { choice, choiceKey, selectedValues } of iterateResolvedChoices(this.grants.choices, this.selectedChoices)) {
+            for (const selectedStr of selectedValues) {
                 const option = choice.options.find((opt) => (opt.value ?? opt.name) === selectedStr);
                 // When the option carries no explicit grants, synthesize an
                 // activeModifier from the choice's declared type so picks like
