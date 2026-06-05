@@ -1,4 +1,5 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
+import { SYSTEM_ID } from '../constants.ts';
 import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
@@ -311,16 +312,11 @@ export class WH40KBaseActor extends Actor {
      * Triggers recalculation of item-based data via prepareEmbeddedData.
      */
     _onItemsChanged(): void {
-        const system = this.system as {
-            _initializeModifierTracking?: () => void;
-            prepareEmbeddedData?: () => void;
-        };
+        const system = this.system as { _initializeModifierTracking?: () => void };
         if (typeof system._initializeModifierTracking === 'function') {
             system._initializeModifierTracking();
         }
-        if (typeof system.prepareEmbeddedData === 'function') {
-            system.prepareEmbeddedData();
-        }
+        this._runEmbeddedDataPrep();
     }
 
     protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | undefined> {
@@ -448,14 +444,13 @@ export class WH40KBaseActor extends Actor {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
         if (characteristic === undefined) return;
 
-        const simpleSkillData = new SimpleSkillData();
-        // eslint-disable-next-line no-restricted-syntax -- boundary: SimpleSkillData.rollData is opaque; cast to RollDataLike is necessary to access typed fields
-        const rollData = simpleSkillData.rollData as unknown as RollDataLike;
-        rollData.actor = this;
-        rollData.nameOverride = characteristic.label;
-        rollData.type = override ?? 'Characteristic';
-        rollData.baseTarget = characteristic.total;
-        rollData.modifiers.modifier = 0;
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: characteristicName,
+            type: 'characteristic',
+            label: characteristic.label,
+            target: characteristic.total,
+            ...(override !== undefined ? { typeOverride: override } : {}),
+        });
         prepareUnifiedRoll(simpleSkillData);
     }
 
@@ -480,6 +475,8 @@ export class WH40KBaseActor extends Actor {
         situationalKey?: string | undefined;
         nameOverride?: string | undefined;
         skillRank?: number | undefined;
+        /** Free-form flavor for `rollData.type` (e.g. a weapon name), overriding the per-`type` literal. */
+        typeOverride?: string | undefined;
     }): SimpleSkillData {
         const TYPE_LITERAL: Record<typeof opts.type, string> = {
             characteristic: 'Characteristic',
@@ -493,7 +490,7 @@ export class WH40KBaseActor extends Actor {
         rollData.actor = this;
         rollData.sourceActor = this;
         rollData.nameOverride = opts.nameOverride ?? opts.label;
-        rollData.type = TYPE_LITERAL[opts.type];
+        rollData.type = opts.typeOverride ?? TYPE_LITERAL[opts.type];
         rollData.rollKey = opts.key;
         rollData.baseTarget = opts.target;
         if (opts.skillRank !== undefined) rollData.skillRank = opts.skillRank;
@@ -532,6 +529,90 @@ export class WH40KBaseActor extends Actor {
         let total = 0;
         for (const mod of modifiers) total += mod.value;
         return total;
+    }
+
+    /**
+     * Shared weapon / psychic-power / default-vocalize roll dispatch. Centralises
+     * the near-identical state machine that lived on both WH40KAcolyte and WH40KNPC.
+     * PCs pass `enforceEquipped: true` (and handle their forceField branch before
+     * delegating); NPCs pass `false`.
+     */
+    protected async _dispatchItemRoll(item: WH40KItem, { enforceEquipped }: { enforceEquipped: boolean }): Promise<void> {
+        if (item.type === 'weapon') {
+            if (enforceEquipped && item.system.state.equipped !== true) {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Actor.WeaponNotEquipped localization key not yet in en.json
+                ui.notifications.warn('Actor must have weapon equipped!');
+                return;
+            }
+            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {
+                this.rollCharacteristic(item.isRanged ? 'ballisticSkill' : 'weaponSkill', item.name);
+            } else {
+                const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
+                DHTargetedActionManager.performWeaponAttack(this, null, item);
+            }
+            return;
+        }
+        if (item.type === 'psychicPower') {
+            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
+                this.rollCharacteristic('willpower', item.name);
+            } else {
+                const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
+                DHTargetedActionManager.performPsychicCast(this, null, item);
+            }
+            return;
+        }
+        await this._vocalizeItem(item);
+    }
+
+    /**
+     * Vocalize an item's benefit/description in chat (the default rollItem branch
+     * for non-weapon/non-psychic items). Shared by PC and NPC.
+     */
+    protected async _vocalizeItem(item: WH40KItem): Promise<void> {
+        const { DHBasicActionManager } = await import('../actions/basic-action-manager.ts');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: benefit/description are per-item-type fields not on the shared system union; narrowed inline before string-vs-object dispatch
+        const system = item.system as { benefit?: unknown; description?: unknown };
+        const benefit = system.benefit;
+        const description = system.description;
+        const rawDescription =
+            (typeof benefit === 'string' ? benefit : null) ??
+            (typeof description === 'string'
+                ? description
+                : typeof description === 'object' && description !== null && 'value' in description
+                ? // eslint-disable-next-line no-restricted-syntax -- boundary: description-object shape is per-item-type; narrowed inline
+                  (description as { value?: string }).value ?? ''
+                : '');
+        const psyRating = this._rollPsyRating();
+        await DHBasicActionManager.sendItemVocalizeChat({
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? is necessary here, not a DataModel schema gap
+            actor: this.name ?? '',
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
+            name: item.name ?? '',
+            type: item.type.toUpperCase(),
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- TextEditor is the V14 global; migration to foundry.applications.ux.TextEditor tracked separately
+            description: await TextEditor.enrichHTML(rawDescription, {
+                rollData: { actor: this, item, ...(psyRating !== undefined ? { pr: psyRating } : {}) },
+            }),
+        });
+    }
+
+    /**
+     * Psy rating exposed to vocalized-item enrichHTML rollData (`@pr`). Base/NPC
+     * actors have none; WH40KAcolyte overrides to return its psy rating.
+     */
+    protected _rollPsyRating(): number | undefined {
+        return undefined;
+    }
+
+    /**
+     * Run the DataModel's embedded-data preparation if it defines one. Shared by the
+     * per-subclass `prepareData` hooks and `_onItemsChanged`.
+     */
+    protected _runEmbeddedDataPrep(): void {
+        const system = this.system as { prepareEmbeddedData?: () => void };
+        if (typeof system.prepareEmbeddedData === 'function') {
+            system.prepareEmbeddedData();
+        }
     }
 
     getCharacteristicFuzzy(char: string): WH40KCharacteristic | undefined {

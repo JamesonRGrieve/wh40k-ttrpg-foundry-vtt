@@ -71,9 +71,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     override prepareData(): void {
         super.prepareData();
         // Call DataModel's embedded data preparation for component calculations
-        if (typeof this.system.prepareEmbeddedData === 'function') {
-            this.system.prepareEmbeddedData();
-        }
+        this._runEmbeddedDataPrep();
     }
 
     get hullType(): string {

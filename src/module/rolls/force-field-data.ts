@@ -1,5 +1,5 @@
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
-import { applyRollModeWhispers, roll1d100 } from './roll-helpers.ts';
+import { postChatCard, resolveGettersForTemplate, roll1d100 } from './roll-helpers.ts';
 
 type ForceFieldItem = WH40KItemDocument & {
     system: WH40KItemDocument['system'] & {
@@ -59,16 +59,8 @@ export class ForceFieldData {
 
         const html = await foundry.applications.handlebars.renderTemplate(
             'systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs',
-            // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate requires Record<string, unknown>; ForceFieldData is passed as template context
-            this as unknown as Record<string, unknown>,
+            resolveGettersForTemplate(this),
         );
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create and applyRollModeWhispers require Record<string, unknown>; chatData is a Foundry API payload
-        const chatData: Record<string, unknown> = {
-            user: game.user.id,
-            rollMode: game.settings.get('core', 'rollMode'),
-            content: html,
-        };
-        applyRollModeWhispers(chatData);
-        await ChatMessage.create(chatData);
+        await postChatCard(html);
     }
 }
