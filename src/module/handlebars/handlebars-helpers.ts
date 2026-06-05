@@ -907,7 +907,7 @@ export function registerHandlebarsHelpers(): void {
                     identifier,
                     baseIdentifier: baseId,
                     label: identifier,
-                    description: 'Unknown quality',
+                    description: game.i18n.localize('WH40K.WeaponQuality.Unknown'),
                     hasLevel: false,
                     level: null,
                 });
@@ -1029,7 +1029,7 @@ export function registerHandlebarsHelpers(): void {
             return {
                 identifier,
                 label: identifier,
-                description: 'Unknown quality',
+                description: game.i18n.localize('WH40K.WeaponQuality.Unknown'),
                 level: null,
             };
         }
@@ -1041,13 +1041,13 @@ export function registerHandlebarsHelpers(): void {
             return {
                 identifier,
                 label: identifier,
-                description: 'Unknown quality',
+                description: game.i18n.localize('WH40K.WeaponQuality.Unknown'),
                 level: null,
             };
         }
         const def = weaponQualities[baseId] as WeaponQualityDef | undefined;
         if (def === undefined) {
-            return { identifier, label: identifier, description: 'Unknown quality', level: null };
+            return { identifier, label: identifier, description: game.i18n.localize('WH40K.WeaponQuality.Unknown'), level: null };
         }
 
         const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level);
