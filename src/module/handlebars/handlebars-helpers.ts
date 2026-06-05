@@ -1,5 +1,5 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
-import WH40K from '../config.ts';
+import WH40K, { buildQualityLabel, parseQualityLevel } from '../config.ts';
 import { formatSigned } from '../utils/format.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
@@ -897,11 +897,7 @@ export function registerHandlebarsHelpers(): void {
 
         for (const identifier of qualityIds) {
             // Parse identifier (e.g., "blast-3" → base="blast", level=3)
-            const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
-            const matchGroup1 = levelMatch?.[1];
-            const matchGroup2 = levelMatch?.[2];
-            const baseId = matchGroup1 ?? identifier;
-            const level: number | null = matchGroup2 !== undefined ? (matchGroup2.toLowerCase() === 'x' ? null : parseInt(matchGroup2, 10)) : null;
+            const { baseId, level } = parseQualityLevel(identifier);
 
             // Look up definition. Use hasOwn to detect missing entries because index access on
             // Record<string, V> returns V (not V | undefined) under our tsconfig.
@@ -921,12 +917,7 @@ export function registerHandlebarsHelpers(): void {
             if (def === undefined) continue;
 
             // Build rich quality object
-            let label = game.i18n.localize(def.label);
-            if (def.hasLevel === true && level !== null) {
-                label += ` (${level})`;
-            } else if (def.hasLevel === true) {
-                label += ` (X)`;
-            }
+            const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level);
 
             qualities.push({
                 identifier,
@@ -1044,11 +1035,7 @@ export function registerHandlebarsHelpers(): void {
         }
         const weaponQualities = rtConfig.weaponQualities;
 
-        const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
-        const matchGroup1 = levelMatch?.[1];
-        const matchGroup2 = levelMatch?.[2];
-        const baseId = matchGroup1 ?? identifier;
-        const level: number | null = matchGroup2 !== undefined ? (matchGroup2.toLowerCase() === 'x' ? null : parseInt(matchGroup2, 10)) : null;
+        const { baseId, level } = parseQualityLevel(identifier);
 
         if (!Object.hasOwn(weaponQualities, baseId)) {
             return {
@@ -1063,12 +1050,7 @@ export function registerHandlebarsHelpers(): void {
             return { identifier, label: identifier, description: 'Unknown quality', level: null };
         }
 
-        let label = game.i18n.localize(def.label);
-        if (def.hasLevel === true && level !== null) {
-            label += ` (${level})`;
-        } else if (def.hasLevel === true) {
-            label += ` (X)`;
-        }
+        const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level);
 
         return {
             identifier,
