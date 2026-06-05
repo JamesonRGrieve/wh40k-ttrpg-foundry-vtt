@@ -192,13 +192,26 @@ describe('migrateSkills (#256)', () => {
 describe('real bestiary pack data migrates to a usable shape', () => {
     const PACK_DIR = resolve(__dirname, '../../../packs/dark-heresy-2/dh2-core-actors-bestiary/_source');
     const files = existsSync(PACK_DIR) ? readdirSync(PACK_DIR).filter((f) => f.endsWith('.json')) : [];
+    // Whole-file reference stubs carry no system; relinked actors are canonically
+    // weapons.mode 'embedded' (UUID-linked items; simple[] keeps any original
+    // no-catalog-match rows verbatim) and pass through migration untouched. Only a
+    // legacy weapons[] ARRAY migrates to the simple-mode object — partition the
+    // cohorts up front so each test body is conditional-free.
+    const sourced = files.filter((f) => {
+        const parsed = JSON.parse(readFileSync(resolve(PACK_DIR, f), 'utf8')) as Json;
+        return isJsonObject(parsed) && parsed['system'] !== undefined;
+    });
+    const legacy = sourced.filter((f) => {
+        const parsed = JSON.parse(readFileSync(resolve(PACK_DIR, f), 'utf8')) as Json;
+        return isJsonObject(parsed) && isJsonObject(parsed['system']) && isJsonArray(parsed['system']['weapons']);
+    });
 
     it('finds the shipped bestiary pack', () => {
         // src/packs is a submodule; if it is unpopulated this guard is meaningless.
         expect(files.length).toBeGreaterThan(0);
     });
 
-    it.each(files)('migrates %s to numeric characteristics + simple weapons', (file) => {
+    it.each(sourced)('migrates %s to numeric characteristics + a weapons object', (file) => {
         const parsed = asObject(JSON.parse(readFileSync(resolve(PACK_DIR, file), 'utf8')), file);
         const system = asObject(parsed['system'], `${file}.system`);
 
@@ -214,12 +227,27 @@ describe('real bestiary pack data migrates to a usable shape', () => {
         }
 
         const weapons = asObject(system['weapons'], `${file}.weapons`);
-        expect(weapons['mode'], `${file} weapons.mode`).toBe('simple');
-        for (const w of asArray(weapons['simple'], `${file}.weapons.simple`)) {
-            const wr = asObject(w, `${file} weapon`);
-            expect(typeof wr['pen'], `${file} weapon.pen`).toBe('number');
-            expect(typeof wr['clip'], `${file} weapon.clip`).toBe('number');
-            expect(typeof wr['damage'], `${file} weapon.damage`).toBe('string');
-        }
+        expect(['simple', 'embedded'], `${file} weapons.mode`).toContain(weapons['mode']);
     });
+
+    // an empty .each table throws at collection — register the legacy suite only
+    // when the pack still ships legacy-array actors (conditional registration at
+    // describe scope, not inside a test body).
+    if (legacy.length > 0) {
+        it.each(legacy)('migrates the legacy weapons[] of %s to numeric simple rows', (file) => {
+            const parsed = asObject(JSON.parse(readFileSync(resolve(PACK_DIR, file), 'utf8')), file);
+            const system = asObject(parsed['system'], `${file}.system`);
+
+            migrateWeapons(system);
+
+            const weapons = asObject(system['weapons'], `${file}.weapons`);
+            expect(weapons['mode'], `${file} weapons.mode`).toBe('simple');
+            for (const w of asArray(weapons['simple'], `${file}.weapons.simple`)) {
+                const wr = asObject(w, `${file} weapon`);
+                expect(typeof wr['pen'], `${file} weapon.pen`).toBe('number');
+                expect(typeof wr['clip'], `${file} weapon.clip`).toBe('number');
+                expect(typeof wr['damage'], `${file} weapon.damage`).toBe('string');
+            }
+        });
+    }
 });
