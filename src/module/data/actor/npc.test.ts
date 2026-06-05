@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /** Narrow shape of NPC wounds field used in migration tests. */
 interface WoundsField {
@@ -55,19 +56,15 @@ type WeaponsField = LegacyWeapon[] | { mode: string; simple: SimpleWeapon[] };
  */
 describe('NPCData', () => {
     it('exports a default class symbol', async () => {
-        const mod = await import('./npc').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`NPCData could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.default).toBeTruthy();
     });
 
     it('_toInt converts numeric string to integer', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
         expect(NPCData._toInt('42')).toBe(42);
@@ -75,8 +72,8 @@ describe('NPCData', () => {
     });
 
     it('_toInt uses fallback for null/undefined/empty string', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
         expect(NPCData._toInt(null, 7)).toBe(7);
@@ -86,8 +83,8 @@ describe('NPCData', () => {
     });
 
     it('_toInt floors floating-point numbers', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
         expect(NPCData._toInt(9.9)).toBe(9);
@@ -95,8 +92,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData converts string size to integer and clamps to [1,10]', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 
@@ -106,8 +103,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData clamps size below 1 to 1', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 
@@ -117,8 +114,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData clamps size above 10 to 10', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 
@@ -128,8 +125,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData converts string wounds values to integers', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 
@@ -141,8 +138,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData converts string threatLevel to integer', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 
@@ -152,8 +149,8 @@ describe('NPCData', () => {
     });
 
     it('CHARACTERISTIC_MAP maps short names to full characteristic keys', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
         expect(NPCData.CHARACTERISTIC_MAP['WS']).toBe('weaponSkill');
@@ -162,8 +159,8 @@ describe('NPCData', () => {
     });
 
     it('SKILL_CHARACTERISTIC_MAP maps skill keys to their governing characteristic', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
         expect(NPCData.SKILL_CHARACTERISTIC_MAP['dodge']).toBe('agility');
@@ -172,8 +169,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData remaps abbreviated string characteristics into the structured full-name shape', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 
@@ -191,8 +188,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData leaves already-structured full-name characteristics untouched', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 
@@ -204,8 +201,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData converts a legacy weapons[] array into the simple-mode object', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 
@@ -222,8 +219,8 @@ describe('NPCData', () => {
     });
 
     it('_migrateData infers a ranged weapon class from a non-melee range', async () => {
-        const mod = await import('./npc').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./npc.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const NPCData = mod.default;
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
  * Tests for StarshipData.
@@ -8,27 +9,23 @@ import { describe, expect, it } from 'vitest';
  */
 describe('StarshipData', () => {
     it('exports a default class symbol', async () => {
-        const mod = await import('./voidcraft').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`StarshipData could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.default).toBeTruthy();
     });
 
     it('_migrateData with empty source does not throw', async () => {
-        const mod = await import('./voidcraft').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const StarshipData = mod.default;
         expect(() => StarshipData._migrateData({})).not.toThrow();
     });
 
     it('_prepareResources computes space.available = total - used', async () => {
-        const mod = await import('./voidcraft').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const StarshipData = mod.default;
 
@@ -46,8 +43,8 @@ describe('StarshipData', () => {
     });
 
     it('_prepareCombatStats computes detectionBonus as tens digit', async () => {
-        const mod = await import('./voidcraft').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const StarshipData = mod.default;
 
@@ -71,8 +68,8 @@ describe('StarshipData', () => {
     });
 
     it('_emptyAppliedModifiers seeds every known stat key with total=0 and empty sources', async () => {
-        const mod = await import('./voidcraft').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const { default: StarshipData, SHIP_MODIFIER_STAT_KEYS } = mod;
         const empty = StarshipData._emptyAppliedModifiers();
@@ -84,8 +81,8 @@ describe('StarshipData', () => {
     });
 
     it('computeAppliedModifiers sums shipComponent.modifiers + shipUpgrade.modifiers + shipRole.shipBonuses', async () => {
-        const mod = await import('./voidcraft').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const { default: StarshipData } = mod;
         const items = [
@@ -138,8 +135,8 @@ describe('StarshipData', () => {
     });
 
     it('computeAppliedModifiers ignores unknown modifier keys', async () => {
-        const mod = await import('./voidcraft').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const { default: StarshipData } = mod;
         const items = [
@@ -158,8 +155,8 @@ describe('StarshipData', () => {
     });
 
     it('_prepareCombatStats handles zero maxima gracefully (percentage = 100)', async () => {
-        const mod = await import('./voidcraft').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const StarshipData = mod.default;
 
