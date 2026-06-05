@@ -38,8 +38,11 @@ describe('compendium resync skips per-actor variants', () => {
 
 describe('isActorVariant behavior (re-derived semantics)', () => {
     // Mirror the guard's logic so a silent semantic change fails loudly here.
-    const isActorVariant = (system: Record<string, unknown>): boolean => {
-        const variantOf = system['variantOf'];
+    interface VariantBearingSystem {
+        variantOf?: string | number | null;
+    }
+    const isActorVariant = (system: VariantBearingSystem): boolean => {
+        const variantOf = system.variantOf;
         return typeof variantOf === 'string' && variantOf !== '';
     };
 
@@ -47,12 +50,12 @@ describe('isActorVariant behavior (re-derived semantics)', () => {
         expect(isActorVariant({ variantOf: 'Compendium.wh40k-rpg.hb-dh2-items-misc.Item.1mVgJ3wYe6hNj970' })).toBe(true);
     });
 
-    it.each([
+    it.each<[VariantBearingSystem, string]>([
         [{}, 'absent'],
         [{ variantOf: '' }, 'empty string'],
         [{ variantOf: null }, 'null'],
         [{ variantOf: 7 }, 'non-string'],
     ])('does not treat %o as a variant (%s)', (system) => {
-        expect(isActorVariant(system as Record<string, unknown>)).toBe(false);
+        expect(isActorVariant(system)).toBe(false);
     });
 });
