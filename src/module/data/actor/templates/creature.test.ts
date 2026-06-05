@@ -1,25 +1,18 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../../testing/model-import.ts';
 
 describe('CreatureTemplate', () => {
     it('has a default CreatureTemplate symbol exported', async () => {
-        const mod = await import('./creature').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`creature template could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./creature.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod).toBeTruthy();
         expect(mod.default).toBeTruthy();
     });
 
     it('does not throw when legacy actor data has no characteristics block', async () => {
-        const mod = await import('./creature').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`creature template could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./creature.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const CreatureTemplate = mod.default;
