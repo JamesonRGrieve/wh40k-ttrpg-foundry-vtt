@@ -32,6 +32,26 @@ interface ShipActionRow {
     typeAndAction: string;
 }
 
+/**
+ * Chat-card payload shared by the Extended Action and Manoeuvre Action
+ * dispatchers. A `type` alias (not an interface) so it carries the implicit
+ * index signature `renderTemplate`'s `Record<string, unknown>` param requires.
+ */
+type ActionCardData = {
+    action: {
+        name: string | null;
+        img: string;
+        skill: string;
+        modifier: number;
+        duration: string;
+        requirements: string;
+        typeAndAction: string;
+        description: string;
+    };
+    actorName: string | null;
+    gameSystem: string;
+};
+
 /** Localization key per essential slot for the build panel. */
 const ESSENTIAL_SLOT_LABEL_KEY: Record<string, string> = {
     plasmaDrive: 'WH40K.ShipComponent.Type.PlasmaDrive',
@@ -827,16 +847,12 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Dispatch a starship Extended Action to chat (issue #186).
-     *
-     * Locates the action either by `data-action-uuid` (compendium or world)
-     * or `data-action-id` (owned), renders the chat card template, and posts
-     * it to the chat log. Mechanical resolution (rolls, modifiers, success
-     * effects) is intentionally out of scope at this stage and is a follow-up.
+     * Resolve a starship action item from a clicked control: `data-action-uuid`
+     * (compendium/world) first, then `data-action-id` (owned). Warns with the
+     * given langpack key and returns undefined when neither resolves. Shared by
+     * the Extended Action and Manoeuvre Action dispatchers.
      */
-    static async #dispatchExtendedAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
-        const actor = this.actor as unknown as WH40KVoidcraft;
+    async #resolveActionItem(target: HTMLElement, actor: WH40KVoidcraft, emptyKey: string): Promise<WH40KItem | undefined> {
         const uuid = target.dataset['actionUuid'] ?? '';
         const itemId = target.dataset['actionId'] ?? '';
 
@@ -854,10 +870,15 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             item = actor.items.get(itemId);
         }
         if (item === undefined) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Voidcraft.ExtendedAction.Empty'));
-            return;
+            ui.notifications.warn(game.i18n.localize(emptyKey));
         }
+        return item;
+    }
 
+    /* -------------------------------------------- */
+
+    /** Build the shared chat-card payload both action dispatchers render. */
+    #buildActionCardData(item: WH40KItem, actor: WH40KVoidcraft): ActionCardData {
         const sys = item.system as {
             skill?: string;
             modifier?: number;
@@ -865,9 +886,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             requirements?: string;
             typeAndAction?: string;
             description?: { value?: string };
-            shipActionEffect?: string;
         };
-        const cardData = {
+        return {
             action: {
                 name: item.name,
                 img: item.img ?? '',
@@ -881,12 +901,46 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             actorName: actor.name,
             gameSystem: (actor.system as { gameSystem: string }).gameSystem,
         };
+    }
+
+    /* -------------------------------------------- */
+
+    /** Render an action chat-card template and post it under the actor's speaker. */
+    async #postActionCard(actor: WH40KVoidcraft, template: string, cardData: ActionCardData): Promise<void> {
+        const html = await foundry.applications.handlebars.renderTemplate(template, cardData);
+        const speaker = ChatMessage.getSpeaker({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
+            actor: actor as unknown as Actor.Implementation,
+        });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
+        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        void ChatMessage.create(payload);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Dispatch a starship Extended Action to chat (issue #186).
+     *
+     * Locates the action either by `data-action-uuid` (compendium or world)
+     * or `data-action-id` (owned), renders the chat card template, and posts
+     * it to the chat log. Mechanical resolution (rolls, modifiers, success
+     * effects) is intentionally out of scope at this stage and is a follow-up.
+     */
+    static async #dispatchExtendedAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
+        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ExtendedAction.Empty');
+        if (item === undefined) return;
+
+        const cardData = this.#buildActionCardData(item, actor);
 
         // Issue #189 — route content-agnostic shipActionEffect tags into the
         // RT Crew/Morale economy. Compendium-side, Hold Fast! / Triage opt-in
         // via `system.shipActionEffect = 'cancelPriorTurnDamage'`; replenish
         // helpers opt in via `'replenishMorale'`. No name string-matching.
-        const effect = sys.shipActionEffect ?? '';
+        const effectSys = item.system as { shipActionEffect?: string };
+        const effect = effectSys.shipActionEffect ?? '';
         if (effect === 'cancelPriorTurnDamage') {
             const restored = await actor.cancelPriorTurnDamage();
             const i18n = game.i18n;
@@ -906,15 +960,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             ui.notifications.info(game.i18n.localize('WH40K.Voidcraft.Crew.NotifyReplenished'));
         }
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/extended-action-chat.hbs', cardData);
-
-        const speaker = ChatMessage.getSpeaker({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
-            actor: actor as unknown as Actor.Implementation,
-        });
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
-        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
-        void ChatMessage.create(payload);
+        await this.#postActionCard(actor, 'systems/wh40k-rpg/templates/chat/extended-action-chat.hbs', cardData);
     }
 
     /* -------------------------------------------- */
@@ -1043,58 +1089,10 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     static async #dispatchManoeuvreAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         const actor = this.actor as unknown as WH40KVoidcraft;
-        const uuid = target.dataset['actionUuid'] ?? '';
-        const itemId = target.dataset['actionId'] ?? '';
+        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ManoeuvreAction.Empty');
+        if (item === undefined) return;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.fromUuid is loosely typed in fvtt-types
-        const fromUuidFn = (globalThis as unknown as { fromUuid?: (uuid: string) => Promise<unknown> }).fromUuid;
-        let item: WH40KItem | undefined;
-        if (uuid !== '' && fromUuidFn !== undefined) {
-            try {
-                item = (await fromUuidFn(uuid)) as WH40KItem | undefined;
-            } catch {
-                item = undefined;
-            }
-        }
-        if (item === undefined && itemId !== '') {
-            item = actor.items.get(itemId);
-        }
-        if (item === undefined) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Voidcraft.ManoeuvreAction.Empty'));
-            return;
-        }
-
-        const sys = item.system as {
-            skill?: string;
-            modifier?: number;
-            duration?: string;
-            requirements?: string;
-            typeAndAction?: string;
-            description?: { value?: string };
-        };
-        const cardData = {
-            action: {
-                name: item.name,
-                img: item.img ?? '',
-                skill: sys.skill ?? '',
-                modifier: sys.modifier ?? 0,
-                duration: sys.duration ?? '',
-                requirements: sys.requirements ?? '',
-                typeAndAction: sys.typeAndAction ?? '',
-                description: sys.description?.value ?? '',
-            },
-            actorName: actor.name,
-            gameSystem: (actor.system as { gameSystem: string }).gameSystem,
-        };
-
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/manoeuvre-action-chat.hbs', cardData);
-
-        const speaker = ChatMessage.getSpeaker({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
-            actor: actor as unknown as Actor.Implementation,
-        });
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
-        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
-        void ChatMessage.create(payload);
+        const cardData = this.#buildActionCardData(item, actor);
+        await this.#postActionCard(actor, 'systems/wh40k-rpg/templates/chat/manoeuvre-action-chat.hbs', cardData);
     }
 }
