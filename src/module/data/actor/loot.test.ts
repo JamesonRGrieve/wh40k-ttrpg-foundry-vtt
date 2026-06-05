@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
  * Tests for LootData.
@@ -13,19 +14,15 @@ import { describe, expect, it } from 'vitest';
  */
 describe('LootData', () => {
     it('exports a default class symbol', async () => {
-        const mod = await import('./loot').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`LootData could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./loot.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.default).toBeTruthy();
     });
 
     it('computeTotalWeight prefers each item totalWeight', async () => {
-        const mod = await import('./loot').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./loot.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const LootData = mod.default;
         const total = LootData.computeTotalWeight([{ totalWeight: 4.5 }, { totalWeight: 1.25 }]);
@@ -33,8 +30,8 @@ describe('LootData', () => {
     });
 
     it('computeTotalWeight falls back to weight × quantity', async () => {
-        const mod = await import('./loot').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./loot.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const LootData = mod.default;
         const total = LootData.computeTotalWeight([{ weight: 2, quantity: 3 }, { weight: 1.5 }]);
@@ -43,8 +40,8 @@ describe('LootData', () => {
     });
 
     it('computeTotalWeight treats missing/invalid fields as zero/one', async () => {
-        const mod = await import('./loot').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./loot.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const LootData = mod.default;
         expect(LootData.computeTotalWeight([])).toBe(0);
