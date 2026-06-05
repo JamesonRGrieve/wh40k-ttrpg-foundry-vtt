@@ -1,10 +1,18 @@
-import { describe, expect, it } from 'vitest';
-import { describeFateFormula, describeWoundsFormula, parseDiceRoll, parseTBMultiplier } from './formula-evaluator.ts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    describeFateFormula,
+    describeWoundsFormula,
+    evaluateFateFormula,
+    evaluateWoundsFormula,
+    parseDiceRoll,
+    parseTBMultiplier,
+    type WoundsActorView,
+} from './formula-evaluator.ts';
 
 /**
- * Coverage for the pure formula parsers/describers (previously untested). The
- * two evaluators (evaluateWoundsFormula / evaluateFateFormula) roll dice and
- * read an actor, so they need a Roll/actor harness and are excluded here.
+ * Coverage for the formula utilities (previously untested). The pure
+ * parsers/describers run directly; the two evaluators drive Foundry's Roll, so a
+ * deterministic Roll stub captures the rolled formula and returns a fixed total.
  */
 
 describe('parseTBMultiplier', () => {
@@ -63,5 +71,87 @@ describe('describeFateFormula', () => {
 
     it('returns "None" for an empty formula', () => {
         expect(describeFateFormula('')).toBe('None');
+    });
+});
+
+describe('evaluateFateFormula (Roll-stubbed)', () => {
+    let rollTotal = 0;
+
+    beforeEach(() => {
+        vi.stubGlobal(
+            'Roll',
+            class {
+                evaluateSync(): { total: number } {
+                    return { total: rollTotal };
+                }
+            },
+        );
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.restoreAllMocks();
+    });
+
+    it('returns the value of the 1d10 condition the roll falls in', () => {
+        rollTotal = 3;
+        expect(evaluateFateFormula('(1-5|=2),(6-10|=3)')).toBe(2);
+        rollTotal = 8;
+        expect(evaluateFateFormula('(1-5|=2),(6-10|=3)')).toBe(3);
+    });
+
+    it('returns 0 for empty or condition-less formulas', () => {
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        expect(evaluateFateFormula('')).toBe(0);
+        rollTotal = 5;
+        expect(evaluateFateFormula('no conditions here')).toBe(0);
+    });
+});
+
+describe('evaluateWoundsFormula (Roll-stubbed)', () => {
+    let lastFormula = '';
+    let rollTotal = 0;
+
+    beforeEach(() => {
+        lastFormula = '';
+        vi.stubGlobal(
+            'Roll',
+            class {
+                constructor(formula: string) {
+                    lastFormula = formula;
+                }
+                evaluateSync(): { total: number } {
+                    return { total: rollTotal };
+                }
+            },
+        );
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.restoreAllMocks();
+    });
+
+    const actor = (bonuses: Record<string, number>): WoundsActorView => ({
+        system: { characteristics: Object.fromEntries(Object.entries(bonuses).map(([key, bonus]) => [key, { bonus }])) },
+    });
+
+    it('substitutes a multiplied characteristic bonus before rolling', () => {
+        rollTotal = 12;
+        const result = evaluateWoundsFormula('2xTB+1d5', actor({ toughness: 4 }));
+        expect(lastFormula).toBe('8+1d5');
+        expect(result).toBe(12);
+    });
+
+    it('substitutes multiple bonus references', () => {
+        rollTotal = 7;
+        evaluateWoundsFormula('TB+SB', actor({ toughness: 4, strength: 3 }));
+        expect(lastFormula).toBe('4+3');
+    });
+
+    it('floors the result at 0 and short-circuits an empty formula', () => {
+        rollTotal = -5;
+        expect(evaluateWoundsFormula('TB', actor({ toughness: 4 }))).toBe(0);
+        expect(evaluateWoundsFormula('', actor({}))).toBe(0);
     });
 });

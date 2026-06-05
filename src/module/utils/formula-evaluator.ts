@@ -13,7 +13,13 @@
  * - "(1-8|=3),(9-10|=4)" - Roll 1d10: 1-8=3 fate, 9-10=4 fate
  */
 
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+/**
+ * Minimal actor surface {@link evaluateWoundsFormula} reads — a structural view
+ * of the actor Document, so the calculation is testable without a full Document.
+ */
+export interface WoundsActorView {
+    system: { characteristics: Record<string, { bonus?: number } | undefined> };
+}
 
 type CharacteristicBonusKey =
     | 'toughness'
@@ -40,7 +46,7 @@ type FateCondition = {
  * @param {Actor} actor - The actor to evaluate for (provides characteristic bonuses)
  * @returns {number} Evaluated wounds value
  */
-export function evaluateWoundsFormula(formula: string, actor: WH40KBaseActorDocument): number {
+export function evaluateWoundsFormula(formula: string, actor: WoundsActorView): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
@@ -76,7 +82,7 @@ export function evaluateWoundsFormula(formula: string, actor: WH40KBaseActorDocu
             // Match patterns like "2xTB" or "TB" (with or without multiplier)
             const regex = new RegExp(`(\\d+)x${abbr}|${abbr}`, 'gi');
             evaluated = evaluated.replace(regex, (_match: string, multiplier?: string) => {
-                const bonus = (actor.system.characteristics[charName] as (typeof actor.system.characteristics)[string] | undefined)?.bonus ?? 0;
+                const bonus = actor.system.characteristics[charName]?.bonus ?? 0;
                 const mult = multiplier !== undefined && multiplier !== '' ? parseInt(multiplier, 10) : 1;
                 return (bonus * mult).toString();
             });
