@@ -583,353 +583,88 @@ export class HooksManager {
             DocumentSheetConfig.unregisterSheet(Actor, 'core', actorSheetV2 as Parameters<typeof DocumentSheetConfig.unregisterSheet>[2]);
         }
 
-        // Per-type sheet registration. Each concrete actor type gets exactly
-        // one matching default sheet. Sheet choice must not diverge from type.
+        // Per-type sheet registration — table-driven (#308). Each concrete type
+        // gets exactly one default sheet; the descriptor tables preserve the
+        // original registration ORDER and the legacy-type aliases verbatim.
+        // Sheet choice must not diverge from type.
+        type SheetReg = { sheet: Parameters<typeof DocumentSheetConfig.registerSheet>[2]; types?: string[]; label: string };
 
-        // --- Per-system default PC sheets ---
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2PlayerSheet, {
-            types: ['dh2-character'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy2',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1PlayerSheet, {
-            types: ['dh1-character'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy1',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderPlayerSheet, {
-            types: ['rt-character'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.RogueTrader',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadePlayerSheet, {
-            types: ['bc-character'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.BlackCrusade',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarPlayerSheet, {
-            types: ['ow-character'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.OnlyWar',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchPlayerSheet, {
-            types: ['dw-character'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Deathwatch',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, ImperiumMaledictumPlayerSheet, {
-            types: ['im-character'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.ImperiumMaledictum',
-        });
-
-        // --- Per-system default NPC sheets ---
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2NPCSheet, {
-            types: ['dh2-npc'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy2NPC',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1NPCSheet, {
-            types: ['dh1-npc'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy1NPC',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderNPCSheet, {
-            types: ['rt-npc'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.RogueTraderNPC',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeNPCSheet, {
-            types: ['bc-npc'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.BlackCrusadeNPC',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarNPCSheet, {
-            types: ['ow-npc'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.OnlyWarNPC',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchNPCSheet, {
-            types: ['dw-npc'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DeathwatchNPC',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, ImperiumMaledictumNPCSheet, {
-            types: ['im-npc'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.ImperiumMaledictumNPC',
-        });
-        // --- Per-system default Craft sheets (terracraft / aircraft / watercraft) ---
-        // Each line's CraftSheet also covers its legacy `{line}-vehicle` type so
-        // pre-rename world actors keep rendering until the migration retypes them.
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2CraftSheet, {
-            types: ['dh2-terracraft', 'dh2-aircraft', 'dh2-vehicle'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy2Vehicle',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1CraftSheet, {
-            types: ['dh1-terracraft', 'dh1-vehicle'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy1Vehicle',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderCraftSheet, {
-            types: ['rt-terracraft', 'rt-aircraft', 'rt-vehicle'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.RogueTraderVehicle',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeCraftSheet, {
-            types: ['bc-terracraft', 'bc-vehicle'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.BlackCrusadeVehicle',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarCraftSheet, {
-            types: ['ow-terracraft', 'ow-aircraft', 'ow-vehicle'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.OnlyWarVehicle',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchCraftSheet, {
-            types: ['dw-terracraft', 'dw-aircraft', 'dw-vehicle'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DeathwatchVehicle',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, ImperiumMaledictumCraftSheet, {
-            types: ['im-terracraft', 'im-vehicle'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.ImperiumMaledictumVehicle',
-        });
-        // --- Voidcraft (RT only for now); also covers legacy `rt-starship` ---
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderVoidcraftSheet, {
-            types: ['rt-voidcraft', 'rt-starship'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.RogueTraderStarship',
-        });
-
-        // --- Loot pile (content-agnostic, all systems) ---
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, LootActorSheet, {
-            types: ['loot'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Loot',
-        });
+        const ACTOR_SHEETS: SheetReg[] = [
+            // Per-system default PC sheets
+            { sheet: DarkHeresy2PlayerSheet, types: ['dh2-character'], label: 'WH40K.Sheet.DarkHeresy2' },
+            { sheet: DarkHeresy1PlayerSheet, types: ['dh1-character'], label: 'WH40K.Sheet.DarkHeresy1' },
+            { sheet: RogueTraderPlayerSheet, types: ['rt-character'], label: 'WH40K.Sheet.RogueTrader' },
+            { sheet: BlackCrusadePlayerSheet, types: ['bc-character'], label: 'WH40K.Sheet.BlackCrusade' },
+            { sheet: OnlyWarPlayerSheet, types: ['ow-character'], label: 'WH40K.Sheet.OnlyWar' },
+            { sheet: DeathwatchPlayerSheet, types: ['dw-character'], label: 'WH40K.Sheet.Deathwatch' },
+            { sheet: ImperiumMaledictumPlayerSheet, types: ['im-character'], label: 'WH40K.Sheet.ImperiumMaledictum' },
+            // Per-system default NPC sheets
+            { sheet: DarkHeresy2NPCSheet, types: ['dh2-npc'], label: 'WH40K.Sheet.DarkHeresy2NPC' },
+            { sheet: DarkHeresy1NPCSheet, types: ['dh1-npc'], label: 'WH40K.Sheet.DarkHeresy1NPC' },
+            { sheet: RogueTraderNPCSheet, types: ['rt-npc'], label: 'WH40K.Sheet.RogueTraderNPC' },
+            { sheet: BlackCrusadeNPCSheet, types: ['bc-npc'], label: 'WH40K.Sheet.BlackCrusadeNPC' },
+            { sheet: OnlyWarNPCSheet, types: ['ow-npc'], label: 'WH40K.Sheet.OnlyWarNPC' },
+            { sheet: DeathwatchNPCSheet, types: ['dw-npc'], label: 'WH40K.Sheet.DeathwatchNPC' },
+            { sheet: ImperiumMaledictumNPCSheet, types: ['im-npc'], label: 'WH40K.Sheet.ImperiumMaledictumNPC' },
+            // Per-system default Craft sheets — each also covers its legacy `{line}-vehicle`
+            // (+ -aircraft) type so pre-rename world actors keep rendering until migration.
+            { sheet: DarkHeresy2CraftSheet, types: ['dh2-terracraft', 'dh2-aircraft', 'dh2-vehicle'], label: 'WH40K.Sheet.DarkHeresy2Vehicle' },
+            { sheet: DarkHeresy1CraftSheet, types: ['dh1-terracraft', 'dh1-vehicle'], label: 'WH40K.Sheet.DarkHeresy1Vehicle' },
+            { sheet: RogueTraderCraftSheet, types: ['rt-terracraft', 'rt-aircraft', 'rt-vehicle'], label: 'WH40K.Sheet.RogueTraderVehicle' },
+            { sheet: BlackCrusadeCraftSheet, types: ['bc-terracraft', 'bc-vehicle'], label: 'WH40K.Sheet.BlackCrusadeVehicle' },
+            { sheet: OnlyWarCraftSheet, types: ['ow-terracraft', 'ow-aircraft', 'ow-vehicle'], label: 'WH40K.Sheet.OnlyWarVehicle' },
+            { sheet: DeathwatchCraftSheet, types: ['dw-terracraft', 'dw-aircraft', 'dw-vehicle'], label: 'WH40K.Sheet.DeathwatchVehicle' },
+            { sheet: ImperiumMaledictumCraftSheet, types: ['im-terracraft', 'im-vehicle'], label: 'WH40K.Sheet.ImperiumMaledictumVehicle' },
+            // Voidcraft (RT only for now); also covers legacy `rt-starship`
+            { sheet: RogueTraderVoidcraftSheet, types: ['rt-voidcraft', 'rt-starship'], label: 'WH40K.Sheet.RogueTraderStarship' },
+            // Loot pile (content-agnostic, all systems)
+            { sheet: LootActorSheet, types: ['loot'], label: 'WH40K.Sheet.Loot' },
+        ];
+        for (const { sheet, types, label } of ACTOR_SHEETS) {
+            DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, sheet, { ...(types !== undefined ? { types } : {}), makeDefault: true, label });
+        }
 
         // Unregister core V1 item sheet and register V2 item sheets
         DocumentSheetConfig.unregisterSheet(Item, 'core', foundry.appv1.sheets.ItemSheet);
 
-        // Default item sheet for unspecified types
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, BaseItemSheet, {
-            makeDefault: true,
-            label: 'WH40K.Sheet.Item',
-        });
-
-        // Weapon sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, WeaponSheet, {
-            types: ['weapon'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Weapon',
-        });
-
-        // Armour sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ArmourSheet, {
-            types: ['armour'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Armour',
-        });
-
-        // Talent sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, TalentSheet, {
-            types: ['talent'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Talent',
-        });
-
-        // Trait sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, TraitSheet, {
-            types: ['trait'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Trait',
-        });
-
-        // Gear sheet (consumables, drugs, tools, gear, miscellaneous quest items)
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, GearSheet, {
-            types: ['gear', 'consumable', 'drug', 'tool', 'miscellaneous'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Gear',
-        });
-
-        // Ammunition sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, AmmoSheet, {
-            types: ['ammunition'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Ammunition',
-        });
-
-        // Psychic Power sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, PsychicPowerSheet, {
-            types: ['psychicPower'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.PsychicPower',
-        });
-
-        // Skill sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, SkillSheet, {
-            types: ['skill'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Skill',
-        });
-
-        // Cybernetic sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CyberneticSheet, {
-            types: ['cybernetic'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Cybernetic',
-        });
-
-        // Force Field sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ForceFieldSheet, {
-            types: ['forceField'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.ForceField',
-        });
-
-        // Critical Injury sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CriticalInjurySheet, {
-            types: ['criticalInjury'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.CriticalInjury',
-        });
-
-        // Condition sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ConditionSheet, {
-            types: ['condition'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Condition',
-        });
-
-        // Content-block sheets (freeform-gated): special ability, malignancy, mutation, mental disorder
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, SpecialAbilitySheet, {
-            types: ['specialAbility'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.SpecialAbility',
-        });
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, MalignancySheet, {
-            types: ['malignancy'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Malignancy',
-        });
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, MutationSheet, {
-            types: ['mutation'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Mutation',
-        });
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, MentalDisorderSheet, {
-            types: ['mentalDisorder'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.MentalDisorder',
-        });
-
-        // Storage Location sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, StorageLocationSheet, {
-            types: ['storageLocation'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.StorageLocation',
-        });
-
-        // Location sheet (structured place metadata)
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, LocationSheet, {
-            types: ['location'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Location',
-        });
-
-        // Peer/Enemy sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, PeerEnemySheet, {
-            types: ['peer', 'enemy'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.PeerEnemy',
-        });
-
-        // Journal Entry sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, JournalEntryItemSheet, {
-            types: ['journalEntry'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.JournalEntry',
-        });
-
-        // Endeavour sheet (Rogue Trader)
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, EndeavourSheet, {
-            types: ['endeavour'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Endeavour',
-        });
-
-        // Investigation Lead sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, LeadSheet, {
-            types: ['lead'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.Lead',
-        });
-
-        // Origin Path sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, OriginPathSheet, {
-            types: ['originPath'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.OriginPath',
-        });
-
-        // Weapon Modification sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, WeaponModSheet, {
-            types: ['weaponModification'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.WeaponMod',
-        });
-
-        // Armour Modification sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ArmourModSheet, {
-            types: ['armourModification'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.ArmourMod',
-        });
-
-        // Attack Special sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, AttackSpecialSheet, {
-            types: ['attackSpecial'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.AttackSpecial',
-        });
-
-        // Weapon Quality sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, WeaponQualitySheet, {
-            types: ['weaponQuality'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.WeaponQuality',
-        });
-
-        // Ship Component sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipComponentSheet, {
-            types: ['shipComponent'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.ShipComponent',
-        });
-
-        // Ship Weapon sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipWeaponSheet, {
-            types: ['shipWeapon'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.ShipWeapon',
-        });
-
-        // Ship Upgrade sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, ShipUpgradeSheet, {
-            types: ['shipUpgrade'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.ShipUpgrade',
-        });
-
-        // NPC Template sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, NPCTemplateSheet, {
-            types: ['npcTemplate'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.NPCTemplate',
-        });
+        const ITEM_SHEETS: SheetReg[] = [
+            { sheet: BaseItemSheet, label: 'WH40K.Sheet.Item' }, // default for unspecified types
+            { sheet: WeaponSheet, types: ['weapon'], label: 'WH40K.Sheet.Weapon' },
+            { sheet: ArmourSheet, types: ['armour'], label: 'WH40K.Sheet.Armour' },
+            { sheet: TalentSheet, types: ['talent'], label: 'WH40K.Sheet.Talent' },
+            { sheet: TraitSheet, types: ['trait'], label: 'WH40K.Sheet.Trait' },
+            { sheet: GearSheet, types: ['gear', 'consumable', 'drug', 'tool', 'miscellaneous'], label: 'WH40K.Sheet.Gear' },
+            { sheet: AmmoSheet, types: ['ammunition'], label: 'WH40K.Sheet.Ammunition' },
+            { sheet: PsychicPowerSheet, types: ['psychicPower'], label: 'WH40K.Sheet.PsychicPower' },
+            { sheet: SkillSheet, types: ['skill'], label: 'WH40K.Sheet.Skill' },
+            { sheet: CyberneticSheet, types: ['cybernetic'], label: 'WH40K.Sheet.Cybernetic' },
+            { sheet: ForceFieldSheet, types: ['forceField'], label: 'WH40K.Sheet.ForceField' },
+            { sheet: CriticalInjurySheet, types: ['criticalInjury'], label: 'WH40K.Sheet.CriticalInjury' },
+            { sheet: ConditionSheet, types: ['condition'], label: 'WH40K.Sheet.Condition' },
+            // Content-block sheets (freeform-gated)
+            { sheet: SpecialAbilitySheet, types: ['specialAbility'], label: 'WH40K.Sheet.SpecialAbility' },
+            { sheet: MalignancySheet, types: ['malignancy'], label: 'WH40K.Sheet.Malignancy' },
+            { sheet: MutationSheet, types: ['mutation'], label: 'WH40K.Sheet.Mutation' },
+            { sheet: MentalDisorderSheet, types: ['mentalDisorder'], label: 'WH40K.Sheet.MentalDisorder' },
+            { sheet: StorageLocationSheet, types: ['storageLocation'], label: 'WH40K.Sheet.StorageLocation' },
+            { sheet: LocationSheet, types: ['location'], label: 'WH40K.Sheet.Location' },
+            { sheet: PeerEnemySheet, types: ['peer', 'enemy'], label: 'WH40K.Sheet.PeerEnemy' },
+            { sheet: JournalEntryItemSheet, types: ['journalEntry'], label: 'WH40K.Sheet.JournalEntry' },
+            { sheet: EndeavourSheet, types: ['endeavour'], label: 'WH40K.Sheet.Endeavour' },
+            { sheet: LeadSheet, types: ['lead'], label: 'WH40K.Sheet.Lead' },
+            { sheet: OriginPathSheet, types: ['originPath'], label: 'WH40K.Sheet.OriginPath' },
+            { sheet: WeaponModSheet, types: ['weaponModification'], label: 'WH40K.Sheet.WeaponMod' },
+            { sheet: ArmourModSheet, types: ['armourModification'], label: 'WH40K.Sheet.ArmourMod' },
+            { sheet: AttackSpecialSheet, types: ['attackSpecial'], label: 'WH40K.Sheet.AttackSpecial' },
+            { sheet: WeaponQualitySheet, types: ['weaponQuality'], label: 'WH40K.Sheet.WeaponQuality' },
+            { sheet: ShipComponentSheet, types: ['shipComponent'], label: 'WH40K.Sheet.ShipComponent' },
+            { sheet: ShipWeaponSheet, types: ['shipWeapon'], label: 'WH40K.Sheet.ShipWeapon' },
+            { sheet: ShipUpgradeSheet, types: ['shipUpgrade'], label: 'WH40K.Sheet.ShipUpgrade' },
+            { sheet: NPCTemplateSheet, types: ['npcTemplate'], label: 'WH40K.Sheet.NPCTemplate' },
+        ];
+        for (const { sheet, types, label } of ITEM_SHEETS) {
+            DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, sheet, { ...(types !== undefined ? { types } : {}), makeDefault: true, label });
+        }
 
         WH40KSettings.registerSettings();
         void HandlebarManager.loadTemplates();
