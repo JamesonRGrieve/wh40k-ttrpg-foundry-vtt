@@ -1,21 +1,18 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 describe('LocationData', () => {
     it('has a default LocationData symbol exported', async () => {
-        const mod = await import('./location').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`location DataModel could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./location.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod).toBeTruthy();
         expect(mod.default).toBeTruthy();
     });
 
     it('exposes an ordered locationTypes registry', async () => {
-        const mod = await import('./location').catch(() => undefined);
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable
+        const mod = await importModelOrSkip(import('./location.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const types = mod.default.locationTypes;
         expect(Array.isArray(types)).toBe(true);
