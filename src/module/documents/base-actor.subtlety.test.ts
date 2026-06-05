@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { RawSubtletyAdjuster } from '../data/shared/subtlety-adjuster.ts';
 import type { CollectedAdjuster } from '../rules/subtlety-adjusters.ts';
+import { importModelOrSkip } from '../testing/model-import.ts';
 import type * as BaseActorModuleType from './base-actor.ts';
 
 type WH40KBaseActor = BaseActorModuleType.WH40KBaseActor;
@@ -36,14 +37,7 @@ type BaseActorModule = typeof BaseActorModuleType;
  * callback, by contrast, does NOT execute when skipped — so `requireModule()`
  * inside an `it` body only runs when `HAVE` is true and the deref is safe.
  */
-const MOD: BaseActorModule | undefined = await import('./base-actor.ts').catch(
-    // eslint-disable-next-line no-restricted-syntax -- boundary: rejection reason is `unknown`, narrowed by the `instanceof Error` guard on the next line
-    (err: unknown) => {
-        const msg = err instanceof Error ? err.message : String(err);
-        console.warn(`WH40KBaseActor could not be imported in this environment: ${msg}`);
-        return undefined;
-    },
-);
+const MOD: BaseActorModule | undefined = await importModelOrSkip(import('./base-actor.ts'));
 const HAVE = MOD !== undefined;
 
 /**

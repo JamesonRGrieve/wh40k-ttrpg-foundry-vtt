@@ -1,13 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../testing/model-import.ts';
 
 describe('WH40KStarship', () => {
     it('exports WH40KStarship class', async () => {
-        const mod = await import('./voidcraft').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KStarship could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod.WH40KVoidcraft).toBeTruthy();
     });
@@ -29,12 +26,8 @@ describe('WH40KStarship', () => {
     });
 
     it('hullType / hullClass / speed / armour getters read from system', async () => {
-        const mod = await import('./voidcraft').catch((err) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`WH40KStarship could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
 
         const fakeStarship = Object.create(mod.WH40KVoidcraft.prototype) as InstanceType<typeof mod.WH40KVoidcraft>;
@@ -107,11 +100,8 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
           }
         | undefined
     > {
-        const mod = await import('./voidcraft').catch((err) => {
-            console.warn(`WH40KStarship import failed: ${err instanceof Error ? err.message : String(err)}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when runtime unavailable
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: reading the document's prototype methods through a structural test interface (the class type and StarshipMethods do not overlap)
         const proto = mod.WH40KVoidcraft.prototype as unknown as StarshipMethods;
