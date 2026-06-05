@@ -11,28 +11,15 @@
  * this file; agents extend it with the model-specific assertions below.
  */
 import { describe, expect, it } from 'vitest';
+import { importModelOrSkip } from '../../testing/model-import.ts';
 
 describe('ArmourData (worked example)', () => {
     it('has a default ArmourData symbol exported', async () => {
-        // Defer the import to runtime — importing a Foundry-V14 DataModel at
-        // module top blows up in non-Foundry test environments (it touches
-        // `foundry.data.fields` during defineSchema). Importing dynamically
-        // inside the test body keeps that blast radius scoped to the assertion
-        // and lets the test still verify the export shape.
-        // Defer the import to runtime — importing a Foundry-V14 DataModel at
-        // module top blows up in non-Foundry test environments (it touches
-        // `foundry.data.fields` during defineSchema). Importing dynamically
-        // inside the test body keeps that blast radius scoped to the assertion
-        // and lets the test still verify the export shape.
-        const mod = await import('./armour').catch((err) => {
-            // If the import fails for environment reasons, the failure mode is
-            // still informative — the test reports the actual error. Skip rather
-            // than silently pass.
-            const msg = err instanceof Error ? err.message : String(err);
-            console.warn(`armour DataModel could not be imported in this environment: ${msg}`);
-            return undefined;
-        });
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        // Defer the import to runtime via importModelOrSkip — importing a
+        // Foundry-V14 DataModel at module top blows up in non-Foundry test
+        // environments (it touches `foundry.data.fields` during defineSchema).
+        const mod = await importModelOrSkip(import('./armour.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         expect(mod).toBeTruthy();
         expect(mod.default).toBeTruthy();
