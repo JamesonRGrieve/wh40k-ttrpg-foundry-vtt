@@ -78,6 +78,7 @@ import {
 } from './applications/item/_module.ts';
 import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
+import { hydrateWorldActor } from './compendium-hydrate.ts';
 import { resyncWorldFromCompendiums } from './compendium-resync.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
@@ -197,6 +198,16 @@ export class HooksManager {
         hooksOn('createActor', (actor: Parameters<typeof grantDefaultItemsToActor>[0], _options: unknown, userId: string) => {
             if (game.user.id !== userId) return;
             void grantDefaultItemsToActor(actor);
+        });
+
+        // Compendium actors ship LEAN inventories (compendiumSource / variantOf join
+        // keys; see src/packs/CLAUDE.md). Hydrate immediately on world import — the
+        // boot-time resync would otherwise only catch it at the next reload. Gated on
+        // the triggering userId like the grant above.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createActor hook payload is framework-typed; narrowed inside compendium-hydrate.ts
+        hooksOn('createActor', (actor: Parameters<typeof hydrateWorldActor>[0], _options: unknown, userId: string) => {
+            if (game.user.id !== userId) return;
+            void hydrateWorldActor(actor);
         });
     }
 
