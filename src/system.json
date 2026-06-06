@@ -1559,6 +1559,18 @@
             "flags": {}
         },
         {
+            "name": "dh2-errata-journals",
+            "label": "Living Errata",
+            "path": "packs/dark-heresy-2/dh2-errata-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-core-origins-homeworlds",
             "label": "Homeworlds",
             "path": "packs/dark-heresy-2/dh2-core-origins-homeworlds",
@@ -6115,7 +6127,7 @@
             "name": "Dark Heresy 2e",
             "color": "#4a0a14",
             "sorting": "a",
-            "packs": ["dh2-adventures"],
+            "packs": ["dh2-adventures", "dh2-errata-journals"],
             "folders": [
                 {
                     "name": "Enemies Beyond",
