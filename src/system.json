@@ -1487,6 +1487,78 @@
             "flags": {}
         },
         {
+            "name": "dh2-gmkit-actors-bestiary",
+            "label": "Game Master's Kit Bestiary",
+            "path": "packs/dark-heresy-2/dh2-gmkit-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-gmkit-journals",
+            "label": "Game Master's Kit Journals",
+            "path": "packs/dark-heresy-2/dh2-gmkit-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-gmscreen-journals",
+            "label": "Game Master's Screen Journals",
+            "path": "packs/dark-heresy-2/dh2-gmscreen-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-gmscreen-rolltables",
+            "label": "Game Master's Screen Tables",
+            "path": "packs/dark-heresy-2/dh2-gmscreen-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-chargen-journals",
+            "label": "Character Creation Supplements",
+            "path": "packs/dark-heresy-2/dh2-chargen-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-chargen-rolltables",
+            "label": "Character Creation Supplement Tables",
+            "path": "packs/dark-heresy-2/dh2-chargen-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-core-origins-homeworlds",
             "label": "Homeworlds",
             "path": "packs/dark-heresy-2/dh2-core-origins-homeworlds",
@@ -6118,6 +6190,14 @@
                 {
                     "name": "Forgotten Gods",
                     "packs": ["dh2-forgotten-actors-bestiary", "dh2-forgotten-journals", "dh2-forgotten-rolltables"]
+                },
+                {
+                    "name": "Game Master's Kit",
+                    "packs": ["dh2-gmkit-actors-bestiary", "dh2-gmkit-journals", "dh2-gmscreen-journals", "dh2-gmscreen-rolltables"]
+                },
+                {
+                    "name": "Character Creation Supplements",
+                    "packs": ["dh2-chargen-journals", "dh2-chargen-rolltables"]
                 },
                 {
                     "name": "Core Rulebook",
