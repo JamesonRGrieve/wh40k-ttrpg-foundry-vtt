@@ -3,6 +3,7 @@
  * Based on dnd5e's BaseActorSheet pattern for Foundry V13+
  */
 
+import { hydratePackActor } from '../../compendium-hydrate.ts';
 import WH40K from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
@@ -391,6 +392,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext returns Record<string,unknown>; concrete fields declared below in the intersection type.
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        // Compendium actors ship LEAN inventories (compendiumSource / variantOf join
+        // keys — see src/packs/CLAUDE.md). Browsing a pack actor joins the canonical
+        // item data in memory (no database write; the pack stays locked). Idempotent —
+        // the second render finds the items already full.
+        if (this.actor.pack != null && this.actor.pack !== '') {
+            await hydratePackActor(this.actor);
+        }
         /* eslint-disable no-restricted-syntax -- boundary: sheet→template context; fields whose runtime shape comes from Foundry's untyped template payload are typed as unknown here. */
         const context: Record<string, unknown> & {
             actor: BaseActorSheetActor;
