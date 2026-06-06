@@ -1571,6 +1571,18 @@
             "flags": {}
         },
         {
+            "name": "dh2-scenes",
+            "label": "Dark Heresy 2 Scenes",
+            "path": "packs/dark-heresy-2/dh2-scenes",
+            "system": "wh40k-rpg",
+            "type": "Scene",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-core-origins-homeworlds",
             "label": "Homeworlds",
             "path": "packs/dark-heresy-2/dh2-core-origins-homeworlds",
@@ -6127,7 +6139,7 @@
             "name": "Dark Heresy 2e",
             "color": "#4a0a14",
             "sorting": "a",
-            "packs": ["dh2-adventures", "dh2-errata-journals"],
+            "packs": ["dh2-adventures", "dh2-errata-journals", "dh2-scenes"],
             "folders": [
                 {
                     "name": "Enemies Beyond",
