@@ -78,6 +78,7 @@ import {
 } from './applications/item/_module.ts';
 import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
+import { onRefreshToken } from './canvas/token-mask.ts';
 import { hydrateWorldActor } from './compendium-hydrate.ts';
 import { resyncWorldFromCompendiums } from './compendium-resync.ts';
 import type { WH40KSystemConfig } from './config.ts';
@@ -160,6 +161,8 @@ export class HooksManager {
         /* eslint-enable no-restricted-syntax, @typescript-eslint/no-deprecated */
         hooksOn('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) => HooksManager.getActorDirectoryEntryContext(options));
         hooksOn('renderTokenHUD', (app: LootTokenHUDLike, html: HTMLElement | JQuery) => HooksManager.onLootTokenHUD(app, html));
+        // Runtime circular busts from plain portraits (flags.wh40k-rpg.tokenFrame)
+        hooksOn('refreshToken', (token: Parameters<typeof onRefreshToken>[0]) => onRefreshToken(token));
         hooksOn('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
             HooksManager.getActorSheetClass(actor, sheetData),
         );
