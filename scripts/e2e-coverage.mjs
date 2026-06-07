@@ -554,6 +554,20 @@ recordDimension('char-gen.mode', covered['char-gen.mode'], CHAR_GEN_MODES);
 // branches that no other spec hits.
 recordDimension('token.flow', covered['token.flow'], TOKEN_FLOWS);
 
+// Token-ring art dimension exercised by tests/e2e/token-ring-art.spec.ts.
+// Verifies the DH2 art pipeline's circular busts against the real
+// TokenDocument/RingData schema, prototype->scene-token ring inheritance,
+// and that the webp serves over the Foundry static route. Keep in sync
+// with TOKEN_RING_FLOWS there.
+const TOKEN_RING_FLOWS = [
+    'pack-actor-ring-art-found',
+    'ring-survives-document-schema',
+    'scene-token-inherits-ring',
+    'token-webp-served',
+    'ring-renders-on-canvas',
+];
+recordDimension('token-ring.flow', covered['token-ring.flow'], TOKEN_RING_FLOWS);
+
 // Subtlety adjuster dimension exercised by tests/e2e/subtlety.spec.ts.
 // Direction #7: per-flow drive of the content-agnostic adjuster surface
 // (manual / inquest primitives, talent-borne event / passive / clamp
