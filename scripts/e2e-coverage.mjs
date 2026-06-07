@@ -568,6 +568,14 @@ const TOKEN_RING_FLOWS = [
 ];
 recordDimension('token-ring.flow', covered['token-ring.flow'], TOKEN_RING_FLOWS);
 
+// Runtime token-mask dimension exercised by tests/e2e/token-mask.spec.ts.
+// Drives source-code coverage on src/module/canvas/token-mask.ts: the
+// flags.wh40k-rpg.tokenFrame circular bust generated from a rectangular
+// portrait at draw time, with a flagless control token left untouched.
+// Keep in sync with TOKEN_MASK_FLOWS there.
+const TOKEN_MASK_FLOWS = ['flag-generates-bust', 'control-token-untouched', 'renders-circular-with-band'];
+recordDimension('token-mask.flow', covered['token-mask.flow'], TOKEN_MASK_FLOWS);
+
 // Subtlety adjuster dimension exercised by tests/e2e/subtlety.spec.ts.
 // Direction #7: per-flow drive of the content-agnostic adjuster surface
 // (manual / inquest primitives, talent-borne event / passive / clamp
