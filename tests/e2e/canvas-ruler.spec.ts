@@ -6,22 +6,20 @@ import { expect, test } from './lib/test';
 /**
  * Tier B coverage of the system's TokenRuler subclass
  * (`src/module/canvas/ruler.ts` — 0% / 50.7% pre-spec). The class
- * extends `foundry.canvas.placeables.tokens.TokenRuler`, whose
- * methods need a PIXI runtime and a real canvas — neither is wired
- * up in headless Foundry. Rather than open a canvas, the spec
- * dynamic-imports the module so the top-level statements run under
- * coverage and asserts that the class is a subclass of the Foundry
- * base, which is the most we can verify off-canvas without staging
- * a full WebGL context.
+ * extends `foundry.canvas.placeables.tokens.TokenRuler`. This spec
+ * predates the discovery that the harness CAN render: PIXI boots
+ * under SwiftShader after `scene.view()` — token-ring-art.spec.ts
+ * and token-mask.spec.ts activate a scene, render placed tokens and
+ * capture screenshots. So a real-canvas ruler spec is feasible; this
+ * one still takes the cheaper path: dynamic-import the module so the
+ * top-level statements run under coverage and assert the class shape.
  *
  * The `_getWaypointStyle` / `_getSegmentStyle` / `_getGridHighlightStyle`
  * overrides + the private `#getSpeedBasedStyle` helper are the
- * uncovered code; exercising them requires either a placed Token
- * with a planned movement (only present after canvas activation) or
- * a hand-built `super` stub that mimics the Foundry base class. The
- * cleanest path is to wait until the headless harness gains a
- * GL-mock layer; for now this spec lights up the import + class
- * shape branches.
+ * uncovered code; exercising them needs a placed Token with a planned
+ * movement on an active canvas (see the token-ring specs for the
+ * activation pattern) — a worthwhile follow-up now that rendering is
+ * proven available.
  *
  * Each flow records under `canvas.flow`. Keys MUST match the
  * CANVAS_FLOWS constant in scripts/e2e-coverage.mjs.
