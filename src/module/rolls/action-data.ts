@@ -27,6 +27,17 @@ export class ActionData {
         this.rollData = new RollData();
     }
 
+    /**
+     * Fate Points currently available on the source actor (0 when the actor has
+     * no fate pool — e.g. non-fate game systems — or has spent out). Surfaced to
+     * chat templates via {@link resolveGettersForTemplate} so the Fate reroll /
+     * +DoS controls only render when there is actually a point to spend.
+     */
+    get sourceFatePoints(): number {
+        const fate = (this.rollData.sourceActor?.system as { fate?: { value?: number } } | undefined)?.fate;
+        return fate?.value ?? 0;
+    }
+
     reset(): void {
         this.effects = [];
         this.effectOutput = [];

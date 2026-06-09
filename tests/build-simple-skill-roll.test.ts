@@ -210,9 +210,15 @@ function makeActor(opts: {
     situationalCharacteristics?: Record<string, SituationalEntry[]>;
     situationalSkills?: Record<string, SituationalEntry[]>;
     situationalCombat?: Record<string, SituationalEntry[]>;
+    fatePoints?: number;
 }): TestActor {
     const actor = Object.create(WH40KBaseActor.prototype) as TestActor;
     actor.name = opts.name;
+    if (opts.fatePoints !== undefined) {
+        // Object.assign plants a runtime `system.fate` pool without fighting the
+        // DataModel-typed `system` slot (the getter under test reads it loosely).
+        Object.assign(actor, { system: { fate: { value: opts.fatePoints } } });
+    }
     if (opts.situationalCharacteristics) {
         actor.getCharacteristicSituationalModifiers = (k): SituationalEntry[] => opts.situationalCharacteristics?.[k] ?? [];
     }
@@ -534,6 +540,20 @@ describe('_buildSimpleSkillRoll — NPC paths skip situational lookup entirely',
 /* -------------------------------------------- */
 /*  Cross-cutting structural assertions          */
 /* -------------------------------------------- */
+
+describe('SimpleSkillData.sourceFatePoints — gates the chat-card Fate controls', () => {
+    it('reports the source actor current Fate Points so the reroll/+DoS buttons can render', () => {
+        const actor = makeActor({ name: 'Acolyte Vex', fatePoints: 3 });
+        const result = buildRoll(actor, { key: 'awareness', type: 'skill', label: 'Awareness Test', target: 45 });
+        expect(result.sourceFatePoints).toBe(3);
+    });
+
+    it('is 0 when the actor has no Fate pool (non-fate systems / spent out → no dead button)', () => {
+        const actor = makeActor({ name: 'Cultist' });
+        const result = buildRoll(actor, { key: 'awareness', type: 'skill', label: 'Awareness Test', target: 45 });
+        expect(result.sourceFatePoints).toBe(0);
+    });
+});
 
 describe('_buildSimpleSkillRoll — structural invariants', () => {
     it('always returns a fresh SimpleSkillData (no shared rollData between calls)', () => {
