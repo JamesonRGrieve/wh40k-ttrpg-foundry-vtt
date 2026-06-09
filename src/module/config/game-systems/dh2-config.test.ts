@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { asBaseActor } from '../../testing/actor-stub.ts';
 import { DH2eSystemConfig } from './dh2-config';
 
 /**
@@ -97,6 +98,38 @@ describe('DH2eSystemConfig advance cost matrix (#126)', () => {
         it('is case-insensitive', () => {
             const matches = cfg.countMatchingAptitudes(['weapon skill', 'OFFENCE'], ['Weapon Skill', 'Offence']);
             expect(matches).toBe(2);
+        });
+    });
+
+    // Every character/NPC in an aptitude system has the universal General aptitude
+    // (DH2 Core p.79). It is never origin-granted, so getCharacterAptitudes injects
+    // it — otherwise advances that list General (most basic skills/talents) are
+    // mispriced as 0-match. Lives on the shared AptitudeBasedSystemConfig, so the
+    // DH2 config exercises the behaviour BC/DW/OW/IM inherit.
+    describe('getCharacterAptitudes() — universal General aptitude', () => {
+        const actorWith = (aptitudes: string[] | undefined): ReturnType<typeof asBaseActor> => asBaseActor({ system: { aptitudes } });
+
+        it('injects General when the actor has no aptitudes (e.g. an NPC with no array)', () => {
+            expect(cfg.getCharacterAptitudes(actorWith(undefined))).toEqual(['General']);
+        });
+
+        it('adds General alongside origin-granted aptitudes', () => {
+            const apts = cfg.getCharacterAptitudes(actorWith(['Weapon Skill', 'Offence']));
+            expect(apts).toEqual(expect.arrayContaining(['Weapon Skill', 'Offence', 'General']));
+        });
+
+        it('does not duplicate an already-granted General (case-insensitive)', () => {
+            const apts = cfg.getCharacterAptitudes(actorWith(['general', 'Knowledge']));
+            expect(apts.filter((a) => a.toLowerCase() === 'general')).toHaveLength(1);
+        });
+
+        it('makes General count toward advances that list it (the basic-advancement fix)', () => {
+            // Linguistics aptitudes are [Intelligence, General]. A character lacking
+            // Intelligence still gets a 1-match purely from the universal General;
+            // before the fix General matched nothing, making this a 0-match advance.
+            const charApts = cfg.getCharacterAptitudes(actorWith(['Fellowship']));
+            const matches = cfg.countMatchingAptitudes(charApts, cfg.getSkillAptitudes('linguistics'));
+            expect(matches).toBe(1);
         });
     });
 });
