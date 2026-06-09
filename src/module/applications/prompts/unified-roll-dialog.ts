@@ -474,7 +474,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 isBasic,
                 characteristicTotal: listedCharTotal + trainingBonus,
                 ...(usingAlt ? { altCharacteristicTotal: altCharTotal + trainingBonus } : {}),
-                halveOnNonBasic: advance === 0 && !isBasic,
+                // Halving untrained non-Basic skills is a career-system (RT/DH1
+                // legacy) convention only. The aptitude family (DH2 + BC/DW/OW/IM)
+                // uses a flat -20 instead, and that penalty is already baked into
+                // baseTarget/trainingBonus at prepare time (creature.ts
+                // `usesAptitudes === true ? charTotal - 20 : …`). Gating on
+                // !isAptitudeSystem stops DH2 from halving the already -20'd target
+                // (regression from allowUntrainedAdvanced letting these rolls fall
+                // through to the halve instead of being blocked).
+                halveOnNonBasic: advance === 0 && !isBasic && !isAptitudeSystem,
                 allowUntrainedAdvanced: isAptitudeSystem,
             });
             // Only override base target when we changed the characteristic or fired the halving rule.
