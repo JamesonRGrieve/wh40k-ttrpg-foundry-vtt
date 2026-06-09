@@ -18,7 +18,7 @@ const WATERCRAFT = readRepoFile('src/module/data/actor/watercraft.ts');
 
 describe('character origin-step de-dup (#272)', () => {
     it('uses the shared ORIGIN_STEP_KEYS + mapOriginStepNames helper', () => {
-        expect(CHARACTER).toContain("import { ORIGIN_STEP_KEYS, mapOriginStepNames } from './origin-step-names.ts'");
+        expect(CHARACTER).toContain("import { ORIGIN_STEP_KEYS, mapOriginStepNames, preserveFreeTextStepNames } from './origin-step-names.ts'");
         expect(CHARACTER).toContain('Object.assign(this.originPath, stepNames)');
         expect(CHARACTER).toContain('mapOriginStepNames(originItems)');
     });
