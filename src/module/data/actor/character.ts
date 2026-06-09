@@ -26,7 +26,7 @@ import { owMountSchemaFields, type OwMountDeclarations } from './mixins/ow-mount
 import { owOrdersSchemaFields, type OwOrdersDeclarations } from './mixins/ow-orders-template.ts';
 import { owRegimentSchemaFields, type OwRegimentDeclarations } from './mixins/ow-regiment-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
-import { ORIGIN_STEP_KEYS, mapOriginStepNames } from './origin-step-names.ts';
+import { ORIGIN_STEP_KEYS, mapOriginStepNames, preserveFreeTextStepNames } from './origin-step-names.ts';
 import CreatureTemplate from './templates/creature.ts';
 
 /** Minimal shape of an actor parent that character data methods depend on. */
@@ -804,6 +804,11 @@ export default class CharacterData extends CreatureTemplate {
             const item = stepMap[key];
             if (item != null) stepNames[key] = item.name;
         }
+        // Divination is free text (Emperor's Tarot quote) with no backing
+        // origin-path item, so mapOriginStepNames seeds it to '' — restore the
+        // stored value before the assign so it isn't clobbered (#272 regression:
+        // the italic divination line under the portrait vanished).
+        preserveFreeTextStepNames(stepNames, this.originPath);
         Object.assign(this.originPath, stepNames);
 
         // Collect aptitudes from origin path (DH2e/BC/OW use aptitudes for XP costs).
