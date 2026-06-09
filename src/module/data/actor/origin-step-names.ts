@@ -39,6 +39,38 @@ export const ORIGIN_STEP_KEYS = [
     'chapter',
 ] as const;
 
+/**
+ * Origin steps stored as free text on the actor rather than derived from a
+ * backing origin-path item. Divination is the DH2 Emperor's Tarot quote: the
+ * player rolls (or types) a phrase saved straight to
+ * `system.originPath.divination`, so there is no owned `originPath` item from
+ * which {@link mapOriginStepNames} could resolve a name. Such steps must survive
+ * data prep — the item-derived map seeds them to `''`, which would otherwise
+ * clobber the stored quote (the #272 regression that blanked the italic
+ * divination line under the character-sheet portrait).
+ */
+export const FREE_TEXT_ORIGIN_STEPS = ['divination'] as const;
+
+/**
+ * Restore free-text origin steps ({@link FREE_TEXT_ORIGIN_STEPS}) into a resolved
+ * step→name map when no owned item produced a name for them, so the actor's
+ * stored value (e.g. the divination quote) is preserved instead of being
+ * overwritten with `''`. Mutates and returns `resolved`. An item-derived name
+ * already present (non-empty) is left untouched.
+ */
+export function preserveFreeTextStepNames(
+    resolved: Record<string, string>,
+    prior: Partial<Record<(typeof FREE_TEXT_ORIGIN_STEPS)[number], string>>,
+): Record<string, string> {
+    for (const key of FREE_TEXT_ORIGIN_STEPS) {
+        const stored = prior[key];
+        if (resolved[key] === '' && typeof stored === 'string' && stored !== '') {
+            resolved[key] = stored;
+        }
+    }
+    return resolved;
+}
+
 /** Minimal shape of an owned item this helper reads. */
 export interface OriginItemLike {
     type?: string;

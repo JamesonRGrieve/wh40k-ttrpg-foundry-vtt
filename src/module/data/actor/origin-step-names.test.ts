@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { readRepoFile } from '../../testing/repo-file.ts';
-import { mapOriginStepNames, ORIGIN_STEP_KEYS, type OriginItemLike } from './origin-step-names.ts';
+import { FREE_TEXT_ORIGIN_STEPS, mapOriginStepNames, ORIGIN_STEP_KEYS, type OriginItemLike, preserveFreeTextStepNames } from './origin-step-names.ts';
 
 describe('mapOriginStepNames', () => {
     it('returns every step key, all empty, for no items', () => {
@@ -46,6 +46,55 @@ describe('mapOriginStepNames', () => {
     it('tolerates missing name / system', () => {
         const items: OriginItemLike[] = [{ type: 'originPath', system: { step: 'homeWorld' } }, { type: 'originPath' }];
         expect(mapOriginStepNames(items)['homeWorld']).toBe('');
+    });
+});
+
+describe('preserveFreeTextStepNames (#272 regression: divination quote clobbered)', () => {
+    it('every free-text step is a known origin step key', () => {
+        for (const key of FREE_TEXT_ORIGIN_STEPS) {
+            expect(ORIGIN_STEP_KEYS).toContain(key);
+        }
+    });
+
+    it('restores a stored divination quote when no item resolved a name', () => {
+        // Divination has no backing origin-path item, so the resolved map seeds ''.
+        const resolved = mapOriginStepNames([]);
+        expect(resolved['divination']).toBe('');
+        preserveFreeTextStepNames(resolved, { divination: 'The blade that breaks the chain.' });
+        expect(resolved['divination']).toBe('The blade that breaks the chain.');
+    });
+
+    it('leaves an item-resolved name untouched', () => {
+        const resolved: Record<string, string> = { divination: 'From an item' };
+        preserveFreeTextStepNames(resolved, { divination: 'Stored quote' });
+        expect(resolved['divination']).toBe('From an item');
+    });
+
+    it('does not invent a value when nothing is stored', () => {
+        const resolved = mapOriginStepNames([]);
+        preserveFreeTextStepNames(resolved, { divination: '' });
+        expect(resolved['divination']).toBe('');
+        preserveFreeTextStepNames(resolved, {});
+        expect(resolved['divination']).toBe('');
+    });
+
+    it('does not touch item-backed steps', () => {
+        const resolved = mapOriginStepNames([]);
+        preserveFreeTextStepNames(resolved, { divination: 'quote' });
+        expect(resolved['background']).toBe('');
+        expect(resolved['homeWorld']).toBe('');
+    });
+
+    it('character data prep restores free-text steps before persisting (wiring guard)', () => {
+        // CharacterData extends TypeDataModel and cannot be instantiated under
+        // happy-dom, so guard the wiring at the source level: the divination
+        // quote must be preserved before Object.assign writes the originPath.
+        const character = readRepoFile('src/module/data/actor/character.ts');
+        expect(character).toContain('preserveFreeTextStepNames(stepNames, this.originPath)');
+        const preserveIdx = character.indexOf('preserveFreeTextStepNames(stepNames, this.originPath)');
+        const assignIdx = character.indexOf('Object.assign(this.originPath, stepNames)');
+        expect(preserveIdx).toBeGreaterThan(-1);
+        expect(assignIdx).toBeGreaterThan(preserveIdx);
     });
 });
 
