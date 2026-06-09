@@ -29,6 +29,7 @@ import { owIssueOrder } from '../../actions/ow-orders-actions.ts';
 import { owRegimentEdit } from '../../actions/ow-regiment-actions.ts';
 import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
+import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
@@ -2977,7 +2978,16 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareAptitudePills(): Array<{ aptitude: string; sources: string[] }> {
         const actor = this.actor;
-        const aptitudes = actor.system.aptitudes as string[];
+        const granted = actor.system.aptitudes as string[];
+
+        // Universal aptitudes (General) are inherent to every character in an
+        // aptitude system and carry no origin source; pull them from the system
+        // config so the literal lives in one place (the aptitude RAW tables).
+        const gameSystem = this._resolveGameSystemId();
+        const sysConfig = gameSystem !== null ? SystemConfigRegistry.get(gameSystem) : null;
+        const universal = sysConfig instanceof AptitudeBasedSystemConfig ? [...sysConfig.universalAptitudes] : [];
+
+        const aptitudes = [...new Set([...granted, ...universal])];
         if (aptitudes.length === 0) return [];
 
         const sourcesOf: Map<string, string[]> = new Map();
@@ -2989,6 +2999,10 @@ export default class CharacterSheet extends BaseActorSheet {
             }
             if (!arr.includes(src)) arr.push(src);
         };
+
+        // Seed the universal aptitudes with their inherent (non-origin) source.
+        const universalSource = game.i18n.localize('WH40K.AptitudeUniversalSource');
+        for (const apt of universal) addSource(apt, universalSource);
 
         const stepLabels: Record<string, string> = {
             homeWorld: 'Home World',

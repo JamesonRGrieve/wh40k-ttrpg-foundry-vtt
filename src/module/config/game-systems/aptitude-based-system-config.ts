@@ -158,13 +158,32 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     }
 
     /**
-     * Collect all aptitudes the character possesses.
-     * Reads from the actor's aptitudes array (populated from origin path items at runtime).
+     * Aptitudes every actor in an aptitude-based system possesses regardless of
+     * origin path. Per DH2 Core p.79 (and the equivalent BC/DW/OW/IM rules) the
+     * General aptitude is universal — it is never granted by home world /
+     * background / role / elite, so it is injected at read time rather than
+     * stored on the actor. Most basic skill and talent advances list General as
+     * one of their two aptitudes, so without this they would always be mispriced
+     * as a 0-match (most expensive) advance. Subclasses may override only on
+     * genuine divergence.
+     */
+    readonly universalAptitudes: readonly string[] = ['General'];
+
+    /**
+     * Collect all aptitudes the actor possesses: the origin-path-granted aptitudes
+     * stored on `system.aptitudes` plus the always-present {@link universalAptitudes}
+     * (General). Works for both characters and NPCs — NPCs carry no aptitudes array,
+     * so they resolve to just the universal set. Case-insensitive dedupe keeps a
+     * granted "General" from doubling the injected one.
      */
     getCharacterAptitudes(actor: WH40KBaseActor): string[] {
         const apts = actor.system.aptitudes;
-        if (apts === undefined) return [];
-        return Array.isArray(apts) ? apts : [...apts];
+        const granted = apts === undefined ? [] : Array.isArray(apts) ? [...apts] : [...apts];
+        const result = [...granted];
+        for (const universal of this.universalAptitudes) {
+            if (!result.some((a) => a.toLowerCase() === universal.toLowerCase())) result.push(universal);
+        }
+        return result;
     }
 
     /**

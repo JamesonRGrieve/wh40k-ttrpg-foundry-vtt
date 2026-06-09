@@ -271,6 +271,7 @@ export type I18nKey =
     | 'WH40K.Ammunition.WeaponStatModifiers'
     | 'WH40K.Ammunition.Weight'
     | 'WH40K.Ammunition.WeightKg'
+    | 'WH40K.AptitudeUniversalSource'
     | 'WH40K.Aptitudes'
     | 'WH40K.AptitudesGranted'
     | 'WH40K.Armour.AP'
