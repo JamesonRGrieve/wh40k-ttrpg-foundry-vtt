@@ -53,6 +53,35 @@ export const RendersWeaponName: Story = {
     },
 };
 
+export const ActivatablePowered: Story = {
+    args: {
+        overrides: { system: { activation: { activatable: true }, state: { activated: true } } },
+    },
+    play: async ({ canvasElement }) => {
+        const btn = canvasElement.querySelector('[data-action="toggleActivation"]');
+        await expect(btn).toBeTruthy();
+        await expect(btn?.textContent).toContain('Powered');
+    },
+};
+
+export const ActivatableDeactivated: Story = {
+    args: {
+        overrides: { system: { activation: { activatable: true }, state: { activated: false } } },
+    },
+    play: async ({ canvasElement }) => {
+        const btn = canvasElement.querySelector('[data-action="toggleActivation"]');
+        await expect(btn).toBeTruthy();
+        await expect(btn?.textContent).toContain('Deactivated');
+    },
+};
+
+export const NotActivatableHasNoToggle: Story = {
+    play: async ({ canvasElement }) => {
+        // The default mock weapon is not activatable → no powered/deactivated toggle.
+        await expect(canvasElement.querySelector('[data-action="toggleActivation"]')).toBeNull();
+    },
+};
+
 export const RendersToggleBodyAction: Story = {
     play: async ({ canvasElement }) => {
         const btn = canvasElement.querySelector('[data-action="toggleBody"]');

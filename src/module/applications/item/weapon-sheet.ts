@@ -92,6 +92,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             nestedItemEdit: WeaponSheet.#nestedItemEdit,
             nestedItemDelete: WeaponSheet.#nestedItemDelete,
             toggleModificationActive: WeaponSheet.#toggleModificationActive,
+            toggleActivation: WeaponSheet.#toggleActivation,
             viewModification: WeaponSheet.#viewModification,
             removeModification: WeaponSheet.#removeModification,
             loadAmmo: WeaponSheet.#loadAmmo,
@@ -706,6 +707,26 @@ export default class WeaponSheet extends ContainerItemSheet {
         await this.item.update({ 'system.modifications': mods });
 
         ui.notifications.info(`${mod.name} ${mod.active ? 'activated' : 'deactivated'}.`);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle a weapon's powered ↔ deactivated mode (chainsword, shock whip, power
+     * weapons). Flips `system.activation.activated`; the effective qualities /
+     * damage / penetration re-derive automatically, so the attack respects it.
+     * @this {WeaponSheet}
+     */
+    static async #toggleActivation(this: WeaponSheet, _event: PointerEvent, _target: HTMLButtonElement): Promise<void> {
+        if (this.item.system.activation?.activatable !== true) return;
+        const next = !this.item.system.state.activated;
+        await this.item.update({ 'system.state.activated': next });
+        ui.notifications.info(
+            game.i18n.format('WH40K.WeaponSheet.ActivationToggled', {
+                name: this.item.name,
+                state: game.i18n.localize(next ? 'WH40K.WeaponSheet.Powered' : 'WH40K.WeaponSheet.Deactivated'),
+            }),
+        );
     }
 
     /* -------------------------------------------- */
