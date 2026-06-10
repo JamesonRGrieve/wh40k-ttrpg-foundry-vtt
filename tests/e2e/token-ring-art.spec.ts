@@ -4,25 +4,24 @@ import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B verification that the DH2 art pipeline's token busts work with the
- * core Dynamic Token Ring in a REAL Foundry runtime.
+ * Tier B verification that the DH2 art pipeline's tokens work with the core
+ * Dynamic Token Ring in a REAL Foundry runtime.
  *
- * The packs author circular alpha-masked busts padded to 75% content
- * (src/packs/tools/imgutil.py — geometry unit-tested in
- * src/packs/tools/tests/) and set `prototypeToken.ring.enabled`
- * (fix_token_rings.py). Band fit comes from the BAKED padding:
- * `ring.subject.scale` is applied by core only through the token animation
- * path, so creation-time draws ignore it (probed by screenshot — the band
- * only appeared after a live document.update). What only a live Foundry can
- * verify is the half this spec covers:
+ * The packs no longer ship baked token files: each actor carries a plain
+ * portrait at `prototypeToken.texture.src` plus a
+ * `prototypeToken.flags.wh40k-rpg.tokenFrame = {cx, cy}` (the runtime mask in
+ * src/module/canvas/token-mask.ts GPU-crops a circular bust at draw time) and
+ * `prototypeToken.ring.enabled`. The runtime mask itself is exercised by
+ * token-mask.spec.ts; what only a live Foundry can verify here is the half
+ * this spec covers:
  *
- *   - the ring JSON survives the real TokenDocument/RingData schema (a wrong
- *     field name would be silently stripped during Actor.create),
+ *   - the ring + tokenFrame JSON survives the real TokenDocument schema (a
+ *     wrong field name would be silently stripped during Actor.create),
  *   - a scene-embedded token created through actor.getTokenDocument() (the
  *     drag-to-canvas path) inherits the enabled ring — a bare { actorId }
  *     embed does NOT apply the prototype,
- *   - the webp the texture points at is actually SERVED by the Foundry
- *     static route (disk presence is already unit-tested; routing is not),
+ *   - the portrait the texture points at is actually SERVED by the Foundry
+ *     static route (for the local-portrait actor this probe selects),
  *   - the canvas RENDERS it: PIXI boots under SwiftShader (contrary to the
  *     assumption documented in canvas-ruler.spec.ts), the placed token gets
  *     a live TokenRing, and a zoomed screenshot artifact
@@ -58,6 +57,7 @@ interface StageOneState {
 interface PrototypeTokenish {
     texture?: { src?: string };
     ring?: { enabled?: boolean };
+    flags?: { 'wh40k-rpg'?: { tokenFrame?: { cx?: number; cy?: number } } };
 }
 
 interface ActorData {
@@ -123,28 +123,27 @@ async function probeDocumentFlows(page: Page): Promise<StageOneState> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
         const g = globalThis as unknown as DocumentGlobals;
 
-        // -- 1. locate a DH2 pack actor authored with a token bust + ring
-        let sourceActor: ActorDocish | null = null;
-        let textureSrc = '';
+        // -- 1. locate a DH2 pack actor authored with a runtime tokenFrame bust +
+        // ring. Prefer one whose texture is a local Foundry-served portrait so the
+        // token-webp-served probe exercises the static route deterministically
+        // (hotlink-portrait actors would otherwise resolve against an external CDN).
         const dh2Packs = [...g.game.packs].filter((p) => p.metadata.type === 'Actor' && p.metadata.id.includes('dh2'));
         const docLists = await Promise.all(dh2Packs.map(async (p) => p.getDocuments()));
-        for (const doc of docLists.flat()) {
-            const src = doc.prototypeToken?.texture?.src ?? '';
-            if (src.includes('/images/tokens/dh2/')) {
-                sourceActor = doc;
-                textureSrc = src;
-                break;
-            }
-        }
-        if (sourceActor === null) {
-            record('pack-actor-ring-art-found', false, 'no DH2 pack actor with a tokens/dh2 texture');
+        const framed = docLists.flat().filter((doc) => doc.prototypeToken?.flags?.['wh40k-rpg']?.tokenFrame !== undefined);
+        if (framed.length === 0) {
+            record('pack-actor-ring-art-found', false, 'no DH2 pack actor carries a prototypeToken tokenFrame flag');
             return { results: out, sceneId: null, actorId: null };
         }
+        const sourceActor: ActorDocish = framed.find((doc) => (doc.prototypeToken?.texture?.src ?? '').startsWith('systems/wh40k-rpg/')) ?? framed[0];
+        const textureSrc = sourceActor.prototypeToken?.texture?.src ?? '';
+        const frame = sourceActor.prototypeToken?.flags?.['wh40k-rpg']?.tokenFrame;
         const packRingEnabled = sourceActor.prototypeToken?.ring?.enabled === true;
         record(
             'pack-actor-ring-art-found',
             packRingEnabled,
-            packRingEnabled ? `${sourceActor.name} -> ${textureSrc}` : `${sourceActor.name} has token art but ring.enabled is not true in pack source`,
+            packRingEnabled
+                ? `${sourceActor.name} -> tokenFrame ${JSON.stringify(frame)} src=${textureSrc}`
+                : `${sourceActor.name} carries tokenFrame but ring.enabled is not true in pack source`,
         );
 
         // -- 2. world import: the ring config must survive the real schema
