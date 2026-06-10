@@ -11,6 +11,7 @@ import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
 import { formatSigned } from '../../utils/format.ts';
+import { sortByDisplayName } from '../../utils/talent-trait-sort.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
@@ -103,11 +104,14 @@ type TraitLike = WH40KItem & {
 };
 type TraitGroup = { category: string; categoryLabel: string; traits: Record<string, unknown>[] };
 type TalentDisplay = Record<string, unknown> & {
+    name: string;
+    fullName: string;
     system: { tier?: number | string };
     tierLabel?: string;
 };
 type TraitDisplay = Record<string, unknown> & {
     name: string;
+    fullName: string;
     system: { category?: string; hasLevel?: boolean };
 };
 type TraitCategoryKey = 'creature' | 'character' | 'elite' | 'unique' | 'origin' | 'general';
@@ -1090,6 +1094,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const augmentedTalents = talents.map((t) => this._augmentTalentData(t as TalentLike));
         const augmentedTraits = traits.map((t) => this._augmentTraitData(t as TraitLike));
 
+        // Order alphabetically by display name before grouping, so the flat lists
+        // and the per-tier / category groups all render A→Z regardless of the
+        // actor's item insertion order.
+        const lang = game.i18n.lang;
+        sortByDisplayName(augmentedTalents, lang);
+        sortByDisplayName(augmentedTraits, lang);
+
         // Group by tier
         const groupedByTier = this._groupTalentsByTier(augmentedTalents);
 
@@ -1277,8 +1288,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             filteredTraits = filteredTraits.filter((t) => t.system.hasLevel === true);
         }
 
-        // Augment with display properties
-        const augmentedTraits = filteredTraits.map((t) => this._augmentTraitData(t));
+        // Augment with display properties, ordered alphabetically by display name
+        // (locale-aware) before grouping so each category group renders A→Z.
+        const augmentedTraits = sortByDisplayName(
+            filteredTraits.map((t) => this._augmentTraitData(t)),
+            game.i18n.lang,
+        );
 
         // Group by category
         const groupedByCategory = this._groupTraitsByCategory(augmentedTraits);
