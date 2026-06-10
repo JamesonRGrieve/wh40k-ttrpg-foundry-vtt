@@ -205,6 +205,19 @@
         {{/each}}
       </div>
 
+      {{!-- Activation Mode Toggle (powered ↔ deactivated): chainsword, shock whip,
+           power weapons. Flips system.activation.activated; the effective
+           qualities/damage/penetration re-derive so the attack respects it. --}}
+      {{#if system.activation.activatable}}
+      <button type="button"
+              class="tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-sm)] tw-w-full tw-py-2 tw-px-4 tw-mt-2 tw-rounded-[6px] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all tw-border {{#if system.state.activated}}tw-bg-[linear-gradient(135deg,rgba(45,138,78,0.35),rgba(16,28,20,0.3))] tw-border-[rgba(74,222,128,0.45)] tw-text-[rgba(190,242,200,0.95)] hover:tw-border-[rgba(74,222,128,0.75)]{{else}}tw-bg-[linear-gradient(135deg,rgba(80,80,90,0.3),rgba(16,20,28,0.3))] tw-border-[rgba(168,168,178,0.3)] tw-text-[rgba(190,190,200,0.7)] hover:tw-border-[rgba(212,175,55,0.5)] hover:tw-text-[color:var(--wh40k-gold)]{{/if}}"
+              data-action="toggleActivation"
+              title="{{localize "WH40K.WeaponSheet.ToggleActivation"}}">
+        <i class="fa-solid {{#if system.state.activated}}fa-bolt{{else}}fa-power-off{{/if}}"></i>
+        <span>{{#if system.state.activated}}{{localize "WH40K.WeaponSheet.PoweredBadge"}}{{else}}{{localize "WH40K.WeaponSheet.DeactivatedBadge"}}{{/if}}</span>
+      </button>
+      {{/if}}
+
       {{!-- Body Toggle Button --}}
       <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-sm)] tw-w-full tw-py-2 tw-px-4 tw-mt-2 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.4),rgba(16,20,28,0.3))] tw-border tw-border-[rgba(212,175,55,0.25)] tw-rounded-[6px] tw-text-[rgba(214,221,235,0.8)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.55),rgba(16,20,28,0.4))] hover:tw-border-[rgba(212,175,55,0.4)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="toggleBody" title="{{#if bodyCollapsed}}{{localize "WH40K.Weapon.ShowDetails"}}{{else}}{{localize "WH40K.Weapon.HideDetails"}}{{/if}}">
         <span class="wh40k-body-toggle__label">{{#if bodyCollapsed}}{{localize "WH40K.Weapon.ShowDetails"}}{{else}}{{localize "WH40K.Weapon.HideDetails"}}{{/if}}</span>

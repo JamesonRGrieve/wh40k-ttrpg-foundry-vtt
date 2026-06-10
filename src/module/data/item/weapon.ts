@@ -2,6 +2,7 @@ import type { ReloadResult } from '../../actions/reload-action-manager.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { capitalize } from '../../handlebars/handlebars-helpers.ts';
 import { t } from '../../i18n/t.ts';
+import { applyDeactivationQualities, deactivationStatDeltas, isDeactivated, type WeaponActivationConfig } from '../../rules/weapon-activation.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -157,6 +158,10 @@ export default class WeaponData extends ItemDataModel.mixin(
         category: string;
         cachedModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number };
     }>;
+    // `required: false` schema field — absent on weapons authored without an
+    // activation block, so optional at runtime. The live on/off toggle is
+    // `state.activated` (EquippableState), not part of this config.
+    declare activation: WeaponActivationConfig | undefined;
     declare requiredTraining: string;
     declare notes: string;
 
@@ -253,6 +258,30 @@ export default class WeaponData extends ItemDataModel.mixin(
                     // Cached qualities
                     addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
                     removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
+                },
+                { required: false },
+            ),
+
+            // Activation mode CONFIG — the powered ↔ deactivated toggle (chainsword,
+            // shock whip, power weapons). Line-authored rules content: `activatable`
+            // marks the weapon as having a state; `deactivated` is the profile of
+            // qualities/stats lost (or gained) while off. The live on/off value is
+            // transient state under `system.state.activated` (not here), per the
+            // pack "Stateful Fields Live Under system.state" convention. Applied in
+            // effectiveSpecial / effective damage / penetration (rules/weapon-activation.ts)
+            // so the attack + damage rolls respect it.
+            activation: new fields.SchemaField(
+                {
+                    activatable: new fields.BooleanField({ required: true, initial: false }),
+                    deactivated: new fields.SchemaField(
+                        {
+                            addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
+                            removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
+                            damage: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            penetration: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        },
+                        { required: false },
+                    ),
                 },
                 { required: false },
             ),
@@ -476,6 +505,16 @@ export default class WeaponData extends ItemDataModel.mixin(
         return this.isPrimitive;
     }
 
+    /** True when this weapon has a powered ↔ deactivated toggle (rules/weapon-activation.ts). */
+    get isActivatable(): boolean {
+        return this.activation?.activatable === true;
+    }
+
+    /** True when the weapon is currently powered/active. Always true for a weapon with no toggle. */
+    get powered(): boolean {
+        return !isDeactivated(this.activation, this.state.activated);
+    }
+
     /**
      * Does this weapon use ammunition?
      * @type {boolean}
@@ -548,7 +587,9 @@ export default class WeaponData extends ItemDataModel.mixin(
             }
         }
 
-        return qualities;
+        // Apply the deactivated-mode quality profile (powered ↔ off). No-op for
+        // non-activatable or currently-active weapons (rules/weapon-activation.ts).
+        return applyDeactivationQualities(qualities, this.activation, this.state.activated);
     }
 
     /**
@@ -620,8 +661,9 @@ export default class WeaponData extends ItemDataModel.mixin(
         const baseBonus = this.damage.bonus || 0;
         const craftBonus = this.craftsmanshipModifiers.damage;
         const modBonus = this._modificationModifiers.damage;
+        const deactBonus = deactivationStatDeltas(this.activation, this.state.activated).damage;
 
-        const totalBonus = baseBonus + craftBonus + modBonus;
+        const totalBonus = baseBonus + craftBonus + modBonus + deactBonus;
 
         if (totalBonus === 0) return baseDamage;
         return `${baseDamage}${totalBonus > 0 ? '+' : ''}${totalBonus}`;
@@ -650,7 +692,7 @@ export default class WeaponData extends ItemDataModel.mixin(
     get effectivePenetration(): number {
         const basePen = this.damage.penetration || 0;
         const modPen = this._modificationModifiers.penetration;
-        return basePen + modPen;
+        return basePen + modPen + deactivationStatDeltas(this.activation, this.state.activated).penetration;
     }
 
     /**
