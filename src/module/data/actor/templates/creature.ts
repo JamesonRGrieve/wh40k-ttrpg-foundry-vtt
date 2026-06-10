@@ -136,6 +136,72 @@ interface SkillGrantEntry {
     level?: string;
 }
 
+/** Read-surface of an existing specialist row, used for case-insensitive dedup. */
+interface ExistingSpecialistRow {
+    name: string;
+    specialization?: string;
+}
+
+/** An origin-path item's skill-grant block, reduced to what the synthesis reads. */
+interface OriginGrantSource {
+    grants: { skills?: SkillGrantEntry[] } | null;
+}
+
+/**
+ * Synthesize derived specialist-skill entry rows from origin-path grants — the
+ * pure core of {@link CreatureTemplate._ensureOriginSpecialistEntries}, exported
+ * so it can be unit-tested without a live DataModel. Mutates `skill.entries` in
+ * place: for every origin-granted specialization on `skillKey` not already
+ * present (matched by name, case-insensitive), appends a row that the prepare
+ * loop then ranks as trained from the grant. Existing rows win, so a player's
+ * purchased advance is preserved and never duplicated. Derived only — nothing
+ * persists; the origin grant remains the single source of truth (Direction #7).
+ */
+export function synthesizeOriginSpecialistEntries(
+    grantSources: readonly OriginGrantSource[],
+    skillKey: string,
+    skill: { characteristic: string; advanced: boolean; basic: boolean; entries: ExistingSpecialistRow[] },
+): void {
+    if (!SkillKeyHelper.SPECIALIST_KEYS.has(skillKey)) return;
+
+    const present = new Set<string>();
+    for (const entry of skill.entries) {
+        const label = (entry.name.length > 0 ? entry.name : entry.specialization ?? '').toLowerCase();
+        if (label.length > 0) present.add(label);
+    }
+
+    for (const source of grantSources) {
+        const grants = source.grants?.skills ?? [];
+        for (const grant of grants) {
+            if (SkillKeyHelper.nameToKey(grant.name ?? '') !== skillKey) continue;
+            const specialization = (grant.specialization ?? '').trim();
+            if (specialization.length === 0) continue;
+            if (BaseSystemConfig.skillLevelToRank(grant.level ?? 'trained') <= 0) continue;
+            if (present.has(specialization.toLowerCase())) continue;
+            present.add(specialization.toLowerCase());
+
+            const row: SkillEntry = {
+                name: specialization,
+                slug: '',
+                characteristic: skill.characteristic,
+                advanced: skill.advanced,
+                basic: skill.basic,
+                advance: 0,
+                trained: false,
+                plus10: false,
+                plus20: false,
+                plus30: false,
+                bonus: 0,
+                notes: '',
+                cost: 0,
+                current: 0,
+                specialization,
+            };
+            skill.entries.push(row);
+        }
+    }
+}
+
 /** Minimal actor interface used when accessing parent.items. */
 interface ActorWithItems {
     items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] };
@@ -944,6 +1010,12 @@ export default class CreatureTemplate extends CommonTemplate {
 
             // Process specialist entries
             if (Array.isArray(skill.entries)) {
+                // Synthesize derived rows for origin-path-granted specializations not
+                // already present, so a granted Common Lore (X) / Forbidden Lore (X) /
+                // Navigate (X) renders as trained from the grant alone — the loop below
+                // only ranks rows that exist, so without this the grant is invisible.
+                this._ensureOriginSpecialistEntries(key, skill);
+
                 for (const entry of skill.entries) {
                     const entryCharKey = entry.characteristic || skill.characteristic;
                     const entryChar = this.getCharacteristic(entryCharKey);
@@ -1400,6 +1472,29 @@ export default class CreatureTemplate extends CommonTemplate {
                 }
             }
         }
+    }
+
+    /**
+     * Ensure every origin-path-granted specialization for this specialist skill has
+     * a runtime entry row, delegating to {@link synthesizeOriginSpecialistEntries}.
+     * The entry loop in {@link _prepareSkills} then ranks each row from the grant,
+     * so a granted Common Lore (X) / Forbidden Lore (X) / Navigate (X) renders as
+     * trained without a hand-seeded row. Derived — nothing is persisted.
+     *
+     * @param skillKey Schema skill key (e.g. 'commonLore').
+     * @param skill    The specialist skill being prepared (its `entries` is mutated in place).
+     */
+    protected _ensureOriginSpecialistEntries(skillKey: string, skill: SkillData): void {
+        if (skill.entries === undefined) return;
+        const grantSources = this._originPathItems().map((item) => ({
+            grants: (item.system.grants as { skills?: SkillGrantEntry[] } | null | undefined) ?? null,
+        }));
+        synthesizeOriginSpecialistEntries(grantSources, skillKey, {
+            characteristic: skill.characteristic,
+            advanced: skill.advanced,
+            basic: skill.basic,
+            entries: skill.entries,
+        });
     }
 
     /* -------------------------------------------- */
