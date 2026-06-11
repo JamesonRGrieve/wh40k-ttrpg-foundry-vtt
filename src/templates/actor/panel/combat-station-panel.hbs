@@ -109,7 +109,7 @@
                                      data-toggle="combat_fatigue_details"
                                      title="Click to {{#if (isExpanded 'combat_fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
                                     <div class="tw-flex tw-items-center tw-gap-[6px] tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))] tw-whitespace-nowrap [&>i]:tw-text-[0.75rem]">
-                                        <i class="fas fa-bolt"></i>
+                                        <i class="fas fa-zzz"></i>
                                         <span>FATIGUE</span>
                                     </div>
                                     <i class="fas fa-chevron-down tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_fatigue_details' actor)}}tw-rotate-180{{/if}}"></i>
@@ -128,7 +128,7 @@
                                 <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-py-1.5 tw-flex-wrap">
                                     {{#each (range 1 system.fatigue.max) as |index|}}
                                         <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-inline-flex tw-items-center tw-justify-center {{#unless (lte index ../system.fatigue.value)}}tw-opacity-40{{/unless}}" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}{{#if (lte index ../system.fatigue.value)}} (active){{else}} (not yet reached){{/if}}">
-                                            <i class="fas fa-bolt {{#if (lte index ../system.fatigue.value)}}tw-animate-bolt-glow-combat tw-text-[color:var(--vital-color)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
+                                            <i class="fas fa-zzz {{#if (lte index ../system.fatigue.value)}}tw-animate-bolt-glow-combat tw-text-[color:var(--vital-color)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                                         </button>
                                     {{/each}}
                                 </div>
