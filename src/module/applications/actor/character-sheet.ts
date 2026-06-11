@@ -1333,6 +1333,9 @@ export default class CharacterSheet extends BaseActorSheet {
             Object.assign(context, talentsData);
             const traitsData = this._prepareTraitsContext(context);
             Object.assign(context, traitsData);
+            // Aptitude pills (relocated here from the Overview dashboard) with
+            // per-source attribution (DH2e/BC/OW). Empty on non-aptitude systems.
+            sheetContext.aptitudePills = this._prepareAptitudePills();
         }
 
         // Add powers context for powers tab
@@ -2963,9 +2966,6 @@ export default class CharacterSheet extends BaseActorSheet {
         // Add favorite talents for display
         const favoriteTalents = this._prepareFavoriteTalents();
         ctx.favoriteTalents = favoriteTalents;
-
-        // Aptitude pills with per-source attribution (DH2e/BC/OW)
-        ctx.aptitudePills = this._prepareAptitudePills();
 
         return ctx;
     }

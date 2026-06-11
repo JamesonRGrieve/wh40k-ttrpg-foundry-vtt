@@ -15,7 +15,10 @@ import panelSrc from './movement-panel-compact.hbs?raw';
 initializeStoryHandlebars();
 
 interface MovementCompactCtx {
-    system: { movement: { half: number; full: number; charge: number; run: number } };
+    system: {
+        movement: { half: number; full: number; charge: number; run: number };
+        lifting: { lift: number; push: number };
+    };
 }
 
 function renderPanel(ctx: MovementCompactCtx): HTMLElement {
@@ -36,9 +39,12 @@ export default meta;
 type Story = StoryObj<MovementCompactCtx>;
 
 export const Default: Story = {
-    name: 'Compact movement panel — Half/Full/Charge/Run rows (#234)',
+    name: 'Compact movement panel — Half/Full/Charge/Run + Carrying Capacity',
     args: {
-        system: { movement: { half: 4, full: 8, charge: 12, run: 24 } },
+        system: {
+            movement: { half: 4, full: 8, charge: 12, run: 24 },
+            lifting: { lift: 90, push: 225 },
+        },
     },
     render: (args) => renderPanel(args),
 };

@@ -30,4 +30,26 @@
             iconBgGrad="linear-gradient(135deg,rgba(from var(--wh40k-accent-red,#c0392b) r g b/0.15) 0%,rgba(from var(--wh40k-accent-red,#c0392b) r g b/0.05) 100%)"
             iconColor="#c0392b"}}
     </div>
+
+    {{!-- Carrying Capacity (Lift / Push) — relocated here from the Overview Vitals card.
+         Mirrors the carrying-capacity block in movement-panel-full, using the shared
+         stat-grid-section partial. --}}
+    {{> systems/wh40k-rpg/templates/actor/partial/stat-grid-section
+        heading=(localize "WH40K.MOVEMENT.CarryingCapacity")
+        headingIcon="fa-weight-hanging"
+        columns=2
+        sectionClass="tw-mt-2 tw-mb-0"
+        stats=(array
+            (object
+                label=(localize "WH40K.MOVEMENT.Stat.Lift")
+                value=system.lifting.lift
+                unit="kg"
+                icon="fa-dumbbell"
+                title=(localize "WH40K.MOVEMENT.Tooltip.Lift"))
+            (object
+                label=(localize "WH40K.MOVEMENT.Stat.PushDrag")
+                value=system.lifting.push
+                unit="kg"
+                icon="fa-cart-flatbed"
+                title=(localize "WH40K.MOVEMENT.Tooltip.Push")))}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

@@ -1,69 +1,50 @@
 {{!--
     Shock panel (DH2 — #66).
 
-    Surfaces `system.shock.{value,max}` and a "Snap Out of It" button.
-    The button dispatches the `snapOutOfShock` action declared on
-    CharacterSheet, which runs a Willpower test (Challenging +0) and,
-    on success, calls `actor.applyShock(-1)`. Result is narrated to chat
-    via the shock-snap-chat partial.
+    Rendered as a compact vital ROW (the same `vital-pip-row` chrome Fatigue
+    uses), so Shock sits immediately under Fatigue inside the Vitals card and
+    reads as one of the vital rows rather than a separate panel. Shock has no
+    derived max (it is an open accumulator), so it shows a value readout +
+    GM −/+ steppers instead of a pip strip, plus the "Snap Out of It" action.
 
-    Render gate (parent template): only DH2 actors include this panel —
-    `actor._gameSystemId === 'dh2'` (mirrors the Subtlety gate). The
-    `wh40k-shock-panel` root class pins a stable selector for e2e specs.
+    Surfaces `system.shock.{value,max}`. The brain button dispatches the
+    `snapOutOfShock` action on CharacterSheet (Willpower test, Challenging +0;
+    success → `actor.applyShock(-1)`, narrated via shock-snap-chat). The −/+
+    steppers reuse the standard increment/decrement StatActions.
 
-    Mirrors fate-panel's shape: counter readout + action button. Increment
-    / decrement controls reuse the standard StatActions handlers so a GM
-    can adjust shock manually without leaving the sheet.
+    Render gate (parent template): only DH2 actors include this row —
+    `actor._gameSystemId === 'dh2'`. The `wh40k-shock-panel` row class and the
+    `wh40k-shock-value` / `wh40k-shock-snap-btn` selectors are pinned for the
+    e2e spec (`tests/e2e/shock-panel.spec.ts`).
 --}}
-<section class="wh40k-shock-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                dh2:tw-border-bronze"
-         data-shock-value="{{system.shock.value}}">
-
-    {{!-- Header: title + value/max readout --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-bolt dh2:tw-text-bronze"></i>
-            <span>{{localize "WH40K.Shock.Header"}}</span>
-        </h3>
-        <span class="wh40k-shock-readout tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
-              title="{{localize 'WH40K.Shock.Value'}}">
-            <span class="wh40k-shock-value">{{system.shock.value}}</span>
-            {{#if (gt system.shock.max 0)}}
-                <span class="tw-text-[color:var(--wh40k-text-muted)]"> / </span>
-                <span class="wh40k-shock-max">{{system.shock.max}}</span>
-            {{/if}}
-        </span>
-    </header>
-
-    {{!-- Quick stepper (mirrors fatigue-panel affordance) --}}
-    <div class="wh40k-shock-stepper tw-flex tw-items-center tw-justify-center tw-gap-3 tw-py-1">
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
+        icon="fa-bolt" label=(localize "WH40K.Shock.Header") rowClass="wh40k-shock-panel"}}
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-ml-auto" data-shock-value="{{system.shock.value}}">
+        <span class="wh40k-shock-value tw-text-[1.1rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-min-w-[20px] tw-text-center">{{system.shock.value}}</span>
+        {{#if (gt system.shock.max 0)}}
+        <span class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)]">/&nbsp;<span class="wh40k-shock-max">{{system.shock.max}}</span></span>
+        {{/if}}
         <button type="button"
-                class="wh40k-shock-stepper-minus tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-[opacity,transform] tw-duration-200"
+                class="wh40k-shock-stepper-minus tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-medium)]"
                 data-action="decrement"
                 data-field="system.shock.value"
                 data-min="0"
                 title="{{localize 'WH40K.Shock.Value'}} −1">
             <i class="fas fa-minus"></i>
         </button>
-        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Shock.Value"}}</span>
         <button type="button"
-                class="wh40k-shock-stepper-plus tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-[opacity,transform] tw-duration-200"
+                class="wh40k-shock-stepper-plus tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-medium)]"
                 data-action="increment"
                 data-field="system.shock.value"
                 title="{{localize 'WH40K.Shock.Value'}} +1">
             <i class="fas fa-plus"></i>
         </button>
+        <button type="button"
+                class="wh40k-shock-snap-btn tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-bright)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                data-action="snapOutOfShock"
+                title="{{localize 'WH40K.Shock.SnapOutTooltip'}}"
+                {{#if (lte system.shock.value 0)}}disabled{{/if}}>
+            <i class="fas fa-brain"></i>
+        </button>
     </div>
-
-    {{!-- Snap Out of It — Willpower test (Challenging +0); success → −1 shock. --}}
-    <button type="button"
-            class="wh40k-shock-snap-btn tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded tw-cursor-pointer tw-bg-gray-700 tw-border-2 tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)] hover:tw-opacity-90"
-            data-action="snapOutOfShock"
-            title="{{localize 'WH40K.Shock.SnapOutTooltip'}}"
-            {{#if (lte system.shock.value 0)}}disabled{{/if}}>
-        <i class="fas fa-brain dh2:tw-text-bronze"></i>
-        <span>{{localize "WH40K.Shock.SnapOutLabel"}}</span>
-    </button>
-</section>
+{{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}

@@ -53,7 +53,6 @@ describe('Status panels relocated to Overview (#263 — no silent data loss)', (
         'ow-comrade-healing-panel.hbs',
         'ow-mount-panel.hbs',
         'ow-battlefield-panel.hbs',
-        'active-effects-panel.hbs',
         'dark-pact-panel.hbs',
         'mortification-button.hbs',
         'fanatic-button.hbs',
@@ -63,5 +62,13 @@ describe('Status panels relocated to Overview (#263 — no silent data loss)', (
 
     it.each(relocated)('Overview now includes %s', (panel) => {
         expect(OVERVIEW).toContain(panel);
+    });
+
+    // Active Effects is surfaced on Overview via the compact dashboard-zone in
+    // the Vitals column, not the full active-effects-panel.hbs partial. The
+    // duplicate full panel was removed; this guards that the at-a-glance
+    // Active Effects display is not silently lost from Overview.
+    it('keeps an Active Effects display on Overview (compact dashboard zone)', () => {
+        expect(OVERVIEW).toContain('title="Active Effects"');
     });
 });
