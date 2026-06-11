@@ -44,7 +44,7 @@
                     {{#unless isNPC}}
                     {{!-- Fatigue (PC-only) --}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
-                        icon="fa-bolt" label="Fatigue"}}
+                        icon="fa-zzz" label="Fatigue"}}
                         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
                             count=system.fatigue.max
                             current=system.fatigue.value
@@ -52,25 +52,18 @@
                             dataAttr="fatigue-index"
                             pipClass="wh40k-fatigue-pip"
                             filledClass=" tw-animate-bolt-glow"
-                            iconClass="fa-bolt"
+                            iconClass="fa-zzz"
                             titlePrefix="Fatigue Level"}}
                         {{#if (gt system.fatigue.value 0)}}
                         <span class="tw-text-[0.7rem] tw-font-bold tw-text-[color:var(--wh40k-accent-combat)] tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.1)] tw-px-1 tw-py-[1px] tw-rounded-[3px]">−10</span>
                         {{/if}}
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
 
-                    {{!-- Lift & Push (PC-only) --}}
-                    <div class="tw-flex tw-items-center tw-justify-between tw-py-0.5">
-                        <span class="tw-flex tw-items-center tw-gap-1.5">
-                            <span class="tw-w-[18px] tw-text-center tw-text-[color:var(--color-text-tertiary)] tw-text-[0.85rem]"><i class="fas fa-dumbbell"></i></span>
-                            <span class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-min-w-[50px] tw-normal-case tw-tracking-normal">Lift</span>
-                            <span class="tw-text-[1.4rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-min-w-[45px] tw-text-center">{{system.lifting.lift}} kg</span>
-                        </span>
-                        <span class="tw-flex tw-items-center tw-gap-1.5">
-                            <span class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-min-w-[50px] tw-normal-case tw-tracking-normal">Push</span>
-                            <span class="tw-text-[1.4rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-min-w-[45px] tw-text-center">{{system.lifting.push}} kg</span>
-                        </span>
-                    </div>
+                    {{!-- Shock (#66) — DH2-only; rendered immediately under Fatigue in the
+                         same vital-row style. Lift/Push moved to the Combat-tab Movement panel. --}}
+                    {{#if isDH2}}
+                        {{> systems/wh40k-rpg/templates/actor/panel/shock-panel.hbs}}
+                    {{/if}}
 
                     {{!-- Fate Points (PC-only) --}}
                     {{#if (gt system.fate.max 0)}}
@@ -265,19 +258,6 @@
                         <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">Experience</span>
                         <span class="tw-text-[0.85rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)]">{{system.experience.available}}/{{system.experience.total}}</span>
                     </div>
-                    {{#if aptitudePills.length}}
-                    <div class="tw-flex tw-flex-wrap tw-items-baseline tw-gap-1 tw-pt-1">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)] tw-shrink-0">Aptitudes</span>
-                        <div class="tw-flex tw-flex-wrap tw-gap-1">
-                            {{#each aptitudePills as |pill|}}
-                            <span class="tw-text-[0.7rem] tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-[rgba(212,175,55,0.08)]"
-                                  data-tooltip="{{#each pill.sources}}{{this}}{{#unless @last}} · {{/unless}}{{/each}}">
-                                {{pill.aptitude}}
-                            </span>
-                            {{/each}}
-                        </div>
-                    </div>
-                    {{/if}}
                 </div>
             </div>
             {{/unless}}
@@ -415,6 +395,11 @@
                     </div>
             {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
             {{/unless}}
+
+            {{!-- Warband Subtlety (#87) — DH2-only subtlety pool; sits directly under the Resources card. --}}
+            {{#if isDH2}}
+                {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
+            {{/if}}
         </div>
 
         {{!-- Per-game-system overview panels (batch-1 + batch-2 integration).
@@ -450,19 +435,9 @@
              original system / state gate; the context vars (alignmentPanel,
              cohesionPanel, …) come from the shared CharacterSheet context. --}}
 
-        {{!-- Shock (#66) — DH2-only Shock counter + Snap-Out-Of-It. --}}
-        {{#if isDH2}}
-            {{> systems/wh40k-rpg/templates/actor/panel/shock-panel.hbs}}
-        {{/if}}
-
         {{!-- Possession (#82) — only when the possession track is engaged. --}}
         {{#if (neq system.possession.state 'none')}}
             {{> systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs}}
-        {{/if}}
-
-        {{!-- Subtlety (#87) — DH2-only warband subtlety pool. --}}
-        {{#if isDH2}}
-            {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
         {{/if}}
 
         {{!-- BC Alignment / Infamy (#173) — Black-Crusade-only. --}}
@@ -492,9 +467,6 @@
             {{> systems/wh40k-rpg/templates/actor/panel/ow-mount-panel.hbs mountPanel=mountPanel}}
             {{> systems/wh40k-rpg/templates/actor/panel/ow-battlefield-panel.hbs battlefieldPanel=battlefieldPanel}}
         {{/if}}
-
-        {{!-- Active Effects (was Status-only; not otherwise on Overview). --}}
-        {{> systems/wh40k-rpg/templates/actor/panel/active-effects-panel.hbs}}
 
     </div>
 
