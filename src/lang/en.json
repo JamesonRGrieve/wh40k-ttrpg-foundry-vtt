@@ -483,6 +483,7 @@
             "Cybernetics": "Cybernetics",
             "Gear": "Gear",
             "NoEquippedItems": "No items currently equipped",
+            "EquippedGear": "Equipped Gear",
             "Equip": "Equip",
             "Unequip": "Unequip",
             "StowInBackpack": "Stow in Backpack",
