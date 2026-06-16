@@ -59,6 +59,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         fateFormula: string;
         fateThreshold: number;
         blessedByEmperor: boolean;
+        psyRating: number;
         skills: Array<{ name: string; specialization: string; level: string }>;
         talents: Array<{ name: string; specialization: string; uuid: string }>;
         traits: Array<{ name: string; level: number; uuid: string }>;
@@ -185,6 +186,11 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
                 // Blessed by Emperor (fate points on critical success)
                 blessedByEmperor: new fields.BooleanField({ required: true, initial: false }),
+
+                // Psy Rating granted for free by this step (e.g. the Psyker elite advance
+                // sanctions a psyker at PR 1). XP-spend computation subtracts the cost of
+                // this granted rating so the free starting rating isn't counted as bought.
+                psyRating: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
 
                 // Skills granted (with training level)
                 skills: new fields.ArrayField(
