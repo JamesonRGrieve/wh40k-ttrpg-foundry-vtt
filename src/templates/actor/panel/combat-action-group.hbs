@@ -18,7 +18,10 @@
                        per `mode`. Optional (sections may be block-only).
         mode         — "item" (talent items: data-item-id, plain name) or
                        "action" (combat actions: data-action-key, localized
-                       label/description, type badge). Default "action".
+                       label/description, and a badge showing the action TIMING
+                       — `entry.type` ∈ half/full/reaction/varies/half-full,
+                       localized via WH40K.Combat.Actions.Timing.*, never a raw
+                       item type). Default "action".
         dataAction   — `data-action` value for iterated buttons
                        ("itemVocalize" for talents, "vocalizeCombatAction"
                        for combat actions).
@@ -62,13 +65,15 @@
                     data-action="{{../dataAction}}"
                     data-action-key="{{entry.key}}"
                     data-tooltip
-                    aria-label="{{localize entry.label}}: {{localize entry.description}}"
-                    title="{{localize entry.label}} — {{localize "WH40K.Combat.Actions.ButtonTitleClickForDescription"}}"
+                    aria-label="{{#if entry.label}}{{localize entry.label}}{{/if}}{{#if entry.description}}: {{localize entry.description}}{{/if}}"
+                    title="{{#if entry.label}}{{localize entry.label}} — {{/if}}{{localize "WH40K.Combat.Actions.ButtonTitleClickForDescription"}}"
                 >
                     <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                     <i class="fas {{entry.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
                     <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize entry.label}}</span>
-                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{entry.type}}</span>
+                    {{#if entry.type}}
+                        <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{localize (concat "WH40K.Combat.Actions.Timing." entry.type)}}</span>
+                    {{/if}}
                 </button>
             {{/if}}
         {{/each}}
