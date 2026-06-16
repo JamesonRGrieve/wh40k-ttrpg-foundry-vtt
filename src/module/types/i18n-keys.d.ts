@@ -1295,6 +1295,7 @@ export type I18nKey =
     | 'WH40K.Equipment.Cybernetics'
     | 'WH40K.Equipment.Equip'
     | 'WH40K.Equipment.Equipped'
+    | 'WH40K.Equipment.EquippedGear'
     | 'WH40K.Equipment.ForceFields'
     | 'WH40K.Equipment.Gear'
     | 'WH40K.Equipment.Items'

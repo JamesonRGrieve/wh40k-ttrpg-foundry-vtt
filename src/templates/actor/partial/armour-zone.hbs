@@ -1,7 +1,8 @@
 {{!-- Shared Armour zone (#234) — the Overview dashboard-zone treatment, reused
      on the Combat tab so both tabs render armour identically. `compact` toggles
      the silhouette's fitted-items strip + roll-range badge (Overview passes
-     compact=true; Combat passes compact=false for the fuller in-combat detail). --}}
+     compact=true; Combat passes compact=false for the fuller in-combat detail).
+     `equippedGear` is forwarded to the silhouette's equipped-gear icon cluster (#334). --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Armour" icon="fa-shield-alt" zoneClass="tw-border-l-[3px] tw-border-l-[#7f8c8d]"}}
-    {{> systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs armourDisplay=armourDisplay compact=compact}}
+    {{> systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs armourDisplay=armourDisplay equippedGear=equippedGear compact=compact}}
 {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}

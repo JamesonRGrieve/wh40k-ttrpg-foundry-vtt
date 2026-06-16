@@ -245,7 +245,7 @@
 
                 {{!-- Right: Armour — shared armour-zone, the same layout as Overview (#234). --}}
                 <div class="tw-flex tw-flex-col tw-gap-2">
-                    {{> systems/wh40k-rpg/templates/actor/partial/armour-zone.hbs armourDisplay=armourDisplay compact=false}}
+                    {{> systems/wh40k-rpg/templates/actor/partial/armour-zone.hbs armourDisplay=armourDisplay equippedGear=equippedGear compact=false}}
                     {{#if hasForceField}}
                     <div class="wh40k-panel tw-mt-[var(--wh40k-space-xs)]">
                         <div class="wh40k-panel-header">
