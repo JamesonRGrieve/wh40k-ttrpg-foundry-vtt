@@ -321,6 +321,9 @@
           <span class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--color-text-secondary)]">Psy Rating</span>
           <span class="tw-font-display tw-text-[1.4rem] tw-font-bold tw-leading-none tw-text-[color:var(--wh40k-color-gold-light)]">{{psychic.psyAdvance.currentRating}}</span>
         </div>
+        {{!-- PR advance is offered only to psykers (PR ≥ 1); a non-psyker's PR 1 comes
+              free with the Psyker elite advance, so no PR 0 → 1 purchase is shown (#327). --}}
+        {{#if psychic.psyAdvance.offered}}
         {{#if psychic.psyAdvance.maxed}}
         <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-1 tw-px-2 tw-rounded tw-bg-[rgba(201,162,39,0.15)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
           <i class="fas fa-crown"></i> Maximum
@@ -335,6 +338,7 @@
           <i class="fas fa-coins"></i>
           <span>Advance to {{psychic.psyAdvance.nextRating}} — {{psychic.psyAdvance.cost}} XP</span>
         </div>
+        {{/if}}
         {{/if}}
       </div>
 
