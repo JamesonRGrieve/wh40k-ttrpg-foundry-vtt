@@ -54,8 +54,10 @@ describe('weapon stat concealment gating (#262)', () => {
         expect(gates.length).toBeGreaterThanOrEqual(2);
     });
 
-    it('gates the overview equipped-weapon damage/range on identified-or-GM', () => {
-        expect(OVERVIEW).toMatch(/\(or weapon\.system\.state\.identified @root\.isGM\)/);
+    it('no longer renders equipped-weapon stats on the Overview (#318) — nothing to gate there', () => {
+        // #318 removed the Equipped Weapons panel from the Overview tab; the weapon
+        // stat-concealment gating now lives on the weapon-panel and combat-panel only.
+        expect(OVERVIEW).not.toMatch(/\(or weapon\.system\.state\.identified @root\.isGM\)/);
     });
 
     it('exposes a GM Identified toggle on the weapon item sheet', () => {
