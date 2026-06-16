@@ -9,7 +9,9 @@
      wh40k-tooltip data when available. --}}
 
 {{#if originPathSteps.length}}
-<div class="tw-flex tw-w-full tw-flex-wrap tw-justify-center tw-gap-1.5 tw-max-w-[160px]">
+<div class="tw-grid {{#if (gt originPathSteps.length 4)}}tw-grid-cols-3{{else}}tw-grid-cols-2{{/if}} tw-w-fit tw-justify-items-center tw-gap-1.5">
+    {{!-- ≤4 steps → 2 columns (DH2's 4 steps form a balanced 2×2); >4 → 3 columns
+         (e.g. RT's 6 stays two rows of 3) rather than a row-of-3 + lone orphan. --}}
     {{#each originPathSteps as |step|}}
     <div class="tw-flex tw-h-12 tw-w-12 tw-items-center tw-justify-center tw-overflow-hidden tw-rounded-full tw-border tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-transition-all {{#if step.item}}tw-border-gold bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
          {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
