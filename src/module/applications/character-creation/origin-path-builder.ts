@@ -381,6 +381,26 @@ export function originProvenanceFlags(
     return { isPureHomebrew: true, isAdaptedHomebrew: false, adaptedFromLabel: '' };
 }
 
+/**
+ * Filter an origin list by provenance category (#295), reusing the shared
+ * `originProvenanceFlags` classification (raw = neither flag, adapted =
+ * isAdaptedHomebrew, pure = isPureHomebrew). All categories enabled is a no-op,
+ * so the default state shows everything. Pure (no `this`) so it's unit-testable.
+ */
+export function filterOriginsByProvenance(
+    origins: NormalizedOrigin[],
+    activeSystem: string,
+    filter: { raw: boolean; adapted: boolean; homebrew: boolean },
+): NormalizedOrigin[] {
+    if (filter.raw && filter.adapted && filter.homebrew) return origins;
+    return origins.filter((origin) => {
+        const { isPureHomebrew, isAdaptedHomebrew } = originProvenanceFlags(origin, activeSystem);
+        if (isPureHomebrew) return filter.homebrew;
+        if (isAdaptedHomebrew) return filter.adapted;
+        return filter.raw;
+    });
+}
+
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
     declare actor: WH40KBaseActor;
     declare gameSystem: GameSystemId;
@@ -401,6 +421,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare equipmentSelections: Map<string, EquipmentEntry>;
     declare _equipmentLoaded: boolean;
     declare _equipmentFilter: { search: string; type: string };
+    /** Per-page provenance filter (#295): which RAW / Adapted / Homebrew categories
+     *  are shown. All true = show everything (the default, no-op). */
+    declare _provenanceFilter: { raw: boolean; adapted: boolean; homebrew: boolean };
     declare _charRolls: number[];
     declare _charAssignments: Record<string, number | null>;
     declare _charCustomBases: Record<string, number>;
@@ -449,6 +472,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             import: OriginPathBuilder.#import,
             setMode: OriginPathBuilder.#setMode,
             setDirection: OriginPathBuilder.#setDirection,
+            toggleProvenanceFilter: OriginPathBuilder.#toggleProvenanceFilter,
             goToStep: OriginPathBuilder.#goToStep,
             selectOriginCard: OriginPathBuilder.#previewOriginCard, // Changed: preview instead of select
             viewOriginCard: OriginPathBuilder.#viewOriginCard,
@@ -522,6 +546,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.equipmentSelections = new Map(); // uuid -> compact item data
         this._equipmentLoaded = false;
         this._equipmentFilter = { search: '', type: 'all' };
+        this._provenanceFilter = { raw: true, adapted: true, homebrew: true };
 
         // Characteristic generation state
         this._charRolls = Array<number>(9).fill(0);
@@ -982,6 +1007,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.lineageOrigins = allOriginPaths.filter((o) => o.stepIndex === optionalStepIndex);
     }
 
+    /**
+     * Apply the per-page provenance filter (#295) to an origin list, using the
+     * shared `originProvenanceFlags` classification (raw = neither flag, adapted =
+     * isAdaptedHomebrew, pure = isPureHomebrew). All categories enabled is a no-op,
+     * so the default state shows everything. Filtering at the source (before the
+     * chart layout is computed) keeps the chart's per-step columns consistent.
+     */
+    _applyProvenanceFilter(origins: NormalizedOrigin[]): NormalizedOrigin[] {
+        return filterOriginsByProvenance(origins, this.gameSystem, this._provenanceFilter);
+    }
+
     /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
@@ -1014,7 +1050,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Use chart layout for core steps - pass direction and step keys for system support
             const stepKeys = this.systemConfig.coreSteps.map((s) => s.key);
             const chartLayout = OriginChartLayout.computeFullChart(
-                asOriginLikeArray(this.allOrigins),
+                asOriginLikeArray(this._applyProvenanceFilter(this.allOrigins)),
                 asOriginLikeMap(this.selections),
                 this.guidedMode,
                 this.direction,
@@ -1061,6 +1097,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             isHomebrew,
             isRaw,
             hideThroneGelt: isRaw,
+            provenanceFilter: this._provenanceFilter,
 
             // System-aware content
             journeyTitle: journeyTitle !== journeyTitleKey ? journeyTitle : game.i18n.localize('WH40K.OriginPath.YourJourney'),
@@ -1701,7 +1738,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 this.lineageSelection?.system['identifier'],
             ].filter((v): v is string => typeof v === 'string' && v !== ''),
         );
-        return this._dedupeOriginsByIdentity(this.lineageOrigins).map((origin) => {
+        return this._applyProvenanceFilter(this._dedupeOriginsByIdentity(this.lineageOrigins)).map((origin) => {
             return {
                 id: origin.id,
                 uuid: origin.uuid,
@@ -3548,6 +3585,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const value = (target as HTMLInputElement).value || target.closest('[data-action]')?.querySelector('input')?.value;
         this.guidedMode = value === 'guided';
         void this.render();
+    }
+
+    /**
+     * Toggle a provenance filter category (#295). Each chip carries
+     * data-category="raw|adapted|homebrew"; toggling re-renders the page with the
+     * origins filtered to the enabled categories (all enabled = show everything).
+     */
+    static #toggleProvenanceFilter(this: OriginPathBuilder, _event: Event, target: HTMLElement): void {
+        const category = target.dataset['category'];
+        if (category === 'raw' || category === 'adapted' || category === 'homebrew') {
+            this._provenanceFilter[category] = !this._provenanceFilter[category];
+            void this.render();
+        }
     }
 
     /**
