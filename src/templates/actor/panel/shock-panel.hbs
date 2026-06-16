@@ -20,6 +20,16 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
         icon="fa-bolt" label=(localize "WH40K.Shock.Header") rowClass="wh40k-shock-panel"}}
     <div class="tw-flex tw-items-center tw-gap-1.5 tw-ml-auto" data-shock-value="{{system.shock.value}}">
+        {{!-- Lightning strip (#315): one bolt per accumulated Shock point. Shock is an
+             open accumulator (no fixed max), so this is a display strip — the value
+             readout and ± steppers remain the way to change it. --}}
+        {{#if (gt system.shock.value 0)}}
+        <span class="tw-flex tw-items-center tw-gap-0.5">
+            {{#each (range 1 system.shock.value)}}
+            <i class="fas fa-bolt tw-text-[0.7rem] tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
+            {{/each}}
+        </span>
+        {{/if}}
         <span class="wh40k-shock-value tw-text-[1.1rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-min-w-[20px] tw-text-center">{{system.shock.value}}</span>
         {{#if (gt system.shock.max 0)}}
         <span class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)]">/&nbsp;<span class="wh40k-shock-max">{{system.shock.max}}</span></span>

@@ -173,6 +173,14 @@ async function setFatigueBoltImpl(this: Host, _event: Event, target: HTMLElement
 
 export const setFatigueBolt = throttledAction('setFatigueBolt', 200, setFatigueBoltImpl);
 
+async function setWoundPipImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
+    // Wounds render as a bounded heart pip strip (#315); clicking heart N sets
+    // current wounds to N (or N-1 to toggle the topmost heart off), clamped to max.
+    return togglePipImpl.call(this, target, 'woundIndex', this.actor.system.wounds?.value ?? 0, this.actor.system.wounds?.max ?? 0, 'system.wounds.value');
+}
+
+export const setWoundPip = throttledAction('setWoundPip', 200, setWoundPipImpl);
+
 /* -------------------------------------------- */
 /*  Direct value setters (corruption / insanity) */
 /* -------------------------------------------- */

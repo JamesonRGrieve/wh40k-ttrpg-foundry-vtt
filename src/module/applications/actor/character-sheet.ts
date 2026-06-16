@@ -717,6 +717,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'setCriticalPip': StatActions.setCriticalPip,
             'setFateStar': StatActions.setFateStar,
             'setFatigueBolt': StatActions.setFatigueBolt,
+            'setWoundPip': StatActions.setWoundPip,
             'setCorruption': StatActions.setCorruption,
             'setInsanity': StatActions.setInsanity,
             'restoreFate': StatActions.restoreFate,

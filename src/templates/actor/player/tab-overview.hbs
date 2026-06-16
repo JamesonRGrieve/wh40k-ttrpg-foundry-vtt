@@ -17,15 +17,20 @@
                     <span>Vitals</span>
                 </div>
                 <div class="tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
-                    {{!-- Wounds --}}
-                    {{> systems/wh40k-rpg/templates/actor/partial/vital-inline-row
-                        icon="fa-heart"
-                        label="Wounds"
-                        field="system.wounds.value"
-                        current=system.wounds.value
-                        max=system.wounds.max
-                        maxAttr=system.wounds.max
-                        stateClass=(iff (eq system.wounds.value 0) "wh40k-critical" (iff (lt (percent system.wounds.value system.wounds.max) 25) "wh40k-warning" ""))}}
+                    {{!-- Wounds — heart pip strip (#315), consistent with Fatigue/Fate.
+                         Filled hearts = current wounds out of max; the value/max
+                         readout stays for an at-a-glance number. --}}
+                    {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
+                        icon="fa-heart" label="Wounds"}}
+                        {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
+                            count=system.wounds.max
+                            current=system.wounds.value
+                            action="setWoundPip"
+                            dataAttr="wound-index"
+                            iconClass="fa-heart"
+                            titlePrefix="Wounds"}}
+                        <span class="tw-ml-auto tw-text-[0.7rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-secondary)]">{{system.wounds.value}}/{{system.wounds.max}}</span>
+                    {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
 
                     {{!-- Critical Wounds --}}
                     {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
