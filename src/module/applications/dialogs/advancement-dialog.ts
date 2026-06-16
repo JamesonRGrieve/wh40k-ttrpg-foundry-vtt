@@ -382,7 +382,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             // non-psykers see a locked-state message pointing them at the
             // Traits tab.
             tabs.push({ id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: this.#activeTab === 'psychic' });
-            tabs.push({ id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-dna', active: this.#activeTab === 'traits' });
+            tabs.push({ id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-medal', active: this.#activeTab === 'traits' });
         }
         context.tabs = tabs;
 
