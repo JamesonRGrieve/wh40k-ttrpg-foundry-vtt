@@ -575,7 +575,8 @@
                 "Lift": "Lift",
                 "Carry": "Carry",
                 "Push": "Push",
-                "PushDrag": "Push/Drag"
+                "PushDrag": "Push/Drag",
+                "Carrying": "Carrying"
             },
             "Tooltip": {
                 "Half": "Click to set Half Move as active movement mode",
@@ -587,7 +588,8 @@
                 "Jump": "Vertical jump height in centimeters",
                 "Lift": "Brief lifting over head",
                 "Carry": "Sustained carrying capacity",
-                "Push": "Pushing/dragging capacity"
+                "Push": "Pushing/dragging capacity",
+                "Carrying": "Current carried weight of your inventory vs. your Carry capacity"
             }
         },
         "SETTINGS": {

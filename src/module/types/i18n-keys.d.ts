@@ -185,6 +185,7 @@ export type I18nKey =
     | 'WH40K.Advancement.Prereq.SkillLevel'
     | 'WH40K.Advancement.Prereq.SkillMissing'
     | 'WH40K.Advancement.Prereq.TalentMissing'
+    | 'WH40K.Advancement.PrereqsNotMetLabel'
     | 'WH40K.Advancement.PsyRatingMaximum'
     | 'WH40K.Advancement.PurchaseTalentViaAdvancement'
     | 'WH40K.Advancement.Purchased'
