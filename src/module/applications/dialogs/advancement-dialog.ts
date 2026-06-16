@@ -160,6 +160,9 @@ interface PreparedPsychicPanel {
         canPurchase: boolean;
         cantAfford: boolean;
         maxed: boolean;
+        /** Whether to offer the PR advance — only once the actor is a psyker (PR ≥ 1).
+         *  A non-psyker's PR 1 comes free with the Psyker elite advance, not as a buy. */
+        offered: boolean;
     };
     disciplines: Array<{
         label: string;
@@ -956,6 +959,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             canPurchase: ratingCost !== null && available >= ratingCost,
             cantAfford: ratingCost !== null && available < ratingCost,
             maxed: nextRating > 10,
+            // PR 0 → 1 is granted by the Psyker elite advance, not purchased — only
+            // offer the PR advance once the actor is already a psyker (PR ≥ 1) (#327).
+            offered: currentRating >= 1,
         };
 
         // Whitelist psychic power packs
