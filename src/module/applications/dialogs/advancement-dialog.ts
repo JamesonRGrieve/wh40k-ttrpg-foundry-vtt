@@ -208,6 +208,24 @@ interface AdvancementContext extends Record<string, unknown> {
     recentPurchases: string[];
 }
 
+/**
+ * Coerce a psychic-power `system.discipline` to its display string. The field is
+ * normally a plain string, but some compendium entries (notably IM) store it as an
+ * object ({ value, label }); a raw `.toString()` on those rendered the group title,
+ * filter chip, and grouping key as literal "[object Object]" (#326). Read the
+ * object's value/label when present, else fall back to "unknown".
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: compendium `system.discipline` is an untyped payload (string | object); narrowed by the type guards below
+function normalizeDiscipline(raw: unknown): string {
+    if (typeof raw === 'string' && raw.length > 0) return raw;
+    if (raw !== null && typeof raw === 'object') {
+        const obj = raw as { value?: string; label?: string };
+        if (typeof obj.value === 'string' && obj.value.length > 0) return obj.value;
+        if (typeof obj.label === 'string' && obj.label.length > 0) return obj.label;
+    }
+    return 'unknown';
+}
+
 export default class AdvancementDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Configuration                               */
@@ -982,7 +1000,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const cost = psychicPowerCost(prCost);
             const owned = ownedPowers.has(entry.name.toLowerCase());
             const prGate = prCost > currentRating;
-            const discipline = (entrySys.discipline ?? 'unknown').toString();
+            const discipline = normalizeDiscipline(entrySys.discipline);
 
             // Tree-path prerequisites: every UUID in `requires` resolves to a
             // power name; if that power is not owned, the prereq is missing.
