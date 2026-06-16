@@ -729,7 +729,7 @@
             "CatCharacteristic": "Char",
             "CatSkill": "Skill",
             "CatTalent": "Talent",
-            "CatPsychicPower": "Power",
+            "CatPsychicPower": "Psyker",
             "CatPsyRating": "Psy"
         },
         "Advancement": {
