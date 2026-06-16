@@ -361,26 +361,19 @@ export default class CharacterData extends CreatureTemplate {
 
             // ===== ORIGIN PATH =====
             originPath: new fields.SchemaField({
-                homeWorld: new fields.StringField({ required: false, blank: true }),
-                birthright: new fields.StringField({ required: false, blank: true }),
-                lureOfTheVoid: new fields.StringField({ required: false, blank: true }),
-                trialsAndTravails: new fields.StringField({ required: false, blank: true }),
-                motivation: new fields.StringField({ required: false, blank: true }),
-                career: new fields.StringField({ required: false, blank: true }),
-                // DH2e-specific fields
-                background: new fields.StringField({ required: false, blank: true }),
-                role: new fields.StringField({ required: false, blank: true }),
-                elite: new fields.StringField({ required: false, blank: true }),
+                // Step identities (homeWorld, birthright, lureOfTheVoid,
+                // trialsAndTravails, motivation, career, background, role, elite,
+                // race, archetype, pride, disgrace, regiment, speciality, chapter)
+                // are NOT stored — they are derived at data-prep time from the
+                // owned `originPath` items (the single source of truth) by
+                // `_computeOriginPathEffects` → `mapOriginStepNames`, so a stored
+                // label can no longer diverge from the item it names. Consumers
+                // keep reading `system.originPath.<step>` (now derived-only).
+                // `divination` is the sole stored step: free text (the Emperor's
+                // Tarot quote) with no backing origin item (see
+                // FREE_TEXT_ORIGIN_STEPS). The `…Uuid` slots below remain as the
+                // structured per-step compendium references.
                 divination: new fields.StringField({ required: false, blank: true }),
-                // Black Crusade fields
-                race: new fields.StringField({ required: false, blank: true }),
-                archetype: new fields.StringField({ required: false, blank: true }),
-                pride: new fields.StringField({ required: false, blank: true }),
-                disgrace: new fields.StringField({ required: false, blank: true }),
-                // Only War / Deathwatch fields
-                regiment: new fields.StringField({ required: false, blank: true }),
-                speciality: new fields.StringField({ required: false, blank: true }),
-                chapter: new fields.StringField({ required: false, blank: true }),
                 // Parallel UUID slots (Phase F). Populated when an origin
                 // step is applied from a compendium item; blank for legacy
                 // PCs until the runtime backfill at world `ready` resolves

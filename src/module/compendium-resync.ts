@@ -22,9 +22,14 @@ const RUNTIME_PRESERVE_PATHS: Record<string, ReadonlyArray<string>> = {
     // definition: a base "Weapon Training (X)" / "Unnatural Characteristic (X)" item is
     // owned per-actor as "(Bolt)" / "(Strength) level 3". Preserve so resync doesn't
     // clobber the chosen specialization/level back to the base's blank/zero.
-    'talent': ['specialization', 'rank'],
+    // `cost` is the per-character XP price paid for the advance (aptitude-dependent,
+    // so it is instance state, not part of the compendium definition). It is summed
+    // by `_computeExperienceSpent`; if the resync clobbered it back to the
+    // compendium's 0, bought talents/powers would silently stop counting toward
+    // spent XP after a reboot.
+    'talent': ['specialization', 'rank', 'cost'],
     'trait': ['specialization', 'level', 'fearRating'],
-    'psychic-power': [],
+    'psychic-power': ['cost'],
 };
 
 const FROZEN_FLAG = 'frozenFromCompendium';
