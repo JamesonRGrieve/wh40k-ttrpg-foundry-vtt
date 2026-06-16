@@ -14,8 +14,8 @@ import { expect, test } from './lib/test';
  *   - src/module/data/item/armour.ts (Array → Set coverage / properties normalization)
  *   - src/module/wh40k-rpg-migrations.ts (checkAndMigrateWorld writes
  *     world-version baseline on first GM ready)
- *   - src/module/compendium-resync.ts (resyncWorldFromCompendiums fires on
- *     ready; backfills _stats.compendiumSource for name-matched items)
+ *   - src/module/compendium-hydrate.ts (hydrateActorInMemory joins the canonical
+ *     compendium body onto lean world-actor items on ready — in memory, no DB write)
  *
  * Foundry V14 itself remaps `label → name` on ActiveEffect creation and
  * `icon → img` on the same; these tests serve as load-bearing pins so the
@@ -28,7 +28,7 @@ import { expect, test } from './lib/test';
 const FLOW_TALENT_PREREQS = 'talent-prerequisites-string-migrates-to-structured';
 const FLOW_AE_LABEL_TO_NAME = 'active-effect-label-migrates-to-name';
 const FLOW_SYSTEM_VERSION = 'system-version-migration-runs';
-const FLOW_COMPENDIUM_RESYNC = 'compendium-resync-runs';
+const FLOW_COMPENDIUM_HYDRATE = 'compendium-hydrate-runs';
 const FLOW_ICON_TO_IMG = 'icon-deprecation-migrates-to-img';
 const FLOW_NO_BREAK = 'migration-doesnt-break-existing-records';
 
@@ -291,7 +291,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
         expect(failures, `system-version migration failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 
-    test('compendium resync has fired (resync-on-ready setting + GM ready hook)', async ({ page }) => {
+    test('compendium hydration has fired (resync-on-ready setting + GM ready hook)', async ({ page }) => {
         const joined = await joinAsGM(page);
         test.skip(!joined, 'GM join failed');
 
@@ -300,8 +300,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
             const { game: foundryGame } = globalThis as unknown as PageWindow;
             // The setting is registered by WH40KSettings.registerSettings; if the
-            // hooks-manager ready chain ran, world-version is set AND the resync
-            // function will have iterated game.actors (a no-op when there are no
+            // hooks-manager ready chain ran, world-version is set AND the in-memory
+            // hydration will have iterated game.actors (a no-op when there are no
             // actors, but the function is still reached).
             let resyncEnabled: string | number | boolean | null = null;
             try {
@@ -310,12 +310,13 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 return { error: `settings.get(resync-on-ready): ${String((err as Error).message)}` };
             }
             // Verify that at least one wh40k-rpg pack is registered and reachable —
-            // resyncWorldFromCompendiums depends on game.packs.contents iteration.
+            // the in-memory hydration resolves each join key via fromUuid, which
+            // depends on game.packs.contents being populated.
             const packs = foundryGame?.packs?.contents ?? [];
             const systemPacks = packs.filter((p) => p.metadata?.packageName === 'wh40k-rpg');
             const itemPacks = systemPacks.filter((p) => p.metadata?.type === 'Item');
-            // Spot-check name-index buildability for one DH2 pack — this is the
-            // exact code path `getNameIndexFor` exercises.
+            // Spot-check index reachability for one DH2 pack — fromUuid resolution
+            // requires the pack index to be loadable.
             const dh2Pack = itemPacks.find((p) => (p.metadata?.name ?? '').startsWith('dh2-'));
             let indexCount = 0;
             let indexError: string | null = null;
@@ -343,13 +344,13 @@ test.describe('migrations + compendium resync (Tier B)', () => {
             if (typeof result.resyncEnabled !== 'boolean') failures.push(`resync-on-ready type was ${typeof result.resyncEnabled}, expected boolean`);
             if (result.systemPackCount === 0) failures.push('no wh40k-rpg compendium packs registered');
             if (result.itemPackCount === 0) failures.push('no Item compendium packs registered');
-            if (result.dh2PackId === null || result.dh2PackId === '') failures.push('no DH2 item pack found (compendium resync index-build would no-op)');
+            if (result.dh2PackId === null || result.dh2PackId === '') failures.push('no DH2 item pack found (compendium hydration join would no-op)');
             if (result.indexError !== null) failures.push(`pack.getIndex failed: ${result.indexError}`);
             if (result.indexCount === 0) failures.push('DH2 pack index returned 0 entries');
-            if (failures.length === 0) recordCoverage('migration.flow', FLOW_COMPENDIUM_RESYNC);
+            if (failures.length === 0) recordCoverage('migration.flow', FLOW_COMPENDIUM_HYDRATE);
         }
 
-        expect(failures, `compendium-resync failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
+        expect(failures, `compendium-hydrate failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 
     test('ActiveEffect icon is remapped to img on create', async ({ page }) => {

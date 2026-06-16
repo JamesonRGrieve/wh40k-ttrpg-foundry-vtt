@@ -8,7 +8,7 @@ import { uuidNameCache } from './uuid-name-cache.ts';
  *
  * Resolves each name against the per-game-system reverse index built by
  * `uuidNameCache`, scoped to the actor's own `system.gameSystem` (with the
- * trailing `e` stripped to match the pack prefix used by `compendium-resync`).
+ * trailing `e` stripped to match the pack prefix used by `gameSystemPackPrefix`).
  *
  * Non-destructive: only writes the parallel `*Uuid` field, never overwrites
  * the display-name field; only fires when the UUID slot is empty AND a

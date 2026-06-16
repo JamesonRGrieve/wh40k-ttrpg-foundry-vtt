@@ -1,26 +1,36 @@
-import { SYSTEM_ID } from './constants.ts';
-
 /**
  * Runtime hydration of LEAN embedded inventory items.
  *
- * Compendium actors store their inventory DRY (see src/packs/CLAUDE.md): each
- * embedded item carries only `_stats.compendiumSource` (a UUID join key) plus the
- * per-actor fields that genuinely belong to the actor (`specialization`, `level`,
- * equipped/quantity state), or — for quest-specific variants — `system.variantOf`
- * pointing at the generic base plus the variant name. The canonical item data
- * lives once, on the compendium item, and is JOINED here at runtime:
+ * Both world actors and compendium (pack) actors store their inventory DRY (see
+ * src/packs/CLAUDE.md): each embedded item carries only `_stats.compendiumSource`
+ * (a UUID join key) plus the per-actor fields that genuinely belong to the actor
+ * (`specialization`, `level`, equipped/quantity state, XP `cost`), or — for
+ * quest-specific variants — `system.variantOf` pointing at the generic base plus
+ * the variant name. The canonical item body lives ONCE, on the compendium item,
+ * and is JOINED here at runtime, ALWAYS IN MEMORY and NEVER written back to the
+ * database:
  *
- *  - **world import** — the `createActor` hook hydrates immediately (the boot
- *    resync would otherwise catch it at next load);
- *  - **world boot** — `resyncWorldFromCompendiums` (compendium-resync.ts) keeps
- *    world actors reconciled against compendium edits;
- *  - **compendium browsing** — actor sheets hydrate the pack document IN MEMORY
- *    (`updateSource`, no database write; packs stay locked) before rendering.
+ *  - **world boot** — `hooks-manager.ready()` hydrates every world actor;
+ *  - **world import** — the `createActor` hook hydrates the new actor;
+ *  - **rendering / pack browsing** — actor sheets hydrate before rendering.
  *
- * The merge is "persisted wins": the canonical system data is the base layer and
+ * Every path calls {@link hydrateActorInMemory}, which uses `updateSource`
+ * (re-coerces typed fields — Sets, nested DataModels — through the schema) +
+ * `reset()`. `updateSource` mutates only the in-memory `_source`; the stored
+ * record stays LEAN, so there is nothing on disk for a reload to clobber and a
+ * compendium edit propagates to every actor on the next load with zero writes.
+ *
+ * The merge is "persisted wins": the canonical system body is the base layer and
  * everything the actor's item actually persists overlays it — so lean stubs gain
- * the full definition while their specialization/level/state survive, and a
- * fully-written item is a no-op (the join is idempotent).
+ * the full definition while their specialization/level/state/cost survive, and a
+ * fully-hydrated item is a no-op (the join is idempotent).
+ *
+ * This REPLACED the old boot-time DB resync (`compendium-resync.ts`, deleted),
+ * whose `updateEmbeddedDocuments` write reconciled the canonical body over the
+ * stored record on every GM `ready` — and in doing so clobbered per-actor fields
+ * (talent/power XP `cost`) back to the compendium's zero whenever a client ran
+ * stale JS that predated the preserve-list fix. An in-memory join cannot clobber
+ * because it never persists.
  */
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry item/actor types carry open-ended Record<string,unknown> at framework boundaries */
@@ -36,10 +46,8 @@ type HydratableItem = {
 };
 
 type HydratableActor = {
-    pack?: string | null;
     items: { contents: HydratableItem[] };
     reset?: () => void;
-    updateEmbeddedDocuments?: (type: 'Item', updates: Array<Record<string, unknown>>) => Promise<unknown>;
 };
 
 type SourceLike = { img: string | null; system: Record<string, unknown> };
@@ -97,7 +105,7 @@ export async function buildHydrationPatches(actor: HydratableActor): Promise<Arr
 
         let source = cache.get(uuid);
         if (source === undefined) {
-            // eslint-disable-next-line no-await-in-loop -- sequential is intentional: the shared cache dedupes pack fetches (same pattern as compendium-resync)
+            // eslint-disable-next-line no-await-in-loop -- sequential is intentional: the shared per-actor cache dedupes pack fetches across this actor's items
             source = (await fromUuid(uuid)) as SourceLike | null;
             cache.set(uuid, source);
         }
@@ -115,28 +123,20 @@ export async function buildHydrationPatches(actor: HydratableActor): Promise<Arr
     return patches;
 }
 
-/** Hydrate a WORLD actor's lean items (persists via updateEmbeddedDocuments). */
-export async function hydrateWorldActor(actor: HydratableActor): Promise<number> {
-    if (actor.pack != null && actor.pack !== '') return 0;
-    const patches = await buildHydrationPatches(actor);
-    if (patches.length > 0 && actor.updateEmbeddedDocuments) {
-        try {
-            await actor.updateEmbeddedDocuments('Item', patches);
-        } catch (err) {
-            console.warn(`[${SYSTEM_ID}] compendium hydrate: updateEmbeddedDocuments failed; items stay lean until the next resync.`, err);
-            return 0;
-        }
-    }
-    return patches.length;
-}
-
 /**
- * Hydrate a PACK actor in memory for display: `updateSource` mutates the cached
- * document's source (no database write — the pack stays locked) and `reset()`
- * re-prepares derived data. Idempotent: a second render finds full items.
+ * Join the canonical compendium body onto an actor's LEAN items, ALWAYS IN
+ * MEMORY: `updateSource` mutates each item's in-memory `_source` (re-coercing
+ * typed fields — Sets, nested DataModels — through the schema; NO database
+ * write, so the stored record stays lean and packs stay locked) and `reset()`
+ * re-prepares the actor's derived data on top of the hydrated items.
+ *
+ * Works identically for world actors and pack actors — there is no DB-write
+ * variant, by design (an in-memory join cannot clobber persisted per-actor
+ * state, which is the whole point). Idempotent: an already-full item produces
+ * no patch (`buildHydrationPatches` detects the no-op), so a second pass over a
+ * hydrated actor returns 0 and skips the reset.
  */
-export async function hydratePackActor(actor: HydratableActor): Promise<number> {
-    if (actor.pack == null || actor.pack === '') return 0;
+export async function hydrateActorInMemory(actor: HydratableActor): Promise<number> {
     const patches = await buildHydrationPatches(actor);
     for (const patch of patches) {
         const item = actor.items.contents.find((i) => i.id === patch['_id']);

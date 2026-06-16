@@ -4,7 +4,7 @@ import { gameSystemPackPrefix } from './game-system-pack-prefix.ts';
 /**
  * Pure mapping helper — no Foundry globals, runs for real in happy-dom.
  * Guards the single source of truth that several call sites
- * (compendium-resync, origin-path backfill, character-sheet origin options,
+ * (origin-path backfill, character-sheet origin options,
  * inventory generator) now share.
  */
 describe('gameSystemPackPrefix', () => {
