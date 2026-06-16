@@ -56,7 +56,7 @@
          character is apt to learn and advance, with their origin-path source(s). --}}
     {{#if aptitudePills.length}}
     {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Aptitudes") icon="fa-graduation-cap"}}
-        <div class="tw-flex tw-flex-wrap tw-gap-1.5">
+        <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1.5">
             {{#each aptitudePills as |pill|}}
             <span class="tw-text-[0.8rem] tw-px-2 tw-py-1 tw-rounded tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[rgba(212,175,55,0.08)] tw-text-[color:var(--color-text-secondary)]"
                   data-tooltip="{{#each pill.sources}}{{this}}{{#unless @last}} · {{/unless}}{{/each}}">
