@@ -237,6 +237,7 @@ type CharacterSheetContextDeclaredFields = {
     hasForceField?: boolean;
     armourDisplayLocations?: unknown;
     armourDisplay?: Record<string, unknown>;
+    equippedGear?: Array<{ id: string | null; name: string; img: string | null }>;
     equippedWeapons?: unknown[];
     primaryWeapon?: unknown;
     secondaryWeapon?: unknown;
@@ -2655,6 +2656,14 @@ export default class CharacterSheet extends BaseActorSheet {
             }
         }
         sheetContext.armourDisplay = armourDisplayMap;
+
+        // Equipped non-armour gear surfaced on the body preview as icons (#334):
+        // auspex, rebreather, micro-bead, cybernetics, active force fields. Armour
+        // already renders per body location and weapons live in the arsenal, so
+        // both are excluded here to avoid duplicating them on the silhouette.
+        sheetContext.equippedGear = categorized.equipped
+            .filter((item) => item.type === 'gear' || item.type === 'cybernetic' || item.type === 'forceField')
+            .map((item) => ({ id: item.id, name: item.name, img: item.img }));
 
         // Weapon slots - categorize by class and equipped status
         const equippedWeapons = weapons.filter((w) => w.system.state.equipped);

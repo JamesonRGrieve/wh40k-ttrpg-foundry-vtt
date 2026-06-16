@@ -8,8 +8,11 @@
                         each with `.total`, `.items[]`, `.tooltipData`.
 
     Optional context:
-        compact — when true, drop the extra fitted-items strip and roll-range
-                  badge to fit dashboard-zone footprints (Overview tab).
+        compact      — when true, drop the extra fitted-items strip and roll-range
+                       badge to fit dashboard-zone footprints (Overview tab).
+        equippedGear — [{ id, name, img }] of equipped non-armour items (gear,
+                       cybernetics, active force fields) rendered as a worn/active
+                       icon cluster below the body (#334).
 --}}
 <div class="tw-grid {{#if compact}}[grid-template-columns:1fr_1fr_1fr] tw-max-w-full{{else}}[grid-template-columns:80px_1fr_80px] tw-max-w-[300px]{{/if}} [grid-template-rows:auto_auto_auto] [grid-template-areas:'._head_.'_'rarm_body_larm'_'rleg_body_lleg'] tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-xs,4px)] tw-w-full tw-mx-auto">
     {{! Head (centered at top) }}
@@ -174,3 +177,25 @@
         {{/unless}}
     </div>
 </div>
+
+{{! Equipped gear cluster (#334) — every equipped non-armour item (auspex,
+    rebreather, micro-bead, cybernetics, active force fields) shown as a worn/
+    active icon below the silhouette. Armour renders on the body locations above;
+    weapons live in the arsenal. Shown in both compact and full variants. }}
+{{#if equippedGear.length}}
+<div class="tw-mt-[var(--wh40k-space-sm,8px)] tw-pt-[var(--wh40k-space-sm,8px)] tw-border-t tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))]">
+    <div class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-mb-[var(--wh40k-space-xs,4px)] tw-text-center tw-whitespace-nowrap">{{localize "WH40K.Equipment.EquippedGear"}}</div>
+    <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1">
+        {{#each equippedGear as |item|}}
+        <button type="button"
+                class="tw-flex-none tw-h-7 tw-w-7 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20 tw-shadow-[0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-transform hover:tw-translate-y-[-1px] hover:tw-border-gold"
+                data-action="itemEdit"
+                data-item-id="{{item.id}}"
+                title="{{item.name}}"
+                aria-label="{{item.name}}">
+            <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+        </button>
+        {{/each}}
+    </div>
+</div>
+{{/if}}
