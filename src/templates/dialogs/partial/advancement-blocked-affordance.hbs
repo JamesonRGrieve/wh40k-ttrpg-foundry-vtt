@@ -1,0 +1,15 @@
+{{!-- Shared blocked-advancement affordance (#325). When an advancement can't be
+     purchased because its prerequisites aren't met, this renders one consistent
+     treatment for BOTH psychic-power and talent rows: a lock icon, a compact
+     on-row chip list of the unmet prerequisites, the cost, and a full
+     "Prerequisites not met: …" tooltip.
+
+     Params:
+       prereqs — string[] of unmet-prerequisite display strings (prereqDisplay)
+       cost    — XP cost of the (blocked) advancement --}}
+<div class="tw-flex tw-flex-wrap tw-items-center tw-justify-end tw-gap-1 tw-text-[color:var(--wh40k-color-warning)] tw-text-[0.7rem] tw-cursor-help"
+     data-tooltip="{{localize 'WH40K.Advancement.PrereqsNotMetLabel'}} {{join prereqs ', '}}">
+    <i class="fas fa-lock"></i>
+    {{#each prereqs}}<span class="tw-py-[0.05rem] tw-px-[0.3rem] tw-rounded tw-bg-[rgba(0,0,0,0.12)] tw-text-[0.6rem] tw-whitespace-nowrap">{{this}}</span>{{/each}}
+    <span class="tw-font-semibold">{{cost}} XP</span>
+</div>

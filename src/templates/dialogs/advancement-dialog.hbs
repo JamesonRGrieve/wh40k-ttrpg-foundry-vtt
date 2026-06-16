@@ -145,10 +145,7 @@
             {{/if}}
           </div>
           {{#if this.blocked}}
-          <div class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-color-warning)] tw-text-[0.7rem] tw-cursor-help" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
-            <i class="fas fa-lock"></i>
-            <span>{{this.cost}} XP</span>
-          </div>
+          {{> systems/wh40k-rpg/templates/dialogs/partial/advancement-blocked-affordance.hbs prereqs=this.prereqDisplay cost=this.cost}}
           {{else if this.owned}}
           <i class="fas fa-check-circle tw-text-[#7cb342]"></i>
           {{else if this.canPurchase}}
@@ -217,10 +214,7 @@
                 {{/if}}
               </div>
               {{#if this.blocked}}
-              <div class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-color-warning)] tw-text-[0.7rem] tw-cursor-help" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
-                <i class="fas fa-lock"></i>
-                <span>{{this.cost}} XP</span>
-              </div>
+              {{> systems/wh40k-rpg/templates/dialogs/partial/advancement-blocked-affordance.hbs prereqs=this.prereqDisplay cost=this.cost}}
               {{else if this.canPurchase}}
               <button
                 class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-[0.3rem] tw-px-[0.6rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.72rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
@@ -265,10 +259,7 @@
             {{/if}}
           </div>
           {{#if this.blocked}}
-          <div class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-color-warning)] tw-text-[0.7rem] tw-cursor-help" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
-            <i class="fas fa-lock"></i>
-            <span>{{this.cost}} XP</span>
-          </div>
+          {{> systems/wh40k-rpg/templates/dialogs/partial/advancement-blocked-affordance.hbs prereqs=this.prereqDisplay cost=this.cost}}
           {{else if this.owned}}
           <i class="fas fa-check-circle tw-text-[#7cb342]"></i>
           {{else if this.canPurchase}}
@@ -404,10 +395,7 @@
                   {{/if}}
                 </div>
                 {{#if this.blocked}}
-                <div class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-color-warning)] tw-text-[0.7rem] tw-cursor-help" title="Prerequisites not met">
-                  <i class="fas fa-lock"></i>
-                  <span>{{this.cost}} XP</span>
-                </div>
+                {{> systems/wh40k-rpg/templates/dialogs/partial/advancement-blocked-affordance.hbs prereqs=this.prereqDisplay cost=this.cost}}
                 {{else if this.owned}}
                 <i class="fas fa-check-circle tw-text-[#7cb342]"></i>
                 {{else if this.canPurchase}}
@@ -425,13 +413,6 @@
                 </div>
                 {{/if}}
               </div>
-              {{#if this.prereqDisplay.length}}
-              <div class="tw-flex tw-items-center tw-gap-1 tw-pl-[2.6rem] tw-text-[0.65rem] tw-text-[color:var(--wh40k-color-warning)] tw-opacity-80">
-                <i class="fas fa-link tw-text-[0.6rem]"></i>
-                <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Requires:</span>
-                <span>{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</span>
-              </div>
-              {{/if}}
             </div>
             {{/each}}
           </div>
