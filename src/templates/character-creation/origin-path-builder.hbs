@@ -296,6 +296,13 @@
  {{/if}}
  </div>
  {{else}}
+ {{!-- Provenance filter chips (#295): RAW / Adapted / Homebrew. All enabled = show all. --}}
+ <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1.5 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.7rem]">
+ <span class="tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OriginPath.ProvenanceFilterLabel"}}</span>
+ <button type="button" data-action="toggleProvenanceFilter" data-category="raw" aria-pressed="{{provenanceFilter.raw}}" class="tw-px-2 tw-py-0.5 tw-rounded-full tw-border tw-border-solid tw-cursor-pointer {{#if provenanceFilter.raw}}tw-border-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-gold)] tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)]{{else}}tw-border-[var(--wh40k-bronze)] tw-text-[color:var(--wh40k-text-muted)] tw-opacity-60{{/if}}">{{localize "WH40K.OriginPath.ProvenanceRaw"}}</button>
+ <button type="button" data-action="toggleProvenanceFilter" data-category="adapted" aria-pressed="{{provenanceFilter.adapted}}" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-border tw-border-solid tw-cursor-pointer {{#if provenanceFilter.adapted}}tw-border-[#64b5f6] tw-text-[#64b5f6] tw-bg-[rgba(100,181,246,0.12)]{{else}}tw-border-[var(--wh40k-bronze)] tw-text-[color:var(--wh40k-text-muted)] tw-opacity-60{{/if}}"><i class="fa-solid fa-shuffle tw-text-[0.6rem]"></i>{{localize "WH40K.OriginPath.ProvenanceAdapted"}}</button>
+ <button type="button" data-action="toggleProvenanceFilter" data-category="homebrew" aria-pressed="{{provenanceFilter.homebrew}}" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-border tw-border-solid tw-cursor-pointer {{#if provenanceFilter.homebrew}}tw-border-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-gold)] tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)]{{else}}tw-border-[var(--wh40k-bronze)] tw-text-[color:var(--wh40k-text-muted)] tw-opacity-60{{/if}}"><i class="fa-solid fa-house tw-text-[0.6rem]"></i>{{localize "WH40K.OriginPath.ProvenanceHomebrew"}}</button>
+ </div>
  {{!-- Origin Cards --}}
  <div class="tw-grid tw-grid-cols-[repeat(auto-fill,minmax(112px,1fr))] tw-gap-[var(--wh40k-space-sm)]">
  {{#each currentStep.origins as |origin|}}
