@@ -75,6 +75,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs',
             'systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs',
             'systems/wh40k-rpg/templates/dialogs/partial/dialog-footer.hbs',
+            'systems/wh40k-rpg/templates/dialogs/partial/advancement-blocked-affordance.hbs',
             'systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs',
             'systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs',
             'systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs',
