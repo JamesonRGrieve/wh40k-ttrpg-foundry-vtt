@@ -930,14 +930,28 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     /**
+     * All embedded items, as an array of documents. ALWAYS read owned items
+     * through this (or a helper built on it) — never `for…of this.parent.items`
+     * directly. A Foundry `Collection`'s default iterator yields `[id, doc]`
+     * entries, so a bare `for…of` hands back tuples whose `.isTalent` / `.system`
+     * are `undefined`; that footgun silently dropped owned talents/powers from
+     * XP math for a long time. `.filter` reliably yields the documents.
+     * Returns `[]` when the parent or its items are unavailable (compendium /
+     * pre-embed contexts).
+     */
+    protected _ownedItems(): WH40KItem[] {
+        const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
+        return actor?.items?.filter(() => true) ?? [];
+    }
+
+    /**
      * The actor's origin-path items (homeworld / background / role / …).
      * Centralizes the `this.parent.items.filter(i => i.isOriginPath)` idiom
      * repeated across the PC preparation methods. Returns `[]` when the parent
      * or its items are unavailable (compendium / pre-embed contexts).
      */
     protected _originPathItems(): WH40KItem[] {
-        const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
-        return actor?.items?.filter((item) => item.isOriginPath) ?? [];
+        return this._ownedItems().filter((item) => item.isOriginPath);
     }
 
     /**

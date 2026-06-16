@@ -82,3 +82,25 @@ describe('character DataModel experience derivation (#240)', () => {
         expect(body, 'BC infamy summed from the chaosAdvancements ledger').toMatch(/category === 'infamy'/);
     });
 });
+
+/**
+ * Itemised purchase breakdown: _computeExperienceSpent builds a display list so
+ * the experience panel can show exactly which advances spent XP went to. The list
+ * is built inline with the same sums, so it always reconciles with calculatedTotal.
+ */
+describe('character DataModel experience purchase breakdown', () => {
+    const m = charSrc.match(/_computeExperienceSpent\(\):\s*void\s*\{([\s\S]*?)\n {4}\}/);
+    const body = m?.[1] ?? '';
+
+    it('builds a purchases list and exposes it on experience', () => {
+        expect(body, '_computeExperienceSpent must exist').not.toBe('');
+        expect(body, 'purchases array declared').toMatch(/const purchases:\s*Array</);
+        expect(body, 'purchases assigned onto experience').toMatch(/this\.experience\.purchases\s*=\s*purchases/);
+    });
+
+    it('records an entry for every spend category', () => {
+        for (const category of ['characteristic', 'skill', 'talent', 'psychicPower', 'psyRating']) {
+            expect(body, `pushes a ${category} entry`).toMatch(new RegExp(`category:\\s*'${category}'`));
+        }
+    });
+});

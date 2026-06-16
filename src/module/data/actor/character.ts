@@ -181,6 +181,15 @@ export default class CharacterData extends CreatureTemplate {
         spentPsychicPowers?: number;
         spentInfamy?: number;
         calculatedTotal?: number;
+        /**
+         * Itemised advancement purchases — a derived display list (NOT persisted)
+         * built by _computeExperienceSpent so the sheet can show where spent XP
+         * went. Each entry's `cost` is the same value summed into the totals above,
+         * so the list always reconciles with `calculatedTotal`. `category` is a
+         * stable key (`characteristic` | `skill` | `talent` | `psychicPower` |
+         * `psyRating`) the template localises; `name` is the entity's display name.
+         */
+        purchases?: Array<{ name: string; cost: number; category: string }>;
     };
     declare rogueTrader: {
         profitFactor: {
@@ -882,36 +891,82 @@ export default class CharacterData extends CreatureTemplate {
         this.experience.spentSkills = 0;
         this.experience.spentTalents = 0;
 
+        // Itemised purchase list, built alongside the sums so it always reconciles
+        // with calculatedTotal. Display-only; consumed by the experience panel.
+        const purchases: Array<{ name: string; cost: number; category: string }> = [];
+
         // Psy Rating has no per-rank stored cost field, so derive its spend from the
         // current rating via the shared DH2 formula (#240). Owned powers add to this below.
         // eslint-disable-next-line no-restricted-syntax -- boundary: psy field is added by CreatureTemplate mixin at runtime; not in CharacterData's own declare list
         const psySelf = this as unknown as { psy?: { rating?: number } };
-        this.experience.spentPsychicPowers = psyRatingTotalCost(Number(psySelf.psy?.rating ?? 0));
-
-        for (const characteristic of Object.values(this.characteristics) as Array<{ cost: number | string }>) {
-            this.experience.spentCharacteristics += parseInt(String(characteristic.cost), 10);
+        const psyRating = Number(psySelf.psy?.rating ?? 0);
+        // A sanctioned psyker is GRANTED a free starting Psy Rating by an origin step
+        // (the Psyker elite advance: grants.psyRating). Only ratings bought ABOVE the
+        // granted floor cost XP. The granted amount is read from the origin grant
+        // (content-driven, never hardcoded), so non-psykers / other lines are unaffected.
+        let grantedPsyRating = 0;
+        for (const origin of this._originPathItems()) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: _originPathItems yields generic WH40KItem; .system is the OriginPath payload, grants.psyRating optional
+            const originSystem = origin.system as { grants?: { psyRating?: number } };
+            const granted = Number(originSystem.grants?.psyRating ?? 0);
+            if (granted > grantedPsyRating) grantedPsyRating = granted;
+        }
+        const ratingSpend = Math.max(0, psyRatingTotalCost(psyRating) - psyRatingTotalCost(grantedPsyRating));
+        this.experience.spentPsychicPowers = ratingSpend;
+        if (psyRating > grantedPsyRating) {
+            purchases.push({ name: `${grantedPsyRating} → ${psyRating}`, cost: ratingSpend, category: 'psyRating' });
         }
 
-        for (const skill of Object.values(this.skills) as Array<{ cost: number | string; entries?: Array<{ cost?: number | string }> }>) {
-            if (Array.isArray(skill.entries)) {
-                for (const speciality of skill.entries) {
-                    this.experience.spentSkills += parseInt(String(speciality.cost ?? 0), 10);
-                }
-            } else {
-                this.experience.spentSkills += parseInt(String(skill.cost), 10);
+        for (const characteristic of Object.values(this.characteristics) as Array<{ label?: string; advance?: number; cost: number | string }>) {
+            const cost = parseInt(String(characteristic.cost), 10) || 0;
+            this.experience.spentCharacteristics += cost;
+            const advance = Number(characteristic.advance ?? 0);
+            if (advance > 0 || cost > 0) {
+                purchases.push({ name: `${characteristic.label ?? ''} (+${advance * 5})`.trim(), cost, category: 'characteristic' });
             }
         }
 
-        for (const item of actor.items) {
+        for (const skill of Object.values(this.skills) as Array<{
+            label?: string;
+            advance?: number;
+            cost: number | string;
+            entries?: Array<{ specialization?: string; name?: string; advance?: number; cost?: number | string }>;
+        }>) {
+            if (Array.isArray(skill.entries)) {
+                for (const speciality of skill.entries) {
+                    const cost = parseInt(String(speciality.cost ?? 0), 10) || 0;
+                    this.experience.spentSkills += cost;
+                    if (Number(speciality.advance ?? 0) > 0 || cost > 0) {
+                        const spec = speciality.specialization ?? speciality.name ?? '';
+                        purchases.push({ name: `${skill.label ?? ''}${spec === '' ? '' : ` (${spec})`}`.trim(), cost, category: 'skill' });
+                    }
+                }
+            } else {
+                const cost = parseInt(String(skill.cost), 10) || 0;
+                this.experience.spentSkills += cost;
+                if (Number(skill.advance ?? 0) > 0 || cost > 0) {
+                    purchases.push({ name: skill.label ?? '', cost, category: 'skill' });
+                }
+            }
+        }
+
+        // Owned talents/powers via _ownedItems() — NEVER `for…of actor.items` (its
+        // Collection iterator yields [id, doc] entries, which silently dropped every
+        // talent/power from spent XP). See CreatureTemplate._ownedItems.
+        for (const item of this._ownedItems()) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: item.system cost/prCost are absent on items without those fields; coerced with defaults
             const sys = item.system as { cost?: number | string; prCost?: number | string };
             if (item.isTalent) {
-                this.experience.spentTalents += parseInt(String(sys.cost ?? '0'), 10);
+                const cost = parseInt(String(sys.cost ?? '0'), 10) || 0;
+                this.experience.spentTalents += cost;
+                purchases.push({ name: item.name, cost, category: 'talent' });
             } else if (item.isPsychicPower) {
                 // Psychic powers carry no XP cost in the compendium; prefer a stored cost
                 // when present, else fall back to the same heuristic the dialog charges.
                 const stored = parseInt(String(sys.cost ?? '0'), 10);
-                this.experience.spentPsychicPowers += stored > 0 ? stored : psychicPowerCost(Number(sys.prCost ?? 1));
+                const cost = stored > 0 ? stored : psychicPowerCost(Number(sys.prCost ?? 1));
+                this.experience.spentPsychicPowers += cost;
+                purchases.push({ name: item.name, cost, category: 'psychicPower' });
             }
         }
 
@@ -938,6 +993,10 @@ export default class CharacterData extends CreatureTemplate {
         // reality (fixes the "1000/1000 with no advancements" report, #224).
         this.experience.used = this.experience.calculatedTotal;
         this.experience.available = this.experience.total - this.experience.calculatedTotal;
+
+        // Sort so the priciest advances surface first, then expose the reconciled list.
+        purchases.sort((a, b) => b.cost - a.cost);
+        this.experience.purchases = purchases;
     }
 
     /**

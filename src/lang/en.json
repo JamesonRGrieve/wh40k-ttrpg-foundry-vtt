@@ -637,8 +637,8 @@
                 }
             },
             "ResyncOnReady": {
-                "Name": "Resync Embedded Items From Compendiums on World Boot",
-                "Hint": "On every world load (GM only), reconcile every embedded item that originated from a compendium with its current source. Definition fields (description, mechanics, classification) are overwritten; per-actor state (skill advances, ammo counts, equipped flags, modifications, quantities) is preserved. Set flags.wh40k-rpg.frozenFromCompendium = true on a specific item to opt that one out."
+                "Name": "Hydrate Embedded Items From Compendiums on World Boot",
+                "Hint": "On every world load, join each embedded item's canonical body (description, mechanics, classification) from its compendium source IN MEMORY — no database write, so stored records stay lean and per-actor state (skill advances, ammo counts, equipped flags, modifications, quantities, XP cost) is never touched. A compendium edit propagates to every actor on the next load. Disabling this leaves items lean until their sheet is next opened (sheets always hydrate on render)."
             },
             "ReconcileOriginGrantsOnReady": {
                 "Name": "Reconcile Origin-Path Grants on World Boot",
@@ -721,6 +721,16 @@
             "Willpower": "Willpower",
             "Fellowship": "Fellowship",
             "Influence": "Influence"
+        },
+        "Experience": {
+            "PurchasesTitle": "XP Purchases",
+            "NoPurchases": "No advancements purchased yet.",
+            "PsyRating": "Psy Rating",
+            "CatCharacteristic": "Char",
+            "CatSkill": "Skill",
+            "CatTalent": "Talent",
+            "CatPsychicPower": "Power",
+            "CatPsyRating": "Psy"
         },
         "Advancement": {
             "Title": "Character Advancement",
