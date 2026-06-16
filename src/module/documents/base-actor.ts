@@ -1,5 +1,6 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { isEffectSuppressedByEquipState } from '../data/shared/equip-state.ts';
 import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
@@ -404,6 +405,31 @@ export class WH40KBaseActor extends Actor {
         if (!hasDataModel) {
             this._computeCharacteristics();
             this._computeMovement();
+        }
+    }
+
+    /**
+     * Gate transferred Active Effects on equip state (#333): an effect that
+     * lives on an equippable item (armour / gear / cybernetic / weapon / force
+     * field) applies only while that item is equipped. Effects on the actor
+     * itself and on always-on items (talents / traits / conditions / origin
+     * paths) are unaffected. This makes Foundry's native effect transfer follow
+     * the same rule already enforced for item stat modifiers (creature template)
+     * and passive Subtlety adjusters (collectSubtletyAdjusters), so unequipping
+     * a piece of gear removes its bonuses and re-equipping restores them.
+     *
+     * `applyActiveEffects()` (invoked from the super `prepareData`) consumes this
+     * generator, so filtering here suppresses the effect's changes wholesale.
+     */
+    override *allApplicableEffects(): Generator<ActiveEffect.Implementation, void, undefined> {
+        for (const effect of super.allApplicableEffects()) {
+            const parent = effect.parent;
+            if (parent?.documentName === 'Item') {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state lives on EquippableTemplate DataModels, not the base Item type
+                const sys = (parent as { system?: { state?: { equipped?: boolean } } }).system;
+                if (isEffectSuppressedByEquipState(sys)) continue;
+            }
+            yield effect;
         }
     }
 
