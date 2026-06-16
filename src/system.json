@@ -1235,6 +1235,42 @@
             "type": "Actor"
         },
         {
+            "name": "dh2-core-actors-npcs",
+            "label": "Core Rulebook NPCs",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {},
+            "path": "packs/dark-heresy-2/dh2-core-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor"
+        },
+        {
+            "name": "dh2-core-actors-reinforcements",
+            "label": "Core Rulebook Reinforcement Characters",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {},
+            "path": "packs/dark-heresy-2/dh2-core-actors-reinforcements",
+            "system": "wh40k-rpg",
+            "type": "Actor"
+        },
+        {
+            "name": "dh2-core-actors-mounts",
+            "label": "Core Rulebook Mounts",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {},
+            "path": "packs/dark-heresy-2/dh2-core-actors-mounts",
+            "system": "wh40k-rpg",
+            "type": "Actor"
+        },
+        {
             "name": "dh2-forgotten-actors-bestiary",
             "label": "Forgotten Gods Bestiary",
             "ownership": {
@@ -1243,6 +1279,18 @@
             },
             "flags": {},
             "path": "packs/dark-heresy-2/dh2-forgotten-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor"
+        },
+        {
+            "name": "dh2-forgotten-actors-npcs",
+            "label": "Forgotten Gods NPCs",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {},
+            "path": "packs/dark-heresy-2/dh2-forgotten-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor"
         },
@@ -4307,6 +4355,18 @@
             "flags": {}
         },
         {
+            "name": "dh2-without-actors-npcs",
+            "label": "Enemies Without NPCs",
+            "path": "packs/dark-heresy-2/dh2-without-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-without-journals",
             "label": "Enemies Without Rules",
             "path": "packs/dark-heresy-2/dh2-without-journals",
@@ -6191,6 +6251,7 @@
                     "name": "Enemies Without",
                     "packs": [
                         "dh2-without-actors-bestiary",
+                        "dh2-without-actors-npcs",
                         "dh2-without-actors-reinforcements",
                         "dh2-without-items-ammo",
                         "dh2-without-items-armor-mods",
@@ -6213,7 +6274,7 @@
                 },
                 {
                     "name": "Forgotten Gods",
-                    "packs": ["dh2-forgotten-actors-bestiary", "dh2-forgotten-journals", "dh2-forgotten-rolltables"]
+                    "packs": ["dh2-forgotten-actors-bestiary", "dh2-forgotten-actors-npcs", "dh2-forgotten-journals", "dh2-forgotten-rolltables"]
                 },
                 {
                     "name": "Game Master's Kit",
@@ -6227,6 +6288,9 @@
                     "name": "Core Rulebook",
                     "packs": [
                         "dh2-core-actors-bestiary",
+                        "dh2-core-actors-npcs",
+                        "dh2-core-actors-reinforcements",
+                        "dh2-core-actors-mounts",
                         "dh2-core-items-ammo",
                         "dh2-core-items-armour",
                         "dh2-core-items-conditions",
