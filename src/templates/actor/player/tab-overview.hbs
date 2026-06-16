@@ -308,40 +308,11 @@
 
         </div>
 
-        {{!-- COLUMN 3: Weapons + Armour → Resources (Movement moved to Combat tab, #266) --}}
+        {{!-- COLUMN 3: Resources. Equipped Weapons & Armour panels removed (#318) —
+             they live on the Combat tab; Movement also moved there (#266). The
+             armour-zone / equippedWeapons / armourDisplay prep is still consumed by
+             the Combat tab, so it is intentionally NOT removed. --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
-            {{!-- Equipped Weapons --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Equipped Weapons" icon="fa-crosshairs" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-combat)]"}}
-                    {{#if equippedWeapons.length}}
-                    <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)]">
-                        {{#each equippedWeapons as |weapon|}}
-                        <div class="tw-flex tw-items-center tw-gap-[6px] tw-px-1.5 tw-py-1 tw-bg-[var(--color-bg-option)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer" data-action="itemEdit" data-item-id="{{weapon.id}}" title="Open {{weapon.name}}">
-                            <img class="tw-w-[20px] tw-h-[20px] tw-rounded-[var(--wh40k-radius-sm)] tw-shrink-0" src="{{weapon.img}}" alt="{{weapon.name}}" />
-                            <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
-                                <span class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--color-text-primary)] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{weapon.name}}</span>
-                                <span class="tw-flex tw-gap-[6px] tw-text-[0.6rem] tw-text-[color:var(--color-text-tertiary)]">
-                                    <span class="tw-font-semibold tw-uppercase">{{weapon.system.classLabel}}</span>
-                                    {{!-- #262: range hidden from players on unidentified weapons; GM always sees it. --}}
-                                    {{#if (or weapon.system.state.identified @root.isGM)}}{{#if weapon.system.rangeLabel}}<span class="">{{weapon.system.rangeLabel}}</span>{{/if}}{{/if}}
-                                </span>
-                            </div>
-                            <span class=" tw-text-[0.7rem] tw-text-[color:var(--color-text-secondary)] tw-font-alt tw-whitespace-nowrap tw-shrink-0">{{#if (or weapon.system.state.identified @root.isGM)}}{{weapon.system.damageLabel}}{{else}}{{localize "WH40K.Weapon.ConcealedStat"}}{{/if}}</span>
-                        </div>
-                        {{/each}}
-                    </div>
-                    {{else}}
-                    <div class="tw-flex tw-items-center tw-justify-center tw-gap-[6px] tw-h-full tw-text-[color:var(--color-text-tertiary)] tw-text-[0.75rem] tw-italic">
-                        <i class="fas fa-crosshairs"></i>
-                        <span>No weapons equipped</span>
-                    </div>
-                    {{/if}}
-            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
-
-            {{!-- Armour — shared armour-zone, also reused on the Combat tab (#234).
-                 Movement was relocated to the Combat tab exclusively (#266), so
-                 Armour stands alone here. --}}
-            {{> systems/wh40k-rpg/templates/actor/partial/armour-zone.hbs armourDisplay=armourDisplay compact=true}}
-
             {{#unless isNPC}}
             {{!-- Resources (Influence / Requisition / Gelt) — PC-only.
                  In DH2 RAW mode Influence is a Statistics characteristic, not an economy stat,

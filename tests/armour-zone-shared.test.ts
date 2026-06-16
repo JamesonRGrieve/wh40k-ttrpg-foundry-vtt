@@ -1,8 +1,9 @@
 /**
- * Regression guard (#234): the Overview Armour layout is reused on the Combat
- * tab. Both tabs now render the shared `armour-zone.hbs` (a dashboard-zone
- * wrapping the armour silhouette); the old combat-only `armour-display-panel.hbs`
- * (panel.hbs wrapper) is gone, so the two tabs can't drift apart again.
+ * Regression guard (#234 / #318): the armour silhouette renders through the
+ * shared `armour-zone.hbs` dashboard-zone; the old combat-only
+ * `armour-display-panel.hbs` (panel.hbs wrapper) is gone. As of #318 the Armour
+ * panel was removed from the Overview tab entirely, so armour-zone now renders on
+ * the Combat tab only.
  */
 
 import { existsSync } from 'node:fs';
@@ -20,9 +21,10 @@ describe('shared armour-zone (#234)', () => {
         expect(PRELOAD).toContain('armour-zone.hbs');
     });
 
-    it('renders armour-zone on both the Overview and Combat tabs', () => {
-        expect(OVERVIEW).toContain('armour-zone.hbs');
+    it('renders armour-zone on the Combat tab; removed from the Overview (#318)', () => {
         expect(COMBAT).toContain('armour-zone.hbs');
+        // #318 removed the Armour panel from the Overview tab.
+        expect(OVERVIEW).not.toContain('armour-zone.hbs');
     });
 
     it('removes the old combat-only armour-display-panel', () => {
