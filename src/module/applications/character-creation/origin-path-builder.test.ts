@@ -223,7 +223,7 @@ afterAll(() => {
     });
 });
 
-const { default: OriginPathBuilder, originProvenanceFlags } = await import('./origin-path-builder.ts');
+const { default: OriginPathBuilder, originProvenanceFlags, filterOriginsByProvenance } = await import('./origin-path-builder.ts');
 
 const proto = OriginPathBuilder.prototype;
 
@@ -1774,5 +1774,29 @@ describe('originProvenanceFlags', () => {
 
     it('marks pure homebrew when no line is official', () => {
         expect(flags([], 'dh2')).toEqual({ isPureHomebrew: true, isAdaptedHomebrew: false, adaptedFromLabel: '' });
+    });
+});
+
+describe('filterOriginsByProvenance (#295)', () => {
+    const raw = { officialLines: ['dh2'] } as Parameters<typeof originProvenanceFlags>[0]; // official in the active system → raw
+    const adapted = { officialLines: ['rt'] } as Parameters<typeof originProvenanceFlags>[0]; // official elsewhere → adapted
+    const homebrew = { officialLines: [] as string[] } as Parameters<typeof originProvenanceFlags>[0]; // nowhere official → pure homebrew
+    const origins = [raw, adapted, homebrew];
+    const apply = (filter: { raw: boolean; adapted: boolean; homebrew: boolean }): typeof origins => filterOriginsByProvenance(origins, 'dh2', filter);
+
+    it('shows everything when all categories are enabled (default no-op)', () => {
+        expect(apply({ raw: true, adapted: true, homebrew: true })).toEqual([raw, adapted, homebrew]);
+    });
+
+    it('hides RAW origins when the raw category is disabled', () => {
+        expect(apply({ raw: false, adapted: true, homebrew: true })).toEqual([adapted, homebrew]);
+    });
+
+    it('shows only pure-homebrew origins when only homebrew is enabled', () => {
+        expect(apply({ raw: false, adapted: false, homebrew: true })).toEqual([homebrew]);
+    });
+
+    it('shows only adapted origins when only adapted is enabled', () => {
+        expect(apply({ raw: false, adapted: true, homebrew: false })).toEqual([adapted]);
     });
 });
