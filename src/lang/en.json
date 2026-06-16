@@ -888,7 +888,14 @@
                 "ClickHintReactionNote": "(out of turn).",
                 "ButtonTitleClickForDescription": "Click for description, Shift+Click to post to chat",
                 "TalentNoDescription": "No description available for this talent.",
-                "TalentChatFailed": "Failed to send {name} to chat"
+                "TalentChatFailed": "Failed to send {name} to chat",
+                "Timing": {
+                    "half": "Half",
+                    "full": "Full",
+                    "reaction": "Reaction",
+                    "varies": "Varies",
+                    "half-full": "Half / Full"
+                }
             }
         },
         "DamageType": {
