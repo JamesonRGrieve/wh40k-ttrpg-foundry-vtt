@@ -68,11 +68,17 @@
                     unit="cm"
                     title=(localize "WH40K.MOVEMENT.Tooltip.Jump")))}}
 
-        {{!-- Lifting Capacity (SB-based) --}}
+        {{!-- Lifting Capacity (SB-based) — leads with current carried inventory weight
+              (encumbrance.value) so the player sees current load vs. capacity (#322). --}}
         {{> systems/wh40k-rpg/templates/actor/partial/stat-grid-section
             heading=(localize "WH40K.MOVEMENT.CarryingCapacity")
             columns=4
             stats=(array
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Carrying")
+                    value=actor.encumbrance.value
+                    unit="kg"
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Carrying"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Carry")
                     value=actor.lifting.carry
