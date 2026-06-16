@@ -1760,11 +1760,11 @@ export default class NPCSheet extends CharacterSheet {
     /**
      * Build a PC-compatible skillLists structure from the 21 basic WH40K
      * skills plus the NPC's sparse `trainedSkills` map. The shared PC skills
-     * panel (templates/actor/panel/skills-panel.hbs) reads
-     * `skillLists.standardColumns` — a 2-array of [key, data] entries with
-     * augmented display fields. We call the inherited `_augmentSkillData` to
-     * attach those fields so every row renders with proper labels, training
-     * indicators, current target, and tooltip data.
+     * panel (templates/actor/panel/skills-panel.hbs) renders the flat
+     * `skillLists.standard` list — [key, data] entries with augmented display
+     * fields — into one width-responsive grid (#267). We call the inherited
+     * `_augmentSkillData` to attach those fields so every row renders with
+     * proper labels, training indicators, current target, and tooltip data.
      * @override
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
@@ -1813,15 +1813,11 @@ export default class NPCSheet extends CharacterSheet {
         // Sort alphabetically by label — matches PC behavior.
         standard.sort((a, b) => (a[1].label ?? '').localeCompare(b[1].label ?? '', game.i18n.lang));
 
-        const splitIndex = Math.ceil(standard.length / 2);
-        const standardColumns = [standard.slice(0, splitIndex), standard.slice(splitIndex)];
-
         context['skillLists'] = {
             standard,
             trainedStandard: standard, // NPCs don't have the trained/untrained-advanced split
             advancedUntrained: [],
             specialist: [],
-            standardColumns,
             hasSpecialistEntries: false,
         };
         // Back-compat for any older code paths that read these.

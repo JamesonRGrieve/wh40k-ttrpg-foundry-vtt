@@ -73,8 +73,11 @@
 
     {{> systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs}}
 
-    {{!-- Talents & Traits side by side (equal height) --}}
-    <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-w-full tw-items-stretch">
+    {{!-- Talents & Traits side by side, collapsing to a single stacked column when the
+         sheet is too narrow (#267). auto-fit follows the panel width (not the viewport);
+         with only two panels the empty third track collapses, so it never exceeds two
+         columns and drops to one below ~48rem. --}}
+    <div class="tw-grid tw-gap-3 tw-w-full tw-items-stretch" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));">
         <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{> systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs}}
         </div>

@@ -1,9 +1,9 @@
 {{!--
     Skill row — single trained/basic skill entry.
-    Used by skills-panel for both left and right columns.
+    Used by skills-panel, tiled into a width-responsive 1–3 column grid.
 
     Hash params:
-        entry — [skillKey, skillData] tuple from skillLists.standardColumns
+        entry — [skillKey, skillData] tuple from skillLists.standard
 --}}
 <div class="tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-md hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-border-[var(--color-border-highlight)]{{#unless (gt entry.[1].trainingLevel 0)}} tw-opacity-50 hover:tw-opacity-65{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
     <div class="tw-flex tw-items-center tw-gap-1.5 tw-min-w-0">
