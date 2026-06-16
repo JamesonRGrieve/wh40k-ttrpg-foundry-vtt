@@ -11,8 +11,8 @@
         {{!-- COLUMN 1: Vitals → Active Effects --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Vitals --}}
-            <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-combat)]">
-                <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-border-b tw-border-solid tw-border-[var(--color-border-secondary)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-accent-combat)]">
+            <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-combat)]">
+                <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-accent-combat)]">
                     <i class="fas fa-heartbeat"></i>
                     <span>Vitals</span>
                 </div>
@@ -92,7 +92,7 @@
 
                 {{#unless isNPC}}
                 {{!-- Mental State (compact) — PC-only (NPC schema has no corruption/insanity) --}}
-                <div class="tw-px-2 tw-py-1.5 tw-bg-[rgba(0,0,0,0.05)] tw-border-t tw-border-solid tw-border-[var(--color-border-light)] tw-mt-auto">
+                <div class="tw-px-2 tw-py-1.5 tw-bg-[rgba(0,0,0,0.05)] tw-mt-auto">
                     {{> systems/wh40k-rpg/templates/actor/partial/vital-inline-row
                         icon="fa-skull"
                         label="Corruption"
@@ -230,8 +230,8 @@
 
             {{#unless isNPC}}
             {{!-- Progression (XP) — PC-only — kept inline due to SVG ring + action-button header --}}
-            <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]">
-                <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-border-b tw-border-solid tw-border-[var(--color-border-secondary)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-color-gold)]">
+            <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]">
+                <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-color-gold)]">
                     <div class="tw-relative tw-w-[20px] tw-h-[20px] tw-shrink-0"data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
                         <svg viewBox="0 0 100 100" class="tw-w-full tw-h-full">
                             <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(120, 46, 34, 0.2)" stroke-width="12"/>
@@ -260,7 +260,7 @@
                     </div>
                     {{!-- Itemised XP purchases (#XP-visibility) — every advance that contributes to Spent,
                          with its cost; the costs sum to {{system.experience.used}}. --}}
-                    <div class="tw-mt-1 tw-pt-1 tw-border-t tw-border-solid tw-border-[var(--color-border-light)]">
+                    <div class="tw-mt-1 tw-pt-1">
                         <div class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[var(--color-text-tertiary)] tw-mb-1">{{localize "WH40K.Experience.PurchasesTitle"}}</div>
                         {{#if system.experience.purchases.length}}
                         <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-[2px]">
@@ -281,8 +281,8 @@
             {{/unless}}
             {{#if isNPC}}
             {{!-- NPC summary panel in the progression slot --}}
-            <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]">
-                <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-border-b tw-border-solid tw-border-[var(--color-border-secondary)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-color-gold)]">
+            <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]">
+                <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-color-gold)]">
                     <i class="fa-solid fa-skull"></i>
                     <span>Threat — {{threatTier.label}}</span>
                 </div>
