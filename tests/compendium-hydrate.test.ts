@@ -1,13 +1,16 @@
 /**
- * Runtime hydration of LEAN compendium-actor inventories (compendium-hydrate.ts).
+ * Runtime hydration of LEAN inventories (compendium-hydrate.ts).
  *
- * History: pack actors store inventory DRY — items carry only the
+ * History: actors store inventory DRY — items carry only the
  * `_stats.compendiumSource` / `system.variantOf` join key plus the per-actor
- * fields (specialization, level, equipped state). A full-copy approach was
- * rejected (WET: ~2,000 duplicated item bodies that drift the moment a
- * compendium item is edited). The runtime joins instead: world import
- * (createActor hook), world boot (resync), and compendium browsing (sheet
- * `_prepareContext` hydrates the pack doc in memory).
+ * fields (specialization, level, equipped state, XP cost). A full-copy approach
+ * was rejected (WET: ~2,000 duplicated item bodies that drift the moment a
+ * compendium item is edited). The runtime joins instead, ALWAYS IN MEMORY and
+ * never to the database, via the single `hydrateActorInMemory` entry point:
+ * world boot (hooks-manager ready loop), world import (createActor hook), and
+ * rendering / compendium browsing (sheet `_prepareContext`). The old DB-write
+ * resync (`compendium-resync.ts`) was deleted — an in-memory join cannot clobber
+ * persisted per-actor state because it never persists.
  */
 
 import { readFileSync } from 'node:fs';
@@ -66,29 +69,48 @@ describe('hydration wiring (source pins)', () => {
     const hooks = readFileSync(resolve(__dirname, '../src/module/hooks-manager.ts'), 'utf8');
     const sheet = readFileSync(resolve(__dirname, '../src/module/applications/actor/base-actor-sheet.ts'), 'utf8');
 
-    it('world import hydrates via the createActor hook, gated on the triggering user', () => {
-        const block = hooks.match(/hooksOn\('createActor',[\s\S]*?hydrateWorldActor[\s\S]*?\}\);/);
+    it('world boot hydrates every actor in memory in the ready chain', () => {
+        // ready() calls the boot-hydration helper as a plain awaited function.
+        const ready = hooks.match(/static async ready\(\):[\s\S]*?await uuidNameCache\.build\(\);/);
+        expect(ready).not.toBeNull();
+        expect(ready?.[0], 'ready() invokes the boot hydration').toMatch(/await HooksManager\.hydrateWorldActorsOnReady\(\)/);
+
+        // The helper gates on the toggle and joins every world actor in memory.
+        const helper = hooks.match(/static async hydrateWorldActorsOnReady\(\):[\s\S]*?\n {4}\}/);
+        expect(helper).not.toBeNull();
+        expect(helper?.[0], 'gated by the resync-on-ready toggle').toMatch(/SETTINGS\.resyncOnReady/);
+        expect(helper?.[0], 'iterates world actors').toMatch(/game\.actors\.contents\.map\(async \(actor\) =>/);
+        expect(helper?.[0], 'joins each via hydrateActorInMemory').toMatch(/await hydrateActorInMemory\(actor\)/);
+    });
+
+    it('world import hydrates via the createActor hook, ungated (every client joins its own copy)', () => {
+        // Anchor on the hydrate-specific signature so we match THIS createActor hook,
+        // not the sibling grantDefaultItemsToActor one (which is correctly userId-gated).
+        const block = hooks.match(/hooksOn\('createActor',\s*\(actor: Parameters<typeof hydrateActorInMemory>\[0\]\) => \{[\s\S]*?\}\);/);
         expect(block).not.toBeNull();
-        expect(block?.[0]).toMatch(/game\.user\.id !== userId/);
+        expect(block?.[0]).toMatch(/void hydrateActorInMemory\(actor\)/);
+        // In-memory join must run on every client, so it must NOT gate on the triggering userId.
+        expect(block?.[0]).not.toMatch(/game\.user\.id !== userId/);
     });
 
-    it('compendium browsing hydrates the pack doc in _prepareContext', () => {
-        const ctx = sheet.match(/_prepareContext\([\s\S]*?hydratePackActor\(/);
+    it('rendering hydrates the actor in _prepareContext for all actors (no pack-only guard)', () => {
+        const ctx = sheet.match(/_prepareContext\([\s\S]*?hydrateActorInMemory\(this\.actor\)/);
         expect(ctx).not.toBeNull();
-        expect(ctx?.[0]).toMatch(/this\.actor\.pack/);
     });
 
-    it('pack hydration never writes to the database (updateSource + reset only)', () => {
-        const fn = hydrate.match(/export async function hydratePackActor[\s\S]*?\n\}/);
+    it('the only hydration path never writes the database (updateSource + reset, no updateEmbeddedDocuments)', () => {
+        const fn = hydrate.match(/export async function hydrateActorInMemory[\s\S]*?\n\}/);
         expect(fn).not.toBeNull();
         expect(fn?.[0]).toMatch(/updateSource/);
-        expect(fn?.[0]).not.toMatch(/updateEmbeddedDocuments/);
+        expect(fn?.[0]).toMatch(/actor\.reset\?\.\(\)/);
+        // The join is in-memory only — no DB-write CALL in the function body.
+        expect(fn?.[0]).not.toMatch(/updateEmbeddedDocuments\(/);
     });
 
-    it('world hydration persists via updateEmbeddedDocuments and never runs on pack docs', () => {
-        const fn = hydrate.match(/export async function hydrateWorldActor[\s\S]*?\n\}/);
-        expect(fn).not.toBeNull();
-        expect(fn?.[0]).toMatch(/if \(actor\.pack != null && actor\.pack !== ''\) return 0;/);
-        expect(fn?.[0]).toMatch(/updateEmbeddedDocuments/);
+    it('no DB-write hydration variant survives anywhere in the module', () => {
+        // No CALL to the DB-write API (the module doc comment may mention it as history).
+        expect(hydrate).not.toMatch(/\.updateEmbeddedDocuments\(/);
+        // The old per-target function names are gone (replaced by the single in-memory path).
+        expect(hydrate).not.toMatch(/function hydrateWorldActor|function hydratePackActor/);
     });
 });

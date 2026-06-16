@@ -5,8 +5,8 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
 /**
  * Boot-time origin-grant reconciliation.
  *
- * Mirrors {@link resyncWorldFromCompendiums} in `compendium-resync.ts`: a
- * GM-only, setting-gated pass run on every world `ready`. For each world actor
+ * A GM-only, setting-gated pass run on every world `ready` (sibling to the
+ * in-memory inventory hydration in `compendium-hydrate.ts`). For each world actor
  * it re-applies every embedded origin-path item through the now-idempotent
  * {@link WH40KItem.applyOriginToActor}. Because that applier reconciles
  * characteristic/wounds/fate contributions against a recorded per-origin delta
