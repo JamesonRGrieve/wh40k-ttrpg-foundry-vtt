@@ -2971,6 +2971,24 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
+     * Origin-granted aptitudes for this actor, or `[]` when the schema has none.
+     * NPC actors reuse the PC templates but their DataModel has no `aptitudes`
+     * field, so `system.aptitudes` is undefined — defaulting here (rather than
+     * spreading a raw cast) is what stops the "granted is not iterable" NPC-sheet
+     * crash (#331). Kept as its own method so the guard's branch doesn't push
+     * `_prepareAptitudePills` over the complexity limit.
+     */
+    #grantedAptitudes(): string[] {
+        // NPCData is a separate hierarchy from CharacterData and has no `aptitudes`
+        // field, yet the character sheet (which NPCs reuse) types this.actor.system
+        // as CharacterData — so the compiler believes aptitudes is always string[].
+        // Read through an optional shape so the real NPC-runtime absence is handled
+        // instead of crashing the spread with "granted is not iterable" (#331).
+        const apt = (this.actor.system as { aptitudes?: string[] }).aptitudes;
+        return apt ?? [];
+    }
+
+    /**
      * Build per-aptitude display data with the origin path source(s) that granted it.
      * Aptitudes come from home world / background / role / elite advance grants or
      * resolved choices. (Characteristic-named aptitudes are NOT auto-granted per RAW.)
@@ -2978,7 +2996,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareAptitudePills(): Array<{ aptitude: string; sources: string[] }> {
         const actor = this.actor;
-        const granted = actor.system.aptitudes as string[];
+        const granted = this.#grantedAptitudes();
 
         // Universal aptitudes (General) are inherent to every character in an
         // aptitude system and carry no origin source; pull them from the system
