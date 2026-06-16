@@ -129,7 +129,7 @@ export const AptitudeSystem: Story = {
         tabs: [
             ...CAREER_TABS,
             { id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: false },
-            { id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-dna', active: false },
+            { id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-medal', active: false },
         ],
     },
     play: ({ canvasElement }) => {
