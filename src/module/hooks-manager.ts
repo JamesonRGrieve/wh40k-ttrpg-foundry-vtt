@@ -79,8 +79,7 @@ import {
 import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { onRefreshToken } from './canvas/token-mask.ts';
-import { hydrateWorldActor } from './compendium-hydrate.ts';
-import { resyncWorldFromCompendiums } from './compendium-resync.ts';
+import { hydrateActorInMemory } from './compendium-hydrate.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
@@ -204,13 +203,13 @@ export class HooksManager {
         });
 
         // Compendium actors ship LEAN inventories (compendiumSource / variantOf join
-        // keys; see src/packs/CLAUDE.md). Hydrate immediately on world import — the
-        // boot-time resync would otherwise only catch it at the next reload. Gated on
-        // the triggering userId like the grant above.
+        // keys; see src/packs/CLAUDE.md). Join the canonical body IN MEMORY on import —
+        // updateSource + reset, never a database write. NOT gated on the triggering
+        // userId: every client must hydrate its own in-memory copy of the new actor
+        // (unlike a DB write, which only one client should perform).
         // eslint-disable-next-line no-restricted-syntax -- boundary: createActor hook payload is framework-typed; narrowed inside compendium-hydrate.ts
-        hooksOn('createActor', (actor: Parameters<typeof hydrateWorldActor>[0], _options: unknown, userId: string) => {
-            if (game.user.id !== userId) return;
-            void hydrateWorldActor(actor);
+        hooksOn('createActor', (actor: Parameters<typeof hydrateActorInMemory>[0]) => {
+            void hydrateActorInMemory(actor);
         });
     }
 
@@ -693,14 +692,37 @@ export class HooksManager {
         };
     }
 
+    /**
+     * Join the canonical compendium body onto every world actor's LEAN items,
+     * IN MEMORY (updateSource + reset; no database write — stored records stay
+     * lean, so there is nothing on disk for a reload to clobber). Replaces the
+     * deleted boot-time DB resync, whose updateEmbeddedDocuments write reconciled
+     * the canonical body over the stored record on every GM ready and, when a
+     * client ran stale JS, clobbered per-actor fields (talent/power XP cost) back
+     * to the compendium's zero. Runs on every client (the join is per-client and
+     * non-persisting); gated only by the `resyncOnReady` toggle.
+     *
+     * Kept as its own method so `ready()` calls it as a plain awaited function
+     * (no inline `game` read wrapping the await) — that read-then-await pattern
+     * spuriously trips `require-atomic-updates` on the later `game.wh40k.*` writes.
+     */
+    static async hydrateWorldActorsOnReady(): Promise<void> {
+        if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady) === false) return;
+        await Promise.all(
+            game.actors.contents.map(async (actor) => {
+                await hydrateActorInMemory(actor);
+            }),
+        );
+    }
+
     static async ready(): Promise<void> {
         await checkAndMigrateWorld();
-        await resyncWorldFromCompendiums();
+        await HooksManager.hydrateWorldActorsOnReady();
         await uuidNameCache.build();
         await backfillOriginPathUuids();
         await reconcileWorldOriginGrants();
 
-        // Initialize rich tooltip system
+        // Initialize rich tooltip system.
         game.wh40k.tooltips = new TooltipsWH40K();
         await game.wh40k.tooltips.initialize();
         TransactionManager.initialize();

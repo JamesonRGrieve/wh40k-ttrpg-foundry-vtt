@@ -4,8 +4,9 @@
  *
  * - `system.state.identified` lives on the shared EquippableTemplate state and
  *   defaults to `true` (existing/RAW gear stays visible).
- * - It is a per-instance runtime flag, so it is preserved across the
- *   compendium→world resync.
+ * - It is per-instance runtime state, so it survives the compendium→world join:
+ *   the hydration in `compendium-hydrate.ts` is "persisted wins" (the actor's
+ *   stored value overlays the canonical body) and never writes the database.
  * - The actor-sheet weapon displays gate damage/pen/range on
  *   `(or item.system.state.identified @root.isGM)`.
  *
@@ -17,7 +18,7 @@ import { describe, expect, it } from 'vitest';
 import { readRepoFile } from './lib/repo-file.ts';
 
 const EQUIPPABLE = readRepoFile('src/module/data/shared/equippable-template.ts');
-const RESYNC = readRepoFile('src/module/compendium-resync.ts');
+const HYDRATE = readRepoFile('src/module/compendium-hydrate.ts');
 const WEAPON_PANEL = readRepoFile('src/templates/actor/panel/weapon-panel.hbs');
 const COMBAT_PANEL = readRepoFile('src/templates/actor/panel/combat-station-panel.hbs');
 const OVERVIEW = readRepoFile('src/templates/actor/player/tab-overview.hbs');
@@ -30,10 +31,13 @@ describe('weapon identification schema (#262)', () => {
         expect(EQUIPPABLE).toMatch(/identified: new fields\.BooleanField\(\{ required: true, initial: true \}\)/);
     });
 
-    it('preserves system.state.identified across the compendium→world resync', () => {
-        // The weapon preserve list must keep the per-instance flag from being
-        // clobbered back to the compendium default.
-        expect(RESYNC).toMatch(/'weapon':\s*\[[^\]]*'state\.identified'/);
+    it('survives the compendium→world join because hydration is persisted-wins', () => {
+        // The in-memory join overlays the actor's PERSISTED system on top of the
+        // canonical body (persisted wins), so a per-instance flag like
+        // state.identified is never reset to the compendium default — and because
+        // the join never writes the DB, there is nothing on disk to clobber.
+        expect(HYDRATE).toMatch(/deepMerge\(structuredClone\(sourceSystem\), persistedSystem\)/);
+        expect(HYDRATE).toMatch(/_source\?\.system \?\? item\.system/);
     });
 });
 
