@@ -19,27 +19,15 @@
     Rendered only for OW actors; the include in tab-status.hbs gates on
     `isOW` — the orchestrator wires that flag in `_prepareContext`.
 --}}
-<section class="wh40k-ow-logistics-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                ow:tw-border-amber-700"
-         data-wh40k-system="ow"
-         data-ow-rating="{{logisticsPanel.rating}}"
-         data-ow-munitorum="{{#if logisticsPanel.munitorum}}on{{else}}off{{/if}}"
-         data-ow-situational="{{logisticsPanel.situational}}">
-
-    {{!-- Header: panel title + rating readout --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-truck-loading ow:tw-text-amber-300"></i>
-            <span>{{localize "WH40K.OW.Logistics.PanelHeader"}}</span>
-        </h3>
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-logistics-panel" accentBorderClass="ow:tw-border-amber-700" accentIconClass="ow:tw-text-amber-300" icon="fa-truck-loading" label=(localize "WH40K.OW.Logistics.PanelHeader") rootAttrs=(safeAttrs "data-wh40k-system" "ow" "data-ow-rating" logisticsPanel.rating "data-ow-munitorum" (iff logisticsPanel.munitorum "on" "off") "data-ow-situational" logisticsPanel.situational) hasRightSlot=true}}
+    {{!-- Header right slot: rating readout --}}
+    {{#*inline "rightSlot"}}
         <span class="wh40k-ow-rating tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums"
               data-ow-rating-readout="{{logisticsPanel.rating}}"
               title="{{localize 'WH40K.OW.Logistics.Rating'}}">
             {{logisticsPanel.rating}}
         </span>
-    </header>
+    {{/inline}}
 
     {{!-- Munitorum Influence Talent toggle --}}
     <div class="wh40k-ow-munitorum tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
@@ -86,4 +74,4 @@
             {{localize "WH40K.OW.Logistics.RollButton"}}
         </button>
     </div>
-</section>
+{{/system-card}}

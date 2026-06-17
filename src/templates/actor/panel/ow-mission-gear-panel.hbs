@@ -21,21 +21,7 @@
     Rendered only for OW actors; the include in tab-status.hbs gates on
     `isOW`.
 --}}
-<section class="wh40k-ow-mission-gear-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                ow:tw-border-amber-700"
-         data-wh40k-system="ow"
-         data-ow-last-outcome="{{#if missionGearPanel.hasOutcome}}{{missionGearPanel.outcomeKey}}{{else}}none{{/if}}">
-
-    {{!-- Header: panel title --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-box-open ow:tw-text-amber-300"></i>
-            <span>{{localize "WH40K.OW.MissionGear.Label"}}</span>
-        </h3>
-    </header>
-
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-mission-gear-panel" accentBorderClass="ow:tw-border-amber-700" accentIconClass="ow:tw-text-amber-300" icon="fa-box-open" label=(localize "WH40K.OW.MissionGear.Label") rootAttrs=(safeAttrs "data-wh40k-system" "ow" "data-ow-last-outcome" (iff missionGearPanel.hasOutcome missionGearPanel.outcomeKey "none"))}}
     {{!-- Last outcome readout --}}
     {{#if missionGearPanel.hasOutcome}}
         <div class="wh40k-ow-mission-gear-last tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
@@ -59,4 +45,4 @@
             {{localize "WH40K.OW.MissionGear.RequestButton"}}
         </button>
     </div>
-</section>
+{{/system-card}}
