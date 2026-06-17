@@ -13,7 +13,8 @@
 
 import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
 
-const WEAPON_QUALITY_PACK = 'wh40k-rpg.rt-core-items-weapon-qualities';
+/** Pack-name suffix shared by every system's weapon-qualities pack (`rt-core-items-weapon-qualities`, `dh2-…`, …). */
+const WEAPON_QUALITY_PACK_SUFFIX = '-core-items-weapon-qualities';
 
 /** All-absent payload: scalars `null`, flags `false`, strings `''`. */
 function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
@@ -84,49 +85,113 @@ export function weaponQualityMechanicsFromRaw(raw: unknown): WeaponQualityMechan
 }
 
 /* -------------------------------------------- */
-/*  Index                                       */
+/*  Index                                        */
 /* -------------------------------------------- */
 
-/** Minimal Foundry-pack surface the index reads — the docs carry our WeaponQualityData system shape. */
+/**
+ * Minimal Foundry-pack surface the index reads — the docs carry our WeaponQualityData
+ * system shape. A canonical doc carries its own `mechanics` and a blank `mechanicsRef`;
+ * a per-system stub leaves `mechanics` at the schema default and points `mechanicsRef`
+ * at the canonical doc's UUID.
+ */
 interface WeaponQualityPackDoc {
-    system?: { identifier?: string; mechanics?: WeaponQualityMechanics };
+    uuid?: string;
+    system?: { identifier?: string; mechanics?: WeaponQualityMechanics; mechanicsRef?: string };
 }
 interface WeaponQualityPack {
+    metadata?: { name?: string };
     getDocuments?: () => Promise<WeaponQualityPackDoc[]>;
 }
 interface PackGameLike {
-    packs?: { get?: (id: string) => WeaponQualityPack | undefined };
+    packs?: { filter?: (fn: (pack: WeaponQualityPack) => boolean) => WeaponQualityPack[] };
 }
 
-let payloadIndex: Map<string, WeaponQualityMechanics> | null = null;
+/** Per-system map (systemId → identifier → mechanics) plus a cross-system flat fallback. */
+let payloadBySystem: Map<string, Map<string, WeaponQualityMechanics>> | null = null;
+let payloadFlat: Map<string, WeaponQualityMechanics> | null = null;
+
+/** Derive the system id from a weapon-qualities pack name (`rt-core-items-weapon-qualities` → `rt`). */
+function systemIdFromPackName(name: string): string {
+    return name.slice(0, -WEAPON_QUALITY_PACK_SUFFIX.length);
+}
 
 /**
- * Build the by-identifier payload index from the weaponQuality compendium. Call
- * once on `ready`; idempotent (rebuilds the cache).
+ * Build the per-system payload index from every `*-core-items-weapon-qualities`
+ * compendium. Call once on `ready`; idempotent (rebuilds the cache).
+ *
+ * Two passes: canonical docs (blank `mechanicsRef`) seed a `uuid → mechanics` table
+ * and their own per-system entries; stub docs (`mechanicsRef` set) resolve their
+ * mechanics by following the ref into that table, so the shared FFG RAW values stay
+ * authored once on the Rogue Trader docs.
  */
 export async function buildWeaponQualityPayloadIndex(): Promise<void> {
-    const map = new Map<string, WeaponQualityMechanics>();
+    const bySystem = new Map<string, Map<string, WeaponQualityMechanics>>();
+    const flat = new Map<string, WeaponQualityMechanics>();
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `game` is a runtime global with no shipped type at this seam
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
-    const pack = packGame?.packs?.get?.(WEAPON_QUALITY_PACK);
-    if (pack?.getDocuments !== undefined) {
-        const docs = await pack.getDocuments();
-        for (const doc of docs) {
-            const identifier = doc.system?.identifier;
-            if (typeof identifier === 'string' && identifier !== '') {
-                map.set(identifier.toLowerCase(), weaponQualityMechanicsFromRaw(doc.system?.mechanics));
+    const packs = packGame?.packs?.filter?.((pack) => pack.metadata?.name?.endsWith(WEAPON_QUALITY_PACK_SUFFIX) === true) ?? [];
+
+    // Read every pack concurrently, then gather all docs up front so refs resolve
+    // regardless of pack order (await lives in the map callback, not a loop).
+    const sources: Array<{ systemId: string; getDocuments: () => Promise<WeaponQualityPackDoc[]> }> = [];
+    for (const pack of packs) {
+        const name = pack.metadata?.name;
+        if (name === undefined || pack.getDocuments === undefined) continue;
+        sources.push({ systemId: systemIdFromPackName(name), getDocuments: pack.getDocuments });
+    }
+    const perPack = await Promise.all(sources.map(async (source) => ({ systemId: source.systemId, packDocs: await source.getDocuments() })));
+
+    const docs: Array<{ systemId: string; doc: WeaponQualityPackDoc }> = [];
+    const canonicalByUuid = new Map<string, WeaponQualityMechanics>();
+    for (const { systemId, packDocs } of perPack) {
+        for (const doc of packDocs) {
+            docs.push({ systemId, doc });
+            const ref = doc.system?.mechanicsRef;
+            if ((ref === undefined || ref === '') && doc.uuid !== undefined) {
+                canonicalByUuid.set(doc.uuid, weaponQualityMechanicsFromRaw(doc.system?.mechanics));
             }
         }
     }
-    payloadIndex = map;
+
+    for (const { systemId, doc } of docs) {
+        const identifier = doc.system?.identifier;
+        if (typeof identifier !== 'string' || identifier === '') continue;
+        const ref = doc.system?.mechanicsRef;
+        const mechanics =
+            ref !== undefined && ref !== ''
+                ? canonicalByUuid.get(ref) ?? defaultWeaponQualityMechanics()
+                : weaponQualityMechanicsFromRaw(doc.system?.mechanics);
+        const key = identifier.toLowerCase();
+        let systemMap = bySystem.get(systemId);
+        if (systemMap === undefined) {
+            systemMap = new Map<string, WeaponQualityMechanics>();
+            bySystem.set(systemId, systemMap);
+        }
+        systemMap.set(key, mechanics);
+        if (!flat.has(key)) flat.set(key, mechanics);
+    }
+
+    payloadBySystem = bySystem;
+    payloadFlat = flat;
 }
 
-/** Look up a quality's mechanics by identifier (case-insensitive). `null` until the index is built. */
-export function getWeaponQualityMechanics(identifier: string): WeaponQualityMechanics | null {
-    return payloadIndex?.get(identifier.toLowerCase()) ?? null;
+/**
+ * Look up a quality's mechanics by identifier (case-insensitive), optionally scoped
+ * to a game system. Falls back to the cross-system value when no system is given or
+ * the system carries no entry (the FFG family's values are identical today). `null`
+ * until the index is built.
+ */
+export function getWeaponQualityMechanics(identifier: string, systemId?: string): WeaponQualityMechanics | null {
+    const key = identifier.toLowerCase();
+    if (systemId !== undefined) {
+        const scoped = payloadBySystem?.get(systemId)?.get(key);
+        if (scoped !== undefined) return scoped;
+    }
+    return payloadFlat?.get(key) ?? null;
 }
 
-/** Seed the index directly (unit tests only — no Foundry pack available there). */
+/** Seed the index directly (unit tests / stories — no Foundry pack available there). Populates the flat fallback. */
 export function setWeaponQualityPayloadsForTesting(entries: Record<string, Partial<WeaponQualityMechanics>>): void {
-    payloadIndex = new Map(Object.entries(entries).map(([id, partial]) => [id.toLowerCase(), weaponQualityMechanicsFromRaw(partial)]));
+    payloadBySystem = null;
+    payloadFlat = new Map(Object.entries(entries).map(([id, partial]) => [id.toLowerCase(), weaponQualityMechanicsFromRaw(partial)]));
 }
