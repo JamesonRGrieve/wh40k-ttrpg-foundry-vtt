@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { SYSTEM_ID } from './constants.ts';
 import {
     ORIGIN_GRANT_DELTAS_FLAG,
+    type OriginAppliedDelta,
     deltaFromModifiers,
     type OriginIdentityItemLike,
     type OriginModifierBag,
     originDeltaFlagPath,
     originIdentityKey,
     readOriginDelta,
+    reconcileResourceDeltas,
 } from './origin-grant-ledger.ts';
 
 /**
@@ -123,62 +125,76 @@ describe('origin-grant-ledger: flag plumbing', () => {
     });
 });
 
-describe('origin-grant-ledger: reconcile convergence (idempotency property)', () => {
+describe('origin-grant-ledger: reconcileResourceDeltas convergence (idempotency property)', () => {
     /**
-     * Mirror of the resource-reconciliation math in `WH40KItem.applyOriginToActor`:
-     * reverse the prior recorded delta, add the freshly-derived one. This is the
-     * exact arithmetic the boot reconcile runs against the actor's current
-     * resource values. We assert the convergence invariant: once the ledger
-     * records an origin's delta, re-applying it is a no-op.
+     * Drive the real shared helper with the boot reconcile's
+     * (`WH40KItem.applyOriginToActor`) resource→path map: `wounds.max` /
+     * `fate.total` only, contribution derived from `deltaFromModifiers`. We assert
+     * the convergence invariant: once the ledger records an origin's delta,
+     * re-applying it is a no-op.
      */
-    function reconcileResources(
-        current: { wounds: number; fate: number; characteristics: Record<string, number> },
-        modifiers: OriginModifierBag,
-        priorDelta: { wounds?: number; fate?: number; characteristics?: Record<string, number> },
-    ): { next: { wounds: number; fate: number; characteristics: Record<string, number> }; recorded: ReturnType<typeof deltaFromModifiers> } {
-        const newDelta = deltaFromModifiers(modifiers);
-        const next = {
-            wounds: current.wounds,
-            fate: current.fate,
-            characteristics: { ...current.characteristics },
-        };
+    const ITEM_PATHS = { wounds: ['wounds.max'], fate: ['fate.total'] } as const;
 
-        const priorWounds = Number(priorDelta.wounds ?? 0);
-        if (newDelta.wounds !== priorWounds) next.wounds = current.wounds - priorWounds + newDelta.wounds;
+    interface ResourceState {
+        wounds: number;
+        fate: number;
+        characteristics: Record<string, number>;
+    }
 
-        const priorFate = Number(priorDelta.fate ?? 0);
-        if (newDelta.fate !== priorFate) next.fate = current.fate - priorFate + newDelta.fate;
+    /** Build the `system` snapshot the helper reads (wounds.max / fate.total / characteristics.*.advance). */
+    function toSystem(state: ResourceState): { wounds: { max: number }; fate: { total: number }; characteristics: Record<string, { advance: number }> } {
+        const characteristics: Record<string, { advance: number }> = {};
+        for (const [k, advance] of Object.entries(state.characteristics)) characteristics[k] = { advance };
+        return { wounds: { max: state.wounds }, fate: { total: state.fate }, characteristics };
+    }
 
-        const priorChars = priorDelta.characteristics ?? {};
-        const charKeys = new Set<string>([...Object.keys(newDelta.characteristics), ...Object.keys(priorChars)]);
-        for (const k of charKeys) {
-            const value = Number(newDelta.characteristics[k] ?? 0);
-            const prior = Number(priorChars[k] ?? 0);
-            if (value === prior) continue;
-            next.characteristics[k] = (current.characteristics[k] ?? 0) - prior + value;
+    /** Apply the helper's `system.*` update bag back onto a state snapshot (the actor.update() Foundry does for real). */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: `updates` is the helper's actor.update() payload (ResourceReconcileResult.updates: Record<string, unknown>); this test replays it
+    function applyUpdates(state: ResourceState, updates: Record<string, unknown>): ResourceState {
+        const next: ResourceState = { wounds: state.wounds, fate: state.fate, characteristics: { ...state.characteristics } };
+        if (typeof updates['system.wounds.max'] === 'number') next.wounds = updates['system.wounds.max'];
+        if (typeof updates['system.fate.total'] === 'number') next.fate = updates['system.fate.total'];
+        // Every characteristic in these convergence cases is pre-seeded on the state, so replaying by known key covers all writes.
+        for (const key of Object.keys(next.characteristics)) {
+            const value = updates[`system.characteristics.${key}.advance`];
+            if (typeof value === 'number') next.characteristics[key] = value;
         }
+        return next;
+    }
 
-        return { next, recorded: newDelta };
+    function reconcile(
+        state: ResourceState,
+        modifiers: OriginModifierBag,
+        priorDelta: OriginAppliedDelta,
+    ): { next: ResourceState; recorded: OriginAppliedDelta } {
+        const md = deltaFromModifiers(modifiers);
+        const { updates, newDelta } = reconcileResourceDeltas(
+            toSystem(state),
+            { characteristics: md.characteristics, resources: { wounds: md.wounds, fate: md.fate } },
+            priorDelta,
+            ITEM_PATHS,
+        );
+        return { next: applyUpdates(state, updates), recorded: newDelta };
     }
 
     const grantMods: OriginModifierBag = { characteristics: { weaponSkill: 5, toughness: 3 }, wounds: 2, fate: 1 };
 
     it('first apply (no prior delta) is purely additive', () => {
         const current = { wounds: 10, fate: 3, characteristics: { weaponSkill: 30, toughness: 30 } };
-        const { next, recorded } = reconcileResources(current, grantMods, {});
+        const { next, recorded } = reconcile(current, grantMods, {});
         expect(next).toEqual({ wounds: 12, fate: 4, characteristics: { weaponSkill: 35, toughness: 33 } });
         expect(recorded).toEqual({ characteristics: { weaponSkill: 5, toughness: 3 }, wounds: 2, fate: 1 });
     });
 
     it('second apply with the recorded delta is a no-op (N applies == 1 apply)', () => {
         const start = { wounds: 10, fate: 3, characteristics: { weaponSkill: 30, toughness: 30 } };
-        const first = reconcileResources(start, grantMods, {});
+        const first = reconcile(start, grantMods, {});
         // Re-apply using the delta the first apply recorded — this is what the
         // builder stamps and what the next reconcile reads back.
-        const second = reconcileResources(first.next, grantMods, first.recorded);
+        const second = reconcile(first.next, grantMods, first.recorded);
         expect(second.next).toEqual(first.next);
         // And a third, for good measure.
-        const third = reconcileResources(second.next, grantMods, second.recorded);
+        const third = reconcile(second.next, grantMods, second.recorded);
         expect(third.next).toEqual(first.next);
     });
 
@@ -189,7 +205,7 @@ describe('origin-grant-ledger: reconcile convergence (idempotency property)', ()
         // nothing — no double-counting on top of the absolute writes.
         const afterAbsoluteWrite = { wounds: 12, fate: 4, characteristics: { weaponSkill: 35, toughness: 33 } };
         const stamped = deltaFromModifiers(grantMods);
-        const reconciled = reconcileResources(afterAbsoluteWrite, grantMods, stamped);
+        const reconciled = reconcile(afterAbsoluteWrite, grantMods, stamped);
         expect(reconciled.next).toEqual(afterAbsoluteWrite);
     });
 
@@ -198,9 +214,82 @@ describe('origin-grant-ledger: reconcile convergence (idempotency property)', ()
         // granting +5 wounds. The recorded prior (+2) is reversed before the new
         // (+5) lands, so the net is +5 over baseline, not +7.
         const baseline = { wounds: 10, fate: 3, characteristics: {} };
-        const a = reconcileResources(baseline, { wounds: 2 }, {});
+        const a = reconcile(baseline, { wounds: 2 }, {});
         expect(a.next.wounds).toBe(12);
-        const b = reconcileResources(a.next, { wounds: 5 }, a.recorded);
+        const b = reconcile(a.next, { wounds: 5 }, a.recorded);
         expect(b.next.wounds).toBe(15);
+    });
+});
+
+describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization', () => {
+    /**
+     * `GrantsProcessor.applyGrants` reconciles five resources and writes both
+     * `value` and `max` for wounds/fate — its resource→path map differs from the
+     * boot reconcile's. These pin that the shared helper honours an arbitrary map
+     * without collapsing the per-applier divergence (the load-bearing point of
+     * parameterizing it).
+     */
+    const PROCESSOR_PATHS = {
+        wounds: ['wounds.value', 'wounds.max'],
+        fate: ['fate.value', 'fate.max'],
+        fateThreshold: ['fate.threshold'],
+        corruption: ['corruption.value'],
+        insanity: ['insanity.value'],
+    } as const;
+
+    it("fans a resource's single prior across all its configured sub-paths", () => {
+        const system = {
+            wounds: { value: 10, max: 10 },
+            fate: { value: 3, max: 3, threshold: 0 },
+            corruption: { value: 0 },
+            insanity: { value: 0 },
+            characteristics: {},
+        };
+        const { updates, newDelta } = reconcileResourceDeltas(system, { characteristics: {}, resources: { wounds: 4 } }, {}, PROCESSOR_PATHS);
+        expect(updates['system.wounds.value']).toBe(14);
+        expect(updates['system.wounds.max']).toBe(14);
+        expect(newDelta.wounds).toBe(4);
+        // A zero contribution against a zero prior writes nothing but is still recorded.
+        expect(updates['system.fate.value']).toBeUndefined();
+        expect(newDelta.fate).toBe(0);
+        expect(newDelta.fateThreshold).toBe(0);
+        expect(newDelta.corruption).toBe(0);
+        expect(newDelta.insanity).toBe(0);
+    });
+
+    it('reverses each resource against its own prior delta (no cross-talk between resources)', () => {
+        const system = {
+            wounds: { value: 14, max: 14 },
+            fate: { value: 5, max: 5, threshold: 2 },
+            corruption: { value: 3 },
+            insanity: { value: 1 },
+            characteristics: {},
+        };
+        const prior: OriginAppliedDelta = { wounds: 4, fate: 2, fateThreshold: 2, corruption: 3, insanity: 1 };
+        const { updates } = reconcileResourceDeltas(
+            system,
+            { characteristics: {}, resources: { wounds: 1, fate: 0, fateThreshold: 0, corruption: 0, insanity: 0 } },
+            prior,
+            PROCESSOR_PATHS,
+        );
+        // wounds re-bases 4→1 across both paths: 14 − 4 + 1 = 11.
+        expect(updates['system.wounds.value']).toBe(11);
+        expect(updates['system.wounds.max']).toBe(11);
+        // The rest reverse to baseline independently.
+        expect(updates['system.fate.value']).toBe(3);
+        expect(updates['system.fate.max']).toBe(3);
+        expect(updates['system.fate.threshold']).toBe(0);
+        expect(updates['system.corruption.value']).toBe(0);
+        expect(updates['system.insanity.value']).toBe(0);
+    });
+
+    it('skips characteristics the actor does not carry but still records them in the delta', () => {
+        const system = { characteristics: { weaponSkill: { advance: 30 } } };
+        const { updates, newDelta } = reconcileResourceDeltas(system, { characteristics: { weaponSkill: 5, ballisticSkill: 4 }, resources: {} }, {}, {});
+        expect(updates['system.characteristics.weaponSkill.advance']).toBe(35);
+        // ballisticSkill is absent on the actor → no advance slot to write…
+        expect(updates['system.characteristics.ballisticSkill.advance']).toBeUndefined();
+        // …but it is still recorded as a contributed delta (matching deltaFromModifiers).
+        expect(newDelta.characteristics).toEqual({ weaponSkill: 5, ballisticSkill: 4 });
     });
 });

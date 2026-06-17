@@ -1,5 +1,12 @@
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
-import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, readOriginDelta, type OriginModifierBag } from '../origin-grant-ledger.ts';
+import {
+    deltaFromModifiers,
+    originDeltaFlagPath,
+    originIdentityKey,
+    readOriginDelta,
+    reconcileResourceDeltas,
+    type OriginModifierBag,
+} from '../origin-grant-ledger.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import type { WH40KItemSystemData } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -803,7 +810,6 @@ export class WH40KItem extends WH40KItemContainer {
      * itself are skip-if-exists (matched by name / identity), mirroring the
      * existing skip-if-exists guard already used for skill/talent grants.
      */
-    // eslint-disable-next-line complexity -- single applier reconciles characteristics, wounds, fate (delta-tracked) plus skip-if-exists skills/talents/self
     async applyOriginToActor(actor: OriginActorLike, options: { silent?: boolean } = {}): Promise<void> {
         if (!this.isOriginPath) {
             // eslint-disable-next-line no-restricted-syntax -- legacy notification string, pending langpack migration
@@ -829,35 +835,21 @@ export class WH40KItem extends WH40KItemContainer {
         // mechanisms never disagree on what an origin "already added".
         const identityKey = this.#originIdentityKey();
         const priorDelta = readOriginDelta(actor.flags, identityKey);
-        const priorChars = priorDelta.characteristics ?? {};
-        const newDelta = deltaFromModifiers(modifiers);
+        const md = deltaFromModifiers(modifiers);
 
-        // Apply characteristic modifiers (reverse prior delta, add current).
-        const charKeys = new Set<string>([...Object.keys(modifiers.characteristics ?? {}), ...Object.keys(priorChars)]);
-        for (const key of charKeys) {
-            const charEntry = actor.system.characteristics[key];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
-            if (charEntry === undefined) continue;
-            const value = Number(modifiers.characteristics?.[key] ?? 0);
-            const prior = Number(priorChars[key] ?? 0);
-            if (value === prior) continue;
-            const currentBonus: number = charEntry.advance;
-            updates[`system.characteristics.${key}.advance`] = currentBonus - prior + value;
-        }
-
-        // Apply wounds modifier (reverse prior, add current).
-        const priorWounds = Number(priorDelta.wounds ?? 0);
-        if (newDelta.wounds !== priorWounds) {
-            const currentWounds: number = actor.system.wounds.max;
-            updates['system.wounds.max'] = currentWounds - priorWounds + newDelta.wounds;
-        }
-
-        // Apply fate modifier (reverse prior, add current).
-        const priorFate = Number(priorDelta.fate ?? 0);
-        if (newDelta.fate !== priorFate) {
-            const currentFate: number = actor.system.fate?.total ?? 0;
-            updates['system.fate.total'] = currentFate - priorFate + newDelta.fate;
-        }
+        // Reverse-then-add reconcile (shared with GrantsProcessor). This applier
+        // writes `wounds.max` / `fate.total` only — its resource→path map differs
+        // from the processor's, which is why the map is a parameter.
+        const { updates: resourceUpdates, newDelta } = reconcileResourceDeltas(
+            actor.system,
+            { characteristics: md.characteristics, resources: { wounds: md.wounds, fate: md.fate } },
+            priorDelta,
+            {
+                wounds: ['wounds.max'],
+                fate: ['fate.total'],
+            },
+        );
+        Object.assign(updates, resourceUpdates);
 
         // Record the delta this apply commits, so the next apply can reverse it.
         updates[originDeltaFlagPath(identityKey)] = newDelta;
