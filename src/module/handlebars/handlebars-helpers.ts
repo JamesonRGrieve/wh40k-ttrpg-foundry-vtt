@@ -196,6 +196,26 @@ export function registerHandlebarsHelpers(): void {
         return outStr;
     });
 
+    // Build a SafeString of `name="value"` attribute pairs from alternating
+    // key/value args, for partials that own an element's root tag but let callers
+    // supply extra attributes (e.g. system-card.hbs's `rootAttrs`). Values are
+    // stringified (a boolean renders "true"/"false", matching an inline
+    // {{#if}}…{{else}}…), HTML-escaped, and null/undefined/empty-name pairs are
+    // skipped. Output goes into a triple-stache so it is not double-escaped.
+    Handlebars.registerHelper('safeAttrs', (...args: TplValue[]): Handlebars.SafeString => {
+        const pairs = args.slice(0, -1); // drop the trailing Handlebars options object
+        const out: string[] = [];
+        for (let i = 0; i + 1 < pairs.length; i += 2) {
+            const name = pairs[i];
+            const value = pairs[i + 1];
+            if (typeof name !== 'string' || name === '') continue;
+            // Only primitive values become attributes; objects/arrays/null/undefined are skipped.
+            if (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'boolean') continue;
+            out.push(`${name}="${Handlebars.escapeExpression(String(value))}"`);
+        }
+        return new Handlebars.SafeString(out.join(' '));
+    });
+
     // Truthiness helper: preserves Handlebars-style truthy semantics for templates.
     const isTruthy = (v: TplValue): boolean => v !== undefined && v !== null && v !== false && v !== 0 && v !== '';
 
