@@ -10,15 +10,15 @@
  * application of a homeworld to a fresh character lives in its own
  * flow (the registry in `within-homeworlds.ts` is the data source).
  *
+ * Built from the shared info-card-dialog factory (#287), matching the
+ * Without / Beyond homeworld info dialogs.
+ *
  * See GitHub issue #139.
  */
 
 import { characteristicLabel, formatCharacteristicMods, formatWounds } from '../../helpers/characteristic-labels.ts';
 import { WITHIN_HOMEWORLDS, WITHIN_HOMEWORLD_IDS, type WithinHomeworldDef, type WithinHomeworldId } from '../../rules/within-homeworlds.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
+import { defineInfoCardDialog } from './define-info-card-dialog.ts';
 
 /** i18n label keys for each homeworld id. */
 const HOMEWORLD_LABEL_KEYS: Record<WithinHomeworldId, string> = {
@@ -73,11 +73,6 @@ interface HomeworldCard {
     accent: AccentClasses;
 }
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
-interface WithinHomeworldInfoContext extends Record<string, unknown> {
-    cards: HomeworldCard[];
-}
-
 function localize(key: string): string {
     return game.i18n.localize(key);
 }
@@ -86,84 +81,41 @@ function formatFateThreshold(def: WithinHomeworldDef): string {
     return `${String(def.fateThreshold.base)} (${def.fateThreshold.emperorsBlessingMin.toString()}+)`;
 }
 
-/**
- * GM-only reference dialog. Three Tailwind-styled cards, each
- * themed in a distinct palette so the homeworlds read as a set at
- * a glance. No action handlers beyond Close.
- */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class WithinHomeworldInfoDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
-    constructor(options: ApplicationV2Config.DefaultOptions = {}) {
-        super(options);
-    }
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
-        tag: 'form',
-        classes: ['wh40k-rpg', 'dialog', 'within-homeworld-info-dialog', 'standard-form'],
-        actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
-            close: WithinHomeworldInfoDialog.#onClose,
-        },
-        position: {
-            width: 880,
-        },
-        window: {
-            title: 'WH40K.WithinHomeworld.DialogTitle',
-            resizable: true,
-        },
-    };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
-        form: {
-            template: 'systems/wh40k-rpg/templates/prompt/within-homeworld-info-dialog.hbs',
-            classes: [],
-            scrollable: [],
-        },
-    };
-
-    /* -------------------------------------------- */
-    /*  Rendering                                   */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<WithinHomeworldInfoContext> {
-        const context = (await super._prepareContext(options)) as WithinHomeworldInfoContext;
-        const cards: HomeworldCard[] = WITHIN_HOMEWORLD_IDS.map((id) => {
-            const def = WITHIN_HOMEWORLDS[id];
-            return {
-                id,
-                labelKey: HOMEWORLD_LABEL_KEYS[id],
-                label: localize(HOMEWORLD_LABEL_KEYS[id]),
-                bonusName: def.homeWorldBonus.name,
-                bonusDescription: def.homeWorldBonus.description,
-                characteristicModsLabel: formatCharacteristicMods(def.characteristicMods.positive, def.characteristicMods.negative),
-                fateThresholdLabel: formatFateThreshold(def),
-                woundsLabel: formatWounds(def.wounds.flat, def.wounds.dice, def.wounds.faces),
-                keyAptitudes: def.keyAptitudes.map((c) => characteristicLabel(c)),
-                accent: HOMEWORLD_ACCENTS[id],
-            };
-        });
-        return { ...context, cards };
-    }
-
-    /* -------------------------------------------- */
-    /*  Action Handlers                             */
-    /* -------------------------------------------- */
-
-    static async #onClose(this: WithinHomeworldInfoDialog, event: Event, _target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        await this.close();
-    }
+/** Build the per-homeworld card view-models injected under `cards` each render. */
+function buildWithinCards(): HomeworldCard[] {
+    return WITHIN_HOMEWORLD_IDS.map((id) => {
+        const def = WITHIN_HOMEWORLDS[id];
+        return {
+            id,
+            labelKey: HOMEWORLD_LABEL_KEYS[id],
+            label: localize(HOMEWORLD_LABEL_KEYS[id]),
+            bonusName: def.homeWorldBonus.name,
+            bonusDescription: def.homeWorldBonus.description,
+            characteristicModsLabel: formatCharacteristicMods(def.characteristicMods.positive, def.characteristicMods.negative),
+            fateThresholdLabel: formatFateThreshold(def),
+            woundsLabel: formatWounds(def.wounds.flat, def.wounds.dice, def.wounds.faces),
+            keyAptitudes: def.keyAptitudes.map((c) => characteristicLabel(c)),
+            accent: HOMEWORLD_ACCENTS[id],
+        };
+    });
 }
+
+/**
+ * GM-only reference dialog: three Tailwind-styled homeworld cards, themed in
+ * distinct palettes so the set reads at a glance. Read-only; built from the
+ * shared info-card-dialog factory (#287).
+ */
+const WithinHomeworldInfoDialog = defineInfoCardDialog({
+    id: 'within-homeworld-info-dialog',
+    titleKey: 'WH40K.WithinHomeworld.DialogTitle',
+    template: 'systems/wh40k-rpg/templates/prompt/within-homeworld-info-dialog.hbs',
+    contextKey: 'cards',
+    extraClasses: ['standard-form'],
+    cards: buildWithinCards,
+});
+export default WithinHomeworldInfoDialog;
 
 /** Convenience opener for the dialog. */
 export function openWithinHomeworldInfoDialog(): void {
-    const dialog = new WithinHomeworldInfoDialog();
-    void dialog.render({ force: true });
+    void new WithinHomeworldInfoDialog().render({ force: true });
 }
