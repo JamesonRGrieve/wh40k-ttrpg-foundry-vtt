@@ -124,6 +124,13 @@
                         valueClass="wh40k-mental-value"
                         stateClass=(insanityDegreeClass system.insanity)
                         degreeText=(insanityDegree system.insanity)}}
+
+                    {{!-- Warband Subtlety (#317) — DH2-only; sits directly under the
+                         Insanity row, styled to match the mental rows. No-op on the
+                         other six systems. Shared-pool data model tracked in #64. --}}
+                    {{#if isDH2}}
+                        {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
+                    {{/if}}
                 </div>
                 {{/unless}}
             </div>
@@ -389,11 +396,6 @@
                     </div>
             {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
             {{/unless}}
-
-            {{!-- Warband Subtlety (#87) — DH2-only subtlety pool; sits directly under the Resources card. --}}
-            {{#if isDH2}}
-                {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
-            {{/if}}
         </div>
 
         {{!-- Per-game-system overview panels (batch-1 + batch-2 integration).
