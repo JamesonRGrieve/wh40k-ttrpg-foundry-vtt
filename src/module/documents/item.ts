@@ -1,3 +1,4 @@
+import { identifierFromNameIfBlank } from '../data/fields/identifier-utils.ts';
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import {
     deltaFromModifiers,
@@ -396,6 +397,29 @@ export class WH40KItem extends WH40KItemContainer {
 
     get isPeer(): boolean {
         return this._type === 'peer';
+    }
+
+    /**
+     * Backfill a stable `system.identifier` on create (#314).
+     *
+     * Items are matched throughout the system by `system.identifier` (origin-path
+     * requirements, weapon-type ammo lookups, candidate de-duplication). The field
+     * defaults `blank: true`, so a freshly *created* item — whether authored on a
+     * sheet or dragged in — starts with an empty identifier and is invisible to
+     * that matching ("not real"). Generate one from the name when blank; items
+     * that already carry an identifier (compendium content, duplicates) keep it.
+     * Types whose schema has no identifier field are left untouched.
+     */
+    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | undefined> {
+        await super._preCreate(data, options, user);
+        // item.system is a per-type union; `identifier` exists only on types built
+        // with IdentifierField, so read it defensively (undefined ⇒ no such field).
+        const current = (this.system as { identifier?: string }).identifier;
+        if (current !== undefined) {
+            const next = identifierFromNameIfBlank(this.name, current);
+            if (next !== undefined) this.updateSource({ system: { identifier: next } });
+        }
+        return undefined;
     }
 
     protected override _onCreate(data: never, options: never, userId: string): void {
