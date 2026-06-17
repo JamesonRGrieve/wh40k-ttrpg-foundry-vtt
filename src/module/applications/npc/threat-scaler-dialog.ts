@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 import ThreatCalculator, { type NPCSystemData } from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -106,17 +107,8 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         activeTab: 'characteristics',
     };
 
-    /**
-     * Promise resolver.
-     * @type {((value: boolean) => void) | null}
-     */
-    #resolve: ((value: boolean) => void) | null = null;
-
-    /**
-     * Whether the dialog was submitted.
-     * @type {boolean}
-     */
-    #submitted = false;
+    /** Promise-resolution plumbing; dismissal resolves false. */
+    readonly #resolution = new DialogResolution<boolean>(false);
 
     /**
      * Original threat level for reset functionality.
@@ -396,8 +388,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         if (currentThreat === newThreat) {
             // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.NoThreatChange localization key
             ui.notifications.info('No threat level change specified');
-            this.#submitted = true;
-            if (this.#resolve) this.#resolve(false);
+            this.#resolution.resolve(false);
             return;
         }
 
@@ -429,13 +420,12 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
                 }),
             );
 
-            this.#submitted = true;
-            if (this.#resolve) this.#resolve(true);
+            this.#resolution.resolve(true);
         } catch (error) {
             console.error('Failed to scale NPC:', error);
             // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.ScaleFailed localization key
             ui.notifications.error('Failed to scale NPC');
-            if (this.#resolve) this.#resolve(false);
+            this.#resolution.resolve(false);
         }
     }
 
@@ -446,8 +436,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {HTMLElement} target
      */
     static async #onCancel(this: NPCThreatScalerDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        this.#submitted = false;
-        if (this.#resolve) this.#resolve(false);
+        // close() → resolveDefault() supplies the cancelled value (false).
         await this.close();
     }
 
@@ -461,10 +450,8 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
-        // Resolve as false if not submitted
-        if (!this.#submitted && this.#resolve) {
-            this.#resolve(false);
-        }
+        // Resolve false if no explicit result fired (idempotent).
+        this.#resolution.resolveDefault();
 
         await super.close(options);
     }
@@ -478,10 +465,9 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @returns {Promise<boolean>} True if scaling was applied, false otherwise.
      */
     async wait(): Promise<boolean> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render({ force: true });
-        });
+        const result = this.#resolution.track();
+        void this.render({ force: true });
+        return result;
     }
 
     /* -------------------------------------------- */

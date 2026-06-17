@@ -14,6 +14,7 @@ import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import StatBlockValidator, { type StatBlockData } from '../../utils/stat-block-validator.ts';
 import TextPatternExtractor from '../../utils/text-pattern-extractor.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 import ThreatCalculator, {
     type NPCArmourData,
     type NPCArmourLocations,
@@ -287,18 +288,9 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      */
     #info: string[] = [];
 
-    /**
-     * Promise resolver.
-     * @type {Function|null}
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: resolves the dialog with whatever Actor.create returns
-    #resolve: ((value: unknown) => void) | null = null;
-
-    /**
-     * Whether submission occurred.
-     * @type {boolean}
-     */
-    #submitted = false;
+    /** Promise-resolution plumbing; dismissal resolves null. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: resolves the dialog with whatever Actor.create returns (opaque)
+    readonly #resolution = new DialogResolution<unknown>(null);
 
     /* -------------------------------------------- */
     /*  Rendering                                   */
@@ -1250,8 +1242,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: this.#targetActor.name }));
                 this.#targetActor.sheet.render(true);
 
-                this.#submitted = true;
-                if (this.#resolve) this.#resolve(this.#targetActor);
+                this.#resolution.resolve(this.#targetActor);
                 return;
             }
 
@@ -1280,12 +1271,11 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor type doesn't expose .sheet in this scope
             (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet?.render(true);
 
-            this.#submitted = true;
-            if (this.#resolve) this.#resolve(actor);
+            this.#resolution.resolve(actor);
         } catch (err) {
             console.error('Failed to import NPC:', err);
             ui.notifications.error(game.i18n.localize('WH40K.NPC.Import.Failed'));
-            if (this.#resolve) this.#resolve(null);
+            this.#resolution.resolve(null);
         }
     }
 
@@ -1295,8 +1285,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {HTMLElement} target
      */
     static async _onCancel(this: StatBlockParser, _event: Event, _target: HTMLElement): Promise<void> {
-        this.#submitted = false;
-        if (this.#resolve) this.#resolve(null);
+        // close() → resolveDefault() supplies the cancelled value (null).
         await this.close();
     }
 
@@ -1321,9 +1310,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close hook signature
     override async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (!this.#submitted && this.#resolve) {
-            this.#resolve(null);
-        }
+        this.#resolution.resolveDefault();
         return super.close(options);
     }
 
@@ -1337,10 +1324,9 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: resolves with the Actor.create result
     async wait(): Promise<unknown> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render(true);
-        });
+        const result = this.#resolution.track();
+        void this.render(true);
+        return result;
     }
 
     /**

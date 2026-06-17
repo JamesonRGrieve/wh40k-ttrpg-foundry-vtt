@@ -12,6 +12,7 @@ import {
     normaliseScale,
     resolveAcquisitionTest,
 } from '../../rules/acquisition-scale.ts';
+import DialogResolution from './dialog-resolution.ts';
 
 /**
  * @file AcquisitionDialog - Profit Factor test dialog for acquiring items
@@ -226,8 +227,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     declare selectedAvailability: AvailabilityKey;
     declare selectedCraftsmanship: CraftsmanshipKey;
     declare selectedScale: ScaleKey;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: resolve receives an opaque result object whose shape depends on outcome
-    #resolve: ((value: unknown) => void) | null = null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the dialog resolves an opaque result object whose shape depends on outcome
+    readonly #resolution = new DialogResolution<unknown>(null);
 
     /* -------------------------------------------- */
     /*  Construction                                */
@@ -542,16 +543,14 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         }
 
         // Resolve and close
-        if (this.#resolve !== null) {
-            this.#resolve({
-                success,
-                dos,
-                roll: roll?.total ?? null,
-                target: finalTarget,
-                autoSuccess: context.autoSuccess,
-                autoFail: context.autoFail,
-            });
-        }
+        this.#resolution.resolve({
+            success,
+            dos,
+            roll: roll?.total ?? null,
+            target: finalTarget,
+            autoSuccess: context.autoSuccess,
+            autoFail: context.autoFail,
+        });
 
         await this.close();
     }
@@ -623,9 +622,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: result shape depends on outcome (success object or null on cancel)
     async wait(): Promise<unknown> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-        });
+        return this.#resolution.track();
     }
 
     /* -------------------------------------------- */
@@ -633,9 +630,9 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
     override async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (this.#resolve !== null && options['_skipResolve'] !== true) {
-            this.#resolve(null);
-        }
+        // Idempotent: a completed test already resolved its result, so this resolves
+        // null only on a bare dismissal.
+        this.#resolution.resolveDefault();
         return super.close(options);
     }
 

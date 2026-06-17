@@ -1,5 +1,6 @@
 import { t } from '../../i18n/t.ts';
 import type { TransactionApprovalDecision, TransactionQuoteView } from '../../transactions/transaction-types.ts';
+import DialogResolution from './dialog-resolution.ts';
 
 /**
  * @file TransactionApprovalDialog
@@ -54,8 +55,7 @@ export default class TransactionApprovalDialog extends HandlebarsApplicationMixi
 
     readonly #quote: TransactionQuoteView;
     #gmModifierPercent = 0;
-    #resolve: ((value: TransactionApprovalDecision) => void) | null = null;
-    #resolved = false;
+    readonly #resolution = new DialogResolution<TransactionApprovalDecision>({ approved: false, gmModifierPercent: 0 });
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts a partial options record
     constructor(quote: TransactionQuoteView, options: Record<string, unknown> = {}) {
@@ -115,31 +115,26 @@ export default class TransactionApprovalDialog extends HandlebarsApplicationMixi
         if (input instanceof HTMLInputElement) {
             this.#gmModifierPercent = Number.parseInt(input.value !== '' ? input.value : '0', 10) || 0;
         }
-        this.#resolved = true;
-        this.#resolve?.({ approved: true, gmModifierPercent: this.#gmModifierPercent });
+        this.#resolution.resolve({ approved: true, gmModifierPercent: this.#gmModifierPercent });
         await this.close();
     }
 
     static async #onReject(this: TransactionApprovalDialog, event: PointerEvent): Promise<void> {
         event.preventDefault();
-        this.#resolved = true;
-        this.#resolve?.({ approved: false, gmModifierPercent: 0 });
+        // close() → resolveDefault() supplies the rejected decision.
         await this.close();
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts/returns an arbitrary options record per shipped typings
     override async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (!this.#resolved && this.#resolve !== null) {
-            this.#resolve({ approved: false, gmModifierPercent: 0 });
-        }
+        this.#resolution.resolveDefault();
         return super.close(options);
     }
 
     async wait(): Promise<TransactionApprovalDecision> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render(true);
-        });
+        const result = this.#resolution.track();
+        void this.render(true);
+        return result;
     }
 
     static async show(quote: TransactionQuoteView): Promise<TransactionApprovalDecision> {

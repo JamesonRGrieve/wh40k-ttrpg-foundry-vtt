@@ -1,6 +1,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
+import DialogResolution from './dialog-resolution.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -79,7 +80,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     declare influenceBurn: number;
     /** When set (proximity launch), only these source actor ids are offered. */
     readonly #restrictToSourceIds: string[] | null = null;
-    #resolve: ((value: boolean | null) => void) | null = null;
+    readonly #resolution = new DialogResolution<boolean | null>(null);
 
     constructor(actor: WH40KBaseActor, options: TransactionRequestOptions = {}) {
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts a partial options record; shipped typings narrower than runtime
@@ -251,25 +252,24 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
             });
 
             TransactionManager.notifyRequester('Transaction request sent to the GM for approval.', 'info');
-            this.#resolve?.(true);
-            await this.close({ _skipResolve: true });
+            this.#resolution.resolve(true);
+            await this.close();
         } catch (error) {
             TransactionManager.notifyRequester(error instanceof Error ? error.message : 'Unable to submit transaction request.', 'error');
         }
     }
 
     async wait(): Promise<boolean | null> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render({ force: true });
-        });
+        const result = this.#resolution.track();
+        void this.render({ force: true });
+        return result;
     }
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options; we add a private _skipResolve marker
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts an arbitrary options record per shipped typings
     override async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (this.#resolve !== null && options['_skipResolve'] !== true) {
-            this.#resolve(null);
-        }
+        // Idempotent: resolve(true) on submit already cleared the resolver, so this
+        // no-ops on the submit path and resolves null only on a bare dismissal.
+        this.#resolution.resolveDefault();
         return super.close(options);
     }
 

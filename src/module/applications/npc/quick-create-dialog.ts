@@ -1,5 +1,6 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 import ThreatCalculator from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -77,17 +78,8 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      */
     readonly #state: NPCState;
 
-    /**
-     * Promise resolver.
-     * @type {((value: WH40KNPC | null) => void) | null}
-     */
-    #resolve: ((value: WH40KNPC | null) => void) | null = null;
-
-    /**
-     * Whether the dialog was submitted.
-     * @type {boolean}
-     */
-    #submitted = false;
+    /** Promise-resolution plumbing; dismissal resolves null. */
+    readonly #resolution = new DialogResolution<WH40KNPC | null>(null);
 
     /**
      * Render timeout.
@@ -355,13 +347,12 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 // eslint-disable-next-line @typescript-eslint/no-deprecated -- actor.sheet.render(true) is the V14 pattern for reopening actor sheets; render({ force: true }) breaks actor sheets
                 void actor.sheet?.render(true);
 
-                this.#submitted = true;
-                if (this.#resolve) this.#resolve(actor);
+                this.#resolution.resolve(actor);
             }
         } catch (error) {
             console.error('Failed to create NPC:', error);
             ui.notifications.error(game.i18n.localize('WH40K.NPC.QuickCreateFailed'));
-            if (this.#resolve) this.#resolve(null);
+            this.#resolution.resolve(null);
         }
     }
 
@@ -371,8 +362,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {HTMLElement} target - The target element.
      */
     static async #onCancel(this: NPCQuickCreateDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        this.#submitted = false;
-        if (this.#resolve) this.#resolve(null);
+        // close() → resolveDefault() supplies the cancelled value (null).
         await this.close();
     }
 
@@ -396,10 +386,8 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
-        // Resolve as null if not submitted
-        if (!this.#submitted && this.#resolve) {
-            this.#resolve(null);
-        }
+        // Resolve null if no explicit result fired (idempotent).
+        this.#resolution.resolveDefault();
 
         await super.close(options);
     }
@@ -413,10 +401,9 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @returns {Promise<WH40KNPC | null>} The created actor, or null if cancelled.
      */
     async wait(): Promise<WH40KNPC | null> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render(true);
-        });
+        const result = this.#resolution.track();
+        void this.render(true);
+        return result;
     }
 
     /* -------------------------------------------- */
