@@ -24,6 +24,9 @@ interface SettingDescriptor {
     default: SettingDefault;
     type: NumberConstructor | BooleanConstructor | StringConstructor | ArrayConstructor;
     choices?: Record<string, string>;
+    /** Foundry fires this on every client when the (world) value changes. Not
+     *  part of the structural-shape snapshot — it is behaviour, not migration shape. */
+    onChange?: (value: SettingDefault) => void;
 }
 
 /** Degrees-of-success calculation mode. `raw` resolves per game system; the
@@ -53,7 +56,59 @@ export class WH40KSettings {
         autoRollDamage: 'auto-roll-damage',
         autoApplyDamage: 'auto-apply-damage',
         requireCombatToAttack: 'require-combat-to-attack',
+        warbandSubtlety: 'warband-subtlety',
     };
+
+    /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
+    static WARBAND_SUBTLETY_MAX = 100;
+    static WARBAND_SUBTLETY_DEFAULT = 60;
+
+    /**
+     * Read the single warband-wide Subtlety value (#64) — a world-scoped pool
+     * shared by every DH2 acolyte. Clamped to 0..max. Safe to call before the
+     * setting is registered (returns the default), so DataModel prep can read it
+     * during early boot without throwing.
+     */
+    static getWarbandSubtlety(): number {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+        let raw: unknown;
+        try {
+            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.warbandSubtlety);
+        } catch {
+            return WH40KSettings.WARBAND_SUBTLETY_DEFAULT;
+        }
+        const n = typeof raw === 'number' && Number.isFinite(raw) ? Math.trunc(raw) : WH40KSettings.WARBAND_SUBTLETY_DEFAULT;
+        return Math.max(0, Math.min(WH40KSettings.WARBAND_SUBTLETY_MAX, n));
+    }
+
+    /**
+     * Write the warband Subtlety value (#64), clamped to 0..max. World-scoped, so
+     * the change propagates to every connected client; the setting's `onChange`
+     * re-renders open sheets (see {@link rerenderSubtletyDependentSheets}).
+     */
+    static async setWarbandSubtlety(value: number): Promise<void> {
+        const clamped = Math.max(0, Math.min(WH40KSettings.WARBAND_SUBTLETY_MAX, Math.trunc(value)));
+        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.warbandSubtlety, clamped);
+    }
+
+    /**
+     * Re-render every rendered actor sheet that surfaces the warband Subtlety
+     * pool (#64), so a change made on one acolyte's sheet is reflected on all
+     * open sheets. Fired from the setting's `onChange`, which runs on every
+     * connected client when the world value changes. Filters to actors that
+     * carry the (DH2-only) `subtlety` field so it is a no-op elsewhere.
+     */
+    static rerenderSubtletyDependentSheets(): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game may be undefined before 'setup'; actors/sheets are loosely typed at the Foundry boundary
+        const actors = (globalThis as { game?: { actors?: { contents?: unknown[] } } }).game?.actors?.contents;
+        if (!Array.isArray(actors)) return;
+        for (const actor of actors) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: narrow the Foundry actor surface we touch (system.subtlety + sheet.render)
+            const a = actor as { system?: { subtlety?: unknown }; sheet?: { rendered?: boolean; render?: (force?: boolean) => unknown } };
+            if (a.system?.subtlety === undefined) continue;
+            if (a.sheet?.rendered === true) void a.sheet.render?.();
+        }
+    }
 
     /** When true, a successful weapon/psychic attack rolls its damage automatically
      *  and posts the damage card, rather than waiting for the chat "Roll Damage"
@@ -411,6 +466,22 @@ export class WH40KSettings {
                 default: true,
                 type: Boolean,
             },
+            {
+                // Warband Subtlety pool (#64): a single world-scoped value shared by
+                // every DH2 acolyte. Sheet-driven (config: false — set via the
+                // Subtlety stepper, not the settings menu); its onChange re-renders
+                // open sheets so the shared value stays in sync across clients.
+                key: S.warbandSubtlety,
+                name: 'WH40K.SETTINGS.WarbandSubtlety.Name',
+                hint: 'WH40K.SETTINGS.WarbandSubtlety.Hint',
+                scope: 'world',
+                config: false,
+                default: WH40KSettings.WARBAND_SUBTLETY_DEFAULT,
+                type: Number,
+                onChange: () => {
+                    WH40KSettings.rerenderSubtletyDependentSheets();
+                },
+            },
         ];
         for (const d of descriptors) {
             game.settings.register(SYSTEM_ID, d.key, {
@@ -422,6 +493,7 @@ export class WH40KSettings {
                 type: d.type,
                 ...(d.requiresReload !== undefined ? { requiresReload: d.requiresReload } : {}),
                 ...(d.choices !== undefined ? { choices: d.choices } : {}),
+                ...(d.onChange !== undefined ? { onChange: d.onChange } : {}),
             });
         }
     }

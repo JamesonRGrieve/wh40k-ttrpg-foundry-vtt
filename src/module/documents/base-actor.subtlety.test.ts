@@ -8,20 +8,19 @@ type WH40KBaseActor = BaseActorModuleType.WH40KBaseActor;
 
 /**
  * Unit coverage for the DH2 Warband Subtlety surface on `WH40KBaseActor`
- * (issue #64, refreshed acceptance criteria — "test covering the sheet read
- * path" + "hook for #87 adjusters to write deltas through").
+ * (issue #64). Subtlety is a single warband-wide, world-scoped pool: the
+ * canonical value lives in the `warband-subtlety` world setting and each DH2
+ * character mirrors it onto `system.subtlety.value` at prep time. So
+ * `applySubtlety(±N, source)` computes the clamped next value using the acting
+ * actor's carried adjusters and then writes the **world setting** (not the
+ * actor), with attribution recorded on the actor's `lastSubtletySource` flag.
  *
- * The DH2 character sheet (`subtlety-panel.hbs`) reads `system.subtlety` and
- * the `subtletyAdjusters[]` context the sheet derives from
- * `actor.collectSubtletyAdjusters()`, and writes deltas through
- * `actor.applySubtlety(±N, source)` / `actor.applySubtletyFromSource(uuid)`.
- * Those four methods are the integration seam the reopened issue calls out as
- * untested ("completion theater" — helper exists but not exercised). The pure
- * normalizers (`clampSubtletyLoss`, `subtletyAdjusterEffectOf`,
- * `isSubtletyPrimitive`) already have co-located tests; this suite covers the
- * Document-layer wiring that joins them to `this.system` / `this.items` /
- * `this.update`, using the same `Object.create(prototype)` fake-actor pattern
- * as `base-actor.test.ts` (no Foundry runtime required).
+ * The DH2 character sheet (`subtlety-panel.hbs`) reads `system.subtlety` and the
+ * `subtletyAdjusters[]` context derived from `actor.collectSubtletyAdjusters()`,
+ * and writes deltas through `applySubtlety` / `applySubtletyFromSource`. Those
+ * methods are the integration seam this suite covers, using the same
+ * `Object.create(prototype)` fake-actor pattern as `base-actor.test.ts` with a
+ * stubbed `game.settings` capturing the world write (no Foundry runtime).
  */
 
 type BaseActorModule = typeof BaseActorModuleType;
@@ -62,18 +61,19 @@ interface FakeItem {
 
 /** The subset of an `Actor#update` payload these tests assert against. */
 interface SubtletyUpdatePayload {
-    'system.subtlety.value'?: number;
     'flags.wh40k-rpg.lastSubtletySource'?: string;
 }
 
 /**
- * Build a `WH40KBaseActor`-shaped fake whose `system.subtlety`, owned `items`,
- * and `update` are all in-memory. `update` mutates the in-memory slot so a
- * follow-up read observes the clamped result, exactly like a live document.
+ * Build a `WH40KBaseActor`-shaped fake whose `system.subtlety` (+ DH2
+ * `gameSystem` gate), owned `items`, and `update` are all in-memory. The world
+ * Subtlety setting is stubbed via {@link stubWorldSubtlety}; `applySubtlety`
+ * writes the new pool value there, so tests assert against `settingWrites`
+ * rather than the actor. `update` still receives the `lastSubtletySource` flag.
  */
 function makeActor(
     Ctor: BaseActorModule['WH40KBaseActor'],
-    opts: { subtlety?: SubtletySlot; items?: FakeItem[] } = {},
+    opts: { subtlety?: SubtletySlot; items?: FakeItem[]; gameSystem?: string } = {},
 ): {
     actor: WH40KBaseActor;
     updates: SubtletyUpdatePayload[];
@@ -82,8 +82,9 @@ function makeActor(
     const actor = Object.create(Ctor.prototype) as WH40KBaseActor;
     const slot = opts.subtlety;
     const updates: SubtletyUpdatePayload[] = [];
+    const gameSystem = opts.gameSystem ?? (slot ? 'dh2' : undefined);
     Object.defineProperty(actor, 'system', {
-        value: slot ? { subtlety: slot } : {},
+        value: slot ? { subtlety: slot, gameSystem } : gameSystem !== undefined ? { gameSystem } : {},
         writable: true,
         configurable: true,
     });
@@ -95,8 +96,6 @@ function makeActor(
     Object.defineProperty(actor, 'update', {
         value: async (data: SubtletyUpdatePayload) => {
             updates.push(data);
-            const next = data['system.subtlety.value'];
-            if (slot && typeof next === 'number') slot.value = next;
             return Promise.resolve(actor);
         },
         writable: true,
@@ -133,14 +132,40 @@ function onlyRow(rows: CollectedAdjuster[]): CollectedAdjuster {
     return row;
 }
 
-describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () => {
-    describe('applySubtlety', () => {
-        it.skipIf(!HAVE)('lowers the pool by a negative delta and writes through update', async () => {
+/** Captured world-setting writes from `WH40KSettings.setWarbandSubtlety` (the pool value). */
+let settingWrites: number[];
+
+/**
+ * Stub `game.settings` so `setWarbandSubtlety` captures the written value and
+ * `getWarbandSubtlety` resolves (returns the default). Also stubs `i18n` so any
+ * label resolution inside the methods under test does not throw.
+ */
+function stubWorldSubtlety(): void {
+    settingWrites = [];
+    vi.stubGlobal('game', {
+        settings: {
+            get: () => 60,
+            set: (_ns: string, _key: string, value: number) => {
+                // Void return — `setWarbandSubtlety` awaits this; `await undefined` is fine.
+                settingWrites.push(value);
+            },
+        },
+        i18n: { localize: (k: string) => k, format: (k: string) => k },
+    });
+}
+
+describe('WH40KBaseActor — Subtlety surface (DH2 world-pool read/write path)', () => {
+    describe('applySubtlety (writes the shared world pool)', () => {
+        beforeEach(stubWorldSubtlety);
+        afterEach(() => {
+            vi.unstubAllGlobals();
+        });
+
+        it.skipIf(!HAVE)('lowers the pool by a negative delta and writes through the world setting', async () => {
             const mod = requireModule();
-            const { actor, updates, slot } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 60, max: 100 } });
+            const { actor } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 60, max: 100 } });
             await actor.applySubtlety(-7, 'manual');
-            expect(slot?.value).toBe(53);
-            expect(updates[0]?.['system.subtlety.value']).toBe(53);
+            expect(settingWrites).toEqual([53]);
         });
 
         it.skipIf(!HAVE)('attributes the source via the lastSubtletySource flag', async () => {
@@ -150,69 +175,80 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
             expect(updates[0]?.['flags.wh40k-rpg.lastSubtletySource']).toBe('inquest');
         });
 
-        it.skipIf(!HAVE)('omits the source flag when no attribution is supplied', async () => {
+        it.skipIf(!HAVE)('omits the source flag (issues no actor update) when no attribution is supplied', async () => {
             const mod = requireModule();
             const { actor, updates } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 60, max: 100 } });
             await actor.applySubtlety(-5);
-            expect(updates[0]).not.toHaveProperty('flags.wh40k-rpg.lastSubtletySource');
+            expect(settingWrites).toEqual([55]);
+            expect(updates).toHaveLength(0);
         });
 
         it.skipIf(!HAVE)('clamps at the 0 floor (never negative)', async () => {
             const mod = requireModule();
-            const { actor, slot } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 4, max: 100 } });
+            const { actor } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 4, max: 100 } });
             await actor.applySubtlety(-50, 'manual');
-            expect(slot?.value).toBe(0);
+            expect(settingWrites).toEqual([0]);
         });
 
         it.skipIf(!HAVE)('clamps at the max ceiling on gains', async () => {
             const mod = requireModule();
-            const { actor, slot } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 95, max: 100 } });
+            const { actor } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 95, max: 100 } });
             await actor.applySubtlety(20, 'manual');
-            expect(slot?.value).toBe(100);
+            expect(settingWrites).toEqual([100]);
         });
 
         it.skipIf(!HAVE)('truncates a fractional amount before applying', async () => {
             const mod = requireModule();
-            const { actor, slot } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 60, max: 100 } });
+            const { actor } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 60, max: 100 } });
             await actor.applySubtlety(-2.9, 'manual');
-            expect(slot?.value).toBe(58);
+            expect(settingWrites).toEqual([58]);
         });
 
-        it.skipIf(!HAVE)('no-ops on a zero / non-finite amount (no update issued)', async () => {
+        it.skipIf(!HAVE)('no-ops on a zero / non-finite amount (no world write)', async () => {
             const mod = requireModule();
             const { actor, updates } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 60, max: 100 } });
             await actor.applySubtlety(0, 'manual');
             await actor.applySubtlety(Number.NaN, 'manual');
+            expect(settingWrites).toHaveLength(0);
             expect(updates).toHaveLength(0);
         });
 
-        it.skipIf(!HAVE)('no-ops when the actor carries no subtlety slot (non-DH2 systems)', async () => {
+        it.skipIf(!HAVE)('no-ops when the actor carries no subtlety slot (NPCs / non-character actors)', async () => {
             const mod = requireModule();
-            // No `subtlety` on system — mirrors a BC/DH1/DW/OW/RT/IM character
-            // whose schema does not carry the DH2-only pool.
-            const { actor, updates } = makeActor(mod.WH40KBaseActor, {});
+            // No `subtlety` on system — mirrors an NPC / vehicle whose schema does
+            // not carry the DH2 character pool.
+            const { actor } = makeActor(mod.WH40KBaseActor, {});
             await actor.applySubtlety(-7, 'manual');
-            expect(updates).toHaveLength(0);
+            expect(settingWrites).toHaveLength(0);
+        });
+
+        it.skipIf(!HAVE)('no-ops for a non-DH2 character (the warband pool is DH2-only)', async () => {
+            const mod = requireModule();
+            // A character on another system carries `subtlety` in the shared schema
+            // but must not touch the DH2 warband pool.
+            const { actor } = makeActor(mod.WH40KBaseActor, { subtlety: { value: 60, max: 100 }, gameSystem: 'bc' });
+            await actor.applySubtlety(-7, 'manual');
+            expect(settingWrites).toHaveLength(0);
         });
 
         it.skipIf(!HAVE)('applies a carried clamp adjuster to losses (Quarantine World floors -5 to -1)', async () => {
             const mod = requireModule();
-            const { actor, slot } = makeActor(mod.WH40KBaseActor, {
+            const { actor } = makeActor(mod.WH40KBaseActor, {
                 subtlety: { value: 60, max: 100 },
                 items: [adjusterItem('Quarantine World', { kind: 'clamp', delta: 0, minAbsoluteDelta: 1, requiresEquipped: false })],
             });
             await actor.applySubtlety(-5, 'manual');
-            expect(slot?.value).toBe(59);
+            expect(settingWrites).toEqual([59]);
         });
 
         it.skipIf(!HAVE)('does not clamp gains even with a clamp adjuster present', async () => {
             const mod = requireModule();
-            const { actor, slot } = makeActor(mod.WH40KBaseActor, {
+            const { actor } = makeActor(mod.WH40KBaseActor, {
                 subtlety: { value: 60, max: 100 },
                 items: [adjusterItem('Quarantine World', { kind: 'clamp', delta: 0, minAbsoluteDelta: 1, requiresEquipped: false })],
             });
             await actor.applySubtlety(5, 'manual');
-            expect(slot?.value).toBe(65);
+            expect(settingWrites).toEqual([65]);
         });
     });
 
@@ -273,10 +309,15 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
     });
 
     describe('applySubtletyFromSource (#87 adjuster write hook)', () => {
+        beforeEach(stubWorldSubtlety);
+        afterEach(() => {
+            vi.unstubAllGlobals();
+        });
+
         it.skipIf(!HAVE)('applies the event-kind delta read from the governing owned item', async () => {
             const mod = requireModule();
             const uuid = 'Compendium.wh40k-rpg.dh2-pacts.Item.pact1';
-            const { actor, slot } = makeActor(mod.WH40KBaseActor, {
+            const { actor } = makeActor(mod.WH40KBaseActor, {
                 subtlety: { value: 60, max: 100 },
                 items: [
                     adjusterItem(
@@ -287,13 +328,13 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
                 ],
             });
             await actor.applySubtletyFromSource(uuid);
-            expect(slot?.value).toBe(52);
+            expect(settingWrites).toEqual([52]);
         });
 
         it.skipIf(!HAVE)('scales the event delta by the scale argument', async () => {
             const mod = requireModule();
             const uuid = 'Compendium.wh40k-rpg.dh2-pacts.Item.pact2';
-            const { actor, slot } = makeActor(mod.WH40KBaseActor, {
+            const { actor } = makeActor(mod.WH40KBaseActor, {
                 subtlety: { value: 60, max: 100 },
                 items: [
                     adjusterItem(
@@ -304,30 +345,30 @@ describe('WH40KBaseActor — Subtlety surface (DH2 sheet read/write path)', () =
                 ],
             });
             await actor.applySubtletyFromSource(uuid, 2);
-            expect(slot?.value).toBe(52);
+            expect(settingWrites).toEqual([52]);
         });
 
         it.skipIf(!HAVE)('does NOT apply a passive adjuster as a one-shot (would double-count)', async () => {
             const mod = requireModule();
             const uuid = 'Compendium.wh40k-rpg.dh2-weapons.Item.daemon';
-            const { actor, updates } = makeActor(mod.WH40KBaseActor, {
+            const { actor } = makeActor(mod.WH40KBaseActor, {
                 subtlety: { value: 60, max: 100 },
                 items: [
                     adjusterItem('Daemon Weapon', { kind: 'passive', delta: -3, minAbsoluteDelta: 0, requiresEquipped: false }, { compendiumSource: uuid }),
                 ],
             });
             await actor.applySubtletyFromSource(uuid);
-            expect(updates).toHaveLength(0);
+            expect(settingWrites).toHaveLength(0);
         });
 
         it.skipIf(!HAVE)('no-ops for an unknown source uuid', async () => {
             const mod = requireModule();
-            const { actor, updates } = makeActor(mod.WH40KBaseActor, {
+            const { actor } = makeActor(mod.WH40KBaseActor, {
                 subtlety: { value: 60, max: 100 },
                 items: [],
             });
             await actor.applySubtletyFromSource('Compendium.wh40k-rpg.dh2-pacts.Item.missing');
-            expect(updates).toHaveLength(0);
+            expect(settingWrites).toHaveLength(0);
         });
     });
 

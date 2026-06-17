@@ -647,6 +647,10 @@
                 "Name": "Reconcile Origin-Path Grants on World Boot",
                 "Hint": "On every world load (GM only), re-apply each actor's embedded origin paths idempotently so missing trained-skill grants self-heal without re-running character creation. Characteristic/wounds/fate contributions are reconciled against a recorded per-origin delta (no double-counting); skills, talents, and the origin item itself are skip-if-exists. Safe to run every boot."
             },
+            "WarbandSubtlety": {
+                "Name": "Warband Subtlety Pool",
+                "Hint": "The single warband-wide Subtlety value (DH2) shared by every acolyte. Edited from any acolyte's Subtlety stepper rather than this menu; changing it updates the shared pool and re-renders all open character sheets."
+            },
             "DegreesMode": {
                 "Name": "Degrees of Success Calculation",
                 "Hint": "How degrees of success/failure are counted. RAW resolves per game system. Gen 1 (DH1, Deathwatch, Rogue Trader): one extra degree per full 10 points of margin — floor(|target − roll| / 10). Gen 2 (Black Crusade, Only War, Dark Heresy 2e): 1 + the difference of the tens digits.",
