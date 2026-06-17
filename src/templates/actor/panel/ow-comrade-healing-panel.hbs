@@ -30,19 +30,9 @@
     Rendered only for OW actors; the include in tab-status.hbs gates on
     `isOW`.
 --}}
-<section class="wh40k-ow-healing-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                ow:tw-border-brass"
-         data-ow-healing-state="{{comradeHealingPanel.comradeState}}"
-         data-ow-healing-recovering="{{#if comradeHealingPanel.isRecovering}}true{{else}}false{{/if}}">
-
-    {{!-- Header: title + recovery / ready badge --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-staff-snake ow:tw-text-brass"></i>
-            <span class="wh40k-ow-healing-panel__label">{{localize "WH40K.OW.ComradeHealing.Label"}}</span>
-        </h3>
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-healing-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-staff-snake" label=(localize "WH40K.OW.ComradeHealing.Label") rootAttrs=(safeAttrs "data-ow-healing-state" comradeHealingPanel.comradeState "data-ow-healing-recovering" comradeHealingPanel.isRecovering) hasRightSlot=true}}
+    {{!-- Header right slot: recovery / ready badge --}}
+    {{#*inline "rightSlot"}}
         <span class="wh40k-ow-healing-panel__status-badge tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
                      {{#if comradeHealingPanel.isReady}}tw-border-success tw-text-success tw-bg-success/10{{/if}}
                      {{#if comradeHealingPanel.isRecovering}}tw-border-gold tw-text-gold tw-bg-gold/10{{/if}}"
@@ -53,7 +43,7 @@
                 {{localize "WH40K.OW.ComradeHealing.Status.Ready"}}
             {{/if}}
         </span>
-    </header>
+    {{/inline}}
 
     {{!-- Recovery clock readout --}}
     <div class="wh40k-ow-healing-panel__clock tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
@@ -123,4 +113,4 @@
             {{localize "WH40K.OW.ComradeHealing.Action.Replace"}}
         </button>
     </div>
-</section>
+{{/system-card}}
