@@ -3,6 +3,7 @@
  * Based on dnd5e's Dialog5e pattern for Foundry V13+
  */
 
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 import type { ApplicationV2Ctor } from './application-types.ts';
 import ApplicationV2Mixin from './application-v2-mixin.ts';
 
@@ -21,11 +22,8 @@ interface DialogButton {
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2Mixin requires ApplicationV2Ctor; cast needed because Foundry's ApplicationV2 class shape doesn't match the constructor type exactly
 export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Promise resolve/reject typed as unknown per Foundry dialog contract; callers cast to concrete type
-    _resolve?: (value: unknown) => void;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Promise reject reason is unknown per standard Promise contract
-    _reject?: (reason?: unknown) => void;
-    _submitted?: boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the dialog resolves a caller-typed result; unknown is the generic API contract
+    readonly #resolution = new DialogResolution<unknown>(null);
 
     /** @override */
     static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
@@ -74,37 +72,29 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /**
-     * Wait for the dialog to be submitted or closed.
+     * Wait for the dialog to be submitted or closed. Resolves with the value passed
+     * to {@link resolve}, or `null` when the dialog is dismissed without submitting.
+     * Shares the {@link DialogResolution} plumbing used by the concrete dialogs (#287).
      * @returns {Promise<unknown>}
      */
-    // TODO(dry): ~13 dialogs (npc/*-dialog.ts, dialogs/*-dialog.ts) reimplement this wait()/_resolve/open() promise plumbing. Extract a generic PromiseDialogMixin<T> and route them through it.
     // eslint-disable-next-line no-restricted-syntax -- boundary: dialog wait() resolves with caller-typed value; unknown is correct for the generic API
     async wait(): Promise<unknown> {
-        return new Promise((resolve, reject) => {
-            this._resolve = resolve;
-            this._reject = reject;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 mixes EventTarget at runtime but TypeScript doesn't know; cast needed for addEventListener
-            (this as unknown as EventTarget).addEventListener(
-                'close',
-                () => {
-                    if (this._submitted !== true) resolve(null);
-                },
-                { once: true },
-            );
-            void this.render({ force: true });
-        });
+        const result = this.#resolution.track();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 mixes EventTarget at runtime but TypeScript doesn't know; cast needed for addEventListener
+        (this as unknown as EventTarget).addEventListener('close', () => this.#resolution.resolveDefault(), { once: true });
+        void this.render({ force: true });
+        return result;
     }
 
     /* -------------------------------------------- */
 
     /**
-     * Resolve the dialog with a result.
+     * Resolve the dialog with a result. A subsequent dismissal then no-ops.
      * @param {unknown} result  The result to return.
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: resolve accepts unknown because callers type the result themselves after await
     resolve(result: unknown): void {
-        this._submitted = true;
-        this._resolve?.(result);
+        this.#resolution.resolve(result);
     }
 
     /* -------------------------------------------- */
