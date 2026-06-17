@@ -96,7 +96,7 @@ export function weaponQualityMechanicsFromRaw(raw: unknown): WeaponQualityMechan
  */
 interface WeaponQualityPackDoc {
     uuid?: string;
-    system?: { identifier?: string; mechanics?: WeaponQualityMechanics; mechanicsRef?: string };
+    system?: { identifier?: string; hasLevel?: boolean; mechanics?: WeaponQualityMechanics; mechanicsRef?: string };
 }
 interface WeaponQualityPack {
     metadata?: { name?: string };
@@ -109,6 +109,9 @@ interface PackGameLike {
 /** Per-system map (systemId → identifier → mechanics) plus a cross-system flat fallback. */
 let payloadBySystem: Map<string, Map<string, WeaponQualityMechanics>> | null = null;
 let payloadFlat: Map<string, WeaponQualityMechanics> | null = null;
+/** Parallel per-system / flat maps of the definition's `hasLevel` flag (content off the pack doc). */
+let hasLevelBySystem: Map<string, Map<string, boolean>> | null = null;
+let hasLevelFlat: Map<string, boolean> | null = null;
 
 /** Derive the system id from a weapon-qualities pack name (`rt-core-items-weapon-qualities` → `rt`). */
 function systemIdFromPackName(name: string): string {
@@ -153,6 +156,8 @@ export async function buildWeaponQualityPayloadIndex(): Promise<void> {
         }
     }
 
+    const levelBySystem = new Map<string, Map<string, boolean>>();
+    const levelFlat = new Map<string, boolean>();
     for (const { systemId, doc } of docs) {
         const identifier = doc.system?.identifier;
         if (typeof identifier !== 'string' || identifier === '') continue;
@@ -161,18 +166,26 @@ export async function buildWeaponQualityPayloadIndex(): Promise<void> {
             ref !== undefined && ref !== ''
                 ? canonicalByUuid.get(ref) ?? defaultWeaponQualityMechanics()
                 : weaponQualityMechanicsFromRaw(doc.system?.mechanics);
+        const hasLevel = doc.system?.hasLevel === true;
         const key = identifier.toLowerCase();
         let systemMap = bySystem.get(systemId);
-        if (systemMap === undefined) {
+        let systemLevels = levelBySystem.get(systemId);
+        if (systemMap === undefined || systemLevels === undefined) {
             systemMap = new Map<string, WeaponQualityMechanics>();
+            systemLevels = new Map<string, boolean>();
             bySystem.set(systemId, systemMap);
+            levelBySystem.set(systemId, systemLevels);
         }
         systemMap.set(key, mechanics);
+        systemLevels.set(key, hasLevel);
         if (!flat.has(key)) flat.set(key, mechanics);
+        if (!levelFlat.has(key)) levelFlat.set(key, hasLevel);
     }
 
     payloadBySystem = bySystem;
     payloadFlat = flat;
+    hasLevelBySystem = levelBySystem;
+    hasLevelFlat = levelFlat;
 }
 
 /**
@@ -194,4 +207,38 @@ export function getWeaponQualityMechanics(identifier: string, systemId?: string)
 export function setWeaponQualityPayloadsForTesting(entries: Record<string, Partial<WeaponQualityMechanics>>): void {
     payloadBySystem = null;
     payloadFlat = new Map(Object.entries(entries).map(([id, partial]) => [id.toLowerCase(), weaponQualityMechanicsFromRaw(partial)]));
+    hasLevelBySystem = null;
+    hasLevelFlat = new Map();
+}
+
+/* -------------------------------------------- */
+/*  Definition metadata (#303 — replaces the in-src WH40K.weaponQualities table) */
+/* -------------------------------------------- */
+
+/** Does the quality take an `(X)` level? Read from the pack doc via the index; `false` until built. */
+export function getWeaponQualityHasLevel(identifier: string, systemId?: string): boolean {
+    const key = identifier.toLowerCase();
+    if (systemId !== undefined) {
+        const scoped = hasLevelBySystem?.get(systemId)?.get(key);
+        if (scoped !== undefined) return scoped;
+    }
+    return hasLevelFlat?.get(key) ?? false;
+}
+
+/** Pascal-case a quality identifier for langpack-key derivation (`razor-sharp` → `RazorSharp`, `unreliable-2` → `Unreliable2`). */
+function pascalIdentifier(identifier: string): string {
+    return identifier
+        .split('-')
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
+}
+
+/** Langpack key for a quality's display label (`accurate` → `WH40K.WeaponQuality.Accurate`). */
+export function weaponQualityLabelKey(identifier: string): string {
+    return `WH40K.WeaponQuality.${pascalIdentifier(identifier)}`;
+}
+
+/** Langpack key for a quality's description (`accurate` → `WH40K.WeaponQuality.AccurateDesc`). */
+export function weaponQualityDescKey(identifier: string): string {
+    return `${weaponQualityLabelKey(identifier)}Desc`;
 }

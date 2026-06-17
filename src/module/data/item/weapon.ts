@@ -1078,8 +1078,6 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     get qualitiesArray(): Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> {
         const qualities: Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> = [];
-        const config = CONFIG.wh40k.weaponQualities;
-
         for (const qualityId of this.effectiveSpecial) {
             // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
             const match = qualityId.match(/^(.+?)-(\d+)$/);
@@ -1089,21 +1087,18 @@ export default class WeaponData extends ItemDataModel.mixin(
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: levelStr is string|undefined from regex destructure
             const level = levelStr !== undefined ? parseInt(levelStr, 10) : null;
 
-            // `config` is typed Record<string, WeaponQualityConfig>, so under strict
-            // index access widens to undefined. Hosted lookup falls back through both ids.
-            const definition: (typeof config)[string] | undefined = config[baseId] ?? config[qualityId];
+            // Definition (label/description langpack keys + hasLevel) resolves from the
+            // weaponQuality compendium via the boot index (#303); null → humanized fallback.
+            const definition = CONFIG.wh40k.getQualityDefinition(qualityId);
 
             const fallbackLabel = qualityId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
             qualities.push({
                 id: qualityId,
                 baseId: baseId,
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: definition is WeaponQualityConfig|undefined under strict indexing
-                label: definition !== undefined && definition.label !== '' ? game.i18n.localize(definition.label) : fallbackLabel,
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: definition is WeaponQualityConfig|undefined under strict indexing
-                description: definition !== undefined && definition.description !== '' ? game.i18n.localize(definition.description) : '',
+                label: definition !== null ? game.i18n.localize(definition.label) : fallbackLabel,
+                description: definition !== null ? game.i18n.localize(definition.description) : '',
                 level: level,
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: definition is WeaponQualityConfig|undefined under strict indexing
-                hasLevel: definition !== undefined ? definition.hasLevel : false,
+                hasLevel: definition !== null ? definition.hasLevel : false,
             });
         }
 

@@ -477,7 +477,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             hasLevel?: boolean;
         }
         interface WH40KConfigShape {
-            weaponQualities?: Record<string, QualityDef>;
+            getQualityDefinition?: (identifier: string) => QualityDef | null;
             armourTypes?: Record<string, { label: string }>;
         }
         // Access CONFIG.wh40k (set during init hook)
@@ -494,11 +494,11 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
         // Try to get quality definition from CONFIG
         const identifier = typeof system['identifier'] === 'string' ? system['identifier'] : '';
-        const def: QualityDef | undefined = wh40kConfig.weaponQualities?.[identifier];
+        const def: QualityDef | null = wh40kConfig.getQualityDefinition?.(identifier) ?? null;
 
         // Get localized label
         let label: unknown;
-        if (def !== undefined) {
+        if (def !== null) {
             label = game.i18n.localize(def.label);
         } else {
             // Fallback to system name
@@ -507,7 +507,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
         // Get description (truncated for browser display)
         let description: string;
-        if (def !== undefined) {
+        if (def !== null) {
             description = game.i18n.localize(def.description);
         } else if (typeof system['effect'] === 'string' && system['effect'] !== '') {
             // Legacy: system.effect might be HTML or page number

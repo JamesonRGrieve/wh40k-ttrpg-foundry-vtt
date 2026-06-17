@@ -3,6 +3,8 @@
  * Central configuration object for the WH40K RPG RPG system.
  */
 
+import { getWeaponQualityHasLevel, getWeaponQualityMechanics, weaponQualityDescKey, weaponQualityLabelKey } from './rules/weapon-quality-payloads.ts';
+
 /* -------------------------------------------- */
 /*  Config Type Definitions                     */
 /* -------------------------------------------- */
@@ -56,7 +58,13 @@ interface VehicleSizeConfig {
     descriptor: string;
 }
 
-interface WeaponQualityConfig {
+/**
+ * A weapon quality's display definition (#303). No longer a hand-authored table:
+ * `getQualityDefinition` derives `label`/`description` langpack keys from the
+ * identifier and reads `hasLevel`/`mechanicalEffect`/`category` from the
+ * weaponQuality compendium via the boot index (Direction #7).
+ */
+interface WeaponQualityDefinition {
     label: string;
     description: string;
     hasLevel: boolean;
@@ -170,8 +178,7 @@ export interface WH40KSystemConfig {
     skillIcons: Record<string, string>;
     getSkillIcon: (skillKey: string) => string;
     getDefaultIcon: (type: string) => string;
-    weaponQualities: Record<string, WeaponQualityConfig>;
-    getQualityDefinition: (identifier: string) => WeaponQualityConfig | null;
+    getQualityDefinition: (identifier: string) => WeaponQualityDefinition | null;
     getQualityLabel: (identifier: string, level?: number | null) => string;
     getQualityDescription: (identifier: string) => string;
     // eslint-disable-next-line no-restricted-syntax -- boundary: getJamThreshold accepts any weapon doc shape; caller knows the concrete type but this interface is shared across all systems
@@ -997,420 +1004,6 @@ WH40K.getDefaultIcon = function (type) {
     return icon || 'icons/svg/item-bag.svg';
 };
 
-/* -------------------------------------------- */
-/*  Weapon Qualities                            */
-/* -------------------------------------------- */
-
-/**
- * Weapon qualities (special properties).
- * @type {Object<string, {label: string, description: string, hasLevel: boolean, category: string, mechanicalEffect: boolean}>}
- */
-WH40K.weaponQualities = {
-    // Accuracy & Reliability
-    'accurate': {
-        label: 'WH40K.WeaponQuality.Accurate',
-        description: 'WH40K.WeaponQuality.AccurateDesc',
-        hasLevel: false,
-        category: 'simple-modifier',
-        mechanicalEffect: true,
-    },
-    'inaccurate': {
-        label: 'WH40K.WeaponQuality.Inaccurate',
-        description: 'WH40K.WeaponQuality.InaccurateDesc',
-        hasLevel: false,
-    },
-    'reliable': {
-        label: 'WH40K.WeaponQuality.Reliable',
-        description: 'WH40K.WeaponQuality.ReliableDesc',
-        hasLevel: false,
-    },
-    'unreliable': {
-        label: 'WH40K.WeaponQuality.Unreliable',
-        description: 'WH40K.WeaponQuality.UnreliableDesc',
-        hasLevel: false,
-    },
-    'unreliable-2': {
-        label: 'WH40K.WeaponQuality.Unreliable2',
-        description: 'WH40K.WeaponQuality.Unreliable2Desc',
-        hasLevel: false,
-    },
-
-    // Melee Properties
-    'balanced': {
-        label: 'WH40K.WeaponQuality.Balanced',
-        description: 'WH40K.WeaponQuality.BalancedDesc',
-        hasLevel: false,
-    },
-    'defensive': {
-        label: 'WH40K.WeaponQuality.Defensive',
-        description: 'WH40K.WeaponQuality.DefensiveDesc',
-        hasLevel: false,
-    },
-    'fast': {
-        label: 'WH40K.WeaponQuality.Fast',
-        description: 'WH40K.WeaponQuality.FastDesc',
-        hasLevel: false,
-    },
-    'flexible': {
-        label: 'WH40K.WeaponQuality.Flexible',
-        description: 'WH40K.WeaponQuality.FlexibleDesc',
-        hasLevel: false,
-    },
-    'unbalanced': {
-        label: 'WH40K.WeaponQuality.Unbalanced',
-        description: 'WH40K.WeaponQuality.UnbalancedDesc',
-        hasLevel: false,
-    },
-    'unwieldy': {
-        label: 'WH40K.WeaponQuality.Unwieldy',
-        description: 'WH40K.WeaponQuality.UnwieldyDesc',
-        hasLevel: false,
-    },
-
-    // Damage Effects
-    'tearing': {
-        label: 'WH40K.WeaponQuality.Tearing',
-        description: 'WH40K.WeaponQuality.TearingDesc',
-        hasLevel: false,
-    },
-    'razor-sharp': {
-        label: 'WH40K.WeaponQuality.RazorSharp',
-        description: 'WH40K.WeaponQuality.RazorSharpDesc',
-        hasLevel: false,
-    },
-    'proven': {
-        label: 'WH40K.WeaponQuality.Proven',
-        description: 'WH40K.WeaponQuality.ProvenDesc',
-        hasLevel: true,
-    },
-    'felling': {
-        label: 'WH40K.WeaponQuality.Felling',
-        description: 'WH40K.WeaponQuality.FellingDesc',
-        hasLevel: true,
-    },
-    'crippling': {
-        label: 'WH40K.WeaponQuality.Crippling',
-        description: 'WH40K.WeaponQuality.CripplingDesc',
-        hasLevel: true,
-    },
-    'devastating': {
-        label: 'WH40K.WeaponQuality.Devastating',
-        description: 'WH40K.WeaponQuality.DevastatingDesc',
-        hasLevel: true,
-    },
-
-    // Area Effects
-    'blast': {
-        label: 'WH40K.WeaponQuality.Blast',
-        description: 'WH40K.WeaponQuality.BlastDesc',
-        hasLevel: true,
-    },
-    'scatter': {
-        label: 'WH40K.WeaponQuality.Scatter',
-        description: 'WH40K.WeaponQuality.ScatterDesc',
-        hasLevel: false,
-    },
-    'spray': {
-        label: 'WH40K.WeaponQuality.Spray',
-        description: 'WH40K.WeaponQuality.SprayDesc',
-        hasLevel: false,
-    },
-    'storm': {
-        label: 'WH40K.WeaponQuality.Storm',
-        description: 'WH40K.WeaponQuality.StormDesc',
-        hasLevel: false,
-    },
-
-    // Status Effects
-    'concussive': {
-        label: 'WH40K.WeaponQuality.Concussive',
-        description: 'WH40K.WeaponQuality.ConcussiveDesc',
-        hasLevel: true,
-    },
-    'corrosive': {
-        label: 'WH40K.WeaponQuality.Corrosive',
-        description: 'WH40K.WeaponQuality.CorrosiveDesc',
-        hasLevel: false,
-    },
-    'toxic': {
-        label: 'WH40K.WeaponQuality.Toxic',
-        description: 'WH40K.WeaponQuality.ToxicDesc',
-        hasLevel: true,
-    },
-    'hallucinogenic': {
-        label: 'WH40K.WeaponQuality.Hallucinogenic',
-        description: 'WH40K.WeaponQuality.HallucinogenicDesc',
-        hasLevel: true,
-    },
-    'snare': {
-        label: 'WH40K.WeaponQuality.Snare',
-        description: 'WH40K.WeaponQuality.SnareDesc',
-        hasLevel: true,
-    },
-    'shocking': {
-        label: 'WH40K.WeaponQuality.Shocking',
-        description: 'WH40K.WeaponQuality.ShockingDesc',
-        hasLevel: false,
-    },
-    'shock': {
-        label: 'WH40K.WeaponQuality.Shock',
-        description: 'WH40K.WeaponQuality.ShockDesc',
-        hasLevel: false,
-    },
-
-    // Weapon Type Markers
-    'bolt': {
-        label: 'WH40K.WeaponQuality.Bolt',
-        description: 'WH40K.WeaponQuality.BoltDesc',
-        hasLevel: false,
-    },
-    'chain': {
-        label: 'WH40K.WeaponQuality.Chain',
-        description: 'WH40K.WeaponQuality.ChainDesc',
-        hasLevel: false,
-    },
-    'flame': {
-        label: 'WH40K.WeaponQuality.Flame',
-        description: 'WH40K.WeaponQuality.FlameDesc',
-        hasLevel: false,
-    },
-    'force': {
-        label: 'WH40K.WeaponQuality.Force',
-        description: 'WH40K.WeaponQuality.ForceDesc',
-        hasLevel: false,
-    },
-    'las': {
-        label: 'WH40K.WeaponQuality.Las',
-        description: 'WH40K.WeaponQuality.LasDesc',
-        hasLevel: false,
-    },
-    'melta': {
-        label: 'WH40K.WeaponQuality.Melta',
-        description: 'WH40K.WeaponQuality.MeltaDesc',
-        hasLevel: false,
-    },
-    'plasma': {
-        label: 'WH40K.WeaponQuality.Plasma',
-        description: 'WH40K.WeaponQuality.PlasmaDesc',
-        hasLevel: false,
-    },
-    'power': {
-        label: 'WH40K.WeaponQuality.Power',
-        description: 'WH40K.WeaponQuality.PowerDesc',
-        hasLevel: false,
-    },
-    'power-field': {
-        label: 'WH40K.WeaponQuality.PowerField',
-        description: 'WH40K.WeaponQuality.PowerFieldDesc',
-        hasLevel: false,
-    },
-    'primitive': {
-        label: 'WH40K.WeaponQuality.Primitive',
-        description: 'WH40K.WeaponQuality.PrimitiveDesc',
-        hasLevel: true,
-    },
-
-    // Special Weapon Types
-    'grenade': {
-        label: 'WH40K.WeaponQuality.Grenade',
-        description: 'WH40K.WeaponQuality.GrenadeDesc',
-        hasLevel: false,
-    },
-    'launcher': {
-        label: 'WH40K.WeaponQuality.Launcher',
-        description: 'WH40K.WeaponQuality.LauncherDesc',
-        hasLevel: false,
-    },
-    'indirect': {
-        label: 'WH40K.WeaponQuality.Indirect',
-        description: 'WH40K.WeaponQuality.IndirectDesc',
-        hasLevel: true,
-    },
-
-    // Energy Weapon Effects
-    'haywire': {
-        label: 'WH40K.WeaponQuality.Haywire',
-        description: 'WH40K.WeaponQuality.HaywireDesc',
-        hasLevel: true,
-    },
-    'overheats': {
-        label: 'WH40K.WeaponQuality.Overheats',
-        description: 'WH40K.WeaponQuality.OverheatsDesc',
-        hasLevel: false,
-    },
-    'overcharge': {
-        label: 'WH40K.WeaponQuality.Overcharge',
-        description: 'WH40K.WeaponQuality.OverchargeDesc',
-        hasLevel: true,
-    },
-    'recharge': {
-        label: 'WH40K.WeaponQuality.Recharge',
-        description: 'WH40K.WeaponQuality.RechargeDesc',
-        hasLevel: false,
-    },
-    'maximal': {
-        label: 'WH40K.WeaponQuality.Maximal',
-        description: 'WH40K.WeaponQuality.MaximalDesc',
-        hasLevel: false,
-    },
-
-    // Special/Rare Properties
-    'sanctified': {
-        label: 'WH40K.WeaponQuality.Sanctified',
-        description: 'WH40K.WeaponQuality.SanctifiedDesc',
-        hasLevel: false,
-    },
-    'tainted': {
-        label: 'WH40K.WeaponQuality.Tainted',
-        description: 'WH40K.WeaponQuality.TaintedDesc',
-        hasLevel: false,
-    },
-    'daemon-wep': {
-        label: 'WH40K.WeaponQuality.DaemonWep',
-        description: 'WH40K.WeaponQuality.DaemonWepDesc',
-        hasLevel: false,
-    },
-    'daemonbane': {
-        label: 'WH40K.WeaponQuality.Daemonbane',
-        description: 'WH40K.WeaponQuality.DaemonbaneDesc',
-        hasLevel: false,
-    },
-    'warp-weapon': {
-        label: 'WH40K.WeaponQuality.WarpWeapon',
-        description: 'WH40K.WeaponQuality.WarpWeaponDesc',
-        hasLevel: false,
-    },
-    'witch-edge': {
-        label: 'WH40K.WeaponQuality.WitchEdge',
-        description: 'WH40K.WeaponQuality.WitchEdgeDesc',
-        hasLevel: false,
-    },
-    'rune-wep': {
-        label: 'WH40K.WeaponQuality.RuneWep',
-        description: 'WH40K.WeaponQuality.RuneWepDesc',
-        hasLevel: false,
-    },
-
-    // Xenos Weapons
-    'gauss': {
-        label: 'WH40K.WeaponQuality.Gauss',
-        description: 'WH40K.WeaponQuality.GaussDesc',
-        hasLevel: false,
-    },
-    'graviton': {
-        label: 'WH40K.WeaponQuality.Graviton',
-        description: 'WH40K.WeaponQuality.GravitonDesc',
-        hasLevel: false,
-    },
-    'necron-wep': {
-        label: 'WH40K.WeaponQuality.NecronWep',
-        description: 'WH40K.WeaponQuality.NecronWepDesc',
-        hasLevel: false,
-    },
-
-    // Special Ammunition/Effects
-    'smoke': {
-        label: 'WH40K.WeaponQuality.Smoke',
-        description: 'WH40K.WeaponQuality.SmokeDesc',
-        hasLevel: true,
-    },
-    'living-ammunition': {
-        label: 'WH40K.WeaponQuality.LivingAmmunition',
-        description: 'WH40K.WeaponQuality.LivingAmmunitionDesc',
-        hasLevel: false,
-    },
-
-    // Combat Modifiers
-    'twin-linked': {
-        label: 'WH40K.WeaponQuality.TwinLinked',
-        description: 'WH40K.WeaponQuality.TwinLinkedDesc',
-        hasLevel: false,
-    },
-    'gyro-stabilised': {
-        label: 'WH40K.WeaponQuality.GyroStabilised',
-        description: 'WH40K.WeaponQuality.GyroStabilisedDesc',
-        hasLevel: false,
-    },
-    'vengeful': {
-        label: 'WH40K.WeaponQuality.Vengeful',
-        description: 'WH40K.WeaponQuality.VengefulDesc',
-        hasLevel: true,
-    },
-    'lance': {
-        label: 'WH40K.WeaponQuality.Lance',
-        description: 'WH40K.WeaponQuality.LanceDesc',
-        hasLevel: false,
-    },
-
-    // Miscellaneous
-    'decay': {
-        label: 'WH40K.WeaponQuality.Decay',
-        description: 'WH40K.WeaponQuality.DecayDesc',
-        hasLevel: true,
-    },
-    'irradiated': {
-        label: 'WH40K.WeaponQuality.Irradiated',
-        description: 'WH40K.WeaponQuality.IrradiatedDesc',
-        hasLevel: true,
-    },
-    'reactive': {
-        label: 'WH40K.WeaponQuality.Reactive',
-        description: 'WH40K.WeaponQuality.ReactiveDesc',
-        hasLevel: false,
-    },
-    'unstable': {
-        label: 'WH40K.WeaponQuality.Unstable',
-        description: 'WH40K.WeaponQuality.UnstableDesc',
-        hasLevel: false,
-    },
-    'volatile': {
-        label: 'WH40K.WeaponQuality.Volatile',
-        description: 'WH40K.WeaponQuality.VolatileDesc',
-        hasLevel: false,
-    },
-    'integrated-weapon': {
-        label: 'WH40K.WeaponQuality.IntegratedWeapon',
-        description: 'WH40K.WeaponQuality.IntegratedWeaponDesc',
-        hasLevel: false,
-    },
-    'ogryn-proof': {
-        label: 'WH40K.WeaponQuality.OgrynProof',
-        description: 'WH40K.WeaponQuality.OgrynProofDesc',
-        hasLevel: false,
-    },
-
-    // Faction-Specific
-    'sm-wep': {
-        label: 'WH40K.WeaponQuality.SMWep',
-        description: 'WH40K.WeaponQuality.SMWepDesc',
-        hasLevel: false,
-    },
-
-    // Special/Placeholder
-    'customised': {
-        label: 'WH40K.WeaponQuality.Customised',
-        description: 'WH40K.WeaponQuality.CustomisedDesc',
-        hasLevel: false,
-    },
-    'sp': {
-        label: 'WH40K.WeaponQuality.SP',
-        description: 'WH40K.WeaponQuality.SPDesc',
-        hasLevel: false,
-    },
-    'cleansing-fire': {
-        label: 'WH40K.WeaponQuality.CleansingFire',
-        description: 'WH40K.WeaponQuality.CleansingFireDesc',
-        hasLevel: false,
-    },
-
-    // Craftsmanship-Only (never in pack data)
-    'never-jam': {
-        label: 'WH40K.WeaponQuality.NeverJam',
-        description: 'WH40K.WeaponQuality.NeverJamDesc',
-        hasLevel: false,
-    },
-};
-
 /**
  * Parse a quality identifier into its base id and level. `blast-3` →
  * `{ baseId: 'blast', level: 3 }`; `flamer-x` → `{ baseId: 'flamer', level: null }`
@@ -1441,10 +1034,22 @@ export function buildQualityLabel(localizedBase: string, hasLevel: boolean, leve
  * @param {string} identifier    Quality identifier (e.g., "tearing", "blast-3")
  * @returns {object|null}        Quality definition or null
  */
-WH40K.getQualityDefinition = function (identifier) {
-    // Strip level suffix if present
+WH40K.getQualityDefinition = (identifier) => {
+    // Strip level suffix (blast-3 → blast, flamer-x → flamer).
     const baseId = identifier.replace(/-\d+$/, '').replace(/-x$/i, '');
-    return this.weaponQualities[baseId] ?? null;
+    const labelKey = weaponQualityLabelKey(baseId);
+    // "Known" iff the langpack carries the label; unlabelled qualities return null so
+    // callers fall back to a humanized identifier (matching the old registry-miss path).
+    if (!game.i18n.has(labelKey)) return null;
+    const mechanics = getWeaponQualityMechanics(baseId);
+    const isMechanical = mechanics !== null && mechanics.type !== '';
+    return {
+        label: labelKey,
+        description: weaponQualityDescKey(baseId),
+        hasLevel: getWeaponQualityHasLevel(baseId),
+        category: isMechanical ? mechanics.type : 'other',
+        mechanicalEffect: isMechanical,
+    };
 };
 
 /**
