@@ -10,6 +10,7 @@ import {
     resolveStunDuration,
     resolveTemplateRadius,
 } from '../../src/module/rules/weapon-quality-effects.ts';
+import { setWeaponQualityPayloadsForTesting } from '../../src/module/rules/weapon-quality-payloads.ts';
 import qualityChatSrc from '../../src/templates/chat/weapon-quality-effect-chat.hbs?raw';
 import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
@@ -18,9 +19,13 @@ import { renderSheet } from '../test-helpers';
  * Chat-card story coverage for the bespoke weapon-quality outcomes
  * promoted in #57 (completion). Each story drives the
  * `weapon-quality-effect-chat.hbs` partial through the per-quality
- * pure resolvers (no hand-authored payload shape), so a regression in
- * `WEAPON_QUALITY_EFFECTS` payload surfaces here as well as in the
- * Vitest unit suite.
+ * pure resolvers (no hand-authored payload shape).
+ *
+ * The mechanical payloads now live on the weaponQuality compendium docs and are
+ * read through the boot index (#303). Foundry is not booted under Storybook, so we
+ * seed that index with the same values the rt-core weaponQuality pack carries —
+ * the browser-side analogue of the Vitest suite, which reads the real pack
+ * `_source` and is the authoritative payload-regression surface.
  *
  * Per-system theming: stories set `gameSystem: 'dh2'` so the card's
  * `data-wh40k-system` anchor activates the `dh2:*` Tailwind variant
@@ -28,6 +33,19 @@ import { renderSheet } from '../test-helpers';
  */
 
 initializeStoryHandlebars();
+
+// Seed the #303 boot index with the rt-core weaponQuality pack values the
+// index-backed resolvers below read (Scatter range bands, Maximal package,
+// Concussive hit-effect save penalty). Pure resolvers (Lance, Graviton, Stun,
+// Template radius) do not consult the index.
+setWeaponQualityPayloadsForTesting({
+    scatter: { type: 'damage', rangeBands: { pointBlank: 3, shortRange: 0, standardRange: -3, longRange: -3, extremeRange: -3 } },
+    maximal: { type: 'damage', maximalDamageDice: '1d10', maximalPenetrationBonus: 2, triggersRecharge: true },
+    concussive: {
+        type: 'hit-effect',
+        hitEffect: { requiresSave: 'toughness', failEffect: 'stunned', stunRoundsVariable: true, saveTargetPenaltyPerLevel: -10 },
+    },
+});
 
 interface QualityPayload {
     radius?: number;
