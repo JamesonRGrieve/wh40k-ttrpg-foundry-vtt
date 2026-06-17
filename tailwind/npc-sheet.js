@@ -12,7 +12,12 @@ module.exports = {
         // Matches the original `_npc-sheet.css` which carried !important here.
         ".window-content": {
             "display": "grid !important",
-            "grid-template-columns": "minmax(180px, 220px) minmax(0, 1fr) !important",
+            // Sidebar column hugs the portrait width (#320): the portrait caps at
+            // 160px (actor-identity.hbs `tw-max-w-[160px]`) inside the header's
+            // px-3 padding + 2px right border ≈ 186px, so a 192px max removes the
+            // dead space the old 220px left around the centred portrait while
+            // still letting the column shrink to a 180px floor.
+            "grid-template-columns": "minmax(180px, 192px) minmax(0, 1fr) !important",
             "grid-template-rows": "minmax(0, 1fr) !important",
             "overflow": "hidden !important",
             "height": "100% !important",
