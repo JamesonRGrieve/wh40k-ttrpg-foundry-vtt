@@ -96,7 +96,7 @@ export function weaponQualityMechanicsFromRaw(raw: unknown): WeaponQualityMechan
  */
 interface WeaponQualityPackDoc {
     uuid?: string;
-    system?: { identifier?: string; hasLevel?: boolean; mechanics?: WeaponQualityMechanics; mechanicsRef?: string };
+    system?: { identifier?: string; mechanics?: WeaponQualityMechanics; mechanicsRef?: string };
 }
 interface WeaponQualityPack {
     metadata?: { name?: string };
@@ -156,8 +156,6 @@ export async function buildWeaponQualityPayloadIndex(): Promise<void> {
         }
     }
 
-    const levelBySystem = new Map<string, Map<string, boolean>>();
-    const levelFlat = new Map<string, boolean>();
     for (const { systemId, doc } of docs) {
         const identifier = doc.system?.identifier;
         if (typeof identifier !== 'string' || identifier === '') continue;
@@ -166,21 +164,26 @@ export async function buildWeaponQualityPayloadIndex(): Promise<void> {
             ref !== undefined && ref !== ''
                 ? canonicalByUuid.get(ref) ?? defaultWeaponQualityMechanics()
                 : weaponQualityMechanicsFromRaw(doc.system?.mechanics);
-        const hasLevel = doc.system?.hasLevel === true;
         const key = identifier.toLowerCase();
         let systemMap = bySystem.get(systemId);
-        let systemLevels = levelBySystem.get(systemId);
-        if (systemMap === undefined || systemLevels === undefined) {
+        if (systemMap === undefined) {
             systemMap = new Map<string, WeaponQualityMechanics>();
-            systemLevels = new Map<string, boolean>();
             bySystem.set(systemId, systemMap);
-            levelBySystem.set(systemId, systemLevels);
         }
         systemMap.set(key, mechanics);
-        systemLevels.set(key, hasLevel);
         if (!flat.has(key)) flat.set(key, mechanics);
-        if (!levelFlat.has(key)) levelFlat.set(key, hasLevel);
     }
+
+    // hasLevel is modelled in the packs as a sibling `<id>-x` doc (blast + blast-x,
+    // proven + proven-x, …), not the per-doc `hasLevel` flag (uniformly false); derive it.
+    const levelBySystem = new Map<string, Map<string, boolean>>();
+    for (const [systemId, systemMap] of bySystem) {
+        const levels = new Map<string, boolean>();
+        for (const key of systemMap.keys()) levels.set(key, systemMap.has(`${key}-x`));
+        levelBySystem.set(systemId, levels);
+    }
+    const levelFlat = new Map<string, boolean>();
+    for (const key of flat.keys()) levelFlat.set(key, flat.has(`${key}-x`));
 
     payloadBySystem = bySystem;
     payloadFlat = flat;
