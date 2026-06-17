@@ -5,6 +5,8 @@
  * Follows DND5E pattern: permissive validation (accepts legacy formats)
  * but provides helper for generating kebab-case from names.
  */
+import { identifierFromName } from './identifier-utils.ts';
+
 // Extend via `any` access to bypass fvtt-types AnyDataField private-brand mismatch.
 // Instances of IdentifierField are structurally incompatible with DataField.Any when
 // the base is referenced through the typed namespace because StringField's #assignmentType
@@ -47,16 +49,12 @@ export default class IdentifierField extends (foundry.data as any).fields.String
 
     /**
      * Generate an identifier from a name string.
-     * Produces kebab-case for new identifiers.
+     * Produces kebab-case for new identifiers. Delegates to the Foundry-free
+     * {@link identifierFromName} so the slug logic stays unit-testable.
      * @param {string} name   The name to convert.
      * @returns {string}
      */
     static fromName(name: string): string {
-        return name
-            .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '');
+        return identifierFromName(name);
     }
 }
