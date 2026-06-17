@@ -20,24 +20,15 @@
         progressPercent:  number       // 0..100; 100 at Hero
       }
 --}}
-<section class="wh40k-dw-renown-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                dw:tw-border-bronze"
-         data-dw-renown="{{renownPanel.value}}"
-         data-dw-rank="{{renownPanel.rank}}">
-
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-medal dw:tw-text-bronze"></i>
-            <span>{{localize "WH40K.DW.Renown.Label"}}</span>
-        </h3>
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-renown-panel" accentBorderClass="dw:tw-border-bronze" accentIconClass="dw:tw-text-bronze" icon="fa-medal" label=(localize "WH40K.DW.Renown.Label") rootAttrs=(safeAttrs "data-dw-renown" renownPanel.value "data-dw-rank" renownPanel.rank) hasRightSlot=true}}
+    {{!-- Header right slot: rank readout --}}
+    {{#*inline "rightSlot"}}
         <span class="wh40k-dw-renown-rank tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
               data-rank="{{renownPanel.rank}}"
               title="{{localize 'WH40K.DW.Renown.Current'}}">
             {{renownPanel.rankLabel}}
         </span>
-    </header>
+    {{/inline}}
 
     {{!-- Current value + thresholds --}}
     <div class="wh40k-dw-renown-readout tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
@@ -88,4 +79,4 @@
             {{localize "WH40K.DW.Renown.Loss"}}
         </button>
     </div>
-</section>
+{{/system-card}}
