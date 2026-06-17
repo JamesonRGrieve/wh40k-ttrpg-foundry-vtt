@@ -57,9 +57,7 @@
 
     {{!-- Per-god tally --}}
     <div class="wh40k-bc-tally tw-flex tw-flex-col tw-gap-1">
-        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.BC.Advancement.TallyHeader"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.BC.Advancement.TallyHeader"}}
         <div class="wh40k-bc-tally-grid tw-grid tw-grid-cols-4 tw-gap-1">
             <div class="wh40k-bc-tally-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-god="khorne">
                 <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Advancement.Alignment.Khorne"}}</span>
@@ -82,9 +80,7 @@
 
     {{!-- Corruption checkpoint state --}}
     <div class="wh40k-bc-checkpoint tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.BC.Advancement.Checkpoint"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.BC.Advancement.Checkpoint"}}
         <span class="wh40k-bc-checkpoint-readout tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
             {{alignmentPanel.checkpoint}} / {{alignmentPanel.corruption}} CP
         </span>
@@ -100,9 +96,7 @@
 
     {{!-- Infamy advance affordance --}}
     <div class="wh40k-bc-infamy tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-infamy="{{alignmentPanel.infamy}}">
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.BC.Advancement.Infamy"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.BC.Advancement.Infamy"}}
         <span class="wh40k-bc-infamy-readout tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
             {{alignmentPanel.infamy}} / {{alignmentPanel.infamyCap}}
         </span>

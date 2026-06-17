@@ -26,9 +26,7 @@
     {{#if missionGearPanel.hasOutcome}}
         <div class="wh40k-ow-mission-gear-last tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
              data-ow-mission-gear-last-readout="{{missionGearPanel.outcomeKey}}">
-            <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.OW.MissionGear.Roll.Result"}}
-            </span>
+            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.OW.MissionGear.Roll.Result"}}
             <span class="tw-font-bold tw-text-[0.85rem] tw-text-amber-100 tw-tabular-nums">
                 {{localize missionGearPanel.outcomeKey}}
             </span>
