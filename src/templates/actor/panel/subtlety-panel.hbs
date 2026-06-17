@@ -17,18 +17,22 @@
     Rendered only for DH2 actors; the include in tab-overview.hbs gates on
     `actor._gameSystemId === 'dh2'`.
 
-    Styling: standardized to the shared Overview "dashboard zone" card look
-    (header bar with icon + title + value readout, accent left-border) so it
-    sits consistently beneath the Resources panel in column 3.
+    Styling: relocated under the Insanity row inside the column-1 Mental State
+    block (#317). The value row mirrors the Corruption / Insanity mental rows
+    (accent left-border, mental label/value classes) rather than the former
+    dashboard-zone card chrome; the manual stepper + adjuster list render
+    beneath it.
 --}}
-<section class="wh40k-subtlety-panel tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]"
+<section class="wh40k-subtlety-panel tw-flex tw-flex-col tw-gap-1 tw-mt-1 tw-pt-1.5 tw-border-t tw-border-solid tw-border-[color:var(--color-border-secondary)]"
          data-subtlety-value="{{system.subtlety.value}}">
 
-    {{!-- Header: icon + title + value / max readout + breakdown affordance --}}
-    <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[var(--color-bg-tertiary)] tw-border-b tw-border-solid tw-border-[var(--color-border-secondary)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
-        <i class="fas fa-user-secret"></i>
-        <span>{{localize "WH40K.SubtletyPanel.Header"}}</span>
-        <span class="wh40k-subtlety-readout tw-ml-auto tw-normal-case tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--color-text-primary)]"
+    {{!-- Value row — styled to match the Corruption / Insanity mental rows --}}
+    <div class="wh40k-subtlety-row wh40k-mental-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw-l5 dh2:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1">
+        <span class="wh40k-mental-label-group">
+            <span class="wh40k-mental-icon"><i class="fas fa-user-secret"></i></span>
+            <span class="wh40k-mental-label">{{localize "WH40K.SubtletyPanel.Header"}}</span>
+        </span>
+        <span class="wh40k-subtlety-readout tw-ml-auto wh40k-mental-value tw-font-bold tw-text-[color:var(--color-text-primary)]"
               title="{{localize 'WH40K.SubtletyPanel.Value'}} / {{localize 'WH40K.SubtletyPanel.Max'}}">
             <span class="wh40k-subtlety-value">{{system.subtlety.value}}</span>
             <span class="tw-text-[color:var(--color-text-tertiary)]"> / </span>
@@ -42,27 +46,30 @@
         </button>
     </div>
 
-    <div class="tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
-        {{!-- GM-only manual stepper --}}
-        {{#if isGM}}
-            <div class="wh40k-subtlety-manual tw-flex tw-items-center tw-justify-center tw-gap-3 tw-py-1">
-                <button type="button"
-                        class="wh40k-subtlety-manual-minus tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-[opacity,transform] tw-duration-200"
-                        data-action="adjustSubtletyManually"
-                        data-delta="-1"
-                        title="{{localize 'WH40K.SubtletyPanel.ManualMinus'}}">
-                    <span class="material-icons">remove_circle</span>
-                </button>
-                <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-tertiary)]">{{localize "WH40K.Subtlety.ManualAdjustment"}}</span>
-                <button type="button"
-                        class="wh40k-subtlety-manual-plus tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-[opacity,transform] tw-duration-200"
-                        data-action="adjustSubtletyManually"
-                        data-delta="1"
-                        title="{{localize 'WH40K.SubtletyPanel.ManualPlus'}}">
-                    <span class="material-icons">add_circle</span>
-                </button>
-            </div>
-        {{/if}}
+    <div class="tw-flex tw-flex-col tw-gap-1">
+        {{!-- Manual stepper — visible to all; enabled only for the GM (#317).
+             Non-GM sees the controls greyed and disabled rather than hidden.
+             The handler (#adjustSubtletyManually) re-checks game.user.isGM, so
+             the disabled attribute is defence-in-depth, not the sole gate. --}}
+        <div class="wh40k-subtlety-manual tw-flex tw-items-center tw-justify-center tw-gap-3 tw-py-1{{#unless isGM}} tw-opacity-50{{/unless}}">
+            <button type="button"
+                    class="wh40k-subtlety-manual-minus tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-p-0 tw-transition-[opacity,transform] tw-duration-200 {{#if isGM}}tw-cursor-pointer tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110{{else}}tw-cursor-not-allowed tw-opacity-80{{/if}}"
+                    data-action="adjustSubtletyManually"
+                    data-delta="-1"
+                    {{#unless isGM}}disabled aria-disabled="true"{{/unless}}
+                    title="{{localize 'WH40K.SubtletyPanel.ManualMinus'}}">
+                <span class="material-icons">remove_circle</span>
+            </button>
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-tertiary)]">{{localize "WH40K.Subtlety.ManualAdjustment"}}</span>
+            <button type="button"
+                    class="wh40k-subtlety-manual-plus tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-p-0 tw-transition-[opacity,transform] tw-duration-200 {{#if isGM}}tw-cursor-pointer tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110{{else}}tw-cursor-not-allowed tw-opacity-80{{/if}}"
+                    data-action="adjustSubtletyManually"
+                    data-delta="1"
+                    {{#unless isGM}}disabled aria-disabled="true"{{/unless}}
+                    title="{{localize 'WH40K.SubtletyPanel.ManualPlus'}}">
+                <span class="material-icons">add_circle</span>
+            </button>
+        </div>
 
         {{!-- Adjuster list --}}
         <div class="wh40k-subtlety-adjusters tw-flex tw-flex-col tw-gap-1">
