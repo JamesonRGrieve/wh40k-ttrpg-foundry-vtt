@@ -94,8 +94,14 @@ export function migrateCharacteristics(source: JsonObject): void {
         const fullKey = shortToFull.get(key.toLowerCase()) ?? key;
         if (fullKey !== key) changed = true;
 
-        if (isJsonObject(value) && 'total' in value) {
-            // Already structured — keep (possibly under a remapped key).
+        if (isJsonObject(value)) {
+            // Already an object — structured data OR a partial-update diff (e.g.
+            // `{ base: 32 }` from an `actor.update('…characteristics.ws.base')`).
+            // `_migrateData` runs on update diffs too, so a partial object must be
+            // kept verbatim (possibly under a remapped key); only flat legacy
+            // scalars (`"45"`) get wrapped. Requiring `'total' in value` here used
+            // to mis-classify the partial `{ base: N }` diff as a legacy scalar and
+            // reset every NPC characteristic to 30 on edit.
             migrated[fullKey] = value;
         } else {
             const total = toInt(value, 30);
