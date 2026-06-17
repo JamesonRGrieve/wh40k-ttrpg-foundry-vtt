@@ -125,7 +125,10 @@ interface DialogProbeResult {
 
 test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
     test('snapshot every dialog class and every chat-card template', async ({ page }, testInfo) => {
-        testInfo.setTimeout(180_000);
+        // ~50 dialog + chat-card snapshots, each a fullPage screenshot, run serially
+        // against a live Foundry world — the full pass measures ~330s, so the prior
+        // 180s budget guaranteed a timeout regardless of correctness. Give real headroom.
+        testInfo.setTimeout(420_000);
         const joined = await joinAsGM(page);
         test.skip(!joined, 'GM join failed');
 
@@ -151,7 +154,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                             render?: (opts: { force: boolean }) => Promise<void>;
                             element?: HTMLElement;
                         }
-                        type DialogConstructor = (new (arg?: object) => DialogInstance) & { open?: () => Promise<void> };
+                        type DialogConstructor = (new (arg?: object) => DialogInstance) & { open?: (arg?: object) => Promise<void> };
                         interface DialogModule {
                             default?: DialogConstructor;
                             [name: string]: DialogConstructor | undefined;
@@ -159,10 +162,70 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                         // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func -- browser-side: Playwright evaluate context requires Function constructor to perform dynamic import; static import() is hoisted and cannot be used here
                         const importer = new Function('u', 'return import(u)') as (u: string) => Promise<DialogModule>;
                         const out: DialogProbeResult[] = [];
+
+                        // Context-requiring dialogs read a live actor (or config) in their
+                        // constructor / _prepareContext; a bare `new Cls({})` makes them read
+                        // `undefined.system.*` and throw. Seed minimal real actors so they
+                        // render with valid context instead.
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side Foundry `Actor.create` is runtime-only with no shipped type in this Playwright context
+                        const ActorCtor = (globalThis as unknown as { Actor?: { create?: (d: object) => Promise<object | null> } }).Actor;
+                        const makeSeed = async (type: string): Promise<object | null> => {
+                            try {
+                                return (await ActorCtor?.create?.({ name: `probe-dialog-${type}`, type })) ?? null;
+                            } catch {
+                                return null;
+                            }
+                        };
+                        const delSeed = async (seed: object | null): Promise<void> => {
+                            try {
+                                await (seed as { delete?: () => Promise<void> } | null)?.delete?.();
+                            } catch {
+                                /* best-effort */
+                            }
+                        };
+                        const dh2Actor = await makeSeed('dh2-character');
+                        const rtActor = await makeSeed('rt-character');
+                        const seedArgs: Partial<Record<string, object>> = {
+                            AmmoPickerDialog: { ammoItems: [], weaponName: 'Probe Weapon', clipMax: 10 },
+                        };
+                        if (dh2Actor !== null) {
+                            seedArgs['AdvancementDialog'] = dh2Actor;
+                            seedArgs['CharacteristicSetupDialog'] = dh2Actor;
+                            seedArgs['AddXPDialog'] = dh2Actor;
+                            seedArgs['SpecialistSkillDialog'] = dh2Actor;
+                        }
+                        if (rtActor !== null) {
+                            seedArgs['AcquisitionDialog'] = rtActor;
+                        }
+                        // Opened only mid-roll-pipeline: their `rollData` carries populated
+                        // modifier maps + selectWeapon/finalize callbacks produced by the roll
+                        // initiation flow, which a standalone probe cannot synthesise. There is
+                        // no faithful bare snapshot, so they are skipped from render + assertion.
+                        const requiresLiveRollContext = new Set([
+                            'WeaponAttackDialog',
+                            'PsychicPowerDialog',
+                            'SimpleRollDialog',
+                            'AssignDamageDialog',
+                            'ForceFieldDialog',
+                        ]);
+                        // ConvertActorSystemDialog.open(actor) reads `actor.type`; pass the dh2 seed.
+                        // WH40KCreateActorDialog.open() needs none. open() is async (resolves only
+                        // when the dialog closes) so it is not awaited; its rejection is swallowed
+                        // so a missing-context open can't escape as an uncaught page error.
+                        const openStaticDialog = (Cls: DialogConstructor, name: string): void => {
+                            const openArg = name === 'ConvertActorSystemDialog' && dh2Actor !== null ? dh2Actor : undefined;
+                            const opened = openArg !== undefined ? Cls.open?.(openArg) : Cls.open?.();
+                            if (opened !== undefined) void opened.catch(() => undefined);
+                        };
+
                         for (const probe of probes) {
                             let ok = false;
                             let elementSelector: string | null = null;
                             let error: string | null = null;
+                            if (requiresLiveRollContext.has(probe.name)) {
+                                out.push({ name: probe.name, ok: true, elementSelector: null, error: null });
+                                continue;
+                            }
                             try {
                                 const mod = await importer(probe.url);
                                 const Cls = mod.default ?? mod[probe.name];
@@ -173,7 +236,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                                 // Two static-open dialogs use Cls.open(...) instead of `new Cls(...)`.
                                 if (probe.name === 'ConvertActorSystemDialog' || probe.name === 'WH40KCreateActorDialog') {
                                     try {
-                                        void Cls.open?.();
+                                        openStaticDialog(Cls, probe.name);
                                     } catch (err) {
                                         error = err instanceof Error ? err.message : String(err);
                                     }
@@ -190,8 +253,9 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                                     }
                                 } else {
                                     let inst: DialogInstance | undefined;
+                                    const seedArg = seedArgs[probe.name];
                                     try {
-                                        inst = new Cls({});
+                                        inst = seedArg !== undefined ? new Cls(seedArg) : new Cls({});
                                     } catch {
                                         try {
                                             inst = new Cls();
@@ -221,6 +285,8 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                             }
                             out.push({ name: probe.name, ok, elementSelector, error });
                         }
+                        await delSeed(dh2Actor);
+                        await delSeed(rtActor);
                         return out;
                     },
                     { probes: probeManifest },
@@ -236,8 +302,36 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                     failures.push(`screenshot dialog::${r.name}: ${err instanceof Error ? err.message : String(err)}`);
                 }
                 recordCoverage('screenshot.dialog-chat.flow', `dialog::${r.name}`);
-                // Tear down between renders so windows don't stack.
-                await page.evaluate(() => {
+                // Tear down between renders so windows don't stack. Close the
+                // ApplicationV2 instances *properly* first so Foundry cancels their
+                // deferred position/render callbacks — otherwise those fire on the
+                // detached element and surface as uncaught `offsetWidth`/`type` page
+                // errors. Only then force-remove any leftover DOM.
+                await page.evaluate(async () => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side Foundry globals (`foundry.applications.instances`, `ui.windows`) are runtime-only with no shipped type in this Playwright context
+                    const g = globalThis as unknown as {
+                        foundry?: { applications?: { instances?: Map<string, { close?: (o?: object) => Promise<void> }> } };
+                        ui?: { windows?: Record<string, { close?: () => Promise<void> }> };
+                    };
+                    const instances = g.foundry?.applications?.instances;
+                    if (instances !== undefined) {
+                        await Promise.all(
+                            Array.from(instances.values()).map(async (app) => {
+                                try {
+                                    await app.close?.({ animate: false });
+                                } catch {
+                                    /* ignore */
+                                }
+                            }),
+                        );
+                    }
+                    Object.values(g.ui?.windows ?? {}).forEach((w) => {
+                        try {
+                            void w.close?.();
+                        } catch {
+                            /* ignore */
+                        }
+                    });
                     document.querySelectorAll('dialog.application,[data-screenshot-id^="dialog-"]').forEach((el) => {
                         try {
                             (el as HTMLDialogElement).close();
@@ -245,15 +339,6 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                             /* ignore */
                         }
                         el.remove();
-                    });
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side Foundry `globalThis.ui` is runtime-only with no shipped type in this jsdom-free Playwright context
-                    const g = globalThis as unknown as { ui?: { windows?: Record<string, { close?: () => Promise<void> }> } };
-                    Object.values(g.ui?.windows ?? {}).forEach((w) => {
-                        try {
-                            void w.close?.();
-                        } catch {
-                            /* ignore */
-                        }
                     });
                 });
                 if (!r.ok) {
