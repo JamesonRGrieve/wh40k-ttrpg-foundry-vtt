@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { checkRighteousFury, getRighteousFuryThreshold } from './weapon-quality-effects';
+import { setWeaponQualityPayloadsForTesting } from './weapon-quality-payloads.ts';
 
 /**
  * Regression tests for the Righteous Fury threshold lookup. The threshold
@@ -10,8 +11,16 @@ import { checkRighteousFury, getRighteousFuryThreshold } from './weapon-quality-
  * If this test suite goes red, do NOT update the expectations to match
  * the new behaviour — DH2 RAW pins these thresholds (Gauss=9, Vengeful=8,
  * standard=10). Fix the underlying lookup.
+ *
+ * `getRighteousFuryThreshold` reads the quality mechanics through the boot
+ * index (#303); seed it with the RAW thresholds here. The weaponQuality pack
+ * actually carrying these values is verified in `weapon-quality-effects.test.ts`.
  */
 describe('Righteous Fury threshold', () => {
+    beforeAll(() => {
+        setWeaponQualityPayloadsForTesting({ gauss: { rfThreshold: 9 }, vengeful: { rfThreshold: 8 } });
+    });
+
     it('defaults to 10 for an undefined weapon', () => {
         expect(getRighteousFuryThreshold(undefined)).toBe(10);
         expect(getRighteousFuryThreshold(null)).toBe(10);

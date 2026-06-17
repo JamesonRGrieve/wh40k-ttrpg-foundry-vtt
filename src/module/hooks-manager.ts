@@ -104,6 +104,7 @@ import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
 import { WH40K } from './rules/config.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
+import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import { registerTradeProximityHud } from './transactions/trade-proximity.ts';
 import { TransactionManager } from './transactions/transaction-manager.ts';
@@ -719,6 +720,7 @@ export class HooksManager {
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();
         await uuidNameCache.build();
+        await buildWeaponQualityPayloadIndex();
         await backfillOriginPathUuids();
         await reconcileWorldOriginGrants();
 

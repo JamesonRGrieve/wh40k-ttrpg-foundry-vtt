@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import type { RollData } from '../rolls/roll-data.ts';
 import { attackSpecials, attackSpecialsNames, calculateAttackSpecialAttackBonuses } from './attack-specials.ts';
+import { setWeaponQualityPayloadsForTesting } from './weapon-quality-payloads.ts';
 
 /**
  * Coverage for the pure attack-special rules consumed by the roll layer
@@ -63,6 +64,14 @@ describe('attackSpecials registry', () => {
 });
 
 describe('calculateAttackSpecialAttackBonuses', () => {
+    // Accurate's aim bonus is read through the weaponQuality boot index (#303); the
+    // resolver returns the absent-default (0) until the index is built, so seed the
+    // RAW value (the pack actually carrying aimBonus: 10 is verified in
+    // weapon-quality-effects.test.ts). The other specials here resolve without the index.
+    beforeAll(() => {
+        setWeaponQualityPayloadsForTesting({ accurate: { aimBonus: 10 } });
+    });
+
     it('Scatter grants +10 at Point Blank / Short Range only', () => {
         expect(run({ specials: ['Scatter'], rangeName: 'Point Blank' })['Scatter']).toBe(10);
         expect(run({ specials: ['Scatter'], rangeName: 'Short Range' })['Scatter']).toBe(10);

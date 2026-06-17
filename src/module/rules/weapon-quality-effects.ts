@@ -23,6 +23,7 @@
 
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
+import { getWeaponQualityMechanics } from './weapon-quality-payloads.ts';
 
 type AttackSpecialLike = {
     name?: string;
@@ -70,320 +71,19 @@ type ExoticDamageContext = {
 
 type QualityModifierMap = Record<string, number>;
 type QualityDamageModifierMap = Record<string, number | string>;
-type QualitySummaryContext = 'attack' | 'parry' | 'damage' | 'penetration' | 'righteous-fury' | 'all';
 
 /* -------------------------------------------- */
-/*  Quality Effect Constants                    */
+/*  Quality mechanics source (#303)             */
 /* -------------------------------------------- */
 
-/** Save-and-effect shape used by qualities that trigger a defender save on hit (Concussive, Shocking, Snare, etc.). */
-export interface WeaponQualityHitEffect {
-    requiresSave: 'agility' | 'toughness' | 'willpower' | 'strength';
-    failEffect: 'stunned' | 'snared' | 'prone' | 'burning' | 'hallucinating' | 'haywire' | 'poisoned' | 'crippled' | 'armour-melt';
-    /** Static round count, OR true if the X parameter on the quality scales it. */
-    stunRoundsVariable?: boolean;
-    /** Static round count when not variable. */
-    stunRounds?: number;
-    /**
-     * Per-DoF penalty applied to the save target value (e.g. Concussive (X) applies
-     * `-X × 10` to the Toughness test). The engine multiplies the level (X) by this
-     * value at runtime to compute the actual penalty. -10 = "Challenging step per X".
-     */
-    saveTargetPenaltyPerLevel?: number;
-}
-
 /**
- * Range-banded scaling payload used by qualities whose damage / penetration
- * changes by the current range band (Scatter). The values are signed deltas
- * applied to the relevant pool (damage or penetration).
+ * The weapon-quality mechanical payloads + effect text formerly lived here as the
+ * hardcoded `WEAPON_QUALITY_EFFECTS` registry. They now live on the weaponQuality
+ * compendium documents (`system.mechanics`, see `data/item/weapon-quality.ts`) and
+ * are read at runtime through the by-identifier index in `weapon-quality-payloads.ts`
+ * (Direction #7). The resolvers below check quality presence by name
+ * (`weaponHasQuality`) and pull any payload values from `getWeaponQualityMechanics`.
  */
-export interface WeaponQualityRangeBands {
-    pointBlank: number;
-    shortRange: number;
-    standardRange: number;
-    longRange: number;
-    extremeRange: number;
-}
-
-/** Template shape (Blast / Smoke) — radius is variable on level X. */
-export interface WeaponQualityTemplate {
-    /** 'sphere' for Blast, 'concealment-cloud' for Smoke. */
-    shape: 'sphere' | 'concealment-cloud' | 'cone';
-    /** True when radius scales with the X level on the quality. */
-    radiusVariable: boolean;
-}
-
-/**
- * Phase 1 weapon quality definitions
- */
-export const WEAPON_QUALITY_EFFECTS = {
-    // Category B: Attack/Parry Modifiers
-    'accurate': {
-        type: 'attack',
-        aimBonus: 10, // +10 BS when using Aim action
-        description: '+10 BS when using Aim action',
-    },
-    'balanced': {
-        type: 'parry',
-        parryBonus: 10, // +10 WS for parry
-        description: '+10 WS when parrying with this weapon',
-    },
-    'defensive': {
-        type: 'parry',
-        parryBonus: 15, // +15 WS for parry
-        description: '+15 WS when parrying with this weapon',
-    },
-    'fast': {
-        type: 'parry',
-        enemyParryPenalty: -20, // Enemies suffer -20 to parry this weapon
-        description: 'Enemies suffer -20 when attempting to parry this weapon',
-    },
-    'unbalanced': {
-        type: 'parry',
-        parryPenalty: -10, // -10 to parry attempts with this weapon
-        description: '-10 WS when parrying with this weapon',
-    },
-    'unwieldy': {
-        type: 'parry',
-        cannotParry: true, // Cannot parry with this weapon
-        description: 'Cannot parry with this weapon',
-    },
-
-    // Category C (subset): Damage/Penetration Modifiers
-    'tearing': {
-        type: 'damage',
-        description: 'Roll 2d10 for damage dice, drop the lowest (already implemented in damage-data.mjs)',
-    },
-    'melta': {
-        type: 'penetration',
-        description: 'Double penetration at short range (includes Point Blank and Short Range)',
-    },
-
-    // Phase 4: Exotic Qualities
-    'force': {
-        type: 'damage',
-        description: 'Psyker adds Psy Rating to damage',
-        requiresPsyker: true,
-    },
-    'warp-weapon': {
-        type: 'penetration',
-        description: 'Ignores armor that is not warded (force fields and warded armor still apply)',
-        ignoresNonWardedArmor: true,
-    },
-    'witch-edge': {
-        type: 'damage',
-        description: 'Eldar wielders add their Strength Bonus twice',
-        requiresEldar: true,
-    },
-    'daemonbane': {
-        type: 'damage',
-        description: '+2d10 damage against Daemons',
-        bonusVsDaemons: true,
-    },
-    'gauss': {
-        type: 'righteous-fury',
-        description: 'Righteous Fury triggers on 9 or 10 on damage die',
-        rfThreshold: 9,
-    },
-    'vengeful': {
-        type: 'righteous-fury',
-        description: 'Righteous Fury triggers on 8, 9, or 10 on damage die (replaces standard RF)',
-        rfThreshold: 8,
-    },
-
-    // Phase 5: Mechanical-effect qualities (#57 partial). The audit's umbrella
-    // covers 28 qualities; this set encodes the ones whose effect fits the
-    // existing modifier-flag pipeline without new infrastructure. The rest
-    // (Blast template, Spray template, Scatter range-bands, Flame
-    // auto-burning, Hallucinogenic table, Haywire jam table, Indirect,
-    // Lance, Maximal mode-switch, Crippling, Smoke, Snare, Toxic save) are
-    // tracked as per-quality follow-up issues.
-    'inaccurate': {
-        type: 'attack',
-        description: 'Aim grants no bonus with this weapon.',
-        cancelsAim: true,
-    },
-    'razor-sharp': {
-        type: 'penetration',
-        description: "On 2+ DoS, the weapon's Penetration is doubled.",
-        razorSharpDoubleOnDoS: 2,
-    },
-    'proven': {
-        type: 'damage',
-        description: 'Each damage die treats a result less than the Proven (X) value as X.',
-        provenFloor: true,
-    },
-    'twin-linked': {
-        type: 'attack',
-        description: '+20 BS on single shots, scoring an additional hit on a successful test with 2+ DoS.',
-        attackBonus: 20,
-        bonusHitOnTwoDoS: true,
-    },
-    'storm': {
-        type: 'attack',
-        description: 'Rate of fire is doubled; semi/full-auto bursts score two additional hits per successful attack.',
-        doublesAdditionalHits: true,
-    },
-    'reliable': {
-        type: 'reliability',
-        description: 'Weapon jams only on a natural 100. (See `rules/weapon-jam.ts:shouldJamRoll`.)',
-        reliable: true,
-    },
-    'unreliable': {
-        type: 'reliability',
-        description: 'Weapon jams on a roll of 91 or higher, even on Semi- or Full Auto. (See `rules/weapon-jam.ts:shouldJamRoll`.)',
-        unreliable: true,
-    },
-    'sanctified': {
-        type: 'damage',
-        description: 'Daemons cannot ignore damage from this weapon.',
-        ignoresDaemonResistance: true,
-    },
-    'power-field': {
-        type: 'parry',
-        description: 'A successful parry against a non-Power, non-Force weapon destroys the parried weapon.',
-        powerFieldDestroysOnParry: true,
-    },
-    'overheats': {
-        type: 'reliability',
-        description: 'On a roll of 91+ (or 1, depending on weapon), the weapon overheats. (See `action-data.ts` overheat branch.)',
-        overheats: true,
-    },
-    'recharge': {
-        type: 'reliability',
-        description: 'Cannot fire on consecutive turns; must spend a round recharging.',
-        recharge: true,
-    },
-
-    // Phase 6: Mechanical wiring for the remaining audit-listed qualities
-    // (#57 completion). Each entry now carries the structured payload the
-    // engine consumes — the inline switch in `rolls/damage-data.ts` and the
-    // template/save resolvers below are the live consumers.
-    'blast': {
-        type: 'template',
-        description: 'Hits all targets within X metres of the impact point.',
-        template: { shape: 'sphere', radiusVariable: true } satisfies WeaponQualityTemplate,
-    },
-    'concussive': {
-        type: 'hit-effect',
-        description: 'On a hit, the target makes a Toughness test (-X×10) or is Stunned for 1 round per DoF; knocked Prone if damage exceeds target SB.',
-        hitEffect: {
-            requiresSave: 'toughness',
-            failEffect: 'stunned',
-            stunRoundsVariable: true,
-            saveTargetPenaltyPerLevel: -10,
-        } satisfies WeaponQualityHitEffect,
-    },
-    'corrosive': {
-        type: 'hit-effect',
-        description: 'Damage rolls a d10 against armour; armour loses that many points and bypasses Toughness reduction on overflow.',
-        hitEffect: { requiresSave: 'toughness', failEffect: 'armour-melt' } satisfies WeaponQualityHitEffect,
-        corrosiveArmourDice: '1d10',
-    },
-    'crippling': {
-        type: 'hit-effect',
-        description: 'If wounded, target gains Crippled; taking more than a Half Action inflicts X damage ignoring Armour and Toughness.',
-        hitEffect: { requiresSave: 'toughness', failEffect: 'crippled' } satisfies WeaponQualityHitEffect,
-        cripplingPenaltyPerActionVariable: true,
-    },
-    'flame': {
-        type: 'hit-effect',
-        description: 'Target makes an Agility test or catches fire.',
-        hitEffect: { requiresSave: 'agility', failEffect: 'burning' } satisfies WeaponQualityHitEffect,
-    },
-    'flexible': { type: 'parry', cannotBeParried: true, description: 'This weapon cannot be parried.' },
-    'graviton': {
-        type: 'hit-effect',
-        description:
-            'On a hit, the target makes a Strength test or falls Prone; vehicles roll Agility instead. Bonus damage equal to the struck location’s Armour Points.',
-        hitEffect: { requiresSave: 'strength', failEffect: 'prone' } satisfies WeaponQualityHitEffect,
-        gravitonAddsArmourAsDamage: true,
-    },
-    'hallucinogenic': {
-        type: 'hit-effect',
-        description: 'Target makes a Toughness test (-X×10) or rolls on the Hallucinogenic table.',
-        hitEffect: {
-            requiresSave: 'toughness',
-            failEffect: 'hallucinating',
-            saveTargetPenaltyPerLevel: -10,
-        } satisfies WeaponQualityHitEffect,
-    },
-    'haywire': {
-        type: 'hit-effect',
-        description: 'On a hit, technological items within X×10 metres roll on the Haywire table at strength 1d10.',
-        hitEffect: { requiresSave: 'toughness', failEffect: 'haywire' } satisfies WeaponQualityHitEffect,
-        haywireRadiusPerLevel: 10,
-    },
-    'indirect': {
-        type: 'attack',
-        description: 'Can be fired without line of sight; suffers a +X BS penalty and scatters 1d10−BSB metres on a miss.',
-        allowsIndirectFire: true,
-        indirectPenaltyVariable: true,
-    },
-    'lance': { type: 'penetration', description: 'Penetration is multiplied by DoS (minimum 1).' },
-    'maximal': {
-        type: 'damage',
-        description: 'Once per encounter, fire at +1d10 damage and +2 penetration; the weapon gains Overheats and must Recharge afterwards.',
-        maximalDamageDice: '1d10',
-        maximalPenetrationBonus: 2,
-        triggersRecharge: true,
-    },
-    'primitive': {
-        type: 'damage',
-        description: 'Each damage die counts as the Primitive (X) value if it would otherwise roll higher (against non-Primitive armour).',
-        primitiveCap: true,
-    },
-    'scatter': {
-        type: 'damage',
-        description: 'Range-banded damage: +3 at Point Blank, +0 at Short Range, −3 at Standard/Long/Extreme.',
-        rangeBands: {
-            pointBlank: 3,
-            shortRange: 0,
-            standardRange: -3,
-            longRange: -3,
-            extremeRange: -3,
-        } satisfies WeaponQualityRangeBands,
-    },
-    'shocking': {
-        type: 'hit-effect',
-        description: 'On a hit, the target makes a Toughness test or suffers 1 level of Fatigue and is Stunned for half DoF rounds (round up).',
-        hitEffect: { requiresSave: 'toughness', failEffect: 'stunned', stunRounds: 1 } satisfies WeaponQualityHitEffect,
-        shockingHalfDoFStun: true,
-        shockingAppliesFatigue: 1,
-    },
-    'smoke': {
-        type: 'template',
-        description: 'On detonation, creates a smoke cloud X metres across that grants concealment.',
-        template: { shape: 'concealment-cloud', radiusVariable: true } satisfies WeaponQualityTemplate,
-    },
-    'snare': {
-        type: 'hit-effect',
-        description: 'On a hit, the target makes an Agility test (-X×10) or is Snared until they escape with a Strength or Agility test (-X×10).',
-        hitEffect: {
-            requiresSave: 'agility',
-            failEffect: 'snared',
-            saveTargetPenaltyPerLevel: -10,
-        } satisfies WeaponQualityHitEffect,
-    },
-    'spray': {
-        type: 'template',
-        description:
-            'No BS test required; all targets in a cone make a Challenging (+0) Agility test to avoid being hit. Composes with the Leaping Dodge talent (rules/spray-avoidance.ts).',
-        template: { shape: 'cone', radiusVariable: false } satisfies WeaponQualityTemplate,
-        sprayAvoidanceCharacteristic: 'agility',
-    },
-    'toxic': {
-        type: 'hit-effect',
-        description: 'On a wound, target makes a Toughness test (-X×10) or suffers 1d10 additional damage of the weapon’s damage type.',
-        hitEffect: {
-            requiresSave: 'toughness',
-            failEffect: 'poisoned',
-            saveTargetPenaltyPerLevel: -10,
-        } satisfies WeaponQualityHitEffect,
-        toxicAdditionalDamageDice: '1d10',
-    },
-};
-
 /* -------------------------------------------- */
 /*  Quality Check Helpers                       */
 /* -------------------------------------------- */
@@ -454,7 +154,7 @@ export function calculateQualityAttackModifiers(rollData: WeaponRollData): Quali
     // Accurate: +10 BS when using Aim action
     if (weaponHasQuality(weapon, 'accurate')) {
         if ((rollData.modifiers['aim'] ?? 0) > 0) {
-            modifiers['Accurate'] = WEAPON_QUALITY_EFFECTS.accurate.aimBonus;
+            modifiers['Accurate'] = getWeaponQualityMechanics('accurate')?.aimBonus ?? 0;
         }
     }
 
@@ -508,17 +208,17 @@ export function getWeaponParryModifier(weapon: QualityItem | null | undefined): 
 
     // Defensive: +15 WS for parry
     if (weaponHasQuality(weapon, 'defensive')) {
-        totalModifier += WEAPON_QUALITY_EFFECTS.defensive.parryBonus;
+        totalModifier += getWeaponQualityMechanics('defensive')?.parryBonus ?? 0;
     }
 
     // Balanced: +10 WS for parry
     if (weaponHasQuality(weapon, 'balanced')) {
-        totalModifier += WEAPON_QUALITY_EFFECTS.balanced.parryBonus;
+        totalModifier += getWeaponQualityMechanics('balanced')?.parryBonus ?? 0;
     }
 
     // Unbalanced: -10 to parry attempts
     if (weaponHasQuality(weapon, 'unbalanced')) {
-        totalModifier += WEAPON_QUALITY_EFFECTS.unbalanced.parryPenalty;
+        totalModifier += getWeaponQualityMechanics('unbalanced')?.parryPenalty ?? 0;
     }
 
     return totalModifier;
@@ -558,7 +258,7 @@ export function getAttackerWeaponParryPenalty(attackerWeapon: QualityItem | null
 
     // Fast: Enemies suffer -20 to parry this weapon
     if (weaponHasQuality(attackerWeapon, 'fast')) {
-        return WEAPON_QUALITY_EFFECTS.fast.enemyParryPenalty;
+        return getWeaponQualityMechanics('fast')?.enemyParryPenalty ?? 0;
     }
 
     return 0;
@@ -701,12 +401,14 @@ export function getRighteousFuryThreshold(weapon: QualityItem | null | undefined
 
     // Gauss: RF on 9-10
     if (weaponHasQuality(weapon, 'gauss')) {
-        return WEAPON_QUALITY_EFFECTS.gauss.rfThreshold;
+        const threshold = getWeaponQualityMechanics('gauss')?.rfThreshold;
+        if (threshold != null) return threshold;
     }
 
     // Vengeful: RF on 8-10 (most permissive, check last)
     if (weaponHasQuality(weapon, 'vengeful')) {
-        return WEAPON_QUALITY_EFFECTS.vengeful.rfThreshold;
+        const threshold = getWeaponQualityMechanics('vengeful')?.rfThreshold;
+        if (threshold != null) return threshold;
     }
 
     return 10; // Standard RF threshold
@@ -741,41 +443,12 @@ export function applyQualityModifiersToRollData(rollData: WeaponRollData): void 
     Object.assign(rollData.specialModifiers, qualityModifiers);
 }
 
-/**
- * Get weapon quality summary for display.
- * Returns human-readable descriptions of active quality effects.
- *
- * @param {Item} weapon - The weapon item
- * @param {string} context - Context for summary ('attack', 'parry', 'damage', 'all')
- * @returns {string[]} Array of quality effect descriptions
- */
-export function getWeaponQualitySummary(weapon: QualityItem | null | undefined, context: QualitySummaryContext = 'all'): string[] {
-    const summary: string[] = [];
-
-    if (!weapon) return summary;
-
-    // Filter qualities by context
-    const relevantQualities = Object.entries(WEAPON_QUALITY_EFFECTS).filter(([_key, def]) => {
-        if (context === 'all') return true;
-        return def.type === context;
-    });
-
-    // Build summary for active qualities
-    for (const [qualityKey, qualityDef] of relevantQualities) {
-        if (weaponHasQuality(weapon, qualityKey)) {
-            summary.push(`${qualityKey.capitalize()}: ${qualityDef.description}`);
-        }
-    }
-
-    return summary;
-}
-
 /* -------------------------------------------- */
 /*  Phase 6 pure resolvers (#57 completion)     */
 /* -------------------------------------------- */
 
 /** Range-band keys used by `resolveScatterRangeBand`. */
-export type ScatterRangeBand = 'Point Blank' | 'Short Range' | 'Standard Range' | 'Long Range' | 'Extreme Range';
+type ScatterRangeBand = 'Point Blank' | 'Short Range' | 'Standard Range' | 'Long Range' | 'Extreme Range';
 
 /**
  * Resolve the Scatter quality's signed damage delta for the current range.
@@ -784,13 +457,13 @@ export type ScatterRangeBand = 'Point Blank' | 'Short Range' | 'Standard Range' 
  */
 export function resolveScatterRangeBand(rangeName: string | undefined): number {
     if (rangeName === undefined) return 0;
-    const bands = WEAPON_QUALITY_EFFECTS.scatter.rangeBands;
+    const bands = getWeaponQualityMechanics('scatter')?.rangeBands;
     const SCATTER_BAND_MAP: Record<ScatterRangeBand, number> = {
-        'Point Blank': bands.pointBlank,
-        'Short Range': bands.shortRange,
-        'Standard Range': bands.standardRange,
-        'Long Range': bands.longRange,
-        'Extreme Range': bands.extremeRange,
+        'Point Blank': bands?.pointBlank ?? 0,
+        'Short Range': bands?.shortRange ?? 0,
+        'Standard Range': bands?.standardRange ?? 0,
+        'Long Range': bands?.longRange ?? 0,
+        'Extreme Range': bands?.extremeRange ?? 0,
     };
     return rangeName in SCATTER_BAND_MAP ? SCATTER_BAND_MAP[rangeName as ScatterRangeBand] : 0;
 }
@@ -804,9 +477,8 @@ export function resolveScatterRangeBand(rangeName: string | undefined): number {
  *   resolveHitEffectSaveTarget({ characteristicTotal: 40, key: 'concussive', level: 3 })
  *   = 40 + (3 × -10) = 10
  */
-export function resolveHitEffectSaveTarget(opts: { characteristicTotal: number; key: keyof typeof WEAPON_QUALITY_EFFECTS; level: number }): number {
-    const entry = WEAPON_QUALITY_EFFECTS[opts.key] as { hitEffect?: WeaponQualityHitEffect } | undefined;
-    const penalty = entry?.hitEffect?.saveTargetPenaltyPerLevel ?? 0;
+export function resolveHitEffectSaveTarget(opts: { characteristicTotal: number; key: string; level: number }): number {
+    const penalty = getWeaponQualityMechanics(opts.key)?.hitEffect.saveTargetPenaltyPerLevel ?? 0;
     const safeLevel = Math.max(0, Math.trunc(opts.level));
     const total = Math.max(0, Math.trunc(opts.characteristicTotal));
     return Math.max(0, total + penalty * safeLevel);
@@ -885,11 +557,12 @@ export function resolveMaximalEffect(): {
     appliesOverheats: boolean;
     triggersRecharge: boolean;
 } {
+    const maximal = getWeaponQualityMechanics('maximal');
     return {
-        bonusPenetration: WEAPON_QUALITY_EFFECTS.maximal.maximalPenetrationBonus,
-        bonusDamageDice: WEAPON_QUALITY_EFFECTS.maximal.maximalDamageDice,
+        bonusPenetration: maximal?.maximalPenetrationBonus ?? 0,
+        bonusDamageDice: maximal?.maximalDamageDice ?? '',
         appliesOverheats: true,
-        triggersRecharge: WEAPON_QUALITY_EFFECTS.maximal.triggersRecharge,
+        triggersRecharge: maximal?.triggersRecharge ?? false,
     };
 }
 
@@ -934,9 +607,6 @@ export function resolveIndirectPenalty(level: number): number {
  * Provides all Phase 1-4 quality handlers in one object.
  */
 export const WeaponQualityEffects = {
-    // Constants
-    EFFECTS: WEAPON_QUALITY_EFFECTS,
-
     // Quality checks
     weaponHasQuality,
     rollDataHasQuality,
@@ -958,9 +628,6 @@ export const WeaponQualityEffects = {
     weaponIgnoresArmor,
     getRighteousFuryThreshold,
     checkRighteousFury,
-
-    // Display helpers
-    getWeaponQualitySummary,
 
     // Phase 6 pure resolvers (#57 completion)
     resolveScatterRangeBand,
