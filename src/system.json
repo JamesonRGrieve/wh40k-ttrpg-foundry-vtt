@@ -1667,6 +1667,18 @@
             "flags": {}
         },
         {
+            "name": "dh2-core-origins-divinations",
+            "label": "Divinations",
+            "path": "packs/dark-heresy-2/dh2-core-origins-divinations",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-core-journals",
             "label": "Core Rulebook Journals",
             "path": "packs/dark-heresy-2/dh2-core-journals",
@@ -6310,6 +6322,7 @@
                         "dh2-core-journals-daemon-binding",
                         "dh2-core-locations",
                         "dh2-core-origins-backgrounds",
+                        "dh2-core-origins-divinations",
                         "dh2-core-origins-elite-advances",
                         "dh2-core-origins-homeworlds",
                         "dh2-core-origins-roles",
