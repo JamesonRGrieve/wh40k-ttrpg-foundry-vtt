@@ -437,6 +437,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare _charPointBuy: Record<string, number>;
     declare _charDragData: { type: string; index: number; characteristic: string | null } | null;
     declare _divination: string;
+    /** Resolved divination origin-path doc for the chosen divination text (#316), or null when freeform/unmatched. Applied via the same commit machinery as the step selections, but kept OUT of `this.selections` so it never inflates the size/completion logic keyed off it. */
+    declare _divinationSelection: NormalizedOrigin | null;
     declare _thronesRolled: number;
     declare _influenceRolled: number;
     declare _savedScrollTop: number;
@@ -558,6 +560,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charDragData = null;
         const actorSys = this._actorSys();
         this._divination = actorSys.originPath?.divination ?? '';
+        this._divinationSelection = null;
         const isDH2Homebrew = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
         this._thronesRolled = isDH2Homebrew ? 0 : actorSys.throneGelt ?? 0;
         this._influenceRolled = isDH2Homebrew ? 0 : actorSys.influence ?? 0;
@@ -4673,9 +4676,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!resetChoices) return;
 
         try {
+            // Resolve the chosen divination (#316) into a selection so its
+            // characteristic modifiers + talent/skill grants apply through the
+            // same commit machinery as the step selections (it stays out of
+            // this.selections so size/completion logic is unaffected).
+            await this._resolveDivinationSelection();
+            const selectionsToApply: NormalizedOrigin[] = [
+                ...this.selections.values(),
+                ...(this._divinationSelection !== null ? [this._divinationSelection] : []),
+            ];
+
             // Build array of origin items from selections
             const originItems = [];
-            for (const [, selection] of this.selections) {
+            for (const selection of selectionsToApply) {
                 // Create an item-like object with proper system data
                 const maybeDoc = selection as { toObject?: () => Partial<NormalizedOrigin> };
                 const itemData: Partial<NormalizedOrigin> = typeof maybeDoc.toObject === 'function' ? maybeDoc.toObject() : foundry.utils.deepClone(selection);
@@ -4746,9 +4759,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 console.warn('Grant application had errors:', result.errors);
             }
 
-            // Create origin path items on actor (for reference/display)
+            // Create origin path items on actor (for reference/display). Includes
+            // the resolved divination (#316) so it is embedded + stamped into the
+            // origin-grant ledger, keeping the boot reconcile idempotent.
             const cleanOriginItems: ItemDataLike[] = [];
-            for (const [, selection] of this.selections) {
+            for (const selection of selectionsToApply) {
                 const selWithToObject = selection as { toObject?: () => ItemDataLike };
                 const itemData: ItemDataLike = selWithToObject.toObject ? selWithToObject.toObject() : (foundry.utils.deepClone(selection) as ItemDataLike);
                 const sourceUuid = itemData.uuid ?? itemData._sourceUuid;
@@ -5033,7 +5048,35 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         for (const [, selection] of this.selections) collectFromSelection(selection);
         collectFromSelection(this.lineageSelection);
+        collectFromSelection(this._divinationSelection);
         return sums;
+    }
+
+    /**
+     * Resolve the chosen divination (#316) to its origin-path doc so its bonus
+     * applies through the same commit machinery as the step selections. The
+     * divination is stored as free text (`system.originPath.divination`); we match
+     * that text by name against the system's `<sys>-core-origins-divinations` pack.
+     * Kept in `_divinationSelection` (NOT `this.selections`) so it never inflates
+     * the size/completion logic keyed off the selection map. Freeform text with no
+     * matching doc resolves to null (text-only, no grant) — the prior behaviour.
+     * @private
+     */
+    async _resolveDivinationSelection(): Promise<void> {
+        this._divinationSelection = null;
+        const text = this._divination.trim();
+        if (text === '') return;
+        const pack = resolvePack(`${this.gameSystem}-core-origins-divinations`);
+        if (!pack) return;
+        const documents = await pack.getDocuments();
+        const wanted = text.toLowerCase();
+        const match = documents.find((d): d is typeof d & { type: string; name: string } => {
+            const doc = d as { type?: string; name?: string };
+            return doc.type === 'originPath' && typeof doc.name === 'string' && doc.name.trim().toLowerCase() === wanted;
+        });
+        if (!match) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape and validates structurally (mirrors _loadOrigins)
+        this._divinationSelection = normalizeOrigin(match as unknown as Record<string, unknown>);
     }
 
     /**
