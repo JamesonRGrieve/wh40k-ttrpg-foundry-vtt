@@ -13,6 +13,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
 const foundryApi = foundry.applications as unknown as {
@@ -96,8 +97,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /** Current roll result, or null if not yet rolled */
     rollResult: OriginRollResult | null;
 
-    /** Promise resolver invoked when the user accepts or cancels */
-    _resolvePromise: ((value: OriginRollResult | null) => void) | null;
+    /** Promise-resolution plumbing; dismissal resolves null. */
+    readonly #resolution = new DialogResolution<OriginRollResult | null>(null);
 
     /** History of previous roll attempts */
     rollHistory: { timestamp: number; result: number; breakdown: string }[];
@@ -175,13 +176,6 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
          * @type {object|null}
          */
         this.rollResult = null;
-
-        /**
-         * Promise resolver
-         * @type {Function|null}
-         * @private
-         */
-        this._resolvePromise = null;
 
         /**
          * Roll history (for showing previous attempts)
@@ -332,10 +326,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             return;
         }
 
-        if (this._resolvePromise) {
-            this._resolvePromise(this.rollResult);
-        }
-
+        this.#resolution.resolve(this.rollResult);
         void this.close();
     }
 
@@ -599,11 +590,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      */
     static #cancel(this: OriginRollDialog, event: Event, _target: HTMLElement): void {
         event.preventDefault();
-
-        if (this._resolvePromise) {
-            this._resolvePromise(null);
-        }
-
+        // Cancelled resolution (null) is supplied by close() → resolveDefault().
         void this.close();
     }
 
@@ -931,14 +918,20 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     static async show(rollType: string, formula: string, context: OriginRollContext): Promise<OriginRollResult | null> {
         const dialog = new OriginRollDialog(rollType, formula, context);
 
-        // Create promise that will be resolved when user accepts/cancels
-        const result = new Promise<OriginRollResult | null>((resolve) => {
-            dialog._resolvePromise = resolve;
-        });
+        // Track resolution before rendering; resolved when the user accepts/cancels/dismisses.
+        const result = dialog.#resolution.track();
 
         // Render the dialog (don't auto-roll, let user choose)
         await dialog.render({ force: true });
 
         return result;
+    }
+
+    /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: close/Record<string,unknown> is the ApplicationV2 override signature
+    override async close(options: Record<string, unknown> = {}): Promise<this> {
+        // Resolve null if no explicit result fired (idempotent).
+        this.#resolution.resolveDefault();
+        return super.close(options);
     }
 }
