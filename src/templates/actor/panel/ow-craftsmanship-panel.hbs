@@ -42,9 +42,7 @@
 
     {{#if craftsmanshipPanel.weapons.length}}
         <div class="wh40k-ow-craftsmanship-weapons tw-flex tw-flex-col tw-gap-1">
-            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.OW.Craftsmanship.WeaponsHeader"}}
-            </span>
+            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.OW.Craftsmanship.WeaponsHeader"}}
             {{#each craftsmanshipPanel.weapons as |entry|}}
                 <div class="wh40k-ow-craftsmanship-row tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-item-id="{{entry.itemId}}"
@@ -95,9 +93,7 @@
 
     {{#if craftsmanshipPanel.armours.length}}
         <div class="wh40k-ow-craftsmanship-armours tw-flex tw-flex-col tw-gap-1">
-            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.OW.Craftsmanship.ArmoursHeader"}}
-            </span>
+            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.OW.Craftsmanship.ArmoursHeader"}}
             {{#each craftsmanshipPanel.armours as |entry|}}
                 <div class="wh40k-ow-craftsmanship-row tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-item-id="{{entry.itemId}}"

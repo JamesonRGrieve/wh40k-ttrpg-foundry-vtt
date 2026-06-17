@@ -32,9 +32,7 @@
 
     {{!-- Current value + thresholds --}}
     <div class="wh40k-dw-renown-readout tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.DW.Renown.Current"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.DW.Renown.Current"}}
         <span class="wh40k-dw-renown-value tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
             {{#if renownPanel.nextRankMin}}
                 {{renownPanel.value}} / {{renownPanel.nextRankMin}}

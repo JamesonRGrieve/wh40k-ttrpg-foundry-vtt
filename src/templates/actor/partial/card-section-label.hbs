@@ -1,0 +1,15 @@
+{{!--
+    Section / chip caption (#292, finding #2) — the uppercase, letter-spaced,
+    muted label used as a sub-section header and as the left label of readout
+    rows across the per-system panels. Centralizes the
+    `tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]`
+    idiom that was hand-rolled on ~18 spans.
+
+    Hash params:
+      labelKey   i18n key, resolved via {{localize}}. (required)
+      sizeClass  font-size utility passed as a literal (e.g. "tw-text-[0.7rem]"
+                 or "tw-text-[0.72rem]") so Tailwind's static scan still emits
+                 it — do NOT build it via interpolation. (required)
+      rootClass  optional extra utilities appended to the span.
+--}}
+<span class="{{sizeClass}} tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]{{#if rootClass}} {{rootClass}}{{/if}}">{{localize labelKey}}</span>

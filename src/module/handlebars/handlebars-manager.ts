@@ -40,6 +40,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/daemonic-immunities-badge.hbs',
             'systems/wh40k-rpg/templates/actor/partial/header-base.hbs',
             'systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs',
             'systems/wh40k-rpg/templates/actor/partial/panel-header.hbs',
             'systems/wh40k-rpg/templates/actor/partial/panel.hbs',
             'systems/wh40k-rpg/templates/actor/partial/system-card.hbs',

@@ -77,9 +77,7 @@
     {{!-- Effect summary for the selected ammo --}}
     {{#if ammoPanel.effect}}
         <div class="wh40k-dw-ammo-effect tw-flex tw-flex-col tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.DW.SpecialAmmo.Effects"}}
-            </span>
+            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.DW.SpecialAmmo.Effects"}}
             <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-0.5">
                 {{#if ammoPanel.effect.bonusDamageDice}}
                     <li class="wh40k-dw-ammo-effect-line tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]" data-effect="bonusDamageDice">
