@@ -81,6 +81,21 @@ describe('migrateCharacteristics', () => {
         expect(source['characteristics']).toEqual(structured);
     });
 
+    it('keeps a PARTIAL structured object (update diff) verbatim — never resets base to 30', () => {
+        // `_migrateData` runs on `actor.update('…characteristics.weaponSkill.base')`
+        // diffs, where the value is a partial object lacking `total`. It must NOT be
+        // mis-read as a legacy scalar (which previously reset every char to 30 on edit).
+        const source: JsonObject = { characteristics: { weaponSkill: { base: 32 } } };
+        migrateCharacteristics(source);
+        expect(source['characteristics']).toEqual({ weaponSkill: { base: 32 } });
+    });
+
+    it('remaps the key but keeps the value for a partial abbreviated-key object diff', () => {
+        const source: JsonObject = { characteristics: { ws: { base: 32 } } };
+        migrateCharacteristics(source);
+        expect(source['characteristics']).toEqual({ weaponSkill: { base: 32 } });
+    });
+
     it('is a no-op when characteristics is absent', () => {
         const source: JsonObject = { wounds: { max: 10 } };
         migrateCharacteristics(source);
