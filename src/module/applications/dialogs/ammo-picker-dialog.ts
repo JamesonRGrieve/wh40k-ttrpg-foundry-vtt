@@ -12,6 +12,7 @@
  */
 
 import type { WH40KItem } from '../../documents/item.ts';
+import DialogResolution from './dialog-resolution.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -80,8 +81,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     readonly #config: AmmoPickerConfig;
-    #resolve: ((value: WH40KItem | null) => void) | null = null;
-    #resolved = false;
+    readonly #resolution = new DialogResolution<WH40KItem | null>(null);
 
     /* -------------------------------------------- */
     /*  Construction                                */
@@ -153,16 +153,14 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         const selectedUuid = selected.value;
         const selectedItem = this.#config.ammoItems.find((item) => item.uuid === selectedUuid);
 
-        this.#resolved = true;
-        this.#resolve?.(selectedItem ?? null);
+        this.#resolution.resolve(selectedItem ?? null);
         await this.close();
     }
 
     /* -------------------------------------------- */
 
     static async #onCancel(this: AmmoPickerDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        this.#resolved = true;
-        this.#resolve?.(null);
+        // close() → resolveDefault() supplies the cancelled value (null).
         await this.close();
     }
 
@@ -173,9 +171,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2.close signature uses Record<string, unknown>
     override async close(options?: Record<string, unknown>): Promise<unknown> {
-        if (!this.#resolved && this.#resolve) {
-            this.#resolve(null);
-        }
+        this.#resolution.resolveDefault();
         return super.close(options);
     }
 
@@ -184,10 +180,9 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     async wait(): Promise<WH40KItem | null> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render(true);
-        });
+        const result = this.#resolution.track();
+        void this.render(true);
+        return result;
     }
 
     static async pick(config: { ammoItems: WH40KItem[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }): Promise<WH40KItem | null> {

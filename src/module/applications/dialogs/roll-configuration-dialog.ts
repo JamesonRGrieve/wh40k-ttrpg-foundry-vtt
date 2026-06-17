@@ -10,6 +10,8 @@
  * - Live target calculation
  */
 
+import DialogResolution from './dialog-resolution.ts';
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 interface DifficultyPreset {
@@ -105,8 +107,8 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     declare selectedDifficulty: string;
     declare customModifier: number;
     declare activeSituationalModifiers: Set<string>;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: resolve callback returns the consumer's untyped result object
-    #resolve: ((value: unknown) => void) | null = null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the dialog resolves the consumer's untyped config result object
+    readonly #resolution = new DialogResolution<unknown>(null);
 
     /* -------------------------------------------- */
     /*  Constructor                                 */
@@ -354,9 +356,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             },
         };
 
-        if (this.#resolve) {
-            this.#resolve(result);
-        }
+        this.#resolution.resolve(result);
     }
 
     /* -------------------------------------------- */
@@ -369,19 +369,17 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: wait() resolves with the consumer's untyped config result
     async wait(): Promise<unknown> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render(true);
-        });
+        const result = this.#resolution.track();
+        void this.render(true);
+        return result;
     }
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close options is loose record
     override async close(options: Record<string, unknown> = {}): Promise<void> {
-        // Ensure we resolve with null if closed without submitting
-        if (this.#resolve && options['submitted'] !== true) {
-            this.#resolve(null);
-        }
+        // Idempotent: a submit already resolved the result, so this resolves null
+        // only on a bare dismissal.
+        this.#resolution.resolveDefault();
         await super.close(options);
     }
 

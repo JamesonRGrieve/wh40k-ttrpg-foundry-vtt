@@ -11,6 +11,8 @@
  *   });
  */
 
+import DialogResolution from './dialog-resolution.ts';
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 interface ConfirmationConfig {
@@ -71,8 +73,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     readonly #config: ConfirmationConfig;
-    #resolve: ((value: boolean) => void) | null = null;
-    #resolved = false;
+    readonly #resolution = new DialogResolution<boolean>(false);
 
     /* -------------------------------------------- */
     /*  Construction                                */
@@ -117,14 +118,12 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     static async #onConfirm(this: ConfirmationDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        this.#resolved = true;
-        this.#resolve?.(true);
+        this.#resolution.resolve(true);
         await this.close();
     }
 
     static async #onCancel(this: ConfirmationDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        this.#resolved = true;
-        this.#resolve?.(false);
+        // close() → resolveDefault() supplies the cancelled value (false).
         await this.close();
     }
 
@@ -135,9 +134,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.close() accepts untyped options; signature must match the framework override
     override async close(options?: Record<string, unknown>): Promise<unknown> {
-        if (!this.#resolved && this.#resolve) {
-            this.#resolve(false);
-        }
+        this.#resolution.resolveDefault();
         return super.close(options);
     }
 
@@ -146,10 +143,9 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     async wait(): Promise<boolean> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render(true);
-        });
+        const result = this.#resolution.track();
+        void this.render(true);
+        return result;
     }
 
     /* -------------------------------------------- */

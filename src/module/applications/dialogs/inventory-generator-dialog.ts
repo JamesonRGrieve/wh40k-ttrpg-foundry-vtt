@@ -2,6 +2,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { t } from '../../i18n/t.ts';
 import { type InventoryCandidate, collectProfiles, generateInventory, seededRng } from '../../inventory/inventory-generator.ts';
 import { InventoryGeneratorManager } from '../../managers/inventory-generator-manager.ts';
+import DialogResolution from './dialog-resolution.ts';
 
 /**
  * @file InventoryGeneratorDialog
@@ -90,8 +91,7 @@ export default class InventoryGeneratorDialog extends HandlebarsApplicationMixin
     #seed = Math.floor(Math.random() * 0x7fffffff) >>> 0 || 1;
     #browseSearch = '';
     readonly #staged = new Map<string, InventoryCandidate>();
-    #resolve: ((value: number | null) => void) | null = null;
-    #resolved = false;
+    readonly #resolution = new DialogResolution<number | null>(null);
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts a partial options record
     constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
@@ -229,29 +229,26 @@ export default class InventoryGeneratorDialog extends HandlebarsApplicationMixin
             return;
         }
         const applied = await InventoryGeneratorManager.applyToActor(this.#actor, [...this.#staged.keys()]);
-        this.#resolved = true;
-        this.#resolve?.(applied);
+        this.#resolution.resolve(applied);
         await this.close();
     }
 
     static async #onCancel(this: InventoryGeneratorDialog, event: Event): Promise<void> {
         event.preventDefault();
-        this.#resolved = true;
-        this.#resolve?.(null);
+        // close() → resolveDefault() supplies the cancelled value (null).
         await this.close();
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts/returns an arbitrary options record per shipped typings
     override async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (!this.#resolved && this.#resolve !== null) this.#resolve(null);
+        this.#resolution.resolveDefault();
         return super.close(options);
     }
 
     async wait(): Promise<number | null> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render(true);
-        });
+        const result = this.#resolution.track();
+        void this.render(true);
+        return result;
     }
 
     static async show(actor: WH40KBaseActor): Promise<number | null> {
