@@ -280,7 +280,91 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
               "scope": "world",
               "type": "Boolean",
             },
+            {
+              "choices": undefined,
+              "config": false,
+              "default": "60",
+              "key": "warband-subtlety",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "Number",
+            },
           ]
         `);
+    });
+});
+
+describe('WH40KSettings — warband Subtlety pool (#64)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('getWarbandSubtlety returns the default when game.settings is unavailable', () => {
+        // No game stub: game.settings.get throws → helper returns the default.
+        expect(WH40KSettings.getWarbandSubtlety()).toBe(WH40KSettings.WARBAND_SUBTLETY_DEFAULT);
+    });
+
+    it('getWarbandSubtlety reads + clamps the stored world value to 0..max', () => {
+        const cases: Array<[number | string, number]> = [
+            [42, 42],
+            [-5, 0],
+            [250, WH40KSettings.WARBAND_SUBTLETY_MAX],
+            [37.9, 37],
+            ['nonsense', WH40KSettings.WARBAND_SUBTLETY_DEFAULT],
+        ];
+        for (const [stored, expected] of cases) {
+            vi.stubGlobal('game', { settings: { get: () => stored } });
+            expect(WH40KSettings.getWarbandSubtlety()).toBe(expected);
+            vi.unstubAllGlobals();
+        }
+    });
+
+    it('setWarbandSubtlety writes the clamped, truncated value to the world setting', async () => {
+        const writes: Array<{ ns: string; key: string; value: number }> = [];
+        vi.stubGlobal('game', {
+            settings: {
+                set: (ns: string, key: string, value: number) => {
+                    // Void return — `setWarbandSubtlety` awaits this; `await undefined` is fine.
+                    writes.push({ ns, key, value });
+                },
+            },
+        });
+        await WH40KSettings.setWarbandSubtlety(53.7);
+        await WH40KSettings.setWarbandSubtlety(-10);
+        await WH40KSettings.setWarbandSubtlety(999);
+        expect(writes.map((w) => w.value)).toEqual([53, 0, WH40KSettings.WARBAND_SUBTLETY_MAX]);
+        expect(writes[0]).toMatchObject({ ns: SYSTEM_ID, key: WH40KSettings.SETTINGS.warbandSubtlety });
+    });
+
+    it('rerenderSubtletyDependentSheets re-renders only rendered sheets of actors carrying the subtlety field', () => {
+        const rendered: string[] = [];
+        interface FakeSubtletyActor {
+            system: { subtlety?: { value: number; max: number } };
+            sheet: { rendered: boolean; render: () => void };
+        }
+        const mkActor = (name: string, hasSubtlety: boolean, isRendered: boolean): FakeSubtletyActor => ({
+            system: hasSubtlety ? { subtlety: { value: 60, max: 100 } } : {},
+            sheet: {
+                rendered: isRendered,
+                render: () => {
+                    rendered.push(name);
+                },
+            },
+        });
+        const actors = [
+            mkActor('dh2-open', true, true), // DH2 acolyte, sheet open → re-render
+            mkActor('dh2-closed', true, false), // DH2 acolyte, sheet closed → skip
+            mkActor('npc-open', false, true), // no subtlety field → skip
+        ];
+        vi.stubGlobal('game', { actors: { contents: actors } });
+        WH40KSettings.rerenderSubtletyDependentSheets();
+        expect(rendered).toEqual(['dh2-open']);
+    });
+
+    it('rerenderSubtletyDependentSheets is a no-op when game/actors are unavailable', () => {
+        // No game stub at all.
+        expect(() => {
+            WH40KSettings.rerenderSubtletyDependentSheets();
+        }).not.toThrow();
     });
 });

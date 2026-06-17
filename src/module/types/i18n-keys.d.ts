@@ -2793,6 +2793,8 @@ export type I18nKey =
     | 'WH40K.SETTINGS.SimpleAttackRolls.Name'
     | 'WH40K.SETTINGS.SimplePsychicRolls.Hint'
     | 'WH40K.SETTINGS.SimplePsychicRolls.Name'
+    | 'WH40K.SETTINGS.WarbandSubtlety.Hint'
+    | 'WH40K.SETTINGS.WarbandSubtlety.Name'
     | 'WH40K.SETTINGS.WorldVersion.Hint'
     | 'WH40K.SETTINGS.WorldVersion.Name'
     | 'WH40K.SancticDaemonology.AnathemaAvailable'

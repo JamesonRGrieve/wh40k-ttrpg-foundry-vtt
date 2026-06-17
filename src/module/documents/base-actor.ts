@@ -198,9 +198,14 @@ export class WH40KBaseActor extends Actor {
      */
     async applySubtlety(amount: number, source?: SubtletySourceRef): Promise<void> {
         if (!Number.isFinite(amount) || amount === 0) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: subtlety lives on character.ts only
-        const subtlety = (this.system as { subtlety?: { value: number; max: number } }).subtlety;
-        if (!subtlety) return;
+        // Subtlety is a single warband-wide, world-scoped pool (#64), DH2-only.
+        // The current value mirrors that world setting on `system.subtlety.value`
+        // (see CharacterData#_syncWarbandSubtlety); the actor's own carried clamps
+        // still shape how far THIS player's action moves the shared pool.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: subtlety + gameSystem live on character.ts only
+        const system = this.system as { subtlety?: { value: number; max: number }; gameSystem?: string };
+        const subtlety = system.subtlety;
+        if (!subtlety || system.gameSystem !== 'dh2') return;
         let delta = Math.trunc(amount);
         if (delta < 0) {
             for (const adj of this.collectSubtletyAdjusters()) {
@@ -211,10 +216,12 @@ export class WH40KBaseActor extends Actor {
         }
         if (delta === 0) return;
         const next = Math.max(0, Math.min(subtlety.max, subtlety.value + delta));
-        // eslint-disable-next-line no-restricted-syntax -- boundary: update() accepts Record<string, unknown>; this is a documented acceptable boundary per CLAUDE.md
-        const updateData: Record<string, unknown> = { 'system.subtlety.value': next };
-        if (source !== undefined) updateData['flags.wh40k-rpg.lastSubtletySource'] = source;
-        await this.update(updateData);
+        // Persist to the shared world setting: it propagates to every connected
+        // client and its onChange re-renders open sheets so all acolytes show the
+        // same pool. Attribution stays on the acting actor's flag for the
+        // activity-log layer.
+        await WH40KSettings.setWarbandSubtlety(next);
+        if (source !== undefined) await this.update({ 'flags.wh40k-rpg.lastSubtletySource': source });
     }
 
     /**
