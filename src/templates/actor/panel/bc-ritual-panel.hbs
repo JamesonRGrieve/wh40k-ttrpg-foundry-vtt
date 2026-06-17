@@ -16,25 +16,16 @@
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
-<section class="wh40k-bc-ritual-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                bc:tw-border-crimson"
-         data-bc-ritual-mastery="{{ritualPanel.ritualMastery}}">
-
-    {{!-- Header --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-hat-wizard bc:tw-text-crimson"></i>
-            <span>{{localize "WH40K.BC.Ritual.PanelHeader"}}</span>
-        </h3>
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-ritual-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-hat-wizard" label=(localize "WH40K.BC.Ritual.PanelHeader") rootAttrs=(safeAttrs "data-bc-ritual-mastery" ritualPanel.ritualMastery) hasRightSlot=true}}
+    {{!-- Header right slot: perform-ritual button --}}
+    {{#*inline "rightSlot"}}
         <button type="button"
                 class="wh40k-bc-ritual-perform-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
                 data-action="bcPerformRitual"
                 title="{{localize 'WH40K.BC.Ritual.PerformButton'}}">
             {{localize "WH40K.BC.Ritual.PerformButton"}}
         </button>
-    </header>
+    {{/inline}}
 
     {{!-- Daemonic Mastery readout --}}
     <div class="wh40k-bc-ritual-mastery tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
@@ -50,4 +41,4 @@
                value="{{ritualPanel.ritualMastery}}"
                class="wh40k-bc-ritual-mastery-input tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
     </div>
-</section>
+{{/system-card}}

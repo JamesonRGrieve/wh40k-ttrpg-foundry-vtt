@@ -31,20 +31,7 @@
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
-<section class="wh40k-bc-supplements-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                bc:tw-border-crimson"
-         data-bc-daemon-engine-rating="{{supplementsPanel.daemonEngineRating}}"
-         data-bc-quick-and-the-dead-active="{{supplementsPanel.quickAndTheDeadActive}}">
-
-    {{!-- Header --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-skull-crossbones bc:tw-text-crimson"></i>
-            <span>{{localize "WH40K.BC.Supplements.PanelHeader"}}</span>
-        </h3>
-    </header>
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-supplements-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-skull-crossbones" label=(localize "WH40K.BC.Supplements.PanelHeader") rootAttrs=(safeAttrs "data-bc-daemon-engine-rating" supplementsPanel.daemonEngineRating "data-bc-quick-and-the-dead-active" supplementsPanel.quickAndTheDeadActive)}}
 
     {{!-- Daemon Engine(X) rating --}}
     <div class="wh40k-bc-daemon-engine tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
@@ -117,4 +104,4 @@
             </div>
         {{/if}}
     </div>
-</section>
+{{/system-card}}
