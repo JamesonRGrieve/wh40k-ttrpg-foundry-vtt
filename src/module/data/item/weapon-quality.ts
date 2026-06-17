@@ -2,6 +2,83 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
+/** Defender-save-on-hit payload (Concussive, Shocking, Snare, …). */
+interface WeaponQualityHitEffect {
+    requiresSave: string;
+    failEffect: string;
+    stunRoundsVariable: boolean;
+    stunRounds: number | null;
+    saveTargetPenaltyPerLevel: number | null;
+}
+
+/** Template payload (Blast / Smoke / Spray). */
+interface WeaponQualityTemplate {
+    shape: string;
+    radiusVariable: boolean;
+}
+
+/** Range-banded damage/penetration deltas (Scatter). */
+interface WeaponQualityRangeBands {
+    pointBlank: number | null;
+    shortRange: number | null;
+    standardRange: number | null;
+    longRange: number | null;
+    extremeRange: number | null;
+}
+
+/**
+ * Structured mechanical payload for a weapon quality (#303). Lives on the
+ * compendium document so quality mechanics + effect text are content data, not
+ * an in-`src/` registry (Direction #7). Every field is optional/sentinel — a
+ * given quality only sets the keys its rule uses; the rest stay at their
+ * "absent" default (`null` / `false` / `''`). The boot-time index in
+ * `module/rules/weapon-quality-payloads.ts` reads these off the packs and the
+ * resolvers consume them by identifier.
+ */
+interface WeaponQualityMechanics {
+    type: string;
+    aimBonus: number | null;
+    parryBonus: number | null;
+    enemyParryPenalty: number | null;
+    parryPenalty: number | null;
+    attackBonus: number | null;
+    rfThreshold: number | null;
+    razorSharpDoubleOnDoS: number | null;
+    haywireRadiusPerLevel: number | null;
+    maximalPenetrationBonus: number | null;
+    shockingAppliesFatigue: number | null;
+    cannotParry: boolean;
+    cannotBeParried: boolean;
+    requiresPsyker: boolean;
+    requiresEldar: boolean;
+    bonusVsDaemons: boolean;
+    ignoresNonWardedArmor: boolean;
+    cancelsAim: boolean;
+    provenFloor: boolean;
+    bonusHitOnTwoDoS: boolean;
+    doublesAdditionalHits: boolean;
+    reliable: boolean;
+    unreliable: boolean;
+    ignoresDaemonResistance: boolean;
+    powerFieldDestroysOnParry: boolean;
+    overheats: boolean;
+    recharge: boolean;
+    triggersRecharge: boolean;
+    primitiveCap: boolean;
+    cripplingPenaltyPerActionVariable: boolean;
+    gravitonAddsArmourAsDamage: boolean;
+    allowsIndirectFire: boolean;
+    indirectPenaltyVariable: boolean;
+    shockingHalfDoFStun: boolean;
+    corrosiveArmourDice: string;
+    maximalDamageDice: string;
+    toxicAdditionalDamageDice: string;
+    sprayAvoidanceCharacteristic: string;
+    hitEffect: WeaponQualityHitEffect;
+    template: WeaponQualityTemplate;
+    rangeBands: WeaponQualityRangeBands;
+}
+
 /**
  * Data model for Weapon Quality items (reference items for weapon qualities).
  * @extends ItemDataModel
@@ -14,6 +91,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
     declare level: number | null;
     declare effect: string;
     declare notes: string;
+    declare mechanics: WeaponQualityMechanics;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -33,6 +111,67 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Structured mechanical payload (#303). Empty/sentinel by default; a
+            // quality only populates the keys its rule consumes.
+            mechanics: new fields.SchemaField({
+                type: new fields.StringField({ required: false, blank: true, initial: '' }),
+                aimBonus: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                parryBonus: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                enemyParryPenalty: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                parryPenalty: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                attackBonus: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                rfThreshold: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                razorSharpDoubleOnDoS: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                haywireRadiusPerLevel: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                maximalPenetrationBonus: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                shockingAppliesFatigue: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                cannotParry: new fields.BooleanField({ required: false, initial: false }),
+                cannotBeParried: new fields.BooleanField({ required: false, initial: false }),
+                requiresPsyker: new fields.BooleanField({ required: false, initial: false }),
+                requiresEldar: new fields.BooleanField({ required: false, initial: false }),
+                bonusVsDaemons: new fields.BooleanField({ required: false, initial: false }),
+                ignoresNonWardedArmor: new fields.BooleanField({ required: false, initial: false }),
+                cancelsAim: new fields.BooleanField({ required: false, initial: false }),
+                provenFloor: new fields.BooleanField({ required: false, initial: false }),
+                bonusHitOnTwoDoS: new fields.BooleanField({ required: false, initial: false }),
+                doublesAdditionalHits: new fields.BooleanField({ required: false, initial: false }),
+                reliable: new fields.BooleanField({ required: false, initial: false }),
+                unreliable: new fields.BooleanField({ required: false, initial: false }),
+                ignoresDaemonResistance: new fields.BooleanField({ required: false, initial: false }),
+                powerFieldDestroysOnParry: new fields.BooleanField({ required: false, initial: false }),
+                overheats: new fields.BooleanField({ required: false, initial: false }),
+                recharge: new fields.BooleanField({ required: false, initial: false }),
+                triggersRecharge: new fields.BooleanField({ required: false, initial: false }),
+                primitiveCap: new fields.BooleanField({ required: false, initial: false }),
+                cripplingPenaltyPerActionVariable: new fields.BooleanField({ required: false, initial: false }),
+                gravitonAddsArmourAsDamage: new fields.BooleanField({ required: false, initial: false }),
+                allowsIndirectFire: new fields.BooleanField({ required: false, initial: false }),
+                indirectPenaltyVariable: new fields.BooleanField({ required: false, initial: false }),
+                shockingHalfDoFStun: new fields.BooleanField({ required: false, initial: false }),
+                corrosiveArmourDice: new fields.StringField({ required: false, blank: true, initial: '' }),
+                maximalDamageDice: new fields.StringField({ required: false, blank: true, initial: '' }),
+                toxicAdditionalDamageDice: new fields.StringField({ required: false, blank: true, initial: '' }),
+                sprayAvoidanceCharacteristic: new fields.StringField({ required: false, blank: true, initial: '' }),
+                hitEffect: new fields.SchemaField({
+                    requiresSave: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    failEffect: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    stunRoundsVariable: new fields.BooleanField({ required: false, initial: false }),
+                    stunRounds: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                    saveTargetPenaltyPerLevel: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                }),
+                template: new fields.SchemaField({
+                    shape: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    radiusVariable: new fields.BooleanField({ required: false, initial: false }),
+                }),
+                rangeBands: new fields.SchemaField({
+                    pointBlank: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                    shortRange: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                    standardRange: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                    longRange: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                    extremeRange: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                }),
+            }),
         };
     }
 
