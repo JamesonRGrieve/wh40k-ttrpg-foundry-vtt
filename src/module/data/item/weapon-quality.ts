@@ -16,6 +16,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
     declare effect: string;
     declare notes: string;
     declare mechanics: WeaponQualityMechanics;
+    declare mechanicsRef: string;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -35,6 +36,13 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Canonical-mechanics reference (#303). On a per-system stub doc this
+            // holds the UUID of the Rogue Trader weaponQuality doc that owns the
+            // shared RAW payload; the boot index follows it so the FFG family's
+            // identical values live in one place. Blank on the canonical doc itself
+            // (which carries its own `mechanics`).
+            mechanicsRef: new fields.StringField({ required: false, blank: true, initial: '' }),
 
             // Structured mechanical payload (#303). Empty/sentinel by default; a
             // quality only populates the keys its rule consumes.
