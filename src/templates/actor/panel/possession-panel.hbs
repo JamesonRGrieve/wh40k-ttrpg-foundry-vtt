@@ -15,23 +15,14 @@
     Rendered only when `system.possession.state !== 'none'`; the call
     site in tab-status.hbs gates the include with `{{#if (neq ...)}}`.
 --}}
-<section class="wh40k-possession-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure"
-         data-possession-state="{{system.possession.state}}">
-
-    {{!-- Header: title + state badge --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-ghost tw-text-crimson dh2:tw-text-crimson rt:tw-text-amber-700 im:tw-text-failure"></i>
-            <span>{{localize "WH40K.Possession.Title"}}</span>
-        </h3>
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-possession-panel" accentBorderClass="dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure" accentIconClass="tw-text-crimson dh2:tw-text-crimson rt:tw-text-amber-700 im:tw-text-failure" icon="fa-ghost" label=(localize "WH40K.Possession.Title") rootAttrs=(safeAttrs "data-possession-state" system.possession.state) hasRightSlot=true}}
+    {{!-- Header right slot: state badge --}}
+    {{#*inline "rightSlot"}}
         <span class="wh40k-possession-state-badge tw-px-2 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]
                      {{#if (eq system.possession.state 'possessed')}}tw-bg-crimson/30 tw-text-crimson-light tw-border tw-border-solid tw-border-crimson{{else}}{{#if (eq system.possession.state 'latent')}}tw-bg-gold-dark/20 tw-text-gold tw-border tw-border-solid tw-border-gold-raw{{else}}tw-bg-black/20 tw-text-[color:var(--wh40k-text-muted)]{{/if}}{{/if}}">
             {{#if (eq system.possession.state 'possessed')}}{{localize "WH40K.Possession.StatePossessed"}}{{else}}{{#if (eq system.possession.state 'latent')}}{{localize "WH40K.Possession.StateLatent"}}{{else}}{{localize "WH40K.Possession.StateNone"}}{{/if}}{{/if}}
         </span>
-    </header>
+    {{/inline}}
 
     {{!-- Unleash counter --}}
     <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-py-1">
@@ -113,4 +104,4 @@
             </div>
         </div>
     {{/if}}
-</section>
+{{/system-card}}

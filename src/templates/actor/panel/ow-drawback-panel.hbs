@@ -51,25 +51,15 @@
     Rendered only for OW actors; the include in tab-overview.hbs gates on
     `isOW`.
 --}}
-<section class="wh40k-ow-drawback-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                ow:tw-border-brass"
-         data-ow-drawback-count="{{drawbackPanel.drawbacks.length}}"
-         data-ow-roster-present="{{#if drawbackPanel.roster.present}}true{{else}}false{{/if}}">
-
-    {{!-- Header: title + applied-refund badge --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-triangle-exclamation ow:tw-text-brass"></i>
-            <span class="wh40k-ow-drawback-panel__label">{{localize "WH40K.OW.RegimentDrawback.Label"}}</span>
-        </h3>
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-drawback-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-triangle-exclamation" label=(localize "WH40K.OW.RegimentDrawback.Label") rootAttrs=(safeAttrs "data-ow-drawback-count" drawbackPanel.drawbacks.length "data-ow-roster-present" drawbackPanel.roster.present) hasRightSlot=true}}
+    {{!-- Header right slot: applied-refund badge --}}
+    {{#*inline "rightSlot"}}
         <span class="wh40k-ow-drawback-panel__refund-badge tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
                      {{#if drawbackPanel.hasDrawbacks}}tw-border-gold tw-text-gold tw-bg-gold/10{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
               data-refund-total="{{drawbackPanel.appliedRefund}}">
             {{localize "WH40K.OW.RegimentDrawback.Refund"}}: +{{drawbackPanel.appliedRefund}}
         </span>
-    </header>
+    {{/inline}}
 
     {{!-- Drawback list --}}
     <ul class="wh40k-ow-drawback-panel__list tw-flex tw-flex-col tw-gap-1 tw-list-none tw-m-0 tw-p-0">
@@ -215,4 +205,4 @@
             {{localize "WH40K.Common.Add"}}
         </button>
     </section>
-</section>
+{{/system-card}}
