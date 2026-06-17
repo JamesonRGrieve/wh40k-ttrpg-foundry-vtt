@@ -8,11 +8,12 @@
  * `actor.collectSubtletyAdjusters()`). Stories cover the visible states the
  * panel must render correctly:
  *   1. PlayerView           — non-GM, mixed adjusters (clamp + passive);
- *                             interactive `play` asserts the readout +
- *                             absence of the GM stepper.
- *   2. GmViewWithAdjusters  — GM stepper visible, three adjusters (clamp,
+ *                             interactive `play` asserts the readout + that the
+ *                             stepper renders but is disabled (#317: visible,
+ *                             greyed for non-GM, not hidden).
+ *   2. GmViewWithAdjusters  — GM stepper enabled, three adjusters (clamp,
  *                             passive penalty, event bonus); `play` asserts
- *                             the stepper buttons + signed-delta rendering.
+ *                             the enabled stepper buttons + signed-delta rendering.
  *   3. EmptyAdjusters       — GM view with no adjusters surfaced.
  *
  * The panel is normally rendered inside the DH2 character sheet root, which
@@ -98,9 +99,12 @@ export const PlayerView: Story = {
         // Pool readout shows current / max.
         void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('60');
         void expect(canvasElement.querySelector('.wh40k-subtlety-max')?.textContent.trim()).toBe('100');
-        // Player view: the GM-only manual stepper must NOT render.
-        void expect(canvasElement.querySelector('.wh40k-subtlety-manual')).toBeNull();
-        void expect(canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]').length).toBe(0);
+        // Player view (#317): the manual stepper renders for everyone but its
+        // buttons are disabled (visible, greyed) for non-GM rather than hidden.
+        void expect(canvasElement.querySelector('.wh40k-subtlety-manual')).not.toBeNull();
+        const playerSteppers = canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]');
+        void expect(playerSteppers.length).toBe(2);
+        void expect(Array.from(playerSteppers).every((b) => (b as HTMLButtonElement).disabled)).toBe(true);
         // Both adjuster rows render; the clamp row shows its shield affordance.
         void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(2);
         void expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
@@ -145,9 +149,10 @@ export const GmViewWithAdjusters: Story = {
     render: (args) => renderPanel(args),
     play: ({ canvasElement }) => {
         void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('45');
-        // GM view: the manual stepper renders both +1 / -1 buttons.
+        // GM view: the manual stepper renders both +1 / -1 buttons, enabled.
         const steppers = canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]');
         void expect(steppers.length).toBe(2);
+        void expect(Array.from(steppers).some((b) => (b as HTMLButtonElement).disabled)).toBe(false);
         const deltas = Array.from(steppers).map((b) => b.getAttribute('data-delta'));
         void expect(deltas).toContain('1');
         void expect(deltas).toContain('-1');
