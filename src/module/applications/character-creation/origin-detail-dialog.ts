@@ -7,8 +7,11 @@
 
 import type { WH40KItem } from '../../documents/item.ts';
 import { getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+type OriginDetailResult = { selected: boolean; origin: WH40KItem | null };
 
 export default class OriginDetailDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /** @override */
@@ -69,12 +72,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     isSelected: boolean;
 
-    /**
-     * Promise resolver for awaiting user input
-     * @type {((value: { selected: boolean, origin: WH40KItem | null }) => void) | null}
-     * @private
-     */
-    _resolvePromise: ((value: { selected: boolean; origin: WH40KItem | null }) => void) | null = null;
+    /** Promise-resolution plumbing; dismissal resolves the cancelled marker. */
+    readonly #resolution = new DialogResolution<OriginDetailResult>({ selected: false, origin: null });
 
     /* -------------------------------------------- */
 
@@ -336,9 +335,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @private
      */
     static #confirm(this: OriginDetailDialog, _event: PointerEvent, _target: HTMLElement): void {
-        if (this._resolvePromise !== null) {
-            this._resolvePromise({ selected: true, origin: this.origin });
-        }
+        this.#resolution.resolve({ selected: true, origin: this.origin });
         void this.close();
     }
 
@@ -350,9 +347,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @private
      */
     static #cancel(this: OriginDetailDialog, _event: PointerEvent, _target: HTMLElement): void {
-        if (this._resolvePromise !== null) {
-            this._resolvePromise({ selected: false, origin: null });
-        }
+        // Cancelled resolution is supplied by close() → _defaultResolution().
         void this.close();
     }
 
@@ -419,26 +414,18 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Promise<{selected: boolean, origin: WH40KItem|null}>}
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: show options are an untyped external payload; Record<string,unknown> is the ApplicationV2 options shape
-    static async show(origin: WH40KItem, options: Record<string, unknown> = {}): Promise<{ selected: boolean; origin: WH40KItem | null }> {
+    static async show(origin: WH40KItem, options: Record<string, unknown> = {}): Promise<OriginDetailResult> {
         const dialog = new OriginDetailDialog(origin, options);
-
-        const result = new Promise<{ selected: boolean; origin: WH40KItem | null }>((resolve) => {
-            dialog._resolvePromise = resolve;
-        });
-
-        await dialog.render(true);
-
+        const result = dialog.#resolution.track();
+        await dialog.render({ force: true });
         return result;
     }
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: close/Record<string,unknown> is the ApplicationV2 override signature
     override async close(options: Record<string, unknown> = {}): Promise<void> {
-        // Resolve with cancelled if not already resolved
-        if (this._resolvePromise !== null) {
-            this._resolvePromise({ selected: false, origin: null });
-            this._resolvePromise = null;
-        }
+        // Resolve the cancelled marker if no explicit result fired (idempotent).
+        this.#resolution.resolveDefault();
         await super.close(options);
     }
 }

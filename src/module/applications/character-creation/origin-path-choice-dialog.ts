@@ -10,6 +10,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface */
 const { ApplicationV2, HandlebarsApplicationMixin } = (
@@ -77,8 +78,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /** Chosen specialization per option, keyed by `choiceKey::optionValue`. */
     specializationSelections: Map<string, string>;
 
-    /** Promise resolver invoked when the user confirms or cancels. */
-    _resolvePromise: ((value: Record<string, string[]> | null) => void) | null;
+    /** Promise-resolution plumbing; dismissal resolves null. */
+    readonly #resolution = new DialogResolution<Record<string, string[]> | null>(null);
 
     /** The option currently waiting for a specialization choice, or null. */
     _pendingSpecOption: PendingSpecOption | null = null;
@@ -224,13 +225,6 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 }
             }
         }
-
-        /**
-         * Promise resolver for awaiting user input
-         * @type {Function|null}
-         * @private
-         */
-        this._resolvePromise = null;
     }
 
     /* -------------------------------------------- */
@@ -629,11 +623,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             selectedChoices[label] = Array.from(selections);
         }
 
-        // Resolve promise with selections
-        if (this._resolvePromise !== null) {
-            this._resolvePromise(selectedChoices);
-        }
-
+        // Resolve with selections; close() then no-ops.
+        this.#resolution.resolve(selectedChoices);
         void this.close();
     }
 
@@ -644,9 +635,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     static #cancel(this: OriginPathChoiceDialog, _event: Event, _target: HTMLElement): void {
-        if (this._resolvePromise !== null) {
-            this._resolvePromise(null);
-        }
+        // Cancelled resolution (null) is supplied by close() → resolveDefault().
         void this.close();
     }
 
@@ -702,13 +691,19 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     static async show(item: WH40KItem, actor: WH40KBaseActor): Promise<Record<string, string[]> | null> {
         const dialog = new OriginPathChoiceDialog(item, actor);
 
-        // Create promise that will be resolved when user confirms/cancels
-        const result = new Promise<Record<string, string[]> | null>((resolve) => {
-            dialog._resolvePromise = resolve;
-        });
+        // Track resolution before rendering; resolved when the user confirms/cancels/dismisses.
+        const result = dialog.#resolution.track();
 
         await dialog.render({ force: true });
 
         return result;
+    }
+
+    /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: close/Record<string,unknown> is the ApplicationV2 override signature
+    override async close(options: Record<string, unknown> = {}): Promise<this> {
+        // Resolve null if no explicit result fired (idempotent).
+        this.#resolution.resolveDefault();
+        return super.close(options);
     }
 }
