@@ -23,7 +23,7 @@ interface TplRecord {
     [key: string]: TplValue;
 }
 
-/** Weapon quality definition from CONFIG.wh40k.weaponQualities. */
+/** Weapon quality display definition resolved by CONFIG.wh40k.getQualityDefinition (#303). */
 interface WeaponQualityDef {
     label: string;
     description: string;
@@ -48,7 +48,7 @@ interface WeaponSystemForCraft {
 
 /** Subset of CONFIG.wh40k surfacing the data these helpers need. */
 interface WH40KConfig {
-    weaponQualities?: Record<string, WeaponQualityDef>;
+    getQualityDefinition?: (identifier: string) => WeaponQualityDef | null;
     ui?: { expanded?: string[] };
     bio?: Record<string, TplValue>;
     getSkillIcon?: (key: string) => string;
@@ -907,11 +907,11 @@ export function registerHandlebarsHelpers(): void {
         if (qualityIds.length === 0) return [];
 
         const rtConfig = getRtConfig();
-        if (!rtConfig?.weaponQualities) {
-            console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
+        if (rtConfig?.getQualityDefinition === undefined) {
+            console.warn('WH40K | CONFIG.wh40k.getQualityDefinition not available');
             return [];
         }
-        const weaponQualities = rtConfig.weaponQualities;
+        const getDef = rtConfig.getQualityDefinition;
 
         const qualities: WeaponQuality[] = [];
 
@@ -919,9 +919,9 @@ export function registerHandlebarsHelpers(): void {
             // Parse identifier (e.g., "blast-3" → base="blast", level=3)
             const { baseId, level } = parseQualityLevel(identifier);
 
-            // Look up definition. Use hasOwn to detect missing entries because index access on
-            // Record<string, V> returns V (not V | undefined) under our tsconfig.
-            if (!Object.hasOwn(weaponQualities, baseId)) {
+            // Resolve the definition from the weaponQuality compendium via the boot index (#303).
+            const def = getDef(baseId);
+            if (def === null) {
                 // Unknown quality, show raw identifier
                 qualities.push({
                     identifier,
@@ -933,8 +933,6 @@ export function registerHandlebarsHelpers(): void {
                 });
                 continue;
             }
-            const def = weaponQualities[baseId] as WeaponQualityDef | undefined;
-            if (def === undefined) continue;
 
             // Build rich quality object
             const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level);
@@ -959,11 +957,11 @@ export function registerHandlebarsHelpers(): void {
      */
     Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem: WeaponSystemForCraft): WeaponQuality[] => {
         const rtConfig = getRtConfig();
-        if (!rtConfig?.weaponQualities) {
-            console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
+        if (rtConfig?.getQualityDefinition === undefined) {
+            console.warn('WH40K | CONFIG.wh40k.getQualityDefinition not available');
             return [];
         }
-        const weaponQualities = rtConfig.weaponQualities;
+        const getDef = rtConfig.getQualityDefinition;
 
         const qualities: WeaponQuality[] = [];
         const craft = weaponSystem.craftsmanship;
@@ -975,10 +973,8 @@ export function registerHandlebarsHelpers(): void {
         }
 
         const pushDef = (key: string, identifier: string): void => {
-            if (!Object.hasOwn(weaponQualities, key)) return;
-            const def = weaponQualities[key];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; weaponQualities[key] may be undefined
-            if (def === undefined) return;
+            const def = getDef(key);
+            if (def === null) return;
             qualities.push({
                 identifier,
                 label: game.i18n.localize(def.label),
@@ -1044,30 +1040,15 @@ export function registerHandlebarsHelpers(): void {
      */
     Handlebars.registerHelper('qualityLookup', (identifier: string): WeaponQuality => {
         const rtConfig = getRtConfig();
-        if (!rtConfig?.weaponQualities) {
-            console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
-            return {
-                identifier,
-                label: identifier,
-                description: game.i18n.localize('WH40K.WeaponQuality.Unknown'),
-                level: null,
-            };
-        }
-        const weaponQualities = rtConfig.weaponQualities;
-
         const { baseId, level } = parseQualityLevel(identifier);
-
-        if (!Object.hasOwn(weaponQualities, baseId)) {
+        const def = rtConfig?.getQualityDefinition?.(baseId) ?? null;
+        if (def === null) {
             return {
                 identifier,
                 label: identifier,
                 description: game.i18n.localize('WH40K.WeaponQuality.Unknown'),
                 level: null,
             };
-        }
-        const def = weaponQualities[baseId] as WeaponQualityDef | undefined;
-        if (def === undefined) {
-            return { identifier, label: identifier, description: game.i18n.localize('WH40K.WeaponQuality.Unknown'), level: null };
         }
 
         const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level);
