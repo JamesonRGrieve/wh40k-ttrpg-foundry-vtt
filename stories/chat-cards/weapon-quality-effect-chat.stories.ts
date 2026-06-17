@@ -9,7 +9,6 @@ import {
     resolveScatterRangeBand,
     resolveStunDuration,
     resolveTemplateRadius,
-    type WEAPON_QUALITY_EFFECTS,
 } from '../../src/module/rules/weapon-quality-effects.ts';
 import qualityChatSrc from '../../src/templates/chat/weapon-quality-effect-chat.hbs?raw';
 import { initializeStoryHandlebars } from '../template-support';
@@ -52,7 +51,7 @@ interface QualityPayload {
 
 interface WeaponQualityCardContext {
     gameSystem: string;
-    qualityKey: keyof typeof WEAPON_QUALITY_EFFECTS;
+    qualityKey: string;
     qualityLabelKey: string;
     qualityDescKey: string;
     accentClass: string;
@@ -60,13 +59,7 @@ interface WeaponQualityCardContext {
     payload: QualityPayload;
 }
 
-function ctx(opts: {
-    qualityKey: keyof typeof WEAPON_QUALITY_EFFECTS;
-    accentClass: string;
-    iconClass: string;
-    payload: QualityPayload;
-    gameSystem?: string;
-}): WeaponQualityCardContext {
+function ctx(opts: { qualityKey: string; accentClass: string; iconClass: string; payload: QualityPayload; gameSystem?: string }): WeaponQualityCardContext {
     const labelKey = `WH40K.Quality.${capitalize(String(opts.qualityKey))}.Name`;
     const descKey = `WH40K.Quality.${capitalize(String(opts.qualityKey))}.Description`;
     return {

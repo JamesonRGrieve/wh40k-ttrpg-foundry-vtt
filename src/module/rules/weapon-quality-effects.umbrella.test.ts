@@ -1,20 +1,35 @@
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import {
-    attackerWeaponPreventsParry,
-    calculateQualityPenetrationModifiers,
-    WEAPON_QUALITY_EFFECTS,
-    type WeaponQualityHitEffect,
-} from './weapon-quality-effects';
+import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
+import { attackerWeaponPreventsParry, calculateQualityPenetrationModifiers } from './weapon-quality-effects';
+import { weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
 
 /**
- * #57 umbrella — partial mechanical coverage. These tests pin the
- * specific qualities that have machine-readable behaviour (Inaccurate,
- * Twin-linked, Razor Sharp, Proven, plus the description-only entries
- * for the remaining 19 qualities). Per-quality follow-up issues will
- * upgrade the description-only ones with real mechanics.
+ * #57 umbrella — partial mechanical coverage. The structured payloads now live on
+ * the weaponQuality compendium docs (`system.mechanics`, #303), so these tests read
+ * the real pack `_source` (through `weaponQualityMechanicsFromRaw`, the boot index's
+ * default-merge) instead of the former in-`src/` WEAPON_QUALITY_EFFECTS registry.
  */
+
+const PACK_DIR = resolve(__dirname, '../../packs/rogue-trader/rt-core-items-weapon-qualities/_source');
+const mechanicsById = new Map<string, WeaponQualityMechanics>();
+if (existsSync(PACK_DIR)) {
+    for (const file of readdirSync(PACK_DIR).filter((f) => f.endsWith('.json'))) {
+        const doc = JSON.parse(readFileSync(resolve(PACK_DIR, file), 'utf8')) as { system?: { identifier?: string; mechanics?: WeaponQualityMechanics } };
+        const id = doc.system?.identifier;
+        if (typeof id === 'string' && id !== '') mechanicsById.set(id.toLowerCase(), weaponQualityMechanicsFromRaw(doc.system?.mechanics));
+    }
+}
+
+function mech(identifier: string): WeaponQualityMechanics {
+    const m = mechanicsById.get(identifier);
+    if (m === undefined) throw new Error(`weaponQuality pack has no doc for identifier "${identifier}"`);
+    return m;
+}
+
 describe('Weapon-quality registry coverage', () => {
-    it('exposes every audit-listed quality in WEAPON_QUALITY_EFFECTS', () => {
+    it('carries mechanics for every audit-listed quality', () => {
         for (const key of [
             // mechanical
             'inaccurate',
@@ -28,7 +43,7 @@ describe('Weapon-quality registry coverage', () => {
             'power-field',
             'overheats',
             'recharge',
-            // description-only
+            // structured payloads
             'blast',
             'concussive',
             'corrosive',
@@ -49,7 +64,7 @@ describe('Weapon-quality registry coverage', () => {
             'spray',
             'toxic',
         ]) {
-            expect(WEAPON_QUALITY_EFFECTS, `missing quality: ${key}`).toHaveProperty(key);
+            expect(mechanicsById.has(key), `missing quality: ${key}`).toBe(true);
         }
     });
 });
@@ -142,31 +157,28 @@ describe('Phase 5 registry promotions (#57 partial)', () => {
     };
 
     for (const [key, expectedType] of Object.entries(expectedTypes)) {
-        it(`promotes ${key} from description-only to ${expectedType}`, () => {
-            const entry = WEAPON_QUALITY_EFFECTS[key as keyof typeof WEAPON_QUALITY_EFFECTS];
-            expect(entry, `missing quality entry: ${key}`).toBeDefined();
-            expect(entry.type).not.toBe('description-only');
-            expect(entry.type).toBe(expectedType);
+        it(`carries ${key} as type ${expectedType}`, () => {
+            expect(mech(key).type).toBe(expectedType);
         });
     }
 
     it('exposes a hit-effect.requiresSave on Shocking (toughness)', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.shocking as { hitEffect: WeaponQualityHitEffect };
-        expect(entry.hitEffect.requiresSave).toBe('toughness');
-        expect(entry.hitEffect.failEffect).toBe('stunned');
-        expect(entry.hitEffect.stunRounds).toBe(1);
+        const hit = mech('shocking').hitEffect;
+        expect(hit.requiresSave).toBe('toughness');
+        expect(hit.failEffect).toBe('stunned');
+        expect(hit.stunRounds).toBe(1);
     });
 
     it('exposes a hit-effect.requiresSave on Concussive (toughness, variable rounds)', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.concussive as { hitEffect: WeaponQualityHitEffect };
-        expect(entry.hitEffect.requiresSave).toBe('toughness');
-        expect(entry.hitEffect.failEffect).toBe('stunned');
-        expect(entry.hitEffect.stunRoundsVariable).toBe(true);
+        const hit = mech('concussive').hitEffect;
+        expect(hit.requiresSave).toBe('toughness');
+        expect(hit.failEffect).toBe('stunned');
+        expect(hit.stunRoundsVariable).toBe(true);
     });
 
     it('exposes a hit-effect.requiresSave on Snare (agility)', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.snare as { hitEffect: WeaponQualityHitEffect };
-        expect(entry.hitEffect.requiresSave).toBe('agility');
-        expect(entry.hitEffect.failEffect).toBe('snared');
+        const hit = mech('snare').hitEffect;
+        expect(hit.requiresSave).toBe('agility');
+        expect(hit.failEffect).toBe('snared');
     });
 });

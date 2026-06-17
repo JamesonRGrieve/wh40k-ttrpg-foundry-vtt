@@ -1,16 +1,16 @@
 /**
- * Per-quality unit tests for the Phase 6 promotions on
- * `WEAPON_QUALITY_EFFECTS` (#57 completion). The umbrella registry test
- * lives in `weapon-quality-effects.umbrella.test.ts` and pins the
- * presence of every audit-listed key; this file covers the per-quality
- * resolver helpers introduced alongside the structured-payload
- * promotions (Blast, Concussive, Corrosive, Crippling, Flame, Flexible,
- * Graviton, Hallucinogenic, Haywire, Indirect, Lance, Maximal,
- * Overheats, Power Field, Primitive, Reliable, Sanctified, Scatter,
- * Shocking, Smoke, Snare, Spray, Toxic).
+ * Per-quality unit tests for the weapon-quality mechanical payloads (#57 / #303).
+ * The payloads now live on the weaponQuality compendium docs (`system.mechanics`)
+ * rather than the former in-`src/` WEAPON_QUALITY_EFFECTS registry, so the
+ * "registry-content" assertions read the real pack `_source` (via
+ * `weaponQualityMechanicsFromRaw`, the same default-merge the boot index uses) and
+ * the resolver helpers run against the index seeded from that same pack data.
  */
 
-import { describe, expect, it } from 'vitest';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { beforeAll, describe, expect, it } from 'vitest';
+import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
 import {
     resolveCripplingTickDamage,
     resolveGravitonBonusDamage,
@@ -24,11 +24,8 @@ import {
     resolveScatterRangeBand,
     resolveStunDuration,
     resolveTemplateRadius,
-    WEAPON_QUALITY_EFFECTS,
-    type WeaponQualityHitEffect,
-    type WeaponQualityRangeBands,
-    type WeaponQualityTemplate,
 } from './weapon-quality-effects.ts';
+import { setWeaponQualityPayloadsForTesting, weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
 
 type QualityWeapon = Parameters<typeof resolvePowerFieldParryDestroys>[0];
 
@@ -36,9 +33,53 @@ function weaponWith(qualities: ReadonlyArray<string>): QualityWeapon {
     return { system: { special: new Set(qualities) } } as QualityWeapon;
 }
 
+// Read the real weaponQuality pack `_source` and build the by-identifier mechanics
+// map the boot index would build, then seed the resolver index from it.
+const PACK_DIR = resolve(__dirname, '../../packs/rogue-trader/rt-core-items-weapon-qualities/_source');
+const mechanicsById = new Map<string, WeaponQualityMechanics>();
+if (existsSync(PACK_DIR)) {
+    for (const file of readdirSync(PACK_DIR).filter((f) => f.endsWith('.json'))) {
+        const doc = JSON.parse(readFileSync(resolve(PACK_DIR, file), 'utf8')) as { system?: { identifier?: string; mechanics?: WeaponQualityMechanics } };
+        const id = doc.system?.identifier;
+        if (typeof id === 'string' && id !== '') mechanicsById.set(id.toLowerCase(), weaponQualityMechanicsFromRaw(doc.system?.mechanics));
+    }
+}
+
+function mech(identifier: string): WeaponQualityMechanics {
+    const m = mechanicsById.get(identifier);
+    if (m === undefined) throw new Error(`weaponQuality pack has no doc for identifier "${identifier}"`);
+    return m;
+}
+
+beforeAll(() => {
+    setWeaponQualityPayloadsForTesting(Object.fromEntries(mechanicsById));
+});
+
+describe('weaponQuality pack is populated with mechanics', () => {
+    it('finds the shipped weaponQuality pack', () => {
+        // src/packs is a submodule; if unpopulated this guard is meaningless.
+        expect(mechanicsById.size).toBeGreaterThan(0);
+    });
+
+    it('pins the RAW Righteous-Fury thresholds (Gauss=9, Vengeful=8)', () => {
+        // The resolver-side lookup is covered in righteous-fury.test.ts; this guards
+        // the pack content the boot index reads.
+        expect(mech('gauss').rfThreshold).toBe(9);
+        expect(mech('vengeful').rfThreshold).toBe(8);
+    });
+
+    it('pins the Category-B parry/attack scalars', () => {
+        expect(mech('accurate').aimBonus).toBe(10);
+        expect(mech('balanced').parryBonus).toBe(10);
+        expect(mech('defensive').parryBonus).toBe(15);
+        expect(mech('fast').enemyParryPenalty).toBe(-20);
+        expect(mech('unbalanced').parryPenalty).toBe(-10);
+    });
+});
+
 describe('Blast (X) — template payload', () => {
     it('exposes a sphere template with variable radius', () => {
-        const tpl = (WEAPON_QUALITY_EFFECTS.blast as { template: WeaponQualityTemplate }).template;
+        const tpl = mech('blast').template;
         expect(tpl.shape).toBe('sphere');
         expect(tpl.radiusVariable).toBe(true);
     });
@@ -51,9 +92,8 @@ describe('Blast (X) — template payload', () => {
 });
 
 describe('Concussive (X) — Toughness test + DoF-scaled stun', () => {
-    const hit = (WEAPON_QUALITY_EFFECTS.concussive as { hitEffect: WeaponQualityHitEffect }).hitEffect;
-
     it('requires a Toughness save with -10 per X', () => {
+        const hit = mech('concussive').hitEffect;
         expect(hit.requiresSave).toBe('toughness');
         expect(hit.saveTargetPenaltyPerLevel).toBe(-10);
         expect(hit.stunRoundsVariable).toBe(true);
@@ -76,7 +116,7 @@ describe('Concussive (X) — Toughness test + DoF-scaled stun', () => {
 
 describe('Corrosive — armour-melt save', () => {
     it('promotes to hit-effect type with an armour-melt fail effect', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.corrosive as { type: string; hitEffect: WeaponQualityHitEffect; corrosiveArmourDice: string };
+        const entry = mech('corrosive');
         expect(entry.type).toBe('hit-effect');
         expect(entry.hitEffect.failEffect).toBe('armour-melt');
         expect(entry.corrosiveArmourDice).toBe('1d10');
@@ -91,14 +131,13 @@ describe('Crippling (X)', () => {
     });
 
     it('hit-effect tag is `crippled`', () => {
-        const hit = (WEAPON_QUALITY_EFFECTS.crippling as { hitEffect: WeaponQualityHitEffect }).hitEffect;
-        expect(hit.failEffect).toBe('crippled');
+        expect(mech('crippling').hitEffect.failEffect).toBe('crippled');
     });
 });
 
 describe('Flame — Agility test or burning', () => {
     it('promotes to a hit-effect that grants Burning on a failed Agility save', () => {
-        const hit = (WEAPON_QUALITY_EFFECTS.flame as { hitEffect: WeaponQualityHitEffect }).hitEffect;
+        const hit = mech('flame').hitEffect;
         expect(hit.requiresSave).toBe('agility');
         expect(hit.failEffect).toBe('burning');
     });
@@ -106,7 +145,7 @@ describe('Flame — Agility test or burning', () => {
 
 describe('Flexible — already parry-typed (regression guard)', () => {
     it('keeps cannotBeParried: true', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.flexible as { type: string; cannotBeParried: boolean };
+        const entry = mech('flexible');
         expect(entry.type).toBe('parry');
         expect(entry.cannotBeParried).toBe(true);
     });
@@ -114,7 +153,7 @@ describe('Flexible — already parry-typed (regression guard)', () => {
 
 describe('Graviton — Strength test, bonus armour damage', () => {
     it('exposes a Strength save with prone fail-effect', () => {
-        const hit = (WEAPON_QUALITY_EFFECTS.graviton as { hitEffect: WeaponQualityHitEffect }).hitEffect;
+        const hit = mech('graviton').hitEffect;
         expect(hit.requiresSave).toBe('strength');
         expect(hit.failEffect).toBe('prone');
     });
@@ -178,9 +217,8 @@ describe('Maximal — recharge / overheat package', () => {
 });
 
 describe('Overheats — registry flag (no resolver needed)', () => {
-    it('keeps the existing overheats:true flag for action-data.ts consumers', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.overheats as { overheats: boolean };
-        expect(entry.overheats).toBe(true);
+    it('keeps the overheats:true flag for action-data.ts consumers', () => {
+        expect(mech('overheats').overheats).toBe(true);
     });
 });
 
@@ -230,21 +268,19 @@ describe('Primitive (X) — damage die cap', () => {
 
 describe('Reliable — registry flag (jam logic lives in rules/weapon-jam.ts)', () => {
     it('keeps the reliable:true flag', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.reliable as { reliable: boolean };
-        expect(entry.reliable).toBe(true);
+        expect(mech('reliable').reliable).toBe(true);
     });
 });
 
 describe('Sanctified — registry flag (Daemons cannot ignore damage)', () => {
     it('keeps the ignoresDaemonResistance flag', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.sanctified as { ignoresDaemonResistance: boolean };
-        expect(entry.ignoresDaemonResistance).toBe(true);
+        expect(mech('sanctified').ignoresDaemonResistance).toBe(true);
     });
 });
 
 describe('Scatter — range-banded damage', () => {
     it('exposes the canonical RAW bands', () => {
-        const bands = (WEAPON_QUALITY_EFFECTS.scatter as { rangeBands: WeaponQualityRangeBands }).rangeBands;
+        const bands = mech('scatter').rangeBands;
         expect(bands.pointBlank).toBe(3);
         expect(bands.shortRange).toBe(0);
         expect(bands.standardRange).toBe(-3);
@@ -268,7 +304,7 @@ describe('Scatter — range-banded damage', () => {
 
 describe('Shocking — Toughness or 1 round stun, half DoF rule', () => {
     it('exposes the 1-round Stun and Fatigue rider', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.shocking as { hitEffect: WeaponQualityHitEffect; shockingAppliesFatigue: number };
+        const entry = mech('shocking');
         expect(entry.hitEffect.requiresSave).toBe('toughness');
         expect(entry.hitEffect.stunRounds).toBe(1);
         expect(entry.shockingAppliesFatigue).toBe(1);
@@ -285,7 +321,7 @@ describe('Shocking — Toughness or 1 round stun, half DoF rule', () => {
 
 describe('Smoke (X) — concealment cloud', () => {
     it('exposes a concealment-cloud template with variable radius', () => {
-        const tpl = (WEAPON_QUALITY_EFFECTS.smoke as { template: WeaponQualityTemplate }).template;
+        const tpl = mech('smoke').template;
         expect(tpl.shape).toBe('concealment-cloud');
         expect(tpl.radiusVariable).toBe(true);
     });
@@ -293,7 +329,7 @@ describe('Smoke (X) — concealment cloud', () => {
 
 describe('Snare (X) — Agility penalty', () => {
     it('penalises Agility by X×10', () => {
-        const hit = (WEAPON_QUALITY_EFFECTS.snare as { hitEffect: WeaponQualityHitEffect }).hitEffect;
+        const hit = mech('snare').hitEffect;
         expect(hit.requiresSave).toBe('agility');
         expect(hit.saveTargetPenaltyPerLevel).toBe(-10);
         expect(resolveHitEffectSaveTarget({ characteristicTotal: 35, key: 'snare', level: 2 })).toBe(15);
@@ -302,7 +338,7 @@ describe('Snare (X) — Agility penalty', () => {
 
 describe('Spray — cone template, Agility avoidance', () => {
     it('exposes a cone template with non-variable shape', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.spray as { template: WeaponQualityTemplate; sprayAvoidanceCharacteristic: string };
+        const entry = mech('spray');
         expect(entry.template.shape).toBe('cone');
         expect(entry.template.radiusVariable).toBe(false);
         expect(entry.sprayAvoidanceCharacteristic).toBe('agility');
@@ -316,7 +352,6 @@ describe('Toxic (X) — Toughness penalty, 1d10 additional damage', () => {
     });
 
     it('exposes a 1d10 additional-damage dice expression', () => {
-        const entry = WEAPON_QUALITY_EFFECTS.toxic as { toxicAdditionalDamageDice: string };
-        expect(entry.toxicAdditionalDamageDice).toBe('1d10');
+        expect(mech('toxic').toxicAdditionalDamageDice).toBe('1d10');
     });
 });
