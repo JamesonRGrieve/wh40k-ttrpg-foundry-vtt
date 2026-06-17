@@ -1,0 +1,34 @@
+{{!--
+    Shared per-system panel card shell (#292). ~30 per-system panels
+    (`bc-*`, `dw-*`, `ow-*`, possession/shock/subtlety) hand-rolled an identical
+    flat `<section>` card — root flex column + padded rounded border on the
+    `--wh40k-panel-bg` translucent background, with a per-system accent border,
+    and an uppercase `<h3>` title with an accent icon. This block partial owns
+    that shell so the ~30 panels stop duplicating it.
+
+    Distinct from `panel.hbs` (the gold-gothic gradient-header card): this is the
+    flatter `0.18` translucent `<section>` treatment those per-system panels use.
+
+    Hash params:
+      rootClass         the panel's own `wh40k-<sys>-<name>-panel` root class.
+      accentBorderClass per-system border variant, e.g. "dw:tw-border-bronze".
+      icon              Font Awesome class (e.g. "fa-scroll").
+      accentIconClass   per-system icon-colour variant, e.g. "dw:tw-text-bronze".
+      label             header title text.
+      rootAttrs         optional SafeString of extra root attributes (e.g.
+                        `data-dw-mission-active="true"`); pass via a helper that
+                        returns a SafeString so the markup is not escaped.
+      hasRightSlot      when true, the caller supplies a `{{#*inline "rightSlot"}}`
+                        block rendered at the header's right edge (a rating badge,
+                        a readout, an action button, …).
+--}}
+<section class="{{rootClass}} tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]{{#if accentBorderClass}} {{accentBorderClass}}{{/if}}"{{#if rootAttrs}} {{{rootAttrs}}}{{/if}}>
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            {{#if icon}}<i class="fas {{icon}}{{#if accentIconClass}} {{accentIconClass}}{{/if}}"></i>{{/if}}
+            <span>{{label}}</span>
+        </h3>
+        {{#if hasRightSlot}}{{> rightSlot}}{{/if}}
+    </header>
+    {{> @partial-block}}
+</section>
