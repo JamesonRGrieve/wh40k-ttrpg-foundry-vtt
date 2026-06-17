@@ -34,9 +34,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-orders-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-bullhorn" label=(localize "WH40K.OW.Orders.Panel.Header")}}
     {{!-- Available generic Orders --}}
     <div class="wh40k-ow-orders-available tw-flex tw-flex-col tw-gap-1">
-        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.OW.Orders.Panel.AvailableHeader"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.OW.Orders.Panel.AvailableHeader"}}
         <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1.5">
             {{#each ordersPanel.available}}
                 <li class="wh40k-ow-orders-row tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
@@ -74,9 +72,7 @@
 
     {{!-- Sweeping Orders currently active --}}
     <div class="wh40k-ow-orders-sweeping tw-flex tw-flex-col tw-gap-1">
-        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.OW.Orders.Sweeping.Header"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.OW.Orders.Sweeping.Header"}}
         {{#if ordersPanel.sweepingActive.length}}
             <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1">
                 {{#each ordersPanel.sweepingActive}}

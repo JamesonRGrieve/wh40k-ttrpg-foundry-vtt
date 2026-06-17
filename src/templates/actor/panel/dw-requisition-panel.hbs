@@ -34,9 +34,7 @@
 
     {{!-- RP pool readout --}}
     <div class="wh40k-dw-rp tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.DW.Requisition.RP.Available"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.DW.Requisition.RP.Available"}}
         <input class="wh40k-dw-rp-input tw-w-20 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-tabular-nums tw-bg-transparent tw-border-0"
                type="number"
                data-dtype="Number"
@@ -48,9 +46,7 @@
 
     {{!-- Mission rating selector --}}
     <div class="wh40k-dw-mission tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.DW.Requisition.Mission.Rating"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.DW.Requisition.Mission.Rating"}}
         <select class="wh40k-dw-mission-select tw-w-32 tw-text-[0.78rem] tw-bg-transparent"
                 name="system.missionRating">
             <option value="standard" {{#if (eq requisitionPanel.missionRating "standard")}}selected{{/if}}>

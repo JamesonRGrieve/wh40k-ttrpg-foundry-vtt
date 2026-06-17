@@ -43,9 +43,7 @@
 
     {{!-- 12-point Regiment budget readout --}}
     <div class="wh40k-ow-regiment-budget tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.OW.Regiment.Budget.Total"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.OW.Regiment.Budget.Total"}}
         <span class="wh40k-ow-regiment-budget-readout tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
               data-budget-spent="{{regimentPanel.regiment.spent}}"
               data-budget-total="{{regimentPanel.regiment.budget}}">
@@ -99,9 +97,7 @@
 
     {{!-- 30-point Standard Kit budget readout --}}
     <div class="wh40k-ow-regiment-kit-budget tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-            {{localize "WH40K.OW.Regiment.Kit.Total"}}
-        </span>
+        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.OW.Regiment.Kit.Total"}}
         <span class="wh40k-ow-regiment-kit-readout tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
               data-kit-spent="{{regimentPanel.kit.spent}}"
               data-kit-total="{{regimentPanel.kit.budget}}">
