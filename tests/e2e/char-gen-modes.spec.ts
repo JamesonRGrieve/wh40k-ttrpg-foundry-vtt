@@ -34,6 +34,8 @@ interface ProbeResult {
     pageErrors: string[];
     created: boolean;
     createError: string | null;
+    divinationApplied: boolean;
+    divinationNote: string;
 }
 
 async function probeCharGenModes(page: Page): Promise<ProbeResult> {
@@ -69,6 +71,10 @@ async function probeCharGenModes(page: Page): Promise<ProbeResult> {
                         pointBuyRemaining?: number;
                         pointBuyPool?: number;
                     };
+                    // Divination apply path (#316)
+                    _divination: string;
+                    _resolveDivinationSelection: () => Promise<void>;
+                    _divinationSelection: { system?: { modifiers?: { characteristics?: Record<string, number> } } } | null;
                 }
                 type BuilderCtor = new (actor: ActorDoc, options: object) => BuilderInstance;
                 interface FoundryGlobal {
@@ -190,6 +196,23 @@ async function probeCharGenModes(page: Page): Promise<ProbeResult> {
                 };
                 runModeFlows();
 
+                // #316: a chosen divination resolves against the real dh2
+                // divination pack and surfaces its characteristic bonus, proving
+                // the apply path is wired (not just stored as text).
+                let divinationApplied = false;
+                let divinationNote = 'not run';
+                try {
+                    activeBuilder._divination = 'Trust in your fear.';
+                    await activeBuilder._resolveDivinationSelection();
+                    const per = activeBuilder._divinationSelection?.system?.modifiers?.characteristics?.['perception'];
+                    divinationApplied = per === 5;
+                    divinationNote = divinationApplied
+                        ? 'divination "Trust in your fear." resolved to Perception +5'
+                        : `resolve failed: perception=${String(per)}, selection ${activeBuilder._divinationSelection === null ? 'null' : 'present'}`;
+                } catch (err) {
+                    divinationNote = `threw: ${String(err instanceof Error ? err.message : err)}`;
+                }
+
                 try {
                     await builder.close?.();
                 } catch {
@@ -201,12 +224,19 @@ async function probeCharGenModes(page: Page): Promise<ProbeResult> {
                     /* ignore */
                 }
 
-                return { flows, created: true, createError: null };
+                return { flows, created: true, createError: null, divinationApplied, divinationNote };
             },
             [...CHAR_GEN_MODES],
         );
 
-        return { flows: result.flows as FlowResult[], pageErrors, created: result.created, createError: result.createError };
+        return {
+            flows: result.flows as FlowResult[],
+            pageErrors,
+            created: result.created,
+            createError: result.createError,
+            divinationApplied: 'divinationApplied' in result && result.divinationApplied === true,
+            divinationNote: 'divinationNote' in result && typeof result.divinationNote === 'string' ? result.divinationNote : 'not run',
+        };
     } finally {
         page.off('pageerror', listener);
     }
@@ -236,5 +266,9 @@ test.describe.serial('character-generation modes (Tier B)', () => {
         expect(failures, `${failures.length}/${CHAR_GEN_MODES.length} char-gen-mode checks failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`).toEqual(
             [],
         );
+
+        // #316: the chosen divination resolves to its pack doc and exposes its
+        // characteristic bonus through the builder's apply path.
+        expect(probe.divinationApplied, `divination apply path (#316) failed: ${probe.divinationNote}`).toBe(true);
     });
 });
