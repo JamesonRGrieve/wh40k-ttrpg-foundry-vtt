@@ -3311,6 +3311,78 @@
             "flags": {}
         },
         {
+            "name": "bc-core-items-weapon-qualities",
+            "label": "Core Rulebook Weapon Qualities",
+            "path": "packs/black-crusade/bc-core-items-weapon-qualities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-core-items-weapon-qualities",
+            "label": "Core Rulebook Weapon Qualities",
+            "path": "packs/dark-heresy-1/dh1-core-items-weapon-qualities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-core-items-weapon-qualities",
+            "label": "Core Rulebook Weapon Qualities",
+            "path": "packs/dark-heresy-2/dh2-core-items-weapon-qualities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-core-items-weapon-qualities",
+            "label": "Core Rulebook Weapon Qualities",
+            "path": "packs/deathwatch/dw-core-items-weapon-qualities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-core-items-weapon-qualities",
+            "label": "Core Rulebook Weapon Qualities",
+            "path": "packs/only-war/ow-core-items-weapon-qualities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "im-core-items-weapon-qualities",
+            "label": "Core Rulebook Weapon Qualities",
+            "path": "packs/imperium-maledictum/im-core-items-weapon-qualities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-core-items-weapons",
             "label": "Core Rulebook Weapons",
             "path": "packs/rogue-trader/rt-core-items-weapons",
@@ -6091,6 +6163,7 @@
                         "bc-core-items-rituals",
                         "bc-core-items-talents",
                         "bc-core-items-traits",
+                        "bc-core-items-weapon-qualities",
                         "bc-core-items-weapons",
                         "bc-core-origins-archetypes",
                         "bc-core-origins-disgraces",
@@ -6183,6 +6256,7 @@
                         "dh1-core-items-gear",
                         "dh1-core-items-psychic-powers",
                         "dh1-core-items-talents",
+                        "dh1-core-items-weapon-qualities",
                         "dh1-core-items-weapons",
                         "dh1-core-journals",
                         "dh1-core-origins-careers",
@@ -6211,8 +6285,45 @@
             "name": "Dark Heresy 2e",
             "color": "#4a0a14",
             "sorting": "a",
-            "packs": ["dh2-adventures", "dh2-errata-journals", "dh2-scenes"],
             "folders": [
+                {
+                    "name": "Character Creation Supplements",
+                    "packs": ["dh2-chargen-journals", "dh2-chargen-rolltables"]
+                },
+                {
+                    "name": "Core Rulebook",
+                    "packs": [
+                        "dh2-core-actors-bestiary",
+                        "dh2-core-actors-mounts",
+                        "dh2-core-actors-npcs",
+                        "dh2-core-actors-reinforcements",
+                        "dh2-core-items-ammo",
+                        "dh2-core-items-armour",
+                        "dh2-core-items-conditions",
+                        "dh2-core-items-consumables",
+                        "dh2-core-items-critical-injuries",
+                        "dh2-core-items-cybernetics",
+                        "dh2-core-items-psychic-powers",
+                        "dh2-core-items-skills",
+                        "dh2-core-items-talents",
+                        "dh2-core-items-talents-specializations",
+                        "dh2-core-items-tools",
+                        "dh2-core-items-traits",
+                        "dh2-core-items-weapon-mods",
+                        "dh2-core-items-weapon-qualities",
+                        "dh2-core-items-weapons",
+                        "dh2-core-items-wearables",
+                        "dh2-core-journals",
+                        "dh2-core-journals-daemon-binding",
+                        "dh2-core-locations",
+                        "dh2-core-origins-backgrounds",
+                        "dh2-core-origins-divinations",
+                        "dh2-core-origins-elite-advances",
+                        "dh2-core-origins-homeworlds",
+                        "dh2-core-origins-roles",
+                        "dh2-core-rolltables"
+                    ]
+                },
                 {
                     "name": "Enemies Beyond",
                     "packs": [
@@ -6285,6 +6396,10 @@
                     ]
                 },
                 {
+                    "name": "Errata",
+                    "packs": ["dh2-errata-journals"]
+                },
+                {
                     "name": "Forgotten Gods",
                     "packs": ["dh2-forgotten-actors-bestiary", "dh2-forgotten-actors-npcs", "dh2-forgotten-journals", "dh2-forgotten-rolltables"]
                 },
@@ -6293,41 +6408,12 @@
                     "packs": ["dh2-gmkit-actors-bestiary", "dh2-gmkit-journals", "dh2-gmscreen-journals", "dh2-gmscreen-rolltables"]
                 },
                 {
-                    "name": "Character Creation Supplements",
-                    "packs": ["dh2-chargen-journals", "dh2-chargen-rolltables"]
+                    "name": "Scenes",
+                    "packs": ["dh2-scenes"]
                 },
                 {
-                    "name": "Core Rulebook",
-                    "packs": [
-                        "dh2-core-actors-bestiary",
-                        "dh2-core-actors-npcs",
-                        "dh2-core-actors-reinforcements",
-                        "dh2-core-actors-mounts",
-                        "dh2-core-items-ammo",
-                        "dh2-core-items-armour",
-                        "dh2-core-items-conditions",
-                        "dh2-core-items-consumables",
-                        "dh2-core-items-critical-injuries",
-                        "dh2-core-items-cybernetics",
-                        "dh2-core-items-psychic-powers",
-                        "dh2-core-items-skills",
-                        "dh2-core-items-talents",
-                        "dh2-core-items-talents-specializations",
-                        "dh2-core-items-tools",
-                        "dh2-core-items-traits",
-                        "dh2-core-items-weapon-mods",
-                        "dh2-core-items-weapons",
-                        "dh2-core-items-wearables",
-                        "dh2-core-journals",
-                        "dh2-core-journals-daemon-binding",
-                        "dh2-core-locations",
-                        "dh2-core-origins-backgrounds",
-                        "dh2-core-origins-divinations",
-                        "dh2-core-origins-elite-advances",
-                        "dh2-core-origins-homeworlds",
-                        "dh2-core-origins-roles",
-                        "dh2-core-rolltables"
-                    ]
+                    "name": "General",
+                    "packs": ["dh2-adventures"]
                 }
             ]
         },
@@ -6348,6 +6434,7 @@
                         "dw-core-items-gear",
                         "dw-core-items-skills",
                         "dw-core-items-talents",
+                        "dw-core-items-weapon-qualities",
                         "dw-core-items-weapons",
                         "dw-core-origins-chapters",
                         "dw-core-origins-specialities"
@@ -6461,6 +6548,7 @@
                         "im-core-items-skills",
                         "im-core-items-talents",
                         "im-core-items-weapon-mods",
+                        "im-core-items-weapon-qualities",
                         "im-core-items-weapons",
                         "im-core-journals",
                         "im-core-origins-factions",
@@ -6508,6 +6596,7 @@
                         "ow-core-items-psychic-powers",
                         "ow-core-items-talents",
                         "ow-core-items-traits",
+                        "ow-core-items-weapon-qualities",
                         "ow-core-items-weapons",
                         "ow-core-origins-commanding-officers",
                         "ow-core-origins-homeworlds",
