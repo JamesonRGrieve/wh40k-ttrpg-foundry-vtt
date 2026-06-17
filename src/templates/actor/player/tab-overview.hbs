@@ -2,11 +2,16 @@
 {{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    {{!-- Column sizing rationale (issue #15): Favourites + Progression panels (col 2) do not
-         benefit from extra width — their content is short rows. Resources (in col 3) cramps
-         badly under tw-grid-cols-3 because Influence/Requisition/Throne Gelt buttons overlap.
-         Cap col 1 (Vitals) and col 2 to 360px max; let col 3 absorb the remaining width. --}}
-    <div class="tw-grid tw-grid-cols-[minmax(280px,360px)_minmax(280px,360px)_1fr] tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
+    {{!-- Column sizing rationale (issue #15): the Overview is a TWO-column layout.
+         Col 1 (Vitals/Mental/Subtlety → Active Effects) and col 2 (Favourites →
+         Progression → Resources) are short-row panels that gain nothing from extra
+         width, so both columns are capped at 360px and the grid is NOT given a third
+         1fr track to stretch into — the old three-column grid let Favourites sprawl
+         with an empty centre while Resources crammed in the wide col 3. Resources now
+         sits under Progression in col 2 and fits via its internal min-w-0 steppers
+         (#236). Column 3 was emptied by #318 (Equipped Weapons & Armour) and #317
+         (Subtlety → under Insanity in col 1). --}}
+    <div class="tw-grid tw-grid-cols-[minmax(280px,360px)_minmax(280px,360px)] tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
 
         {{!-- COLUMN 1: Vitals → Active Effects --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
@@ -317,14 +322,11 @@
             </div>
             {{/if}}
 
-
-        </div>
-
-        {{!-- COLUMN 3: Resources. Equipped Weapons & Armour panels removed (#318) —
-             they live on the Combat tab; Movement also moved there (#266). The
-             armour-zone / equippedWeapons / armourDisplay prep is still consumed by
-             the Combat tab, so it is intentionally NOT removed. --}}
-        <div class="tw-flex tw-flex-col tw-gap-2">
+            {{!-- Resources relocated here, under Progression, when the Overview
+                 collapsed to two columns (#15). Equipped Weapons & Armour (the old
+                 col-3 occupants) were removed in #318; Movement moved to Combat
+                 (#266). The armour-zone / equippedWeapons / armourDisplay prep is
+                 still consumed by the Combat tab, so it is intentionally NOT removed. --}}
             {{#unless isNPC}}
             {{!-- Resources (Influence / Requisition / Gelt) — PC-only.
                  In DH2 RAW mode Influence is a Statistics characteristic, not an economy stat,
