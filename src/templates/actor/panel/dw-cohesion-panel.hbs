@@ -24,24 +24,14 @@
     Rendered only for DW actors; the include in the appropriate
     tab-*.hbs gates on `isDW` from context.
 --}}
-<section class="wh40k-dw-cohesion-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                dw:tw-border-bronze"
-         data-dw-cohesion-current="{{cohesionPanel.current}}"
-         data-dw-cohesion-max="{{cohesionPanel.max}}">
-
-    {{!-- Header: pool readout --}}
-    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
-            <i class="fas fa-shield-halved dw:tw-text-bronze"></i>
-            <span>{{localize "WH40K.DW.Cohesion.Label"}}</span>
-        </h3>
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-cohesion-panel" accentBorderClass="dw:tw-border-bronze" accentIconClass="dw:tw-text-bronze" icon="fa-shield-halved" label=(localize "WH40K.DW.Cohesion.Label") rootAttrs=(safeAttrs "data-dw-cohesion-current" cohesionPanel.current "data-dw-cohesion-max" cohesionPanel.max) hasRightSlot=true}}
+    {{!-- Header right slot: pool readout --}}
+    {{#*inline "rightSlot"}}
         <span class="wh40k-dw-cohesion-readout tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums"
               title="{{localize 'WH40K.DW.Cohesion.Pool'}}">
             {{cohesionPanel.current}} / {{cohesionPanel.max}}
         </span>
-    </header>
+    {{/inline}}
 
     {{#if cohesionPanel.rallied}}
         <div class="wh40k-dw-cohesion-rallied tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded">
@@ -76,4 +66,4 @@
             {{localize "WH40K.DW.Cohesion.Challenge.Title"}}
         </button>
     </div>
-</section>
+{{/system-card}}
