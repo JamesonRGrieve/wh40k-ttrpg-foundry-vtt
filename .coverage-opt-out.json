@@ -1,5 +1,5 @@
 {
-  "_comment": "DataModels and document classes touch foundry.* (foundry.data.fields, etc.) at module-eval, so they cannot be imported under happy-dom/vitest — a co-located unit test can only be a vacuous skip-placeholder. Real coverage for these lives in the e2e Tier B suite (tests/e2e/data-item-models, data-actor-models, data-shared-templates, documents-extra), which boots real Foundry and exercises each model via actor/item creation across game systems. These paths are opted out of the co-located *.test.ts symmetry requirement on that basis.",
+  "_comment": "DataModels and document classes touch foundry.* (foundry.data.fields, etc.) at module-eval, so they cannot be imported under happy-dom/vitest — a co-located unit test can only be a vacuous skip-placeholder. Real coverage for these lives in the e2e Tier B suite (tests/e2e/data-item-models, data-actor-models, data-shared-templates, documents-extra), which boots real Foundry and exercises each model via actor/item creation across game systems. A second category is pure type-definition leaves (interfaces only, no runtime code — e.g. item/weapon-quality-mechanics.ts) whose shape is exercised by the consumers that import it; there is nothing to execute in a co-located test. These paths are opted out of the co-located *.test.ts symmetry requirement on that basis.",
   "stories": [],
   "data": [
     "src/module/data/actor/bases/starship-base.ts",
@@ -24,6 +24,7 @@
     "src/module/data/item/special-ability.ts",
     "src/module/data/item/talent.ts",
     "src/module/data/item/trait.ts",
+    "src/module/data/item/weapon-quality-mechanics.ts",
     "src/module/data/item/weapon.ts",
     "src/module/data/shared/attack-template.ts",
     "src/module/data/shared/damage-template.ts",
