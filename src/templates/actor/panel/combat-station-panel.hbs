@@ -11,7 +11,7 @@
                 <div class="tw-flex tw-flex-col tw-gap-2">
                     <div class="wh40k-panel">
                         <div class="wh40k-panel-header">
-                            <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-heartbeat"></i> Vitals</span>
+                            {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label="Vitals" icon="fa-heartbeat"}}
                         </div>
                         <div class="wh40k-panel-body tw-flex tw-flex-col tw-gap-2 tw-bg-gradient-to-br tw-from-black/[0.02] tw-to-black/[0.05] tw-border tw-border-solid tw-border-black/10 tw-rounded-[var(--wh40k-radius-lg)] tw-shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)] tw-p-2">
 
@@ -249,7 +249,7 @@
                     {{#if hasForceField}}
                     <div class="wh40k-panel tw-mt-[var(--wh40k-space-xs)]">
                         <div class="wh40k-panel-header">
-                            <span class="wh40k-panel-title"><i class="fas fa-circle-notch tw-text-[color:var(--wh40k-accent-powers)]"></i> Force Field</span>
+                            {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label="Force Field" icon="fa-circle-notch"}}
                         </div>
                         <div class="wh40k-panel-body">
                             <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)]">
@@ -271,7 +271,7 @@
             {{!-- Row 2: Weapons (full width) --}}
             <div class="wh40k-panel tw-flex-1 tw-min-h-0" data-drop-zone="general" data-accepts="weapon">
                 <div class="wh40k-panel-header tw-order-[-1] tw-shrink-0">
-                    <span class="wh40k-panel-title"><i class="fas fa-fist-raised tw-text-[color:var(--wh40k-accent-talents)]"></i> Weapons</span>
+                    {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label="Weapons" icon="fa-fist-raised"}}
                 </div>
                 <div class="wh40k-panel-body tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-overflow-x-hidden">
                     {{#if actor.items}}
