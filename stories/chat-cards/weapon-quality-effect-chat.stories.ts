@@ -43,7 +43,7 @@ setWeaponQualityPayloadsForTesting({
     maximal: { type: 'damage', maximalDamageDice: '1d10', maximalPenetrationBonus: 2, triggersRecharge: true },
     concussive: {
         type: 'hit-effect',
-        hitEffect: { requiresSave: 'toughness', failEffect: 'stunned', stunRoundsVariable: true, saveTargetPenaltyPerLevel: -10 },
+        hitEffect: { requiresSave: 'toughness', failEffect: 'stunned', stunRoundsVariable: true, stunRounds: null, saveTargetPenaltyPerLevel: -10 },
     },
 });
 
