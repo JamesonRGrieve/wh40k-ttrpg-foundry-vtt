@@ -7,6 +7,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import DialogResolution from './dialog-resolution.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -92,8 +93,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #assignments: Partial<Record<CharacteristicKey, number | null>> = {};
     #customBases: Partial<Record<CharacteristicKey, number>> = {};
     #advancedMode = false;
-    #resolve: ((value: boolean) => void) | null = null;
-    #applied = false;
+    readonly #resolution = new DialogResolution<boolean>(false);
     #dragData: DragData | null = null;
 
     /* -------------------------------------------- */
@@ -466,8 +466,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
         await this.#actor.update(updateData);
 
-        this.#applied = true;
-        this.#resolve?.(true);
+        this.#resolution.resolve(true);
 
         ui.notifications.info(game.i18n.localize('WH40K.CharacteristicSetup.Applied'));
         await this.close();
@@ -492,19 +491,16 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
     override async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (!this.#applied && this.#resolve !== null) {
-            this.#resolve(false);
-        }
+        this.#resolution.resolveDefault();
         return super.close(options);
     }
 
     /* -------------------------------------------- */
 
     async wait(): Promise<boolean> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render({ force: true });
-        });
+        const result = this.#resolution.track();
+        void this.render({ force: true });
+        return result;
     }
 
     static async open(actor: WH40KBaseActor): Promise<boolean> {

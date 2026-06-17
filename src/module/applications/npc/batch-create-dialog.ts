@@ -1,4 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 import ThreatCalculator from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -109,17 +110,8 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         openSheets: false,
     };
 
-    /**
-     * Promise resolver.
-     * @type {((value: WH40KNPC[]) => void) | null}
-     */
-    #resolve: ((value: WH40KNPC[]) => void) | null = null;
-
-    /**
-     * Whether submitted.
-     * @type {boolean}
-     */
-    #submitted = false;
+    /** Promise-resolution plumbing; dismissal resolves an empty list. */
+    readonly #resolution = new DialogResolution<WH40KNPC[]>([]);
 
     /**
      * Render timeout.
@@ -302,11 +294,10 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 }
             }
 
-            this.#submitted = true;
-            this.#resolve?.(actors);
+            this.#resolution.resolve(actors);
         } else {
             ui.notifications.error(game.i18n.localize('WH40K.NPC.BatchCreate.Failed'));
-            this.#resolve?.([]);
+            this.#resolution.resolve([]);
         }
     }
 
@@ -384,8 +375,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {HTMLElement} target
      */
     static async #onCancel(this: BatchCreateDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        this.#submitted = false;
-        if (this.#resolve) this.#resolve([]);
+        // close() → resolveDefault() supplies the cancelled value ([]).
         await this.close();
     }
 
@@ -407,9 +397,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     override async close(options: Record<string, unknown> = {}): Promise<void> {
         if (this._renderTimeout !== null) clearTimeout(this._renderTimeout);
 
-        if (!this.#submitted && this.#resolve !== null) {
-            this.#resolve([]);
-        }
+        this.#resolution.resolveDefault();
 
         void super.close(options);
     }
@@ -423,10 +411,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<WH40KNPC[]>} Created actors.
      */
     async wait(): Promise<WH40KNPC[]> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render({ force: true });
-        });
+        const result = this.#resolution.track();
+        void this.render({ force: true });
+        return result;
     }
 
     /**

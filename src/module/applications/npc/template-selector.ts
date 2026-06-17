@@ -1,5 +1,6 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -122,17 +123,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      */
     #isHorde: boolean = false;
 
-    /**
-     * Promise resolver.
-     * @type {((value: WH40KNPC | null) => void) | null}
-     */
-    #resolve: ((value: WH40KNPC | null) => void) | null = null;
-
-    /**
-     * Whether submitted.
-     * @type {boolean}
-     */
-    #submitted: boolean = false;
+    /** Promise-resolution plumbing; dismissal resolves null. */
+    readonly #resolution = new DialogResolution<WH40KNPC | null>(null);
 
     /**
      * Render timeout handle.
@@ -455,8 +447,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 const actorSheet = (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet;
                 actorSheet?.render(true);
 
-                this.#submitted = true;
-                if (this.#resolve) this.#resolve(actor);
+                this.#resolution.resolve(actor);
                 await this.close();
             }
         } catch (err) {
@@ -473,8 +464,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target
      */
     static async #onCancel(this: TemplateSelector, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        this.#submitted = false;
-        if (this.#resolve) this.#resolve(null);
+        // close() → resolveDefault() supplies the cancelled value (null).
         await this.close();
     }
 
@@ -487,9 +477,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     override async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
-        if (!this.#submitted && this.#resolve) {
-            this.#resolve(null);
-        }
+        this.#resolution.resolveDefault();
 
         return super.close(options);
     }
@@ -503,10 +491,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<WH40KNPC | null>} Created actor or null.
      */
     async wait(): Promise<WH40KNPC | null> {
-        return new Promise((resolve) => {
-            this.#resolve = resolve;
-            void this.render(true);
-        });
+        const result = this.#resolution.track();
+        void this.render(true);
+        return result;
     }
 
     /**
