@@ -1,5 +1,6 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
 import { bcDaemonPrinceSchemaFields, type BcDaemonPrinceDeclarations } from './mixins/bc-daemon-prince-template.ts';
 import { bcGiftsSchemaFields, type BcGiftsDeclarations } from './mixins/bc-gifts-template.ts';
@@ -728,6 +729,22 @@ export default class CharacterData extends CreatureTemplate {
         this._computeExperienceSpent();
         this._updateWoundsFateModifiers();
         this._computeWoundsMax();
+        this._syncWarbandSubtlety();
+    }
+
+    /**
+     * Mirror the world-scoped warband Subtlety pool (#64) into this character's
+     * display-only `system.subtlety.value`. Subtlety is a single warband-wide
+     * value shared by every DH2 acolyte, stored in the `warbandSubtlety` world
+     * setting; mirroring it here at prep time gives the sheet, the adjuster
+     * aggregation, and `applySubtlety` one source of truth. DH2-only — a no-op
+     * on the other six systems (whose `subtlety` field is hidden anyway). Runs
+     * after `_computeOriginPathEffects` has resolved `gameSystem`.
+     * @protected
+     */
+    _syncWarbandSubtlety(): void {
+        if (this.gameSystem !== 'dh2') return;
+        this.subtlety.value = WH40KSettings.getWarbandSubtlety();
     }
 
     /**
