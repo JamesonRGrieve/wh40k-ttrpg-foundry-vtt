@@ -158,6 +158,15 @@ export class GrantsManager {
      * @param {number} [options.depth=0] - Current recursion depth
      * @returns {Promise<GrantsApplicationResult>}
      */
+    /**
+     * Stable per-source key for an item's applied-grants flag entry: prefer the
+     * UUID, then the embedded `_id`/`id`, falling back to a name-derived slug.
+     * Shared so the apply and reverse paths key the same source identically.
+     */
+    static sourceKeyFor(item: WH40KItem): string {
+        return item.uuid ?? item._id ?? item.id ?? `item-${item.name.replace(/\s+/g, '-')}`;
+    }
+
     // eslint-disable-next-line complexity -- orchestrator: idempotency guard + depth guard + per-grant application + recursion + persistence + notifications
     static async applyItemGrants(item: WH40KItem, actor: WH40KBaseActor, options: ApplyItemGrantsOptions = {}): Promise<GrantsApplicationResult> {
         const appliedState: AppliedGrantState = {};
@@ -170,8 +179,7 @@ export class GrantsManager {
         };
 
         // Generate source key for tracking
-        const itemName = item.name.replace(/\s+/g, '-');
-        const sourceKey = item.uuid ?? item._id ?? item.id ?? `item-${itemName}`;
+        const sourceKey = GrantsManager.sourceKeyFor(item);
 
         // Idempotency check - skip if already applied (unless forced)
         if (options.force !== true && options.dryRun !== true && this.hasAppliedGrants(actor, sourceKey)) {

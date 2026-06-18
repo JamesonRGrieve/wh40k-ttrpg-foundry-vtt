@@ -1,163 +1,114 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { WH40KBaseActor as WH40KActor } from '../documents/base-actor.ts';
-import type { WH40KItem } from '../documents/item.ts';
-import { handleGrantRemoval } from './grants-processor.ts';
-import { processTalentGrants } from './talent-grants.ts';
+import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
 /**
- * Behavioural regression contract for the talent grant-on-drop / grant-on-delete
- * lifecycle (#304, step 1 — land BEFORE the GrantsProcessor → GrantsManager
- * cutover). These assert the *observable* outcome a user sees, not engine
- * internals, so they survive the eventual engine swap and become its acceptance
- * gate:
+ * Regression contract for the talent grant-on-drop / grant-on-delete lifecycle
+ * (#304). The base-actor descendant hooks call `processTalentGrants` on drop and
+ * `handleTalentRemoval` on delete; both now bridge to the single GrantsManager
+ * engine (the former GrantsProcessor was removed). These pin the bridge's
+ * observable contract — the guards and the correct delegation — across two game
+ * systems (dh2 + ow) per Direction #3. The deep apply/reverse behaviour (skill
+ * upgrade, item create/dedupe, resource math, reversal) is covered by the
+ * `data/grant/*` and `grants-manager` suites the bridge delegates into.
  *
- *  - Dropping a talent with `hasGrants` applies its grants (here: a skill
- *    training upgrade on a skill the actor already has).
- *  - Deleting a granting talent offers to remove the items it granted (tracked
- *    via `flags.wh40k-rpg.grantedById`) and removes exactly those on confirm.
- *
- * Run across two game systems (dh2 + ow) so the lifecycle is proven homologated,
- * per Direction #3. The path is exercised through the real bridge
- * (`processTalentGrants`) and the real removal handler (`handleGrantRemoval`) the
- * base-actor descendant hooks call.
+ * talent-grants.ts statically imports GrantsManager, which transitively evaluates
+ * `extends foundry.abstract.DataModel` at module-load (undefined under happy-dom).
+ * Stub a no-op DataModel base BEFORE a dynamic import (static imports hoist above
+ * the stub), exactly as grants-manager.test.ts does.
  */
 
-type MockFn = ReturnType<typeof vi.fn>;
-type MockActor = WH40KActor & { deleteEmbeddedDocuments: MockFn; createEmbeddedDocuments: MockFn; update: MockFn };
-
-interface MockSkill {
-    id: string;
-    type: 'skill';
-    name: string;
-    system: { specialization?: string };
-    update: MockFn;
+class FakeDataModel {
+    isFakeDataModel = true;
 }
-
-/** A talent whose grants drive the on-drop path. */
-function makeTalent(grants: { skills: Array<{ name: string; level: string }> }, id = 'talent-1'): WH40KItem {
-    const talent = { id, type: 'talent', name: 'Granting Talent', system: { hasGrants: true, grants }, flags: {} };
-    // eslint-disable-next-line no-restricted-syntax -- test boundary: structural mock of the Foundry WH40KItem surface processTalentGrants/handleGrantRemoval read (type/system.grants/id/flags); the full Document type is not the unit under test
-    return talent as unknown as WH40KItem;
+type AnyCtor = abstract new (...args: never[]) => object;
+interface FoundryStub {
+    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
 }
-
-/** An item the actor carries, optionally flagged as granted by a talent. */
-function makeGranted(id: string, name: string, grantedById: string | undefined): WH40KItem {
-    const item = { id, type: 'talent', name, system: {}, flags: grantedById === undefined ? {} : { 'wh40k-rpg': { grantedById } } };
-    // eslint-disable-next-line no-restricted-syntax -- test boundary: structural mock of the Foundry WH40KItem surface (id/type/name/flags.wh40k-rpg.grantedById) the removal handler filters on
-    return item as unknown as WH40KItem;
+interface GlobalShim {
+    foundry?: FoundryStub | undefined;
 }
+const G = globalThis as GlobalShim;
+const ORIGINAL_FOUNDRY = G.foundry;
+G.foundry = { abstract: { DataModel: FakeDataModel, TypeDataModel: FakeDataModel } };
 
-function makeSkill(id: string, name: string): MockSkill {
-    return { id, type: 'skill', name, system: { specialization: '' }, update: vi.fn(async () => Promise.resolve()) };
-}
+afterAll(() => {
+    G.foundry = ORIGINAL_FOUNDRY;
+});
 
-/** Minimal actor exposing only the collection + mutation surface the grant lifecycle uses. */
-function makeActor(gameSystem: string, items: Array<WH40KItem | MockSkill>): MockActor {
-    // eslint-disable-next-line no-restricted-syntax -- test boundary: the mixed talent/skill mock list is presented to production code as the actor's WH40KItem collection
-    const list = items as unknown as WH40KItem[];
-    const collection = {
-        find: (fn: (i: WH40KItem) => boolean) => list.find(fn),
-        filter: (fn: (i: WH40KItem) => boolean) => list.filter(fn),
-        some: (fn: (i: WH40KItem) => boolean) => list.some(fn),
-        get: (id: string) => list.find((i) => i.id === id),
-        get contents() {
-            return list;
-        },
+const { GrantsManager } = await import('../managers/grants-manager.ts');
+const { processTalentGrants, handleTalentRemoval } = await import('./talent-grants.ts');
+
+type ManagerActor = Parameters<typeof processTalentGrants>[1];
+
+function makeTalent(opts: { hasGrants?: boolean; type?: string; id?: string; uuid?: string } = {}): Parameters<typeof processTalentGrants>[0] {
+    const talent = {
+        type: opts.type ?? 'talent',
+        name: 'Granting Talent',
+        id: opts.id ?? 'talent-1',
+        uuid: opts.uuid,
+        system: { hasGrants: opts.hasGrants ?? true },
     };
-    const actor = {
-        id: 'actor-1',
-        name: 'Test Acolyte',
-        system: { gameSystem },
-        flags: {},
-        items: collection,
-        update: vi.fn(async () => Promise.resolve()),
-        createEmbeddedDocuments: vi.fn(async () => Promise.resolve([])),
-        deleteEmbeddedDocuments: vi.fn(async () => Promise.resolve([])),
-    };
-    // eslint-disable-next-line no-restricted-syntax -- test boundary: structural mock of the Foundry WH40KActor surface the grant lifecycle uses (items collection + create/delete/update); the full Document type is not the unit under test
-    return actor as unknown as MockActor;
+    // eslint-disable-next-line no-restricted-syntax -- test boundary: structural mock of the WH40KItem surface the bridge reads (type / system.hasGrants / id / uuid); the full Document type is not the unit under test
+    return talent as unknown as Parameters<typeof processTalentGrants>[0];
+}
+
+function makeActor(gameSystem: string): ManagerActor {
+    const actor = { id: 'actor-1', name: 'Test Acolyte', system: { gameSystem } };
+    // eslint-disable-next-line no-restricted-syntax -- test boundary: the bridge only forwards the actor to the (spied) GrantsManager, so a minimal stub suffices
+    return actor as unknown as ManagerActor;
 }
 
 const SYSTEMS = ['dh2', 'ow'] as const;
 
-beforeEach(() => {
-    vi.stubGlobal('game', { wh40k: { log: vi.fn() }, user: { id: 'u1' } });
-    vi.stubGlobal('ui', { notifications: { info: vi.fn(), warn: vi.fn() } });
-});
-
 afterEach(() => {
     vi.restoreAllMocks();
-    vi.unstubAllGlobals();
 });
 
-describe('talent grant lifecycle — on-drop applies grants (#304 regression gate)', () => {
+describe('talent grant lifecycle — on-drop applies via GrantsManager (#304)', () => {
     for (const system of SYSTEMS) {
-        it(`[${system}] dropping a talent that grants skill training upgrades an existing skill`, async () => {
-            const awareness = makeSkill('sk-aware', 'Awareness');
-            const actor = makeActor(system, [awareness]);
-            const talent = makeTalent({ skills: [{ name: 'Awareness', level: 'trained' }] });
+        it(`[${system}] a talent with hasGrants applies its grants idempotently`, async () => {
+            const apply = vi
+                .spyOn(GrantsManager, 'applyItemGrants')
+                .mockResolvedValue({ success: true, appliedState: {}, notifications: [], errors: [], skipped: false });
+            const talent = makeTalent();
+            const actor = makeActor(system);
 
             await processTalentGrants(talent, actor);
 
-            expect(awareness.update).toHaveBeenCalledTimes(1);
-            expect(awareness.update).toHaveBeenCalledWith({ 'system.trained': true });
+            expect(apply).toHaveBeenCalledTimes(1);
+            expect(apply).toHaveBeenCalledWith(talent, actor, { showNotification: true, depth: 0 });
         });
 
-        it(`[${system}] a talent without hasGrants applies nothing on drop`, async () => {
-            const awareness = makeSkill('sk-aware', 'Awareness');
-            const actor = makeActor(system, [awareness]);
-            const inert = {
-                id: 't',
-                type: 'talent',
-                name: 'Inert',
-                system: { hasGrants: false, grants: { skills: [{ name: 'Awareness', level: 'trained' }] } },
-                flags: {},
-            };
+        it(`[${system}] a talent without hasGrants applies nothing`, async () => {
+            const apply = vi.spyOn(GrantsManager, 'applyItemGrants');
+            await processTalentGrants(makeTalent({ hasGrants: false }), makeActor(system));
+            expect(apply).not.toHaveBeenCalled();
+        });
 
-            // eslint-disable-next-line no-restricted-syntax -- test boundary: structural mock of a grant-less talent (hasGrants:false) to assert the early return
-            await processTalentGrants(inert as unknown as WH40KItem, actor);
-
-            expect(awareness.update).not.toHaveBeenCalled();
+        it(`[${system}] a non-talent item applies nothing`, async () => {
+            const apply = vi.spyOn(GrantsManager, 'applyItemGrants');
+            await processTalentGrants(makeTalent({ type: 'weapon' }), makeActor(system));
+            expect(apply).not.toHaveBeenCalled();
         });
     }
 });
 
-describe('talent grant lifecycle — on-delete removes granted items (#304 regression gate)', () => {
+describe('talent grant lifecycle — on-delete reverses via GrantsManager (#304)', () => {
     for (const system of SYSTEMS) {
-        it(`[${system}] confirming removal deletes exactly the items this talent granted`, async () => {
-            const granted = makeGranted('g1', 'Granted Ability', 'talent-1');
-            const other = makeGranted('g2', 'Unrelated', 'some-other-talent');
-            const actor = makeActor(system, [granted, other]);
-            const talent = makeTalent({ skills: [] }, 'talent-1');
-            vi.stubGlobal('Dialog', { confirm: vi.fn(async () => Promise.resolve(true)) });
+        it(`[${system}] removing a talent reverses exactly what it applied, keyed by its source`, async () => {
+            const reverse = vi.spyOn(GrantsManager, 'reverseAppliedGrants').mockResolvedValue({ success: true, reversed: {}, notifications: [], errors: [] });
+            const talent = makeTalent({ uuid: 'Actor.actor-1.Item.talent-1' });
+            const actor = makeActor(system);
 
-            await handleGrantRemoval(talent, actor);
+            await handleTalentRemoval(talent, actor);
 
-            expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledTimes(1);
-            expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('Item', ['g1']);
+            expect(reverse).toHaveBeenCalledTimes(1);
+            expect(reverse).toHaveBeenCalledWith(actor, GrantsManager.sourceKeyFor(talent));
         });
 
-        it(`[${system}] declining removal deletes nothing`, async () => {
-            const granted = makeGranted('g1', 'Granted Ability', 'talent-1');
-            const actor = makeActor(system, [granted]);
-            const talent = makeTalent({ skills: [] }, 'talent-1');
-            vi.stubGlobal('Dialog', { confirm: vi.fn(async () => Promise.resolve(false)) });
-
-            await handleGrantRemoval(talent, actor);
-
-            expect(actor.deleteEmbeddedDocuments).not.toHaveBeenCalled();
-        });
-
-        it(`[${system}] a talent that granted nothing prompts nothing and deletes nothing`, async () => {
-            const actor = makeActor(system, [makeGranted('g2', 'Unrelated', 'some-other-talent')]);
-            const talent = makeTalent({ skills: [] }, 'talent-1');
-            const confirm = vi.fn(async () => Promise.resolve(true));
-            vi.stubGlobal('Dialog', { confirm });
-
-            await handleGrantRemoval(talent, actor);
-
-            expect(confirm).not.toHaveBeenCalled();
-            expect(actor.deleteEmbeddedDocuments).not.toHaveBeenCalled();
+        it(`[${system}] removing a non-talent reverses nothing`, async () => {
+            const reverse = vi.spyOn(GrantsManager, 'reverseAppliedGrants');
+            await handleTalentRemoval(makeTalent({ type: 'trait' }), makeActor(system));
+            expect(reverse).not.toHaveBeenCalled();
         });
     }
 });

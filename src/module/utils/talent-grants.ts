@@ -1,48 +1,50 @@
 /**
- * Talent Grants System - Wrapper for Unified Grants Processor
+ * Talent grant lifecycle — thin bridge from the base-actor descendant hooks to the
+ * unified GrantsManager engine (#304).
  *
- * Backward compatibility layer for talent grant processing.
- * Now uses the unified GrantsProcessor for all grant operations.
+ * GrantsManager (`managers/grants-manager.ts` + `data/grant/*`) is the single grant
+ * engine; the former GrantsProcessor was removed. On drop we apply the talent's
+ * grants idempotently (so re-adding the same talent does not double-grant); on
+ * delete we reverse exactly what that talent applied, keyed by the same source key.
+ *
+ * GrantsManager is loaded via dynamic import inside each function — base-actor.ts
+ * statically imports this module, and GrantsManager transitively evaluates the grant
+ * DataModels (`extends foundry.abstract.DataModel`) at module-load. Deferring the
+ * import to call time (when Foundry is live) keeps the actor import chain free of
+ * that eval, exactly as the former GrantsProcessor bridge did.
  */
 
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
-import { GrantsProcessor, GRANT_MODE } from './grants-processor.ts';
 
 /**
- * Process grants from a newly added talent.
- * Automatically creates granted items and applies skill training.
+ * Apply grants from a newly added talent (auto-creates granted items, applies skill
+ * training, etc.) via GrantsManager. Idempotent per talent source key.
  *
- * @param {WH40KItem} talent - The talent item that was added
- * @param {WH40KActor} actor - The actor receiving the talent
- * @param {number} [depth=0] - Current recursion depth (prevents infinite loops)
- * @returns {Promise<void>}
+ * @param talent - The talent item that was added
+ * @param actor - The actor receiving the talent
+ * @param depth - Current recursion depth (suppresses nested notifications)
  */
 export async function processTalentGrants(talent: WH40KItemDocument, actor: WH40KBaseActorDocument, depth = 0): Promise<void> {
     if (talent.type !== 'talent') return;
-
-    // Check if this talent grants anything
     if (talent.system.hasGrants !== true) return;
 
-    // Use unified processor in immediate mode
-    await GrantsProcessor.processGrants(talent, actor, {
-        mode: GRANT_MODE.IMMEDIATE,
-        depth: depth,
-        maxDepth: 3,
+    const { GrantsManager } = await import('../managers/grants-manager.ts');
+    await GrantsManager.applyItemGrants(talent, actor, {
         showNotification: depth === 0,
-        sourceItem: talent,
+        depth,
     });
 }
 
 /**
- * Handle removal of a talent that granted other items.
- * Optionally removes granted items if user confirms.
+ * Reverse the grants a talent applied when it is removed from an actor, keyed by the
+ * same source key GrantsManager applied them under (deletes granted items, reverts
+ * skill upgrades, restores resource bonuses) and clears the applied-grants flag entry.
  *
- * @param {WH40KItem} talent - The talent being removed
- * @param {WH40KActor} actor - The actor losing the talent
- * @returns {Promise<void>}
+ * @param talent - The talent being removed
+ * @param actor - The actor losing the talent
  */
 export async function handleTalentRemoval(talent: WH40KItemDocument, actor: WH40KBaseActorDocument): Promise<void> {
-    // Forward to unified handler
-    const { handleGrantRemoval } = await import('./grants-processor.ts');
-    await handleGrantRemoval(talent, actor);
+    if (talent.type !== 'talent') return;
+    const { GrantsManager } = await import('../managers/grants-manager.ts');
+    await GrantsManager.reverseAppliedGrants(actor, GrantsManager.sourceKeyFor(talent));
 }
