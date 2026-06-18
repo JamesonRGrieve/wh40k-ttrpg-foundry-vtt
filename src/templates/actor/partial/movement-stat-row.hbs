@@ -1,9 +1,10 @@
 {{!--
-    Movement stat row — single Half/Full/Charge/Run row for compact movement panels.
+    Movement stat row — one Half/Full/Charge/Run/Disengage row for the compact
+    combat movement cluster (#235). Doubles as the in-combat move-mode selector.
 
     Hash params:
         label        — required (e.g. "Half")
-        value        — required (numeric)
+        value        — required (numeric distance)
         icon         — FA class (e.g. "fa-walking")
         iconBgGrad   — required CSS gradient string for icon circle background
         iconColor    — required CSS color string for icon glyph
@@ -11,8 +12,12 @@
         unit         — optional, default "m"
         action       — optional data-action name; when set the row becomes a clickable control
         movementType — optional value for data-movement-type (e.g. "half"); paired with `action`
+        actionCost   — optional badge text (e.g. "½", "1") for the action this move spends
+        active       — optional; highlights the row as the currently-selected move mode
+        disabled     — optional; greys the row and drops its data-action (turn-gated — not the player's turn)
+        title        — optional tooltip
 --}}
-<div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]{{#if action}} tw-cursor-pointer{{/if}}" style="background:var(--color-bg-option);border-color:var(--color-border-light);"{{#if action}} data-action="{{action}}" data-movement-type="{{movementType}}"{{/if}}>
+<div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]{{#if action}}{{#unless disabled}} tw-cursor-pointer{{/unless}}{{/if}}{{#if disabled}} tw-opacity-50 tw-pointer-events-none{{/if}}" style="background:{{#if active}}rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.18){{else}}var(--color-bg-option){{/if}};border-color:{{#if active}}var(--wh40k-accent-gold,#d4a520){{else}}var(--color-border-light){{/if}};"{{#if action}}{{#unless disabled}} data-action="{{action}}" data-movement-type="{{movementType}}"{{/unless}}{{/if}}{{#if title}} data-tooltip="{{title}}"{{/if}} aria-pressed="{{#if active}}true{{else}}false{{/if}}">
     <div class="tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2] tw-text-[0.9rem]" style="background:{{iconBgGrad}};color:{{iconColor}};">
         <i class="fas {{icon}}"></i>
     </div>
@@ -20,5 +25,7 @@
         <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px] tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" style="color:var(--wh40k-text-muted);">{{label}}</span>
         <span class="tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none" style="color:var(--color-text-primary);">{{value}}<span class="tw-text-[0.8rem] tw-font-normal tw-ml-[2px]" style="color:var(--wh40k-text-muted);">{{#if unit}}{{unit}}{{else}}m{{/if}}</span></span>
     </div>
+    {{#if actionCost}}<span class="tw-z-[2] tw-shrink-0 tw-text-[0.7rem] tw-font-semibold tw-px-[6px] tw-py-[2px] tw-rounded-[4px]" style="background:var(--color-bg-option);color:var(--wh40k-text-muted);border:1px solid var(--color-border-light);">{{actionCost}}</span>{{/if}}
+    {{#if active}}<i class="fas fa-circle-check tw-z-[2] tw-shrink-0" style="color:var(--wh40k-accent-gold,#d4a520);" aria-hidden="true"></i>{{/if}}
     <div class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1] tw-transition-[width]" style="width:{{fillPercent}}%;background:linear-gradient(90deg,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.08) 0%,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.02) 100%);border-right:2px solid rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.2);"></div>
 </div>

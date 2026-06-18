@@ -32,14 +32,9 @@
             This panel keeps only the non-per-weapon actions: combat talents, movement,
             reactions, and utility tools. }}
 
-        {{! MOVEMENT ACTIONS }}
-        {{> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
-            heading="Movement Actions"
-            icon="fa-walking"
-            items=dh.combatActions.movement
-            mode="action"
-            dataAction="vocalizeCombatAction"
-            actionColor="--wh40k-accent-equipment"}}
+        {{! Movement is the Movement cluster (movement-panel-compact) — the single, }}
+        {{! turn-gated move-mode selector (Half/Full/Charge/Run/Disengage). It replaces }}
+        {{! the former duplicate Movement Actions group here (#235). }}
 
         {{! REACTION ACTIONS }}
         {{#> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs

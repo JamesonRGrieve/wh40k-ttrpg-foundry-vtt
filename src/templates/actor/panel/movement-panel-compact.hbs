@@ -1,39 +1,65 @@
-{{! Modern Compact Movement Panel for Combat Tab }}
-{{! Sleek, dense design with visual hierarchy }}
+{{! Combat movement cluster (#235) — the single in-combat move-mode selector. }}
+{{! Half / Full / Charge / Run / Disengage toggles: each shows its distance + action }}
+{{! cost, the selected mode is highlighted, and the whole cluster greys out (turn-gated) }}
+{{! when it is not this player's turn. Selecting a mode sets the token's move mode, which }}
+{{! the preUpdateToken enforcement reads to budget the turn (Charge/Run raise the allowance). }}
 
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
-    label="Movement"
+    label=(localize "WH40K.MOVEMENT.Label")
     icon="fa-running"
     headerClass="tw-border-b-gold bc:tw-border-b-crimson-light dh1:tw-border-b-gold-raw-l5 dh2:tw-border-b-gold-raw dw:tw-border-b-accent-combat ow:tw-border-b-brass-l20 rt:tw-border-b-gold im:tw-border-b-failure"}}
+    {{#if combatMovement.inCombat}}
+        <div class="tw-flex tw-items-center tw-justify-between tw-mb-[8px] tw-px-1 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">
+            {{#if combatMovement.disabled}}
+                <span><i class="fas fa-hourglass-half tw-mr-[4px]"></i>{{localize "WH40K.MOVEMENT.NotYourTurn"}}</span>
+            {{else}}
+                <span><i class="fas fa-gauge-high tw-mr-[4px]"></i>{{localize "WH40K.MOVEMENT.RemainingThisTurn" remaining=combatMovement.remaining}}</span>
+            {{/if}}
+        </div>
+    {{/if}}
     <div class="tw-flex tw-flex-col tw-gap-[8px]">
         {{> systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs
-            label="Half" value=system.movement.half icon="fa-walking" fillPercent=25
-            action="vocalizeMovement" movementType="half"
+            label=(localize "WH40K.MOVEMENT.Stat.Half") value=system.movement.half icon="fa-walking" fillPercent=25
+            action="setMovementMode" movementType="half" actionCost="½"
+            active=(eq combatMovement.selectedMode "half") disabled=combatMovement.disabled
+            title=(localize "WH40K.MOVEMENT.Tooltip.Half")
             iconBgGrad="linear-gradient(135deg,rgba(from var(--wh40k-accent-green-bright,#4caf50) r g b/0.15) 0%,rgba(from var(--wh40k-accent-green-bright,#4caf50) r g b/0.05) 100%)"
             iconColor="var(--wh40k-accent-green,#388e3c)"}}
 
         {{> systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs
-            label="Full" value=system.movement.full icon="fa-shoe-prints" fillPercent=50
-            action="vocalizeMovement" movementType="full"
+            label=(localize "WH40K.MOVEMENT.Stat.Full") value=system.movement.full icon="fa-shoe-prints" fillPercent=50
+            action="setMovementMode" movementType="full" actionCost="1"
+            active=(eq combatMovement.selectedMode "full") disabled=combatMovement.disabled
+            title=(localize "WH40K.MOVEMENT.Tooltip.Full")
             iconBgGrad="linear-gradient(135deg,rgba(from var(--wh40k-accent-info,#3498db) r g b/0.15) 0%,rgba(from var(--wh40k-accent-info,#3498db) r g b/0.05) 100%)"
             iconColor="#2980b9"}}
 
         {{> systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs
-            label="Charge" value=system.movement.charge icon="fa-running" fillPercent=75
-            action="vocalizeMovement" movementType="charge"
+            label=(localize "WH40K.MOVEMENT.Stat.Charge") value=system.movement.charge icon="fa-running" fillPercent=75
+            action="setMovementMode" movementType="charge" actionCost="1"
+            active=(eq combatMovement.selectedMode "charge") disabled=combatMovement.disabled
+            title=(localize "WH40K.MOVEMENT.Tooltip.Charge")
             iconBgGrad="linear-gradient(135deg,rgba(243,156,18,0.15) 0%,rgba(243,156,18,0.05) 100%)"
             iconColor="#e67e22"}}
 
         {{> systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs
-            label="Run" value=system.movement.run icon="fa-wind" fillPercent=100
-            action="vocalizeMovement" movementType="run"
+            label=(localize "WH40K.MOVEMENT.Stat.Run") value=system.movement.run icon="fa-wind" fillPercent=100
+            action="setMovementMode" movementType="run" actionCost="1"
+            active=(eq combatMovement.selectedMode "run") disabled=combatMovement.disabled
+            title=(localize "WH40K.MOVEMENT.Tooltip.Run")
             iconBgGrad="linear-gradient(135deg,rgba(from var(--wh40k-accent-red,#c0392b) r g b/0.15) 0%,rgba(from var(--wh40k-accent-red,#c0392b) r g b/0.05) 100%)"
             iconColor="#c0392b"}}
+
+        {{> systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs
+            label=(localize "WH40K.MOVEMENT.Stat.Disengage") value=system.movement.half icon="fa-right-from-bracket" fillPercent=25
+            action="setMovementMode" movementType="disengage" actionCost="1"
+            active=(eq combatMovement.selectedMode "disengage") disabled=combatMovement.disabled
+            title=(localize "WH40K.MOVEMENT.Tooltip.Disengage")
+            iconBgGrad="linear-gradient(135deg,rgba(from var(--wh40k-accent-purple,#8e44ad) r g b/0.15) 0%,rgba(from var(--wh40k-accent-purple,#8e44ad) r g b/0.05) 100%)"
+            iconColor="#8e44ad"}}
     </div>
 
-    {{!-- Carrying Capacity (Lift / Push) — relocated here from the Overview Vitals card.
-         Mirrors the carrying-capacity block in movement-panel-full, using the shared
-         stat-grid-section partial. --}}
+    {{!-- Carrying Capacity (Lift / Push) — relocated here from the Overview Vitals card. --}}
     {{> systems/wh40k-rpg/templates/actor/partial/stat-grid-section
         heading=(localize "WH40K.MOVEMENT.CarryingCapacity")
         headingIcon="fa-weight-hanging"

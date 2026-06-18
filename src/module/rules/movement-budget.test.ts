@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { evaluateCombatMovement, turnMovementAllowance } from './movement-budget.ts';
+import { combatMovementView, evaluateCombatMovement, turnMovementAllowance } from './movement-budget.ts';
 
 const base = { enforced: true, isActorsTurn: true, movedThisTurnMetres: 0, requestedMetres: 5, allowanceMetres: 10 };
 
@@ -59,6 +59,11 @@ describe('turnMovementAllowance', () => {
         expect(turnMovementAllowance(rates, 'run')).toBe(24);
     });
 
+    it('treats Disengage as a half-rate move', () => {
+        expect(turnMovementAllowance(rates, 'disengage')).toBe(4);
+        expect(turnMovementAllowance({ full: 8 }, 'disengage')).toBe(8); // no half rate → full fallback
+    });
+
     it('falls back to the full move when the selected mode has no rate', () => {
         expect(turnMovementAllowance({ full: 8 }, 'charge')).toBe(8);
     });
@@ -66,5 +71,37 @@ describe('turnMovementAllowance', () => {
     it('returns 0 (unknown) when rates are missing', () => {
         expect(turnMovementAllowance(undefined, undefined)).toBe(0);
         expect(turnMovementAllowance({}, 'run')).toBe(0);
+    });
+});
+
+describe('combatMovementView', () => {
+    const rates = { half: 4, full: 8, charge: 12, run: 24 };
+
+    it('is enabled and shows remaining allowance on the actor’s turn', () => {
+        const view = combatMovementView({ inCombat: true, isActorsTurn: true, isGM: false, selectedMode: 'charge', rates, movedThisTurnMetres: 4 });
+        expect(view.disabled).toBe(false);
+        expect(view.selectedMode).toBe('charge');
+        expect(view.remaining).toBe(8); // 12 charge − 4 moved
+    });
+
+    it('disables (turn-gates) a player when it is not their turn', () => {
+        const view = combatMovementView({ inCombat: true, isActorsTurn: false, isGM: false, selectedMode: 'full', rates, movedThisTurnMetres: 0 });
+        expect(view.disabled).toBe(true);
+    });
+
+    it('never disables a GM — GMs move freely', () => {
+        const view = combatMovementView({ inCombat: true, isActorsTurn: false, isGM: true, selectedMode: 'full', rates, movedThisTurnMetres: 0 });
+        expect(view.disabled).toBe(false);
+    });
+
+    it('is never disabled out of combat', () => {
+        const view = combatMovementView({ inCombat: false, isActorsTurn: false, isGM: false, selectedMode: undefined, rates, movedThisTurnMetres: 0 });
+        expect(view.disabled).toBe(false);
+        expect(view.inCombat).toBe(false);
+    });
+
+    it('clamps remaining at 0 once the budget is spent', () => {
+        const view = combatMovementView({ inCombat: true, isActorsTurn: true, isGM: false, selectedMode: 'full', rates, movedThisTurnMetres: 10 });
+        expect(view.remaining).toBe(0); // 8 full − 10 moved → clamped
     });
 });

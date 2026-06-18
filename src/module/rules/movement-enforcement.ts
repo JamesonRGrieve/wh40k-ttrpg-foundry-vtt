@@ -73,7 +73,7 @@ function writeMovedMetres(combatant: LooseCombatant | null | undefined, metres: 
 /** The token's selected move mode (the move-mode toggle flag); undefined when unset/invalid → full move. */
 function readMovementMode(token: LooseToken): MovementMode | undefined {
     const raw = (token as FlagAccessor | null | undefined)?.getFlag?.(SYSTEM_ID, MOVEMENT_MODE_FLAG);
-    return raw === 'half' || raw === 'full' || raw === 'charge' || raw === 'run' ? raw : undefined;
+    return raw === 'half' || raw === 'full' || raw === 'charge' || raw === 'run' || raw === 'disengage' ? raw : undefined;
 }
 
 /** Metres a token move covers, from the position delta and the scene grid. */

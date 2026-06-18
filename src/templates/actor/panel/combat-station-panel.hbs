@@ -234,8 +234,9 @@
                         </div>
                         {{/unless}}
 
-                        {{!-- Mobility — shared compact movement panel (DRY with the purpose-built
-                             movement-panel-compact partial; rows stay click-to-announce via vocalizeMovement). #234 --}}
+                        {{!-- Movement — the consolidated move-mode cluster (movement-panel-compact):
+                             Half/Full/Charge/Run/Disengage toggles that set the move mode, gate the
+                             per-turn budget, and grey out off-turn for players. #235 --}}
                         {{> systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs}}
                         </div>
 
