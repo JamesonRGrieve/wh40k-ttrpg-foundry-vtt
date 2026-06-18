@@ -26,6 +26,7 @@ import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
+import { cloneGrantedItemData } from './grant-materialize.ts';
 import { type NormalizedChoice, type NormalizedChoiceOption, type NormalizedOrigin, normalizeOrigin } from './normalized-origin.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
@@ -37,7 +38,6 @@ import type {
     CoreFlags,
     EquipmentEntry,
     ItemDataLike,
-    ItemSystemLike,
     PreviewGrantEntry,
     PreviewSummary,
 } from './types.ts';
@@ -5273,14 +5273,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // eslint-disable-next-line no-await-in-loop -- sequential: each item needs its own compendium lookup and clone
             const source = await fromUuid(uuid);
             if (!source) continue;
-            const sourceDoc = source as { toObject?: () => ItemDataLike };
-            const itemData: ItemDataLike = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as ItemDataLike);
-            delete itemData._id;
-            const flags: { core?: CoreFlags } & Record<string, CoreFlags | undefined> = itemData.flags ?? {};
-            const core: CoreFlags = flags.core ?? {};
-            core.sourceId = uuid;
-            flags.core = core;
-            itemData.flags = flags;
+            const itemData = cloneGrantedItemData(source, { sourceId: uuid });
 
             if (equipEntry.type === 'ammunition') {
                 // Size user-picked ammo to one clip of the primary ranged weapon that supports it.
@@ -5377,26 +5370,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (!source) continue;
             const sourceDoc = source as { name?: string; type?: string; toObject?: () => ItemDataLike };
             if (sourceDoc.type !== 'talent') continue;
-            const itemData: ItemDataLike = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as ItemDataLike);
-            delete itemData._id;
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- `.system ?? {}` is banned by the repo's no-restricted-syntax rule for DataModel-backed fields
-            const itemSystem: ItemSystemLike & { specialization?: string } = itemData.system === undefined ? {} : itemData.system;
-            itemData.system = itemSystem;
-            if (plan.specialization !== undefined && plan.specialization !== '') {
-                itemSystem.specialization = plan.specialization;
-            }
+            const itemData = cloneGrantedItemData(source, { sourceId: plan.uuid, originPathGranted: true, specialization: plan.specialization });
             const name = typeof itemData.name === 'string' ? itemData.name : sourceDoc.name ?? '';
             const dedupKey = `${name}::${normSpec(plan.specialization)}`;
             if (seenKeys.has(dedupKey)) continue;
             seenKeys.add(dedupKey);
             if (actorHasTalent(name, plan.specialization)) continue;
-
-            const itemFlags: { 'core'?: CoreFlags; 'wh40k-rpg'?: { originPathGranted?: boolean } } & ItemDataLike['flags'] = itemData.flags ?? {};
-            itemFlags.core = itemFlags.core ?? {};
-            itemFlags.core.sourceId = plan.uuid;
-            itemFlags['wh40k-rpg'] = itemFlags['wh40k-rpg'] ?? {};
-            itemFlags['wh40k-rpg'].originPathGranted = true;
-            itemData.flags = itemFlags;
 
             toCreate.push(itemData);
         }
