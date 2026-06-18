@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { WITHIN_GRENADES, listWithinGrenades } from '../../src/module/rules/within-grenades.ts';
-import templateSrc from '../../src/templates/prompt/grenade-throw-dialog.hbs?raw';
-import { renderSheet } from '../test-helpers';
+import templateSrc from '../../../../src/templates/prompt/grenade-throw-dialog.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
+import { WITHIN_GRENADES, listWithinGrenades } from '../../rules/within-grenades.ts';
 
 interface Args {
     selectedId: string;

@@ -340,6 +340,26 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
         title: 'Prompts/SpecialistSkillDialog',
         exports: ['NoSkillSelected', 'WithPreselectedSkillAndSpecializations', 'ActionButtonsDispatch'],
     },
+    {
+        title: 'Prompts/WeaponAttackDialog',
+        exports: ['RangedAttack', 'MeltaShortRange', 'WeaponSelect'],
+    },
+    {
+        title: 'Prompts/PsychicPowerDialog',
+        exports: ['FocusPower', 'WithRatingBonus', 'PowerSelect'],
+    },
+    {
+        title: 'Prompts/WarpTravelDialog',
+        exports: ['InputsOnly', 'ResolvedJourney', 'OffCourseJourney'],
+    },
+    {
+        title: 'Prompts/UnifiedRollDialog',
+        exports: ['CharacteristicTest', 'ManualSuccess', 'AthleticsClimb'],
+    },
+    {
+        title: 'Prompts/SimpleRollDialog',
+        exports: ['Standard', 'HardTest'],
+    },
 
     // ── src/module/rules/ ────────────────────────────────────────────────
     {

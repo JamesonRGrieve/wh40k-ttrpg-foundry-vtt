@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { SISTER_OF_BATTLE_TALENTS } from '../../src/module/rules/sister-of-battle.ts';
-import templateSrc from '../../src/templates/prompt/sister-of-battle-dialog.hbs?raw';
-import { renderSheet } from '../test-helpers';
+import templateSrc from '../../../../src/templates/prompt/sister-of-battle-dialog.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
+import { SISTER_OF_BATTLE_TALENTS } from '../../rules/sister-of-battle.ts';
 
 interface TalentCard {
     id: string;
