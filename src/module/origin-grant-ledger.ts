@@ -158,14 +158,14 @@ function valueAtPath(system: object, path: string): unknown {
 }
 
 /**
- * Reverse-then-add resource reconciliation shared by every origin/grant applier
- * (`WH40KItem.applyOriginToActor`, `GrantsProcessor.applyGrants`).
+ * Reverse-then-add resource reconciliation used by `WH40KItem.applyOriginToActor`
+ * (and available to any future origin/grant applier).
  *
  * For each characteristic and configured resource it computes
  * `current − priorDelta + contribution`, so re-applying the same contribution
  * converges instead of stacking — the ledger idempotency invariant. The
  * resource→path map is a parameter, NOT collapsed: `applyOriginToActor` writes
- * `wounds.max` / `fate.total` only, while `GrantsProcessor` writes
+ * `wounds.max` / `fate.total` only, while a resource-grant applier might write
  * `wounds.value`+`.max` / `fate.value`+`.max` plus threshold / corruption /
  * insanity — each passes its own {@link ResourcePathMap}. A resource's single
  * prior reverses across all of its configured sub-paths. Characteristics the

@@ -101,7 +101,7 @@ export interface ItemDataLike {
  * loosely onto fields the builder reads from origin-paths, weapons, and
  * ammunition — concrete typings live in each DataModel.
  */
-export interface ItemSystemLike {
+interface ItemSystemLike {
     step?: string;
     identifier?: string;
     quantity?: number;
