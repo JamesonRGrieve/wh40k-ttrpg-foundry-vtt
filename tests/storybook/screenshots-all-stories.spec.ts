@@ -360,6 +360,14 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
         title: 'Prompts/SimpleRollDialog',
         exports: ['Standard', 'HardTest'],
     },
+    {
+        title: 'Chat/Condition Card',
+        exports: ['Harmful', 'Beneficial', 'Neutral'],
+    },
+    {
+        title: 'Chat/Critical Injury Card',
+        exports: ['ImpactMajor', 'EnergyFatalPermanent', 'RendingArm'],
+    },
 
     // ── src/module/rules/ ────────────────────────────────────────────────
     {
