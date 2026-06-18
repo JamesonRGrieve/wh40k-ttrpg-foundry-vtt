@@ -59,17 +59,22 @@ export function evaluateCombatMovement(input: MovementEvaluationInput): Movement
     return { allowed: true, reason: 'ok', remaining: Math.max(0, remaining - requested) };
 }
 
+/** The four combat move modes a player selects (the move-mode toggle / token flag). */
+export type MovementMode = 'half' | 'full' | 'charge' | 'run';
+
 /**
- * The metres a combatant may move this turn: a full move, raised to charge/run
- * when that movement action has been spent this turn. Returns the largest
- * applicable rate (0 when none are known → caller treats as "unknown").
+ * The metres a combatant may move this turn for the **selected move mode** — the
+ * in-combat move-mode toggle (persisted as the token's `movementAction` flag).
+ * Half/Full are the half-/full-action moves; Charge/Run are the full-action moves
+ * that raise the allowance to their larger rate. Falls back to the full move when
+ * the mode is unset or its rate is unknown; 0 when no rate is known (caller treats
+ * 0 as "unknown" → budget not enforced).
  */
 export function turnMovementAllowance(
-    rates: { full?: number; charge?: number; run?: number } | undefined,
-    spent: { charge?: boolean; run?: boolean } | undefined,
+    rates: { half?: number; full?: number; charge?: number; run?: number } | undefined,
+    mode: MovementMode | undefined,
 ): number {
     if (rates === undefined) return 0;
-    if (spent?.run === true && typeof rates.run === 'number') return rates.run;
-    if (spent?.charge === true && typeof rates.charge === 'number') return rates.charge;
+    if (mode !== undefined && typeof rates[mode] === 'number') return rates[mode];
     return typeof rates.full === 'number' ? rates.full : 0;
 }

@@ -45,19 +45,26 @@ describe('evaluateCombatMovement', () => {
 });
 
 describe('turnMovementAllowance', () => {
-    it('defaults to a full move', () => {
-        expect(turnMovementAllowance({ full: 8, charge: 12, run: 24 }, {})).toBe(8);
+    const rates = { half: 4, full: 8, charge: 12, run: 24 };
+
+    it('defaults to a full move when no mode is selected', () => {
+        expect(turnMovementAllowance(rates, undefined)).toBe(8);
         expect(turnMovementAllowance({ full: 8 }, undefined)).toBe(8);
     });
 
-    it('raises to charge / run when that action was spent (run wins)', () => {
-        expect(turnMovementAllowance({ full: 8, charge: 12, run: 24 }, { charge: true })).toBe(12);
-        expect(turnMovementAllowance({ full: 8, charge: 12, run: 24 }, { run: true })).toBe(24);
-        expect(turnMovementAllowance({ full: 8, charge: 12, run: 24 }, { charge: true, run: true })).toBe(24);
+    it('returns the rate for the selected move mode', () => {
+        expect(turnMovementAllowance(rates, 'half')).toBe(4);
+        expect(turnMovementAllowance(rates, 'full')).toBe(8);
+        expect(turnMovementAllowance(rates, 'charge')).toBe(12);
+        expect(turnMovementAllowance(rates, 'run')).toBe(24);
+    });
+
+    it('falls back to the full move when the selected mode has no rate', () => {
+        expect(turnMovementAllowance({ full: 8 }, 'charge')).toBe(8);
     });
 
     it('returns 0 (unknown) when rates are missing', () => {
-        expect(turnMovementAllowance(undefined, {})).toBe(0);
-        expect(turnMovementAllowance({}, { run: true })).toBe(0);
+        expect(turnMovementAllowance(undefined, undefined)).toBe(0);
+        expect(turnMovementAllowance({}, 'run')).toBe(0);
     });
 });
