@@ -9,11 +9,23 @@
  * All downstream code works exclusively with NormalizedOrigin.
  */
 
-import type { Grant } from '../../utils/grants-processor.ts';
-
 /* -------------------------------------------- */
 /*  Raw input shapes (unvalidated compendium)   */
 /* -------------------------------------------- */
+
+/**
+ * A single legacy grant entry as authored on origin/talent compendium docs
+ * (`system.grants.{skills,talents,traits,equipment,specialAbilities}`). Formerly
+ * exported from the removed GrantsProcessor; kept local to the normalizer that
+ * consumes it (the runtime grant engine is GrantsManager + `data/grant/*`).
+ */
+interface Grant {
+    name: string;
+    level?: string | number;
+    specialization?: string;
+    uuid?: string;
+    quantity?: number;
+}
 
 /** Minimal type guard — narrows unknown to a plain object we can index */
 // eslint-disable-next-line no-restricted-syntax -- boundary: isRecord is the validation entry point; `unknown` is narrowed to Record<string,unknown> on the next line via typeof/instanceof checks
