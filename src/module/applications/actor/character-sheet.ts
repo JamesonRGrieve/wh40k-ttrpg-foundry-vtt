@@ -89,6 +89,7 @@ import {
     type OpposedStrengthInput,
 } from '../../rules/grapple.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
+import { combatMovementView } from '../../rules/movement-budget.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
 import {
@@ -164,6 +165,8 @@ type CharacterSheetContext = Record<string, unknown> & {
         armour?: Record<string, unknown>;
     };
     dh?: Record<string, unknown> & { combatActions?: { attacks?: Array<{ subtypes?: string[] }> } };
+    /** Combat move-mode cluster state (#235) — drives the movement panel toggles. */
+    combatMovement?: { inCombat: boolean; disabled: boolean; selectedMode: string | undefined; remaining: number };
     // Explicit declarations to avoid TS4111 (noPropertyAccessFromIndexSignature) on the
     // intersected Record<string, unknown> for all known sheet-context fields written by
     // _prepareContext / _preparePartContext / _prepareCombatData / _prepareLoadoutData / ...
@@ -2620,6 +2623,32 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * Combat move-mode cluster state (#235): the selected move mode + whether the
+     * cluster is turn-gated (greyed) for this player + metres left this turn. GMs are
+     * never gated — they move freely — and out of combat nothing is gated.
+     */
+    #computeCombatMovement(): { inCombat: boolean; disabled: boolean; selectedMode: string | undefined; remaining: number } {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.combat / Combatant / TokenDocument flags are loosely-typed Foundry runtime surfaces, read defensively
+        const combat = game.combat as { started?: boolean; combatant?: { actorId?: string | null; getFlag?: (s: string, k: string) => unknown } | null } | null;
+        const inCombat = combat?.started === true;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: TokenDocument.getFlag returns Foundry's untyped flag payload
+        const token = this.actor.getActiveTokens()[0]?.document as { getFlag?: (s: string, k: string) => unknown } | undefined;
+        const rawMode = token?.getFlag?.('wh40k-rpg', 'movementAction');
+        const selectedMode =
+            rawMode === 'half' || rawMode === 'full' || rawMode === 'charge' || rawMode === 'run' || rawMode === 'disengage' ? rawMode : undefined;
+        const combatant = combat?.combatant;
+        const moved = Number(combatant?.getFlag?.('wh40k-rpg', 'movedThisTurnMetres') ?? 0);
+        return combatMovementView({
+            inCombat,
+            isActorsTurn: combatant?.actorId === this.actor.id,
+            isGM: game.user.isGM,
+            selectedMode,
+            rates: this.actor.system.movement,
+            movedThisTurnMetres: Number.isFinite(moved) ? moved : 0,
+        });
+    }
+
+    /**
      * Prepare combat tab data for the template.
      * @param {object} context      The template render context.
      * @param {object} categorized  Categorized items.
@@ -2634,6 +2663,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         this.#prepareCombatVitals(sheetContext, system);
         this.#prepareCombatReactionTargets(sheetContext);
+        sheetContext.combatMovement = this.#computeCombatMovement();
 
         // Critical injuries
         sheetContext.criticalInjuries = categorized.criticalInjury;
@@ -3864,7 +3894,11 @@ export default class CharacterSheet extends BaseActorSheet {
             | undefined;
         const movementConfig = config?.[movementType];
         const label = movementConfig ? game.i18n.localize(movementConfig.label ?? movementType) : movementType;
-        const speed = this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
+        // Disengage moves at the Half rate (full action, no reactions provoked) and has no own movement entry.
+        const speed =
+            movementType === 'disengage'
+                ? this.actor.system.movement.half
+                : this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
         ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }
 

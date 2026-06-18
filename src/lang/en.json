@@ -552,6 +552,8 @@
         "Movement": "Movement",
         "MOVEMENT": {
             "Label": "Movement",
+            "RemainingThisTurn": "{remaining} m left this turn",
+            "NotYourTurn": "Not this combatant's turn",
             "Type": {
                 "Half": "Half Move",
                 "Full": "Full Move",
@@ -567,6 +569,7 @@
                 "Full": "Full",
                 "Charge": "Charge",
                 "Run": "Run",
+                "Disengage": "Disengage",
                 "LeapVertical": "Leap (V)",
                 "LeapHorizontal": "Leap (H)",
                 "LeapVerticalLong": "Leap Vertical",
@@ -580,10 +583,11 @@
                 "Carrying": "Carrying"
             },
             "Tooltip": {
-                "Half": "Click to set Half Move as active movement mode",
-                "Full": "Click to set Full Move as active movement mode",
-                "Charge": "Click to set Charge as active movement mode",
-                "Run": "Click to set Run as active movement mode",
+                "Half": "Click to set Half Move as active movement mode (half action)",
+                "Full": "Click to set Full Move as active movement mode (full action)",
+                "Charge": "Click to set Charge as active movement mode (full action) — raises your turn allowance to the Charge rate",
+                "Run": "Click to set Run as active movement mode (full action) — raises your turn allowance to the Run rate",
+                "Disengage": "Click to set Disengage as active movement mode (full action) — move up to your Half rate without provoking reactions",
                 "LeapVertical": "Standing vertical leap height",
                 "LeapHorizontal": "Running horizontal leap distance",
                 "Jump": "Vertical jump height in centimeters",

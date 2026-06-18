@@ -11,15 +11,15 @@ import { expect, test } from '@playwright/test';
 const SHOT_DIR = resolve(__dirname, '..', '..', '.e2e-screenshots');
 const SHOT = resolve(SHOT_DIR, 'issue-234-movement-compact.png');
 
-test('issue #234: compact movement panel renders Half/Full/Charge/Run', async ({ page }) => {
+test('issue #234/#235: compact movement cluster renders Half/Full/Charge/Run/Disengage', async ({ page }) => {
     mkdirSync(SHOT_DIR, { recursive: true });
-    await page.goto('/iframe.html?id=actor-character-movementpanelcompact--default&viewMode=story');
+    await page.goto('/iframe.html?id=actor-character-movementpanelcompact--out-of-combat&viewMode=story');
     await page.waitForSelector('.wh40k-panel', { timeout: 10_000 });
     await page.screenshot({ path: SHOT, fullPage: true });
 
     // Labels are CSS-uppercased; compare case-insensitively.
     const text = (await page.locator('.wh40k-panel').innerText()).replace(/\s+/g, ' ').toUpperCase();
-    for (const label of ['HALF', 'FULL', 'CHARGE', 'RUN']) {
+    for (const label of ['HALF', 'FULL', 'CHARGE', 'RUN', 'DISENGAGE']) {
         expect(text).toContain(label);
     }
     // The four rates from the story args (4 / 8 / 12 / 24 m).

@@ -59,22 +59,60 @@ export function evaluateCombatMovement(input: MovementEvaluationInput): Movement
     return { allowed: true, reason: 'ok', remaining: Math.max(0, remaining - requested) };
 }
 
-/** The four combat move modes a player selects (the move-mode toggle / token flag). */
-export type MovementMode = 'half' | 'full' | 'charge' | 'run';
+/** The combat move modes a player selects (the move-mode toggle / token flag). */
+export type MovementMode = 'half' | 'full' | 'charge' | 'run' | 'disengage';
+
+/** Movement rates derived on the actor (metres). */
+export interface MovementRates {
+    half?: number;
+    full?: number;
+    charge?: number;
+    run?: number;
+}
 
 /**
  * The metres a combatant may move this turn for the **selected move mode** — the
  * in-combat move-mode toggle (persisted as the token's `movementAction` flag).
- * Half/Full are the half-/full-action moves; Charge/Run are the full-action moves
- * that raise the allowance to their larger rate. Falls back to the full move when
- * the mode is unset or its rate is unknown; 0 when no rate is known (caller treats
- * 0 as "unknown" → budget not enforced).
+ * Half is the half-action move; Full/Charge/Run/Disengage are full-action moves —
+ * Charge/Run raise the allowance to their larger rate, Disengage moves at the Half
+ * rate (no reactions provoked). Falls back to the full move when the mode is unset
+ * or its rate is unknown; 0 when no rate is known (caller treats 0 as "unknown" →
+ * budget not enforced).
  */
-export function turnMovementAllowance(
-    rates: { half?: number; full?: number; charge?: number; run?: number } | undefined,
-    mode: MovementMode | undefined,
-): number {
+export function turnMovementAllowance(rates: MovementRates | undefined, mode: MovementMode | undefined): number {
     if (rates === undefined) return 0;
+    if (mode === 'disengage') return typeof rates.half === 'number' ? rates.half : rates.full ?? 0;
     if (mode !== undefined && typeof rates[mode] === 'number') return rates[mode];
     return typeof rates.full === 'number' ? rates.full : 0;
+}
+
+/** Combat-tab move-mode cluster view (#235): what the move-mode toggles render. */
+export interface CombatMovementView {
+    /** True during an active encounter — show the per-turn budget line + states. */
+    inCombat: boolean;
+    /** True when the cluster should grey out / turn-gate (in combat, not this actor's turn, not GM). */
+    disabled: boolean;
+    /** The currently-selected move mode (highlighted toggle), if any. */
+    selectedMode: MovementMode | undefined;
+    /** Metres still available this turn for the selected mode (clamped at 0). */
+    remaining: number;
+}
+
+/**
+ * Compute the move-mode cluster view from combat state. Pure: the sheet gathers the
+ * Foundry state (combat started, whose turn, GM, the token's selected mode, metres
+ * moved) and this derives the render flags. GMs are never disabled — they move freely.
+ */
+export function combatMovementView(input: {
+    inCombat: boolean;
+    isActorsTurn: boolean;
+    isGM: boolean;
+    selectedMode: MovementMode | undefined;
+    rates: MovementRates | undefined;
+    movedThisTurnMetres: number;
+}): CombatMovementView {
+    const disabled = input.inCombat && !input.isActorsTurn && !input.isGM;
+    const allowance = turnMovementAllowance(input.rates, input.selectedMode);
+    const remaining = allowance > 0 ? Math.max(0, allowance - Math.max(0, input.movedThisTurnMetres)) : 0;
+    return { inCombat: input.inCombat, disabled, selectedMode: input.selectedMode, remaining };
 }

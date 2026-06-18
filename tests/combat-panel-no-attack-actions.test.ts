@@ -2,7 +2,8 @@
  * Regression guard (#227): per-weapon attack actions are NOT listed on the combat
  * panel — they belong on the weapon attack dialog (opened from a weapon, where a
  * target / RoF mode / modifiers are chosen). The panel keeps only the non-per-weapon
- * actions: combat talents, movement, reactions, and utility tools.
+ * actions: combat talents, reactions, and utility tools. (Movement moved to the
+ * dedicated turn-gated move-mode cluster in #235.)
  */
 
 import { describe, expect, it } from 'vitest';
@@ -22,10 +23,13 @@ describe('combat panel no longer lists per-weapon attack actions (#227)', () => 
     });
 
     it('keeps the non-per-weapon action groups', () => {
-        expect(panel).toContain('heading="Movement Actions"');
         expect(panel).toContain('heading="Reactions"');
         expect(panel).toContain('heading="Combat Talents"');
         expect(panel).toContain('heading="Utility Actions"');
+    });
+
+    it('drops the Movement Actions group — movement is the dedicated move-mode cluster (#235)', () => {
+        expect(panel).not.toContain('heading="Movement Actions"');
     });
 
     it('the sheet no longer partitions attacks into melee/ranged/general for the panel', () => {

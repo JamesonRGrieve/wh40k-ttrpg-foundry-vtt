@@ -1,9 +1,11 @@
 /**
- * Storybook stories for the compact movement panel (#234). This panel is
- * purpose-built for the combat tab and is now wired into combat-station-panel
- * in place of the old inline mobility block. The rows are click-to-announce
- * (data-action="vocalizeMovement") via the optional action param on
- * movement-stat-row, so the combat behaviour is preserved by the DRY swap.
+ * Storybook stories for the combat movement cluster (#235 / #234). This Combat-tab
+ * panel is the single in-combat move-mode selector: Half/Full/Charge/Run/Disengage
+ * toggles (`data-action="setMovementMode"`), each showing its distance + action
+ * cost, the selected mode highlighted, and the whole cluster greyed/turn-gated when
+ * it is not the player's turn. The `combatMovement` context (selectedMode / disabled
+ * / remaining / inCombat) drives those states; the sheet computes it from combat
+ * state (GM is never greyed — GMs move freely).
  *
  * Values are fixed for screenshot-diff stability (no Math.random).
  */
@@ -14,19 +16,28 @@ import panelSrc from './movement-panel-compact.hbs?raw';
 
 initializeStoryHandlebars();
 
+interface CombatMovementCtx {
+    inCombat: boolean;
+    disabled: boolean;
+    selectedMode?: string;
+    remaining?: number;
+}
 interface MovementCompactCtx {
     system: {
         movement: { half: number; full: number; charge: number; run: number };
         lifting: { lift: number; push: number };
     };
+    combatMovement?: CombatMovementCtx;
+    _system?: string;
 }
+
+const RATES = { half: 4, full: 8, charge: 12, run: 24 };
+const LIFTING = { lift: 90, push: 225 };
 
 function renderPanel(ctx: MovementCompactCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
-    wrapper.dataset['wh40kSystem'] = 'dh2';
-    // Constrain width to the combat panel's vitals-column footprint so the
-    // composed look matches where this panel actually renders.
+    wrapper.dataset['wh40kSystem'] = ctx._system ?? 'dh2';
     wrapper.style.maxWidth = '280px';
     wrapper.appendChild(renderSheet(panelSrc, ctx));
     return wrapper;
@@ -38,13 +49,45 @@ const meta: Meta<MovementCompactCtx> = {
 export default meta;
 type Story = StoryObj<MovementCompactCtx>;
 
-export const Default: Story = {
-    name: 'Compact movement panel — Half/Full/Charge/Run + Carrying Capacity',
+export const OutOfCombat: Story = {
+    name: 'Out of combat — all modes selectable, no turn budget',
+    args: { system: { movement: RATES, lifting: LIFTING } },
+    render: (args) => renderPanel(args),
+};
+
+export const YourTurnChargeSelected: Story = {
+    name: 'Your turn — Charge selected, allowance raised to 12m',
     args: {
-        system: {
-            movement: { half: 4, full: 8, charge: 12, run: 24 },
-            lifting: { lift: 90, push: 225 },
-        },
+        system: { movement: RATES, lifting: LIFTING },
+        combatMovement: { inCombat: true, disabled: false, selectedMode: 'charge', remaining: 12 },
+    },
+    render: (args) => renderPanel(args),
+};
+
+export const YourTurnBudgetLow: Story = {
+    name: 'Your turn — Full move, 3m left this turn',
+    args: {
+        system: { movement: RATES, lifting: LIFTING },
+        combatMovement: { inCombat: true, disabled: false, selectedMode: 'full', remaining: 3 },
+    },
+    render: (args) => renderPanel(args),
+};
+
+export const NotYourTurn: Story = {
+    name: 'Not your turn — cluster greyed + turn-gated',
+    args: {
+        system: { movement: RATES, lifting: LIFTING },
+        combatMovement: { inCombat: true, disabled: true, selectedMode: 'full' },
+    },
+    render: (args) => renderPanel(args),
+};
+
+export const RogueTraderYourTurn: Story = {
+    name: 'Per-system (RT) — Run selected',
+    args: {
+        system: { movement: RATES, lifting: LIFTING },
+        combatMovement: { inCombat: true, disabled: false, selectedMode: 'run', remaining: 24 },
+        _system: 'rt',
     },
     render: (args) => renderPanel(args),
 };

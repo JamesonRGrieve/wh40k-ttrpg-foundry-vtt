@@ -361,6 +361,10 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
         exports: ['Active', 'Hidden'],
     },
     {
+        title: 'Actor/Character/MovementPanelCompact',
+        exports: ['OutOfCombat', 'YourTurnChargeSelected', 'YourTurnBudgetLow', 'NotYourTurn', 'RogueTraderYourTurn'],
+    },
+    {
         title: 'Actor/Starship/ShipPointsBudgetPanel',
         exports: ['CleanBuild', 'OverBudget', 'MissingEssentialSlot'],
     },
