@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { WITHIN_HOMEWORLDS, WITHIN_HOMEWORLD_IDS } from '../../src/module/rules/within-homeworlds.ts';
-import templateSrc from '../../src/templates/prompt/within-homeworld-info-dialog.hbs?raw';
-import { renderSheet } from '../test-helpers';
+import templateSrc from '../../../../src/templates/prompt/within-homeworld-info-dialog.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
+import { WITHIN_HOMEWORLDS, WITHIN_HOMEWORLD_IDS } from '../../rules/within-homeworlds.ts';
 
 interface Args {
     showAll: boolean;

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/radical-services-dialog.hbs?raw';
-import { clickAction, renderSheet } from '../test-helpers';
+import templateSrc from '../../../../src/templates/prompt/radical-services-dialog.hbs?raw';
+import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
 interface ServiceRow {
     id: string;

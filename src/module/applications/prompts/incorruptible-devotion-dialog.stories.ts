@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/incorruptible-devotion-dialog.hbs?raw';
-import { clickAction, renderSheet } from '../test-helpers';
+import templateSrc from '../../../../src/templates/prompt/incorruptible-devotion-dialog.hbs?raw';
+import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
 interface Args {
     corruptionAmount: number;
