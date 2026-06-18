@@ -861,9 +861,9 @@ export class WH40KItem extends WH40KItemContainer {
         const priorDelta = readOriginDelta(actor.flags, identityKey);
         const md = deltaFromModifiers(modifiers);
 
-        // Reverse-then-add reconcile (shared with GrantsProcessor). This applier
-        // writes `wounds.max` / `fate.total` only — its resource→path map differs
-        // from the processor's, which is why the map is a parameter.
+        // Reverse-then-add reconcile via the shared origin-grant-ledger helper. This
+        // applier writes `wounds.max` / `fate.total` only — its resource→path map is a
+        // parameter so other appliers can write a different set of paths.
         const { updates: resourceUpdates, newDelta } = reconcileResourceDeltas(
             actor.system,
             { characteristics: md.characteristics, resources: { wounds: md.wounds, fate: md.fate } },
