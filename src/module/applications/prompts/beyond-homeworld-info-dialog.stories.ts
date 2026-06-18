@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { listBeyondHomeworlds } from '../../src/module/rules/beyond-homeworlds';
-import templateSrc from '../../src/templates/prompt/beyond-homeworld-info-dialog.hbs?raw';
-import { renderSheet } from '../test-helpers';
+import { listBeyondHomeworlds } from '../../../../src/module/rules/beyond-homeworlds';
+import templateSrc from '../../../../src/templates/prompt/beyond-homeworld-info-dialog.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 /**
  * Storybook stories for BeyondHomeworldInfoDialog (GitHub #140).

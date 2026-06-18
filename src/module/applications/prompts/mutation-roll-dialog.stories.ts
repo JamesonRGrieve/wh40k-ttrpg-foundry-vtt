@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { TRACK_RANGES, type MutationTrack } from '../../src/module/rules/mutation-table.ts';
-import templateSrc from '../../src/templates/prompt/mutation-roll-dialog.hbs?raw';
-import { renderSheet } from '../test-helpers';
+import templateSrc from '../../../../src/templates/prompt/mutation-roll-dialog.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
+import { TRACK_RANGES, type MutationTrack } from '../../rules/mutation-table.ts';
 
 interface Args {
     track: MutationTrack;

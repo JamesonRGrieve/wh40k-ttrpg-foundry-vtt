@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import templateSrc from '../../src/templates/prompt/right-stuff-dialog.hbs?raw';
-import { renderSheet } from '../test-helpers';
+import templateSrc from '../../../../src/templates/prompt/right-stuff-dialog.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 /**
  * Dialog story for the Ace role's Right Stuff Fate spend
