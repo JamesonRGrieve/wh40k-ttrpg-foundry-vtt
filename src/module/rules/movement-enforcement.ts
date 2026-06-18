@@ -14,9 +14,11 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
-import { evaluateCombatMovement, type MovementEvaluation, turnMovementAllowance } from './movement-budget.ts';
+import { evaluateCombatMovement, type MovementEvaluation, type MovementMode, turnMovementAllowance } from './movement-budget.ts';
 
 const MOVED_FLAG = 'movedThisTurnMetres';
+/** Token flag the move-mode toggle (`setMovementMode`) writes — half/full/charge/run. */
+const MOVEMENT_MODE_FLAG = 'movementAction';
 
 export interface TokenMoveDecisionInput {
     automation: 'full' | 'display' | 'none';
@@ -39,7 +41,12 @@ export function decideTokenMove(input: TokenMoveDecisionInput): MovementEvaluati
 }
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry TokenDocument / Combat / Combatant / canvas.grid are loosely typed framework surfaces; reads are structural and guarded, all wrapped in allow-on-error */
-type LooseToken = { id?: string | null; x?: number; y?: number; actor?: { system?: { movement?: { full?: number; charge?: number; run?: number } } } | null };
+type LooseToken = {
+    id?: string | null;
+    x?: number;
+    y?: number;
+    actor?: { system?: { movement?: { half?: number; full?: number; charge?: number; run?: number } } } | null;
+};
 // Kept minimal so Foundry's Combat/Combatant are structurally assignable to it
 // (its getFlag/setFlag carry a narrow scope type that a `string` param rejects).
 type LooseCombatant = { tokenId?: string | null };
@@ -61,6 +68,12 @@ function readMovedMetres(combatant: LooseCombatant | null | undefined): number {
 function writeMovedMetres(combatant: LooseCombatant | null | undefined, metres: number): void {
     const setFlag = (combatant as FlagAccessor | null | undefined)?.setFlag;
     if (typeof setFlag === 'function') void setFlag(SYSTEM_ID, MOVED_FLAG, metres);
+}
+
+/** The token's selected move mode (the move-mode toggle flag); undefined when unset/invalid → full move. */
+function readMovementMode(token: LooseToken): MovementMode | undefined {
+    const raw = (token as FlagAccessor | null | undefined)?.getFlag?.(SYSTEM_ID, MOVEMENT_MODE_FLAG);
+    return raw === 'half' || raw === 'full' || raw === 'charge' || raw === 'run' ? raw : undefined;
 }
 
 /** Metres a token move covers, from the position delta and the scene grid. */
@@ -92,7 +105,7 @@ function onPreUpdateToken(tokenDoc: LooseToken, changes: { x?: number | null | u
             isActorsTurn: combat.combatant?.tokenId === tokenDoc.id,
             movedThisTurnMetres: readMovedMetres(combat.combatant),
             requestedMetres: measureMoveMetres(tokenDoc, changes),
-            allowanceMetres: turnMovementAllowance(tokenDoc.actor?.system?.movement, {}),
+            allowanceMetres: turnMovementAllowance(tokenDoc.actor?.system?.movement, readMovementMode(tokenDoc)),
         });
 
         if (!decision.allowed) {
