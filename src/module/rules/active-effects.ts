@@ -81,7 +81,7 @@ export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void>
     };
     const rollTotal = context.roll?.total ?? 0;
     const target = context.target ?? 0;
-    context.success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
+    context.success = isD100Success(rollTotal, target);
 
     const damageRoll = new Roll('1d10', {});
     await damageRoll.evaluate();
