@@ -9,11 +9,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate as renderTpl, mockActor } from '../../../../stories/mocks';
+import { mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/extended';
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { clickAction, assertField } from '../../../../stories/test-helpers';
+import { clickAction, assertField, renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/actor/voidcraft/header.hbs?raw';
 import crewTabSrc from '../../../templates/actor/voidcraft/tab-crew.hbs?raw';
 import extendedActionsTabSrc from '../../../templates/actor/voidcraft/tab-extended-actions.hbs?raw';
@@ -25,24 +25,38 @@ initializeStoryHandlebars();
 
 const rng = seedRandom(0xca5cade5);
 
-const headerTpl = Hbs.compile(headerSrc);
-const tabsTpl = Hbs.compile(tabsSrc);
-const statsTabTpl = Hbs.compile(statsTabSrc);
-const extendedActionsTabTpl = Hbs.compile(extendedActionsTabSrc);
-const crewTabTpl = Hbs.compile(crewTabSrc);
 const shipWeaponChatTpl = Hbs.compile(shipWeaponChatSrc);
 
+/** Actor types are `<systemId>-<role>`; the prefix is the active game-system id. */
+function systemIdOf(ctx: SheetContextLike): string {
+    const [systemId = 'rt'] = ctx.actor.type.split('-');
+    return systemId;
+}
+
+/**
+ * Render the resolved ship-weapon-firing chat card under a `.wh40k-rpg` +
+ * `data-wh40k-system` ancestor so Tailwind utilities (scoped by
+ * `important: '.wh40k-rpg'`) and per-system variants both cascade — chat cards
+ * render outside any sheet root at runtime (CLAUDE.md "Adaptation procedure 3a").
+ */
+function renderShipWeaponChatCard(args: ShipWeaponChatCtx): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'wh40k-rpg tw-p-4';
+    wrapper.setAttribute('data-wh40k-system', args.gameSystem);
+    wrapper.innerHTML = shipWeaponChatTpl(args);
+    return wrapper;
+}
+
 function renderVoidcraftSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = Hbs.compile(`
-        <div class="tw-flex tw-flex-col">
-            ${headerTpl(ctx)}
-            ${tabsTpl(ctx)}
-            <main class="wh40k-body tw-p-2">
-                ${statsTabTpl(ctx)}
-            </main>
-        </div>
-    `);
-    return renderTpl(tpl, ctx);
+    return renderSheetParts(
+        [
+            { template: headerSrc },
+            { template: tabsSrc },
+            { template: statsTabSrc, partClass: 'wh40k-body tw-p-2' },
+        ],
+        ctx,
+        { systemId: systemIdOf(ctx) },
+    );
 }
 
 // Seed the RNG to keep subsequent randomId calls deterministic
@@ -193,16 +207,17 @@ const issue186ExtendedActions = [
 ];
 
 function renderExtendedActionsPanel(ctx: SheetContextLike): HTMLElement {
-    const tpl = Hbs.compile(`
-        <div class="wh40k-rpg voidcraft sheet tw-flex tw-flex-col" data-wh40k-system="rt">
-            ${headerTpl(ctx)}
-            ${tabsTpl(ctx)}
-            <main class="wh40k-body tw-p-2">
-                ${extendedActionsTabTpl(ctx)}
-            </main>
-        </div>
-    `);
-    return renderTpl(tpl, ctx);
+    const panel = renderSheetParts(
+        [
+            { template: headerSrc },
+            { template: tabsSrc },
+            { template: extendedActionsTabSrc, partClass: 'wh40k-body tw-p-2' },
+        ],
+        ctx,
+        { systemId: systemIdOf(ctx) },
+    );
+    panel.classList.add('voidcraft', 'tw-flex', 'tw-flex-col');
+    return panel;
 }
 
 // ── Issue #184 — Macrobattery Firing chat card ──────────────────────────────
@@ -303,16 +318,7 @@ function mockShipWeaponChatCtx(overrides?: Partial<ShipWeaponChatCtx>): ShipWeap
 export const MacrobatteryFiring: StoryObj<ShipWeaponChatCtx> = {
     name: 'Issue #184 — Macrobattery Firing chat card',
     args: mockShipWeaponChatCtx(),
-    render: (args) => {
-        const wrapper = document.createElement('div');
-        // Outer `.wh40k-rpg` ancestor is required so Tailwind utilities scoped
-        // by `important: '.wh40k-rpg'` actually take effect. Per-system
-        // variants then cascade from `data-wh40k-system="rt"`.
-        wrapper.className = 'wh40k-rpg tw-p-4';
-        wrapper.setAttribute('data-wh40k-system', args.gameSystem);
-        wrapper.innerHTML = shipWeaponChatTpl(args);
-        return wrapper;
-    },
+    render: (args) => renderShipWeaponChatCard(args),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         // Weapon name and per-class label both render.
@@ -366,13 +372,7 @@ export const LanceFiring: StoryObj<ShipWeaponChatCtx> = {
             hullMax: 35,
         },
     }),
-    render: (args) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'wh40k-rpg tw-p-4';
-        wrapper.setAttribute('data-wh40k-system', args.gameSystem);
-        wrapper.innerHTML = shipWeaponChatTpl(args);
-        return wrapper;
-    },
+    render: (args) => renderShipWeaponChatCard(args),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         await expect(storyCanvas.getByText('Titanforge Lance')).toBeVisible();
@@ -404,13 +404,7 @@ export const MacrobatteryMiss: StoryObj<ShipWeaponChatCtx> = {
             hullMax: 35,
         },
     }),
-    render: (args) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'wh40k-rpg tw-p-4';
-        wrapper.setAttribute('data-wh40k-system', args.gameSystem);
-        wrapper.innerHTML = shipWeaponChatTpl(args);
-        return wrapper;
-    },
+    render: (args) => renderShipWeaponChatCard(args),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         await expect(storyCanvas.getByText(/Miss/i)).toBeVisible();
@@ -425,16 +419,17 @@ export const MacrobatteryMiss: StoryObj<ShipWeaponChatCtx> = {
 // reflects the document's state change.
 
 function renderCrewPanel(ctx: SheetContextLike): HTMLElement {
-    const tpl = Hbs.compile(`
-        <div class="wh40k-rpg voidcraft sheet tw-flex tw-flex-col" data-wh40k-system="rt">
-            ${headerTpl(ctx)}
-            ${tabsTpl(ctx)}
-            <main class="wh40k-body tw-p-2">
-                ${crewTabTpl(ctx)}
-            </main>
-        </div>
-    `);
-    return renderTpl(tpl, ctx);
+    const panel = renderSheetParts(
+        [
+            { template: headerSrc },
+            { template: tabsSrc },
+            { template: crewTabSrc, partClass: 'wh40k-body tw-p-2' },
+        ],
+        ctx,
+        { systemId: systemIdOf(ctx) },
+    );
+    panel.classList.add('voidcraft', 'tw-flex', 'tw-flex-col');
+    return panel;
 }
 
 const crewTabCtxBase: SheetContextLike = {

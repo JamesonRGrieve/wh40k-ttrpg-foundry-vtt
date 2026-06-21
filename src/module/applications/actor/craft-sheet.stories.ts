@@ -8,13 +8,12 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate as renderTpl, mockActor } from '../../../../stories/mocks';
+import { mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/extended';
 import { mockVehicleSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { assertField, submitForm } from '../../../../stories/test-helpers';
+import { assertField, submitForm, renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/actor/craft/header.hbs?raw';
 import overviewTabSrc from '../../../templates/actor/craft/tab-overview.hbs?raw';
 import tabsSrc from '../../../templates/actor/craft/tabs.hbs?raw';
@@ -23,21 +22,22 @@ initializeStoryHandlebars();
 
 const rng = seedRandom(0xf00dcafe);
 
-const headerTpl = HBS.compile(headerSrc);
-const tabsTpl = HBS.compile(tabsSrc);
-const overviewTpl = HBS.compile(overviewTabSrc);
+/** Actor types are `<systemId>-<role>`; the prefix is the active game-system id. */
+function systemIdOf(ctx: SheetContextLike): string {
+    const [systemId = 'dh2'] = ctx.actor.type.split('-');
+    return systemId;
+}
 
 function renderCraftSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = HBS.compile(`
-        <div class="tw-flex tw-flex-col">
-            ${headerTpl(ctx)}
-            ${tabsTpl(ctx)}
-            <main class="wh40k-body tw-p-2">
-                ${overviewTpl(ctx)}
-            </main>
-        </div>
-    `);
-    return renderTpl(tpl, ctx);
+    return renderSheetParts(
+        [
+            { template: headerSrc },
+            { template: tabsSrc },
+            { template: overviewTabSrc, partClass: 'wh40k-body tw-p-2' },
+        ],
+        ctx,
+        { systemId: systemIdOf(ctx) },
+    );
 }
 
 const meta: Meta<SheetContextLike> = {
