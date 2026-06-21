@@ -13,6 +13,8 @@
  * +10 / +20 is appropriate to surface at all.
  */
 
+import { nonNegInt } from './_num.ts';
+
 /** Maximum assistants the engine will count toward the bonus. */
 export const DEFAULT_ASSISTANT_CAP = 2;
 
@@ -22,6 +24,6 @@ export const DEFAULT_ASSISTANT_CAP = 2;
  */
 export function getAssistanceBonus(assistants: number, cap: number = DEFAULT_ASSISTANT_CAP): number {
     if (!Number.isFinite(assistants)) return 0;
-    const n = Math.max(0, Math.min(Math.trunc(assistants), Math.max(0, Math.trunc(cap))));
+    const n = Math.min(nonNegInt(assistants), nonNegInt(cap));
     return n * 10;
 }

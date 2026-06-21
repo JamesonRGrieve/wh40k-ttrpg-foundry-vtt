@@ -9,6 +9,8 @@
  * engine only manages the IP tally and threshold detection.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export const INQUEST_THRESHOLDS: readonly number[] = [200, 400, 600, 900, 1200];
 
 export interface InquestState {
@@ -28,8 +30,8 @@ export interface InquestState {
  * Useful for emitting a "revelation unlocked" chat card once per crossing.
  */
 export function inquestRevelationsCrossed(oldIP: number, newIP: number): number {
-    const a = Math.max(0, Math.trunc(oldIP));
-    const b = Math.max(0, Math.trunc(newIP));
+    const a = nonNegInt(oldIP);
+    const b = nonNegInt(newIP);
     if (b <= a) return 0;
     let crossed = 0;
     for (const t of INQUEST_THRESHOLDS) {
@@ -40,7 +42,7 @@ export function inquestRevelationsCrossed(oldIP: number, newIP: number): number 
 
 /** Current revelation tier (0–5) given an IP tally. */
 export function getCurrentRevelationTier(ip: number): number {
-    const v = Math.max(0, Math.trunc(ip));
+    const v = nonNegInt(ip);
     let tier = 0;
     for (const t of INQUEST_THRESHOLDS) {
         if (v >= t) tier += 1;

@@ -20,6 +20,8 @@
  * exposes the threshold math + status predicates.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export interface FatigueThresholdInput {
     /** Actor's Toughness bonus (tens digit). */
     toughnessBonus: number;
@@ -29,8 +31,8 @@ export interface FatigueThresholdInput {
 
 /** RAW (errata L113): Fatigue Threshold = TB + WPB. */
 export function getFatigueThreshold(input: FatigueThresholdInput): number {
-    const tb = Math.max(0, Math.trunc(input.toughnessBonus));
-    const wpb = Math.max(0, Math.trunc(input.willpowerBonus));
+    const tb = nonNegInt(input.toughnessBonus);
+    const wpb = nonNegInt(input.willpowerBonus);
     return tb + wpb;
 }
 
@@ -48,7 +50,7 @@ export interface FatigueStateInput {
  * (10 − TB) minutes per RAW.
  */
 export function isFatigueUnconscious(input: FatigueStateInput): boolean {
-    const level = Math.max(0, Math.trunc(input.fatigueLevel));
+    const level = nonNegInt(input.fatigueLevel);
     const threshold = getFatigueThreshold(input);
     return level > threshold;
 }
@@ -57,7 +59,7 @@ export function isFatigueUnconscious(input: FatigueStateInput): boolean {
  * Whether the actor has hit 2× threshold → death (errata L113).
  */
 export function isFatigueDeath(input: FatigueStateInput): boolean {
-    const level = Math.max(0, Math.trunc(input.fatigueLevel));
+    const level = nonNegInt(input.fatigueLevel);
     const threshold = getFatigueThreshold(input);
     return level > threshold * 2;
 }
@@ -67,7 +69,7 @@ export function isFatigueDeath(input: FatigueStateInput): boolean {
  * 10 − Toughness bonus, floored at 1 minute.
  */
 export function getFatigueUnconsciousMinutes(toughnessBonus: number): number {
-    const tb = Math.max(0, Math.trunc(toughnessBonus));
+    const tb = nonNegInt(toughnessBonus);
     return Math.max(1, 10 - tb);
 }
 
@@ -81,8 +83,8 @@ export function getFatigueUnconsciousMinutes(toughnessBonus: number): number {
  *          fatigue level 4, characteristic bonus 5 → NOT halved.
  */
 export function isCharacteristicHalvedByFatigue(characteristicBonus: number, fatigueLevel: number): boolean {
-    const bonus = Math.max(0, Math.trunc(characteristicBonus));
-    const level = Math.max(0, Math.trunc(fatigueLevel));
+    const bonus = nonNegInt(characteristicBonus);
+    const level = nonNegInt(fatigueLevel);
     if (level === 0) return false;
     return bonus < level;
 }
@@ -93,6 +95,6 @@ export function isCharacteristicHalvedByFatigue(characteristicBonus: number, fat
  * remaining level — RAW: "6 hours removes all").
  */
 export function getFatigueRecoveredAfterRest(hoursOfRest: number): number {
-    const hours = Math.max(0, Math.trunc(Number.isFinite(hoursOfRest) ? hoursOfRest : 0));
+    const hours = nonNegInt(hoursOfRest);
     return Math.min(6, hours);
 }

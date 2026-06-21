@@ -10,6 +10,8 @@
  * test math. The math is identical in both modes.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export type AvailabilityKey =
     | 'ubiquitous'
     | 'abundant'
@@ -81,5 +83,5 @@ export function getRequisitionTestTarget(input: RequisitionTestInput): Requisiti
  */
 export function applyInfluenceLossOnBigFailure(currentInfluence: number, dof: number): number {
     if (dof >= 3) return Math.max(0, Math.trunc(currentInfluence) - 1);
-    return Math.max(0, Math.trunc(currentInfluence));
+    return nonNegInt(currentInfluence);
 }

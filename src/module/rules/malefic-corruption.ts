@@ -11,6 +11,8 @@
  * resolver in a follow-up.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export type PsyDiscipline = 'biomancy' | 'divination' | 'pyromancy' | 'telekinesis' | 'telepathy' | 'malefic' | 'sanctic' | 'daemonology' | 'minor';
 
 /**
@@ -21,6 +23,6 @@ export type PsyDiscipline = 'biomancy' | 'divination' | 'pyromancy' | 'telekines
 export function getMaleficCorruptionCost(discipline: PsyDiscipline, effectivePR: number, success: boolean): number {
     if (!success) return 0;
     if (discipline !== 'malefic') return 0;
-    const pr = Math.max(0, Math.trunc(effectivePR));
+    const pr = nonNegInt(effectivePR);
     return pr;
 }

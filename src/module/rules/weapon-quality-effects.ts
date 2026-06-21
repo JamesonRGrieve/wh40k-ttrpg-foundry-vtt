@@ -23,6 +23,7 @@
 
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
+import { nonNegInt } from './_num.ts';
 import { getWeaponQualityMechanics } from './weapon-quality-payloads.ts';
 
 type AttackSpecialLike = {
@@ -479,8 +480,8 @@ export function resolveScatterRangeBand(rangeName: string | undefined): number {
  */
 export function resolveHitEffectSaveTarget(opts: { characteristicTotal: number; key: string; level: number }): number {
     const penalty = getWeaponQualityMechanics(opts.key)?.hitEffect.saveTargetPenaltyPerLevel ?? 0;
-    const safeLevel = Math.max(0, Math.trunc(opts.level));
-    const total = Math.max(0, Math.trunc(opts.characteristicTotal));
+    const safeLevel = nonNegInt(opts.level);
+    const total = nonNegInt(opts.characteristicTotal);
     return Math.max(0, total + penalty * safeLevel);
 }
 
@@ -489,7 +490,7 @@ export function resolveHitEffectSaveTarget(opts: { characteristicTotal: number; 
  * Concussive (RAW: 1 round per DoF). Pure: caller passes the DoF and key.
  */
 export function resolveStunDuration(opts: { dof: number; key: 'shocking' | 'concussive' }): number {
-    const dof = Math.max(0, Math.trunc(opts.dof));
+    const dof = nonNegInt(opts.dof);
     if (opts.key === 'shocking') return Math.ceil(dof / 2);
     return dof;
 }
@@ -501,7 +502,7 @@ export function resolveStunDuration(opts: { dof: number; key: 'shocking' | 'conc
  * as a standalone helper for chat-card display layers.
  */
 export function resolveLanceBonus(basePenetration: number, dos: number): number {
-    const pen = Math.max(0, Math.trunc(basePenetration));
+    const pen = nonNegInt(basePenetration);
     const safeDos = Math.max(1, Math.trunc(dos));
     return pen * (safeDos - 1);
 }
@@ -513,8 +514,8 @@ export function resolveLanceBonus(basePenetration: number, dos: number): number 
  * the inline `damage-data.ts:301-307` branch.
  */
 export function resolvePrimitiveDamageAdjust(dieResult: number, level: number): number {
-    const die = Math.max(0, Math.trunc(dieResult));
-    const cap = Math.max(0, Math.trunc(level));
+    const die = nonNegInt(dieResult);
+    const cap = nonNegInt(level);
     return die > cap ? cap - die : 0;
 }
 
@@ -533,7 +534,7 @@ export function resolveGravitonBonusDamage(armourPoints: number | undefined): nu
  * Haywire field radius (metres) for a given X level: X × 10 metres.
  */
 export function resolveHaywireRadius(level: number): number {
-    const safeLevel = Math.max(0, Math.trunc(level));
+    const safeLevel = nonNegInt(level);
     return safeLevel * 10;
 }
 
@@ -542,7 +543,7 @@ export function resolveHaywireRadius(level: number): number {
  * but the helper guards against bogus negatives for safety.
  */
 export function resolveTemplateRadius(level: number): number {
-    return Math.max(0, Math.trunc(level));
+    return nonNegInt(level);
 }
 
 /**
@@ -587,14 +588,14 @@ export function resolvePowerFieldParryDestroys(defenderWeapon: QualityItem | nul
  * Toughness. Returns the per-tick damage value.
  */
 export function resolveCripplingTickDamage(level: number): number {
-    return Math.max(0, Math.trunc(level));
+    return nonNegInt(level);
 }
 
 /**
  * Indirect (X) BS penalty applied to the firer (positive number → penalty).
  */
 export function resolveIndirectPenalty(level: number): number {
-    const n = Math.max(0, Math.trunc(level));
+    const n = nonNegInt(level);
     return n === 0 ? 0 : n * -10;
 }
 

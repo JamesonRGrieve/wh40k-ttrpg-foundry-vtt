@@ -14,6 +14,9 @@
  * mismanifest opposed-Willpower cascade (beyond.md L2095-2116).
  */
 
+import { clampRoll, degreesOfFailure, degreesOfSuccess } from './_dice.ts';
+import { nonNegInt } from './_num.ts';
+
 export type PossessionState = 'none' | 'latent' | 'possessed';
 
 export interface PossessionSlot {
@@ -29,8 +32,8 @@ export interface PossessionSlot {
  */
 export function canUnleashDaemon(slot: PossessionSlot): boolean {
     if (slot.state === 'none') return false;
-    const used = Math.max(0, Math.trunc(slot.unleashUsed));
-    const max = Math.max(0, Math.trunc(slot.unleashMax));
+    const used = nonNegInt(slot.unleashUsed);
+    const max = nonNegInt(slot.unleashMax);
     return used < max;
 }
 
@@ -64,8 +67,8 @@ export function resetSessionUnleash(slot: PossessionSlot): PossessionSlot {
  * Capped at 0 (never returns a negative target).
  */
 export function getResistDaemonTarget(willpowerTotal: number, corruptionPoints: number): number {
-    const wp = Math.max(0, Math.trunc(willpowerTotal));
-    const cp = Math.max(0, Math.trunc(corruptionPoints));
+    const wp = nonNegInt(willpowerTotal);
+    const cp = nonNegInt(corruptionPoints);
     const tier = cp >= 91 ? 3 : cp >= 61 ? 2 : cp >= 31 ? 1 : 0;
     return Math.max(0, wp - 10 * tier);
 }
@@ -114,10 +117,10 @@ export function getResistDaemonTarget(willpowerTotal: number, corruptionPoints: 
  * legal 1..100 d100 range and the target floored at 0.
  */
 function signedDegrees(roll: number, target: number): { passed: boolean; degrees: number } {
-    const r = Math.max(1, Math.min(100, Math.trunc(roll)));
-    const t = Math.max(0, Math.trunc(target));
-    if (r <= t) return { passed: true, degrees: Math.floor((t - r) / 10) + 1 };
-    return { passed: false, degrees: Math.floor((r - t) / 10) + 1 };
+    const r = clampRoll(roll);
+    const t = nonNegInt(target);
+    if (r <= t) return { passed: true, degrees: degreesOfSuccess(r, t) };
+    return { passed: false, degrees: degreesOfFailure(r, t) };
 }
 
 /**
@@ -157,7 +160,7 @@ export interface FrenzyTestResult {
  * @param willpowerTotal  Actor's full Willpower characteristic total.
  */
 export function resolveFrenzyTest(roll: number, willpowerTotal: number): FrenzyTestResult {
-    const target = Math.max(0, Math.trunc(willpowerTotal));
+    const target = nonNegInt(willpowerTotal);
     const { passed, degrees } = signedDegrees(roll, target);
     return {
         passed,
