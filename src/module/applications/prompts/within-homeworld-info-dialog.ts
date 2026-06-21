@@ -8,7 +8,14 @@
  * breakpoint), home-world bonus rules text, key aptitude(s), and
  * starting wounds expression. No actor mutation, no chat card —
  * application of a homeworld to a fresh character lives in its own
- * flow (the registry in `within-homeworlds.ts` is the data source).
+ * flow.
+ *
+ * Per Direction #7 (#338), the mechanical VALUES are read from the
+ * compendium pack `dh2-within-origins-homeworlds` (each home-world is
+ * an `originPath` document) via {@link readHomeworldMechanics}; the
+ * Within supplement carries no supplement-specific riders, so this
+ * dialog holds only DISPLAY config (the per-id label key + accent
+ * palette) and the pack id.
  *
  * Built from the shared info-card-dialog factory (#287), matching the
  * Without / Beyond homeworld info dialogs.
@@ -16,15 +23,22 @@
  * See GitHub issue #139.
  */
 
-import { characteristicLabel, formatCharacteristicMods, formatWounds } from '../../helpers/characteristic-labels.ts';
-import { WITHIN_HOMEWORLDS, WITHIN_HOMEWORLD_IDS, type WithinHomeworldDef, type WithinHomeworldId } from '../../rules/within-homeworlds.ts';
+import { formatCharacteristicMods, formatWounds } from '../../helpers/characteristic-labels.ts';
+import { readHomeworldMechanics, type HomeworldMechanics } from '../../rules/homeworld-compendium.ts';
 import { defineInfoCardDialog } from './define-info-card-dialog.ts';
 
-/** i18n label keys for each homeworld id. */
+/** Fully-qualified compendium pack id holding the Within home-world `originPath` documents. */
+const WITHIN_HOMEWORLD_PACK = 'wh40k-rpg.dh2-within-origins-homeworlds';
+
+/** Compendium `system.identifier` values, in supplement (chapter) order. */
+const WITHIN_HOMEWORLD_IDS = ['agri-world', 'feudal-world', 'frontier-world'] as const;
+type WithinHomeworldId = (typeof WITHIN_HOMEWORLD_IDS)[number];
+
+/** i18n label keys per home-world (keyed by compendium identifier). */
 const HOMEWORLD_LABEL_KEYS: Record<WithinHomeworldId, string> = {
-    agriWorld: 'WH40K.WithinHomeworld.AgriWorld',
-    feudalWorld: 'WH40K.WithinHomeworld.FeudalWorld',
-    frontierWorld: 'WH40K.WithinHomeworld.FrontierWorld',
+    'agri-world': 'WH40K.WithinHomeworld.AgriWorld',
+    'feudal-world': 'WH40K.WithinHomeworld.FeudalWorld',
+    'frontier-world': 'WH40K.WithinHomeworld.FrontierWorld',
 };
 
 /**
@@ -42,17 +56,17 @@ interface AccentClasses {
 }
 
 const HOMEWORLD_ACCENTS: Record<WithinHomeworldId, AccentClasses> = {
-    agriWorld: {
+    'agri-world': {
         border: 'tw-border-amber-600',
         accentText: 'tw-text-amber-300',
         accentBg: 'tw-bg-amber-900/30',
     },
-    feudalWorld: {
+    'feudal-world': {
         border: 'tw-border-emerald-600',
         accentText: 'tw-text-emerald-300',
         accentBg: 'tw-bg-emerald-900/30',
     },
-    frontierWorld: {
+    'frontier-world': {
         border: 'tw-border-yellow-700',
         accentText: 'tw-text-yellow-200',
         accentBg: 'tw-bg-yellow-900/30',
@@ -77,27 +91,35 @@ function localize(key: string): string {
     return game.i18n.localize(key);
 }
 
-function formatFateThreshold(def: WithinHomeworldDef): string {
-    return `${String(def.fateThreshold.base)} (${def.fateThreshold.emperorsBlessingMin.toString()}+)`;
+function formatFateThreshold(mechanics: HomeworldMechanics): string {
+    return `${String(mechanics.fateBase)} (${mechanics.emperorsBlessingMin.toString()}+)`;
 }
 
-/** Build the per-homeworld card view-models injected under `cards` each render. */
-function buildWithinCards(): HomeworldCard[] {
-    return WITHIN_HOMEWORLD_IDS.map((id) => {
-        const def = WITHIN_HOMEWORLDS[id];
-        return {
+/**
+ * Build the per-homeworld card view-models injected under `cards` each
+ * render, reading all mechanical values from the compendium. Unknown ids
+ * (a pack missing a document) are skipped.
+ */
+async function buildWithinCards(): Promise<HomeworldCard[]> {
+    const mechanicsById = await readHomeworldMechanics(WITHIN_HOMEWORLD_PACK);
+    const cards: HomeworldCard[] = [];
+    for (const id of WITHIN_HOMEWORLD_IDS) {
+        const mechanics = mechanicsById.get(id);
+        if (mechanics === undefined) continue;
+        cards.push({
             id,
             labelKey: HOMEWORLD_LABEL_KEYS[id],
             label: localize(HOMEWORLD_LABEL_KEYS[id]),
-            bonusName: def.homeWorldBonus.name,
-            bonusDescription: def.homeWorldBonus.description,
-            characteristicModsLabel: formatCharacteristicMods(def.characteristicMods.positive, def.characteristicMods.negative),
-            fateThresholdLabel: formatFateThreshold(def),
-            woundsLabel: formatWounds(def.wounds.flat, def.wounds.dice, def.wounds.faces),
-            keyAptitudes: def.keyAptitudes.map((c) => characteristicLabel(c)),
+            bonusName: mechanics.bonusName,
+            bonusDescription: mechanics.bonusDescription,
+            characteristicModsLabel: formatCharacteristicMods(mechanics.charModsPositive, mechanics.charModsNegative),
+            fateThresholdLabel: formatFateThreshold(mechanics),
+            woundsLabel: formatWounds(mechanics.woundsFlat, mechanics.woundsDice, mechanics.woundsFaces),
+            keyAptitudes: mechanics.aptitudes,
             accent: HOMEWORLD_ACCENTS[id],
-        };
-    });
+        });
+    }
+    return cards;
 }
 
 /**

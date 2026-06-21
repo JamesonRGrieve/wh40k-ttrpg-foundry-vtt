@@ -2,16 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { WITHOUT_HOMEWORLDS, getWithoutHomeworld, listWithoutHomeworlds } from './without-homeworlds';
 
 /**
- * Contract tests for the Without-supplement new home-world registry
- * (without.md p. 27-32, GitHub issue #102).
+ * Contract tests for the slimmed Without-supplement home-world registry
+ * (without.md p. 27-32, GitHub issues #102 / #338).
  *
- * Pins the RAW values for Death World, Garden World, and Research
- * Station — characteristic mods, Fate threshold (base + Emperor's
- * Blessing trigger), wounds tuple, aptitude, key talents, mechanical
- * hooks, and the riders (Death World surprise-bonus suppression,
- * Garden World Serenity duration / Insanity-XP, Research Station
- * Pursuit-of-Data scholastic-to-forbidden advancement). Drift here
- * means a RAW regression.
+ * Per Direction #7, the basic mechanical values (characteristic mods, Fate
+ * threshold, wounds, aptitude) now live in the compendium and are pinned by
+ * `homeworld-compendium.test.ts`. This suite pins what the registry still
+ * owns: the `compendiumId` join key, the structured riders (Death World
+ * surprise-bonus suppression, Garden World Serenity duration / Insanity-XP,
+ * Research Station Pursuit-of-Data advancement), and the prose fields.
  */
 
 describe('WITHOUT_HOMEWORLDS registry shape', () => {
@@ -19,23 +18,21 @@ describe('WITHOUT_HOMEWORLDS registry shape', () => {
         expect(Object.keys(WITHOUT_HOMEWORLDS).sort()).toEqual(['deathWorld', 'gardenWorld', 'researchStation']);
     });
 
-    it('every entry declares the required fields', () => {
+    it('every entry declares the required slimmed fields', () => {
         for (const def of Object.values(WITHOUT_HOMEWORLDS)) {
             expect(def.id).toBeTruthy();
+            expect(def.compendiumId).toMatch(/^[a-z]+(-[a-z]+)*$/);
             expect(def.label).toMatch(/^WH40K\.WithoutHomeworld\./);
-            expect(def.characteristicMods.bonuses.length).toBeGreaterThan(0);
-            expect(def.characteristicMods.penalties.length).toBeGreaterThan(0);
-            expect(def.fateThreshold.base).toBeGreaterThanOrEqual(2);
-            expect(def.fateThreshold.base).toBeLessThanOrEqual(3);
-            expect(def.fateThreshold.emperorsBlessing).toBeGreaterThanOrEqual(2);
-            expect(def.fateThreshold.emperorsBlessing).toBeLessThanOrEqual(10);
-            expect(def.wounds.dieFaces).toBe(5);
-            expect(def.wounds.base).toBeGreaterThan(0);
-            expect(def.aptitude.length).toBeGreaterThan(0);
             expect(def.keyTalents.length).toBeGreaterThan(0);
             expect(def.recommendedBackgrounds.length).toBeGreaterThan(0);
             expect(def.mechanicalHook.length).toBeGreaterThan(20);
         }
+    });
+
+    it('joins each registry id to its kebab-case compendium identifier', () => {
+        expect(WITHOUT_HOMEWORLDS.deathWorld.compendiumId).toBe('death-world');
+        expect(WITHOUT_HOMEWORLDS.gardenWorld.compendiumId).toBe('garden-world');
+        expect(WITHOUT_HOMEWORLDS.researchStation.compendiumId).toBe('research-station');
     });
 
     it('listWithoutHomeworlds returns all three definitions in a stable order', () => {
@@ -44,9 +41,9 @@ describe('WITHOUT_HOMEWORLDS registry shape', () => {
     });
 
     it('getWithoutHomeworld returns the definition by id', () => {
-        expect(getWithoutHomeworld('deathWorld')?.aptitude).toBe('Fieldcraft');
-        expect(getWithoutHomeworld('gardenWorld')?.aptitude).toBe('Social');
-        expect(getWithoutHomeworld('researchStation')?.aptitude).toBe('Knowledge');
+        expect(getWithoutHomeworld('deathWorld')?.compendiumId).toBe('death-world');
+        expect(getWithoutHomeworld('gardenWorld')?.compendiumId).toBe('garden-world');
+        expect(getWithoutHomeworld('researchStation')?.compendiumId).toBe('research-station');
     });
 
     it('getWithoutHomeworld returns undefined for unknown ids', () => {
@@ -57,23 +54,6 @@ describe('WITHOUT_HOMEWORLDS registry shape', () => {
 
 describe('Death World (without.md p. 27-28)', () => {
     const def = WITHOUT_HOMEWORLDS.deathWorld;
-
-    it('grants +Ag, +Per and applies -Fel', () => {
-        expect(def.characteristicMods.bonuses).toEqual(['agility', 'perception']);
-        expect(def.characteristicMods.penalties).toEqual(['fellowship']);
-    });
-
-    it("uses Fate 2 with Emperor's Blessing on 5+", () => {
-        expect(def.fateThreshold).toEqual({ base: 2, emperorsBlessing: 5 });
-    });
-
-    it('starts with 9 + 1d5 wounds', () => {
-        expect(def.wounds).toEqual({ base: 9, dieFaces: 5 });
-    });
-
-    it('declares the Fieldcraft aptitude', () => {
-        expect(def.aptitude).toBe('Fieldcraft');
-    });
 
     it("grants Survivor's Paranoia (suppresses +30 WS/BS Surprised bonus)", () => {
         expect(def.keyTalents.join(';')).toMatch(/Survivor/);
@@ -91,23 +71,6 @@ describe('Death World (without.md p. 27-28)', () => {
 
 describe('Garden World (without.md p. 29-30)', () => {
     const def = WITHOUT_HOMEWORLDS.gardenWorld;
-
-    it('grants +Fel, +Ag and applies -T', () => {
-        expect(def.characteristicMods.bonuses).toEqual(['fellowship', 'agility']);
-        expect(def.characteristicMods.penalties).toEqual(['toughness']);
-    });
-
-    it("uses Fate 2 with Emperor's Blessing on 4+", () => {
-        expect(def.fateThreshold).toEqual({ base: 2, emperorsBlessing: 4 });
-    });
-
-    it('starts with 7 + 1d5 wounds', () => {
-        expect(def.wounds).toEqual({ base: 7, dieFaces: 5 });
-    });
-
-    it('declares the Social aptitude', () => {
-        expect(def.aptitude).toBe('Social');
-    });
 
     it('grants Serenity of the Green (Shock/Trauma halved rounded up, Insanity 50xp)', () => {
         expect(def.keyTalents.join(';')).toMatch(/Serenity/);
@@ -134,23 +97,6 @@ describe('Garden World (without.md p. 29-30)', () => {
 
 describe('Research Station (without.md p. 31-32)', () => {
     const def = WITHOUT_HOMEWORLDS.researchStation;
-
-    it('grants +Int, +Per and applies -Fel', () => {
-        expect(def.characteristicMods.bonuses).toEqual(['intelligence', 'perception']);
-        expect(def.characteristicMods.penalties).toEqual(['fellowship']);
-    });
-
-    it("uses Fate 3 with Emperor's Blessing on 8+", () => {
-        expect(def.fateThreshold).toEqual({ base: 3, emperorsBlessing: 8 });
-    });
-
-    it('starts with 8 + 1d5 wounds', () => {
-        expect(def.wounds).toEqual({ base: 8, dieFaces: 5 });
-    });
-
-    it('declares the Knowledge aptitude', () => {
-        expect(def.aptitude).toBe('Knowledge');
-    });
 
     it('grants Pursuit of Data (Scholastic Rank 2 -> Forbidden Rank 1, related)', () => {
         expect(def.keyTalents.join(';')).toMatch(/Pursuit of Data/);
