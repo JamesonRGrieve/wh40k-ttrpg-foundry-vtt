@@ -4,261 +4,54 @@
  * Provides canonical mapping between skill display names and internal keys,
  * validates skill keys against actor schema, and identifies specialist skills.
  *
- * All 51 WH40K RPG skills + 3 compatibility skills (athletics, parry, stealth).
+ * The four lookup maps (name→key, specialist keys, characteristics, advanced
+ * flags) are all DERIVED from the canonical `SKILL_DEFINITIONS` catalog in
+ * `data/shared/skill-definitions.ts` (#273) — never hand-maintained here — so the
+ * label / characteristic / advanced / specialist facts live in exactly one place
+ * and cannot drift between this helper and the schema.
  */
 
+import {
+    skillAdvancedMap,
+    skillCharacteristicShortMap,
+    skillNameToKeyMap,
+    specialistSkillKeys,
+} from '../data/shared/skill-definitions.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with many callers across the codebase
 export class SkillKeyHelper {
     /**
-     * Complete mapping of all skill display names to internal keys.
-     * Based on SKILL_TABLE.md and creature.mjs schema.
-     * @type {Object<string, string>}
+     * Mapping of all skill display names to internal keys.
+     * Derived from the canonical `SKILL_DEFINITIONS` catalog (#273).
      */
-    static SKILL_NAME_TO_KEY = {
-        // Standard Skills - Basic (22 skills)
-        'Awareness': 'awareness',
-        'Barter': 'barter',
-        'Carouse': 'carouse',
-        'Charm': 'charm',
-        'Climb': 'climb',
-        'Command': 'command',
-        'Concealment': 'concealment',
-        'Contortionist': 'contortionist',
-        'Deceive': 'deceive',
-        'Disguise': 'disguise',
-        'Dodge': 'dodge',
-        'Evaluate': 'evaluate',
-        'Gamble': 'gamble',
-        'Inquiry': 'inquiry',
-        'Intimidate': 'intimidate',
-        'Literacy': 'literacy',
-        'Logic': 'logic',
-        'Scrutiny': 'scrutiny',
-        'Search': 'search',
-        'Silent Move': 'silentMove',
-        'Survival': 'survival',
-        'Swim': 'swim',
-
-        // Standard Skills - Advanced (14 skills)
-        'Acrobatics': 'acrobatics',
-        'Blather': 'blather',
-        'Chem-Use': 'chemUse',
-        'Commerce': 'commerce',
-        'Demolition': 'demolition',
-        'Interrogation': 'interrogation',
-        'Invocation': 'invocation',
-        'Medicae': 'medicae',
-        'Psyniscience': 'psyniscience',
-        'Security': 'security',
-        'Shadowing': 'shadowing',
-        'Sleight of Hand': 'sleightOfHand',
-        'Tracking': 'tracking',
-        'Wrangling': 'wrangling',
-
-        // Specialist Skills - Advanced (12 skills)
-        'Ciphers': 'ciphers',
-        'Common Lore': 'commonLore',
-        'Drive': 'drive',
-        'Forbidden Lore': 'forbiddenLore',
-        'Navigation': 'navigation',
-        'Performer': 'performer',
-        'Pilot': 'pilot',
-        'Scholastic Lore': 'scholasticLore',
-        'Secret Tongue': 'secretTongue',
-        'Speak Language': 'speakLanguage',
-        'Tech-Use': 'techUse',
-        'Trade': 'trade',
-
-        // DH2e/BC/OW Standard Skills (not in RT)
-        'Athletics': 'athletics',
-        'Linguistics': 'linguistics',
-        'Navigate': 'navigate',
-        'Operate': 'operate',
-        'Parry': 'parry',
-        'Stealth': 'stealth',
-    };
+    static SKILL_NAME_TO_KEY: Record<string, string> = skillNameToKeyMap();
 
     /**
      * Reverse mapping: key to display name.
-     * @type {Object<string, string>}
      */
-    static SKILL_KEY_TO_NAME = Object.fromEntries(Object.entries(this.SKILL_NAME_TO_KEY).map(([k, v]) => [v, k]));
+    static SKILL_KEY_TO_NAME: Record<string, string> = Object.fromEntries(Object.entries(this.SKILL_NAME_TO_KEY).map(([k, v]) => [v, k]));
 
     /**
-     * Specialist skill keys (those with .entries arrays).
-     * @type {Set<string>}
+     * Specialist skill keys (those with `.entries` arrays).
+     * Derived from the catalog entries flagged `hasEntries` (#273).
      */
-    static SPECIALIST_KEYS = new Set([
-        // RT/DH1e specialist groups
-        'ciphers',
-        'commonLore',
-        'drive',
-        'forbiddenLore',
-        'navigation',
-        'performer',
-        'pilot',
-        'scholasticLore',
-        'secretTongue',
-        'speakLanguage',
-        'trade',
-        // DH2e/BC/OW specialist groups
-        'linguistics',
-        'navigate',
-        'operate',
-    ]);
+    static SPECIALIST_KEYS: Set<string> = specialistSkillKeys();
 
     /**
-     * Characteristic short names for each skill.
-     * Maps skill key → characteristic abbreviation.
-     * @type {Object<string, string>}
+     * Characteristic short names for each skill (skill key → abbreviation).
+     * Derived from the catalog's `char` field (#273).
      */
-    static SKILL_CHARACTERISTICS = {
-        // Agility-based
-        acrobatics: 'Ag',
-        concealment: 'Ag',
-        contortionist: 'Ag',
-        dodge: 'Ag',
-        security: 'Ag',
-        shadowing: 'Ag',
-        silentMove: 'Ag',
-        sleightOfHand: 'Ag',
-        drive: 'Ag',
-        pilot: 'Ag',
-        stealth: 'Ag',
-
-        // Strength-based
-        climb: 'S',
-        intimidate: 'S',
-        swim: 'S',
-        athletics: 'S',
-
-        // Toughness-based
-        carouse: 'T',
-
-        // Intelligence-based
-        chemUse: 'Int',
-        demolition: 'Int',
-        evaluate: 'Int',
-        gamble: 'Int',
-        literacy: 'Int',
-        logic: 'Int',
-        medicae: 'Int',
-        survival: 'Int',
-        tracking: 'Int',
-        wrangling: 'Int',
-        ciphers: 'Int',
-        commonLore: 'Int',
-        forbiddenLore: 'Int',
-        navigation: 'Int',
-        scholasticLore: 'Int',
-        secretTongue: 'Int',
-        speakLanguage: 'Int',
-        techUse: 'Int',
-        trade: 'Int',
-
-        // Perception-based
-        awareness: 'Per',
-        psyniscience: 'Per',
-        scrutiny: 'Per',
-        search: 'Per',
-
-        // Willpower-based
-        interrogation: 'WP',
-        invocation: 'WP',
-
-        // Fellowship-based
-        barter: 'Fel',
-        blather: 'Fel',
-        charm: 'Fel',
-        command: 'Fel',
-        commerce: 'Fel',
-        deceive: 'Fel',
-        disguise: 'Fel',
-        inquiry: 'Fel',
-        performer: 'Fel',
-
-        // Weapon Skill-based
-        parry: 'WS',
-
-        // DH2e/BC/OW skills (athletics, stealth already above)
-        linguistics: 'Int',
-        navigate: 'Int',
-        operate: 'Ag',
-    };
+    static SKILL_CHARACTERISTICS: Record<string, string> = skillCharacteristicShortMap();
 
     /**
-     * Advanced/Basic classification for each skill.
-     * Maps skill key → isAdvanced (true = Advanced, false = Basic).
-     * @type {Object<string, boolean>}
+     * Advanced/Basic classification for each skill (skill key → isAdvanced).
+     * Derived from the catalog's `advanced` field (#273).
      */
-    static SKILL_TYPES = {
-        // Standard skills - Advanced
-        acrobatics: true,
-        blather: true,
-        chemUse: true,
-        commerce: true,
-        demolition: true,
-        interrogation: true,
-        invocation: true,
-        medicae: true,
-        psyniscience: true,
-        security: true,
-        shadowing: true,
-        sleightOfHand: true,
-        tracking: true,
-        wrangling: true,
-
-        // Standard skills - Basic
-        awareness: false,
-        barter: false,
-        carouse: false,
-        charm: false,
-        climb: false,
-        command: false,
-        concealment: false,
-        contortionist: false,
-        deceive: false,
-        disguise: false,
-        dodge: false,
-        evaluate: false,
-        gamble: false,
-        inquiry: false,
-        intimidate: false,
-        literacy: false,
-        logic: false,
-        scrutiny: false,
-        search: false,
-        silentMove: false,
-        survival: false,
-        swim: false,
-
-        // Specialist skills - ALL Advanced
-        ciphers: true,
-        commonLore: true,
-        drive: true,
-        forbiddenLore: true,
-        navigation: true,
-        performer: true,
-        pilot: true,
-        scholasticLore: true,
-        secretTongue: true,
-        speakLanguage: true,
-        techUse: true,
-        trade: true,
-
-        // Hidden compatibility skills - Basic
-        athletics: false,
-        parry: false,
-        stealth: false,
-    };
+    static SKILL_TYPES: Record<string, boolean> = skillAdvancedMap();
 
     static #lookupKey(value: string): string {
-        if (Object.hasOwn(this.SKILL_NAME_TO_KEY, value)) {
-            return this.SKILL_NAME_TO_KEY[value as keyof typeof SkillKeyHelper.SKILL_NAME_TO_KEY];
-        }
-        return value;
+        return this.SKILL_NAME_TO_KEY[value] ?? value;
     }
 
     /* -------------------------------------------- */
@@ -283,8 +76,8 @@ export class SkillKeyHelper {
             return '';
         }
 
-        const key = this.SKILL_NAME_TO_KEY[name as keyof typeof SkillKeyHelper.SKILL_NAME_TO_KEY];
-        if (key) return key;
+        const key = this.SKILL_NAME_TO_KEY[name];
+        if (key !== undefined) return key;
 
         // Fallback: slugify the name
         console.warn(`SkillKeyHelper: Unknown skill name "${name}", using slugified fallback`);
@@ -305,7 +98,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.keyToName("commonLore")  // → "Common Lore"
      */
     static keyToName(key: string): string {
-        return this.SKILL_KEY_TO_NAME[key as keyof typeof SkillKeyHelper.SKILL_KEY_TO_NAME] || key;
+        return this.SKILL_KEY_TO_NAME[key] ?? key;
     }
 
     /**
@@ -352,7 +145,7 @@ export class SkillKeyHelper {
      */
     static getCharacteristic(keyOrName: string): string | null {
         const key = this.#lookupKey(keyOrName);
-        return this.SKILL_CHARACTERISTICS[key as keyof typeof SkillKeyHelper.SKILL_CHARACTERISTICS] || null;
+        return this.SKILL_CHARACTERISTICS[key] ?? null;
     }
 
     /**
@@ -367,10 +160,7 @@ export class SkillKeyHelper {
      */
     static isAdvanced(keyOrName: string): boolean {
         const key = this.#lookupKey(keyOrName);
-        if (Object.hasOwn(this.SKILL_TYPES, key)) {
-            return this.SKILL_TYPES[key as keyof typeof SkillKeyHelper.SKILL_TYPES];
-        }
-        return false;
+        return this.SKILL_TYPES[key] ?? false;
     }
 
     /* -------------------------------------------- */
@@ -453,7 +243,7 @@ export class SkillKeyHelper {
         isSpecialist: boolean;
     } | null {
         const key = this.#lookupKey(keyOrName);
-        if (!this.SKILL_KEY_TO_NAME[key as keyof typeof SkillKeyHelper.SKILL_KEY_TO_NAME]) return null;
+        if (this.SKILL_KEY_TO_NAME[key] === undefined) return null;
 
         return {
             key,
