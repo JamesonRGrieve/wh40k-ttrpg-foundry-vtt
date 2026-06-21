@@ -63,6 +63,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/effect-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/empty-state.hbs',
             'systems/wh40k-rpg/templates/actor/partial/dropzone.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/effect-dropzone.hbs',
             'systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/item-table.hbs',
             'systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs',
