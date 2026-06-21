@@ -1,3 +1,5 @@
+import { getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+
 /**
  * Minimal shape of a per-system item document as probed by chat-card actions.
  * The result of each roll/use dispatch is discarded by the handler, so each
@@ -91,8 +93,9 @@ export class ChatMessageWH40K extends ChatMessage {
         const total = roll.total;
         if (total === undefined) return null;
         const targetNum = Number(target);
-        const success = total <= targetNum;
-        const degrees = Math.floor(Math.abs(total - targetNum) / 10);
+        const success = isD100Success(total, targetNum);
+        const method = resolveDegreesMethod((this.speakerActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+        const degrees = 1 + (success ? getDegreeForMode(method, targetNum, total) : getDegreeForMode(method, total, targetNum));
 
         return { success, degrees };
     }

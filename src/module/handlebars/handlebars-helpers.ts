@@ -1,6 +1,6 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import WH40K, { buildQualityLabel, parseQualityLevel } from '../config.ts';
-import { formatSigned } from '../utils/format.ts';
+import { capitalize, formatSigned } from '../utils/format.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
 import { formatSourceLabel, type SourceInput } from './source-label.ts';
@@ -63,10 +63,10 @@ function isTplObject(v: TplValue): v is TplRecord {
     return v !== null && v !== undefined && typeof v === 'object';
 }
 
-export function capitalize(text: string): string {
-    if (text === '') return '';
-    return text.charAt(0).toUpperCase() + text.substring(1);
-}
+// `capitalize` is single-sourced in `utils/format.ts` (#358); re-exported here so
+// existing `import { capitalize } from '.../handlebars-helpers'` call sites and
+// the `capitalize` Handlebars helper below keep resolving against one definition.
+export { capitalize };
 
 export function toCamelCase(str: string): string {
     return str

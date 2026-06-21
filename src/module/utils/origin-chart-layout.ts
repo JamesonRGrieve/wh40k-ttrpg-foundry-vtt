@@ -12,6 +12,8 @@
  * Direction only determines which prior selection is considered "most recent".
  */
 
+import { capitalize } from './format.ts';
+
 /**
  * Direction constants for path navigation
  */
@@ -388,7 +390,7 @@ export class OriginChartLayout {
      * @private
      */
     static _getStepLabel(stepKey: string): string {
-        const key = `WH40K.OriginPath.${stepKey.charAt(0).toUpperCase() + stepKey.slice(1)}`;
+        const key = `WH40K.OriginPath.${capitalize(stepKey)}`;
         return game.i18n.localize(key);
     }
 }
