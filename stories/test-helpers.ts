@@ -53,17 +53,48 @@ export function renderSheet(templateSource: string, context: Context = {}): HTML
 }
 
 /**
+ * Options for {@link renderSheetParts}.
+ *
+ * `systemId` stamps `data-wh40k-system="<id>"` on the composed wrapper so that
+ * per-system Tailwind variants (`dh2:tw-*`, `rt:tw-*`, …) — which only fire
+ * when an ancestor carries the attribute — activate inside the story (CLAUDE.md
+ * "Adaptation procedure 3a"). When `systemId` is supplied, a `theme-dark` class
+ * is also added so foundry2.css's theme tokens cascade (matching the mock
+ * `renderTemplate` shell). Override the theme name (or pass `null` to suppress
+ * it) via `theme`. Callers that omit both keep the bare `wh40k-rpg sheet`
+ * wrapper unchanged.
+ */
+export interface RenderSheetPartsOptions {
+    systemId?: string;
+    theme?: string | null;
+}
+
+/**
  * Compose multiple Handlebars partials into a single rendered tree, mimicking
  * what an ApplicationV2 sheet does when it concatenates its `static PARTS`.
  * Each entry contributes one template + (optionally) a per-part context that
  * extends `baseContext`. Returns the wrapper element with each part appended.
  *
  * Use this for full-sheet stories — header + tabs + body in one tree — so that
- * Tailwind cascade breaks and theme regressions surface visually.
+ * Tailwind cascade breaks and theme regressions surface visually. Pass
+ * `options.systemId` to activate per-system variants on the composed tree.
  */
-export function renderSheetParts(parts: Array<{ template: string; context?: Context; partClass?: string }>, baseContext: Context = {}): HTMLElement {
+export function renderSheetParts(
+    parts: Array<{ template: string; context?: Context; partClass?: string }>,
+    baseContext: Context = {},
+    options: RenderSheetPartsOptions = {},
+): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg', 'sheet');
+    if (options.systemId !== undefined) {
+        wrapper.dataset['wh40kSystem'] = options.systemId;
+        // Default the theme to `dark` when system theming is engaged, mirroring
+        // the mock `renderTemplate` shell; `theme: null` opts out explicitly.
+        const theme = options.theme === undefined ? 'dark' : options.theme;
+        if (theme !== null) wrapper.classList.add(`theme-${theme}`);
+    } else if (typeof options.theme === 'string') {
+        wrapper.classList.add(`theme-${options.theme}`);
+    }
     for (const part of parts) {
         const tpl = HbsStory.compile(part.template);
         const html = tpl({ ...baseContext, ...(part.context ?? {}) });

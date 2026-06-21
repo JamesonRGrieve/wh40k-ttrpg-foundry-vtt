@@ -9,6 +9,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { ALL_SYSTEM_IDS, type GameSystemId } from '../src/module/config/game-systems/types';
+import { localizeKey } from '../stories/mocks/lang-localize';
 import { mockNpcSheetContext, mockPlayerSheetContext, mockStarshipSheetContext, mockVehicleSheetContext } from '../stories/mocks/sheet-contexts';
 
 interface GameI18nStub {
@@ -24,32 +25,14 @@ interface GlobalShim {
 const G = globalThis as GlobalShim;
 const ORIGINAL_GAME = G.game;
 
-// Header labels are localized via makeOriginField (#298 item 3); resolve the header-label
-// keys to their English so the IM-shape label assertions below reflect the displayed text.
-const HEADER_I18N: Record<string, string> = {
-    'WH40K.OriginPath.HomeWorld': 'Home World',
-    'WH40K.OriginPath.Career': 'Career',
-    'WH40K.OriginPath.CareerPath': 'Career Path',
-    'WH40K.OriginPath.Regiment': 'Regiment',
-    'WH40K.OriginPath.Speciality': 'Speciality',
-    'WH40K.OriginPath.Demeanour': 'Demeanour',
-    'WH40K.OriginPath.Patron': 'Patron',
-    'WH40K.OriginPath.Faction': 'Faction',
-    'WH40K.OriginPath.Role': 'Role',
-    'WH40K.OriginPath.Endeavour': 'Endeavour',
-    'WH40K.OriginPath.Archetype': 'Archetype',
-    'WH40K.OriginPath.Pride': 'Pride',
-    'WH40K.OriginPath.Disgrace': 'Disgrace',
-    'WH40K.OriginPath.Motivation': 'Motivation',
-    'WH40K.OriginPath.Chapter': 'Chapter',
-    'WH40K.Character.Rank': 'Rank',
-};
-
 beforeAll(() => {
     // Some configs call game.i18n.localize; the factory installs a stub if absent,
-    // but tests that run in isolation rely on the same passthrough (header keys resolved).
+    // but tests that run in isolation install the same resolver. Labels resolve
+    // through the shared {@link localizeKey} (flattens en.json once) instead of a
+    // hand-copied key→string map, so a langpack reword can't pass against a stale
+    // string (#364).
     G.game = {
-        i18n: { localize: (k: string): string => HEADER_I18N[k] ?? k, format: (k: string): string => k },
+        i18n: { localize: (k: string): string => localizeKey(k), format: (k: string): string => localizeKey(k) },
     };
 });
 
