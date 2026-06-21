@@ -32,7 +32,10 @@ describe('computeCharacteristicTotals (#271)', () => {
     it('post-item recompute (#365) matches the helper, incl. clamp and unnatural', () => {
         // Mirror creature.ts `_applyModifiersToCharacteristics`: extra folds in
         // advance*5 - damage + (originPath + item) modifier; total clamps at 0.
-        const recompute = (char: { base: number; modifier: number; unnatural: number; advance: number; damage: number }, totalMod: number) => {
+        const recompute = (
+            char: { base: number; modifier: number; unnatural: number; advance: number; damage: number },
+            totalMod: number,
+        ): { total: number; bonus: number } => {
             const baseTotal = char.base + char.advance * 5 + char.modifier;
             const total = Math.max(0, baseTotal + totalMod - char.damage);
             const baseBonus = Math.floor(total / 10);

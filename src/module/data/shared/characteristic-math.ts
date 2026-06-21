@@ -19,7 +19,13 @@ export interface CharacteristicLike {
  * derived (a characteristic cannot drop below 0 once item modifiers land).
  * Bonus is the tens digit, multiplied by the Unnatural level when ≥ 2.
  */
-export function computeCharacteristicTotals(base: number, modifier: number, unnatural: number, extra = 0, clampTotalToZero = false): { total: number; bonus: number } {
+export function computeCharacteristicTotals(
+    base: number,
+    modifier: number,
+    unnatural: number,
+    extra = 0,
+    clampTotalToZero = false,
+): { total: number; bonus: number } {
     const rawTotal = base + modifier + extra;
     const total = clampTotalToZero ? Math.max(0, rawTotal) : rawTotal;
     const baseBonus = Math.floor(total / 10);

@@ -150,7 +150,7 @@ export async function spendRightStuff(actor: WH40KBaseActorDocument, skill: Righ
     await emitChatFromTemplate(
         'systems/wh40k-rpg/templates/chat/right-stuff-chat.hbs',
         // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts an untyped Handlebars context bag
-        templateData as unknown as Record<string, unknown>,
+        templateData,
         { applyWhispers: true },
     );
 

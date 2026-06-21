@@ -5,8 +5,8 @@ import type { WH40KBaseActor } from '../src/module/documents/base-actor.ts';
 import type { WeaponActionData as WeaponActionDataType } from '../src/module/rolls/action-data.ts';
 import type { Hit as HitType } from '../src/module/rolls/damage-data.ts';
 import type { RollData as RollDataType } from '../src/module/rolls/roll-data.ts';
-import { seedRandom } from '../stories/mocks/extended.ts';
 import { buildApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
+import { seedRandom } from '../stories/mocks/extended.ts';
 
 /**
  * Runtime modules are loaded via dynamic `import()` *after* the Foundry globals

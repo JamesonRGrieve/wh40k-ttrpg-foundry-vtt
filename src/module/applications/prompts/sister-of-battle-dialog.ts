@@ -13,8 +13,8 @@
  * See GitHub issue #134.
  */
 
-import { SISTER_OF_BATTLE_TALENTS, type SisterOfBattleTalent } from '../../rules/sister-of-battle.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { SISTER_OF_BATTLE_TALENTS, type SisterOfBattleTalent } from '../../rules/sister-of-battle.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

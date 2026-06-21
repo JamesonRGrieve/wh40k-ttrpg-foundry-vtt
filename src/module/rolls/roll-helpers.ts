@@ -177,6 +177,7 @@ export interface EmitChatOptions {
     /** Posting user id (defaults to the current user). */
     user?: string | undefined;
     /** Opaque Foundry ChatSpeaker bag, included only when provided. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
     speaker?: unknown;
     /** Explicit rollMode; included in the payload only when provided (so the
      * default public post carries no rollMode, matching the legacy call sites). */
@@ -198,18 +199,19 @@ export interface EmitChatOptions {
  * pass `rollMode` / `applyWhispers` to honour whisper modes, or `speaker` to
  * attribute the message — so each call site keeps its exact prior intent.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload (Foundry framework type) — `data` is the untyped Handlebars context bag fed to renderTemplate then ChatMessage.create
 export async function emitChatFromTemplate(template: string, data: Record<string, unknown>, opts: EmitChatOptions = {}): Promise<void> {
     const html = await foundry.applications.handlebars.renderTemplate(template, data);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
     const chatData: Record<string, unknown> = {
-        user: opts.user ?? game.user?.id,
+        user: opts.user ?? game.user.id,
         content: html,
     };
     if (opts.rollMode !== undefined) chatData['rollMode'] = opts.rollMode;
     if (opts.speaker !== undefined) chatData['speaker'] = opts.speaker;
     if (opts.applyWhispers === true) applyRollModeWhispers(chatData);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped Foundry payload
-    await ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]);
+    await ChatMessage.create(chatData);
 }
 
 export async function sendActionDataToChat(actionData: ActionData): Promise<void> {

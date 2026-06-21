@@ -17,6 +17,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import {
     COLONY_AFFECTIVE_KEYS,
     COLONY_CHARACTERISTICS,
@@ -26,7 +27,6 @@ import {
     resolveColonyGrowth,
     tierForSize,
 } from '../../rules/rt-colony.ts';
-import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

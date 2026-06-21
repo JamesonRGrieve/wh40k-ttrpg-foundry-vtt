@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it, vi } from 'vitest';
-import { buildApplicationV2Api, FakeApplicationV2, type Constructor } from '../../testing/app-v2-stub.ts';
+import { buildApplicationV2Api, type Constructor, type FakeApplicationV2 } from '../../testing/app-v2-stub.ts';
 
 /**
  * Structural shape of every `globalThis` member this suite stubs. The runtime

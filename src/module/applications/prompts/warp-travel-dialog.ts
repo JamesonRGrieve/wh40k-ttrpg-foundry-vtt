@@ -16,8 +16,8 @@
  * file is a thin UI shell.
  */
 
-import { type WarpJourneyResult, resolveWarpJourney, rollPeril } from '../../rules/warp-travel.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { type WarpJourneyResult, resolveWarpJourney, rollPeril } from '../../rules/warp-travel.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

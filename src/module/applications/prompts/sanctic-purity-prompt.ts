@@ -20,8 +20,8 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import { SANCTIC_PURITY_FATE_COST } from '../../rules/sanctic-purity.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { SANCTIC_PURITY_FATE_COST } from '../../rules/sanctic-purity.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

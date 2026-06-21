@@ -245,7 +245,6 @@ WH40K.resources = {
  * Item availability ratings.
  * @type {Object<string, {label: string, modifier: number}>}
  */
-// TODO(dry): ship-*-sheet.ts hand-roll duplicate availability/hull-type choice maps instead of deriving from this. Add a shared choicesFrom(CONFIG.wh40k.availabilities) helper and delete the per-sheet copies.
 WH40K.availabilities = {
     'ubiquitous': { label: 'WH40K.Availability.Ubiquitous', modifier: 70 },
     'abundant': { label: 'WH40K.Availability.Abundant', modifier: 50 },

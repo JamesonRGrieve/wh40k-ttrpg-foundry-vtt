@@ -11,8 +11,8 @@
  * See GitHub issue #65.
  */
 
-import { MAX_FEAR_RATING, getShockTableRollModifier, resolveFearTest } from '../../rules/fear.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { MAX_FEAR_RATING, getShockTableRollModifier, resolveFearTest } from '../../rules/fear.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

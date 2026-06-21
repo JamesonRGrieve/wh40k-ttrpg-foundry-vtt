@@ -189,11 +189,11 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         const actor = makeActor({ gameSystem: 'dh2', medicae: 40 });
         actor.effects = [bloodLossEffect];
 
-        // rng 0.29 → rollD100 = 30, vs target 40+10=50 → success.
+        // rng 0.29 → rollD100 = 29 (0.29*100 = 28.9999… floors to 28, +1), vs target 40+10=50 → success.
         const res = await staunchBloodLoss(asActor(actor), () => 0.29);
 
         expect(res.success).toBe(true);
-        expect(res.roll).toBe(30);
+        expect(res.roll).toBe(29);
         expect(res.target).toBe(50);
         expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', ['ae-1']);
         expect(chat.lastContent()).toContain('success="true"');

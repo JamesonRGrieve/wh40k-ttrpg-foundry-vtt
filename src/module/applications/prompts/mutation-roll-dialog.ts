@@ -10,8 +10,8 @@
  * See GitHub issue #117.
  */
 
-import { type MutationDef, type MutationTrack, TRACK_RANGES, rollMutation } from '../../rules/mutation-table.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { type MutationDef, type MutationTrack, TRACK_RANGES, rollMutation } from '../../rules/mutation-table.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
