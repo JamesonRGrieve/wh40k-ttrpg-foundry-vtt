@@ -1,0 +1,15 @@
+{{!--
+    Shared item-sheet name input — the per-system gold display title input used
+    by the compact-flex item headers (condition / lead / gear / ammo / content
+    block / critical injury / location / journal entry / armour mod). The
+    per-system accent class string was duplicated verbatim across those sheets;
+    this is the single source of truth.
+
+    Hash arguments:
+        placeholder    — raw placeholder string.
+        placeholderKey — i18n key for the placeholder (preferred over `placeholder`).
+        lockable       — when truthy, the input becomes read-only outside edit mode
+                         (mirrors the ammo sheet: appends the readonly class +
+                         attribute gated on the caller's `inEditMode`).
+--}}
+<input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1{{#if lockable}}{{#unless inEditMode}} wh40k-input--readonly{{/unless}}{{/if}}" name="name" value="{{item.name}}" placeholder="{{#if placeholderKey}}{{localize placeholderKey}}{{else}}{{placeholder}}{{/if}}"{{#if lockable}}{{#unless inEditMode}} readonly{{/unless}}{{/if}} />

@@ -14,13 +14,7 @@
     </div>
 
     <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-        <input
-            class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1"
-            name="name"
-            type="text"
-            value="{{item.name}}"
-            placeholder="{{localize 'WH40K.Modification.NamePlaceholder'}}"
-        />
+        {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholderKey="WH40K.Modification.NamePlaceholder"}}
 
         <div class="tw-inline-flex tw-items-center tw-gap-1 tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">
             <i class="fas fa-wrench"></i>
