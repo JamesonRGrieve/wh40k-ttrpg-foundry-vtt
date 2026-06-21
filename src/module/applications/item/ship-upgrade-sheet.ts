@@ -2,31 +2,12 @@
  * @file ShipUpgradeSheet - ApplicationV2 sheet for ship upgrade items
  */
 
+import { shipAvailabilityChoices } from '../../utils/ship-choices.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 
 /** Tab label localization keys, hoisted so the tab descriptors reference identifiers. */
 const TAB_LABEL_DETAILS = 'WH40K.Tabs.Details';
 const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
-
-/**
- * Get availability choices for dropdown.
- * @returns Choices object
- */
-function getAvailabilityChoices(): Record<string, string> {
-    return {
-        'ubiquitous': game.i18n.localize('WH40K.Availability.Ubiquitous'),
-        'abundant': game.i18n.localize('WH40K.Availability.Abundant'),
-        'plentiful': game.i18n.localize('WH40K.Availability.Plentiful'),
-        'common': game.i18n.localize('WH40K.Availability.Common'),
-        'average': game.i18n.localize('WH40K.Availability.Average'),
-        'scarce': game.i18n.localize('WH40K.Availability.Scarce'),
-        'rare': game.i18n.localize('WH40K.Availability.Rare'),
-        'very-rare': game.i18n.localize('WH40K.Availability.VeryRare'),
-        'extremely-rare': game.i18n.localize('WH40K.Availability.ExtremelyRare'),
-        'near-unique': game.i18n.localize('WH40K.Availability.NearUnique'),
-        'unique': game.i18n.localize('WH40K.Availability.Unique'),
-    };
-}
 
 /**
  * Sheet for ship upgrade items.
@@ -45,7 +26,7 @@ const ShipUpgradeSheet = defineSimpleItemSheet({
     defaultTab: 'details',
     prepareContext(_sheet, context) {
         // Add upgrade-specific choices
-        context['availabilities'] = getAvailabilityChoices();
+        context['availabilities'] = shipAvailabilityChoices();
 
         // Add display helpers
         const sys = context['system'] as { hasModifiers?: boolean; power?: number };
