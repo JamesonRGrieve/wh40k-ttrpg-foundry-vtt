@@ -100,17 +100,6 @@ export default class ForceFieldDialog extends BaseRollDialog {
 
         return true;
     }
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    override async _performRoll(): Promise<void> {
-        if (!this._validateRoll()) return;
-
-        await (this.rollData['finalize'] as () => Promise<void>)();
-        await (this.rollData['performActionAndSendToChat'] as () => Promise<void>)();
-        await this.close();
-    }
 }
 
 /* -------------------------------------------- */

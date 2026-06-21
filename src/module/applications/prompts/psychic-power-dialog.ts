@@ -2,7 +2,7 @@
  * @file PsychicPowerDialog - V2 dialog for psychic power configuration
  */
 
-import BaseRollDialog from './base-roll-dialog.ts';
+import BaseRollDialog, { type RollDispatch } from './base-roll-dialog.ts';
 
 interface PsychicRollData {
     selectPower?: (name: string) => void;
@@ -86,9 +86,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      */
     async _onPowerSelectChange(event: Event): Promise<void> {
         const data = this.psychicAttackData.rollData;
-        if (typeof data.selectPower === 'function') data.selectPower((event.target as HTMLInputElement).name);
-        if (typeof data.update === 'function') await data.update();
-        void this.render();
+        await this._onSelectItem(data, data.selectPower, (event.target as HTMLInputElement).name);
     }
 
     /* -------------------------------------------- */
@@ -123,9 +121,8 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      * Handle power selection via action.
      */
     static async #onSelectPower(this: PsychicPowerDialog, _event: Event, target: HTMLElement): Promise<void> {
-        this.psychicAttackData.rollData.selectPower?.(target.getAttribute('name') ?? '');
-        await this.psychicAttackData.rollData.update?.();
-        void this.render();
+        const data = this.psychicAttackData.rollData;
+        await this._onSelectItem(data, data.selectPower, target.getAttribute('name') ?? '');
     }
 
     /* -------------------------------------------- */
@@ -133,10 +130,11 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    override async _performRoll(): Promise<void> {
-        await this.psychicAttackData.rollData.finalize?.();
-        await this.psychicAttackData.performActionAndSendToChat?.();
-        await this.close();
+    override _getRollData(): RollDispatch {
+        return {
+            finalize: this.psychicAttackData.rollData.finalize,
+            performActionAndSendToChat: this.psychicAttackData.performActionAndSendToChat,
+        };
     }
 }
 
