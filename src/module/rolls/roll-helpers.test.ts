@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getDegreeForMode, resolveDegreesMethod } from './roll-helpers.ts';
+import { getDegreeForMode, isD100Success, resolveDegreesMethod } from './roll-helpers.ts';
 
 /**
  * Degrees-of-success method selection (#DoS-mode setting).
@@ -25,6 +25,35 @@ function stubMode(mode: string): void {
 
 afterEach(() => {
     vi.unstubAllGlobals();
+});
+
+describe('isD100Success — the single-sourced d100 success rule', () => {
+    it('succeeds when the roll is at or below the target', () => {
+        expect(isD100Success(35, 50)).toBe(true);
+        expect(isD100Success(50, 50)).toBe(true); // exactly on target
+    });
+
+    it('fails when the roll is above the target', () => {
+        expect(isD100Success(51, 50)).toBe(false);
+        expect(isD100Success(99, 50)).toBe(false);
+    });
+
+    it('a natural 01 ALWAYS succeeds, even against an impossible target', () => {
+        expect(isD100Success(1, 0)).toBe(true);
+        expect(isD100Success(1, -30)).toBe(true);
+    });
+
+    it('a natural 100 ALWAYS fails, even against a target of 100+', () => {
+        expect(isD100Success(100, 100)).toBe(false);
+        expect(isD100Success(100, 200)).toBe(false);
+    });
+
+    it('honours both naturals at the extremes of the roll-under band', () => {
+        // 1 ≤ target trivially, but the natural-01 rule is what guarantees it;
+        // 100 > target only when target < 100, the natural-100 rule covers the rest.
+        expect(isD100Success(1, 1)).toBe(true);
+        expect(isD100Success(100, 99)).toBe(false);
+    });
 });
 
 describe('getDegreeForMode — additional degrees', () => {

@@ -4,6 +4,7 @@
  */
 
 import { getWeaponQualityHasLevel, getWeaponQualityMechanics, weaponQualityDescKey, weaponQualityLabelKey } from './rules/weapon-quality-payloads.ts';
+import { getDegreeForMode, isD100Success, resolveDegreesMethod } from './rolls/roll-helpers.ts';
 
 /* -------------------------------------------- */
 /*  Config Type Definitions                     */
@@ -854,9 +855,11 @@ WH40K.difficulties = {
  * @returns {object}       The result with degrees.
  */
 WH40K.calculateDegrees = (roll, target) => {
-    const difference = target - roll;
-    const success = roll <= target;
-    const degrees = Math.floor(Math.abs(difference) / 10) + 1;
+    const success = isD100Success(roll, target);
+    // No actor context here; resolve the method from the homebrew degreesMode
+    // setting (defaults to the per-system rule, which is gen2 when unscoped).
+    const method = resolveDegreesMethod(undefined);
+    const degrees = 1 + (success ? getDegreeForMode(method, target, roll) : getDegreeForMode(method, roll, target));
 
     return {
         success,
