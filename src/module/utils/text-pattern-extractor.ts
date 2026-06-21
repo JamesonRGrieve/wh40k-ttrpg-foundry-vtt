@@ -8,6 +8,8 @@
  * - List parsing with nested structures
  */
 
+import { capitalize } from './format.ts';
+
 /**
  * Utility for extracting structured data from text.
  */
@@ -218,10 +220,10 @@ export default class TextPatternExtractor {
     /**
      * Convert text to camelCase key.
      * @param {string} text - Text to convert
-     * @param {boolean} capitalize - Capitalize first letter
+     * @param {boolean} capitalizeFirst - Capitalize first letter
      * @returns {string} camelCase key
      */
-    static toKey(text: string, capitalize: boolean = false): string {
+    static toKey(text: string, capitalizeFirst: boolean = false): string {
         const cleaned = text.replace(/[^A-Za-z0-9]/g, ' ').trim();
 
         const parts = cleaned.split(/\s+/).filter(Boolean);
@@ -232,8 +234,8 @@ export default class TextPatternExtractor {
         if (first === undefined) return '';
         const key = [first.toLowerCase(), ...rest.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())].join('');
 
-        if (!capitalize) return key;
-        return key.charAt(0).toUpperCase() + key.slice(1);
+        if (!capitalizeFirst) return key;
+        return capitalize(key);
     }
 
     /**

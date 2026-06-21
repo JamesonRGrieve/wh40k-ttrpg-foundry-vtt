@@ -7,6 +7,7 @@
  */
 
 import type { BaseSystemConfig } from '../config/game-systems/base-system-config.ts';
+import { capitalize } from './format.ts';
 
 /* -------------------------------------------- */
 /*  Characteristic Display                      */
@@ -89,7 +90,7 @@ export function getChoiceTypeLabel(type: string): string {
     const localized = game.i18n.localize(key);
     // If localization returned the key itself, fall back to capitalized type
     if (localized === key) {
-        return type ? type.charAt(0).toUpperCase() + type.slice(1) : 'Choice';
+        return type ? capitalize(type) : 'Choice';
     }
     return localized;
 }
