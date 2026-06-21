@@ -1122,16 +1122,14 @@ export default class CreatureTemplate extends CommonTemplate {
             char.itemModifier = itemMod;
             char.totalModifier = totalMod;
 
-            // Recalculate total from BASE values to avoid accumulation
-            // Base total is: base + (advance * 5) + modifier (from schema)
-            // Subtract recoverable characteristic damage (core.md §"Characteristic Damage").
-            const baseTotal = char.base + char.advance * 5 + char.modifier;
-            char.total = Math.max(0, baseTotal + totalMod - char.damage);
-
-            // Recalculate bonus with new total
-            const baseModifier = Math.floor(char.total / 10);
-            const unnaturalLevel = char.unnatural || 0;
-            char.bonus = unnaturalLevel >= 2 ? baseModifier * unnaturalLevel : baseModifier;
+            // Recalculate total from BASE values to avoid accumulation, routing
+            // through the shared SSOT so the unnatural/bonus rule stays identical to
+            // the pre-item `_prepareCharacteristics` pass. The `extra` term folds in
+            // `advance*5 - damage` (core.md §"Characteristic Damage") plus the item /
+            // origin-path modifier; `clampTotalToZero` floors the total at 0.
+            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0, char.advance * 5 - char.damage + totalMod, true);
+            char.total = total;
+            char.bonus = bonus;
         }
 
         // Update initiative bonus from characteristic (recalculate from base)
