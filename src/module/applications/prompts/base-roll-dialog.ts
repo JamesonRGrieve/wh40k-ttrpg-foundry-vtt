@@ -10,8 +10,8 @@ const { ApplicationV2 } = foundry.applications.api;
  * `_performRoll()` sequence stays agnostic to the storage shape.
  */
 export interface RollDispatch {
-    finalize?: () => Promise<void> | void;
-    performActionAndSendToChat?: () => Promise<void> | void;
+    finalize?: (() => Promise<void> | void) | undefined;
+    performActionAndSendToChat?: (() => Promise<void> | void) | undefined;
 }
 
 /**
@@ -189,7 +189,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
      */
     _getRollData(): RollDispatch {
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollData is an arbitrary roll-config record; RollDispatch is its finalize/dispatch view
-        return this.rollData as RollDispatch;
+        return this.rollData;
     }
 
     /* -------------------------------------------- */

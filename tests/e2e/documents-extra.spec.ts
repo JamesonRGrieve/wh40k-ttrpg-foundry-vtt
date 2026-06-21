@@ -764,7 +764,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                      * Flow 13: chat-message-calculateDegrees-real-roll
                      * Evaluate a deterministic Roll, create a ChatMessage
                      * whose roll yields total=35, target=50 → expected
-                     * `success=true, degrees=1`. Asserts the full d100-DoS
+                     * `success=true, degrees=2`. Asserts the full d100-DoS
                      * arithmetic over a real Foundry Roll.
                      * ============================================================ */
                     try {
@@ -795,9 +795,10 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                                 });
                             }
                             const dos = msg.calculateDegrees?.();
-                            if (dos?.success === true && dos.degrees === 1) {
+                            // DH2e (gen2): 1 base DoS + 1 per full 10 under target = 1 + floor((50-35)/10) = 2 (#335).
+                            if (dos?.success === true && dos.degrees === 2) {
                                 fired['chat-message-calculateDegrees-real-roll'] = true;
-                                notes['chat-message-calculateDegrees-real-roll'] = `total=35 target=50 -> success=true degrees=1`;
+                                notes['chat-message-calculateDegrees-real-roll'] = `total=35 target=50 -> success=true degrees=2`;
                             } else {
                                 notes['chat-message-calculateDegrees-real-roll'] = `unexpected dos=${JSON.stringify(dos)}`;
                             }

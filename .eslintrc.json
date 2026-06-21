@@ -113,7 +113,9 @@
     "gulpfile.js",
     "src/packs/",
     "src/module/icons/registry.generated.ts",
-    "src/module/types/icon-keys.d.ts"
+    "src/module/types/icon-keys.d.ts",
+    "stories/**/*.js",
+    "stories/**/*.js.map"
   ],
   "overrides": [
     {

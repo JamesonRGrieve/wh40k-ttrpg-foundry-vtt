@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { NpcFormDialogConfig, makeNpcFormDialog } from './npc-form-dialog.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructors; `unknown[]` is rejected.
 type Constructor<T = object> = new (...args: any[]) => T;
@@ -31,11 +32,17 @@ interface BakedOptions {
     form?: { submitOnChange: boolean; closeOnSubmit: boolean };
 }
 
-interface FactoryClass {
+/**
+ * The factory's emitted class, narrowed to the static surface the assertions read.
+ * Extends the real `ReturnType` so the `make` helper downcasts with a single `as`
+ * (the factory types `DEFAULT_OPTIONS.window` without the runtime-only
+ * `minimizable`/`contentClasses` keys, which `BakedOptions` restores for assertions).
+ */
+type FactoryClass = Omit<ReturnType<typeof makeNpcFormDialog>, 'DEFAULT_OPTIONS' | 'PARTS'> & {
     name: string;
     DEFAULT_OPTIONS: BakedOptions;
     PARTS: Record<string, { template: string }>;
-}
+};
 
 describe('makeNpcFormDialog', () => {
     beforeEach(() => {
@@ -43,9 +50,9 @@ describe('makeNpcFormDialog', () => {
         vi.resetModules();
     });
 
-    async function make(config: Parameters<typeof import('./npc-form-dialog.ts').makeNpcFormDialog>[0]): Promise<FactoryClass> {
+    async function make(config: NpcFormDialogConfig): Promise<FactoryClass> {
         const { makeNpcFormDialog } = await import('./npc-form-dialog.ts');
-        return makeNpcFormDialog(config) as unknown as FactoryClass;
+        return makeNpcFormDialog(config) as FactoryClass;
     }
 
     it('bakes the shared form-dialog chrome with common defaults', async () => {

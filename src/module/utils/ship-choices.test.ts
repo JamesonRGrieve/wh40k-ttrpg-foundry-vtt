@@ -23,6 +23,7 @@ describe('shipHullTypeChoices', () => {
         const choices = shipHullTypeChoices();
         expect(Object.keys(choices)[0]).toBe('all');
         for (const key of Object.keys(WH40K.hullTypes)) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.json (flag on)
             expect(choices[key]).toBe(`loc:${WH40K.hullTypes[key]?.label.split('.').pop() ?? ''}`);
         }
     });

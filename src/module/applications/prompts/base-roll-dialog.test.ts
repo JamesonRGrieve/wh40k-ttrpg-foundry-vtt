@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { importModelOrSkip } from '../../testing/model-import.ts';
+import type { RollDispatch } from './base-roll-dialog.ts';
 
 /**
  * Tests for the shared finalize/select plumbing hoisted into BaseRollDialog (#348).
@@ -14,25 +15,36 @@ import { importModelOrSkip } from '../../testing/model-import.ts';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructors; `unknown[]` is rejected.
 type Constructor<T = object> = new (...args: any[]) => T;
 
-interface RollDispatch {
-    finalize?: () => Promise<void> | void;
-    performActionAndSendToChat?: () => Promise<void> | void;
+// The minimal `this` each prototype method actually touches. Declaring these per
+// method (rather than a single fat stub) lets each test build a complete object of
+// the exact shape its method needs, so no `as unknown` bridge is required.
+/** `_getRollData` reads only `this.rollData`. */
+interface RollDataHost {
+    rollData: RollDispatch;
+}
+/** `_onSelectItem` re-renders via `this.render` and otherwise works off its args. */
+interface RenderHost {
+    render: () => Promise<void> | void;
 }
 
-// The subset of the BaseRollDialog prototype the tests reach into.
-interface BaseRollDialogProto {
-    _performRoll(this: RollDialogStub): Promise<void>;
-    _getRollData(this: RollDialogStub): RollDispatch;
-    _onSelectItem(this: RollDialogStub, rollData: { update?: () => Promise<void> | void }, selectFn: ((name: string) => void) | undefined, name: string): Promise<void>;
-}
-
-// The stub `this` the prototype methods run against.
-interface RollDialogStub {
-    rollData: Record<string, unknown>;
+// The full stub `this` for `_performRoll`, which exercises the entire sequence.
+interface RollDialogStub extends RollDataHost {
     _validateRoll: () => boolean;
     _getRollData: () => RollDispatch;
     close: () => Promise<void>;
     render: () => Promise<void> | void;
+}
+
+// The subset of the BaseRollDialog prototype the tests reach into.
+interface BaseRollDialogProto {
+    _performRoll: (this: RollDialogStub) => Promise<void>;
+    _getRollData: (this: RollDataHost) => RollDispatch;
+    _onSelectItem: (
+        this: RenderHost,
+        rollData: { update?: () => Promise<void> | void },
+        selectFn: ((name: string) => void) | undefined,
+        name: string,
+    ) => Promise<void>;
 }
 
 function installFoundryStubs(): void {
@@ -54,8 +66,10 @@ function installFoundryStubs(): void {
 async function loadProto(): Promise<BaseRollDialogProto | undefined> {
     const mod = await importModelOrSkip(import('./base-roll-dialog.ts'));
     if (mod === undefined) return undefined;
-    const Ctor = mod.default as unknown as { prototype: BaseRollDialogProto };
-    return Ctor.prototype;
+    // The prototype methods are invoked via `.call(stub)` against the minimal
+    // per-method `this` hosts (RollDataHost / RenderHost / RollDialogStub) rather than
+    // a booted ApplicationV2; the real prototype assigns to BaseRollDialogProto directly.
+    return mod.default.prototype;
 }
 
 describe('BaseRollDialog shared roll plumbing (#348)', () => {
@@ -73,7 +87,7 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
         if (proto === undefined) return;
 
         const finalize = vi.fn();
-        const stub = { rollData: { finalize } } as unknown as RollDialogStub;
+        const stub: RollDataHost = { rollData: { finalize } };
         expect(proto._getRollData.call(stub)).toBe(stub.rollData);
     });
 
@@ -85,7 +99,7 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
         const calls: string[] = [];
         const finalize = vi.fn(() => void calls.push('finalize'));
         const performActionAndSendToChat = vi.fn(() => void calls.push('dispatch'));
-        const close = vi.fn(() => {
+        const close = vi.fn(async () => {
             calls.push('close');
             return Promise.resolve();
         });
@@ -95,7 +109,7 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
                 calls.push('validate');
                 return true;
             },
-            _getRollData: () => stub.rollData as RollDispatch,
+            _getRollData: () => stub.rollData,
             close,
             render: () => undefined,
         };
@@ -112,11 +126,11 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
 
         const finalize = vi.fn();
         const performActionAndSendToChat = vi.fn();
-        const close = vi.fn(() => Promise.resolve());
+        const close = vi.fn(async () => Promise.resolve());
         const stub: RollDialogStub = {
             rollData: { finalize, performActionAndSendToChat },
             _validateRoll: () => false,
-            _getRollData: () => stub.rollData as RollDispatch,
+            _getRollData: () => stub.rollData,
             close,
             render: () => undefined,
         };
@@ -133,7 +147,7 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the ApplicationV2 runtime is unavailable, not an assertion branch
         if (proto === undefined) return;
 
-        const close = vi.fn(() => Promise.resolve());
+        const close = vi.fn(async () => Promise.resolve());
         const stub: RollDialogStub = {
             rollData: {},
             _validateRoll: () => true,
@@ -154,12 +168,12 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
 
         const calls: string[] = [];
         const selectFn = vi.fn((name: string) => void calls.push(`select:${name}`));
-        const update = vi.fn(() => {
+        const update = vi.fn(async () => {
             calls.push('update');
             return Promise.resolve();
         });
         const render = vi.fn(() => void calls.push('render'));
-        const stub = { render } as unknown as RollDialogStub;
+        const stub: RenderHost = { render };
 
         await proto._onSelectItem.call(stub, { update }, selectFn, 'Bolt Pistol');
 
@@ -173,7 +187,7 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
         if (proto === undefined) return;
 
         const render = vi.fn();
-        const stub = { render } as unknown as RollDialogStub;
+        const stub: RenderHost = { render };
 
         await proto._onSelectItem.call(stub, {}, undefined, 'Anything');
 
