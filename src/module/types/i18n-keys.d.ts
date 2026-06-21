@@ -1516,6 +1516,7 @@ export type I18nKey =
     | 'WH40K.Lead.State.DeadEnd'
     | 'WH40K.Lead.State.Label'
     | 'WH40K.Lead.State.Pursued'
+    | 'WH40K.Lead.State.Resolved'
     | 'WH40K.Lead.Type.Document'
     | 'WH40K.Lead.Type.Label'
     | 'WH40K.Lead.Type.Location'

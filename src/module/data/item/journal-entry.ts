@@ -1,6 +1,6 @@
+import { LEAD_STATUS_CHOICES, type LeadStatus, normalizeLeadStatus } from '../../config/lead-status.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import { JOURNAL_LEAD_STATUS_CHOICES, type LeadStatus } from '../shared/lead-status.ts';
 
 // Re-export so existing `LeadStatus` importers keep resolving after the
 // canonical type moved to the shared lead-status vocabulary module.
@@ -14,7 +14,7 @@ export type { LeadStatus };
  * fields (status, source, owner) are populated and the sheet renders
  * the lead view. Otherwise the entry is a plain in-character note. The
  * lead-status vocabulary is shared with {@link ../item/lead.ts LeadData}
- * via {@link ../shared/lead-status.ts}.
+ * via {@link ../../config/lead-status.ts}.
  */
 export default class JournalEntryItemData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
@@ -38,11 +38,31 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
             leadStatus: new fields.StringField({
                 required: true,
                 initial: 'active',
-                choices: [...JOURNAL_LEAD_STATUS_CHOICES],
+                choices: [...LEAD_STATUS_CHOICES],
             }),
             leadSource: new fields.StringField({ required: false, initial: '', blank: true }),
             leadGmRedHerring: new fields.BooleanField({ required: true, initial: false }),
         };
+    }
+
+    /**
+     * Normalise legacy stored payloads before the schema validates. Journal
+     * leads historically stored the terminal state camel-cased (`deadEnd`),
+     * which is not in the unified `LEAD_STATUS_CHOICES` (`dead-end`); coerce it
+     * here so the field validates on load. Idempotent for canonical values.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: SystemDataModel.migrateData signature is Foundry-defined (raw source/return)
+    static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: SystemDataModel.migrateData inherits an untyped Foundry signature
+        const out = super.migrateData(source);
+        const status = out['leadStatus'];
+        if (typeof status === 'string') {
+            const canonical = normalizeLeadStatus(status);
+            if (canonical !== status) {
+                out['leadStatus'] = canonical;
+            }
+        }
+        return out;
     }
 
     /** @override */

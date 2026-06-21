@@ -1,6 +1,6 @@
+import { LEAD_STATUS_CHOICES, isTerminalLeadStatus, leadStatusIcon, leadStatusLabelKey } from '../../config/lead-status.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import { LEAD_STATE_CHOICES, LEAD_STATUS_ICONS, LEAD_STATUS_LABEL_KEYS } from '../shared/lead-status.ts';
 
 /**
  * Data model for Investigation Lead items.
@@ -12,7 +12,7 @@ import { LEAD_STATE_CHOICES, LEAD_STATUS_ICONS, LEAD_STATUS_LABEL_KEYS } from '.
  *
  * The lead-status vocabulary (choices + label/icon maps) is shared with
  * {@link ../item/journal-entry.ts JournalEntryItemData} via
- * {@link ../shared/lead-status.ts}.
+ * {@link ../../config/lead-status.ts}.
  *
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
@@ -30,11 +30,12 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
         return {
             ...super.defineSchema(),
 
-            // Investigation state — pursued and dead-end resolve from active.
+            // Investigation state — see the shared lead-status registry
+            // (active → pursued → resolved | dead-end).
             state: new fields.StringField({
                 required: true,
                 initial: 'active',
-                choices: [...LEAD_STATE_CHOICES],
+                choices: [...LEAD_STATUS_CHOICES],
             }),
 
             // Source clue — free text identifying which clue / scene
@@ -62,7 +63,7 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
      * Localized label for the lead's current state.
      */
     get stateLabel(): string {
-        const key = LEAD_STATUS_LABEL_KEYS[this.state] ?? 'WH40K.Lead.State.Active';
+        const key = leadStatusLabelKey(this.state);
         return game.i18n.has(key) ? game.i18n.localize(key) : this.state;
     }
 
@@ -70,7 +71,7 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
      * Font Awesome icon class for the lead's current state.
      */
     get stateIcon(): string {
-        return LEAD_STATUS_ICONS[this.state] ?? 'fa-circle-question';
+        return leadStatusIcon(this.state);
     }
 
     /**
@@ -101,10 +102,11 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
     }
 
     /**
-     * Is this lead resolved (terminal state)?
+     * Is this lead in a terminal (closed) state — `resolved` or `dead-end`?
+     * Driven by the shared registry's `terminal` flag, not a hard-coded id.
      */
     get isResolved(): boolean {
-        return this.state === 'dead-end';
+        return isTerminalLeadStatus(this.state);
     }
 
     /* -------------------------------------------- */

@@ -1000,6 +1000,7 @@
                 "Label": "State",
                 "Active": "Active",
                 "Pursued": "Pursued",
+                "Resolved": "Resolved",
                 "DeadEnd": "Dead End"
             },
             "SourceClue": {
