@@ -1,5 +1,6 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { LEAD_STATE_CHOICES, LEAD_STATUS_ICONS, LEAD_STATUS_LABEL_KEYS } from '../shared/lead-status.ts';
 
 /**
  * Data model for Investigation Lead items.
@@ -8,6 +9,10 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * (witness/document/location/other), a source clue that produced it, and a
  * state that resolves through pursued → dead-end / active. Pure data shape —
  * no automation; resolution mechanics live on the actor / GM workflow.
+ *
+ * The lead-status vocabulary (choices + label/icon maps) is shared with
+ * {@link ../item/journal-entry.ts JournalEntryItemData} via
+ * {@link ../shared/lead-status.ts}.
  *
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
@@ -29,7 +34,7 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
             state: new fields.StringField({
                 required: true,
                 initial: 'active',
-                choices: ['active', 'pursued', 'dead-end'],
+                choices: [...LEAD_STATE_CHOICES],
             }),
 
             // Source clue — free text identifying which clue / scene
@@ -57,12 +62,7 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
      * Localized label for the lead's current state.
      */
     get stateLabel(): string {
-        const map: Record<string, string> = {
-            'active': 'WH40K.Lead.State.Active',
-            'pursued': 'WH40K.Lead.State.Pursued',
-            'dead-end': 'WH40K.Lead.State.DeadEnd',
-        };
-        const key = map[this.state] ?? 'WH40K.Lead.State.Active';
+        const key = LEAD_STATUS_LABEL_KEYS[this.state] ?? 'WH40K.Lead.State.Active';
         return game.i18n.has(key) ? game.i18n.localize(key) : this.state;
     }
 
@@ -70,12 +70,7 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
      * Font Awesome icon class for the lead's current state.
      */
     get stateIcon(): string {
-        const icons: Record<string, string> = {
-            'active': 'fa-magnifying-glass',
-            'pursued': 'fa-route',
-            'dead-end': 'fa-ban',
-        };
-        return icons[this.state] ?? 'fa-circle-question';
+        return LEAD_STATUS_ICONS[this.state] ?? 'fa-circle-question';
     }
 
     /**
