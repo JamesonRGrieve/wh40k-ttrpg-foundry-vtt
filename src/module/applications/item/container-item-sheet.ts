@@ -4,14 +4,19 @@
  */
 
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KItemDocument } from '../../types/global.d.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
 /**
  * Item sheet for container-type items (weapons, armour, gear, etc.)
  * that can hold nested items like modifications.
+ *
+ * Generic over the concrete item document type so container subclasses
+ * (weapon, armour, …) thread their DataModel-narrowed item through the base
+ * `get item(): TItem`; defaults to `WH40KItemDocument` for the plain container.
  */
-export default class ContainerItemSheet extends BaseItemSheet {
+export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KItemDocument> extends BaseItemSheet<TItem> {
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,

@@ -20,12 +20,7 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
  * Sheet for gear items (consumables, drugs, tools, etc.).
  */
 // @ts-expect-error - TS2417 static side inheritance
-export default class GearSheet extends BaseItemSheet {
-    /** Narrow the inherited item document to its gear DataModel shape. */
-    override get item(): GearItem {
-        return super.item as GearItem;
-    }
-
+export default class GearSheet extends BaseItemSheet<GearItem> {
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
