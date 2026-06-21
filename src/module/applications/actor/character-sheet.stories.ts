@@ -7,11 +7,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { mockPlayerSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { clickAction } from '../../../../stories/test-helpers';
+import { clickAction, renderSheetParts } from '../../../../stories/test-helpers';
 import combatActionsPanelSrc from '../../../templates/actor/panel/combat-actions-panel.hbs?raw';
 import headerSrc from '../../../templates/actor/player/header-dh.hbs?raw';
 import biographyTabSrc from '../../../templates/actor/player/tab-biography.hbs?raw';
@@ -21,23 +20,22 @@ initializeStoryHandlebars();
 
 const rng = seedRandom(0xc4a4c7e2);
 
-const headerTpl = HbsLib.compile(headerSrc);
-const tabsTpl = HbsLib.compile(tabsSrc);
-const biographyTpl = HbsLib.compile(biographyTabSrc);
+/** Actor types are `<systemId>-<role>`; the prefix is the active game-system id. */
+function systemIdOf(ctx: SheetContextLike): string {
+    const [systemId = 'dh2'] = ctx.actor.type.split('-');
+    return systemId;
+}
 
 function renderCharacterSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = HbsLib.compile(`
-        <div class="tw-grid tw-grid-cols-[280px_minmax(0,1fr)]">
-            <aside class="wh40k-sidebar tw-flex tw-min-h-full tw-flex-col tw-bg-[var(--color-bg-secondary,#252525)]">
-                ${headerTpl(ctx)}
-                ${tabsTpl(ctx)}
-            </aside>
-            <main class="wh40k-body tw-min-w-0 tw-p-2">
-                ${biographyTpl(ctx)}
-            </main>
-        </div>
-    `);
-    return renderStoryTemplate(tpl, ctx);
+    return renderSheetParts(
+        [
+            { template: headerSrc, partClass: 'wh40k-sidebar tw-flex tw-min-h-full tw-flex-col tw-bg-[var(--color-bg-secondary,#252525)]' },
+            { template: tabsSrc, partClass: 'wh40k-sidebar' },
+            { template: biographyTabSrc, partClass: 'wh40k-body tw-min-w-0 tw-p-2' },
+        ],
+        ctx,
+        { systemId: systemIdOf(ctx) },
+    );
 }
 
 randomId('character', rng);
