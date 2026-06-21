@@ -108,3 +108,39 @@ export const SKILL_DEFINITIONS: Record<string, SkillDefinition> = {
 export function skillCharacteristicMap(): Record<string, string> {
     return Object.fromEntries(Object.entries(SKILL_DEFINITIONS).map(([key, d]) => [key, CHARACTERISTIC_SHORT_TO_FULL[d.char] ?? d.char]));
 }
+
+/**
+ * Derive the display-label → key map from {@link SKILL_DEFINITIONS}
+ * (e.g. `'Common Lore' → 'commonLore'`). Single source for SkillKeyHelper's
+ * name→key lookup.
+ */
+export function skillNameToKeyMap(): Record<string, string> {
+    return Object.fromEntries(Object.entries(SKILL_DEFINITIONS).map(([key, d]) => [d.label, key]));
+}
+
+/**
+ * Derive the set of specialist-group keys (those carrying per-specialization
+ * `entries`) from {@link SKILL_DEFINITIONS} — i.e. every entry with `hasEntries`.
+ */
+export function specialistSkillKeys(): Set<string> {
+    return new Set(
+        Object.entries(SKILL_DEFINITIONS)
+            .filter(([, d]) => d.hasEntries)
+            .map(([key]) => key),
+    );
+}
+
+/**
+ * Derive a `skillKey → short-characteristic-code` map from {@link SKILL_DEFINITIONS}
+ * (e.g. `dodge → 'Ag'`). Short form, unlike {@link skillCharacteristicMap}.
+ */
+export function skillCharacteristicShortMap(): Record<string, string> {
+    return Object.fromEntries(Object.entries(SKILL_DEFINITIONS).map(([key, d]) => [key, d.char]));
+}
+
+/**
+ * Derive a `skillKey → isAdvanced` map from {@link SKILL_DEFINITIONS}.
+ */
+export function skillAdvancedMap(): Record<string, boolean> {
+    return Object.fromEntries(Object.entries(SKILL_DEFINITIONS).map(([key, d]) => [key, d.advanced]));
+}
