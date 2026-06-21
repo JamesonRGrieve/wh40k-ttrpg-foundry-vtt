@@ -1,6 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
-
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import { makeNpcFormDialog } from './npc-form-dialog.ts';
 
 interface DialogState {
     npc: WH40KNPC | null;
@@ -20,7 +19,17 @@ interface DifficultyRating {
  *
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
-export default class DifficultyCalculatorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
+    id: 'difficulty-calculator-{id}',
+    cssClass: 'difficulty-calculator-dialog',
+    tag: 'div',
+    // Preserves the original framework-default window chrome (no standard-form, default flags).
+    window: { title: 'WH40K.NPC.DifficultyCalculator', icon: 'fa-solid fa-calculator', minimizable: true, resizable: false, contentClasses: [] },
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts number | 'auto'
+    position: { width: 600, height: 'auto' as unknown as number },
+    partId: 'form',
+    template: 'systems/wh40k-rpg/templates/dialogs/difficulty-calculator.hbs',
+}) {
     /**
      * Internal state for the dialog.
      * @type {DialogState}
@@ -34,30 +43,11 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** Per-dialog action deltas; merged with the shared base options. */
     static override DEFAULT_OPTIONS = {
-        id: 'difficulty-calculator-{id}',
-        classes: ['wh40k-rpg', 'difficulty-calculator-dialog'],
-        tag: 'div',
-        window: {
-            title: 'WH40K.NPC.DifficultyCalculator',
-            icon: 'fa-solid fa-calculator',
-        },
-        position: {
-            width: 600,
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts number | 'auto'
-            height: 'auto' as unknown as number,
-        },
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry action handlers are invoked with the application as `this`
             updateQuantity: DifficultyCalculatorDialog.#updateQuantity,
-        },
-    };
-
-    /** @override */
-    static PARTS = {
-        form: {
-            template: 'systems/wh40k-rpg/templates/dialogs/difficulty-calculator.hbs',
         },
     };
 
