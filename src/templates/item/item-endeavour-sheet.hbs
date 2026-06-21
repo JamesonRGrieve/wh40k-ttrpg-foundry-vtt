@@ -6,7 +6,7 @@
             <span class="material-icons tw-text-gold rt:tw-text-gold tw-text-2xl">flag</span>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-            <input class="tw-font-display tw-text-xl tw-text-gold rt:tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" type="text" value="{{item.name}}" placeholder="{{localize 'WH40K.Endeavours.NamePlaceholder'}}" />
+            {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholderKey="WH40K.Endeavours.NamePlaceholder"}}
             <div class="tw-inline-flex tw-items-center tw-gap-2 tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">
                 <span class="material-icons tw-text-sm">military_tech</span>
                 <span>{{localize "WH40K.Endeavours.Header"}}</span>
