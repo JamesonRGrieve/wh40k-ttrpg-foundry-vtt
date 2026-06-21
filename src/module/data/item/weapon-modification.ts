@@ -2,6 +2,7 @@ import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { normalizeNestedToArray, normalizeToArray } from '../shared/normalize-to-array.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
@@ -100,28 +101,11 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     // eslint-disable-next-line no-restricted-syntax -- boundary: _cleanData receives raw untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
     static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
-        if (!source) return;
-        const restrictions = source['restrictions'];
-        if (restrictions instanceof Object) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: restrictions is untyped Foundry migration data
-            const restrictionsRecord = restrictions as Record<string, unknown>;
-            if (restrictionsRecord['weaponClasses'] instanceof Set) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
-                restrictionsRecord['weaponClasses'] = Array.from(restrictionsRecord['weaponClasses'] as Set<unknown>);
-            }
-            if (restrictionsRecord['weaponTypes'] instanceof Set) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
-                restrictionsRecord['weaponTypes'] = Array.from(restrictionsRecord['weaponTypes'] as Set<unknown>);
-            }
-        }
-        if (source['addedQualities'] instanceof Set) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
-            source['addedQualities'] = Array.from(source['addedQualities'] as Set<unknown>);
-        }
-        if (source['removedQualities'] instanceof Set) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
-            source['removedQualities'] = Array.from(source['removedQualities'] as Set<unknown>);
-        }
+        // Convert SetFields to arrays for storage (see normalize-to-array.ts).
+        normalizeNestedToArray(source, 'restrictions', 'weaponClasses');
+        normalizeNestedToArray(source, 'restrictions', 'weaponTypes');
+        normalizeToArray(source, 'addedQualities');
+        normalizeToArray(source, 'removedQualities');
     }
 
     /* -------------------------------------------- */

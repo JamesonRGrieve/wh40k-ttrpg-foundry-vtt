@@ -2,6 +2,7 @@ import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { normalizeNestedToArray, normalizeToArray } from '../shared/normalize-to-array.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
@@ -190,25 +191,10 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     // eslint-disable-next-line no-restricted-syntax -- boundary: _cleanData receives untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
     static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
-        if (!source) return;
-        // Convert SetFields to Arrays for storage
-        const restrictions = source['restrictions'];
-        if (restrictions instanceof Object) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: restrictions is untyped Foundry migration data
-            const restrictionsRecord = restrictions as Record<string, unknown>;
-            if (restrictionsRecord['armourTypes'] instanceof Set) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
-                restrictionsRecord['armourTypes'] = Array.from(restrictionsRecord['armourTypes'] as Set<unknown>);
-            }
-        }
-        if (source['addedProperties'] instanceof Set) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
-            source['addedProperties'] = Array.from(source['addedProperties'] as Set<unknown>);
-        }
-        if (source['removedProperties'] instanceof Set) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
-            source['removedProperties'] = Array.from(source['removedProperties'] as Set<unknown>);
-        }
+        // Convert SetFields to arrays for storage (see normalize-to-array.ts).
+        normalizeNestedToArray(source, 'restrictions', 'armourTypes');
+        normalizeToArray(source, 'addedProperties');
+        normalizeToArray(source, 'removedProperties');
     }
 
     /* -------------------------------------------- */

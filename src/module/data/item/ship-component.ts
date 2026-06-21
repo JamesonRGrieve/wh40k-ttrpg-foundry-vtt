@@ -2,6 +2,7 @@ import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { normalizeToArray } from '../shared/normalize-to-array.ts';
 
 /**
  * Data model for Ship Component items.
@@ -150,15 +151,8 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent cleanData signature
     static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
-        // Ensure hullType is array for Set field
-        if (source?.['hullType'] != null && !Array.isArray(source['hullType'])) {
-            if (typeof source['hullType'] === 'string') {
-                source['hullType'] = [source['hullType']];
-            } else if (source['hullType'] instanceof Set) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> is the correct type here; Foundry source data is untyped
-                source['hullType'] = Array.from(source['hullType'] as Set<unknown>);
-            }
-        }
+        // Convert the hullType SetField to an array before Foundry serializes (see normalize-to-array.ts).
+        normalizeToArray(source, 'hullType', { stringMode: 'wrap' });
     }
 
     /* -------------------------------------------- */
