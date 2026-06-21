@@ -1,4 +1,5 @@
 import { afterAll, describe, expect, it } from 'vitest';
+import { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { importModelOrSkip } from '../../testing/model-import.ts';
 
@@ -84,5 +85,28 @@ describe('SkillGrantData._getSchemaSkillKey (#279)', () => {
         expect(grant._getSchemaSkillKey('', actor)).toBeNull();
         // Resolvable name, but the actor's schema does not carry it.
         expect(grant._getSchemaSkillKey('Parry', actorWithSkills('dodge'))).toBeNull();
+    });
+});
+
+describe('SkillGrantData level→rank single-sourcing (#340)', () => {
+    it('_getLevelUpdates writes the canonical BaseSystemConfig rank for every level', () => {
+        const grant = makeGrant();
+        for (const level of Object.keys(SkillGrantData.TRAINING_LEVELS)) {
+            expect(grant._getLevelUpdates(level)).toEqual({ advance: BaseSystemConfig.skillLevelToRank(level) });
+        }
+    });
+
+    it('resolves the aliases the old local advance table dropped to 0', () => {
+        const grant = makeGrant();
+        // known/experienced/veteran were absent from the deleted advanceByLevel map.
+        expect(grant._getLevelUpdates('known')).toEqual({ advance: 1 });
+        expect(grant._getLevelUpdates('experienced')).toEqual({ advance: 3 });
+        expect(grant._getLevelUpdates('veteran')).toEqual({ advance: 4 });
+    });
+
+    it('TRAINING_LEVELS.order matches the canonical rank for every level (grant↔sheet agree)', () => {
+        for (const [level, def] of Object.entries(SkillGrantData.TRAINING_LEVELS)) {
+            expect(def?.order).toBe(BaseSystemConfig.skillLevelToRank(level));
+        }
     });
 });
