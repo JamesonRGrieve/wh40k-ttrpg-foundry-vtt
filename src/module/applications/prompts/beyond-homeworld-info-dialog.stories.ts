@@ -5,18 +5,35 @@ import templateSrc from '../../../../src/templates/prompt/beyond-homeworld-info-
 import { renderSheet } from '../../../../stories/test-helpers';
 
 /**
- * Storybook stories for BeyondHomeworldInfoDialog (GitHub #140).
+ * Storybook stories for BeyondHomeworldInfoDialog (GitHub #140 / #338).
  *
  * Renders the three Beyond home-worlds (Daemon World, Penal Colony,
- * Quarantine World) as a grid of cards using the typed registry as
- * the source of truth — no hand-authored card data. The play function
- * verifies all three cards render and that the Quarantine subtlety-
- * clamp rider + Daemon corruption rider surface on their cards.
+ * Quarantine World) as a grid of cards. The dialog joins the slimmed
+ * registry (riders + prose) with compendium-sourced mechanical basics
+ * at render time; stories don't run the compendium stack, so the basics
+ * are declared inline here mirroring `readHomeworldMechanics` output.
+ * The play function verifies all three cards render and that the
+ * Quarantine subtlety-clamp rider + Daemon corruption rider surface on
+ * their cards.
  */
 
 interface Args {
     showAllRiders: boolean;
 }
+
+/** Projected compendium basics per compendium identifier (mirrors the reader). */
+const BASICS: Record<string, { bonuses: string[]; penalties: string[]; fateBase: number; blessing: number; aptitude: string; woundsFlat: number }> = {
+    'daemon-world': { bonuses: ['Willpower', 'Perception'], penalties: ['Fellowship'], fateBase: 3, blessing: 4, aptitude: 'Willpower', woundsFlat: 7 },
+    'penal-colony': { bonuses: ['Toughness', 'Perception'], penalties: ['Influence'], fateBase: 3, blessing: 8, aptitude: 'Toughness', woundsFlat: 10 },
+    'quarantine-world': {
+        bonuses: ['Ballistic Skill', 'Intelligence'],
+        penalties: ['Strength'],
+        fateBase: 3,
+        blessing: 9,
+        aptitude: 'Fieldcraft',
+        woundsFlat: 8,
+    },
+};
 
 interface BeyondHomeworldCardCtx {
     id: string;
@@ -36,23 +53,26 @@ interface BeyondHomeworldCardCtx {
 
 function buildContext(): { homeworlds: BeyondHomeworldCardCtx[] } {
     return {
-        homeworlds: listBeyondHomeworlds().map((def) => ({
-            id: def.id,
-            label: def.label,
-            accent: def.id === 'daemonWorld' ? 'crimson' : def.id === 'penalColony' ? 'grey' : 'green',
-            bonusesLabel: def.characteristicMods.bonuses.map((b) => `+${b.charAt(0).toUpperCase()}${b.slice(1)}`).join(', '),
-            penaltiesLabel: def.characteristicMods.penalties.map((p) => `-${p.charAt(0).toUpperCase()}${p.slice(1)}`).join(', '),
-            fateLabel: `${def.fateThreshold.base} (Emperor's Blessing ${def.fateThreshold.emperorsBlessing}+)`,
-            woundsLabel: `${def.wounds.base} + 1d${def.wounds.dieFaces}`,
-            aptitude: def.aptitude,
-            keyTalents: def.keyTalents,
-            recommendedBackgrounds: def.recommendedBackgrounds,
-            mechanicalHook: def.mechanicalHook,
-            corruptionRiderLabel: def.corruptionRider ? `1d${def.corruptionRider.dieFaces} + ${def.corruptionRider.base} Corruption Points` : null,
-            subtletyClampLabel: def.subtletyClamp
-                ? `Subtlety decreases reduced by ${def.subtletyClamp.reducedBy} (min reduction ${def.subtletyClamp.minimumReduction})`
-                : null,
-        })),
+        homeworlds: listBeyondHomeworlds().map((def) => {
+            const basics = BASICS[def.compendiumId] ?? { bonuses: [], penalties: [], fateBase: 0, blessing: 0, aptitude: '', woundsFlat: 0 };
+            return {
+                id: def.id,
+                label: def.label,
+                accent: def.id === 'daemonWorld' ? 'crimson' : def.id === 'penalColony' ? 'grey' : 'green',
+                bonusesLabel: basics.bonuses.map((b) => `+${b}`).join(', '),
+                penaltiesLabel: basics.penalties.map((p) => `-${p}`).join(', '),
+                fateLabel: `${basics.fateBase} (Emperor's Blessing ${basics.blessing}+)`,
+                woundsLabel: `${basics.woundsFlat} + 1d5`,
+                aptitude: basics.aptitude,
+                keyTalents: def.keyTalents,
+                recommendedBackgrounds: def.recommendedBackgrounds,
+                mechanicalHook: def.mechanicalHook,
+                corruptionRiderLabel: def.corruptionRider ? `1d${def.corruptionRider.dieFaces} + ${def.corruptionRider.base} Corruption Points` : null,
+                subtletyClampLabel: def.subtletyClamp
+                    ? `Subtlety decreases reduced by ${def.subtletyClamp.reducedBy} (min reduction ${def.subtletyClamp.minimumReduction})`
+                    : null,
+            };
+        }),
     };
 }
 
