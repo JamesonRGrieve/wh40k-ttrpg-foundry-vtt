@@ -8,7 +8,7 @@ import {
     reconcileResourceDeltas,
     type OriginModifierBag,
 } from '../origin-grant-ledger.ts';
-import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import { applyRollModeWhispers, getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
 import type { WH40KItemSystemData } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
@@ -670,8 +670,9 @@ export class WH40KItem extends WH40KItemContainer {
         if (roll.total === undefined) return this.sendToChat();
         const rollTotal: number = roll.total;
 
-        const success = rollTotal <= opts.targetValue;
-        const degrees = Math.floor(Math.abs(opts.targetValue - rollTotal) / 10);
+        const success = isD100Success(rollTotal, opts.targetValue);
+        const method = resolveDegreesMethod((this.actor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+        const degrees = 1 + (success ? getDegreeForMode(method, opts.targetValue, rollTotal) : getDegreeForMode(method, rollTotal, opts.targetValue));
 
         const cardData = {
             item: this,

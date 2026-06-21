@@ -12,7 +12,7 @@
 
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData } from '../../rolls/roll-data.ts';
-import { getDegreeForMode, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import {
     AIM_OPTIONS,
@@ -573,7 +573,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const manualTotal = this._manualRollTotal;
         if (manualTotal !== null) {
             const method = resolveDegreesMethod((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
-            const success = manualTotal === 1 || (manualTotal <= finalTarget && manualTotal !== 100);
+            const success = isD100Success(manualTotal, finalTarget);
             if (success) {
                 const dos = 1 + getDegreeForMode(method, finalTarget, manualTotal);
                 rollResult = { success: true, dos, dof: 0, total: manualTotal };
@@ -1601,7 +1601,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // Manual roll - skip _calculateHit, compute success ourselves
             const target = this.rollData.modifiedTarget;
             const method = resolveDegreesMethod((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
-            this.rollData.success = manualTotal === 1 || (manualTotal <= target && manualTotal !== 100);
+            this.rollData.success = isD100Success(manualTotal, target);
             if (this.rollData.success) {
                 this.rollData.dof = 0;
                 this.rollData.dos = 1 + getDegreeForMode(method, target, manualTotal);
