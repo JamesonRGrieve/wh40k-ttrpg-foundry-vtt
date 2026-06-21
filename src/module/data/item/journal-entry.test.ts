@@ -10,8 +10,12 @@ describe('JournalEntryItemData', () => {
         expect(mod.default).toBeTruthy();
     });
 
+    // `migrateData` coerces the legacy `leadStatus: 'deadEnd'` spelling to the
+    // canonical `dead-end` via `normalizeLeadStatus`, whose behaviour is covered
+    // directly in `../../config/lead-status.test.ts` (the model load skips under
+    // happy-dom, so the delegate is unit-tested at the registry level).
+    //
     // TODO: as Foundry test infrastructure expands, add assertions for:
     //   - schema includes the description template
     //   - rich-text body fields round-trip through cleanData
-    //   - migrateData normalises legacy journal-entry payloads
 });

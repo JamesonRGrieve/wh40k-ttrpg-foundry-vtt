@@ -5,6 +5,7 @@
  * notes. No automation — the sheet is a data shape view per issue #74.
  */
 
+import { leadStatusSelectOptions } from '../../config/lead-status.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 
 const LeadSheet = defineSimpleItemSheet({
@@ -15,11 +16,9 @@ const LeadSheet = defineSimpleItemSheet({
     height: 540,
     tabs: [],
     extraContext: {
-        states: {
-            'active': 'WH40K.Lead.State.Active',
-            'pursued': 'WH40K.Lead.State.Pursued',
-            'dead-end': 'WH40K.Lead.State.DeadEnd',
-        },
+        // State dropdown options derive from the shared lead-status registry so
+        // appending a status there extends the sheet without editing it.
+        states: leadStatusSelectOptions(),
         leadTypes: {
             witness: 'WH40K.Lead.Type.Witness',
             document: 'WH40K.Lead.Type.Document',

@@ -39,9 +39,9 @@
             <div class="tw-flex tw-flex-col tw-gap-1">
               <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Lead.State.Label"}}</label>
               <select name="system.state" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-                <option value="active" {{#if (eq item.system.state "active")}}selected{{/if}}>{{localize "WH40K.Lead.State.Active"}}</option>
-                <option value="pursued" {{#if (eq item.system.state "pursued")}}selected{{/if}}>{{localize "WH40K.Lead.State.Pursued"}}</option>
-                <option value="dead-end" {{#if (eq item.system.state "dead-end")}}selected{{/if}}>{{localize "WH40K.Lead.State.DeadEnd"}}</option>
+                {{#each states as |labelKey id|}}
+                <option value="{{id}}" {{#if (eq ../item.system.state id)}}selected{{/if}}>{{localize labelKey}}</option>
+                {{/each}}
               </select>
             </div>
             <div class="tw-flex tw-flex-col tw-gap-1">
