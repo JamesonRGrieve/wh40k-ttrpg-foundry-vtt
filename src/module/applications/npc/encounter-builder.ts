@@ -10,7 +10,7 @@
  * - Deploy NPCs to combat tracker
  */
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import { makeNpcFormDialog } from './npc-form-dialog.ts';
 
 interface NPC {
     uuid: string;
@@ -36,29 +36,23 @@ interface Template {
  * Application for building and managing combat encounters.
  * @extends {ApplicationV2}
  */
-export default class EncounterBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class EncounterBuilder extends makeNpcFormDialog({
+    id: 'encounter-builder',
+    cssClass: 'encounter-builder',
+    tag: 'div',
+    window: { title: 'WH40K.NPC.Encounter.Title', icon: 'fa-solid fa-swords', minimizable: true },
+    position: { width: 800, height: 650 },
+    partId: 'content',
+    template: 'systems/wh40k-rpg/templates/apps/encounter-builder.hbs',
+}) {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** Per-dialog action deltas; merged with the shared base options. */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds `this` at click-time; private static method references are safe here */
     static override DEFAULT_OPTIONS = {
-        id: 'encounter-builder',
-        classes: ['wh40k-rpg', 'encounter-builder'],
-        tag: 'div',
-        window: {
-            title: 'WH40K.NPC.Encounter.Title',
-            icon: 'fa-solid fa-swords',
-            minimizable: true,
-            resizable: true,
-            contentClasses: ['standard-form'],
-        },
-        position: {
-            width: 800,
-            height: 650,
-        },
         actions: {
-            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds `this` at click-time; private static method references are safe here */
             addNPC: EncounterBuilder.#addNPC,
             removeNPC: EncounterBuilder.#removeNPC,
             adjustCount: EncounterBuilder.#adjustCount,
@@ -67,18 +61,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             loadTemplate: EncounterBuilder.#loadTemplate,
             deployToCombat: EncounterBuilder.#deployToCombat,
             openNPC: EncounterBuilder.#openNPC,
-            /* eslint-enable @typescript-eslint/unbound-method */
         },
     };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        content: {
-            template: 'systems/wh40k-rpg/templates/apps/encounter-builder.hbs',
-        },
-    };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
     /*  Difficulty Thresholds                       */

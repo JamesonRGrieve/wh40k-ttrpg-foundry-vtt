@@ -1,8 +1,7 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
-
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import { makeNpcFormDialog } from './npc-form-dialog.ts';
 
 interface FilterState {
     category: string;
@@ -43,47 +42,30 @@ interface TemplateRow {
  * Dialog for browsing and selecting NPC templates.
  * @extends {ApplicationV2}
  */
-export default class TemplateSelector extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class TemplateSelector extends makeNpcFormDialog({
+    id: 'template-selector-{id}',
+    cssClass: 'template-selector',
+    tag: 'div',
+    window: { title: 'WH40K.NPC.Template.SelectTitle', icon: 'fa-solid fa-file-lines' },
+    position: { width: 800, height: 650 },
+    partId: 'content',
+    template: 'systems/wh40k-rpg/templates/dialogs/template-selector.hbs',
+}) {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** Per-dialog action deltas; merged with the shared base options. */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
-        id: 'template-selector-{id}',
-        classes: ['wh40k-rpg', 'template-selector'],
-        tag: 'div',
-        window: {
-            title: 'WH40K.NPC.Template.SelectTitle',
-            icon: 'fa-solid fa-file-lines',
-            minimizable: false,
-            resizable: true,
-            contentClasses: ['standard-form'],
-        },
-        position: {
-            width: 800,
-            height: 650,
-        },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             selectTemplate: TemplateSelector.#selectTemplate,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             clearFilter: TemplateSelector.#clearFilter,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             create: TemplateSelector.#onCreate,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             cancel: TemplateSelector.#onCancel,
         },
     };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        content: {
-            template: 'systems/wh40k-rpg/templates/dialogs/template-selector.hbs',
-        },
-    };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
     /*  Properties                                  */
