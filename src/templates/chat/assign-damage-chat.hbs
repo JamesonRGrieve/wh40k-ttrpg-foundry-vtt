@@ -53,14 +53,13 @@
             {{else}}
             {{! Damage Taken }}
             {{#if this.hasDamage}}
-                <div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md">
-                    <div class="tw-flex tw-justify-between tw-items-center tw-mb-2 tw-pb-2 tw-border-b tw-border-[var(--wh40k-wounds-border)]">
-                        <span class="tw-font-display tw-text-sm tw-text-[var(--wh40k-wounds-secondary)] tw-uppercase tw-tracking-widest">Wounds Taken</span>
-                        <span class="tw-text-xs tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded tw-text-[var(--wh40k-card-muted)]">{{this.hit.location}}</span>
-                    </div>
-                    <div class="tw-text-center tw-text-3xl tw-font-bold tw-text-[var(--wh40k-wounds-secondary)] tw-shadow-[0_0_10px_rgba(139,0,0,0.5)]">{{this.damageTaken}}</div>
-                    <div class="tw-text-center tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-card-muted)] tw-mt-1">{{this.hit.damageType}}</div>
-                </div>
+                {{> systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs
+                    labelKey="WH40K.Combat.WoundsTaken"
+                    badge=this.hit.location
+                    value=this.damageTaken
+                    caption=this.hit.damageType
+                    valueShadowClass="tw-shadow-[0_0_10px_rgba(139,0,0,0.5)]"
+                    captionMutedVar="--wh40k-card-muted"}}
             {{/if}}
             {{/if}}
 
