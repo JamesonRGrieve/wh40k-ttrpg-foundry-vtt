@@ -5,13 +5,11 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { mockNpcSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { clickAction } from '../../../../stories/test-helpers';
+import { clickAction, renderSheetParts } from '../../../../stories/test-helpers';
 import npcTabSrc from '../../../templates/actor/npc/tab-npc.hbs?raw';
 
 initializeStoryHandlebars();
@@ -19,15 +17,14 @@ initializeStoryHandlebars();
 const rng = seedRandom(0xdeadbeef);
 void randomId('npc', rng); // seed advance only — id not used at module level
 
-const npcTabTpl = HBS.compile(npcTabSrc);
+/** Actor types are `<systemId>-<role>`; the prefix is the active game-system id. */
+function systemIdOf(ctx: SheetContextLike): string {
+    const [systemId = 'dh2'] = ctx.actor.type.split('-');
+    return systemId;
+}
 
 function renderNPCSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = HBS.compile(`
-        <div class="wh40k-sheet-body tw-p-2">
-            ${npcTabTpl(ctx)}
-        </div>
-    `);
-    return renderTpl(tpl, ctx);
+    return renderSheetParts([{ template: npcTabSrc, partClass: 'wh40k-sheet-body tw-p-2' }], ctx, { systemId: systemIdOf(ctx) });
 }
 
 const meta: Meta<SheetContextLike> = {

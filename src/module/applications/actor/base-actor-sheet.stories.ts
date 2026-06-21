@@ -6,13 +6,11 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
 import { mockPlayerSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { clickAction } from '../../../../stories/test-helpers';
+import { clickAction, renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/actor/player/header-dh.hbs?raw';
 import biographyTabSrc from '../../../templates/actor/player/tab-biography.hbs?raw';
 import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
@@ -21,23 +19,22 @@ initializeStoryHandlebars();
 
 const rng = seedRandom(0xba5eba11);
 
-const headerTpl = Hbs.compile(headerSrc);
-const tabsTpl = Hbs.compile(tabsSrc);
-const biographyTpl = Hbs.compile(biographyTabSrc);
+/** Actor types are `<systemId>-<role>`; the prefix is the active game-system id. */
+function systemIdOf(ctx: SheetContextLike): string {
+    const [systemId = 'dh2'] = ctx.actor.type.split('-');
+    return systemId;
+}
 
 function renderBaseActorSheet(ctx: SheetContextLike): HTMLElement {
-    const tpl = Hbs.compile(`
-        <div class="tw-grid tw-grid-cols-[260px_minmax(0,1fr)]">
-            <aside class="wh40k-sidebar tw-flex tw-min-h-full tw-flex-col">
-                ${headerTpl(ctx)}
-                ${tabsTpl(ctx)}
-            </aside>
-            <main class="wh40k-body tw-min-w-0 tw-p-2">
-                ${biographyTpl(ctx)}
-            </main>
-        </div>
-    `);
-    return renderTpl(tpl, ctx);
+    return renderSheetParts(
+        [
+            { template: headerSrc, partClass: 'wh40k-sidebar tw-flex tw-min-h-full tw-flex-col' },
+            { template: tabsSrc, partClass: 'wh40k-sidebar' },
+            { template: biographyTabSrc, partClass: 'wh40k-body tw-min-w-0 tw-p-2' },
+        ],
+        ctx,
+        { systemId: systemIdOf(ctx) },
+    );
 }
 
 void randomId('base-actor', rng);
