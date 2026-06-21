@@ -8,7 +8,7 @@ import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
-import { getDegreeForMode, getOpposedDegrees, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
+import { getDegreeForMode, getOpposedDegrees, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 
 export class ActionData {
     id: string = uuid();
@@ -154,7 +154,7 @@ export class ActionData {
         }
         const rollTotal = this.rollData.roll?.total ?? 0;
         const target = this.rollData.modifiedTarget;
-        this.rollData.success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
+        this.rollData.success = isD100Success(rollTotal, target);
     }
 
     // eslint-disable-next-line complexity -- this method is a deliberate central dispatcher for action resolution branches
