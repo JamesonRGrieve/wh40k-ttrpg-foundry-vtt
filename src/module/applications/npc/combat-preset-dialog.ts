@@ -2,8 +2,7 @@ import type { WH40KNPC } from '../../documents/npc.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
-
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import { makeNpcFormDialog } from './npc-form-dialog.ts';
 
 interface Preset {
     id: string;
@@ -40,7 +39,16 @@ interface DialogState {
  *
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
-export default class CombatPresetDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class CombatPresetDialog extends makeNpcFormDialog({
+    id: 'combat-preset-dialog-{id}',
+    cssClass: 'combat-preset-dialog',
+    tag: 'div',
+    // Preserves the original framework-default window chrome (no standard-form, default flags).
+    window: { title: 'WH40K.NPC.CombatPresets', icon: 'fa-solid fa-bookmark', minimizable: true, resizable: false, contentClasses: [] },
+    position: { width: 700, height: 600 },
+    partId: 'form',
+    template: 'systems/wh40k-rpg/templates/dialogs/combat-preset.hbs',
+}) {
     /**
      * Internal state for the dialog.
      * @type {DialogState}
@@ -55,20 +63,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** Per-dialog action deltas; merged with the shared base options. */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
-        id: 'combat-preset-dialog-{id}',
-        classes: ['wh40k-rpg', 'combat-preset-dialog'],
-        tag: 'div',
-        window: {
-            title: 'WH40K.NPC.CombatPresets',
-            icon: 'fa-solid fa-bookmark',
-        },
-        position: {
-            width: 700,
-            height: 600,
-        },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             saveNew: CombatPresetDialog.#saveNew,
             loadSelected: CombatPresetDialog.#loadSelected,
@@ -77,15 +74,8 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             importPreset: CombatPresetDialog.#importPreset,
             selectPreset: CombatPresetDialog.#selectPreset,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
-
-    /** @override */
-    static PARTS = {
-        form: {
-            template: 'systems/wh40k-rpg/templates/dialogs/combat-preset.hbs',
-        },
-    };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
     /*  Static Properties                           */
