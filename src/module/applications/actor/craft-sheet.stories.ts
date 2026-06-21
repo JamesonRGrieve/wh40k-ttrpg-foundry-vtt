@@ -29,15 +29,9 @@ function systemIdOf(ctx: SheetContextLike): string {
 }
 
 function renderCraftSheet(ctx: SheetContextLike): HTMLElement {
-    return renderSheetParts(
-        [
-            { template: headerSrc },
-            { template: tabsSrc },
-            { template: overviewTabSrc, partClass: 'wh40k-body tw-p-2' },
-        ],
-        ctx,
-        { systemId: systemIdOf(ctx) },
-    );
+    return renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: overviewTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
+        systemId: systemIdOf(ctx),
+    });
 }
 
 const meta: Meta<SheetContextLike> = {

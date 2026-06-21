@@ -11,12 +11,7 @@
  * and cannot drift between this helper and the schema.
  */
 
-import {
-    skillAdvancedMap,
-    skillCharacteristicShortMap,
-    skillNameToKeyMap,
-    specialistSkillKeys,
-} from '../data/shared/skill-definitions.ts';
+import { skillAdvancedMap, skillCharacteristicShortMap, skillNameToKeyMap, specialistSkillKeys } from '../data/shared/skill-definitions.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with many callers across the codebase
@@ -77,6 +72,7 @@ export class SkillKeyHelper {
         }
 
         const key = this.SKILL_NAME_TO_KEY[name];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) types this index access as `string`, but tsconfig.json (flag on) requires the `string | undefined` guard
         if (key !== undefined) return key;
 
         // Fallback: slugify the name
@@ -243,6 +239,7 @@ export class SkillKeyHelper {
         isSpecialist: boolean;
     } | null {
         const key = this.#lookupKey(keyOrName);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) types this index access as `string`, but tsconfig.json (flag on) requires the `string | undefined` guard
         if (this.SKILL_KEY_TO_NAME[key] === undefined) return null;
 
         return {

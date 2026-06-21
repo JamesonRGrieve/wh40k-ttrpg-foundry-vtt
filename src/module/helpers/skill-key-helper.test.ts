@@ -1,11 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-    SKILL_DEFINITIONS,
-    skillAdvancedMap,
-    skillCharacteristicShortMap,
-    skillNameToKeyMap,
-    specialistSkillKeys,
-} from '../data/shared/skill-definitions.ts';
+import { SKILL_DEFINITIONS, skillAdvancedMap, skillCharacteristicShortMap, skillNameToKeyMap, specialistSkillKeys } from '../data/shared/skill-definitions.ts';
 import { SkillKeyHelper } from './skill-key-helper.ts';
 
 /**

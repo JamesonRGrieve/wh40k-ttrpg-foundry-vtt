@@ -73,8 +73,8 @@ export function flashElement(element: HTMLElement, animClass: string, duration =
     }, duration);
 }
 
-/** Placement strategy for {@link showBriefNotification}. */
-export type BriefNotificationPosition =
+/** Placement strategy for {@link showBriefNotification}. Internal — surfaced via {@link ShowBriefNotificationOptions}. */
+type BriefNotificationPosition =
     /** `position: absolute`, centred horizontally above the anchor (page-scroll-aware). */
     | 'above'
     /** `position: fixed`, just to the right of the anchor (viewport-anchored). */

@@ -19,6 +19,11 @@
  * @see {@link ../item/weapon-modification.ts}
  */
 
+import { asRawSource, type RawSource } from './raw-source.ts';
+
+/** A single raw source value (Set, string, array, null, …) prior to schema cleaning. */
+type RawValue = RawSource[string];
+
 /**
  * How a *string* source value (rather than a Set) should be coerced to an array.
  * - `'none'`: leave strings untouched — only Sets are converted.
@@ -44,9 +49,9 @@ interface NormalizeOptions {
  * @param stringMode How a string value should be split (see {@link StringMode}).
  * @returns The normalized value — an array when conversion applied, else `value`.
  */
-function coerce(value: unknown, stringMode: StringMode): unknown {
+function coerce(value: RawValue, stringMode: StringMode): RawValue {
     if (value === null || value === undefined || Array.isArray(value)) return value;
-    if (value instanceof Set) return Array.from(value as Set<unknown>);
+    if (value instanceof Set) return Array.from(value);
     if (typeof value === 'string') {
         if (stringMode === 'wrap') return [value];
         if (stringMode === 'split') return value.split(',').map((s) => s.trim());
@@ -62,7 +67,7 @@ function coerce(value: unknown, stringMode: StringMode): unknown {
  * @param key        The top-level field key to normalize.
  * @param options    String-coercion behaviour (see {@link NormalizeOptions}).
  */
-export function normalizeToArray(source: Record<string, unknown> | undefined, key: string, options: NormalizeOptions = {}): void {
+export function normalizeToArray(source: RawSource | undefined, key: string, options: NormalizeOptions = {}): void {
     if (!source || !(key in source)) return;
     source[key] = coerce(source[key], options.stringMode ?? 'none');
 }
@@ -77,16 +82,9 @@ export function normalizeToArray(source: Record<string, unknown> | undefined, ke
  * @param childKey   The nested SetField key (e.g. `'armourTypes'`).
  * @param options    String-coercion behaviour (see {@link NormalizeOptions}).
  */
-export function normalizeNestedToArray(
-    source: Record<string, unknown> | undefined,
-    parentKey: string,
-    childKey: string,
-    options: NormalizeOptions = {},
-): void {
+export function normalizeNestedToArray(source: RawSource | undefined, parentKey: string, childKey: string, options: NormalizeOptions = {}): void {
     if (!source) return;
-    const parent = source[parentKey];
-    if (parent === null || typeof parent !== 'object' || Array.isArray(parent)) return;
-    const parentRecord = parent as Record<string, unknown>;
-    if (!(childKey in parentRecord)) return;
+    const parentRecord = asRawSource(source[parentKey]);
+    if (parentRecord === null || !(childKey in parentRecord)) return;
     parentRecord[childKey] = coerce(parentRecord[childKey], options.stringMode ?? 'none');
 }

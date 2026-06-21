@@ -2,15 +2,20 @@ import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import ShipStatModifiersTemplate, { type ShipStatModifiers } from '../shared/ship-stat-modifiers-template.ts';
+import {
+    shipHasModifiers,
+    shipModifiersList,
+    shipStatModifiersSchema,
+    type ShipModifierEntry,
+    type ShipStatModifiers,
+} from '../shared/ship-stat-modifiers-template.ts';
 
 /**
  * Data model for Ship Upgrade items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
- * @mixes ShipStatModifiersTemplate
  */
-export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemplate, ShipStatModifiersTemplate) {
+export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare power: number;
@@ -36,7 +41,8 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
             space: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             shipPoints: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
-            // Stat modifiers (9-field block) come from ShipStatModifiersTemplate.
+            // Stat modifiers (shared nine-field ship-stat block)
+            modifiers: shipStatModifiersSchema(),
 
             // Effect description
             effect: new fields.HTMLField({ required: true, blank: true }),
@@ -116,7 +122,15 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
         return '0';
     }
 
-    // hasModifiers / modifiersList are inherited from ShipStatModifiersTemplate.
+    /** Has any non-zero ship-stat modifier? */
+    get hasModifiers(): boolean {
+        return shipHasModifiers(this.modifiers);
+    }
+
+    /** Non-zero ship-stat modifiers as a localized display list. */
+    get modifiersList(): ShipModifierEntry[] {
+        return shipModifiersList(this.modifiers);
+    }
 
     /* -------------------------------------------- */
     /*  Chat Properties                             */

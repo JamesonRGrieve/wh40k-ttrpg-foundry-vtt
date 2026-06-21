@@ -3,15 +3,20 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import { normalizeToArray } from '../shared/normalize-to-array.ts';
-import ShipStatModifiersTemplate, { type ShipStatModifiers } from '../shared/ship-stat-modifiers-template.ts';
+import {
+    shipHasModifiers,
+    shipModifiersList,
+    shipStatModifiersSchema,
+    type ShipModifierEntry,
+    type ShipStatModifiers,
+} from '../shared/ship-stat-modifiers-template.ts';
 
 /**
  * Data model for Ship Component items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
- * @mixes ShipStatModifiersTemplate
  */
-export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTemplate, ShipStatModifiersTemplate) {
+export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare componentType: string;
@@ -86,7 +91,8 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
                 choices: ['ubiquitous', 'abundant', 'plentiful', 'common', 'average', 'scarce', 'rare', 'very-rare', 'extremely-rare', 'near-unique', 'unique'],
             }),
 
-            // Stat modifiers (9-field block) come from ShipStatModifiersTemplate.
+            // Stat modifiers (shared nine-field ship-stat block)
+            modifiers: shipStatModifiersSchema(),
 
             // Effect description
             effect: new fields.HTMLField({ required: true, blank: true }),
@@ -201,7 +207,15 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
         return this.condition === 'functional';
     }
 
-    // hasModifiers / modifiersList are inherited from ShipStatModifiersTemplate.
+    /** Has any non-zero ship-stat modifier? */
+    get hasModifiers(): boolean {
+        return shipHasModifiers(this.modifiers);
+    }
+
+    /** Non-zero ship-stat modifiers as a localized display list. */
+    get modifiersList(): ShipModifierEntry[] {
+        return shipModifiersList(this.modifiers);
+    }
 
     /* -------------------------------------------- */
     /*  Chat Properties                             */

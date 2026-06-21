@@ -11,6 +11,7 @@
  */
 
 import { coerceInt } from '../fields/coerce.ts';
+import type { RawSource } from './raw-source.ts';
 
 /** Inclusive bounds for the creature/NPC `size` band. */
 const MIN_SIZE = 1;
@@ -59,7 +60,7 @@ export function sizeNameToInt(name: string): number {
  * @param fields - The flat field names to coerce.
  * @param defaults - Optional per-field fallback values; missing → 0.
  */
-export function coerceIntFields(obj: Record<string, unknown>, fields: readonly string[], defaults: Record<string, number> = {}): void {
+export function coerceIntFields(obj: RawSource, fields: readonly string[], defaults: Record<string, number> = {}): void {
     for (const field of fields) {
         if (obj[field] !== undefined) {
             obj[field] = coerceInt(obj[field], defaults[field] ?? 0);

@@ -1,5 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { asBaseActor } from '../../testing/actor-stub.ts';
 import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
@@ -28,15 +29,19 @@ afterAll(() => {
 
 const { default: BaseGrantData } = await import('./base-grant.ts');
 
+/** The merged delta payload `_reverseWithDeltaMap` hands to `actor.update` (flat dotted-path → number). */
+type UpdatePayload = Record<string, number>;
+
 /** Actor stub recording every `update` payload so the helper's apply-tail is observable. */
-function recordingActor(): { actor: WH40KBaseActor; calls: Array<Record<string, unknown>> } {
-    const calls: Array<Record<string, unknown>> = [];
-    const actor = {
-        update: (payload: Record<string, unknown>) => {
+function recordingActor(): { actor: WH40KBaseActor; calls: UpdatePayload[] } {
+    const calls: UpdatePayload[] = [];
+    const actor = asBaseActor({
+        // The helper `await`s this; recording synchronously and returning void is
+        // sufficient (`await undefined` resolves), and avoids a no-await async fn.
+        update: (payload: UpdatePayload): void => {
             calls.push(payload);
-            return Promise.resolve(undefined);
         },
-    } as unknown as WH40KBaseActor;
+    });
     return { actor, calls };
 }
 
@@ -94,7 +99,7 @@ describe('BaseGrantData._reverseWithDeltaMap (#345)', () => {
         const grant = makeGrant();
         const { actor, calls } = recordingActor();
 
-        const restores = await grant._reverseWithDeltaMap(actor, {} as Record<string, State>, () => ({ deltas: {}, restore: null }));
+        const restores = await grant._reverseWithDeltaMap(actor, {}, () => ({ deltas: {}, restore: null }));
 
         expect(calls).toEqual([]);
         expect(restores).toEqual([]);
