@@ -45,7 +45,7 @@
  */
 
 import type { GameSystemId } from '../config/game-systems/types.ts';
-import { degreesOfFailure as computeDegreesOfFailure, degreesOfSuccess as computeDegreesOfSuccess, findBandBy, type Rng } from './_dice.ts';
+import { degreesOfFailure as computeDegreesOfFailure, degreesOfSuccess as computeDegreesOfSuccess, findBandBy, type Rng, rollD100 } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export type { Rng };
@@ -517,9 +517,7 @@ export function getPerilForRoll(d100: number): PerilDef | null {
  * the table has a gap (the canonical RT table has a 56-58 gap reserved for
  * "Vice Versa", which is intentionally omitted here). */
 export function rollPeril(rng: Rng = Math.random): { rolled: number; peril: PerilDef | null } {
-    const raw = Number(rng());
-    const r = Number.isFinite(raw) ? Math.min(0.9999999, Math.max(0, raw)) : 0;
-    const rolled = Math.floor(r * 100) + 1;
+    const rolled = rollD100(rng);
     return { rolled, peril: getPerilForRoll(rolled) };
 }
 

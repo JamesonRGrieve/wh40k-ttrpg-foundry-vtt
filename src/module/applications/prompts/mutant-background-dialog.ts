@@ -16,6 +16,7 @@
  */
 
 import { MUTANT_STARTING_CORRUPTION } from '../../rules/chaos-backgrounds.ts';
+import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -139,11 +140,7 @@ export default class MutantBackgroundDialog extends ApplicationV2Mixin(Applicati
             gameSystem: 'dh2',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mutant-background-chat.hbs', templateData);
-
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: ChatMessage.create payload shape lives outside our shipped types; game.user can be undefined before login in some Foundry boot paths
-        const payload = { user: game.user?.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
-        await ChatMessage.create(payload);
+        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/mutant-background-chat.hbs', templateData);
         await this.close();
     }
 

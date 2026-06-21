@@ -21,7 +21,7 @@
  * content-agnostic resolution primitive only.
  */
 
-import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RIGHT_STUFF } from './xenos-features.ts';
 
@@ -147,20 +147,12 @@ export async function spendRightStuff(actor: WH40KBaseActorDocument, skill: Righ
         gameSystem,
     };
 
-    const html = await foundry.applications.handlebars.renderTemplate(
+    await emitChatFromTemplate(
         'systems/wh40k-rpg/templates/chat/right-stuff-chat.hbs',
         // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts an untyped Handlebars context bag
         templateData as unknown as Record<string, unknown>,
+        { applyWhispers: true },
     );
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const chatData: Record<string, unknown> = {
-        user: game.user.id,
-        content: html,
-    };
-    applyRollModeWhispers(chatData);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts untyped Foundry data
-    await ChatMessage.create(chatData);
 
     return resolution;
 }

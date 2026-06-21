@@ -170,6 +170,48 @@ export async function postChatCard(
     await ChatMessage.create(chatData);
 }
 
+/** Options controlling how {@link emitChatFromTemplate} builds its payload.
+ * Each field maps a chat key the prompt-dialog / rules call sites set by hand;
+ * defaults reproduce the bare `{ user: game.user.id, content }` public post. */
+export interface EmitChatOptions {
+    /** Posting user id (defaults to the current user). */
+    user?: string | undefined;
+    /** Opaque Foundry ChatSpeaker bag, included only when provided. */
+    speaker?: unknown;
+    /** Explicit rollMode; included in the payload only when provided (so the
+     * default public post carries no rollMode, matching the legacy call sites). */
+    rollMode?: string | undefined;
+    /** When true, run {@link applyRollModeWhispers} after assembling the payload
+     * so a `gmroll` / `blindroll` / `selfroll` rollMode is honoured. */
+    applyWhispers?: boolean | undefined;
+}
+
+/**
+ * Render a chat `.hbs` template and post the result as a ChatMessage — the
+ * single home of the `renderTemplate` → build `{ user, content }` →
+ * `ChatMessage.create` idiom that was hand-rolled across the prompt dialogs
+ * and several `rules/` sites (each repeating the same boundary cast +
+ * eslint-disable). The boundary cast to `Parameters<typeof ChatMessage.create>[0]`
+ * lives here once.
+ *
+ * Defaults reproduce the bare public post (`{ user: game.user.id, content }`);
+ * pass `rollMode` / `applyWhispers` to honour whisper modes, or `speaker` to
+ * attribute the message — so each call site keeps its exact prior intent.
+ */
+export async function emitChatFromTemplate(template: string, data: Record<string, unknown>, opts: EmitChatOptions = {}): Promise<void> {
+    const html = await foundry.applications.handlebars.renderTemplate(template, data);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
+    const chatData: Record<string, unknown> = {
+        user: opts.user ?? game.user?.id,
+        content: html,
+    };
+    if (opts.rollMode !== undefined) chatData['rollMode'] = opts.rollMode;
+    if (opts.speaker !== undefined) chatData['speaker'] = opts.speaker;
+    if (opts.applyWhispers === true) applyRollModeWhispers(chatData);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped Foundry payload
+    await ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]);
+}
+
 export async function sendActionDataToChat(actionData: ActionData): Promise<void> {
     // Flatten the ActionData + its RollData so Handlebars can read the
     // prototype getters (modifiedTarget / name / activeModifiers / …); passing

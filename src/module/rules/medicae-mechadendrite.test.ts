@@ -189,10 +189,11 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         const actor = makeActor({ gameSystem: 'dh2', medicae: 40 });
         actor.effects = [bloodLossEffect];
 
-        // Roll 30 vs target 40+10=50 → success.
-        const res = await staunchBloodLoss(asActor(actor), () => 30);
+        // rng 0.29 → rollD100 = 30, vs target 40+10=50 → success.
+        const res = await staunchBloodLoss(asActor(actor), () => 0.29);
 
         expect(res.success).toBe(true);
+        expect(res.roll).toBe(30);
         expect(res.target).toBe(50);
         expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', ['ae-1']);
         expect(chat.lastContent()).toContain('success="true"');
@@ -204,10 +205,11 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         const actor = makeActor({ gameSystem: 'dh2', medicae: 20 });
         actor.effects = [bloodLossEffect];
 
-        // Roll 90 vs target 20+10=30 → failure.
-        const res = await staunchBloodLoss(asActor(actor), () => 90);
+        // rng 0.89 → rollD100 = 90, vs target 20+10=30 → failure.
+        const res = await staunchBloodLoss(asActor(actor), () => 0.89);
 
         expect(res.success).toBe(false);
+        expect(res.roll).toBe(90);
         expect(actor.deleteEmbeddedDocuments).not.toHaveBeenCalled();
         expect(chat.lastContent()).toContain('success="false"');
         expect(chat.lastContent()).toContain('bleed="false"');
@@ -219,14 +221,26 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         const actor = makeActor({ gameSystem: 'dh2', medicae: 60 });
         actor.effects = [bloodLoss, stunned];
 
-        await staunchBloodLoss(asActor(actor), () => 10);
+        // rng 0.09 → rollD100 = 10, vs target 60+10=70 → success.
+        await staunchBloodLoss(asActor(actor), () => 0.09);
 
         expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', ['ae-blood']);
     });
 
     it('propagates the actor game system onto the chat card for per-system theming', async () => {
         const actor = makeActor({ gameSystem: 'rt', medicae: 50 });
-        await staunchBloodLoss(asActor(actor), () => 5);
+        await staunchBloodLoss(asActor(actor), () => 0.04); // rollD100 = 5
         expect(chat.lastContent()).toContain('sys="rt"');
+    });
+
+    it('routes the injected rng through rollD100 — a [0,1) float yields a real 1-100 roll, not the always-1 latent-bug result (#374)', async () => {
+        // Pre-fix, `Math.floor(rng())` of any fractional value floored to 0 and
+        // clamped to 1, so every injected roll was a guaranteed natural 01. A
+        // mid-range fraction must now produce a mid-range roll instead.
+        const actor = makeActor({ gameSystem: 'dh2', medicae: 30 });
+        // rng 0.62 → rollD100 = 63, vs target 30+10=40 → failure (not a forced 01 success).
+        const res = await staunchBloodLoss(asActor(actor), () => 0.62);
+        expect(res.roll).toBe(63);
+        expect(res.success).toBe(false);
     });
 });

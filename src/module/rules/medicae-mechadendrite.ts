@@ -24,8 +24,9 @@
  */
 
 import type { WH40KItem } from '../documents/item.ts';
-import { applyRollModeWhispers, roll1d100 } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate, getDegreeForMode, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument, WH40KSkill } from '../types/global.d.ts';
+import { type Rng, rollD100 } from './_dice.ts';
 import { removeEffects } from './active-effects.ts';
 
 export const MEDICAE_MECHADENDRITE = {
@@ -113,8 +114,10 @@ export interface StaunchResolution {
  */
 export function resolveBloodLossStaunch(medicaeTarget: number, rollTotal: number): StaunchResolution {
     const target = medicaeTarget + MEDICAE_MECHADENDRITE.medicaeBonus;
-    const success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
-    const degrees = success ? Math.floor((target - rollTotal) / 10) : -Math.floor((rollTotal - target) / 10);
+    const success = isD100Success(rollTotal, target);
+    // Degrees route through the shared engine (gen-2 tens-digit method, the DH2
+    // default) instead of a hand-rolled margin calculation; sign marks success.
+    const degrees = success ? getDegreeForMode('gen2', target, rollTotal) : -getDegreeForMode('gen2', rollTotal, target);
     return { roll: rollTotal, target, success, degrees };
 }
 
@@ -135,13 +138,16 @@ function getMedicaeTarget(actor: WH40KBaseActorDocument): number {
  * the outcome.
  *
  * @param actor   The actor whose mechadendrite is being used.
- * @param rng     Optional injectable d100 roll (1-100) for determinism.
+ * @param rng     Optional `[0, 1)` float source (the shared `_dice.Rng`
+ *                contract) for determinism; routed through `rollD100` so the
+ *                injected branch produces a real 1-100 roll rather than the
+ *                always-1 result of flooring a fractional value.
  */
-export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: () => number): Promise<StaunchResolution> {
+export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: Rng): Promise<StaunchResolution> {
     const medicaeTarget = getMedicaeTarget(actor);
     let rollTotal: number;
     if (rng !== undefined) {
-        rollTotal = Math.max(1, Math.min(100, Math.floor(rng())));
+        rollTotal = rollD100(rng);
     } else {
         const roll = await roll1d100();
         rollTotal = roll.total ?? 100;
@@ -175,20 +181,12 @@ export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: () =
         gameSystem,
     };
 
-    const html = await foundry.applications.handlebars.renderTemplate(
+    await emitChatFromTemplate(
         'systems/wh40k-rpg/templates/chat/medicae-mechadendrite-chat.hbs',
         // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts an untyped Handlebars context bag
         templateData as unknown as Record<string, unknown>,
+        { applyWhispers: true },
     );
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const chatData: Record<string, unknown> = {
-        user: game.user.id,
-        content: html,
-    };
-    applyRollModeWhispers(chatData);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts untyped Foundry data
-    await ChatMessage.create(chatData);
 
     return resolution;
 }
