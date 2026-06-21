@@ -22,8 +22,9 @@
  *   node scripts/ts-coverage.mjs --json     # JSON only on stdout
  *   node scripts/ts-coverage.mjs --quiet    # write report, no stdout
  */
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, relative, sep } from 'node:path';
+import { walkFiles } from './lib/walk.mjs';
 
 const ROOT = resolve(process.cwd(), 'src/module');
 const OUT = resolve(process.cwd(), '.ts-coverage.json');
@@ -45,14 +46,7 @@ const PATTERNS = {
     tsIgnore: /@ts-ignore\b/g,
 };
 
-function* walk(dir) {
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const st = statSync(full);
-        if (st.isDirectory()) yield* walk(full);
-        else if (st.isFile() && name.endsWith('.ts') && !name.endsWith('.d.ts') && !name.endsWith('.test.ts')) yield full;
-    }
-}
+const walk = (dir) => walkFiles(dir, { ext: '.ts', exclude: ['.d.ts', '.test.ts'] });
 
 function topLevelDir(file) {
     // file is absolute. Compute relative-to-ROOT and take the first path segment.

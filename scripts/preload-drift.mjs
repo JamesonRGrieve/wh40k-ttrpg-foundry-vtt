@@ -21,8 +21,9 @@
  *   node scripts/preload-drift.mjs            # check, exit non-zero on drift
  *   node scripts/preload-drift.mjs --json     # JSON report on stdout
  */
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { walkFiles } from './lib/walk.mjs';
 
 const TEMPLATES_ROOT = resolve(process.cwd(), 'src/templates');
 const MANAGER = resolve(process.cwd(), 'src/module/handlebars/handlebars-manager.ts');
@@ -34,14 +35,7 @@ const PARTIAL_PREFIX = 'systems/wh40k-rpg/templates/';
 const PARTIAL_RE = /\{\{#?>\s*(systems\/wh40k-rpg\/templates\/[^\s}]+\.hbs)\b/g;
 const PRELOAD_RE = /['"](systems\/wh40k-rpg\/templates\/[^'"]+\.hbs)['"]/g;
 
-function* walkHbs(dir) {
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const st = statSync(full);
-        if (st.isDirectory()) yield* walkHbs(full);
-        else if (st.isFile() && name.endsWith('.hbs')) yield full;
-    }
-}
+const walkHbs = (dir) => walkFiles(dir, { ext: '.hbs' });
 
 function templatePathToFs(p) {
     // systems/wh40k-rpg/templates/foo/bar.hbs → src/templates/foo/bar.hbs

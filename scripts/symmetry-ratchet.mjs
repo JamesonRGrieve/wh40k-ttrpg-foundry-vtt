@@ -9,22 +9,13 @@
  *
  * Update via `pnpm symmetry:ratchet:update`.
  */
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { walkFiles as walk } from './lib/walk.mjs';
 
 const BASELINE = resolve(process.cwd(), '.symmetry-baseline');
 const args = process.argv.slice(2);
 const updateMode = args.includes('--update');
-
-function* walk(dir) {
-    if (!existsSync(dir)) return;
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const stat = statSync(full);
-        if (stat.isDirectory()) yield* walk(full);
-        else if (stat.isFile()) yield full;
-    }
-}
 
 function siblingExists(file, suffix) {
     return existsSync(file.replace(/\.ts$/, suffix));
