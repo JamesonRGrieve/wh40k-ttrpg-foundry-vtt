@@ -238,6 +238,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs',
+            'systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs',
             'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs',
