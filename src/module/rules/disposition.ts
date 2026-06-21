@@ -16,9 +16,22 @@ export type DispositionLabel = 'Hostile' | 'Antagonistic' | 'Wary' | 'Neutral' |
 
 export const DISPOSITION_LABELS: ReadonlyArray<DispositionLabel> = ['Hostile', 'Antagonistic', 'Wary', 'Neutral', 'Cooperative', 'Friendly', 'Helpful'];
 
+/** Inclusive bounds of the social-disposition scale (−3 Hostile … +3 Helpful). */
+export const DISPOSITION_RANGE = { min: -3, max: 3 } as const;
+
+/**
+ * Clamp an arbitrary numeric input to the −3..+3 disposition scale,
+ * truncating fractions. Single source of the disposition clamp so the
+ * label lookup, the test modifier, and the actor's `adjustDisposition`
+ * all share one range definition.
+ */
+export function clampDisposition(value: number): number {
+    return Math.max(DISPOSITION_RANGE.min, Math.min(DISPOSITION_RANGE.max, Math.trunc(value)));
+}
+
 /** Map −3..+3 to the canonical label. */
 export function labelForDisposition(value: number): DispositionLabel {
-    const idx = Math.max(0, Math.min(6, Math.trunc(value) + 3));
+    const idx = clampDisposition(value) - DISPOSITION_RANGE.min;
     return DISPOSITION_LABELS[idx] ?? 'Neutral';
 }
 
@@ -32,7 +45,7 @@ export function labelForDisposition(value: number): DispositionLabel {
  * @param skill which social skill is being attempted.
  */
 export function getDispositionModifier(disposition: number, skill: 'charm' | 'command' | 'inquiry' | 'deceive' | 'intimidate'): number {
-    const d = Math.max(-3, Math.min(3, Math.trunc(disposition)));
+    const d = clampDisposition(disposition);
     if (skill === 'intimidate') return -d * 10;
     return d * 10;
 }
