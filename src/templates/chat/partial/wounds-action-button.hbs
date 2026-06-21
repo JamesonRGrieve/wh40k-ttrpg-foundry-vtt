@@ -1,0 +1,30 @@
+{{!--
+    Shared wounds-themed action button for chat cards — the full-width danger
+    button (dark-red wounds palette) that applies fatigue / damage from a
+    condition card. The button class string is byte-identical across the
+    bleeding and burning cards; only the `roll-control__*` class, the icon, the
+    label, and the data-* payload vary.
+
+    Hash arguments:
+        action          — the roll-control__* class (e.g. "roll-control__apply-damage").
+                          Required.
+        icon            — Material Icons ligature (default "api").
+        label           — button text.
+        labelKey        — i18n key for the label (preferred over `label`).
+        dataUuid        — actor uuid (data-uuid).
+        dataDamage      — data-damage value.
+        dataFatigue     — data-fatigue value.
+        dataType        — optional data-type (e.g. "Energy").
+        dataIgnoreArmour— optional data-ignore-armour ("true").
+--}}
+<button
+    class="{{action}} tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[color:var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all tw-duration-[var(--wh40k-transition-base)] tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)]"
+    {{#if dataType}}data-type="{{dataType}}"
+    {{/if}}{{#if dataIgnoreArmour}}data-ignore-armour="{{dataIgnoreArmour}}"
+    {{/if}}data-uuid="{{dataUuid}}"
+    data-damage="{{dataDamage}}"
+    data-fatigue="{{dataFatigue}}"
+>
+    <span class="material-icons tw-text-[16px]">{{#if icon}}{{icon}}{{else}}api{{/if}}</span>
+    <span>{{#if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}</span>
+</button>
