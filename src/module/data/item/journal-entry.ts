@@ -1,14 +1,10 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { JOURNAL_LEAD_STATUS_CHOICES, type LeadStatus } from '../shared/lead-status.ts';
 
-/**
- * Status of an Investigation Lead (core.md §"Conducting The Investigation").
- * - `active`: the lead is open and worth pursuing.
- * - `pursued`: acolytes are currently working it.
- * - `resolved`: the lead paid off and is closed.
- * - `deadEnd`: the lead was investigated and yielded nothing.
- */
-export type LeadStatus = 'active' | 'pursued' | 'resolved' | 'deadEnd';
+// Re-export so existing `LeadStatus` importers keep resolving after the
+// canonical type moved to the shared lead-status vocabulary module.
+export type { LeadStatus };
 
 /**
  * Data model for Journal Entry items.
@@ -16,7 +12,9 @@ export type LeadStatus = 'active' | 'pursued' | 'resolved' | 'deadEnd';
  * Doubles as the Investigation Lead container per core.md §"Leads"
  * (p. 282) — when `isLead === true`, the additional lead-specific
  * fields (status, source, owner) are populated and the sheet renders
- * the lead view. Otherwise the entry is a plain in-character note.
+ * the lead view. Otherwise the entry is a plain in-character note. The
+ * lead-status vocabulary is shared with {@link ../item/lead.ts LeadData}
+ * via {@link ../shared/lead-status.ts}.
  */
 export default class JournalEntryItemData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
@@ -40,7 +38,7 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
             leadStatus: new fields.StringField({
                 required: true,
                 initial: 'active',
-                choices: ['active', 'pursued', 'resolved', 'deadEnd'],
+                choices: [...JOURNAL_LEAD_STATUS_CHOICES],
             }),
             leadSource: new fields.StringField({ required: false, initial: '', blank: true }),
             leadGmRedHerring: new fields.BooleanField({ required: true, initial: false }),
