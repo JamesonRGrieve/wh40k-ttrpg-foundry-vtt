@@ -168,11 +168,11 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             this.disciplineLabel,
             `PR Cost: ${this.prCost}`,
             `Focus: ${this.focusTestLabel}`,
-            ...((Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
+            ...ItemDataModel.inheritedChatProperties(this, ActivationTemplate),
         ];
 
         if (this.isAttack) {
-            props.push(...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []));
+            props.push(...ItemDataModel.inheritedChatProperties(this, DamageTemplate));
         }
 
         if (this.sustained) {
