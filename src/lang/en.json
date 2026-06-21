@@ -880,6 +880,7 @@
             "QuickActions": "Quick Actions",
             "Attack": "Attack",
             "AssignDamage": "Assign Damage",
+            "WoundsTaken": "Wounds Taken",
             "CriticalInjuries": "Critical Injuries",
             "NoInjuries": "No critical injuries",
             "Movement": "Movement",
