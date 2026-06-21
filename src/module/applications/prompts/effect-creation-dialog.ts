@@ -12,8 +12,12 @@ interface EffectCreationDialogOptions {
     resolve: (value: ActiveEffect | null) => void;
 }
 
+/**
+ * Form data the effect-creation dialog collects. Exported so the unit tests assert
+ * against the concrete input shape instead of redeclaring an `extends Record` clone.
+ */
 // eslint-disable-next-line no-restricted-syntax -- boundary: EffectCreationData extends Record for FormDataExtended compatibility; index signature is deliberate
-interface EffectCreationData extends Record<string, unknown> {
+export interface EffectCreationData extends Record<string, unknown> {
     effectType: 'condition' | 'characteristic' | 'skill' | 'combat' | 'custom';
     conditionId?: string;
     characteristic?: string;
@@ -22,6 +26,33 @@ interface EffectCreationData extends Record<string, unknown> {
     customName?: string;
     modifierValue?: string;
     duration?: { rounds: string };
+}
+
+/** A single Active Effect change entry. */
+interface ActiveEffectChange {
+    key: string;
+    mode: number;
+    value: number;
+}
+
+/**
+ * The condition / characteristic / skill / combat effect creation payload built by
+ * the modifier builders. Exported so the unit tests assert on the concrete shape
+ * instead of casting from `Record<string, unknown>`.
+ */
+export interface EffectPayload {
+    name: string;
+    icon: string;
+    changes: ActiveEffectChange[];
+    flags: { 'wh40k-rpg': { nature: string; requiresProcessing?: boolean } };
+    duration?: { rounds: number; startRound: number; startTurn: number } | undefined;
+}
+
+/** The minimal custom-effect payload (no changes / nature flag, just a named disabled effect). */
+interface CustomEffectPayload {
+    name: string;
+    icon: string;
+    disabled: boolean;
 }
 
 export default class EffectCreationDialog extends DialogV2 {
@@ -200,8 +231,7 @@ export default class EffectCreationDialog extends DialogV2 {
     static async formHandler(this: EffectCreationDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = formData.object as EffectCreationData;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is an ActiveEffect creation payload; Record<string,unknown> is the Foundry createEmbeddedDocuments API shape
-        let effectData: Record<string, unknown> | null = null;
+        let effectData: EffectPayload | CustomEffectPayload | null = null;
 
         const Ctor = this.constructor as typeof EffectCreationDialog;
         // Handle based on effect type
@@ -218,15 +248,15 @@ export default class EffectCreationDialog extends DialogV2 {
             effectData = Ctor._createCustomData(data);
         }
 
-        if (!effectData) {
+        if (effectData === null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40K.ActiveEffect.InvalidData is a localization key, not a hardcoded string; lint rule cannot distinguish
             ui.notifications.warn('WH40K.ActiveEffect.InvalidData');
             return this.resolve(null);
         }
 
         // Create the effect
-        // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments requires {name:string}&Record<string,unknown>; effectData is known-valid at this point
-        const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as Record<string, unknown> & { name: string }]);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect.createEmbeddedDocuments accepts Record<string,unknown>; EffectPayload/CustomEffectPayload are structurally valid creation payloads but the framework method is untyped
+        const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as unknown as Record<string, unknown> & { name: string }]);
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: effects[0] is Document|undefined; cast to ActiveEffect|null after null-coalescing guard
         return this.resolve((effects[0] ?? null) as ActiveEffect | null);
     }
@@ -236,14 +266,12 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create condition effect data
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
-    static _createConditionData(data: EffectCreationData): Record<string, unknown> | null {
+    static _createConditionData(data: EffectCreationData): EffectPayload | null {
         const conditionId = data.conditionId;
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- conditionId is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!conditionId) return null;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: conditions map holds Foundry ActiveEffect creation payloads; Record<string,unknown> is the API shape
-        const conditions: Record<string, Record<string, unknown>> = {
+        const conditions: Record<string, EffectPayload> = {
             stunned: {
                 name: 'Stunned',
                 icon: 'icons/svg/daze.svg',
@@ -327,10 +355,20 @@ export default class EffectCreationDialog extends DialogV2 {
      * The characteristic/skill/combat builders are thin callers that differ
      * only in `label` / `changeKey` / `icon`.
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
-    static _buildEffectData({ label, changeKey, value, icon, data }: { label: string; changeKey: string; value: number; icon: string; data: EffectCreationData }): Record<string, unknown> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
-        const effectData: Record<string, unknown> = {
+    static _buildEffectData({
+        label,
+        changeKey,
+        value,
+        icon,
+        data,
+    }: {
+        label: string;
+        changeKey: string;
+        value: number;
+        icon: string;
+        data: EffectCreationData;
+    }): EffectPayload {
+        const effectData: EffectPayload = {
             name: `${label} ${value > 0 ? '+' : ''}${value}`,
             icon,
             changes: [
@@ -357,12 +395,11 @@ export default class EffectCreationDialog extends DialogV2 {
      * positive round count is supplied. Shared by every effect builder so the
      * duration shape lives in exactly one place.
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
-    static _applyDuration(effectData: Record<string, unknown>, data: EffectCreationData): Record<string, unknown> {
+    static _applyDuration(effectData: EffectPayload, data: EffectCreationData): EffectPayload {
         const rounds = parseInt(data.duration?.rounds ?? '0', 10);
         if (rounds > 0) {
             const combat = game.combat;
-            effectData['duration'] = {
+            effectData.duration = {
                 rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,
@@ -376,8 +413,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create characteristic modifier data
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
-    static _createCharacteristicData(data: EffectCreationData): Record<string, unknown> | null {
+    static _createCharacteristicData(data: EffectCreationData): EffectPayload | null {
         const characteristic = data.characteristic;
         const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
@@ -404,8 +440,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create skill modifier data
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
-    static _createSkillData(data: EffectCreationData): Record<string, unknown> | null {
+    static _createSkillData(data: EffectCreationData): EffectPayload | null {
         const skill = data.skill;
         const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
@@ -428,8 +463,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create combat modifier data
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
-    static _createCombatData(data: EffectCreationData): Record<string, unknown> | null {
+    static _createCombatData(data: EffectCreationData): EffectPayload | null {
         const combatType = data.combatType;
         const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
@@ -452,8 +486,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create custom effect data
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
-    static _createCustomData(data: EffectCreationData): Record<string, unknown> | null {
+    static _createCustomData(data: EffectCreationData): CustomEffectPayload | null {
         const name = data.customName?.trim();
 
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- name is string|undefined after optional chain + trim; falsy check covers both undefined and ''

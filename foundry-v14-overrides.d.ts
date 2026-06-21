@@ -285,6 +285,10 @@ declare global {
                 subtitle?: string;
                 icon?: string;
                 resizable?: boolean;
+                /** Whether the window may be minimized to its header. */
+                minimizable?: boolean;
+                /** Extra CSS classes applied to the window content element. */
+                contentClasses?: string[];
                 controls?: Array<{
                     icon: string;
                     label: string;

@@ -66,18 +66,26 @@ export interface NpcFormDialogConfig {
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- the emitted base class is meant to be extended; an explicit return type would erase its inferred static (DEFAULT_OPTIONS/PARTS) and Handlebars instance surface
 export function makeNpcFormDialog(config: NpcFormDialogConfig) {
-    const window = config.window ?? {};
-    const defaultOptions = {
+    const winConfig = config.window ?? {};
+    // Build the window block without spreading explicit `undefined` into optional keys
+    // (exactOptionalPropertyTypes TS2375 rejects `title: undefined` on `title?: string`).
+    const windowOptions: NonNullable<ApplicationV2Config.DefaultOptions['window']> = {
+        minimizable: winConfig.minimizable ?? false,
+        resizable: winConfig.resizable ?? true,
+        contentClasses: winConfig.contentClasses ?? ['standard-form'],
+    };
+    if (winConfig.title !== undefined) windowOptions.title = winConfig.title;
+    if (winConfig.icon !== undefined) windowOptions.icon = winConfig.icon;
+
+    // Typed as the wide (all-optional) DefaultOptions shape so subclasses can supply
+    // partial deltas (`{ actions, form }`) without redeclaring the full shell — the
+    // static-side extends check on each subclass is against this type, not a narrow
+    // inferred literal.
+    const defaultOptions: ApplicationV2Config.DefaultOptions = {
         id: config.id,
         classes: ['wh40k-rpg', config.cssClass],
         tag: config.tag ?? 'form',
-        window: {
-            title: window.title,
-            icon: window.icon,
-            minimizable: window.minimizable ?? false,
-            resizable: window.resizable ?? true,
-            contentClasses: window.contentClasses ?? ['standard-form'],
-        },
+        window: windowOptions,
         position: config.position,
         // Form-submitting dialogs get the form-flag defaults; the handler is added per-dialog.
         ...(config.form !== undefined
@@ -86,9 +94,9 @@ export function makeNpcFormDialog(config: NpcFormDialogConfig) {
     };
 
     class NpcFormDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-        static override DEFAULT_OPTIONS = defaultOptions;
+        static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = defaultOptions;
 
-        static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+        static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
             [config.partId]: { template: config.template },
         };
     }

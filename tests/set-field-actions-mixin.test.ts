@@ -1,14 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ApplicationV2Ctor } from '../src/module/applications/api/application-types.ts';
+import type { SetFieldActionsMixinAPI } from '../src/module/applications/api/sheet-mixin-types.ts';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructors; `unknown[]` is rejected.
-type Constructor<T = object> = new (...args: any[]) => T;
+/** A Set-backed list field, persisted as a string array (Foundry SetField storage form). */
+type ListField = string[];
 
-/** Captured `item.update(...)` payloads, newest last. */
-type UpdatePayload = Record<string, unknown>;
+/** The owned-item `system` bag: list fields, possibly nested under intermediate nodes. */
+interface SystemBag {
+    [key: string]: ListField | SystemBag;
+}
+
+/** Captured `item.update(...)` payloads (keys are `system.<path>`, values the persisted array), newest last. */
+type UpdatePayload = Record<string, ListField>;
 
 interface FakeItem {
-    system: Record<string, unknown>;
+    system: SystemBag;
     update: (payload: UpdatePayload) => Promise<void>;
 }
 
@@ -24,10 +30,10 @@ class BaseSheet {
     }
 }
 
-function makeItem(system: Record<string, unknown>): FakeItem {
+function makeItem(system: SystemBag): FakeItem {
     return {
         system,
-        update(payload: UpdatePayload): Promise<void> {
+        async update(payload: UpdatePayload): Promise<void> {
             updates.push(payload);
             // Mirror the write back onto the in-memory system so reads see it.
             for (const [path, value] of Object.entries(payload)) {
@@ -39,21 +45,34 @@ function makeItem(system: Record<string, unknown>): FakeItem {
     };
 }
 
+/** True when a bag node is an intermediate record (not a leaf list field). */
+function isBag(node: ListField | SystemBag | undefined): node is SystemBag {
+    return node !== undefined && !Array.isArray(node);
+}
+
 function installFoundryStubs(): void {
     Object.assign(globalThis, {
         foundry: {
             utils: {
-                getProperty(obj: Record<string, unknown>, path: string): unknown {
-                    return path.split('.').reduce<unknown>((acc, key) => (acc as Record<string, unknown> | undefined)?.[key], obj);
+                getProperty(obj: SystemBag, path: string): ListField | SystemBag | undefined {
+                    return path.split('.').reduce<ListField | SystemBag | undefined>((acc, key) => (isBag(acc) ? acc[key] : undefined), obj);
                 },
-                setProperty(obj: Record<string, unknown>, path: string, value: unknown): void {
+                setProperty(obj: SystemBag, path: string, value: ListField): void {
                     const keys = path.split('.');
                     const last = keys.pop();
                     if (last === undefined) return;
                     let cursor = obj;
                     for (const key of keys) {
-                        cursor[key] ??= {};
-                        cursor = cursor[key] as Record<string, unknown>;
+                        const next = cursor[key];
+                        // Create the intermediate node if absent; descend into it when it
+                        // already is a bag (leaf arrays on the path are overwritten).
+                        if (isBag(next)) {
+                            cursor = next;
+                        } else {
+                            const created: SystemBag = {};
+                            cursor[key] = created;
+                            cursor = created;
+                        }
                     }
                     cursor[last] = value;
                 },
@@ -62,14 +81,6 @@ function installFoundryStubs(): void {
     });
 }
 
-// eslint-disable-next-line no-restricted-syntax -- the mixed instance exposes the helper methods; bridging BaseSheet into the Foundry ctor shape the mixin expects.
-type MixedSheet = BaseSheet & {
-    readSetField(field: string): Set<string>;
-    writeSetField(field: string, set: Set<string>): Promise<void>;
-    addToSetField(field: string, value: string): Promise<void>;
-    removeFromSetField(field: string, value: string | undefined): Promise<void>;
-};
-
 describe('SetFieldActionsMixin', () => {
     beforeEach(() => {
         installFoundryStubs();
@@ -77,11 +88,11 @@ describe('SetFieldActionsMixin', () => {
         updates.length = 0;
     });
 
-    async function makeSheet(system: Record<string, unknown>): Promise<MixedSheet> {
+    async function makeSheet(system: SystemBag): Promise<SetFieldActionsMixinAPI> {
         const { default: SetFieldActionsMixin } = await import('../src/module/applications/api/set-field-actions-mixin.ts');
         // eslint-disable-next-line no-restricted-syntax -- boundary: bridging structural BaseSheet into the mixin's ApplicationV2Ctor parameter.
         const Mixed = SetFieldActionsMixin(BaseSheet as unknown as ApplicationV2Ctor);
-        return new Mixed(makeItem(system)) as unknown as MixedSheet;
+        return new Mixed(makeItem(system));
     }
 
     it('reads a top-level Set-backed field, defaulting to empty', async () => {
