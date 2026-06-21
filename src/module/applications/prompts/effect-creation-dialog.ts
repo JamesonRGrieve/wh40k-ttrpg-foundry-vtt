@@ -316,7 +316,49 @@ export default class EffectCreationDialog extends DialogV2 {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: index access on Record may return undefined; guard is required at runtime
         if (!conditionData) return null;
 
-        const effectData = foundry.utils.deepClone(conditionData);
+        return this._applyDuration(foundry.utils.deepClone(conditionData), data);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Build a single-change active-effect creation payload (name, icon, one
+     * `changes[]` entry, the wh40k nature flag, and the shared duration block).
+     * The characteristic/skill/combat builders are thin callers that differ
+     * only in `label` / `changeKey` / `icon`.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
+    static _buildEffectData({ label, changeKey, value, icon, data }: { label: string; changeKey: string; value: number; icon: string; data: EffectCreationData }): Record<string, unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
+        const effectData: Record<string, unknown> = {
+            name: `${label} ${value > 0 ? '+' : ''}${value}`,
+            icon,
+            changes: [
+                {
+                    key: changeKey,
+                    mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+                    value: value,
+                },
+            ],
+            flags: {
+                'wh40k-rpg': {
+                    nature: value > 0 ? 'beneficial' : 'harmful',
+                },
+            },
+        };
+
+        return this._applyDuration(effectData, data);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Apply the combat-anchored duration block to an effect payload when a
+     * positive round count is supplied. Shared by every effect builder so the
+     * duration shape lives in exactly one place.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
+    static _applyDuration(effectData: Record<string, unknown>, data: EffectCreationData): Record<string, unknown> {
         const rounds = parseInt(data.duration?.rounds ?? '0', 10);
         if (rounds > 0) {
             const combat = game.combat;
@@ -326,7 +368,6 @@ export default class EffectCreationDialog extends DialogV2 {
                 startTurn: combat?.turn ?? 0,
             };
         }
-
         return effectData;
     }
 
@@ -335,7 +376,6 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create characteristic modifier data
      */
-    // TODO(dry): _createCharacteristicData/_createSkillData/_create* all build the same {name,icon,changes[],flags,duration} payload. Collapse to one _buildEffectData({label,changeKey,value,data}).
     // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
     static _createCharacteristicData(data: EffectCreationData): Record<string, unknown> | null {
         const characteristic = data.characteristic;
@@ -350,35 +390,13 @@ export default class EffectCreationDialog extends DialogV2 {
             /* eslint-enable no-restricted-syntax */
             characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
-        const effectData: Record<string, unknown> = {
-            name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,
+        return this._buildEffectData({
+            label: charLabel,
+            changeKey: `system.characteristics.${characteristic}.modifier`,
+            value,
             icon: 'icons/svg/upgrade.svg',
-            changes: [
-                {
-                    key: `system.characteristics.${characteristic}.modifier`,
-                    mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-                    value: value,
-                },
-            ],
-            flags: {
-                'wh40k-rpg': {
-                    nature: value > 0 ? 'beneficial' : 'harmful',
-                },
-            },
-        };
-
-        const rounds = parseInt(data.duration?.rounds ?? '0', 10);
-        if (rounds > 0) {
-            const combat = game.combat;
-            effectData['duration'] = {
-                rounds,
-                startRound: combat?.round ?? 0,
-                startTurn: combat?.turn ?? 0,
-            };
-        }
-
-        return effectData;
+            data,
+        });
     }
 
     /* -------------------------------------------- */
@@ -396,35 +414,13 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const skillLabel = skill.charAt(0).toUpperCase() + skill.slice(1);
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
-        const effectData: Record<string, unknown> = {
-            name: `${skillLabel} ${value > 0 ? '+' : ''}${value}`,
+        return this._buildEffectData({
+            label: skillLabel,
+            changeKey: `system.skills.${skill}.bonus`,
+            value,
             icon: 'icons/svg/upgrade.svg',
-            changes: [
-                {
-                    key: `system.skills.${skill}.bonus`,
-                    mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-                    value: value,
-                },
-            ],
-            flags: {
-                'wh40k-rpg': {
-                    nature: value > 0 ? 'beneficial' : 'harmful',
-                },
-            },
-        };
-
-        const rounds = parseInt(data.duration?.rounds ?? '0', 10);
-        if (rounds > 0) {
-            const combat = game.combat;
-            effectData['duration'] = {
-                rounds,
-                startRound: combat?.round ?? 0,
-                startTurn: combat?.turn ?? 0,
-            };
-        }
-
-        return effectData;
+            data,
+        });
     }
 
     /* -------------------------------------------- */
@@ -442,35 +438,13 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const typeLabel = combatType.charAt(0).toUpperCase() + combatType.slice(1);
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
-        const effectData: Record<string, unknown> = {
-            name: `${typeLabel} ${value > 0 ? '+' : ''}${value}`,
+        return this._buildEffectData({
+            label: typeLabel,
+            changeKey: `system.combat.${combatType}`,
+            value,
             icon: 'icons/svg/combat.svg',
-            changes: [
-                {
-                    key: `system.combat.${combatType}`,
-                    mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-                    value: value,
-                },
-            ],
-            flags: {
-                'wh40k-rpg': {
-                    nature: value > 0 ? 'beneficial' : 'harmful',
-                },
-            },
-        };
-
-        const rounds = parseInt(data.duration?.rounds ?? '0', 10);
-        if (rounds > 0) {
-            const combat = game.combat;
-            effectData['duration'] = {
-                rounds,
-                startRound: combat?.round ?? 0,
-                startTurn: combat?.turn ?? 0,
-            };
-        }
-
-        return effectData;
+            data,
+        });
     }
 
     /* -------------------------------------------- */

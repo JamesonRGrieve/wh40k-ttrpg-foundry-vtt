@@ -4,6 +4,17 @@ import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/applicati
 const { ApplicationV2 } = foundry.applications.api;
 
 /**
+ * The finalize/dispatch contract every roll dialog drives on the roll button.
+ * `_getRollData()` resolves this from wherever a subclass stores it (directly on
+ * `rollData`, or nested on a wrapping `*AttackData` record), so the shared
+ * `_performRoll()` sequence stays agnostic to the storage shape.
+ */
+export interface RollDispatch {
+    finalize?: () => Promise<void> | void;
+    performActionAndSendToChat?: () => Promise<void> | void;
+}
+
+/**
  * Base dialog class for roll prompts.
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
@@ -171,11 +182,48 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /**
-     * Perform the roll action. Override in subclasses.
+     * Resolve the finalize/dispatch contract for this dialog. The default reads
+     * it straight off `rollData` (force-field / assign-damage shape); subclasses
+     * that wrap their roll data in a `*AttackData` record override this hook.
+     * @protected
+     */
+    _getRollData(): RollDispatch {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData is an arbitrary roll-config record; RollDispatch is its finalize/dispatch view
+        return this.rollData as RollDispatch;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Perform the roll action: validate, finalize the roll data, dispatch to
+     * chat, then close. Shared across all roll dialogs; subclasses customise via
+     * `_validateRoll()` and `_getRollData()` rather than overriding this.
      * @protected
      */
     async _performRoll(): Promise<void> {
+        if (!this._validateRoll()) return;
+
+        const dispatch = this._getRollData();
+        await dispatch.finalize?.();
+        await dispatch.performActionAndSendToChat?.();
         await this.close();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Shared select→update→render handler for item-pick actions (weapon, power).
+     * Calls the roll data's select callback with the chosen name, refreshes the
+     * roll data, then re-renders the dialog.
+     * @param rollData  The roll-config record exposing `selectFn` and `update`.
+     * @param selectFn  The roll data's selection callback (e.g. `selectWeapon`).
+     * @param name      The selected item's name.
+     * @protected
+     */
+    async _onSelectItem(rollData: { update?: () => Promise<void> | void }, selectFn: ((name: string) => void) | undefined, name: string): Promise<void> {
+        selectFn?.(name);
+        await rollData.update?.();
+        void this.render();
     }
 
     /* -------------------------------------------- */
