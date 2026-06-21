@@ -11,53 +11,13 @@
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { walkFiles as walk } from './lib/walk.mjs';
+import { scanMissingPairs } from './lib/symmetry-scan.mjs';
 
 const BASELINE = resolve(process.cwd(), '.symmetry-baseline');
 const args = process.argv.slice(2);
 const updateMode = args.includes('--update');
 
-function siblingExists(file, suffix) {
-    return existsSync(file.replace(/\.ts$/, suffix));
-}
-
-const root = resolve(process.cwd(), 'src/module');
-const optOutPath = resolve(process.cwd(), '.coverage-opt-out.json');
-const optOut = existsSync(optOutPath) ? JSON.parse(readFileSync(optOutPath, 'utf8')) : { stories: [], data: [], documents: [] };
-const report = { sheetMissing: [], dataMissing: [], docsMissing: [] };
-
-for (const file of walk(`${root}/applications`)) {
-    if (!file.endsWith('.ts') || file.endsWith('.test.ts') || file.endsWith('.stories.ts') || file.endsWith('.d.ts')) continue;
-    const base = file.split('/').pop();
-    if (base === '_module.ts') continue;
-    const isSheet = /-sheet\.ts$/.test(base) || /Sheet\.ts$/.test(base);
-    const isDialog = /-dialog\.ts$/.test(base) || /Dialog\.ts$/.test(base);
-    if (!isSheet && !isDialog) continue;
-    if (siblingExists(file, '.stories.ts')) continue;
-    const rel = file.replace(`${process.cwd()}/`, '');
-    if (optOut.stories?.includes(rel)) continue;
-    report.sheetMissing.push(rel);
-}
-
-for (const file of walk(`${root}/data`)) {
-    if (!file.endsWith('.ts') || file.endsWith('.test.ts') || file.endsWith('.d.ts')) continue;
-    const base = file.split('/').pop();
-    if (base === '_module.ts') continue;
-    if (siblingExists(file, '.test.ts')) continue;
-    const rel = file.replace(`${process.cwd()}/`, '');
-    if (optOut.data?.includes(rel)) continue;
-    report.dataMissing.push(rel);
-}
-
-for (const file of walk(`${root}/documents`)) {
-    if (!file.endsWith('.ts') || file.endsWith('.test.ts') || file.endsWith('.d.ts')) continue;
-    const base = file.split('/').pop();
-    if (base === '_module.ts') continue;
-    if (siblingExists(file, '.test.ts')) continue;
-    const rel = file.replace(`${process.cwd()}/`, '');
-    if (optOut.documents?.includes(rel)) continue;
-    report.docsMissing.push(rel);
-}
+const report = scanMissingPairs();
 
 const cur = {
     sheets: report.sheetMissing?.length ?? 0,
