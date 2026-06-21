@@ -188,11 +188,7 @@ type RollSkillFn = (key: string) => Promise<void>;
  * @extends BaseItemSheet
  */
 // @ts-expect-error - TS2417 static side inheritance
-export default class TalentSheet extends BaseItemSheet {
-    override get item(): TalentItem {
-        return super.item as TalentItem;
-    }
-
+export default class TalentSheet extends BaseItemSheet<TalentItem> {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */

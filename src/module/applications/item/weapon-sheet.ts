@@ -71,11 +71,7 @@ interface WeaponSheetContext extends Record<string, unknown> {
  * Sheet for weapon items with support for weapon modifications and ammunition.
  * Redesigned as a single-page layout with FAB action buttons.
  */
-export default class WeaponSheet extends ContainerItemSheet {
-    override get item(): WeaponItem {
-        return super.item as WeaponItem;
-    }
-
+export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
