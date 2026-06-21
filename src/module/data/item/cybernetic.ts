@@ -228,11 +228,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [
-            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
-            this.typeLabel,
-            `Location: ${this.locationsLabel}`,
-        ];
+        const props = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate), this.typeLabel, `Location: ${this.locationsLabel}`];
 
         if (this.hasArmourPoints) {
             const apValues = Object.entries(this.armourPoints)

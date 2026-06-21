@@ -173,11 +173,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- getOwnPropertyDescriptor may return undefined at runtime despite mixin type guarantees; defensive fallback required
-            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
-            `For: ${this.weaponTypesLabel}`,
-        ];
+        const props = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate), `For: ${this.weaponTypesLabel}`];
 
         const mods = this.modifiers;
         if (mods.damage !== 0) {

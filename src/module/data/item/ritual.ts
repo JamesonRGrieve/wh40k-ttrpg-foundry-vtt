@@ -122,11 +122,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [
-            this.typeLabel,
-            `Test: ${this.testLabel}`,
-            ...(Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]),
-        ];
+        const props = [this.typeLabel, `Test: ${this.testLabel}`, ...ItemDataModel.inheritedChatProperties(this, ActivationTemplate)];
 
         return props;
     }
