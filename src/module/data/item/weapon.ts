@@ -10,6 +10,7 @@ import AttackTemplate from '../shared/attack-template.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate, { type EquippableState } from '../shared/equippable-template.ts';
+import { renameKeys } from '../shared/migrate-rename.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
@@ -331,7 +332,8 @@ export default class WeaponData extends ItemDataModel.mixin(
         WeaponData.#migrateSpecial(source);
         WeaponData.#migrateClass(source);
         WeaponData.#coerceEnums(source);
-        WeaponData.#migrateProficiency(source);
+        // Legacy field rename (overwrite if source present): proficiency→requiredTraining.
+        renameKeys(source, { proficiency: 'requiredTraining' }, { guard: 'overwrite' });
     }
 
     /**
@@ -378,18 +380,6 @@ export default class WeaponData extends ItemDataModel.mixin(
         if (typeof cls === 'string' && techTypeValues.includes(cls)) {
             source['type'] = cls;
             source['class'] = 'melee';
-        }
-    }
-
-    /**
-     * Migrate proficiency -> requiredTraining.
-     * @param {object} source  The source data
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors _migrateData source signature for internal migration helpers
-    static #migrateProficiency(source: Record<string, unknown>): void {
-        if (source['proficiency'] !== undefined) {
-            source['requiredTraining'] = source['proficiency'];
-            delete source['proficiency'];
         }
     }
 
