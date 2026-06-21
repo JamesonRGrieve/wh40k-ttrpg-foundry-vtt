@@ -9,6 +9,7 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import type { SimpleSkillData as SimpleSkillDataType } from '../src/module/rolls/action-data.ts';
+import { buildApplicationV2Api, type ApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
 
 // --- Stub Foundry globals before importing system modules. -----------------
 // `unified-roll-dialog.ts` (transitive import via base-actor.ts) reads
@@ -23,18 +24,12 @@ import type { SimpleSkillData as SimpleSkillDataType } from '../src/module/rolls
 interface FoundryHandlebarsStub {
     renderTemplate: () => Promise<string>;
 }
-interface FoundryApiStub {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructor signatures.
-    ApplicationV2: new (...args: any[]) => object;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for the HandlebarsApplicationMixin generic constraint.
-    HandlebarsApplicationMixin: <T extends new (...args: any[]) => object>(Base: T) => T;
-}
 interface FoundryUtilsStub {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's foundry.utils.Collection extends Map with framework-defined keys/values; matches the framework type.
     Collection: new () => Map<unknown, unknown>;
 }
 interface FoundryStub {
-    applications: { api: FoundryApiStub; handlebars: FoundryHandlebarsStub };
+    applications: { api: ApplicationV2Api; handlebars: FoundryHandlebarsStub };
     utils: FoundryUtilsStub;
 }
 interface GameI18nStub {
@@ -75,14 +70,6 @@ const ORIGINAL_GAME = stubs.game;
 const ORIGINAL_ACTOR = stubs.Actor;
 const ORIGINAL_CONST = stubs.CONST;
 
-class FakeApplicationV2 {}
-
-// The HandlebarsApplicationMixin is a class-decorator-style mixin; we shim a
-// pass-through that preserves the constructor signature.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructor signatures; `never[]`/`unknown[]` are rejected.
-type ClassCtor = new (...args: any[]) => object;
-const fakeHandlebarsApplicationMixin = <T extends ClassCtor>(Base: T): T => class extends Base {};
-
 class FakeActor {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor.system is the DataModel slot — unknown until narrowed by the per-type DataModel; this stub never reads it.
     declare system: unknown;
@@ -98,10 +85,7 @@ class FakeActor {
 
 stubs.foundry = {
     applications: {
-        api: {
-            ApplicationV2: FakeApplicationV2,
-            HandlebarsApplicationMixin: fakeHandlebarsApplicationMixin,
-        },
+        api: buildApplicationV2Api(),
         handlebars: {
             renderTemplate: async () => Promise.resolve(''),
         },
