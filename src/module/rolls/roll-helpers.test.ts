@@ -1,5 +1,6 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getDegreeForMode, isD100Success, resolveDegreesMethod } from './roll-helpers.ts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type ChatRuntimeHandle, stubChatRuntime } from '../testing/chat-runtime.ts';
+import { emitChatFromTemplate, getDegreeForMode, isD100Success, resolveDegreesMethod } from './roll-helpers.ts';
 
 /**
  * Degrees-of-success method selection (#DoS-mode setting).
@@ -76,6 +77,75 @@ describe('getDegreeForMode — additional degrees', () => {
     it('the two methods diverge inside a single 10-band (the live-game case)', () => {
         // Beating a target by 2 points: Gen 1 = 0 extra, Gen 2 = 1 extra.
         expect(getDegreeForMode('gen1', 41, 39)).not.toBe(getDegreeForMode('gen2', 41, 39));
+    });
+});
+
+describe('emitChatFromTemplate — the single-sourced template→ChatMessage idiom', () => {
+    /** The chat payload the helper hands to `ChatMessage.create`, beyond `content`. */
+    interface EmittedPayload {
+        user?: string;
+        content?: string;
+        rollMode?: string;
+        speaker?: unknown;
+        whisper?: unknown[];
+    }
+
+    let chat: ChatRuntimeHandle;
+
+    beforeEach(() => {
+        // Echo the rendered template + context so we can assert the helper feeds
+        // the right template path and data through to renderTemplate.
+        chat = stubChatRuntime({
+            userId: 'gm-7',
+            renderTemplate: (tpl, context) => `<card tpl="${tpl}">${JSON.stringify(context)}</card>`,
+        });
+    });
+
+    afterEach(() => {
+        chat.restore();
+    });
+
+    function lastPayload(): EmittedPayload {
+        // The stub stores the full create() payload; only `content` is typed on
+        // the shared handle, so narrow to the chat-payload shape for assertions.
+        return (chat.created.at(-1) ?? {}) as unknown as EmittedPayload;
+    }
+
+    it('renders the named template with the supplied data and posts the result', async () => {
+        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/example.hbs', { foo: 'bar', n: 3 });
+        const payload = lastPayload();
+        expect(payload.content).toBe('<card tpl="systems/wh40k-rpg/templates/chat/example.hbs">{"foo":"bar","n":3}</card>');
+    });
+
+    it('defaults to a bare public post — current user, no rollMode, no whisper', async () => {
+        await emitChatFromTemplate('tpl.hbs', {});
+        const payload = lastPayload();
+        expect(payload.user).toBe('gm-7');
+        expect(payload.rollMode).toBeUndefined();
+        expect(payload.whisper).toBeUndefined();
+    });
+
+    it('includes an explicit rollMode and speaker only when provided', async () => {
+        const speaker = { actor: 'actor-1', alias: 'Brother Test' };
+        await emitChatFromTemplate('tpl.hbs', {}, { rollMode: 'roll', speaker });
+        const payload = lastPayload();
+        expect(payload.rollMode).toBe('roll');
+        expect(payload.speaker).toEqual(speaker);
+        // A plain `roll` (public) mode adds no whisper recipients.
+        expect(payload.whisper).toBeUndefined();
+    });
+
+    it('applies GM whispers when applyWhispers is set and the rollMode is gmroll', async () => {
+        await emitChatFromTemplate('tpl.hbs', {}, { rollMode: 'gmroll', applyWhispers: true });
+        const payload = lastPayload();
+        expect(payload.rollMode).toBe('gmroll');
+        // The stub's getWhisperRecipients returns [], so the key is set to an array.
+        expect(Array.isArray(payload.whisper)).toBe(true);
+    });
+
+    it('honours an explicit user override', async () => {
+        await emitChatFromTemplate('tpl.hbs', {}, { user: 'player-3' });
+        expect(lastPayload().user).toBe('player-3');
     });
 });
 
