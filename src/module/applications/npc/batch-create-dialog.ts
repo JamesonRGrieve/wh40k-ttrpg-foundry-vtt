@@ -1,8 +1,7 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
+import { makeNpcFormDialog } from './npc-form-dialog.ts';
 import ThreatCalculator from './threat-calculator.ts';
-
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 interface BatchState {
     namePattern: string;
@@ -43,33 +42,24 @@ interface NPCActorData {
  * Dialog for creating multiple NPCs at once.
  * @extends {ApplicationV2}
  */
-// TODO(dry): the 6 npc/*-dialog.ts classes each redeclare a near-identical DEFAULT_OPTIONS and bypass DialogWH40K. Route through the shared base + a per-dialog config object.
-export default class BatchCreateDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class BatchCreateDialog extends makeNpcFormDialog({
+    id: 'batch-create-dialog-{id}',
+    cssClass: 'batch-create-dialog',
+    window: { title: 'WH40K.NPC.BatchCreate.Title', icon: 'fa-solid fa-users' },
+    position: { width: 550, height: 550 },
+    partId: 'form',
+    template: 'systems/wh40k-rpg/templates/dialogs/batch-create.hbs',
+    form: {},
+}) {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** Per-dialog action + form-handler deltas; merged with the shared base options. */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 form/action handlers accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
-        id: 'batch-create-dialog-{id}',
-        classes: ['wh40k-rpg', 'batch-create-dialog'],
-        tag: 'form',
-        window: {
-            title: 'WH40K.NPC.BatchCreate.Title',
-            icon: 'fa-solid fa-users',
-            minimizable: false,
-            resizable: true,
-            contentClasses: ['standard-form'],
-        },
-        position: {
-            width: 550,
-            height: 550,
-        },
         form: {
             handler: BatchCreateDialog.#onSubmit,
-            submitOnChange: false,
-            closeOnSubmit: true,
         },
         actions: {
             cancel: BatchCreateDialog.#onCancel,
@@ -77,15 +67,6 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         },
     };
     /* eslint-enable @typescript-eslint/unbound-method */
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        form: {
-            template: 'systems/wh40k-rpg/templates/dialogs/batch-create.hbs',
-        },
-    };
 
     /* -------------------------------------------- */
     /*  Properties                                  */

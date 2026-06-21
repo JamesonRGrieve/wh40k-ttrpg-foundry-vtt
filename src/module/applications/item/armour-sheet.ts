@@ -4,6 +4,7 @@
 
 import type ArmourData from '../../data/item/armour.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 
 /** Armour item with its system data typed to the ArmourData DataModel. */
@@ -18,7 +19,7 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
 /**
  * Sheet for armour items with support for armour modifications.
  */
-export default class ArmourSheet extends ContainerItemSheet {
+export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet) {
     /** Narrow the inherited item document to its armour DataModel shape. */
     override get item(): ArmourItem {
         return super.item as ArmourItem;
@@ -139,7 +140,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      */
     static async #toggleCoverage(this: ArmourSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const location = target.dataset['location'];
-        const coverage = new Set(this.item.system.coverage);
+        const coverage = this.readSetField('coverage');
 
         // Handle "all" special case
         if (location === 'all') {
@@ -177,7 +178,7 @@ export default class ArmourSheet extends ContainerItemSheet {
             coverage.add('body');
         }
 
-        await this.item.update({ 'system.coverage': Array.from(coverage) });
+        await this.writeSetField('coverage', coverage);
     }
 
     /**
@@ -191,10 +192,7 @@ export default class ArmourSheet extends ContainerItemSheet {
         const property = select?.value ?? '';
         if (property === '') return;
 
-        const properties = new Set(this.item.system.properties);
-        properties.add(property);
-
-        await this.item.update({ 'system.properties': Array.from(properties) });
+        await this.addToSetField('properties', property);
 
         // Reset select
         if (select !== null) select.value = '';
@@ -207,11 +205,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {HTMLElement} target
      */
     static async #removeProperty(this: ArmourSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        const property = target.dataset['property'];
-        const properties = new Set(this.item.system.properties);
-        if (property !== undefined) properties.delete(property);
-
-        await this.item.update({ 'system.properties': Array.from(properties) });
+        await this.removeFromSetField('properties', target.dataset['property']);
     }
 
     /**

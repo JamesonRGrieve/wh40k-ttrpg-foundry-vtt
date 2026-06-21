@@ -4,6 +4,7 @@
 
 import type AmmunitionData from '../../data/item/ammunition.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
 /** Ammunition item with its system data typed to the AmmunitionData DataModel. */
@@ -19,7 +20,7 @@ const TAB_LABEL_DETAILS = 'WH40K.Tabs.Details';
  * Sheet for ammunition items.
  * Displays modifiers with stat bar and weapon compatibility.
  */
-export default class AmmoSheet extends BaseItemSheet {
+export default class AmmoSheet extends SetFieldActionsMixin(BaseItemSheet) {
     /** Narrow the inherited item document to its ammunition DataModel shape. */
     override get item(): AmmoItem {
         return super.item as AmmoItem;
@@ -94,9 +95,10 @@ export default class AmmoSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /**
-     * Add a quality to added or removed list.
+     * Add a quality to the added or removed list. The shared Set add/persist core
+     * lives in {@link SetFieldActionsMixin}; this handler resolves the target field
+     * from `data-type` and pulls the value from the matching text input.
      */
-    // TODO(dry): this add/remove-to-Set handler triplet is duplicated in armour-sheet.ts and armour-mod-sheet.ts. Extract a SetFieldActionsMixin keyed off data-field.
     static async #addQuality(this: AmmoSheet, _event: Event, target: HTMLElement): Promise<void> {
         const type = target.dataset['type']; // 'added' or 'removed'
         const input = this.element.querySelector<HTMLInputElement>(`[name="new-${type}-quality"]`);
@@ -105,10 +107,7 @@ export default class AmmoSheet extends BaseItemSheet {
         if (quality === '') return;
 
         const field = type === 'added' ? 'addedQualities' : 'removedQualities';
-        const qualities = new Set(this.item.system[field]);
-        qualities.add(quality);
-
-        await this.item.update({ [`system.${field}`]: Array.from(qualities) });
+        await this.addToSetField(field, quality);
 
         // Clear input
         if (input !== null) input.value = '';
@@ -118,21 +117,13 @@ export default class AmmoSheet extends BaseItemSheet {
      * Remove a quality from the added list.
      */
     static async #removeAddedQuality(this: AmmoSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const quality = target.dataset['quality'];
-        const qualities = new Set(this.item.system.addedQualities);
-        if (quality !== undefined) qualities.delete(quality);
-
-        await this.item.update({ 'system.addedQualities': Array.from(qualities) });
+        await this.removeFromSetField('addedQualities', target.dataset['quality']);
     }
 
     /**
      * Remove a quality from the removed list.
      */
     static async #removeRemovedQuality(this: AmmoSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const quality = target.dataset['quality'];
-        const qualities = new Set(this.item.system.removedQualities);
-        if (quality !== undefined) qualities.delete(quality);
-
-        await this.item.update({ 'system.removedQualities': Array.from(qualities) });
+        await this.removeFromSetField('removedQualities', target.dataset['quality']);
     }
 }
