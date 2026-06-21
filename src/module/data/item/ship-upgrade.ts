@@ -2,29 +2,22 @@ import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import ShipStatModifiersTemplate, { type ShipStatModifiers } from '../shared/ship-stat-modifiers-template.ts';
 
 /**
  * Data model for Ship Upgrade items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
+ * @mixes ShipStatModifiersTemplate
  */
-export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemplate) {
+export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemplate, ShipStatModifiersTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare power: number;
     declare space: number;
     declare shipPoints: number;
-    declare modifiers: {
-        speed: number;
-        manoeuvrability: number;
-        detection: number;
-        armour: number;
-        hullIntegrity: number;
-        turretRating: number;
-        voidShields: number;
-        morale: number;
-        crewRating: number;
-    };
+    // modifiers (ship-stat block + hasModifiers/modifiersList) from ShipStatModifiersTemplate.
+    declare modifiers: ShipStatModifiers;
     declare effect: string;
     declare availability: string;
     declare notes: string;
@@ -43,18 +36,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
             space: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             shipPoints: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
-            // Stat modifiers
-            modifiers: new fields.SchemaField({
-                speed: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                manoeuvrability: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                detection: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                armour: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                hullIntegrity: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                turretRating: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                voidShields: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                morale: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                crewRating: new fields.NumberField({ required: true, initial: 0, integer: true }),
-            }),
+            // Stat modifiers (9-field block) come from ShipStatModifiersTemplate.
 
             // Effect description
             effect: new fields.HTMLField({ required: true, blank: true }),
@@ -134,31 +116,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
         return '0';
     }
 
-    /**
-     * Has any non-zero modifiers?
-     * @type {boolean}
-     */
-    get hasModifiers(): boolean {
-        return Object.values(this.modifiers).some((v) => v !== 0);
-    }
-
-    /**
-     * Get modifiers as a formatted list.
-     * @type {object[]}
-     */
-    get modifiersList(): Array<{ key: string; label: string; value: number }> {
-        const list: Array<{ key: string; label: string; value: number }> = [];
-        for (const [key, value] of Object.entries(this.modifiers)) {
-            if (value !== 0) {
-                list.push({
-                    key,
-                    label: game.i18n.localize(`WH40K.ShipStat.${key.capitalize()}`),
-                    value,
-                });
-            }
-        }
-        return list;
-    }
+    // hasModifiers / modifiersList are inherited from ShipStatModifiersTemplate.
 
     /* -------------------------------------------- */
     /*  Chat Properties                             */
