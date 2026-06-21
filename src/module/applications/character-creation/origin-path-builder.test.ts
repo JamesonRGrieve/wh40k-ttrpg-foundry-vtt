@@ -1,4 +1,5 @@
 import { afterAll, describe, expect, it, vi } from 'vitest';
+import { buildApplicationV2Api, FakeApplicationV2, type Constructor } from '../../testing/app-v2-stub.ts';
 
 /**
  * Structural shape of every `globalThis` member this suite stubs. The runtime
@@ -30,8 +31,6 @@ interface GameStub {
     // reset assigns cleanly under exactOptionalPropertyTypes.
     tables: { getName: (name: string) => RollTableStub | undefined } | undefined;
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: TS2545 requires a mixin base constructor to have a single `any[]` rest param; `unknown[]`/`never[]` are rejected by the mixin-class spec
-type MixinBase = abstract new (...args: any[]) => object;
 /** The reset-choices payload `#commit` resolves from the confirm dialog. */
 interface CommitResetChoices {
     resetInventory: boolean;
@@ -43,7 +42,7 @@ interface FoundryStub {
     applications: {
         api: {
             ApplicationV2: typeof FakeApplicationV2;
-            HandlebarsApplicationMixin: <T extends MixinBase>(Base: T) => T;
+            HandlebarsApplicationMixin: <T extends Constructor>(Base: T) => T;
             DialogV2?: { prompt: (...args: never[]) => Promise<CommitResetChoices | null> };
         };
     };
@@ -71,12 +70,6 @@ const ORIGINAL_GAME = stubHost.game;
 const ORIGINAL_FOUNDRY = stubHost.foundry;
 const ORIGINAL_UI = stubHost.ui;
 const ORIGINAL_ROLL = stubHost.Roll;
-
-class FakeApplicationV2 {}
-const fakeHandlebarsApplicationMixin = <T extends MixinBase>(Base: T): T => {
-    abstract class Mixed extends Base {}
-    return Mixed;
-};
 
 vi.mock('../../config/game-systems/index.ts', () => ({
     SystemConfigRegistry: {
@@ -189,10 +182,7 @@ const STUBS: GlobalStubs = {
     },
     foundry: {
         applications: {
-            api: {
-                ApplicationV2: FakeApplicationV2,
-                HandlebarsApplicationMixin: fakeHandlebarsApplicationMixin,
-            },
+            api: buildApplicationV2Api(),
         },
         abstract: {
             DataModel: class {},
