@@ -2,7 +2,7 @@
  * @file WeaponAttackDialog - V2 dialog for weapon attack configuration
  */
 
-import BaseRollDialog from './base-roll-dialog.ts';
+import BaseRollDialog, { type RollDispatch } from './base-roll-dialog.ts';
 
 interface WeaponRollData {
     selectWeapon?: (name: string) => void;
@@ -85,9 +85,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
      */
     async _onWeaponSelectChange(event: Event): Promise<void> {
         const data = this.weaponAttackData.rollData;
-        if (typeof data.selectWeapon === 'function') data.selectWeapon((event.target as HTMLInputElement).name);
-        if (typeof data.update === 'function') await data.update();
-        void this.render();
+        await this._onSelectItem(data, data.selectWeapon, (event.target as HTMLInputElement).name);
     }
 
     /* -------------------------------------------- */
@@ -118,9 +116,8 @@ export default class WeaponAttackDialog extends BaseRollDialog {
      * Handle weapon selection via action.
      */
     static async #onSelectWeapon(this: WeaponAttackDialog, _event: Event, target: HTMLElement): Promise<void> {
-        this.weaponAttackData.rollData.selectWeapon?.(target.getAttribute('name') ?? '');
-        await this.weaponAttackData.rollData.update?.();
-        void this.render();
+        const data = this.weaponAttackData.rollData;
+        await this._onSelectItem(data, data.selectWeapon, target.getAttribute('name') ?? '');
     }
 
     /* -------------------------------------------- */
@@ -140,12 +137,11 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    override async _performRoll(): Promise<void> {
-        if (!this._validateRoll()) return;
-
-        await this.weaponAttackData.rollData.finalize?.();
-        await this.weaponAttackData.performActionAndSendToChat?.();
-        await this.close();
+    override _getRollData(): RollDispatch {
+        return {
+            finalize: this.weaponAttackData.rollData.finalize,
+            performActionAndSendToChat: this.weaponAttackData.performActionAndSendToChat,
+        };
     }
 }
 
