@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { easeOutCubic, flashElement, rafTween } from './animation-utils.ts';
+import { easeOutCubic, flashElement, rafTween, showBriefNotification } from './animation-utils.ts';
 
 describe('easeOutCubic', () => {
     it('maps the unit interval with ease-out shape', () => {
@@ -84,5 +84,80 @@ describe('flashElement', () => {
         flashElement(el, 'tw-animate-stat-increase', 300, ['tw-animate-stat-increase', 'tw-animate-stat-decrease']);
         expect(el.classList.contains('tw-animate-stat-decrease')).toBe(false);
         expect(el.classList.contains('tw-animate-stat-increase')).toBe(true);
+    });
+});
+
+describe('showBriefNotification', () => {
+    let rafQueue: FrameRequestCallback[];
+
+    beforeEach(() => {
+        rafQueue = [];
+        vi.useFakeTimers();
+        // happy-dom's rAF is not driven by fake timers; capture and drive it manually.
+        vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+            rafQueue.push(cb);
+            return rafQueue.length;
+        });
+    });
+
+    afterEach(() => {
+        document.body.innerHTML = '';
+        vi.useRealTimers();
+        vi.unstubAllGlobals();
+        vi.restoreAllMocks();
+    });
+
+    /** Run every queued requestAnimationFrame callback once. */
+    function flushRaf(): void {
+        const callbacks = rafQueue.splice(0, rafQueue.length);
+        for (const cb of callbacks) cb(0);
+    }
+
+    it('appends a toast carrying the message + type class, then removes it after the lifecycle', () => {
+        const anchor = document.createElement('div');
+        document.body.appendChild(anchor);
+
+        showBriefNotification(anchor, 'saved', 'success');
+
+        const toast = document.querySelector('.brief-notification');
+        expect(toast).not.toBeNull();
+        expect(toast?.textContent).toBe('saved');
+        expect(toast?.classList.contains('brief-notification-success')).toBe(true);
+
+        // Enter transition (rAF) raises opacity.
+        flushRaf();
+        expect((toast as HTMLElement).style.opacity).toBe('1');
+
+        // After the visible window + the leave transition, the toast is gone.
+        vi.advanceTimersByTime(2000); // visible window for the default 'above' placement
+        vi.advanceTimersByTime(200); // leave transition before .remove()
+        expect(document.querySelector('.brief-notification')).toBeNull();
+    });
+
+    it("defaults to 'above' placement (absolute, centred) and applies 'right' (fixed) when requested", () => {
+        const anchor = document.createElement('div');
+        document.body.appendChild(anchor);
+
+        showBriefNotification(anchor, 'a', 'info');
+        const above = document.querySelector<HTMLElement>('.brief-notification');
+        expect(above?.style.position).toBe('absolute');
+        expect(above?.style.transform).toContain('translateX(-50%)');
+        above?.remove();
+
+        showBriefNotification(anchor, 'b', 'info', { position: 'right' });
+        const right = document.querySelector<HTMLElement>('.brief-notification');
+        expect(right?.style.position).toBe('fixed');
+    });
+
+    it("removes the 'right'-placed toast after its shorter visible window", () => {
+        const anchor = document.createElement('div');
+        document.body.appendChild(anchor);
+
+        showBriefNotification(anchor, 'x', 'warning', { position: 'right' });
+        expect(document.querySelector('.brief-notification')).not.toBeNull();
+
+        vi.advanceTimersByTime(1500); // 'right' visible window
+        vi.advanceTimersByTime(200); // leave transition
+        expect(document.querySelector('.brief-notification')).toBeNull();
     });
 });
