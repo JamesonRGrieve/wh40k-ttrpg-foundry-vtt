@@ -194,37 +194,36 @@ export default class ResourceGrantData extends BaseGrantData {
     /** @inheritDoc */
     override async reverse(actor: WH40KBaseActor, appliedState: Record<string, ResourceAppliedState>): Promise<ResourceRestoreData> {
         const ctor = this.constructor as typeof ResourceGrantData;
-        const restoreData: ResourceRestoreData = { resources: {} };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
-        const updates: Record<string, unknown> = {};
 
-        for (const [type, state] of Object.entries(appliedState)) {
+        // Per-field delta mapper: replace grants restore the captured value/max
+        // exactly; additive grants subtract the rolled value from the current
+        // value/max. Unknown resource types are skipped. The shared
+        // merge/apply/guard tail lives in BaseGrantData._reverseWithDeltaMap (#345).
+        const restores = await this._reverseWithDeltaMap(actor, appliedState, (type, state) => {
             const resourceDef = ctor.RESOURCES[type];
-            if (resourceDef === undefined) continue;
+            if (resourceDef === undefined) return null;
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
+            const deltas: Record<string, unknown> = {};
             if (!state.additive) {
-                // Replace grants restore the captured previousValue/previousMax exactly.
-                updates[resourceDef.valuePath] = state.previousValue;
+                deltas[resourceDef.valuePath] = state.previousValue;
                 if (resourceDef.affectsMax && resourceDef.maxPath !== null && state.previousMax !== null) {
-                    updates[resourceDef.maxPath] = state.previousMax;
+                    deltas[resourceDef.maxPath] = state.previousMax;
                 }
             } else {
                 const currentValue = Number(foundry.utils.getProperty(actor, resourceDef.valuePath)) || 0;
-                updates[resourceDef.valuePath] = currentValue - state.rolledValue;
-
+                deltas[resourceDef.valuePath] = currentValue - state.rolledValue;
                 if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
                     const currentMax = Number(foundry.utils.getProperty(actor, resourceDef.maxPath)) || 0;
-                    updates[resourceDef.maxPath] = currentMax - state.rolledValue;
+                    deltas[resourceDef.maxPath] = currentMax - state.rolledValue;
                 }
             }
 
-            restoreData.resources[type] = state;
-        }
+            return { deltas, restore: { type, state } };
+        });
 
-        if (Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
-
+        const restoreData: ResourceRestoreData = { resources: {} };
+        for (const { type, state } of restores) restoreData.resources[type] = state;
         return restoreData;
     }
 

@@ -243,6 +243,49 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
     }
 
     /**
+     * Shared reverse/restore tail for delta-map grants (#345).
+     *
+     * Walks an `appliedState` map, asks the caller's per-entry mapper for the
+     * `{ path: value }` deltas and the restore record for that entry, merges all
+     * deltas into one update payload, applies it once (only when non-empty), and
+     * collects the restore records into an array. Each grant keeps ONLY its
+     * per-field delta mapper; the empty-updates guard and the single
+     * `actor.update(...)` call live here so a fix to either lands in one place.
+     *
+     * Returns `null` from the mapper to skip an entry (no delta, no restore
+     * record), e.g. a resource grant whose recorded type is no longer valid.
+     *
+     * @param actor - The actor being reversed.
+     * @param appliedState - The per-entry state recorded at apply time.
+     * @param mapper - Maps one `(key, state)` to its update deltas + restore record.
+     * @returns The collected restore records, in iteration order.
+     * @protected
+     */
+    async _reverseWithDeltaMap<S, R>(
+        actor: WH40KBaseActor,
+        appliedState: Record<string, S>,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: deltas feed a Foundry document.update payload
+        mapper: (key: string, state: S) => { deltas: Record<string, unknown>; restore: R } | null,
+    ): Promise<R[]> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
+        const updates: Record<string, unknown> = {};
+        const restores: R[] = [];
+
+        for (const [key, state] of Object.entries(appliedState)) {
+            const mapped = mapper(key, state);
+            if (mapped === null) continue;
+            Object.assign(updates, mapped.deltas);
+            restores.push(mapped.restore);
+        }
+
+        if (Object.keys(updates).length > 0) {
+            await actor.update(updates);
+        }
+
+        return restores;
+    }
+
+    /**
      * Check if this grant can be automatically applied without user interaction.
      * @returns {object|false} Data to auto-apply, or false if user input needed
      */
