@@ -31,6 +31,7 @@ describe('threat-utils', () => {
         it('carries the band label key and colour through', () => {
             const band = difficultyForRatio(1.0);
             expect(band.label).toBe('WH40K.Threat.Moderate');
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.json (flag on)
             expect(band.color).toBe(DIFFICULTY_BANDS['moderate']?.color);
             expect(band.maxRatio).toBe(1.2);
         });

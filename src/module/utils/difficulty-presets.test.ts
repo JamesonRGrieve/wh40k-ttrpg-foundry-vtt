@@ -15,6 +15,7 @@ describe('buildDifficultyPresets', () => {
 
     it('takes each modifier from the CONFIG map (no re-hardcoded copy)', () => {
         for (const preset of buildDifficultyPresets()) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.json (flag on)
             expect(preset.modifier).toBe(WH40K.difficulties[preset.key]?.modifier);
         }
     });

@@ -22,22 +22,27 @@
  */
 
 import type { WH40KItemDocument } from '../../types/global.d.ts';
-import type { ApplicationV2Ctor } from './application-types.ts';
-
-/** Minimal sheet surface the mixin relies on. */
-interface SetFieldSheet {
-    readonly item: WH40KItemDocument;
-}
+import type { ApplicationV2Ctor, ConstructorOf } from './application-types.ts';
+import type { SetFieldActionsMixinAPI } from './sheet-mixin-types.ts';
 
 /**
  * Adds Set-backed list-field add/remove handling to an item sheet.
  * @template {ApplicationV2} T
  * @param Base - The base class being mixed.
- * @returns Extended class with Set-field helpers and generic add/remove actions.
+ * @returns Extended class (base constructor surface intersected with the
+ *   {@link SetFieldActionsMixinAPI} instance helpers) so consuming sheets see
+ *   `this.addToSetField(...)` & friends without a cast.
  * @mixin
  */
-export default function SetFieldActionsMixin<T extends ApplicationV2Ctor>(Base: T): T {
-    class SetFieldActionsApplication extends Base {
+export default function SetFieldActionsMixin<T extends ApplicationV2Ctor>(Base: T): T & ConstructorOf<SetFieldActionsMixinAPI> {
+    class SetFieldActionsApplication extends Base implements SetFieldActionsMixinAPI {
+        /**
+         * The item document this sheet edits. Contributed by the item-sheet base
+         * the mixin is applied over (BaseItemSheet); `declare`d here so the Set-field
+         * helpers read `this.item.system` without bridging through a cast.
+         */
+        declare readonly item: WH40KItemDocument;
+
         /* eslint-disable @typescript-eslint/no-explicit-any -- mixin idiom: constructor forwards whatever the base accepts (TS2545) */
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
@@ -70,9 +75,8 @@ export default function SetFieldActionsMixin<T extends ApplicationV2Ctor>(Base: 
          * @param field - Dot-path under `system` (e.g. `properties`, `restrictions.armourTypes`).
          */
         readSetField(field: string): Set<string> {
-            const { item } = this as unknown as SetFieldSheet;
             // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns the broad system value; the field is a SetField/array
-            const value = foundry.utils.getProperty(item.system, field) as Iterable<string> | undefined;
+            const value = foundry.utils.getProperty(this.item.system, field) as Iterable<string> | undefined;
             return new Set(value ?? []);
         }
 
@@ -82,8 +86,7 @@ export default function SetFieldActionsMixin<T extends ApplicationV2Ctor>(Base: 
          * @param set - The values to persist.
          */
         async writeSetField(field: string, set: Set<string>): Promise<void> {
-            const { item } = this as unknown as SetFieldSheet;
-            await item.update({ [`system.${field}`]: Array.from(set) });
+            await this.item.update({ [`system.${field}`]: Array.from(set) });
         }
 
         /**

@@ -3,8 +3,8 @@
  * Central configuration object for the WH40K RPG RPG system.
  */
 
-import { getWeaponQualityHasLevel, getWeaponQualityMechanics, weaponQualityDescKey, weaponQualityLabelKey } from './rules/weapon-quality-payloads.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod } from './rolls/roll-helpers.ts';
+import { getWeaponQualityHasLevel, getWeaponQualityMechanics, weaponQualityDescKey, weaponQualityLabelKey } from './rules/weapon-quality-payloads.ts';
 import { capitalize } from './utils/format.ts';
 
 /* -------------------------------------------- */

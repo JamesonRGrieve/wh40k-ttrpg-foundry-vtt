@@ -283,6 +283,27 @@ export interface ActiveModifiersMixinAPI {
 export type ItemPreviewMixinAPI = object;
 
 /* -------------------------------------------- */
+
+/**
+ * API surface added by SetFieldActionsMixin.
+ *
+ * The mixin contributes the Set-backed list-field read/write/add/remove instance
+ * helpers consumed by the ammunition / armour / armour-mod item sheets. Declared
+ * here so the mixin's return type can intersect it and consuming sheets see the
+ * methods on `this` without a cast.
+ */
+export interface SetFieldActionsMixinAPI {
+    /** Read a (possibly nested) Set-backed field under `system` as a Set. */
+    readSetField: (field: string) => Set<string>;
+    /** Persist a Set-backed field as an array (Foundry's SetField storage form). */
+    writeSetField: (field: string, set: Set<string>) => Promise<void>;
+    /** Add a value to a Set-backed field and persist the result. */
+    addToSetField: (field: string, value: string) => Promise<void>;
+    /** Remove a value from a Set-backed field and persist the result. */
+    removeFromSetField: (field: string, value: string | undefined) => Promise<void>;
+}
+
+/* -------------------------------------------- */
 /*  Combined Interface                          */
 /* -------------------------------------------- */
 

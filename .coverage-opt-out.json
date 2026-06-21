@@ -1,6 +1,8 @@
 {
   "_comment": "DataModels and document classes touch foundry.* (foundry.data.fields, etc.) at module-eval, so they cannot be imported under happy-dom/vitest — a co-located unit test can only be a vacuous skip-placeholder. Real coverage for these lives in the e2e Tier B suite (tests/e2e/data-item-models, data-actor-models, data-shared-templates, documents-extra), which boots real Foundry and exercises each model via actor/item creation across game systems. A second category is pure type-definition leaves (interfaces only, no runtime code — e.g. item/weapon-quality-mechanics.ts, abstract/_types.ts) whose shape is exercised by the consumers that import it; there is nothing to execute in a co-located test. These paths are opted out of the co-located *.test.ts symmetry requirement on that basis. Where a data module DOES expose foundry-free runtime logic (a pure const, a deferred-foundry helper, or a panel/context builder), it gets a real co-located *.test.ts instead of an opt-out — see data/shared/body-locations.test.ts and data/actor/mixins/ow-craftsmanship-template.test.ts.",
-  "stories": [],
+  "stories": [
+    "src/module/applications/npc/npc-form-dialog.ts"
+  ],
   "data": [
     "src/module/data/abstract/_types.ts",
     "src/module/data/actor/aircraft.ts",
