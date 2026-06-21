@@ -12,6 +12,8 @@
  * consumer's job (sheet update + ActiveEffect / status condition).
  */
 
+import { nonNegInt } from './_num.ts';
+
 type AtZeroEffect =
     /** Skill / talent tests using this characteristic auto-fail. */
     | 'cannot-test'
@@ -64,8 +66,8 @@ export function getAtZeroEffect(characteristicKey: string): AtZeroEntry | undefi
  * Effective characteristic value = total − damage, floored at 0.
  */
 export function getEffectiveCharacteristic(total: number, damage: number): number {
-    const t = Math.max(0, Math.trunc(Number.isFinite(total) ? total : 0));
-    const d = Math.max(0, Math.trunc(Number.isFinite(damage) ? damage : 0));
+    const t = nonNegInt(total);
+    const d = nonNegInt(damage);
     return Math.max(0, t - d);
 }
 
@@ -75,7 +77,7 @@ export function getEffectiveCharacteristic(total: number, damage: number): numbe
  * the caller doesn't over-heal.
  */
 export function getCharacteristicDamageHealed(damageSoFar: number, hoursOfRest: number): number {
-    const damage = Math.max(0, Math.trunc(Number.isFinite(damageSoFar) ? damageSoFar : 0));
-    const hours = Math.max(0, Math.trunc(Number.isFinite(hoursOfRest) ? hoursOfRest : 0));
+    const damage = nonNegInt(damageSoFar);
+    const hours = nonNegInt(hoursOfRest);
     return Math.min(damage, hours);
 }

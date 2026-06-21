@@ -11,6 +11,8 @@
  * on the NPC schema (#73) marks which NPCs are eligible.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export type ReinforcementTier = 'standard' | 'specialist' | 'elite' | 'master';
 
 /**
@@ -35,7 +37,7 @@ export function isReinforcementTier(value: unknown): value is ReinforcementTier 
  * Returns 0 if the inputs are bad.
  */
 export function getReinforcementCallTarget(influence: number, tier: ReinforcementTier): number {
-    const inf = Math.max(0, Math.trunc(influence));
+    const inf = nonNegInt(influence);
     const mod = REINFORCEMENT_MODIFIER[tier];
     return Math.max(0, inf + mod);
 }

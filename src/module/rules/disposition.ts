@@ -10,6 +10,8 @@
  * skill — this module just exposes the numeric modifier.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export type DispositionLabel = 'Hostile' | 'Antagonistic' | 'Wary' | 'Neutral' | 'Cooperative' | 'Friendly' | 'Helpful';
 
 export const DISPOSITION_LABELS: ReadonlyArray<DispositionLabel> = ['Hostile', 'Antagonistic', 'Wary', 'Neutral', 'Cooperative', 'Friendly', 'Helpful'];
@@ -49,7 +51,7 @@ export function getDispositionModifier(disposition: number, skill: 'charm' | 'co
  * negative caps from malformed input.
  */
 export function getInteractionCap(fellowshipBonus: number): number {
-    return Math.max(0, Math.trunc(fellowshipBonus));
+    return nonNegInt(fellowshipBonus);
 }
 
 /** Inputs to the interaction-gated disposition gain resolver. */
@@ -87,7 +89,7 @@ export interface InteractionDispositionGainResult {
  */
 export function resolveInteractionDispositionGain(input: InteractionDispositionGainInput): InteractionDispositionGainResult {
     const cap = getInteractionCap(input.pcFellowshipBonus);
-    const used = Math.max(0, Math.trunc(input.interactionsSoFar));
+    const used = nonNegInt(input.interactionsSoFar);
     const remaining = Math.max(0, cap - used);
     if (remaining <= 0) {
         return { gain: 0, atCap: true, remainingInteractions: 0 };

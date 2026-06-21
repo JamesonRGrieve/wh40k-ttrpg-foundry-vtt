@@ -8,6 +8,8 @@
  * discovered.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export type PactDisposition = -3 | -2 | -1 | 0 | 1 | 2 | 3;
 
 export interface PactDefinition {
@@ -38,5 +40,5 @@ export function adjustPactDisposition(current: PactDisposition, delta: number): 
 
 /** Subtlety hit on discovery. Caller pipes through `applySubtlety(-n)`. */
 export function getDiscoverySubtletyHit(pact: PactDefinition): number {
-    return Math.max(0, Math.trunc(pact.discoverySubtletyPenalty));
+    return nonNegInt(pact.discoverySubtletyPenalty);
 }

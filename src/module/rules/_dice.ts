@@ -20,9 +20,15 @@ export type Rng = () => number;
  * the margin, plus one — a bare pass is 1 DoS (core.md §"Degrees of Success").
  * A failed roll (`roll > target`) yields 0, so callers can use the return value
  * directly without a separate pass check.
+ *
+ * `extra: true` switches to the "extra degrees" convention (`max(0,
+ * floor(margin / 10))`): a bare pass scores 0 and each full ten of margin adds
+ * one — the form Black Crusade rituals and Only War logistics report bonuses
+ * in, where the bare success already grants the base effect.
  */
-export function degreesOfSuccess(roll: number, target: number): number {
+export function degreesOfSuccess(roll: number, target: number, options?: { extra?: boolean }): number {
     if (roll > target) return 0;
+    if (options?.extra === true) return Math.max(0, Math.floor((target - roll) / 10));
     return Math.floor((target - roll) / 10) + 1;
 }
 
@@ -33,9 +39,15 @@ export function degreesOfSuccess(roll: number, target: number): number {
  * `inclusive: false` counts the margin from the first point *past* the target
  * (`floor((roll − target − 1) / 10) + 1`), matching the Navigator-power
  * convention; the default counts from the target itself.
+ *
+ * `extra: true` switches to the "extra degrees" convention (`max(0,
+ * floor(margin / 10))`): a bare fail scores 0, mirroring {@link degreesOfSuccess}
+ * with `extra` for the BC-ritual / OW-logistics report form. `extra` takes
+ * precedence over `inclusive`.
  */
-export function degreesOfFailure(roll: number, target: number, options?: { inclusive?: boolean }): number {
+export function degreesOfFailure(roll: number, target: number, options?: { inclusive?: boolean; extra?: boolean }): number {
     if (roll <= target) return 0;
+    if (options?.extra === true) return Math.max(0, Math.floor((roll - target) / 10));
     const margin = options?.inclusive === false ? roll - target - 1 : roll - target;
     return Math.floor(margin / 10) + 1;
 }
@@ -85,15 +97,21 @@ export interface BandRow {
 }
 
 /**
- * Find the row whose inclusive `[low, high]` range contains `roll`. With
- * `clamp: true` (default), a roll below the first row's low / above the last
- * row's high snaps to the first / last row instead of returning undefined —
- * roll tables are exhaustive, so an out-of-band roll means a modifier pushed
- * past the table edge. With `clamp: false` an out-of-band roll returns
- * `undefined`. Rows are assumed sorted ascending by `range[0]`.
+ * Find the row whose inclusive `[low, high]` range — read via the `range`
+ * accessor — contains `roll`. With `clamp: true` (default), a roll below the
+ * first row's low / above the last row's high snaps to the first / last row
+ * instead of returning undefined — roll tables are exhaustive, so an out-of-band
+ * roll means a modifier pushed past the table edge. With `clamp: false` an
+ * out-of-band roll (or one that lands in a table gap) returns `undefined`. Rows
+ * are assumed sorted ascending by their range start.
+ *
+ * Use this when rows key their bounds under a field other than `range`
+ * (e.g. `roll`, `{rangeMin, rangeMax}`) — pass an accessor returning the
+ * inclusive `[low, high]` tuple. {@link findBand} is the shorthand for rows that
+ * already expose `range`.
  */
-export function findBand<T extends BandRow>(rows: readonly T[], roll: number, options?: { clamp?: boolean }): T | undefined {
-    const hit = rows.find((row) => roll >= row.range[0] && roll <= row.range[1]);
+export function findBandBy<T>(rows: readonly T[], roll: number, range: (row: T) => readonly [number, number], options?: { clamp?: boolean }): T | undefined {
+    const hit = rows.find((row) => roll >= range(row)[0] && roll <= range(row)[1]);
     if (hit !== undefined) return hit;
     if (options?.clamp === false) return undefined;
     const first = rows[0];
@@ -102,9 +120,34 @@ export function findBand<T extends BandRow>(rows: readonly T[], roll: number, op
     // (main tsconfig) types indexed access as T | undefined and requires this guard.
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json has the flag off, tsc (flag on) requires this guard
     if (first === undefined || last === undefined) return undefined;
-    if (roll < first.range[0]) return first;
-    if (roll > last.range[1]) return last;
+    if (roll < range(first)[0]) return first;
+    if (roll > range(last)[1]) return last;
     return undefined;
+}
+
+/**
+ * Find the row whose inclusive `[low, high]` `range` contains `roll`. Shorthand
+ * for {@link findBandBy} over rows that expose a `range` tuple directly; see that
+ * function for the clamp semantics.
+ */
+export function findBand<T extends BandRow>(rows: readonly T[], roll: number, options?: { clamp?: boolean }): T | undefined {
+    return findBandBy(rows, roll, (row) => row.range, options);
+}
+
+/**
+ * Clamp a raw roll value to an inclusive integer band (default `[1, 100]` —
+ * a legal d100). The value is truncated toward zero, then clamped to
+ * `[min, max]`. Non-finite input is left to propagate through the clamp
+ * (`NaN` stays `NaN`) unless `nonFinite` is supplied, in which case a non-finite
+ * input returns that fallback — matching the two re-derived shapes in the rules
+ * layer (the bare `Math.max(min, Math.min(max, Math.trunc(roll)))` form vs. the
+ * Navigator form that floors a non-finite roll to its minimum).
+ */
+export function clampRoll(roll: number, options?: { min?: number; max?: number; nonFinite?: number }): number {
+    if (options?.nonFinite !== undefined && !Number.isFinite(roll)) return options.nonFinite;
+    const min = options?.min ?? 1;
+    const max = options?.max ?? 100;
+    return Math.max(min, Math.min(max, Math.trunc(roll)));
 }
 
 /**

@@ -21,6 +21,8 @@
  * See GitHub issue #117.
  */
 
+import { clampRoll } from './_dice.ts';
+
 export type MutationTrack = 'minor' | 'major';
 
 export interface MutationDef {
@@ -142,7 +144,7 @@ const defaultRng: RollD100 = () => Math.floor(Math.random() * 100) + 1;
 
 /** Look up the mutation that owns the given d100 roll on the given track. */
 export function findMutationByRoll(roll: number, track: MutationTrack): MutationDef | null {
-    const r = Math.max(1, Math.min(100, Math.trunc(roll)));
+    const r = clampRoll(roll);
     for (const m of MUTATION_TABLE) {
         if (r >= m.roll.min && r <= m.roll.max && m.tracks.includes(track)) {
             return m;

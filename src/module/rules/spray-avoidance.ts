@@ -12,6 +12,8 @@
  * Agility (default) or Dodge (with Leaping Dodge talent).
  */
 
+import { nonNegInt } from './_num.ts';
+
 type SprayAvoidanceSkill = 'agility' | 'dodge';
 
 export interface SprayAvoidanceInput {
@@ -37,7 +39,7 @@ export interface SprayAvoidanceResult {
  */
 export function resolveSprayAvoidance(input: SprayAvoidanceInput): SprayAvoidanceResult {
     if (input.hasLeapingDodge) {
-        return { skill: 'dodge', target: Math.max(0, Math.trunc(input.dodgeTotal)) };
+        return { skill: 'dodge', target: nonNegInt(input.dodgeTotal) };
     }
-    return { skill: 'agility', target: Math.max(0, Math.trunc(input.agilityTotal)) };
+    return { skill: 'agility', target: nonNegInt(input.agilityTotal) };
 }
