@@ -20,12 +20,7 @@ const TAB_LABEL_DETAILS = 'WH40K.Tabs.Details';
  * Sheet for ammunition items.
  * Displays modifiers with stat bar and weapon compatibility.
  */
-export default class AmmoSheet extends SetFieldActionsMixin(BaseItemSheet) {
-    /** Narrow the inherited item document to its ammunition DataModel shape. */
-    override get item(): AmmoItem {
-        return super.item as AmmoItem;
-    }
-
+export default class AmmoSheet extends SetFieldActionsMixin(BaseItemSheet<AmmoItem>) {
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {

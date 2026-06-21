@@ -41,12 +41,7 @@ const TAB_LABEL_PREVIEW = 'WH40K.NPC.Template.Tabs.Preview';
  *
  * @extends {BaseItemSheet}
  */
-export default class NPCTemplateSheet extends BaseItemSheet {
-    /** Narrow the inherited item document to its npcTemplate DataModel shape. */
-    override get item(): NPCTemplateItem {
-        return super.item as NPCTemplateItem;
-    }
-
+export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
