@@ -22,8 +22,9 @@
  * tsc errors (must be zero); this gates the four manual-suppression patterns
  * agents are most likely to introduce when fixing types under time pressure.
  */
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { relative, resolve, sep } from 'node:path';
+import { walkFiles } from './lib/walk.mjs';
 
 const REPORT = resolve(process.cwd(), '.ts-coverage.json');
 const BASELINE = resolve(process.cwd(), '.ts-coverage-baseline');
@@ -39,14 +40,7 @@ const PATTERNS = {
     tsIgnore: /@ts-ignore\b/g,
 };
 
-function* walk(dir) {
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const stat = statSync(full);
-        if (stat.isDirectory()) yield* walk(full);
-        else if (stat.isFile() && name.endsWith('.ts') && !name.endsWith('.d.ts') && !name.endsWith('.test.ts')) yield full;
-    }
-}
+const walk = (dir) => walkFiles(dir, { ext: '.ts', exclude: ['.d.ts', '.test.ts'] });
 
 function topLevelDir(file) {
     const rel = relative(ROOT, file);

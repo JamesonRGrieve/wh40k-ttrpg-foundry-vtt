@@ -24,8 +24,9 @@
  *   node scripts/coverage-symmetry.mjs            # check
  *   node scripts/coverage-symmetry.mjs --json     # JSON report on stdout
  */
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve, relative } from 'node:path';
+import { walkFiles as walk } from './lib/walk.mjs';
 
 const ROOT = resolve(process.cwd(), 'src/module');
 const OPT_OUT_PATH = resolve(process.cwd(), '.coverage-opt-out.json');
@@ -35,16 +36,6 @@ const jsonMode = args.has('--json');
 const optOut = existsSync(OPT_OUT_PATH)
     ? JSON.parse(readFileSync(OPT_OUT_PATH, 'utf8'))
     : { stories: [], data: [], documents: [] };
-
-function* walk(dir) {
-    if (!existsSync(dir)) return;
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const st = statSync(full);
-        if (st.isDirectory()) yield* walk(full);
-        else if (st.isFile()) yield full;
-    }
-}
 
 function siblingExists(file, suffix) {
     // Replace .ts → suffix.ts (e.g. weapon.ts → weapon.test.ts)

@@ -7,7 +7,8 @@
 // by running `pnpm theme:coverage`). Update via `pnpm theme:ratchet:update`
 // after a deliberate increase in adoption.
 
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { walkFiles } from './lib/walk.mjs';
 
 const COVERAGE = '.theme-coverage.json';
 const BASELINE = '.theme-baseline';
@@ -15,16 +16,7 @@ const BASELINE = '.theme-baseline';
 const SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'];
 const variantPattern = new RegExp(`\\b(${SYSTEM_IDS.join('|')}):tw-`);
 
-function* walk(dir) {
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const stat = statSync(full);
-        if (stat.isDirectory()) yield* walk(full);
-        else if (stat.isFile() && name.endsWith('.hbs')) yield full;
-    }
-}
-
-const templatePaths = [...walk('src/templates')];
+const templatePaths = [...walkFiles('src/templates', { ext: '.hbs' })];
 let current = 0;
 const adoptedTemplates = [];
 const perSystemHits = Object.fromEntries(SYSTEM_IDS.map((id) => [id, 0]));
