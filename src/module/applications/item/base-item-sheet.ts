@@ -32,8 +32,8 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
 /* eslint-disable @typescript-eslint/no-explicit-any -- boundary: Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending */
-// biome-ignore lint/suspicious/noExplicitAny: boundary - Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending
 export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDocument> extends StatBreakdownMixin(
+    // biome-ignore lint/suspicious/noExplicitAny: boundary - Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending
     ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any))),
 ) {
     /* eslint-enable @typescript-eslint/no-explicit-any */

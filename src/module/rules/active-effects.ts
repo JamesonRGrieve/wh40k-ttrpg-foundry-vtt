@@ -93,9 +93,9 @@ export async function sendActiveEffectMessage(activeContext: ActiveEffectChatCon
     await emitChatFromTemplate(
         activeContext.template,
         // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts untyped context; cast to match Handlebars signature
-        activeContext as unknown as Record<string, unknown>,
+        activeContext,
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get('core', 'rollMode') is typed as the open core-settings value
-        { rollMode: game.settings.get('core', 'rollMode') as string, applyWhispers: true },
+        { rollMode: game.settings.get('core', 'rollMode'), applyWhispers: true },
     );
 }
 

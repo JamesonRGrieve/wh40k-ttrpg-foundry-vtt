@@ -17,10 +17,11 @@
  * See issue #221.
  */
 
+import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
-export default class FreeformGatedItemSheet extends BaseItemSheet {
+export default class FreeformGatedItemSheet<TItem extends WH40KItemDocument = WH40KItemDocument> extends BaseItemSheet<TItem> {
     /**
      * Whether the sheet should show edit controls. In addition to the base
      * gate (editable, non-compendium), the freeform world setting must be on.

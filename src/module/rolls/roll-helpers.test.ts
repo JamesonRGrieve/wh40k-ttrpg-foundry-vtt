@@ -81,13 +81,18 @@ describe('getDegreeForMode — additional degrees', () => {
 });
 
 describe('emitChatFromTemplate — the single-sourced template→ChatMessage idiom', () => {
+    /** A Foundry ChatSpeaker bag — only the fields the cases set/assert. */
+    interface SpeakerStub {
+        actor?: string;
+        alias?: string;
+    }
     /** The chat payload the helper hands to `ChatMessage.create`, beyond `content`. */
     interface EmittedPayload {
         user?: string;
         content?: string;
         rollMode?: string;
-        speaker?: unknown;
-        whisper?: unknown[];
+        speaker?: SpeakerStub;
+        whisper?: string[];
     }
 
     let chat: ChatRuntimeHandle;
@@ -108,7 +113,7 @@ describe('emitChatFromTemplate — the single-sourced template→ChatMessage idi
     function lastPayload(): EmittedPayload {
         // The stub stores the full create() payload; only `content` is typed on
         // the shared handle, so narrow to the chat-payload shape for assertions.
-        return (chat.created.at(-1) ?? {}) as unknown as EmittedPayload;
+        return chat.created.at(-1) ?? {};
     }
 
     it('renders the named template with the supplied data and posts the result', async () => {

@@ -11,8 +11,8 @@
  * this file is a thin UI shell over `rollDisorder()`.
  */
 
-import { type DisorderDef, type DisorderSeverity, rollDisorder } from '../../rules/disorders-table.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { type DisorderDef, type DisorderSeverity, rollDisorder } from '../../rules/disorders-table.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

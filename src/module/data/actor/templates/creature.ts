@@ -1127,7 +1127,13 @@ export default class CreatureTemplate extends CommonTemplate {
             // the pre-item `_prepareCharacteristics` pass. The `extra` term folds in
             // `advance*5 - damage` (core.md §"Characteristic Damage") plus the item /
             // origin-path modifier; `clampTotalToZero` floors the total at 0.
-            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0, char.advance * 5 - char.damage + totalMod, true);
+            const { total, bonus } = computeCharacteristicTotals(
+                char.base,
+                char.modifier,
+                char.unnatural || 0,
+                char.advance * 5 - char.damage + totalMod,
+                true,
+            );
             char.total = total;
             char.bonus = bonus;
         }

@@ -12,8 +12,8 @@
  * it up without changes.
  */
 
-import { type GrenadeDefinition, type GrenadeSaveCharacteristic, getWithinGrenade, listWithinGrenades } from '../../rules/within-grenades.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { type GrenadeDefinition, type GrenadeSaveCharacteristic, getWithinGrenade, listWithinGrenades } from '../../rules/within-grenades.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

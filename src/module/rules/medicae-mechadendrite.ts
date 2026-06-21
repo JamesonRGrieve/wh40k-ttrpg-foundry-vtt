@@ -184,7 +184,7 @@ export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: Rng)
     await emitChatFromTemplate(
         'systems/wh40k-rpg/templates/chat/medicae-mechadendrite-chat.hbs',
         // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts an untyped Handlebars context bag
-        templateData as unknown as Record<string, unknown>,
+        templateData,
         { applyWhispers: true },
     );
 
