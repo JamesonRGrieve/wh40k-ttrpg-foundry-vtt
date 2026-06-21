@@ -13,6 +13,8 @@
  * loop are wired by the engine consumer.
  */
 
+import { nonNegInt } from './_num.ts';
+
 /** Penalty applied to BS while Pinned. */
 export const PINNED_BS_PENALTY = -20;
 
@@ -31,7 +33,7 @@ export interface PinningTestInput {
 
 /** Compose the WP target for the initial Pinning resist test. */
 export function resolvePinningTest(input: PinningTestInput): { target: number } {
-    const wp = Math.max(0, Math.trunc(input.willpowerTotal));
+    const wp = nonNegInt(input.willpowerTotal);
     const mod = Number.isFinite(input.triggerModifier) ? Math.trunc(input.triggerModifier ?? 0) : 0;
     return { target: Math.max(0, wp + mod) };
 }
@@ -52,7 +54,7 @@ export interface EscapePinningInput {
  * favourable bonus).
  */
 export function resolveEscapePinningTest(input: EscapePinningInput): { target: number; favourableBonus: boolean } {
-    const wp = Math.max(0, Math.trunc(input.willpowerTotal));
+    const wp = nonNegInt(input.willpowerTotal);
     const favourable = input.notBeingShotAt || input.inCover;
     const target = wp + (favourable ? ESCAPE_PINNING_FAVOURABLE_BONUS : 0);
     return { target: Math.max(0, target), favourableBonus: favourable };

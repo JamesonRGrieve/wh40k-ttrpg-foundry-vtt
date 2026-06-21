@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { degreesOfFailure, degreesOfSuccess, findBand, type OpposedSide, resolveOpposed, type Rng, rollD100, rollDie } from './_dice.ts';
+import { clampRoll, degreesOfFailure, degreesOfSuccess, findBand, findBandBy, type OpposedSide, resolveOpposed, type Rng, rollD100, rollDie } from './_dice.ts';
 
 const SAMPLE = [1, 5, 10, 11, 20, 21, 30, 41, 50, 55, 70, 90, 100];
 
@@ -153,5 +153,97 @@ describe('rollDie / rollD100 with a seeded Rng (#301)', () => {
         expect(rollD100(seeded([0]))).toBe(1);
         expect(rollD100(seeded([0.5]))).toBe(51);
         expect(rollD100(seeded([0.999999]))).toBe(100);
+    });
+});
+
+describe('degreesOfSuccess / degreesOfFailure — extra-degrees convention (#301)', () => {
+    it('a bare success scores 0 extra degrees (no +1)', () => {
+        expect(degreesOfSuccess(50, 50, { extra: true })).toBe(0);
+        expect(degreesOfSuccess(41, 50, { extra: true })).toBe(0); // margin 9 → floor 0
+    });
+
+    it('adds one extra degree per full ten of margin on a pass', () => {
+        expect(degreesOfSuccess(40, 50, { extra: true })).toBe(1); // margin 10
+        expect(degreesOfSuccess(30, 50, { extra: true })).toBe(2); // margin 20
+    });
+
+    it('a bare failure scores 0 extra degrees', () => {
+        expect(degreesOfFailure(51, 50, { extra: true })).toBe(0);
+        expect(degreesOfFailure(50, 50, { extra: true })).toBe(0); // a pass is always 0
+    });
+
+    it('adds one extra degree per full ten of margin on a fail', () => {
+        expect(degreesOfFailure(61, 50, { extra: true })).toBe(1); // margin 11
+        expect(degreesOfFailure(70, 50, { extra: true })).toBe(2); // margin 20
+    });
+
+    it('matches the original BC-ritual / OW-logistics inline formula across the sample grid', () => {
+        for (const target of SAMPLE) {
+            for (const roll of SAMPLE) {
+                const success = roll <= target;
+                const expectedDos = success ? Math.max(0, Math.floor((target - roll) / 10)) : 0;
+                const expectedDof = success ? 0 : Math.max(0, Math.floor((roll - target) / 10));
+                expect(degreesOfSuccess(roll, target, { extra: true })).toBe(expectedDos);
+                expect(degreesOfFailure(roll, target, { extra: true })).toBe(expectedDof);
+            }
+        }
+    });
+});
+
+describe('findBandBy — key-accessor band lookup (#301)', () => {
+    const perilRows = [
+        { id: 'low', rangeMin: 1, rangeMax: 25 },
+        { id: 'mid', rangeMin: 26, rangeMax: 55 },
+        // intentional 56-58 gap
+        { id: 'high', rangeMin: 59, rangeMax: 100 },
+    ];
+    const range = (r: { rangeMin: number; rangeMax: number }): readonly [number, number] => [r.rangeMin, r.rangeMax];
+
+    it('reads bounds through the accessor', () => {
+        expect(findBandBy(perilRows, 1, range)?.id).toBe('low');
+        expect(findBandBy(perilRows, 55, range)?.id).toBe('mid');
+        expect(findBandBy(perilRows, 100, range)?.id).toBe('high');
+    });
+
+    it('clamp:false returns undefined for a roll in a table gap', () => {
+        expect(findBandBy(perilRows, 57, range, { clamp: false })).toBeUndefined();
+    });
+
+    it('clamp:false returns undefined for out-of-band rolls', () => {
+        expect(findBandBy(perilRows, 0, range, { clamp: false })).toBeUndefined();
+        expect(findBandBy(perilRows, 200, range, { clamp: false })).toBeUndefined();
+    });
+
+    it('default clamp snaps out-of-band rolls to the first / last row', () => {
+        expect(findBandBy(perilRows, 0, range)?.id).toBe('low');
+        expect(findBandBy(perilRows, 200, range)?.id).toBe('high');
+    });
+
+    it('findBand delegates to findBandBy over a `range` field', () => {
+        const rows = [{ range: [1, 10] as const, n: 'a' }, { range: [11, 20] as const, n: 'b' }];
+        expect(findBand(rows, 15)?.n).toBe('b');
+        expect(findBand(rows, 99, { clamp: false })).toBeUndefined();
+    });
+});
+
+describe('clampRoll (#301)', () => {
+    it('truncates then clamps to the default 1..100 band', () => {
+        expect(clampRoll(50.9)).toBe(50);
+        expect(clampRoll(0)).toBe(1);
+        expect(clampRoll(150)).toBe(100);
+    });
+
+    it('honours a custom max (e.g. a d10 hazard table)', () => {
+        expect(clampRoll(15, { max: 10 })).toBe(10);
+        expect(clampRoll(7, { max: 10 })).toBe(7);
+    });
+
+    it('NaN-preserving by default (matches the bare Math.max(min, min(max, trunc)) form)', () => {
+        expect(clampRoll(Number.NaN)).toBeNaN();
+    });
+
+    it('maps non-finite input to the supplied fallback (Navigator form)', () => {
+        expect(clampRoll(Number.NaN, { nonFinite: 1 })).toBe(1);
+        expect(clampRoll(Number.POSITIVE_INFINITY, { nonFinite: 1 })).toBe(1);
     });
 });

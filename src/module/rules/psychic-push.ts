@@ -14,6 +14,8 @@
  *    X is the push level.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export type PsyMode = 'fettered' | 'unfettered' | 'push';
 
 export interface PsyModeResolved {
@@ -35,7 +37,7 @@ export interface PsyModeInput {
 }
 
 export function resolvePsyMode(input: PsyModeInput): PsyModeResolved {
-    const basePR = Math.max(0, Math.trunc(input.basePR));
+    const basePR = nonNegInt(input.basePR);
     if (input.mode === 'fettered') {
         const half = Math.floor(basePR / 2);
         return { effectivePR: half, focusModifier: 10, forcePhenomena: false, phenomenaModifier: 0 };
