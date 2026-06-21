@@ -1,0 +1,27 @@
+{{!--
+    Shared wounds / damage callout box for chat cards — the dark-red bordered
+    panel with a divider header strip, a large centred value, and an uppercase
+    caption underneath. Recurs across bleeding, burning, and damage-roll cards.
+
+    Hash arguments:
+        label            — header strip label (e.g. "Damage", "Fire Damage").
+        labelKey         — i18n key for the header label (preferred over `label`).
+        badge            — optional right-aligned chip in the header (e.g. hit location).
+        badgeKey         — i18n key for the badge (preferred over `badge`).
+        value            — the large centred value.
+        caption          — uppercase caption under the value (e.g. damage type).
+        captionKey       — i18n key for the caption (preferred over `caption`).
+        valueShadowClass — shadow utility on the value. Defaults to the text-shadow
+                           form (bleeding / burning); damage-roll passes the
+                           box-shadow form.
+        captionMutedVar  — CSS var name for the caption colour (default
+                           "--wh40k-text-muted"; damage-roll uses "--wh40k-card-muted").
+--}}
+<div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md">
+    <div class="tw-flex tw-justify-between tw-items-center tw-mb-2 tw-pb-2 tw-border-b tw-border-[var(--wh40k-wounds-border)]">
+        <span class="tw-font-display tw-text-[0.9rem] tw-text-[color:var(--wh40k-wounds-secondary)] tw-uppercase tw-tracking-[0.1em]">{{#if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}</span>
+        {{#if badge}}<span class="tw-text-[0.8rem] tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[3px] tw-text-[var(--wh40k-card-muted)]">{{badge}}</span>{{else if badgeKey}}<span class="tw-text-[0.8rem] tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[3px] tw-text-[var(--wh40k-card-muted)]">{{localize badgeKey}}</span>{{/if}}
+    </div>
+    <div class="tw-text-center tw-text-[2rem] tw-font-bold tw-text-[color:var(--wh40k-wounds-secondary)] {{#if valueShadowClass}}{{valueShadowClass}}{{else}}tw-[text-shadow:0_0_10px_rgba(139,0,0,0.5)]{{/if}}">{{value}}</div>
+    <div class="tw-text-center tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var({{#if captionMutedVar}}{{captionMutedVar}}{{else}}--wh40k-text-muted{{/if}})] tw-mt-1">{{#if captionKey}}{{localize captionKey}}{{else}}{{caption}}{{/if}}</div>
+</div>

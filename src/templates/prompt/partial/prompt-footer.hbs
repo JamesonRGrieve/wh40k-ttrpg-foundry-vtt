@@ -1,0 +1,41 @@
+{{!--
+    Shared prompt-dialog footer — confirm-first button pair used by the roll /
+    spend / install prompts in templates/prompt/. Structurally distinct from
+    dialogs/partial/dialog-footer.hbs: prompts render the primary action FIRST,
+    carry a per-dialog accent on the wrapper border + confirm gradient, and gate
+    the primary on an eligibility flag. The secondary (cancel / decline) button
+    is byte-identical across every prompt, so it lives here; the bespoke primary
+    is fully parameterised.
+
+    Hash arguments:
+        rootClass        — accent border (+ any extra) on the footer wrapper.
+                           Required (e.g. "tw-border-[rgba(201,162,39,0.2)]").
+
+        confirmAction    — data-action on the primary button. Required.
+        confirmIcon      — Font Awesome class for the primary button (default "fa-check").
+        confirmLabel     — primary button text.
+        confirmLabelKey  — i18n key for the primary text (preferred over confirmLabel).
+        confirmClass     — utility classes for the primary button's accent/gradient
+                           (appended after the shared layout classes). Required for
+                           a non-default accent; defaults to the gold gradient.
+        confirmDisabled  — truthy → emit `disabled` on the primary button.
+        confirmDisabledClass — extra classes applied to the primary ONLY while
+                           confirmDisabled is truthy (e.g. "tw-opacity-50 tw-cursor-not-allowed").
+
+        cancelAction     — data-action on the secondary button (default "cancel").
+        cancelIcon       — Font Awesome class for the secondary button (default "fa-times").
+        cancelLabel      — secondary button text.
+        cancelLabelKey   — i18n key for the secondary text (preferred).
+--}}
+<div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t{{#if rootClass}} {{rootClass}}{{/if}}">
+    <button type="button"
+            data-action="{{confirmAction}}"{{#if confirmDisabled}} disabled{{/if}}
+            class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer {{#if confirmClass}}{{confirmClass}}{{else}}tw-border-none tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]{{/if}}{{#if confirmDisabled}}{{#if confirmDisabledClass}} {{confirmDisabledClass}}{{/if}}{{/if}}">
+        <i class="fas {{#if confirmIcon}}{{confirmIcon}}{{else}}fa-check{{/if}}"></i> {{#if confirmLabelKey}}{{localize confirmLabelKey}}{{else if confirmLabel}}{{confirmLabel}}{{else}}{{localize "WH40K.Confirm"}}{{/if}}
+    </button>
+    <button type="button"
+            data-action="{{#if cancelAction}}{{cancelAction}}{{else}}cancel{{/if}}"
+            class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+        <i class="fas {{#if cancelIcon}}{{cancelIcon}}{{else}}fa-times{{/if}}"></i> {{#if cancelLabelKey}}{{localize cancelLabelKey}}{{else if cancelLabel}}{{cancelLabel}}{{else}}{{localize "WH40K.Cancel"}}{{/if}}
+    </button>
+</div>

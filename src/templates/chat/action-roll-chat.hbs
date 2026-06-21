@@ -103,10 +103,10 @@
                 {{#unless ignoreSuccess}}
                   {{#unless isTargetOnly}}
                     {{#if success}}
-                        <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-success-bg)] tw-border-2 tw-border-[var(--wh40k-success-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-success-glow),inset_0_0_30px_rgba(45,138,78,0.1)]">
-                            <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[var(--wh40k-success-secondary)]">Success</div>
-                            <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
+                            variant="success"
+                            label="Success"
+                            value=roll.total}}
                         {{#if hitLocation}}
                             <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-1.5 tw-text-gold tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.06em]">
                                 <i class="fas fa-crosshairs tw-text-[0.75rem] tw-opacity-70"></i>
@@ -114,10 +114,10 @@
                             </div>
                         {{/if}}
                     {{else}}
-                        <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-danger-bg)] tw-border-2 tw-border-[var(--wh40k-danger-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-fail-glow),inset_0_0_30px_rgba(168,50,50,0.1)]">
-                            <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[var(--wh40k-danger-secondary)]">Failure</div>
-                            <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
+                            variant="danger"
+                            label="Failure"
+                            value=roll.total}}
                     {{/if}}
                   {{/unless}}
                 {{/unless}}
