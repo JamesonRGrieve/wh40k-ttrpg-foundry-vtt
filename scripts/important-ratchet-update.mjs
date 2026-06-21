@@ -5,9 +5,14 @@
 // tailwind/*.js). Scan lives in scripts/lib/scan-important.mjs (shared with the
 // coverage + ratchet scripts).
 
-import { writeFileSync } from 'node:fs';
 import { writeReport } from './lib/scan-important.mjs';
+import { runScalarRatchet } from './lib/scalar-ratchet.mjs';
 
 const { totalImportant: current } = writeReport();
-writeFileSync('.important-baseline', `${current}\n`);
-console.log(`.important-baseline -> ${current}`);
+runScalarRatchet({
+    baselinePath: '.important-baseline',
+    current,
+    direction: 'rise',
+    updateMode: true,
+    updateMessage: (cur) => `.important-baseline -> ${cur}`,
+});

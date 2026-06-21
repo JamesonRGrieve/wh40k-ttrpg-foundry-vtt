@@ -4,9 +4,14 @@
 // (a template gained per-system `<system>:tw-*` variant usage). Scan lives in
 // scripts/lib/scan-theme.mjs (shared with the coverage + ratchet scripts).
 
-import { writeFileSync } from 'node:fs';
 import { writeReport } from './lib/scan-theme.mjs';
+import { runScalarRatchet } from './lib/scalar-ratchet.mjs';
 
 const { adopted: current } = writeReport();
-writeFileSync('.theme-baseline', `${current}\n`);
-console.log(`.theme-baseline -> ${current}`);
+runScalarRatchet({
+    baselinePath: '.theme-baseline',
+    current,
+    direction: 'fall',
+    updateMode: true,
+    updateMessage: (cur) => `.theme-baseline -> ${cur}`,
+});

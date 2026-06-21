@@ -6,38 +6,22 @@
 // count has risen above the baseline. Run `pnpm animation:ratchet:update` to
 // lower the baseline after genuine reductions.
 
-import { existsSync, readFileSync } from 'node:fs';
 import { writeReport } from './lib/scan-animation.mjs';
+import { runScalarRatchet } from './lib/scalar-ratchet.mjs';
 
 const COVERAGE = '.animation-coverage.json';
 const BASELINE = '.animation-baseline';
 
 const { animationDeclarations: current } = writeReport();
 
-if (!existsSync(BASELINE)) {
-    console.error(`No ${BASELINE} found. Run \`pnpm animation:ratchet:update\` once to seed it.`);
-    process.exit(2);
-}
-
-const baseline = Number(readFileSync(BASELINE, 'utf8').trim());
-
-if (Number.isNaN(baseline)) {
-    console.error(`${BASELINE} is not a number.`);
-    process.exit(2);
-}
-
-if (current > baseline) {
-    console.error(
-        `animation:ratchet failed — ${current} animation declarations in ${COVERAGE.replace(/\.json$/, '')}, baseline is ${baseline}.\n` +
+runScalarRatchet({
+    baselinePath: BASELINE,
+    current,
+    direction: 'rise',
+    seedHint: `No ${BASELINE} found. Run \`pnpm animation:ratchet:update\` once to seed it.`,
+    failMessage: (cur, baseline) =>
+        `animation:ratchet failed — ${cur} animation declarations in ${COVERAGE.replace(/\.json$/, '')}, baseline is ${baseline}.\n` +
         `Each \`animation: <name> ...\` rule in the monolith should be replaced by \`tw-animate-<name>\` on the consuming template (\`docs/tailwind-migration.md\`).`,
-    );
-    process.exit(1);
-}
-
-if (current < baseline) {
-    console.log(
-        `animation:ratchet — ${current} animation declarations (was ${baseline}). Run \`pnpm animation:ratchet:update\` to lower the baseline in this commit.`,
-    );
-}
-
-process.exit(0);
+    improveMessage: (cur, baseline) =>
+        `animation:ratchet — ${cur} animation declarations (was ${baseline}). Run \`pnpm animation:ratchet:update\` to lower the baseline in this commit.`,
+});

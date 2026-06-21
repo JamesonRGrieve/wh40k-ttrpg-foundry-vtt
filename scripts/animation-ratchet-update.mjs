@@ -4,9 +4,14 @@
 // to `tw-animate-<name>`) to update the gate. Scan lives in
 // scripts/lib/scan-animation.mjs (shared with the coverage + ratchet scripts).
 
-import { writeFileSync } from 'node:fs';
 import { writeReport } from './lib/scan-animation.mjs';
+import { runScalarRatchet } from './lib/scalar-ratchet.mjs';
 
 const { animationDeclarations: current } = writeReport();
-writeFileSync('.animation-baseline', `${current}\n`);
-console.log(`.animation-baseline -> ${current}`);
+runScalarRatchet({
+    baselinePath: '.animation-baseline',
+    current,
+    direction: 'rise',
+    updateMode: true,
+    updateMessage: (cur) => `.animation-baseline -> ${cur}`,
+});
