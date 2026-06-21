@@ -18,19 +18,21 @@
             {{else}}
             {{!-- Result Display --}}
             {{#if success}}
-                <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-success-bg)] tw-border-2 tw-border-[var(--wh40k-success-primary)] tw-shadow-[0_0_20px_rgba(45,138,78,0.4),inset_0_0_30px_rgba(45,138,78,0.1)]">
-                    <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[var(--wh40k-success-secondary)]">Success</div>
-                    <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
-                </div>
+                {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
+                    variant="success"
+                    label="Success"
+                    value=roll.total
+                    glowClass="tw-shadow-[0_0_20px_rgba(45,138,78,0.4),inset_0_0_30px_rgba(45,138,78,0.1)]"}}
                 <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
                     <span class="tw-text-[1.5rem] tw-font-bold tw-text-success">{{dos}}</span>
                     <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Success</span>
                 </div>
             {{else}}
-                <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-danger-bg)] tw-border-2 tw-border-[var(--wh40k-danger-primary)] tw-shadow-[0_0_20px_rgba(168,50,50,0.4),inset_0_0_30px_rgba(168,50,50,0.1)]">
-                    <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[var(--wh40k-danger-secondary)]">Failure</div>
-                    <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
-                </div>
+                {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
+                    variant="danger"
+                    label="Failure"
+                    value=roll.total
+                    glowClass="tw-shadow-[0_0_20px_rgba(168,50,50,0.4),inset_0_0_30px_rgba(168,50,50,0.1)]"}}
                 <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
                     <span class="tw-text-[1.5rem] tw-font-bold tw-text-failure">{{dof}}</span>
                     <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Failure</span>
