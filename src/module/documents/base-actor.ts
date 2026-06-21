@@ -1,6 +1,8 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
 import { isEffectSuppressedByEquipState } from '../data/shared/equip-state.ts';
+import { computeMovement } from '../data/shared/movement-math.ts';
 import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
@@ -677,12 +679,11 @@ export class WH40KBaseActor extends Actor {
             const modifier = Number(charAny['modifier'] ?? 0);
             const unnatural = Number(charAny['unnatural'] ?? 0);
 
-            characteristic.total = base + advance * 5 + modifier;
-
-            // Calculate bonus: base modifier is tens digit
-            const baseModifier = Math.floor(characteristic.total / 10);
-            // Unnatural multiplies the modifier (0 = no effect, 2+ = multiplier)
-            characteristic.bonus = unnatural >= 2 ? baseModifier * unnatural : baseModifier;
+            // Single-sourced through the shared characteristic math (#337); the
+            // PC-style advance*5 term is folded in via `extra`.
+            const { total, bonus } = computeCharacteristicTotals(base, modifier, unnatural, advance * 5);
+            characteristic.total = total;
+            characteristic.bonus = bonus;
         }
 
         const initChar = this.initiative.characteristic;
@@ -701,12 +702,10 @@ export class WH40KBaseActor extends Actor {
         // Skip movement calculation if agility is not available (e.g., for starships)
         if (agility === undefined) return;
         const size = this.size;
-        this.system.movement = {
-            half: agility.bonus + size - 4,
-            full: (agility.bonus + size - 4) * 2,
-            charge: (agility.bonus + size - 4) * 3,
-            run: (agility.bonus + size - 4) * 6,
-        };
+        // Single-sourced through the shared movement math (#337); the floors
+        // (1/2/3/6 minimums) were missing from this copy and the helper restores
+        // them — these actor types (NPC / Vehicle / Starship) take the floors.
+        this.system.movement = computeMovement(agility.bonus, size, true);
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because the characteristic object shape varies by actor type

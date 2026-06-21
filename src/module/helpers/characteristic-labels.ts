@@ -12,10 +12,7 @@
  * swap is behaviour-preserving.
  */
 
-/** Capitalize the first letter (historical fallback for unknown combat/resource keys). */
-function capitalize(key: string): string {
-    return key.charAt(0).toUpperCase() + key.slice(1);
-}
+import { capitalize } from '../utils/format.ts';
 
 /** Full localized characteristic label (e.g. `weaponSkill` → "Weapon Skill"). */
 export function characteristicLabel(key: string): string {

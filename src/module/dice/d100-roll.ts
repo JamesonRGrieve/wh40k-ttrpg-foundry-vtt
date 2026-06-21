@@ -1,4 +1,5 @@
 import RollConfigurationDialog from '../applications/dialogs/roll-configuration-dialog.ts';
+import { isD100Success } from '../rolls/roll-helpers.ts';
 import BasicRollWH40K from './basic-roll.ts';
 
 /**
@@ -55,7 +56,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @type {boolean}
      */
     get isSuccess(): boolean {
-        return this.evaluatedTotal <= this.target;
+        return isD100Success(this.evaluatedTotal, this.target);
     }
 
     /**

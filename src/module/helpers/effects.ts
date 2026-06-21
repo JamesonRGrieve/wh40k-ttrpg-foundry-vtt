@@ -9,6 +9,8 @@
  * `getChangeLabel` here — no template changes.
  */
 
+import { capitalize } from '../utils/format.ts';
+
 /** Shape of a raw ActiveEffect change entry as stored on the document. */
 export interface EffectChangeRaw {
     key: string;
@@ -34,11 +36,6 @@ function getI18n(): I18nLike {
         return game.i18n;
     }
     return { localize: (key: string) => key };
-}
-
-function capitalize(s: string): string {
-    if (!s) return s;
-    return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 /**

@@ -1,5 +1,4 @@
 import { identifierFromNameIfBlank } from '../data/fields/identifier-utils.ts';
-import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import {
     deltaFromModifiers,
     originDeltaFlagPath,
@@ -8,8 +7,9 @@ import {
     reconcileResourceDeltas,
     type OriginModifierBag,
 } from '../origin-grant-ledger.ts';
-import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import { applyRollModeWhispers, getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
 import type { WH40KItemSystemData } from '../types/global.d.ts';
+import { capitalize } from '../utils/format.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 import { WH40KItemContainer } from './item-container.ts';
@@ -670,8 +670,9 @@ export class WH40KItem extends WH40KItemContainer {
         if (roll.total === undefined) return this.sendToChat();
         const rollTotal: number = roll.total;
 
-        const success = rollTotal <= opts.targetValue;
-        const degrees = Math.floor(Math.abs(opts.targetValue - rollTotal) / 10);
+        const success = isD100Success(rollTotal, opts.targetValue);
+        const method = resolveDegreesMethod((this.actor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+        const degrees = 1 + (success ? getDegreeForMode(method, opts.targetValue, rollTotal) : getDegreeForMode(method, rollTotal, opts.targetValue));
 
         const cardData = {
             item: this,
@@ -975,7 +976,7 @@ export class WH40KItem extends WH40KItemContainer {
         if (modifiers.characteristics !== undefined) {
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
-                    const charName = key.charAt(0).toUpperCase() + key.slice(1);
+                    const charName = capitalize(key);
                     preview.characteristics.push({
                         name: charName,
                         value: value > 0 ? `+${value}` : value,
