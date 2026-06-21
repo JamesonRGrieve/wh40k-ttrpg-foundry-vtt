@@ -11,6 +11,7 @@
  */
 
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
+import { calculatePartyThreat, difficultyForRatio } from './threat-utils.ts';
 
 interface NPC {
     uuid: string;
@@ -64,24 +65,6 @@ export default class EncounterBuilder extends makeNpcFormDialog({
         },
     };
     /* eslint-enable @typescript-eslint/unbound-method */
-
-    /* -------------------------------------------- */
-    /*  Difficulty Thresholds                       */
-    /* -------------------------------------------- */
-
-    /**
-     * Difficulty ratings based on threat ratio.
-     * Ratio = total enemy threat / party threat
-     * @type {Object}
-     */
-    static DIFFICULTY_RATINGS: Record<string, { maxRatio: number; label: string; color: string }> = {
-        trivial: { maxRatio: 0.5, label: 'WH40K.Threat.Trivial', color: '#4ade80' },
-        easy: { maxRatio: 0.8, label: 'WH40K.Threat.Low', color: '#84cc16' },
-        moderate: { maxRatio: 1.2, label: 'WH40K.Threat.Moderate', color: '#facc15' },
-        dangerous: { maxRatio: 1.6, label: 'WH40K.Threat.Dangerous', color: '#fb923c' },
-        deadly: { maxRatio: 2.0, label: 'WH40K.Threat.Deadly', color: '#ef4444' },
-        apocalyptic: { maxRatio: Infinity, label: 'WH40K.Threat.Apocalyptic', color: '#991b1b' },
-    };
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -154,8 +137,8 @@ export default class EncounterBuilder extends makeNpcFormDialog({
         const totalThreat = this.#npcs.reduce((sum, npc) => sum + npc.threat * npc.count, 0);
         const totalNPCs = this.#npcs.reduce((sum, npc) => sum + npc.count, 0);
 
-        // Calculate party threat (simplified: party count * average level * 2)
-        const partyThreat = this.#party.count * this.#party.averageLevel * 2;
+        // Party threat — single-sourced baseline formula (#350).
+        const partyThreat = calculatePartyThreat(this.#party.count, this.#party.averageLevel);
 
         // Determine difficulty
         const ratio = partyThreat > 0 ? totalThreat / partyThreat : 0;
@@ -331,19 +314,14 @@ export default class EncounterBuilder extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /**
-     * Get difficulty rating for a threat ratio.
+     * Get difficulty rating for a threat ratio. Bands are single-sourced in
+     * {@link difficultyForRatio} (shared with the difficulty calculator, #350).
      * @param {number} ratio - Threat ratio.
      * @returns {Object} Difficulty rating.
      * @private
      */
     _getDifficulty(ratio: number): { key: string; maxRatio: number; label: string; color: string } {
-        for (const [key, rating] of Object.entries(EncounterBuilder.DIFFICULTY_RATINGS)) {
-            if (ratio <= rating.maxRatio) {
-                return { key, ...rating };
-            }
-        }
-        const fallback = EncounterBuilder.DIFFICULTY_RATINGS['apocalyptic'] ?? { maxRatio: Infinity, label: 'WH40K.Threat.Apocalyptic', color: '#991b1b' };
-        return { key: 'apocalyptic', ...fallback };
+        return difficultyForRatio(ratio);
     }
 
     /**

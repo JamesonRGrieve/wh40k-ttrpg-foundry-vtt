@@ -1,5 +1,6 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
+import { calculatePartyThreat, difficultyForRatio } from './threat-utils.ts';
 
 interface DialogState {
     npc: WH40KNPC | null;
@@ -12,6 +13,21 @@ interface DifficultyRating {
     color: string;
     description: string;
 }
+
+/**
+ * GM-facing prose describing each shared difficulty band, keyed by band id.
+ * The band's thresholds / colour / label come from {@link difficultyForRatio}
+ * (the single source shared with the encounter builder, #350); these
+ * descriptions are calculator-only flavour text.
+ */
+const DIFFICULTY_DESCRIPTIONS: Record<string, string> = {
+    trivial: 'This encounter poses no real threat to the party.',
+    easy: 'The party should handle this encounter without significant resource expenditure.',
+    moderate: 'A fair challenge that will require tactical thinking and resource management.',
+    dangerous: 'A difficult encounter. Party members may take significant wounds.',
+    deadly: 'A life-threatening encounter. Party members may die or suffer critical injuries.',
+    apocalyptic: 'Near-certain TPK. Only attempt with significant advantages or preparation.',
+};
 
 /**
  * Dialog for calculating encounter difficulty against the party.
@@ -115,8 +131,8 @@ export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
         }
         const partyLevel = partySize > 0 ? Math.round(totalRank / partySize) : 1;
 
-        // Party threat = size × rank × 2 (baseline formula)
-        const partyThreat = partySize * partyLevel * 2;
+        // Party threat — single-sourced baseline formula (#350).
+        const partyThreat = calculatePartyThreat(partySize, partyLevel);
 
         // NPC threat
         const npc = this.#state.npc;
@@ -162,57 +178,20 @@ export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /**
-     * Get difficulty rating from threat ratio.
+     * Get difficulty rating from threat ratio. Thresholds, colour, and label key
+     * come from the shared {@link difficultyForRatio} band table (#350); the
+     * localized label and calculator-only description are resolved here.
      * @param {number} ratio - Threat ratio (NPC threat / Party threat).
      * @returns {DifficultyRating} Difficulty object with key, label, color, description.
      * @private
      */
     _getDifficultyRating(ratio: number): DifficultyRating {
-        if (ratio < 0.25) {
-            return {
-                key: 'trivial',
-                label: 'Trivial',
-                color: '#4caf50',
-                description: 'This encounter poses no real threat to the party.',
-            };
-        }
-        if (ratio < 0.5) {
-            return {
-                key: 'easy',
-                label: 'Easy',
-                color: '#8bc34a',
-                description: 'The party should handle this encounter without significant resource expenditure.',
-            };
-        }
-        if (ratio < 0.75) {
-            return {
-                key: 'moderate',
-                label: 'Moderate',
-                color: '#ff9800',
-                description: 'A fair challenge that will require tactical thinking and resource management.',
-            };
-        }
-        if (ratio < 1) {
-            return {
-                key: 'dangerous',
-                label: 'Dangerous',
-                color: '#ff5722',
-                description: 'A difficult encounter. Party members may take significant wounds.',
-            };
-        }
-        if (ratio < 1.5) {
-            return {
-                key: 'deadly',
-                label: 'Deadly',
-                color: '#f44336',
-                description: 'A life-threatening encounter. Party members may die or suffer critical injuries.',
-            };
-        }
+        const band = difficultyForRatio(ratio);
         return {
-            key: 'apocalyptic',
-            label: 'Apocalyptic',
-            color: '#9c27b0',
-            description: 'Near-certain TPK. Only attempt with significant advantages or preparation.',
+            key: band.key,
+            label: game.i18n.localize(band.label),
+            color: band.color,
+            description: DIFFICULTY_DESCRIPTIONS[band.key] ?? '',
         };
     }
 
