@@ -13,11 +13,15 @@ export interface CharacteristicLike {
 
 /**
  * Compute a characteristic's `total` and unnatural-adjusted `bonus`.
- * `extra` folds in the PC-only `advance*5 - damage` term (NPCs pass `0`).
+ * `extra` folds in the PC-only `advance*5 - damage` term (NPCs pass `0`); the
+ * post-item recompute additionally folds in its item/origin-path modifier here.
+ * When `clampTotalToZero` is set, the total floors at 0 before the bonus is
+ * derived (a characteristic cannot drop below 0 once item modifiers land).
  * Bonus is the tens digit, multiplied by the Unnatural level when ≥ 2.
  */
-export function computeCharacteristicTotals(base: number, modifier: number, unnatural: number, extra = 0): { total: number; bonus: number } {
-    const total = base + modifier + extra;
+export function computeCharacteristicTotals(base: number, modifier: number, unnatural: number, extra = 0, clampTotalToZero = false): { total: number; bonus: number } {
+    const rawTotal = base + modifier + extra;
+    const total = clampTotalToZero ? Math.max(0, rawTotal) : rawTotal;
     const baseBonus = Math.floor(total / 10);
     const bonus = unnatural >= 2 ? baseBonus * unnatural : baseBonus;
     return { total, bonus };
