@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ApplicationV2Ctor } from '../src/module/applications/api/application-types.ts';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructors; `unknown[]` is rejected.
-type Constructor<T = object> = new (...args: any[]) => T;
+import type { Constructor } from '../src/module/testing/app-v2-stub.ts';
 
 interface FakeApplicationApi {
     HandlebarsApplicationMixin: <T extends Constructor>(base: T) => T;

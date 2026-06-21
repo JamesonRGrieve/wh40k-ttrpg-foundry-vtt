@@ -6,6 +6,7 @@ import type { WeaponActionData as WeaponActionDataType } from '../src/module/rol
 import type { Hit as HitType } from '../src/module/rolls/damage-data.ts';
 import type { RollData as RollDataType } from '../src/module/rolls/roll-data.ts';
 import { seedRandom } from '../stories/mocks/extended.ts';
+import { buildApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
 
 /**
  * Runtime modules are loaded via dynamic `import()` *after* the Foundry globals
@@ -91,13 +92,11 @@ class StubRoll {
 }
 
 function installFoundryGlobal(): void {
-    class StubApplicationV2 {}
-    const HandlebarsApplicationMixin = <T extends abstract new (...args: never[]) => object>(base: T): T => base;
     const stubEnrichHTML = async (): Promise<string> => Promise.resolve('');
     const stubRenderTemplate = async (): Promise<string> => Promise.resolve('');
     vi.stubGlobal('foundry', {
         applications: {
-            api: { ApplicationV2: StubApplicationV2, HandlebarsApplicationMixin },
+            api: buildApplicationV2Api({ mixinShape: 'identity' }),
             handlebars: { renderTemplate: stubRenderTemplate },
             ux: { TextEditor: { implementation: { enrichHTML: stubEnrichHTML } } },
         },

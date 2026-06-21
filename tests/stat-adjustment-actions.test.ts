@@ -10,6 +10,7 @@
 
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StatAdjustmentHost } from '../src/module/applications/api/stat-adjustment-actions.ts';
+import { installApplicationV2Stub, type ApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
 
 interface I18nStub {
     localize: (k: string) => string;
@@ -22,18 +23,12 @@ interface GameStub {
     i18n: I18nStub;
     user: UserStub;
 }
-interface FoundryApiStub {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS requires `any[]` rest for mixin-compatible constructor signatures (TS2545); matches Foundry's ApplicationV2.
-    ApplicationV2: new (...args: any[]) => object;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS requires `any[]` rest for the HandlebarsApplicationMixin generic constraint (TS2545).
-    HandlebarsApplicationMixin: <T extends new (...args: any[]) => object>(Base: T) => T;
-}
 interface FoundryUtilsStub {
     // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns `unknown` per the framework contract (deep property access).
     getProperty: (obj: Record<string, unknown>, path: string) => unknown;
 }
 interface FoundryStub {
-    applications: { api: FoundryApiStub };
+    applications: { api?: ApplicationV2Api };
     utils: FoundryUtilsStub;
 }
 
@@ -45,21 +40,12 @@ const G = globalThis as GlobalShim;
 const ORIGINAL_GAME = G.game;
 const ORIGINAL_FOUNDRY = G.foundry;
 
-class FakeApplicationV2 {}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS requires `any[]` for mixin class constructors (TS error TS2545); `unknown[]` is rejected.
-const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {};
-
 G.game = {
     i18n: { localize: (k: string) => k, format: (k: string) => k },
     user: { isGM: true },
 };
 G.foundry = {
-    applications: {
-        api: {
-            ApplicationV2: FakeApplicationV2,
-            HandlebarsApplicationMixin: fakeHandlebarsApplicationMixin,
-        },
-    },
+    applications: {},
     utils: {
         // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty takes/returns `unknown` per the framework's deep-property-access contract.
         getProperty: (obj: Record<string, unknown>, path: string): unknown => {
@@ -74,6 +60,9 @@ G.foundry = {
         },
     },
 };
+// Merge the shared ApplicationV2 stub onto the foundry blob set above, preserving
+// the `utils.getProperty` sibling the suite installed.
+installApplicationV2Stub();
 
 afterAll(() => {
     G.game = ORIGINAL_GAME;
