@@ -3,50 +3,16 @@
 // templates). Direction: count cannot FALL. A drop means a regression
 // (a template stopped supporting per-system theming).
 //
-// Reads `.theme-baseline` and `.theme-coverage.json` (regenerated here
-// by running `pnpm theme:coverage`). Update via `pnpm theme:ratchet:update`
+// Reads `.theme-baseline` and regenerates `.theme-coverage.json` via the shared
+// scan in scripts/lib/scan-theme.mjs. Update via `pnpm theme:ratchet:update`
 // after a deliberate increase in adoption.
 
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { writeReport } from './lib/scan-theme.mjs';
 
-const COVERAGE = '.theme-coverage.json';
 const BASELINE = '.theme-baseline';
 
-const SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'];
-const variantPattern = new RegExp(`\\b(${SYSTEM_IDS.join('|')}):tw-`);
-
-function* walk(dir) {
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const stat = statSync(full);
-        if (stat.isDirectory()) yield* walk(full);
-        else if (stat.isFile() && name.endsWith('.hbs')) yield full;
-    }
-}
-
-const templatePaths = [...walk('src/templates')];
-let current = 0;
-const adoptedTemplates = [];
-const perSystemHits = Object.fromEntries(SYSTEM_IDS.map((id) => [id, 0]));
-
-for (const path of templatePaths) {
-    const text = readFileSync(path, 'utf8');
-    if (!variantPattern.test(text)) continue;
-    current++;
-    adoptedTemplates.push(path);
-    for (const id of SYSTEM_IDS) {
-        const matches = text.match(new RegExp(`\\b${id}:tw-`, 'g'));
-        if (matches) perSystemHits[id] += matches.length;
-    }
-}
-
-writeFileSync(COVERAGE, JSON.stringify({
-    generatedAt: new Date().toISOString(),
-    total: templatePaths.length,
-    adopted: current,
-    perSystemHits,
-    adoptedTemplates,
-}, null, 2) + '\n');
+const { adopted: current } = writeReport();
 
 if (!existsSync(BASELINE)) {
     console.error(`No ${BASELINE} found. Run \`pnpm theme:ratchet:update\` once to seed it.`);

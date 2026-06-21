@@ -1,44 +1,12 @@
 #!/usr/bin/env node
 // Raise `.theme-baseline` to the current adopted count from
 // `.theme-coverage.json`. Run after a deliberate adoption increase
-// (a template gained per-system `<system>:tw-*` variant usage).
+// (a template gained per-system `<system>:tw-*` variant usage). Scan lives in
+// scripts/lib/scan-theme.mjs (shared with the coverage + ratchet scripts).
 
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
+import { writeReport } from './lib/scan-theme.mjs';
 
-const SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'];
-const variantPattern = new RegExp(`\\b(${SYSTEM_IDS.join('|')}):tw-`);
-
-function* walk(dir) {
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const stat = statSync(full);
-        if (stat.isDirectory()) yield* walk(full);
-        else if (stat.isFile() && name.endsWith('.hbs')) yield full;
-    }
-}
-
-const templatePaths = [...walk('src/templates')];
-let current = 0;
-const adoptedTemplates = [];
-const perSystemHits = Object.fromEntries(SYSTEM_IDS.map((id) => [id, 0]));
-
-for (const path of templatePaths) {
-    const text = readFileSync(path, 'utf8');
-    if (!variantPattern.test(text)) continue;
-    current++;
-    adoptedTemplates.push(path);
-    for (const id of SYSTEM_IDS) {
-        const matches = text.match(new RegExp(`\\b${id}:tw-`, 'g'));
-        if (matches) perSystemHits[id] += matches.length;
-    }
-}
-
-writeFileSync('.theme-coverage.json', JSON.stringify({
-    generatedAt: new Date().toISOString(),
-    total: templatePaths.length,
-    adopted: current,
-    perSystemHits,
-    adoptedTemplates,
-}, null, 2) + '\n');
+const { adopted: current } = writeReport();
 writeFileSync('.theme-baseline', `${current}\n`);
 console.log(`.theme-baseline -> ${current}`);
