@@ -135,13 +135,16 @@ function getMedicaeTarget(actor: WH40KBaseActorDocument): number {
  * the outcome.
  *
  * @param actor   The actor whose mechadendrite is being used.
- * @param rng     Optional injectable d100 roll (1-100) for determinism.
+ * @param rng     Optional `[0, 1)` float source (the shared `_dice.Rng`
+ *                contract) for determinism; routed through `rollD100` so the
+ *                injected branch produces a real 1-100 roll rather than the
+ *                always-1 result of flooring a fractional value.
  */
-export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: () => number): Promise<StaunchResolution> {
+export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: Rng): Promise<StaunchResolution> {
     const medicaeTarget = getMedicaeTarget(actor);
     let rollTotal: number;
     if (rng !== undefined) {
-        rollTotal = Math.max(1, Math.min(100, Math.floor(rng())));
+        rollTotal = rollD100(rng);
     } else {
         const roll = await roll1d100();
         rollTotal = roll.total ?? 100;
