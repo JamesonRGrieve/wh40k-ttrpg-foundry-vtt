@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import BaseGrantData, { type GrantApplicationResult, type GrantApplyOptions, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
 
 /** Specialist-skill sub-entry on the actor schema. */
@@ -135,7 +136,7 @@ export default class SkillGrantData extends BaseGrantData {
                 continue;
             }
 
-            const schemaKey = this._getSchemaSkillKey(skillConfig.key);
+            const schemaKey = this._getSchemaSkillKey(skillConfig.key, actor);
             const specialization = skillConfig.specialization;
 
             if (schemaKey === null) {
@@ -285,80 +286,25 @@ export default class SkillGrantData extends BaseGrantData {
     }
 
     /**
-     * Get the schema skill key from various input formats.
+     * Resolve a grant's skill identifier to a schema key, validating it exists on
+     * the actor. The identifier may be either an already-canonical schema key
+     * (e.g. `'commonLore'`) or a display name (`'Common Lore'`); name resolution
+     * routes through {@link SkillKeyHelper.nameToKey} — the canonical resolver
+     * derived from SKILL_DEFINITIONS (#279) — instead of a stale local table that
+     * omitted athletics/linguistics/navigate/parry/stealth, so origin-path grants
+     * for those five silently failed to resolve. Returns the resolved key only
+     * when it is a real skill on the actor's schema, else null.
      * @private
      */
-    _getSchemaSkillKey(key: string): string | null {
+    _getSchemaSkillKey(key: string, actor: WH40KBaseActor): string | null {
         if (!key) return null;
-
-        // Normalize the key
-        const normalized = key.toLowerCase().replace(/[\s-]/g, '');
-
-        // Map of common variants to schema keys
-        const keyMap: Record<string, string | undefined> = {
-            // Standard skills
-            'acrobatics': 'acrobatics',
-            'awareness': 'awareness',
-            'barter': 'barter',
-            'blather': 'blather',
-            'carouse': 'carouse',
-            'charm': 'charm',
-            'chemuse': 'chemUse',
-            'chem-use': 'chemUse',
-            'climb': 'climb',
-            'command': 'command',
-            'commerce': 'commerce',
-            'concealment': 'concealment',
-            'contortionist': 'contortionist',
-            'deceive': 'deceive',
-            'demolition': 'demolition',
-            'disguise': 'disguise',
-            'dodge': 'dodge',
-            'evaluate': 'evaluate',
-            'gamble': 'gamble',
-            'inquiry': 'inquiry',
-            'interrogation': 'interrogation',
-            'intimidate': 'intimidate',
-            'invocation': 'invocation',
-            'literacy': 'literacy',
-            'logic': 'logic',
-            'medicae': 'medicae',
-            'psyniscience': 'psyniscience',
-            'scrutiny': 'scrutiny',
-            'search': 'search',
-            'security': 'security',
-            'shadowing': 'shadowing',
-            'silentmove': 'silentMove',
-            'silent move': 'silentMove',
-            'sleightofhand': 'sleightOfHand',
-            'sleight of hand': 'sleightOfHand',
-            'survival': 'survival',
-            'swim': 'swim',
-            'tracking': 'tracking',
-            'wrangling': 'wrangling',
-            // Specialist skills
-            'ciphers': 'ciphers',
-            'cipher': 'ciphers',
-            'commonlore': 'commonLore',
-            'common lore': 'commonLore',
-            'drive': 'drive',
-            'forbiddenlore': 'forbiddenLore',
-            'forbidden lore': 'forbiddenLore',
-            'navigation': 'navigation',
-            'performer': 'performer',
-            'pilot': 'pilot',
-            'scholasticlore': 'scholasticLore',
-            'scholastic lore': 'scholasticLore',
-            'secrettongue': 'secretTongue',
-            'secret tongue': 'secretTongue',
-            'speaklanguage': 'speakLanguage',
-            'speak language': 'speakLanguage',
-            'techuse': 'techUse',
-            'tech-use': 'techUse',
-            'trade': 'trade',
-        };
-
-        return keyMap[normalized] ?? keyMap[key.toLowerCase()] ?? null;
+        const skills = skillSystem(actor).skills;
+        // Already a canonical schema key (the common case for stored grants).
+        if (Object.hasOwn(skills, key)) return key;
+        // Otherwise treat it as a display name and resolve through the catalog.
+        const schemaKey = SkillKeyHelper.nameToKey(key);
+        if (schemaKey === '') return null;
+        return Object.hasOwn(skills, schemaKey) ? schemaKey : null;
     }
 
     /**
