@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { resolveCharacteristicBonusRefs } from '../shared/characteristic-formula.ts';
 import BaseGrantData, { type GrantApplicationResult, type GrantApplyOptions, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
 
 /**
@@ -320,30 +321,9 @@ export default class ResourceGrantData extends BaseGrantData {
             return this._evaluateLookupTable(normalizedFormula);
         }
 
-        // Replace characteristic references
-        let processedFormula = normalizedFormula;
-
-        // Replace TB, WPB, etc. with actual bonus values
-        const charAbbreviations: Record<string, string> = {
-            TB: 'toughness',
-            SB: 'strength',
-            AB: 'agility',
-            WPB: 'willpower',
-            FB: 'fellowship',
-            IB: 'intelligence',
-            PB: 'perception',
-            WSB: 'weaponSkill',
-            BSB: 'ballisticSkill',
-        };
-
-        for (const [abbr, charKey] of Object.entries(charAbbreviations)) {
-            const regex = new RegExp(`(\\d*)x?${abbr}`, 'gi');
-            processedFormula = processedFormula.replace(regex, (_match, multiplier: string) => {
-                const bonus = (actor.system as { characteristics?: Record<string, { bonus?: number }> }).characteristics?.[charKey]?.bonus ?? 0;
-                const mult = parseInt(multiplier, 10) || 1;
-                return String(bonus * mult);
-            });
-        }
+        // Replace characteristic-bonus references (TB, SB, …) with current bonuses.
+        const characteristics = (actor.system as { characteristics?: Record<string, { bonus?: number }> }).characteristics;
+        const processedFormula = resolveCharacteristicBonusRefs(normalizedFormula, (charKey) => characteristics?.[charKey]?.bonus ?? 0);
 
         // Evaluate dice formula
         try {

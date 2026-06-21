@@ -1,6 +1,7 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
+import { parseCharacteristicBonusTerm } from '../shared/characteristic-formula.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
 import { bcDaemonPrinceSchemaFields, type BcDaemonPrinceDeclarations } from './mixins/bc-daemon-prince-template.ts';
 import { bcGiftsSchemaFields, type BcGiftsDeclarations } from './mixins/bc-gifts-template.ts';
@@ -1054,7 +1055,6 @@ export default class CharacterData extends CreatureTemplate {
         if (actor?.items === undefined) return;
 
         const originItems = this._originPathItems();
-        const tb = this.characteristics.toughness.bonus;
 
         let computedMax = 0;
         let hasWoundFormula = false;
@@ -1070,19 +1070,18 @@ export default class CharacterData extends CreatureTemplate {
 
             hasWoundFormula = true;
 
-            // Check if formula references TB (Toughness Bonus) — RT pattern
-            const tbPattern = /(\d*)x?TB/i;
-            const tbMatch = formula.match(tbPattern);
+            // Check if the formula references a characteristic bonus (TB/SB/WPB/…) — RT pattern.
+            const charTerm = parseCharacteristicBonusTerm(formula);
 
-            if (tbMatch) {
-                // Formula contains TB — recompute with current TB
-                // Parse: "2xTB+1d5+1" → TB multiplier=2, remainder needs die result
-                const tbMultiplier = parseInt(tbMatch.at(1) ?? '', 10) || 1;
-                const tbComponent = tbMultiplier * tb;
+            if (charTerm !== null) {
+                // Formula scales with a characteristic — recompute with the current bonus.
+                // Parse: "2xTB+1d5+1" → multiplier=2 × current toughness bonus, remainder needs die result.
+                const currentBonus = this.getCharacteristic(charTerm.charKey)?.bonus ?? 0;
+                const charComponent = charTerm.multiplier * currentBonus;
 
-                // Strip the TB term and any dice terms to get the flat bonus
-                const withoutTB = formula.replace(tbPattern, '0');
-                const withoutDice = withoutTB.replace(/\d*d\d+/gi, '0');
+                // Strip the characteristic term and any dice terms to get the flat bonus
+                const withoutChar = formula.replace(charTerm.match, '0');
+                const withoutDice = withoutChar.replace(/\d*d\d+/gi, '0');
                 let flatBonus = 0;
                 try {
                     // Evaluate the remaining flat terms (e.g., "0+0+1" → 1)
@@ -1123,7 +1122,7 @@ export default class CharacterData extends CreatureTemplate {
                     dieValue = rolledValue - flatBonus;
                 }
 
-                computedMax += tbComponent + dieValue + flatBonus;
+                computedMax += charComponent + dieValue + flatBonus;
             } else {
                 // No TB reference — flat formula (DH2e/BC/OW style: "9+1d5")
                 // Use stored rolled value as-is
