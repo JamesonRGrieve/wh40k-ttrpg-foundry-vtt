@@ -1,0 +1,24 @@
+{{!--
+    Shared success / failure result callout for roll chat cards — the centred
+    glowing box that shows the test outcome label + the rolled total.
+
+    Recurs across action-roll, simple-roll, force-field-roll, psychic-action, and
+    burning chat cards. The success/danger design-token family is selected by
+    `variant`; the label and value vary per card; the glow and value text/box
+    shadow are overridable because a few cards diverge there.
+
+    Hash arguments:
+        variant          — "success" (green) or "danger" (red). Required.
+        label            — outcome text (e.g. "Success", "Field Activated").
+        labelKey         — i18n key for the label (preferred over `label`).
+        value            — the big number rendered below the label (e.g. roll.total).
+        glowClass        — the box-shadow utility on the outer box. Defaults to the
+                           token glow (`var(--wh40k-card-{success|fail}-glow)`); some
+                           cards pass a literal rgba glow instead.
+        valueShadowClass — the shadow utility on the value. Defaults to the
+                           box-shadow form; a few cards use a text-shadow form.
+--}}
+<div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md {{#if (eq variant "success")}}tw-bg-[var(--wh40k-success-bg)] tw-border-2 tw-border-[var(--wh40k-success-primary)]{{else}}tw-bg-[var(--wh40k-danger-bg)] tw-border-2 tw-border-[var(--wh40k-danger-primary)]{{/if}} {{#if glowClass}}{{glowClass}}{{else}}{{#if (eq variant "success")}}tw-shadow-[0_0_20px_var(--wh40k-card-success-glow),inset_0_0_30px_rgba(45,138,78,0.1)]{{else}}tw-shadow-[0_0_20px_var(--wh40k-card-fail-glow),inset_0_0_30px_rgba(168,50,50,0.1)]{{/if}}{{/if}}">
+    <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 {{#if (eq variant "success")}}tw-text-[var(--wh40k-success-secondary)]{{else}}tw-text-[var(--wh40k-danger-secondary)]{{/if}}">{{#if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}</div>
+    <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none {{#if valueShadowClass}}{{valueShadowClass}}{{else}}tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium)]{{/if}}">{{value}}</div>
+</div>

@@ -6,7 +6,14 @@
     variant="horizontal"
     cardClass="wh40k-sheet-header npc-template-header tw-gap-4 tw-p-3 tw-bg-[var(--wh40k-bg-secondary)] tw-border-[var(--wh40k-border-color)] bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure"}}
     <div class="tw-shrink-0">
-        <img class="tw-w-20 tw-h-20 tw-object-cover tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-cursor-pointer tw-transition-[border-color] hover:tw-border-gold bc:hover:tw-border-crimson-light dh1:hover:tw-border-gold-raw-l5 dh2:hover:tw-border-gold-raw dw:hover:tw-border-accent-combat ow:hover:tw-border-brass-l20 rt:hover:tw-border-gold im:hover:tw-border-failure" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-tooltip="{{localize 'WH40K.Sheet.ChangeImage'}}">
+        {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs
+            imgOnly=true
+            src=item.img
+            alt=item.name
+            dataTooltip=(localize "WH40K.Sheet.ChangeImage")
+            sizeClass="tw-w-20 tw-h-20"
+            roundedClass="tw-rounded-md"
+            imgClass="tw-border-2 tw-border-[var(--wh40k-border-color)] tw-transition-[border-color] hover:tw-border-gold bc:hover:tw-border-crimson-light dh1:hover:tw-border-gold-raw-l5 dh2:hover:tw-border-gold-raw dw:hover:tw-border-accent-combat ow:hover:tw-border-brass-l20 rt:hover:tw-border-gold im:hover:tw-border-failure"}}
     </div>
 
     <div class="tw-flex tw-flex-1 tw-flex-col tw-gap-2">

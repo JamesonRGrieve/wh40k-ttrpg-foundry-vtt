@@ -10,14 +10,11 @@
     ═══════════════════════════════════════════════════════════════════ --}}
     <header class="tw-flex tw-items-start tw-flex-shrink-0 tw-gap-3 tw-p-3 tw-bg-gradient-to-b tw-from-[var(--color-bg-secondary)] tw-to-[var(--color-bg-primary)] tw-border-b-2 tw-border-b-[var(--color-border-secondary)]">
       {{!-- Portrait --}}
-      <div class="tw-relative tw-flex-shrink-0 tw-cursor-pointer tw-overflow-hidden" data-action="editImage">
-        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
-        {{#if inEditMode}}
-        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-opacity-0">
-          <i class="fa-solid fa-camera"></i>
-        </div>
-        {{/if}}
-      </div>
+      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs
+          src=item.img
+          alt=item.name
+          extraClass="tw-flex-shrink-0"
+          overlayIcon="fa-camera"}}
 
       {{!-- Title & Meta --}}
       <div class="tw-flex-1 tw-flex tw-flex-col tw-min-w-0">
