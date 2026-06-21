@@ -23,6 +23,7 @@
  *                            motive-systems critical hit.
  */
 
+import { nonNegInt } from './_num.ts';
 import { resolveSprayAvoidance, type SprayAvoidanceResult } from './spray-avoidance.ts';
 import { FIELD_VIVISECTION, HOTSHOT_PILOT, HULL_DOWN, LEAPING_DODGE, PUSH_THE_LIMIT } from './xenos-features.ts';
 
@@ -80,7 +81,7 @@ export function resolveFieldVivisection(input: FieldVivisectionInput): FieldVivi
     const baseSkill = input.mode === 'melee' ? 'weaponSkill' : 'ballisticSkill';
     const fallback: FieldVivisectionResult = {
         skill: baseSkill,
-        target: Math.max(0, Math.trunc(input.weaponSkillTotal)),
+        target: nonNegInt(input.weaponSkillTotal),
         swapped: false,
     };
     if (!input.isCalledShot) return fallback;
@@ -88,7 +89,7 @@ export function resolveFieldVivisection(input: FieldVivisectionInput): FieldVivi
     if (FIELD_VIVISECTION.requiresForbiddenLore && !input.hasForbiddenLoreXenos) return fallback;
     return {
         skill: FIELD_VIVISECTION.alternateSkill,
-        target: Math.max(0, Math.trunc(input.medicaeTotal)),
+        target: nonNegInt(input.medicaeTotal),
         swapped: true,
     };
 }
@@ -129,9 +130,9 @@ export interface HotshotPilotResult {
  * `spendFatigue` is false or AgB ≤ 0.
  */
 export function resolveHotshotPilot(input: HotshotPilotInput): HotshotPilotResult {
-    const agB = Math.max(0, Math.trunc(input.agilityBonus));
-    const baseDos = Math.max(0, Math.trunc(input.degreesOfSuccess));
-    const baseDof = Math.max(0, Math.trunc(input.degreesOfFailure));
+    const agB = nonNegInt(input.agilityBonus);
+    const baseDos = nonNegInt(input.degreesOfSuccess);
+    const baseDof = nonNegInt(input.degreesOfFailure);
     if (!input.spendFatigue || agB <= 0) {
         return {
             fatigueGained: 0,
@@ -263,7 +264,7 @@ export interface PushTheLimitResult {
 export function resolvePushTheLimit(input: PushTheLimitInput): PushTheLimitResult {
     const invoked = input.invoke && !input.alreadyUsedThisRound;
     const modifier = invoked ? PUSH_THE_LIMIT.operateBonus : 0;
-    const dof = input.success ? 0 : Math.max(0, Math.trunc(input.rawDegrees));
+    const dof = input.success ? 0 : nonNegInt(input.rawDegrees);
     const triggersCritical = invoked && !input.success && dof >= PUSH_THE_LIMIT.failureThresholdForCritical;
     return {
         modifier,

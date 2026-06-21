@@ -45,7 +45,7 @@
  */
 
 import type { GameSystemId } from '../config/game-systems/types.ts';
-import type { Rng } from './_dice.ts';
+import { degreesOfFailure, degreesOfSuccess, findBandBy, type Rng } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export type { Rng };
@@ -131,12 +131,14 @@ export function resolveD100Test(input: D100TestInput): {
     degreesOfFailure: number;
 } {
     const { rolled, target } = input;
-    if (rolled <= target) {
-        const dos = Math.floor((target - rolled) / 10) + 1;
-        return { passed: true, degreesOfSuccess: dos, degreesOfFailure: 0 };
-    }
-    const dof = Math.floor((rolled - target) / 10) + 1;
-    return { passed: false, degreesOfSuccess: 0, degreesOfFailure: dof };
+    // The shared primitives each return 0 outside their own branch
+    // (`degreesOfSuccess` is 0 on a fail, `degreesOfFailure` is 0 on a pass),
+    // so the pair reproduces the original `+1` margin counting exactly.
+    return {
+        passed: rolled <= target,
+        degreesOfSuccess: degreesOfSuccess(rolled, target),
+        degreesOfFailure: degreesOfFailure(rolled, target),
+    };
 }
 
 // ---------------------------------------------------------------------------
@@ -506,7 +508,9 @@ export const PERILS_OF_THE_WARP: ReadonlyArray<PerilDef> = Object.freeze([
 /** Find the Peril entry covering the given d100 roll (1-100; 00 → 100). */
 export function getPerilForRoll(d100: number): PerilDef | null {
     const normalized = d100 === 0 ? 100 : d100;
-    return PERILS_OF_THE_WARP.find((p) => normalized >= p.rangeMin && normalized <= p.rangeMax) ?? null;
+    // `clamp: false` preserves the intentional 56-58 table gap (and any
+    // out-of-range roll) returning null instead of snapping to an edge row.
+    return findBandBy(PERILS_OF_THE_WARP, normalized, (p) => [p.rangeMin, p.rangeMax], { clamp: false }) ?? null;
 }
 
 /** Roll a fresh d100 and return the matching Peril. Returns null only when

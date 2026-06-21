@@ -24,6 +24,8 @@
  * RNG-free and actor-decoupled; no I/O, no Foundry Document reads.
  */
 
+import { degreesOfFailure, degreesOfSuccess } from './_dice.ts';
+
 /* -------------------------------------------------------------------- */
 /*  Base rating + flat bonuses                                          */
 /* -------------------------------------------------------------------- */
@@ -260,8 +262,14 @@ export interface LogisticsTestResult {
  */
 export function resolveLogisticsTest(ctx: LogisticsContext, roll: number): LogisticsTestResult {
     const { target, breakdown } = computeLogisticsTarget(ctx);
-    const success = roll <= target;
-    const degreesOfSuccess = success ? Math.max(0, Math.floor((target - roll) / 10)) : 0;
-    const degreesOfFailure = success ? 0 : Math.max(0, Math.floor((roll - target) / 10));
-    return { success, degreesOfSuccess, degreesOfFailure, target, breakdown };
+    // OW logistics uses the "extra degrees" convention — a bare success scores 0
+    // and each full ten of margin adds one — so route through the shared
+    // primitives with `extra: true`.
+    return {
+        success: roll <= target,
+        degreesOfSuccess: degreesOfSuccess(roll, target, { extra: true }),
+        degreesOfFailure: degreesOfFailure(roll, target, { extra: true }),
+        target,
+        breakdown,
+    };
 }

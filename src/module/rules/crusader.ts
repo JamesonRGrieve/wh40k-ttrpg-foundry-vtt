@@ -33,6 +33,7 @@
  * aptitude / talent grants.
  */
 
+import { nonNegInt } from './_num.ts';
 import { MAX_FEAR_RATING } from './fear.ts';
 
 /* -------------------------------------------- */
@@ -58,7 +59,7 @@ export const SMITE_THE_UNHOLY_FATE_COST = 1;
  * clamp to 1 for chat-card display).
  */
 export function resolveSmiteTheUnholyDoS(willpowerTotal: number): number {
-    const wp = Math.max(0, Math.trunc(Number.isFinite(willpowerTotal) ? willpowerTotal : 0));
+    const wp = nonNegInt(willpowerTotal);
     return Math.floor(wp / 10);
 }
 
@@ -105,8 +106,8 @@ export interface SmiteMeleeHitResult {
  */
 export function applySmiteTheUnholyBonus(input: SmiteMeleeHitInput): SmiteMeleeHitResult {
     const rating = Math.max(0, Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(input.targetFearRating) ? input.targetFearRating : 0)));
-    const baseDamage = Math.max(0, Math.trunc(Number.isFinite(input.baseDamage) ? input.baseDamage : 0));
-    const basePenetration = Math.max(0, Math.trunc(Number.isFinite(input.basePenetration) ? input.basePenetration : 0));
+    const baseDamage = nonNegInt(input.baseDamage);
+    const basePenetration = nonNegInt(input.basePenetration);
     if (rating === 0) {
         return { damage: baseDamage, penetration: basePenetration, bonusApplied: 0, isNoOp: true };
     }

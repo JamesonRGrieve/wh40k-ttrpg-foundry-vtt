@@ -16,6 +16,7 @@
  */
 
 import type { ChaosAlignment } from '../config/game-systems/types.ts';
+import { clampRoll, findBandBy } from './_dice.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from './daemon-weapon.ts';
 
 /** A single 1d10 entry on a Daemon Weapon Attribute table. */
@@ -116,8 +117,10 @@ export function tableForAlignment(alignment: ChaosAlignment): DaemonWeaponAttrib
 /** Resolve a 1d10 roll value against a table entry. */
 export function attributeAtRoll(table: DaemonWeaponAttributeTable, roll: number): DaemonWeaponAttribute {
     const entries = DAEMON_WEAPON_ATTRIBUTE_TABLES[table];
-    const clamped = Math.max(1, Math.min(10, Math.floor(roll)));
-    const found = entries.find((entry) => clamped >= entry.roll[0] && clamped <= entry.roll[1]);
+    const clamped = clampRoll(roll, { max: 10 });
+    // `clamp: false` so a (defensive) out-of-band roll falls through to the
+    // explicit last-entry / empty-table handling below rather than snapping.
+    const found = findBandBy(entries, clamped, (entry) => entry.roll, { clamp: false });
     if (found !== undefined) return found;
     // Tables cover 1..10 by construction; fall back defensively to the last entry to keep the signature non-undefined.
     const fallback = entries[entries.length - 1];

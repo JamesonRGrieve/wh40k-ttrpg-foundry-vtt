@@ -6,6 +6,8 @@
  * tracker, scene hooks, on-zone-enter listeners) drives them.
  */
 
+import { nonNegInt } from './_num.ts';
+
 /* -------------------------------------------- */
 /*  Falling damage (core.md L11155-11166)       */
 /* -------------------------------------------- */
@@ -18,7 +20,7 @@ export const FALLING_DAMAGE_DICE_PER_2M = '1d10';
  * no damage (rounded down). 2m → 1d10, 4m → 2d10, etc.
  */
 export function getFallingDiceCount(metres: number): number {
-    const m = Math.max(0, Math.trunc(Number.isFinite(metres) ? metres : 0));
+    const m = nonNegInt(metres);
     return Math.floor(m / 2);
 }
 
@@ -51,7 +53,7 @@ export interface DrowningRoundInput {
  * (cumulative). Floored at 0.
  */
 export function resolveDrowningTest(input: DrowningRoundInput): { target: number } {
-    const tgh = Math.max(0, Math.trunc(input.toughnessTotal));
+    const tgh = nonNegInt(input.toughnessTotal);
     const rounds = Math.max(1, Math.trunc(input.roundsSubmerged));
     const cumulativePenalty = (rounds - 1) * 10;
     return { target: Math.max(0, tgh - cumulativePenalty) };
@@ -73,8 +75,8 @@ export interface SuffocationInput {
  * actor takes damage and risks death per RAW. Floored at 0.
  */
 export function getBreathHoldSeconds(input: SuffocationInput): number {
-    const tb = Math.max(0, Math.trunc(input.toughnessBonus));
-    const wpb = Math.max(0, Math.trunc(input.willpowerBonus));
+    const tb = nonNegInt(input.toughnessBonus);
+    const wpb = nonNegInt(input.willpowerBonus);
     return tb + wpb;
 }
 
@@ -84,6 +86,6 @@ export function getBreathHoldSeconds(input: SuffocationInput): number {
  */
 export function isPastBreathCeiling(input: SuffocationInput & { secondsElapsed: number }): boolean {
     const ceiling = getBreathHoldSeconds(input);
-    const elapsed = Math.max(0, Math.trunc(Number.isFinite(input.secondsElapsed) ? input.secondsElapsed : 0));
+    const elapsed = nonNegInt(input.secondsElapsed);
     return elapsed > ceiling;
 }

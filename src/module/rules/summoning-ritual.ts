@@ -12,6 +12,7 @@
  * follow-up.
  */
 
+import { nonNegInt } from './_num.ts';
 import { DAEMONIC_MASTERY_FACTORS, buildDaemonicMasteryTest, type DaemonicMasteryFactor } from './daemonic-mastery.ts';
 
 export interface SummoningRitualState {
@@ -49,5 +50,5 @@ export function prepareSummoningRitual(state: SummoningRitualState): SummoningRi
 
 /** Binding duration in hours: 1 per DoS of the Daemonic Mastery test. */
 export function bindingDurationHours(masteryDos: number): number {
-    return Math.max(0, Math.trunc(masteryDos));
+    return nonNegInt(masteryDos);
 }

@@ -13,6 +13,8 @@
  * remains the caller's responsibility.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export type PoisonOngoingTag = 'crippled' | 'helpless' | 'prone' | 'characteristic-damage' | 'none';
 
 export interface PoisonProfile {
@@ -39,8 +41,8 @@ export interface PoisonExposureInput {
 
 /** Target Toughness for the resist test; floored at 0. */
 export function resolvePoisonExposure(input: PoisonExposureInput): { target: number } {
-    const tgh = Math.max(0, Math.trunc(input.toughnessTotal));
-    const rating = Math.max(0, Math.trunc(input.poisonRating));
+    const tgh = nonNegInt(input.toughnessTotal);
+    const rating = nonNegInt(input.poisonRating);
     return { target: Math.max(0, tgh - rating) };
 }
 
@@ -58,9 +60,9 @@ export interface PoisonFailurePayload {
 /** Compose the full failure payload for a failed exposure test. */
 export function buildPoisonFailurePayload(profile: PoisonProfile): PoisonFailurePayload {
     return {
-        immediateDamage: Math.max(0, Math.trunc(profile.failureDamage)),
-        ongoingDamagePerRound: Math.max(0, Math.trunc(profile.ongoingDamagePerRound)),
-        ongoingDurationRounds: Math.max(0, Math.trunc(profile.ongoingDurationRounds)),
+        immediateDamage: nonNegInt(profile.failureDamage),
+        ongoingDamagePerRound: nonNegInt(profile.ongoingDamagePerRound),
+        ongoingDurationRounds: nonNegInt(profile.ongoingDurationRounds),
         ongoingTag: profile.ongoingTag,
     };
 }

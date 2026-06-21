@@ -12,6 +12,7 @@
  * the sheet surface remain follow-ups under #136.
  */
 
+import { nonNegInt } from './_num.ts';
 import { AVAILABILITY_MODIFIERS, type AvailabilityKey } from './requisition-test.ts';
 
 export type XenosCondition = 'pristine' | 'worn' | 'degraded' | 'ruined';
@@ -44,8 +45,8 @@ export function getXenosCondition(remainingCharges: number): XenosCondition {
  * a pure projection.
  */
 export function tickXenosDegradation(remainingCharges: number, ticks = 1): { newCharges: number; newCondition: XenosCondition } {
-    const start = Math.max(0, Math.trunc(remainingCharges));
-    const decrement = Math.max(0, Math.trunc(ticks));
+    const start = nonNegInt(remainingCharges);
+    const decrement = nonNegInt(ticks);
     const newCharges = Math.max(0, start - decrement);
     return { newCharges, newCondition: getXenosCondition(newCharges) };
 }
@@ -80,7 +81,7 @@ export function resolveXenosRepairTarget(input: XenosRepairInput): XenosRepairRe
     if (input.currentCondition === 'pristine') {
         return { target: input.techUseTotal, isNoOp: true, requiresFacility: false };
     }
-    const tu = Math.max(0, Math.trunc(input.techUseTotal));
+    const tu = nonNegInt(input.techUseTotal);
     const modifier = AVAILABILITY_MODIFIERS[input.availability];
     const target = Math.max(0, tu + modifier);
     return {
