@@ -471,6 +471,27 @@
         "TalentsGranted": "Talents Granted",
         "Traits": "Traits",
         "TraitsGranted": "Traits Granted",
+        "TalentEditor": {
+            "AddCharacteristicRequirement": "Add Characteristic Requirement",
+            "AddSkillRequirement": "Add Skill Requirement",
+            "AddTalentRequirement": "Add Talent Requirement",
+            "AddCharacteristicModifier": "Add Characteristic Modifier",
+            "AddSkillModifier": "Add Skill Modifier",
+            "AddCombatModifier": "Add Combat Modifier",
+            "AddResourceModifier": "Add Resource Modifier",
+            "AddOtherModifier": "Add Other Modifier",
+            "AddSituationalCharacteristicModifier": "Add Situational Characteristic Modifier",
+            "AddSituationalSkillModifier": "Add Situational Skill Modifier",
+            "AddSituationalCombatModifier": "Add Situational Combat Modifier",
+            "AddGrantedSkill": "Add Granted Skill",
+            "AddGrantedTalent": "Add Granted Talent",
+            "AddGrantedTrait": "Add Granted Trait",
+            "AddSpecialAbility": "Add Special Ability"
+        },
+        "ModifiersEditor": {
+            "AddConditionalCharacteristicBonus": "Add Conditional Characteristic Bonus",
+            "AddCustomModifier": "Add Custom Modifier"
+        },
         "Equipment": {
             "ProtectionMatrix": "Protection Matrix",
             "Containers": "Containers",

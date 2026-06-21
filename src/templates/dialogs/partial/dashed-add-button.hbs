@@ -1,0 +1,27 @@
+{{!--
+    Shared dashed-border "add row" button used by the talent-editor dialog and
+    the item modifiers-editor panel. Emits a `data-action` button with an icon +
+    localised label, optionally carrying `data-category` / `data-type` so the
+    handler knows which list to append to. The dominant talent-editor styling is
+    the default; a caller with a different visual treatment passes its full class
+    string via `accentClass`.
+
+    Hash arguments:
+        action      — data-action on the button (default "addItem").
+        category    — optional data-category (talent-editor lists).
+        type        — optional data-type (which sub-list to append to).
+        labelKey    — i18n key for the button label. Required.
+        iconClass   — Font Awesome class for the leading icon (default
+                      "fa-solid fa-plus").
+        accentClass — full class string for the button. Defaults to the
+                      talent-editor dashed-accent treatment; pass a complete
+                      class string to override the visual treatment entirely.
+        extraClass  — appended after the default class (ignored when
+                      `accentClass` is given). For one-off decorations on a
+                      single call site (e.g. an extra hover shadow).
+--}}
+<button type="button"
+        data-action="{{#if action}}{{action}}{{else}}addItem{{/if}}"{{#if category}} data-category="{{category}}"{{/if}}{{#if type}} data-type="{{type}}"{{/if}}
+        class="{{#if accentClass}}{{accentClass}}{{else}}tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold{{#if extraClass}} {{extraClass}}{{/if}}{{/if}}">
+    <i class="{{#if iconClass}}{{iconClass}}{{else}}fa-solid fa-plus{{/if}}"></i> {{localize labelKey}}
+</button>
