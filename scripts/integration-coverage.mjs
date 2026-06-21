@@ -3,22 +3,13 @@
 // test files (one focused area per file) and the total `it(...)` /
 // `test(...)` cases inside them. Output at `.integration-coverage.json`.
 
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { walkFiles } from './lib/walk.mjs';
 
 const ROOT = 'tests/integration';
 const OUT = '.integration-coverage.json';
 
-function* walk(dir) {
-    if (!existsSync(dir)) return;
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const stat = statSync(full);
-        if (stat.isDirectory()) yield* walk(full);
-        else if (stat.isFile() && name.endsWith('.test.ts')) yield full;
-    }
-}
-
-const files = [...walk(ROOT)];
+const files = [...walkFiles(ROOT, { ext: '.test.ts' })];
 let cases = 0;
 const perFile = [];
 const caseRe = /^\s*(?:it|test)(?:\.\w+)?\s*\(/gm;
