@@ -326,50 +326,50 @@ export default class SkillGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payload + per-skill restore record */
+    /* eslint-disable-next-line no-restricted-syntax -- boundary: per-skill restore record shape varies */
     override async reverse(actor: WH40KBaseActor, appliedState: Record<string, SkillAppliedState>): Promise<{ skills: Array<Record<string, unknown>> }> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: per-skill restore record shape varies
-        const restoreData: { skills: Array<Record<string, unknown>> } = { skills: [] };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
-        const updates: Record<string, unknown> = {};
         const system = skillSystem(actor);
 
-        for (const [key, state] of Object.entries(appliedState)) {
-            if (!state.schemaKey) continue;
+        // Per-field delta mapper: created specialist entries are spliced out;
+        // upgraded skills/entries revert to the previous level's advance. Entries
+        // that were neither created nor upgraded (or carry no schemaKey) are
+        // skipped. The shared merge/apply/guard tail lives in
+        // BaseGrantData._reverseWithDeltaMap (#345).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-skill restore record shape varies
+        const skills = await this._reverseWithDeltaMap<SkillAppliedState, Record<string, unknown>>(actor, appliedState, (key, state) => {
+            if (!state.schemaKey) return null;
 
             if (state.created === true && state.specialization !== undefined) {
                 // Remove created specialist entry
                 const currentSkill = system.skills[state.schemaKey];
-                if (currentSkill?.entries !== undefined && state.entryIndex !== undefined) {
-                    const newEntries: SkillEntry[] = [...currentSkill.entries];
-                    newEntries.splice(state.entryIndex, 1);
-                    updates[`system.skills.${state.schemaKey}.entries`] = newEntries;
-                    restoreData.skills.push({ key, removed: true, specialization: state.specialization });
-                }
-            } else if (state.upgraded === true && state.previousLevel !== null && state.previousLevel !== '') {
+                if (currentSkill?.entries === undefined || state.entryIndex === undefined) return null;
+                const newEntries: SkillEntry[] = [...currentSkill.entries];
+                newEntries.splice(state.entryIndex, 1);
+                return {
+                    deltas: { [`system.skills.${state.schemaKey}.entries`]: newEntries },
+                    restore: { key, removed: true, specialization: state.specialization },
+                };
+            }
+
+            if (state.upgraded === true && state.previousLevel !== null && state.previousLevel !== '') {
                 // Revert to previous level
                 const levelUpdates = this._getLevelUpdates(state.previousLevel);
-
-                if (state.specialization !== undefined && state.entryIndex !== undefined) {
-                    // Specialist skill entry
-                    for (const [field, value] of Object.entries(levelUpdates)) {
-                        updates[`system.skills.${state.schemaKey}.entries.${state.entryIndex}.${field}`] = value;
-                    }
-                } else {
-                    // Standard skill
-                    for (const [field, value] of Object.entries(levelUpdates)) {
-                        updates[`system.skills.${state.schemaKey}.${field}`] = value;
-                    }
+                const pathPrefix =
+                    state.specialization !== undefined && state.entryIndex !== undefined
+                        ? `system.skills.${state.schemaKey}.entries.${state.entryIndex}`
+                        : `system.skills.${state.schemaKey}`;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
+                const deltas: Record<string, unknown> = {};
+                for (const [field, value] of Object.entries(levelUpdates)) {
+                    deltas[`${pathPrefix}.${field}`] = value;
                 }
-                restoreData.skills.push({ key, reverted: true, previousLevel: state.previousLevel });
+                return { deltas, restore: { key, reverted: true, previousLevel: state.previousLevel } };
             }
-        }
 
-        if (Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
+            return null;
+        });
 
-        return restoreData;
+        return { skills };
     }
 
     /** @inheritDoc */
