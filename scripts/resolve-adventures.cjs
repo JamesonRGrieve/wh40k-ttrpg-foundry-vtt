@@ -20,8 +20,7 @@
  * before `db.put`.
  */
 
-const fs = require('fs');
-const path = require('path');
+const { iterPackJson } = require('./lib/iter-pack-json.cjs');
 
 const COMPENDIUM_PREFIX = 'Compendium.wh40k-rpg.';
 
@@ -57,31 +56,21 @@ const ADVENTURE_CONTENT_FIELDS = ['actors', 'combats', 'items', 'journal', 'scen
  */
 function buildUuidIndex(packsRoot, resolveSource) {
     const index = new Map();
-    for (const group of fs.readdirSync(packsRoot)) {
-        const groupPath = path.join(packsRoot, group);
-        if (!fs.statSync(groupPath).isDirectory()) continue;
-        for (const packName of fs.readdirSync(groupPath)) {
-            const sourceDir = path.join(groupPath, packName, '_source');
-            if (!fs.existsSync(sourceDir)) continue;
-            const collection = collectionForPack(packName);
-            const uuidClass = COLLECTION_TO_UUID_CLASS[collection];
-            if (!uuidClass) continue; // adventures themselves are not referenceable content
-            for (const file of fs.readdirSync(sourceDir)) {
-                if (!file.endsWith('.json')) continue;
-                const filePath = path.join(sourceDir, file);
-                let doc;
-                try {
-                    doc = resolveSource(filePath);
-                } catch (err) {
-                    // A broken reference chain elsewhere should not abort indexing.
-                    console.warn(`[adventures] skipping unindexable source ${filePath}: ${err.message}`);
-                    continue;
-                }
-                if (!doc || typeof doc._id !== 'string' || doc._id.length === 0) continue;
-                const uuid = `${COMPENDIUM_PREFIX}${packName}.${uuidClass}.${doc._id}`;
-                index.set(uuid, { doc, packName, collection });
-            }
+    for (const { filePath, packName } of iterPackJson(packsRoot)) {
+        const collection = collectionForPack(packName);
+        const uuidClass = COLLECTION_TO_UUID_CLASS[collection];
+        if (!uuidClass) continue; // adventures themselves are not referenceable content
+        let doc;
+        try {
+            doc = resolveSource(filePath);
+        } catch (err) {
+            // A broken reference chain elsewhere should not abort indexing.
+            console.warn(`[adventures] skipping unindexable source ${filePath}: ${err.message}`);
+            continue;
         }
+        if (!doc || typeof doc._id !== 'string' || doc._id.length === 0) continue;
+        const uuid = `${COMPENDIUM_PREFIX}${packName}.${uuidClass}.${doc._id}`;
+        index.set(uuid, { doc, packName, collection });
     }
     return index;
 }

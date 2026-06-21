@@ -20,6 +20,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { iterPackJson } = require('./lib/iter-pack-json.cjs');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -105,30 +109,6 @@ function normalizeName(name) {
   return String(name).trim().toLowerCase();
 }
 
-function* iterPackJson() {
-  for (const group of fs.readdirSync(PACK_SRC)) {
-    const groupPath = path.join(PACK_SRC, group);
-    if (group.startsWith('.') || group.startsWith('_')) continue;
-    if (!fs.statSync(groupPath).isDirectory()) continue;
-    for (const pack of fs.readdirSync(groupPath)) {
-      const packPath = path.join(groupPath, pack);
-      if (!fs.statSync(packPath).isDirectory()) continue;
-      if (pack.includes('.backup')) continue;
-      const sourceDir = path.join(packPath, '_source');
-      if (!fs.existsSync(sourceDir)) continue;
-      for (const file of fs.readdirSync(sourceDir)) {
-        if (!file.endsWith('.json')) continue;
-        yield {
-          filePath: path.join(sourceDir, file),
-          relPath: path.relative(REPO_ROOT, path.join(sourceDir, file)),
-          packName: pack,
-          group,
-        };
-      }
-    }
-  }
-}
-
 /**
  * Foundry's `DocumentUUIDField` rejects any id that isn't exactly 16
  * alphanumeric characters (see `isValidId` in `foundry.mjs`). An invalid
@@ -168,7 +148,7 @@ function main() {
   let totalDocs = 0;
   let totalRefStubs = 0;
 
-  for (const entry of iterPackJson()) {
+  for (const entry of iterPackJson(PACK_SRC, { repoRoot: REPO_ROOT })) {
     let doc;
     try {
       const raw = JSON.parse(fs.readFileSync(entry.filePath, 'utf8'));
