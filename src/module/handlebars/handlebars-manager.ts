@@ -90,6 +90,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/shared/accent-heading.hbs',
 
             // Acolyte sheet templates
+            'systems/wh40k-rpg/templates/actor/player/header-sidebar.hbs',
             'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',
             'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
             'systems/wh40k-rpg/templates/actor/player/body.hbs',
