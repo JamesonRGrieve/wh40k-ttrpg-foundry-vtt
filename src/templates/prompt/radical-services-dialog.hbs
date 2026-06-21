@@ -36,17 +36,11 @@
     </table>
 
     {{!-- Action buttons --}}
-    <div class="tw-flex tw-gap-2 tw-mt-4 tw-pt-3 tw-border-t tw-border-[rgba(201,162,39,0.2)]">
-        <button type="button"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]"
-                data-action="attemptRequisition"
-                {{#unless selectedServiceId}}disabled{{/unless}}>
-            <i class="fas fa-dice-d20"></i> {{localize "WH40K.RadicalServices.AttemptButton"}}
-        </button>
-        <button type="button"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]"
-                data-action="cancel">
-            <i class="fas fa-times"></i> {{localize "WH40K.RadicalServices.Cancel"}}
-        </button>
-    </div>
+    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs
+        rootClass="tw-border-[rgba(201,162,39,0.2)]"
+        confirmAction="attemptRequisition"
+        confirmIcon="fa-dice-d20"
+        confirmLabelKey="WH40K.RadicalServices.AttemptButton"
+        confirmDisabled=(eq selectedServiceId null)
+        cancelLabelKey="WH40K.RadicalServices.Cancel"}}
 </div>

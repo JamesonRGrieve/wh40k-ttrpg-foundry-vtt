@@ -34,14 +34,9 @@
         </div>
     </div>
 
-    <div class="tw-flex tw-gap-2.5 tw-px-5 tw-py-4 tw-bg-gradient-to-b tw-from-[rgba(0,0,0,0.2)] tw-to-[rgba(0,0,0,0.4)] tw-border-t tw-border-[rgba(201,162,39,0.2)]">
-        <button type="button" data-action="add" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-transition-all tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:tw-shadow-[0_6px_20px_rgba(201,162,39,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:tw-bg-gradient-to-br hover:tw-from-[#d4ad32] hover:tw-to-[#9a7818] hover:-tw-translate-y-0.5">
-            <i class="fas fa-plus"></i>
-            Add
-        </button>
-        <button type="button" data-action="cancel" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-transition-all tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)] hover:tw-bg-[rgba(255,255,255,0.1)] hover:tw-text-[rgba(255,255,255,0.9)] hover:tw-border-[rgba(255,255,255,0.25)]">
-            <i class="fas fa-times"></i>
-            Cancel
-        </button>
-    </div>
+    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs
+        rootClass="tw-border-[rgba(201,162,39,0.2)]"
+        confirmAction="add"
+        confirmIcon="fa-plus"
+        confirmLabelKey="WH40K.Skills.AddSpecialization"}}
 </form>
