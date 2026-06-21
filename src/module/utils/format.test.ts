@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatSigned } from './format.ts';
+import { capitalize, formatSigned } from './format.ts';
 
 describe('formatSigned (#280)', () => {
     it('prefixes positive numbers with +', () => {
@@ -26,5 +26,26 @@ describe('formatSigned (#280)', () => {
     it('preserves fractional values', () => {
         expect(formatSigned(2.5)).toBe('+2.5');
         expect(formatSigned(-0.5)).toBe('-0.5');
+    });
+});
+
+describe('capitalize (#358)', () => {
+    it('upper-cases only the first character', () => {
+        expect(capitalize('hello')).toBe('Hello');
+        expect(capitalize('weaponSkill')).toBe('WeaponSkill');
+    });
+
+    it('leaves the remainder of the string untouched (no lower-casing)', () => {
+        expect(capitalize('hELLO')).toBe('HELLO');
+        expect(capitalize('ABC')).toBe('ABC');
+    });
+
+    it('returns an empty string unchanged', () => {
+        expect(capitalize('')).toBe('');
+    });
+
+    it('handles single-character and non-letter leads', () => {
+        expect(capitalize('a')).toBe('A');
+        expect(capitalize('1abc')).toBe('1abc');
     });
 });

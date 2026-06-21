@@ -12,7 +12,7 @@
 
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData } from '../../rolls/roll-data.ts';
-import { getDegreeForMode, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import {
     AIM_OPTIONS,
@@ -32,6 +32,7 @@ import { availableSkillVariants, filterModifiersByVariant, type SkillVariant } f
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
 import { formatSigned } from '../../utils/format.ts';
 import { calculateTokenDistance, RANGE_BRACKETS } from '../../utils/range-calculator.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
@@ -254,21 +255,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /*  Constants                                    */
     /* -------------------------------------------- */
 
-    static DIFFICULTIES = [
-        { key: 'trivial', label: 'Trivial', modifier: 60, icon: 'fa-smile', description: 'Automatic success unless complications' },
-        { key: 'elementary', label: 'Elementary', modifier: 50, icon: 'fa-smile-beam', description: 'Almost trivial with minor effort' },
-        { key: 'simple', label: 'Simple', modifier: 40, icon: 'fa-grin-beam', description: 'Easy tasks under no pressure' },
-        { key: 'easy', label: 'Easy', modifier: 30, icon: 'fa-grin', description: 'Simple tasks with no pressure' },
-        { key: 'routine', label: 'Routine', modifier: 20, icon: 'fa-meh', description: 'Standard tasks with time' },
-        { key: 'ordinary', label: 'Ordinary', modifier: 10, icon: 'fa-smile-beam', description: 'Typical difficulty' },
-        { key: 'challenging', label: 'Challenging', modifier: 0, icon: 'fa-grimace', description: 'No modifier (baseline)', default: true },
-        { key: 'difficult', label: 'Difficult', modifier: -10, icon: 'fa-frown', description: 'Complex or contested tasks' },
-        { key: 'hard', label: 'Hard', modifier: -20, icon: 'fa-dizzy', description: 'Very challenging circumstances' },
-        { key: 'veryHard', label: 'Very Hard', modifier: -30, icon: 'fa-tired', description: 'Exceptional difficulty' },
-        { key: 'arduous', label: 'Arduous', modifier: -40, icon: 'fa-sad-tear', description: 'Punishing odds against success' },
-        { key: 'punishing', label: 'Punishing', modifier: -50, icon: 'fa-sad-cry', description: 'Verging on impossible' },
-        { key: 'hellish', label: 'Hellish', modifier: -60, icon: 'fa-skull', description: 'Near-impossible feats' },
-    ];
+    /** The difficulty ladder, derived from the canonical `WH40K.difficulties`
+     * CONFIG map joined with shared presentation (icons/descriptions). A getter
+     * so it resolves after CONFIG is populated and reflects any rebalance. */
+    static get DIFFICULTIES(): DifficultyPreset[] {
+        return buildDifficultyPresets();
+    }
 
     static WEAPON_MODIFIERS = [
         { key: 'aimHalf', label: 'Aim (Half)', value: 10, description: 'Half action aim bonus' },
@@ -573,7 +565,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const manualTotal = this._manualRollTotal;
         if (manualTotal !== null) {
             const method = resolveDegreesMethod((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
-            const success = manualTotal === 1 || (manualTotal <= finalTarget && manualTotal !== 100);
+            const success = isD100Success(manualTotal, finalTarget);
             if (success) {
                 const dos = 1 + getDegreeForMode(method, finalTarget, manualTotal);
                 rollResult = { success: true, dos, dof: 0, total: manualTotal };
@@ -1601,7 +1593,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // Manual roll - skip _calculateHit, compute success ourselves
             const target = this.rollData.modifiedTarget;
             const method = resolveDegreesMethod((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
-            this.rollData.success = manualTotal === 1 || (manualTotal <= target && manualTotal !== 100);
+            this.rollData.success = isD100Success(manualTotal, target);
             if (this.rollData.success) {
                 this.rollData.dof = 0;
                 this.rollData.dos = 1 + getDegreeForMode(method, target, manualTotal);
