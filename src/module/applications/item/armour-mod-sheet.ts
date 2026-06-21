@@ -2,6 +2,7 @@
  * @file ArmourModSheet - ApplicationV2 sheet for armour modification items
  */
 
+import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 
 interface ArmourModSystem {
@@ -21,7 +22,7 @@ interface ArmourModSystem {
  * Sheet for armour modification items.
  * Extends ContainerItemSheet to support embedded mods (if needed).
  */
-export default class ArmourModSheet extends ContainerItemSheet {
+export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSheet) {
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...ContainerItemSheet.DEFAULT_OPTIONS,
@@ -190,9 +191,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     static async #onToggleArmourType(this: ArmourModSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const type = target.dataset['type'];
         if (type === undefined || type.length === 0) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel exposes armourTypes as Set but persisted form is array
-        const system = this.item.system as unknown as { restrictions: { armourTypes: string[] | Set<string> } };
-        const current = new Set(system.restrictions.armourTypes);
+        const current = this.readSetField('restrictions.armourTypes');
 
         if (current.has(type)) {
             current.delete(type);
@@ -205,7 +204,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
             current.add('any');
         }
 
-        await this.item.update({ 'system.restrictions.armourTypes': Array.from(current) });
+        await this.writeSetField('restrictions.armourTypes', current);
     }
 
     /**
@@ -235,15 +234,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const property = target.dataset['property'];
         const list = target.dataset['list']; // "added" or "removed"
         if (property === undefined || property.length === 0 || list === undefined || list.length === 0) return;
-        const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
-        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose dynamic property indexing to TS
-        const current = new Set((this.item.system as unknown as Record<'addedProperties' | 'removedProperties', string[]>)[field]);
-
-        current.add(property);
-
-        await this.item.update({
-            [`system.${field}`]: Array.from(current),
-        });
+        await this.addToSetField(`${list}Properties`, property);
     }
 
     /**
@@ -256,14 +247,6 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const property = target.dataset['property'];
         const list = target.dataset['list']; // "added" or "removed"
         if (property === undefined || property.length === 0 || list === undefined || list.length === 0) return;
-        const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
-        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose dynamic property indexing to TS
-        const current = new Set((this.item.system as unknown as Record<'addedProperties' | 'removedProperties', string[]>)[field]);
-
-        current.delete(property);
-
-        await this.item.update({
-            [`system.${field}`]: Array.from(current),
-        });
+        await this.removeFromSetField(`${list}Properties`, property);
     }
 }

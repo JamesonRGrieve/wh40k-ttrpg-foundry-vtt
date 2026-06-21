@@ -1,9 +1,8 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
+import { makeNpcFormDialog } from './npc-form-dialog.ts';
 import ThreatCalculator from './threat-calculator.ts';
-
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 interface NPCState {
     name: string;
@@ -19,47 +18,31 @@ interface NPCState {
  * Dialog for quickly creating NPCs with auto-generated stats.
  * @extends {ApplicationV2}
  */
-export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class NPCQuickCreateDialog extends makeNpcFormDialog({
+    id: 'npc-quick-create-{id}',
+    cssClass: 'npc-quick-create-dialog',
+    window: { icon: 'fa-solid fa-user-plus' },
+    position: { width: 650, height: 700 },
+    partId: 'form',
+    template: 'systems/wh40k-rpg/templates/dialogs/npc-quick-create.hbs',
+    form: {},
+}) {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** Per-dialog action + form-handler deltas; merged with the shared base options. */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action/form handlers: framework binds `this` at call time */
     static override DEFAULT_OPTIONS = {
-        id: 'npc-quick-create-{id}',
-        classes: ['wh40k-rpg', 'npc-quick-create-dialog'],
-        tag: 'form',
-        window: {
-            icon: 'fa-solid fa-user-plus',
-            minimizable: false,
-            resizable: true,
-            contentClasses: ['standard-form'],
-        },
-        position: {
-            width: 650,
-            height: 700,
-        },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action/form handlers: framework binds `this` at call time */
         form: {
             handler: NPCQuickCreateDialog.#onSubmit,
-            submitOnChange: false,
-            closeOnSubmit: true,
         },
         actions: {
             cancel: NPCQuickCreateDialog.#onCancel,
             updatePreview: NPCQuickCreateDialog.#onUpdatePreview,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        form: {
-            template: 'systems/wh40k-rpg/templates/dialogs/npc-quick-create.hbs',
-        },
-    };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

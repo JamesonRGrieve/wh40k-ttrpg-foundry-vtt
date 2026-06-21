@@ -1,6 +1,6 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
-
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import { makeNpcFormDialog } from './npc-form-dialog.ts';
+import { calculatePartyThreat, difficultyForRatio } from './threat-utils.ts';
 
 interface DialogState {
     npc: WH40KNPC | null;
@@ -15,12 +15,37 @@ interface DifficultyRating {
 }
 
 /**
+ * GM-facing prose describing each shared difficulty band, keyed by band id.
+ * The band's thresholds / colour / label come from {@link difficultyForRatio}
+ * (the single source shared with the encounter builder, #350); these
+ * descriptions are calculator-only flavour text.
+ */
+const DIFFICULTY_DESCRIPTIONS: Record<string, string> = {
+    trivial: 'This encounter poses no real threat to the party.',
+    easy: 'The party should handle this encounter without significant resource expenditure.',
+    moderate: 'A fair challenge that will require tactical thinking and resource management.',
+    dangerous: 'A difficult encounter. Party members may take significant wounds.',
+    deadly: 'A life-threatening encounter. Party members may die or suffer critical injuries.',
+    apocalyptic: 'Near-certain TPK. Only attempt with significant advantages or preparation.',
+};
+
+/**
  * Dialog for calculating encounter difficulty against the party.
  * Analyzes active party members and compares to NPC threat rating.
  *
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
-export default class DifficultyCalculatorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
+    id: 'difficulty-calculator-{id}',
+    cssClass: 'difficulty-calculator-dialog',
+    tag: 'div',
+    // Preserves the original framework-default window chrome (no standard-form, default flags).
+    window: { title: 'WH40K.NPC.DifficultyCalculator', icon: 'fa-solid fa-calculator', minimizable: true, resizable: false, contentClasses: [] },
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts number | 'auto'
+    position: { width: 600, height: 'auto' as unknown as number },
+    partId: 'form',
+    template: 'systems/wh40k-rpg/templates/dialogs/difficulty-calculator.hbs',
+}) {
     /**
      * Internal state for the dialog.
      * @type {DialogState}
@@ -34,30 +59,11 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** Per-dialog action deltas; merged with the shared base options. */
     static override DEFAULT_OPTIONS = {
-        id: 'difficulty-calculator-{id}',
-        classes: ['wh40k-rpg', 'difficulty-calculator-dialog'],
-        tag: 'div',
-        window: {
-            title: 'WH40K.NPC.DifficultyCalculator',
-            icon: 'fa-solid fa-calculator',
-        },
-        position: {
-            width: 600,
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts number | 'auto'
-            height: 'auto' as unknown as number,
-        },
         actions: {
             // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry action handlers are invoked with the application as `this`
             updateQuantity: DifficultyCalculatorDialog.#updateQuantity,
-        },
-    };
-
-    /** @override */
-    static PARTS = {
-        form: {
-            template: 'systems/wh40k-rpg/templates/dialogs/difficulty-calculator.hbs',
         },
     };
 
@@ -125,8 +131,8 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         }
         const partyLevel = partySize > 0 ? Math.round(totalRank / partySize) : 1;
 
-        // Party threat = size × rank × 2 (baseline formula)
-        const partyThreat = partySize * partyLevel * 2;
+        // Party threat — single-sourced baseline formula (#350).
+        const partyThreat = calculatePartyThreat(partySize, partyLevel);
 
         // NPC threat
         const npc = this.#state.npc;
@@ -172,57 +178,20 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /* -------------------------------------------- */
 
     /**
-     * Get difficulty rating from threat ratio.
+     * Get difficulty rating from threat ratio. Thresholds, colour, and label key
+     * come from the shared {@link difficultyForRatio} band table (#350); the
+     * localized label and calculator-only description are resolved here.
      * @param {number} ratio - Threat ratio (NPC threat / Party threat).
      * @returns {DifficultyRating} Difficulty object with key, label, color, description.
      * @private
      */
     _getDifficultyRating(ratio: number): DifficultyRating {
-        if (ratio < 0.25) {
-            return {
-                key: 'trivial',
-                label: 'Trivial',
-                color: '#4caf50',
-                description: 'This encounter poses no real threat to the party.',
-            };
-        }
-        if (ratio < 0.5) {
-            return {
-                key: 'easy',
-                label: 'Easy',
-                color: '#8bc34a',
-                description: 'The party should handle this encounter without significant resource expenditure.',
-            };
-        }
-        if (ratio < 0.75) {
-            return {
-                key: 'moderate',
-                label: 'Moderate',
-                color: '#ff9800',
-                description: 'A fair challenge that will require tactical thinking and resource management.',
-            };
-        }
-        if (ratio < 1) {
-            return {
-                key: 'dangerous',
-                label: 'Dangerous',
-                color: '#ff5722',
-                description: 'A difficult encounter. Party members may take significant wounds.',
-            };
-        }
-        if (ratio < 1.5) {
-            return {
-                key: 'deadly',
-                label: 'Deadly',
-                color: '#f44336',
-                description: 'A life-threatening encounter. Party members may die or suffer critical injuries.',
-            };
-        }
+        const band = difficultyForRatio(ratio);
         return {
-            key: 'apocalyptic',
-            label: 'Apocalyptic',
-            color: '#9c27b0',
-            description: 'Near-certain TPK. Only attempt with significant advantages or preparation.',
+            key: band.key,
+            label: game.i18n.localize(band.label),
+            color: band.color,
+            description: DIFFICULTY_DESCRIPTIONS[band.key] ?? '',
         };
     }
 

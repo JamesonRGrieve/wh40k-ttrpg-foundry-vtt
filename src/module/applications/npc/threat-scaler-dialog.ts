@@ -1,8 +1,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
+import { makeNpcFormDialog } from './npc-form-dialog.ts';
 import ThreatCalculator, { type NPCSystemData } from './threat-calculator.ts';
-
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 interface CharacteristicChange {
     current: number;
@@ -38,32 +37,24 @@ interface ScalerState {
  * Dialog for scaling an existing NPC's stats to a new threat level.
  * @extends {ApplicationV2}
  */
-export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class NPCThreatScalerDialog extends makeNpcFormDialog({
+    id: 'npc-threat-scaler-{id}',
+    cssClass: 'npc-threat-scaler-dialog',
+    window: { title: 'WH40K.NPC.ScaleThreat', icon: 'fa-solid fa-chart-line' },
+    position: { width: 550, height: 650 },
+    partId: 'form',
+    template: 'systems/wh40k-rpg/templates/dialogs/threat-scaler.hbs',
+    form: {},
+}) {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** Per-dialog action + form-handler deltas; merged with the shared base options. */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 form/action handlers accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
-        id: 'npc-threat-scaler-{id}',
-        classes: ['wh40k-rpg', 'npc-threat-scaler-dialog'],
-        tag: 'form',
-        window: {
-            title: 'WH40K.NPC.ScaleThreat',
-            icon: 'fa-solid fa-chart-line',
-            minimizable: false,
-            resizable: true,
-            contentClasses: ['standard-form'],
-        },
-        position: {
-            width: 550,
-            height: 650,
-        },
         form: {
             handler: NPCThreatScalerDialog.#onSubmit,
-            submitOnChange: false,
-            closeOnSubmit: true,
         },
         actions: {
             cancel: NPCThreatScalerDialog.#onCancel,
@@ -73,15 +64,6 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         },
     };
     /* eslint-enable @typescript-eslint/unbound-method */
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        form: {
-            template: 'systems/wh40k-rpg/templates/dialogs/threat-scaler.hbs',
-        },
-    };
 
     /* -------------------------------------------- */
     /*  Properties                                  */
