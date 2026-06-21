@@ -15,8 +15,8 @@
  * See GitHub issue #91.
  */
 
-import { MUTANT_STARTING_CORRUPTION } from '../../rules/chaos-backgrounds.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { MUTANT_STARTING_CORRUPTION } from '../../rules/chaos-backgrounds.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

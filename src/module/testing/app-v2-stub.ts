@@ -27,8 +27,10 @@
  * `DialogV2.prompt` spy varies per case), so it is not a build-time option here.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructor signatures; `unknown[]` / `never[]` are rejected by the mixin-class spec.
+/* eslint-disable @typescript-eslint/no-explicit-any -- mixin: TS2545 requires `any[]` rest for mixin-class constructor signatures; `unknown[]` / `never[]` are rejected by the mixin-class spec. */
+// biome-ignore lint/suspicious/noExplicitAny: mixin - TS2545 requires `any[]` rest for mixin-class constructor signatures
 export type Constructor<T = object> = new (...args: any[]) => T;
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /** Empty stand-in for `foundry.applications.api.ApplicationV2`. */
 export class FakeApplicationV2 {}
@@ -76,6 +78,7 @@ export function buildApplicationV2Api(opts: BuildApplicationV2ApiOptions = {}): 
 
 /** Typed view over `globalThis.foundry` for the merge-install path. */
 interface FoundryGlobalView {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: shape of the Foundry `foundry` global being stubbed (applications/api namespaces are open bags)
     foundry?: { applications?: { api?: Record<string, unknown> } & Record<string, unknown> } & Record<string, unknown>;
 }
 
@@ -86,10 +89,16 @@ interface FoundryGlobalView {
  */
 export function installApplicationV2Stub(opts: BuildApplicationV2ApiOptions = {}): ApplicationV2Api {
     const api = buildApplicationV2Api(opts);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: fvtt-types declares `foundry` as a non-optional global; this typed view lets the test reach/merge it without a `Record` cast.
-    const view = globalThis as typeof globalThis & FoundryGlobalView;
-    const foundry = view.foundry ?? (view.foundry = {});
-    const applications = foundry.applications ?? (foundry.applications = {});
-    applications.api = { ...applications.api, ...api };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: stubbing the Foundry `foundry` global (fvtt-types declares it non-optional) in a test harness; cast to a writable optional view so the stub can seed/merge it.
+    const view = globalThis as unknown as FoundryGlobalView;
+    const existingFoundry = view.foundry ?? {};
+    const existingApplications = existingFoundry.applications ?? {};
+    view.foundry = {
+        ...existingFoundry,
+        applications: {
+            ...existingApplications,
+            api: { ...existingApplications.api, ...api },
+        },
+    };
     return api;
 }

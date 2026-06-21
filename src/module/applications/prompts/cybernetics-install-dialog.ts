@@ -20,9 +20,9 @@
  * regress the other six lines.
  */
 
+import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { type CyberneticCraftsmanship, type CyberneticInstallSite, composeInstallTest, resolveInstall, rollRecoveryTime } from '../../rules/cybernetics.ts';
 import { rollDifficulties } from '../../rules/difficulties.ts';
-import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

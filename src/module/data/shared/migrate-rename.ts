@@ -15,6 +15,8 @@
  *
  * In every mode the legacy key is deleted once copied.
  */
+import type { RawSource } from './raw-source.ts';
+
 export type RenameGuard = 'if-target-unset' | 'overwrite';
 
 export interface RenameKeysOptions {
@@ -28,7 +30,7 @@ export interface RenameKeysOptions {
  * @param map A mapping from legacy key → current key.
  * @param opts Guard options controlling whether an existing target is preserved.
  */
-export function renameKeys(source: Record<string, unknown>, map: Record<string, string>, opts: RenameKeysOptions = {}): void {
+export function renameKeys(source: RawSource, map: Record<string, string>, opts: RenameKeysOptions = {}): void {
     const guard = opts.guard ?? 'if-target-unset';
     for (const [legacyKey, currentKey] of Object.entries(map)) {
         const shouldRename = guard === 'if-target-unset' ? legacyKey in source && source[currentKey] === undefined : source[legacyKey] !== undefined;

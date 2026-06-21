@@ -11,9 +11,9 @@
  * See GitHub issue #85.
  */
 
+import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import type { BindingStrength } from '../../rules/daemon-weapon.ts';
 import { DAEMONHOST_TIERS, type DaemonhostTier } from '../../rules/daemonhost.ts';
-import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
