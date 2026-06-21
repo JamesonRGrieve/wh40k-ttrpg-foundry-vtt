@@ -34,7 +34,7 @@
  */
 
 import { nonNegInt } from './_num.ts';
-import { MAX_FEAR_RATING } from './fear.ts';
+import { clampFearRating } from './fear.ts';
 
 /* -------------------------------------------- */
 /*  Smite the Unholy — Fate-spend auto-pass     */
@@ -105,7 +105,7 @@ export interface SmiteMeleeHitResult {
  * rider itself only ever adds, never subtracts.
  */
 export function applySmiteTheUnholyBonus(input: SmiteMeleeHitInput): SmiteMeleeHitResult {
-    const rating = Math.max(0, Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(input.targetFearRating) ? input.targetFearRating : 0)));
+    const rating = clampFearRating(input.targetFearRating);
     const baseDamage = nonNegInt(input.baseDamage);
     const basePenetration = nonNegInt(input.basePenetration);
     if (rating === 0) {
