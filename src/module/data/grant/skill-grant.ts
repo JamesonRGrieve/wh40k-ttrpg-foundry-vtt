@@ -1,4 +1,6 @@
+import { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import BaseGrantData, { type GrantApplicationResult, type GrantApplyOptions, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
 
 /** Specialist-skill sub-entry on the actor schema. */
@@ -66,16 +68,22 @@ export default class SkillGrantData extends BaseGrantData {
 
     /**
      * Valid skill training levels.
+     *
+     * `order` is the numeric rank each level maps to and is the SINGLE consumer
+     * of {@link BaseSystemConfig.skillLevelToRank} (#340) — the same canonical
+     * level→rank table the actor templates / config helper use — so the grant and
+     * the sheet can never disagree on an alias's rank. `label` (i18n key) and
+     * `bonus` (display offset) are grant-presentation-only and stay local.
      * @type {object}
      */
     static TRAINING_LEVELS: Record<string, { order: number; label: string; bonus: number } | undefined> = {
-        known: { order: 1, label: 'WH40K.Skill.Level.Known', bonus: 0 },
-        trained: { order: 1, label: 'WH40K.Skill.Level.Trained', bonus: 0 }, // RT/DH1e/DW rank 1 alias
-        plus10: { order: 2, label: 'WH40K.Skill.Level.Plus10', bonus: 10 }, // RT/DH1e/DW rank 2 alias
-        experienced: { order: 3, label: 'WH40K.Skill.Level.Experienced', bonus: 20 },
-        plus20: { order: 3, label: 'WH40K.Skill.Level.Plus20', bonus: 20 }, // RT/DH1e/DW rank 3 alias
-        veteran: { order: 4, label: 'WH40K.Skill.Level.Veteran', bonus: 30 },
-        plus30: { order: 4, label: 'WH40K.Skill.Level.Plus30', bonus: 30 }, // DH2e/BC/OW rank 4 alias
+        known: { order: BaseSystemConfig.skillLevelToRank('known'), label: 'WH40K.Skill.Level.Known', bonus: 0 },
+        trained: { order: BaseSystemConfig.skillLevelToRank('trained'), label: 'WH40K.Skill.Level.Trained', bonus: 0 }, // RT/DH1e/DW rank 1 alias
+        plus10: { order: BaseSystemConfig.skillLevelToRank('plus10'), label: 'WH40K.Skill.Level.Plus10', bonus: 10 }, // RT/DH1e/DW rank 2 alias
+        experienced: { order: BaseSystemConfig.skillLevelToRank('experienced'), label: 'WH40K.Skill.Level.Experienced', bonus: 20 },
+        plus20: { order: BaseSystemConfig.skillLevelToRank('plus20'), label: 'WH40K.Skill.Level.Plus20', bonus: 20 }, // RT/DH1e/DW rank 3 alias
+        veteran: { order: BaseSystemConfig.skillLevelToRank('veteran'), label: 'WH40K.Skill.Level.Veteran', bonus: 30 },
+        plus30: { order: BaseSystemConfig.skillLevelToRank('plus30'), label: 'WH40K.Skill.Level.Plus30', bonus: 30 }, // DH2e/BC/OW rank 4 alias
     };
 
     /** Property declarations */
@@ -135,7 +143,7 @@ export default class SkillGrantData extends BaseGrantData {
                 continue;
             }
 
-            const schemaKey = this._getSchemaSkillKey(skillConfig.key);
+            const schemaKey = this._getSchemaSkillKey(skillConfig.key, actor);
             const specialization = skillConfig.specialization;
 
             if (schemaKey === null) {
@@ -285,80 +293,25 @@ export default class SkillGrantData extends BaseGrantData {
     }
 
     /**
-     * Get the schema skill key from various input formats.
+     * Resolve a grant's skill identifier to a schema key, validating it exists on
+     * the actor. The identifier may be either an already-canonical schema key
+     * (e.g. `'commonLore'`) or a display name (`'Common Lore'`); name resolution
+     * routes through {@link SkillKeyHelper.nameToKey} — the canonical resolver
+     * derived from SKILL_DEFINITIONS (#279) — instead of a stale local table that
+     * omitted athletics/linguistics/navigate/parry/stealth, so origin-path grants
+     * for those five silently failed to resolve. Returns the resolved key only
+     * when it is a real skill on the actor's schema, else null.
      * @private
      */
-    _getSchemaSkillKey(key: string): string | null {
+    _getSchemaSkillKey(key: string, actor: WH40KBaseActor): string | null {
         if (!key) return null;
-
-        // Normalize the key
-        const normalized = key.toLowerCase().replace(/[\s-]/g, '');
-
-        // Map of common variants to schema keys
-        const keyMap: Record<string, string | undefined> = {
-            // Standard skills
-            'acrobatics': 'acrobatics',
-            'awareness': 'awareness',
-            'barter': 'barter',
-            'blather': 'blather',
-            'carouse': 'carouse',
-            'charm': 'charm',
-            'chemuse': 'chemUse',
-            'chem-use': 'chemUse',
-            'climb': 'climb',
-            'command': 'command',
-            'commerce': 'commerce',
-            'concealment': 'concealment',
-            'contortionist': 'contortionist',
-            'deceive': 'deceive',
-            'demolition': 'demolition',
-            'disguise': 'disguise',
-            'dodge': 'dodge',
-            'evaluate': 'evaluate',
-            'gamble': 'gamble',
-            'inquiry': 'inquiry',
-            'interrogation': 'interrogation',
-            'intimidate': 'intimidate',
-            'invocation': 'invocation',
-            'literacy': 'literacy',
-            'logic': 'logic',
-            'medicae': 'medicae',
-            'psyniscience': 'psyniscience',
-            'scrutiny': 'scrutiny',
-            'search': 'search',
-            'security': 'security',
-            'shadowing': 'shadowing',
-            'silentmove': 'silentMove',
-            'silent move': 'silentMove',
-            'sleightofhand': 'sleightOfHand',
-            'sleight of hand': 'sleightOfHand',
-            'survival': 'survival',
-            'swim': 'swim',
-            'tracking': 'tracking',
-            'wrangling': 'wrangling',
-            // Specialist skills
-            'ciphers': 'ciphers',
-            'cipher': 'ciphers',
-            'commonlore': 'commonLore',
-            'common lore': 'commonLore',
-            'drive': 'drive',
-            'forbiddenlore': 'forbiddenLore',
-            'forbidden lore': 'forbiddenLore',
-            'navigation': 'navigation',
-            'performer': 'performer',
-            'pilot': 'pilot',
-            'scholasticlore': 'scholasticLore',
-            'scholastic lore': 'scholasticLore',
-            'secrettongue': 'secretTongue',
-            'secret tongue': 'secretTongue',
-            'speaklanguage': 'speakLanguage',
-            'speak language': 'speakLanguage',
-            'techuse': 'techUse',
-            'tech-use': 'techUse',
-            'trade': 'trade',
-        };
-
-        return keyMap[normalized] ?? keyMap[key.toLowerCase()] ?? null;
+        const skills = skillSystem(actor).skills;
+        // Already a canonical schema key (the common case for stored grants).
+        if (Object.hasOwn(skills, key)) return key;
+        // Otherwise treat it as a display name and resolve through the catalog.
+        const schemaKey = SkillKeyHelper.nameToKey(key);
+        if (schemaKey === '') return null;
+        return Object.hasOwn(skills, schemaKey) ? schemaKey : null;
     }
 
     /**
@@ -373,50 +326,50 @@ export default class SkillGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payload + per-skill restore record */
+    /* eslint-disable-next-line no-restricted-syntax -- boundary: per-skill restore record shape varies */
     override async reverse(actor: WH40KBaseActor, appliedState: Record<string, SkillAppliedState>): Promise<{ skills: Array<Record<string, unknown>> }> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: per-skill restore record shape varies
-        const restoreData: { skills: Array<Record<string, unknown>> } = { skills: [] };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
-        const updates: Record<string, unknown> = {};
         const system = skillSystem(actor);
 
-        for (const [key, state] of Object.entries(appliedState)) {
-            if (!state.schemaKey) continue;
+        // Per-field delta mapper: created specialist entries are spliced out;
+        // upgraded skills/entries revert to the previous level's advance. Entries
+        // that were neither created nor upgraded (or carry no schemaKey) are
+        // skipped. The shared merge/apply/guard tail lives in
+        // BaseGrantData._reverseWithDeltaMap (#345).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-skill restore record shape varies
+        const skills = await this._reverseWithDeltaMap<SkillAppliedState, Record<string, unknown>>(actor, appliedState, (key, state) => {
+            if (!state.schemaKey) return null;
 
             if (state.created === true && state.specialization !== undefined) {
                 // Remove created specialist entry
                 const currentSkill = system.skills[state.schemaKey];
-                if (currentSkill?.entries !== undefined && state.entryIndex !== undefined) {
-                    const newEntries: SkillEntry[] = [...currentSkill.entries];
-                    newEntries.splice(state.entryIndex, 1);
-                    updates[`system.skills.${state.schemaKey}.entries`] = newEntries;
-                    restoreData.skills.push({ key, removed: true, specialization: state.specialization });
-                }
-            } else if (state.upgraded === true && state.previousLevel !== null && state.previousLevel !== '') {
+                if (currentSkill?.entries === undefined || state.entryIndex === undefined) return null;
+                const newEntries: SkillEntry[] = [...currentSkill.entries];
+                newEntries.splice(state.entryIndex, 1);
+                return {
+                    deltas: { [`system.skills.${state.schemaKey}.entries`]: newEntries },
+                    restore: { key, removed: true, specialization: state.specialization },
+                };
+            }
+
+            if (state.upgraded === true && state.previousLevel !== null && state.previousLevel !== '') {
                 // Revert to previous level
                 const levelUpdates = this._getLevelUpdates(state.previousLevel);
-
-                if (state.specialization !== undefined && state.entryIndex !== undefined) {
-                    // Specialist skill entry
-                    for (const [field, value] of Object.entries(levelUpdates)) {
-                        updates[`system.skills.${state.schemaKey}.entries.${state.entryIndex}.${field}`] = value;
-                    }
-                } else {
-                    // Standard skill
-                    for (const [field, value] of Object.entries(levelUpdates)) {
-                        updates[`system.skills.${state.schemaKey}.${field}`] = value;
-                    }
+                const pathPrefix =
+                    state.specialization !== undefined && state.entryIndex !== undefined
+                        ? `system.skills.${state.schemaKey}.entries.${state.entryIndex}`
+                        : `system.skills.${state.schemaKey}`;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
+                const deltas: Record<string, unknown> = {};
+                for (const [field, value] of Object.entries(levelUpdates)) {
+                    deltas[`${pathPrefix}.${field}`] = value;
                 }
-                restoreData.skills.push({ key, reverted: true, previousLevel: state.previousLevel });
+                return { deltas, restore: { key, reverted: true, previousLevel: state.previousLevel } };
             }
-        }
 
-        if (Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
+            return null;
+        });
 
-        return restoreData;
+        return { skills };
     }
 
     /** @inheritDoc */
@@ -479,14 +432,12 @@ export default class SkillGrantData extends BaseGrantData {
         // `min(originPathRank + advance, 4)` on every prepareDerivedData run,
         // so writing the boolean flags directly is clobbered immediately.
         // Persist the numeric `advance` instead, which is the field
-        // _prepareSkills reads from.
-        const advanceByLevel: Record<string, number> = {
-            trained: 1,
-            plus10: 2,
-            plus20: 3,
-            plus30: 4,
-        };
-        return { advance: advanceByLevel[level] ?? 0 };
+        // _prepareSkills reads from. The level→rank mapping is the canonical
+        // BaseSystemConfig.skillLevelToRank table (#340) — same one the sheet /
+        // actor templates rank skills by — so the grant and the sheet agree on
+        // every alias (known/experienced/veteran included, which the old local
+        // table dropped to 0).
+        return { advance: BaseSystemConfig.skillLevelToRank(level) };
     }
 
     /** @inheritDoc */

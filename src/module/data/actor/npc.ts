@@ -3,6 +3,7 @@ import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
+import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { computeMovement } from '../shared/movement-math.ts';
 import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
@@ -1007,7 +1008,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Prepare characteristic totals and bonuses.
      * @protected
      */
-    // TODO(dry): this + _prepareMovement/getRollData/_toInt/#migrateSize/#migrateWounds duplicate data/actor/templates/creature.ts. Extract shared statics (parameterize the advance term and Math.max floors).
+    // TODO(dry): this + _prepareMovement/getRollData/_toInt duplicate data/actor/templates/creature.ts. Extract shared statics (parameterize the advance term and Math.max floors). #347 already shared the size clamp + per-field int coercion (data/shared/field-coercion.ts).
     _prepareCharacteristics(): void {
         for (const [, char] of Object.entries(this.characteristics)) {
             // total = base + modifier; bonus = unnatural-adjusted tens digit (no advance term for NPCs).
@@ -1120,8 +1121,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateSize(source: Record<string, unknown>): void {
         if (source['size'] !== undefined) {
-            const sizeInt = this._toInt(source['size'], 4);
-            source['size'] = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
+            source['size'] = clampSize(this._toInt(source['size'], 4));
         }
     }
 
@@ -1134,15 +1134,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         if (typeof source['wounds'] === 'object' && source['wounds'] !== null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: source['wounds'] is untyped legacy migration data
             const wounds = source['wounds'] as Record<string, unknown>;
-            if (wounds['max'] !== undefined) {
-                wounds['max'] = this._toInt(wounds['max'], 10);
-            }
-            if (wounds['value'] !== undefined) {
-                wounds['value'] = this._toInt(wounds['value'], 10);
-            }
-            if (wounds['critical'] !== undefined) {
-                wounds['critical'] = this._toInt(wounds['critical'], 0);
-            }
+            coerceIntFields(wounds, ['max', 'value', 'critical'], { max: 10, value: 10, critical: 0 });
         }
     }
 
@@ -1152,9 +1144,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateThreatLevel(source: Record<string, unknown>): void {
-        if (source['threatLevel'] !== undefined) {
-            source['threatLevel'] = this._toInt(source['threatLevel'], 5);
-        }
+        coerceIntFields(source, ['threatLevel'], { threatLevel: 5 });
     }
 
     /**
