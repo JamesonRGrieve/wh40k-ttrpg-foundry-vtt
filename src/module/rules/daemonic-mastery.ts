@@ -10,6 +10,8 @@
  * modifier breakdown for chat-card display.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export interface DaemonicMasteryFactor {
     label: string;
     /** Positive helps the player; negative hinders. */
@@ -38,7 +40,7 @@ export interface DaemonicMasteryResult {
 
 export function buildDaemonicMasteryTest(input: DaemonicMasteryInput): DaemonicMasteryResult {
     const breakdown: { label: string; value: number }[] = [];
-    breakdown.push({ label: 'Willpower', value: Math.max(0, Math.trunc(input.willpowerTotal)) });
+    breakdown.push({ label: 'Willpower', value: nonNegInt(input.willpowerTotal) });
     for (const factor of input.factors) {
         if (factor.modifier !== 0) breakdown.push({ label: factor.label, value: factor.modifier });
     }

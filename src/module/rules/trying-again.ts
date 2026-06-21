@@ -10,6 +10,8 @@
  * actor has already attempted this skill in the current scene.
  */
 
+import { nonNegInt } from './_num.ts';
+
 /** Skills that RAW recommend cannot be retried without circumstance change. */
 export const NO_RETRY_SKILLS: ReadonlySet<string> = new Set(['inquiry', 'awareness', 'logic', 'forbiddenLore', 'scholasticLore', 'commonLore']);
 
@@ -31,7 +33,7 @@ export interface RetryAdvice {
  *   already rolled in the current scene.
  */
 export function getTryAgainAdvice(skillKey: string, previousAttempts: number): RetryAdvice {
-    const attempts = Math.max(0, Math.trunc(previousAttempts));
+    const attempts = nonNegInt(previousAttempts);
     if (attempts === 0) {
         return { blocksByConvention: false, cumulativePenalty: 0, hint: '' };
     }

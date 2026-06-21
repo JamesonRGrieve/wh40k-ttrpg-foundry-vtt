@@ -10,10 +10,12 @@
  * 10 and, if so, the target value for the test.
  */
 
+import { nonNegInt } from './_num.ts';
+
 /** Returns the number of malignancy-test thresholds crossed between old → new. */
 export function malignancyThresholdsCrossed(oldCorruption: number, newCorruption: number): number {
-    const a = Math.max(0, Math.trunc(oldCorruption));
-    const b = Math.max(0, Math.trunc(newCorruption));
+    const a = nonNegInt(oldCorruption);
+    const b = nonNegInt(newCorruption);
     if (b <= a) return 0;
     return Math.floor(b / 10) - Math.floor(a / 10);
 }
@@ -26,8 +28,8 @@ export function malignancyThresholdsCrossed(oldCorruption: number, newCorruption
  * @param corruption current Corruption Points.
  */
 export function getMalignancyTestTarget(willpowerTotal: number, corruption: number): number {
-    const wp = Math.max(0, Math.trunc(willpowerTotal));
-    const corr = Math.max(0, Math.trunc(corruption));
+    const wp = nonNegInt(willpowerTotal);
+    const corr = nonNegInt(corruption);
     const penalty = Math.floor(corr / 10) * 10;
     return Math.max(0, wp - penalty);
 }

@@ -14,6 +14,8 @@
  * are follow-up scope for #65.
  */
 
+import { nonNegInt } from './_num.ts';
+
 /** Maximum canonical Fear rating per RAW (Fear 4 is the highest tier). */
 export const MAX_FEAR_RATING = 4;
 
@@ -41,7 +43,7 @@ export interface FearTestResult {
 export function resolveFearTest(input: FearTestInput): FearTestResult {
     const rating = Math.max(0, Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(input.fearRating) ? input.fearRating : 0)));
     if (rating === 0) return { target: input.willpowerTotal, isNoOp: true };
-    const wp = Math.max(0, Math.trunc(input.willpowerTotal));
+    const wp = nonNegInt(input.willpowerTotal);
     return { target: Math.max(0, wp - getFearTestPenalty(rating)), isNoOp: false };
 }
 
