@@ -9,44 +9,11 @@
 // Direction: this number rises as templates adopt per-system styling.
 // The ratchet asserts it cannot fall.
 //
-// Output: prints `<adopted>/<total>` to stdout. Writes
-// `.theme-coverage.json` with full breakdown.
+// Output: prints `<adopted>/<total>` to stdout. Writes `.theme-coverage.json`
+// with full breakdown. The scan (and the canonical system-id list) lives in
+// scripts/lib/scan-theme.mjs, shared with the ratchet + update scripts.
 
-import { readFileSync, writeFileSync } from 'node:fs';
-import { execSync } from 'node:child_process';
+import { writeReport } from './lib/scan-theme.mjs';
 
-const SYSTEM_IDS = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'];
-const variantPattern = new RegExp(
-    `\\b(${SYSTEM_IDS.join('|')}):tw-`,
-);
-
-const templatePaths = execSync('find src/templates -type f -name "*.hbs"', {
-    encoding: 'utf8',
-}).trim().split('\n').filter(Boolean);
-
-let adopted = 0;
-const adoptedTemplates = [];
-const perSystemHits = Object.fromEntries(SYSTEM_IDS.map((id) => [id, 0]));
-
-for (const path of templatePaths) {
-    const text = readFileSync(path, 'utf8');
-    if (!variantPattern.test(text)) continue;
-    adopted++;
-    adoptedTemplates.push(path);
-    for (const id of SYSTEM_IDS) {
-        const re = new RegExp(`\\b${id}:tw-`, 'g');
-        const matches = text.match(re);
-        if (matches) perSystemHits[id] += matches.length;
-    }
-}
-
-const report = {
-    generatedAt: new Date().toISOString(),
-    total: templatePaths.length,
-    adopted,
-    perSystemHits,
-    adoptedTemplates,
-};
-
-writeFileSync('.theme-coverage.json', JSON.stringify(report, null, 2) + '\n');
-console.log(`${adopted}/${templatePaths.length}`);
+const { adopted, total } = writeReport();
+console.log(`${adopted}/${total}`);

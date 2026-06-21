@@ -7,30 +7,10 @@
 // can be removed.
 //
 // Output: prints the count to stdout. Writes `.animation-coverage.json` for
-// the ratchet to compare against `.animation-baseline`.
+// the ratchet to compare against `.animation-baseline`. The scan itself lives
+// in scripts/lib/scan-animation.mjs (shared with the ratchet + update scripts).
 
-import { readFileSync, writeFileSync } from 'node:fs';
-import { walkFiles } from './lib/walk.mjs';
+import { writeReport } from './lib/scan-animation.mjs';
 
-// The legacy monolith was exploded into per-component files under src/css/**.
-// Scan every legacy CSS file (everything except the entry shim) for
-// `animation:` and `animation-name:` declarations.
-const SOURCES = [...walkFiles('src/css', { ext: '.css' })]
-    .filter((p) => p !== 'src/css/entry.css')
-    .sort();
-
-let count = 0;
-for (const path of SOURCES) {
-    const text = readFileSync(path, 'utf8');
-    const matches = text.match(/^\s*animation(?:-name)?\s*:/gm) ?? [];
-    count += matches.length;
-}
-
-const report = {
-    generatedAt: new Date().toISOString(),
-    sources: SOURCES,
-    animationDeclarations: count,
-};
-
-writeFileSync('.animation-coverage.json', JSON.stringify(report, null, 2) + '\n');
-console.log(count);
+const { animationDeclarations } = writeReport();
+console.log(animationDeclarations);
