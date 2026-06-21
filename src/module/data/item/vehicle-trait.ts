@@ -1,18 +1,20 @@
-import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import VehicleStatModifiersTemplate, { type VehicleStatModifiers } from '../shared/vehicle-stat-modifiers-template.ts';
 
 /**
  * Data model for Vehicle Trait items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
+ * @mixes VehicleStatModifiersTemplate
  */
-export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTemplate) {
+export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTemplate, VehicleStatModifiersTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare descriptionText: string;
-    declare modifiers: { speed: number; manoeuvrability: number; armour: number; integrity: number };
+    // modifiers (vehicle-stat block + hasModifiers/modifiersList) from VehicleStatModifiersTemplate.
+    declare modifiers: VehicleStatModifiers;
     declare hasLevel: boolean;
     declare level: number | null;
     declare notes: string;
@@ -29,13 +31,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
             // Plain text description (for search/tooltips)
             descriptionText: new fields.StringField({ required: false, initial: '', blank: true }),
 
-            // Stat modifiers (CRITICAL - applies to vehicle!)
-            modifiers: new fields.SchemaField({
-                speed: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                manoeuvrability: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                armour: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                integrity: new fields.NumberField({ required: true, initial: 0, integer: true }),
-            }),
+            // Stat modifiers (4-field block) come from VehicleStatModifiersTemplate.
 
             // Does this trait have a level?
             hasLevel: new fields.BooleanField({ required: true, initial: false }),
@@ -50,33 +46,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /**
-     * Has any non-zero modifiers?
-     * @type {boolean}
-     */
-    get hasModifiers(): boolean {
-        return Object.values(this.modifiers).some((v) => v !== 0);
-    }
-
-    /**
-     * Get modifiers as a formatted list.
-     * @type {object[]}
-     */
-    get modifiersList(): Array<{ key: string; label: string; value: number; formatted: string }> {
-        const list: Array<{ key: string; label: string; value: number; formatted: string }> = [];
-        for (const [key, value] of Object.entries(this.modifiers)) {
-            if (value !== 0) {
-                const label = game.i18n.localize(`WH40K.VehicleStat.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
-                list.push({
-                    key,
-                    label,
-                    value,
-                    formatted: `${formatSigned(value)}`,
-                });
-            }
-        }
-        return list;
-    }
+    // hasModifiers / modifiersList are inherited from VehicleStatModifiersTemplate.
 
     /**
      * Get the full name including level.
