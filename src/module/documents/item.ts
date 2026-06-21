@@ -1,5 +1,4 @@
 import { identifierFromNameIfBlank } from '../data/fields/identifier-utils.ts';
-import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import {
     deltaFromModifiers,
     originDeltaFlagPath,
@@ -10,6 +9,7 @@ import {
 } from '../origin-grant-ledger.ts';
 import { applyRollModeWhispers, getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
 import type { WH40KItemSystemData } from '../types/global.d.ts';
+import { capitalize } from '../utils/format.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 import { WH40KItemContainer } from './item-container.ts';
@@ -976,7 +976,7 @@ export class WH40KItem extends WH40KItemContainer {
         if (modifiers.characteristics !== undefined) {
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
-                    const charName = key.charAt(0).toUpperCase() + key.slice(1);
+                    const charName = capitalize(key);
                     preview.characteristics.push({
                         name: charName,
                         value: value > 0 ? `+${value}` : value,
