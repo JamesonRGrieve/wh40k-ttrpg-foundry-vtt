@@ -1,40 +1,19 @@
 #!/usr/bin/env node
 // Ratchet for `!important` declarations remaining in `tailwind/*.js`.
 //
-// Reads `.important-baseline` and regenerates `.important-coverage.json`.
-// Fails if the count has risen above the baseline. Run
-// `pnpm important:ratchet:update` to lower the baseline after a port that
-// removes !important declarations (typically: porting a template's
-// consumption to inline `tw-*` utilities and deleting the matching plugin
-// rule).
+// Reads `.important-baseline` and regenerates `.important-coverage.json` via
+// the shared scan in scripts/lib/scan-important.mjs. Fails if the count has
+// risen above the baseline. Run `pnpm important:ratchet:update` to lower the
+// baseline after a port that removes !important declarations (typically:
+// porting a template's consumption to inline `tw-*` utilities and deleting the
+// matching plugin rule).
 
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { writeReport } from './lib/scan-important.mjs';
 
-const COVERAGE = '.important-coverage.json';
 const BASELINE = '.important-baseline';
 
-const SOURCES = readdirSync('tailwind')
-    .filter((f) => f.endsWith('.js'))
-    .map((f) => join('tailwind', f))
-    .sort();
-
-const perFile = {};
-let current = 0;
-for (const path of SOURCES) {
-    const text = readFileSync(path, 'utf8');
-    const count = (text.match(/!important/g) ?? []).length;
-    perFile[path] = count;
-    current += count;
-}
-writeFileSync(
-    COVERAGE,
-    JSON.stringify(
-        { generatedAt: new Date().toISOString(), sources: SOURCES, perFile, totalImportant: current },
-        null,
-        2,
-    ) + '\n',
-);
+const { totalImportant: current } = writeReport();
 
 if (!existsSync(BASELINE)) {
     console.error(`No ${BASELINE} found. Run \`pnpm important:ratchet:update\` once to seed it.`);
