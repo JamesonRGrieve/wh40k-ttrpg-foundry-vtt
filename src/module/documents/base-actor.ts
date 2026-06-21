@@ -7,6 +7,7 @@ import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shar
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
+import { clampDisposition } from '../rules/disposition.ts';
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
@@ -252,7 +253,7 @@ export class WH40KBaseActor extends Actor {
         // eslint-disable-next-line no-restricted-syntax -- boundary: disposition lives on npc.ts only
         const disposition = (this.system as { disposition?: { value: number } }).disposition;
         if (!disposition) return;
-        const next = Math.max(-3, Math.min(3, disposition.value + Math.trunc(delta)));
+        const next = clampDisposition(disposition.value + Math.trunc(delta));
         await this.update({ 'system.disposition.value': next });
     }
 

@@ -1,5 +1,33 @@
 import { describe, expect, it } from 'vitest';
-import { DISPOSITION_LABELS, getDispositionModifier, getInteractionCap, labelForDisposition, resolveInteractionDispositionGain } from './disposition';
+import {
+    clampDisposition,
+    DISPOSITION_LABELS,
+    DISPOSITION_RANGE,
+    getDispositionModifier,
+    getInteractionCap,
+    labelForDisposition,
+    resolveInteractionDispositionGain,
+} from './disposition';
+
+describe('clampDisposition / DISPOSITION_RANGE (#376 — single-sourced clamp)', () => {
+    it('declares the −3..+3 inclusive bounds', () => {
+        expect(DISPOSITION_RANGE.min).toBe(-3);
+        expect(DISPOSITION_RANGE.max).toBe(3);
+    });
+    it('passes through in-range values unchanged', () => {
+        expect(clampDisposition(-3)).toBe(-3);
+        expect(clampDisposition(0)).toBe(0);
+        expect(clampDisposition(3)).toBe(3);
+    });
+    it('clamps out-of-range values to the extremes', () => {
+        expect(clampDisposition(99)).toBe(3);
+        expect(clampDisposition(-99)).toBe(-3);
+    });
+    it('truncates fractions toward zero', () => {
+        expect(clampDisposition(1.9)).toBe(1);
+        expect(clampDisposition(-1.9)).toBe(-1);
+    });
+});
 
 describe('labelForDisposition', () => {
     it('maps -3 to Hostile, 0 to Neutral, +3 to Helpful', () => {
