@@ -121,7 +121,7 @@ describe('skill tooltip regressions', () => {
         // contains the template marker rather than a hand-rolled span body.
         expect(html).not.toContain('Training:</span>');
         expect(html).toContain('Training Progression');
-        expect(html).toContain('WH40K.Tooltip.Skill.RankWithBonus');
+        expect(html).toContain(localizeKey('WH40K.Tooltip.Skill.RankWithBonus'));
         // Active rung carries the `active` class on its span.
         expect(html).toContain('<span class="active">');
         expect(html).toContain('Use the die button to roll');
@@ -164,12 +164,12 @@ describe('skill tooltip regressions', () => {
         // (issue #27 label-clarity follow-up) — the trivial mock localize
         // echoes the format-template key, so we look for the template marker
         // rather than the expanded sentence.
-        expect(html).toContain('WH40K.Tooltip.Skill.CharacteristicLabel');
+        expect(html).toContain(localizeKey('WH40K.Tooltip.Skill.CharacteristicLabel'));
         expect(html).not.toContain('Training:</span>');
         // Known is the active rung — the RankWithBonus template marker
         // appears once per rung; the active class proves the right rung
         // is the rendered selection.
-        expect(html).toContain('WH40K.Tooltip.Skill.RankWithBonus');
+        expect(html).toContain(localizeKey('WH40K.Tooltip.Skill.RankWithBonus'));
         expect(html).toContain('<span class="active">');
     });
 
@@ -208,10 +208,10 @@ describe('skill tooltip regressions', () => {
         // The untrained-target row now renders for aptitude systems too, with
         // the −20 value (char 37 − 20 = 17), and the progression rung uses the
         // flat-penalty label rather than the ÷2 half-base label.
-        expect(html).toContain('WH40K.Tooltip.Skill.UntrainedTargetLabel');
+        expect(html).toContain(localizeKey('WH40K.Tooltip.Skill.UntrainedTargetLabel'));
         expect(html).toContain('17');
-        expect(html).toContain('WH40K.Tooltip.Skill.UntrainedWithPenalty');
-        expect(html).not.toContain('WH40K.Tooltip.Skill.UntrainedHalfBase');
+        expect(html).toContain(localizeKey('WH40K.Tooltip.Skill.UntrainedWithPenalty'));
+        expect(html).not.toContain(localizeKey('WH40K.Tooltip.Skill.UntrainedHalfBase'));
     });
 
     it('computes the −20 untrained base in prepared payload for aptitude systems', () => {
@@ -288,7 +288,7 @@ describe('skill tooltip regressions', () => {
         // Every rung resolves through the same template so the marker
         // appears multiple times; the active class proves the right rung
         // is the rendered selection (Trained at +10 in this case).
-        expect(html).toContain('WH40K.Tooltip.Skill.RankWithBonus');
+        expect(html).toContain(localizeKey('WH40K.Tooltip.Skill.RankWithBonus'));
         expect(html).toContain('<span class="active">');
     });
 
@@ -327,7 +327,7 @@ describe('skill tooltip regressions', () => {
         // via the UntrainedTargetLabel template. The trivial mock localize
         // echoes the key verbatim, so the rendered HTML carries the marker
         // plus the numeric value substituted into {value}.
-        expect(html).toContain('WH40K.Tooltip.Skill.UntrainedTargetLabel');
+        expect(html).toContain(localizeKey('WH40K.Tooltip.Skill.UntrainedTargetLabel'));
         expect(html).toContain('18');
     });
 });

@@ -1,15 +1,20 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import VehicleStatModifiersTemplate, { type VehicleStatModifiers } from '../shared/vehicle-stat-modifiers-template.ts';
+import {
+    vehicleHasModifiers,
+    vehicleModifiersList,
+    vehicleStatModifiersSchema,
+    type VehicleModifierEntry,
+    type VehicleStatModifiers,
+} from '../shared/vehicle-stat-modifiers-template.ts';
 
 /**
  * Data model for Vehicle Trait items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
- * @mixes VehicleStatModifiersTemplate
  */
-export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTemplate, VehicleStatModifiersTemplate) {
+export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare descriptionText: string;
@@ -31,7 +36,8 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
             // Plain text description (for search/tooltips)
             descriptionText: new fields.StringField({ required: false, initial: '', blank: true }),
 
-            // Stat modifiers (4-field block) come from VehicleStatModifiersTemplate.
+            // Stat modifiers (shared four-field vehicle-stat block)
+            modifiers: vehicleStatModifiersSchema(),
 
             // Does this trait have a level?
             hasLevel: new fields.BooleanField({ required: true, initial: false }),
@@ -46,7 +52,15 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    // hasModifiers / modifiersList are inherited from VehicleStatModifiersTemplate.
+    /** Has any non-zero vehicle-stat modifier? */
+    get hasModifiers(): boolean {
+        return vehicleHasModifiers(this.modifiers);
+    }
+
+    /** Non-zero vehicle-stat modifiers as a localized display list. */
+    get modifiersList(): VehicleModifierEntry[] {
+        return vehicleModifiersList(this.modifiers);
+    }
 
     /**
      * Get the full name including level.

@@ -1,6 +1,7 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { asBaseActor } from '../../testing/actor-stub.ts';
 import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
@@ -33,7 +34,7 @@ const { default: SkillGrantData } = await import('./skill-grant.ts');
 function actorWithSkills(...keys: string[]): WH40KBaseActor {
     const skills: Record<string, { trained: boolean; plus10: boolean; plus20: boolean }> = {};
     for (const key of keys) skills[key] = { trained: false, plus10: false, plus20: false };
-    return { system: { skills } } as unknown as WH40KBaseActor;
+    return asBaseActor({ system: { skills } });
 }
 
 /** Build a grant instance without invoking the (schema-touching) constructor. */

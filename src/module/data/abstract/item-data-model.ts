@@ -302,13 +302,16 @@ export default class ItemDataModel extends SystemDataModel {
      * `?? []` fallback uniform — previously `ritual.ts` and `navigator-power.ts`
      * omitted it, a latent crash when the template's getter is absent.
      *
-     * @param self      The DataModel instance whose state the getter reads.
+     * @param instance  The DataModel instance whose state the getter reads.
      * @param template  The mixin template class whose `chatProperties` to invoke.
      * @returns The template's chat properties, or `[]` when undefined.
      */
-    static inheritedChatProperties(self: object, template: { prototype: object }): string[] {
-        const getter = Object.getOwnPropertyDescriptor(template.prototype, 'chatProperties')?.get;
-        return (getter?.call(self) as string[] | undefined) ?? [];
+    static inheritedChatProperties(instance: object, template: { prototype: object }): string[] {
+        // `Reflect.get(proto, key, instance)` invokes the prototype's `chatProperties`
+        // getter (if any) with `instance` as the receiver, returning `undefined` when
+        // the template defines no such getter — the uniform `?? []` fallback.
+        const chatProperties = Reflect.get(template.prototype, 'chatProperties', instance) as string[] | undefined;
+        return chatProperties ?? [];
     }
 
     /**

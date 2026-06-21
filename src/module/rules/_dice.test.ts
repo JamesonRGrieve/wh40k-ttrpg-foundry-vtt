@@ -220,7 +220,10 @@ describe('findBandBy — key-accessor band lookup (#301)', () => {
     });
 
     it('findBand delegates to findBandBy over a `range` field', () => {
-        const rows = [{ range: [1, 10] as const, n: 'a' }, { range: [11, 20] as const, n: 'b' }];
+        const rows = [
+            { range: [1, 10] as const, n: 'a' },
+            { range: [11, 20] as const, n: 'b' },
+        ];
         expect(findBand(rows, 15)?.n).toBe('b');
         expect(findBand(rows, 99, { clamp: false })).toBeUndefined();
     });

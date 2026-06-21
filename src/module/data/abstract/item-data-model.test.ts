@@ -148,8 +148,8 @@ describe('ItemDataModel', () => {
                     return [`label: ${this.label}`];
                 }
             }
-            const self = { label: 'plasma' };
-            expect(ItemDataModel.inheritedChatProperties(self, Template)).toEqual(['label: plasma']);
+            const instance = { label: 'plasma' };
+            expect(ItemDataModel.inheritedChatProperties(instance, Template)).toEqual(['label: plasma']);
         });
 
         it('falls back to an empty array when the template defines no chatProperties getter', async () => {

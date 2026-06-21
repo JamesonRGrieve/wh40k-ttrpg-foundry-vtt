@@ -1,15 +1,20 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import VehicleStatModifiersTemplate, { type VehicleStatModifiers } from '../shared/vehicle-stat-modifiers-template.ts';
+import {
+    vehicleHasModifiers,
+    vehicleModifiersList,
+    vehicleStatModifiersSchema,
+    type VehicleModifierEntry,
+    type VehicleStatModifiers,
+} from '../shared/vehicle-stat-modifiers-template.ts';
 
 /**
  * Data model for Vehicle Upgrade items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
- * @mixes VehicleStatModifiersTemplate
  */
-export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionTemplate, VehicleStatModifiersTemplate) {
+export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare upgradeType: string;
@@ -78,7 +83,8 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
                 label: 'WH40K.VehicleUpgrade.InstallCost',
             }),
 
-            // Stat modifiers (4-field block) come from VehicleStatModifiersTemplate.
+            // Stat modifiers (shared four-field vehicle-stat block)
+            modifiers: vehicleStatModifiersSchema(),
 
             // Notes
             notes: new fields.StringField({ required: false, initial: '', blank: true }),
@@ -89,7 +95,15 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    // hasModifiers / modifiersList are inherited from VehicleStatModifiersTemplate.
+    /** Has any non-zero vehicle-stat modifier? */
+    get hasModifiers(): boolean {
+        return vehicleHasModifiers(this.modifiers);
+    }
+
+    /** Non-zero vehicle-stat modifiers as a localized display list. */
+    get modifiersList(): VehicleModifierEntry[] {
+        return vehicleModifiersList(this.modifiers);
+    }
 
     /**
      * Render modifiers as inline HTML for table-cell display. Negative values
