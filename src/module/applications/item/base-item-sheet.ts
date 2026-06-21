@@ -7,7 +7,7 @@ import WH40K from '../../config.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 import * as EffectActions from '../api/effect-actions.ts';
 import type { EffectsOwner } from '../api/effect-actions.ts';
 import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
@@ -326,11 +326,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         }
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
-            input.addEventListener('focus', (event) => {
-                (event.target as HTMLInputElement).select();
-            });
-        });
+        setupNumberInputAutoSelect(this.element);
 
         // Equipped toggle: burst-pulse animation on check
         this.element.querySelectorAll<HTMLInputElement>('.wh40k-toggle-equipped input[type="checkbox"]').forEach((cb) => {

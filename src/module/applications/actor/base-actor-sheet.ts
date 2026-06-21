@@ -13,7 +13,7 @@ import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWoun
 import { formatSigned } from '../../utils/format.ts';
 import { sortByDisplayName } from '../../utils/talent-trait-sort.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
 import ContextMenuMixin from '../api/context-menu-mixin.ts';
 import EnhancedDragDropMixin from '../api/drag-drop-visual-mixin.ts';
@@ -1526,11 +1526,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
-            input.addEventListener('focus', (event) => {
-                (event.target as HTMLInputElement).select();
-            });
-        });
+        setupNumberInputAutoSelect(this.element);
 
         // Inline-edit: dblclick text to edit, save button to commit
         this.element.querySelectorAll<HTMLElement>('[data-inline-edit]').forEach((wrap) => {
