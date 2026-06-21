@@ -80,17 +80,6 @@ export default class AssignDamageDialog extends BaseRollDialog {
         event.preventDefault();
         await this.close();
     }
-
-    /* -------------------------------------------- */
-    /*  Roll Methods                                */
-    /* -------------------------------------------- */
-
-    /** @override */
-    override async _performRoll(): Promise<void> {
-        await (this.rollData['finalize'] as () => Promise<void>)();
-        await (this.rollData['performActionAndSendToChat'] as () => Promise<void>)();
-        await this.close();
-    }
 }
 
 /* -------------------------------------------- */
