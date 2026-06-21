@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-lead-sheet.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { leadStatusSelectOptions } from '../../config/lead-status.ts';
 
 interface LeadArgs {
     item: {
@@ -36,7 +37,9 @@ const baseSystem = (): LeadArgs['item']['system'] => ({
 
 const meta = {
     title: 'Item Sheets/LeadSheet',
-    render: (args) => renderSheet(templateSrc, { ...args }),
+    // `states` mirrors the sheet's registry-derived select options so the
+    // state dropdown renders its full set of <option>s in isolation.
+    render: (args) => renderSheet(templateSrc, { ...args, states: leadStatusSelectOptions() }),
     args: {
         item: { name: 'Sister Mira, Lay-Cleric', img: 'icons/svg/eye.svg', system: baseSystem() },
         system: baseSystem(),
@@ -106,6 +109,35 @@ export const DeadEnd: Story = {
     },
 };
 
+export const Resolved: Story = {
+    args: {
+        item: {
+            name: 'Recovered cipher-key',
+            img: 'icons/svg/circle.svg',
+            system: {
+                ...baseSystem(),
+                state: 'resolved',
+                stateLabel: 'Resolved',
+                stateIcon: 'fa-circle-check',
+                leadType: 'document',
+                leadTypeLabel: 'Document',
+                leadTypeIcon: 'fa-file-lines',
+                sourceClue: 'Decrypted the slate — it named the safehouse.',
+            },
+        },
+        system: {
+            ...baseSystem(),
+            state: 'resolved',
+            stateLabel: 'Resolved',
+            stateIcon: 'fa-circle-check',
+            leadType: 'document',
+            leadTypeLabel: 'Document',
+            leadTypeIcon: 'fa-file-lines',
+            sourceClue: 'Decrypted the slate — it named the safehouse.',
+        },
+    },
+};
+
 export const RendersFields: Story = {
     play: ({ canvasElement }) => {
         const cv = within(canvasElement);
@@ -115,5 +147,9 @@ export const RendersFields: Story = {
         const typeSelect = canvasElement.querySelector('select[name="system.leadType"]');
         void expect(stateSelect).toBeTruthy();
         void expect(typeSelect).toBeTruthy();
+        // State options derive from the shared registry — all four, including the
+        // distinct `resolved` outcome, must render.
+        const stateValues = Array.from(stateSelect?.querySelectorAll('option') ?? []).map((o) => o.value);
+        void expect(stateValues).toEqual(['active', 'pursued', 'resolved', 'dead-end']);
     },
 };
