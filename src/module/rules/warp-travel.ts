@@ -45,7 +45,7 @@
  */
 
 import type { GameSystemId } from '../config/game-systems/types.ts';
-import { degreesOfFailure, degreesOfSuccess, findBandBy, type Rng } from './_dice.ts';
+import { degreesOfFailure as computeDegreesOfFailure, degreesOfSuccess as computeDegreesOfSuccess, findBandBy, type Rng } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export type { Rng };
@@ -136,8 +136,8 @@ export function resolveD100Test(input: D100TestInput): {
     // so the pair reproduces the original `+1` margin counting exactly.
     return {
         passed: rolled <= target,
-        degreesOfSuccess: degreesOfSuccess(rolled, target),
-        degreesOfFailure: degreesOfFailure(rolled, target),
+        degreesOfSuccess: computeDegreesOfSuccess(rolled, target),
+        degreesOfFailure: computeDegreesOfFailure(rolled, target),
     };
 }
 

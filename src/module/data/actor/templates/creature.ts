@@ -9,6 +9,7 @@ import { applyCharacteristicRollData, computeCharacteristicTotals } from '../../
 import { CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
 import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
 import { computeMovement } from '../../shared/movement-math.ts';
+import { asRawSource, type RawSource } from '../../shared/raw-source.ts';
 import { SKILL_DEFINITIONS } from '../../shared/skill-definitions.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
 import CommonTemplate from './common.ts';
@@ -206,27 +207,6 @@ export function synthesizeOriginSpecialistEntries(
 /** Minimal actor interface used when accessing parent.items. */
 interface ActorWithItems {
     items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] };
-}
-
-/**
- * Generic property bag used during migration / cleaning passes.
- * Foundry hands us raw, unvalidated source data; we narrow nested objects
- * via this same shape rather than spreading `as Record<string, unknown>`
- * casts across every migration helper.
- */
-// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration/clean source bag
-type RawSource = Record<string, unknown>;
-
-/**
- * Narrow a child property to a RawSource if it's a non-null object.
- * Returns null otherwise so callers can short-circuit.
- */
-// eslint-disable-next-line no-restricted-syntax -- boundary: receives raw unvalidated source
-function asRawSource(value: unknown): RawSource | null {
-    if (typeof value === 'object' && value !== null) {
-        return value as RawSource;
-    }
-    return null;
 }
 
 export default class CreatureTemplate extends CommonTemplate {

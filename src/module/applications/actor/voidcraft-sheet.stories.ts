@@ -48,15 +48,9 @@ function renderShipWeaponChatCard(args: ShipWeaponChatCtx): HTMLElement {
 }
 
 function renderVoidcraftSheet(ctx: SheetContextLike): HTMLElement {
-    return renderSheetParts(
-        [
-            { template: headerSrc },
-            { template: tabsSrc },
-            { template: statsTabSrc, partClass: 'wh40k-body tw-p-2' },
-        ],
-        ctx,
-        { systemId: systemIdOf(ctx) },
-    );
+    return renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: statsTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
+        systemId: systemIdOf(ctx),
+    });
 }
 
 // Seed the RNG to keep subsequent randomId calls deterministic
@@ -207,15 +201,9 @@ const issue186ExtendedActions = [
 ];
 
 function renderExtendedActionsPanel(ctx: SheetContextLike): HTMLElement {
-    const panel = renderSheetParts(
-        [
-            { template: headerSrc },
-            { template: tabsSrc },
-            { template: extendedActionsTabSrc, partClass: 'wh40k-body tw-p-2' },
-        ],
-        ctx,
-        { systemId: systemIdOf(ctx) },
-    );
+    const panel = renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: extendedActionsTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
+        systemId: systemIdOf(ctx),
+    });
     panel.classList.add('voidcraft', 'tw-flex', 'tw-flex-col');
     return panel;
 }
@@ -419,15 +407,9 @@ export const MacrobatteryMiss: StoryObj<ShipWeaponChatCtx> = {
 // reflects the document's state change.
 
 function renderCrewPanel(ctx: SheetContextLike): HTMLElement {
-    const panel = renderSheetParts(
-        [
-            { template: headerSrc },
-            { template: tabsSrc },
-            { template: crewTabSrc, partClass: 'wh40k-body tw-p-2' },
-        ],
-        ctx,
-        { systemId: systemIdOf(ctx) },
-    );
+    const panel = renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: crewTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
+        systemId: systemIdOf(ctx),
+    });
     panel.classList.add('voidcraft', 'tw-flex', 'tw-flex-col');
     return panel;
 }

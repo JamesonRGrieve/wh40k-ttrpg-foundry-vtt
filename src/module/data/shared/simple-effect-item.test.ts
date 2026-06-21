@@ -9,9 +9,15 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+/** The field-options shape `simpleEffectItemSchema` passes to each Foundry data field. */
+interface FieldOptions {
+    required: boolean;
+    blank: boolean;
+}
+
 /** Records each constructed field so we can assert key/type wiring. */
 class StubField {
-    constructor(public readonly options: Record<string, unknown>) {}
+    constructor(public readonly options: FieldOptions) {}
 }
 class HTMLFieldStub extends StubField {}
 class StringFieldStub extends StubField {}
